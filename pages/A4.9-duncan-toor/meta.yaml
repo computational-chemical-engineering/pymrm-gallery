@@ -15,21 +15,30 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 12
+runtime_seconds: 11
 datasets:
   - duncan-toor-1962-run1.csv
 
 validation:
   - flux uniformity along the capillary (quasi-steady check)
-  - species mole balance
+  - species mole balance in the closed cell
   - time-step independence
+  - mean/max deviation against the digitised measurements
 
 adds: >
-  Qualitative correction of Fick's law (which predicts zero N2 motion), plus a
-  quantitative correction of Toor's linearisation by resolving the composition
-  dependence of [B] along the capillary (4.5% of the peak N2 separation).
+  Qualitative correction of Fick's law, which cannot cross zero at all and is
+  wrong by 9.1 mole % in the N2 difference against 1.4 mole % for Maxwell-Stefan;
+  plus a quantitative correction of Toor's 1962 linearisation by resolving the
+  composition dependence of [B] along the capillary (5.5% of the peak N2
+  separation).
+
+agreement: >
+  0.59 mole % mean absolute deviation over 28 digitised points, against the
+  0.45 mole % the paper reports for its own Maxwell-Stefan predictions and a
+  stated experimental error of 2.6 mole %. Roughly 0.5 mole % of our figure is
+  digitisation error rather than model error. Nothing was fitted.
 
 caveats: >
-  Experimental points not yet digitised; the page currently shows simulation
-  only. Model parameters are the commonly tabulated values and have not been
-  verified against the original article.
+  Two of the thirty markers in Fig. 2 overlap another series and are absent from
+  the dataset rather than guessed. The initial compositions are themselves the
+  t=0 digitised points, so they carry the same +/-0.005 uncertainty.

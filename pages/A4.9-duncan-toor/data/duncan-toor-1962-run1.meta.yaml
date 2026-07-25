@@ -1,6 +1,6 @@
 dataset_id: duncan-toor-1962-run1
-title: Bulb compositions vs time, H2/N2/CO2 two-bulb diffusion cell
-status: placeholder          # placeholder | complete
+title: Bulb compositions vs time, H2/N2/CO2 two-bulb diffusion cell (Fig. 2)
+status: complete
 
 source:
   authors:
@@ -9,20 +9,49 @@ source:
   year: 1962
   container: "AIChE Journal 8(1) 38-41"
   doi: 10.1002/aic.690080112
-  access: TODO               # e.g. "institutional subscription (lawful access)"
-  licence: "all rights reserved (facts extracted; figure not reproduced)"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
 
 acquisition:
-  method: digitised          # digitised | table | supplementary | repository | author | synthetic
-  tool: TODO                 # e.g. WebPlotDigitizer 4.7
-  figure: TODO               # e.g. "Figure 2"
-  operator: TODO
-  date: TODO
-  estimated_error: TODO
+  method: digitised
+  figure: "Figure 2 — Variation of composition with time"
+  tool: "programmatic extraction (poppler pdftoppm at 600 dpi + scipy.ndimage)"
+  procedure: >
+    Page rendered at 600 dpi. Markers isolated by morphological opening with a
+    9 px disk, which removes the ~6-11 px curves, gridlines and frame while
+    restoring the solid markers to full extent so centroids stay unbiased.
+    Axes calibrated from the gridlines: x from the 17 one-hour verticals
+    (px 182 = 0 h, px 2046 = 16 h); the y-axis is BROKEN into two blocks with
+    different scales - upper (nitrogen, expanded 2x) 0.600 at py 149 and 0.400
+    at py 1076, lower (H2/CO2) 0.000 at py 2464 and 0.500 at py 1306.
+    Markers assigned to (bulb, species) using the unambiguous t=0 charge
+    (bulb 1 = H2+N2, bulb 2 = N2+CO2) together with closure and the closed-cell
+    exchange balance.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-25
+  estimated_error: >
+    +/- 0.005 mole fraction, dominated by marker centroid placement against the
+    0.025 (upper block) and 0.05 (lower block) gridline spacing.
+
+validation:
+  closure: "max |sum(x) - 1| = 0.0073, mean 0.0031 over all complete bulb/time pairs"
+  monotonicity: "all six series monotonic in the physically required direction"
+  exchange_balance: "V1*dx1 = -V2*dx2 satisfied to 0.19% (H2), 0.82% (CO2), 3.13% (N2)"
+  note: >
+    Closure alone cannot identify which bulb is which (swapping the bulbs
+    preserves it), and nearest-neighbour continuation fails for nitrogen because
+    the two N2 series cross - that crossing is POINT O, the phenomenon the
+    experiment exists to show. The assignment therefore uses the t=0 charge plus
+    the exchange balance, and monotonicity is retained as an independent check
+    that was not used to make the assignment.
+
+missing:
+  - "CO2, bulb 2, t = 2 h  - marker overlaps another series in the figure"
+  - "H2,  bulb 2, t = 12 h - marker overlaps another series in the figure"
 
 columns:
-  - {name: time_h,  unit: h, description: elapsed time}
-  - {name: bulb,    unit: "-", description: "bulb index, 1 or 2"}
+  - {name: time_h,  unit: h,   description: elapsed time}
+  - {name: bulb,    unit: "-", description: "bulb index; 1 = H2+N2 charge, 2 = N2+CO2 charge"}
   - {name: species, unit: "-", description: "H2 | N2 | CO2"}
   - {name: x,       unit: "-", description: mole fraction}
 
@@ -34,8 +63,11 @@ redistribution_basis: >
   by contract. The original figure image is NOT reproduced; the points are
   re-plotted from the extracted coordinates.
 
-notes: >
-  The model parameters used on the page (cell geometry, initial compositions,
-  Maxwell-Stefan diffusivities) are the values commonly tabulated for this
-  experiment and have NOT yet been verified against the original article. Verify
-  them at the same time as the data points are extracted.
+parameters_verified: >
+  All model parameters on the page were checked against the paper text on
+  2026-07-25: bulb volumes 77.99 and 78.63 cc; capillary 8.59 cm long, 2.08 mm
+  diameter; water bath 35.2 +/- 0.01 C; 1 atm; Maxwell-Stefan diffusivities at
+  35.2 C and 1 atm of 0.833 (N2-H2), 0.680 (H2-CO2) and 0.168 (CO2-N2) sq cm/s.
+  The paper uses an EFFECTIVE (L/A) of 258.1 1/cm measured from seven binary
+  runs (Table 1), not the geometric 251.1 1/cm - a 2.80% difference - and states
+  that Fig. 2 is computed with the effective value. The page follows this.
