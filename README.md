@@ -9,10 +9,14 @@ scaffolding, and one complete page — `A4.9` Duncan–Toor ternary diffusion �
 in place. CI executes notebooks and validates metadata.
 
 ```bash
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
 python scripts/check_metadata.py     # metadata + provenance validation
 python scripts/run_pages.py          # execute every page notebook
-quarto render                        # build the site
+
+export QUARTO_PYTHON=$(which python) # so Quarto uses the same interpreter
+quarto render                        # build the site into _site/
 ```
 
 ## Goal

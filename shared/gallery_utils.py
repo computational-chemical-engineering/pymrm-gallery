@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-RAW_BASE = "https://raw.githubusercontent.com/pymrm/pymrm-gallery/main"
+RAW_BASE = "https://raw.githubusercontent.com/computational-chemical-engineering/pymrm-gallery/main"
 
 __all__ = [
     "in_colab",

@@ -8,9 +8,9 @@ page and in the release metadata.
 
 ## Pick a model
 
-Browse [`models.yaml`](https://github.com/pymrm/pymrm-gallery/blob/main/models.yaml)
+Browse [`models.yaml`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/models.yaml)
 for entries with `status: planned`, or the full survey in
-[`docs/`](https://github.com/pymrm/pymrm-gallery/tree/main/docs) for the ~236
+[`docs/`](https://github.com/computational-chemical-engineering/pymrm-gallery/tree/main/docs) for the ~236
 catalogued models not yet migrated into the index. Open an issue to claim one so
 two people do not build the same page.
 
@@ -26,9 +26,21 @@ repository rather than a figure, and structure `S1`–`S6`.
 ## Build it
 
 ```bash
-git clone https://github.com/pymrm/pymrm-gallery && cd pymrm-gallery
+git clone https://github.com/computational-chemical-engineering/pymrm-gallery
+cd pymrm-gallery
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp -r templates/page-skeleton pages/<catalog-id>-<slug>
+```
+
+To render the site locally you also need [Quarto](https://quarto.org) (pinned to
+1.10.x in CI). Point it at your environment so it uses the same interpreter as
+the notebooks:
+
+```bash
+export QUARTO_PYTHON=$(which python)   # or the path to your .venv/bin/python
+quarto render                          # full site into _site/
+quarto preview                         # live reload while editing
 ```
 
 Fill in the nine required sections: *Background · The published model ·
@@ -41,7 +53,7 @@ Rules that CI enforces:
   Colab VM with no repository checkout.
 - **Load data through `gallery_utils.load_data`**, never a bare relative path.
 - **Every CSV needs a `.meta.yaml` provenance sidecar.** Schema and legal basis:
-  [`docs/data-strategy.md`](https://github.com/pymrm/pymrm-gallery/blob/main/docs/data-strategy.md).
+  [`docs/data-strategy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/data-strategy.md).
 - **No source PDFs, ever.** DOIs and extracted CSVs only.
 - **No Quarto-only Markdown in `index.ipynb`** — no `:::` blocks, no shortcodes.
   The notebook must render in Jupyter, GitHub, and VS Code.
@@ -76,7 +88,7 @@ to keep the barrier low.
 ## Using a coding agent
 
 Encouraged. Point it at
-[`AGENTS.md`](https://github.com/pymrm/pymrm-gallery/blob/main/AGENTS.md), which
+[`AGENTS.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/AGENTS.md), which
 tells it to start from `models.yaml`, copy the structurally nearest existing
 page, and follow the pymrm conventions. You remain responsible for the physics
 and for the honesty of the data provenance — please check both before opening a
