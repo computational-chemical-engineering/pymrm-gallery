@@ -141,17 +141,22 @@ models:
     slug: contour-averaged-particle
     title: "Contour-averaged model for non-spherical catalyst particles"
     section: B
-    status: planned
+    status: deferred            # see `blocked_by`
     tier: T3
     priority: P1
     structures: [S13, S3]
     phases: [gas-solid]
     reference:
       authors: ["Peters, E. A. J. F."]
-      year: 2025
+      year: null
+    blocked_by: >
+      Manuscript in second revision as of July 2026, not yet published. Gallery
+      policy is published work only. The 4TU data package is already deposited
+      (doi:10.4121/fdaae2bf-02af-440a-bee7-346e53de2d42, MIT), so this page
+      becomes buildable the day the paper appears.
     note: >
-      In-house, published, data owned (4TU deposit). Uses construct_div with a
-      callable nu. High-credibility page — no data provenance question.
+      Uses construct_div with a callable nu — currently the only planned
+      demonstration of S13.
     related: [B1.1, B1.2]
 
   - id: B3.1
@@ -343,15 +348,18 @@ models:
     slug: ammonia-membrane-reactor
     title: "2D axisymmetric ammonia synthesis membrane reactor"
     section: H
-    status: planned
+    status: deferred            # see `blocked_by`
     tier: T3
     priority: P1
     structures: [S6, S7, S10]
     phases: [gas-solid]
+    blocked_by: >
+      Not yet published (July 2026). Gallery policy is published work only.
+      Revisit on publication — it remains the strongest demonstration that the
+      gallery handles research-scale coupled models.
     note: >
-      In-house, published, data owned. Coupled concentration–pressure–temperature
-      with Darcy flow and Sieverts permeation. Proves the gallery handles
-      research-scale models, not just textbook ones.
+      Coupled concentration–pressure–temperature with Darcy flow and Sieverts
+      permeation.
     related: [H1.1, H1.3, C2.3]
 
   - id: H1.1
@@ -363,7 +371,32 @@ models:
     priority: P1
     structures: [S7]
     phases: [gas]
-    related: [H1.2, H1.3, H1.12]
+    data: {tier: 2, method: table}
+    note: >
+      Promoted into the first wave after H1.12 was deferred. Permeation data is
+      commonly tabulated, and the pressure exponent n (0.5 vs 1) is itself a
+      published controversy worth showing against data — see Caravella et al.
+      (2010) on the empirical exponent.
+    related: [H1.2, H1.3, H1.4]
+
+  - id: H1.4
+    slug: itoh-membrane-dehydrogenation
+    title: "Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium"
+    section: H
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S7]
+    phases: [gas-solid]
+    reference:
+      authors: ["Itoh, N."]
+      year: 1987
+      container: "AIChE Journal 33(9) 1576–1578"
+    note: >
+      Promoted into the first wave with H1.1. Conversion beyond the equilibrium
+      limit is a striking, quantitative, published result, and the page needs
+      only the permeation closure from H1.1 plus a 1D reactor model.
+    related: [H1.1, H1.5, H1.12]
 
   - id: H1.7
     slug: solution-diffusion

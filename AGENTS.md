@@ -62,6 +62,18 @@ repository. The errors agents actually make:
   depends on neighbouring cells; `axes_blocks=[-2,-1]` for phase-and-species
   coupling.
 
+## Published work only
+
+The gallery reproduces **published** models. If a model's source is a
+manuscript in preparation, under review, or in revision, it does not get a page
+yet — regardless of how good the data situation is, and regardless of whether
+the authors are the gallery maintainers.
+
+Such entries carry `status: deferred` plus a `blocked_by` field saying what
+lifts the block. Do not build a page for a `deferred` entry, and do not promote
+one to `planned` without being told to. `scripts/check_metadata.py` enforces
+that every deferred entry explains itself and has no page directory.
+
 ## Data rules — the ones that matter most
 
 - **Never fabricate data.** If no dataset exists for a model, set

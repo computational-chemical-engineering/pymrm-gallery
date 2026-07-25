@@ -286,14 +286,36 @@ contribution from the first commit:
 Chosen for data availability, structural diversity, and in-house ownership —
 they collectively exercise `S1`–`S9` and prove every part of the workflow.
 
-| Order | Page | Why first |
-|---|---|---|
-| 1 | **A4.9 Duncan–Toor ternary diffusion** | Small tabulated dataset; Fick fails, Maxwell–Stefan succeeds; the clearest "why pymrm" story |
-| 2 | **B1.1/B1.5 Thiele + Weisz–Hicks** | Analytical validation; exercises `S3` and nonlinear multiplicity; teacher solution exists |
-| 3 | **C2.1 Xu–Froment SMR kinetics** | Tier-2 data; the most-used kinetics in the catalog |
-| 4 | **H1.12 Ammonia membrane reactor** | In-house, published, data owned — proves the gallery handles research-scale models |
-| 5 | **F1.4 Krishna–Ellenberger holdup** | Abundant tabulated data; a correlation page, testing that format |
-| 6 | **D1.4 Fixed bed + particle coupling** | The `S8` flagship; shows what pymrm does that spreadsheet-level tools cannot |
+| Order | Page | Status | Why first |
+|---|---|---|---|
+| 1 | **A4.9 Duncan–Toor ternary diffusion** | **built** | Small tabulated dataset; Fick fails, Maxwell–Stefan succeeds; the clearest "why pymrm" story |
+| 2 | **B1.1/B1.5 Thiele + Weisz–Hicks** | next | Analytical validation; exercises `S3` and nonlinear multiplicity; teacher solution exists |
+| 3 | **C2.1 Xu–Froment SMR kinetics** | | Tier-2 data; the most-used kinetics in the catalog |
+| 4 | **H1.1 + H1.4 Sieverts permeation and the Itoh membrane reactor** | | Keeps section H in the first wave after H1.12 was deferred; both published, both with obtainable data; conversion beyond equilibrium is a striking result |
+| 5 | **F1.4 Krishna–Ellenberger holdup** | | Abundant tabulated data; a correlation page, testing that format |
+| 6 | **D1.4 Fixed bed + particle coupling** | | The `S8` flagship; shows what pymrm does that spreadsheet-level tools cannot |
 
 After these six, the workflow (data provenance, template, CI, Colab) is proven
 and the catalog can be worked through in priority order by more than one person.
+
+### Published-work-only policy
+
+**The gallery reproduces published models.** Unpublished in-house work is
+deferred until the paper appears, however good the data situation is.
+
+This costs the two strongest in-house pages for now — `H1.12` (ammonia
+membrane reactor) and `B1.12` (contour-averaged non-spherical particle,
+manuscript in second revision as of July 2026). Both carry
+`status: deferred` and a `blocked_by` field in `models.yaml`, and both become
+buildable on publication; `B1.12`'s data is already deposited at 4TU with a DOI.
+
+The reasoning is that a gallery whose selling point is "reproduces the
+published literature" is weakened, not strengthened, by pages that cannot be
+checked against a publication. It also avoids any question of pre-empting a
+manuscript under review.
+
+Consequence for the catalog: `S13` (non-standard geometry via
+`construct_div(nu=callable)`) currently has **no** buildable demonstration,
+since `B1.12` was its only planned page. If an `S13` example is wanted in the
+first wave, it needs a published alternative — an annular or slab pellet with a
+non-uniform area profile would do.

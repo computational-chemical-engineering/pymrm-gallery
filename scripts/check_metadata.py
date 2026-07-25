@@ -50,6 +50,19 @@ def main() -> int:
     if dup:
         errors.append(f"models.yaml contains {dup} duplicate id(s)")
 
+    # Deferred entries must say why, so the block is auditable and can be lifted.
+    for mid, rec in records.items():
+        status = rec.get("status")
+        if status not in {"planned", "in-progress", "published", "deferred"}:
+            errors.append(f"models.yaml {mid}: unknown status {status!r}")
+        if status == "deferred" and not rec.get("blocked_by"):
+            errors.append(
+                f"models.yaml {mid}: status 'deferred' requires a `blocked_by` "
+                f"field explaining the block and what lifts it")
+        if status == "deferred" and (ROOT / "pages").joinpath(
+                f"{mid}-{rec.get('slug', '')}").is_dir():
+            errors.append(f"models.yaml {mid}: deferred but a page directory exists")
+
     # ---- pages -------------------------------------------------------------
     pages_dir = ROOT / "pages"
     for page in sorted(p for p in pages_dir.iterdir() if p.is_dir()) if pages_dir.is_dir() else []:

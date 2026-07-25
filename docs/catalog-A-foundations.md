@@ -108,13 +108,20 @@ exercise. It is the perfect "why this library exists" demonstration.
 | B1.9 | Wakao–Smith random pore | *Chem. Eng. Sci.* 17 (1962) | D_eff for bidisperse pore systems | S3 | T1 | P2 |
 | B1.10 | Feng–Stewart pore network | *IEC Fundam.* 12 (1973) | Multicomponent pore transport | S9 | T2 | P3 |
 | B1.11 | Multicomponent pellet with MS/DGM | Ethanol dehydrogenation, SMR pellets | Coupled selectivity in pellets | S9+S3 | T1 | P2 |
-| B1.12 | Contour-averaged non-spherical pellet | Peters (this suite's `particle_model` project) | η for arbitrary pellet shape via 1D reduction | S13 | T3 | **P1** |
+| B1.12 | Contour-averaged non-spherical pellet | Peters (this suite's `particle_model` project) | η for arbitrary pellet shape via 1D reduction | S13 | T3 | *deferred* |
 | B1.13 | Bimodal / macro–micro pellet | — | Two-scale intraparticle resistance | S8 | T2 | P2 |
 
 **Gallery angle for B1.** B1.1 + B1.5 together are the flagship pages: the
 analytical η(φ) is exact, the Weisz–Hicks multiplicity is a genuinely hard
-nonlinear solve, and both are in the existing teacher solutions. B1.12 is the
-group's own published contribution and belongs prominently in the gallery.
+nonlinear solve, and both are in the existing teacher solutions.
+
+B1.12 is the group's own contribution but the manuscript is in second revision
+(July 2026), so it is **deferred** under the published-work-only policy
+([blueprint §9](blueprint.md#published-work-only-policy)) even though its data is
+already deposited at 4TU with a DOI. Note the side effect: B1.12 was the only
+planned `S13` page, so `construct_div(nu=callable)` currently has no
+demonstration in the gallery. A published annular or variable-area pellet
+problem would fill that gap in the meantime.
 
 ## B2 — Catalyst deactivation
 

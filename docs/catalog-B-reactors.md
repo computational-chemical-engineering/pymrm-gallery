@@ -183,13 +183,20 @@ solve, and overlaying them shows exactly where each asymptote fails.
 | H1.9 | Maxwell–Stefan zeolite membrane | Krishna & van den Broeke (1995); Krishna & Baur (2003) | Loading-dependent multicomponent permeation | S9 | T1 | P2 |
 | H1.10 | Perovskite oxygen transport (Wagner) | Bouwmeester & Burggraaf | Ambipolar O2 flux | S3 | T1 | P2 |
 | H1.11 | Membrane-assisted autothermal reforming | van Sint Annaland group (TU/e) | Integrated H2 production | S7 | T2 | **P1** |
-| H1.12 | Ammonia synthesis membrane reactor | This suite's `ammonia_synthesis_reactor` project | 2D axisymmetric, coupled p–T–c | S6+S7+S10 | T3 | **P1** |
+| H1.12 | Ammonia synthesis membrane reactor | This suite's `ammonia_synthesis_reactor` project | 2D axisymmetric, coupled p–T–c | S6+S7+S10 | T3 | *deferred* |
 | H1.13 | RO/NF concentration polarisation + film theory | — | Flux decline, rejection | S3 | T1 | P2 |
 | H1.14 | Electrodialysis / ion-exchange membrane | — | Nernst–Planck with electroneutrality | S10 | T2 | P3 |
 
-**Gallery angle for H.** H1.12 is already-published in-house work; putting it in
-the gallery with its data is the single strongest credibility anchor available.
-H1.3 is the best "pymrm improves the original" candidate in this section:
+**Gallery angle for H.** H1.12 is in-house work but **not yet published**, so it
+is deferred under the published-work-only policy
+([blueprint §9](blueprint.md#published-work-only-policy)) and returns when the
+paper appears. The first wave for this section is therefore H1.1 (Sieverts
+permeation — well-tabulated data, and the pressure exponent *n* is itself a
+published controversy worth plotting against data) paired with H1.4 (Itoh's
+membrane dehydrogenation reactor, AIChE J 1987 — conversion beyond the
+equilibrium limit, which needs only H1.1's closure plus a 1D reactor model).
+
+H1.3 remains the best "pymrm improves the original" candidate in this section:
 concentration polarisation is usually estimated with a 1D film coefficient, and
 pymrm can resolve the actual 2D boundary layer (`S6`) and show the error.
 
