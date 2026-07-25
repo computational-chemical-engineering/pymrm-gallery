@@ -1,0 +1,46 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+id: B1.1
+slug: thiele-weisz-hicks
+title: "Thiele modulus and the Weisz–Hicks non-isothermal pellet"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S3, S10]
+phases: [gas-solid]
+
+covers: [B1.1, B1.5]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 300
+datasets:
+  - isothermal-exact.csv
+
+validation:
+  - isothermal eta against the exact closed form, three geometries
+  - grid convergence order at fixed Thiele modulus
+  - non-isothermal continuation against an independent shooting solution
+  - Prater bound on the centre temperature rise
+
+adds: >
+  Nothing for the isothermal case, deliberately - Thiele's formula is exact and
+  the value is that it pins the discretisation to 2e-4 and confirms second-order
+  convergence. For the non-isothermal case, the entire solution branch: making
+  phi^2 an unknown and pinning the centre concentration turns the multivalued
+  eta(phi) curve single-valued and traces it in one sweep, including the
+  unstable middle branch that Newton iteration on phi cannot reach.
+
+agreement: >
+  Isothermal 2.2e-4 max relative error for phi <= 30 at n_r = 200; the error
+  grows to 6.5e-3 by phi = 100 where the surface layer is thinner than a cell,
+  and falls to 1.9e-5 under refinement to n_r = 1600. Non-isothermal
+  continuation agrees with the shooting reference to 1.0e-5 median relative
+  deviation in eta at equal centre concentration.
+
+caveats: >
+  Provenance tier 6 - this page is validated against exact and reference
+  solutions, NOT against experiment. Neither source paper reports measurements.

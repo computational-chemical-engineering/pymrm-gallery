@@ -107,26 +107,42 @@ models:
 
   # ---------------------------------------------------------------- section B
   - id: B1.1
-    slug: thiele-effectiveness
-    title: "Thiele modulus and the effectiveness factor"
+    slug: thiele-weisz-hicks
+    title: "Thiele modulus and the Weisz–Hicks non-isothermal pellet"
+    description: >
+      The effectiveness factor from Thiele's exact isothermal solution to the
+      Weisz–Hicks non-isothermal pellet, where eta exceeds 100 and three steady
+      states coexist at one Thiele modulus.
     section: B
-    status: planned
+    status: published
     tier: T0
     priority: P1
-    structures: [S3]
+    structures: [S3, S10]
     phases: [gas-solid]
+    covers: [B1.1, B1.5]
     reference:
       authors: ["Thiele, E. W."]
       year: 1939
       container: "Industrial & Engineering Chemistry 31(7) 916–920"
-    note: "Analytical validation available; pair with B1.5 on one page or as siblings."
-    related: [B1.2, B1.3, B1.4, B1.5, J4.7]
+      doi: 10.1021/ie50355a027
+    also:
+      authors: ["Weisz, P. B.", "Hicks, J. S."]
+      year: 1962
+      container: "Chemical Engineering Science 17(4) 265–275"
+      doi: 10.1016/0009-2509(62)85005-2
+    predicts: [effectiveness factor, ignition, steady-state multiplicity]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton, clip_approach]
+    data: {tier: 6, method: analytical, status: complete}
+    page: pages/B1.1-thiele-weisz-hicks/
+    related: [B1.2, B1.4, B1.5, D1.4, J4.7, A4.9]
 
   - id: B1.5
     slug: weisz-hicks
     title: "Weisz–Hicks non-isothermal pellet: η > 1 and multiplicity"
     section: B
-    status: planned
+    status: published
+    covered_by: B1.1          # built as one page together with the Thiele model
+    page: pages/B1.1-thiele-weisz-hicks/
     tier: T0
     priority: P1
     structures: [S3]

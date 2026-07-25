@@ -1,0 +1,46 @@
+dataset_id: thiele-isothermal-exact
+title: Exact isothermal effectiveness factor, first-order reaction, three geometries
+status: complete
+
+source:
+  authors:
+    - "Thiele, E. W."
+  year: 1939
+  container: "Industrial & Engineering Chemistry 31(7) 916-920"
+  doi: 10.1021/ie50355a027
+  access: "not required - the closed-form solutions are standard textbook results"
+  licence: "n/a - mathematical results, not a copyrightable dataset"
+
+acquisition:
+  method: analytical
+  procedure: >
+    Evaluated directly from the closed-form solutions:
+    slab      eta = tanh(phi)/phi
+    cylinder  eta = 2*I1(phi)/(phi*I0(phi))
+    sphere    eta = (3/phi^2)*(phi*coth(phi) - 1)
+    on 60 logarithmically spaced phi from 0.05 to 100. phi is built on the
+    half-thickness for the slab and on the radius for cylinder and sphere.
+  tool: "numpy / scipy.special.iv"
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-25
+  estimated_error: "machine precision"
+
+provenance_tier: 6
+
+not_experimental: >
+  THIS IS NOT MEASURED DATA. Thiele (1939) is an analytical paper and Weisz &
+  Hicks (1962) is a computational one; neither reports experiments. The page is
+  validated against exact solutions (isothermal) and an independent shooting
+  solution of the same equation (non-isothermal). Both are real tests of the
+  discretisation, neither is a test against nature. Experimental
+  effectiveness-factor measurements exist elsewhere in the literature and would
+  make a worthwhile companion page.
+
+columns:
+  - {name: geometry, unit: "-", description: "slab | cylinder | sphere"}
+  - {name: phi,      unit: "-", description: "Thiele modulus"}
+  - {name: eta,      unit: "-", description: "effectiveness factor"}
+
+redistribution_basis: >
+  Values generated here from standard closed-form expressions. Mathematical
+  results are not copyrightable and no third-party dataset is reproduced.
