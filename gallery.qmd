@@ -1,0 +1,35 @@
+---
+title: "Gallery"
+listing:
+  id: model-listing
+  contents: pages
+  type: grid
+  grid-columns: 3
+  sort: "categories"
+  categories: cloud
+  fields: [title, description, categories]
+  feed: true
+page-layout: full
+---
+
+Every page shows a published model, the experimental data it was validated
+against, and a `pymrm` reproduction with a quantitative agreement metric.
+
+**Filtering.** The category cloud below carries every classification axis at
+once, using prefixed tags:
+
+| Prefix | Meaning | Example |
+|---|---|---|
+| `sec:` | Catalog section (physical domain) | `sec:A` transport closures, `sec:D` fixed bed |
+| `struct:` | Mathematical structure — *the axis to filter on if you want to reuse code* | `struct:S8` nested reactor–particle coupling |
+| `tier:` | Standing in the literature | `tier:T0` canonical |
+| `data:` | Provenance tier of the dataset | `data:tier1` open repository |
+| `phase:` | Phase system | `phase:gas`, `phase:gas-solid` |
+
+Structure codes are defined in
+[`docs/taxonomy.md`](https://github.com/pymrm/pymrm-gallery/blob/main/docs/taxonomy.md).
+Two pages sharing a `struct:` tag are solved by nearly the same pymrm code even
+when their physics is unrelated — that is the intended route to reuse.
+
+::: {#model-listing}
+:::

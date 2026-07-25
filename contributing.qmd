@@ -1,0 +1,77 @@
+---
+title: "Contribute a page"
+---
+
+The catalog lists **266 models**; no single group will build them all. Pages are
+individually authored and individually credited, with your name and ORCID on the
+page and in the release metadata.
+
+## Pick a model
+
+Browse [`models.yaml`](https://github.com/pymrm/pymrm-gallery/blob/main/models.yaml)
+for entries with `status: planned`, or the full survey in
+[`docs/`](https://github.com/pymrm/pymrm-gallery/tree/main/docs) for the ~236
+catalogued models not yet migrated into the index. Open an issue to claim one so
+two people do not build the same page.
+
+Good first pages have: a clear primary reference, data in a table or an open
+repository rather than a figure, and structure `S1`–`S6`.
+
+## Build it
+
+```bash
+git clone https://github.com/pymrm/pymrm-gallery && cd pymrm-gallery
+pip install -r requirements.txt
+cp -r templates/page-skeleton pages/<catalog-id>-<slug>
+```
+
+Fill in the nine required sections: *Background · The published model ·
+Parameters and assumptions · The data · PyMRM implementation · Results ·
+Validation · What pymrm adds · Reuse*.
+
+Rules that CI enforces:
+
+- **Cell 1 is the Colab environment cell.** The notebook must run on a fresh
+  Colab VM with no repository checkout.
+- **Load data through `gallery_utils.load_data`**, never a bare relative path.
+- **Every CSV needs a `.meta.yaml` provenance sidecar.** Schema and legal basis:
+  [`docs/data-strategy.md`](https://github.com/pymrm/pymrm-gallery/blob/main/docs/data-strategy.md).
+- **No source PDFs, ever.** DOIs and extracted CSVs only.
+- **No Quarto-only Markdown in `index.ipynb`** — no `:::` blocks, no shortcodes.
+  The notebook must render in Jupyter, GitHub, and VS Code.
+- **At least one validation** that does not use the experimental data.
+- **Call `report_agreement(...)`** so metric regressions are caught.
+
+Then:
+
+```bash
+python scripts/check_metadata.py
+python scripts/run_pages.py
+```
+
+## Never fabricate data
+
+If you cannot obtain the experimental data, build the page against an analytical
+solution or a high-fidelity reference and **label it as such**, or leave the
+dataset as a placeholder and mark the page `status: planned`. A page with
+invented numbers is worse than no page, and it is the one thing that would
+destroy the gallery's usefulness.
+
+The same applies to the *What pymrm adds* section. If the page is a faithful
+reproduction with no extension, write that.
+
+## Review
+
+A maintainer checks four things: the physics is right, the data provenance is
+complete and honest, the notebook executes from a clean environment, and a
+validation is present. This is a quality gate, not peer review — we are trying
+to keep the barrier low.
+
+## Using a coding agent
+
+Encouraged. Point it at
+[`AGENTS.md`](https://github.com/pymrm/pymrm-gallery/blob/main/AGENTS.md), which
+tells it to start from `models.yaml`, copy the structurally nearest existing
+page, and follow the pymrm conventions. You remain responsible for the physics
+and for the honesty of the data provenance — please check both before opening a
+PR.

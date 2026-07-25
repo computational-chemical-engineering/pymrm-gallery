@@ -1,0 +1,56 @@
+name: execute
+
+# freeze caches notebook output, so a green site build proves nothing about
+# whether the notebooks still run. This workflow is the real check, and it runs
+# on a schedule as well as on PRs so a pymrm release cannot silently break every
+# page while the site keeps rendering stale output.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"     # Mondays 04:00 UTC
+  workflow_dispatch:
+
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install pyyaml
+      - run: python scripts/check_metadata.py
+
+  notebooks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pymrm: ["pinned", "latest"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          if [ "${{ matrix.pymrm }}" = "latest" ]; then
+            pip install --upgrade --pre pymrm
+          fi
+          python -c "import pymrm; print('pymrm', pymrm.__version__)"
+
+      - name: Execute every page
+        run: python scripts/run_pages.py
+
+      - name: Check agreement metrics against baseline
+        if: matrix.pymrm == 'pinned'
+        run: python scripts/check_agreement.py
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: executed-notebooks-${{ matrix.pymrm }}
+          path: pages/**/index.ipynb

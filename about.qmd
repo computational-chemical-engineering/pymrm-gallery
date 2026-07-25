@@ -1,0 +1,79 @@
+---
+title: "About"
+---
+
+## Purpose
+
+Chemical engineering has an unusually rich stock of phenomenological models —
+Thiele's effectiveness factor, Kunii–Levenspiel's bubbling bed, the
+Doyle–Fuller–Newman battery model — that are taught everywhere and reimplemented
+constantly, usually from scratch and usually without the original data at hand.
+
+This gallery collects them in one place, each reproduced with `pymrm` and shown
+against the experimental data it was validated on, as a runnable notebook.
+
+## The page contract
+
+Every page shows the same four things, in the same order:
+
+1. the model **as originally published**, in the original notation, with a table
+   mapping symbols to code variables;
+2. the **core experimental data**, as a plain CSV with a machine-readable
+   provenance sidecar;
+3. the **pymrm reproduction** overlaid on that data, with a quantitative
+   agreement metric that CI tracks for regressions;
+4. **what pymrm adds** — and if it adds nothing, the page says so. A faithful
+   reproduction is a legitimate result; a manufactured improvement is not.
+
+Every page also carries at least one validation that does not use the
+experimental data: an analytical limit, a conservation check, or a
+grid/time-step independence check.
+
+## Classification
+
+Two axes. **Physical domain** (`sec:`) is what you browse. **Mathematical
+structure** (`struct:`) is what you reuse — codes `S1`–`S13` describing the
+shape of the numerical problem rather than the physics. Pages sharing a
+structure code are solved by nearly the same pymrm code even when their subject
+matter is unrelated, which is the intended route to adapting a model from
+outside your own field.
+
+Full scheme: [`docs/taxonomy.md`](https://github.com/pymrm/pymrm-gallery/blob/main/docs/taxonomy.md).
+
+## Licensing
+
+| Component | Licence |
+|---|---|
+| Code — notebooks, `shared/`, `scripts/` | MIT |
+| Prose and figures generated here | CC-BY-4.0 |
+| Data we generate ourselves | CC0 |
+| Data digitised from third-party publications | not relicensed — see below |
+
+Digitised datasets are distributed as **factual data with attribution**.
+Numerical values are facts and are not protected by copyright; extraction for
+scientific research by a research organisation with lawful access is covered by
+Art. 15n of the Dutch Auteurswet, implementing Art. 3 of the DSM Directive (EU)
+2019/790. Source figure images are never reproduced — points are re-plotted from
+extracted coordinates — and source PDFs are never committed. Each dataset's
+`.meta.yaml` records its origin, extraction method, and basis for
+redistribution.
+
+If you are an author whose data appears here and you would like a page changed
+or removed, please open an issue; we will act on it promptly.
+
+## Relationship to the rest of PyMRM
+
+- [`pymrm`](https://github.com/multiscale-modelling-multiphase-flows/pymrm) —
+  the library itself.
+- `pymrm-book` — the course book: tutorials, exercises, and lecture notes for
+  the Multiphase Reactor Modeling course at TU Eindhoven.
+- **this gallery** — validated reproductions of published models, for research
+  reuse rather than teaching.
+
+The book teaches you the method. The gallery gives you a model to start from.
+
+## Citing
+
+Cite **both** the original publication and this gallery. Each page lists its
+primary reference; the gallery itself has a `CITATION.cff` and a DOI per
+release.

@@ -1,0 +1,51 @@
+name: publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.6.40        # pinned: renders must be reproducible
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+
+      - run: pip install -r requirements.txt
+
+      - name: Emit machine-readable index
+        run: python scripts/check_metadata.py --emit-json
+
+      # _freeze/ is committed, so this reuses cached output and only re-executes
+      # notebooks whose source actually changed.
+      - name: Render site
+        run: quarto render
+
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: _site}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

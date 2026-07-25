@@ -1,0 +1,56 @@
+project:
+  type: website
+  output-dir: _site
+  execute-dir: project
+  render:
+    - index.qmd
+    - gallery.qmd
+    - about.qmd
+    - contributing.qmd
+    - pages/**/index.ipynb
+
+execute:
+  freeze: auto        # cache executed output; see docs/blueprint.md §0 consequence 4
+  daemon: false
+
+website:
+  title: "PyMRM Gallery"
+  description: >
+    Important phenomenological models from the chemical engineering literature,
+    reproduced with pymrm and shown against their original experimental data.
+  site-url: https://pymrm.github.io/pymrm-gallery
+  repo-url: https://github.com/pymrm/pymrm-gallery
+  repo-actions: [edit, issue]
+  open-graph: true
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: gallery.qmd
+        text: Gallery
+      - href: contributing.qmd
+        text: Contribute
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/pymrm/pymrm-gallery
+  page-footer:
+    left: "Code MIT · Prose CC-BY-4.0 · See About for data terms"
+    right: "Built with [Quarto](https://quarto.org)"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    code-copy: true
+    fig-width: 7
+    fig-height: 4.5
+    df-print: paged
+    citations-hover: true
+
+bibliography: references.bib
+csl: https://www.zotero.org/styles/elsevier-harvard

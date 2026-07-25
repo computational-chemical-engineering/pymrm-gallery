@@ -1,0 +1,495 @@
+# pymrm-gallery model index — CANONICAL metadata source.
+#
+# This file is the single source of truth (docs/blueprint.md §0, consequence 3).
+# Page front matter is validated against it by scripts/check_metadata.py; it is
+# NOT an independent record. Entries with status: planned have no page yet and
+# exist here so they can be turned into contributor issues.
+#
+# Full survey and rationale: docs/catalog-A-foundations.md, -B-reactors.md,
+# -C-adjacent.md. Migration of the remaining ~236 catalogued models into this
+# file is incremental; run scripts/check_metadata.py --report-missing to see
+# which catalog IDs are not yet here.
+
+schema_version: 1
+
+models:
+
+  # ---------------------------------------------------------------- section A
+  - id: A4.9
+    slug: duncan-toor
+    title: "Duncan–Toor ternary gas diffusion"
+    description: >
+      The two-bulb experiment where Fick's law provably fails: nitrogen
+      diffuses uphill, stops against its own gradient, then reverses.
+    section: A
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S3, S9]
+    phases: [gas]
+    reference:
+      authors: ["Duncan, J. B.", "Toor, H. L."]
+      year: 1962
+      container: "AIChE Journal 8(1) 38–41"
+      doi: 10.1002/aic.690080112
+    predicts: [composition trajectories, osmotic diffusion, diffusion barrier, reverse diffusion]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton]
+    data: {tier: 4, method: digitised, status: placeholder}
+    page: pages/A4.9-duncan-toor/
+    related: [A4.2, A4.3, A4.8, B1.11, H1.9]
+
+  - id: A4.2
+    slug: maxwell-stefan-vs-fick
+    title: "Maxwell–Stefan vs Fick for multicomponent mixtures"
+    section: A
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S9]
+    phases: [gas]
+    reference:
+      authors: ["Krishna, R.", "Wesselingh, J. A."]
+      year: 1997
+      container: "Chemical Engineering Science 52(6) 861–911"
+      doi: 10.1016/S0009-2509(96)00458-7
+    related: [A4.9, A4.3]
+
+  - id: A1.1
+    slug: ergun-pressure-drop
+    title: "Ergun equation for packed-bed pressure drop"
+    section: A
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Ergun, S."]
+      year: 1952
+      container: "Chemical Engineering Progress 48 89–94"
+    note: >
+      Build as a comparison page against Kozeny–Carman, Forchheimer and the
+      Eisfeld–Schnitzlein wall correction on one dataset.
+    related: [A1.2, A1.3, A1.4]
+
+  - id: A2.3
+    slug: taylor-aris-dispersion
+    title: "Taylor–Aris dispersion"
+    section: A
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S6, S4]
+    phases: [liquid]
+    reference:
+      authors: ["Taylor, G. I."]
+      year: 1953
+      container: "Proc. R. Soc. Lond. A 219 186–203"
+    note: >
+      Strong "pymrm improves the original" candidate: solve the real 2D problem
+      and show where the 1D effective coefficient breaks down at short times.
+    related: [A2.1, A2.5]
+
+  - id: A3.4
+    slug: wakao-funazkri
+    title: "Wakao–Funazkri particle–fluid mass and heat transfer"
+    section: A
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Wakao, N.", "Funazkri, T."]
+      year: 1978
+      container: "Chemical Engineering Science 33(10) 1375–1384"
+    related: [A3.5, D1.3]
+
+  # ---------------------------------------------------------------- section B
+  - id: B1.1
+    slug: thiele-effectiveness
+    title: "Thiele modulus and the effectiveness factor"
+    section: B
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Thiele, E. W."]
+      year: 1939
+      container: "Industrial & Engineering Chemistry 31(7) 916–920"
+    note: "Analytical validation available; pair with B1.5 on one page or as siblings."
+    related: [B1.2, B1.3, B1.4, B1.5, J4.7]
+
+  - id: B1.5
+    slug: weisz-hicks
+    title: "Weisz–Hicks non-isothermal pellet: η > 1 and multiplicity"
+    section: B
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Weisz, P. B.", "Hicks, J. S."]
+      year: 1962
+      container: "Chemical Engineering Science 17(4) 265–275"
+    related: [B1.1, B1.6, D2.4]
+
+  - id: B1.12
+    slug: contour-averaged-particle
+    title: "Contour-averaged model for non-spherical catalyst particles"
+    section: B
+    status: planned
+    tier: T3
+    priority: P1
+    structures: [S13, S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Peters, E. A. J. F."]
+      year: 2025
+    note: >
+      In-house, published, data owned (4TU deposit). Uses construct_div with a
+      callable nu. High-credibility page — no data provenance question.
+    related: [B1.1, B1.2]
+
+  - id: B3.1
+    slug: shrinking-core
+    title: "Shrinking-core model for non-catalytic gas–solid reaction"
+    section: B
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S12]
+    phases: [gas-solid]
+    reference:
+      authors: ["Yagi, S.", "Kunii, D."]
+      year: 1955
+      container: "5th Symposium (International) on Combustion, 231–244"
+    related: [B3.2, B3.3, I1.8]
+
+  # ---------------------------------------------------------------- section C
+  - id: C2.1
+    slug: xu-froment-smr
+    title: "Steam methane reforming kinetics (Xu & Froment)"
+    section: C
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S1, S2]
+    phases: [gas, gas-solid]
+    reference:
+      authors: ["Xu, J.", "Froment, G. F."]
+      year: 1989
+      container: "AIChE Journal 35(1) 88–96"
+      doi: 10.1002/aic.690350109
+    predicts: [reaction rate, conversion, selectivity]
+    data: {tier: 2, method: table}
+    related: [C2.2, C2.6, D3.1, B1.11]
+
+  - id: C2.10
+    slug: o-xylene-phthalic-anhydride
+    title: "o-Xylene to phthalic anhydride: the classic hot spot"
+    section: C
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S2, S6]
+    phases: [gas-solid]
+    reference:
+      authors: ["Froment, G. F."]
+      year: 1967
+    related: [D2.2, D3.4]
+
+  # ---------------------------------------------------------------- section D
+  - id: D1.4
+    slug: fixed-bed-particle-coupling
+    title: "Heterogeneous fixed bed with resolved intraparticle profiles"
+    section: D
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S8, S7, S3]
+    phases: [gas-solid]
+    note: >
+      The S8 flagship. Schur-complement coupling of a pellet model to a column
+      model — what pymrm does that spreadsheet-level tools cannot.
+    related: [D1.3, D1.5, B1.1, J3.4]
+
+  - id: D1.5
+    slug: fixed-bed-2d-radial
+    title: "2D fixed bed with radial dispersion and wall cooling"
+    section: D
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S6]
+    phases: [gas-solid]
+    related: [D1.1, D2.2, A3.11]
+
+  - id: D2.2
+    slug: van-welsenaere-froment-runaway
+    title: "Van Welsenaere–Froment runaway criteria"
+    section: D
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S2]
+    phases: [gas-solid]
+    reference:
+      authors: ["Van Welsenaere, R. J.", "Froment, G. F."]
+      year: 1970
+      container: "Chemical Engineering Science 25(10) 1503–1516"
+    note: "Sweep over many solves; the runaway boundary is the figure."
+    related: [D2.1, D2.3, C2.10]
+
+  # ---------------------------------------------------------------- section E
+  - id: E2.1
+    slug: kunii-levenspiel
+    title: "Kunii–Levenspiel bubbling fluidised bed reactor"
+    section: E
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S7]
+    phases: [gas-solid]
+    reference:
+      authors: ["Kunii, D.", "Levenspiel, O."]
+      year: 1968
+      container: "I&EC Process Design and Development 7(4) 481–492"
+    related: [E1.1, E1.2, E2.3]
+
+  - id: E2.7
+    slug: cfb-core-annulus
+    title: "Circulating fluidised bed core–annulus model"
+    section: E
+    status: planned
+    tier: T1
+    priority: P2
+    structures: [S7]
+    phases: [gas-solid]
+    data:
+      tier: 1
+      method: repository
+      note: >
+        NETL/PSRI CFD Challenge Problem — open experimental data for a
+        0.305 m x 16 m CFB riser at mfix.netl.doe.gov/challenge.
+    related: [E2.8, E2.9]
+
+  # ---------------------------------------------------------------- section F
+  - id: F1.4
+    slug: krishna-ellenberger-holdup
+    title: "Krishna–Ellenberger two-bubble-class gas holdup"
+    section: F
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S1]
+    phases: [gas-liquid]
+    reference:
+      authors: ["Krishna, R.", "Ellenberger, J."]
+      year: 1996
+      container: "AIChE Journal 42(9) 2627–2634"
+      doi: 10.1002/aic.690420923
+    data: {tier: 2, method: table}
+    related: [F1.1, F1.2, F1.3, F2.2]
+
+  - id: F2.3
+    slug: slurry-bubble-column-ft
+    title: "Slurry bubble column for Fischer–Tropsch synthesis"
+    section: F
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S7, S8]
+    phases: [gas-liquid-solid]
+    reference:
+      authors: ["Maretto, C.", "Krishna, R."]
+      year: 1999
+      container: "Catalysis Today 52(2-3) 279–289"
+    related: [F1.4, F2.2, C2.7]
+
+  - id: F3.1
+    slug: hatta-regimes
+    title: "Hatta number and the gas–liquid reaction regimes"
+    section: F
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-liquid]
+    note: "Analytical asymptotes overlaid on the full film solve; ideal S3 teaching page."
+    related: [F3.2, F3.3, F3.5]
+
+  # ---------------------------------------------------------------- section G
+  - id: G1.8
+    slug: trickle-bed-partial-wetting
+    title: "Trickle-bed reactor with partial catalyst wetting"
+    section: G
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S8]
+    phases: [gas-liquid-solid]
+    reference:
+      authors: ["Herskowitz, M.", "Smith, J. M."]
+      year: 1983
+      container: "AIChE Journal 29(1) 1–18"
+    related: [G1.6, G1.5, B1.1]
+
+  # ---------------------------------------------------------------- section H
+  - id: H1.12
+    slug: ammonia-membrane-reactor
+    title: "2D axisymmetric ammonia synthesis membrane reactor"
+    section: H
+    status: planned
+    tier: T3
+    priority: P1
+    structures: [S6, S7, S10]
+    phases: [gas-solid]
+    note: >
+      In-house, published, data owned. Coupled concentration–pressure–temperature
+      with Darcy flow and Sieverts permeation. Proves the gallery handles
+      research-scale models, not just textbook ones.
+    related: [H1.1, H1.3, C2.3]
+
+  - id: H1.1
+    slug: sieverts-permeation
+    title: "Sieverts-law hydrogen permeation through Pd membranes"
+    section: H
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S7]
+    phases: [gas]
+    related: [H1.2, H1.3, H1.12]
+
+  - id: H1.7
+    slug: solution-diffusion
+    title: "Wijmans–Baker solution–diffusion model"
+    section: H
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [liquid, gas]
+    reference:
+      authors: ["Wijmans, J. G.", "Baker, R. W."]
+      year: 1995
+      container: "Journal of Membrane Science 107(1-2) 1–21"
+    related: [H1.8, H1.13]
+
+  # ---------------------------------------------------------------- section I
+  - id: I1.2
+    slug: catalytic-converter-lightoff
+    title: "Monolith catalytic converter light-off"
+    section: I
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S4, S7]
+    phases: [gas-solid]
+    reference:
+      authors: ["Oh, S. H.", "Cavendish, J. C."]
+      year: 1982
+      container: "I&EC Product Research and Development 21(1) 29–37"
+    related: [I1.1, C2.13]
+
+  - id: I1.7
+    slug: reverse-flow-reactor
+    title: "Reverse-flow reactor for autothermal oxidation"
+    section: I
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S4, S5]
+    phases: [gas-solid]
+    reference:
+      authors: ["Matros, Y. Sh.", "Bunimovich, G. A."]
+      year: 1996
+      container: "Catalysis Reviews 38(1) 1–68"
+    related: [D2.6, I1.9]
+
+  # ---------------------------------------------------------------- section J
+  - id: J1.5
+    slug: ldf-breakthrough
+    title: "Linear driving force and adsorption breakthrough"
+    section: J
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S4, S5]
+    phases: [gas-solid]
+    reference:
+      authors: ["Glueckauf, E."]
+      year: 1955
+      container: "Transactions of the Faraday Society 51 1540–1551"
+    note: "Build as a triptych with J1.6 (analytical) and J1.8 (general rate model)."
+    related: [J1.6, J1.8, J1.10]
+
+  - id: J2.2
+    slug: msmpr-crystalliser
+    title: "MSMPR crystalliser and the population balance"
+    section: J
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S11]
+    phases: [liquid-solid]
+    reference:
+      authors: ["Randolph, A. D.", "Larson, M. A."]
+      year: 1971
+      container: "Theory of Particulate Processes"
+    note: >
+      Growth along the internal coordinate is convection — pymrm's TVD machinery
+      applies directly, which is an under-exploited fit.
+    related: [J2.1, J2.4]
+
+  - id: J3.4
+    slug: doyle-fuller-newman
+    title: "Doyle–Fuller–Newman lithium-ion battery model"
+    section: J
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S8, S10, S3]
+    phases: [liquid-solid]
+    reference:
+      authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
+      year: 1993
+      container: "Journal of the Electrochemical Society 140(6) 1526–1533"
+    note: >
+      Structurally identical to D1.4 (reactor-particle coupling). Demonstrating
+      that the same pymrm pattern solves both is a strong generality claim, and
+      it reaches a large audience outside classical reaction engineering.
+    related: [J3.3, J3.5, D1.4]
+
+  - id: J4.7
+    slug: immobilised-enzyme-pellet
+    title: "Diffusion-limited immobilised enzyme particle"
+    section: J
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [liquid-solid]
+    note: >
+      Literally B1.1 with Michaelis–Menten kinetics. Cross-linked deliberately:
+      a bioengineer arriving here discovers the whole S3 family.
+    related: [B1.1, J4.6]
+
+  - id: J4.8
+    slug: asm1-activated-sludge
+    title: "ASM1 activated sludge model"
+    section: J
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S1]
+    phases: [liquid]
+    reference:
+      authors: ["Henze, M.", "Grady, C. P. L.", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
+      year: 1987
+      container: "IWA Scientific and Technical Report No. 1"
+    related: [J4.9, J4.1]

@@ -1,0 +1,56 @@
+---
+title: "PyMRM Gallery"
+subtitle: "Published chemical engineering models, reproduced against their original data"
+---
+
+## What this is
+
+A growing, open collection of the important phenomenological models of chemical
+engineering — packed beds, fluidised beds, bubble columns, membrane reactors,
+catalyst particles, and the unit operations next door — each one reproduced with
+[`pymrm`](https://github.com/multiscale-modelling-multiphase-flows/pymrm) and
+shown **against the experimental data it was originally validated on**.
+
+Every page carries the same four things:
+
+1. the model **as originally published**, in the original notation;
+2. the **core experimental data**, as a plain CSV with full provenance;
+3. the **pymrm reproduction**, overlaid on that data with a quantitative
+   agreement metric;
+4. **what pymrm adds** — a relaxed assumption, a finer discretisation, a limit
+   the original could not reach. Or an honest statement that the page is a
+   faithful reproduction and adds nothing.
+
+Every page is a Jupyter notebook you can download and run, unmodified, in Google
+Colab.
+
+[Browse the gallery](gallery.qmd){.btn .btn-primary}
+
+## Three ways to use it
+
+**Find a model and adapt it.** Filter the [gallery](gallery.qmd) by physical
+domain (`sec:`) to find a model of your system, then edit the parameters. Each
+page ends with a *Reuse* section listing exactly what to change.
+
+**Find a *structure* and adapt it.** More powerful, and less obvious: filter by
+`struct:` instead. A diffusion-limited enzyme pellet, a catalyst pellet, and the
+solid phase of a lithium-ion battery electrode are the *same mathematical
+problem*, so the same pymrm code solves all three. If nothing in your field
+matches, something in someone else's probably does.
+
+**Let a coding agent do it.** The catalog is published as machine-readable
+[`models.yaml`](https://github.com/pymrm/pymrm-gallery/blob/main/models.yaml)
+and the repository carries an
+[`AGENTS.md`](https://github.com/pymrm/pymrm-gallery/blob/main/AGENTS.md) with
+instructions. Point your agent at the repository and ask it to build a model of
+your system; it is designed to find the structurally nearest page and adapt it
+rather than assemble something from API documentation.
+
+## Status
+
+Early. The [literature survey](https://github.com/pymrm/pymrm-gallery/tree/main/docs)
+catalogues **266 models** across ten sections; pages are being built in priority
+order, sequenced by data availability rather than by model importance.
+
+Contributions are welcome and individually credited — see
+[Contribute](contributing.qmd).
