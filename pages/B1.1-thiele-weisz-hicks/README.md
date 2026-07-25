@@ -17,10 +17,21 @@ slab, cylinder and sphere, with second-order convergence. At phi = 100 the error
 grows to 6.5e-3 because the surface layer is thinner than a cell; refining to
 n_r = 1600 brings it to 1.9e-5.
 
-Non-isothermal: at beta = 0.6, gamma = 20 the fold spans 0.297 < phi < 0.319,
-and at phi = 0.308 there are three steady states with eta = 1.08, 18.3 and 36.1
-- a 33x spread at a single Thiele modulus. The pymrm continuation agrees with an
-independent shooting solution to 1.0e-5.
+Non-isothermal: at beta = 0.6, gamma = 20 the fold spans 0.297 < phi < 0.572,
+and phi = 0.412 has three steady states - a 38x spread at a single Thiele
+modulus. Reference and pymrm agree on all three branches, including the unstable
+middle one:
+
+| branch      | shooting reference | pymrm continuation |
+|-------------|--------------------|--------------------|
+| extinguished|              1.177 |              1.173 |
+| unstable    |              6.207 |              6.225 |
+| ignited     |             44.450 |             44.450 |
+
+The fold is located on the shooting reference rather than on the continuation:
+the continuation carries a warm-start chain, so which points converge is mildly
+floating-point dependent and its turning points move between machines. CI caught
+exactly that.
 
 ## Data
 
