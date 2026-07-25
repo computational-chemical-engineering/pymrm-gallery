@@ -4,8 +4,16 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: planning.** This repository currently contains the literature survey
-and design documents. No pages have been built yet.
+**Status: first page built.** The literature survey (266 models), the Quarto
+scaffolding, and one complete page — `A4.9` Duncan–Toor ternary diffusion — are
+in place. CI executes notebooks and validates metadata.
+
+```bash
+pip install -r requirements.txt
+python scripts/check_metadata.py     # metadata + provenance validation
+python scripts/run_pages.py          # execute every page notebook
+quarto render                        # build the site
+```
 
 ## Goal
 
