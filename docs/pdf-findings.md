@@ -111,7 +111,7 @@ approach to equilibrium, and a 5 % shift in the (external) equilibrium constants
 moves the long-space-time predictions by the same amount. The bias there belongs
 to finding 4, not to the kinetics.
 
-## 2. Krishna & Ellenberger (1996) — page `F1.4`
+## 2. Krishna & Ellenberger (1996) — page `F1.4` — model read, not yet built
 
 `AIChE_Journal-1996-Krishna.pdf`
 
@@ -120,19 +120,61 @@ this is the column-geometry table the page needs. **Table 2** physical
 properties of the liquids used. **Table 3** average relative deviation of their
 model against the Wilkinson correlation.
 
-**Scale: 2,787 experiments, of which 1,735 in the churn-turbulent regime.** That
-is a substantial dataset, and Tables 1–2 are text so the conditions transcribe
-cleanly.
+**Scale: 2,787 experiments, of which 1,735 in the churn-turbulent regime.**
 
-The holdup measurements themselves appear to be in figures (e.g. Figure 11,
-large-bubble holdup vs *U* − *U*_trans for several gas densities), so expect
-digitisation. Their large-bubble model is **Eq. 19**; the transition velocity
-uses the **Reilly** correlation.
+**Table 1 has a free integrity check, and it passes.** The nineteen per-row
+experiment counts — 346, 22, 60, 128, 460, 239, 209, 293, 37, 153, 63, 185, 99,
+119, 70, 77, 64, 92, 71 — sum to exactly **2,787**, the total stated in the
+text. Transcribe the column and add it up before doing anything else.
 
-Good news for the page's framing: they report the Wilkinson correlation
-consistently *over*predicting large-bubble holdup while *under*predicting the
-small-bubble contribution — a concrete published claim the reproduction can test
-rather than merely restate.
+Watch three OCR slips in Table 1 that the page image corrects: `air-paraffin
+oil (3)` is **(B)**, `SF, -tetradecane` is **SF₆**, and `0.00 1-0.249` is
+**0.001–0.249**.
+
+### The complete model, read from the page images
+
+Wilkinson et al. (1992), their Eqs. 1–4:
+
+- (1) ε_b = (*U* − *U*_trans)/*V*_b ; ε = ε_small + ε_b
+- (2) *U*_trans = ε_trans *V*_small ; ε_trans = 0.5 exp(−193 ρ_G^−0.61 μ_L^0.5 σ^0.11)
+- (3) *V*_small μ_L/σ = 2.25 (σ³ρ_L/(g μ_L⁴))^−0.273 (ρ_L/ρ_G)^0.03
+- (4) *V*_b μ_L/σ = *V*_small μ_L/σ + 2.4 ((*U*−*U*_trans)μ_L/σ)^0.757 (σ³ρ_L/(g μ_L⁴))^−0.077 (ρ_L/ρ_G)^0.077
+
+Reilly et al. (1994) for the transition, their Eq. 8, with **B = 3.85** (stated
+in their text, not in the notation list):
+
+- ε_trans = 0.59 *B*^1.5 √(ρ_G^0.96/ρ_L · σ^0.12)
+- *V*_small = (1/2.84) ρ_G^−0.04 σ^0.12
+- *U*_trans = *V*_small ε_trans (1 − ε_trans)
+
+Their own large-bubble correlation, **Eq. 19** — the point of the paper:
+
+> ε_b = 0.268 · *D*_T^−0.18 · (*U* − *U*_df)^−0.22 · (*U* − *U*_df)^4/5
+
+i.e. ε_b = 0.268 *D*_T^−0.18 (*U* − *U*_df)^0.58, since 4/5 − 0.22 = 0.58. Valid
+for *U* > 0.1 m/s and dispersion heights *H* > 1 m. Note it contains **no fluid
+property at all** — that is the claim.
+
+Derivation chain, if the page wants to show it: Eq. 12 (ε_b as an integral of
+(*U*−*U*_df)/*V*_b over the dispersion height) → Eq. 13 (*V*_b = φ√(g d_b)) →
+Eq. 14 (φ = φ₀ *D*_T^N) → Eq. 15 → Eq. 16 for *H* ≫ *h*\* → Eq. 17 with
+*h*\* = b0(*U*−*U*_df)^b1 → Eq. 19 is Eq. 17 fitted.
+
+### What is still missing, and it is the expensive part
+
+**Table 3 cannot be reproduced without the raw data.** Its δ values (1735
+points: Wilkinson 1.25 vs their model 0.16 for ε_b; 0.24 vs 0.23 for ε) are
+averages over the 1,735 churn-turbulent measurements, and those measurements
+exist only as scatter in Figures 7, 9 and 11. **Without digitising a figure this
+page has no data and must not be published** — evaluating both correlations and
+observing that one lies above the other demonstrates nothing.
+
+Best digitisation targets, in order: **Figure 11** (large-bubble holdup vs
+*U*−*U*_df at four gas densities, log–log, one column, the cleanest test of the
+gas-density claim), then **Figure 7a/7b** (three column diameters, tests the
+*D*_T^−0.18 exponent directly), then Figure 9. Expect the `C2.1` marker
+extraction rather than the `A4.9` one, and expect worse: these are dense
+overlapping scatter plots on log axes with several series per panel.
 
 ## 3. Weisz & Hicks (1962) — page `B1.1` (already published)
 

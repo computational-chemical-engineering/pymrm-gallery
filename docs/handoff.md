@@ -91,9 +91,18 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
-   figures. Budget real time for the figures: see the marker-extraction note
-   below.
+1. **`F1.4` Krishna & Ellenberger** — the next chance to add an experimentally
+   validated page, and **the model is already read**: Wilkinson's Eqs. 1–4,
+   Reilly's Eq. 8 with *B* = 3.85, and their own Eq. 19,
+   ε_b = 0.268 · *D*_T^−0.18 · (*U* − *U*_df)^0.58, all transcribed in
+   [`pdf-findings.md`](pdf-findings.md#2-krishna--ellenberger-1996--page-f14).
+   Tables 1–2 transcribe cleanly, and Table 1 self-checks: its nineteen per-row
+   experiment counts sum to exactly the 2,787 the text states.
+   **What is left is the expensive part.** The holdup measurements exist only as
+   scatter in Figures 7, 9 and 11, and without one of them digitised the page has
+   no data and must not be published — showing that two correlations differ is
+   not validation. Start with Figure 11, and budget real time: see the
+   marker-extraction note below.
 2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
    fluidised-bed model.
 3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
