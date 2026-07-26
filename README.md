@@ -48,6 +48,7 @@ Colab.
 
 | Document | Contents |
 |---|---|
+| [`docs/handoff.md`](docs/handoff.md) | **Start here.** Current state, papers and API access, what to build next, and the lessons worth not relearning |
 | [`docs/taxonomy.md`](docs/taxonomy.md) | Classification scheme: physical domain, mathematical structure codes (`S1`–`S13`), model tiers, build priorities, the page contract |
 | [`docs/catalog-A-foundations.md`](docs/catalog-A-foundations.md) | Transport closures, catalyst particle models, reaction kinetics (98 entries) |
 | [`docs/catalog-B-reactors.md`](docs/catalog-B-reactors.md) | Fixed bed, fluidised bed, bubble column, trickle bed, membrane, structured/intensified (104 entries) |
