@@ -1,0 +1,129 @@
+dataset_id: xu-froment-1989-conversion
+title: Methane conversion and conversion into CO2 vs space time (Figures 2 and 3)
+status: complete
+
+source:
+  authors:
+    - "Xu, J."
+    - "Froment, G. F."
+  year: 1989
+  container: "AIChE Journal 35(1) 88-96"
+  doi: 10.1002/aic.690350109
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure images not reproduced)"
+
+conditions:
+  pressure_bar: 10.0
+  h2o_ch4_molar: 3.0
+  h2_ch4_molar: 1.25
+  temperatures_K: [773, 798, 823, 848]
+  catalyst: "Ni/MgAl2O4 spinel, 15.2 % Ni, crushed to 0.18-0.25 mm, 0.4 g diluted in alpha-alumina"
+  note: >
+    Figure captions give p_t and the steam-to-methane ratio; H2/CH4 = 1.25 for
+    all steam reforming runs is from Table 1. Space times were corrected by the
+    authors to the reference activity level (page 89), which is the level of
+    the Table 5/6 parameters, so no activity factor applies.
+
+acquisition:
+  method: digitised
+  figure: "Figure 2 (total methane conversion) and Figure 3 (methane converted to CO2), journal page 89"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage (uniform_filter, grey_opening)"
+  script: >
+    pages/C2.1-xu-froment-smr/extract_figures.py regenerates this file from a
+    local copy of the PDF (which is not and must not be in the repository) and
+    re-runs the self-checks below. It is deterministic: the audited candidate
+    indices are constants in the script, so it reproduces this dataset exactly
+    rather than re-deciding what is a marker.
+  procedure: >
+    ONLY the experimental markers were extracted. The smooth curves on both
+    figures are the authors' own model predictions and were deliberately left
+    alone, so that the comparison on the page is model-against-measurement
+    rather than model-against-their-model.
+
+    The markers are small multi-stroke glyphs (x, +, open square, open circle,
+    open and filled triangle) about 20 px across at 600 dpi, drawn on top of
+    curves about 10 px thick - too similar in scale for the morphological
+    opening used on Duncan & Toor. Detection instead used a local ink excess:
+    D = ink area in a 25x25 box; B = the largest value at that point explainable
+    by a locally straight structure, taken as the maximum over six orientations
+    of the grey-scale opening of D with a 121 px line element; markers are the
+    peaks of D - B. Taking the maximum over orientations is what makes this work
+    near the origin, where all four curves are steep: a vertical line element
+    reproduces a vertical curve, so B tracks D and no false peaks appear. A
+    single horizontal element flags the whole steep section instead.
+
+    Every candidate was then inspected at 600 dpi in a labelled contact sheet
+    and kept only if a marker glyph sits at the crosshair. Curvature of the
+    predicted curves produces excess peaks with no glyph, and a strong glyph
+    produces a second peak on the curve beside it; both were rejected. Of 41
+    first-pass candidates on Figure 2, 29 survived, and of 51 on Figure 3, 30
+    survived. Each surviving blob was then split into local maxima at least 21
+    px apart (17 px on Figure 3, whose closest pair is 22 px apart) to separate
+    glyph pairs drawn one above the other, and the split result was audited a
+    second time the same way. One glyph in each figure had to be added by hand
+    where the split still merged it with its neighbour, giving 30 markers on
+    Figure 2 and 31 on Figure 3.
+
+    Axes were calibrated by least squares on the printed tick marks, located
+    programmatically: Figure 2 x from four ticks at 0.10-0.40 (max residual
+    1.4 px = 0.00035 in W/F) and y from six ticks at 0.025-0.150 (4.4 px =
+    0.00055 in x_CH4); Figure 3 x from four ticks (2.5 px = 0.00063) and y from
+    five ticks at 0.025-0.125 (2.5 px = 0.00025 in x_CO2).
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-26
+  estimated_error: >
+    +/- 0.0006 in conversion and +/- 0.0007 in W/F, dominated by placing the
+    centre of a ~20 px glyph that overlaps a ~10 px curve, plus the tick
+    residuals quoted above.
+
+temperature_assignment:
+  method: >
+    A point is assigned to one of the four printed curve labels (773, 798, 823,
+    848 K) by which band of conversion it falls in. The bands do not overlap
+    anywhere in the digitised set: the gaps between them are 0.0078, 0.0096 and
+    0.0133 in x_CH4 and 0.0067, 0.0062 and 0.0071 in x_CO2 - an order of
+    magnitude wider than the 0.0006 digitisation error - so no point is
+    ambiguous.
+  independent_check: >
+    Within each temperature, conversion must rise monotonically with space
+    time. It does at 773, 798 and 848 K in both quantities. At 823 K, where the
+    runs are densest, there are two steps of -0.00088 and -0.00203 in x_CH4 and
+    one of -0.00305 in x_CO2 - experimental scatter about a rising trend, not
+    misassignment: a misassigned point would be out by at least 0.006, the
+    narrowest gap between bands. Monotonicity was not used to make the
+    assignment.
+
+validation:
+  cross_figure_pairing: >
+    Figures 2 and 3 plot the SAME runs, so each Figure-2 point must have a
+    Figure-3 partner at the same space time. All 30 Figure-2 points pair with a
+    Figure-3 point at the same temperature to within 0.0027 in W/F, mean 0.0008
+    - two independently digitised figures with independently fitted axis
+    calibrations agreeing to about one digitisation error.
+  carbon_closure: >
+    Methane converted to CO2 cannot exceed total methane converted. x_CO2 <=
+    x_CH4 holds for all 30 pairs (allowing 0.0012 for digitisation error), with
+    the difference growing smoothly with temperature as the CO route opens up:
+    at W/F ~ 0.20 it is 0.0000 at 773 K, 0.0036 at 798 K, 0.0101 at 823 K and
+    0.0204 at 848 K.
+
+missing:
+  - "Figure 2, 823 K, W/F ~ 0.150: Figure 3 resolves two runs 0.0016 apart in
+     x_CO2 where Figure 2 shows a single merged glyph. The Figure-2 value is
+     recorded once rather than guessed, which is why Figure 3 contributes 31
+     rows and Figure 2 only 30."
+
+columns:
+  - {name: temperature_K, unit: K,   description: "reactor temperature; the curve label the point belongs to"}
+  - {name: W_F,           unit: "g_cat h / mol_CH4", description: "space time W/F0_CH4"}
+  - {name: quantity,      unit: "-", description: "x_CH4 (total methane conversion) or x_CO2 (methane converted into CO2)"}
+  - {name: value,         unit: "-", description: "conversion, mol/mol CH4 fed"}
+  - {name: figure,        unit: "-", description: "source figure, 2 or 3"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The original figure images are NOT reproduced; the points are
+  re-plotted from the extracted coordinates.

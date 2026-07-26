@@ -33,7 +33,7 @@ exponents; the Xu & Froment file scores 7,422 and still mangles them.
 
 ---
 
-## 1. Xu & Froment (1989) — page `C2.1`
+## 1. Xu & Froment (1989) — page `C2.1` ✔ built 2026-07-26
 
 `AIChE Journal - January 1989 - Xu.pdf`
 
@@ -69,6 +69,47 @@ OCR by inference — a mis-read exponent is a silently wrong rate constant.
 
 `K_CO2` was never statistically significant and correctly has **no** term in the
 denominator of the rate equations.
+
+### What the page actually needed, and how it went
+
+All three subtleties above survived contact with the model and are on the page.
+Two further things were found while building it:
+
+4. **The paper never tabulates the equilibrium constants** *K*₁, *K*₂, *K*₃,
+   although they appear in all three rate equations. They have to come from
+   outside the paper. The check that makes this defensible is that
+   d ln *K*/d(1/*T*) = −Δ*H*/*R*, so the correlation's slopes *are* reaction
+   enthalpies and can be compared with the paper's own Table 7: 0.42 %, 1.93 %
+   and 0.54 % for reactions I, II and III. This turned out to matter — see
+   below.
+5. **Table 5 ⇄ Table 6 is a free check on the page-image reading.** The two
+   tables are related by *A* = value(*T*ᵣ)·exp(*E*/(*RT*ᵣ)). Recomputing all
+   seven Table 6 pre-exponentials from Table 5 reproduces them to ≤1.44 %.
+   Because *T*ᵣ is *in* the formula, the same check catches trap 3: forcing
+   648 K on every parameter puts *K*_CH₄ out by a factor of 0.22 and *K*_H₂O by
+   a factor of 33.
+
+**Extraction, in the end.** Journal page 94 (PDF page 7) at 600 dpi was legible
+without any image processing — both tables read directly, exponents and all.
+Figures 2 and 3 (page 89) were much harder than Duncan & Toor: the markers are
+~20 px glyphs on ~10 px curves, so morphological opening does not separate them.
+What worked was a *local ink excess* — box-filtered ink density minus the
+largest value explainable by a locally straight structure (the maximum over six
+orientations of a grey-scale opening with a long line element) — followed by a
+visual audit of every candidate at 600 dpi. The orientation maximum is the
+essential part: a single horizontal element flags the whole steep near-origin
+section as marker.
+
+**Two independent checks made the digitisation trustworthy.** Figures 2 and 3
+plot the same runs, so every Figure-2 point must have a Figure-3 partner at the
+same space time — all 30 pair to within 0.0027 in *W*/*F*, from independently
+fitted axis calibrations. And *x*_CO₂ ≤ *x*_CH₄ must hold: it does, everywhere.
+
+**Result:** 0.0017 mean absolute deviation in conversion over 61 points, nothing
+fitted. But the residual is not flat — it grows with space time and tracks the
+approach to equilibrium, and a 5 % shift in the (external) equilibrium constants
+moves the long-space-time predictions by the same amount. The bias there belongs
+to finding 4, not to the kinetics.
 
 ## 2. Krishna & Ellenberger (1996) — page `F1.4`
 
@@ -110,12 +151,13 @@ theirs — worth doing but low priority.
 
 ## Recommended order for the next session
 
-1. **Xu & Froment Table 6** via page-image reading → build `C2.1`. Highest value:
-   it is the most-used kinetics in the catalog, and it would be the gallery's
-   second page validated against real measurements rather than analytics.
-2. **Krishna & Ellenberger Tables 1–2** transcribe (clean text), then digitise
-   the holdup figures → build `F1.4`.
-3. Weisz & Hicks figures only if time allows.
-
-Note the balance issue this addresses: of three published pages, only `A4.9` is
-tested against experiment. `C2.1` and `F1.4` would make it three of five.
+1. ~~**Xu & Froment Table 6** via page-image reading → build `C2.1`.~~ **Done
+   2026-07-26.** Two of four published pages are now tested against experiment.
+2. **Van Welsenaere & Froment** `D2.2` — cheapest of all now that the Elsevier
+   PII endpoint works (clean text, no OCR). The runaway boundary is a sweep over
+   many solves, which makes a figure the original could only sketch.
+3. **Krishna & Ellenberger Tables 1–2** transcribe (clean text), then digitise
+   the holdup figures → build `F1.4`. Expect the marker extraction to be closer
+   to `C2.1` than to `A4.9`; the tophat-over-orientations routine in
+   `C2.1`'s session notes is the starting point, not morphological opening.
+4. Weisz & Hicks figures only if time allows.

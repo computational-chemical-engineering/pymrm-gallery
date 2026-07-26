@@ -1,0 +1,92 @@
+dataset_id: xu-froment-1989-parameters
+title: Intrinsic kinetic parameters for methane steam reforming (Tables 5 and 6)
+status: complete
+
+source:
+  authors:
+    - "Xu, J."
+    - "Froment, G. F."
+  year: 1989
+  container: "AIChE Journal 35(1) 88-96"
+  doi: 10.1002/aic.690350109
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 5 (parameter estimates and reference temperatures) and Table 6 (preexponential factors), journal page 94"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    The PDF text layer of this scan renders every exponent as literal text -
+    `8.664 lo-'` where the value is 8.664e-n - so `pdftotext` output was NOT
+    used for any number here. Journal page 94 (PDF page 7) was rendered at
+    600 dpi with pdftoppm, cropped to the two tables, and each entry read
+    directly from the image. No exponent was reconstructed by inference: a
+    misread exponent is a silently wrong rate constant, and the mantissa alone
+    gives no warning.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-26
+  estimated_error: >
+    None beyond the paper's own rounding: the values are printed to 3-4
+    significant figures and were transcribed exactly as printed.
+
+validation:
+  round_trip: >
+    Tables 5 and 6 are related by A = value(T_ref) * exp(E/(R T_ref)) for the
+    rate coefficients and A = value(T_ref) * exp(dH/(R T_ref)) for the
+    adsorption constants. Recomputing all seven Table 6 preexponentials from
+    the Table 5 entries reproduces them to within 1.44 % (k3), 1.28 % (k1) and
+    <0.5 % for the other five - consistent with the paper's own rounding.
+    This is an independent check on BOTH readings and on the split reference
+    temperature, since T_ref is part of the formula: forcing 648 K on every
+    parameter puts K_CH4 out by a factor of 0.22 and K_H2O by a factor of 33,
+    rather than a fraction of a percent.
+  reference_temperatures: >
+    T_ref = 648 K for k1, k2, k3, K_CO and K_H2, but 823 K for K_CH4 and
+    K_H2O (stated on journal page 93, and confirmed by the round trip above).
+    Using a single reference temperature for all seven is a natural mistake
+    and biases the temperature dependence.
+
+activity_level:
+  note: >
+    Table 6 is footnoted "Reference activity", and the text on journal page 94
+    says the coefficients listed in Table 5 have to be multiplied by 2.246 to be
+    used with fresh catalyst, which puts Table 5 at the same level. These are
+    therefore the parameters for the PARTIALLY DEACTIVATED catalyst at the
+    steam-reforming reference activity level - which is the level the Figure 2
+    and 3 space times were corrected to, so no factor applies there.
+    Two factors in the paper must NOT be applied to this dataset:
+      * 1.225 - the reverse water-gas shift and methanation reference activity
+        relative to steam reforming. The curves in Figures 4 and 5 were drawn
+        after multiplying these rate parameters by 1.225.
+      * 2.246 - the fresh-catalyst factor. All rate coefficients must be
+        multiplied by 2.246 when the equations are used with fresh catalyst.
+        The paper obtains this by extrapolating the conversion-vs-time curve of
+        Figure 1 to t = 0 and calls it "not too accurate".
+
+omissions:
+  - "K_CO2 has no entry: it was never statistically significant, from either
+     data set, and correctly has NO term in the denominator of the rate
+     equations. Adding one is a common error."
+
+columns:
+  - {name: symbol,                 unit: "-",   description: "parameter name"}
+  - {name: A,                      unit: varies, description: "preexponential factor (Table 6)"}
+  - {name: A_unit,                 unit: "-",   description: "units of A"}
+  - {name: E_or_dH_kJ_per_mol,     unit: kJ/mol, description: "activation energy E_i for k_i, adsorption enthalpy dH_j for K_j (Table 5)"}
+  - {name: value_at_Tref,          unit: varies, description: "parameter value at its reference temperature (Table 5)"}
+  - {name: value_at_Tref_unit,     unit: "-",   description: "units of value_at_Tref"}
+  - {name: T_ref_K,                unit: K,     description: "reference temperature for this parameter"}
+  - {name: table,                  unit: "-",   description: "source table(s) in the paper"}
+
+not_in_this_dataset:
+  - "Equilibrium constants K1, K2, K3. Xu & Froment do not tabulate them. The
+     page uses published correlations and checks their van 't Hoff slopes
+     against the paper's own Table 7 reaction enthalpies - see the notebook."
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

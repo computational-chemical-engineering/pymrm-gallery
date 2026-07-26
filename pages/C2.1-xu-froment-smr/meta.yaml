@@ -1,0 +1,58 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.1
+slug: xu-froment-smr
+title: "Steam methane reforming kinetics (Xu & Froment)"
+section: C
+status: published
+tier: T1
+priority: P1
+structures: [S1, S2]
+phases: [gas, gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 20
+datasets:
+  - xu-froment-1989-parameters.csv
+  - xu-froment-1989-conversion.csv
+
+validation:
+  - Table 5 to Table 6 parameter round trip (checks the exponent readings and the split reference temperature)
+  - van 't Hoff slopes of the equilibrium correlation against the paper's own Table 7 reaction enthalpies
+  - carbon and hydrogen atom balance along the reactor
+  - grid independence of the plug-flow integration
+  - mean/max deviation against 61 digitised measurements at four temperatures
+
+adds: >
+  Two things the paper does not give. First, the residual is decomposed: the
+  bias in methane conversion grows from 0.0012 at short space time to 0.0032 at
+  long space time, tracking the approach to equilibrium, and a 5 % shift in the
+  equilibrium constants - which Xu & Froment do not tabulate, so they must come
+  from elsewhere - moves the long-space-time predictions by 0.0026 to 0.0039,
+  the same size as that bias. The residual there therefore cannot be charged to
+  the kinetics. Second, the reversibility of each of the three reactions is
+  plotted along the reactor: the water-gas shift runs 0.03 to 0.18 in beta ahead
+  of reforming and equilibrates at roughly half the space time, which is the
+  regime split the paper asserts from its V(II) plot but never shows.
+
+agreement: >
+  0.0017 mean absolute deviation in conversion over all 61 digitised points
+  (30 total-conversion, 31 conversion-into-CO2) at 773-848 K, worst point
+  0.0058, or 2.7 % of the mean measured conversion, against a digitisation
+  error of about 0.0006. Nothing was fitted: every kinetic parameter is Table 6
+  as printed.
+
+caveats: >
+  The equilibrium constants are not from this paper - Xu & Froment do not
+  tabulate them - and the model is biased high by about 0.003 in conversion at
+  the longest space times, where reactions I and III are 85-97 % of the way to
+  equilibrium.
+  The parameters are for the partially deactivated catalyst at the
+  steam-reforming reference activity level; using them for fresh catalyst needs
+  the paper's factor of 2.246, and reproducing the paper's Figures 4 and 5
+  needs its factor of 1.225. One marker in Figure 2 is a merged pair and is
+  recorded once rather than guessed.

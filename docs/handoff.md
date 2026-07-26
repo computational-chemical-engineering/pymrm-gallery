@@ -7,21 +7,21 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-3 pages, 4 published catalog entries, both CI workflows green.
+4 pages, 5 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
-| `A4.9` Duncan–Toor ternary diffusion | Osmotic → uphill → diffusion barrier | **0.59 mole %** vs the paper's own 0.45%, 28 digitised points |
+| `A4.9` Duncan–Toor ternary diffusion | Osmotic → uphill → diffusion barrier | **experimental** — 0.59 mole % vs the paper's own 0.45%, 28 digitised points |
+| `C2.1` Xu–Froment steam reforming | The most-used SMR kinetics, against the runs they were fitted to | **experimental** — 0.0017 in conversion (2.7%) over 61 digitised points, nothing fitted |
 | `B1.1`+`B1.5` Thiele + Weisz–Hicks | η(φ), and 3 steady states at one φ | 2.2e-4 vs exact; both methods agree on all three branches |
 | `F3.1` Hatta regimes | Enhancement factor, 3 regimes | 6.3e-3 vs exact; VKH good to 2.1%, DeCoursey to 8.7% |
 
-Status counts live in `models.yaml`: 4 published, 25 planned, 2 deferred
+Status counts live in `models.yaml`: 5 published, 24 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
-**Only `A4.9` is validated against experiment.** The other two are provenance
-tier 6 (exact/reference solutions) and say so on the page. Correcting that
-balance is the single most valuable thing to do next.
+**Two of four pages are now validated against experiment**, up from one of
+three. Keeping that ratio moving is still the most valuable thing to do next.
 
 ## Papers available
 
@@ -55,34 +55,29 @@ digitising. Be polite with request volume; this is not a bulk-download tool.
 
 ## Extraction cost, revised
 
-The API changes the ranking. Cheapest first:
-
 | Page | Paper | Extraction | Value |
 |---|---|---|---|
 | `D2.2` | Van Welsenaere & Froment | **API, clean text** | Runaway criteria; sweep-based figures are striking |
 | `A3.4` | Wakao & Funazkri | **API, clean text** | Sh–Re dataset, but likely a scatter *figure* → digitise |
 | `E2.1` | Kunii & Levenspiel | good OCR (12.4k chars/page) | The canonical fluidised-bed model |
 | `I1.2` | Oh & Cavendish | good OCR (9.0k) | Converter light-off, `S4`+`S7` |
-| `C2.1` | Xu & Froment | **hard** — Table 6 needs page-image reading | Highest: most-used kinetics in the catalog |
 | `F1.4` | Krishna & Ellenberger | tables clean, holdup in figures | 2,787 experiments |
+| ~~`C2.1`~~ | ~~Xu & Froment~~ | ~~hard~~ | **done 2026-07-26** |
 
 ## Recommended next moves
 
-1. **`C2.1` Xu & Froment** despite the extraction cost — it is the most-used
-   kinetics in the whole catalog and would be the second experimentally-validated
-   page. Read Table 6 from a 600 dpi page image (the route that worked for Duncan
-   & Toor Figure 2). **Do not repair the OCR by inference** — a mis-read exponent
-   is a silently wrong rate constant. Three traps in that paper are recorded in
-   [`pdf-findings.md`](pdf-findings.md#1-xu--froment-1989--page-c21).
-2. **`D2.2` Van Welsenaere & Froment** — now cheap via the API, and the runaway
-   boundary is a sweep over many solves, which makes a strong figure the original
-   could only sketch.
-3. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
-   figures.
+1. **`D2.2` Van Welsenaere & Froment** — cheapest of what is left, and the
+   runaway boundary is a sweep over many solves, which makes a strong figure the
+   original could only sketch.
+2. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
+   figures. Budget real time for the figures: see the marker-extraction note
+   below.
+3. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
+   fluidised-bed model.
 
 ## Hard-won lessons — read before building
 
-Both are also stored as user memories and will load automatically.
+The first two are also stored as user memories and will load automatically.
 
 - **Never fabricate data.** If a dataset cannot be obtained, mark it
   `status: placeholder`, keep the page `status: planned`, and say so on the page.
@@ -92,14 +87,30 @@ Both are also stored as user memories and will load automatically.
   located on a warm-start continuation curve; CI re-executed on another machine
   and got η_ignited 44.45 against 36.15 locally. Locate features on a smooth
   deterministic reference (analytical, or a shooting solve) and rank turning
-  points by prominence. See
-  [`pdf-findings.md`](pdf-findings.md) and the `B1.1` page README.
+  points by prominence.
 - **Validation catches what inspection does not.** Three defects in `B1.1` were
   found by the monotonicity and closure checks, not by reading the code: a sign
   error, a sweep that missed a solution branch entirely, and a comparison that
   reported 89% deviation where the truth was 1e-5.
 - **`check_agreement.py` failing is a signal, not a nuisance.** Update the
   baseline only when the model genuinely changed, and say why in the commit.
+- **Look for a check the *paper* pays for.** `C2.1` gained three that cost
+  nothing: Tables 5 and 6 are related by the Arrhenius form, so recomputing one
+  from the other tests the page-image reading *and* the split reference
+  temperature at once; the van 't Hoff slope of an equilibrium correlation is a
+  reaction enthalpy, so it can be checked against the paper's own table; and two
+  figures plotting the same runs must pair up point-for-point across
+  independently fitted axes. Look for these before writing the notebook — they
+  are worth more than any amount of code review.
+- **Marker extraction is per-figure, not a recipe.** Morphological opening
+  worked on Duncan & Toor because its markers are solid and much larger than the
+  curves. Xu & Froment's are ~20 px glyphs on ~10 px curves and needed a
+  different method: local ink density minus the largest value explainable by a
+  locally straight structure (grey-scale opening with a long *line* element,
+  maximised over six orientations). Take the maximum over orientations, or every
+  steep near-origin curve section is flagged as a marker. Then audit every
+  candidate visually at 600 dpi — on `C2.1` roughly a quarter of the automatic
+  candidates were curvature artefacts with no glyph at the crosshair.
 
 ## Working commands
 
@@ -109,14 +120,15 @@ source ~/Code/pymrm_suite/.venv/bin/activate
 
 python scripts/check_metadata.py            # metadata + provenance validation
 python scripts/check_metadata.py --report-missing   # catalog IDs not yet in models.yaml
-python scripts/run_pages.py                 # execute every page notebook
+python scripts/run_pages.py                 # execute every page notebook (slow: ~minutes)
 python scripts/check_agreement.py           # metric regression check
 
 export QUARTO_PYTHON=$(which python)
 quarto render                               # build the site into _site/
 ```
 
-Pages are generated from builder scripts rather than hand-edited JSON; the
-pattern is in the session scratchpad but is easy to recreate — build a list of
-`nbformat` markdown/code cells and write the notebook. Nine required sections,
-listed in [`AGENTS.md`](../AGENTS.md).
+Pages are generated from builder scripts rather than hand-edited JSON.
+`pages/C2.1-xu-froment-smr/build_page.py` is the reference example: a list of
+`nbformat` markdown/code cells written to `index.ipynb`, so prose and code stay
+in one reviewable file. Nine required sections, listed in
+[`AGENTS.md`](../AGENTS.md).

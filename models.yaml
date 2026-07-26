@@ -194,8 +194,12 @@ models:
   - id: C2.1
     slug: xu-froment-smr
     title: "Steam methane reforming kinetics (Xu & Froment)"
+    description: >
+      The three rate equations almost every reformer simulation still uses,
+      rebuilt from the printed tables and put back against the runs they were
+      fitted to.
     section: C
-    status: planned
+    status: published
     tier: T1
     priority: P1
     structures: [S1, S2]
@@ -205,9 +209,19 @@ models:
       year: 1989
       container: "AIChE Journal 35(1) 88–96"
       doi: 10.1002/aic.690350109
-    predicts: [reaction rate, conversion, selectivity]
-    data: {tier: 2, method: table}
-    related: [C2.2, C2.6, D3.1, B1.11]
+    predicts: [reaction rate, conversion, selectivity, approach to equilibrium]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    data: {tier: 4, method: digitised, status: complete}
+    note: >
+      Two datasets. The kinetic parameters are tier 2 (Tables 5 and 6) but had
+      to be read from a 600 dpi page render because the scan's text layer
+      mangles every exponent; the validation measurements are tier 4, the
+      experimental markers of Figures 2 and 3. The equilibrium constants are in
+      neither - the paper does not tabulate them - so they come from a cited
+      correlation whose van 't Hoff slopes are checked against the paper's own
+      Table 7.
+    page: pages/C2.1-xu-froment-smr/
+    related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
   - id: C2.10
     slug: o-xylene-phthalic-anhydride
