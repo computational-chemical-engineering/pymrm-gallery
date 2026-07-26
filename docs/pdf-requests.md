@@ -47,6 +47,10 @@ less than the whole paper.
 
 - Duncan & Toor (1962), AIChE J 8(1) 38–41 — used for page `A4.9`. Figure 2
   digitised, all parameters verified.
+- **All three priority-1 papers**, delivered 2026-07-26. Inspected but not yet
+  used — see [`pdf-findings.md`](pdf-findings.md) for what is in each, the OCR
+  obstacle on the Xu & Froment scan, and the recommended order of work. Items 1,
+  2 and 3 in the priority-1 table above can be considered supplied.
 
 ## What I do with each
 
