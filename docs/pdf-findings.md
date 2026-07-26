@@ -147,6 +147,103 @@ agreement with someone else's 1962 numerics. Digitising their curves would add a
 third comparison and, more usefully, confirm that our β and γ conventions match
 theirs — worth doing but low priority.
 
+## 4. Van Welsenaere & Froment (1970) — page `D2.2`
+
+`1-s2.0-0009250970850734-main.pdf`, and full text via the Elsevier PII endpoint.
+
+**Structure.** Seven sections and an appendix, **no tables at all**, ten
+figures. §1 model and base parameters · §2 the *p*–*T* phase plane · §3 critical
+inlet conditions (the two criteria) · §4 subcritical conditions · §5 comparison
+with Barkelew · §6 four worked numerical examples · §7 conclusion · Appendix I
+on the locus of maxima.
+
+**The API text is unusable for numbers.** It is the publisher's OCR of the same
+scan and it discards the 1970 mid-dot decimal separator: `R = 00125 m` for
+0.0125 m, `b = 19837` for 19.837, `(p°),,, = 001353 atm` for 0.01353 atm. It is
+excellent for prose and section structure. Read every number off a 600 dpi page
+render — the same discipline as `C2.1`.
+
+**Base parameter set** (journal page 1504, read from the page image at 600 dpi,
+not transcribed from the API text):
+
+| | |
+|---|---|
+| *M* | 29.48 kg/kmol |
+| *P* | 1 atm |
+| ρ_b | 1300 kg/m³ |
+| ρ_g | 1.293 kg/m³ |
+| (−Δ*H*) | 307 000 kcal/kmol |
+| *c*_p | 0.323 kcal/(m³·°C) — **volumetric**, as printed |
+| *u* | 3600 m/hr |
+| *U* | 82.7 kcal/(m²·hr·°C) |
+| *R* | 0.0125 m |
+| *p*_B⁰ | 0.208 atm |
+| *a* | 13 636 K⁻¹ (= *E*/*R*_gas) |
+| *b* | 19.837 |
+
+Note *c*_p is printed as kcal/m³·°C, i.e. already ρ*c*_p, which is what makes
+*C* = 2*U*/(*c*_p·*R*) come out in 1/hr against *z* = *z*′/*u* in hr. Do not
+multiply by ρ_g again.
+
+**Model** (their Eqs. 3–4), pseudo-first-order irreversible, one dimension,
+constant wall temperature:
+
+d*p*/d*z* = −*A p* e^(−a/T+b), d*T*/d*z* = *B p* e^(−a/T+b) − *C*(*T*−*T*_w),
+with *A* = *M P* ρ_b/ρ_g · *p*_B⁰, *B* = (−Δ*H*)ρ_b/*c*_p · *p*_B⁰,
+*C* = 2*U*/(*c*_p *R*), *z* = *z*′/*u*, and *p* = *p*⁰, *T* = *T*₀ = *T*_w at
+*z* = 0.
+
+**The first criterion, complete** (all read from the page images, journal pages
+1506 and 1509–1511):
+
+| Eq. | Formula |
+|---|---|
+| 6 | maxima curve: *B p*_m e^(−a/T_m+b) − *C*(*T*_m−*T*_w) = 0 |
+| 7 | *p*_m = (*T*_m−*T*_w) / [(*B*/*C*) e^(−a/T_m+b)] |
+| **8** | ***T*_M = ½[*a* − √(*a*(*a*−4*T*_w))]** — the critical hot spot |
+| 28 | (*p*⁰)_u = (*A*/*B*)(*T*_M−*T*_w)·[1/√*X* + 1]², *X* = (*A*/*C*)e^(−a/T_M+b) |
+| 29 | (*p*⁰)_l = (*T*_M−*T*_w)/[(*B*/*C*)e^(−a/T_M+b)] + (*A*/*B*)(*T*_M−*T*_w) |
+| 30 | (*p*⁰)_m = (*A*/*B*)(*T*_M−*T*_w)·[1 + 1/√*X* + 1/*X*] — equals the mean of 28 and 29 |
+| 31–34 | (Δ*T*)_ad/(Δ*T*)_eff = 1+*Q*+*Q*², (Δ*T*)_ad = (*B*/*A*)*p*⁰, (Δ*T*)_eff = *T*_M−*T*_w, *Q* = 1/√*X* |
+
+**These were checked numerically and every published number comes back.** With
+the parameter set above and *T*_w = 625 K:
+
+| Quantity | Recomputed | Paper |
+|---|---|---|
+| ln *K* (Eq. 22) | −2.0568 | −2.055 |
+| *t*_w (Eq. 21b) | 21.8176 | 21.818 |
+| *T*_M (Eq. 8) | 656.62 K | 656.6 K |
+| (*p*⁰)_l (Eq. 29) | 0.01353 atm | 0.01353 |
+| (*p*⁰)_u (Eq. 28) | 0.01976 atm | 0.01976 |
+| (*p*⁰)_m (Eq. 30) | 0.01664 atm | 0.01665 |
+| Example 4: (Δ*T*)_ad, *Q*, *R* | 521.10 K, 3.4662, 0.01752 m | 521.09, 3.4675, 0.0175 m |
+| Example 3: (Δ*T*)_ad | 312.66 K | 312.6 |
+
+That is the parameter reading *and* all seven formulae confirmed at once, before
+a line of the page is written. The script is in the session scratchpad but is
+two dozen lines and trivial to recreate from the table above.
+
+**The second criterion** needs their Eq. 20, *K* = (*t*−2)/(*t* e^(−t+20)) ·
+[1 − *t*(1 − *t*/*t*_w)], with *t* = *a*/(*T*_i)_t and *K* = (*A*/*C*)e^(b−20).
+The paper solves it graphically through Figs. 6 and 7 explicitly to avoid
+needing a computer. Solve it directly with `brentq` instead and **Figs. 6 and 7
+become validation targets rather than inputs** — that is the natural "what pymrm
+adds" for this page, alongside a runaway-boundary sweep over (*T*_w, *p*⁰) that
+the original could only sketch as Fig. 8.
+
+**Validation, in order of value.** §6's four worked examples (above) test the
+criteria and need no digitising at all. Fig. 8 — upper limit, lower limit, mean
+and exact critical *p*⁰ against *T*_w over 600–700 K for both criteria, with
+Barkelew's values marked ⊕ — is the richer target and would also let the page
+reproduce the paper's comparison with Barkelew. **Read §6 from the page image**;
+it is where the lost decimal points do the most damage.
+
+**Provenance note.** These are the authors' own computed values, not
+measurements, so `D2.2` is a tier-6 page like `B1.1` and `F3.1` unless Fig. 9
+(Barkelew's diagram) is treated as an independent reference. Do not describe it
+as experimentally validated.
+
 ---
 
 ## Recommended order for the next session

@@ -46,19 +46,40 @@ curl -sS -H "X-ELS-APIKey: $K" -H "Accept: text/plain" \
 ```
 
 Verified working on Van Welsenaere & Froment (47 kB) and Wakao & Funazkri
-(45 kB) — both of which had the *worst* OCR of the set. The API returns properly
-encoded text, so exponents and subscripts survive.
+(45 kB) — both of which had the *worst* local OCR of the set.
 
-**Limits:** Elsevier only. Xu & Froment and Krishna & Ellenberger are Wiley and
-remain OCR-only. And full text never yields figure data — plots still need
-digitising. Be polite with request volume; this is not a bulk-download tool.
+**Correction, 2026-07-26 — do not trust the API text for numbers.** An earlier
+version of this file claimed the API "returns properly encoded text, so
+exponents and subscripts survive". That is wrong for pre-1980 scans. What comes
+back is the *publisher's* OCR of the same scan, and on Van Welsenaere & Froment
+it drops decimal points wholesale:
+
+| API text | Truth (600 dpi page image) |
+|---|---|
+| `R = 00125 m` | *R* = 0.0125 m |
+| `M = 2948 kg/kmole` | *M* = 29.48 kg/kmole |
+| `(p°),,, = 001353 atm` | (*p*⁰)ₗ = 0.01353 atm |
+| `b = 19837` | *b* = 19.837 |
+| `t,„ = 21 -818` | *t*ₘ = 21.818 |
+
+The 1970 typesetting uses a mid-dot decimal separator, which the OCR discards.
+So the API is excellent for **prose** — section structure, what each figure
+shows, which assumptions are stated — and useless for **parameters**. Read
+those from a 600 dpi page render, the same as for a Wiley scan. Treat any
+integer with an implausible magnitude as a lost decimal point and go to the
+image; never "fix" it by inference.
+
+**Other limits:** Elsevier only. Xu & Froment and Krishna & Ellenberger are
+Wiley and have no API route at all. And full text never yields figure data —
+plots still need digitising. Be polite with request volume; this is not a
+bulk-download tool.
 
 ## Extraction cost, revised
 
 | Page | Paper | Extraction | Value |
 |---|---|---|---|
-| `D2.2` | Van Welsenaere & Froment | **API, clean text** | Runaway criteria; sweep-based figures are striking |
-| `A3.4` | Wakao & Funazkri | **API, clean text** | Sh–Re dataset, but likely a scatter *figure* → digitise |
+| `D2.2` | Van Welsenaere & Froment | API for prose, **page image for every number** | Runaway criteria; sweep-based figures are striking |
+| `A3.4` | Wakao & Funazkri | API for prose, page image for numbers | Sh–Re dataset, but likely a scatter *figure* → digitise |
 | `E2.1` | Kunii & Levenspiel | good OCR (12.4k chars/page) | The canonical fluidised-bed model |
 | `I1.2` | Oh & Cavendish | good OCR (9.0k) | Converter light-off, `S4`+`S7` |
 | `F1.4` | Krishna & Ellenberger | tables clean, holdup in figures | 2,787 experiments |
@@ -66,9 +87,13 @@ digitising. Be polite with request volume; this is not a bulk-download tool.
 
 ## Recommended next moves
 
-1. **`D2.2` Van Welsenaere & Froment** — cheapest of what is left, and the
-   runaway boundary is a sweep over many solves, which makes a strong figure the
-   original could only sketch.
+1. **`D2.2` Van Welsenaere & Froment** — the runaway boundary is a sweep over
+   many solves, which makes a strong figure the original could only sketch. The
+   API gives the prose cheaply, but every number has to come off a page render
+   (see the correction above). The parameter set has already been read and is
+   recorded in [`pdf-findings.md`](pdf-findings.md#4-van-welsenaere--froment-1970--page-d22);
+   the paper has no tables, only ten figures, so validation means digitising
+   Figures 1–3 (profiles) or Fig. 8 (the Barkelew comparison).
 2. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
    figures. Budget real time for the figures: see the marker-extraction note
    below.
