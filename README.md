@@ -52,6 +52,7 @@ Colab.
 | [`docs/catalog-A-foundations.md`](docs/catalog-A-foundations.md) | Transport closures, catalyst particle models, reaction kinetics (98 entries) |
 | [`docs/catalog-B-reactors.md`](docs/catalog-B-reactors.md) | Fixed bed, fluidised bed, bubble column, trickle bed, membrane, structured/intensified (104 entries) |
 | [`docs/catalog-C-adjacent.md`](docs/catalog-C-adjacent.md) | Adsorption, crystallisation/PBE, electrochemical, biochemical, polymerisation, emerging (64 entries) |
+| [`docs/pdf-requests.md`](docs/pdf-requests.md) | Papers still needed to build planned pages, in priority order, with what each one is needed for |
 | [`docs/data-strategy.md`](docs/data-strategy.md) | Where experimental data comes from, the legal position on digitising figures, the provenance sidecar format |
 | [`docs/blueprint.md`](docs/blueprint.md) | Repository layout, Quarto publishing, Colab compatibility, `models.yaml`, CI, licensing, contribution model |
 
