@@ -1,0 +1,58 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: D2.2
+slug: van-welsenaere-froment-runaway
+title: "Van Welsenaere–Froment runaway criteria"
+section: D
+status: published
+tier: T0
+priority: P1
+structures: [S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 10
+datasets:
+  - van-welsenaere-froment-1970-parameters.csv
+  - van-welsenaere-froment-1970-examples.csv
+
+validation:
+  - parameter reading against four derived quantities printed in the paper (ln K, t_w, T_M, the Example 1 bracket)
+  - the identity T_M^2 = a(T_M - T_w), exact from their Eq. 8
+  - grid independence of the plug-flow integration
+  - all 30 numbers printed in their Section 6, criterion values and integration values kept separate
+  - pymrm reactor bisection against an independent phase-plane back-integration
+
+adds: >
+  Their Figs. 6 and 7 exist only to solve one implicit equation without a
+  computer; solving Eq. 20 directly turns both figures from inputs into checks.
+  Their Fig. 8 was four curves through a handful of back-integrated points,
+  because each point was expensive; drawn continuously it shows what the paper
+  can only assert at one wall temperature - that the bracket is 27-66 % wide for
+  the first criterion and 21-37 % for the second, that the second criterion is
+  more conservative by 0.3 % at 600 K widening to 15 % at 700 K, and that
+  despite the narrower bracket it is the FIRST criterion whose midpoint is the
+  better estimate (+0.3 to +1.2 % against its own exact value, against +1.7 to
+  +4.7 %). The paper compares them only at 625 K, where they are
+  indistinguishable.
+
+agreement: >
+  0.054 % mean absolute deviation over all 30 values printed in Section 6, worst
+  0.40 %, with nothing fitted. Separately: 0.051 % mean over the 25 closed-form
+  criterion values and 0.069 % over the 5 numerical-integration values. The
+  pymrm reactor and an independent phase-plane back-integration agree on the
+  critical inlet pressure to 0.18 % across 600-700 K.
+
+caveats: >
+  Provenance tier 6. The paper contains no experimental data at all - every
+  number here is the authors' own computed value, so this page is validated
+  against a published reference solution in the same sense as B1.1 and F3.1,
+  not against experiment. The first-order upwind discretisation converges as
+  O(h) and leaves about 0.04 K of error in the hot spot at the default grid,
+  which is below the paper's own rounding but is not negligible if the criteria
+  are pushed further. The units trap in c_p (printed volumetric) moves the
+  runaway boundary silently if missed.

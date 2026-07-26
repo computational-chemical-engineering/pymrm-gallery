@@ -147,7 +147,7 @@ agreement with someone else's 1962 numerics. Digitising their curves would add a
 third comparison and, more usefully, confirm that our β and γ conventions match
 theirs — worth doing but low priority.
 
-## 4. Van Welsenaere & Froment (1970) — page `D2.2`
+## 4. Van Welsenaere & Froment (1970) — page `D2.2` ✔ built 2026-07-27
 
 `1-s2.0-0009250970850734-main.pdf`, and full text via the Elsevier PII endpoint.
 
@@ -249,12 +249,14 @@ as experimentally validated.
 ## Recommended order for the next session
 
 1. ~~**Xu & Froment Table 6** via page-image reading → build `C2.1`.~~ **Done
-   2026-07-26.** Two of four published pages are now tested against experiment.
-2. **Van Welsenaere & Froment** `D2.2` — cheapest of all now that the Elsevier
-   PII endpoint works (clean text, no OCR). The runaway boundary is a sweep over
-   many solves, which makes a figure the original could only sketch.
+   2026-07-26.**
+2. ~~**Van Welsenaere & Froment** `D2.2`.~~ **Done 2026-07-27** — and it cost
+   the correction recorded above: the Elsevier API is *not* a way around OCR for
+   numbers.
 3. **Krishna & Ellenberger Tables 1–2** transcribe (clean text), then digitise
    the holdup figures → build `F1.4`. Expect the marker extraction to be closer
-   to `C2.1` than to `A4.9`; the tophat-over-orientations routine in
-   `C2.1`'s session notes is the starting point, not morphological opening.
-4. Weisz & Hicks figures only if time allows.
+   to `C2.1` than to `A4.9`; `pages/C2.1-xu-froment-smr/extract_figures.py` is
+   the starting point, not morphological opening. This is the next chance to
+   add an experimentally validated page — 2,787 runs.
+4. **Kunii & Levenspiel** `E2.1` — best text layer of the set.
+5. Weisz & Hicks figures only if time allows.

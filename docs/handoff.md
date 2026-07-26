@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-07-26
+# Handoff — state as of 2026-07-27
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -7,21 +7,24 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-4 pages, 5 published catalog entries, both CI workflows green.
+5 pages, 6 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
 | `A4.9` Duncan–Toor ternary diffusion | Osmotic → uphill → diffusion barrier | **experimental** — 0.59 mole % vs the paper's own 0.45%, 28 digitised points |
 | `C2.1` Xu–Froment steam reforming | The most-used SMR kinetics, against the runs they were fitted to | **experimental** — 0.0017 in conversion (2.7%) over 61 digitised points, nothing fitted |
 | `B1.1`+`B1.5` Thiele + Weisz–Hicks | η(φ), and 3 steady states at one φ | 2.2e-4 vs exact; both methods agree on all three branches |
+| `D2.2` Van Welsenaere–Froment runaway | Two criteria for the runaway boundary, swept over the operating plane | 0.054% over all 30 numbers in their Section 6; two independent methods agree to 0.18% |
 | `F3.1` Hatta regimes | Enhancement factor, 3 regimes | 6.3e-3 vs exact; VKH good to 2.1%, DeCoursey to 8.7% |
 
-Status counts live in `models.yaml`: 5 published, 24 planned, 2 deferred
+Status counts live in `models.yaml`: 6 published, 23 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
-**Two of four pages are now validated against experiment**, up from one of
-three. Keeping that ratio moving is still the most valuable thing to do next.
+**Two of five pages are validated against experiment.** `D2.2` is tier 6 by
+necessity — its source paper contains no measurements at all — so the ratio has
+not moved. `F1.4` (2,787 experiments) and `A3.4` are the next chances to move
+it, and both need figure digitisation.
 
 ## Papers available
 
@@ -84,21 +87,17 @@ bulk-download tool.
 | `I1.2` | Oh & Cavendish | good OCR (9.0k) | Converter light-off, `S4`+`S7` |
 | `F1.4` | Krishna & Ellenberger | tables clean, holdup in figures | 2,787 experiments |
 | ~~`C2.1`~~ | ~~Xu & Froment~~ | ~~hard~~ | **done 2026-07-26** |
+| ~~`D2.2`~~ | ~~Van Welsenaere & Froment~~ | ~~API + page image~~ | **done 2026-07-27** |
 
 ## Recommended next moves
 
-1. **`D2.2` Van Welsenaere & Froment** — the runaway boundary is a sweep over
-   many solves, which makes a strong figure the original could only sketch. The
-   API gives the prose cheaply, but every number has to come off a page render
-   (see the correction above). The parameter set has already been read and is
-   recorded in [`pdf-findings.md`](pdf-findings.md#4-van-welsenaere--froment-1970--page-d22);
-   the paper has no tables, only ten figures, so validation means digitising
-   Figures 1–3 (profiles) or Fig. 8 (the Barkelew comparison).
-2. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
+1. **`F1.4` Krishna & Ellenberger** — transcribe Tables 1–2, digitise the holdup
    figures. Budget real time for the figures: see the marker-extraction note
    below.
-3. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
+2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
    fluidised-bed model.
+3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
+   the prose, but read every number off the page (see the correction above).
 
 ## Hard-won lessons — read before building
 
@@ -127,6 +126,14 @@ The first two are also stored as user memories and will load automatically.
   figures plotting the same runs must pair up point-for-point across
   independently fitted axes. Look for these before writing the notebook — they
   are worth more than any amount of code review.
+- **Two independent methods beat one method plus a tolerance.** On `D2.2` the
+  critical inlet pressure is computed twice: by bisection on the pymrm reactor,
+  and by an adaptive quadrature of the trajectory in the *p*–*T* phase plane
+  that never forms the reactor grid. They agree to 0.18 % across the whole
+  operating range, and that number is the only one on the page that does not
+  involve the paper. Look for a second route to the same quantity — it is often
+  cheap, and it catches discretisation error that grid refinement alone will
+  flatter.
 - **Marker extraction is per-figure, not a recipe.** Morphological opening
   worked on Duncan & Toor because its markers are solid and much larger than the
   curves. Xu & Froment's are ~20 px glyphs on ~10 px curves and needed a

@@ -4,8 +4,8 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: four pages built, two of them validated against experiment.** The
-literature survey (266 models), the Quarto scaffolding, and four complete pages
+**Status: five pages built, two of them validated against experiment.** The
+literature survey (266 models), the Quarto scaffolding, and five complete pages
 are in place; CI executes every notebook and validates metadata.
 
 | Page | Validation |
@@ -13,6 +13,7 @@ are in place; CI executes every notebook and validates metadata.
 | `A4.9` Duncan–Toor ternary diffusion | **experimental** — 0.59 mole % over 28 digitised points |
 | `C2.1` Xu–Froment steam reforming kinetics | **experimental** — 0.0017 in conversion over 61 digitised points |
 | `B1.1`+`B1.5` Thiele modulus and Weisz–Hicks | exact/reference solutions (provenance tier 6) |
+| `D2.2` Van Welsenaere–Froment runaway criteria | published reference solution — 0.054 % over 30 values (tier 6) |
 | `F3.1` Hatta regimes | exact/reference solutions (provenance tier 6) |
 
 ```bash

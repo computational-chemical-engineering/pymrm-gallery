@@ -292,7 +292,7 @@ they collectively exercise `S1`–`S9` and prove every part of the workflow.
 | 2 | **B1.1/B1.5 Thiele + Weisz–Hicks** | **built** | Analytical validation; exercises `S3` and nonlinear multiplicity; teacher solution exists |
 | 3 | **C2.1 Xu–Froment SMR kinetics** | **built** | Tier-2 data; the most-used kinetics in the catalog |
 | 4 | **H1.1 + H1.4 Sieverts permeation and the Itoh membrane reactor** | next | Keeps section H in the first wave after H1.12 was deferred; both published, both with obtainable data; conversion beyond equilibrium is a striking result |
-| 5 | **F1.4 Krishna–Ellenberger holdup** | | Abundant tabulated data; a correlation page, testing that format |
+| 5 | **F1.4 Krishna–Ellenberger holdup** | next | Abundant tabulated data; a correlation page, testing that format |
 | 6 | **D1.4 Fixed bed + particle coupling** | | The `S8` flagship; shows what pymrm does that spreadsheet-level tools cannot |
 
 After these six, the workflow (data provenance, template, CI, Colab) is proven

@@ -1,0 +1,59 @@
+dataset_id: van-welsenaere-froment-1970-parameters
+title: Base case parameters for the runaway analysis (Section 1)
+status: complete
+
+source:
+  authors:
+    - "Van Welsenaere, R. J."
+    - "Froment, G. F."
+  year: 1970
+  container: "Chemical Engineering Science 25(10) 1503-1516"
+  doi: 10.1016/0009-2509(70)85073-4
+  access: "institutional subscription, TU Eindhoven (lawful access); Elsevier full-text API"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Section 1, journal page 1504 (the paper has no numbered tables)"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    The Elsevier full-text API was used for the prose and section structure but
+    NOT for any number here. It returns the publisher's OCR of the same 1970
+    scan, and that OCR discards the mid-dot decimal separator the typesetting
+    uses: it renders R = 0.0125 m as `R = 00125 m`, M = 29.48 as `2948`,
+    b = 19.837 as `19837`, and (p0) = 0.01353 atm as `001353`. Every value in
+    this file was therefore read from a 600 dpi render of journal page 1504.
+    Nothing was reconstructed by inference.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-26
+  estimated_error: >
+    None beyond the paper's own rounding; values are transcribed exactly as
+    printed.
+
+validation:
+  independent_check: >
+    The reading is confirmed by four of the paper's own derived quantities,
+    which depend on the whole parameter set at once and none of which was used
+    to obtain it. Recomputing from this file gives ln K = -2.0568 against their
+    -2.055 (their Eq. 22), t_w = 21.8176 against 21.818 (Eq. 21b),
+    T_M = 656.62 K against 656.6 K (Eq. 8), and the Example 1 bracket 0.01353
+    to 0.01976 atm against their 0.01353 to 0.01976. A single mis-set decimal
+    point anywhere in the table breaks all four.
+  units_trap: >
+    c_p is printed as kcal/m3.degC, i.e. it already includes the gas density.
+    Multiplying by rho_g "to fix the units" changes C = 2U/(c_p R) by a factor
+    of 1.293 and silently moves the runaway boundary. rho_g appears only in
+    A = M P rho_b/rho_g . p_B0.
+
+columns:
+  - {name: symbol,      unit: "-",    description: "symbol as used in the paper"}
+  - {name: value,       unit: varies, description: "value as printed"}
+  - {name: unit,        unit: "-",    description: "unit as printed"}
+  - {name: description, unit: "-",    description: "what the symbol means"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

@@ -1,0 +1,65 @@
+dataset_id: van-welsenaere-froment-1970-examples
+title: Published values from the four worked examples (Section 6)
+status: complete
+
+source:
+  authors:
+    - "Van Welsenaere, R. J."
+    - "Froment, G. F."
+  year: 1970
+  container: "Chemical Engineering Science 25(10) 1503-1516"
+  doi: 10.1016/0009-2509(70)85073-4
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 6
+  note: >
+    THESE ARE NOT MEASUREMENTS. They are the authors' own computed values -
+    partly closed-form extrapolations, partly fourth-order Runge-Kutta
+    integrations of their Eqs. 3-4. The page is therefore validated against a
+    published reference solution, in the same sense as B1.1 and F3.1, and must
+    not be described as validated against experiment. The paper contains no
+    experimental data of any kind.
+
+acquisition:
+  method: table
+  figure: "Section 6 'Examples', journal pages 1512-1513 (running text, not a table)"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    Section 6 is where the Elsevier API's lost decimal points do the most
+    damage - it is almost entirely numbers, and `001353` and `0.01353` differ
+    by a factor of ten with nothing in the text to flag it. Both pages were
+    rendered at 600 dpi and every value read from the image. The `kind` column
+    records whether a value comes from the authors' closed-form criterion or
+    from their numerical integration, because the two test different parts of a
+    reimplementation and should not be pooled into one agreement number.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-26
+  estimated_error: >
+    None beyond the paper's own rounding, which is 3-5 significant figures and
+    is the dominant term in any comparison against them. Their t_r = 19.013 is
+    read off their own Fig. 7 by eye and is the least precise entry.
+
+completeness:
+  note: >
+    Every numerical value printed in Section 6 is here, including the
+    intermediate steps of Example 1(b), so that a reimplementation can be
+    checked at each stage rather than only at the answer. Nothing was omitted
+    for being inconvenient.
+
+columns:
+  - {name: example,    unit: "-",    description: "1a, 1b, 2, 3 or 4"}
+  - {name: quantity,   unit: "-",    description: "what the number is"}
+  - {name: value,      unit: varies, description: "value as printed"}
+  - {name: unit,       unit: "-",    description: "unit"}
+  - {name: kind,       unit: "-",    description: "criterion (closed form) or integration (their Runge-Kutta)"}
+  - {name: equation,   unit: "-",    description: "the paper's equation number, or Fig. 7 where read off a graph"}
+  - {name: conditions, unit: "-",    description: "the case the value belongs to"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

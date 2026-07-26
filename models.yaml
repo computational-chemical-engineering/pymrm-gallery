@@ -266,8 +266,12 @@ models:
   - id: D2.2
     slug: van-welsenaere-froment-runaway
     title: "Van Welsenaere–Froment runaway criteria"
+    description: >
+      Where a cooled tube stops being controllable, from two intrinsic features
+      of the temperature profile — and what the criteria cost you, swept over
+      the whole operating plane.
     section: D
-    status: planned
+    status: published
     tier: T0
     priority: P1
     structures: [S2]
@@ -276,8 +280,17 @@ models:
       authors: ["Van Welsenaere, R. J.", "Froment, G. F."]
       year: 1970
       container: "Chemical Engineering Science 25(10) 1503–1516"
-    note: "Sweep over many solves; the runaway boundary is the figure."
-    related: [D2.1, D2.3, C2.10]
+      doi: 10.1016/0009-2509(70)85073-4
+    predicts: [hot spot temperature, critical inlet partial pressure, runaway boundary]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    data: {tier: 6, method: table, status: complete}
+    note: >
+      Tier 6: the paper contains no experimental data, only the authors' own
+      closed-form extrapolations and Runge-Kutta integrations. Validated against
+      all 30 numbers printed in its Section 6, and cross-checked between the
+      pymrm reactor and an independent phase-plane back-integration.
+    page: pages/D2.2-van-welsenaere-froment-runaway/
+    related: [D2.1, D2.3, C2.10, C2.1, B1.1]
 
   # ---------------------------------------------------------------- section E
   - id: E2.1
