@@ -3,10 +3,33 @@
 Recorded 2026-07-26 after inspecting the three priority-1 papers. **No numbers
 were transcribed into any dataset from these** — see the OCR warning below.
 
-> **Move the PDFs somewhere durable.** They were delivered to a session
-> scratchpad, which is not persistent. Suggested: `~/papers/pymrm-gallery/`.
-> Still never inside this repository — `.gitignore` blocks `*.pdf` and
-> `scripts/check_metadata.py` errors on committed ones.
+> **Location: `~/papers/pymrm-gallery/`** (moved there 2026-07-26; not in the
+> repo, and must stay out — `.gitignore` blocks `*.pdf` and
+> `scripts/check_metadata.py` errors on committed ones).
+
+## Inventory and text-layer quality
+
+Priorities 1 and 2 are all supplied. The characters-per-page figure is a good
+predictor of whether tables will transcribe mechanically or need reading from a
+page image: below roughly 5,000 expect trouble with sub/superscripts.
+
+| chars/page | File | Paper | Page |
+|---|---|---|---|
+| 12,403 | `i260028a001.pdf` | Kunii & Levenspiel (1968) | `E2.1` |
+| 8,987 | `i300005a006.pdf` | Oh & Cavendish (1982) | `I1.2` |
+| 8,578 | `AIChE…1962…Duncan…pdf` | Duncan & Toor (1962) | `A4.9` ✔ done |
+| 7,422 | `AIChE Journal - January 1989 - Xu.pdf` | Xu & Froment (1989) | `C2.1` |
+| 6,773 | `AIChE…1987…Itoh…pdf` | Itoh (1987) | `H1.4` |
+| 6,408 | `AIChE_Journal-1996-Krishna.pdf` | Krishna & Ellenberger (1996) | `F1.4` |
+| 5,635 | `1-s2.0-0009250978851203-main.pdf` | Wakao & Funazkri (1978) | `A3.4` |
+| 4,595 | `1-s2.0-0009250970850734-main.pdf` | Van Welsenaere & Froment (1970) | `D2.2` |
+| 4,432 | `1-s2.0-0009250962850052-main.pdf` | Weisz & Hicks (1962) | `B1.1` ✔ published |
+
+The two ACS scans have the best text layers by a wide margin, so **Kunii &
+Levenspiel and Oh & Cavendish are the cheapest of the remaining pages to start**
+— worth weighing against Xu & Froment's higher scientific value but harder
+extraction. Note that a high character count does not guarantee correct
+exponents; the Xu & Froment file scores 7,422 and still mangles them.
 
 ---
 
