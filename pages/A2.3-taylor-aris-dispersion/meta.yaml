@@ -1,0 +1,56 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.3
+slug: taylor-aris-dispersion
+title: "Taylor–Aris dispersion"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3, S6]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 48
+datasets:
+  - taylor-1953-dispersion.csv
+
+validation:
+  - homogenisation closure against Taylor's Eq. 25, refined to show second-order convergence
+  - the same closure across 2.5 decades of Peclet number
+  - direct 2-D transient simulation against Eq. 25, refined to show the upwind error is first order in dz
+  - mass conservation in the transient solve
+  - Taylor's own capillary run recomputed, and the diffusivity it implies checked against an independently measured range
+
+adds: >
+  Taylor could only bound when his result applies - radial equilibration takes
+  about a^2/(3.83^2 D), so wait "much longer than" that - because answering it
+  needs the transient solution he had no way to compute. Running it turns the
+  inequality into a number: the growth rate settles permanently within 10 % of
+  Eq. 25 by 2.1 equilibration times, 5 % by 2.6 and 3 % by 2.9, i.e. tau ~ 0.2.
+  That is considerably less demanding than the phrase suggests, and it is useful
+  in that direction - a lumped axial dispersion coefficient becomes defensible
+  after a small multiple of the radial diffusion time, not an order of magnitude.
+
+agreement: >
+  The closure reproduces Eq. 25 to 1.0e-4 relative at n_r = 200, converging as
+  O(h^2) with a refinement ratio of 4.00, and to within 0.016 % across Pe = 2 to
+  398. The direct 2-D simulation converges to it as O(dz), reaching 0.7 % at
+  n_z = 3200 with mass conserved to 1e-13. Taylor's worked capillary run
+  recomputes to 0.04 % in k and 0.38 % in the inferred diffusivity, and that
+  diffusivity, 5.98e-6 cm2/s, lies inside the 4.35e-6 to 1.50e-5 range measured
+  independently by Furth & Ullmann.
+
+caveats: >
+  Data tier 2 and the comparison is indirect: Taylor's raw concentration
+  profiles are not transcribed, only his worked inference and the literature
+  range it is checked against. His second inferred value (Eq. 42) is left out
+  because the tube radius for those runs is not stated beside the calculation.
+  The direct simulation carries first-order upwind numerical dispersion - 1.8 %
+  at the resolution used for the timing sweep - so the tightest accuracy band
+  quoted above sits at the edge of what that run resolves; the closure, which
+  has no convective term, is the precise check.

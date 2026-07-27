@@ -111,7 +111,7 @@ approach to equilibrium, and a 5 % shift in the (external) equilibrium constants
 moves the long-space-time predictions by the same amount. The bias there belongs
 to finding 4, not to the kinetics.
 
-## 2. Krishna & Ellenberger (1996) — page `F1.4` — model read, not yet built
+## 2. Krishna & Ellenberger (1996) — page `F1.4` — reviewed, approach revised
 
 `AIChE_Journal-1996-Krishna.pdf`
 
@@ -347,3 +347,46 @@ The gate is figure digitisation, so the split is:
 `A4.2` is a 51-page review with 71 figures and is not a single model; it is a
 reference for the `S9` pages rather than a page of its own. Do not queue it as
 one.
+
+---
+
+## `F1.4` Figure 11 — what the review changed
+
+The digitisation was put to the maintainer as an overlay on the original figure
+(private artifact, not committed). The verdict was **"positions fine, shapes
+wrong — do not trust the gas labels"**, with these specifics:
+
+- **SF₆ stops at about *U* − *U*_df = 0.05 m/s.** It is well separated and
+  entirely on the left. Everything the detector called SF₆ to the right of that
+  is squares and circles — 9 of its 21 SF₆ calls.
+- **Most triangles (helium) lie below the eq. (19) line.** Above the line in the
+  dense band the detector's triangles are wrong; those are circles and squares.
+- Circles and squares are found where there is little overlap and missed in the
+  dense region — hence only 6 argon and 4 air out of 63.
+- One triangle is missed entirely: the second from the left, drawn inside a
+  square.
+
+**The fix is not a better classifier — it is to stop needing the labels.**
+Eq. 19 contains no gas-density term at all:
+
+> ε_b = 0.268 *D*_T^−0.18 (*U* − *U*_df)^0.58
+
+so testing it against the extracted *positions*, ignoring which marker shape
+each came from, is not a workaround — it is the correct test, and it uses all
+63 points instead of a curated subset.
+
+Doing that gives **13.3 % mean absolute deviation with a bias of −0.2 %**, which
+sits alongside the δ = 0.16 the authors themselves report in their Table 3 for
+this correlation over all 1,735 churn-turbulent runs.
+
+The gas-density claim then rides on the one series the review confirms is
+cleanly separable. Splitting at 0.05 m/s: the SF₆ group (ρ_G = 6.7 kg/m³) sits
+−3.0 % from Eq. 19 and everything else (ρ_G = 0.18 to 1.83) sits +0.5 %, a
+**3.5 % difference across a 37-fold range of gas density**. That is the paper's
+independence claim, made quantitative, without relying on a single uncertain
+marker label.
+
+**Carry this forward.** Before building a shape classifier for a scatter figure,
+check whether the model being tested actually needs the series identity. Often
+the correlation under test has no term for whatever distinguishes the series,
+and then the labels are decoration.

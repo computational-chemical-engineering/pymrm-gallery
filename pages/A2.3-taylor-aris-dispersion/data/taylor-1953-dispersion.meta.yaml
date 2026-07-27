@@ -1,0 +1,68 @@
+dataset_id: taylor-1953-dispersion
+title: Worked dispersion measurement and the diffusivity inferred from it (Section 9)
+status: complete
+
+source:
+  authors:
+    - "Taylor, G. I."
+  year: 1953
+  container: "Proceedings of the Royal Society of London A 219(1137) 186-203"
+  doi: 10.1098/rspa.1953.0139
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Section 9 'Comparison with previous measurements', journal pages 200 and 202 (running text, not a table)"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    Read from a 600 dpi render, not from the text layer. This 1953 Royal Society
+    scan sets decimal points as a raised dot that the OCR turns into a hyphen -
+    it renders 48.0 as `48-0` and 59.8 as `59-8` - so every number in it is
+    wrong by a factor of ten or is unparseable. That is the same failure already
+    recorded for Van Welsenaere & Froment, from a different publisher three
+    decades apart, and it is why nothing numeric here came from `pdftotext`.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-27
+  estimated_error: >
+    None beyond the paper's own rounding: Taylor quotes k to three significant
+    figures and D to two.
+
+validation:
+  internal_consistency: >
+    The four measured quantities over-determine the answer, so the transcription
+    can be checked against itself. From the fitted profile, 4 k t = beta^-2 with
+    beta = 0.0828 and t = 240 s gives k = 0.1519, against the 0.152 Taylor
+    prints. Feeding that k, a = 0.0252 cm and u0 = 0.524 cm/s into his Eq. 25
+    gives D = 0.5975e-5, against the 0.60e-5 he prints. A mis-read digit
+    anywhere in the group breaks both.
+  what_it_tests: >
+    Taylor's argument is that a dispersion measurement can be inverted to yield
+    a molecular diffusivity. The test is therefore not that the model reproduces
+    his k - it is that the D implied by his k lands inside the range measured by
+    completely different means. It does: 0.60e-5 sits inside the 0.435e-5 to
+    1.5e-5 that Furth & Ullmann obtained for KMnO4 at 18 C.
+
+not_transcribed:
+  - "A second inferred value, D = 0.79e-5 (Taylor's Eq. 42), comes from his type
+     B1 experiments. Reproducing it needs the tube radius for those runs, which
+     is not stated alongside the calculation, and back-solving it from Eq. 25
+     implies a ~ 0.21 cm rather than the 0.0252 cm capillary. Rather than guess
+     which tube it was, the value is left out."
+  - "Tables 1-3 of measured concentration profiles. The page validates against
+     Taylor's closed form and his worked inference, so the raw profiles are not
+     needed; they would be a digitisation job for a later revision."
+
+columns:
+  - {name: quantity, unit: "-",    description: "what the number is"}
+  - {name: value,    unit: varies, description: "value as printed"}
+  - {name: unit,     unit: "-",    description: "unit, c.g.s. throughout"}
+  - {name: source,   unit: "-",    description: "the paper's equation number, or the cited measurement"}
+  - {name: note,     unit: "-",    description: "context"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.
