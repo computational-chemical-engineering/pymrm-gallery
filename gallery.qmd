@@ -10,6 +10,7 @@ listing:
   fields: [title, description, categories]
   feed: true
 page-layout: full
+toc: false
 ---
 
 Every page shows a published model, the experimental data it was validated
@@ -20,16 +21,28 @@ panel groups them by axis — click a tag to filter, click *Categories* to clear
 
 | Axis | Meaning | Example |
 |---|---|---|
-| **Section** | Catalog section (physical domain) | `A` transport closures, `D` fixed bed |
+| **Section** | Catalog section — the physical domain, listed below | `A` transport closures, `D` fixed bed |
 | **Structure** | Mathematical structure — *the axis to filter on if you want to reuse code* | `S8` nested reactor–particle coupling |
 | **Tier** | Standing in the literature | `T0` canonical |
 | **Data** | Provenance tier of the dataset | `tier1` open repository, `tier6` reference solution |
 | **Phase** | Phase system | `gas`, `gas-solid` |
 
-Structure codes are defined in
-[`docs/taxonomy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/taxonomy.md).
-Two pages sharing a structure code are solved by nearly the same pymrm code even
-when their physics is unrelated — that is the intended route to reuse.
+### The section letters
+
+The catalog is divided into ten sections by physical domain. Only the sections
+that already have a page appear in the filter panel.
+
+| | | | |
+|---|---|---|---|
+| **A** Transport & closure relations | **B** Catalyst particle & intraparticle transport | **C** Reaction kinetics | **D** Fixed / packed bed reactors |
+| **E** Fluidised beds | **F** Gas–liquid & slurry reactors | **G** Three-phase packed beds | **H** Membrane reactors & separations |
+| **I** Structured & intensified reactors | **J** Adjacent unit operations | | |
+
+Section and structure codes are both defined in full in
+[`docs/taxonomy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/taxonomy.md);
+hovering a tag in the panel shows what it means. Two pages sharing a structure
+code are solved by nearly the same pymrm code even when their physics is
+unrelated — that is the intended route to reuse.
 
 ::: {#model-listing}
 :::
@@ -57,6 +70,44 @@ when their physics is unrelated — that is the intended route to reuse.
     { prefix: "data", label: "Data" },
     { prefix: "phase", label: "Phase" },
   ];
+
+  // A bare "A" or "S8" on a chip says nothing on its own, so the meaning goes
+  // in the tooltip. Kept in step with docs/taxonomy.md, Axes 1 and 2.
+  var MEANING = {
+    "sec:A": "Transport & closure relations",
+    "sec:B": "Catalyst particle & intraparticle transport",
+    "sec:C": "Reaction kinetics",
+    "sec:D": "Fixed / packed bed reactors",
+    "sec:E": "Fluidised beds",
+    "sec:F": "Gas–liquid & slurry reactors",
+    "sec:G": "Three-phase packed beds",
+    "sec:H": "Membrane reactors & separations",
+    "sec:I": "Structured & intensified reactors",
+    "sec:J": "Adjacent unit operations",
+    "struct:S1": "ODE-IVP in time (batch, CSTR dynamics)",
+    "struct:S2": "ODE-IVP in space (ideal PFR marching)",
+    "struct:S3": "1D steady BVP (particle, film)",
+    "struct:S4": "1D transient PDE (axial dispersion, breakthrough)",
+    "struct:S5": "1D convection-dominated (sharp fronts)",
+    "struct:S6": "2D PDE (radial dispersion, Graetz, monolith)",
+    "struct:S7": "Multi-domain / multi-phase coupling",
+    "struct:S8": "Nested-scale coupling (reactor ↔ particle)",
+    "struct:S9": "Implicit multicomponent flux (Maxwell–Stefan, dusty gas)",
+    "struct:S10": "DAE / constrained (pressure–velocity, electroneutrality)",
+    "struct:S11": "Population balance (internal coordinate)",
+    "struct:S12": "Moving boundary / shrinking core",
+    "struct:S13": "Non-standard geometry",
+    "tier:T0": "Canonical — taught everywhere, still the reference formulation",
+    "tier:T1": "Field standard — the default model in its subfield",
+    "tier:T2": "Established alternative — competes with the field standard",
+    "tier:T3": "Specialised or emerging",
+    "data:tier1": "Open repository",
+    "data:tier2": "Table printed in the paper",
+    "data:tier3": "Supplementary material",
+    "data:tier4": "Digitised from a figure",
+    "data:tier5": "Obtained from the authors",
+    "data:tier6": "Reference or exact solution, not experiment",
+  };
 
   // "S10" must sort after "S2", so compare any trailing digits numerically.
   function naturalKey(s) {
@@ -124,8 +175,10 @@ when their physics is unrelated — that is the intended route to reuse.
       var chips = document.createElement("div");
       chips.className = "gallery-cat-chips";
       bucket.forEach(function (it) {
-        // keep the full prefixed tag reachable, just not printed on every chip
-        it.el.setAttribute("title", it.full);
+        // the full prefixed tag stays reachable, and where the short label is
+        // not self-explanatory the tooltip says what it means
+        var meaning = MEANING[it.full];
+        it.el.setAttribute("title", meaning ? it.full + " — " + meaning : it.full);
         var span = it.el.querySelector(".quarto-category-count") || it.el;
         if (it.prefix) span.textContent = it.rest;
         chips.appendChild(it.el); // move, preserving Quarto's onclick
