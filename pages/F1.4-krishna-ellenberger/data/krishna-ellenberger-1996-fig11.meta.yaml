@@ -1,0 +1,92 @@
+dataset_id: krishna-ellenberger-1996-fig11
+title: Large-bubble gas holdup vs excess gas velocity (Figure 11)
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Ellenberger, J."
+  year: 1996
+  container: "AIChE Journal 42(9) 2627-2634"
+  doi: 10.1002/aic.690420923
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  column_diameter_m: 0.10
+  liquid: tetradecane
+  distributor: "sintered glass plate"
+  gases_and_densities_kg_m3: {helium: 0.18, air: 1.3, argon: 1.83, SF6: 6.7}
+  note: >
+    The abscissa is (U - U_df) with MEASURED U_df, as the figure caption states;
+    the model curves on the same figure instead take U_df = U_trans from the
+    Reilly correlation. Nothing here depends on that distinction, because only
+    the markers were extracted.
+
+acquisition:
+  method: digitised
+  figure: "Figure 11, journal page 2633"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage, then matching pursuit over four shape templates"
+  procedure: >
+    Only the experimental markers were extracted; the solid eq. (19) line and the
+    dashed Wilkinson curves are the authors' models and were left alone.
+
+    The four series differ ONLY by marker shape - triangle helium, square air,
+    circle argon, diamond SF6 - all open outlines about 42-46 px across at 600
+    dpi, overlapping each other and the eq. (19) line. Detection scored each
+    shape by a template with two masks: how much of its outline is covered by
+    (dilated) ink, minus how filled its interior is. Markers were then found by
+    matching pursuit rather than peak-picking - take the best (position, shape)
+    anywhere, record it, erase that outline from the image, repeat - because two
+    markers drawn almost on top of one another are hopeless for non-maximum
+    suppression but come apart once the first outline is removed.
+
+    Axes are logarithmic and were calibrated from the printed decade ticks:
+    x = 0.01 m/s at column 240.5 with 769 px per decade, eps_b = 1 at row 61
+    with 510 px per decade.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-27
+  estimated_error: >
+    Positions: about +/- 0.5 % in (U - U_df) and +/- 0.4 % in eps_b, from placing
+    the centre of a ~44 px glyph on log axes with ~770 px decades. Shape
+    assignment: see below - unreliable in the dense band, and treated as such.
+
+review:
+  reviewed_by: "gallery maintainer, against the original figure at 8x zoom"
+  date: 2026-07-27
+  verdict: "positions fine, shapes wrong - do not trust the gas labels"
+  findings: >
+    (1) SF6 stops at about U - U_df = 0.05 m/s. It is well separated and entirely
+    on the left; 9 of the 21 markers the detector called SF6 lie to the right of
+    that and are squares or circles. (2) Most triangles (helium) lie below the
+    eq. (19) line; above the line in the dense band the detector's triangles are
+    wrong and are really circles and squares. (3) Circles and squares are found
+    where there is little overlap and missed in the dense region, which is why
+    the detector returned only 6 argon and 4 air out of 63. (4) One triangle is
+    missed entirely - the second from the left, drawn inside a square.
+  consequence: >
+    Only the SF6 group carries a gas label in this file. Every other row is
+    `unassigned`. That is a deliberate choice rather than a gap to be filled
+    later: Eq. 19 contains no gas-density term, so the correlation can be tested
+    against the positions alone, using all 63 points instead of a curated subset
+    - the labels are not needed for it. They are needed only for the
+    gas-independence claim, and for that the SF6 group is sufficient, because it
+    is the density extreme (6.7 against 0.18-1.83 kg/m3).
+
+missing:
+  - "One helium marker, the second triangle from the left, drawn inside a square.
+     Identified by the reviewer, not recovered by the detector. 1 of ~64."
+
+columns:
+  - {name: U_minus_Udf, unit: m/s, description: "excess gas velocity above the dense-phase velocity, measured"}
+  - {name: eps_b,       unit: "-", description: "large-bubble gas holdup"}
+  - {name: gas,         unit: "-", description: "SF6 where the review confirms the assignment, otherwise `unassigned`"}
+  - {name: rho_G_kg_m3, unit: kg/m3, description: "gas density, blank where the gas is unassigned"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The figure image is NOT reproduced; the points are re-plotted
+  from the extracted coordinates.
