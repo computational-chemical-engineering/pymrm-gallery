@@ -302,3 +302,48 @@ as experimentally validated.
    add an experimentally validated page — 2,787 runs.
 4. **Kunii & Levenspiel** `E2.1` — best text layer of the set.
 5. Weisz & Hicks figures only if time allows.
+
+---
+
+## Batch triage, 2026-07-27 — ten papers arrived at once
+
+Run `python scripts/probe_paper.py ~/papers/pymrm-gallery/*.pdf` to regenerate
+this. The question it answers is *where do this paper's numbers live*, because
+that, not page count, sets the cost of the page.
+
+| Catalog | Paper | Text layer | Figures | Cost |
+|---|---|---|---|---|
+| `G1.8` | Herskowitz & Smith 1983 | 9 500 ch/pg, Tables 1–6 | 9 | tables transcribe directly |
+| `J3.4` | Doyle–Fuller–Newman 1993 | 8 460 ch/pg | 8 | parameters in running text |
+| `J4.8` | Henze et al. 1987 (ASM1) | 6 836 ch/pg, Tables 1–4 | 2 | the model *is* a table |
+| `A4.2` | Krishna & Wesselingh 1997 | 6 883 ch/pg | 71 | a 51-page review, not one model |
+| `B3.1` | Yagi & Kunii 1955 | 6 035 ch/pg, Tables 1–4 | 11 | tables transcribe directly |
+| `H1.7` | Wijmans & Baker 1995 | 4 784 ch/pg | 12 | thin — read numbers off renders |
+| `F2.3` | Maretto & Krishna 1999 | 4 420 ch/pg, Table 1 | 8 | thin — read numbers off renders |
+| `J1.5` | Glueckauf 1955 | 2 469 ch/pg, Table 2 | 2 | thin — read numbers off renders |
+| `A2.3` | Taylor 1953 | 2 469 ch/pg equivalent | few | thin, and hyphens for decimals |
+| `A1.1` | Ergun 1952 | **none at all** | — | pure scan, everything off renders |
+
+**The decimal-point trap is not confined to Elsevier.** Taylor's 1953 Royal
+Society scan renders `48.0` as `48-0` and `59.8` as `59-8`. Same failure as Van
+Welsenaere & Froment, different publisher, different decade. Assume it for any
+pre-1980 scan and read the numbers off a render.
+
+### Which of these can be built without a human in the loop
+
+The gate is figure digitisation, so the split is:
+
+- **`A2.3` Taylor–Aris** — validation is Taylor's own closed form
+  *K* = *a*²*U*²/(48*D*) plus his measured table. Table, not figure. **No gate.**
+- **`J1.5` Glueckauf** — the LDF coefficient 15*D*/*r*² against the exact
+  spherical-diffusion series. Purely analytic. **No gate.**
+- **`J4.8` ASM1** — the model is a stoichiometric matrix; validation is the
+  continuity relations the matrix must satisfy. **No gate**, but a big model.
+- **`A1.1` Ergun** — a one-line correlation, but its data is in a scanned figure
+  and table. Needs the gate.
+- Everything else — `F2.3`, `H1.7`, `G1.8`, `B3.1`, `J3.4` — validates against
+  figures and needs the gate.
+
+`A4.2` is a 51-page review with 71 figures and is not a single model; it is a
+reference for the `S9` pages rather than a page of its own. Do not queue it as
+one.

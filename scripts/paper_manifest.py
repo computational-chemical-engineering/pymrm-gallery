@@ -100,12 +100,18 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]+", "", s.lower())
 
 
-def on_disk(entry, files):
-    """Match a catalog entry to a downloaded PDF by surname + year, or by PII."""
+def on_disk(entry, files, doi=None):
+    """Match a catalog entry to a downloaded PDF by surname + year, or by PII.
+
+    `doi` may be one just resolved from CrossRef: many of these files are named
+    after the publisher's PII (i260028a001.pdf, 1-s2.0-0009250978851203-main.pdf)
+    and carry neither author nor year, so without it the check misses papers that
+    are already on disk and sends you to fetch them again.
+    """
     r = entry.get("reference") or {}
     surnames = [_norm(a.split(",")[0]) for a in r.get("authors", [])]
     year = str(r.get("year", ""))
-    doi = (r.get("doi") or "")
+    doi = doi or r.get("doi") or ""
     pii = re.sub(r"[^0-9A-Za-z]", "", doi.split("/")[-1]) if doi else ""
     for f in files:
         n = _norm(f.name)
@@ -122,6 +128,7 @@ def main():
     ap.add_argument("--update-yaml", action="store_true",
                     help="write DOIs resolved via CrossRef back into models.yaml")
     ap.add_argument("--no-lookup", action="store_true", help="skip CrossRef")
+    ap.add_argument("--json", type=Path, help="write the resolved rows as JSON")
     args = ap.parse_args()
 
     models = yaml.safe_load((ROOT / "models.yaml").read_text(encoding="utf-8"))
@@ -147,7 +154,8 @@ def main():
                          title=m.get("title", ""), container=container,
                          authors=", ".join(r.get("authors", [])),
                          year=r.get("year", ""), doi=doi or "",
-                         pub=pub, route=route, have=on_disk(m, files), note=note))
+                         pub=pub, route=route, have=on_disk(m, files, doi),
+                         note=note))
 
     rows.sort(key=lambda d: (d["pri"], d["id"]))
     need = [d for d in rows if not d["have"]]
@@ -176,6 +184,10 @@ def main():
             text = pat.sub(lambda mo: mo.group(1) + f"      doi: {doi}\n", text, count=1)
         (ROOT / "models.yaml").write_text(text, encoding="utf-8")
         print(f"\nwrote {len(resolved)} resolved DOI(s) into models.yaml")
+
+    if args.json:
+        args.json.write_text(json.dumps(rows, indent=1, default=str), encoding="utf-8")
+        print(f"\nwrote {args.json}")
 
     if args.html:
         parts = ["<meta charset='utf-8'><title>pymrm-gallery: papers to fetch</title>",
