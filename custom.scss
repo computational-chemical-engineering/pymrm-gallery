@@ -1,0 +1,112 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+/* ------------------------------------------------------------------ *
+ * Gallery category filter
+ *
+ * Quarto renders `categories: cloud` as a word cloud whose font size
+ * scales with how many pages carry each tag. With five classification
+ * axes and single-digit counts that scaling is noise: it makes the
+ * column look ragged, and it makes a rare-but-important tag look less
+ * important than a common one. The tags are a FILTER, not a measure of
+ * popularity, so they are all rendered at one size here.
+ *
+ * The grouping into Section / Structure / Tier / Data / Phase is done by
+ * the script at the foot of gallery.qmd, which moves Quarto's own
+ * elements rather than recreating them, so the click handlers Quarto
+ * attached still work.
+ * ------------------------------------------------------------------ */
+
+.quarto-listing-category-title {
+  cursor: pointer;
+  margin-bottom: 0.15rem;
+}
+
+.gallery-category-hint {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #6c757d;
+  margin-bottom: 0.75rem;
+}
+
+.quarto-listing-category.category-cloud {
+  display: block; /* the groups below do the laying out */
+
+  /* neutralise the count-scaled sizes */
+  .category-cloud-1,
+  .category-cloud-2,
+  .category-cloud-3,
+  .category-cloud-4,
+  .category-cloud-5,
+  .category-cloud-6,
+  .category-cloud-7,
+  .category-cloud-8,
+  .category-cloud-9,
+  .category-cloud-10 {
+    font-size: 0.8rem;
+  }
+
+  .category {
+    padding-right: 0;
+  }
+}
+
+.gallery-cat-group {
+  margin-bottom: 0.7rem;
+}
+
+.gallery-cat-group-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a9099;
+  margin-bottom: 0.28rem;
+}
+
+.gallery-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+}
+
+.quarto-listing-category.category-cloud .gallery-cat-chips .category {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border: 1px solid #d7dbe0;
+  border-radius: 999px;
+  background: #fff;
+  color: #33383d;
+  line-height: 1.5;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.quarto-listing-category.category-cloud .gallery-cat-chips .category:hover {
+  border-color: #9aa3ad;
+  background: #f2f4f6;
+}
+
+.quarto-listing-category.category-cloud .gallery-cat-chips .category.active {
+  background: #2761e3;
+  border-color: #2761e3;
+  color: #fff;
+  font-weight: 600;
+}
+
+.quarto-listing-category.category-cloud
+  .gallery-cat-chips
+  .category.active
+  .quarto-category-count {
+  color: #fff;
+}
+
+/* the listing cards carry the same tags; make them quieter than the title */
+.quarto-grid-item .listing-categories .listing-category {
+  text-transform: none;
+  font-size: 0.7rem;
+  opacity: 0.85;
+}

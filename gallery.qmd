@@ -15,21 +15,143 @@ page-layout: full
 Every page shows a published model, the experimental data it was validated
 against, and a `pymrm` reproduction with a quantitative agreement metric.
 
-**Filtering.** The category cloud below carries every classification axis at
-once, using prefixed tags:
+**Filtering.** Every page carries tags on five axes at once. The **Categories**
+panel groups them by axis — click a tag to filter, click *Categories* to clear.
 
-| Prefix | Meaning | Example |
+| Axis | Meaning | Example |
 |---|---|---|
-| `sec:` | Catalog section (physical domain) | `sec:A` transport closures, `sec:D` fixed bed |
-| `struct:` | Mathematical structure — *the axis to filter on if you want to reuse code* | `struct:S8` nested reactor–particle coupling |
-| `tier:` | Standing in the literature | `tier:T0` canonical |
-| `data:` | Provenance tier of the dataset | `data:tier1` open repository |
-| `phase:` | Phase system | `phase:gas`, `phase:gas-solid` |
+| **Section** | Catalog section (physical domain) | `A` transport closures, `D` fixed bed |
+| **Structure** | Mathematical structure — *the axis to filter on if you want to reuse code* | `S8` nested reactor–particle coupling |
+| **Tier** | Standing in the literature | `T0` canonical |
+| **Data** | Provenance tier of the dataset | `tier1` open repository, `tier6` reference solution |
+| **Phase** | Phase system | `gas`, `gas-solid` |
 
 Structure codes are defined in
 [`docs/taxonomy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/taxonomy.md).
-Two pages sharing a `struct:` tag are solved by nearly the same pymrm code even
+Two pages sharing a structure code are solved by nearly the same pymrm code even
 when their physics is unrelated — that is the intended route to reuse.
 
 ::: {#model-listing}
 :::
+
+```{=html}
+<script>
+// Regroup Quarto's category cloud into one block per classification axis.
+//
+// The tags are prefixed (sec:, struct:, tier:, data:, phase:) so that a single
+// flat list can carry five axes. Left alone, Quarto sorts them alphabetically
+// and scales each one's font size by how many pages use it -- which interleaves
+// the axes, repeats the prefix on every chip, puts struct:S10 before struct:S2,
+// and makes a rare tag look less important than a common one when the tags are
+// a filter, not a measure of popularity.
+//
+// The existing elements are MOVED, never cloned or rebuilt, so the click
+// handlers Quarto attached to them keep working, and
+// `.quarto-listing-category .category[data-category=...]` still matches for
+// activation from the URL hash.
+(function () {
+  var AXES = [
+    { prefix: "sec", label: "Section" },
+    { prefix: "struct", label: "Structure" },
+    { prefix: "tier", label: "Tier" },
+    { prefix: "data", label: "Data" },
+    { prefix: "phase", label: "Phase" },
+  ];
+
+  // "S10" must sort after "S2", so compare any trailing digits numerically.
+  function naturalKey(s) {
+    var m = /^(\D*)(\d*)(.*)$/.exec(s);
+    return [m[1], m[2] === "" ? -1 : parseInt(m[2], 10), m[3]];
+  }
+  function naturalCmp(a, b) {
+    var ka = naturalKey(a), kb = naturalKey(b);
+    return (
+      ka[0].localeCompare(kb[0]) || ka[1] - kb[1] || ka[2].localeCompare(kb[2])
+    );
+  }
+
+  function group() {
+    var cloud = document.querySelector(
+      ".quarto-listing-category.category-cloud"
+    );
+    if (!cloud || cloud.dataset.grouped === "1") return;
+
+    var items = Array.prototype.slice
+      .call(cloud.querySelectorAll(":scope > .category"))
+      .map(function (el) {
+        var full = (el.textContent || "").trim();
+        var i = full.indexOf(":");
+        return {
+          el: el,
+          full: full,
+          prefix: i > 0 ? full.slice(0, i) : "",
+          rest: i > 0 ? full.slice(i + 1) : full,
+        };
+      });
+    if (!items.length) return;
+
+    var buckets = {}, order = [];
+    items.forEach(function (it) {
+      var key = it.prefix || "_other";
+      if (!buckets[key]) {
+        buckets[key] = [];
+        order.push(key);
+      }
+      buckets[key].push(it);
+    });
+
+    var known = AXES.map(function (a) { return a.prefix; });
+    var sequence = AXES.filter(function (a) { return buckets[a.prefix]; }).concat(
+      order
+        .filter(function (k) { return known.indexOf(k) === -1; })
+        .map(function (k) {
+          return { prefix: k, label: k === "_other" ? "Other" : k };
+        })
+    );
+
+    var frag = document.createDocumentFragment();
+    sequence.forEach(function (axis) {
+      var bucket = buckets[axis.prefix];
+      bucket.sort(function (a, b) { return naturalCmp(a.rest, b.rest); });
+
+      var group = document.createElement("div");
+      group.className = "gallery-cat-group";
+      var label = document.createElement("span");
+      label.className = "gallery-cat-group-label";
+      label.textContent = axis.label;
+      group.appendChild(label);
+
+      var chips = document.createElement("div");
+      chips.className = "gallery-cat-chips";
+      bucket.forEach(function (it) {
+        // keep the full prefixed tag reachable, just not printed on every chip
+        it.el.setAttribute("title", it.full);
+        var span = it.el.querySelector(".quarto-category-count") || it.el;
+        if (it.prefix) span.textContent = it.rest;
+        chips.appendChild(it.el); // move, preserving Quarto's onclick
+      });
+      group.appendChild(chips);
+      frag.appendChild(group);
+    });
+
+    cloud.appendChild(frag);
+    cloud.dataset.grouped = "1";
+
+    var title = document.querySelector(".quarto-listing-category-title");
+    if (title && !document.querySelector(".gallery-category-hint")) {
+      var hint = document.createElement("span");
+      hint.className = "gallery-category-hint";
+      hint.textContent = "Click a tag to filter; click Categories to clear.";
+      title.parentNode.insertBefore(hint, title.nextSibling);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", group);
+  } else {
+    group();
+  }
+  window.addEventListener("load", group); // in case the listing renders late
+})();
+</script>
+```
