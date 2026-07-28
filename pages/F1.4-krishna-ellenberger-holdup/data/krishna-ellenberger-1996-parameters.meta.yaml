@@ -1,0 +1,63 @@
+dataset_id: krishna-ellenberger-1996-parameters
+title: Physical properties, Figure 11 conditions, and the reported deviations
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Ellenberger, J."
+  year: 1996
+  container: "AIChE Journal 42(9) 2627-2634"
+  doi: 10.1002/aic.690420923
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 2 (page 2629), the Figure 11 legend (page 2633), Table 3 (page 2634), and the Reilly constant from the text on page 2630"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page images"
+  procedure: >
+    Read from renders rather than the text layer, which mangles subscripts in
+    this scan - it gives SF6 as `SF,` and turns Table 1's velocity range
+    0.001-0.249 into `0.00 1-0.249`. The constant B = 3.85 in the Reilly
+    transition correlation appears only in the running text on page 2630, not in
+    the notation list, and is easy to miss.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-28
+  estimated_error: >
+    None beyond the paper's own rounding. Table 2 notes that the surface
+    tensions are estimated rather than measured.
+
+validation:
+  table_1_self_check: >
+    Not part of this file, but worth recording because it validates the reading
+    of the same scan: the nineteen per-row experiment counts in Table 1 sum to
+    exactly the 2,787 total the text states.
+  correlations_reproduce_figure_6: >
+    Feeding these properties into the Reilly correlation gives a dense-phase
+    voidage of 0.057 for helium rising to 0.324 for SF6, and a dense-phase
+    velocity of 0.013 to 0.046 m/s. The paper's Figure 6 shows measured values of
+    roughly 0.10-0.20 and 0.02-0.035 over the helium-to-argon range it covers,
+    which brackets the computed helium-to-argon values of 0.057-0.174 and
+    0.013-0.032. Consistent in magnitude and trend, which is what a property
+    transcription check can establish.
+
+columns:
+  - {name: quantity, unit: "-",    description: "what the number is"}
+  - {name: value,    unit: varies, description: "value as printed"}
+  - {name: unit,     unit: "-",    description: "unit as printed; converted to SI in the notebook"}
+  - {name: source,   unit: "-",    description: "the table or page it comes from"}
+  - {name: note,     unit: "-",    description: "context"}
+
+not_transcribed:
+  - "Table 1, the full experimental matrix of 2,787 runs across six columns and
+     eleven gas-liquid systems. Only the Figure 11 subset is used here."
+  - "Tables 4 and 5 of Wezorke's culled data, used by the authors as an
+     independent check."
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

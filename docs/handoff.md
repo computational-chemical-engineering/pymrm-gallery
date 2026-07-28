@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-07-27
+# Handoff — state as of 2026-07-28
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-5 pages, 6 published catalog entries, both CI workflows green.
+8 pages, 9 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -16,15 +16,18 @@ Start here if you are picking this up fresh. Read this, then
 | `B1.1`+`B1.5` Thiele + Weisz–Hicks | η(φ), and 3 steady states at one φ | 2.2e-4 vs exact; both methods agree on all three branches |
 | `D2.2` Van Welsenaere–Froment runaway | Two criteria for the runaway boundary, swept over the operating plane | 0.054% over all 30 numbers in their Section 6; two independent methods agree to 0.18% |
 | `F3.1` Hatta regimes | Enhancement factor, 3 regimes | 6.3e-3 vs exact; VKH good to 2.1%, DeCoursey to 8.7% |
+| `A2.3` Taylor–Aris dispersion | Homogenisation closure, and when the lumped coefficient becomes defensible | 1.0e-4 vs Eq. 25 at n_r=200, O(h²); Taylor's own capillary run to 0.04% |
+| `J1.5` LDF breakthrough | What the linear-driving-force constant actually is | 6.6e-5 vs the exact series at n_r=400 |
+| `F1.4` Krishna–Ellenberger holdup | A correlation with no fluid property in it, against the figure it was fitted to | **experimental** — 13.8% mean deviation, +2.8% bias over 63 digitised points |
 
-Status counts live in `models.yaml`: 6 published, 23 planned, 2 deferred
+Status counts live in `models.yaml`: 9 published, 20 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
-**Two of five pages are validated against experiment.** `D2.2` is tier 6 by
-necessity — its source paper contains no measurements at all — so the ratio has
-not moved. `F1.4` (2,787 experiments) and `A3.4` are the next chances to move
-it, and both need figure digitisation.
+**Three of eight pages are validated against experiment** (`A4.9`, `C2.1`,
+`F1.4`), and `A2.3` against Taylor's own worked capillary run. `D2.2` is tier 6
+by necessity — its source paper contains no measurements at all. `A3.4` is the
+next chance to move the ratio, and it needs figure digitisation.
 
 ## Papers available
 
@@ -85,28 +88,54 @@ bulk-download tool.
 | `A3.4` | Wakao & Funazkri | API for prose, page image for numbers | Sh–Re dataset, but likely a scatter *figure* → digitise |
 | `E2.1` | Kunii & Levenspiel | good OCR (12.4k chars/page) | The canonical fluidised-bed model |
 | `I1.2` | Oh & Cavendish | good OCR (9.0k) | Converter light-off, `S4`+`S7` |
-| `F1.4` | Krishna & Ellenberger | tables clean, holdup in figures | 2,787 experiments |
+| ~~`F1.4`~~ | ~~Krishna & Ellenberger~~ | ~~tables clean, holdup in figures~~ | **done 2026-07-28** |
 | ~~`C2.1`~~ | ~~Xu & Froment~~ | ~~hard~~ | **done 2026-07-26** |
 | ~~`D2.2`~~ | ~~Van Welsenaere & Froment~~ | ~~API + page image~~ | **done 2026-07-27** |
 
 ## Recommended next moves
 
-1. **`F1.4` Krishna & Ellenberger** — the next chance to add an experimentally
-   validated page, and **the model is already read**: Wilkinson's Eqs. 1–4,
-   Reilly's Eq. 8 with *B* = 3.85, and their own Eq. 19,
-   ε_b = 0.268 · *D*_T^−0.18 · (*U* − *U*_df)^0.58, all transcribed in
-   [`pdf-findings.md`](pdf-findings.md#2-krishna--ellenberger-1996--page-f14).
-   Tables 1–2 transcribe cleanly, and Table 1 self-checks: its nineteen per-row
-   experiment counts sum to exactly the 2,787 the text states.
-   **What is left is the expensive part.** The holdup measurements exist only as
-   scatter in Figures 7, 9 and 11, and without one of them digitised the page has
-   no data and must not be published — showing that two correlations differ is
-   not validation. Start with Figure 11, and budget real time: see the
-   marker-extraction note below.
-2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
+1. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
    fluidised-bed model.
-3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
+2. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
    the prose, but read every number off the page (see the correction above).
+3. **`F2.3` Maretto & Krishna** — the slurry bubble column that *consumes*
+   `F1.4`. Eq. 19 and Reilly's Eq. 8 are already implemented and validated on
+   the `F1.4` page as standalone SI functions; lift them rather than rewriting.
+
+### What `F1.4` settled, and what it did not
+
+Figure 11 is digitised (63 markers) and the page is live. Three things are worth
+carrying forward.
+
+**The figure was salvaged by dropping labels, not by fixing the classifier.**
+The four series differ only by marker shape, and shape recognition failed in the
+dense band — the maintainer review confirmed it. Rather than curate a subset,
+every row except the SF₆ group is `unassigned`. This cost nothing, because
+**Eq. 19 contains no gas-density term**: the correlation can be tested against
+positions alone, using all 63 points. Labels are needed only for the
+gas-independence claim, and the SF₆ group alone carries that, being the density
+extreme. *Generalise this before spending hours on a classifier: ask which
+columns the model you are testing actually reads.*
+
+**A group comparison can be confounded even when the groups look clean.** The
+first version of the gas-independence test compared the SF₆ points' bias against
+the rest — until a check showed the two groups occupy *disjoint* velocity
+windows on this figure, every SF₆ point below 0.044 m/s and every other point
+above 0.051. The difference measured velocity, not density. Replaced by an
+extrapolation test: fit a free power law on the lighter gases only, predict the
+SF₆ points it never saw. Before reporting a between-group difference, check the
+groups overlap in every other variable.
+
+**Deviation direction is not cosmetic.** The first draft computed the two
+correlations' deviations in opposite senses — measured/model for one,
+model/measured for the other. At 14 % scatter the reciprocal differs materially:
+the mean moved 13.3 → 13.8 %, the bias −0.2 → +2.8 %, and the headline
+gas-density number 3.5 → 5.0 % (before that test was replaced outright). Fix a
+single convention,
+(model − measured)/measured, state it on the page, and use it everywhere.
+
+Figures 7 (column diameter) and 9 (liquid properties) are still undigitised, so
+the diameter and liquid-property independence claims remain untested.
 
 ## Hard-won lessons — read before building
 
