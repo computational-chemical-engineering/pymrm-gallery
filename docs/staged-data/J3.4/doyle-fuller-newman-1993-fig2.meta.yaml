@@ -1,0 +1,80 @@
+dataset_id: doyle-fuller-newman-1993-fig2
+title: Cell potential vs cathode utilisation, six simulated curves (Figure 2)
+status: complete
+
+source:
+  authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
+  year: 1993
+  container: "Journal of the Electrochemical Society 140(6) 1526-1533"
+  doi: 10.1149/1.2221597
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+provenance_tier_note: >
+  THIS IS NOT EXPERIMENTAL DATA. Every curve on Figure 2 is output of the
+  authors' own simulation; the text cites measured discharge curves by reference
+  only and plots none. Confirmed by the gallery maintainer on review. A page
+  built on this is a reference-solution reproduction in the sense of D2.2, and
+  must not be described as validated against experiment.
+
+conditions:
+  cell: "lithium foil | polymer electrolyte | TiS2 composite insertion cathode"
+  parameters: "Tables I and II of the paper; T = 100 C, delta_s = 50 um, delta_c = 100 um, R_s = 1.0 um"
+  curves: "charge at I = -10 A/m2; open-circuit potential (dashed); discharge at I = 5, 10, 13, 20 A/m2"
+  initial_solid_concentration: "1 % of maximum for the discharge curves (caption)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 2, journal page 1529"
+  tool: "poppler pdftoppm at 600 dpi, column-wise run detection with order-preserving tracking"
+  procedure: >
+    Traced column by column. The six curves never cross, so at each column the
+    trackers are matched to the ink runs by an order-preserving dynamic program
+    over all six at once, rather than each tracker independently taking its
+    nearest run. That matters: greedy nearest-run matching made the dashed
+    open-circuit curve and the I = 5 curve swap repeatedly where they run close
+    together. Each solid curve is allowed to coast only 10 px through a gap, so
+    it stops at its true endpoint instead of walking onto a nearby label; the
+    dashed curve is allowed 70 px.
+
+    Seeded at u = 0.12, where all six are separated, then traced both directions.
+
+    Cell potential cannot rise with utilisation, so each trace is projected onto
+    the nearest non-increasing sequence (pool-adjacent-violators). Only the dashed
+    curve needed it: 3 spans totalling 10 points, widest 8 px.
+
+    Axes are linear over the frame: utilisation 0 to 1 between columns 2693 and
+    4357, cell potential 0 to 3 V between rows 5922 and 4546.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-29
+  estimated_error: >
+    Better than 3 mV, i.e. about 1.5 px. Calibration is confirmed independently:
+    the inward y-axis tick marks land on 2.000, 1.500, 1.000 and 0.500 V.
+  thinning: "the raw trace is one point per pixel column; the CSV is thinned to ~200 points per curve"
+
+review:
+  reviewed_by: "gallery maintainer, against the original figure"
+  date: 2026-07-29
+  verdict: "correct, one print artefact to remove"
+  findings: >
+    Confirmed that the figure contains no measured points; confirmed the curve
+    identities top to bottom (charge I = -10, open-circuit dashed, then I = 5, 10,
+    13, 20) and that all six traced endpoints match the printed ones. One defect:
+    the open-circuit curve carried a small hump near u = 0.58, caused by a speck
+    of print noise about 7 px above the dashed line that the tracker climbed onto.
+  consequence: >
+    The monotone projection removes it. Over u = 0.53-0.64 the curve now deviates
+    from a local quadratic by at most 3.7 mV, against 2.5 mV over a quiet stretch
+    at u = 0.20-0.35 - i.e. the artefact is gone rather than merely reduced.
+
+columns:
+  - {name: curve, unit: "-", description: "charge (I=-10) | open-circuit (dashed) | I=5 | I=10 | I=13 | I=20, in A/m2"}
+  - {name: utilisation, unit: "-", description: "fraction of active cathode material used, Eq. 25"}
+  - {name: cell_potential_V, unit: V, description: "cell potential"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced.

@@ -1,0 +1,80 @@
+dataset_id: wijmans-baker-1995-fig5
+title: Water flux, salt flux and salt rejection vs applied pressure (Figure 5)
+status: complete
+
+source:
+  authors: ["Wijmans, J. G.", "Baker, R. W."]
+  year: 1995
+  container: "Journal of Membrane Science 107(1-2) 1-21"
+  doi: 10.1016/0376-7388(95)00102-I
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  solution: "model seawater, 3.5 % sodium chloride"
+  membrane: "FilmTec FT30, described by the authors as good quality reverse osmosis"
+  osmotic_pressure_stated: "~350 psi, from the caption"
+
+acquisition:
+  method: digitised
+  figure: "Figure 5, journal page 11"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  procedure: >
+    Every marker on this figure is an open outline that touches nothing else, so
+    they were found as enclosed white holes rather than by template matching -
+    label the white regions, discard those touching the crop border, keep the
+    ones of marker size. Shape follows from the hole's bounding-box fill: about
+    0.78 for a circle, about 0.57 for a triangle. Positions are bounding-box
+    centres, not hole centroids, because a triangle's centroid sits below its
+    true centre.
+
+    Axes are linear and were calibrated from the printed ticks: x = 0 psig at
+    column 1474.5 and 1200 psig at 3072.5; water flux 0 to 30 L/m2/h between rows
+    1915.0 and 607.0; salt flux 0 to 5 g/m2/h between rows 1913.5 and 1279.5;
+    rejection 0 to 100 % between rows 3295.5 and 1985.5.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-28
+  estimated_error: >
+    About +/- 12 psi in pressure and under 1 % in the ordinates. The pressure
+    figure is measured, not assumed: the same four experiments appear in all
+    three series, and the x-positions recovered independently agree to 5-12 psi
+    on the first three points.
+
+validation:
+  water_flux_linearity: >
+    Eq. 37 says the water flux is A(dp - d_pi), i.e. linear in applied pressure
+    with a zero-flux intercept at the osmotic pressure. The four extracted points
+    give r^2 = 0.9998 and an intercept of 322 psi against the ~350 psi the caption
+    states. Neither number was used in the extraction.
+  salt_flux_constancy: >
+    Eq. 40 says the salt flux is independent of pressure. The four extracted
+    points give 2.99 +/- 0.05 g/m2/h, a spread of 3 %.
+  rejection: >
+    Reads 100.0 +/- 0.1 %. The circles straddle the frame line at 100 %, so this
+    is a statement that rejection is essentially complete, not a measurement of
+    how complete.
+
+review:
+  reviewed_by: "gallery maintainer, against the original figure"
+  date: 2026-07-29
+  verdict: "all correct"
+  findings: >
+    All 13 markers found with nothing invented; the series assignment (circles =
+    water flux on the left axis, triangles = salt flux on the right axis, lower
+    circles = rejection) confirmed correct. The reviewer also confirmed that the
+    fourth triangle really does sit at a higher pressure (934 psig) than the
+    fourth circle (894 psig) - the two series were not measured at identical
+    pressures, so this is not a misplacement.
+
+columns:
+  - {name: series, unit: "-", description: "water_flux | salt_flux | salt_rejection"}
+  - {name: p_psig, unit: psig, description: "applied pressure"}
+  - {name: value,  unit: varies, description: "see the unit column"}
+  - {name: unit,   unit: "-", description: "L m-2 h-1, g m-2 h-1, or %"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced; the points are re-plotted from the extracted coordinates.

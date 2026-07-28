@@ -1,0 +1,80 @@
+dataset_id: herskowitz-smith-1983-fig6
+title: Partial-wetting penalty on the overall effectiveness factor (Figure 6)
+status: complete
+
+source:
+  authors: ["Herskowitz, M.", "Smith, J. M."]
+  year: 1983
+  container: "AIChE Journal 29(1) 1-18"
+  doi: 10.1002/aic.690290102
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+why_this_figure: >
+  The gallery originally queued Figure 2 (wetting efficiency against liquid rate,
+  seven literature sources). On review that was dropped: it needs the series
+  identity of about 45 small overlapping markers on a coarse grid-crossed scan,
+  and the correlation it supports depends on particle diameter and flow rate, so
+  the identity cannot be ignored the way it could on F1.4. Figure 6 is the actual
+  model for an S8 partial-wetting page, and it states every parameter it used.
+  Figure 2 is cited, not digitised.
+
+conditions:
+  printed_in_figure: "Sc_L = 100; d_p = 1.5e-3 m; eps_p = 0.5; eps_B = 0.4; tau = 2; mu_L = 8e-4 kg/(m s); C*_L = 1.0"
+  curves: "L_m = 0.50, 1.0, 2.0, 7.0 kg/(m2 s), with f_e = 0.72, 0.77, 0.83, 0.94 printed alongside"
+  chi_definition: "Eq. 19: chi = (eta_o - eta_o(f_e=1)) / eta_o(f_e=1)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 6, journal page 8"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  procedure: >
+    Four straight lines on log-log axes. The grid cuts each line into segments, so
+    run-length line stripping fragments them; instead the eight known horizontal
+    gridline rows and four vertical gridline columns are erased by position, the
+    remaining gaps bridged by a closing with a diagonal structuring element, and
+    each line recovered as one connected component. A straight line is then fitted
+    in (log phi, log chi).
+
+    Axes calibrated from the gridlines: 415.5 px per decade in chi (residuals
+    under 0.006 decades over 0.01 to 20) and 421.9 px per decade in phi.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-29
+  estimated_error: "fit rms 0.023 to 0.029 decades, i.e. about 6 % in chi"
+
+validation:
+  eq_20_self_check: >
+    The figure prints f_e = 0.72, 0.77, 0.83 and 0.94 for its four L_m values.
+    Eq. 20 of the same paper, f_e = 0.77 * L_m^0.1, gives 0.718, 0.770, 0.825 and
+    0.936. All four agree to the printed precision, which confirms both the
+    reading of Eq. 20 and the pairing of curves to L_m values.
+  parallelism: >
+    The four fitted slopes are 1.098, 1.098, 1.112 and 1.131 - parallel to within
+    3 %, which is what a penalty that scales as a power of the Thiele modulus
+    should look like.
+
+review:
+  reviewed_by: "gallery maintainer"
+  date: 2026-07-29
+  verdict: "switch the page to this figure; do not digitise Figure 2"
+  findings: >
+    The maintainer chose Figure 6 over Figure 2, judged Figure 2 not worth
+    digitising given the overlap problem, and confirmed that the 12 marker
+    positions recovered from Figure 2 in the earlier attempt were themselves fine.
+    Figure 2 is to be cited rather than extracted.
+
+columns:
+  - {name: L_m_kg_m2_s, unit: kg m-2 s-1, description: "liquid mass velocity labelling the curve"}
+  - {name: f_e, unit: "-", description: "wetting efficiency printed beside the curve"}
+  - {name: slope_dlogchi_dlogphi, unit: "-", description: "fitted log-log slope of the line"}
+  - {name: chi_at_phi_10, unit: "-", description: "fitted chi at Thiele modulus 10, i.e. the line's position"}
+  - {name: phi_min, unit: "-", description: "lower end of the digitised range"}
+  - {name: phi_max, unit: "-", description: "upper end of the digitised range"}
+  - {name: fit_rms_decades, unit: decades, description: "rms residual of the straight-line fit"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced.

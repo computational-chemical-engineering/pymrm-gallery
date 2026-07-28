@@ -1,0 +1,90 @@
+dataset_id: maretto-krishna-1999-fig2
+title: Total gas holdup vs superficial gas velocity at three slurry concentrations (Figure 2)
+status: complete
+
+source:
+  authors: ["Maretto, C.", "Krishna, R."]
+  year: 1999
+  container: "Catalysis Today 52(2-3) 279-289"
+  doi: 10.1016/S0920-5861(99)00082-6
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  column_diameter_m: 0.10
+  liquid: "paraffin oil slurry"
+  series: "solids volume fraction eps_s = 0 (circles), 0.16 (diamonds), 0.35 (squares)"
+  note: >
+    The figure also carries the authors' model curves. Only the experimental
+    markers were extracted; the curves were left alone.
+
+acquisition:
+  method: digitised
+  figure: "Figure 2, journal page 282"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage, template matching pursuit"
+  procedure: >
+    The model curve is drawn straight through the markers, which splits every
+    marker interior in two and defeats hole-finding, so detection is by matching
+    pursuit over circle/square/diamond templates at 40, 44 and 48 px: score each
+    placement by outline coverage minus a penalty for a filled interior, take the
+    best anywhere, erase that outline, repeat. Coverage is scored against ink
+    dilated by 2 px because the printed stroke is only 1-2 px wide.
+
+    The annotation text and the D_T = 0.1 m legend box are masked, after a first
+    pass matched the "0" glyphs in "eps_S = 0.35" as markers.
+
+    SERIES IDENTITY DOES NOT COME FROM THE MATCHED SHAPE. The reviewer found that
+    where markers overlap, the template picks the wrong shape - a pair of
+    overlapping squares reads as a circle. But the three series each follow their
+    own curve and never cross, so identity is assigned by position instead: fit
+    eps = a + b*log(U) + c*log(U)^2 per series, reassign every marker to the
+    nearest fitted curve, refit, iterate to a fixed point. This moved 10 of 95
+    markers, which is exactly the population the reviewer described. Each
+    position was then re-optimised against the template for the series it had
+    been assigned to, which shifted markers by 1 px median and 14 px at worst.
+
+    Axes are linear, calibrated from the printed ticks: U = 0.00034859*x - 0.19053
+    and eps = -0.00051962*y + 0.89719, with eps = 0 at row 1726.7 - note the
+    x-axis rule is drawn about 97 px BELOW eps = 0, so the frame is not the zero.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-29
+  estimated_error: >
+    About +/- 0.5 % in U and +/- 0.004 in eps for the resolved markers. The 20
+    rows marked resolved = no carry no useful error bar at all; see below.
+
+review:
+  reviewed_by: "gallery maintainer, against the original figure"
+  date: 2026-07-29
+  verdict: "positions good, series assignment needed fixing, cluster to be reported not dropped"
+  findings: >
+    (1) The series key (circle = 0, diamond = 0.16, square = 0.35) confirmed.
+    (2) On the eps_s = 0.35 line the detector reported a few circles and diamonds;
+    these are squares lying almost on top of other squares. On the eps_s = 0.16
+    line two reported circles are really diamonds. (3) Some diamonds were slightly
+    displaced from the printed markers. (4) The two circles floating above the
+    eps_s = 0 curve near U = 0.09 are real data points, not a printing artefact.
+    (5) The 20 detections inside the merged cluster at the origin should be
+    reported, flagged, rather than silently dropped.
+  consequence: >
+    (2) and (3) are fixed by the curve-based reassignment and position refit
+    described above. (5) is why the file carries a `resolved` column: the 20
+    cluster rows are included with an empty eps_s, and must not be used for
+    fitting or agreement metrics.
+
+not_extracted:
+  - "The authors' model curves on the same figure."
+  - "Figures 3 and 4 (column diameter and gas density), not yet digitised."
+
+columns:
+  - {name: eps_s, unit: "-", description: "solids volume fraction of the series; blank where unresolved"}
+  - {name: U_m_s, unit: m/s, description: "superficial gas velocity"}
+  - {name: eps_total, unit: "-", description: "total gas holdup"}
+  - {name: resolved, unit: "-", description: "yes = separable marker; no = inside the merged cluster at the origin, position only, series unknown"}
+  - {name: marker_as_drawn, unit: "-", description: "shape the detector matched, kept for audit; NOT the series key - use eps_s"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced.
