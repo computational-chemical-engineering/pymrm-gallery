@@ -12,4 +12,4 @@ Move the whole directory to `pages/<id>-<slug>/data/` when the page is built.
 
 | Directory | Catalog | State |
 |---|---|---|
-| `F1.4/` | `F1.4` Krishna & Ellenberger | Figure 11 digitised, 63 positions, reviewed by the maintainer 2026-07-27. Gas labels deliberately incomplete — see the sidecar's `review` block. |
+| — | — | nothing staged. `F1.4` moved to `pages/F1.4-krishna-ellenberger-holdup/data/` when that page was built, 2026-07-28. |

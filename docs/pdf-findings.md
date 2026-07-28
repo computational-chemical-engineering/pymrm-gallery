@@ -375,18 +375,43 @@ so testing it against the extracted *positions*, ignoring which marker shape
 each came from, is not a workaround — it is the correct test, and it uses all
 63 points instead of a curated subset.
 
-Doing that gives **13.3 % mean absolute deviation with a bias of −0.2 %**, which
+Doing that gives **13.8 % mean absolute deviation with a bias of +2.8 %**, which
 sits alongside the δ = 0.16 the authors themselves report in their Table 3 for
 this correlation over all 1,735 churn-turbulent runs.
 
-The gas-density claim then rides on the one series the review confirms is
-cleanly separable. Splitting at 0.05 m/s: the SF₆ group (ρ_G = 6.7 kg/m³) sits
-−3.0 % from Eq. 19 and everything else (ρ_G = 0.18 to 1.83) sits +0.5 %, a
-**3.5 % difference across a 37-fold range of gas density**. That is the paper's
-independence claim, made quantitative, without relying on a single uncertain
-marker label.
+**Two numbers in an earlier version of this section were wrong.** They are left
+here corrected rather than deleted, because both mistakes generalise.
 
-**Carry this forward.** Before building a shape classifier for a scatter figure,
-check whether the model being tested actually needs the series identity. Often
-the correlation under test has no term for whatever distinguishes the series,
-and then the labels are decoration.
+*Deviation direction.* The first pass computed measured/model for Eq. 19 and
+model/measured for Wilkinson. At 14 % scatter a ratio and its reciprocal are not
+interchangeable: the mean moved 13.3 → 13.8 % and the bias −0.2 → +2.8 %. Fix
+one convention — the page uses (model − measured)/measured — and apply it to
+every correlation being compared.
+
+*The gas-density test was confounded.* The first pass split at 0.05 m/s and
+reported the SF₆ group at −3.0 % against everything else at +0.5 %, a 3.5 %
+difference across a 37-fold density range. That number measures **velocity, not
+density**: on this figure the groups do not overlap at all in the abscissa —
+every SF₆ point lies below 0.044 m/s and every other point above 0.051. If
+Eq. 19's exponent of 0.58 is slightly off at the low end, the SF₆ group looks
+displaced for a reason unrelated to gas.
+
+The test that does work is extrapolation. Fit a free power law to the 51
+helium/air/argon points only, then predict the 12 SF₆ points — 3.7 to 37 times
+denser, and unseen by the fit. The result is a bias of **−7.7 % with 13.5 %
+scatter**, the same scatter as the correlation itself, so SF₆ is not an outlier
+group. Wilkinson would require 20–27 %. Part of the 7.7 % is extrapolation error
+(the SF₆ window sits about half a decade below the fitted range), so it is an
+upper bound on any real gas effect, and the page says so.
+
+**Carry three things forward.**
+
+1. Before building a shape classifier for a scatter figure, check whether the
+   model being tested actually needs the series identity. Often the correlation
+   under test has no term for whatever distinguishes the series, and then the
+   labels are decoration.
+2. Before reporting a difference between two groups, check the groups overlap in
+   every *other* variable. A clean-looking group contrast can be measuring the
+   confound.
+3. Fix one deviation convention per page and state it. Reciprocals diverge as
+   soon as the scatter is more than a few percent.
