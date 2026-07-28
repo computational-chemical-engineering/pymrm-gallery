@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-07-28
+# Handoff — state as of 2026-07-29
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-8 pages, 9 published catalog entries, both CI workflows green.
+9 pages, 10 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -19,8 +19,9 @@ Start here if you are picking this up fresh. Read this, then
 | `A2.3` Taylor–Aris dispersion | Homogenisation closure, and when the lumped coefficient becomes defensible | 1.0e-4 vs Eq. 25 at n_r=200, O(h²); Taylor's own capillary run to 0.04% |
 | `J1.5` LDF breakthrough | What the linear-driving-force constant actually is | 6.6e-5 vs the exact series at n_r=400 |
 | `F1.4` Krishna–Ellenberger holdup | A correlation with no fluid property in it, against the figure it was fitted to | **experimental** — 13.8% mean deviation, +2.8% bias over 63 digitised points |
+| `H1.7` Wijmans–Baker solution–diffusion | Two constants predict the third — and the figure cannot test the prediction | **experimental** — A and B fitted to 8 points, rejection predicted for the other 4 |
 
-Status counts live in `models.yaml`: 9 published, 20 planned, 2 deferred
+Status counts live in `models.yaml`: 10 published, 19 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
@@ -94,13 +95,63 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
+1. **`F2.3`, `J3.4`, `G1.8`, `B3.1`** — all four are unblocked and their data is
+   staged or unnecessary. `B3.1` is analytic and needs nothing; `G1.8` needs
+   Eq. 19–21 plus Table 2's approximate spherical solution against the four
+   digitised Fig. 6 lines; `J3.4` is a full P2D battery model and is the largest
+   build in the queue.
+2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
    fluidised-bed model.
-2. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
+3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
    the prose, but read every number off the page (see the correction above).
-3. **`F2.3` Maretto & Krishna** — the slurry bubble column that *consumes*
-   `F1.4`. Eq. 19 and Reilly's Eq. 8 are already implemented and validated on
-   the `F1.4` page as standalone SI functions; lift them rather than rewriting.
+   Note `F2.3` consumes `F1.4`: Eq. 19 and Reilly's Eq. 8 are already
+   implemented and validated on the `F1.4` page as standalone SI functions, so
+   lift them rather than rewriting.
+
+### The batched figure review, 2026-07-29 — read this before digitising anything
+
+Five figures were digitised, put to the maintainer as **one** review artifact
+(source figure ⇄ overlay toggle, closed questions plus a free-text box per
+figure), and all five came back answered in a single pass. That is the workflow
+to repeat: batching costs nothing extra and turns five review round-trips into
+one. The artifact is private and no page image enters the repo.
+
+What came back, and what it changed:
+
+- **`H1.7` Wijmans & Baker Fig. 5** — all correct. Page now built and published.
+- **`F2.3` Maretto & Krishna Fig. 2** — *"On the eps_s=0.35 line you detect a few
+  circles and diamonds. These are just squares almost on top of other squares."*
+  Fixed, see the lesson below. Also: report the unresolved cluster flagged rather
+  than drop it, and the two circles floating above the top curve are real data.
+- **`J3.4` Doyle–Fuller–Newman Fig. 2** — confirmed **no experimental data at
+  all**; reference-solution page only. One print speck removed.
+- **`G1.8`** — **switch to Figure 6, do not digitise Figure 2.** Fig. 2 needs the
+  identity of ~45 overlapping markers and the correlation under test depends on
+  particle diameter, so the F1.4 shortcut does not apply. Fig. 6 is the model.
+- **`B3.1`** — agreed it is analytic; **no figure needed, no review gate.**
+
+Staged extractions with their review verdicts are in `docs/staged-data/`.
+
+**Series identity can come from position instead of shape.** This is the F1.4
+lesson in a second form and it is the reusable one. On `F2.3` the template
+matcher picked the wrong *shape* wherever markers overlapped — two overlapping
+squares read as a circle. But the three series each follow their own curve and
+never cross, so identity was reassigned by fitting `eps = a + b·log U + c·log²U`
+per series and moving every marker to the nearest curve, iterated to a fixed
+point. That moved exactly the 10 markers the reviewer had described, without
+touching the detector. **Ask what carries the series identity in the figure —
+shape, position, or a curve — before trying to improve shape recognition.**
+
+**Check whether the figure can resolve what you are testing.** On `H1.7` the
+rejection panel appears to validate the model; closing the model shows it
+predicts a 0.31 percentage-point rise, which is 4 px on a figure whose curve is
+6 px thick. Agreement there is not evidence. Compute the predicted effect in
+*pixels* before quoting an agreement.
+
+**Reusable extraction code** lives in the session scratchpad, not the repo:
+`markers.py` (shape-template matching pursuit, open and filled), `curves.py`
+(column tracing with an order-preserving DP so adjacent curves cannot swap), and
+`overlay.py`. Worth promoting into `scripts/` when a fourth figure needs them.
 
 ### What `F1.4` settled, and what it did not
 

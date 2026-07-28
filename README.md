@@ -4,8 +4,8 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: eight pages built, three of them validated against experiment.** The
-literature survey (266 models), the Quarto scaffolding, and eight complete pages
+**Status: nine pages built, four of them validated against experiment.** The
+literature survey (266 models), the Quarto scaffolding, and nine complete pages
 are in place; CI executes every notebook and validates metadata.
 
 | Page | Validation |
@@ -18,6 +18,7 @@ are in place; CI executes every notebook and validates metadata.
 | `F1.4` Krishna–Ellenberger large-bubble holdup | **experimental** — 13.8 % mean deviation over 63 digitised points |
 | `A2.3` Taylor–Aris dispersion | 1.0e-4 vs Taylor's Eq. 25; his own capillary run to 0.04 % |
 | `J1.5` LDF breakthrough | 6.6e-5 vs the exact series solution (provenance tier 6) |
+| `H1.7` Wijmans–Baker solution–diffusion | **experimental** — two constants fitted to two series predict the third |
 
 ```bash
 python -m venv .venv && source .venv/bin/activate

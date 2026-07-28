@@ -1,0 +1,65 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.7
+slug: solution-diffusion
+title: "Wijmans–Baker solution–diffusion model"
+section: H
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [liquid, gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - wijmans-baker-1995-fig5.csv
+
+validation:
+  - eq. (40) is self-checking: the salt permeability B recovered independently from each of the four salt points agrees to 2.7 % with no trend in pressure
+  - rejection predicted from A and B alone, neither fitted to the rejection data, against the four rejection markers
+  - the pymrm concentration-polarisation film solve against its closed form, refined to show first-order convergence
+  - concentration polarisation tested as an explanation for the intercept gap, and ruled out
+
+adds: >
+  The rejection panel of Figure 5 looks like a validation of the model and is
+  not one. Closing the model - A from the water flux, B from the salt flux,
+  rejection then fixed - predicts a rise of 0.31 percentage points across the
+  measured pressure range, which is 4 px on a printed figure whose curve is
+  about 6 px thick. The markers agree, and would have agreed with any prediction
+  above 99 %. The evidence in that figure is in the first two panels, not the
+  third.
+
+  Separately, the derivation assumes no concentration polarisation and never
+  examines it. A pymrm convection-diffusion solve of the feed-side film puts
+  numbers on it: at the highest measured flux a 50 um boundary layer raises the
+  wall concentration 23 % above bulk and a 200 um one raises it 70 %. It also
+  shows that polarisation cannot explain the gap between the fitted osmotic
+  pressure and the stated one, because a film thick enough to shift the
+  intercept that far would halve the apparent permeability.
+
+agreement: >
+  Eq. 37 fits the four water-flux points with r^2 = 0.99981, giving
+  A = 0.0482 L/(m2 h psi) and a zero-flux intercept of 322 +/- 7 psi against the
+  ~350 psi the caption states. Eq. 40 gives B = 0.0857 L/(m2 h) with a 2.7 %
+  spread across a 1.56-fold pressure range. Rejection predicted from those two
+  constants is 99.39 to 99.70 % over the measured range; the digitised markers
+  read 99.85 to 100.08 %, which is agreement only in the weak sense described
+  above. The film solve matches its closed form to 4.3e-4 at n = 400 and
+  converges first order, refinement ratio 2.00.
+
+caveats: >
+  One figure of a review article, four points per series, and a commercial
+  membrane whose A and B are not independently known, so the fitted constants
+  cannot be checked against anything external. The fitted osmotic pressure sits
+  28 psi - four standard errors - below the caption's stated value; polarisation
+  is ruled out as the cause but nothing is ruled in, and the discrepancy is left
+  open rather than explained away. The film thickness is a free parameter: the
+  polarisation figures are a sensitivity study, not a measurement, and only the
+  negative conclusion drawn from them is independent of it. The intrinsic
+  rejection fed to the film solve comes from the model itself, which is mildly
+  circular, though the wall ratio is insensitive to it.
