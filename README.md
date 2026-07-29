@@ -4,8 +4,8 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: nine pages built, four of them validated against experiment.** The
-literature survey (266 models), the Quarto scaffolding, and nine complete pages
+**Status: ten pages built, four of them validated against experiment.** The
+literature survey (266 models), the Quarto scaffolding, and ten complete pages
 are in place; CI executes every notebook and validates metadata.
 
 | Page | Validation |
@@ -19,6 +19,7 @@ are in place; CI executes every notebook and validates metadata.
 | `A2.3` Taylor–Aris dispersion | 1.0e-4 vs Taylor's Eq. 25; his own capillary run to 0.04 % |
 | `J1.5` LDF breakthrough | 6.6e-5 vs the exact series solution (provenance tier 6) |
 | `H1.7` Wijmans–Baker solution–diffusion | **experimental** — two constants fitted to two series predict the third |
+| `B3.1` Yagi–Kunii shrinking core | analytic — 6.9e-16 against an independent derivation of the same equation |
 
 ```bash
 python -m venv .venv && source .venv/bin/activate

@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-9 pages, 10 published catalog entries, both CI workflows green.
+10 pages, 11 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -20,8 +20,9 @@ Start here if you are picking this up fresh. Read this, then
 | `J1.5` LDF breakthrough | What the linear-driving-force constant actually is | 6.6e-5 vs the exact series at n_r=400 |
 | `F1.4` Krishna–Ellenberger holdup | A correlation with no fluid property in it, against the figure it was fitted to | **experimental** — 13.8% mean deviation, +2.8% bias over 63 digitised points |
 | `H1.7` Wijmans–Baker solution–diffusion | Two constants predict the third — and the figure cannot test the prediction | **experimental** — A and B fitted to 8 points, rejection predicted for the other 4 |
+| `B3.1` Yagi–Kunii shrinking core | The one equation all three textbook regimes come from, plus a map of where they are safe | 6.9e-16 against an independent derivation; all three limits to 2.4e-8 |
 
-Status counts live in `models.yaml`: 10 published, 19 planned, 2 deferred
+Status counts live in `models.yaml`: 11 published, 18 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
@@ -95,11 +96,12 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`F2.3`, `J3.4`, `G1.8`, `B3.1`** — all four are unblocked and their data is
-   staged or unnecessary. `B3.1` is analytic and needs nothing; `G1.8` needs
-   Eq. 19–21 plus Table 2's approximate spherical solution against the four
-   digitised Fig. 6 lines; `J3.4` is a full P2D battery model and is the largest
-   build in the queue.
+1. **`G1.8`, `F2.3`, `J3.4`** — all three unblocked, data staged. `G1.8` needs
+   Eqs. 19–21 plus Table 2's approximate spherical solution against the four
+   digitised Fig. 6 lines, and Eq. 20 self-checks against the printed f_e values.
+   `F2.3` can lift Eq. 19 and Reilly's Eq. 8 from the `F1.4` page as validated SI
+   functions. `J3.4` is a full P2D battery model, the largest build in the queue,
+   and can only ever be a reference-solution page. (`B3.1` — **done 2026-07-29**.)
 2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
    fluidised-bed model.
 3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
@@ -107,6 +109,32 @@ bulk-download tool.
    Note `F2.3` consumes `F1.4`: Eq. 19 and Reilly's Eq. 8 are already
    implemented and validated on the `F1.4` page as standalone SI functions, so
    lift them rather than rewriting.
+
+### Verify an equation read off a page image before building on it
+
+`B3.1` is the template. Its two governing equations were read from 600 dpi
+renders because the scan's text layer mangles them (`theta_B` as `0B`, Eq. 6's
+exponents dropped). A page-image reading is a transcription and needs checking
+like any other. Two checks settled it:
+
+- **Endpoint identities that only hold for the right coefficients.** Eq. 6 must
+  give exactly 0 at *r*/*R* = 1 and exactly 1 at *r*/*R* = 0 for *any* parameter
+  values, which requires its numerator to collapse to its denominator term by
+  term. A mis-read coefficient breaks this immediately.
+- **An independent derivation.** Integrating the moving boundary from Eq. 5's
+  three resistances, without looking at Eq. 6, reproduced it to 6.9e-16 over six
+  decades — and recovered the factor 3 on the film term and the 12 in
+  *k*_d1 = 12D/D_p on the way.
+
+Look for both before writing the notebook. This is the same instinct as the
+`C2.1` Table 5/6 round trip, generalised: *a transcription you can only read once
+should be checked against something you can derive.*
+
+**And refuse to invent what the paper omits.** `B3.1` cannot produce absolute
+burnout times, because Parker & Hottel's correlation is printed for the specific
+combustion rate `K_c` and the unit conversion to `k_c1` is not given. The page
+works entirely in the dimensionless groups instead, which costs nothing, and says
+so. Do not reconstruct a missing unit conversion by inference.
 
 ### The batched figure review, 2026-07-29 — read this before digitising anything
 

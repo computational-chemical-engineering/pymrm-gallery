@@ -1,0 +1,55 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B3.1
+slug: shrinking-core
+title: "Shrinking-core model for non-catalytic gas–solid reaction"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S12]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets: []
+
+validation:
+  - eq. (6) is exactly 0 at r/R = 1 and exactly 1 at r/R = 0 for any (omega, gamma), which only holds for the printed coefficients
+  - eq. (6) reproduces all three classical conversion-time laws in their respective limits, to 2.4e-8
+  - eq. (6) is shown to BE the integral of eq. (5)'s three resistances, agreeing to 6.9e-16 over six decades of resistance ratio, which recovers the factor 3 on the film term and the 12 in k_d1 independently
+  - the pymrm spherical shell solve reproduces the analytic series resistance to 2.1e-6, converging second order
+
+adds: >
+  Textbooks give the three limiting conversion-time laws and leave the reader to
+  pick one. That choice has a quantitative answer, and this page maps it: for
+  every (omega, gamma) the full eq. (6) is compared with the closest
+  single-resistance law. Over six decades in each group, some single law is within
+  5 % on 71 % of the plane and within 2 % on 52 %, and the worst case anywhere is
+  20 %, at omega = 11, gamma = 0.8 - the middle of the map, where no resistance
+  dominates and all three must be kept. The map is derived from eq. (6) and does
+  not appear in the paper.
+
+agreement: >
+  Not applicable in the experimental sense; this is a tier 6 analytic page. The
+  numbers that matter are internal consistency checks. Eq. (6) as read off the
+  600 dpi render is identical to the independent moving-boundary integration to
+  6.9e-16 worst case, reduces to the film, ash-layer and reaction-control laws to
+  8.2e-10, 2.3e-8 and 3.8e-10, and is exact at both endpoints. The pymrm shell
+  solve matches the closed-form series resistance to 2.1e-6 at n = 400 with
+  refinement ratios approaching 4.
+
+caveats: >
+  No experimental comparison, by construction: the source paper's measurements are
+  of fluidised-bed elutriation and particle size distributions, which belong to a
+  different model. k_c1 cannot be recovered from the paper as printed - Parker and
+  Hottel's correlation is given for the specific combustion rate K_c and the unit
+  conversion to k_c1 is not stated - so no absolute burnout times are quoted and
+  the paper's Figure 6 is not reproduced. The regime map is a statement about
+  eq. (6), not about any particular particle. Constant outer radius is assumed
+  throughout; a solid that sheds its ash is a different problem. The quasi-steady
+  assumption behind both eq. (6) and the shell solve is argued rather than tested.
