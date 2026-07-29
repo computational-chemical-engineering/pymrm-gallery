@@ -96,9 +96,8 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`G1.8`, `F2.3`, `J3.4`** — all three unblocked, data staged. `G1.8` needs
-   Eqs. 19–21 plus Table 2's approximate spherical solution against the four
-   digitised Fig. 6 lines, and Eq. 20 self-checks against the printed f_e values.
+1. **`F2.3`, `J3.4`** — unblocked, data staged. **`G1.8` is BLOCKED** on a
+   question for the maintainer; see the section below.
    `F2.3` can lift Eq. 19 and Reilly's Eq. 8 from the `F1.4` page as validated SI
    functions. `J3.4` is a full P2D battery model, the largest build in the queue,
    and can only ever be a reference-solution page. (`B3.1` — **done 2026-07-29**.)
@@ -109,6 +108,36 @@ bulk-download tool.
    Note `F2.3` consumes `F1.4`: Eq. 19 and Reilly's Eq. 8 are already
    implemented and validated on the `F1.4` page as standalone SI functions, so
    lift them rather than rewriting.
+
+### `G1.8` is blocked — a model that closes for one curve out of four
+
+Everything needed to reproduce Herskowitz & Smith's Figure 6 was found and each
+piece verified on a 600 dpi render: **Table 1**'s sphere row (page 8 cites
+"Table 2", which actually holds the pressure-drop constants — an error in the
+paper), Eq. 19 for χ, Eq. 20 for *f*_e, Eq. 21 for α_gLS, with α_gs → ∞ and
+*C*\*_L = 1 as stated.
+
+Three independent checks pass. Eq. 20 reproduces the four *f*_e values printed
+inside the figure exactly. Table 1's sphere expression reduces to the classical
+sphere effectiveness factor when *f*_e = 1, which fixes φ on the *V*/*S* length.
+The chain collapses to χ = (1 − *f*_e)·η_s(φ)·φ²/α_gLS, whose log-log slope is
+1.03 against 1.10–1.13 measured.
+
+**And then it reproduces only the lowest curve.** L_m = 0.50 comes out at 3.767
+against 3.752 digitised at φ = 10 — 0.4 %, nothing fitted. L_m = 1.0, 2.0 and 7.0
+are out by 1.69×, 4.03× and 2.34×. The line positions are not in doubt: an
+overlay of the fits sits on the printed curves and the legend rows align with the
+curve endpoints.
+
+Nothing reconciles it cleanly. Matching each curve needs α_gs = 2462, 16.2, 4.7,
+10.3 — no pattern, all contradicting "very large". Fitting *f*_e instead needs
+0.721, 0.864, 0.958, 0.974 against the printed 0.72, 0.77, 0.83, 0.94, a
+correction that grows with L_m.
+
+So either the upper three curves used something unstated, or the figure is wrong.
+**Do not publish the page claiming agreement.** Asserting a 1983 AIChE review is
+in error is not a call to make from arithmetic alone; it is a question for the
+maintainer. Full detail is in the staged sidecar's `model_closure_attempt:` block.
 
 ### Verify an equation read off a page image before building on it
 

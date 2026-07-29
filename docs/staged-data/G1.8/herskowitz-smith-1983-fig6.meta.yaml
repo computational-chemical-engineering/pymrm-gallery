@@ -53,6 +53,52 @@ validation:
     3 %, which is what a penalty that scales as a power of the Thiele modulus
     should look like.
 
+model_closure_attempt:
+  date: 2026-07-29
+  status: UNRESOLVED - do not build the page until this is settled
+  what_was_assembled: >
+    The full chain needed to reproduce Figure 6 was located and each piece
+    verified against a 600 dpi render:
+      * Table 1, sphere row (page 4) - approximate overall effectiveness factor
+        for a partially wetted sphere, two parallel paths:
+        eta_o = f_e C*_L / (phi^2/a_gLS + 3phi^2/(3phi coth 3phi - 1))
+              + (1 - f_e) / (phi^2/a_gs  + 3phi^2/(3phi coth 3phi - 1))
+      * eq. 19 (page 8): chi = (eta_o - eta_o(f_e=1)) / eta_o(f_e=1)
+      * eq. 20 (page 8): f_e = 0.77 L_m^0.1
+      * eq. 21 (page 8): 1/a_gLS = 1/(1.05 L_m^0.3) + 1/(6.91 L_m^0.6)
+      * a_gs -> infinity and C*_L = 1.0, both as stated
+    Page 8 cites "Table 2" for the spherical solution; Table 2 holds the
+    pressure-drop constants beta and gamma. The intended reference is Table 1.
+    That is an error in the paper, confirmed against the notation list.
+  independent_checks_that_passed: >
+    eq. 20 reproduces the four f_e values printed inside the figure exactly
+    (0.718, 0.770, 0.825, 0.936 against 0.72, 0.77, 0.83, 0.94). Table 1's sphere
+    expression reduces to the classical sphere effectiveness factor when f_e = 1
+    and the external resistances vanish, which fixes phi on the V/S characteristic
+    length. The chain collapses to a closed form,
+    chi = (1 - f_e) * eta_s(phi) * phi^2 / a_gLS, whose log-log slope is 1.03
+    against 1.10-1.13 measured off the four digitised lines.
+  the_discrepancy: >
+    The L_m = 0.50 curve is reproduced to 0.4 % at phi = 10 - model 3.767 against
+    3.752 digitised - with nothing fitted. The other three are not:
+      L_m = 1.0  model 2.439  figure 1.441  ratio 1.69
+      L_m = 2.0  model 1.428  figure 0.354  ratio 4.03
+      L_m = 7.0  model 0.334  figure 0.143  ratio 2.34
+    The line positions are not in doubt: an overlay of the four fits on the
+    original figure sits on the printed curves, and the legend rows align with the
+    curve endpoints top to bottom, so the curve-to-L_m assignment is as printed.
+  what_does_not_reconcile_it: >
+    No single a_gs works - matching each curve individually requires 2462, 16.2,
+    4.7 and 10.3, with no pattern and all contradicting the stated "very large".
+    No consistent f_e correction either: the required values are 0.721, 0.864,
+    0.958, 0.974 against the printed 0.72, 0.77, 0.83, 0.94, so the needed
+    correction grows with L_m rather than being a fixed offset.
+  open_question_for_the_maintainer: >
+    Either the three upper-L_m curves were computed with something the paper does
+    not state, or the figure contains an error. The page must not be published
+    claiming agreement it does not have, and asserting the paper is wrong is not a
+    call to make from the numbers alone. Held here until decided.
+
 review:
   reviewed_by: "gallery maintainer"
   date: 2026-07-29
