@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-14 pages, 15 published catalog entries, both CI workflows green.
+15 pages, 16 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -23,7 +23,7 @@ Start here if you are picking this up fresh. Read this, then
 | `B3.1` Yagi–Kunii shrinking core | The one equation all three textbook regimes come from, plus a map of where they are safe | 6.9e-16 against an independent derivation; all three limits to 2.4e-8 |
 | `F2.3` Maretto–Krishna FT slurry column | Plug-flow large bubbles over a well-mixed slurry, and two printed constants that stop it working | **experimental** holdup — 5–6% over 79 points; conversions 93.1/63.8% vs the paper's 96/63% |
 
-Status counts live in `models.yaml`: 15 published, 14 planned, 2 deferred
+Status counts live in `models.yaml`: 16 published, 13 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
@@ -145,6 +145,27 @@ Two pymrm traps recorded on that page, both silent failures:
   rank-deficient solve still returns a plausible-looking profile.
 - With varying velocity, discretise `d(Uc)/dz` as the divergence of the flux.
   `U dc/dz` loses the gas contraction — 65 % of the volumetric flow here.
+
+### Two independent readings of the same paper can validate each other
+
+`J3.4` is the pattern. Its open-circuit expression (eq. 16) was read off a 600 dpi
+render; the *dashed curve on Figure 2 is that same quantity*, and had already been
+digitised and maintainer-reviewed. The two agree to **3.3 mV over 237 points**
+against a digitisation good to ~3 mV. Neither reading informed the other, so each
+validates the other — the page-image transcription and the curve trace are
+independent witnesses.
+
+Look for this whenever a figure plots something the text also states in closed
+form. It converts two separately doubtful extractions into one confident result,
+and costs nothing beyond noticing the overlap.
+
+**When the paper does not print what the model needs, invert what it does print.**
+`J3.4`'s Appendix A says the conductivity "was fit to a third-order polynomial"
+and gives no coefficients. Rather than guess, the agent inverted the paper's own
+eqs. 28 and 29, which both contain (1/kappa + 1/sigma) — two published numbers
+yielding two estimates 19 % apart, stated openly as a reconstruction. That is the
+line between reconstruction and fabrication: every input traceable to something
+printed.
 
 ### `G1.8` is blocked — a model that closes for one curve out of four
 

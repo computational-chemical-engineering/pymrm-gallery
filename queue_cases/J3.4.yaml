@@ -5,7 +5,7 @@ catalog_reference: Doyle, Fuller & Newman, JES 140:1526 (1993)
 priority: P1
 tier: T1
 structures: S8+S10
-status: unclaimed
+status: published
 reference:
   authors:
   - Doyle, M.
@@ -13,10 +13,76 @@ reference:
   - Newman, J.
   year: 1993
   container: Journal of the Electrochemical Society 140(6) 1526–1533
+  doi: 10.1149/1.2221597
 paper:
-  on_disk: null
-  open_access: null
-  checked: null
+  on_disk: ~/papers/pymrm-gallery/Doyle_1993_J._Electrochem._Soc._140_1526.pdf
+  open_access: false
+  checked: 2026-07-31
 blocker: null
-notes: null
-updated: '2026-07-30'
+notes: 'Page built in queue_cases/J3.4/page/ and executes clean in 37 s (build_page.py
+  -> index.ipynb, nbclient, no errors). Reference-solution page only: Figure 2 carries
+  no experimental points, confirmed on maintainer review.
+
+  EXTRACTION COMPLETE. All three items the staged sidecar listed as outstanding were
+  read off 600 dpi renders and are now in the page''s parameters CSV. Eq. 16 is U_2
+  = 2.17 + (RT/F)(ln((c_T-c_s)/c_s) + beta c_s + zeta); Eq. 17 is the Butler-Volmer
+  with prefactors c_s and (c_T - c_s); Eq. 20 fixes beta = -0.000558 m3/mol and zeta
+  = 8.10. Appendix A gives the salt diffusivity as 7.5e-12 m2/s and c_max = 3920 mol/m3.
+
+  BUT APPENDIX A DOES NOT PRINT THE CONDUCTIVITY POLYNOMIAL. It says only that the
+  conductivity of PEO-LiCF3SO3 "was fit to a third-order polynomial" and cites ref.
+  19; there are no coefficients anywhere in the article and no figure of kappa against
+  c. That was the one real gap and it is closed by inverting the paper''s own Eqs.
+  28 and 29, which contain (1/kappa + 1/sigma) and whose values it prints (delta =
+  1.95, nu = 68). Those give kappa_eff = 7.97e-3 and 6.72e-3 S/m - 19 % apart - and
+  both put sigma/kappa at O(1e5) as the paper states. The page carries a constant
+  kappa and says what that costs.
+
+  Three findings the next reader should have. (1) The reduction in the staged inventory
+  holds: S_c = 1.02e-4 at I = 10 (paper 0.0001) and 2.04e-4 at I = 20, so Appendix
+  B''s superposition is off the critical path at every current in Figure 2. Eq. 27
+  independently confirms the Appendix A diffusivity: S_s = 0.153 against the paper''s
+  0.15. (2) Table I''s cathode salt flux is ambiguous. Written as div(eps D grad c)
+  with the text''s D_eff = D eps^0.5 it can mean D eps^1.5 or D eps^0.5. D eps^1.5
+  is ruled out by the paper''s own Figure 3 - it drives the electrolyte to zero before
+  half the discharge - and by the transport-limited crossings, which come out at a
+  third to a half of the published utilisation. (3) Eq. 5 as printed omits the factor
+  nu = nu+ + nu- = 2 that a 1:1 salt requires; with the paper''s own n = nu+ = z+
+  = 1 and Newman''s s+ = -1 the printed group is half the concentration-cell emf coefficient.
+  Figure 2 does NOT decide this: nu = 1 gives a smaller mean deviation (18.2 vs 25.5
+  mV) and nu = 2 better transport limits, and the two bracket the published curves.
+  The page uses nu = 2 on the thermodynamic argument and prints both.
+
+  Agreement: Eq. 16 against the paper''s own plotted open-circuit curve, 3.3 mV over
+  237 points; four discharge curves 25.5 mV pooled over 884 points with a -23.8 mV
+  bias; 1.7 V cutoff utilisation at I = 10 of 0.831 against 0.84 stated and 0.821
+  digitised; porosity optimum at 0.60, exactly where the paper puts it, at 0.928 against
+  their 0.97. Salt conserved to 3e-16, grid spread 0.14 mV over a 4x refinement.
+
+  For the integrator: models.yaml was deliberately not touched. Promoting the page
+  needs an entry with slug doyle-fuller-newman, structures [S8, S10], status published,
+  and the page directory moved to pages/J3.4-doyle-fuller-newman/. The three data
+  sidecars satisfy scripts/check_metadata.py''s required fields. Note that the fig2
+  sidecar uses a free-text `provenance_tier_note` rather than the `provenance_tier`
+  block the other pages use; the notebook reads that key, so keep them consistent
+  if it is restructured.
+
+  '
+updated: '2026-07-31'
+follow_up:
+  kind: reconstructed-property
+  question: 'Two things in the printed model could not be settled from the paper and
+    are worth a second opinion. (1) Appendix A says the PEO-LiCF3SO3 conductivity
+    ''was fit to a third-order polynomial'' and cites ref. 19, but prints no coefficients
+    and no kappa(c) figure. It was reconstructed by inverting the paper''s own eqs.
+    28 and 29, which both contain (1/kappa + 1/sigma), giving kappa_eff = 7.97e-3
+    and 6.72e-3 S/m - 19 % apart. (2) Eq. 5 omits the factor nu = 2 that a 1:1 salt
+    requires. Figure 2 cannot decide it: nu = 1 fits slightly better (18.2 vs 25.5
+    mV) but nu = 2 gives better transport limits, and the two bracket the published
+    curves. The page uses nu = 2 on the thermodynamic argument and prints both.'
+  detail: 'Not blocking - the page is live and states both openly rather than choosing
+    by fit. If you have the Bouridah/Fauteux conductivity data (ref. 19/20) the reconstruction
+    could be replaced by the real polynomial, which would also sharpen the charge-curve
+    residual: the charge bias is +64 mV against -24 mV on discharge, the signature
+    of series resistance and therefore of exactly this reconstructed kappa.'
+  artifacts: []

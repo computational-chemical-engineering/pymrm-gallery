@@ -606,8 +606,13 @@ models:
   - id: J3.4
     slug: doyle-fuller-newman
     title: "Doyle–Fuller–Newman lithium-ion battery model"
+    description: >
+      The P2D battery model, rebuilt from a paper that does not print one of the
+      properties it needs — and an open-circuit expression that checks against
+      the figure's own dashed curve to 3 mV.
     section: J
-    status: planned
+    status: published
+    page: pages/J3.4-doyle-fuller-newman/
     tier: T1
     priority: P1
     structures: [S8, S10, S3]
@@ -616,11 +621,17 @@ models:
       authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
       year: 1993
       container: "Journal of the Electrochemical Society 140(6) 1526–1533"
+      doi: 10.1149/1.2221597
+    predicts: [galvanostatic discharge and charge curves, electrolyte profiles, porosity optimum]
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac, newton]
+    data: {tier: 6, method: digitised, status: complete}
     note: >
       Structurally identical to D1.4 (reactor-particle coupling). Demonstrating
       that the same pymrm pattern solves both is a strong generality claim, and
       it reaches a large audience outside classical reaction engineering.
-    related: [J3.3, J3.5, D1.4]
+      Figure 2 contains no measurements - every curve is the authors' own
+      simulation - so this is a reference-solution page, not an experimental one.
+    related: [J3.3, J3.5, D1.4, J1.5]
 
   - id: J4.7
     slug: immobilised-enzyme-pellet

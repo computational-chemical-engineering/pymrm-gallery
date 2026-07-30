@@ -1,0 +1,59 @@
+dataset_id: doyle-fuller-newman-1993-parameters
+title: Model parameters of the lithium/polymer/insertion cell (Tables I and II, Appendix A, Eq. 20)
+status: complete
+
+source:
+  authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
+  year: 1993
+  container: "Journal of the Electrochemical Society 140(6) 1526-1533"
+  doi: 10.1149/1.2221597
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 6
+  note: >
+    Model inputs, not measurements. The paper itself contains no experimental
+    data. Some entries are the authors' own choices (k_2 is set "equal to a
+    value corresponding to a nearly reversible situation" because no exchange
+    current density for TiS2 had been reported), and the Eq. 20 constants come
+    from West et al. via the paper.
+
+acquisition:
+  method: table
+  figure: "Table II (journal page 1529), Appendix A (page 1532), Eq. 20 (page 1528)"
+  tool: "poppler pdftoppm at 600 dpi; every value read from the rendered page image"
+  procedure: >
+    The text layer of this scan renders Table II's exponents as literal text
+    (`5.0 . 10 -13`, `10 -1~`), so all values were read from 600 dpi renders.
+    Two of them have an independent arithmetic check inside the paper and both
+    pass: D = 7.5e-12 m2/s reproduces the paper's own S_s = 0.15 through Eq. 27
+    (0.153), and the Table II values reproduce its S_c = 0.0001 through Eq. 26
+    (1.02e-4). The Eq. 20 constants are confirmed against the paper's own
+    plotted open-circuit curve to 3 mV over 237 digitised points.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-31
+  estimated_error: "none beyond the paper's own rounding"
+
+completeness:
+  note: >
+    ONE INPUT OF THE PUBLISHED MODEL IS NOT IN THIS FILE AND IS NOT IN THE
+    PAPER. Appendix A states that the conductivity of PEO-LiCF3SO3 "was fit to
+    a third-order polynomial" and cites ref. 19, but the coefficients are
+    printed nowhere in the article, and no figure of kappa versus c is given.
+    The page reconstructs a single constant value from the paper's own
+    Eqs. 28 and 29 instead; see the notebook. Everything else the model needs
+    is here.
+
+columns:
+  - {name: symbol,      unit: "-",      description: "symbol as used on the page"}
+  - {name: value,       unit: varies,   description: "value as printed"}
+  - {name: unit,        unit: "-",      description: "SI unit"}
+  - {name: source,      unit: "-",      description: "where in the paper it is printed"}
+  - {name: description, unit: "-",      description: "what the parameter is"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced.
