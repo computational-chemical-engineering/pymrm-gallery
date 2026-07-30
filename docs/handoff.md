@@ -97,8 +97,14 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`J3.4`** — unblocked, data staged; a full P2D battery model and the largest
-   build left. It can only ever be a reference-solution page. **`G1.8` is
+1. **`J3.4`** — the largest build left, and now **specified rather than just
+   staged**. The paper is transcribed into the sidecar's `model_inventory:`
+   block, including one finding that changes the build: the paper's own Eq. 26
+   gives S_c = 1.0e-4, so **solid-phase diffusion is negligible** and Appendix
+   B's superposition machinery comes off the critical path. Three items remain to
+   extract (Appendix A's conductivity polynomial and salt diffusivity, Eq. 16's
+   open-circuit potential, Eq. 17's Butler–Volmer). It can only ever be a
+   reference-solution page — Figure 2 contains no measurements. **`G1.8` is
    BLOCKED** on a question for the maintainer; see below. (`F2.3` — **done
    2026-07-30**.)
    `F2.3` can lift Eq. 19 and Reilly's Eq. 8 from the `F1.4` page as validated SI
