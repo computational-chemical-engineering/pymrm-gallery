@@ -1,0 +1,23 @@
+# The Petersen stoichiometric matrix, Table 1 of Henze, Grady, Gujer, Marais &
+# Matsuo (1987), Water Research 21(5) 505-515.  8 processes x 13 components.
+#
+# Every cell is transcribed EXACTLY as printed, in sympy-parseable form.  A blank
+# cell in the paper is an empty field here (the paper: "If a particular process
+# has no impact upon a given component, then the box formed by the intersection
+# of the process row and component column is blank").
+#
+# The two decimal conversion factors 2.86 and 4.57 are kept as printed.  They are
+# rounded values of 20/7 and 32/7 -- see the page, which shows that this rounding
+# is the ONLY thing that stops the matrix satisfying COD continuity exactly.
+#
+# Read from a 600 dpi render of journal pages 506 (columns 1-9) and 507
+# (columns 10-13); the PDF text layer scrambles the matrix and was not used.
+j,process,S_I,S_S,X_I,X_S,X_BH,X_BA,X_P,S_O,S_NO,S_NH,S_ND,X_ND,S_ALK
+1,Aerobic growth of heterotrophs,,-1/Y_H,,,1,,,-(1-Y_H)/Y_H,,-i_XB,,,-i_XB/14
+2,Anoxic growth of heterotrophs,,-1/Y_H,,,1,,,,-(1-Y_H)/(2.86*Y_H),-i_XB,,,(1-Y_H)/(14*2.86*Y_H)-i_XB/14
+3,Aerobic growth of autotrophs,,,,,,1,,-(4.57-Y_A)/Y_A,1/Y_A,-i_XB-1/Y_A,,,-i_XB/14-1/(7*Y_A)
+4,"""Decay"" of heterotrophs",,,,1-f_P,-1,,f_P,,,,,i_XB-f_P*i_XP,
+5,"""Decay"" of autotrophs",,,,1-f_P,,-1,f_P,,,,,i_XB-f_P*i_XP,
+6,Ammonification of soluble organic nitrogen,,,,,,,,,,1,-1,,1/14
+7,"""Hydrolysis"" of entrapped organics",,1,,-1,,,,,,,,,
+8,"""Hydrolysis"" of entrapped organic nitrogen",,,,,,,,,,,1,-1,

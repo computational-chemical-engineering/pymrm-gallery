@@ -1,0 +1,54 @@
+dataset_id: oh-cavendish-1982-cell-density
+title: Channel hydraulic radius and void fraction versus cell density
+status: complete
+
+source:
+  authors:
+    - "Oh, S. H."
+    - "Cavendish, J. C."
+  year: 1982
+  container: "Industrial & Engineering Chemistry Product Research and Development 21(1) 29-37"
+  doi: 10.1021/i300005a006
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 2
+  note: >
+    A printed table of geometry. Not measurements - these three rows follow
+    exactly from the cell density and the stated 0.0254 cm wall thickness, and
+    the notebook uses that to check the transcription (see below).
+
+acquisition:
+  method: table
+  figure: "Table II, journal page 33"
+  tool: "poppler pdftoppm at 600 dpi"
+  procedure: >
+    pdftotext renders the first cell density as "3LO"; the render shows 31.0.
+    All six remaining values transcribed directly.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-07-30
+  estimated_error: "none beyond the paper's rounding (4 decimal places)"
+
+completeness:
+  note: >
+    The whole of Table II. This table is used on the page as a free integrity
+    check rather than as model input: for square channels of pitch
+    p = 1/sqrt(cell density) with wall thickness w, the open side is s = p - w,
+    R_h = s/2 and eps = (s/p)^2. Reproducing all six numbers from the two
+    stated inputs confirms both the transcription and the meaning of R_h, which
+    matters because R_h is defined in the paper as 2*(area/perimeter), i.e.
+    half the hydraulic diameter.
+
+columns:
+  - {name: cell_density_per_cm2, unit: "1/cm2", description: "channel openings per unit frontal area"}
+  - {name: R_h_cm,               unit: cm,      description: "hydraulic radius 2*(cross-sectional area/wetted perimeter)"}
+  - {name: void_fraction,        unit: "-",     description: "monolith void fraction"}
+  - {name: note,                 unit: "-",     description: "marks the standard row"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

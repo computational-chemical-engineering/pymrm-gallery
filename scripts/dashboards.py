@@ -125,8 +125,22 @@ def entries():
     return [e for e in out if e]
 
 
-def img_uri(path: Path):
-    return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode()
+def img_uri(path: Path, max_w: int = 1150):
+    """Inline a PNG, downscaled and palette-reduced. These pages carry several
+    review overlays each and are meant to load on a slow connection."""
+    try:
+        from PIL import Image
+        import io
+        im = Image.open(path).convert("RGB")
+        if im.width > max_w:
+            im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
+        im = im.quantize(colors=64, method=Image.MEDIANCUT, dither=Image.NONE)
+        buf = io.BytesIO()
+        im.save(buf, format="PNG", optimize=True)
+        raw = buf.getvalue()
+    except Exception:
+        raw = path.read_bytes()
+    return "data:image/png;base64," + base64.b64encode(raw).decode()
 
 
 def ref_line(e):

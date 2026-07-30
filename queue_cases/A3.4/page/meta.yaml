@@ -1,0 +1,78 @@
+# Page metadata. Staged in queue_cases/, not yet in pages/.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.4
+slug: wakao-funazkri
+title: "Wakao–Funazkri particle–fluid mass and heat transfer"
+section: A
+status: in-progress          # blocked on a figure-digitisation review; see ../../A3.4.yaml
+tier: T1
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 25
+datasets:
+  - wakao-funazkri-1978-fig2.csv
+  - wakao-funazkri-1978-parameters.csv
+
+validation:
+  - the pymrm discretisation of eq. (4) with Danckwerts boundary conditions against eq. (7), the paper's own closed form; first-order convergence confirmed (error ratios 2.00 over four grid doublings) and one Richardson step lands within 2.0e-6
+  - eq. (7) collapsing onto eq. (8) as the bed Peclet number grows, which is the reason the liquid-phase data survive the re-analysis untouched
+  - the liquid-phase correction computed over the paper's whole accepted range, 1.33 % at worst, against conclusion 1's "not appreciably different"
+  - the stagnant-sphere limit, Sh -> 2 exactly for eqs. (9) and (12) and Sh -> 0 for eq. (11), which crosses Sh = 2 at Re = 4.6
+  - Petrovic and Thodos' eq. (11) re-analysed with eq. (2) and compared with eq. (12); reproduces it to 1.8 % mean and 4.5 % worst over 100 <= Re <= 900, nothing fitted, and moves by under half a per cent when L/d_p is changed fourfold
+  - the axis calibration of Figure 2 checked against three curves whose equations the paper prints - eqs. (9), (11) and (12) all recompute onto the drawn curves at 600 dpi, which also fixes the j_D convention and the voidage used to draw eq. (11)
+  - eq. (12) refitted freely on the 81 digitised gas-phase markers, returning alpha = 1.17 +/- 0.22 and beta = 0.555 +/- 0.037 against the printed 1.1 and 0.6
+
+adds: >
+  The correlation itself is three constants and pymrm adds nothing to it. What
+  pymrm adds is the operation the paper had to do by chart and by hand: eq. (7)
+  exists because in 1978 the alternative was solving a boundary-value problem
+  for every one of several hundred literature points. With eq. (4) discretised,
+  the closed form becomes a check on the solver rather than the method, and the
+  inversion - the actual scientific step - becomes a root find on the forward
+  solve. Three things follow that the paper could not easily print: the
+  correction factor as a continuous map over (Re, Sc, L/d_p) instead of two
+  scatter plots; the conditioning limit, below which a gas-phase bed is
+  saturated and the outlet contains no transfer coefficient at all whatever
+  dispersion coefficient is assumed; and a reproduction of the paper's own
+  recalculation from published algebra alone, pushing eq. (11) through eq. (7)
+  twice and recovering eq. (12) to 1.8 %.
+
+agreement: >
+  Deviation is (model - measured)/measured throughout. The data-free results are
+  the strong ones. The pymrm solve reproduces eq. (7) to 2.0e-6 after one
+  Richardson step, with clean first-order convergence. Re-analysing Petrovic and
+  Thodos' eq. (11) with the eq. (2) dispersion coefficient returns eq. (12) to
+  1.8 % on average and 4.5 % at worst over 100 <= Re <= 900, with nothing
+  fitted. The liquid-phase correction is at most 1.33 % over 3 <= Re <= 1e4,
+  which is conclusion 1 of the paper made quantitative. Against the 81 digitised
+  Figure 2 markers, eq. (12) has a mean absolute deviation of 26.5 % and a bias
+  of +4.9 %; that scatter is the scatter of 1943-1969 gas-phase mass-transfer
+  data and is not a measure of the correlation. The number that matters there is
+  the trend: eq. (11)'s bias runs -36 % below Re = 30, -21 % over 30-100, -2 %
+  over 100-300 and +13 % above 300, while eq. (12)'s stays flat - which is
+  exactly the claim the paper makes about its own Figure 2. Ranz-Marshall is
+  56 % low everywhere.
+
+caveats: >
+  The Figure 2 extraction has NOT been reviewed by a maintainer and the page is
+  staged rather than published because of it. Recall in the dense band above
+  Re = 100 is the open question: of order 110 markers appear to be drawn and 81
+  were kept. Nothing that matters on the page depends on those points - the
+  headline results are algebra and a solved boundary-value problem - and the one
+  thing they are used for, the trend in the residual, is robust to a missing
+  marker. Figure 3, the liquid-phase plot that alpha and beta were actually
+  fitted on, is not extracted; it is a dense scatter of ~250 filled markers,
+  many fully merged, and the free refit here therefore tests 1.1 and 0.6 only
+  against the gas data they were checked against, not the liquid data they came
+  from. The bed voidage 0.40 is inferred from the eq. (11) line drawn in
+  Figure 2, not stated in the paper. L/d_p is swept rather than known, because
+  bed heights are not tabulated per source; the results quoted were chosen to be
+  the ones that barely depend on it. Below Re ~ 50 for a gas the inversion is
+  ill conditioned and the page says so instead of reporting a number.

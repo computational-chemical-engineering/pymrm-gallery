@@ -1,0 +1,55 @@
+dataset_id: wakao-funazkri-1978-parameters
+title: Constants of the Wakao-Funazkri correlation and the ones it is compared with
+status: complete
+
+source:
+  authors:
+    - "Wakao, N."
+    - "Funazkri, T."
+  year: 1978
+  container: "Chemical Engineering Science 33(10) 1375-1384"
+  doi: 10.1016/0009-2509(78)85120-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts only)"
+
+acquisition:
+  method: "read from 600 dpi page renders"
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  procedure: >
+    This is a 1978 Elsevier scan. Its text layer, and the publisher's own OCR
+    served by the Elsevier full-text API, both drop decimal points wholesale -
+    "Sh = 2 + 1 1 Sc 3 Re 6" for eq. (12), "0 357 Re -0 359" for eq. (11). The
+    API text was used for prose and section structure only. Every constant in
+    this file was read from a 600 dpi render of the journal page:
+      eqs. (1), (2), (3)  page 1375 (PDF page 1)
+      eq.  (4)            page 1381 (PDF page 7)
+      eqs. (5), (7), (8), (9)  page 1382 (PDF page 8)
+      eqs. (10), (11), (12)    page 1383 (PDF page 9)
+  verification: >
+    Three of the constants are checkable against the figures rather than merely
+    transcribed, because Figure 2 draws eqs. (9), (11) and (12) and all three
+    recompute onto their printed curves at 600 dpi. See the calibration_check
+    block of the Figure 2 sidecar.
+
+derived:
+  - name: eps_b_figure2
+    value: 0.40
+    basis: >
+      NOT printed in the paper. Fitted so that eq. (11), converted to a Sherwood
+      number by Sh = j_D Re Sc^(1/3), lies on the straight line drawn in
+      Figure 2. Round-number agreement with a plausible packed-bed voidage is
+      part of why the conversion is believed. Nothing else on the page depends
+      on it except the eq. (11) comparison itself.
+
+columns:
+  - {name: quantity, unit: "-", description: "identifier used on the page"}
+  - {name: value, unit: "-", description: "numerical value"}
+  - {name: unit, unit: "-", description: "all dimensionless"}
+  - {name: description, unit: "-", description: "what it is and which equation it comes from"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3).
