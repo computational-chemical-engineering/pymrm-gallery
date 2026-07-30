@@ -1,0 +1,95 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+#
+# STAGED, NOT PUBLISHED. B1.2 has no entry in models.yaml yet. Promoting this
+# page means moving the directory to pages/B1.2-aris-shape-factor/ and adding a
+# matching models.yaml entry; nothing here has been written to models.yaml.
+id: B1.2
+slug: aris-shape-factor
+title: "Aris generalised shape modulus"
+section: B
+status: staged
+tier: T0
+priority: P1
+structures: [S3, S13]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 34
+datasets:
+  - aris1957-table1.csv
+  - aris1957-spherical-shell.csv
+
+reference:
+  authors: ["Aris, R."]
+  year: 1957
+  container: "Chemical Engineering Science 6(6) 262-268"
+  doi: 10.1016/0009-2509(57)85028-3
+also:
+  note: >
+    Reprinted verbatim as Chemical Engineering Science 50(24) 3899-3903 (1995),
+    doi:10.1016/0009-2509(96)81819-7. The 1995 re-typesetting has a clean text
+    layer and is the version to read; the 1957 scan OCRs badly.
+
+validation:
+  - eqs. 15-17 reproduce 19 of the 21 entries of Aris's Table 1 to 0.00078, the printed rounding; the two that do not are both in the cylinder column at Lambda = 5 and 10, printed high by 3.8% and 2.6%
+  - the spherical-shell expression, transcribed from a mangled scan, reproduces all five of his printed values to 0.00041 AND collapses to eq. 17 at p = 0 (1.1e-16) and to eq. 15 at p = 1 (5.8e-10) - seven independent constraints on six terms
+  - pymrm 1-D reproduces eqs. 15-17 and the shell expression to 2.4e-4 worst case at n = 400
+  - the 2-D axisymmetric solve reproduces Aris's unevaluated double series to 4.2e-4 when p is read as radius:length (his nomenclature) and disagrees by 47% when it is read as in his running text - the only way to resolve an ambiguity the paper itself cannot settle
+  - the 2-D square rod and 3-D cube reproduce an independent eigenfunction expansion to 8.2e-6 and 7.5e-5, the cube converging second order (ratio 2.29 for a 1.33x refinement)
+  - eq. 18, eta*Lambda -> 1, extrapolates to 1 within 0.0011 for five shapes including two with edges
+  - eqs. 19-20 reproduce his worked mixture example: mean modulus 1.3158 against 1.316, eta 0.6580 against 0.658
+
+adds: >
+  Aris quantified the shape-independence of the v_p/s_x collapse on the only
+  three shapes with closed-form answers, and wrote that the general case "would
+  be an excessively difficult task, equivalent to solving the problem
+  completely". This page solves it, over fourteen shapes: four spherical shells,
+  five finite cylinders from long rod to flat disc, a square rod and a cube
+  alongside his three. Two results follow that his table cannot show. The band
+  is 0.116 wide at Lambda = 1.1, 27% wider than his plate-to-sphere 0.092. And
+  the sphere, which Table 1 makes look like the extreme case, is not the floor -
+  at the same v_p/s_x = a/3 the cube lies 0.026 (3.7%) below it and the cylinder
+  of length 2a between them, because a corner admits reactant from two
+  directions at once. The page also settles the factor-of-two ambiguity in his
+  case (iv) series, which the paper cannot settle because it never evaluates it.
+
+agreement: >
+  Not applicable in the experimental sense; Aris (1957) contains no measurements
+  and this is a tier 6 analytic page. The numbers that matter are external
+  checks. Eqs. 15-17 match 19 of 21 Table 1 entries to 0.00078. The shell
+  expression matches all five printed values to 0.00041 and both stated limits
+  to 1.1e-16 and 5.8e-10. pymrm matches the closed forms to 2.4e-4 in 1-D, the
+  printed double series to 4.2e-4 in 2-D, and independent eigenfunction
+  expansions to 8.2e-6 (square rod, 2-D) and 7.5e-5 (cube, 3-D). Eq. 18
+  extrapolates to unity within 0.0011.
+
+caveats: >
+  No experimental comparison is possible from this source. A 600 dpi page render
+  could NOT be obtained: the institutional entitlement returns a one-page preview
+  PDF for both the 1957 printing and the 1995 reprint, and both tables are on
+  later pages, so the transcription rests on two independent text layers that
+  agree with each other plus the paper's own algebra. The two cylinder-column
+  entries at Lambda >= 5 are reported as a discrepancy rather than corrected. The
+  third number in the section 4 mixture example cannot be established at all -
+  the two printings give 0.397 and 0.897 and eq. 19 gives 0.4936 - and is left as
+  printed. Beyond Lambda ~ 5 the cube curve is its eigenfunction series rather
+  than a pymrm solve, because the O(1/lambda) reacting layer is not resolved by a
+  24^3 or 32^3 grid (they differ by 11% at Lambda = 20); the series is validated
+  against the 3-D solve at Lambda = 1 only. The widened band is a statement about
+  the idealised isothermal first-order problem with no film resistance.
+
+blocker:
+  kind: review
+  question: >
+    Two transcriptions could not be verified on a 600 dpi render because the
+    Elsevier entitlement only returns page 1. Both are corroborated by two
+    independent printings and by the paper's own equations, but a maintainer with
+    the full PDF should confirm (a) Table 1's cylinder column at Lambda = 5 and
+    10, printed 0.197 and 0.100 against 0.1897 and 0.0975 from eq. 16, and
+    (b) the section 4 mixture example's third number, printed 0.397 in the 1995
+    reprint and 0.897 in the 1957 scan against 0.4936 recomputed.

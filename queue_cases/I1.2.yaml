@@ -5,7 +5,7 @@ catalog_reference: Oh & Cavendish, IEC Prod. Res. Dev. 21 (1982)
 priority: P1
 tier: T0
 structures: S4+S7
-status: unclaimed
+status: published
 reference:
   authors:
   - Oh, S. H.
@@ -13,9 +13,70 @@ reference:
   year: 1982
   container: I&EC Product Research and Development 21(1) 29–37
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/i300005a006.pdf
   open_access: null
-  checked: null
+  checked: '2026-07-30'
 blocker: null
-notes: null
-updated: '2026-07-30'
+notes: 'Built in queue_cases/I1.2/page/. Full transient monolith model (eqs 9-12),
+  twelve fields per cell solved monolithically, 2m17s to execute.
+
+  VALIDATION. All six numbers of Table III reproduced with nothing fitted: mean 0.63
+  % in T_s,max (990.4/986.1/966.9 K against 996/991/975) and worst 1.25 cells of the
+  paper''s own 1/80 grid in x_max/L. Both trends correct (raising lambda_s lowers
+  the peak and moves it downstream). The transient rise is 236 degC against the paper''s
+  241, and the peak occurs at 9.75 s against 10.1 s. Table II reproduced from geometry
+  alone to 0.09 %. The paper''s stated Lewis number of H2 comes out 3.89 against ~4,
+  which validates the Slattery-Bird diffusivities, the gas conductivity correlation
+  and the assumed molecular weight together.
+
+  The Table III residual is a consistent 0.5-0.8 % LOW, and it is not discretisation:
+  the value is converged to 1.5 K between 80 and 320 cells while the gap to the paper
+  is 5 K. The page says so rather than papering over it.
+
+  FOUR QUANTITIES THE PAPER DOES NOT PRINT, each taken from a source it names and
+  each checked: S = 2*eps/R_h (checked against Table II); D_i from Slattery-Bird,
+  Bird et al. 1960 p. 505 (checked against Le_H2); the heats of combustion from standard
+  formation enthalpies; and the limiting Nusselt and Sherwood numbers, which are the
+  only real ambiguity - the paper says "constant wall heat flux, Shah and London (1971)",
+  which for a square duct is 3.608 (H1), 3.091 (H2) or 2.976 (T). Table III is used
+  as the arbiter and the page prints what each gives: H1 is -0.6 % in the peak temperature
+  against -2.0 % and -2.4 % for the others, and -3.5 % in the peak time against +8.9
+  % and +11.9 %.
+
+  TWO READINGS OF EQ 12 SETTLED THE SAME WAY. It is printed as d(C_ps*T_s)/dt, not
+  C_ps*dT_s/dt, and the Nomenclature confirms it with Psi = (1-eps)*rho_s*[C_ps +
+  T_s*dC_ps/dT_s]. With the tabulated C_ps the two readings differ by about 2x in
+  effective thermal inertia at 300 K. The printed form gives the peak at 9.75 s (-3.5
+  %); the alternative gives 7.85 s (-22 %).
+
+  LIGHT-OFF IS A PREDICTION, NOT A COMPARISON. The paper reports case 1 entirely as
+  figures and prints no number for it. The page says this explicitly. 50 % CO conversion
+  at 47.13 s, with a spread of 0.47 s (1.0 %) over a 4x grid change and a 4x time-step
+  change, and the qualitative sequence the paper describes in words is reproduced:
+  CO, C3H6 and H2 light off within a second of each other while CH4 never reaches
+  1 %; the hot spot sits at the inlet while heating is convective, jumps to the outlet
+  at ignition, and walks back upstream over the next four minutes.
+
+  PROVENANCE TIER 6 - the paper contains no experimental data at all. Its two experimental
+  references (Hegedus 1975, Mondt 1981) are qualitative appeals with no numbers. Do
+  not describe this page as validated against experiment.
+
+  CONSERVATION. Species balance closes to 3.7e-8 of the species fed and the energy
+  balance to 1.3e-11 of the heat released, at every one of 3001 time levels.
+
+  FOUR TRAPS WORTH CARRYING FORWARD. (1) The Newton system must be scaled on both
+  sides; twelve fields spanning 750 K to 5e-5 mole fraction make the first sparse
+  solve return "matrix is exactly singular" without it. (2) The old-time accumulation
+  term enters the residual as +enthalpy(T_old)/dt and is subtracted; the wrong sign
+  gives a Newton iteration that converges onto the temperature lower bound every step
+  and never reports an error. (3) A conservation check must use the outlet FACE value
+  from compute_boundary_values, not the last cell centre - with a zero-gradient outlet
+  they differ by 3e-4, and the species balance then closes to 1 % instead of 1e-12,
+  which looks like solver noise. (4) A pandas lookup for parameters inside the residual
+  made the notebook 12x slower than the linear algebra it wrapped - 33 minutes against
+  2m15s. Resolve the table to plain floats before the time loop.
+
+  Not promoted to pages/ - left staged for the integrator.
+
+  '
+updated: '2026-07-31'

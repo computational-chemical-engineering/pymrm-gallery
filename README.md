@@ -4,8 +4,8 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: thirteen pages built, five of them validated against experiment.** The
-literature survey (266 models), the Quarto scaffolding, and thirteen complete
+**Status: fourteen pages built, five of them validated against experiment.** The
+literature survey (266 models), the Quarto scaffolding, and fourteen complete
 pages are in place; CI executes every notebook and validates metadata. Remaining
 cases are tracked in [`queue_cases/`](queue_cases/) and worked by agents in
 parallel.
@@ -25,6 +25,7 @@ parallel.
 | `F2.3` Maretto–Krishna FT slurry column | **experimental** — holdup to 5–6 % over 79 digitised points |
 | `E2.1` Kunii–Levenspiel bubbling bed | three worked appendices reproduced to 0.46 % / 0.57 % / 1.8 % (tier 6) |
 | `J4.8` ASM1 activated sludge | continuity closes as exact symbolic identities; 104-cell matrix (tier 6) |
+| `I1.2` Oh–Cavendish converter light-off | all six numbers of the paper's Table III, 0.63 % mean, nothing fitted (tier 6) |
 
 ```bash
 python -m venv .venv && source .venv/bin/activate

@@ -524,17 +524,26 @@ models:
   - id: I1.2
     slug: catalytic-converter-lightoff
     title: "Monolith catalytic converter light-off"
+    description: >
+      A transient monolith channel that reproduces all six numbers of the
+      paper's Table III with nothing fitted — and four of the quantities it
+      needs are never printed.
     section: I
-    status: planned
+    status: published
+    page: pages/I1.2-catalytic-converter-lightoff/
     tier: T0
     priority: P1
     structures: [S4, S7]
     phases: [gas-solid]
+    predicts: [light-off time, peak solid temperature and its location, transient conversion]
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac, newton]
     reference:
       authors: ["Oh, S. H.", "Cavendish, J. C."]
       year: 1982
       container: "I&EC Product Research and Development 21(1) 29–37"
-    related: [I1.1, C2.13]
+      doi: 10.1021/i300005a006
+    data: {tier: 6, method: table, status: complete}
+    related: [I1.1, C2.13, D2.2]
 
   - id: I1.7
     slug: reverse-flow-reactor

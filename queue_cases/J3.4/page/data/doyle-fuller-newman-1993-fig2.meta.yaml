@@ -1,0 +1,127 @@
+dataset_id: doyle-fuller-newman-1993-fig2
+title: Cell potential vs cathode utilisation, six simulated curves (Figure 2)
+status: complete
+
+source:
+  authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
+  year: 1993
+  container: "Journal of the Electrochemical Society 140(6) 1526-1533"
+  doi: 10.1149/1.2221597
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+provenance_tier_note: >
+  THIS IS NOT EXPERIMENTAL DATA. Every curve on Figure 2 is output of the
+  authors' own simulation; the text cites measured discharge curves by reference
+  only and plots none. Confirmed by the gallery maintainer on review. A page
+  built on this is a reference-solution reproduction in the sense of D2.2, and
+  must not be described as validated against experiment.
+
+conditions:
+  cell: "lithium foil | polymer electrolyte | TiS2 composite insertion cathode"
+  parameters: "Tables I and II of the paper; T = 100 C, delta_s = 50 um, delta_c = 100 um, R_s = 1.0 um"
+  curves: "charge at I = -10 A/m2; open-circuit potential (dashed); discharge at I = 5, 10, 13, 20 A/m2"
+  initial_solid_concentration: "1 % of maximum for the discharge curves (caption)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 2, journal page 1529"
+  tool: "poppler pdftoppm at 600 dpi, column-wise run detection with order-preserving tracking"
+  procedure: >
+    Traced column by column. The six curves never cross, so at each column the
+    trackers are matched to the ink runs by an order-preserving dynamic program
+    over all six at once, rather than each tracker independently taking its
+    nearest run. That matters: greedy nearest-run matching made the dashed
+    open-circuit curve and the I = 5 curve swap repeatedly where they run close
+    together. Each solid curve is allowed to coast only 10 px through a gap, so
+    it stops at its true endpoint instead of walking onto a nearby label; the
+    dashed curve is allowed 70 px.
+
+    Seeded at u = 0.12, where all six are separated, then traced both directions.
+
+    Cell potential cannot rise with utilisation, so each trace is projected onto
+    the nearest non-increasing sequence (pool-adjacent-violators). Only the dashed
+    curve needed it: 3 spans totalling 10 points, widest 8 px.
+
+    Axes are linear over the frame: utilisation 0 to 1 between columns 2693 and
+    4357, cell potential 0 to 3 V between rows 5922 and 4546.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-29
+  estimated_error: >
+    Better than 3 mV, i.e. about 1.5 px. Calibration is confirmed independently:
+    the inward y-axis tick marks land on 2.000, 1.500, 1.000 and 0.500 V.
+  thinning: "the raw trace is one point per pixel column; the CSV is thinned to ~200 points per curve"
+
+review:
+  reviewed_by: "gallery maintainer, against the original figure"
+  date: 2026-07-29
+  verdict: "correct, one print artefact to remove"
+  findings: >
+    Confirmed that the figure contains no measured points; confirmed the curve
+    identities top to bottom (charge I = -10, open-circuit dashed, then I = 5, 10,
+    13, 20) and that all six traced endpoints match the printed ones. One defect:
+    the open-circuit curve carried a small hump near u = 0.58, caused by a speck
+    of print noise about 7 px above the dashed line that the tracker climbed onto.
+  consequence: >
+    The monotone projection removes it. Over u = 0.53-0.64 the curve now deviates
+    from a local quadratic by at most 3.7 mV, against 2.5 mV over a quiet stretch
+    at u = 0.20-0.35 - i.e. the artefact is gone rather than merely reduced.
+
+model_inventory:
+  date: 2026-07-30
+  status: specified but NOT yet implemented
+  why_it_matters: >
+    Recorded so the next session starts from a transcribed model rather than
+    re-deriving it. This is the largest build in the queue and the flagship
+    S8/S10 page; it is worth getting right rather than fast.
+
+  the_reduction_that_changes_the_build: >
+    Eq. 26 defines S_c = R_s^2 I / (D_s F (1-eps) c_T delta_c), the ratio of
+    solid-phase diffusion time to discharge time, and states that diffusion may
+    be neglected for S_c << 1. With Table II's values (R_s = 1 um, I = 10 A/m2,
+    D_s = 5e-13 m2/s, eps = 0.3, c_T = 29000 mol/m3, delta_c = 100 um) this
+    evaluates to 1.02e-4. Solid-phase diffusion is therefore negligible at the
+    conditions of Figure 2, on the paper's own criterion, which takes the whole
+    superposition apparatus of Appendix B off the critical path and leaves
+    electrolyte transport, kinetics and the open-circuit potential.
+    VERIFY this before relying on it at the highest current shown (I = 20).
+
+  reuse_from_J1_5: >
+    Appendix B's eq. B-5, a(tau) = (2/pi^2) sum 1/n^2 [1 - exp(-n^2 pi^2 tau)]
+    with tau = t D_s / R_s^2, is the same spherical-diffusion series already
+    implemented and validated on page J1.5. If the S_c reduction is ever relaxed,
+    lift it from there rather than rewriting.
+
+  transcribed_so_far:
+    tables: "Table I (all governing equations, page 5) and Table II (parameters, page 5)"
+    transference_number: "t0_+ = 0.0107907 + 1.48837e-4 * c   (Appendix A, fitted to ref. 20)"
+    salt_precipitation_limit: "c_max = 3920 mol/m3, from the PEO phase diagram"
+    current_conservation: "eqs. 21-24: grad(Phi_1) = 0 at x = delta_s; i_1 = -sigma grad(Phi_1); div(i_1 + i_2) = 0; I = i_1 + i_2"
+    parameters: >
+      D_s = 5.0e-13 m2/s; sigma = 1.0e4 S/m; i_0,1 = 12.6 A/m2; alpha_a = alpha_c = 0.5;
+      c_T = 29000 mol/m3; k_2 = 1e-10 m4/(mol s); n = 1; T = 100 C; delta_s = 50 um;
+      delta_c = 100 um; R_s = 1.0 um; c_0 = 1000 mol/m3; eps = 0.3
+
+  still_to_extract:
+    - "Appendix A: the third-order polynomial fit for the conductivity of PEO-LiCF3SO3 (ref. 19), and the constant salt diffusion coefficient. Located in the right column of page 8, between the transference-number fit and Appendix B."
+    - "Eq. 16: the open-circuit potential of the insertion material, carrying the activity-correction parameters xi and zeta."
+    - "Eq. 17: the Butler-Volmer expression for the pore-wall flux j_n."
+
+  a_route_worth_considering: >
+    The dashed curve in the digitised set IS the open-circuit potential. If eq. 16
+    proves hard to read or its xi/zeta are not given, the digitised dashed curve
+    can serve as U(u) directly and the discharge curves predicted from it by
+    adding the computed polarisation. That makes the extraction load-bearing
+    rather than decorative, and isolates the transport and kinetics.
+
+columns:
+  - {name: curve, unit: "-", description: "charge (I=-10) | open-circuit (dashed) | I=5 | I=10 | I=13 | I=20, in A/m2"}
+  - {name: utilisation, unit: "-", description: "fraction of active cathode material used, Eq. 25"}
+  - {name: cell_potential_V, unit: V, description: "cell potential"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced.

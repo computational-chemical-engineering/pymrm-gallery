@@ -324,6 +324,21 @@ that, not page count, sets the cost of the page.
 | `A2.3` | Taylor 1953 | 2 469 ch/pg equivalent | few | thin, and hyphens for decimals |
 | `A1.1` | Ergun 1952 | **none at all** | — | pure scan, everything off renders |
 
+### Look for the 1995 Golden Jubilee reprint before rendering pages
+
+*Chemical Engineering Science* reprinted a set of its classics **verbatim** in the
+1995 Golden Jubilee issue (vol. 50), re-typeset rather than re-scanned. Where the
+original scan OCRs badly, the reprint OCRs cleanly, and the two printings can be
+diffed against each other — which turns a guess into a decision. Aris 1957 renders
+`0.698` as `898` in the 1957 scan and correctly in the 1995 reprint
+(PII `0009250996818197`); an agent transcribed only numbers the two printings
+agree on, and used a disagreement at *p* = 0.75 to work out which printing was
+right by checking both against the paper's own stated limits.
+
+Search the PII endpoint for the vol. 50 (1995) reprint of any pre-1970 CES paper
+before falling back to 600 dpi renders. It is faster and it gives a second
+independent witness for every constant.
+
 **The decimal-point trap is not confined to Elsevier.** Taylor's 1953 Royal
 Society scan renders `48.0` as `48-0` and `59.8` as `59-8`. Same failure as Van
 Welsenaere & Froment, different publisher, different decade. Assume it for any

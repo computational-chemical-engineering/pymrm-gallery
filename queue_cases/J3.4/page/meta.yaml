@@ -1,0 +1,75 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J3.4
+slug: doyle-fuller-newman
+title: "Doyle–Fuller–Newman lithium/polymer/insertion cell (P2D)"
+section: J
+status: in-progress
+tier: T1
+priority: P1
+structures: [S8, S10]
+phases: [liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 300
+datasets:
+  - doyle-fuller-newman-1993-fig2.csv
+  - doyle-fuller-newman-1993-parameters.csv
+  - doyle-fuller-newman-1993-stated-results.csv
+
+validation:
+  - Eq. 16 (open-circuit potential, read from a page image) against the paper's own plotted dashed curve, 237 digitised points
+  - Eq. 26 and Eq. 27 recomputed against the S_c and S_s values the paper prints, which independently confirm D_s and the salt diffusivity
+  - the conductivity recovered twice, from Eq. 28 and from Eq. 29, and both checked against the paper's stated sigma/kappa = O(1e5)
+  - exact conservation of total salt, which the flux form of the salt balance makes a property of the discretisation
+  - grid independence over a 4x refinement
+  - the short-time concentration rise at the anode against the semi-infinite analytical solution and against the paper's Figure 4
+  - the long-time pore-wall flux against the charge-balance value and the paper's Figure 5
+  - the utilisation at the 1.7 V cutoff against the 84 % the paper states
+  - the porosity optimisation the paper reports as a single sentence
+
+adds: >
+  The paper never prints the conductivity of its own electrolyte: Appendix A
+  says the PEO-LiCF3SO3 conductivity "was fit to a third-order polynomial" and
+  gives no coefficients and no figure. The page recovers a value by inverting
+  the paper's own Eqs. 28 and 29 - two independent routes that agree to 19 % and
+  both reproduce its stated sigma/kappa = O(1e5). It also settles two
+  ambiguities in the printed model from the paper's own results: the Bruggeman
+  exponent in the cathode salt flux (eps^1.5 is ruled out because it drives the
+  electrolyte to zero before half of the discharge, contradicting their
+  Figure 3), and the factor nu = 2 missing from Eq. 5's concentration term,
+  which thermodynamics requires for a 1:1 salt and the published cutoff
+  utilisations confirm. Finally it sweeps the porosity optimisation that the
+  paper reports as one sentence - it finds the same optimum, and shows that the
+  penalty for being below it is far steeper than for being above it.
+  No new physics: the model is theirs, unchanged.
+
+agreement: >
+  Eq. 16 reproduces the paper's own open-circuit curve to 3.3 mV mean absolute
+  deviation over 237 digitised points, against a digitisation accurate to about
+  3 mV. The four discharge curves are reproduced to a pooled mean absolute
+  deviation of about 26 mV on a 3 V scale with nothing fitted (17, 24, 29 and
+  36 mV at I = 5, 10, 13 and 20 A/m2). The 1.7 V cutoff utilisation at I = 10
+  comes out at 0.83 against the 0.84 the paper states and the 0.82 the digitised
+  curve gives. The porosity optimum is found at 0.60, exactly where the paper
+  puts it. Salt is conserved to 1e-15 and the cell potential moves by 0.04 mV
+  over a fourfold grid refinement.
+
+caveats: >
+  Provenance tier 6. Figure 2 contains no experimental data at all - every curve
+  on it is the authors' own simulation - so this page is validated against a
+  published reference solution in the sense of D2.2 and must NOT be described as
+  validated against experiment. The electrolyte conductivity is a
+  reconstruction, not a reading: it is a single constant recovered from the
+  paper's own dimensionless groups, and the two routes to it differ by 19 %. It
+  therefore carries no concentration dependence, which the paper is explicit
+  about mattering, and the consequence is visible: at I = 13 and 20 A/m2 the
+  model reaches complete electrolyte depletion at the back face at u = 0.45 and
+  0.23 against published 0.64 and 0.30, and stops there. The charge curve is
+  over-polarised by about 64 mV throughout, and the discharge curves by about
+  25 mV, both in the direction of too much series resistance - i.e. of a
+  conductivity that is somewhat too low.
