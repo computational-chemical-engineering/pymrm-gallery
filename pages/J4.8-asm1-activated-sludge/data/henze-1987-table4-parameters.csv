@@ -1,0 +1,36 @@
+# Table 4, "Typical parameter values at neutral pH and 20 C for domestic
+# wastewater", Henze, Grady, Gujer, Marais & Matsuo (1987), Water Research
+# 21(5) 505-515, journal page 513.  Read from a 600 dpi render.
+#
+# `value_min` = `value_max` where the paper prints a single value.
+# `may_be_assumed` is TRUE for the eight parameters that the paper's Table 2
+# lists as showing "little variation from waste to waste".
+#
+# NOTE the last row.  Table 4 prints TWENTY parameter rows, but the paper states
+# the model "contains 13 components and 19 parameters", and Table 1's parameter
+# lists name exactly 19.  The extra row is a second ammonification coefficient:
+# k_a = 0.016 m3 (g cell COD.day)^-1 appears in the correct position in the
+# kinetic block, and k_A = 0.08 m3 COD (g.day)^-1 is appended after b_A.  No
+# symbol k_A is defined anywhere in the model.  Both rows are recorded here as
+# printed; the page does not choose between them by inference.
+symbol,group,units,value_min,value_max,may_be_assumed,note
+Y_A,stoichiometric,g cell COD formed (g N oxidized)^-1,0.07,0.28,TRUE,
+Y_H,stoichiometric,g cell COD formed (g COD oxidized)^-1,0.46,0.69,FALSE,
+f_P,stoichiometric,dimensionless,0.08,0.08,TRUE,
+i_XB,stoichiometric,g N (g COD)^-1 in biomass,0.086,0.086,TRUE,printed as "8 N(8 COD)-i in biomas" in the text layer; render reads g N (g COD)^-1 in biomass
+i_XP,stoichiometric,g N (g COD)^-1 in products from biomass,0.06,0.06,TRUE,
+mu_hat_H,kinetic,day^-1,3,13.2,FALSE,
+K_S,kinetic,g COD m^-3,10,180,FALSE,
+K_OH,kinetic,g O2 m^-3,0.01,0.15,TRUE,paper's K_{O.H}
+K_NO,kinetic,g NO3-N m^-3,0.1,0.2,TRUE,
+b_H,kinetic,day^-1,0.09,4.38,FALSE,
+eta_g,kinetic,dimensionless,0.6,1.0,FALSE,
+eta_h,kinetic,dimensionless,0.4,0.4,FALSE,
+k_a,kinetic,m^3 (g cell COD.day)^-1,0.016,0.016,FALSE,ammonification; see the note above about the duplicate row k_A
+k_h,kinetic,g slowly biodegradable COD (g cell COD.day)^-1,2.2,2.2,FALSE,
+K_X,kinetic,g slowly biodegradable COD (g cell COD)^-1,0.15,0.15,FALSE,
+mu_hat_A,kinetic,day^-1,0.34,0.65,FALSE,
+K_NH,kinetic,g NH3-N m^-3,0.6,3.6,FALSE,
+K_OA,kinetic,g O2 m^-3,0.5,2.0,TRUE,paper's K_{O.A}
+b_A,kinetic,day^-1,0.05,0.15,TRUE,
+k_A,kinetic,m^3 COD (g.day)^-1,0.08,0.08,FALSE,undefined symbol; printed after b_A as a twentieth row - see the note above

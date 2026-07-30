@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-07-30
+# Handoff — state as of 2026-07-31
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-11 pages, 12 published catalog entries, both CI workflows green.
+13 pages, 14 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -23,7 +23,7 @@ Start here if you are picking this up fresh. Read this, then
 | `B3.1` Yagi–Kunii shrinking core | The one equation all three textbook regimes come from, plus a map of where they are safe | 6.9e-16 against an independent derivation; all three limits to 2.4e-8 |
 | `F2.3` Maretto–Krishna FT slurry column | Plug-flow large bubbles over a well-mixed slurry, and two printed constants that stop it working | **experimental** holdup — 5–6% over 79 points; conversions 93.1/63.8% vs the paper's 96/63% |
 
-Status counts live in `models.yaml`: 12 published, 17 planned, 2 deferred
+Status counts live in `models.yaml`: 14 published, 15 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
@@ -175,6 +175,39 @@ So either the upper three curves used something unstated, or the figure is wrong
 **Do not publish the page claiming agreement.** Asserting a 1983 AIChE review is
 in error is not a call to make from arithmetic alone; it is a question for the
 maintainer. Full detail is in the staged sidecar's `model_closure_attempt:` block.
+
+### Working the catalogue with parallel agents
+
+`queue_cases/` holds one YAML per catalogued case; `scripts/case_queue.py` and
+`scripts/dashboards.py` drive it, and `scripts/find_papers.py` does acquisition.
+Agents build into `queue_cases/<ID>/page/` and touch nothing shared, so several
+run at once; an integrator merges finished pages into `pages/`, adds the
+`models.yaml` entry, and runs the gates.
+
+**Three things that went wrong in the first batch, all worth avoiding again.**
+
+**Never `git add -A` after an agent runs.** Review overlays are drawn on the
+source page image, so they *are* the copyrighted figure — three were committed to
+this public repo before being caught, contradicting the redistribution basis every
+sidecar states. `queue_cases/*/review/*.png` is now git-ignored, but the gate is
+human: look at what an agent produced before staging it.
+
+**A DOI resolved from a terse citation is usually wrong.** CrossRef returns
+something confident for any query: "Carman (1937)" matched a 2025 paper citing
+Kozeny–Carman, and "Danckwerts" matched a 1968 re-derivation. Title-word overlap
+is not enough — require the publication year to agree, and mark anything
+auto-resolved as unverified so a wrong DOI never sends the maintainer after the
+wrong paper.
+
+**Filenames carry no metadata.** Half the PDFs on disk are named by publisher PII
+(`i260028a001.pdf`) or an export id, so automatic matching missed them and one
+case was reported as needing a paper the maintainer had already supplied.
+`docs/papers-on-disk.yaml` maps catalogue ID to filename by hand and is consulted
+first; add a line whenever a PDF arrives.
+
+**Open access will not carry section A.** Of the first cases checked, most 1937–75
+classics have neither DOI nor open copy — they predate DOIs. Expect the papers
+list to be dominated by old classics and to work well only for recent sections.
 
 ### Verify an equation read off a page image before building on it
 

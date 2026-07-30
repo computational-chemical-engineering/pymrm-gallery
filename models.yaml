@@ -311,19 +311,28 @@ models:
 
   # ---------------------------------------------------------------- section E
   - id: E2.1
-    slug: kunii-levenspiel
-    title: "Kunii–Levenspiel bubbling fluidised bed reactor"
+    slug: kunii-levenspiel-bubbling-bed
+    title: "Kunii–Levenspiel bubbling bed model"
+    description: >
+      Three regions, one bubble size, and a conversion ceiling the paper never
+      states — the bed cannot beat it however fast the reaction goes, and it does
+      not depend on gas velocity at all.
     section: E
-    status: planned
+    status: published
+    page: pages/E2.1-kunii-levenspiel-bubbling-bed/
     tier: T0
     priority: P1
     structures: [S7]
     phases: [gas-solid]
+    predicts: [bubble and cloud exchange coefficients, overall rate constant, conversion]
+    pymrm_api: [construct_div, construct_convflux_upwind]
     reference:
       authors: ["Kunii, D.", "Levenspiel, O."]
       year: 1968
-      container: "I&EC Process Design and Development 7(4) 481–492"
-    related: [E1.1, E1.2, E2.3]
+      container: "Industrial & Engineering Chemistry Process Design and Development 7(4) 481–492"
+      doi: 10.1021/i260028a001
+    data: {tier: 6, method: table, status: complete}
+    related: [E1.1, E1.2, E2.3, A1.6, B1.1]
 
   - id: E2.7
     slug: cfb-core-annulus
@@ -621,14 +630,25 @@ models:
   - id: J4.8
     slug: asm1-activated-sludge
     title: "ASM1 activated sludge model"
+    description: >
+      A 104-cell stoichiometric matrix whose continuity relations close as exact
+      symbolic identities — and whose only imperfection is two rounded decimals.
     section: J
-    status: planned
+    status: published
+    page: pages/J4.8-asm1-activated-sludge/
     tier: T1
     priority: P1
-    structures: [S1]
+    structures: [S1, S4]
     phases: [liquid]
+    predicts: [COD/nitrogen/charge continuity, nitrification and denitrification, alkalinity]
+    pymrm_api: [construct_div, construct_convflux_upwind]
     reference:
       authors: ["Henze, M.", "Grady, C. P. L.", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
       year: 1987
-      container: "IWA Scientific and Technical Report No. 1"
+      container: "Water Research 21(5) 505–515"
+      doi: 10.1016/0043-1354(87)90058-3
+      note: >
+        The abbreviated report in Water Research, not the IWA Scientific and
+        Technical Report No. 1 that the catalogue cites; the matrix is the same.
+    data: {tier: 6, method: table, status: complete}
     related: [J4.9, J4.1]

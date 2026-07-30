@@ -1,0 +1,83 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+#
+# NOTE FOR THE INTEGRATOR: models.yaml currently has J4.8 at `status: planned`
+# and `reference.container: "IWA Scientific and Technical Report No. 1"`.
+# Promoting this page means setting that record to published (or in-progress)
+# and, if desired, pointing the reference at the Water Research abbreviated
+# report that was actually used - see queue_cases/J4.8.yaml.
+id: J4.8
+slug: asm1-activated-sludge
+title: "ASM1 activated sludge model"
+section: J
+status: in-progress
+tier: T1
+priority: P1
+structures: [S1]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 58
+datasets:
+  - henze-1987-table1-components
+  - henze-1987-table1-stoichiometry
+  - henze-1987-table1-rates
+  - henze-1987-table4-parameters
+
+validation:
+  - all 8 ionic-charge balances close to exactly zero as symbolic identities in Y_H, Y_A, f_P, i_XB and i_XP - no parameter values substituted
+  - all 8 nitrogen balances close to exactly zero once a dissolved-dinitrogen component is added; without it process 2 leaves (1-Y_H)/(2.86*Y_H) g N unaccounted for
+  - 6 of 8 COD balances close to exactly zero; the residuals on processes 2 and 3 are (Y_H-1)/(1001*Y_H) and -1/(700*Y_A), which are exactly the rounding of 20/7 to 2.86 and 32/7 to 4.57. Substituting the exact fractions makes all 24 balances exactly zero
+  - 10 printed coefficients are recovered by solving continuity for them; 8 come back symbolically identical and the other 2 differ only by that same rounding
+  - the paper's own equation (3) is reproduced exactly from column 2 of the transcribed matrix times the transcribed rate column, cross-checking 3 cells and 3 rate rows against separately typeset material
+  - the pymrm plug-flow lane conserves nitrogen to 1.4e-12 and charge to 2.8e-14 g m-3 d-1 against an oxygen demand of 652 g m-3 d-1, at every grid
+  - the same lane leaks 0.2072 g COD m-3 d-1, predicted to 6e-11 relative by the two stoichiometric residuals; with 20/7 and 32/7 the leak falls to 7e-12, a factor of 3e10
+  - grid refinement of the lane is first order (error ratios 1.94, 2.18, 2.35 at n = 75 to 600), which is what upwind convection gives
+
+adds: >
+  Nothing to the matrix, which is the paper's contribution and is exact. What the
+  reactor adds is the use of the alkalinity column, which the paper calls "not
+  essential" and equips with a threshold (50 g m-3 as CaCO3) that it never
+  evaluates. Charge continuity fixes the arithmetic with no parameter in it -
+  nitrification destroys 2/14 mol of alkalinity per g N and denitrification
+  returns 1/14, exactly half - and the lane turns that into a design curve: with
+  no unaerated volume this operating point needs 3.37 mol m-3 of raw-water
+  alkalinity to stay above the paper's limit, a 30 % anoxic zone drops that to
+  1.47 and a 50 % one to 0.26. The same sweep locates the nitrogen-removal
+  optimum at 50 % unaerated, 8.7 g N m-3 against 26.8 with no anoxic zone.
+
+agreement: >
+  Not applicable in the experimental sense; the source paper contains no worked
+  example, no calibrated plant and no dataset of its own. The numbers that matter
+  are internal-consistency checks on the transcription. Charge and nitrogen
+  continuity close to exactly zero on all eight processes as symbolic identities;
+  COD closes on six of eight and the two residuals are exactly the printed
+  rounding of 20/7 and 32/7, vanishing identically when the exact fractions are
+  used. Ten printed coefficients are recovered from continuity alone, eight
+  identically. The pymrm lane inherits this exactly: nitrogen and charge balance
+  to 1e-12 and 3e-14 g m-3 d-1, COD leaks 0.2072 g m-3 d-1 (0.032 % of the oxygen
+  demand) and the leak is predicted from the stoichiometry to 6e-11 relative.
+
+caveats: >
+  No comparison with a measurement anywhere, by construction: this is the
+  abbreviated report and its one data figure is borrowed from Ekama et al. (1986)
+  to illustrate a measurement procedure. The page validates a transcription and
+  its internal consistency, not a prediction. The continuity relations are NOT
+  printed in this paper - they follow from the component definitions it does
+  state, and the page derives them rather than quoting them. A fourteenth
+  component S_N2 is added, without which nitrogen continuity cannot close on
+  process 2; that is the only change made to the published matrix. Table 4 prints
+  twenty parameter rows against the nineteen the paper says the model has, with
+  the ammonification coefficient appearing twice (k_a = 0.016 and an undefined
+  k_A = 0.08); both are recorded and the reactor is run at both rather than one
+  being chosen by inference. The reactor operating point, the influent, the 1:1
+  return-sludge blend and the geometric-mean parameter rule are ours, not the
+  paper's; the paper supplies no example to reproduce. Plug flow with no axial
+  dispersion, a settler treated as a perfect separation point, and mixed-liquor
+  solids imposed at the lane inlet rather than set by a sludge age. Continuity
+  constrains stoichiometry only - it says nothing about whether the rate
+  expressions or the parameter ranges are right.

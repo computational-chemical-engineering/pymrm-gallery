@@ -5,16 +5,99 @@ catalog_reference: Ergun, Chem. Eng. Prog. 48:89 (1952)
 priority: P1
 tier: T0
 structures: S3
-status: unclaimed
+status: needs-input
 reference:
   authors:
   - Ergun, S.
   year: 1952
   container: Chemical Engineering Progress 48 89–94
 paper:
-  on_disk: null
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/211103107pdfcreator.pdf
   open_access: null
-  checked: null
-blocker: null
-notes: null
+  checked: '2026-07-30'
+blocker:
+  kind: figure-review
+  question: >-
+    The page is built, executes, and passes every check available to me, but the
+    figure digitisation has not been through the maintainer's visual review, which
+    the gallery requires for every extraction. Three specific questions, all
+    answerable in about fifteen minutes from the overlays: (1) is any red ring on
+    something that is not a marker? (2) in the dense chain of Fig. 7's top panel,
+    are the ringed centres on markers, or sliding onto the drawn eq. (14b) line
+    where the two merge? (3) roughly how many markers per panel did the detector
+    miss - random misses cost precision only, a systematic one would bias the
+    refit. If all three come back clean, set status to ready, fill the review
+    block of data/ergun-1952-fig7-markers.meta.yaml, and move
+    queue_cases/A1.1/page/ to pages/A1.1-ergun-pressure-drop/.
+  detail: >-
+    Nothing scientific is unresolved. The extraction is self-consistent to an
+    unusual degree: refitting Ergun's two constants from the 244 recovered markers
+    gives k1 = 151.9 and k2 = 1.697 against his printed 150 and 1.75 (+1.3 %,
+    -3.0 %); the three panels, which are three different laboratories with three
+    independently fitted axis calibrations, give k1 = 146.6, 154.6, 151.0; and an
+    independent second digitisation of the same runs from Fig. 5's other ordinate
+    agrees on binned median f_v to 2.9 % with no trend. The round trip is provably
+    not circular - detection keys on the enclosed white interior of an open
+    circle, Ergun's drawn line has none, and the marker-free half of the top panel
+    returns zero points. The one shape question that could have caused a
+    systematic miss (Fig. 5's Morcom panel uses four symbols) was resolved by
+    direct inspection at 4x: Fig. 7 is all open circles and carries no shape
+    legend.
+
+    Also correct the catalog while you are here. docs/catalog-A-foundations.md
+    says "Ergun's original data are tabulated in the 1952 paper and are
+    digitisable". They are not tabulated. The paper contains NO tables at all, and
+    no text layer either - pdftotext returns four bytes for four pages. Everything
+    on the page was read off 600 dpi renders and the dataset came out of the
+    figures.
+  artifacts:
+  - queue_cases/A1.1/review/README.md
+  - queue_cases/A1.1/review/A1.1-fig7-present-overlay.png
+  - queue_cases/A1.1/review/A1.1-fig7-burke-overlay.png
+  - queue_cases/A1.1/review/A1.1-fig7-morcom-overlay.png
+  - queue_cases/A1.1/review/A1.1-fig5-present-overlay.png
+  - queue_cases/A1.1/review/A1.1-extraction-replot.png
+notes: >-
+  Built as the comparison page the catalog asks for, so it COVERS A1.1, A1.2
+  (Kozeny-Carman), A1.3 (Darcy-Forchheimer) and A1.4 (Eisfeld-Schnitzlein wall
+  correction) in one. Mark all four when it is promoted.
+
+  Page in queue_cases/A1.1/page/, slug ergun-pressure-drop, 25 cells, runs in
+  about 6 s. Five datasets with sidecars: 244 markers from Ergun's Fig. 7 (three
+  panels), 74 from Fig. 5's top panel as a cross-check, his constants plus the
+  measured level of the line he labels Kozeny-Carman, and two files from Eisfeld &
+  Schnitzlein (2001).
+
+  Three findings worth carrying beyond this page.
+
+  (1) The Eisfeld paper came whole out of the Elsevier PII endpoint
+  (S0009250900005339) and, being born-digital 2001, does NOT suffer the
+  lost-decimal-point failure recorded in pdf-findings.md for the pre-1980 scans.
+  Its Table 1 turned out to be the key to the whole page: it re-catalogues the
+  same primary sources Ergun plotted and gives each one's D/dp range, which is the
+  only way to locate the wall-effect regime on Ergun's axes - his own plot carries
+  no such term. Morcom's spheres, tablets and nodules sit at D/dp = 3.7-10.6,
+  exactly the range Ergun discarded from Burke & Plummer and kept in Morcom.
+
+  (2) A new extraction method that is worth promoting into scripts/. For open
+  circular markers on printed graph paper, do not build a shape detector at all:
+  label the connected WHITE regions and keep the small ones, i.e. the hole inside
+  each ring. It is immune to grid lines and to the model curve by construction -
+  neither encloses anything - which is exactly what makes a "refit the paper's own
+  constants" round trip non-circular. It cost nothing and beat two attempts at
+  ring template matching, which drowned in grid intersections. Mask the in-panel
+  series label first: letter counters are enclosed white regions of the same size
+  as a marker interior.
+
+  (3) On log-read data, state the fit weighting. Unweighted least squares in
+  Ergun's own linear coordinates gives k1 = 168.5 (+12 %) because f_v spans two
+  and a half decades; equal relative weight gives 151.9 (+1.3 %). The page prints
+  both. This generalises to every gallery page that fits a correlation to
+  digitised log-axis points.
+
+  Not done, and cheap if wanted later: Figs. 6 and 8 hold the full 640-experiment
+  set including Oman & Watson, but Fig. 6 is a single band 640 markers deep and
+  the low-Re half is unresolvable. Figs. 5 and 7 were chosen because they separate
+  the sources. Fig. 5's Burke & Plummer and Morcom panels print too faintly in
+  this scan to calibrate, so only its top panel was used.
 updated: '2026-07-30'

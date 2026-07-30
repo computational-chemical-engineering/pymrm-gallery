@@ -1,0 +1,20 @@
+# Process rate expressions rho_j, right-hand column of Table 1 of Henze, Grady,
+# Gujer, Marais & Matsuo (1987), Water Research 21(5) 505-515.
+#
+# Transcribed exactly as printed, in sympy/python-parseable form.  Symbols follow
+# the paper: mu_hat_H, mu_hat_A are the maximum specific growth rates written
+# with a circumflex in the paper.  K_OH is the paper's K_{O,H}, K_OA its
+# K_{O,A}.  Process 8's rate is printed as rho_7*(X_ND/X_S) and is written out
+# here in full so that the row can be evaluated on its own.
+#
+# Read from a 600 dpi render of journal page 507; the PDF text layer scrambles
+# these expressions and was not used.
+j,process,rate
+1,Aerobic growth of heterotrophs,mu_hat_H*(S_S/(K_S+S_S))*(S_O/(K_OH+S_O))*X_BH
+2,Anoxic growth of heterotrophs,mu_hat_H*(S_S/(K_S+S_S))*(K_OH/(K_OH+S_O))*(S_NO/(K_NO+S_NO))*eta_g*X_BH
+3,Aerobic growth of autotrophs,mu_hat_A*(S_NH/(K_NH+S_NH))*(S_O/(K_OA+S_O))*X_BA
+4,"""Decay"" of heterotrophs",b_H*X_BH
+5,"""Decay"" of autotrophs",b_A*X_BA
+6,Ammonification of soluble organic nitrogen,k_a*S_ND*X_BH
+7,"""Hydrolysis"" of entrapped organics",k_h*((X_S/X_BH)/(K_X+(X_S/X_BH)))*((S_O/(K_OH+S_O))+eta_h*(K_OH/(K_OH+S_O))*(S_NO/(K_NO+S_NO)))*X_BH
+8,"""Hydrolysis"" of entrapped organic nitrogen",k_h*((X_S/X_BH)/(K_X+(X_S/X_BH)))*((S_O/(K_OH+S_O))+eta_h*(K_OH/(K_OH+S_O))*(S_NO/(K_NO+S_NO)))*X_BH*(X_ND/X_S)

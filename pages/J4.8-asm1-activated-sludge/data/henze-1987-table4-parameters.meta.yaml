@@ -1,0 +1,54 @@
+dataset_id: henze-1987-table4-parameters
+title: Typical ASM1 parameter values at neutral pH and 20 C for domestic wastewater (Table 4)
+status: complete
+
+source:
+  authors: ["Henze, M.", "Grady, C. P. L. Jr", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
+  year: 1987
+  container: "Water Research 21(5) 505-515"
+  doi: 10.1016/0043-1354(87)90058-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; table image not reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 4, journal page 513; the may_be_assumed flag comes from Table 2, journal page 510"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  procedure: >
+    Read from a 600 dpi render.  The text layer mangles this table too - it
+    returns mu_hat_H's range as "3-I 3.2", i_XB's units as "8 N(8 COD)-i in
+    biomas" and K_NH's units as "g NH3-N m -~" - so every value was taken from
+    the image.  The two ammonification rows were checked at 8x magnification to
+    confirm that the subscripts really are a lowercase a and an uppercase A.
+  estimated_error: >
+    None; these are printed decimal values, read directly.  The uncertainty is
+    in the paper's own ranges, which are wide by design - it calls the ranges
+    for k_h, k_a, K_X, eta_g and eta_h "tentative at best".
+
+columns:
+  - {name: symbol,         unit: "-",  description: parameter symbol, ASCII transliteration of the printed one}
+  - {name: group,          unit: "-",  description: stoichiometric or kinetic, as blocked in the table}
+  - {name: units,          unit: "-",  description: units exactly as printed}
+  - {name: value_min,      unit: "varies", description: lower end of the printed range, or the single printed value}
+  - {name: value_max,      unit: "varies", description: upper end of the printed range, or the single printed value}
+  - {name: may_be_assumed, unit: "-",  description: TRUE if Table 2 lists the parameter as one that may be assumed constant}
+  - {name: note,           unit: "-",  description: free text}
+
+known_defect: >
+  Table 4 prints twenty parameter rows.  The paper states the model has "13
+  components and 19 parameters", and Table 1's own parameter lists name exactly
+  nineteen.  The extra row is a duplicate ammonification coefficient:
+  k_a = 0.016 m3 (g cell COD.day)^-1 sits in the correct place in the kinetic
+  block, and k_A = 0.08 m3 COD (g.day)^-1 is appended after b_A.  No symbol k_A
+  is defined anywhere in the model, and both rows have units consistent with the
+  process 6 rate k_a * S_ND * X_BH.  This file records both rows as printed.
+  The page does not decide between them by inference: continuity, which is what
+  the page validates, contains no kinetic parameter at all, and the illustrative
+  reactor is run at both values so the reader can see what the choice costs.
+
+redistribution_basis: >
+  Parameter values are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3).  The original table image is NOT reproduced.

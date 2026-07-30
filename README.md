@@ -4,9 +4,11 @@ An open-science gallery of important phenomenological models from the chemical
 engineering literature, each reproduced with [`pymrm`](https://github.com/) and
 shown against its original experimental data.
 
-**Status: eleven pages built, five of them validated against experiment.** The
-literature survey (266 models), the Quarto scaffolding, and eleven complete pages
-are in place; CI executes every notebook and validates metadata.
+**Status: thirteen pages built, five of them validated against experiment.** The
+literature survey (266 models), the Quarto scaffolding, and thirteen complete
+pages are in place; CI executes every notebook and validates metadata. Remaining
+cases are tracked in [`queue_cases/`](queue_cases/) and worked by agents in
+parallel.
 
 | Page | Validation |
 |---|---|
@@ -21,6 +23,8 @@ are in place; CI executes every notebook and validates metadata.
 | `H1.7` Wijmans–Baker solution–diffusion | **experimental** — two constants fitted to two series predict the third |
 | `B3.1` Yagi–Kunii shrinking core | analytic — 6.9e-16 against an independent derivation of the same equation |
 | `F2.3` Maretto–Krishna FT slurry column | **experimental** — holdup to 5–6 % over 79 digitised points |
+| `E2.1` Kunii–Levenspiel bubbling bed | three worked appendices reproduced to 0.46 % / 0.57 % / 1.8 % (tier 6) |
+| `J4.8` ASM1 activated sludge | continuity closes as exact symbolic identities; 104-cell matrix (tier 6) |
 
 ```bash
 python -m venv .venv && source .venv/bin/activate

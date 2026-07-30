@@ -1,0 +1,68 @@
+dataset_id: henze-1987-table1-stoichiometry
+title: ASM1 Petersen stoichiometric matrix, 8 processes x 13 components (Table 1)
+status: complete
+
+source:
+  authors: ["Henze, M.", "Grady, C. P. L. Jr", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
+  year: 1987
+  container: "Water Research 21(5) 505-515"
+  doi: 10.1016/0043-1354(87)90058-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; table image not reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 1, journal pages 506 (components 1-9) and 507 (components 10-13)"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  procedure: >
+    The PDF text layer scrambles the matrix completely - it renders 1/Y_H as
+    "I / r~", (4.57 - Y_A)/Y_A as "4 . 5 7 - Y4 / Y,~" and drops most of the
+    alkalinity column - so NOTHING here was transcribed from OCR.  Both journal
+    pages were rendered at 600 dpi and every cell read from the image.  The
+    matrix straddles a page break: components 1-9 and the process names are on
+    page 506, components 10-13 and the rate column on page 507.
+  estimated_error: >
+    None claimed as a numerical error - these are algebraic expressions, either
+    read correctly or not.  The reading is instead tested: see `verification`.
+
+verification: >
+  Ten of the thirty-four non-blank cells are recovered independently from the
+  three continuity relations (COD, nitrogen, ionic charge) that the component
+  definitions force on any stoichiometric matrix, and every recovered expression
+  is symbolically identical to the transcribed one.  All eight charge balances
+  and seven of the eight nitrogen balances close to exactly zero as symbolic
+  identities in Y_H, Y_A, f_P, i_XB and i_XP.  A single mis-read coefficient
+  anywhere in the alkalinity, oxygen, nitrate or X_ND columns would break this.
+  See the page's validation section.
+
+columns:
+  - {name: j,       unit: "-", description: process index, 1-8}
+  - {name: process, unit: "-", description: process name as printed}
+  - {name: S_I,     unit: "-", description: stoichiometric coefficient for soluble inert organic matter}
+  - {name: S_S,     unit: "-", description: stoichiometric coefficient for readily biodegradable substrate}
+  - {name: X_I,     unit: "-", description: stoichiometric coefficient for particulate inert organic matter}
+  - {name: X_S,     unit: "-", description: stoichiometric coefficient for slowly biodegradable substrate}
+  - {name: X_BH,    unit: "-", description: stoichiometric coefficient for active heterotrophic biomass}
+  - {name: X_BA,    unit: "-", description: stoichiometric coefficient for active autotrophic biomass}
+  - {name: X_P,     unit: "-", description: stoichiometric coefficient for particulate decay products}
+  - {name: S_O,     unit: "-", description: stoichiometric coefficient for oxygen (negative COD)}
+  - {name: S_NO,    unit: "-", description: stoichiometric coefficient for nitrate + nitrite nitrogen}
+  - {name: S_NH,    unit: "-", description: stoichiometric coefficient for ammonium + ammonia nitrogen}
+  - {name: S_ND,    unit: "-", description: stoichiometric coefficient for soluble biodegradable organic nitrogen}
+  - {name: X_ND,    unit: "-", description: stoichiometric coefficient for particulate biodegradable organic nitrogen}
+  - {name: S_ALK,   unit: "-", description: stoichiometric coefficient for alkalinity, molar units}
+
+notes: >
+  Cells are stored as sympy-parseable expression strings, not floats, because
+  most of the matrix is algebra in the five stoichiometric parameters.  An empty
+  field is a blank box in the paper, meaning the process does not touch that
+  component.  The literals 2.86 and 4.57 are kept exactly as printed; the page
+  shows that they are rounded values of 20/7 and 32/7, and that this rounding is
+  the only thing standing between the printed matrix and exact COD continuity.
+
+redistribution_basis: >
+  Stoichiometric coefficients are facts, not protected by copyright (Feist,
+  1991); extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3).  The original table image is NOT reproduced.

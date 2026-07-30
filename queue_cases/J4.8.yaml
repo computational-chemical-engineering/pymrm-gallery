@@ -5,7 +5,7 @@ catalog_reference: Henze et al., IWA (1987)
 priority: P1
 tier: T1
 structures: S1
-status: unclaimed
+status: published
 reference:
   authors:
   - Henze, M.
@@ -16,9 +16,89 @@ reference:
   year: 1987
   container: IWA Scientific and Technical Report No. 1
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/1-s2.0-0043135487900583-main.pdf
   open_access: null
-  checked: null
+  checked: '2026-07-30'
 blocker: null
-notes: null
+notes: 'Page built in queue_cases/J4.8/page/ and executed clean in 58 s. The whole
+  of Table 1 (the 8 x 13 Petersen matrix, 30 printed cells, plus the 8 rate expressions),
+  Table 4 and the component definitions are transcribed into data/ with sidecars,
+  all read off 600 dpi renders of journal pages 506, 507 and 513 - the PDF text layer
+  scrambles the matrix completely and was not used.
+
+  THE RESULT. The three continuity relations that the component definitions force
+  close as SYMBOLIC identities in Y_H, Y_A, f_P, i_XB, i_XP, with no parameter values
+  substituted anywhere. Charge: exactly zero on all 8 processes. Nitrogen: exactly
+  zero on all 8 once a 14th component S_N2 is added (without it process 2 leaves (1-Y_H)/(2.86*Y_H)
+  g N, 0.16 to 0.41 over Table 4''s yield range, with nowhere to go - the reason ASM2/ASM3
+  carry S_N2). COD: exactly zero on 6 of 8; processes 2 and 3 leave (Y_H-1)/(1001*Y_H)
+  and -1/(700*Y_A), and those are EXACTLY the rounding of 20/7 to 2.86 and of 32/7
+  to 4.57. Substituting the exact fractions makes all 24 balances identically zero.
+  The only imperfection in the entire 104-box table is two decimals of typesetting.
+
+  The observation that makes a single COD continuity possible: reference nitrogen
+  at -III, and the paper''s own two conversion factors become two differences on one
+  scale - 32/7 - 12/7 = 20/7 (the printed 2.86) and 32/7 - 0 = 32/7 (the printed 4.57).
+
+  FOUR MORE CHECKS. (i) Ten printed coefficients recovered by deleting them and solving
+  continuity; 8 come back symbolically identical, 2 differ only by the same rounding.
+  (ii) The paper''s equation (3), typeset separately from the matrix, is reproduced
+  exactly from column 2 of the transcribed matrix times the transcribed rate column
+  - three cells and three rate rows confirmed for free. (iii) A pymrm plug-flow lane
+  (Modified Ludzack-Ettinger, 14 components, internal recycle closed as a fixed point)
+  conserves nitrogen to 1.4e-12 and charge to 2.8e-14 g m-3 d-1 against an oxygen
+  demand of 652, at every grid, while leaking exactly 0.2072 g COD m-3 d-1 - predicted
+  from the two stoichiometric residuals to 6e-11 relative, and falling to 7e-12 with
+  the exact fractions. The same defect appears symbolically and numerically and vanishes
+  in both together. (iv) Grid refinement first order, ratios 1.94, 2.18, 2.35.
+
+  WHAT PYMRM ADDS: use of the alkalinity column, which the paper calls "not essential"
+  and equips with a 50 g CaCO3 m-3 pH threshold it never evaluates. Charge continuity
+  gives nu_ALK = (nu_NH - nu_NO)/14, so nitrification costs 2/14 mol per g N and denitrification
+  returns 1/14 - exactly half, with no parameter in it. The lane turns that into a
+  design curve: at this operating point the raw-water alkalinity needed to hold the
+  paper''s limit falls from 3.37 mol m-3 with no anoxic zone to 1.47 at 30 % and 0.26
+  at 50 % unaerated. The same sweep puts the nitrogen-removal optimum at 50 % unaerated,
+  8.7 g N m-3 against 26.8 with none.
+
+  NO EXPERIMENTAL DATA, deliberately - the abbreviated report has no worked example,
+  no calibrated plant and no dataset, and its only data figure is borrowed from Ekama
+  et al. (1986) to illustrate a measurement procedure. Tier 2 sourcing (printed tables),
+  tier-6-equivalent validation. Stated plainly on the page.
+
+  THREE THINGS THE INTEGRATOR MUST KNOW. (1) models.yaml has J4.8 at status planned
+  while meta.yaml is set to in-progress per the build instruction, so the two contradict
+  until models.yaml is updated; scripts/check_metadata.py compares `status` and will
+  flag it as soon as the directory moves into pages/. models.yaml''s reference.container
+  is the IWA report, but the paper actually used is the Water Research abbreviated
+  report, doi:10.1016/0043-1354(87)90058-3 - worth pointing the record at it. (2)
+  The notebook imports sympy, which was NOT present in the shared venv and was installed
+  there during this build (sympy 1.14.0). The Colab cell installs it. Continuity is
+  verified symbolically rather than at a sample parameter set, which is the whole
+  strength of the check, so the dependency is load-bearing. (3) A DEFECT IN TABLE
+  4, reported rather than repaired: it prints twenty parameter rows against the nineteen
+  the paper says the model has. The ammonification coefficient appears twice - k_a
+  = 0.016 m3(g cell COD.day)^-1 in the correct place in the kinetic block, and k_A
+  = 0.08 m3 COD (g.day)^-1 appended after b_A under a symbol defined nowhere in the
+  model. Both subscripts were re-read at 8x magnification and the case is unambiguous.
+  Both rows are in the CSV and the reactor is run at both, rather than one being picked
+  by inference. No continuity check touches a kinetic parameter, so nothing in the
+  validation depends on the choice. If the maintainer knows which row the full IWA
+  report carries, the CSV note and the page''s sensitivity paragraph can be tightened
+  - this paper alone does not settle it.
+
+  '
 updated: '2026-07-30'
+follow_up:
+  kind: parameter-ambiguity
+  question: 'ASM1''s Table 4 prints twenty parameter rows against the nineteen the
+    paper says the model has. Ammonification appears twice: k_a = 0.016 m3/(g cell
+    COD.day) in the kinetic block, and k_A = 0.08 m3 COD/(g.day) appended after b_A
+    under a symbol defined nowhere. Both subscripts were re-read at 8x and the case
+    is unambiguous. Do you know which row the full IWA Scientific and Technical Report
+    No. 1 carries?'
+  detail: Not blocking. Both rows are in the CSV and the reactor is run at both rather
+    than one being chosen by inference - no continuity check touches a kinetic parameter,
+    so nothing on the page depends on the answer. Knowing it would let one CSV note
+    and one paragraph be tightened. This paper alone does not settle it.
+  artifacts: []

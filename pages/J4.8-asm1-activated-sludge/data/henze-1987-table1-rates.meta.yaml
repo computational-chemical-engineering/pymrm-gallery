@@ -1,0 +1,47 @@
+dataset_id: henze-1987-table1-rates
+title: ASM1 process rate expressions rho_j, right-hand column of Table 1
+status: complete
+
+source:
+  authors: ["Henze, M.", "Grady, C. P. L. Jr", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
+  year: 1987
+  container: "Water Research 21(5) 505-515"
+  doi: 10.1016/0043-1354(87)90058-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; table image not reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 1, process rate column, journal page 507"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  procedure: >
+    Read from a 600 dpi render.  The text layer is unusable here too - it
+    renders process 1 as ". ( ss V So" and process 7 as a run of broken glyphs.
+  estimated_error: "not applicable - algebraic expressions"
+
+verification: >
+  Process 2's rate is reproduced by the paper's own equation (3), which writes
+  out the observed conversion rate r_2 = v21*rho_1 + v22*rho_2 + v27*rho_7 in
+  full.  Multiplying the transcribed rho_1, rho_2 and rho_7 by the transcribed
+  column-2 coefficients (-1/Y_H, -1/Y_H, +1) reproduces equation (3) term for
+  term, which cross-checks three of the eight rate rows and three matrix cells
+  against a part of the paper that was typeset separately.
+
+columns:
+  - {name: j,       unit: "-", description: process index, 1-8}
+  - {name: process, unit: "-", description: process name as printed}
+  - {name: rate,    unit: "M L^-3 T^-1", description: process rate rho_j as a python/sympy expression}
+
+notes: >
+  Symbol names are ASCII transliterations of the printed ones - mu_hat_H and
+  mu_hat_A carry a circumflex in the paper, K_OH and K_OA are printed K_{O,H}
+  and K_{O,A}.  Process 8's rate is printed as rho_7*(X_ND/X_S); it is written
+  out in full here so each row can be evaluated on its own.  Note the resulting
+  0/0 at X_S = 0, which is a property of the printed model, not of this file.
+
+redistribution_basis: >
+  Rate expressions are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3).  The original table image is NOT reproduced.

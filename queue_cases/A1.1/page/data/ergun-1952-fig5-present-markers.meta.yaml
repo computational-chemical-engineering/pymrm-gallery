@@ -1,0 +1,67 @@
+dataset_id: ergun-1952-fig5-present-markers
+title: "The same runs on the other ordinate: f_v from Ergun's Figure 5, top panel"
+status: awaiting-review
+purpose: >
+  This file exists only as a cross-check on
+  `ergun-1952-fig7-markers.csv`. Ergun states on journal page 93 that "Figure 7
+  shows f_k plotted vs. N_Re/(1-eps) for the data already presented in Figure 5",
+  so Figures 5 and 7 are the same measurements on two ordinates related by
+  f_k = f_v / [N_Re/(1-eps)]. Digitising both, with independently fitted axis
+  calibrations, tests the extraction against the paper's own redundancy.
+
+source:
+  authors:
+    - "Ergun, S."
+  year: 1952
+  container: "Chemical Engineering Progress 48(2) 89-94"
+  doi: null
+  access: "print scan supplied by the maintainer (lawful access); no text layer"
+  licence: "all rights reserved (facts extracted; no figure image is reproduced)"
+
+conditions:
+  ordinate: >
+    f_v, Ergun's eq. (13a): (dP/L) g_c (D_p^2 / (mu U_m)) (eps^3 / (1 - eps)^2).
+  abscissa: "N_Re/(1 - eps)"
+  panel: "top panel only, labelled Present Investigation"
+  why_only_one_panel: >
+    The Burke & Plummer and Morcom panels of Figure 5 are printed faintly in this
+    scan; no grid line in either spans the panel, so the axes cannot be calibrated
+    from the ladder and were not attempted. The top panel's grid is crisp (25
+    abscissa lines, 9 ordinate lines, residuals 0.8 % and 1.6 %).
+
+acquisition:
+  method: digitised
+  figure: "Figure 5, journal page 92, top panel"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  procedure: >
+    Identical to `ergun-1952-fig7-markers.csv`: enclosed white regions of 5-200 px
+    with a bounding box under 18x18 px, merged within 5 px, series label masked,
+    axes calibrated from the printed decade ladder with the panel frame at 7 and
+    4000 on the abscissa and at 1000 and 100 on the ordinate.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  estimated_error: >
+    Calibration residual 0.8 % on the abscissa and 1.6 % on the ordinate; the
+    ordinate is the weaker of the two because only nine grid lines survive the
+    scan.
+  completeness: >
+    74 markers, against 72 recovered from the corresponding Fig. 7 panel. The two
+    are the same measurements, so the count difference is a measure of how many
+    merged blobs each rendering happens to resolve.
+
+review:
+  reviewed_by: null
+  date: null
+  verdict: "NOT YET REVIEWED - see queue_cases/A1.1/review/"
+
+columns:
+  - {name: series, unit: "-", description: "always present_investigation"}
+  - {name: Re_over_one_minus_eps, unit: "-", description: "abscissa, N_Re/(1-eps)"}
+  - {name: f_v, unit: "-", description: "ordinate as plotted, Ergun eq. (13a)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure image is
+  reproduced.

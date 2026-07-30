@@ -5,17 +5,100 @@ catalog_reference: IEC Proc. Des. Dev. 7:481 (1968); Fluidization Engineering (1
 priority: P1
 tier: T0
 structures: S7
-status: unclaimed
+status: published
 reference:
   authors:
   - Kunii, D.
   - Levenspiel, O.
   year: 1968
   container: I&EC Process Design and Development 7(4) 481–492
+  doi: 10.1021/i260028a001
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/i260028a001.pdf
   open_access: null
-  checked: null
+  checked: '2026-07-30'
 blocker: null
-notes: null
+notes: 'Built in queue_cases/E2.1/page/. Notebook executes end to end in 3.6 s, all
+  checks pass. Tier 6 (data:tier6) - nothing on the page is compared with a measurement,
+  and the page says so rather than implying more.
+
+  WHAT THE PAGE ESTABLISHES. The bubbling bed model reduced to what it actually is
+  - a continued fraction (eq. 49) and an exponential (eq. 54) - and then verified
+  against the three worked appendices the paper prints, which between them exercise
+  every equation the model has and need no figure digitisation at all. Appendix C''s
+  eight intermediates (u_br 42.81 vs 42.8, u_b 53.91 vs 53.9, delta 0.2059 vs 0.206,
+  K_bc 5.435 vs 5.44, K_ce 2.234 vs 2.23, gamma_c 0.398 vs 0.40, gamma_e 1.530 vs
+  1.53, K_r/K_m 0.7059 vs 0.706) reproduce to 0.46 % worst case. Appendix A''s nine
+  quantities, ending in (Sh)_over-all = 0.0453 Re - 0.0101 against the printed 0.045
+  Re - 0.0101, reproduce to 0.57 %. Appendix B reproduces to 1.8 %.
+
+  TWO PRINTED SLIPS, RECORDED NOT REPAIRED. (1) Appendix C prints u_0 = (6.6 + 9.9
+  + 13.2 + 20)/5 = 13.2 - four terms over five. 13.2 is used downstream everywhere
+  and is confirmed independently by the paper''s own u_b = 13.2 - 2.1 + 42.8 = 53.9,
+  so nothing is in doubt; a term was dropped in typesetting. (2) Appendix B prints
+  (1 - eps_f)(u_0 + 5.8) = 8.70 where its own stated eps_mf = 0.50 gives 7.87; only
+  8.70 reproduces the printed final answer 0.070 + 0.051 Re, so 8.70 is what the authors
+  used, and it corresponds to eps_mf = 0.447. Both stored as printed in the CSV, both
+  surfaced on the page.
+
+  THREE THINGS THE PAGE ADDS. (a) A conversion ceiling the paper never states: as
+  K_r -> infinity, eq. 49''s bracket collapses to K_bc/K_r and K_f -> K_bc L_f/u_b,
+  which contains no rate constant. For the authors'' own appendix C bed that is 99.13
+  % conversion and no more, 94.5 % at d_b = 5 cm, 81.4 % at 7 cm. Substituting eq.
+  4 shows it is exactly independent of u_0, confirmed numerically to 3.7e-16. The
+  bed also crosses below backmix flow at K_m = 2.267 for d_b = 3.7 cm. (b) The extension
+  the paper explicitly defers - eqs. 48b and 48c freeze the cloud and emulsion, and
+  the paper says that for u_0/u_mf < 6~11 "the conversion of emulsion gas will have
+  to be found by an extension of the present analysis" while Kobayashi''s runs sit
+  at 3.1 to 9.6. The pymrm three-region distributed solve puts the convection back
+  and raises the unconverted fraction by 7-15 %, which is comparable to moving d_b
+  from 3.7 to 4.2 cm; the honest reading is that the fitted bubble size absorbs it.
+  With the convection off it reproduces eq. 54 to 4.8e-7 after Richardson extrapolation,
+  observed order 0.999 - two independent routes to the same number. (c) Two claims
+  the paper makes in passing, tested and both slightly overstated over the range of
+  its own figure 9: gamma_b in 0 to 0.01 is said to change the outlet by under 1 %
+  (true to K_m = 1.94, 4.7 % at K_m = 8), and the cloud-wake contribution to the exit
+  gas by 10 % at most (true to K_m near 4.9, 12.1 % at K_m = 8).
+
+  EQUATIONS. All read from 600 dpi pdftoppm renders. This scan has the best text layer
+  of the set (12.4k chars/page) and is still useless for equations - it renders eqs.
+  49, 50 and 56 as fragments and turns appendix C''s "13.2 K_m" into "1.32 K_m". Confirms
+  the pdf-findings rule: read every number and every equation off a render regardless
+  of text-layer quality.
+
+  DATA. One CSV with sidecar: the numbers the authors printed in their own three appendices.
+  Explicitly labelled tier 6 - authors'' own computed values, not measurements.
+
+  ONE OPEN QUESTION FOR THE MAINTAINER, and it does not block the page. Figure 9 was
+  digitised as far as it goes and staged in queue_cases/E2.1/review/ (script + NOTES.md;
+  no page image committed). 15 markers at K_m > 1.8 come out clean and their three
+  glyphs sort onto three non-overlapping bands that never cross, which corroborates
+  the classification; 16 markers below K_m = 1.8 overlap into merged ink and cannot
+  be located at all. Using the subset with d_b assigned by glyph exactly as the paper
+  does gives 6.2 % mean absolute deviation, +2.3 % bias, over 15 points. The question
+  is whether half a figure is worth publishing when d_b was fitted to those very points
+  - the one genuinely predictive thing it tests is the bubble-size ordering 3.7 <
+  4.2 < 5.0 with velocity, which comes out right with nothing fitted on our side.
+  If the maintainer says yes, E2.1 gains an experimental tier and needs a second CSV,
+  a rewritten "The data" section and one paragraph separating validated-against-measurement
+  from reproduced-against-the-authors''-fit. If no, the page ships as built.
+
+  '
+review_artifacts:
+- queue_cases/E2.1/review/NOTES.md
+- queue_cases/E2.1/review/extract_figure9.py
 updated: '2026-07-30'
+follow_up:
+  kind: optional-figure-digitisation
+  question: 'Figure 9 was only half recoverable: the 15 markers above K_m = 1.8 are
+    clean and sort onto three non-overlapping bands by glyph, but the 16 below K_m
+    = 1.8 are merged ink and were not recovered. The usable subset gives 6.2 % mean
+    deviation and +2.3 % bias with the bubble size assigned by glyph as the paper
+    does. Is half a figure worth publishing, given that d_b was fitted to those very
+    points? The one predictive thing it tests is the bubble-size ordering 3.7 < 4.2
+    < 5.0 cm.'
+  detail: Not blocking - the page is live as a tier 6 page validated on three worked
+    appendices. Saying yes would give it an experimental tier and needs a second CSV
+    plus a rewritten data section. Extraction script and notes are in queue_cases/E2.1/review/;
+    no page image is committed.
+  artifacts: []

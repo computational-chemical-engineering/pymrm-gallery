@@ -1,0 +1,58 @@
+dataset_id: eisfeld-2001-wall-correction
+title: "Eisfeld & Schnitzlein's refitted Reichelt coefficients, and how 24 correlations score on their database"
+status: complete
+
+source:
+  authors:
+    - "Eisfeld, B."
+    - "Schnitzlein, K."
+  year: 2001
+  container: "Chemical Engineering Science 56(14) 4321-4329"
+  doi: 10.1016/S0009-2509(00)00533-9
+  access: "Elsevier full-text API, institutional key (lawful access)"
+  licence: "all rights reserved (facts extracted)"
+
+conditions:
+  equation: >
+    Their eq. (3), Reichelt's (1972) form with the coefficients refitted:
+    psi = K1 A_w^2 / Re_dp * (1-eps)^2/eps^3 + (A_w/B_w) * (1-eps)/eps^3,
+    with eq. (4): A_w = 1 + 2/(3 (D/dp)(1-eps)), B_w = (k1 (dp/D)^2 + k2)^2.
+    psi = dP dp / (rho U^2 L) and Re_dp = rho U dp / mu, both on the SUPERFICIAL
+    velocity. In Ergun's coordinates this is
+    f_v = K1 A_w^2 + (A_w/B_w) Re/(1-eps), so K1 replaces Ergun's 150 and
+    A_w/B_w replaces his 1.75. Note that no separate turbulent constant appears:
+    as D/dp -> infinity the kinetic coefficient tends to 1/k2^2, which is 1.321
+    for spheres, not 1.75.
+  database: >
+    2391 points, D/dp from 1.624 to 250, mean voidage 0.330 to 0.882, Re_dp from
+    0.01 to 17635 (their Table 1).
+  deviation_definition: >
+    sigma is the relative root-mean-square deviation of psi,
+    sqrt( sum_i ((psi_exp - psi_comp)/psi_comp)^2 / (N-1) ) (their section 4).
+
+acquisition:
+  method: "transcribed from the publisher's full text"
+  tables: "Table 3 (fitted coefficients), Table 2 (deviations), Table 1 (database totals)"
+  procedure: >
+    Retrieved with the Elsevier PII endpoint. This is a 2001 born-digital
+    article, so the returned text is real text rather than an OCR of a scan and
+    does not suffer the lost-decimal-point failure recorded in docs/pdf-findings.md
+    for the pre-1980 papers. The equations were still checked for self-consistency:
+    substituting Ergun's A = 150, B = 1.75 into their eq. (2) reproduces Ergun's
+    eq. (14b) exactly, which confirms that psi, Re_dp and the eps-groupings have
+    been read correctly.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+
+columns:
+  - {name: quantity, unit: "-", description: "K1, k1, k2 are the fitted coefficients of eq. (3)-(4); sigma_* are relative rms deviations from Table 2 or 3"}
+  - {name: particle_shape, unit: "-", description: "spheres | cylinders | all"}
+  - {name: value, unit: "-", description: "value"}
+  - {name: unit, unit: "-", description: "all dimensionless"}
+  - {name: source, unit: "-", description: "table in the paper"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Text and data mining for scientific
+  research with lawful access is covered by Art. 15n Auteurswet (implementing DSM
+  Directive (EU) 2019/790 Art. 3).

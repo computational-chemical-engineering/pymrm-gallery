@@ -1,0 +1,118 @@
+dataset_id: ergun-1952-fig7-markers
+title: "Friction factor f_k against N_Re/(1-eps), digitised from Ergun's Figure 7 (three panels)"
+status: awaiting-review
+
+source:
+  authors:
+    - "Ergun, S."
+  year: 1952
+  container: "Chemical Engineering Progress 48(2) 89-94"
+  doi: null
+  access: "print scan supplied by the maintainer (lawful access); the PDF has no text layer at all"
+  licence: "all rights reserved (facts extracted; no figure image is reproduced)"
+
+conditions:
+  ordinate: >
+    f_k, Ergun's eq. (14a): (dP/L) g_c (D_p / (G U_m)) (eps^3 / (1 - eps)).
+  abscissa: "N_Re/(1 - eps) with N_Re = D_p G / mu"
+  derived_column: >
+    f_v = f_k * N_Re/(1-eps) is Ergun's eq. (13a) and is exact algebra, not a
+    second measurement. It is stored because the linear form f_v = k1 + k2 x is
+    what the constants are fitted in.
+  panels:
+    present_investigation: >
+      Ergun's own runs: nitrogen and other gases through crushed porous solids in
+      a 7.24 cm^2 tube (Figure 1 caption, journal page 90).
+    burke_plummer: "Burke & Plummer (1928), as replotted by Ergun"
+    morcom: "Morcom (1946), as replotted by Ergun"
+  omitted_by_ergun: >
+    Journal page 93: "The scatter to be seen on the plot of Burke and Plummer was
+    largely due to the systems involving mixtures and those for which the ratio of
+    tube diameter to particle size was less than 10. These systems have been
+    omitted in Figure 5." Figure 7 is Figure 5 replotted, so the same omission
+    applies here.
+
+acquisition:
+  method: digitised
+  figure: "Figure 7, journal page 92 (all three panels)"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  procedure: >
+    The markers are open circles about 13 px across at 600 dpi drawn on
+    logarithmic graph paper. Detection does NOT look for the circles: it labels
+    the connected white regions and keeps those with area 5-200 px and a bounding
+    box under 18x18 px, i.e. the enclosed interior of each open circle. A grid
+    line that cuts a marker splits its interior in two, so centroids closer than
+    5 px are merged.
+
+    This choice is what makes the round trip in the notebook non-circular. Ergun
+    draws the fitted eq. (14b) line through the same points. A line has no
+    enclosed interior, so the detector is structurally incapable of picking it
+    up, and the marker-free right-hand half of the "Present investigation" panel
+    - which contains the drawn line and nothing else - returns zero detections.
+
+    The in-panel series label ("Present Investigation", "Burke & Plummer",
+    "Morcom") is masked before detection, because letter counters are enclosed
+    white regions of the same size as a marker interior. The mask is found
+    automatically as a horizontal band of five or more ink components 17-45 px
+    tall.
+
+    Axes were calibrated per panel from the printed 1-2-...-9 decade ladder of
+    the graph paper, assigned by nearest value to a two-point guess from the frame
+    and then refitted by least squares. 24-25 abscissa lines and 10-12 ordinate
+    lines were used per panel. The panel frames are the value 7 on the left and
+    4000 on the right - not 8, which is the first interior line and carries the
+    first printed label.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  estimated_error: >
+    Calibration: the fitted ladder reproduces the printed grid lines to 1.3 % or
+    better, and the four independently calibrated panels agree on the decade
+    width to within 1.7 % (x 422.6-424.0 px, y 422.9-430.5 px). Positions: one
+    scan pixel is 0.24 % on both axes, and marker centres are placed to about
+    1.5 px, so roughly 0.4 % per coordinate.
+  completeness: >
+    244 of Ergun's markers were recovered from three panels. This is not all of
+    them. Where markers overlap so heavily that their outlines merge into a solid
+    blob - most of the low-Re half of the "Present investigation" panel - the
+    interior disappears and the marker is not detected. Ergun states his
+    constants were fitted to 640 experiments across more sources than these three
+    panels, so the file was never going to be complete. Missing points cost
+    precision, not accuracy: they are lost from the middle of dense clusters,
+    symmetrically about the trend.
+
+marker_shape:
+  question: >
+    Figure 5's Morcom panel distinguishes tablets (o), cylinders (x), nodules
+    (triangle) and spheres (square) by symbol. A cross or a triangle has no
+    enclosed interior, so if Figure 7 also mixed shapes those series would be
+    missed systematically rather than at random.
+  resolved: >
+    Checked directly on the render at 4x magnification in four separate windows
+    of the Morcom panel (low, middle and high abscissa, and the dense cluster
+    near the printed line) and on the other two panels. Figure 7 carries no
+    shape legend and every marker in it is an open circle roughly 13 px across.
+    The missing-series failure mode does not apply.
+  checked_on: 2026-07-30
+
+review:
+  reviewed_by: null
+  date: null
+  verdict: "NOT YET REVIEWED - see queue_cases/A1.1/review/ for the overlays"
+  questions_for_reviewer:
+    - "Are there false positives - red rings on something that is not a marker?"
+    - "In the dense chain of the Present investigation panel, are the detected centres on markers, or drifting onto the drawn eq. (14b) line where markers merge into it?"
+    - "Roughly how many markers per panel does the eye count that the detector missed? The refit is insensitive to random misses but not to a systematic one."
+
+columns:
+  - {name: series, unit: "-", description: "present_investigation | burke_plummer | morcom"}
+  - {name: Re_over_one_minus_eps, unit: "-", description: "abscissa, N_Re/(1-eps)"}
+  - {name: f_k, unit: "-", description: "ordinate as plotted, Ergun eq. (14a)"}
+  - {name: f_v, unit: "-", description: "f_k * Re_over_one_minus_eps, Ergun eq. (13a); algebra, not an independent reading"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden by
+  contract. No figure image is reproduced; the points are re-plotted from the
+  extracted coordinates.

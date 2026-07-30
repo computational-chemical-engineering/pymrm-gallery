@@ -161,7 +161,11 @@ def doi_link(e):
     if not d:
         return ""
     d = str(d).replace("https://doi.org/", "")
-    return f' &middot; <a href="https://doi.org/{esc(d)}" target="_blank" rel="noopener">doi:{esc(d)}</a>'
+    tag = ""
+    if (e.get("doi_source") or "").startswith("crossref"):
+        tag = ' <span class="pill" title="resolved automatically, not checked by hand">unverified</span>'
+    return (f' &middot; <a href="https://doi.org/{esc(d)}" target="_blank" '
+            f'rel="noopener">doi:{esc(d)}</a>{tag}')
 
 
 # ---------------------------------------------------------------- papers page
@@ -285,11 +289,29 @@ def input_page(es):
         P.append('<div class="card"><div class="card-b">'
                  '<div class="tools"><button class="btn" id="copy">Copy answers</button></div>'
                  '<pre id="dump">Nothing yet.</pre></div></div>')
+    follow = [e for e in es if e.get("follow_up") and e["status"] == "published"]
+    if follow:
+        P.append('<h2>Not blocking &mdash; published, but a question is open</h2>')
+        for e in follow:
+            f = e["follow_up"]
+            P.append('<div class="card"><div class="card-h">'
+                     f'<span class="cid">{esc(e["id"])}</span>'
+                     f'<span class="ctitle">{esc(e["title"])}</span>'
+                     f'<span class="pill">{esc(f.get("kind","optional"))}</span>'
+                     '</div><div class="card-b">')
+            if f.get("question"):
+                P.append(f'<p class="q">{esc(f["question"])}</p>')
+            if f.get("detail"):
+                P.append(f'<p class="detail">{esc(f["detail"])}</p>')
+            P.append(f'<textarea id="a_{esc(e["id"]).replace(".","_")}" '
+                     f'placeholder="Optional - {esc(e["id"])} is already live either way."></textarea>')
+            P.append("</div></div>")
     P.append(f'<footer>Generated {date.today()} from <code>queue_cases/</code>. '
              f'Figures are shown only to check a data extraction; no page image is committed to the '
              f'public repository.</footer></div>')
 
-    ids = [e["id"] for e in blocked]
+    ids = [e["id"] for e in blocked] + [e["id"] for e in es
+                                        if e.get("follow_up") and e["status"] == "published"]
     js = """
 const IDS=%s;
 const b=document.getElementById('copy');

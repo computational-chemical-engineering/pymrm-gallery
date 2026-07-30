@@ -1,0 +1,85 @@
+dataset_id: kunii-levenspiel-1968-appendices
+title: Printed intermediate and final results of the three worked appendices
+status: complete
+
+source:
+  authors: ["Kunii, D.", "Levenspiel, O."]
+  year: 1968
+  container: "Industrial & Engineering Chemistry Process Design and Development 7(4) 481-492"
+  doi: 10.1021/i260028a001
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+conditions:
+  appendix_A: >
+    Gas-solid mass transfer, smallest solid of Resnick and White (1949).
+    d_p = 0.028 cm, phi_s = 0.40, u_t = 41 cm/s, D = 0.065 cm2/s, y = 0.9,
+    Sc = 2.39, u_mf = 1.21 cm/s, eps_mf = 0.50, gamma_b = 0.005, d_b = 0.35 cm.
+  appendix_B: >
+    Gas-solid heat transfer, smallest solid of Heertjes and McKibbins.
+    d_p = 0.036 cm, phi_s = 0.806, u_t = 86 cm/s, k_g = 6.25e-5 cal/(cm s C),
+    C_pg = 0.24 cal/(g C), Pr = 0.69, u_mf = 10 cm/s, eps_mf = 0.50,
+    gamma_b = 0.001, d_b = 0.5 cm.
+  appendix_C: >
+    Catalytic ozone decomposition, conditions of Kobayashi and Arai (1966).
+    D = 0.204 cm2/s, d_t = 20 cm, L_m = 34 cm, eps_m = 0.45, eps_mf = 0.50,
+    u_mf = 2.1 cm/s, u_0 = 13.2 cm/s, d_b = 3.7 cm, gamma_b = 0, alpha = 0.47.
+    Gas is air at ambient conditions; rho_g = 1.18e-3 g/cc, mu = 1.8e-4 g/(cm s)
+    are stated in appendices A and B and apply throughout.
+
+acquisition:
+  method: table
+  figure: "Appendices A, B and C, journal pages 490-491"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    These are NOT measurements. They are the numbers Kunii and Levenspiel
+    themselves printed while working three examples of their own model, and they
+    are collected here so that a reimplementation can be checked against them
+    line by line.
+
+    Every value was read off a 600 dpi render of the printed page, not from the
+    PDF text layer. The text layer of this scan is good by 1968 standards
+    (12.4k characters per page) but it still drops decimal points and mangles
+    every displayed equation - it renders appendix C's "13.2 K_m" as "1.32 K_m",
+    for instance, and equations 49, 50 and 56 come out as fragments. Nothing here
+    was transcribed mechanically.
+
+    Two printed slips are recorded as printed rather than corrected:
+
+    (1) Appendix C prints u_0 = (6.6 + 9.9 + 13.2 + 20)/5 = 13.2 cm/s. Four terms
+    divided by five. The result 13.2 is the value used in every subsequent step
+    of the appendix and is confirmed independently by u_b = 13.2 - 2.1 + 42.8 =
+    53.9, so the value is not in doubt; a term was dropped in typesetting. The
+    figure 9 legend lists five velocities, and the missing term is consistent with
+    16.5, but that is inference and is not recorded in this file.
+
+    (2) Appendix B prints (1 - eps_f)(u_0 + 5.8) = 8.70 where its own stated
+    eps_mf = 0.50 and u_br = 15.7 cm/s give 7.87. The printed final answer
+    Nu_apparent = 0.070 + 0.051 Re follows from 8.70, so 8.70 is what the authors
+    used throughout; 8.70 corresponds to eps_mf = 0.447. The row is stored as
+    printed and the page reports both.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-30
+  estimated_error: >
+    None beyond the printed precision, which is two or three significant figures.
+    These are transcribed characters, not digitised positions.
+
+columns:
+  - {name: appendix, unit: "-", description: "which worked example, A, B or C"}
+  - {name: symbol, unit: "-", description: "identifier used in the notebook"}
+  - {name: description, unit: "-", description: "what the quantity is and which equation produced it"}
+  - {name: value, unit: "see units column", description: "the value as printed"}
+  - {name: units, unit: "-", description: "units as printed (CGS throughout)"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced.
+
+caveat: >
+  TIER 6. These are the authors' own computed values, not measurements.
+  Reproducing them tests the reimplementation and the reading of the printed
+  equations; it says nothing about whether the model describes a real fluidized
+  bed. The paper's experimental comparison lives in figures 3, 5, 7, 8 and 9,
+  which are scatter plots that would have to be digitised, and none of it is in
+  this file.

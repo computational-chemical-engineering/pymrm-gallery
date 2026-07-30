@@ -1,0 +1,94 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: E2.1
+slug: kunii-levenspiel-bubbling-bed
+title: "Kunii–Levenspiel bubbling bed model"
+section: E
+status: published
+tier: T0
+priority: P1
+structures: [S7]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - kunii_levenspiel_1968_appendix_values.csv
+
+validation:
+  - all eight printed intermediates of appendix C (u_br, u_b, delta, K_bc, K_ce, gamma_c, gamma_e, K_r/K_m) recomputed from eqs. 2, 3, 10, 12, 15, 17, 45 and 51 to 0.46 % worst case
+  - appendix A's nine printed quantities, ending in (Sh)_over-all = 0.045 Re - 0.0101, reproduced to 0.57 % - the same flow model driving gas-solid mass transfer through eq. 27
+  - appendix B's (Nu)_apparent = 0.070 + 0.051 Re reproduced to 1.8 % using its printed 8.70, which localises the slip - its own stated eps_mf = 0.50 gives 7.87 and would move the slope by 10.6 %
+  - the pymrm distributed three-region solve, with the cloud and emulsion frozen, reproduces eq. 54 with observed first order 0.999 and 4.8e-7 after Richardson extrapolation - two independent routes to the same number
+  - the K_r -> 0 limit of eq. 49 is exactly K_m u_0/(u_0-u_mf) to 6e-9, not the K_m of eq. 57
+  - global mass balance on the extended solve closes to 8e-6
+  - the ceiling K_f = K_bc L_f/u_b is independent of u_0 to 3.7e-16, which is an analytic identity of the model
+
+adds: >
+  The published model is a continued fraction and an exponential, and the page
+  says so rather than inventing a PDE. What the reimplementation adds is three
+  things.
+
+  A conversion ceiling the paper never states. As K_r -> infinity eq. 49's
+  bracket collapses to K_bc/K_r and K_f -> K_bc L_f/u_b, which contains no rate
+  constant at all. For the authors' own appendix C bed that is 99.13 % conversion
+  and no more, falling to 94.5 % at d_b = 5 cm and 81.4 % at 7 cm. Substituting
+  eq. 4 shows the ceiling is exactly independent of u_0, confirmed numerically to
+  3.7e-16.
+
+  The extension the paper explicitly defers. Eqs. 48b and 48c freeze the cloud
+  and the emulsion - they exchange gas sideways but carry none - and the paper
+  flags the cost, saying that for u_0/u_mf < 6~11 "the conversion of emulsion gas
+  will have to be found by an extension of the present analysis". Kobayashi's
+  runs sit at u_0/u_mf = 3.1 to 9.6. The pymrm model puts the convection back
+  (bubble up at u_0-u_mf, cloud+wake up with the bubble at u_b, emulsion taking
+  the remainder, which is downward, with the two ends coupled by the
+  recirculation loop of the paper's own figure 6). It raises the unconverted
+  fraction by 7 to 15 % - comparable to moving d_b from 3.7 to 4.2 cm, which is
+  the one parameter the authors fitted. The honest conclusion is that the fitted
+  bubble size absorbs it.
+
+  Two claims the paper makes in passing, tested. gamma_b between 0 and 0.01 is
+  said to change the outlet concentration by under 1 %; true to K_m = 1.94, and
+  4.7 % at K_m = 8, the right-hand edge of the paper's own figure 9. The
+  cloud-wake contribution to the exit gas is said to change the fraction
+  unconverted by 10 % at most; true to K_m near 4.9, and 12.1 % at K_m = 8.
+
+agreement: >
+  Tier 6. Nothing on this page is compared with a measurement. The numbers are
+  the paper's own printed results: appendix C's eight intermediates to 0.46 %,
+  appendix A's nine quantities to 0.57 %, appendix B to 1.8 % with its printed
+  8.70. The internal checks are stronger - the distributed pymrm solve reproduces
+  the closed-form eq. 54 to 4.8e-7 after Richardson extrapolation with observed
+  order 0.999, the mass balance closes to 8e-6, the K_r -> 0 limit matches
+  u_0/(u_0-u_mf) to 6e-9, and the ceiling's independence of u_0 holds to 3.7e-16.
+
+caveats: >
+  No experimental comparison. The paper's data is figures 3, 5, 7, 8 and 9, all
+  scatter plots; on figure 9, the sharpest of them, the markers below K_m about
+  1.8 overlap into a solid mass in which centres cannot be located, so the
+  extraction is staged for maintainer review and is not on this page. Every
+  number here is the authors' own arithmetic, reproduced.
+
+  d_b is fitted, not predicted. The paper is explicit that relating its
+  "effective bubble size" to observed bubbles is unfinished business, so d_b =
+  3.7 cm should not be read as a physical diameter, and the ceiling map is a
+  statement about eq. 49 rather than about any real bed. First order only: eqs.
+  48a-c are linear in C_A and the continued fraction does not survive any other
+  rate law.
+
+  The distributed model's emulsion velocity is a stated closure, not the paper's.
+  The three superficial velocities are required to sum to u_0; the paper's own
+  eqs. 5 and 7 give an emulsion velocity that overshoots u_0 by 9.7 % for this
+  bed, and both are run so the reader can see the spread (7-15 % versus 0-11 %).
+  The top and bottom mixing conditions on the recirculation loop are likewise a
+  choice, consistent with the paper's figure 6 but not written down by it.
+
+  Appendix C's u_0 = (6.6 + 9.9 + 13.2 + 20)/5 = 13.2 has four terms over five; a
+  term was dropped in typesetting. 13.2 is used throughout and is confirmed by
+  the paper's own u_b = 53.9, so nothing is repaired by inference. alpha = 0.47
+  in appendix C is outside the 0.25-0.40 range of the paper's own eq. 6.
