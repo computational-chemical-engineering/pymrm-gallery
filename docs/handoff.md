@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-07-29
+# Handoff — state as of 2026-07-30
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -7,7 +7,7 @@ Start here if you are picking this up fresh. Read this, then
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-10 pages, 11 published catalog entries, both CI workflows green.
+11 pages, 12 published catalog entries, both CI workflows green.
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -21,8 +21,9 @@ Start here if you are picking this up fresh. Read this, then
 | `F1.4` Krishna–Ellenberger holdup | A correlation with no fluid property in it, against the figure it was fitted to | **experimental** — 13.8% mean deviation, +2.8% bias over 63 digitised points |
 | `H1.7` Wijmans–Baker solution–diffusion | Two constants predict the third — and the figure cannot test the prediction | **experimental** — A and B fitted to 8 points, rejection predicted for the other 4 |
 | `B3.1` Yagi–Kunii shrinking core | The one equation all three textbook regimes come from, plus a map of where they are safe | 6.9e-16 against an independent derivation; all three limits to 2.4e-8 |
+| `F2.3` Maretto–Krishna FT slurry column | Plug-flow large bubbles over a well-mixed slurry, and two printed constants that stop it working | **experimental** holdup — 5–6% over 79 points; conversions 93.1/63.8% vs the paper's 96/63% |
 
-Status counts live in `models.yaml`: 11 published, 18 planned, 2 deferred
+Status counts live in `models.yaml`: 12 published, 17 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
@@ -96,8 +97,10 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`F2.3`, `J3.4`** — unblocked, data staged. **`G1.8` is BLOCKED** on a
-   question for the maintainer; see the section below.
+1. **`J3.4`** — unblocked, data staged; a full P2D battery model and the largest
+   build left. It can only ever be a reference-solution page. **`G1.8` is
+   BLOCKED** on a question for the maintainer; see below. (`F2.3` — **done
+   2026-07-30**.)
    `F2.3` can lift Eq. 19 and Reilly's Eq. 8 from the `F1.4` page as validated SI
    functions. `J3.4` is a full P2D battery model, the largest build in the queue,
    and can only ever be a reference-solution page. (`B3.1` — **done 2026-07-29**.)
@@ -108,6 +111,34 @@ bulk-download tool.
    Note `F2.3` consumes `F1.4`: Eq. 19 and Reilly's Eq. 8 are already
    implemented and validated on the `F1.4` page as standalone SI functions, so
    lift them rather than rewriting.
+
+### When a printed constant is wrong, prove it from the paper's own results
+
+`F2.3` needed two corrections before it would run, and the method for
+establishing them generalises.
+
+Eq. 2's rate prefactor is printed as 8.8533e3 mol/(s kg_cat bar²), which gives an
+intrinsic rate 10⁶ larger than any cobalt catalyst. Eq. 1's rate is labelled
+`R_CO+H2` but behaves as a CO rate. Neither could be fixed by fitting — that would
+have made the whole comparison circular.
+
+**What made the diagnosis safe was establishing chemical control first.** The
+paper reports that a 10-fold rise or 3-fold fall in kLa is negligible; reproducing
+that *before* touching the kinetics proves the mass-transfer correlations are not
+free to absorb a rate error. Only then does the conversion comparison isolate the
+kinetics, so each correction becomes a discrete choice between stated
+alternatives — 10³ vs 10⁻³, syngas vs CO — with the paper's own reported
+conversions selecting between them. The page prints the alternatives and what each
+gives.
+
+*Order matters: pin down what is NOT free before claiming a constant is wrong.*
+
+Two pymrm traps recorded on that page, both silent failures:
+
+- A convection outlet left as `None` makes the matrix **singular**, and a
+  rank-deficient solve still returns a plausible-looking profile.
+- With varying velocity, discretise `d(Uc)/dz` as the divergence of the flux.
+  `U dc/dz` loses the gas contraction — 65 % of the volumetric flow here.
 
 ### `G1.8` is blocked — a model that closes for one curve out of four
 

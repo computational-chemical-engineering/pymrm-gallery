@@ -1,0 +1,65 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F2.3
+slug: slurry-bubble-column-ft
+title: "Slurry bubble column for Fischer–Tropsch synthesis"
+section: F
+status: published
+tier: T1
+priority: P1
+structures: [S7, S8]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 150
+datasets:
+  - maretto-krishna-1999-fig2.csv
+
+validation:
+  - the convection operator on its own, against the analytic exp(-kz/U), refined to show first-order convergence, plus an exactly flat profile with no sink
+  - the hydrodynamic model against 79 digitised Figure 2 markers at three slurry concentrations, restricted to the churn-turbulent range the model claims
+  - eq. 9's coefficient 0.3 compared with F1.4's 0.268 on the same points
+  - the paper's own kLa sensitivity test reproduced, establishing that the reactor is chemically controlled and so that the conversion check isolates the kinetics
+  - reactor conversions against the two values the paper reports for eps_s = 0.30
+
+adds: >
+  Two constants in the printed model are wrong, and the page localises both
+  against the paper's own reported results rather than fitting round them.
+  Eq. 2's prefactor is printed as 8.8533e3 mol/(s kg_cat bar^2), which gives an
+  intrinsic rate 1e6 larger than the paper's own 96 % conversion requires; the
+  exponent is used as -3. And eq. 1's rate, labelled R_CO+H2, behaves as a CO
+  rate: read as syngas it gives 71.5 % and 24.1 % where the paper reports 96 %
+  and 63 %, read as CO it gives 93.1 % and 63.7 %. What makes the diagnosis safe
+  is that the reactor is chemically controlled - the paper's kLa sensitivity
+  result is reproduced first - so nothing else is free to absorb the error.
+
+  The page also separates what is validated from what is only reproduced: the
+  hydrodynamics are tested against measurement, the conversions only against the
+  authors' simulation output.
+
+agreement: >
+  Hydrodynamics: 5.9 %, 6.3 % and 4.9 % mean absolute deviation at eps_s = 0,
+  0.16 and 0.35 over 79 markers, one set of constants, nothing fitted. Reactor:
+  93.1 % conversion at U = 0.12 m/s and 63.8 % at 0.40 against the 96 % and 63 %
+  the paper reports for eps_s = 0.30. The convection operator reproduces
+  exp(-kz/U) with refinement ratios 3.43, 3.85, 3.96 (first order, as upwind
+  must be) and is flat to 4e-14 with no sink.
+
+caveats: >
+  The reactor is never compared with a measurement - no commercial FT slurry
+  column data is public and the paper reports none - so every conversion number
+  is a check against the authors' own simulation, not against reality. The
+  digitised holdup is from a 0.10 m column at ambient pressure while the reactor
+  runs at 7 m and 30 bar, so eq. 11's pressure factor and the D_T cap at 1 m are
+  used well outside anything validated here. 20 of the 99 digitised markers lie
+  in an unresolvable cluster at the origin and are carried in the CSV flagged
+  `resolved = no`, excluded from every metric. Points below U_df are excluded
+  because the churn-turbulent model does not apply there. The liquid outflow term
+  of eqs. 19-20 is dropped because U_Lo is not in Table 1, which is the most
+  likely cause of the residual 3-point gap at low velocity. Axial dispersion in
+  the slurry is assumed away. Both constant corrections rest on the authors'
+  reported conversions being correct.
