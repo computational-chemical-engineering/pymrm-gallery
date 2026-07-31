@@ -1,0 +1,46 @@
+# Catalogue block for E1.1, to splice into models.yaml. APPEND — E1.1 is not in
+# models.yaml at all today, although E2.1's `related:` list already names it.
+#
+# status: planned, and there is NO `page:` key, because no page was built. See
+# queue_cases/E1.1.yaml `scope_decision:` for why: Kunii & Levenspiel (1968) is
+# on disk and prints the two-phase relation (eqs. 2 + 3) but neither attributes
+# it, names it, nor tests it, and those equations are already reproduced on the
+# published E2.1 page. Splicing this block is optional and independent of the
+# paper question — it makes the case visible in the canonical index and records
+# the verified citation so nobody re-resolves it.
+#
+# `slug` and `title` are provisional: no meta.yaml exists yet to match them
+# against. Whoever builds the page must keep the three in sync.
+
+- id: E1.1
+  slug: two-phase-theory
+  title: "Two-phase theory of fluidisation"
+  description: >
+    The postulate the whole bubbling-bed literature is built on — gas beyond
+    what minimum fluidisation needs passes through as bubbles, so the dense
+    phase sees the same flow however hard the bed is blown — and the measured
+    bubble flow that falls well short of it.
+  section: E
+  status: planned
+  tier: T0
+  priority: P1
+  structures: [S7]
+  phases: [gas-solid]
+  predicts: [bubble fraction, bed expansion, dense-phase gas flow, bypass fraction, first-order conversion]
+  pymrm_api: [construct_div, construct_convflux_upwind, construct_coefficient_matrix, newton]
+  reference:
+    authors: ["Toomey, R. D.", "Johnstone, H. F."]
+    year: 1952
+    container: "Chemical Engineering Progress 48(5) 220–226"
+  data: {tier: 6, method: table, status: placeholder}
+  note: >
+    Blocked on the source, not on the physics. Chem. Eng. Progr. 48 (1952)
+    predates DOIs and has no open-access route; Kunii & Levenspiel (1968), the
+    only fluidisation paper on disk, does not cite Toomey & Johnstone and states
+    the split only as its own eqs. 2 and 3, which the E2.1 page already
+    reproduces. Fluidization Engineering (2nd ed., 1991) ch. 6 would unblock the
+    case equally well — it states the postulate as such and prints the
+    visible-bubble-flow factor Y that measures its failure. Build it as the page
+    that tests the split against data rather than assuming it; that is what E2.1,
+    which is tier 6 with no measurement on it, structurally cannot be.
+  related: [E2.1, E1.2, E1.4, E1.3, E1.5]

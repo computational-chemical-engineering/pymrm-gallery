@@ -28,9 +28,20 @@ secrets.*
 # copyrighted figure. They exist only to be looked at once by the maintainer in
 # a private artifact, and must never enter this public repository - every data
 # sidecar's redistribution_basis says the figure image is not reproduced.
-queue_cases/*/review/*.png
-queue_cases/*/review/*.jpg
-queue_cases/*/review/*.pdf
+# Everything under review/, not just the images. An extraction CSV sitting there
+# is a dataset that has NOT been through the maintainer's visual review, and
+# committing one would publish unreviewed numbers with no provenance sidecar -
+# the same failure as committing the overlay, one step removed. Caught on H1.4,
+# 2026-07-31, where fig4_digitised.csv matched no pattern.
+#
+# A reviewed dataset does not live here: it moves into <page>/data/ with its
+# .meta.yaml sidecar, and that path is tracked.
+# Ignore the CONTENTS, not the directory: git will not re-include a file inside
+# an ignored directory, so `queue_cases/*/review/` would make the negations below
+# dead letters.
+queue_cases/*/review/*
+!queue_cases/*/review/*.md
+!queue_cases/*/review/*.py
 
 # The same images base64-inlined. `scripts/dashboards.py --with-images` writes
 # the maintainer's private copy here; the tracked docs/dashboards/*.html are

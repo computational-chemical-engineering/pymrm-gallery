@@ -1,0 +1,81 @@
+# Page metadata. Staged in queue_cases/, not yet in pages/.
+# models.yaml is canonical; this file must not contradict it.
+# Integrator: flip status to published when moving to pages/.
+id: H1.4
+slug: itoh-membrane-dehydrogenation
+title: "Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium"
+section: H
+status: published
+tier: T0
+priority: P1
+structures: [S7]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 12
+datasets:
+  - itoh-1987-stated-values.csv
+
+validation:
+  - the one stated measurement, 0.997 at u_C0 = 2.90e-7 and v_A0 = 11.8e-5 mol/s, is reproduced as 0.9983 with nothing fitted (deviation +0.13 %, convention (model - measured)/measured) - reported together with the sensitivity sweep that shows how little it resolves, and with the -45 % deviation on the quantity that actually varies, 1 - X
+  - resolving power of that comparison, measured rather than asserted - alpha_H over a factor 33 and k*V_r over a factor 100 leave the modelled conversion unchanged; K_p may be divided by 3 or multiplied by 10 with the deviation inside 0.3 %
+  - the printed permeation constant alpha_H = 4.47e-5 mol/s recomputed from Eq. 1's own inputs to 0.03 % (an internal identity; it propagates to no reported number)
+  - K_p(473 K) reconstructed from the paper's stated equilibrium conversion (18.7 %) and checked against an independent van 't Hoff estimate from standard formation data (ratio 1.58)
+  - alpha_H = 0 limit recovers the stated equilibrium conversion (implementation consistency)
+  - pymrm FV/Newton solution against an independent stiff-IVP integration (the paper's own Runge-Kutta role), with a five-level grid ladder and first-order convergence
+  - hydrogen conservation (the corrected Eq. 5) - trivially exact co-current, where the sums telescope, and reported as a genuine O(h) error counter-current, on a grid ladder to n_z = 6400; the whole operating map bounded by the kinetics-free fast-permeation ceiling
+
+adds: >
+  The paper's computation is an initial-value problem; the pymrm finite-volume
+  Newton form reproduces it and then, with only per-field velocities and
+  boundary values changed, solves the counter-current arrangement that a
+  marching integrator would need shooting for. The prediction (no data exists),
+  on a converged grid (n_z = 3200, ladder shown to 6400): counter-current wins
+  decisively at moderate purge - 0.93 vs 0.61 conversion at 8e-6 mol/s - and
+  loses at very low purge, 0.19 vs 0.23 at 0.5e-6 mol/s, where the loaded purge
+  stream back-permeates hydrogen into the fresh feed.
+
+  The archival contribution is the resolution of two misprints in the 3-page
+  communication, each settled from the paper's own printed statements: Eq. 5's
+  sign (substituting the paper's own hydrogen balance into the printed equation
+  gives v_H = -v_H, so it forces v_H = 0 and contradicts Eq. 3), and the
+  equilibrium-constant expression (the printed 4.89e35 exp(+3190/T) Pa^3
+  implies ~100 % equilibrium conversion against the paper's own 18.7 %, cannot
+  be rescued by any units reading, and has the wrong exponent sign for an
+  endothermic reaction; K_p(473) is reconstructed from the stated conversion).
+  A third value a reader might suspect - the headline purge rate
+  v_A0 = 11.8e-5 mol/s - is printed correctly, reads cleanly on the native
+  300 dpi bitmap, and is confirmed here rather than corrected.
+
+agreement: >
+  The measured 0.997 confirms that the reactor reached its co-current
+  fast-permeation asymptote; the model of Eqs. 1-8 with nothing fitted puts
+  that asymptote at 0.9983 (+0.13 %). That comparison bounds K_p to within
+  about an order of magnitude and does not test the kinetics or the permeance
+  at all - the page prints the sweep that establishes this. On the unconverted
+  fraction 1 - X the model is 45 % low (0.00166 against 0.0030). The printed
+  alpha_H is recomputed from its own inputs to 0.03 %; the reconstructed
+  K_p(473) = 2.36e11 Pa^3 agrees with an independent van 't Hoff estimate to a
+  factor 1.58. The pymrm FV solution converges first order to an independent
+  stiff-IVP reference (refinement ratio 2.0).
+
+caveats: >
+  The one comparison with measurement is a single stated conversion at an
+  operating point where the model sits exactly on its thermodynamic ceiling, so
+  it is NOT evidence for Itoh's Langmuir-Hinshelwood kinetics, nor for the
+  Sieverts permeance, and it does not select the reconstructed K_p over the
+  van 't Hoff value (which agrees marginally better). The measurement is quoted
+  to three digits with no uncertainty, so the deviation is only known to lie in
+  [+0.08 %, +0.19 %]. The low-purge region, where kinetics and permeation
+  resistance shape the curves, is checked only as a reproduction of the paper's
+  calculated curves; Figure 4's markers were not digitised (the ranked-
+  validation policy prefers stated results, and digitisation stalls a case on
+  review). K_p is a reconstruction from the paper's own equilibrium statement,
+  every input printed; the printed K_P expression it replaces remains
+  unexplained. The counter-current comparison is a pure prediction, on a
+  converged grid but with no data behind it, and reported only over the purge
+  range where the Newton solve converges cleanly.

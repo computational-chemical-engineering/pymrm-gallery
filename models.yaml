@@ -343,6 +343,39 @@ models:
     data: {tier: 6, method: table, status: complete}
     related: [E1.1, E1.2, E2.3, A1.6, B1.1]
 
+  - id: E1.1
+    slug: two-phase-theory
+    title: "Two-phase theory of fluidisation"
+    description: >
+      The postulate the whole bubbling-bed literature is built on — gas beyond
+      what minimum fluidisation needs passes through as bubbles, so the dense
+      phase sees the same flow however hard the bed is blown — and the measured
+      bubble flow that falls well short of it.
+    section: E
+    status: planned
+    tier: T0
+    priority: P1
+    structures: [S7]
+    phases: [gas-solid]
+    predicts: [bubble fraction, bed expansion, dense-phase gas flow, bypass fraction, first-order conversion]
+    pymrm_api: [construct_div, construct_convflux_upwind, construct_coefficient_matrix, newton]
+    reference:
+      authors: ["Toomey, R. D.", "Johnstone, H. F."]
+      year: 1952
+      container: "Chemical Engineering Progress 48(5) 220–226"
+    data: {tier: 6, method: table, status: placeholder}
+    note: >
+      Blocked on the source, not on the physics. Chem. Eng. Progr. 48 (1952)
+      predates DOIs and has no open-access route; Kunii & Levenspiel (1968), the
+      only fluidisation paper on disk, does not cite Toomey & Johnstone and states
+      the split only as its own eqs. 2 and 3, which the E2.1 page already
+      reproduces. Fluidization Engineering (2nd ed., 1991) ch. 6 would unblock the
+      case equally well — it states the postulate as such and prints the
+      visible-bubble-flow factor Y that measures its failure. Build it as the page
+      that tests the split against data rather than assuming it; that is what E2.1,
+      which is tier 6 with no measurement on it, structurally cannot be.
+    related: [E2.1, E1.2, E1.4, E1.3, E1.5]
+
   - id: E2.7
     slug: cfb-core-annulus
     title: "Circulating fluidised bed core–annulus model"
@@ -492,21 +525,33 @@ models:
   - id: H1.4
     slug: itoh-membrane-dehydrogenation
     title: "Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium"
+    description: >
+      Hydrogen leaves through a palladium wall, so a dehydrogenation capped at
+      18.7 % equilibrium conversion runs to a measured 99.7 %. The model puts that
+      operating point on its co-current fast-permeation ceiling and lands on the
+      measured number with nothing fitted - and the page measures how little the
+      comparison resolves (nothing about the kinetics or the permeance), after two
+      misprints in the 3-page communication are resolved from the paper's own
+      statements.
     section: H
-    status: planned
+    status: published
+    page: pages/H1.4-itoh-membrane-dehydrogenation/
     tier: T0
     priority: P1
     structures: [S7]
     phases: [gas-solid]
+    predicts:
+      - conversion beyond the equilibrium limit
+      - axial flow and hydrogen-fraction profiles in both channels
+      - co-current vs counter-current purge (prediction)
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac]
     reference:
       authors: ["Itoh, N."]
       year: 1987
       container: "AIChE Journal 33(9) 1576–1578"
-    note: >
-      Promoted into the first wave with H1.1. Conversion beyond the equilibrium
-      limit is a striking, quantitative, published result, and the page needs
-      only the permeation closure from H1.1 plus a 1D reactor model.
-    related: [H1.1, H1.5, H1.12]
+      doi: 10.1002/aic.690330921
+    data: {tier: 2, method: stated in text, status: complete}
+    related: [H1.1, H1.5, H1.7, F2.3, D2.2]
 
   - id: H1.7
     slug: solution-diffusion

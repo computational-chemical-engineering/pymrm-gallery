@@ -1,0 +1,135 @@
+dataset_id: itoh-1987-stated-values
+title: Numerical results stated in the text of Itoh (1987)
+n_values: 7
+status: complete
+
+source:
+  authors: ["Itoh, N."]
+  year: 1987
+  container: "AIChE Journal 33(9) 1576-1578"
+  doi: 10.1002/aic.690330921
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+conditions:
+  reaction: "cyclohexane -> benzene + 3 H2 over 0.5 wt% Pt/Al2O3 pellets"
+  reactor: "Pd hollow tube, 200 um wall, 140 mm long, packed with catalyst inside; Ar purge on the shell side"
+  temperature: "473 K, isothermal"
+  pressure: "1 atm on both sides"
+
+acquisition:
+  method: "stated in text"
+  tool: "poppler pdfimages at the scan's native resolution; the PDF's page images are 300 dpi bilevel CCITT, so rendering at 600 dpi is a 2x upsample and adds nothing. Every number was read off the page image, not the OCR layer."
+  procedure: >
+    The paper is a 3-page communication with no tables; its numerical results
+    live in the running text and in the equations. All values in this file were
+    transcribed from the native 300 dpi page bitmaps. TWO printing problems were
+    found and resolved; each resolution uses only other printed statements of
+    the same paper, and the notebook prints the evidence. A third value is
+    CONFIRMED as printed, not corrected:
+
+    (1) Eq. 5 prints v_H = u_H - 3(u_C0 - u_C). Integrating the paper's own
+    Eqs. 2 and 3 with dv_H/dL = Q_H gives u_H + v_H = 3(u_C0 - u_C);
+    substituting that into the printed Eq. 5 gives v_H = -v_H, i.e. the printed
+    equation forces v_H = 0 identically, contradicting the permeation term of
+    Eq. 3. The correct form is v_H = 3(u_C0 - u_C) - u_H: a sign flip in print.
+    No sign-convention escape exists - Eq. 8 places every initial condition at
+    L = 0, Figure 3 draws v_A0 entering the separation side at the left, Figure
+    1 shows the purge gas entering at the feed end, and the sentence below Eq. 6
+    defines v_i as the separation-side flow rate (positive in +L).
+
+    (NOT a misprint) v_A0 = 11.8 x 10^-5 mol/s: on the native bitmap the
+    superscript reads -5 cleanly (the same line carries an unambiguous -7), so
+    this is what the paper prints and it is stored as printed. It is worth
+    confirming independently, and the confirmation is kinetics-free: the
+    fast-permeation thermodynamic ceiling at v_A0 = 11.8e-6 mol/s is X = 0.716
+    (0.664 with an independent van 't Hoff K_p), so the measured 0.997 would be
+    impossible under the 10^-6 reading for ANY kinetics or permeance; reaching
+    it would require K_p 338x the reconstruction, implying a membrane-free
+    equilibrium conversion of 0.734 against the printed 0.187. Figure 4's
+    hand-lettered abscissa exponent IS genuinely illegible on the scan; nothing
+    in this file or on the page depends on reading it.
+
+    (2) The printed equilibrium-constant expression
+    K_P = 4.89e35 exp(+3190/T) Pa^3 gives 4.2e38 Pa^3 at 473 K, which
+    contradicts the paper's own stated equilibrium conversion of 18.7 % (it
+    implies ~100 %) and the premise of the study. K_p(473 K) was therefore
+    reconstructed from the stated equilibrium conversion instead:
+    K_p = 2.357e11 Pa^3. Every input to that reconstruction (x_eq = 0.187,
+    y_C0 = 0.197, P = 1 atm, T = 473 K) is printed in the paper. An
+    independent van 't Hoff estimate from standard formation data gives
+    1.49e11 Pa^3 (ratio 1.58), consistent in magnitude. A units error cannot
+    explain the printed line (re-reading it as atm^3 leaves it 27 orders out),
+    and the sign of its exponent is independently wrong: the reaction is
+    endothermic (dH298 = +206 kJ/mol), so K_p must rise with T. The most
+    economical diagnosis is that only the exponential argument is corrupted -
+    the printed prefactor is within a factor 54 of exp(dS/R) = 9.0e33 Pa^3, and
+    the slope that makes it reproduce the paper's own x_eq is -26,480 K, within
+    7 % of the van 't Hoff slope -24,810 K. That is a diagnosis only; the page
+    uses the reconstruction from x_eq, which assumes nothing about the origin
+    of the printed line. The Arrhenius form of K_P is never needed: the model
+    is isothermal at 473 K.
+  operator: "Claude Fable 5 (builder agent)"
+  date: 2026-07-31
+  estimated_error: >
+    Transcription: none expected; every character was verified on the native
+    300 dpi bitmap, and the verification crops are kept in
+    queue_cases/H1.4/review/. The measured conversion itself is quoted by the
+    authors to three digits with no stated uncertainty, so it constrains X only
+    to [0.9965, 0.9975]; the page works that band through explicitly.
+
+validation:
+  alpha_H_identity: >
+    The printed permeation constant alpha_H = 4.47e-5 mol/s is recomputed from
+    Eq. 1's own inputs (D = 9.23e-10 m2/s, C_0 = 1280 mol/m3, l_0 = 0.14 m,
+    r_i = 8.5 mm, r_o = 8.7 mm) to within 0.03 %; the alternative reading of
+    the text's '17.0 mm OD' gives 2.4 %. Strictly this shows what Itoh
+    SUBSTITUTED INTO Eq. 1, not what the tube physically was, and it propagates
+    to nothing: the model uses the printed alpha_H, and r_i enters only through
+    V_r, which appears only as the product k*V_r - varied over a factor 100 in
+    the page's sensitivity sweep without moving any reported number.
+  equilibrium_statement: >
+    The stated 18.7 % equilibrium conversion is consistent with an independent
+    van 't Hoff estimate of K_p from NIST-type standard formation data
+    (factor 1.58, i.e. within the accuracy of a constant-enthalpy estimate),
+    and Figure 4 prints the same number (0.187) as the v_A0 -> 0 intercept of
+    all three calculated curves.
+  measured_conversion: >
+    The model of Eqs. 1-8, with nothing fitted, puts the stated measured
+    conversion 0.997 at 0.9983 (deviation +0.13 %, convention
+    (model - measured)/measured). The page reports the resolving power of that
+    comparison alongside it, because it is small: the modelled value IS the
+    algebraic fast-permeation/equilibrium ceiling, so varying alpha_H over a
+    factor 33 or k*V_r over a factor 100 does not change it at all, and K_p may
+    be divided by 3 or multiplied by 10 with the deviation staying inside
+    0.3 %. On the quantity that does vary, 1 - X, the model is 45 % low
+    (0.00166 against 0.0030). The measurement therefore tests the
+    equilibrium-plus-permeation description and neither the kinetics nor the
+    permeance.
+
+review:
+  reviewed_by: null
+  date: null
+  verdict: pending
+  findings: >
+    No figure was digitised for this dataset, so there is no overlay to review
+    for it. The native-resolution verification crops of every transcribed
+    number and of the two printing problems are in queue_cases/H1.4/review/
+    (git-ignored page images). Separately, an UNREVIEWED trial digitisation of
+    Figure 4's calculated curves is staged in the same review/ directory as a
+    non-blocking follow-up (see queue_cases/H1.4.yaml, follow_up:); none of it
+    is used on the page or in this dataset.
+
+columns:
+  - {name: quantity, unit: "-", description: "what the number is"}
+  - {name: value, unit: varies, description: "as printed (v_A0 exponent resolved, see above)"}
+  - {name: unit, unit: "-", description: "unit of the value"}
+  - {name: kind, unit: "-", description: "measurement | operating condition | thermodynamic statement"}
+  - {name: where_stated, unit: "-", description: "location in the paper"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image or figure is
+  reproduced.

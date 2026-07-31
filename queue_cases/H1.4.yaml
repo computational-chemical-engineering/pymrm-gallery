@@ -5,7 +5,7 @@ catalog_reference: AIChE J 33 (1987)
 priority: P1
 tier: T0
 structures: S7
-status: ready
+status: published
 reference:
   authors:
   - Itoh, N.
@@ -17,27 +17,137 @@ paper:
   open_access: null
   checked: '2026-07-31'
 blocker: null
-notes: 'Built 2026-07-31 without figure digitisation: validation route is the
-  stated measured conversion (99.7 % at u_C0 = 2.90e-7, v_A0 = 11.8e-5 mol/s;
-  model 99.8 %, +0.13 %) plus two internal identities (alpha_H recomputed from
-  Eq. 1 to 0.03 %; K_p(473) reconstructed from the stated 18.7 % equilibrium
-  conversion, van''t Hoff cross-check ratio 1.6). Three misprints resolved from
-  the paper''s own statements and documented on the page, in the data sidecar,
-  and in review/NOTES.md: Eq. 5 sign flip, v_A0 exponent (10^-5, proved by a
-  kinetics-free thermodynamic ceiling: the 10^-6 reading caps X at 0.72), and
-  the K_P expression (printed form implies ~100 % equilibrium conversion).
-  Figure 4''s experimental markers deliberately not digitised; doing so later
-  would extend validation without touching the page. Counter-current extension
-  is a labelled prediction. Earlier note (paper mapped to H1.9 in
-  papers-on-disk.yaml by mistake) already fixed. models_entry.yaml: H1.4 exists
-  in models.yaml as planned - upgrade in place, do not append.'
+notes: 'Built 2026-07-31 without figure digitisation; revised 2026-07-31 after
+  adversarial verification (report in queue_cases/H1.4/review/verification.md).
+  Verdict was safe to publish after fixes F1-F5; all are applied and the page
+  re-executes deterministically (10 s, byte-identical stream outputs and
+  agreement.json over two runs, no warm-start continuation anywhere).
+
+  VALIDATION ROUTE AND ITS HONEST RESOLVING POWER. The one comparison with a
+  measurement is the stated conversion 0.997 at u_C0 = 2.90e-7, v_A0 = 11.8e-5
+  mol/s; the model gives 0.9983 (+0.13 %). That number is now reported together
+  with the sweep that shows how little it resolves, because the modelled value
+  IS the algebraic co-current fast-permeation/equilibrium ceiling exactly
+  (|model - ceiling| = 0): alpha_H over a factor 33 and k*V_r over a factor 100
+  leave X unchanged to 1.4e-11 and 0 respectively, and K_p may be divided by 3
+  (-0.19 %) or multiplied by 10 (+0.28 %) with the deviation still inside
+  0.3 %. The van''t Hoff K_p agrees slightly BETTER (+0.04 %) than the
+  reconstruction, so the comparison cannot tell them apart. On the quantity that
+  actually varies, 1 - X, the model is 45 % low (0.00166 against 0.0030), and
+  since 0.997 is three digits with no uncertainty the deviation is only known to
+  lie in [+0.08 %, +0.19 %]. The page, README, meta.yaml, models_entry.yaml and
+  the data sidecar no longer lead with "reproduced to 0.13 % with nothing
+  fitted"; they say the measurement confirms the reactor reached its co-current
+  fast-permeation asymptote and that the model puts that asymptote in the right
+  place, and that it is NOT evidence about the Langmuir-Hinshelwood kinetics or
+  the Sieverts permeance. All of this is in agreement.json for CI.
+
+  TWO MISPRINTS, NOT THREE. (1) Eq. 5''s sign: substituting the paper''s own
+  hydrogen balance u_H + v_H = 3(u_C0 - u_C) into the printed
+  v_H = u_H - 3(u_C0 - u_C) gives v_H = -v_H, so the printed equation forces
+  v_H = 0 and contradicts Eq. 3 outright - a stronger argument than "it would be
+  negative", and the convention escape is closed by Eq. 8, Figure 3, Figure 1
+  and the sentence below Eq. 6 (all confirmed on the native bitmap during this
+  revision). (2) The K_P expression: printed 4.89e35 exp(+3190/T) Pa^3 implies
+  x_eq = 1.00 against the printed 0.187; a units re-reading leaves it 27 orders
+  out and the exponent sign is independently wrong for an endothermic reaction
+  (dH298 = +206 kJ/mol). K_p(473) = 2.3566e11 Pa^3 reconstructed from x_eq =
+  0.187; van''t Hoff cross-check 1.49e11, ratio 1.58. The decision table now
+  also carries the corrupted-argument diagnosis (printed prefactor within a
+  factor 54 of exp(dS/R) = 9.0e33 Pa^3; the slope reproducing the paper''s own
+  x_eq is -26,480 K, within 7 % of -dH/R = -24,810 K). NOT a misprint:
+  v_A0 = 11.8e-5 mol/s reads -5 cleanly on the native 300 dpi bitmap, so the
+  page CONFIRMS the printed value instead of correcting it; the kinetics-free
+  ceiling argument (0.716 at 11.8e-6, 0.664 with the van''t Hoff K_p; reaching
+  0.997 there would need K_p 338x the reconstruction, implying a membrane-free
+  x_eq of 0.734) is kept as corroboration. What is genuinely illegible is
+  Figure 4''s hand-lettered abscissa exponent, and nothing depends on it. The
+  count is two everywhere: page, README.md, meta.yaml, models_entry.yaml, the
+  data sidecar, and review/NOTES.md.
+
+  COUNTER-CURRENT PREDICTION NOW CONVERGED. It was quoted at the class default
+  n_z = 400, which is not converged (X(0.5e-6) = 0.1991 against 0.1908 at
+  n_z = 6400). The comparison is now run at n_z = 3200 with the ladder
+  400/800/1600/3200/6400 printed for both endpoints and quoted to two decimals:
+  co-current 0.61 vs counter-current 0.93 at 8e-6 mol/s, and the reversal at
+  0.5e-6, co 0.23 vs counter 0.19. The counter-current hydrogen closure is now
+  reported as the non-trivial conservation check (worst 3.5e-3 at n_z = 3200,
+  first order in h); the co-current closure at 7e-16 is explicitly labelled as
+  weak evidence, since the co-current sums telescope and the identity holds at
+  any n_z. Convergence limit unchanged and honestly reported (solve stalls
+  above 8e-6; likely the sqrt(v_H) derivative singularity at the shell inlet).
+
+  STALE NUMBERS FIXED. "6 to 14 Newton iterations" is gone; every solve now
+  records its count and the range is printed and put in agreement.json
+  (currently 5 to 67 whole-page, 6 to 67 by the validation section). The
+  sidecar''s van''t Hoff "1.6e11" is corrected to 1.49e11. The "600 dpi render"
+  provenance is corrected everywhere: the scan is 300 dpi bilevel CCITT and a
+  600 dpi render is a 2x upsample. The alpha_H/OD inference is softened to what
+  the identity actually shows (which radii Itoh substituted into Eq. 1) with a
+  note that it propagates to nothing, since r_i enters only through V_r and V_r
+  only through the product k*V_r.
+
+  FIGURE 4: STILL NOT DIGITISED FOR THE PAGE. See follow_up below - a trial
+  digitisation of the calculated curves is staged unreviewed in review/ and is
+  used nowhere on the page or in data/.
+
+  Earlier note (paper mapped to H1.9 in papers-on-disk.yaml by mistake) already
+  fixed. models_entry.yaml: H1.4 exists in models.yaml as planned - upgrade in
+  place, do not append.'
+review_artifacts:
+- queue_cases/H1.4/review/NOTES.md
+- queue_cases/H1.4/review/verification.md
+- queue_cases/H1.4/review/extract_figure4.py
+follow_up:
+  kind: optional-figure-digitisation
+  question: 'Figure 4''s three CALCULATED curves were digitised as a trial and are
+    staged unreviewed. With the reconstructed K_p(473) = 2.357e11 Pa^3 the page''s
+    model matches the 25 traced points to rms 0.023 in conversion (0.012 over the
+    19 points away from the steep near-origin region); dividing or multiplying K_p
+    by 1.58 degrades that to 0.047 / 0.044, and by 3 to 0.100 / 0.094. So the
+    authors'' own curves discriminate K_p at the factor-1.6 level and select the
+    reconstruction - which is exactly what the one measured point cannot do
+    (validation check 1 shows K_p is unconstrained there to within an order of
+    magnitude). Adopting this would give the page its only K_p-discriminating
+    check. It needs a visual review of the 25 numbered points on the overlay
+    first. Worth it?'
+  detail: Not blocking - the page ships without it and is complete as staged. These
+    are the authors' own CALCULATED curves, so even after review this is reproduction,
+    not measurement, and the page stays tier 6 on the data side; no experimental tier
+    is gained. Artifacts are in queue_cases/H1.4/review/ - extract_figure4.py (deterministic,
+    tick pixel coordinates recorded in the source and re-asserted at run time), fig4_digitised.csv
+    (25 points) and fig4_overlay.png (numbered, git-ignored as a page image). WARNING
+    for the integrator - .gitignore covers only *.png/*.jpg/*.pdf under queue_cases/*/review/,
+    so fig4_digitised.csv is NOT ignored and must not be committed while unreviewed;
+    do not run 'git add -A' in that directory. Regions deliberately skipped by the
+    extraction - the merged near-axis region below 0.41 scale units, the flat right-hand
+    two-thirds of the 0.29 curve where it lies on the frame rule, and every column
+    where an experimental marker or the 'calc.' leader line crosses a curve. Stated
+    digitisation uncertainty 0.005 in X on the shallow parts and 0.015-0.02 for the
+    six steep near-origin points (ids 1, 2, 8, 9, 17, 18). The verifier reached the
+    same conclusion independently from its own 23-point digitisation (rms 0.0105 /
+    0.0370 / 0.0484).
+  artifacts:
+  - queue_cases/H1.4/review/extract_figure4.py
+  - queue_cases/H1.4/review/fig4_digitised.csv
+  - queue_cases/H1.4/review/fig4_overlay.png
 resume:
   staged_at: queue_cases/H1.4/page/
+  blocking: false
   established: >
-    Full extraction verified on 600 dpi renders (crops in review/); model built,
-    executed (~10 s runtime), all six validation checks green; agreement.json
-    written. Nothing outstanding: ready for verifier and integration.
-  answer_changes: {}
+    Extraction, misprint resolutions and validation-route ranking are settled and
+    verified. All verifier findings F1-F5 applied; page rebuilt and re-executed
+    deterministically. Nothing outstanding: ready for integration.
+  answer_changes:
+    answer_yes: Review the 25 numbered points on queue_cases/H1.4/review/fig4_overlay.png,
+      then add a second CSV with sidecar under page/data/, a paragraph in 'The data',
+      and a validation check reporting the rms against the calculated curves as a
+      K_p-discriminating reproduction (explicitly not a measurement). Extraction
+      script already written.
+    answer_no: No change; the page ships as staged, with the digitisation left in
+      review/ and never committed.
+    do_not_redo: The extraction, the two misprint resolutions, the ceiling argument,
+      the counter-current grid study.
   files_to_touch: []
   do_not_redo: extraction, misprint resolutions, validation-route ranking
 updated: '2026-07-31'
