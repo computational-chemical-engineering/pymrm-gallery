@@ -228,10 +228,13 @@ print(f"   {'gas':8s}{'rho_G':>7}{'eps_trans':>11}{'V_small':>10}{'U_trans':>10}
 for k, v in GAS.items():
     e, vs, ut = reilly_transition(v)
     print(f"   {k:8s}{v:7.2f}{e:11.4f}{vs:10.4f}{ut:10.4f}")
-print("   the paper's Fig. 6 measures eps_df ~ 0.10-0.20 and U_df ~ 0.02-0.035")
-print("   over the helium-to-argon range it covers; the computed 0.057-0.174")
-print("   and 0.013-0.032 bracket that, which is the check a property")
-print("   transcription can support")'''))
+print("   Fig. 6 measures eps_df 0.089/0.139/0.192 and U_df 0.0161/0.0230/0.0269")
+print("   at rho_G = 0.18/1.3/1.83 (tick-calibrated reads, corrected 2026-07-31:")
+print("   an earlier version of this page quoted 0.10-0.20 and 0.02-0.035, and")
+print("   the U_df band was wrong at both ends). The computed 0.057-0.174 and")
+print("   0.013-0.032 bracket the measured values, which is the check a property")
+print("   transcription can support. Note eps_df RISES with gas density here")
+print("   - roughly as rho_G^0.30 - so a single flat band misrepresents it.")'''))
 
 cells.append(md("""## Results
 

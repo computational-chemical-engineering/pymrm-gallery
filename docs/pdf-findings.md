@@ -324,6 +324,29 @@ that, not page count, sets the cost of the page.
 | `A2.3` | Taylor 1953 | 2 469 ch/pg equivalent | few | thin, and hyphens for decimals |
 | `A1.1` | Ergun 1952 | **none at all** | — | pure scan, everything off renders |
 
+### 600 dpi is not always 600 dpi — check the embedded image first
+
+Itoh 1987 (`H1.4`) is a **300 dpi bilevel CCITT** scan. `pdftoppm -r 600` on it is a
+2× upsample and carries **no information the 300 dpi bitmap does not already
+have** — the extra pixels are interpolation. A verifier chasing a marginal
+superscript had to read the native bitmap as an ASCII map instead, and that read
+overturned a claimed misprint: the exponent the page said was mis-set is printed
+correctly.
+
+So "read it at 600 dpi" is shorthand for *read the image, not the text layer*, not
+a guarantee of resolution. Before quoting a marginal glyph, check what is actually
+in the file:
+
+```bash
+pdfimages -list f.pdf | head        # width, height, bpc, encoding per image
+```
+
+If `bpc` is 1 (bilevel) the anti-aliasing that makes a glyph legible at 600 dpi
+does not exist, and a rendered upsample can invent apparent shapes. Render at the
+image's own resolution and, for a genuinely ambiguous character, compare it with
+an unambiguous instance of both candidates elsewhere on the same line — that is
+what settled `-5` against `-7` here.
+
 ### Look for the 1995 Golden Jubilee reprint before rendering pages
 
 *Chemical Engineering Science* reprinted a set of its classics **verbatim** in the
