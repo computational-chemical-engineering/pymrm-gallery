@@ -1,0 +1,95 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B1.6
+slug: prater-relation
+title: "The Prater relation: temperature slaved to concentration in a catalyst particle"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 64
+datasets: []
+
+validation:
+  - the transcription of eqs. (4), (5), (7) and (8) is checked three ways against the paper's own content, including a sign in eq. (8) that the paper contradicts itself on
+  - the identity is proved symbolically for an arbitrary rate function and an arbitrary geometry index nu
+  - 324 pymrm two-field solves over 3 geometries, 3 rate laws, 3 Arrhenius numbers and Prater numbers of both signs, worst violation 1.1e-11; convergence is asserted separately through the Newton residual (worst 4.6e-11), because the violation itself cannot detect a failed solve
+  - "the sensitivity of that violation is measured rather than asserted: four injected defects lift it to 4.2e-01 (heat source sign), 1.0e-02 (1 % heat source scale error), 1.6e-01 (mismatched boundary condition type) and 5.4e-01 (rate at an inconsistent state), linearly in the size of the defect"
+  - "the same measurement establishes what it is blind to: up to 1.1e-11 for Newton iterates stopped after 1-3 steps, one of which has the impossible y = 2.12 at the centre (8.5e-12 there); 4.7e-12 for a geometry index that makes eta 57 % wrong; 2.4e-15 for a 3-cell grid that makes eta 37 % wrong"
+  - an independent scipy.solve_bvp collocation solve sharing no code with the pymrm one gives 2.6e-13, but inherits the invariant structurally (6 of its 12 solves did not even reach their own tolerance), so it corroborates the profiles, not the identity
+  - the two solvers' y(u) profiles agree to 1.0e-06 at n_u = 800 and converge at second order where the collocation reference itself converged - a comparison that can fail, and does flag the case where the reference is bad
+  - agreement with B1.1's independent shooting reference, which discretises nothing, improves at second order, 3.9e-05 at n_u = 800; this is the page's real discretisation test
+  - cross-page conventions: beta recovered from the two-field solution equals B1.5's beta = 0.6 to 3.3e-10 and the reduced single equation B1.1/B1.5 solves gives the same solution to 6.1e-12 in y - both are guaranteed by the identity and are labelled as convention and implementation checks, not corroboration
+  - the film breakdown matches a closed form derived on the page to 1.9e-11 relative (5.6e-14 on an 8-cell grid - the match is an algebraic identity of the discrete system, confirming the derivation rather than the solve)
+  - the transient breakdown vanishes identically at Le = 1 (3.5e-13), the control the theory predicts
+
+adds: >
+  Nothing to the identity itself - Prater's result is exact and its proof is two
+  lines. What is new is the size of the error when its assumptions fail, which
+  the 1958 result could only assume away. With an external film the interior
+  relation survives referenced to the SURFACE, while the bulk-referenced form
+  everyone writes is wrong by beta(1-y_s)(Bi_m/Bi_h - 1), uniformly in position -
+  a closed form derived here, whose numerical match is forced by the discrete
+  harmonicity, so the contribution is the derivation plus the magnitudes (up to
+  99.6 % of the temperature rise sitting outside the pellet). In a transient the
+  relation is a linear invariant of the system exactly when Le = 1; away from
+  that it is violated by up to 0.252 of beta, peaking early and decaying to zero
+  at steady state. Both breakdowns are quantified, not merely noted. The identity
+  also makes a cheap unit test for any non-isothermal pellet code, for one
+  specific class of bug: it catches an inconsistency between the two source terms
+  or between the two boundary conditions - a sign, a scale, a boundary condition
+  type, a rate at the wrong state - linearly in the size of the defect, and the
+  page measures that sensitivity by injecting each defect. It catches nothing
+  else: a non-converged Newton solve, a wrong geometry index and a 3-cell grid
+  all leave it at roundoff, and the page measures that too.
+
+agreement: >
+  Not applicable in the experimental sense - this is a tier 6 identity page. The
+  numbers that matter are internal, and they are not of equal weight. The
+  identity holds to 1.1e-11 (median 8.9e-13) over 324 pymrm solves spanning
+  slab/cylinder/sphere, first-order, Langmuir-Hinshelwood and zero-order
+  kinetics, gamma = 10-30 and beta from -0.4 to +0.6, and to 2.6e-13 under an
+  independent collocation discretisation - but both are inherited identities of
+  the discrete system, and the page demonstrates by injection what they can and
+  cannot detect (4.2e-01 for a heat-source sign error, 1.0e-02 for a 1 % scale
+  error, 1.6e-01 for a mismatched boundary condition type, 5.4e-01 for a rate at
+  an inconsistent state; roundoff for a non-converged solve, a wrong geometry
+  index and a 3-cell grid). The checks that can fail are the two profile
+  comparisons: pymrm against the collocation solution, 1.0e-06 at n_u = 800 at
+  second order, and pymrm against B1.1's shooting reference, which discretises
+  nothing, 3.9e-05 at n_u = 800 at observed order 2.11. The film failure matches
+  its closed form to 1.9e-11 relative (an algebraic identity, matched equally
+  well on 8 cells); the transient control at Le = 1 gives 3.5e-13 against
+  violations of 0.124 and 0.252 of beta at Le = 0.1 and 10.
+
+caveats: >
+  Provenance tier 6, and emphatically NOT experimental validation: this is an
+  identity proof plus numerical confirmation. Neither source paper reports
+  measurements. Prater (1958) itself was not consulted - no copy is on disk and
+  none is open access - so every equation is transcribed from Weisz & Hicks
+  (1962) as printed, with Prater cited for the result as they cite him. Two
+  printed expressions for beta in their eq. (8) carry opposite signs; the page
+  states both alternatives and shows which one the paper's own rate expression,
+  sign convention and eta > 1 result select, rather than repairing it by
+  inference. Because the identity is linear and one construct_div serves both
+  fields, any discretisation applying the same operator to both inherits it
+  exactly: the sweep residual is a floating-point measurement and does NOT test
+  the discretisation, the geometry index, or whether the nonlinear solve
+  converged - all three demonstrated on the page by injection. The scipy
+  collocation solve inherits it for the same structural reason and is not
+  independent evidence for the identity either; the checks with resolving power
+  are the profile comparisons against the collocation solution and against
+  B1.1's shooting reference. The assumption that both balances share one reaction
+  rate is not tested; nor is variable D_e and lambda, where only a
+  Kirchhoff-transformed relation between the potentials survives and the relation
+  between T and c itself becomes nonlinear. Zero-order
+  kinetics is swept at small phi only, because above a threshold a dead core forms
+  and no steady state exists to test.

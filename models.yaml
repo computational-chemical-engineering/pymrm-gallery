@@ -171,6 +171,42 @@ models:
       container: "Chemical Engineering Science 17(4) 265–275"
     related: [B1.1, B1.6, D2.4]
 
+  - id: B1.6
+    slug: prater-relation
+    title: "The Prater relation: temperature slaved to concentration in a catalyst particle"
+    description: >
+      One linear identity fixes the temperature everywhere inside a catalyst
+      particle from the concentration alone, whatever the kinetics and whatever
+      the shape. Proved symbolically, confirmed across 324 pymrm solves and an
+      independent collocation solve, with the sensitivity of that confirmation
+      measured by injecting defects, and then broken on purpose: a film with
+      unequal Biot numbers, and a transient with Lewis number away from one.
+    section: B
+    status: published
+    page: pages/B1.6-prater-relation/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    reference:
+      authors: ["Weisz, P. B.", "Hicks, J. S."]
+      year: 1962
+      container: "Chemical Engineering Science 17(4) 265–275"
+      doi: 10.1016/0009-2509(62)85005-2
+    also:
+      authors: ["Prater, C. D."]
+      year: 1958
+      container: "Chemical Engineering Science 8(3–4) 284–286"
+      doi: 10.1016/0009-2509(58)85035-6
+    predicts:
+      - internal temperature rise from the concentration profile
+      - Prater number
+      - maximum internal temperature rise
+      - failure of the bulk-referenced relation under film resistance
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, clip_approach]
+    data: {tier: 6, method: analytical, status: complete}
+    related: [B1.1, B1.5, B1.4, B1.2, D1.4, J4.7]
+
   - id: B1.12
     slug: contour-averaged-particle
     title: "Contour-averaged model for non-spherical catalyst particles"

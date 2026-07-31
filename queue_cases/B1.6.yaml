@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Sci. 8 (1958)
 priority: P1
 tier: T0
 structures: S3
-status: ready
+status: published
 reference:
   authors:
   - Weisz, P. B.
@@ -47,24 +47,56 @@ notes: >
   Validation route 2 (an internal identity the model must satisfy); no figure
   digitised and none needed, so no maintainer review gate. Tier 6 - an identity
   proof plus numerical confirmation, NOT experimental validation, and the page
-  says so in three places.
+  says so in five places.
 
-  Headline numbers: identity violation 1.1e-11 worst over 324 pymrm two-field
-  solves (median 8.9e-13), and 2.6e-13 under an independent scipy.solve_bvp
-  collocation solve that shares no code with the pymrm one. Cross-page: beta
-  recovered from the solution reproduces B1.5's beta = 0.6 to 3.3e-10, and the
-  reduced single equation B1.1/B1.5 solves gives the same profile to 6.1e-12 in
-  y; agreement with B1.1's shooting reference is second order, 3.9e-05 at
-  n_u = 800. Breakdowns: with a film the bulk-referenced relation is wrong by
-  beta(1-y_s)(Bi_m/Bi_h - 1), a closed form derived on the page and matched to
-  1.9e-11 relative, while the surface-referenced relation still holds to
-  5.5e-12; in a transient the relation is exact iff Le = 1 (control 3.5e-13) and
-  is violated by up to 0.252 of beta otherwise.
+  REVISED 2026-08-01 after adversarial verification (report kept at
+  queue_cases/B1.6/review/verification.md). The physics, derivations and
+  transcription all survived attack unchanged, including the sign contradiction
+  in Weisz & Hicks and the transient breakdown, which the verifier reproduced on
+  an independent node-based finite-difference discretisation (Le = 10 gives
+  0.2519 on two grids and two schemes). What was wrong was the page's account of
+  what its numbers proved, and that has been rewritten. Three claims were false
+  and are gone from every location including meta.yaml: that the sweep residual
+  "measures the nonlinear solve" (it is 8.5e-12 for a Newton iterate with
+  y = 2.12 at the centre), that it "would catch a mismatched geometry index" (it
+  is 4.7e-12 while eta is 57 % wrong, and one construct_div serves both columns
+  so the defect cannot even be constructed per field), and that the collocation
+  section "removes the shared-operator objection" (the collocation inherits the
+  invariant identically; 6 of its 12 solves do not even reach their own
+  tolerance, and the residual does not notice).
+
+  Headline numbers. What the sweep residual IS: a floating-point measurement,
+  1.1e-11 worst over 324 pymrm two-field solves (median 8.9e-13), with
+  convergence asserted separately through the Newton residual (worst 4.6e-11).
+  What it detects, now measured on the page by injection rather than asserted -
+  heat-source sign flip 4.2e-01, 1 % heat-source scale error exactly 1.0e-02,
+  boundary-condition type mismatch 1.6e-01, rate at an inconsistent state
+  5.4e-01, i.e. linear in the defect. What it is blind to, also measured:
+  non-converged Newton 1.1e-11, wrong geometry index 4.7e-12 (eta 57 % wrong),
+  3-cell grid 2.4e-15 (eta 37 % wrong - BETTER than at n_u = 200). The checks
+  that can fail are the two profile comparisons: pymrm against the collocation
+  solution, 1.0e-06 at n_u = 800 at second order (and it correctly flags the one
+  case where the collocation reference itself did not converge, stalling at
+  9.3e-05), and pymrm against B1.1's shooting reference, 3.9e-05 at n_u = 800,
+  observed order 2.11. The collocation identity residual (2.6e-13), the beta
+  recovery (3.3e-10) and the reduced-equation match (6.1e-12 in y) are kept but
+  labelled as inherited identities - convention and implementation checks
+  between pages, not corroboration. Breakdowns: with a film the bulk-referenced
+  relation is wrong by beta(1-y_s)(Bi_m/Bi_h - 1), a closed form derived on the
+  page and matched to 1.9e-11 relative - but the match is forced by the discrete
+  harmonicity (5.6e-14 on an 8-cell grid), so it confirms the algebra, not the
+  solve; the surface-referenced relation still holds to 5.5e-12. In a transient
+  the relation is exact iff Le = 1 (control 3.5e-13) and is violated by up to
+  0.252 of beta otherwise.
 
   Integrator notes: no new pip dependencies (sympy is already in
   requirements.txt, added for J4.8). No data/ directory and no sidecar - no
   numbers are transcribed, only equations. B1.6 is not yet in models.yaml, so
   queue_cases/B1.6/models_entry.yaml is a NEW entry to append in section-B order
   after B1.5, not an upgrade in place; B1.5's `related:` list already names B1.6.
-  Notebook runtime ~61 s.
-updated: '2026-07-31'
+  Notebook runtime ~64 s. report_agreement now carries 17 metrics: the four
+  defect-sensitivity numbers and the three blindness numbers are CI-visible, the
+  Newton residual and the two profile comparisons were added, and
+  beta_recovery_vs_B1_5 was dropped because it only re-encoded the sweep
+  residual divided by (1-y).
+updated: '2026-08-01'

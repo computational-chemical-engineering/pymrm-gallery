@@ -197,6 +197,23 @@ nothing else. **The fix was never to delete the check; it was to say what it
 tests.** Publishing the sensitivity table is strictly better than publishing the
 residual alone.
 
+**A powerless check hides a second failure: nobody notices the reference is
+broken.** Fixing `B1.6` turned up something the verifier had not reached — **6 of
+the 12 `solve_bvp` collocation runs never reached their own tolerance**
+(`status = 1`, rms residual up to 4.0e-01), and the reported "worst 2.6e-13" came
+from one of the failed ones. The invariant was satisfied by a solution that was
+not a solution. Adding the check that *can* fail — pymrm profiles against
+collocation profiles — both converged at order 2.00 on the good references and
+stalled at 9.3e-05 with order −0.00 on the bad one, flagging it immediately.
+**Assert your reference solver converged; do not infer it from an identity.**
+
+**Two pages carried a code comment that asserted a sensitivity the check did not
+have** (`B1.6`, `E1.2` — "a wrong nu or a mis-signed boundary flux breaks it
+immediately"; measured, it moves for neither). The comment gets written when the
+check is conceived, the check weakens as the code evolves, and nobody re-runs the
+claim. **A comment claiming sensitivity is a claim, and needs the same break test
+as the number.**
+
 Three questions to ask of every agreement number, before it goes on a page:
 
 1. **Do the two routes share code?** Same assembly, same operator, same
