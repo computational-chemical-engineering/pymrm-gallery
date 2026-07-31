@@ -5,7 +5,7 @@ catalog_reference: Versteeg & van Swaaij (1988); Danckwerts & Sharma
 priority: P1
 tier: T1
 structures: S3+S10
-status: ready
+status: needs-input
 reference:
   authors:
   - Bosch, H.
@@ -18,22 +18,93 @@ paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/F3_5.pdf
   open_access: https://ris.utwente.nl/ws/files/6532984/Bosch89gas2.pdf
   checked: '2026-07-31'
-blocker: null
-notes: >
-  Paper identity resolved 2026-07-31: the catalogue's citation "Versteeg &
-  van Swaaij (1988); Danckwerts & Sharma" points at the group's kinetics
-  paper; the auto-resolved DOI (crossref) landed on Bosch, Versteeg & van
-  Swaaij (1989) CES 44(11) 2735-2743, which IS the model paper the case wants
-  (CO2 into amine-promoted carbonate with parallel reversible reactions) and
-  cites the 1988 kinetics paper as its correlation (11). Verified against the
-  PDF first pages; reference block above records the actual paper. Page
-  staged at queue_cases/F3.5/page/: film model reproduces Table 2 to 0.6%
-  (unpromoted) / 7.6% (promoted) after a one-scalar Kc2 reconstruction fitted
-  to the paper's own J = E kL (ci - cb) identity (the printed constants are
-  internally inconsistent with Table 2 and Fig. 4 by a factor ~1.46 on
-  Kw/Kc2 - documented on the page). Tier 6: the paper contains no tabulated
-  measurements. Runtime ~30 s. Verifier attention: the reconstruction
-  section (one fitted scalar - checked for circularity: fitted to the c_b
-  identity only, never to E), and the 600 dpi transcriptions of Tables 1-2.
-updated: '2026-07-31'
+blocker:
+  kind: figure-digitisation-review
+  question: Three figure extractions need your eye before this page can publish, because the
+    page's defence of its own reconstruction now rests on them. (1) In F3.5-fig2-overlay.png
+    and F3.5-fig3-overlay.png, do the traced curve centres sit on the printed curves? (2)
+    Both figures are labelled alpha = 0.4 in their insets, but their own speciation reads
+    alpha = 0.2 - charge sums 3998/3997 against [K+] = 4000, electroneutral to 0.1 %, and
+    swapping the two ion assignments breaks it by -20/-20/+40 %. Do you agree the insets are
+    wrong and the page may say so? (3) In F3.5-fig4-overlay.png the dashed CO2 curve and the
+    solid promoted-HCO3- curve run about 11 px apart at the right edge; the script identifies
+    the upper intermittent one as the dashed curve at 2.18. Is that the right curve? The earlier
+    independent read gave 2.16, so the two disagree.
+  detail: 'Why this blocks rather than being optional: the unpromoted bulk CO2 read off these
+    figures gives the correction scalar s = 1.419 / 1.405 / 1.510 using no enhancement factor
+    and no Table 2 at all. That is the ONLY route to s that is not fitted to a combination
+    of the printed J and E, so it is what answers the circularity objection the verifier raised.
+    Without it the page still publishes, but with an openly fitted scalar and no independent
+    support - materially weaker. Everything else on the page is done and needs nothing: Table
+    1 (15 rows) and Table 2 (32 numbers) re-read at 600 dpi and exact, the reconstruction,
+    the adverse desorption evidence, and the validation battery relabelled. Batch this with
+    G1.7''s two overlays - one review pass covers both.'
+  artifacts:
+  - queue_cases/F3.5/review/extract_figs.py
+  - queue_cases/F3.5/review/F3.5-fig2-overlay.png
+  - queue_cases/F3.5/review/F3.5-fig3-overlay.png
+  - queue_cases/F3.5/review/F3.5-fig4-overlay.png
+notes: 'Paper identity resolved 2026-07-31: the catalogue''s citation "Versteeg & van Swaaij
+  (1988); Danckwerts & Sharma" points at the group''s kinetics paper; the auto-resolved DOI
+  (crossref) landed on Bosch, Versteeg & van Swaaij (1989) CES 44(11) 2735-2743, which IS
+  the model paper the case wants (CO2 into amine-promoted carbonate with parallel reversible
+  reactions) and cites the 1988 kinetics paper as its correlation (11). Verified against the
+  PDF first pages; reference block above records the actual paper.
+
+  Page staged at queue_cases/F3.5/page/. Verification pass 2026-07-31 sent it back as "legitimate
+  but under-caveated"; the model, the transcriptions, the scalar and the numerics all stood,
+  and the corrections in queue_cases/F3.5/review/verification.md sections 9-10 were applied
+  2026-08-01. State now:
+
+  Film model reproduces Table 2 after a one-scalar reconstruction of K3 = Kw/Kc2 (s = 1.4585)
+  fitted to the paper''s own J = E kL (ci - cb) identity. HEADLINE is the unpromoted FLUX,
+  max 3.8%; promoted E 7.6%, promotion factors 5.6%. The unpromoted E agree to 0.6% but that
+  is flattered - the fitted cb sits in E''s denominator, E is 2.6x less sensitive to s than
+  J, and the four E_u deviations are one offset repeated; the page says so. The fit is NOT
+  independent of the enhancement factors (the implied cb is built from J and E) and the page
+  states that exactly. Location is a three-way choice: Kc1 rejected (E_u 19.8% high), Kc2
+  vs Kw essentially undetermined (F 5.6% vs 8.6%); the code uses Kc2. Why K3 differs is not
+  established - ionic strength has the right sign, a ~10 K Kw reference temperature error
+  fits equally well.
+
+  ADVERSE RESULT, reported on the page as such: the paper''s only two out-of-sample numbers
+  both prefer the printed constants - desorption F = 3.72 (-2.3%) printed vs 3.35 (-12.0%)
+  reconstructed, driving-force reduction 34.7% vs 39.1% against the paper''s "about one third".
+  The page runs both and does not present this as corroboration.
+
+  Independent support that touches no enhancement factor: the unpromoted bulk CO2 read off
+  Figures 2, 3 and 4 implies s = 1.419, 1.405, 1.510 (mean 1.445), and the alpha = 0.2 solve
+  reproduces Fig. 2''s HDA profile (374 -> 485 vs 369 -> 484). Those readings also show Figs
+  2 and 3 to be at alpha = 0.2 although their insets print 0.4 (electroneutral against [K+]
+  = 4000 only at 0.2); Table 2 and Fig. 4 agree with each other and the page follows them.
+  Figure readings are quoted as a cross-check pending maintainer visual review - no CSV, no
+  dataset, nothing on the page depends on them; see follow_up below.
+
+  Tier 6: the paper contains no tabulated measurements. Runtime ~45 s.
+
+  '
+resume:
+  staged_at: queue_cases/F3.5/page/
+  blocking: true
+  established: Page built, executes in 42 s, agreement.json byte-identical across two clean
+    runs. Paper identity confirmed (Bosch, Versteeg & van Swaaij 1989). Table 1 and Table
+    2 verified exact on 600 dpi renders. Headline demoted to J_u within 3.8 %. The adverse
+    out-of-sample evidence (printed constants give F = 3.72, -2.3 %, against the reconstruction's
+    3.35, -12.0 %) is reported as evidence AGAINST the reconstruction. Validation split into
+    two real checks (PFO 3.5e-5, VKH 0.1 %) and consistency checks labelled structurally guaranteed.
+    Extraction script and three numbered overlays staged in review/. Do not re-derive or re-extract.
+  answer_changes:
+    all_three_confirmed: Flip to ready and integrate unchanged - the figure cross-check is
+      already written into the page, labelled pending review; delete that label.
+    curves_or_alpha_wrong: Remove the FIG_READ block and the alpha = 0.2 profile panel from
+      build_page.py, restate the circularity section as openly fitted with no independent
+      route, and publish the rest. Nothing else depends on the figures.
+    fig4_curve_is_2.16_not_2.18: 'One number changes: FIG_READ[4] cb, and the s it implies
+      (1.510 -> ~1.50). No structural change.'
+  files_to_touch:
+  - queue_cases/F3.5/page/build_page.py
+  - queue_cases/F3.5.yaml
+  do_not_redo: the extraction, the Table 1/2 transcription, the reconstruction, the desorption
+    analysis, the validation relabelling
+updated: '2026-08-01'
 doi_source: crossref-auto, verified against PDF 2026-07-31
