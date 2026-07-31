@@ -5,14 +5,90 @@ catalog_reference: Chem. Eng. Sci. (1991)
 priority: P1
 tier: T1
 structures: S3
-status: in-progress
+status: needs-input
 reference:
+  authors:
+  - Wammes, W. J. A.
+  - Westerterp, K. R.
+  year: 1991
+  container: Chemical Engineering & Technology 14(6) 406–413
   doi: 10.1002/ceat.270140608
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/G1_7.pdf
   open_access: https://ris.utwente.nl/ws/files/6515074/Wammes91hydro.pdf
   checked: '2026-07-31'
-blocker: null
-notes: null
+identity_note: >
+  The catalogue's "Chem. Eng. Sci. (1991)" citation points at the Wammes,
+  Mechielsen & Westerterp CES 46 (1991) 409-417 atmospheric companion. The
+  fetched OA copy is the same group's Chem. Eng. Technol. 14 (1991) 406-413
+  synthesis paper, verified against its own header on the 600 dpi renders. It
+  derives the high-pressure hold-up (Eq. 9) and pressure-gradient (Eq. 8)
+  correlations itself, states their fitted ranges and error statistics, and
+  carries the validation figures, so it is the right paper for this case; the
+  CES companion is NOT needed. models_entry.yaml, meta.yaml and the page all
+  record the actual CET reference and note the catalogue's original citation.
+blocker:
+  kind: needs-input
+  question: >
+    Figure digitisation review (the only human gate left): do the numbered
+    crosses in queue_cases/G1.7/review/fig7_overlay.png (16 markers, dynamic
+    hold-up) and fig6_overlay.png (20 markers, pressure gradient) each sit on a
+    real data marker, one cross per marker, none missed, and are the four
+    series correctly told apart by shape (open/filled circle/square)? The four
+    touching-marker pairs to check specifically: fig7 crosses 13/14 (v_l = 4)
+    and 15/16 (v_l = 2); fig6 crosses 17/18 (leftmost cluster) and 19/20
+    (rho_g about 1.6).
+  detail: >
+    The page is otherwise complete and executes in ~5 s: coupled Eqs. (8)+(9)
+    reproduce the 16 hold-up points to 2.9 % mean |dev| (paper's own stated
+    error 8 %) and the 20 pressure points to 10.4 % (paper: 12 %), nothing
+    fitted. If the overlays pass, flip the two sidecars' review blocks and
+    publish; if any marker is wrong, only the affected CSV rows change.
+  artifacts:
+  - queue_cases/G1.7/review/fig7_overlay.png
+  - queue_cases/G1.7/review/fig6_overlay.png
+  - queue_cases/G1.7/page/data/wammes-1991-fig7.meta.yaml
+  - queue_cases/G1.7/page/data/wammes-1991-fig6.meta.yaml
+resume:
+  staged_at: queue_cases/G1.7/page/
+  established: >
+    Paper identity verified (CET 14 (1991), not the CES companion - see
+    identity_note). All equations and both tables read from 600 dpi renders and
+    cross-checked: Table 2's gas-density coefficients reproduce the ideal gas
+    law at 293 K to 0.0 % (N2) and 2.7 % (He); the printed Ga_l range cap
+    0.32e6 IS water-on-3.2mm to 0.5 %; Eq. (7) as printed lacks Eq. (8)'s
+    prefactor (factor 155 x 6^-0.37 = 80) - documented on the page, Eq. (8)
+    implemented. Both figures digitised (16 + 20 points, connected-component +
+    hole/eroded centroids, merged pairs split); page built in house style
+    (build_page.py -> index.ipynb via nbformat), executes end to end,
+    report_agreement called. Coupled closure solved with NumJac + newton; S3
+    CO2-absorption plug-flow model verified against Eq. (3) at first order.
+    Do not re-digitise, re-derive, or re-transcribe anything.
+  answer_changes:
+    overlays_pass: >
+      Set both sidecars' review blocks (reviewed_by/date/verdict), change their
+      status from pending-review to complete and models_entry data.status to
+      complete, set this file to ready; page needs no rebuild.
+    marker_wrong_or_missed: >
+      Correct only the affected rows in
+      queue_cases/G1.7/page/data/wammes-1991-fig[67].csv (pixel->data
+      calibrations are recorded in the sidecars), rerun build_page.py +
+      nbclient, refresh the agreement numbers in meta.yaml if they move.
+    series_misassigned: >
+      Reassign the marker column of the affected rows; the legend (v_g, rho_g)
+      per shape is printed in the paper and transcribed in the CSVs; rerun as
+      above.
+  files_to_touch:
+  - queue_cases/G1.7/page/data/wammes-1991-fig7.meta.yaml
+  - queue_cases/G1.7/page/data/wammes-1991-fig6.meta.yaml
+  - queue_cases/G1.7.yaml
+  do_not_redo: extraction, equation transcription, model closure, page build
+notes: >
+  Deviation convention (model - measured)/measured throughout. Known honest
+  limitations recorded in meta.yaml caveats: correlations tested on their own
+  data (reproduction, not independent validation); tall-bed porosity assumed
+  equal to the printed short-bed value (the +10 % pressure bias sits inside
+  that uncertainty and the page shows the sensitivity); Fig. 6 gas identity
+  ambiguous for the two middle density clusters (<= 4 % effect via viscosity).
 updated: '2026-07-31'
-doi_source: crossref-auto
+doi_source: verified-against-page-render

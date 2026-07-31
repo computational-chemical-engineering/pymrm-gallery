@@ -1,0 +1,50 @@
+dataset_id: marquis-2019-table1-parameters
+title: Dimensional model parameters of the Marquis et al. (2019) graphite / LiPF6 / LCO cell (Table I)
+status: complete
+
+source:
+  authors: ["Marquis, S. G.", "Sulzer, V.", "Timms, R.", "Please, C. P.", "Chapman, S. J."]
+  year: 2019
+  container: "Journal of the Electrochemical Society 166(15) A3693-A3706"
+  doi: 10.1149/2.0341915jes
+  access: "open access; publisher PDF downloaded directly from iopscience.iop.org"
+  licence: "The Electrochemical Society; article is served without a paywall (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 6
+  note: >
+    Model inputs, not measurements. The values are the parameter set the paper
+    itself takes from Scott Moura's fastDFN code (their ref. 27), in turn
+    adapted from Newman's DUALFOIL (their ref. 26). The paper does NOT print
+    the functional forms U_n(c), U_p(c), D_e(c_e) and kappa_e(c_e) that go with
+    them - it cites the codes for those - which is why this page cannot rerun
+    their cell, and uses this table only for the arithmetic reproduction of
+    their Tables II and III.
+
+acquisition:
+  method: table
+  figure: "Table I (journal page A3695); initial stoichiometries and cutoff from the Table III caption (page A3696)"
+  tool: "poppler pdftotext for structure; every value verified against a 600 dpi pdftoppm render"
+  procedure: >
+    The text layer of this born-digital PDF is good, but the three-column table
+    layout interleaves rows on extraction, so every value was checked against
+    the rendered page image. The derived-value check on the page (Tables II and
+    III recomputed from this table, 21 quantities) passes at the paper's own
+    printed precision - which is truncation, not rounding - and it tests every
+    entry that enters any derived group.
+  operator: "Claude (Fable 5), pymrm-gallery builder agent"
+  date: 2026-07-31
+  estimated_error: "none beyond the paper's own printed precision (truncation)"
+
+columns:
+  - {name: symbol,      unit: "-",    description: "symbol as used on the page"}
+  - {name: region,      unit: "-",    description: "negative electrode / separator / positive electrode / global"}
+  - {name: value,       unit: varies, description: "value as printed, converted to SI where the table uses um"}
+  - {name: unit,        unit: "-",    description: "SI unit"}
+  - {name: source,      unit: "-",    description: "where in the paper it is printed"}
+  - {name: description, unit: "-",    description: "the paper's own row description"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). The article is distributed by the
+  publisher without access control. No page image is reproduced.

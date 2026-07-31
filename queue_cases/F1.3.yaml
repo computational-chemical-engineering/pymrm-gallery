@@ -4,19 +4,85 @@ title: Wilkinson et al.
 catalog_reference: AIChE J 38 (1992)
 priority: P1
 tier: T1
-structures: ''
-status: needs-paper
-reference: {}
+structures: S1
+status: ready
+reference:
+  authors:
+  - Wilkinson, P. M.
+  - Spek, A. P.
+  - van Dierendonck, L. L.
+  year: 1992
+  container: AIChE Journal 38(4) 544-554
+  doi: 10.1002/aic.690380408
 paper:
   on_disk: null
   open_access: null
   checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
+  note: >
+    Still not on disk and still no open-access route - but the case no longer
+    needs it. Krishna & Ellenberger (1996),
+    ~/papers/pymrm-gallery/AIChE_Journal-1996-Krishna.pdf, reprints the
+    correlation in full as its Eqs. 1-4 and prints Reilly et al. (1994) Eq. 8
+    alongside it. All five equations were verified independently on 600 dpi
+    renders of journal pages 2627 and 2629 for this case; they agree with what
+    docs/pdf-findings.md section 2 records and with the F1.4 page's
+    implementation. The DOI above was resolved from the full citation printed in
+    Krishna & Ellenberger's literature-cited list (authors, vol. 38, p. 544,
+    1992) and confirmed against CrossRef on all four fields - verified, not a
+    title-similarity guess.
+blocker: null
+scope_decision: >
+  Built as its own page rather than marked covered_by F1.4, and the judgement was
+  made before any code. F1.4 evaluates Wilkinson's rise-velocity equations at
+  Figure 11's plotted abscissa as a foil for Eq. 19, and never evaluates Eq. 2,
+  the transition equation, at all. Eq. 2 turns out to be where the whole
+  correlation lives: run end to end it gives eps_trans = 0.0028 for
+  air-tetradecane against a measured 0.10-0.20, and 1.5e-8 for helium, which
+  empties the small-bubble population - one of two independent defects the page
+  separates, the other being eq. 4's rise velocity, 39 % low. That, the
+  dimensional and C1 identities, the comparison of the two
+  printed transition closures and their complementary validity windows, and the
+  pressure reading of the correlation are all absent from F1.4. The one number
+  the two pages share - Wilkinson's +63.9 % bias on the 63 points - is recomputed
+  here independently and agrees exactly, which is a cross-page consistency check
+  rather than a repetition. This page also closes the abscissa-convention caveat
+  F1.4 had to leave open (worth at most 15 %).
+notes: >
+  Staged at queue_cases/F1.3/page/, executes end to end in about 4 s,
+  report_agreement called with 13 metrics. Deviation convention
+  (model - measured)/measured throughout, matching F1.4.
+
+  NO FIGURE WAS DIGITISED and there is no review gate. The 63 experimental points
+  are F1.4's published, maintainer-reviewed dataset, loaded cross-page with
+  load_data(..., page="F1.4-krishna-ellenberger-holdup"), and no test on this
+  page depends on the marker shapes the review found unreliable. One new dataset
+  was transcribed from a printed table -
+  data/krishna-ellenberger-1996-table2-liquids.csv, Table 2's five liquids - with
+  a full sidecar; its tetradecane row agrees exactly with the same numbers
+  already published on F1.4.
+
+  Validation, highest available first: (1) internal identities - every group in
+  Eqs. 3 and 4 is exactly dimensionless while both transition equations are not,
+  and the C1 limit at the transition recovers Eq. 4's printed exponent 0.757 as
+  0.7566; (2) reproduction of the authors' own computed Figure 4 lines for two
+  liquids, read to one significant figure against printed decade ticks with no
+  coordinates extracted, labelled reproduction and not validation; (3) the 63
+  measured points, giving 63.9 % mean absolute deviation and +63.9 % bias, with a
+  fitted slope of 0.621 against the data's 0.636 that shows the error is a level
+  error and not a slope error. Table 3's delta values are quoted as the authors'
+  own and are explicitly NOT reproduced - the 1,735 raw runs are not published,
+  and the page says so.
+
+  Honest limits recorded in meta.yaml caveats: the primary source was never read,
+  so a mis-set exponent in Krishna & Ellenberger's reprint would be inherited
+  (the two identities are the defence, and both pass); Wilkinson's own stated
+  validity range is unknown, so every statement about where Eq. 2 behaves is
+  about the formula and not a quotation of its authors; the measured dense-phase
+  bands (0.10-0.20 and 0.02-0.035 m/s) are one-significant-figure reads of
+  Figures 4 and 6 used as plot bands, not a dataset; the total-holdup comparison
+  uses a reference built from the measured eps_b plus Reilly's eps_df and is
+  labelled indicative; the column-diameter argument is internal consistency
+  between two of the paper's own results; the pressure sweep is an extrapolation
+  with nothing here to test it.
 updated: '2026-07-31'
+doi_source: verified-against-page-render-and-crossref

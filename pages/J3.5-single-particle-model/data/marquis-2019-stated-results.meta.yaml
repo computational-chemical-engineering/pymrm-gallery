@@ -1,0 +1,53 @@
+dataset_id: marquis-2019-stated-results
+title: Stated numerical results of Marquis et al. (2019) - Tables II, III and IV, and one in-text value
+status: complete
+
+source:
+  authors: ["Marquis, S. G.", "Sulzer, V.", "Timms, R.", "Please, C. P.", "Chapman, S. J."]
+  year: 2019
+  container: "Journal of the Electrochemical Society 166(15) A3693-A3706"
+  doi: 10.1149/2.0341915jes
+  access: "open access; publisher PDF downloaded directly from iopscience.iop.org"
+  licence: "The Electrochemical Society; article is served without a paywall (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 6
+  note: >
+    All values are the authors' own computed results - timescales and
+    dimensionless groups derived from their Table I (Tables II and III), and
+    RMS voltage errors of their reduced models against their own DFN solution
+    (Table IV). Nothing in the paper is a measurement.
+
+acquisition:
+  method: table
+  figure: "Table II (page A3695), Table III (page A3696), Table IV (page A3702), one sentence on page A3701"
+  tool: "poppler pdftotext for structure; every value verified against a 600 dpi pdftoppm render"
+  procedure: >
+    Tables II and III are pure arithmetic on Table I and are recomputed on the
+    page; 21 of 21 derived values reproduce to the printed precision (the
+    paper truncates rather than rounds, so every deviation is one-sided). Two
+    findings from that check are recorded here rather than silently fixed:
+    (1) the in-text sentence on page A3701 says C_e = 5.1e-3 C while Table III
+    prints 4.19e-3 C - recomputation gives 4.195e-3 C, so the table is right
+    and the sentence is not; (2) Table II prints the expression for tau_n with
+    a subscript typo (D*_{s,p} where the value 2.5641e3 s corresponds to
+    D*_{s,n}). Table IV values are for THEIR cell and chemistry and are context
+    only: the OCP and electrolyte property functions needed to rerun that cell
+    are in their cited codes (refs 26, 27), not printed in the paper, so this
+    page does not attempt to reproduce Table IV.
+  operator: "Claude (Fable 5), pymrm-gallery builder agent"
+  date: 2026-07-31
+  estimated_error: "none beyond the paper's own printed precision (truncation)"
+
+columns:
+  - {name: quantity,    unit: "-",    description: "name as used on the page"}
+  - {name: value,       unit: varies, description: "value as printed (at 1C where the entry scales with C-rate)"}
+  - {name: unit,        unit: "-",    description: "unit"}
+  - {name: scales_with, unit: "-",    description: "how the printed entry scales with C-rate: none, C, or 1/C"}
+  - {name: source,      unit: "-",    description: "where in the paper it is printed"}
+  - {name: kind,        unit: "-",    description: "timescale / dimensionless parameter / RMS voltage error"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). The article is distributed by the
+  publisher without access control. No page image is reproduced.

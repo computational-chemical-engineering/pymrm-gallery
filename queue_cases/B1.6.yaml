@@ -5,18 +5,66 @@ catalog_reference: Chem. Eng. Sci. 8 (1958)
 priority: P1
 tier: T0
 structures: S3
-status: needs-paper
-reference: {}
+status: ready
+reference:
+  authors:
+  - Weisz, P. B.
+  - Hicks, J. S.
+  year: 1962
+  container: Chemical Engineering Science 17(4) 265–275
+  doi: 10.1016/0009-2509(62)85005-2
+also:
+  authors:
+  - Prater, C. D.
+  year: 1958
+  container: Chemical Engineering Science 8(3–4) 284–286
+  doi: 10.1016/0009-2509(58)85035-6
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/1-s2.0-0009250962850052-main.pdf
   open_access: null
   checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
+blocker: null
+notes: >
+  Built 2026-07-31, staged at queue_cases/B1.6/page/. The earlier `needs-paper`
+  block is lifted and removed: Prater (1958) itself is still not on disk and
+  still has no open-access route, but it is NOT needed. Weisz & Hicks (1962) -
+  already on disk and already the source for the published B1.1/B1.5 page -
+  print the relation as their eq. (7) and attribute it to Prater for any particle
+  geometry, citing Damkoehler for the sphere. Eqs. (4), (5), (7) and (8) were
+  read off a 600 dpi render of journal page 266; the text layer mangles them
+  (`AT = T - To = - F`, `[grad ~1,~~`). The page states explicitly that Prater
+  1958 was not consulted, and its DOI (10.1016/0009-2509(58)85035-6) was resolved
+  via CrossRef and checked against the volume and page in Weisz & Hicks' own
+  reference [11] ("PRATER C. D., Chem. Engng. Sci. 1958 8 284").
+
+  Finding worth carrying: the two printed expressions for beta in eq. (8) carry
+  OPPOSITE signs - eq. (7) at c -> 0 gives -(c_0 H D)/(K T_0) while eq. (8)
+  writes +(c_0 H D)/(K T_0) = (dT/T_0)_max. The page prints both alternatives and
+  shows that the paper's own eq. (8) rate exponent, its stated sweep of beta from
+  0 to +0.8 for exothermic reactions, and its eta > 1 result all select
+  beta = +(dT/T_0)_max. Nothing was repaired by inference.
+
+  Validation route 2 (an internal identity the model must satisfy); no figure
+  digitised and none needed, so no maintainer review gate. Tier 6 - an identity
+  proof plus numerical confirmation, NOT experimental validation, and the page
+  says so in three places.
+
+  Headline numbers: identity violation 1.1e-11 worst over 324 pymrm two-field
+  solves (median 8.9e-13), and 2.6e-13 under an independent scipy.solve_bvp
+  collocation solve that shares no code with the pymrm one. Cross-page: beta
+  recovered from the solution reproduces B1.5's beta = 0.6 to 3.3e-10, and the
+  reduced single equation B1.1/B1.5 solves gives the same profile to 6.1e-12 in
+  y; agreement with B1.1's shooting reference is second order, 3.9e-05 at
+  n_u = 800. Breakdowns: with a film the bulk-referenced relation is wrong by
+  beta(1-y_s)(Bi_m/Bi_h - 1), a closed form derived on the page and matched to
+  1.9e-11 relative, while the surface-referenced relation still holds to
+  5.5e-12; in a transient the relation is exact iff Le = 1 (control 3.5e-13) and
+  is violated by up to 0.252 of beta otherwise.
+
+  Integrator notes: no new pip dependencies (sympy is already in
+  requirements.txt, added for J4.8). No data/ directory and no sidecar - no
+  numbers are transcribed, only equations. B1.6 is not yet in models.yaml, so
+  queue_cases/B1.6/models_entry.yaml is a NEW entry to append in section-B order
+  after B1.5, not an upgrade in place; B1.5's `related:` list already names B1.6.
+  Notebook runtime ~61 s.
 updated: '2026-07-31'

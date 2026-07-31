@@ -5,19 +5,39 @@ catalog_reference: AIChE J 33 (1987)
 priority: P1
 tier: T0
 structures: S7
-status: in-progress
+status: ready
 reference:
   authors:
   - Itoh, N.
   year: 1987
   container: AIChE Journal 33(9) 1576–1578
+  doi: 10.1002/aic.690330921
 paper:
   on_disk: ~/papers/pymrm-gallery/AIChE Journal - September 1987 - Itoh - A membrane reactor using palladium.pdf
   open_access: null
   checked: '2026-07-31'
 blocker: null
-notes: 'Paper was on disk all along but mapped to H1.9 in docs/papers-on-disk.yaml
-  by mistake (fixed 2026-07-31). Itoh 1987 is a 3-page communication: expect the
-  model and parameters in running text, and check for stated conversions before
-  reaching for the figures.'
+notes: 'Built 2026-07-31 without figure digitisation: validation route is the
+  stated measured conversion (99.7 % at u_C0 = 2.90e-7, v_A0 = 11.8e-5 mol/s;
+  model 99.8 %, +0.13 %) plus two internal identities (alpha_H recomputed from
+  Eq. 1 to 0.03 %; K_p(473) reconstructed from the stated 18.7 % equilibrium
+  conversion, van''t Hoff cross-check ratio 1.6). Three misprints resolved from
+  the paper''s own statements and documented on the page, in the data sidecar,
+  and in review/NOTES.md: Eq. 5 sign flip, v_A0 exponent (10^-5, proved by a
+  kinetics-free thermodynamic ceiling: the 10^-6 reading caps X at 0.72), and
+  the K_P expression (printed form implies ~100 % equilibrium conversion).
+  Figure 4''s experimental markers deliberately not digitised; doing so later
+  would extend validation without touching the page. Counter-current extension
+  is a labelled prediction. Earlier note (paper mapped to H1.9 in
+  papers-on-disk.yaml by mistake) already fixed. models_entry.yaml: H1.4 exists
+  in models.yaml as planned - upgrade in place, do not append.'
+resume:
+  staged_at: queue_cases/H1.4/page/
+  established: >
+    Full extraction verified on 600 dpi renders (crops in review/); model built,
+    executed (~10 s runtime), all six validation checks green; agreement.json
+    written. Nothing outstanding: ready for verifier and integration.
+  answer_changes: {}
+  files_to_touch: []
+  do_not_redo: extraction, misprint resolutions, validation-route ranking
 updated: '2026-07-31'

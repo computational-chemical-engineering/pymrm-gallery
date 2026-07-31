@@ -5,16 +5,106 @@ catalog_reference: Various reductions of J3.4
 priority: P1
 tier: T1
 structures: S3
-status: in-progress
-reference: {}
+status: published
+reference:
+  authors:
+  - Marquis, S. G.
+  - Sulzer, V.
+  - Timms, R.
+  - Please, C. P.
+  - Chapman, S. J.
+  year: 2019
+  container: Journal of the Electrochemical Society 166(15) A3693-A3706
+  doi: 10.1149/2.0341915jes
 paper:
-  on_disk: null
-  open_access: null
+  on_disk: ~/papers/pymrm-gallery/Marquis_2019_J._Electrochem._Soc._166_A3693.pdf
+  open_access: true
   checked: '2026-07-31'
 blocker: null
-notes: 'find_papers could not resolve the catalogue phrase "Various reductions of
-  J3.4" (expected — it is not a citation) and briefly marked this needs-paper in a
-  race with the builder dispatch. A builder is live: it is acquiring Marquis et al.
-  2019 (J. Electrochem. Soc. 166 A3693, DOI 10.1149/2.0341915jes, gold OA) as the
-  published SPMe source and building the page as a reduction of the J3.4 P2D page.'
+notes: 'Page built, verified and REVISED after adversarial review; executing in
+  queue_cases/J3.5/page/ (31 cells, ~150 s - the runtime is the converged DFN reference
+  sweep). The catalogue phrase "various reductions of J3.4" is made citable through
+  Marquis, Sulzer, Timms, Please & Chapman (2019), the asymptotic derivation of
+  the SPM and SPMe from the DFN model - open access, downloaded from IOP, verified
+  complete (15 pdf pages, A3693-A3706), mapped in docs/papers-on-disk.yaml.
+
+
+  The build applies their reduction to the J3.4 half-cell rather than their own
+  graphite/LCO cell, because their cell''s OCP and electrolyte property FUNCTIONS
+  are in cited codes (DUALFOIL, fastDFN), not printed in the paper - so their Table
+  IV cannot be reproduced from the printed record and is carried as context only.
+  Everything physical loads cross-page from J3.4''s reviewed parameter set; the
+  DFN reference is J3.4''s Cell class ported unchanged (one added dt_scale argument).
+  No figure digitised; no new pip dependencies.
+
+
+  Validation, ranked as built: (1) stated results - their Tables II and III recomputed
+  from Table I, 21/21 at worst 1.2e-3, and the page now shows this is the paper''s
+  TRUNCATION (all nine deviations above 1e-4 are one-sided) rather than rounding;
+  the check also catches that the in-text C_e = 5.1e-3 C on p. A3701 contradicts
+  their own Table III (4.19e-3 C, confirmed by recomputation, both verified on 600
+  dpi renders), and a subscript typo in Table II''s tau_n expression (prints D_{s,p},
+  value uses D_{s,n}). (2) internal identity - SPM and SPMe against the gallery''s
+  J3.4 DFN over I = 0.25-4 A/m2 on a CONVERGED sweep (DFN dt_scale 0.0625, SPMe
+  n_t 3200): SPM slope 1.00, SPMe local exponents 2.07 / 2.16 / 2.36 / 2.70 with
+  three-point window fits 2.11 / 2.26 / 2.53. There is no single converged "slope
+  2.07" and the page no longer quotes one. At I = 1 the errors are 12.14 mV vs 0.0452
+  mV (factor 268). (3) analytic limit - the quasi-steady correction is piecewise
+  quadratic in closed form; the pymrm operator lands on it to 3.5e-5 with an O(h^2)
+  refinement ratio of 4.02. Plus structural salt conservation (4.5e-13), the exact
+  coulomb-counting identity (6.7e-16, their Eq. 32), and numerical independence
+  checked at the sweep''s LOWEST current (SPMe dt 0.4 %, SPMe grid 2 %, DFN dt converged
+  to 0.8 % under a further 4x refinement; the untightened default is 220 % off).
+
+
+  Two new tests answer "what does the slope test actually resolve?". A mutation
+  table (one correction term mis-scaled or deleted at a time, same electrolyte solve,
+  same DFN reference): a 10 % error in the ohmic delta_c/3 or in the concentration
+  factor 2 multiplies the I = 1 error by 9.8x / 14.9x and collapses the exponent
+  to ~1, but DELETING the electrode-averaged exchange-current correction changes
+  the error by 0.01 % (that term is untested by this page - stated plainly) and
+  moving the anode overpotential to c_0 changes it by 10 % (exponent 1.83). A shared-parameter
+  test: raising the reconstructed kappa by its published 19 % uncertainty shifts
+  both models together (0.83 mV) and the measured SPMe error by only 9 % - so nothing
+  on this page can test kappa, U_ocp, k_2, sigma or i_0_1.
+
+
+  Two findings worth the maintainer''s eye, neither blocking: C_e for this cell
+  is IDENTICALLY Doyle''s own printed group S_s (Eq. 27) - 0.153 recomputed vs 0.15
+  printed in 1993 - and their solid-diffusion condition is Doyle''s S_c (Eq. 26);
+  and all five Table VI conditions (the fifth, the reaction timescale, is now evaluated
+  too: C_r = I/(a i_0,typ delta_c) = 1e-4 at I = 10 against a bound of 6.5) say
+  Doyle''s own Figure 2 currents mostly sit outside the SPMe''s regime - marginal
+  at I = 10 (C_e = 0.15, kappa_hat = 1.04), violated at I = 20 (0.31, 0.52), with
+  the first-order profile predicting negative electrolyte above I = 10.2 A/m2.
+
+
+  Caveats stated on the page: tier 6 twice over (model-vs-model against a reference
+  that is itself a reproduced simulation); constant kappa and D make the SPMe''s
+  absolute accuracy flattering, and make the SPM''s slope 1.00 STRUCTURAL rather
+  than evidence (every omitted term is exactly proportional to I on this cell);
+  the exponents, not the mV values, are the transferable result. I = 0.25 A/m2 is
+  the bottom of the sweep because the DFN integrator does not run at I = 0.125 at
+  any dt_scale tried (36 / 91 / 7 steps, u never leaves u_0), which the page demonstrates;
+  the sweep helper dfn_on_grid now RAISES on a truncated march instead of letting
+  np.interp clamp it into a silent 401 mV "error".
+
+
+  Fixes applied after verification (queue_cases/J3.5/review/verification.md, all
+  five CONFIRMED findings plus all six lower-severity ones): the overstated "a wrong
+  coefficient anywhere leaves the SPMe stuck at slope 1" replaced by the measured
+  mutation table; the headline 2.07 (fitted on the least converged point) replaced
+  by the converged sweep with its window dependence; "J3.4: utilisation stops at
+  0.31" - which was in NO source - replaced by Doyle''s own stated u = 0.30 loaded
+  from J3.4''s stated-results CSV; the stale "twenty" / "20/20" corrected to 21
+  in the prose and in both data sidecars; "over the mid sweep" and the Reuse section''s
+  "I ~ 8 A/m2" corrected to the three lowest currents and to the computed 10.2 A/m2.
+
+
+  Integrator notes: models_entry.yaml is an APPEND - models.yaml has no J3.5 record
+  yet (referenced only from J3.4''s related list). meta.yaml status is in-progress,
+  flip to published on merge; runtime_seconds is now 150. Cross-page data dependency:
+  the page loads pages/J3.4-doyle-fuller-newman/data/doyle-fuller-newman-1993-parameters.csv
+  and .../stated-results.csv via load_data(page=...), so J3.4 must stay published.
+  queue_cases/J3.5/review/ holds only verification.md (no page images).'
 updated: '2026-07-31'
