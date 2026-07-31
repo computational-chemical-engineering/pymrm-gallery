@@ -171,6 +171,32 @@ power against the error class it is presented as guarding.
 - `J3.5` claimed a slope test resolved four correction terms; deleting one of
   them entirely changed the answer by 0.02 %.
 
+**`B1.6` is the worked example, because there the break test was actually run.**
+Its identity residual ε held at ~1e-11 across 324 solves. Injecting defects showed
+what that number is blind to:
+
+| injected defect | result | ε |
+|---|---|---|
+| `maxfev=1`, Newton residual 18 | centre y = **2.12** (impossible, y > 1) | 8.5e-12 |
+| sphere solved with `nu = 0` | η **57 % wrong** | 4.7e-12 |
+| `n_u = 3` | η **37 % wrong** | 2.4e-15 (*better* than at 200) |
+| garbage 5-node mesh in the "independent" `solve_bvp` route | — | 2.0e-11 |
+
+So ε could not see an unconverged solve, a wrong geometry, a wrong grid, or a
+garbage mesh — and the page claimed all four. The geometry claim was impossible by
+construction: one `construct_div` serves both fields, so geometry cancels out of
+the invariant identically. The independent discretisation was not independent
+*for this quantity*: `w = θ + βy` is a closed linear subsystem that scipy
+inherits exactly.
+
+What ε *does* catch, measured the same way: a source-sign error → 0.42, a 1 %
+source-scale error → exactly 1.0e-02, a boundary-condition-type mismatch → 0.16,
+an inconsistent rate state → 0.54. That is a real and useful check — it detects an
+inconsistency between the two source terms or the two boundary conditions, and
+nothing else. **The fix was never to delete the check; it was to say what it
+tests.** Publishing the sensitivity table is strictly better than publishing the
+residual alone.
+
 Three questions to ask of every agreement number, before it goes on a page:
 
 1. **Do the two routes share code?** Same assembly, same operator, same
