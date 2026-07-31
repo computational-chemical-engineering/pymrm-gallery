@@ -255,17 +255,36 @@ def input_page(es):
         P.append(f'<li class="stat{" hot" if hot and n else ""}"><b>{n}</b><span>{lab}</span></li>')
     P.append("</ul></header>")
 
+    # Sort by how long each will take. A two-minute yes/no should not be buried
+    # under a fifteen-minute figure review; the cheap ones can then be cleared in
+    # a coffee break, which is what actually keeps cases moving.
+    def cost(e):
+        b = e.get("blocker") or {}
+        shots = len([a for a in (b.get("artifacts") or []) if str(a).endswith(".png")])
+        return (shots, e.get("priority", "P3"), e["id"])
+
+    def cost_label(e):
+        b = e.get("blocker") or {}
+        n = len([a for a in (b.get("artifacts") or []) if str(a).endswith(".png")])
+        if n == 0:
+            return "~2 min, no images"
+        return f"~15 min, {n} overlay{'s' if n > 1 else ''}"
+
+    blocked.sort(key=cost)
+
     if not blocked:
         P.append('<div class="empty" style="margin-top:30px"><b>Nothing needs you right now.</b>'
                  'Agents halt here when they hit a judgement call — a figure extraction to eyeball, '
                  'a constant that looks wrong, a scope decision. Nothing is stuck silently.</div>')
     else:
-        for e in sorted(blocked, key=lambda e: (e.get("priority", "P3"), e["id"])):
+        P.append('<h2>Quickest first</h2>')
+        for e in blocked:
             b = e.get("blocker") or {}
             kind = b.get("kind", "decision")
             P.append('<div class="card"><div class="card-h">'
                      f'<span class="cid">{esc(e["id"])}</span>'
                      f'<span class="ctitle">{esc(e["title"])}</span>'
+                     f'<span class="pill p1">{esc(cost_label(e))}</span>'
                      f'<span class="pill">{esc(kind)}</span></div><div class="card-b">'
                      f'<span class="ref">{esc(ref_line(e))}</span>{doi_link(e)}')
             if b.get("question"):

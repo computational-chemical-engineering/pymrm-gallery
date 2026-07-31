@@ -197,6 +197,74 @@ So either the upper three curves used something unstated, or the figure is wrong
 in error is not a call to make from arithmetic alone; it is a question for the
 maintainer. Full detail is in the staged sidecar's `model_closure_attempt:` block.
 
+### Working the catalogue with parallel agents — the operating procedure
+
+**Never block on the maintainer.** A case that needs input is *parked*, not
+waited on: write its `resume:` block, and immediately dispatch the next case.
+Keep about five builders live continuously. The maintainer reads the dashboards
+when they choose; do not ping them per case and do not idle.
+
+**The loop.**
+
+1. Pick the next case (policy below) and dispatch a builder with
+   `docs/agent-brief.md`.
+2. When it reports `ready`, dispatch a **verifier** on the staged page before
+   publishing. Findings go back to the builder or get fixed inline.
+3. Integrate: move `queue_cases/<ID>/page/` to `pages/<ID>-<slug>/`, splice the
+   agent's `models_entry.yaml` into `models.yaml`, flip `meta.yaml` to
+   `published`, run `check_metadata.py`, `run_pages.py --changed`,
+   `check_agreement.py`, commit, push.
+4. When it reports `needs-input` or `needs-paper`, it is already parked — confirm
+   the `resume:` block is complete, regenerate the dashboards, republish, move on.
+5. Refill to five live.
+
+**Dispatch policy, highest first.** Throughput is set by how rarely a case needs
+the maintainer, so prefer cases that will not:
+
+1. paper on disk **and** validation likely to be a table, appendix or stated
+   result rather than a figure — these run end to end with no human involvement;
+2. paper on disk, figure-validated;
+3. paper reachable open access (`scripts/find_papers.py --fetch`);
+4. anything else — these mostly become `needs-paper`, which is fine but yields
+   no page.
+
+Never dispatch two agents onto the same case, and never onto a case whose
+`covered_by` names another.
+
+**Draining parked cases.** When answers arrive, read each entry's `resume:`
+block: `established` says what not to redo, `answer_changes` says exactly what
+the answer alters, `files_to_touch` says where. A parked case should never need
+its extraction or its validation repeated.
+
+**Integration gotchas, all seen at least once.** `slug` and `title` in
+`meta.yaml` must match `models.yaml` exactly. An `id` may already exist as
+`planned` — upgrade it in place rather than appending, or `check_metadata`
+reports a duplicate. New dependencies must reach `requirements.txt` or CI breaks
+on the next machine (`sympy` for `J4.8`).
+
+**NEVER `git add -A` after an agent has run.** Review overlays are drawn on the
+source page image, so they *are* the copyrighted figure; three reached this
+public repo before being caught. `queue_cases/*/review/*.png` is git-ignored now,
+but look at what you are staging.
+
+**Three acquisition failure modes worth knowing.**
+
+*A DOI resolved from a terse citation is usually wrong.* CrossRef returns
+something confident for any query: "Carman (1937)" matched a 2025 paper citing
+Kozeny–Carman. Year agreement is required, and auto-resolved DOIs are marked
+unverified on the dashboard.
+
+*Filenames carry no metadata.* Half the PDFs on disk are named by publisher PII
+(`i260028a001.pdf`). `docs/papers-on-disk.yaml` maps catalogue ID to filename by
+hand and is consulted first; add a line whenever a PDF arrives.
+
+*Do not ask for papers a case does not need.* `A1.2`/`A1.3`/`A1.4` sat on the
+papers dashboard while the catalogue asks for them as one comparison page — which
+`A1.1` is. Check `covered_by` before reporting `needs-paper`.
+
+*Open access will not carry section A.* Most 1937–75 classics predate DOIs
+entirely. Expect that list to be irreducible and old.
+
 ### Working the catalogue with parallel agents
 
 `queue_cases/` holds one YAML per catalogued case; `scripts/case_queue.py` and

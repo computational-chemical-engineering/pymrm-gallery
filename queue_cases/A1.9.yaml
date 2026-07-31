@@ -20,3 +20,14 @@ blocker:
   artifacts: []
 notes: null
 updated: '2026-07-30'
+resume:
+  blocking: true
+  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
+  on_arrival:
+  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
+  - set status back to unclaimed and clear paper.checked so find_papers re-runs
+  - dispatch a build agent with the standard brief in docs/agent-brief.md
+  established: 'Acquisition attempted and exhausted: not on disk, and no open-access
+    route via Unpaywall. See blocker.detail.'
+  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route
+    appears (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
