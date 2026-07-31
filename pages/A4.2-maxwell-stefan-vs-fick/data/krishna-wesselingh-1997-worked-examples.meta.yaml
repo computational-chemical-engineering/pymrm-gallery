@@ -1,0 +1,95 @@
+dataset_id: krishna-wesselingh-1997-worked-examples
+title: Printed matrices of the two worked Fick/Maxwell-Stefan transformation examples
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Wesselingh, J. A."
+  year: 1997
+  container: "Chemical Engineering Science 52(6) 861-911"
+  doi: 10.1016/S0009-2509(96)00458-7
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+conditions:
+  ideal: >
+    H2 (1) / N2 (2) / CO2 (3) ideal gas mixture, the system of the Duncan &
+    Toor (1962) two-bulb experiment. Maxwell-Stefan pair diffusivities "from
+    the kinetic gas theory": 8.33e-5, 6.8e-5 and 1.68e-5 m2/s - identical to
+    the values Duncan & Toor measured at 35.2 C and 1 atm (0.833, 0.680,
+    0.168 cm2/s; see the A4.9 page). [B] and [D] are evaluated at the
+    equilibrium composition x = (0.25, 0.5, 0.25). Ideal gas, so [Gamma] = [I]
+    and [D] = [B]^-1. Journal page 872.
+  nonideal: >
+    Acetone (1) / benzene (2) / carbon tetrachloride (3) liquid at 25 C and
+    x = (0.35, 0.35, 0.3). Maxwell-Stefan diffusivities "estimated": 3.4e-9,
+    2.5e-9, 1.7e-9 m2/s. [Gamma] "estimated from activity coefficient data".
+    [D] = [B]^-1 [Gamma]. Journal page 871.
+  dt_run: >
+    Initial bulb compositions of the Duncan & Toor run the review highlights,
+    its eq. (3), with the review's own bulb numbering: bulb 1 = N2 + CO2,
+    bulb 2 = H2 + N2 (the OPPOSITE numbering to Duncan & Toor's Fig. 2 and to
+    the A4.9 page, where bulb 1 is the H2 + N2 charge). 86 mm capillary.
+    Journal page 863.
+
+acquisition:
+  method: table
+  figure: "displayed matrices and in-text values, journal pages 863, 871, 872"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    These are NOT measurements. They are the numbers Krishna and Wesselingh
+    themselves printed while working two examples of the [B], [Gamma], [D]
+    matrix formalism, collected so a reimplementation can be checked against
+    them element by element.
+
+    The PDF is an Acrobat 3.0 Capture OCR of a scan, so every value was read
+    off a 600 dpi page render (pdftoppm), not from the text layer. Renders
+    inspected on 2026-07-31.
+
+    One printed slip is recorded as printed rather than corrected: B12 of the
+    non-ideal example is printed as -0.036 x 10^9 s/m2. Two independent routes
+    show the sign is a typographical error: (i) eq. (26) of the review with
+    the example's own printed diffusivities gives B12 = -x1 (1/D12 - 1/D13) =
+    +0.037 x 10^9, necessarily positive because D12 > D13; (ii) the example's
+    own printed [D] is reproduced to <= 1.7 % per element by [B]^-1 [Gamma]
+    only when B12 = +0.036 x 10^9 is used - with the printed minus sign the
+    D12 element comes out 75 % wrong. The row stores the value as printed;
+    the page reports both.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-07-31
+  estimated_error: >
+    None beyond the printed precision, which is two or three significant
+    figures (the printed matrices are themselves rounded; e.g. B12 of the
+    ideal example is printed as 0.007 x 10^5 where the unrounded value is
+    0.00675 x 10^5). These are transcribed characters, not digitised
+    positions.
+
+validation:
+  ideal_B: "recomputed from the printed diffusivities via eq. (26): elementwise agreement 0.09-0.33 %, 3.5 % on the heavily rounded 0.007e5 element"
+  ideal_D: "recomputed [B]^-1 agrees with the printed [D] to 0.02-1.0 % per element"
+  nonideal_identity: "[B]^-1 [Gamma] with the printed matrices (B12 sign corrected) reproduces the printed [D] to <= 1.7 % per element"
+  dt_run_closure: "both bulb compositions sum to exactly 1.00000 as printed"
+
+columns:
+  - {name: example, unit: "-", description: "ideal | nonideal | dt_run (see conditions)"}
+  - {name: symbol, unit: "-", description: "identifier used in the notebook; D12 etc are Maxwell-Stefan pair diffusivities, B/G/DF are elements of [B], [Gamma], [D]"}
+  - {name: value, unit: "see units column", description: "numeric value in SI units"}
+  - {name: units, unit: "-", description: "SI units of value"}
+  - {name: printed_as, unit: "-", description: "the value exactly as printed on the page"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research
+  by a research organisation with lawful access is covered by Art. 15n
+  Auteurswet (implementing DSM Directive (EU) 2019/790 Art. 3). No page image
+  or figure is reproduced.
+
+caveat: >
+  TIER 6. These are the authors' own computed (and, for the diffusivities and
+  [Gamma], estimated) values, not measurements. Reproducing them tests the
+  reimplementation of eqs. (26) and (27) and the reading of the printed pages;
+  it says nothing about whether the Maxwell-Stefan model describes a real
+  mixture. The experimental comparison on the page uses the maintainer-reviewed
+  digitised Duncan & Toor dataset published with page A4.9, loaded cross-page;
+  its provenance lives in that page's sidecar.

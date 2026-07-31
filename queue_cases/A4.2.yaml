@@ -5,7 +5,7 @@ catalog_reference: Krishna & Wesselingh, Chem. Eng. Sci. 52:861 (1997)
 priority: P1
 tier: T0
 structures: S9
-status: in-progress
+status: published
 reference:
   authors:
   - Krishna, R.
@@ -18,5 +18,101 @@ paper:
   open_access: null
   checked: '2026-07-31'
 blocker: null
-notes: null
+notes: 'Built in queue_cases/A4.2/page/, then reworked after adversarial verification
+  (review/verification.md, findings F1-F7 all addressed - see the end of these notes).
+  Notebook regenerates from build_page.py and
+  executes end to end in ~33 s. Scoped per the planned models.yaml entry: the
+  Fick-matrix/Maxwell-Stefan equivalence and the effective-diffusivity breakdown,
+  NOT the whole 51-page review (its dusty-gas, surface-diffusion, electrolyte and
+  membrane sections belong to A4.3, H1.9, J5.x).
+
+  VALIDATION ROUTE: route 1 (worked examples with printed intermediates) plus a
+  route-2 internal identity, plus cross-page experimental data. No figure was
+  digitised. The review prints two complete worked matrix examples: (a) p. 872,
+  H2/N2/CO2 ideal gas at the Duncan-Toor equilibrium composition, [B] and [D]
+  printed plus a nitrogen flux estimate; (b) p. 871, acetone/benzene/CCl4 at 25 C,
+  [B], [Gamma] and [D] printed. All values read off 600 dpi renders (the PDF is an
+  Acrobat Capture OCR; text layer untrusted for signs/exponents) and transcribed
+  into data/krishna-wesselingh-1997-worked-examples.csv with sidecar.
+
+  KEY NUMBERS. (a) recomputed [B] and [D] match the printed matrices to 0.02-1.03 %
+  per element ([D]), rounding-limited; flux estimate J2*(l/c_t) = 0.958e-5 m2/s and
+  ratio J2/J1 = -0.499 reproduced exactly from the printed arithmetic. (b) the
+  printed triple closes on the identity [D] = [B]^-1 [Gamma] to 1.65 % per element
+  - but ONLY after correcting a provable sign typo in B12, printed as -0.036e9.
+  FOUR in-paper routes, the first of which never uses B12: back-solving the
+  authors'' unrounded diffusivities from the printed B11, B21, B22 alone gives
+  3.375/2.507/1.661e-9 (printed 3.4/2.5/1.7), and eq. (26) then predicts
+  B12 = +0.0359e9 - the printed magnitude to 0.2 %, opposite sign; eq. (26) with
+  the rounded diffusivities gives +0.037e9 (necessarily positive since D12 > D13);
+  the review''s OTHER worked example (p. 872) prints B12 = +0.007e5 under the same
+  D12 > D13 ordering, so the two printed examples are mutually inconsistent and the
+  ideal one is the one that reproduces; and with the printed minus sign the
+  example''s own printed D12 comes out 75 % wrong while the rival hypothesis
+  (B21 is the typo) fails at 302 %. The CSV stores the value as printed and the
+  page prints all five alternatives.
+
+  TRANSPORT DEMO. Four flux closures on one skeleton. The important one is
+  flux_ms_friction: the raw n x n Maxwell-Stefan friction system with the
+  sum_k J_k = 0 bootstrap, which forms no [B], eliminates no species and shares no
+  code with build_b. It reproduces [D](x) to 3.1e-12 over 200 random ternary
+  compositions (fixed seed) and the whole two-bulb transient to 7.8e-16, and the
+  friction balance it never used vanishes to 4.5e-16. The MS-vs-Fick-matrix
+  agreement (8.9e-16) is reported separately and labelled for what it is: an
+  algebraic identity between two inversions of the SAME [B], with no power against
+  an error inside [B]. Against the cross-page A4.9 measurements Maxwell-Stefan
+  gives 0.59 mole % mean, nothing fitted - but this is the same solver on the same
+  data as A4.9, so its figure is necessarily reproduced (faithful port, not
+  independent corroboration), and 0.59 mole % sits at the A4.9 digitisation floor
+  of +/-0.005 mole fraction. Wilke gives 3.14 mole %, and 1.38 vs 9.07 mole % on
+  the nitrogen bulb-difference signal.
+
+  THE WILKE NUMBERS ARE CONDITIONED ON WHICH SPECIES IS ELIMINATED, and the page
+  now says so wherever one is quoted, with the permutation table computed on the
+  page: eliminated CO2 (the page''s ordering) 3.14 mean / 9.07 N2 / no zero
+  crossing; H2 4.31 / 9.03 / no crossing; N2 1.44 / 3.39 / crosses zero, peaking
+  +0.1935 against the MS peak +0.1227. Maxwell-Stefan is invariant under all three
+  orderings to 3.9e-16 - a genuine point in its favour, and now the page''s
+  argument. The "cannot cross zero" claim is restated accurately: a positive scalar
+  diffusivity moves a species strictly down its own gradient, so the bulb
+  difference of any species CARRYING the scalar law decays monotonically; a species
+  eliminated by difference can cross zero, which is bookkeeping, not physics. The
+  Wilke fluxes also violate the closed-cell equimolar constraint by 105 % (printed
+  104.8 %) of the largest flux; this is now in report_agreement. The review''s
+  frozen-[D] initial-flux estimate is priced at 6.7 % error in the flux ratio.
+  Effective D2 of nitrogen backed out of the solution visits +infinity, negative
+  values and zero, with point O at t = 0.96 h and the barrier at t = 7.52 h
+  (deterministic fixed-step trajectory, no continuation).
+
+  DATA. Own dataset tier 6 (authors'' printed computations, transcribed; sidecar
+  documents the B12 typo and the 600 dpi verification). Experimental comparison
+  loads A4.9''s published tier-4 digitised Duncan-Toor CSV cross-page via
+  load_data(..., page="A4.9-duncan-toor") - nothing re-digitised, provenance
+  stays with A4.9. One bookkeeping trap documented on the page: the review''s
+  eq. (3) swaps Duncan & Toor''s bulb labels (its bulb 1 is the N2+CO2 charge).
+
+  VERIFICATION FIXES (review/verification.md). F1 stale "~30 %" replaced by the
+  computed 105 % closure defect and the whole page swept for drifted hard-coded
+  numbers (the frozen-matrix "~6 %" now interpolates 6.7 %; the H2 effective-D
+  "within a few percent" now prints the computed 5.4 % excursion). F2 the
+  independent friction route above added and quoted; the 2x2 identity kept but
+  relabelled. F3 permutation table, figure and restated claim, as above. F4/F5 the
+  A4.9 comparisons reworded - same computation, hence the same number; the added
+  value is the route and the structural argument, not the 9.07/1.38 figures A4.9
+  already publishes. F6 wilke_closure_defect plus the permutation metrics added to
+  report_agreement. F7 bulb labelling made consistent: every bulb NUMBER on the
+  page is Duncan & Toor''s, and the one cell using the review''s eq. (3) now names
+  its ends by charge (x_h2n2 / x_n2co2). NOT re-litigated (survived attack): the
+  B12 sign call, determinism, the bulb-labelling numerics and the 6.7 % frozen
+  matrix claim. One number differs from the verifier''s report: the N2-eliminated
+  Wilke peak is +0.1935 here, not +0.1238 - recomputed twice, and the mean/N2
+  metrics of that same run match the verifier''s 1.44/3.39 exactly.
+
+  INTEGRATOR NOTES. No new pip dependencies. models_entry.yaml upgrades the
+  existing planned A4.2 entry IN PLACE (do not append). meta.yaml status is
+  in-progress; flip to published on integration. The page requires
+  pages/A4.9-duncan-toor/data/ to remain in place (cross-page load falls back to
+  the raw GitHub URL on Colab). Nothing in review/ needs review - no figure was
+  digitised and no page image leaves the scratchpad.'
+review_artifacts: []
 updated: '2026-07-31'
