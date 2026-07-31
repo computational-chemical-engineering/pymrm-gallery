@@ -818,6 +818,50 @@ models:
       simulation - so this is a reference-solution page, not an experimental one.
     related: [J3.3, J3.5, D1.4, J1.5]
 
+  - id: J3.1
+    slug: butler-volmer-tafel
+    title: "Butler–Volmer kinetics and its linear and Tafel limits"
+    description: >
+      The interfacial charge-transfer law as Doyle, Fuller and Newman print it,
+      with the exchange current density derived from their own equations rather
+      than quoted, and the overpotential at which each of its two standard
+      approximations goes wrong by 1, 5 and 10 % — closed form for Tafel, and
+      checked against the overpotentials the published J3.4 cell actually runs at.
+      Its two electrodes turn out to be in different regimes.
+    section: J
+    status: published
+    page: pages/J3.1-butler-volmer-tafel/
+    tier: T0
+    priority: P1
+    structures: [S1, S10]
+    phases: [liquid-solid]
+    reference:
+      authors: ["Doyle, M.", "Fuller, T. F.", "Newman, J."]
+      year: 1993
+      container: "Journal of the Electrochemical Society 140(6) 1526–1533"
+      doi: 10.1149/1.2221597
+    also:
+      authors: ["Marquis, S. G.", "Sulzer, V.", "Timms, R.", "Please, C. P.", "Chapman, S. J."]
+      year: 2019
+      container: "Journal of the Electrochemical Society 166(15) A3693–A3706"
+      doi: 10.1149/2.0341915jes
+    origin_not_consulted: >
+      Tafel, J. (1905); Butler, J. A. V. (1924, 1932); Erdey-Grúz, T. and
+      Volmer, M. (1930). Conventional attribution, recorded without a DOI because
+      no copy was available and no citation could be verified against an original.
+      Not consulted; nothing on the page derives from them.
+    predicts:
+      - current density from surface overpotential
+      - exchange current density from the rate parameter and the surface composition
+      - charge-transfer resistance
+      - Tafel slope
+      - the overpotential at which the Tafel approximation deviates by a stated fraction
+      - the overpotential at which the linear approximation deviates by a stated fraction
+      - the surface overpotential distribution in a porous electrode
+    pymrm_api: [construct_grad, construct_div, NumJac, stencil_block_diagonals, newton]
+    data: {tier: 6, method: analytical, status: complete}
+    related: [J3.4, J3.5, J3.3, J3.2, B1.6, D1.4]
+
   - id: J3.5
     slug: single-particle-model
     title: "Single particle models with electrolyte (SPM / SPMe)"

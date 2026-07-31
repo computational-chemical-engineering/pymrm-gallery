@@ -1,0 +1,144 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J3.1
+slug: butler-volmer-tafel
+title: "Butler–Volmer kinetics and its linear and Tafel limits"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1, S10]
+phases: [liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 51
+datasets: []
+
+validation:
+  - Eq. 17 reduced with Eq. 16 reproduces the paper's separately printed Eq. 30 factor by factor and exponent by exponent, and only when alpha_a + alpha_c = 1 (4.6e-12)
+  - what that check can and cannot detect, measured by injecting five mis-transcriptions one at a time - each of the four single-equation exponent swaps lifts it to O(1) at asymmetric alpha, while at Doyle's own alpha = 0.5 every swap is a no-op and a swap applied to BOTH prefactors cancels and is undetectable
+  - the zero-current potential of Eq. 17 equals Eq. 16 to 6.6e-16 V under that condition, and its closed-form offset away from it is matched to 7.3e-16 V
+  - i = 0 at zero surface overpotential for every parameter set (7.8e-15); the anodic and cathodic partial currents balance there (1.5e-14, reported as the structural identity it is), their common value being Eq. 30's i_0 to 5.3e-15 over four alpha pairs including asymmetric ones
+  - R_ct = RT/(nFi_0) with n = alpha_a + alpha_c, against a central difference on Eq. 17 (1.8e-9)
+  - the arcsinh inversion, printed by Marquis et al. as their Eqs. 1g-1h and 18 and used on J3.4, fed forward through Eq. 17 over five decades of current (9.7e-11)
+  - the closed-form Tafel threshold against root-finding on the full law over six transfer coefficients and three tolerance levels (3.1e-15)
+  - Doyle's printed delta = 1.95 and nu = 68, whose ratio removes the unprinted conductivity and tests Eq. 30's exchange current density (-15.7 %, evaluated at the initial state the paper specifies) - shown in the same cell to be arithmetically identical to J3.4's 19 % kappa spread rather than an independent second test
+  - the J3.4 cell re-solved with the standard form in place of Eq. 17 as printed, giving the same cell potential to 2.2e-12 mV
+  - the Tafel-substituted cell's first-step overpotential against the uniform-reaction prediction (0.46 %)
+  - grid independence over an eightfold refinement, and exact conservation of total salt (8.9e-16)
+  - the cell run with and without the nu = 2 factor J3.4 leaves open, to show the kinetic conclusions do not depend on it
+
+adds: >
+  Nothing to the law itself - Butler-Volmer is one line of arithmetic and pymrm
+  has no role in it. What the page adds is the quantified validity boundary of
+  each limit, and the operating envelope needed to make it actionable. The Tafel
+  threshold turns out to have an exact closed form, eta = RT ln(1 + 1/eps) /
+  ((alpha_a + alpha_c) F), which depends on the transfer coefficients only
+  through their sum: asymmetry changes the Tafel slope but not the Tafel onset.
+  The linear threshold does depend on the split, has two asymptotic forms
+  (sqrt(24 eps) symmetric, 2 eps/|alpha_a - alpha_c| strongly asymmetric, good to
+  3.6 % and 6.8 %), and is non-monotonic in alpha_a because the asymmetry and
+  curvature errors cancel just below 0.5 - a real anomaly the page reports and
+  then advises against relying on. Doyle's Eq. 30 is derived from Eq. 17 rather
+  than used alongside it, which turns two separately transcribed equations into a
+  check on both and shows they are mutually consistent only for
+  alpha_a + alpha_c = 1. The ratio nu^2/delta cancels the conductivity Doyle
+  never prints, so Eq. 30's exchange current density can be tested against
+  printed numbers without J3.4's reconstruction. Finally the J3.4 cell is used as
+  an operating envelope - a use it was not built for and a quantity it never
+  reports - and shows its two electrodes sitting 2.9 decades apart in |eta_s|,
+  which at a 1 % tolerance puts them in different regimes.
+
+agreement: >
+  The algebraic identities hold to between 4.6e-12 and 6.6e-16, and the closed-form
+  Tafel threshold matches root-finding on the full law to 3.1e-15. Eq. 30 recovers
+  a i_o2 delta_c / I that is 15.7 % below what Doyle's own printed delta = 1.95 and
+  nu = 68 imply - the only comparison on the page that involves the paper's
+  numbers rather than its algebra. Thresholds at Doyle's 373.15 K, with
+  alpha_a + alpha_c = 1: Tafel is 10 % out at 77.1 mV, 5 % at 97.9 mV, 1 % at
+  148.4 mV; the symmetric linear form is 10 % out at 51.7 mV, 5 % at 35.9 mV, 1 %
+  at 15.8 mV (61.6/78.2/118.6 and 41.3/28.7/12.6 mV at 298.15 K). In the published
+  J3.4 cell at I = 10 A/m2 the porous cathode runs at a mean surface overpotential
+  of 0.032 mV and a peak of 0.74 mV, three decades inside the 5 % linear window,
+  while the lithium foil runs at 24.8 mV - 0.69 of the 5 % threshold but 1.6 times
+  the 1 % one - and at 46.6 mV at I = 20, past the 5 % boundary. The separation
+  between the two electrodes is 2.9 decades in |eta_s|. Four of the five injected
+  mis-transcriptions move the Eq. 17 vs Eq. 30 residual from 4.5e-12 to between
+  0.95 and 1.0 at asymmetric alpha; none of them moves it at all at Doyle's
+  alpha = 0.5, and the fifth cancels and is undetectable anywhere.
+  Substituting the linear law in the cathode moves the cell potential by
+  1.5e-10 mV; substituting Tafel moves it by 519 mV, of the wrong sign. The
+  Tafel-substituted cell's first-step overpotential, +446.2 mV, matches the
+  uniform-reaction prediction of +444.2 mV to 0.46 %. The cell potential moves
+  0.149 mV over an eightfold grid refinement and salt is conserved to 8.9e-16.
+
+caveats: >
+  Provenance tier 6. Nothing on this page is compared with a measurement. Doyle's
+  Figure 2 contains no experimental points at all, confirmed by the maintainer on
+  review of the original, and every check here is either an algebraic identity or
+  a number the paper prints. This page is reproduced and internally verified; it
+  is NOT validated against experiment.
+
+  The historical sources of the Butler-Volmer equation - Tafel (1905),
+  J. A. V. Butler (1924, 1932), Erdey-Gruz and Volmer (1930) - were NOT consulted.
+  They are not on disk, are not open access, and no DOI is asserted for them; they
+  are recorded as conventional attribution only. Every equation on the page is
+  read from Doyle, Fuller and Newman (1993), off 600 dpi renders of journal pages
+  1527, 1528 and 1530, because that scan's text layer mangles them.
+
+  The -15.7 % on the nu^2/delta check is NOT explained, and the page says so.
+  Rounding of the printed groups does not account for it: nu +- 0.5 and
+  delta +- 0.005 give only a +-1.7 % band, and closing the gap would need
+  nu = 62.4, which is 8.2 % from the printed 68. Neither obvious explanation is
+  available. The concentration state is printed: the sentence under Eq. 30 reads
+  "For these calculations, the concentrations are taken to be at their initial
+  values", Fig. 2's caption pins the initial solid at 1 % of maximum, and the page
+  evaluates Eq. 30 exactly there. And kappa cancels identically from nu^2/delta,
+  so an ambiguity in the effective conductivity cannot be where the residual sits.
+  Closing it would need u_0 = 0.0141 against a printed 0.01, or R_s = 0.843 um
+  against a printed 1.0 um - both contradict Table II, so neither is adopted. The
+  residual is reported, not explained. It is also NOT an independent second
+  disagreement: 1/(1 - 0.1574) - 1 = +18.67 % is the same number as J3.4's spread
+  between its two routes to the unprinted conductivity (+18.67 %, differing only
+  by the 1/sigma term), so it must not be counted twice. What this reading adds is
+  that the disagreement survives with kappa removed entirely.
+
+  The peak cathode overpotential is deliberately reported as NOT converged at
+  these grids: it is a boundary-layer value in the first cathode cell and rises by
+  1.9x over an eightfold refinement. Its increments do shrink (0.208, 0.166,
+  0.104 mV), so the sequence is converging - it has simply not arrived, and the
+  page says that rather than claiming divergence. Nothing is concluded from it
+  alone; the conclusion rests on the 15.7x margin to the 1 % threshold. The
+  cell-averaged value converges to 0.4 %.
+
+  Two of the identity checks are reported as identities rather than as evidence,
+  and an injected-defect table on the page measures which is which. At Doyle's own
+  alpha_a = alpha_c = 0.5 EVERY exponent swap is a no-op, so the whole
+  discriminating power of the Eq. 17 vs Eq. 30 comparison comes from the
+  hypothetical asymmetric rows of the sweep; and because the
+  (c_max - c)^alpha_c c^alpha_a prefactor is the same code expression on both
+  sides, a swap applied to both at once cancels and is undetectable even there.
+  The partial-current balance never moves under any injected defect: it is an
+  exact algebraic consequence of alpha_a + alpha_c = 1.
+
+  Where the two electrodes sit is tolerance-dependent and the page states the
+  tolerance. At I = 10 both are inside the 5 % linear window (cathode by three
+  decades, foil by a factor of 1.4); they are in genuinely different regimes only
+  at the 1 % tolerance or at I = 20. What is tolerance-independent is the 2.9
+  decades of separation between them.
+
+  The cancellation anomaly in the linear threshold (81 mV at alpha_a = 0.42
+  against 36 mV at 0.50) is a true property of the function but is fragile: its
+  location is set by the tolerance, jumping at alpha_a = 0.4103 for a 5 %
+  tolerance and at 0.4593 for a 1 % one, both located by root-finding on the
+  overshoot peak. The page prints it and then recommends the asymptote instead.
+
+  The absolute overpotentials belong to one cell at 100 C whose rate constant its
+  authors chose, in their own words, as "a value corresponding to a nearly
+  reversible situation" because none had been measured for TiS2. That choice is
+  why this cathode is in the linear regime. The thresholds transfer; these
+  overpotentials do not.

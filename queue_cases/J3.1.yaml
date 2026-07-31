@@ -5,18 +5,316 @@ catalog_reference: —
 priority: P1
 tier: T0
 structures: S1
-status: in-progress
-reference: {}
+status: published
+reference:
+  authors:
+  - Doyle, M.
+  - Fuller, T. F.
+  - Newman, J.
+  year: 1993
+  container: Journal of the Electrochemical Society 140(6) 1526-1533
+  doi: 10.1149/1.2221597
+also:
+  authors:
+  - Marquis, S. G.
+  - Sulzer, V.
+  - Timms, R.
+  - Please, C. P.
+  - Chapman, S. J.
+  year: 2019
+  container: Journal of the Electrochemical Society 166(15) A3693-A3706
+  doi: 10.1149/2.0341915jes
+origin_not_consulted: >
+  Tafel, J. (1905); Butler, J. A. V. (1924, 1932); Erdey-Gruz, T. and Volmer, M.
+  (1930). Conventional attribution only. NOT on disk, NOT open access, and NO DOI
+  is asserted - none could be verified against an original, and neither Doyle
+  1993 nor Marquis 2019 cites them, so there was no printed citation string to
+  check against (the route that verified Prater's DOI on B1.6 was not available
+  here). Nothing on the page derives from them, and the page says so in its
+  Background section.
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/Doyle_1993_J._Electrochem._Soc._140_1526.pdf
   open_access: null
   checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  note: >
+    The earlier `needs-paper` block is lifted and removed. The catalogue records
+    no citation for J3.1 at all, and the historical primary sources are 1900s-30s
+    papers with no route to them. They are not needed: Doyle, Fuller & Newman
+    (1993) - already on disk and already the source of the published J3.4 page -
+    prints the law twice, as Eq. 6 with the exchange current density of Eq. 8
+    (flat electrode) and as Eq. 17 with Eq. 30 (insertion reaction). Eqs. 6, 7, 8,
+    16, 17, 18, 28, 29 and 30 were read off 600 dpi renders of journal pages 1527,
+    1528 and 1530; that scan's text layer mangles all of them (Eq. 17 comes out as
+    `i = Fk2(emax - c)~~ ... ~R~01 - U'))`, Eq. 8 as
+    `io~ = F(kal) ~cl (kc~)aal (Cmax--C)""I(C)~al`). Marquis et al. (2019),
+    already on disk for J3.5, prints the same kinetics in hyperbolic-sine form
+    (its Eqs. 1g-1h: 1g is the sinh law, 1h its exchange current density) with the
+    closed-form inversion (its Eq. 18), giving a second independent printed
+    witness.
+blocker: null
+scope_decision: >
+  Built as its own page rather than marked covered_by J3.4, and the judgement was
+  made before any code was written.
+
+  J3.4 embeds Eq. 17 inside a full P2D cell and never examines the law. It does
+  not derive the exchange current density (it uses Eq. 30 alongside Eq. 17 without
+  connecting them), does not ask what happens when the transfer coefficients fail
+  to sum to one, and does not touch either limit. J3.5 does asymptotics of the
+  cell, not of the kinetics. None of the following exists on either page:
+
+  - Eq. 30 DERIVED from Eq. 17 by way of Eq. 16, which turns three separately
+    transcribed equations (pages 1528 and 1530) into a mutual check, and
+    establishes that they are consistent only when alpha_a + alpha_c = 1 - i.e.
+    that Doyle's model has no exchange current density at all outside that
+    condition;
+  - the closed-form Tafel validity threshold
+    eta = RT ln(1 + 1/eps) / ((alpha_a + alpha_c) F), and the result that it
+    depends on the transfer coefficients only through their SUM;
+  - the linear threshold, its two asymptotes and its non-monotonicity in alpha_a;
+  - the nu^2/delta ratio, which cancels the conductivity Doyle never prints and so
+    tests Eq. 30 independently of J3.4's reconstruction;
+  - the operating-envelope reading of the J3.4 cell: the distribution of eta_s,
+    which J3.4 never reports, and the finding that its two electrodes sit nearly
+    three decades apart in |eta_s|.
+
+  The page also does NOT need a spatial solve for the law itself, and says so
+  plainly. The pymrm solve enters only for the operating envelope, and the page's
+  "What pymrm adds" section states outright that pymrm adds nothing to the law.
+
+  VERIFIED 2026-08-01. All four claims above were checked against the actual files
+  by the adversarial verifier and all four hold: J3.4 calls Eq. 30 only from
+  kappa_from_nu and never in the kinetics; its arcsinh is the exact inversion of
+  the symmetric law rather than a limit; neither J3.4 nor J3.5 mentions
+  alpha_a + alpha_c != 1. The scope call stands.
+
+  Two qualifications the first pass missed; neither changes the decision, and both
+  are now stated ON THE PAGE (Background, and Reuse):
+
+  - J3.5's bv_invert (its line 592) silently CONTAINS the reduction derived here:
+    at zero current its root is Eq. 16 exactly, and its exchange prefactor has
+    Eq. 30's structure. J3.5 never says so, never states the alpha_a + alpha_c = 1
+    condition the closed form depends on, and never uses it as a check. What J3.1
+    adds is stating it, testing it, and stating the condition - but an integrator
+    should know the algebra was already in the repository.
+  - J3.5's C_r_doyle is the same interfacial-versus-superficial ratio J3.1 uses to
+    classify the cathode, reported there as ~1e-4 against 1.0e-3 here. The two are
+    the same quantity on different i_0 scales: J3.5 follows Marquis in scaling on a
+    TYPICAL exchange current PRE0 * c_T, J3.1 evaluates Eq. 30 at the initial state
+    Doyle specifies. The ratio is exactly sqrt(u_0 (1 - u_0)) = 0.0995, computed on
+    the page so the two entries cannot be read as disagreeing.
+notes: >
+  Built 2026-07-31, adversarially verified and REVISED 2026-08-01. Staged at
+  queue_cases/J3.1/page/. 47 cells, notebook executes end to end in ~51 s,
+  report_agreement called with 47 metrics.
+
+  WHAT THE 2026-08-01 REVISION CHANGED (verifier report at
+  queue_cases/J3.1/review/verification.md; its verdict was "safe to publish after
+  F1-F4", and the scope decision, the transcription check and the identity battery
+  all survived unchanged).
+
+  F1, factual, FIXED. The Reuse section claimed a delta_c = 210 "moves it from the
+  edge of the Tafel regime to three decades inside the linear one". That is wrong
+  by ~21x and in the unsafe direction. On the SUPERFICIAL current the cathode sits
+  at i/i_0 = 0.210, eta_s = 6.75 mV, a 0.18 % linear error - already inside the
+  1 % linear window (0.43 x the 15.81 mV threshold) - and the 5 % Tafel boundary
+  at i/i_0 = 4.36 would need 20.8x more current. The porous electrode is not being
+  rescued from Tafel; it starts inside the linear window and a delta_c takes it
+  from a 0.18 % linear error to a 4.2e-8 one. The corrected statement, plus the
+  case where the factor WOULD decide the verdict (about 21x this current, where
+  the superficial reading reaches Tafel while the interface is still linear), is
+  now computed in a new Results cell, "Superficial or interfacial?", and the Reuse
+  prose points at it instead of asserting. The equivalent sentence in Results was
+  already correct and is unchanged. The claim had not leaked into meta.yaml,
+  README.md or models_entry.yaml - checked.
+
+  F2, factual, FIXED. The page said the residual on nu^2/delta was unexplained
+  because "the paper does not say which concentration state or which effective
+  kappa the groups were evaluated at". Both halves are wrong and both are gone.
+  Doyle states the state in plain English immediately under Eq. 30 - "For these
+  calculations, the concentrations are taken to be at their initial values" -
+  re-read here off a fresh 600 dpi render of page 1530, and Fig. 2's caption pins
+  the initial solid at 1 % of maximum; the page's own sidecar already recorded it.
+  And kappa cancels identically from nu^2/delta, so it cannot be part of the
+  explanation. The -15.7 % is KEPT and kept UNEXPLAINED, which remains the right
+  call, but the page now says honestly that the obvious candidate is ruled out by
+  the paper's own sentence and records what closing the gap would require:
+  u_0 = 0.0141 against a printed 0.01, or R_s = 0.843 um against a printed 1.0 um.
+  Both contradict Table II; neither is adopted.
+
+  The J3.4 19 % connection HELD UP, and more strongly than "the same size": it is
+  the SAME NUMBER. kappa_eff(Eq. 28)/kappa_eff(Eq. 29) - 1 = +18.674703 % and
+  1/(1 - 0.157360) - 1 = +18.674688 %, agreeing to 8.0e-7 relative, which is the
+  1/sigma term. Both are now computed in the same cell. It is one disagreement
+  viewed from two sides, NOT two independent tests, and the page has been promoted
+  out of the parenthetical to say so - in Check 3, in "What pymrm adds", and in
+  meta.yaml's caveats. What this reading adds is only that the disagreement
+  survives with kappa removed entirely.
+
+  F3/F4, powerless checks, FIXED by measurement rather than by wording. A new
+  section, "What Checks 1 and 2 can and cannot catch", re-codes the transcription
+  wrong one mistake at a time and re-measures both residuals, following the
+  pattern B1.6 uses. Computed, not retyped:
+
+    injected defect                      Eq.17 vs Eq.30      i0 vs Eq.30    balance
+                                      a=(.5,.5)     asym  (.5,.5)    asym    worst
+    none - as printed                  4.56e-12  4.54e-12 4.44e-16 5.33e-15 1.50e-14
+    Eq. 30 tail exponents swapped      4.56e-12  9.75e-01 4.44e-16 3.81e+01 1.50e-14
+    Eq. 30 prefactor exponents swapped 4.56e-12  9.52e-01 4.44e-16 2.00e+01 1.50e-14
+    Eq. 17 prefactor read as c^alpha_c 4.56e-12  9.52e-01 4.44e-16 1.99e+01 1.50e-14
+    the same swap in BOTH prefactors   4.56e-12  4.54e-12 4.44e-16 5.55e-15 1.50e-14
+    Eq. 17 bracket exponents swapped   4.56e-12  1.00e+00 4.44e-16 3.86e+01 1.50e-14
+
+  Three things the table establishes and the page now states. (i) At Doyle's own
+  alpha_a = alpha_c = 0.5 EVERY exponent swap is a no-op - the six rows span
+  exactly 0.0 - so the entire discriminating power of Check 1 comes from the
+  hypothetical asymmetric rows of the sweep, and a reader who assumed it bites at
+  the published parameters would be wrong. (ii) Swapping the prefactor in BOTH
+  equations at once is undetectable even at asymmetric alpha, because
+  (c_max - c)^alpha_c c^alpha_a is the same code expression on both sides and
+  cancels in the ratio; only the (c_T - c_s)^alpha_a c_s^alpha_c half is actually
+  tested. Swapping it in EITHER equation alone does break, which is what makes the
+  printed alpha_A resolvable as alpha_a. (iii) The partial-current balance never
+  moves under any of them: it is an exact algebraic consequence of
+  alpha_a + alpha_c = 1 and is now reported as the identity it is.
+
+  i0_from_partials_vs_eq30_rel had no power because it was evaluated only at
+  alpha = 0.5. It is now evaluated over four alpha pairs with sum 1 including
+  asymmetric ones - baseline 5.3e-15, and 38 under an Eq. 30 tail swap - so it can
+  fail. partial_currents_balance_rel is renamed
+  partial_currents_balance_rel_structural. Six defect_* metrics were added to
+  report_agreement, including defect_worst_at_symmetric_alpha_eq17_vs_eq30 = 0
+  (the no-op result itself) and defect_both_prefactors_swap = 4.5e-12 (the
+  undetectable one), so CI records what the checks cannot catch as well as what
+  they can.
+
+  Minor fixes taken in the same pass. F5: the 1 % cancellation-window jump was
+  stated as "near alpha_a = 0.455"; it is located by root-finding on the
+  first-lobe overshoot peak at 0.4593 (and 0.4103 at 5 %), both now computed on
+  the page, and the 1.52 % overshoot at alpha_a = 0.45 is computed rather than
+  typed - these were the only two prose numbers the verifier found not
+  interpolated. F6: "the two electrodes are in different regimes" is
+  tolerance-dependent; at I = 10 both are inside the 5 % linear window (cathode
+  0.001x, foil 0.69x) and the statement is unambiguous only at the 1 % tolerance
+  or at I = 20. The heading is now "three decades apart", the tolerance is stated
+  first, and each electrode is printed against both thresholds. F7: "does NOT
+  converge under refinement" overstated - the increments are 0.208, 0.166,
+  0.104 mV, a converging sequence that has not arrived; now "not converged at
+  these grids", with the increments computed. F8: Marquis's sinh kinetics is
+  Eq. 1g and the exchange current density Eq. 1h; the page cited "Eq. 1h" for both
+  and now cites Eqs. 1g-1h.
+
+  Everything else the verifier attacked survived and was NOT touched: the
+  transcription of Eqs. 16, 17, 18, 19, 20, 28, 29, 30 and Table II; the
+  non-circularity of the Eq. 17 -> Eq. 30 collapse (Eq. 30 is printed two journal
+  pages later and is not derived from Eq. 17 in the paper); the alpha_a + alpha_c
+  = 1 condition; the non-monotonic linear threshold (matched to 1e-15 against a
+  100x denser independent scan); all three self-caught defects; and the tier-6
+  statement.
+
+  NO FIGURE WAS DIGITISED and there is no maintainer review gate. The page ships
+  no data/ directory and no sidecar - no numbers are transcribed, only equations.
+  It loads two CSVs cross-page from J3.4 (parameters, stated results) via
+  load_data(page="J3.4-doyle-fuller-newman"), so J3.4 must stay published.
+  queue_cases/J3.1/review/ holds only two self-generated matplotlib exports; NO
+  source page image is anywhere in the case directory.
+
+  Validation, ranked as built: (2) internal identities, the strongest route here,
+  because Doyle prints Eq. 16, Eq. 17 and Eq. 30 in three places and does not
+  derive them from one another - reducing Eq. 17 with Eq. 16 reproduces Eq. 30
+  exactly (4.6e-12 over 4000 states), and only for alpha_a + alpha_c = 1, with the
+  failure away from that condition matched to its own closed form to 7.3e-16 V;
+  plus i = 0 at zero overpotential (7.8e-15), the partial-current balance
+  (1.5e-14, structural) whose common value IS Eq. 30's i_0 (5.3e-15 over four
+  alpha pairs including asymmetric ones), R_ct = RT/(nFi_0) (1.8e-9), the arcsinh
+  inversion fed forward through Eq. 17 (9.7e-11), and the closed-form Tafel
+  threshold against root-finding on the full law (3.1e-15). What each of these can
+  and cannot detect is measured by injected defects, not asserted - see the
+  revision block above.
+  (3) A stated numerical result: Doyle's delta = 1.95 and nu = 68, whose RATIO
+  removes (1/kappa + 1/sigma) entirely - which matters because kappa is the one
+  input the paper never prints. Eq. 30 gives a i_o2 delta_c / I that is 15.7 %
+  below what the printed groups imply. (4) No figure digitised and none needed.
+
+  Headline results. Tafel threshold, closed form, alpha_a + alpha_c = 1: 10 % at
+  77.1 mV, 5 % at 97.9 mV, 1 % at 148.4 mV at Doyle's 373.15 K (61.6 / 78.2 /
+  118.6 mV at 298.15 K), independent of how alpha is split. Linear threshold,
+  alpha = 0.5: 51.7 / 35.9 / 15.8 mV at 373.15 K (41.3 / 28.7 / 12.6 at 298.15),
+  and it DOES depend on the split - narrowing 9.0x between alpha_a = 0.5 and 0.1,
+  with asymptotes sqrt(24 eps) (good to 3.6 %) and 2 eps/|alpha_a - alpha_c|
+  (6.8 % for alpha_a <= 0.3). In the J3.4 cell at I = 10 the porous cathode runs
+  at 0.032 mV mean / 0.74 mV peak surface overpotential - three decades inside the
+  5 % linear window, because a delta_c = 210 divides the superficial current
+  density - while the flat lithium foil runs at 24.8 mV (0.69 of the 5 %
+  threshold, 1.6 times the 1 % one), and 46.6 mV at I = 20, past the 5 % boundary.
+  The two electrodes are 2.9 decades apart in |eta_s|. Substituting the linear law
+  in the cathode moves the cell
+  potential by 1.5e-10 mV; substituting Tafel moves it by 519 mV OF THE WRONG
+  SIGN, and the Tafel run's first-step overpotential (+446.2 mV) matches the
+  uniform-reaction prediction (+444.2 mV) to 0.46 %.
+
+  Three findings worth the maintainer's eye, none blocking.
+
+  1. Doyle's Eqs. 16, 17 and 30 are mutually consistent ONLY for
+     alpha_a + alpha_c = 1. Their Table II satisfies it, so the published cell is
+     fine, but the model as printed has no exchange current density outside that
+     condition and its Eq. 17 then contradicts its own Eq. 16 by
+     (RT/F) ln((c_T - c_s)/c_s) (1/(alpha_a + alpha_c) - 1), up to 168 mV over the
+     ranges swept.
+
+  2. The nu^2/delta check is 15.7 % off. This is the SAME NUMBER J3.4 met as a
+     19 % disagreement between its two routes to kappa (+18.6747 % both ways,
+     agreeing to 8e-7), not a second independent test - but read this way it is a
+     statement about the exchange current density and the geometry with NO kappa
+     in it (1/sigma contributes 1e-4 against 1/kappa ~ 20). Rounding is ruled out
+     on the page, not waved at: nu +- 0.5 and delta +- 0.005 give a +-1.7 % band,
+     and closing the gap would need nu = 62.4, 8.2 % from the printed 68. Both
+     obvious explanations are ruled out by the paper's own text: Doyle states
+     under Eq. 30 that the concentrations are at their initial values (so "which
+     state?" is not available), and kappa cancels identically from the ratio.
+     Closing it would need u_0 = 0.0141 or R_s = 0.843 um, each contradicting a
+     printed value. The residual is REPORTED, not explained.
+
+  3. The linear validity threshold is NON-MONOTONIC in alpha_a. Just below 0.5 the
+     asymmetry error and the curvature error cancel, so the 5 % boundary is 81 mV
+     at alpha_a = 0.42 against 36 mV at 0.50. It is a true property of the
+     function and a fragile one - the window's position is set by the tolerance,
+     jumping at alpha_a = 0.4103 for a 5 % tolerance and 0.4593 for a 1 % one,
+     both located by root-finding on the first-lobe overshoot peak - and the page
+     prints it and then recommends the asymptote instead.
+
+  Three defects were found BY THE CHECKS and none by reading the code; all are
+  recorded on the page because each is a way this page could have looked right and
+  been wrong. (i) A bracketing root-find on the linear deviation returned a later
+  crossing, reporting the alpha_a = 0.3 threshold as 203 mV instead of 8.3 mV -
+  the deviation is non-monotonic and the threshold is the FIRST crossing. (ii)
+  Comparing kinetic laws under independently adaptive time stepping put 0.44 mV of
+  time-discretisation error into a quantity whose true value is 1e-10 mV; the
+  reference step sequence is now recorded and replayed so the comparison is
+  step-for-step with no interpolation. (iii) The kinetic switch switched BOTH
+  electrodes, so the "cathode" comparison was reading the anode's error - and
+  produced almost the same 0.44 mV. Two different defects, one plausible-looking
+  answer.
+
+  One number is deliberately reported as NOT converged at these grids: the peak
+  cathode |eta_s| is a boundary-layer value in the first cathode cell and rises
+  1.9x over an eightfold grid refinement, with increments 0.208, 0.166, 0.104 mV -
+  a converging sequence that has not arrived. Nothing is concluded from it alone;
+  the conclusion rests on the 15.7x margin to the 1 % threshold. The cell-averaged
+  value converges to 0.4 %.
+
+  J3.4's open question about the factor nu = 2 in Eq. 5 is NOT taken a side on.
+  The cell is run both ways: the cell potential moves 49.4 mV, the peak cathode
+  overpotential 1.85 %, and the regime classification of both electrodes is
+  unchanged, so no conclusion on this page depends on how it is settled.
+
+  Integrator notes: no new pip dependencies (numpy, pandas, scipy, matplotlib,
+  pymrm only). models_entry.yaml is an APPEND - models.yaml has no J3.1 record
+  yet. meta.yaml status is in-progress, flip to published on merge. The
+  models_entry carries an `origin_not_consulted` key rather than a second `also`
+  block, deliberately, so that no tooling can mistake the historical attribution
+  for a source that was read; it carries no DOI. Structures are proposed as
+  [S1, S10] rather than the catalogue's bare S1: S1 covers the time-marched cell
+  used as an operating envelope and S10 the electroneutrality constraint that
+  comes with the ported J3.4 porous electrode. Cross-page data dependency on
+  J3.4's data/ directory, as J3.5 also has.
+updated: '2026-08-01'
