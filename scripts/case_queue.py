@@ -16,6 +16,7 @@ Statuses
     needs-input  cannot proceed: a decision or visual check is owed by the maintainer
     ready        built and green, waiting to be committed
     published    live on the site
+    covered      folded into another case's page; `covered_by` names it
     deferred     deliberately not built; `blocker.detail` says why
 """
 from __future__ import annotations
@@ -31,7 +32,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 QUEUE = ROOT / "queue_cases"
 STATUSES = ["unclaimed", "in-progress", "needs-paper", "needs-input",
-            "ready", "published", "deferred"]
+            "ready", "covered", "published", "deferred"]
 
 ROW = re.compile(r"^\|\s*\**`?([A-J]\d+\.\d+)`?\**\s*\|(.+)$")
 
