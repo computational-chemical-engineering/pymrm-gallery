@@ -146,6 +146,68 @@ Two pymrm traps recorded on that page, both silent failures:
 - With varying velocity, discretise `d(Uc)/dz` as the divergence of the flux.
   `U dc/dz` loses the gas contraction — 65 % of the volumetric flow here.
 
+### The check that cannot fail — the defect the verifier exists to catch
+
+**Read this before writing a validation cell.** On 2026-07-31 six pages went
+through adversarial verification and *four* carried the same defect, in different
+disguises. It is now the most common finding in this repository, it always looks
+like the page's strongest evidence, and inspection never catches it.
+
+The shape: two routes to a quantity are compared, they agree to machine
+precision, and the agreement is **algebraically guaranteed**, so the check has no
+power against the error class it is presented as guarding.
+
+- `A4.2` compared Maxwell–Stefan against generalized Fick at **8.9e-16**. Both
+  called the same `build_b`; one solved the 2×2, the other wrote out its
+  adjugate. A dropped sign inside `build_b` moved both together and the metric
+  still read machine precision. Replaced by the n×n friction system, which never
+  forms [B] — that one agrees to 7.8e-16 and *can* fail.
+- `F3.5` reported electroneutrality at 2.8e-11 and charge flux at 1.1e-9. All
+  charged species share one diffusivity, the reactions conserve charge and both
+  boundaries are Dirichlet: those residuals cannot be anything else.
+- `F1.3` "recovered" a printed exponent 0.757 as 0.7566 — from a function
+  containing `**0.757`. Substituting 0.657 recovers 0.6557. It was claimed in
+  five places as the defence against a mis-read exponent.
+- `J3.5` claimed a slope test resolved four correction terms; deleting one of
+  them entirely changed the answer by 0.02 %.
+
+Three questions to ask of every agreement number, before it goes on a page:
+
+1. **Do the two routes share code?** Same assembly, same operator, same
+   parameter dict — then you are testing arithmetic, not physics.
+2. **Deliberately break something the check should catch** — wrong `nu`, a
+   flipped sign, a mismatched boundary condition — and confirm the number
+   *moves*. If it does not, the check is decoration. This is cheap and it is the
+   only reliable test.
+3. **Is the identity structural?** Conservation residuals are often exact by
+   construction. Say what the check confirms (bookkeeping, an implementation
+   port) rather than implying it confirms the model.
+
+A check that cannot fail is not evidence, and presenting one as evidence is the
+kind of quiet overclaim that costs more credibility than a missing page. Keeping
+it is fine — label it for what it is, as `A4.2` now does ("algebraic identity …
+cannot detect an error inside [B]").
+
+**The sibling defect: prose numbers drift from code output.** Four pages in the
+same batch printed a number in markdown that the notebook contradicted two cells
+above — 30 % against 104.8 %, "twenty" against 21, "15–20 %" against 8.4–21.4 %,
+"6 to 14 Newton iterations" against 6–27. Interpolate computed values into the
+prose instead of typing them, and before reporting `ready`, re-read every
+markdown number against what the cells actually print.
+
+### An old page's errors travel into the new page that reuses it
+
+`F1.3` lifted a sentence from the published `F1.4` — the reuse `AGENTS.md`
+encourages — and its verifier, reading Fig. 6 for itself, found the band wrong at
+both ends (`U_df` 0.02–0.035 m/s against a measured 0.0161/0.0230/0.0269). It had
+survived `F1.4`'s own review because it reads as background prose rather than as a
+result, which is exactly where a wrong number hides.
+
+So verifying a new page audits the pages it borrows from, for free — but only if
+the verifier re-reads the *source*, not the sibling page. Say so in the dispatch.
+And when a finding lands on a published page, fix it there in its own commit: it
+is live, and the fix is cheap.
+
 ### Two independent readings of the same paper can validate each other
 
 `J3.4` is the pattern. Its open-circuit expression (eq. 16) was read off a 600 dpi
