@@ -1,16 +1,29 @@
 #!/usr/bin/env python3
 """Generate the two maintainer dashboards from the case queue.
 
-    python scripts/dashboards.py
+    python scripts/dashboards.py                 # repo-safe, no page images
+    python scripts/dashboards.py --with-images   # also writes the private copy
 
 Writes docs/dashboards/papers-needed.html and docs/dashboards/needs-input.html.
-Both are self-contained (images inlined) so they can be published as artifacts.
+
+**Review overlays are the copyrighted page image.** They are drawn on the source
+figure, so inlining one into a committed file publishes it, exactly as committing
+the PNG would. `queue_cases/*/review/*.png` has been git-ignored since 2026-07-29,
+but the dashboards inlined the same PNGs as base64 and *are* committed — eight of
+them were in the tracked needs-input.html across five commits before this was
+caught on 2026-07-31.
+
+So the tracked pages never carry images: each overlay becomes a filename and a
+caption. `--with-images` additionally writes docs/dashboards/private/, which is
+git-ignored and is what gets published as the private maintainer artifact.
 """
 from __future__ import annotations
 
+import argparse
 import base64
 import html
 import json
+import re
 from collections import Counter
 from datetime import date
 from pathlib import Path
@@ -20,6 +33,11 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 QUEUE = ROOT / "queue_cases"
 OUT = ROOT / "docs" / "dashboards"
+PRIVATE = OUT / "private"
+
+# Set only for the git-ignored private copy; the committed pages are never built
+# with images. See the module docstring.
+INLINE_IMAGES = False
 
 SECTION_NAME = {
     "A": "Foundations — transport closures",
@@ -123,6 +141,29 @@ def entries():
         except Exception:
             pass
     return [e for e in out if e]
+
+
+def slot(case_id) -> str:
+    """Textarea id for a case or standing decision. The copy-answers script
+    applies the same transform, so both must stay in step."""
+    return re.sub(r"[^A-Za-z0-9]", "_", str(case_id))
+
+
+def standing_decisions():
+    """Repo-wide decisions from docs/standing-decisions.yaml.
+
+    A per-case blocker rides along in queue_cases/<ID>.yaml, but a decision that
+    belongs to no case (a history rewrite, a permission grant) has nowhere to
+    live, so it used to survive only by being retyped into the next session's
+    prompt. This puts it on the dashboard with everything else.
+    """
+    f = ROOT / "docs" / "standing-decisions.yaml"
+    if not f.is_file():
+        return []
+    try:
+        return yaml.safe_load(f.read_text(encoding="utf-8")) or []
+    except Exception:
+        return []
 
 
 def img_uri(path: Path, max_w: int = 1150):
@@ -272,6 +313,27 @@ def input_page(es):
 
     blocked.sort(key=cost)
 
+    # Repo-wide decisions, which belong to no case and so would otherwise be
+    # carried only by whoever remembered to restate them in the next prompt.
+    standing = standing_decisions()
+    if standing:
+        P.append('<h2>Standing decisions &mdash; not tied to one case</h2>')
+    for d in standing:
+        P.append('<div class="card"><div class="card-h">'
+                 f'<span class="cid">{esc(d.get("id",""))}</span>'
+                 f'<span class="ctitle">{esc(d.get("title",""))}</span>'
+                 f'<span class="pill p1">{"blocking" if d.get("blocking") else "not blocking"}</span>'
+                 '<span class="pill">standing decision</span></div><div class="card-b">')
+        if d.get("raised"):
+            P.append(f'<span class="ref">raised {esc(str(d["raised"]))}</span>')
+        if d.get("question"):
+            P.append(f'<p class="q">{esc(d["question"])}</p>')
+        if d.get("detail"):
+            P.append(f'<p class="detail">{esc(d["detail"])}</p>')
+        P.append(f'<textarea id="a_{slot(d.get("id",""))}" '
+                 f'placeholder="Your answer on {esc(d.get("title",""))}"></textarea>')
+        P.append("</div></div>")
+
     if not blocked:
         P.append('<div class="empty" style="margin-top:30px"><b>Nothing needs you right now.</b>'
                  'Agents halt here when they hit a judgement call — a figure extraction to eyeball, '
@@ -299,7 +361,14 @@ def input_page(es):
             if shots:
                 P.append('<div class="shots">')
                 for sp in shots:
-                    P.append(f'<img src="{img_uri(sp)}" alt="{esc(e["id"])} review">')
+                    if INLINE_IMAGES:
+                        P.append(f'<img src="{img_uri(sp)}" alt="{esc(e["id"])} review">')
+                    else:
+                        # Never inline into a committed file: the overlay is drawn
+                        # on the source figure and so is the copyrighted image.
+                        rel = sp.relative_to(ROOT) if ROOT in sp.parents else sp
+                        P.append('<p class="detail">Review overlay not shown here '
+                                 f'(copyrighted page image): <code>{esc(str(rel))}</code></p>')
                 P.append("</div>")
             P.append(f'<textarea id="a_{esc(e["id"]).replace(".","_")}" '
                      f'placeholder="Your answer for {esc(e["id"])} — free text is fine, and '
@@ -326,17 +395,21 @@ def input_page(es):
                      f'placeholder="Optional - {esc(e["id"])} is already live either way."></textarea>')
             P.append("</div></div>")
     P.append(f'<footer>Generated {date.today()} from <code>queue_cases/</code>. '
-             f'Figures are shown only to check a data extraction; no page image is committed to the '
-             f'public repository.</footer></div>')
+             f'Review overlays appear only in the private copy '
+             f'(<code>scripts/dashboards.py --with-images</code>, git-ignored); the '
+             f'committed page names them instead, because an overlay is drawn on the '
+             f'source figure and so is the copyrighted image.</footer></div>')
 
-    ids = [e["id"] for e in blocked] + [e["id"] for e in es
-                                        if e.get("follow_up") and e["status"] == "published"]
+    ids = ([str(d.get("id", "")) for d in standing]
+           + [e["id"] for e in blocked]
+           + [e["id"] for e in es
+              if e.get("follow_up") and e["status"] == "published"])
     js = """
 const IDS=%s;
 const b=document.getElementById('copy');
 if(b)b.addEventListener('click',()=>{
   const L=['CASE DECISIONS — pymrm-gallery',''];
-  IDS.forEach(id=>{const t=document.getElementById('a_'+id.replace('.','_'));
+  IDS.forEach(id=>{const t=document.getElementById('a_'+id.replace(/[^A-Za-z0-9]/g,'_'));
     if(t&&t.value.trim()){L.push('## '+id);t.value.trim().split('\\n').forEach(x=>L.push('  '+x));L.push('');}});
   const out=L.length>2?L.join('\\n'):'(nothing filled in yet)';
   document.getElementById('dump').textContent=out;
@@ -348,6 +421,13 @@ if(b)b.addEventListener('click',()=>{
 
 
 if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--with-images", action="store_true",
+                    help="also write docs/dashboards/private/ with the review "
+                         "overlays inlined; that directory is git-ignored and is "
+                         "what gets published as the private artifact")
+    args = ap.parse_args()
+
     OUT.mkdir(parents=True, exist_ok=True)
     es = entries()
     (OUT / "papers-needed.html").write_text(papers_page(es), encoding="utf-8")
@@ -356,3 +436,12 @@ if __name__ == "__main__":
     print(f"{len(es)} cases: " + ", ".join(f"{k}={v}" for k, v in sorted(c.items())))
     for f in ("papers-needed.html", "needs-input.html"):
         print(f"   docs/dashboards/{f}  {(OUT/f).stat().st_size//1024} kB")
+
+    if args.with_images:
+        INLINE_IMAGES = True
+        PRIVATE.mkdir(parents=True, exist_ok=True)
+        (PRIVATE / "papers-needed.html").write_text(papers_page(es), encoding="utf-8")
+        (PRIVATE / "needs-input.html").write_text(input_page(es), encoding="utf-8")
+        for f in ("papers-needed.html", "needs-input.html"):
+            print(f"   docs/dashboards/private/{f}  "
+                  f"{(PRIVATE/f).stat().st_size//1024} kB  (git-ignored)")

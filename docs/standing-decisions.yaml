@@ -1,0 +1,58 @@
+# Decisions owed by the maintainer that are not tied to one catalogue case.
+#
+# Per-case blockers live in queue_cases/<ID>.yaml and reach the decisions
+# dashboard from there. These are repo-wide: they do not belong to any one case,
+# so nothing would carry them forward otherwise, and they were previously being
+# restated by hand in each session's prompt.
+#
+# Rendered at the top of docs/dashboards/needs-input.html. Delete an entry once
+# it is settled, and record what was decided in docs/handoff.md.
+#
+# Fields: id, title, question, detail, blocking (true if work is stalled on it),
+#         raised (date).
+
+- id: history-purge
+  title: Purge copyrighted overlays from git history
+  raised: '2026-07-29'
+  blocking: false
+  question: >
+    May I rewrite the published history of this public repo to remove the review
+    overlays, which requires a force-push?
+  detail: >
+    Three overlay PNGs were committed and later deleted (e9a3cc8), so they are
+    gone from the working tree but still reachable in history. Scope grew on
+    2026-07-31: docs/dashboards/needs-input.html is itself tracked and inlined
+    the same overlays as base64 - three in 7a2ed33, then eight in each of
+    4d24b87, d0ae665, 1359629 and cdcfd4b. Inlining publishes the image exactly
+    as committing the PNG does, and every data sidecar's redistribution_basis
+    says the figure image is not reproduced.
+
+    The leak is stopped going forward: scripts/dashboards.py now builds the
+    tracked pages without images (they name each overlay instead) and only
+    --with-images writes docs/dashboards/private/, which is git-ignored. That
+    fixes new commits; it does not touch what is already published.
+
+    Removing the history needs git-filter-repo plus a force-push, which breaks
+    every existing clone and rewrites the hashes on the commits above. Not doing
+    it leaves the images retrievable by anyone who knows the SHAs. Nothing is
+    blocked either way.
+
+- id: elsevier-key-permission
+  title: Allow the Bash tool to read the Elsevier API key
+  raised: '2026-07-30'
+  blocking: false
+  question: >
+    Can ~/.config/elsevier/apikey be added to the Bash permission allowlist, so
+    the article-retrieval API can be used without a prompt on every call?
+  detail: >
+    The key is at ~/.config/elsevier/apikey (mode 600, outside the repo,
+    .gitignore blocks credential filenames). Reading it trips the permission
+    classifier, so every full-text fetch stalls waiting for a human.
+
+    This is the highest-leverage unblock in the queue. Section A is 33 cases
+    short of a paper and find_papers found an open-access route for almost none
+    of them - they are 1937-75 classics that predate DOIs. A large share are
+    Elsevier (Chemical Engineering Science), which the institutional key reaches
+    through the PII endpoint. Note the standing caveat in docs/handoff.md: the
+    API text is good for prose and structure and unusable for numbers on
+    pre-1980 scans, which still have to be read off 600 dpi renders.

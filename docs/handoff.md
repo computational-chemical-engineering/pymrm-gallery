@@ -236,6 +236,14 @@ block: `established` says what not to redo, `answer_changes` says exactly what
 the answer alters, `files_to_touch` says where. A parked case should never need
 its extraction or its validation repeated.
 
+**Decisions that belong to no case go in `docs/standing-decisions.yaml`.** A
+per-case blocker rides along in `queue_cases/<ID>.yaml` and reaches the dashboard
+from there, but a repo-wide decision — a history rewrite, a permission grant —
+has nowhere to live and used to survive only by being retyped into the next
+session's prompt. Entries in that file render at the top of the decisions
+dashboard with their own answer boxes. Delete one when it is settled and record
+what was decided here.
+
 **Integration gotchas, all seen at least once.** `slug` and `title` in
 `meta.yaml` must match `models.yaml` exactly. An `id` may already exist as
 `planned` — upgrade it in place rather than appending, or `check_metadata`
@@ -246,6 +254,22 @@ on the next machine (`sympy` for `J4.8`).
 source page image, so they *are* the copyrighted figure; three reached this
 public repo before being caught. `queue_cases/*/review/*.png` is git-ignored now,
 but look at what you are staging.
+
+**And check what *generated* files inline, not just what agents write.** The
+git-ignore on the PNGs was not enough. `docs/dashboards/needs-input.html` is
+tracked, and `scripts/dashboards.py` inlined those same overlays into it as
+base64 — three in `7a2ed33`, then eight in each of `4d24b87`, `d0ae665`,
+`1359629`, `cdcfd4b`. Ignoring a file and then embedding its bytes in a tracked
+file publishes it just the same, and the deletion commit `e9a3cc8` did not touch
+this route at all. Found 2026-07-31.
+
+Fixed by splitting the build: `python scripts/dashboards.py` writes the tracked
+pages with **no images** (each overlay is named instead), and `--with-images`
+additionally writes `docs/dashboards/private/`, which is git-ignored and is what
+gets published as the maintainer artifact. The tracked page went 903 kB → 23 kB.
+The history still holds the old copies — that is a standing decision, below.
+*The general rule: `git check-ignore` proves nothing about a generated artefact.
+Grep the tracked output for `data:`, and check the size.*
 
 **Three acquisition failure modes worth knowing.**
 

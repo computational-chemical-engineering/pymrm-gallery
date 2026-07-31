@@ -6,7 +6,7 @@ catalog_reference: Ramachandran & Chaudhari (1983); Herskowitz & Smith, AIChE J 
 priority: P1
 tier: T1
 structures: S8
-status: unclaimed
+status: needs-input
 reference:
   authors:
   - Herskowitz, M.
@@ -14,9 +14,39 @@ reference:
   year: 1983
   container: AIChE Journal 29(1) 1–18
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/AIChE Journal - 1983 - Herskowitz.pdf
   open_access: null
-  checked: null
-blocker: null
+  checked: '2026-07-31'
+status_note: was left unclaimed by mistake; the 2026-07-29 build is blocked on a maintainer question
+blocker:
+  kind: needs-input
+  question: 'The assembled Figure 6 model chain (Table 1 sphere row, Eqs. 19-21,
+    alpha_gs -> inf, C*_L = 1) reproduces the L_m = 0.50 curve to 0.4 % with
+    nothing fitted, but L_m = 1.0, 2.0, 7.0 are out by 1.69x, 4.03x, 2.34x, and
+    no single stated assumption reconciles them. Either the upper three curves
+    used something unstated, or the figure is wrong. Publish as a discrepancy
+    page, hold, or drop?'
+  detail: 'Full closure attempt, every check that passed, and the two failed
+    reconciliation routes are in docs/staged-data/G1.8/
+    herskowitz-smith-1983-fig6.meta.yaml (model_closure_attempt: block).
+    Asserting a 1983 AIChE review is in error is not a call to make from
+    arithmetic alone.'
+  artifacts:
+  - docs/staged-data/G1.8/herskowitz-smith-1983-fig6.csv
+  - docs/staged-data/G1.8/herskowitz-smith-1983-fig6.meta.yaml
+resume:
+  staged_at: docs/staged-data/G1.8/
+  established: 'Figure 6 digitised and maintainer-reviewed; Table 1 sphere row,
+    Eqs. 19-21 all verified on 600 dpi renders; three independent checks pass
+    (printed f_e values exact, sphere limit, log-log slope 1.03 vs 1.10-1.13);
+    L_m = 0.50 closes to 0.4 %. Do not re-derive or re-digitise anything.'
+  answer_changes:
+    publish_as_discrepancy: 'Build the page presenting the chain, the one curve
+      that closes, and the quantified failure of the other three as the finding
+      itself; never claim agreement.'
+    hold: 'No change; case stays parked.'
+    drop: 'Mark deferred with blocker.detail pointing at the closure attempt.'
+  files_to_touch: [queue_cases/G1.8/page/, models.yaml]
+  do_not_redo: extraction, verification checks, reconciliation attempts
 notes: null
-updated: '2026-07-30'
+updated: '2026-07-31'
