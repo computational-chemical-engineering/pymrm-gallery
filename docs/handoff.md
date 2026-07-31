@@ -1,13 +1,37 @@
-# Handoff — state as of 2026-07-31
+# Handoff — state as of 2026-08-01
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
+
+**Read [“The check that cannot fail”](#the-check-that-cannot-fail--the-defect-the-verifier-exists-to-catch)
+before writing any validation cell.** On 2026-07-31/08-01 six pages went through
+adversarial verification and four carried the same defect. It is now the most
+common finding in this repository.
 
 ## Built and live
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-15 pages, 16 published catalog entries, both CI workflows green.
+21 page directories, 22 published catalog entries, both CI workflows green.
+
+### Added 2026-07-31/08-01
+
+| Page | What it shows | Validation |
+|---|---|---|
+| `A4.2` Maxwell–Stefan vs Fick | Two bookkeepings of one physics; the scalar closure fails *structurally* | Two worked matrix examples; MS invariant to species ordering to 3.9e-16 where Wilke moves 1.44–4.31 mole % |
+| `J3.5` SPM / SPMe | Asymptotic reductions of `J3.4`, and what their slope test resolves | Their Tables II+III, 21/21; error exponent drifts 2.07→2.70, stated as a window |
+| `H1.4` Itoh Pd membrane reactor | Conversion past equilibrium — and how little the measurement tests | Stated 99.7 %; **45 % low on 1−X**, the quantity that varies |
+| `F1.3` Wilkinson holdup | A correlation whose one pressure term fails | 6.8 decades low at helium — the authors' own published finding |
+| `E1.2` Davidson bubble | Eqs. 9 and 10 are one flow field read twice | The printed 4.5 recovered to 1.1e-6, never an input |
+| `B1.6` Prater relation | An identity, and the two ways it breaks | Defect-sensitivity table; film and Le ≠ 1 breakdowns |
+
+Also corrected on the live `F1.4`: a measured band quoted wrongly
+(`U_df` 0.02–0.035 m/s against 0.0161/0.0230/0.0269), found because `F1.3`
+inherited the sentence and its verifier re-read the figure.
+
+Four of these six used the **reprint route** — the origin paper unreachable, a
+paper on disk printing it in full with attribution. See `reference_read_from` in
+[`AGENTS.md`](../AGENTS.md).
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -23,20 +47,50 @@ Start here if you are picking this up fresh. Read this, then
 | `B3.1` Yagi–Kunii shrinking core | The one equation all three textbook regimes come from, plus a map of where they are safe | 6.9e-16 against an independent derivation; all three limits to 2.4e-8 |
 | `F2.3` Maretto–Krishna FT slurry column | Plug-flow large bubbles over a well-mixed slurry, and two printed constants that stop it working | **experimental** holdup — 5–6% over 79 points; conversions 93.1/63.8% vs the paper's 96/63% |
 
-Status counts live in `models.yaml`: 16 published, 13 planned, 2 deferred
+Status counts live in `models.yaml`: 22 published, 12 planned, 2 deferred
 (`H1.12`, `B1.12` — unpublished manuscripts, see the published-work-only policy
 in [`blueprint.md §9`](blueprint.md#published-work-only-policy)).
 
-**Three of eight pages are validated against experiment** (`A4.9`, `C2.1`,
-`F1.4`), and `A2.3` against Taylor's own worked capillary run. `D2.2` is tier 6
-by necessity — its source paper contains no measurements at all. `A3.4` is the
-next chance to move the ratio, and it needs figure digitisation.
+**Four pages are validated against experiment** (`A4.9`, `C2.1`, `F1.4`, and
+`F1.3` on `F1.4`'s dataset), plus `A2.3` against Taylor's own worked capillary
+run and `H1.4` against a stated measurement — though `H1.4`'s page now says
+plainly how little that comparison resolves. Everything else is tier 6 by
+necessity: the source papers contain no measurements. `A3.4` is still the next
+chance to move the ratio and still needs figure digitisation.
+
+### The queue, and why it is paper-starved
+
+266 catalogued cases: 22 published, 6 needing maintainer input, 3 covered,
+2 deferred, 5 unclaimed, and **227 blocked on a source PDF**. That last number is
+irreducible by automation — `find_papers.py` was run over all 266 on 2026-07-31
+and found open-access routes for five. Most of section A predates DOIs entirely.
+
+So the productive vein is not acquisition but the **reprint route**, and the two
+standing decisions that would widen it: the Elsevier API key permission, and
+whether a named monograph on disk may source the textbook-canonical cases. Both
+are in [`standing-decisions.yaml`](standing-decisions.yaml) and on the decisions
+dashboard.
+
+**Two finished pages are parked on one batched figure review** (`F3.5`, `G1.7`).
+Batching is deliberate — five figures came back in a single sitting on
+2026-07-29. Neither needs any further work; both carry complete `resume:` blocks.
 
 ## Papers available
 
-Nine PDFs at **`~/papers/pymrm-gallery/`** (priorities 1 and 2 complete).
-Inventory with per-file text-layer quality is in
-[`pdf-findings.md`](pdf-findings.md).
+**Twenty-two PDFs** at `~/papers/pymrm-gallery/`, and **every one has now been
+consumed by a published or parked page.** Inventory with per-file text-layer
+quality is in [`pdf-findings.md`](pdf-findings.md); the catalogue-ID → filename
+map is [`papers-on-disk.yaml`](papers-on-disk.yaml) and must be updated by hand
+whenever a PDF arrives — automatic matching misses publisher-PII filenames, and a
+mis-mapped entry asks the maintainer for a paper they already supplied (`H1.4`
+was listed under `H1.9` until 2026-07-31).
+
+Three arrived during the 2026-07-31 sweep: `Marquis_2019…` (`J3.5`, gold OA from
+IOP), `F3_5.pdf` and `G1_7.pdf` (both from the University of Twente repository).
+Note both of the latter were **auto-resolved to the wrong citation** and the
+builders' identity checks caught it — `F3.5` is Bosch et al. 1989, not the
+catalogue's Versteeg & van Swaaij 1988; `G1.7` is the Chem. Eng. Technol. paper,
+not the CES one. Always verify identity before building.
 
 ## Elsevier full text — use this instead of OCR
 
@@ -97,26 +151,28 @@ bulk-download tool.
 
 ## Recommended next moves
 
-1. **`J3.4`** — the largest build left, and now **specified rather than just
-   staged**. The paper is transcribed into the sidecar's `model_inventory:`
-   block, including one finding that changes the build: the paper's own Eq. 26
-   gives S_c = 1.0e-4, so **solid-phase diffusion is negligible** and Appendix
-   B's superposition machinery comes off the critical path. Three items remain to
-   extract (Appendix A's conductivity polynomial and salt diffusivity, Eq. 16's
-   open-circuit potential, Eq. 17's Butler–Volmer). It can only ever be a
-   reference-solution page — Figure 2 contains no measurements. **`G1.8` is
-   BLOCKED** on a question for the maintainer; see below. (`F2.3` — **done
-   2026-07-30**.)
-   `F2.3` can lift Eq. 19 and Reilly's Eq. 8 from the `F1.4` page as validated SI
-   functions. `J3.4` is a full P2D battery model, the largest build in the queue,
-   and can only ever be a reference-solution page. (`B3.1` — **done 2026-07-29**.)
-2. **`E2.1` Kunii & Levenspiel** — best text layer of the set, and the canonical
-   fluidised-bed model.
-3. **`A3.4` Wakao & Funazkri** — the Sh–Re dataset. Elsevier, so the API gives
-   the prose, but read every number off the page (see the correction above).
-   Note `F2.3` consumes `F1.4`: Eq. 19 and Reilly's Eq. 8 are already
-   implemented and validated on the `F1.4` page as standalone SI functions, so
-   lift them rather than rewriting.
+Every paper on disk has now been consumed. `J3.4`, `E2.1`, `F2.3`, `B3.1` and
+`I1.2` are published; `A3.4` and `A1.1` are parked on figure review; `G1.8` is
+parked on a judgement call. So the next moves are not "build the next paper on
+disk" — there isn't one.
+
+1. **Drain the two parked figure reviews if answers have arrived** (`F3.5`,
+   `G1.7`). Both are finished pages; read the `resume:` blocks, do not re-derive.
+   `A3.4`, `A1.1` and `E2.1`'s optional Figure 9 are also waiting on the same
+   kind of look.
+2. **Work the reprint route.** Four pages came from it in one session. The test,
+   from `AGENTS.md`: a paper on disk that prints the result *and* names or tests
+   it. `E1.1` is the counterexample that bounds the method — Kunii & Levenspiel
+   print the two-phase relation but never name, attribute or test it, so it
+   cannot source a page *about* that postulate. Candidates not yet tried include
+   `B1.4` (does Weisz & Hicks state the Weisz–Prater criterion, or only cite it?),
+   `J3.3` (Doyle prints the porous-electrode equations, but check the overlap with
+   `J3.4` before building), and `F1.9` (likely `covered_by` `F1.3` now — check
+   first).
+3. **Nothing else moves without the maintainer.** 227 cases need a PDF, and
+   `find_papers.py --fetch` over all 266 found five open-access routes. The two
+   unblocks worth more than any single paper are the Elsevier key permission and
+   a few monographs on disk; both are standing decisions.
 
 ### When a printed constant is wrong, prove it from the paper's own results
 
