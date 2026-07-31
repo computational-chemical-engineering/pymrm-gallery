@@ -1,0 +1,74 @@
+dataset_id: krishna-ellenberger-1996-table2-liquids
+title: Physical properties of the five liquids (Table 2)
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Ellenberger, J."
+  year: 1996
+  container: "AIChE Journal 42(9) 2627-2634"
+  doi: 10.1002/aic.690420923
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 2, journal page 2629"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    Transcribed from a 600 dpi render rather than the text layer. The text layer
+    of this scan is legible for Table 2 but mangles subscripts elsewhere in the
+    same paper (SF6 as `SF,`, 0.001-0.249 as `0.00 1-0.249` in Table 1), so the
+    render was used for consistency and every row was checked against it.
+    The Polyacrylamide block is one table row spanning four concentrations; it
+    is expanded here into four rows carrying the same density and surface
+    tension, with the zero-shear viscosity printed for each concentration.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-31
+  estimated_error: >
+    None beyond the paper's own rounding. The surface-tension column is headed
+    "mN/m (Est.)" in the original - the values are estimated, not measured, and
+    that is the authors' own label.
+
+validation:
+  cross_check_against_F1_4: >
+    The tetradecane row (763 kg/m3, 2.2 mPa s, 27 mN/m) was transcribed here
+    independently of the same three numbers already published in
+    pages/F1.4-krishna-ellenberger-holdup/data/krishna-ellenberger-1996-parameters.csv,
+    which were read from the same table on a different occasion. The two
+    readings agree exactly.
+  correlations_reproduce_the_paper_s_own_curves: >
+    Feeding the water row and the tetradecane row through Wilkinson's eq. 2 and
+    Reilly's eq. 8 gives eps_trans = 0.0102 and 0.147 for air-water, and 0.0028
+    and 0.147 for air-tetradecane. The authors draw their own evaluation of both
+    correlations as horizontal lines on the logarithmic axes of their Figure 4:
+    in panel (a), air-water, the Wilkinson line sits on the 0.01 decade tick and
+    the Reilly line just above 0.1; in panel (c), air-tetradecane, the Wilkinson
+    line sits between the 0.001 and 0.01 ticks and the Reilly line again just
+    above 0.1. Both readings are to one significant figure against printed
+    decade ticks and no coordinates were extracted from the figure. This is a
+    reproduction of the authors' own computed lines - a check on the property
+    transcription and on the equations as transcribed - and not a comparison
+    with measurement.
+
+columns:
+  - {name: liquid,               unit: "-",     description: "liquid as named in Table 2"}
+  - {name: density_kg_m3,        unit: kg/m3,   description: "liquid density"}
+  - {name: viscosity_mPa_s,      unit: mPa s,   description: "dynamic viscosity; zero-shear viscosity for the polyacrylamide solutions"}
+  - {name: surface_tension_mN_m, unit: mN/m,    description: "surface tension, estimated (the table says so)"}
+  - {name: newtonian,            unit: "-",     description: "yes/no; the polyacrylamide solutions are not, and are excluded from the correlations"}
+  - {name: note,                 unit: "-",     description: "context"}
+
+not_transcribed:
+  - "Table 1, the experimental matrix of 2,787 runs. The subset relevant to
+     Figure 11 is already transcribed in the F1.4 page's parameters file."
+  - "Table 3, the average relative deviations. Already transcribed in the F1.4
+     page's parameters file and loaded cross-page here."
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

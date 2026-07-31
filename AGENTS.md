@@ -62,6 +62,39 @@ repository. The errors agents actually make:
   depends on neighbouring cells; `axes_blocks=[-2,-1]` for phase-and-species
   coupling.
 
+## When the model is read from a paper that reprints it
+
+Many classics are unreachable — pre-DOI, no open-access route — while a paper
+that **is** on disk prints the model in full with attribution. Building from that
+reprint is legitimate and is how `F1.3` (Wilkinson, via Krishna & Ellenberger
+1996) and `B1.6` (Prater, via Weisz & Hicks 1962) were built. Building from
+memory or from a textbook you have not opened is not: that is the "textbook
+restatement passed off as the source's" the builder brief forbids, and it is the
+fabrication route for this class of case.
+
+Record both, and keep them distinct:
+
+```yaml
+reference:                    # the ORIGIN of the result — cited, not consulted
+  authors: ["Wilkinson, P. M.", ...]
+  year: 1992
+reference_read_from:          # the text actually read, and where each equation came from
+  authors: ["Krishna, R.", "Ellenberger, J."]
+  year: 1996
+  note: "Reprints the correlation as its Eqs. 1-4; verified on a 600 dpi render."
+```
+
+Say the same thing in prose on the page. A reader must never have to guess which
+document a transcription came from, and the next agent must not go looking for a
+paper nobody has.
+
+**Check the reprint actually carries the case before using it.** `E1.1` was
+parked, not built, because Kunii & Levenspiel state the two-phase relation but
+never attribute it to Toomey & Johnstone, never name it and never test it — so
+the reprint could not source a page *about* that postulate. Ask whether the
+reprint supports the claim the case is for, not merely whether the equation
+appears in it.
+
 ## Published work only
 
 The gallery reproduces **published** models. If a model's source is a

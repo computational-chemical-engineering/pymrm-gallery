@@ -1,0 +1,129 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F1.3
+slug: wilkinson-high-pressure-holdup
+title: "Wilkinson high-pressure bubble-column gas holdup"
+section: F
+status: published
+tier: T1
+priority: P1
+structures: [S1]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - krishna-ellenberger-1996-table2-liquids.csv
+  - krishna-ellenberger-1996-fig11.csv        # loaded cross-page from F1.4
+  - krishna-ellenberger-1996-parameters.csv   # loaded cross-page from F1.4
+
+validation:
+  - dimensional identity - every group in eqs. 3 and 4 comes out exactly dimensionless by exponent arithmetic on (kg, m, s), while the transition equations of both Wilkinson (eq. 2) and Reilly (eq. 8) do not, so their constants carry units; the source's own Notation list on its page 2634 declares sigma in N/m, mu_L in Pa s and rho_G in kg/m3, so SI is the paper's stated convention rather than an inference. The identity constrains exponents INSIDE the groups only - an exponent on an already dimensionless group (0.757, -0.273, -0.077, 0.03, 0.077) is unconstrained by it and rests on the 600 dpi render alone
+  - continuity identity - eps_b -> (U - U_trans)/V_small and eps -> eps_trans as U -> U_trans, so eq. 4's first term is exactly eq. 3's V_small and the correlation is C1 across its own regime boundary. This is a structural identity and NOT a transcription check - an earlier draft fitted the rate of approach, "recovered" the printed 0.757 as 0.7566 and called that a check; it is circular, since 0.757 is typed into the function being fitted, and the claim has been withdrawn from the page
+  - monotonicity and invertibility of eps_b(U), and eps < 1 over the whole useful range (eps = 1 only at U = 12.2 m/s)
+  - reproduction of the authors' own computed lines, on two different figures - on Figure 4's LOGARITHMIC axes eq. 2 gives 0.0102 for air-water and 0.0028 for air-tetradecane, matching where the authors draw their own evaluation (one significant figure, no coordinates extracted); on Figure 6's LINEAR axes eq. 8 reproduces (0.057 and 0.174 against lines read at ~0.055 and ~0.17 at rho_G = 0.18 and 1.83) while eq. 2 is drawn indistinguishable from zero, which corroborates the collapse without quantifying it. Labelled reproduction, not validation; with the circular check withdrawn this is the page's only external transcription check on eq. 2. Recorded there too: Reilly's U_trans as printed comes out about 20 % below (-18 % and -22 % at the two densities read) the authors' own drawn Reilly curve in Figure 6's velocity panel while their eps_trans curve reproduces, which is an inconsistency in the source and not a transcription error here - nothing on the page turns on it
+  - measurement - the 63 digitised Figure 11 markers, giving Wilkinson a mean absolute deviation of 63.9 % with a bias of +63.9 % at air density, +46.8 % to +79.4 % across the four gases, and a fitted power-law slope of 0.621 against the data's 0.636, which shows the error is a level error and not a slope error
+  - the abscissa-convention question F1.4 left open, closed - running Wilkinson end to end from a physical velocity rather than at the plotted abscissa moves eps_b by at most 15 %
+
+adds: >
+  Krishna and Ellenberger report that Wilkinson underpredicts the dense-phase
+  parameters and overpredicts the large-bubble holdup, and give a statistic for
+  each. Running the four equations end to end - which needs eq. 2, the one
+  equation the F1.4 page never evaluates - shows these are two defects that can
+  be separated. Eq. 2 puts the regime transition 1.7 decades too low at air and
+  1.4 at argon, and 6.8 decades too low at helium (eps_trans = 0.0028 for
+  air-tetradecane against a measured 0.139, and 1.5e-8 against 0.089 for helium),
+  which empties the small-bubble population; that defect is entirely eq. 2's. At
+  the measured excess velocity eq. 2 does not enter at all, so the +64 % on eps_b
+  belongs to eqs. 3 and 4 JOINTLY - V_b is 39 % low, and V_b's first term is
+  eq. 3's V_small, which supplies 46 % of V_b on average over these points
+  (23-77 %, and 77 % at the lowest excess velocity) - and running end to end
+  multiplies the two defects to +67 to +88 %. The gas labels on Figure 11 are
+  unreliable, so all 63 points are evaluated at air density; redoing it at the
+  other three gases gives +46.8 % (helium) to +79.4 % (SF6), a 33 pp span
+  (+-16 pp about the air value) and a V_b shortfall of 32-44 % rather than a
+  single 39 %. What is not wrong is the shape: over the window Figure 11 covers,
+  the power-law slope Wilkinson predicts (0.621) is closer to the measured 0.636
+  than the replacement correlation's 0.58 is. Two further results are in neither
+  source. First, the two transition closures are NOT complementary: Reilly's
+  eq. 8 exceeds Wilkinson's eq. 2 at every gas density from 0.1 to 1000 kg/m3,
+  the ratio bottoming out at 2.85 near 29 kg/m3 and rising again, so the curves
+  never cross and there is no density at which Wilkinson takes over. They fail in
+  opposite directions instead - eq. 2 is low wherever it can be tested and is
+  hard-bounded by its prefactor 0.5, while eq. 8 is the better-supported of the
+  two but passes its authors' stated ceiling of 0.32 just past SF6 at 6.7 kg/m3,
+  turns non-monotone at 15 kg/m3 and exceeds 1 at 70 - so above 6.7 kg/m3
+  neither closure has support in this source. Second, Table 3's pattern follows
+  from the split: eq. 2 underpredicts eps_small by about twice as much (0.128) as
+  eq. 1 overpredicts eps_b (0.066), the signs are opposite, so roughly two-thirds
+  of the absolute error cancels in the total, which is why Wilkinson is ten times
+  worse than its replacement on eps_b and level with it on the total. That
+  cancellation figure is close to a restatement of the two terms it is built
+  from, and its small-bubble term uses Reilly's eps_df - a model - as the stand-in
+  for a measured small-bubble holdup that is not published.
+
+agreement: >
+  Deviation is (model - measured)/measured throughout, the same convention as
+  F1.4, so the two pages are directly comparable. Against the 63 digitised
+  Figure 11 markers, Wilkinson eqs. 1-4 have a mean absolute deviation of 63.9 %
+  with a bias of +63.9 % - it is high at every single point. F1.4 reports the same
+  number, but this page retypes eqs. 3 and 4 from the same source and applies them
+  to the same 63 rows, so the match is a transcription cross-check between two
+  pages, not an independent computation. Evaluating all 63 points at air density
+  is itself an assumption forced by the unreliable gas labels, and it is worth
+  +-16 pp: the four-gas span is +46.8 % (helium) to +79.4 % (SF6), i.e. a V_b
+  shortfall of 32-44 % rather than a single 39 %. The fitted log-log slope over
+  that window is 0.621 against the data's free-fit 0.636, and the deviation
+  correlates with log(U - U_df) at only -0.11, so the error is in the level and
+  not the shape. Nothing here reproduces Table 3, whose 1,735 raw runs are not
+  published: the printed delta = 1.25 for eps_b and 0.24 for eps are quoted as the
+  authors' own and used only for pattern. What carries the transcription is the
+  dimensional identity on eqs. 3 and 4 plus the source's own Notation list for the
+  units, and the reproduction of the authors' plotted evaluation of eq. 2 on
+  Figures 4 and 6. The C1 identity does NOT carry it: fitting the rate of approach
+  only reads back an exponent typed into the function being fitted, and that claim
+  has been removed from the page.
+
+caveats: >
+  The primary source, Wilkinson et al. (1992), was not available. Eqs. 1-4 are
+  taken from Krishna and Ellenberger's (1996) reprint of them and verified on
+  600 dpi renders of that paper, so a mis-set exponent there would be inherited
+  here. The defence is the dimensional identity plus the reproduction of the
+  authors' own plotted lines on Figures 4 and 6 - NOT the C1 continuity check,
+  which is circular and is labelled as such on the page. The dimensional identity
+  also does not reach an exponent applied to an already dimensionless group
+  (0.757, -0.273, -0.077, 0.03, 0.077); those five numbers rest on the 600 dpi
+  render alone. Wilkinson's own stated range of validity is therefore unknown -
+  every statement about where eq. 2 behaves is a statement about the formula, not
+  a quotation of its authors, and 14 kg/m3 is only where eq. 2 crosses a FIXED
+  0.15, which is a lower bound on adequacy rather than a crossover, because the
+  measured dense-phase voidage rises with density too. Krishna and Ellenberger are replacing this
+  correlation, so they are a hostile witness, and every claim of theirs used here
+  is attributed. This is an algebraic closure, not a discretised model; no pymrm
+  operator appears and the page says so rather than inventing a PDE. The only
+  measurements used are the 63 Figure 11 markers - one column, one liquid, four
+  gases - loaded cross-page from F1.4, whose maintainer review found the marker
+  positions trustworthy and the gas labels not, so no test here depends on
+  series identity. The liquid-property and column-diameter behaviour is discussed
+  and not tested; those are Figures 7 and 9 and neither is digitised. Six numbers
+  are read by eye off Figure 6 to two significant figures - eps_df 0.089/0.139/
+  0.192 and U_df 0.0161/0.0230/0.0269 m/s at rho_G = 0.18/1.30/1.83 - and are used
+  as plot markers and to put a scale on a trend the paper states in words. They
+  are not a dataset: no CSV, no sidecar, and none of the four validation checks
+  uses them. The only quantitative claim resting on them, the extrapolated
+  measured level near 14 kg/m3, is labelled a three-point reconstruction. They
+  replace coarser bands (0.10-0.20 and 0.02-0.035 m/s) an earlier draft carried;
+  the U_df band was wrong, excluding the helium measurement and sitting 30 % above
+  the largest one, and drawing either as a full-width flat band asserted a
+  density-independence the paper denies. The total-holdup comparison uses a reference built
+  from the measured eps_b plus Reilly's eps_df, because no total holdup is
+  published for these runs, and is labelled indicative. The column-diameter
+  argument propagates the measured bias with eq. 19's own diameter exponent and
+  is an internal-consistency argument between two of the paper's results, not a
+  reproduction of either. The pressure sweep is an extrapolation with nothing
+  here to test it; beyond 6.5 kg/m3 it also runs Reilly outside its stated range,
+  and the figure marks where.

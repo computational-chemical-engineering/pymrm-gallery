@@ -417,6 +417,51 @@ models:
     data: {tier: 4, method: digitised}
     related: [F1.1, F1.2, F1.3, F2.2, F2.3]
 
+  - id: F1.3
+    slug: wilkinson-high-pressure-holdup
+    title: "Wilkinson high-pressure bubble-column gas holdup"
+    description: >
+      The four-equation correlation that predicts bubble-column gas holdup from
+      fluid properties alone, run end to end. Pressure enters it in one place only,
+      the gas density, and that is where it fails: at atmospheric densities its
+      transition equation puts the regime change 1.4-1.7 decades too low at air and
+      argon and 6.8 decades too low at helium, which empties the small-bubble
+      population and accounts for one half of the statistic that replaced it - the
+      other half being the rise-velocity pair, eqs. 3 and 4 jointly. The gap does
+      not close with density: Reilly's transition closure exceeds Wilkinson's at
+      every density up to 1000 kg/m3, so the two never cross, and above 6.7 kg/m3
+      neither has support in this source.
+    section: F
+    status: published
+    page: pages/F1.3-wilkinson-high-pressure-holdup/
+    tier: T1
+    priority: P1
+    structures: [S1]
+    phases: [gas-liquid]
+    predicts:
+      - regime-transition gas holdup and superficial velocity from fluid properties
+      - small-bubble and large-bubble rise velocities
+      - large-bubble holdup above the transition
+      - total gas holdup
+      - the gas-density (hence pressure) dependence of all of the above
+    pymrm_api: []
+    reference:
+      authors: ["Wilkinson, P. M.", "Spek, A. P.", "van Dierendonck, L. L."]
+      year: 1992
+      container: "AIChE Journal 38(4) 544-554"
+      doi: 10.1002/aic.690380408
+    reference_read_from:
+      authors: ["Krishna, R.", "Ellenberger, J."]
+      year: 1996
+      container: "AIChE Journal 42(9) 2627-2634"
+      doi: 10.1002/aic.690420923
+      note: >
+        Reprints Wilkinson's correlation in full as its Eqs. 1-4, together with
+        Reilly et al. (1994) Eq. 8, the Table 2 liquid properties and the Table 3
+        deviations. Every equation was verified on a 600 dpi render of that paper.
+    data: {tier: 4, method: digitised, status: complete}
+    related: [F1.4, F1.9, F2.3, F1.1, F3.1]
+
   - id: F2.3
     slug: slurry-bubble-column-ft
     title: "Slurry bubble column for Fischer–Tropsch synthesis"

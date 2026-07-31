@@ -5,7 +5,7 @@ catalog_reference: AIChE J 38 (1992)
 priority: P1
 tier: T1
 structures: S1
-status: ready
+status: published
 reference:
   authors:
   - Wilkinson, P. M.
@@ -33,24 +33,79 @@ paper:
 blocker: null
 scope_decision: >
   Built as its own page rather than marked covered_by F1.4, and the judgement was
-  made before any code. F1.4 evaluates Wilkinson's rise-velocity equations at
-  Figure 11's plotted abscissa as a foil for Eq. 19, and never evaluates Eq. 2,
-  the transition equation, at all. Eq. 2 turns out to be where the whole
-  correlation lives: run end to end it gives eps_trans = 0.0028 for
-  air-tetradecane against a measured 0.10-0.20, and 1.5e-8 for helium, which
-  empties the small-bubble population - one of two independent defects the page
-  separates, the other being eq. 4's rise velocity, 39 % low. That, the
-  dimensional and C1 identities, the comparison of the two
-  printed transition closures and their complementary validity windows, and the
-  pressure reading of the correlation are all absent from F1.4. The one number
-  the two pages share - Wilkinson's +63.9 % bias on the 63 points - is recomputed
-  here independently and agrees exactly, which is a cross-page consistency check
-  rather than a repetition. This page also closes the abscissa-convention caveat
-  F1.4 had to leave open (worth at most 15 %).
+  made before any code. The adversarial verification pass confirmed the factual
+  basis: F1.4 genuinely never evaluates Eq. 2 (no 193, no exponential transition
+  anywhere in its build script), and F1.3 imports nothing from it and defines its
+  own functions. F1.4 evaluates Wilkinson's rise-velocity equations at
+  Figure 11's plotted abscissa as a foil for Eq. 19. Eq. 2 turns out to be where
+  the whole correlation lives: run end to end it gives eps_trans = 0.0028 for
+  air-tetradecane against a measured 0.139, and 1.5e-8 against 0.089 for helium,
+  which empties the small-bubble population - one of two defects the page
+  separates, the other being the rise-velocity pair, eqs. 3 and 4 jointly, with
+  V_b 39 % low. That, the dimensional identity, the units the source's own
+  Notation list declares, the comparison of the two printed transition closures
+  across gas density, and the pressure reading of the correlation are all absent
+  from F1.4. The one number the two pages share - Wilkinson's +63.9 % bias on the
+  63 points - is NOT an independent computation: this page retypes eqs. 3 and 4
+  from the same source and applies them to the same 63 rows of the same CSV, so
+  agreement to all printed digits is arithmetically guaranteed and tests only
+  that the two transcriptions match. It is described that way on the page, in
+  meta.yaml and in the README. This page also closes the abscissa-convention
+  caveat F1.4 had to leave open (worth at most 15 %).
 notes: >
   Staged at queue_cases/F1.3/page/, executes end to end in about 4 s,
-  report_agreement called with 13 metrics. Deviation convention
+  report_agreement called with 18 metrics. Deviation convention
   (model - measured)/measured throughout, matching F1.4.
+
+  SECOND PASS, 2026-07-31. The page came back from adversarial verification
+  (queue_cases/F1.3/review/verification.md) with two must-fix findings, both
+  applied, plus five wording fixes. The headline finding survived and was
+  strengthened: the Eq. 2 collapse is real, is Krishna & Ellenberger's own
+  published finding ("the Wilkinson correlation severely underpredicts the values
+  of the voidage and gas velocity through the dense phase", with eps_df =
+  eps_trans taken by the authors), and the units question is now settled by
+  quotation rather than inference - the Notation list on journal page 2634 prints
+  sigma in N m^-1, mu_L in Pa s, rho_G in kg m^-3, confirmed here on the PDF.
+
+  FIX 1 - the crossover/complementarity claim is REMOVED. Eq. 2 crossing a fixed
+  0.15 at 14.2 kg/m3 was an artefact of holding the target constant: the measured
+  eps_df rises with density (the paper says so outright - "while increasing gas
+  density significantly increases the dense-phase gas voidage (cf. Figure 6)"),
+  and the three Figure 6(a) reads scale as rho_G^0.30, putting the measured level
+  at 14.2 kg/m3 near 0.32 where Eq. 2 is still a factor 2.1 low. Eq. 2 also never
+  exceeds Reilly's Eq. 8 at any density up to 1000 kg/m3 - the ratio bottoms out
+  at 2.85 near 29 kg/m3 and rises again - so the curves never cross. CORRECTED
+  CONCLUSION, now on the page, in meta.yaml adds/agreement/caveats, in
+  models_entry.yaml and in the README: Eq. 2 underpredicts at every density
+  examined and the gap does not close; 14 kg/m3 is a LOWER BOUND on where it
+  could become adequate, not a crossover; the two closures fail in opposite
+  directions rather than being complementary, and above 6.7 kg/m3 neither has
+  support in this source. The two full-width grey axhspans are gone, replaced by
+  the three Figure 6 markers plus a trend line drawn solid only over 0.18-1.83
+  and dotted where extrapolated.
+
+  FIX 2 - the circular C1 exponent check is REMOVED from all five places (page
+  Validation section 2, the "honest limits" list, meta.yaml validation, meta.yaml
+  agreement, meta.yaml caveats, plus the README, which was a sixth). The fit only
+  read back the 0.757 typed into wilkinson_vb. The C1 identity is kept for what
+  it does establish - that Eq. 4's first term is exactly Eq. 3's V_small - and
+  the metric continuity_exponent_recovered was dropped for
+  continuity_limit_departure, which measures the limit and not the exponent. The
+  transcription defence is now the dimensional identity plus the Notation list
+  plus the reproduction of the authors' plotted Eq. 2 values on Figures 4 and 6.
+  The page also now states what the dimensional identity does NOT reach: an
+  exponent on an already dimensionless group (0.757, -0.273, -0.077, 0.03, 0.077)
+  rests on the 600 dpi render alone.
+
+  Wording fixes applied: the +64 % is attributed to Eqs. 3 and 4 jointly, with
+  V_small 46 % of V_b on average (23-77 %, 77 % at the lowest excess velocity);
+  the +-16 pp four-gas span on the headline (+46.8 % He to +79.4 % SF6, V_b low
+  32-44 %) is printed and in two agreement metrics; the decade counts are
+  consistent (1.7 at air, 1.4 at argon, 6.8 at helium); the 68 % cancellation is
+  labelled a near-restatement whose small-bubble term uses Reilly's eps_df, a
+  model, and the wrong "about as much as" line is corrected to "about twice";
+  and the shared +63.9 % with F1.4 is described as a transcription cross-check,
+  not an independent computation.
 
   NO FIGURE WAS DIGITISED and there is no review gate. The 63 experimental points
   are F1.4's published, maintainer-reviewed dataset, loaded cross-page with
@@ -59,30 +114,89 @@ notes: >
   was transcribed from a printed table -
   data/krishna-ellenberger-1996-table2-liquids.csv, Table 2's five liquids - with
   a full sidecar; its tetradecane row agrees exactly with the same numbers
-  already published on F1.4.
+  already published on F1.4. Six further numbers are read by eye off Figure 6
+  (eps_df 0.089/0.139/0.192 and U_df 0.0161/0.0230/0.0269 m/s at rho_G =
+  0.18/1.30/1.83) and are defined inline in the notebook with their provenance.
+  They are plot markers and a scale for a trend the paper states in words - no
+  CSV, no sidecar, no software digitisation, and none of the four validation
+  checks uses them. INTEGRATOR: if you would rather these went through the normal
+  digitisation review gate, they are isolated in one constant block near the top
+  of the results and only two sentences depend on them.
 
-  Validation, highest available first: (1) internal identities - every group in
+  TWO CORRECTIONS TO THE VERIFICATION REPORT ITSELF, both checked on the render
+  and both applied to the page in the corrected form. (i) The report calls eps_df
+  "Fig. 6(b)" and U_df "Fig. 6(a)"; the printed caption is "Influence of gas
+  density on the (a) dense-phase gas voidage, and (b) superficial gas velocity
+  through the dense phase", so the letters are the other way round. The values
+  themselves are right and were re-read here. (ii) The report gives the Wilkinson
+  lines on Figure 6 as eps_trans ~ 0.0032 and U_trans ~ 0.0009 at rho_G = 1.3.
+  Figure 6's axes are LINEAR (0-0.2 and 0-0.05 m/s), which cannot resolve either
+  number - the Wilkinson curves are simply drawn on the zero line. The page
+  therefore does not claim a quantitative Figure 6 reproduction of eq. 2; it says
+  Figure 6 corroborates the collapse and that Figure 4's logarithmic axes are
+  what quantify it. What Figure 6 DOES reproduce quantitatively is Reilly's
+  eps_trans curve (0.057 and 0.174 computed against ~0.055 and ~0.17 read at
+  rho_G = 0.18 and 1.83), and the page records the report's finding 10 alongside
+  it: eq. 8's U_trans as printed comes out about 20 % below (-18 % and -22 % at
+  rho_G = 0.18 and 1.83) the authors' own drawn
+  Reilly velocity curve, an inconsistency in the source rather than here.
+
+  Validation, highest available first: (1) internal identity - every group in
   Eqs. 3 and 4 is exactly dimensionless while both transition equations are not,
-  and the C1 limit at the transition recovers Eq. 4's printed exponent 0.757 as
-  0.7566; (2) reproduction of the authors' own computed Figure 4 lines for two
-  liquids, read to one significant figure against printed decade ticks with no
-  coordinates extracted, labelled reproduction and not validation; (3) the 63
-  measured points, giving 63.9 % mean absolute deviation and +63.9 % bias, with a
-  fitted slope of 0.621 against the data's 0.636 that shows the error is a level
-  error and not a slope error. Table 3's delta values are quoted as the authors'
-  own and are explicitly NOT reproduced - the 1,735 raw runs are not published,
-  and the page says so.
+  with the source's own Notation list fixing the units; the C1 limit is kept as a
+  structural identity and is explicitly NOT offered as a transcription check;
+  (2) reproduction of the authors' own computed lines on two different figures -
+  the Figure 4 lines for two liquids and the Figure 6 lines for air-tetradecane,
+  read to one significant figure against printed ticks with no coordinates
+  extracted, labelled reproduction and not validation; (3) the 63 measured
+  points, giving 63.9 % mean absolute deviation and +63.9 % bias at air density
+  (+46.8 to +79.4 % across the four gases), with a fitted slope of 0.621 against
+  the data's 0.636 that shows the error is a level error and not a slope error.
+  Table 3's delta values are quoted as the authors' own and are explicitly NOT
+  reproduced - the 1,735 raw runs are not published, and the page says so.
 
   Honest limits recorded in meta.yaml caveats: the primary source was never read,
-  so a mis-set exponent in Krishna & Ellenberger's reprint would be inherited
-  (the two identities are the defence, and both pass); Wilkinson's own stated
-  validity range is unknown, so every statement about where Eq. 2 behaves is
-  about the formula and not a quotation of its authors; the measured dense-phase
-  bands (0.10-0.20 and 0.02-0.035 m/s) are one-significant-figure reads of
-  Figures 4 and 6 used as plot bands, not a dataset; the total-holdup comparison
-  uses a reference built from the measured eps_b plus Reilly's eps_df and is
-  labelled indicative; the column-diameter argument is internal consistency
-  between two of the paper's own results; the pressure sweep is an extrapolation
-  with nothing here to test it.
+  so a mis-set exponent in Krishna & Ellenberger's reprint would be inherited,
+  and the defence is the dimensional identity and the figure reproductions and
+  not the C1 check; Wilkinson's own stated validity range is unknown, so every
+  statement about where Eq. 2 behaves is about the formula and not a quotation of
+  its authors; the six Figure 6 reads are markers, not a dataset; the total-holdup
+  comparison uses a reference built from the measured eps_b plus Reilly's eps_df
+  and is labelled indicative; the column-diameter argument is internal
+  consistency between two of the paper's own results; the pressure sweep is an
+  extrapolation with nothing here to test it.
+
+found_in_published_page:
+  page: pages/F1.4-krishna-ellenberger-holdup/
+  status: NOT FIXED HERE - this builder did not touch F1.4. For the integrator.
+  found_by: >
+    Adversarial verification of F1.3, 2026-07-31; see
+    queue_cases/F1.3/review/verification.md finding 7. F1.3 had inherited the
+    same wrong band verbatim and has now corrected it on its own page.
+  issue: >
+    build_page.py on the published F1.4 page states "the paper's Fig. 6 measures
+    eps_df ~ 0.10-0.20 and U_df ~ 0.02-0.035". The U_df half is wrong. Krishna &
+    Ellenberger (1996) Figure 6, velocity panel - panel (b) by its caption,
+    which reads "(a) dense-phase gas voidage, and (b) superficial gas velocity
+    through the dense phase" - read against its printed axis ticks, gives
+    U_df = 0.0161, 0.0230 and 0.0269 m/s at rho_G = 0.18, 1.30 and 1.83 kg/m3
+    (helium, air, argon). The stated band therefore excludes the helium
+    measurement altogether and its upper edge sits about 30 % above the largest
+    measurement; a one-significant-figure read would be 0.02-0.03 m/s.
+  also_worth_noting: >
+    The eps_df half of the band, 0.10-0.20, is fair against the same figure's
+    voidage panel (a), which reads 0.089 / 0.139 / 0.192 at those three densities. But
+    both quantities RISE with gas density - the paper states it in its own text,
+    "while increasing gas density significantly increases the dense-phase gas
+    voidage (cf. Figure 6)" - so a flat band drawn across a density axis asserts
+    an independence the paper denies. F1.3 previously did exactly that and now
+    plots the three points and their trend instead.
+  impact: >
+    Low. Nothing quantitative rests on the band on either page; it is descriptive
+    text (and, on F1.3, was a plot band). No agreement metric on either page uses
+    it.
+  source: >
+    ~/papers/pymrm-gallery/AIChE_Journal-1996-Krishna.pdf, Figure 6, journal
+    page 2631. Tick-calibrated reads, two significant figures.
 updated: '2026-07-31'
 doi_source: verified-against-page-render-and-crossref
