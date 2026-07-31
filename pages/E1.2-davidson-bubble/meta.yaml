@@ -1,0 +1,126 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: E1.2
+slug: davidson-bubble
+title: "The Davidson bubble: rise velocity, cloud and through-flow"
+section: E
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 9
+datasets: []                 # loads E2.1's printed-appendix CSV cross-page; owns none
+
+validation:
+  - the through-flow computed from the pymrm flow field rebuilds the coefficient 4.5 that opens Kunii and Levenspiel's equations 10 and 11, with 4.5 entering the code nowhere - the page's central result, and the only reported number that survives every deliberate break
+  - seven single-defect sabotages of the operator (wrong nu, mismatched nu, an l = 2 sink, a truncating far field, a flipped outward normal, a flipped far-field datum) each move that coefficient - the mildest by 33 %, the worst to 13.5 - while two of the other reported numbers do not move at all
+  - the cloud volume reproduces equation 9 in the sense that matters - the derived closed form (R_c/R)^3 = (u_br + 2u_f)/(u_br - u_f) matches the printed equation term for term, and gamma_c built from the numerically computed cloud reproduces appendix C's printed 0.40 to 0.46 % - while the 7.2e-8 quoted below is discretisation error against that same closed form, not evidence about equation 9
+  - K_bc and H_bc reassembled from the derived through-flow plus the printed 5.85 diffusive terms reproduce appendix A's 46.5, appendix C's 5.44 and appendix B's 0.0360 to 0.43 % worst case
+  - the printed single-bubble members of the three appendices - u_b - u_0 = 12.0 and 5.8, u_br = 42.8, u_b = 53.9, gamma_c = 0.40 - reproduce to 1.06 % worst case, the worst being appendix B's two-significant-figure 5.8; these eight values are E2.1's already-published reproduction of one shared transcription, reached here by a second route, and are not independent corroboration
+  - grid convergence against the closed form derived on the page is second order to three digits (observed 2.000) over five grids, reaching 2.0e-6 in the potential and 7.2e-8 in R_c/R
+  - the cloud radius is found a second way, by integrating gas trajectories through the numerical velocity field and bisecting on release radius until a streamline stops returning to the bubble; agreement 1.2e-14, which confirms the topology claim rather than supplying an independent error estimate
+  - the R_c/R limits hold to 5.3e-7 over seven decades of u_br/u_f, and below u_br = u_f the root finder correctly returns no cloud at all
+  - the discrete integral identity closes to 2.0e-12, and is reported as the ALGEBRAIC identity it is - the volume-weighted sum of the discrete residuals, which telescopes for any consistent (construct_div, cell-volume, nu) triple and any boundary data; it detects a mismatch between the nu in construct_div and the one in the sink term (0.42 at its weakest) and nothing else, staying at 2.0e-12 under a wrong-but-consistent nu and under a mis-signed boundary condition that ruins the field
+  - the same operator with nu = 1 gives the two-dimensional bubble and matches its own closed form [(u_br+u_f)/(u_br-u_f)]^(1/2) to 3.9e-8, with a through-flow of 8 u_mf/(pi d_b) reached both numerically and analytically
+
+adds: >
+  Nothing to the closed form - the classical solution is exact and the algebra is
+  short. What the reimplementation adds is four things.
+
+  One flow field, read twice. The cloud volume (equation 9) and the convective
+  part of the interchange coefficient (the 4.5 in equations 10 and 11) appear in
+  the reactor literature as separate correlations in separate sections. Solving
+  the percolation problem once and reading both off it shows they are the same
+  object evaluated in two ways, and recovers the 4.5 without ever using it as an
+  input - the strongest available check that equation 10 was read correctly off
+  the page. The 1.1e-6 quoted beside it is discretisation error; the check's
+  content is binary, and seven deliberate operator defects each move the
+  coefficient, the mildest by a third and the worst to 13.5.
+
+  A threshold rather than a limit. V_c/V_b = 3/(u_br/u_f - 1) has a pole, not a
+  zero, at u_br = u_f. Below it there is no cloud at all: the streamline
+  integration finds no closed orbit, which is the correct answer rather than a
+  numerical failure, and equation 9 returns a negative number. Applying that test
+  to the paper's own three appendix beds puts appendix B on the wrong side of it -
+  d_b = 0.50 cm, u_mf = 10 cm/s, eps_mf = 0.50 give u_br/u_f = 0.787 and
+  V_c/V_b = -14.1. Nothing in the paper is wrong, because appendix B is a
+  heat-transfer example that never evaluates equation 9, but a reader carrying
+  equation 9 into a bed like that gets nonsense with no QUANTITATIVE warning -
+  the paper says equation 9 is for "beds with fast rising bubbles" and never says
+  how fast is fast. The bubble would have to exceed 0.81 cm for a cloud to exist
+  there. The verdict is robust to the one number in appendix B that is in doubt:
+  E2.1 records that its printed (1 - eps_f)u_b = 8.70 implies eps_mf = 0.447
+  rather than the stated 0.50, which moves u_br/u_f from 0.787 to 0.704 - further
+  below the threshold, and nothing under eps_mf = 0.635 gives that bed a cloud.
+
+  The asymmetry between the two constants. u_br never enters the gas potential,
+  so the through-flow - and therefore the 4.5 - is valid on both sides of that
+  threshold while the 3 in equation 9 is not. The two are usually quoted together
+  as though they had the same standing.
+
+  The two-dimensional bubble for free. Changing nu from 2 to 1 turns the same
+  operator into the slab-bed problem and gives R_c/R = [(u_br+u_f)/(u_br-u_f)]^(1/2),
+  an exponent of 1/2 rather than 1/3, so a systematically larger cloud at the same
+  velocity ratio, and a through-flow of 8 u_mf/(pi d_b) = 2.55 u_mf/d_b against
+  4.5 u_mf/d_b. That matters because photographs of bubbles and clouds mostly come
+  from two-dimensional beds while the correlations they calibrate are
+  three-dimensional. Derived here; Kunii and Levenspiel print only the 3-D form.
+
+agreement: >
+  Tier 6. Nothing on this page is compared with a measurement, and the source
+  contains no single-bubble measurements to compare with. The printed numbers are
+  the authors' own arithmetic: the single-bubble members of their three worked
+  appendices reproduce to 1.06 % worst case (appendix B's 5.8, printed to two
+  significant figures), gamma_c to 0.46 %, and K_bc and H_bc rebuilt from the
+  derived through-flow to 0.43 %. Those eight values are E2.1's published
+  reproduction of one shared transcription, reached here by a second route; they
+  are not a second independent confirmation and must not be counted twice. The
+  internal numbers are much sharper: the through-flow coefficient 4.5 comes out to
+  1.1e-6, the cloud radius to 7.2e-8 of the closed form at n = 1600 with observed
+  order 2.000, the limits to 5.3e-7 over seven decades, and the two-dimensional
+  cloud to 3.9e-8. The discrete integral identity closes to 2.0e-12, but that is
+  an algebraic identity rather than a check - see the validation list.
+
+caveats: >
+  No experimental comparison, and not because one was skipped: Kunii and
+  Levenspiel (1968) reports conversions and transfer coefficients for whole beds,
+  never observations of a single bubble. Everything here is either the authors'
+  own arithmetic or this page's own derivation.
+
+  Every equation and number was read from Kunii & Levenspiel (1968) on 600 dpi
+  renders of journal pages 482, 490, 491 and 492. Their attribution for the
+  underlying object is one parenthesis: the name Davidson appears in the body of
+  the paper exactly once, on journal page 490, inside a list of the model's
+  simplifying assumptions - "many simplifying assumptions were made in developing
+  this model (the Davidson bubble, bed with single size of bubbles, ...)". There
+  is NO Davidson & Harrison entry in their literature cited on journal page 492,
+  where Davidson, J. F. appears only as a co-author of Orcutt, Davidson & Pigford
+  (1958); equations 3 and 9 and the 0.711 carry no citation at all; and the
+  derivations are credited to Kunii & Levenspiel (1968b), I&EC Fundamentals 7 446,
+  which is not on disk. The monograph normally cited as the origin of these
+  results, Davidson & Harrison's Fluidised Particles, was NOT consulted and is the
+  source of nothing here - and even the knowledge that it is the usual citation is
+  general background rather than something traced to a document read for this
+  page. The derivation on the page is done from scratch rather than copied from
+  any source.
+
+  The 0.711 in u_br is taken as given, not derived - it is the Davies-Taylor
+  spherical-cap rise velocity and does not follow from the percolation problem at
+  all. The 5.85 diffusive terms in equations 10 and 11 are likewise used only as
+  printed constants; they are a penetration-theory contribution the 1968 paper
+  does not derive.
+
+  The model itself assumes a spherical bubble, a uniform pressure over its
+  surface, an emulsion exactly at minimum fluidisation, inviscid potential flow of
+  the solids and Darcy flow of the gas, and an isolated bubble. Real bubbles are
+  spherical caps with wakes; the wake fraction alpha in equation 17 is empirical
+  (Rowe & Partridge, 1965) and is no part of this theory. And d_b is a fitted
+  effective bubble size in the reactor model, not a measured diameter - E2.1 says
+  so at length - so the appendix values used here inherit that.

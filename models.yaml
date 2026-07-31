@@ -343,6 +343,56 @@ models:
     data: {tier: 6, method: table, status: complete}
     related: [E1.1, E1.2, E2.3, A1.6, B1.1]
 
+  - id: E1.2
+    slug: davidson-bubble
+    title: "The Davidson bubble: rise velocity, cloud and through-flow"
+    description: >
+      A single bubble in an incipiently fluidised bed is a Laplace problem with a
+      uniform-pressure hole in it, and one pymrm solve of it produces both the
+      cloud that Kunii and Levenspiel's equation 9 gives and the 4.5 that opens
+      their equation 10 — two consecutive equations, stated and never derived,
+      that turn out to be one flow field read twice. The through-flow coefficient
+      comes out to 1.1e-6 without ever being an input. The cloud, unlike the
+      through-flow, has a pole rather than a limit at u_br = u_f, and the source
+      paper's own appendix B bed sits on the wrong side of it.
+    section: E
+    status: published
+    page: pages/E1.2-davidson-bubble/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    predicts:
+      - cloud radius and cloud volume around a rising bubble
+      - through-flow of gas percolating through a bubble
+      - the convective term of the bubble-to-cloud interchange coefficient
+      - the threshold in bubble velocity below which no cloud exists
+      - gas and solids streamline patterns around a bubble in the bubble frame
+      - the two-dimensional (slab-bed) counterparts of all of the above
+    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix]
+    reference:
+      authors: ["Kunii, D.", "Levenspiel, O."]
+      year: 1968
+      container: "Industrial & Engineering Chemistry Process Design and Development 7(4) 481-492"
+      doi: 10.1021/i260028a001
+    also:
+      authors: ["Davidson"]
+      year: null
+      container: null
+      doi: null
+      note: >
+        Recorded exactly as strongly as the read source supports, and no more.
+        Kunii and Levenspiel name "the Davidson bubble" once, on journal page 490,
+        in a parenthesis listing the model's simplifying assumptions. They give a
+        surname and nothing else: no initials, no year, no title, no publisher, and
+        no entry in their literature cited (journal page 492). The monograph
+        usually named as the origin of these results was NOT consulted, is the
+        source of nothing on the page, and its bibliographic detail is general
+        background rather than anything transcribed from a document read here, so
+        it is deliberately not recorded in this block.
+    data: {tier: 6, method: table, status: complete}
+    related: [E2.1, E1.1, B1.1, B1.6, A2.3]
+
   - id: E1.1
     slug: two-phase-theory
     title: "Two-phase theory of fluidisation"

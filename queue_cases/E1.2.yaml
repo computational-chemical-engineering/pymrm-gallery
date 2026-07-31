@@ -5,18 +5,313 @@ catalog_reference: Fluidised Particles (1963)
 priority: P1
 tier: T0
 structures: S3
-status: in-progress
-reference: {}
+status: published
+reference:
+  authors:
+  - Kunii, D.
+  - Levenspiel, O.
+  year: 1968
+  container: Industrial & Engineering Chemistry Process Design and Development 7(4)
+    481-492
+  doi: 10.1021/i260028a001
+also:
+  authors:
+  - Davidson
+  year: null
+  container: null
+  doi: null
+  note: >
+    Recorded exactly as strongly as the read source supports. Kunii and
+    Levenspiel name "the Davidson bubble" ONCE, on journal page 490, inside a
+    parenthesis listing the model's simplifying assumptions - a surname and
+    nothing else: no initials, no year, no title, no publisher, and no entry in
+    their literature cited on journal page 492. The monograph usually named as
+    the origin (the catalogue's `catalog_reference` above) was NOT consulted and
+    is the source of nothing on the page; its bibliographic detail - year, title,
+    publisher, city - appears in no document read here, so it is deliberately
+    absent from these fields rather than filled in from memory.
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/i260028a001.pdf
   open_access: null
   checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+blocker: null
+scope_decision:
+  verdict: build
+  date: '2026-07-31'
+  question: >
+    E2.1 is published and implements the full Kunii-Levenspiel bubbling-bed
+    model, which CONSUMES the Davidson-Harrison relations. Does E1.2 restate it,
+    and should it therefore be `covered_by: E2.1`?
+  answer: >
+    No. Build it. Four reasons, in order of weight.
+
+    1. THE CATALOGUE ALREADY SAYS SO, ON BOTH AXES. docs/catalog-B-reactors.md
+    line 76 gives E1.2 as "Bubble rise, cloud, throughflow" with structure S3;
+    line 86 gives E2.1 as S7. S3 is "1D steady BVP, construct_grad +
+    construct_div"; S7 is "multi-domain / multi-phase coupling". The structure
+    axis is the gallery's primary reuse axis (AGENTS.md), and these are different
+    problems on it. An agent matching on S3 and looking for a spherical-geometry
+    Laplace BVP with a Legendre mode finds nothing in E2.1.
+
+    2. E2.1 NEVER SOLVES A FLOW FIELD. It takes u_br, V_c/V_b and K_bc as given
+    formulas and builds a reactor model on them. Its build_page.py contains
+    `ubr = 0.711*np.sqrt(G*db)` and `fc = 3*(umf/emf)/(ubr - umf/emf) + alpha` as
+    one-line inputs. Where those two expressions come from is not on that page,
+    and cannot be without changing what the page is about.
+
+    3. THE NEW EVIDENCE IS ROUTE 2, NOT ROUTE 1 - AND ROUTE 1 IS ENTIRELY E2.1'S.
+    Corrected 2026-08-01 after adversarial verification; the original wording of
+    this argument ("no headline number is duplicated ... the only overlap is
+    u_br = 42.8 and u_b = 53.9") was FALSE. ALL EIGHT of E1.2's route-1
+    reproductions are already published on E2.1 to every printed digit, from the
+    same single CSV that E1.2 loads cross-page rather than copying: 46.555,
+    11.958, 0.035845, 5.7387, 42.814, 53.914, 5.4349, 0.39815. Both route-1
+    headline percentages, 1.06 % and 0.43 %, are E2.1's numbers. The route to
+    K_bc/H_bc differs - E1.2's leading term comes out of the solve where E2.1
+    types the literal 4.5 - but the solve returns 4.499995, so the totals are
+    indistinguishable and that difference carries no information beyond the
+    direct 4.5 comparison. Route 1 is therefore a transcription read the same way
+    twice, not corroboration, and the page now says so in its Validation section.
+
+    What is NOT duplicated, and is the actual case for building: the through-flow
+    coefficient 4.5 rebuilt from a numerical field in which 4.5 appears nowhere
+    (and which seven injected operator defects each move, the mildest by 33 %);
+    the flow field itself, which E2.1 never solves; the 2-D bubble; and the
+    threshold result in argument 4. E2.1 can produce none of them.
+
+    4. IT PRODUCES A RESULT E2.1 CANNOT. V_c/V_b = 3/(u_br/u_f - 1) has a POLE at
+    u_br = u_f, and appendix B of the source paper sits on the wrong side of it
+    (u_br/u_f = 0.787; eq. 9 gives -14.1). Only a page that asks where the cloud
+    comes from asks whether it exists.
+
+    The dependency runs the opposite way to what the question assumes: E1.2 is
+    upstream of E2.1, and E2.1's `related` should gain E1.2 on integration.
+notes: >
+  Built 2026-07-31, staged at queue_cases/E1.2/page/. Adversarially verified
+  2026-08-01 (queue_cases/E1.2/review/verification.md) and revised the same day
+  against that report; see FIXES APPLIED at the end of these notes. Notebook
+  executes end to end in about 8 s, every check passes. Tier 6 (data: tier6) -
+  nothing on the page is compared with a measurement, and the source contains no
+  single-bubble measurements to compare with. The page says exactly that.
+
+  SLUG. `davidson-bubble`, changed from `davidson-harrison-bubble`. No document
+  read here attributes the model to two authors, and the slug is the URL. The
+  page directory must be pages/E1.2-davidson-bubble/. The catalogue title above
+  ("Davidson-Harrison bubble") is the catalogue's own text and stays; nothing
+  rendered on the page says it.
+
+  THE STALE `blocker: {kind: paper}` IS CLEARED, and the monograph is still NOT
+  needed. Kunii & Levenspiel (1968) - already on disk at
+  ~/papers/pymrm-gallery/i260028a001.pdf and already the source of the published
+  E2.1 page - prints every single-bubble result the case needs and, decisively,
+  EVALUATES each of eqs. 9, 10, 11 and 17 with the arithmetic shown and the
+  answer printed in three worked appendices. That is what distinguishes this case
+  from E1.1, which was parked because K&L state the two-phase relation but never
+  name it and never test it. Here they do both.
+
+  THE ATTRIBUTION, AT ITS ACTUAL STRENGTH. It is ONE parenthesis. `pdftotext`
+  over all 12 pages returns exactly two Davidson hits: the Orcutt et al. (1958)
+  reference, and - on journal page 490 (PDF page 10), bottom of the left column -
+  "many simplifying assumptions were made in developing this model (the Davidson
+  bubble, bed with single size of bubbles, emulsion at minimum fluidizing
+  conditions at all gas velocities, etc.)". It is a list of simplifying
+  assumptions in the closing discussion, not a section about the model.
+  (Corrected: earlier notes said journal page 489. There are zero Davidson hits
+  on page 489.) K&L do NOT list Davidson & Harrison in their literature cited
+  (journal page 492, both columns checked at 600 dpi; the list runs Chu to
+  Zabrodsky and Davidson, J. F. appears only as Orcutt's co-author); eqs. 3 and 9
+  and the 0.711 carry no citation at all; and every derivation is deferred to
+  Kunii & Levenspiel 1968b, I&EC Fundamentals 7 446, also not on disk. So the
+  page names Davidson, singular, quotes the parenthesis, and says plainly that
+  the monograph's bibliographic detail is general background rather than a
+  transcription. The derivation on the page is done from scratch.
+
+  WHAT THE PAGE ESTABLISHES. The Davidson single-bubble problem posed and solved
+  as two 1D radial BVPs sharing one constant operator: the solids potential
+  (Neumann at the bubble - no solids cross) and the gas potential (Dirichlet at
+  the bubble - uniform pressure over its surface), both being the l = 1 harmonic
+  Phi = h(r) cos(theta) whose radial factor satisfies
+  (1/r^nu) d/dr(r^nu dh/dr) - nu h/r^2 = 0. From that single field it reads BOTH
+  Kunii and Levenspiel's eq. 9 (the cloud, as the zero of the total radial
+  velocity amplitude, i.e. the dividing streamline) and the coefficient 4.5 that
+  opens their eqs. 10 and 11 (the through-flow per unit bubble volume, from
+  q = 3 u_mf pi R^2). Those are consecutive equations 9 and 10, both stated and neither derived;
+  they are one solve read twice.
+
+  EQUATIONS, all read off 600 dpi pdftoppm renders (journal pages 482, 490, 491):
+    eq. 2   delta = (u_0 - u_mf)/u_b
+    eq. 3   u_b = u_0 - u_mf + u_br = u_0 - u_mf + 0.711 (g d_b)^(1/2)
+    eq. 9   V_c/V_b = [3 u_mf/eps_mf] / [0.711(g d_b)^(1/2) - u_mf/eps_mf]
+    eq. 10  K_bc = 4.5 (u_mf/d_b) + 5.85 D^(1/2) g^(1/4) / d_b^(5/4)
+    eq. 11  H_bc = 4.5 u_mf rho_g Cpg/d_b + 5.85 (k_g rho_g Cpg)^(1/2) g^(1/4)/d_b^(5/4)
+    eq. 17  gamma_c = (1-eps_mf)[ 3(u_mf/eps_mf)/(0.711(g d_b)^(1/2) - u_mf/eps_mf) + alpha ]
+
+  WHAT CONFIRMED THE TRANSCRIPTION. Three things, sharing no error mode. (a)
+  Appendix C prints eqs. 10, 3, 2, 12, 17, 15 and 45 fully substituted with their
+  answers, so the symbolic reading and the numerical reading corroborate each
+  other; every one reproduces. (b) An independent derivation of the
+  potential-flow solution, done before reading eq. 9 closely, gives
+  (R_c/R)^3 = (u_br + 2u_f)/(u_br - u_f), hence V_c/V_b = 3u_f/(u_br - u_f),
+  which is eq. 9 term for term. (c) The same derivation gives
+  q/V_b = 3 u_mf pi R^2 / (4/3 pi R^3) = 4.5 u_mf/d_b, reproducing the printed
+  4.5 to 1.1e-6 with 4.5 never used as an input. A mis-read coefficient in either
+  equation breaks (b) or (c) immediately.
+
+  VALIDATION ROUTE AND KEY NUMBERS. Routes 1 and 2 both available. NO figure was
+  digitised and none is needed, so there is no review gate on this case.
+
+  READ THE ROUTE-1 BLOCK BELOW WITH THIS CAVEAT. Every one of those eight printed
+  values is ALREADY PUBLISHED ON E2.1, to every digit, from the same single CSV
+  that this page loads cross-page. Both headline percentages (1.06 % and 0.43 %)
+  are E2.1's numbers reached here by a second route. They confirm that one
+  transcription was read the same way twice; they are NOT independent
+  corroboration and must not be counted as two pages agreeing. The page's own
+  Validation section now says this in as many words. The genuinely new evidence
+  is route 2 - above all the 4.5 - plus the threshold result.
+    route 1, printed worked examples (all eight also on E2.1):
+      u_b - u_0, appendix A   11.958  vs 12.0     0.35 %
+      u_b - u_0, appendix B    5.739  vs 5.8      1.06 %  (printed to 2 s.f.)
+      u_br, appendix C        42.814  vs 42.8     0.03 %
+      u_b, appendix C         53.914  vs 53.9     0.03 %
+      gamma_c, appendix C     0.39815 vs 0.40     0.46 %  (a substituted eq. 9)
+      K_bc appendix A/C and H_bc appendix B, rebuilt from the DERIVED through-flow
+      plus the printed 5.85 terms: 46.555/46.5, 5.4349/5.44, 0.035845/0.0360,
+      worst 0.43 %
+    route 2, internal identities (this is the new evidence):
+      through-flow coefficient vs printed 4.5    1.1e-6 (see below on the beds)
+      cloud radius vs closed form at n = 1600    7.2e-8
+      observed order of the discretisation       2.000 over five grids
+      R_c by root-of-W vs by streamline ODE      1.2e-14
+      limits over 7 decades of u_br/u_f          5.3e-7
+      2-D bubble vs its own closed form          3.9e-8
+      discrete integral identity                 2.0e-12 - AN IDENTITY, NOT A
+                                                 CHECK; see below
+
+  WHAT EACH ROUTE-2 NUMBER ACTUALLY ESTABLISHES. Cell 9 of the notebook now
+  measures this instead of asserting it: it re-solves appendix C's bubble seven
+  times with one thing sabotaged each time, through no-op `defect` hooks in
+  solve_mode, and prints the 4.5, the field error, the R_c/R error and the
+  identity for each. Computed, not retyped:
+      injected defect                      4.5 ->  field err  R_c/R err  identity
+      (baseline)                            4.500    2.0e-06    7.2e-08   2.0e-12
+      nu = 1 everywhere (2-D operator)      1.032    2.5e-01    4.7e-03   4.7e-13
+      nu = 1 in construct_div only          1.078    3.5e+00    2.7e-02   4.2e-01
+      nu = 1 in the sink term only         12.071    4.9e+00    6.1e-02   1.0e+00
+      sink coefficient 6 (l = 2 harmonic)   0.281    6.7e+00    4.9e-02   6.7e-01
+      far-field amplitude nu, not nu+1      3.000    6.7e+00    7.2e-08   2.0e-12
+      outer BC a = -1 (normal flipped)     13.507    4.0e+01    7.5e-05   2.0e-12
+      outer BC d sign flipped              -4.500    4.0e+01    7.2e-08   2.0e-12
+  Conclusions, and they changed how the page is written. (a) The 4.5 is the guard:
+  every defect moves it, the mildest by 33 %, the worst to a factor of three, and
+  one flips its sign. (b) The discrete integral identity is ALGEBRAIC - lhs - rhs
+  is the volume-weighted sum of the discrete residuals, which telescopes for any
+  consistent (construct_div, cell-volume, nu) triple and any boundary data. It
+  catches exactly the three nu mismatches and nothing else: it reads BETTER than
+  baseline under a wrong-but-consistent nu that makes the coefficient 77 % wrong,
+  and is unchanged at 2.0e-12 under a mis-signed outer boundary condition that
+  ruins the field by seven orders of magnitude - the single most common pymrm
+  error. It is no longer reported as a validation metric or described as testing
+  the boundary gradients. (c) R_c/R is blind to a common-mode far-field error:
+  flipping the outer `d` destroys both potentials and leaves R_c/R unchanged to
+  eight digits, because both rescale together and the root of W = g' - f' does
+  not move.
+
+  THE 4.5 IS IDENTICAL ON ALL THREE BEDS, AND THAT IS ONE RESULT, NOT THREE.
+  4.499995 and 1.11e-06 to every digit on A, B and C, necessarily: eps_mf, u_mf
+  and d_b all cancel out of coeff = eps_mf * 3(u_mf/eps_mf) * pi R^2 / (4/3 pi
+  R^3) * d_b/u_mf = 4.5, and the grid is geometric in r/R so even the
+  discretisation error is scale-invariant. The coefficient is a pure number,
+  which is the point. Related: read 1.1e-6 as discretisation error, not as the
+  strength of the agreement - the check's content is binary, 4.5 against anything
+  else, and the table above is what says how loudly it would fail.
+
+  THREE THINGS THE PAGE ADDS. (a) The one-field-read-twice result above. (b) The
+  cloud has a THRESHOLD, not a limit: V_c/V_b = 3/(u_br/u_f - 1) has a pole at
+  u_br = u_f, below which no closed streamline exists at all - the streamline
+  integration finds none, which is the correct answer, and eq. 9 returns a
+  negative number. Applying that to the paper's own three appendix beds puts
+  APPENDIX B on the wrong side: its printed d_b = 0.50 cm, u_mf = 10 cm/s and
+  eps_mf = 0.50 give u_br/u_f = 0.787 and V_c/V_b = -14.1. Nothing in the paper
+  is wrong - appendix B is a heat-transfer example that needs gamma_b and H_bc
+  and never evaluates eq. 9 - but the bubble would have to exceed d_b = 0.81 cm
+  for a cloud to exist there, and a reader who carries eq. 9 into such a bed gets
+  nonsense with no QUANTITATIVE warning: K&L do preface eq. 9 with "in beds with
+  fast rising bubbles", quoted on the page, but never say how fast is fast. The
+  pole claim was re-verified independently: d_b = 0.5 cm, u_mf = 10 cm/s and
+  eps_mf = 0.5 are read directly off journal page 490 and corroborated twice by
+  the paper's own substituted arithmetic on journal page 491, and appendix B's
+  worked solution computes only gamma_b and H_bc, so it genuinely never evaluates
+  eq. 9. It is also robust to the one appendix-B number in doubt: the published
+  E2.1 page records that its printed (1-eps_f)u_b = 8.70 implies eps_mf = 0.447
+  rather than the stated 0.50, which moves u_br/u_f from 0.787 DOWN to 0.704, and
+  no eps_mf below 0.635 gives that bed a cloud. Related asymmetry, also new: u_br
+  never enters the gas potential, so the 4.5 is valid on both sides of that
+  threshold while the 3 in eq. 9 is not; the two constants are normally quoted as
+  though they had the same standing. One interpretive caveat now on the page: what
+  is speed-independent is the volumetric through-flow q = 3 u_mf pi R^2, and
+  whether q/V_b still deserves the name "bubble-to-cloud interchange" below the
+  threshold is a question the page does not settle, since the bubble -> cloud ->
+  emulsion series has no middle term there. (c) The 2-D bubble for free - nu = 1 instead of nu = 2 on the
+  same operator gives R_c/R = [(u_br+u_f)/(u_br-u_f)]^(1/2), exponent 1/2 rather
+  than 1/3, and a through-flow of 8 u_mf/(pi d_b) = 2.55 u_mf/d_b against
+  4.5 u_mf/d_b. That matters because bubble and cloud photographs mostly come
+  from 2-D beds while the correlations they calibrate are 3-D. Derived here;
+  K&L print only the 3-D form.
+
+  WHAT THE PAGE DOES NOT CLAIM. It recovers TWO of the three single-bubble
+  numbers, not three: the cloud and the through-flow. The 0.711 is taken as given
+  (Davies-Taylor spherical cap; it does not follow from the percolation problem),
+  and K&L print eq. 3 bare with no citation for it, so the page does not say
+  where it came from either. The 5.85 diffusive terms are used only as printed
+  constants - the 1968 paper does not derive them and its companion is not on
+  disk. No experimental comparison anywhere, stated plainly rather than implied
+  away.
+
+  DATA. The page owns NO dataset. It loads E2.1's printed-appendix CSV
+  cross-page, load_data(..., page="E2.1-kunii-levenspiel-bubbling-bed"), so one
+  transcription exists in the repository and two copies cannot drift. Every row
+  used was independently re-read here on a 600 dpi render before use. E1.2 must
+  therefore be integrated while E2.1 remains published - the same dependency F1.3
+  has on F1.4 and A4.2 has on A4.9.
+
+  INTEGRATOR NOTES. models_entry.yaml is an APPEND (no `- id: E1.2` in
+  models.yaml; section E currently holds only E2.1 and E2.7). THE PAGE DIRECTORY
+  IS pages/E1.2-davidson-bubble/ - the slug changed. No new pip dependencies -
+  numpy, scipy, matplotlib, pandas, pyyaml only. Runtime about 8 s. E2.1's
+  `related` list should gain E1.2 on integration; the dependency runs
+  E1.2 -> E2.1, not the other way. `related` no longer lists E1.3 or E1.4: both
+  are in docs/catalog-B-reactors.md but in neither models.yaml nor pages/, so the
+  page must not promise them. B1.6 is kept because it is staged and will exist.
+
+  FIXES APPLIED 2026-08-01 after adversarial verification, one per finding.
+    F1 (blocking) - the discrete integral identity is relabelled as the algebraic
+      identity it is, in the cell comment, in the printed output, in meta.yaml and
+      here; its false claim to catch "a wrong nu or a mis-signed boundary flux"
+      is gone; results["discrete_conservation"] is dropped from report_agreement
+      and replaced by three computed defect-sensitivity metrics; and a new cell 9
+      computes the injected-defect table above rather than retyping it.
+    F2 - slug davidson-harrison-bubble -> davidson-bubble, in page/meta.yaml and
+      models_entry.yaml, with the directory consequence flagged for the
+      integrator.
+    F3 - the attribution's page is 490, not 489 (fixed here and in
+      models_entry.yaml), and its strength - one parenthesis in a list of
+      simplifying assumptions - is now stated on the page and in both sidecars
+      instead of "K&L's attribution, not this page's".
+    F4 - the `also:` block no longer carries year, title, publisher or city; none
+      of that appears in any document read here. It keeps the surname the source
+      prints, and says why the rest is absent.
+    F5 - scope_decision argument 3 is rewritten: all eight route-1 values are
+      E2.1's published numbers, not two, and the page's Validation section now
+      says so. The build verdict stands on arguments 1, 2 and 4.
+    Should-fixes also applied: "on all three beds" now explains why the three are
+      identical; the C u_br / C u_b traceability row is corrected to journal page
+      491, left column; the opening paragraph now says the page recovers two of
+      the three and hedges the 0.711's provenance; E1.3 and E1.4 dropped from
+      `related` and from the page's Reuse prose. Optional items also taken: the
+      "no warning" phrasing is now "no QUANTITATIVE warning" with K&L's own
+      qualifier quoted; the eps_mf = 0.447 robustness clause is added and
+      computed from the loaded CSV; the R_c/R common-mode blindness is stated;
+      the interpretive caveat about q/V_b below the threshold is added; and
+      meta.yaml bullet 1 no longer describes the 7.2e-8 as a test of eq. 9.
+review_artifacts: [review/verification.md]
+updated: '2026-08-01'
