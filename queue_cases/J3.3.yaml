@@ -5,18 +5,190 @@ catalog_reference: Newman & Tobias, JES 109 (1962)
 priority: P1
 tier: T0
 structures: S3+S10
-status: needs-paper
+status: covered
+covered_by: J3.4
 reference: {}
 paper:
   on_disk: null
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-01'
+  note: >
+    Newman & Tobias (1962) is still not on disk and still has no open-access route;
+    that part of the earlier blocker was correct and is unchanged. It is no longer
+    recorded as a blocker because the case does not need it: the case is closed as
+    covered, not parked. The reprint that WAS examined is
+    ~/papers/pymrm-gallery/Doyle_1993_J._Electrochem._Soc._140_1526.pdf (Doyle,
+    Fuller & Newman, JES 140(6) 1526-1533), already the source of the published
+    J3.4, J3.5 and J3.1.
+
+    IMPORTANT for anyone re-opening this: Doyle does NOT cite Newman & Tobias
+    (1962) anywhere. His porous-electrode citations are ref. 15 = Newman &
+    Tiedemann, AIChE J. 21, 25 (1975), for the effective-property corrections, and
+    ref. 12 = Newman, Electrochemical Systems (Prentice-Hall, 1991), for the "four
+    dimensionless parameters that characterize the current distribution in a porous
+    electrode". So the reprint route cannot attach the catalogue's named origin to
+    a page even in principle. Neither Newman & Tiedemann 1975 nor the monograph is
+    on disk.
+blocker: null
+scope_decision: >
+  COVERED BY J3.4. The call was made before any code was written, and it went
+  against the hypothesis the dispatch offered.
+
+  THE REPRINT TEST PASSES. This was checked first and separately from the scope
+  question, because the two are independent and the reprint test is the one E1.1
+  failed. Doyle names porous electrode theory, prints it, uses it AND tests it:
+
+  - Named three times. Introduction: "West et al. treated insertion into the
+    composite cathode with porous electrode theory, modeling the electrolyte and
+    active cathode material as superimposed continua without regard to microscopic
+    structure". Model Development: "These phases are treated as superimposed
+    continua, so that a material balance on the lithium in the polymer/salt phase
+    gives [Eq. 10]". Summary: "The composite cathode is modeled using porous
+    electrode theory with both kinetic and diffusional resistances to solid phase
+    transport."
+  - Printed in full. Read off a 600 dpi render of journal page 1528 (the text layer
+    mangles all of them):
+      Eq. 10   eps d(c)/dt = div(eps D(c) grad c) - i_2.grad t+0(c)/(z+ nu+ F)
+                             + a j_n (1 - t+0)/nu+
+      Eq. 11   a j_n = (-s_i/(n F)) div i_2
+      (unnumbered, between 11 and 12)  kappa_eff = kappa eps^1.5
+                                       D_eff     = D eps^0.5
+      Eq. 19   eta = Phi_1 - Phi_2
+      Eq. 21   grad Phi_1 = 0 at x = delta_s
+      Eq. 22   i_1 = -sigma grad Phi_1
+      Eq. 23   div(i_1 + i_2) = 0
+      Eq. 24   I = i_1 + i_2
+    Note the two Bruggeman exponents differ as printed, 1.5 for kappa and 0.5 for
+    D; that is what the text says, verified on the render, and it is what makes
+    Table I ambiguous. J3.4 resolved it.
+  - Attributed. The effective-property corrections carry superscript 15, i.e.
+    Newman & Tiedemann (1975), the canonical porous-electrode-theory review.
+  - TESTED, which is the specific thing E1.1's reprint did not do. Doyle evaluates
+    the theory's own current-distribution criteria (Eqs. 28, 29: delta = 1.95,
+    nu = 68), states the rule "If either of these parameters is significantly
+    larger than unity, then we expect that the ohmic drop dominates the current
+    distribution in the porous electrode", predicts front-loading from
+    sigma/kappa = O(1e5), and then checks it: "This analysis is supported by the
+    short-time current distributions shown in Fig. 5."
+
+  So this is NOT an E1.1. A page about porous electrode theory could legitimately
+  be sourced from Doyle. The reason there is no page is the second test, not the
+  first.
+
+  THE SCOPE TEST FAILS. Porous electrode theory is what J3.4 already is, and the
+  overlap is not thematic - it is item by item. Checked against
+  pages/J3.4-doyle-fuller-newman/build_page.py, not against J3.4's own summary:
+
+  1. The volume-averaged salt balance (Eq. 10) with the porosity and the pore-wall
+     source is J3.4's governing equation, stated in its "The published model"
+     section and implemented in Cell.residual.
+  2. Eq. 11 is used explicitly - J3.4 collapses both source terms into a single
+     divergence "because a j_n = div i_2 / F", which is Eq. 11, and gets exact salt
+     conservation out of it.
+  3. The Bruggeman correction is not merely used but EXAMINED. J3.4's validation
+     section 5, "The Bruggeman exponent the paper leaves ambiguous", runs the
+     cathode at D eps^1.5, D eps^0.5 and D, and discriminates them against the
+     paper's own Figure 3 and its transport-limited crossings. This was the single
+     strongest candidate for J3.3-specific content and it is already spent.
+  4. The specific interfacial area is J3.4's `a_spec = 3.0 * (1 - eps_c) / P["R_s"]`
+     and its `self.a` field. (Doyle prints no geometric closure for `a` at all - the
+     symbol list gives only "a specific interracial area, m2/m3". So a page ABOUT
+     `a` would rest on a relation the source never prints, which IS the E1.1 shape.)
+  5. The two-potential formulation, Eqs. 21-24, is the one thing J3.4 does not
+     solve - and J3.4 says so, in its PyMRM implementation section, and justifies
+     it with a number: "The matrix ohmic drop is added back explicitly; at
+     I = 20 A/m2 it is 1e-7 V, which is why the paper's sigma can be treated this
+     way." That is arithmetic anyone can redo: I delta_c/(2 sigma) =
+     20 * 100e-6 / (2 * 1e4) = 1e-7 V. Carrying Phi_1 as a real field would change
+     Doyle's cell by a tenth of a microvolt. It is not a page.
+  6. The distributed reaction - which is exactly what the catalogue asks J3.3 to
+     predict ("Distributed reaction in electrodes", docs/catalog-C-adjacent.md) -
+     is J3.4's validation check 4, "the pore-wall flux at long times", compared
+     against the paper's Figure 5 with the sign convention fixed from it.
+  7. The porosity optimisation, which is the paper's own porous-electrode design
+     result, is J3.4's entire "What pymrm adds" section, swept as a curve.
+
+  WHAT WOULD BE LEFT, AND WHY IT IS NOT ENOUGH. Two items survive the audit: a
+  sweep of sigma/kappa showing where J3.4's equipotential-matrix collapse stops
+  being safe, and the a -> 0 / planar-electrode limit. Doyle prints neither, states
+  nothing about either, and both are extensions rather than reproductions. More
+  decisively, the VALIDATION for such a page ranks out. Per docs/agent-brief.md the
+  route must be chosen before the model, and here:
+
+  - Route 3, stated numerical results, is exhausted by the siblings. Doyle's only
+    porous-electrode numbers are S_c = 0.0001 and S_s = 0.15 (both consumed by
+    J3.4), delta = 1.95 and nu = 68 (both consumed by J3.1, which found the
+    -15.7 % residual and established it is arithmetically the SAME number as
+    J3.4's 19 % conductivity spread - one disagreement from two sides), and
+    sigma/kappa = O(1e5) (consumed by J3.4). Re-reporting any of them would be a
+    third view of a disagreement that already has two.
+  - Route 2 leaves one non-structural identity, the planar collapse. Everything
+    else porous electrode theory offers here - div(i_1 + i_2) = 0, I = i_1 + i_2,
+    charge conservation - is exact by construction in this formulation and would be
+    precisely the "check that cannot fail" docs/handoff.md exists to stop.
+  - Route 4 is unavailable and unwanted: Doyle's Fig. 2 carries no measurements,
+    established and maintainer-confirmed.
+
+  So a J3.3 would be a re-implementation of J3.4 with a 1e-7 V field added, no
+  unconsumed printed number to check against, and one honest identity. That is not
+  a page; it is a weaker copy of a published one.
+
+  WHY THIS IS NOT THE J3.1 SITUATION, since the precedent was offered and it is
+  the obvious counter-argument. J3.1's case rested on J3.4 EMBEDDING Eq. 17 without
+  examining it - not deriving Eq. 30 from it, not testing the alpha_a + alpha_c = 1
+  condition, not touching either limit - so there was untouched, checkable content
+  in a source J3.4 had merely used. The inverse holds here. J3.4 does not embed
+  porous electrode theory; porous electrode theory is J3.4's structure, J3.4's own
+  Background is written as a porous-electrode argument ("A battery electrode is not
+  a surface..."), its Reuse section calls the solver "the porous-electrode
+  skeleton", and the two places where the theory is genuinely open to examination -
+  the Bruggeman exponent and the porosity optimum - are the two things J3.4 spends
+  its Validation and its "What pymrm adds" sections on.
+
+  AND THE VERSION THE DISPATCH SUGGESTED CANNOT BE BUILT AT ALL. The defensible
+  J3.3 was to be about the volume-averaging step itself - when treating a real
+  porous structure as superimposed continua is valid. Doyle prints nothing on this.
+  He writes "without regard to microscopic structure" and moves on. There is no
+  separation-of-scales criterion, no validity condition, no test of the continuum
+  assumption anywhere in the article. A page about the averaging step would have to
+  supply that from outside the source, which is the fabrication route this class of
+  case exists to avoid.
+notes: >
+  Closed as covered on 2026-08-01 after a scope audit. NO PAGE WAS BUILT, no
+  queue_cases/J3.3/page/ exists, no models_entry.yaml was written (covered cases
+  get no models.yaml record - same treatment as A1.2, A1.3, A1.4 under A1.1), and
+  no figure was digitised. The earlier `blocker: {kind: paper}` is cleared: it was
+  correct that Newman & Tobias (1962) is unobtainable, but the case is closed
+  rather than parked, so it is no longer waiting on anything.
+
+  WHAT WAS ESTABLISHED, so nobody redoes it:
+
+  - Doyle's porous-electrode equation set was read off a 600 dpi render of journal
+    page 1528 (pdftoppm -r 600 -f 4 -l 4) and is transcribed in full under
+    `scope_decision:` above - Eqs. 10, 11, 19, 21, 22, 23, 24 and the two
+    effective-property relations. The text layer of this scan mangles every one of
+    them; do not trust pdftotext here. This transcription is NOT on any page and
+    is recorded only here.
+  - The printed Bruggeman exponents genuinely differ between the two properties:
+    kappa_eff = kappa eps^1.5 but D_eff = D eps^0.5. Confirmed on the render. This
+    is the origin of the Table I ambiguity J3.4 resolves; it is not a mis-reading.
+  - Doyle prints no geometric closure for the specific interfacial area `a`. The
+    a = 3(1-eps)/R_s used on J3.4 is J3.4's own sphere assumption, not a
+    transcription.
+  - Doyle does not cite Newman & Tobias (1962). His porous-electrode attributions
+    are Newman & Tiedemann (1975) and Newman's 1991 monograph.
+
+  IF THE CASE IS EVER RE-OPENED, it needs a paper, not a re-reading of Doyle.
+  Newman & Tobias, JES 109, 1183 (1962), or Newman & Tiedemann, AIChE J. 21, 25
+  (1975), would supply both the origin attribution the reprint cannot carry and -
+  more importantly - unconsumed stated results, the classical current-distribution
+  solutions under linear and Tafel kinetics that Doyle does not print. That is the
+  only route by which J3.3 becomes distinguishable from J3.4, and it is a paper
+  request, not a modelling decision. Until then the honest answer is that the
+  gallery's porous electrode theory page is J3.4.
+
+  FOR THE INTEGRATOR: nothing to merge. models.yaml is untouched by design. If a
+  `related:` list is ever regenerated, note that models.yaml lines 867 and 911
+  already point J3.4 and J3.5 at J3.3; those references now resolve to a covered
+  case, which is the same situation A1.2-A1.4 are in and needs no change.
+updated: '2026-08-01'
