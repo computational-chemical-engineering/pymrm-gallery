@@ -5,18 +5,86 @@ catalog_reference: Adv. Catal. 6 (1954)
 priority: P1
 tier: T0
 structures: S3
-status: in-progress
-reference: {}
+status: published
+reference:
+  authors: ["Weisz, P. B.", "Prater, C. D."]
+  year: 1954
+  container: "Advances in Catalysis 6, 143. Academic Press, New York"
+  doi: null
+reference_read_from:
+  authors: ["Weisz, P. B.", "Hicks, J. S."]
+  year: 1962
+  container: "Chemical Engineering Science 17(4) 265-275"
+  doi: 10.1016/0009-2509(62)85005-2
 paper:
-  on_disk: null
+  on_disk: ~/papers/pymrm-gallery/1-s2.0-0009250962850052-main.pdf   # the reprint, not the origin
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-01'
+scope_decision: >
+  BUILD, not covered_by. Checked against the three published siblings from the
+  same paper before writing any code. B1.1/B1.5 solve the forward problem -
+  known rate constant, compute eta(phi_0), trace the multiplicity. B1.6 proves
+  the Prater relation, an identity internal to the pellet. B1.4 is the inverse
+  problem neither addresses: what an experimenter can conclude from observables
+  alone - measured rate, particle size, effective diffusivity, surface
+  concentration - with no knowledge of the kinetics. That is Weisz and Hicks'
+  own Section V, "THE UTILIZATION FACTOR IN TERMS OF OBSERVABLE PARAMETERS",
+  which no existing page touches. Concretely non-overlapping content: what the
+  Phi < 1 threshold actually guarantees (a number, per geometry and per rate
+  law, where the sources give an order of magnitude); the non-isothermal
+  extension eq. (10a) tested as a false-negative map against eq. (1); the
+  endothermic case where eq. (10a) inverts; and a test of the paper's Section V
+  claim that the observable removes the multiplicity, which turns out to hold
+  over most but not all of the range the paper says it computed. The pellet
+  solver is reused from B1.6/B1.1 rather than rewritten; the branch tracer is
+  extended to take an arbitrary rate law.
+reprint_route_check: >
+  Passes the AGENTS.md test that E1.1 failed. Weisz and Hicks do not merely
+  print the criterion, they name it, state its purpose ("contains only
+  observable quantities and does not presuppose knowledge of the intrinsic
+  rate law"), give the observable group its symbol as their eq. (11), extend it
+  to the exothermic case as their eq. (10a), devote Section V to it, and test
+  it against their own Fig. 2. Attribution nuance recorded on the page: they
+  attach eq. (1) to their reference [9] (Weisz alone, Z. Phys. Chem. 1957 11 1),
+  not to [5] (Weisz and Prater 1954). Reference [5] IS named and used in the
+  same paper, for the shape-insensitivity of eta(phi) and for the printed
+  Q'/Q relation. Both are cited; neither was consulted.
+notes: >
+  Staged at queue_cases/B1.4/page/. Runtime ~200 s. No data/ directory - nothing
+  digitised, no CSV, tier 6 throughout and the page says so in three places.
+  Verified 2026-08-01 (queue_cases/B1.4/review/verification.md): physics,
+  transcription, scope and all five break tests survived, every headline number
+  independently re-derived. Findings F1-F8 and F10 fixed in this pass; F9 (the
+  NumJac layout also affects the published B1.1 and B1.6) is a separate
+  follow-up and is NOT touched here.
+  The three substantive corrections, because they change what the page claims.
+  (a) F1: the folds in the observable all sit BELOW Phi = 1, not above it. The
+  turning points are now computed (fold_turning_points, refined on the shooting
+  solver) rather than described: the largest is Phi = 0.8055, and all 14
+  ambiguous measurements on the page's own grid have Phi < 1. Phi = 1 still has
+  a unique root in 32 of 32, so eq. (1) keeps its verdict boundary - but the
+  ambiguity is entirely inside the band it certifies as safe, which is a second
+  false-negative mechanism and a stronger result than the earlier draft claimed.
+  (b) F2: "below the figure's line width" was asserted and is wrong. Measured on
+  a 600 dpi render of journal page 272, panel (d): one decade of the Phi axis is
+  357.9 px (gridline centroids 199.6/560.1/917.5/1275.7/1631.3 px for
+  Phi = 0.1/1/10/100/1000) and the printed curve stroke is 6 px median at ink
+  threshold 160/255, 7 px at 200/255, over 163 scan rows of the two near-vertical
+  dashed segments. The beta = 0.3, gamma = 40 fold is 0.0194 decades = 6.9 px,
+  i.e. about ONE line width. The page now says the figure is silent - it can
+  neither show the fold nor rule it out - and prints the arithmetic. Those two
+  pixel constants are the only quantities taken from the image besides the beta
+  labels; no curve is digitised and the tier stays 6.
+  (c) F3: reference [5] as printed on journal page 274 carries no chapter title,
+  so the page no longer gives one. Page 274 added to every provenance list.
+  Two things the integrator should know. (1) models_entry.yaml is an APPEND -
+  B1.4 is not in models.yaml at all; place it between B1.3 and B1.5 to keep
+  section B ordered. (2) The page records a pymrm performance finding that
+  applies to the published B1.6 as well: NumJac((n_u,)) on a single-field 1-D
+  problem builds a DENSE n_u x n_u numerical Jacobian, because the default
+  stencil couples the last axis and here the last axis is space. B1.6's
+  ReducedPellet uses that shape. Switching to the house layout (n_u, 1) gives a
+  bit-identical answer for a fraction of the cost - worth a follow-up on B1.6,
+  and worth a line in docs/handoff.md.
+blocker: null
+updated: '2026-08-01'

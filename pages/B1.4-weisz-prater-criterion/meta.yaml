@@ -1,0 +1,114 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B1.4
+slug: weisz-prater-criterion
+title: "The Weisz-Prater criterion: what an observed rate can tell you"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 205
+datasets: []
+
+validation:
+  - every equation transcribed from 600 dpi renders of Weisz and Hicks (1962), journal pages 265, 267, 268, 269, 272 and 273, because the scan's text layer renders eq. (1) as "$:$<I" and eq. (10a) as "expCrBK1 + LOI"; references [5] and [9] read from the literature-cited block on journal page 274, which prints no chapter title for [5] and so none is given on the page
+  - the shooting reference reproduces the closed-form isothermal effectiveness factor to 7.1e-11 over three geometries and seven states each; this is what licenses every branch result, because the branch tracer is the only route to the unstable middle branch
+  - pymrm reproduces the same closed form to 8.3e-06 at n_u = 400 at observed order 2.12
+  - pymrm reproduces the shooting solution in the non-isothermal case to 5.0e-05 at n_u = 800 over 18 branch states including unstable ones, at observed order 2.00 - the two share only the algebraic rate law, and this is the page's real discretisation test
+  - the Phi = 1 threshold located twice, by bisection on pymrm and on the closed form, agreeing to 1.1e-07; and against the shooting branch for five rate laws to 2.0e-07
+  - "three printed statements reproduced and used as inputs to nothing: the worked gamma = 20, beta = 0.3 case gives phi_0 = 0.099491 against the paper's 'phi_0 ~ 0.1'; the multiplicity onset comes out at beta*gamma = 4.86-5.61 against the paper's 'beta*gamma >~ 5'; and Q'/Q spans [0.5005, 1.0000] against the paper's 'between Q and Q/2'"
+  - "defect sensitivity measured rather than asserted: a wrong geometry index moves eta at Phi = 1 from 0.9353 to 0.6948, a 3-cell grid to 0.9276, a 1 % rate-scale error to 0.9446; flipping the sign of beta in the exponent moves it by 0.81; mis-transcribing eq. (10a)'s exponent as gamma*beta moves the threshold from 9.9e-03 to 2.5e-03"
+  - "the flux/volume form of eq. (11) is shown to BE the volume-weighted Newton residual, so it is reported as such: it catches a 1 % source mismatch (9.9e-03) and a non-converged solve (2.0e-03) and is structurally blind to a wrong nu (4.2e-12) and to a 3-cell grid (2.1e-15)"
+  - "a spurious threshold found and reported: bisecting phi_0 for Phi = 1 with the inhibited Langmuir-Hinshelwood rate returns phi_0 = 5.5638 with Phi = 1.0005 and a Newton residual of 1.2e+02 - not a solution. Every threshold on the page is therefore located on the shooting branch, and threshold_state returns the residual"
+
+adds: >
+  Nothing to the criterion or to Weisz and Hicks' extension of it; both are
+  reproduced exactly as printed. What is added is the part left as an order of
+  magnitude. What Phi < 1 actually guarantees, computed exactly: eta = 0.9353
+  for a first-order sphere, 0.6948 for a slab - a factor 4.7 in the error the
+  same inequality lets through, most of it the choice of length scale (the
+  spread across geometries falls from 0.240 to 0.132 on the volume-to-surface
+  length). Across kinetics on one shape it runs from exactly 1 (zero order,
+  where eta = 1 identically up to Phi = 6) through 0.8796 (second order) to
+  1.0483 for a self-inhibited Langmuir-Hinshelwood rate, where eta exceeds 1
+  with no heat effect at all and the criterion cannot tell that apart from a
+  thermal one. A false-negative map over the exothermic plane: eq. (1) admits
+  eta up to 3136 before objecting, eq. (10a) removes every one of those false
+  negatives and holds eta within 1.3 % of 1, paying with a conservatism that
+  reaches a factor 1.0e+05 in Phi. Applied to an endothermic pellet eq. (10a)
+  inverts - its threshold grows without bound and it certifies everything -
+  which is what the paper's one-clause restriction to exothermic reactions is
+  worth. And a quantitative limit on the paper's Section V claim that the
+  observable "has removed the multiplicity": it postpones it, from
+  beta*gamma = 4.9-5.6 to 10.9-22.7, so Phi is multivalued in 4 of the 32 swept
+  cases, inside the gamma = 10-40, beta = 0-0.8 range the paper says it
+  computed. And every fold sits BELOW Phi = 1 - the largest turning point is
+  Phi = 0.8055 - i.e. inside the band eq. (1) certifies as safe. Phi = 1 keeps a
+  unique root in 32 of 32, so the verdict boundary survives; what a fold costs is
+  the meaning of a PASS. All 14 ambiguous measurements on the page's grid have
+  Phi < 1, the worst clearing the threshold by a factor 3.2 while admitting
+  eta = 2.28, 5.09 or 226. That is a second false-negative mechanism, distinct
+  from the loose threshold, and one that tightening the threshold cannot fix.
+  Located against the beta labels Fig. 7 actually carries, one of its four
+  panels contains a drawn curve in the folded regime (gamma = 40, beta = 0.3);
+  whether the printed figure could have shown it is measured in pixels rather
+  than asserted - the fold spans 0.0194 decades = 6.9 px on a 600 dpi render of
+  panel (d) against a 6-7 px printed stroke, about one line width, so the figure
+  is SILENT and neither shows the fold nor rules it out. That is a limit on the
+  claim, not a refutation: the criterion works everywhere the authors apply it.
+  Also a pymrm lesson with a measurement behind
+  it: NumJac((n_u,)) on
+  a one-field problem builds a dense Jacobian because the stencil couples the
+  last axis; the house layout (n_u, 1) gives a bit-identical answer for a
+  fraction of the cost.
+
+agreement: >
+  Not applicable in the experimental sense - tier 6. The checks with resolving
+  power are the two solver comparisons: pymrm against the exact isothermal
+  effectiveness factor, 8.3e-06 at n_u = 400 at observed order 2.12, and pymrm
+  against the shooting reference over 18 non-isothermal branch states,
+  5.0e-05 at n_u = 800 at observed order 2.00. The shooting reference itself
+  matches the closed form to 7.1e-11. The Phi = 1 threshold agrees between
+  pymrm and the closed form to 1.1e-07 and between pymrm and the shooting
+  branch across five rate laws to 2.0e-07. Three printed statements from the
+  paper are reproduced: phi_0 = 0.099491 against "phi_0 ~ 0.1", multiplicity
+  onset at beta*gamma = 4.86-5.61 against "beta*gamma >~ 5", and Q'/Q in
+  [0.5005, 1.0000] against "between Q and Q/2". Everything else on the page is
+  a prediction rather than an agreement, and is labelled that way.
+
+caveats: >
+  Provenance tier 6 and emphatically NOT experimental validation. Neither
+  source reports a measurement. Weisz and Prater (1954) itself was not
+  consulted - no copy on disk, no open-access route, pre-DOI - so every
+  equation is transcribed from Weisz and Hicks (1962) as printed. Note also
+  that Weisz and Hicks do not attribute eq. (1) to Weisz and Prater at all:
+  they attribute it to their reference [9], Weisz, Z. Phys. Chem. 1957 11 1,
+  which was also not consulted. Reference [5], Weisz and Prater 1954, is named
+  and used in the same paper for the shape-insensitivity of eta(phi) and for
+  the Q'/Q relation. The page states this rather than quietly adopting the
+  common name. Numerically: the fold-onset thresholds are upper bounds, because
+  a fold shallower than the spacing between traced branch states cannot be
+  seen, and the onset criterion (fold depth > 1e-4) is a convention whose
+  sensitivity is measured on the page. Two quantities are measured off the
+  600 dpi render of Fig. 7(d) - one decade of the Phi axis, 357.9 px, and the
+  printed curve stroke, 6-7 px - purely to establish resolving power; no curve
+  is digitised and no value is read off an axis, so the tier is still 6. That
+  measurement supports a NEGATIVE conclusion only: the figure cannot resolve the
+  fold either way, so it is evidence for neither side. Non-isothermal states with phi_0 > 30
+  are excluded from the pymrm-vs-shooting comparison because no 800-cell grid
+  resolves a boundary layer that thin; two of the twenty states are affected
+  and the exclusion is stated. The confusion counts depend on the grid of
+  synthetic measurements and are reported as secondary to the continuous
+  quantities. The film-free, steady, single-reaction, constant-property
+  assumptions are all carried without test here; the film and transient
+  breakdowns are on B1.6. Gamma is held fixed while phi_0 varies, which is what
+  the printed Q'/Q relation assumes even though strictly gamma = Q/(R T_0) also
+  moves with temperature.
