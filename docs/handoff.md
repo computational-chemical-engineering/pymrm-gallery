@@ -294,6 +294,36 @@ above — 30 % against 104.8 %, "twenty" against 21, "15–20 %" against 8.4–2
 prose instead of typing them, and before reporting `ready`, re-read every
 markdown number against what the cells actually print.
 
+### `NumJac(shape)` on a one-field 1-D problem builds a dense Jacobian
+
+Found while building `B1.4`, confirmed independently, and it was live on three
+published pages. The default stencil couples the **last** axis in full, so a bare
+`(n,)` shape declares every cell coupled to every other:
+
+| n | `NumJac((n,))` constructor | nnz/n² | `NumJac((n,1))` |
+|---|---|---|---|
+| 400 | 3.2 s | 1.0000 | 0.0005 s |
+| 1600 | 70 s | 1.0000 | 0.0012 s |
+
+Whole-page effect, answers **bit-identical** in every metric: `B1.1` 321 s → 52 s
+(6.2×), `B1.6` 64 s → 22 s (2.8×). Always write the single-field layout as
+`(n, 1)` so the last axis is the field axis — which is the house convention
+anyway, and degrades gracefully when a second field appears.
+
+**And do not reach for `axes_diagonals=[0]` on a 1-D shape.** `AGENTS.md` used to
+say to add it "when the source term depends on neighbouring cells", with no
+dimension caveat. On `ndims=1` that is *wrong*, not just wasteful: `axes_blocks`
+still defaults to `[-1]`, the same axis 0, so the `[-1, 0, 1]` offsets are
+reinterpreted as absolute indices n−1, 0, 1. The Jacobian comes out with no
+diagonal and the solve converges to a different answer. It is only meaningful at
+`ndims ≥ 2` — `NumJac((n, 1), axes_diagonals=[0])` — and only when the *source
+term itself* reads neighbours; the Laplacian's coupling normally arrives
+analytically through the divergence operator.
+
+*The general lesson: a convention documented without its precondition is worse
+than no convention, because agents follow it. When a rule turns out to be
+dimension-dependent, say so where the rule is written.*
+
 ### An old page's errors travel into the new page that reuses it
 
 `F1.3` lifted a sentence from the published `F1.4` — the reuse `AGENTS.md`

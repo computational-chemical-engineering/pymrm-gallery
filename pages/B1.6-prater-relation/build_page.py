@@ -917,7 +917,15 @@ cells.append(code('''class ReducedPellet:
         d = construct_div(self.shape, self.u_f, nu=self.nu)   # 0/1/2 geometry
         self.lap, self.lap_bc = d @ g, (d @ gb).toarray().reshape(-1, 1)
         self.grad, self.grad_bc = g, gb.toarray().reshape(-1, 1)
-        self.numjac = NumJac(self.shape)
+        # (n_u, 1), NOT self.shape. NumJac's default stencil couples the LAST
+        # axis in full; self.shape is (n_u,), whose last axis is SPACE, so
+        # NumJac(self.shape) would declare every cell coupled to every other and
+        # build a dense n_u x n_u Jacobian. `src` below is pointwise in y - the
+        # tridiagonal coupling is in self.lap, which is added analytically - so
+        # the block must be diagonal. Writing the shape with an explicit
+        # length-1 field axis is the house layout and makes it so; the answer is
+        # bit-identical, the Jacobian is n_u times cheaper to set up.
+        self.numjac = NumJac((n_u, 1))
 
     def solve(self, phi, beta, gamma, y_init):
         p2 = phi * phi

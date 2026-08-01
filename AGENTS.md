@@ -57,10 +57,29 @@ repository. The errors agents actually make:
   finite-difference stencils with `scipy.sparse.diags`.
 - **`nu` in `construct_div`** is geometry: `0` Cartesian, `1` cylindrical, `2`
   spherical, or a callable for an arbitrary area profile. State it in a comment.
-- **`NumJac` stencil**: `NumJac(shape)` couples only the last axis (correct for
-  a pointwise `reaction(c)`); add `axes_diagonals=[0]` when the source term
-  depends on neighbouring cells; `axes_blocks=[-2,-1]` for phase-and-species
-  coupling.
+- **`NumJac` stencil**: `NumJac(shape)` couples the **last axis in full** —
+  correct for a pointwise `reaction(c)` when the last axis is the field index.
+  `axes_blocks=[-2,-1]` for phase-and-species coupling. Two traps, both measured
+  on published pages (2026-08-01):
+
+  **Never pass a bare 1-D shape.** For a single field write `(n, 1)`, not `(n,)`.
+  With `(n,)` the last axis *is space*, so the default stencil declares every cell
+  coupled to every other and builds a **dense n×n Jacobian** — 3.2 s to construct
+  at n=400 and 70 s at n=1600, against 0.5 ms for the right shape. The answers are
+  bit-identical; only the cost changes. This was live on `B1.1`, `B1.6` and
+  `F3.1`, and cost `B1.1` 6.3× its runtime.
+
+  **`axes_diagonals=[0]` is only meaningful once `ndims ≥ 2`.** An earlier version
+  of this file said to add it "when the source term depends on neighbouring
+  cells", with no dimension caveat. On a 1-D shape that is not merely over-broad,
+  it is *wrong*: `axes_blocks` still defaults to `[-1]`, which is the same axis 0,
+  so `stencil_block_diagonals` treats axis 0 as a fixed axis and reinterprets the
+  `[-1, 0, 1]` offsets as **absolute indices** n−1, 0, 1. The Jacobian comes out
+  with no diagonal at all and the solve converges to a different answer. Write
+  `NumJac((n, 1), axes_diagonals=[0])` instead — and only when the *source term
+  itself* reads neighbouring cells, which is rarer than it sounds: the coupling
+  from the Laplacian normally arrives analytically through the divergence
+  operator, not through the function handed to `NumJac`.
 
 ## When the model is read from a paper that reprints it
 
