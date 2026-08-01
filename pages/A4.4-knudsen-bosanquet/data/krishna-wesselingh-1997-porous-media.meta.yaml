@@ -1,0 +1,114 @@
+dataset_id: krishna-wesselingh-1997-porous-media
+title: Printed constants and stated results of the dusty-gas sections of Krishna & Wesselingh (1997)
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Wesselingh, J. A."
+  year: 1997
+  container: "Chemical Engineering Science 52(6) 861-911"
+  doi: 10.1016/S0009-2509(96)00458-7
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+conditions:
+  eq84_eq85: >
+    Journal page 886, section "The dusty gas model". Eq. (83) relates the
+    effective binary pair diffusivities to their free-space values through the
+    porosity-to-tortuosity factor, D^e_ij = (eps/tau) D_ij; eq. (84) states
+    tau = 1 for a cylindrical pore; eq. (85) gives the effective Knudsen
+    diffusivity D^e_iM = (eps/tau)(d_0/3) sqrt(8 R T / (pi M_i)), attributed to
+    Jackson (1977) and Mason & Malinauskas (1983), with d_0 the pore DIAMETER
+    and the square-root term named in the text as "the velocity of motion".
+    The two stored numbers are the denominator 3 and the mass exponent -1/2.
+  eq107: >
+    Journal page 892. With grad(p) = 0 the dusty gas model constrains the
+    fluxes of a gaseous mixture to sum N_i sqrt(M_i) = 0, "which is Graham's
+    law of diffusion in gaseous mixtures". The stored number is the exponent
+    +1/2 on the molar mass.
+  jackson: >
+    Journal page 892, quoted by the review from Jackson (1977). For a simple
+    irreversible reaction A -> nu_B B inside a catalyst pellet, and assuming
+    complete conversion of A, the pressure at the centre of the pellet is
+    p_0 = sqrt(nu_B) p, where p is the pressure outside. "Thus, for nu_B = 2,
+    we have a 40 % increase in pressure as we proceed towards the centre of
+    the pellet." Note sqrt(2) - 1 = 41.42 %, so the printed 40 % is the
+    authors' rounding of their own closed form; the page reports both.
+  fig44: >
+    Journal page 887, conditions printed inside Fig. 44: diffusion of
+    helium (1) - neon (2) - argon (3) across a bundle of parallel capillaries,
+    d_0 = 39 um, delta = 9.6 mm, Delta p = 0, T = 300.1 K, x_1 = 0.51,
+    x_2 = 0.27, Delta x_1 = 0.901, Delta x_2 = -0.486, with the abscissa
+    running from 10 to 10^5 Pa. The figure compares the review's dusty-gas
+    calculation with measurements of Remick & Geankoplis (1974). The measured
+    points are NOT transcribed here - they would require figure digitisation -
+    and this page does not reproduce that comparison.
+
+acquisition:
+  method: table
+  figure: "in-text equations and stated results, journal pages 886, 887, 892, 893; plus the condition box printed inside Fig. 44"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    These are NOT measurements. They are constants and stated results the
+    authors themselves printed, collected so that a reimplementation of the
+    dusty gas model and of the Bosanquet formula can be checked against them.
+
+    The PDF is an Acrobat 3.0 Capture OCR of a scan, so every value was read
+    off a 600 dpi page render (pdftoppm -r 600), not from the text layer. The
+    text layer is demonstrably unreliable here: it renders eq. (86)'s
+    prefactor as "c_t/RT" where the page prints 1/RT, and eq. (109)'s
+    stoichiometric subscripts as "nu_{1i}" where the page prints nu_1.
+    Renders inspected on 2026-08-01.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-01
+  estimated_error: >
+    None beyond the printed precision. These are transcribed characters, not
+    digitised positions. The one loose figure is the review's own "40 %",
+    which is sqrt(2) - 1 = 41.42 % rounded down; it is stored as printed.
+
+validation:
+  eq85_vs_eq82: >
+    Eq. (109) with D_visc = 0 was re-derived symbolically from eq. (82) for
+    n = 2 with a prescribed flux ratio; the difference is identically zero.
+  eq109_to_eq110: >
+    Eq. (109) collapses to eq. (110) exactly when the flux ratio is
+    N_2/N_1 = -1, which is the review's own condition (ii), confirming the
+    transcription of the composition-dependent term.
+  jackson_result: >
+    A pymrm dusty-gas pellet solve that encodes p_0 = sqrt(nu_B) p nowhere
+    returns it to 4.2e-7 relative for nu_B = 2 in the Knudsen-controlled
+    limit, and to ~1e-6 for nu_B = 1, 3 and 4, independently of pellet
+    geometry, Thiele modulus and grid. That residual is the finite-Kn bulk
+    term of eq. (82), not solver accuracy: run at Kn = 1e5, 1e6, 1e7 and 1e8
+    on a fixed grid, the deviation times Kn is constant to 0.04%, so it
+    vanishes as 1/Kn exactly as the omitted limit requires.
+  graham: >
+    The same solver, given equal total pressure at both ends of an isobaric
+    binary cell, returns the flux ratio of eq. (107) to 1.6e-12 without
+    that constraint appearing anywhere in the code.
+
+columns:
+  - {name: group, unit: "-", description: "eq84 | eq85 | eq107 | jackson | fig44 (see conditions)"}
+  - {name: symbol, unit: "-", description: "identifier used in the notebook"}
+  - {name: value, unit: "see units column", description: "numeric value in SI units"}
+  - {name: units, unit: "-", description: "SI units of value"}
+  - {name: printed_as, unit: "-", description: "the quantity exactly as printed on the page"}
+  - {name: journal_page, unit: "-", description: "printed journal page number"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research
+  by a research organisation with lawful access is covered by Art. 15n
+  Auteurswet (implementing DSM Directive (EU) 2019/790 Art. 3). No page image
+  or figure is reproduced.
+
+caveat: >
+  TIER 6. These are printed constants and the authors' own (and Jackson's)
+  analytical results, not measurements. Reproducing them tests the
+  reimplementation of eqs. (82), (85), (107), (109) and (110) and the reading
+  of the printed pages; it says nothing about whether the dusty gas model
+  describes a real porous medium. The review does show such a comparison - its
+  Fig. 44, against Remick & Geankoplis (1974) - but reproducing it would need
+  figure digitisation and the ternary matrix form, which belong to catalogue
+  entry A4.3, not here.

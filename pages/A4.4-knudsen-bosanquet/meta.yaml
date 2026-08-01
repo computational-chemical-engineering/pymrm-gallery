@@ -1,0 +1,103 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.4
+slug: knudsen-bosanquet
+title: "Knudsen diffusion and the Bosanquet relation"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 9
+datasets:
+  - krishna-wesselingh-1997-porous-media.csv
+
+validation:
+  - a stated result reproduced - Jackson's pellet-centre pressure p_0 = sqrt(nu_B) p, quoted by Krishna & Wesselingh on p. 892 with "a 40% increase" for nu_B = 2 - recovered by the pymrm dusty-gas solve to 4.2e-7 relative at nu_B = 2 and 1.1e-6 worst over nu_B = 1, 2, 3, 4, with a spread of 3.6e-8 across 18 combinations of geometry, Thiele modulus and grid. The residual 4.2e-7 is not solver accuracy: it is the finite-Kn bulk term of eq. (82), measured to scale as 1/Kn (deviation x Kn constant to 0.04% from Kn = 1e5 to 1e8 on a fixed grid), so the check is a statement about the Knudsen limit rather than about numerics
+  - a second stated result - Graham's law, eq. (107) - emerges from the isobaric slab to 1.6e-12; the solver is given equal total concentration at both ends and never told the constraint. It is an identity of eqs. (82)+(85) once grad p = 0, so it checks the M^-1/2 exponent of eq. (85) and the sign structure of eq. (82), not the model - and inverting that exponent lifts the residual to 1.6e-1, so it is not vacuous
+  - the review's two scaling claims (p. 887) measured as log-log slopes of the slab flux - 0.993 and 0.996 against a stated 1 under Knudsen control, 0.033 and 0.063 against a stated 0 under bulk control, the residues being finite-Kn effects over 30x sweeps
+  - transcription of eq. (109) settled twice, symbolically - re-derived from eq. (82) for a binary with a prescribed flux ratio (difference identically 0) and collapsing to eq. (110) exactly at flux ratio 1, which is the review's own condition (ii)
+  - two flux closures that differ ONLY in the constitutive relation - the 2x2 [B^e] inversion, which presumes no flux ratio, against the scalar eq. (109), which does; they share the grid, the operators, the residual assembly and the Jacobian, so the comparison tests the presumption and not the discretisation. They agree to 2.4e-15 over 9 solves where the stoichiometry fixes the ratio, differ by 9.9e-1 when the ratio is forced to 1, and differ by 1.0e0 when the signs of the [B^e] off-diagonals are flipped - a defect the headline check cannot see
+  - defect-sensitivity table for the headline check - eq. (85)'s mass exponent flipped moves it 100%, the mass dependence dropped 41%, a wrong stoichiometric coefficient 50%; it is blind to geometry (1e-12), to a 5-cell grid (6.6e-7 vs 4.2e-7 undefected), to an unconverged solve (relative residual 4.4e-8 against 1.1e-14, answer unchanged) and to a sign flip in the [B^e] off-diagonals (deviation 4.2e-7 -> 5.6e-7, i.e. inside the finite-Kn residue). Each blind row is a claim the page does not make; the sign flip is instead caught by the closure comparison (1.0e0) and by Graham's law (2.6e-2)
+  - the geometry index nu of construct_div checked against a closed form - at nu_B = 1 the flux ratio is 1, eq. (109) collapses to a constant diffusivity and the pellet becomes the classical first-order problem, so the solved effectiveness factor is compared with tanh(phi)/phi, 2 I1/(phi I0) and (3/phi)(coth phi - 1/phi) for slab, cylinder and sphere - worst 1.7e-6, against 4.9% for the nearest wrong geometry. Nothing else on the page can see a wrong nu
+  - grid convergence at order 2.21 in the effectiveness factor, plus a second refinement AT THE CONDITIONS THE HEADLINE IS QUOTED AT (Kn = 1e-3, phi = 30, where the reacting shell is thinnest): 27.31% at n = 150, 27.03% at n = 300, 26.97% at the sweep's n = 600, 26.96% at n = 4800, so the quoted two significant figures are the model's and not the mesh's. Worst relative Newton residual anywhere on the page 1.4e-10, asserted on every solve rather than inferred
+  - eq. (85)'s sqrt(T), 1/sqrt(M) and linear-in-d_0 scalings recovered to 0 (definitional); the Bosanquet model's centre pressure against its own closed form nu_B D_A/D_B to 2.8e-12; the closed-form error map against the solver's own coefficients to 6.7e-16 (both algebraic)
+
+adds: >
+  The review names the Bosanquet formula, derives it from the dusty gas model,
+  lists the three conditions it needs and calls it "very restricted in its
+  applicability" - and stops. It prints no error estimate and no Knudsen-number
+  dependence. This page supplies both. (1) A closed form for the error,
+  D_Bos/D_1 = 1 + (rho-1) x_1/(1+Kn), derived symbolically from the review's own
+  eqs. (109) and (110), where rho is the flux ratio the application imposes.
+  (2) The consequence, which is the reverse of the usual instinct: the error
+  decays as 1/(1+Kn), so the interpolation is exact under Knudsen control and
+  worst under bulk control - for a spherical pellet running A -> 2B at a Thiele
+  modulus of 30, Bosanquet overestimates the effectiveness factor by 27.0% at
+  Kn = 1e-3 (26.97% at the sweep's n = 600, 26.96% grid-converged), 14.1% at
+  Kn = 1 and 3e-5% at Kn = 1e6, and underestimates the isobaric H2/N2
+  counter-diffusion flux by 41.3% and 0.04% at the same two extremes. The
+  percentages are conditions-specific and phi is named wherever they appear: the
+  same bulk-limit error is 25.5% at phi = 10 and 27.7% at phi = 100. What does
+  not depend on phi - and is the result - is the monotone decay with Kn. (3) The two failure modes separated: condition (iii) is shown
+  symbolically to be exactly "the viscous term of eq. (109) vanishes", which an
+  isobaric counter-diffusion cell satisfies automatically while breaking (ii)
+  through Graham's law, whereas a reacting pellet with a net mole change breaks
+  both at once; the two close simultaneously only for equal molar masses. (4) The internal pressure as an observable - the dusty gas model
+  and the Bosanquet closure disagree about the pellet centre pressure by a
+  factor of two under bulk control and not at all under Knudsen control; neither
+  number is in the review. (5) Jackson's sqrt(nu_B), quoted in the review as an
+  aside about mechanical strength, used as the page's one non-algebraic test,
+  with its sensitivity measured rather than asserted.
+
+agreement: >
+  Against printed results: Jackson's p_0 = sqrt(nu_B) p to 1.1e-6 worst over
+  four stoichiometries (the review's own rounding, "a 40% increase", is
+  sqrt(2)-1 = 41.42%; the residual 4.2e-7 is the finite-Kn model term, measured
+  to scale as 1/Kn, not solver accuracy); Graham's law eq. (107) to 1.6e-12; the
+  review's p. 887 scaling exponents to 0.007 (Knudsen) and 0.063 (bulk) over 30x
+  sweeps. Internal: eq. (109) re-derived from eq. (82) exactly and reduced to
+  eq. (110) exactly; the 2x2 dusty-gas route against the scalar route 2.4e-15
+  where they should agree and 9.9e-1 where they should not; the effectiveness
+  factor against the classical closed form for all three geometries to 1.7e-6;
+  grid order 2.21, with the headline 27.0% (phi = 30) converged to 26.96% at
+  n = 4800; worst relative Newton residual 1.4e-10.
+
+caveats: >
+  TIER 6 throughout. Nothing on this page is compared with a measurement. The
+  review does contain one dusty-gas/experiment comparison - its Fig. 44, against
+  Remick & Geankoplis (1974) - but it is ternary, needs figure digitisation and
+  belongs to catalogue entry A4.3; only the conditions printed inside that
+  figure are transcribed here, and none of them is used. The origins are not
+  consulted: Bosanquet's 1944 wartime report and Knudsen (1909) are unreachable,
+  and Jackson (1977) and Mason & Malinauskas (1983) are not on disk - every
+  equation reaches this page through Krishna & Wesselingh (1997), which prints
+  and names them. The page is binary and scalar by design: the n-component
+  matrix form of the dusty gas model is A4.3. Viscous flow is set to zero
+  throughout (the review's own remark is that neglecting it "is not very
+  serious"), as are surface diffusion and any pore-size distribution. Most
+  results are dimensionless because the review prints no pore size, porosity or
+  rate constant for a reacting pellet; where a dimensional number appears it
+  uses the review's own printed pair diffusivities, loaded cross-page from A4.2.
+  Those the review gives as estimates "from the kinetic gas theory" for the
+  Duncan & Toor (1962) system, with NO temperature and NO pressure printed
+  beside them: the 35.2 C and 1 atm at which they are used here are Duncan &
+  Toor's own conditions, taken from page A4.9's dataset sidecar and not from
+  this review. They enter only through a mean molecular speed and a total
+  concentration, and no validated number depends on them. Likewise eps/tau = 1
+  is eq. (84)'s printed tau = 1 together with an ASSUMED porosity of 1.
+  The effectiveness-factor percentages are quoted at a named Thiele modulus
+  (phi = 30) and grid (n = 600); they vary with phi, and the phi-sensitivity is
+  measured and printed on the page.
+  The Knudsen number is defined here as D^e_12/D^e_1M, which the review never
+  defines; it equals the mean-free-path-over-diameter only under the elementary
+  kinetic-theory estimate D_12 = v_bar lambda/3, and is used purely as an
+  abscissa. The headline sqrt(nu_B) check is blind to pellet geometry, to the
+  grid and to an unconverged solve, all measured and stated on the page.
