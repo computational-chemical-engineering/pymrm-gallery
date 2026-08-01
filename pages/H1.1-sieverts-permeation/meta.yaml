@@ -1,0 +1,131 @@
+# Page metadata. Staged in queue_cases/, not yet in pages/.
+# models.yaml is canonical; this file must not contradict it.
+# Integrator: H1.1 ALREADY EXISTS in models.yaml as `status: planned`. Upgrade
+# that entry in place using models_entry.yaml - do not append a duplicate.
+# Flip status to published when moving to pages/.
+id: H1.1
+slug: sieverts-permeation
+title: "Sieverts-law hydrogen permeation through Pd membranes"
+section: H
+status: published
+tier: T0
+priority: P1
+structures: [S3, S5]        # models.yaml currently says [S7]; see models_entry.yaml
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 15
+datasets:
+  - itoh-1987-permeation.csv
+
+validation:
+  - the one number the source prints, alpha_H = 4.47e-5 mol/s, DERIVED (not evaluated from Eq. 1's formula) by a pymrm radial finite-volume solve of the wall with Sieverts equilibrium at both faces, from Itoh's own printed D, C_0 and l_0 - deviation -0.032 %, against a printed value that carries only three significant figures
+  - what that identity can and cannot fail on, stated rather than implied - it tests the transcription of D, C_0, l_0 and the 200 um wall, the structure of Eq. 1 and the radial assembly GIVEN the geometry, but it cannot test the geometry because the radii were selected by requiring it to close; what it does is discriminate the two candidate readings of the printed "17.0 mm" by 2.4 % against a 0.03 % residual
+  - the resolving power of that identity, measured rather than asserted - a wrong `nu` costs -1.16 % against the baseline solve (-1.19 % against the printed value, the difference being the baseline's own -0.032 % offset) on a wall 2.4 % of the tube radius, 45 % on a wall with r_o/r_i = 3, and a grid as coarse as n_r = 3 costs 2e-9; alpha_H also constrains only the ratio r_o/r_i = 1.023522, so the printed 200 um wall is what turns a ratio into a radius (1 % window: r_i = 8.417 to 8.589 mm)
+  - the INDEPENDENT geometric witness, re-read on the native 300 dpi bitmap of journal page 1577: Figure 1 prints the dimension values 0.2, 17(phi), 28(phi) and 140 [mm], and the 17(phi) arrowheads terminate at rows 268 and 342 on the INNER faces of the two membrane lines, with the wall dimensioned separately as 0.2 - giving r_i = 8.5 mm from the drawing alone, in contradiction to the text's "17.0 mm OD". Printed values are recorded as fact, the arrowhead reading as an interpretation, with a non-blocking follow-up asking the maintainer to confirm it
+  - the wall solve against its closed form on a seven-level grid ladder, second order (1.99), and against a quadrature of the resistance integral for a wall whose D varies with position, where no closed form exists (2.9e-7)
+  - the channel solve against the exact inverted antiderivative G for the half-power law, six-level grid ladder, first order (1.00), max deviation 2.4e-4 at n_z = 3200; the extinction-length invariant L + G(w)/Pi = L_ext holds to 1.7e-4 relative at every cell
+  - the same ladder ABOVE Pi_crit, at Itoh's own Pi = 51.4, from a marched initial guess: first order (0.99), 4.9e-3 at n_z = 3200, every value non-negative, 3014 of 3200 cells at exactly zero, and the front placed to O(h) - so the fixed grid does resolve the extinction point
+  - the same channel with a loaded permeate against an independent quadrature reference (2e-4), confirming that the half-power law strips only to the pressure-matched floor beta y'/(1 - y') when the permeate side is not clean
+  - every one of those two checks broken on purpose - six injected defects on the wall (nu, grid, radii, thickness, a slipped digit in D) and five on the channel (sink sign, driving force, exponent, geometry, outlet condition). Quoted over the breaks whose solve CONVERGED, the smallest moves the error 340x and the largest 2900x; two more break the SOLVE rather than the answer (w substituted for the mole fraction, 217x; nu = 1, 1028x) and are reported as such, and the outlet-Dirichlet variant makes the assembly singular
+  - the series surface-resistance construction of section 5 recovered at both analytic limits (1.2e-6, 8.4e-7) - labelled as the algebraic identity it is
+
+adds: >
+  For the uniform 200 um wall Itoh actually had, nothing: the closed form is
+  exact and the pymrm solve reproduces it to 1e-9. The page says so. What the
+  solve buys is the wall the closed form cannot express, and the page
+  demonstrates it - a position-dependent diffusivity, checked against a
+  quadrature of the resistance integral, 30.6 % away from the uniform-D answer.
+  That is the route to composite membranes, Pd-Ag gradients, loading-dependent
+  D, and supported films.
+
+  The new quantitative content is two numbers the source does not contain. The
+  capacity ratio Pi = alpha_H/u_H0 and its critical value
+  Pi_crit = G(1, beta) = 2.84 separate the membrane-limited regime from the
+  flow-limited one, and the scaling y_H ~ Pi^(-1/n) says what spare capacity is
+  worth: under a half-power law it is worth its SQUARE. Itoh's tube sits at
+  Pi = 51.4 against Pi_crit = 2.84, so permeation is 18x from being the limiting
+  resistance. That is the condition (with equilibrium kinetics) that puts page
+  H1.4's model on its co-current fast-permeation ceiling, and on that ceiling the
+  conversion is a function of K_p and the purge split alone - so the permeance
+  has no observable left to move. That EXPLAINS, rather than restates, H1.4's
+  verified finding that its measured conversion is completely insensitive to
+  alpha_H. Two numbers go with it and they describe DIFFERENT problems: the same
+  membrane run as a SEPARATOR ON A CLEAN PERMEATE against the duty his reaction
+  sets would strip it in 5.5 % of the tube at a driving mole fraction of 3.8e-4,
+  whereas Itoh's actual reactor loads its permeate with an argon purge, so at the
+  ceiling both sides carry the same H2 mole fraction y = 7.2e-3 (19x that
+  3.8e-4), the driving difference tends to zero, and with y' > 0 there is no
+  finite extinction length at all.
+
+  The half-power exponent is also given its two structural consequences: a
+  finite extinction length (an exponent of 1 never empties the tube - the
+  logarithm diverges), and, in section 5, the apparent exponent produced when a
+  finite surface step is put in series with the wall, which runs from 1/2 to 1
+  and is not a constant even at fixed lambda.
+
+agreement: >
+  The single number the source prints, alpha_H = 4.47e-5 mol/s, is reproduced
+  to -0.032 % by a pymrm radial solve that derives it rather than evaluating
+  it. That is a transcription-and-derivation check, not a physical validation:
+  Itoh reports no permeation measurement anywhere, so NOTHING on this page is
+  compared with an experiment. The remaining agreements are internal: the wall
+  solve converges at order 1.99 to its closed form and to 2.9e-7 against a
+  quadrature reference on a graded wall; the channel solve converges at order
+  1.00 to the exact inverted antiderivative (2.4e-4 at n_z = 3200) and to 2e-4
+  against a quadrature reference with a loaded permeate; and every defect that
+  converged to a wrong answer moves the channel error by at least 340x.
+
+caveats: >
+  There is no measurement on this page. The source contains no permeation flux,
+  no measured permeance and no pressure sweep, so in the gallery's data-tier
+  language the validation situation is tier 6 and the page says so in its own
+  Data section. The one external target, alpha_H, is a number Itoh COMPUTED
+  from two literature constants he did not measure either.
+
+  The radii r_i = 8.5 mm and r_o = 8.7 mm are a reconstruction, and the page
+  rests it on two readings rather than one. The text says "17.0 mm OD", but only
+  the ID reading reproduces the printed alpha_H (0.03 % against 2.4 %) - which
+  DISCRIMINATES two readings of one sentence and is NOT an independent test of
+  the geometry, because the radii are that identity's own output. The page says
+  so plainly. The independent witness is Figure 1, re-read here on the native
+  300 dpi bitmap: it prints the dimension values 0.2, 17(phi), 28(phi) and 140
+  [mm], and the 17(phi) arrowheads terminate on the INNER faces of the two
+  membrane lines (rows 268 and 342) with the wall dimensioned separately as 0.2,
+  giving the bore as 17 mm independently of alpha_H. The printed values are
+  recorded as fact and the arrowhead placement as an interpretation; a
+  non-blocking follow-up asks the maintainer to confirm the latter. Note also
+  that alpha_H constrains only r_o/r_i, so the printed 200 um wall is what turns
+  a ratio into a radius.
+
+  Attribution matters here and is stated precisely: Itoh attributes the
+  half-power law to Bohmholdt and Wicke (1967), and cites Sieverts and Danz
+  (1936) only for the solubility constant C_0. Caravella et al. (2010), named
+  in the catalog entry for the empirical exponent, is not on disk and is not
+  used; nothing on this page is a claim about measured exponents in real
+  palladium. Section 5's apparent-exponent chart is a derivation from the
+  mechanism with one dimensionless group, compared with no data, and Itoh's own
+  membrane cannot be placed on its axis because no surface kinetics are printed.
+
+  Itoh gives D and C_0 at 473 K only, so the page says nothing about the
+  temperature dependence of the permeance.
+
+  Finally, the channel model has a GLOBALISATION trap, named as one. Above
+  Pi_crit the extinction point falls inside the domain and the flat-start damped
+  Newton stalls - but the discrete problem is perfectly well posed: the cell
+  residual is continuous and strictly increasing, negative at w = 0 and positive
+  at w_(i-1), so a unique non-negative root exists at every cell and every Pi,
+  and past the front it decays quadratically per cell, underflows to exactly 0
+  within nine cells and stays there. What fails is Newton: the sink's Jacobian
+  diverges like w^(-1/2) as w -> 0, NumJac perturbs with an ABSOLUTE floor
+  (eps_jac = 1e-6) so the differenced derivative is meaningless across the whole
+  sub-1e-6 tail, and the line search parks on a slightly negative w where the
+  max(w,0) clip is non-smooth. Marching the same bidiagonal system for an
+  initial guess converges the UNMODIFIED solver over the entire sweep (16 of 30
+  points needed it; min w = 0, worst residual 5e-13), including Itoh's own
+  Pi = 51.4. The page shows both the failure and the fix, and does NOT tell the
+  next builder to reach for a free-boundary method.

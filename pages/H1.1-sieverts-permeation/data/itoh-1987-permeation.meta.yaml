@@ -1,0 +1,169 @@
+dataset_id: itoh-1987-permeation
+title: The half-power permeation law and its constants, as printed by Itoh (1987)
+n_values: 14
+status: complete
+
+source:
+  authors: ["Itoh, N."]
+  year: 1987
+  container: "AIChE Journal 33(9) 1576-1578"
+  doi: 10.1002/aic.690330921
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+attribution_inside_the_source: >
+  This matters for a page about the law itself, so it is recorded precisely.
+
+  (a) THE EXPONENT. Itoh attributes the half-power law to Bohmholdt and Wicke
+  (1967), Z. physik. Chem., Neue Folge 56, 133 - not to Sieverts. His sentence
+  reads: "The permeation rate of hydrogen gas through the palladium membrane,
+  Q_H, was assumed to obey the half-power pressure law (Bohmholdt and Wicke,
+  1967), i.e., it is proportional to the difference between the roots of the
+  hydrogen partial pressures in the reaction and separation sides, p_H and
+  p'_H:".
+
+  (b) WHAT SIEVERTS IS CITED FOR. Sieverts and Danz (1936), "Solubilities of D2
+  and H2 in Palladium", Z. physik. Chem. (B) 34, 158, is cited by Itoh for ONE
+  number: C_0 = 1,280 mol/m3, "a standard concentration of hydrogen in the
+  palladium, which is at equilibrium with the gas-phase hydrogen at pressure
+  P_0", at 473 K. That constant is the amplitude of Sieverts' law
+  c = C_0 sqrt(p/P_0); the square-root form itself is not stated by Itoh as
+  Sieverts'.
+
+  (c) WHAT ITOH DOES NOT PRINT. No permeation measurement of any kind - no flux,
+  no permeance measured on this membrane, no pressure sweep. No temperature
+  dependence either: D and C_0 are quoted at 473 K only and alpha_H is a single
+  number, so nothing on this page can be said about the activation energy of the
+  permeance. And no discussion of departures from the exponent 1/2: the value is
+  assumed, not tested.
+
+conditions:
+  membrane: "dense palladium hollow tube, 200 um wall, 140 mm long"
+  temperature: "473 K, isothermal"
+  pressure: "1 atm total on both sides"
+
+acquisition:
+  method: "stated in text"
+  tool: "poppler pdfimages at the scan's native resolution. The PDF's page images are 300 dpi bilevel CCITT (pdfimages -list), so pdftoppm -r 600 is a 2x upsample and carries no information the 300 dpi bitmap does not already have. Every character was read off the page bitmap, never off the OCR text layer."
+  procedure: >
+    Eq. 1 and the paragraph that follows it were read on the native bitmaps of
+    journal pages 1576 (right column, bottom) and 1577 (left column, top). As
+    printed:
+
+      Q_H = alpha_H ( sqrt(p_H/P_o) - sqrt(p'_H/P_o) )
+      alpha_H = 2*pi*l_o / ln(r_o/r_i) * D * C_o                        (1)
+
+    followed by: "P_o is 1.013 x 10^5 Pa and D is Fick's diffusion coefficient of
+    hydrogen dissolved in the palladium. C_o is defined as a standard
+    concentration of hydrogen in the palladium, which is at equilibrium with the
+    gas-phase hydrogen at pressure P_o. The alpha_H is defined as a permeation
+    rate constant of hydrogen gas. When literature values, i.e., 9.23 x 10^-10
+    m^2 s^-1 for D (Nagamoto and Inoue, 1985) and 1,280 mol m^-3 for C_o
+    (Sieverts and Danz, 1936) at 473 K, were used, alpha_H calculated was
+    4.47 x 10^-5 mol s^-1."
+
+    The three marginal superscripts in that sentence (-10, -3, -5) all read
+    cleanly at native resolution; the "-10" and the "-3" on the same line serve
+    as unambiguous comparison glyphs for the "-5". The Notation list confirms the
+    units: alpha_H and Q_H in mol/s, C_0 in mol/m3, D in m2/s, l_o "entire length
+    of reactor" in m, r_i and r_o the inner and outer radii of the palladium
+    tube. The bracket of Eq. 1 is dimensionless (both pressures are divided by
+    P_o), which is what makes alpha_H a rate in mol/s rather than a
+    mol/s/Pa^0.5.
+
+    NO MISPRINT WAS FOUND in any of this. The two printing problems in this paper
+    (Eq. 5's sign and the K_P expression, both resolved on page H1.4) are
+    elsewhere and do not touch the permeation law.
+
+    RECONSTRUCTED VALUES. r_i and r_o are not printed as such. Two independent
+    routes were used, and they agree.
+
+    (i) THE alpha_H IDENTITY. The text gives "200 um thick, 17.0 mm OD", but
+    substituting r_i = 8.3 mm / r_o = 8.5 mm into Eq. 1 gives alpha_H = 4.365e-5
+    mol/s, 2.4 % below the printed 4.47e-5, whereas r_i = 8.5 mm / r_o = 8.7 mm
+    (i.e. reading 17.0 mm as the ID) gives 4.4686e-5, 0.03 % away. With alpha_H
+    printed to three digits that DISCRIMINATES THE TWO CANDIDATE READINGS of one
+    printed sentence - it is not an independent test of the geometry, because the
+    radii are its own output. Note also that alpha_H constrains only the RATIO
+    r_o/r_i (= 1.023522 at the printed value): (r_i, wall) = (4.25 mm, 100 um),
+    (8.5 mm, 200 um) and (17 mm, 400 um) all satisfy it identically. The printed
+    200 um wall is what turns the ratio into a radius.
+
+    (ii) FIGURE 1, RE-READ HERE ON THE NATIVE BITMAP OF JOURNAL PAGE 1577. The
+    figure prints four dimension VALUES - 0.2, 17(phi), 28(phi) and 140 - with
+    the unit "[mm]". Those values are printed numbers and are recorded as such.
+    Which diameter "17 phi" labels depends on where its arrowheads terminate,
+    which is an INTERPRETATION of the drawing and is recorded as one. Read on the
+    300 dpi bitmap (page-image rows quoted; the upper palladium membrane line is
+    rows 262-266, the lower 344-348, the upper shell band 231-238, the lower
+    369-377):
+
+      * "0.2", arrow column 705: an arrowhead tip at row 259 pointing DOWN and
+        one at row 267 pointing UP. The two tips face each other across the
+        upper membrane band from outside - this is the wall thickness.
+      * "17 phi", arrow column 754: a tip at row 268 pointing UP and one at row
+        342 pointing DOWN. The two tips face apart and land on the INNER faces
+        of the two membrane lines - this is the bore.
+      * "28 phi", arrow column 809: the dimension line runs from row 239, just
+        below the inner face of the upper shell band, to a tip at row 368
+        pointing DOWN onto the inner face of the lower shell band. The lower tip
+        is crisp; the upper arrowhead's point is the least clean of the six read
+        here (its narrowest pixel row is 255 rather than 239), so this row is
+        supporting context, not evidence.
+
+      Read that way, Figure 1 dimensions the palladium tube's INNER diameter as
+      17 mm, i.e. r_i = 8.5 mm and r_o = 8.5 + 0.2 = 8.7 mm - independently of
+      alpha_H, and in contradiction to the running text's "17.0 mm OD". The
+      drawing is schematic (the 0.2 mm wall is drawn ~5 px where 17 mm is 74 px),
+      so only the arrowhead PLACEMENT is used, never a measured length.
+
+    The two routes agree, which is why the page presents them as mutually
+    validating rather than resting on either alone. H1.4's verifier reported the
+    same Figure 1 observation; it is re-read here from the bitmap rather than
+    borrowed. A follow-up on queue_cases/H1.1.yaml asks the maintainer to confirm
+    the arrowhead reading, since it is what makes the pair independent.
+  operator: "Claude Opus 5 (builder agent)"
+  date: 2026-08-01
+  estimated_error: >
+    Transcription: none expected. Every character was verified on the native
+    300 dpi bitmap. The one soft value is the r_i/r_o pair, which is a
+    reconstruction and is labelled as one in the CSV's `kind` column; the page
+    prints both readings side by side and reports what each does to alpha_H.
+
+validation:
+  alpha_H_identity: >
+    The printed alpha_H = 4.47e-5 mol/s is reproduced by an independent pymrm
+    finite-volume solve of steady radial diffusion through the cylindrical wall
+    (nu=1) with Sieverts equilibrium at both faces, using only Itoh's own printed
+    D, C_0 and l_0 and the reconstructed radii: 4.4686e-5 mol/s, -0.03 %. The
+    solve does not evaluate Eq. 1's formula - it derives it. This is the page's
+    one comparison with a number the source prints.
+  what_this_cannot_test: >
+    Itoh prints no permeation measurement, so nothing on this page is compared
+    with an experiment. The alpha_H identity tests a transcription and a
+    derivation, not the physics; every other check is an internal identity or a
+    closed-form limit. In the gallery's data-tier language the validation
+    situation is tier 6, and the page says so.
+
+review:
+  reviewed_by: null
+  date: null
+  verdict: pending
+  findings: >
+    No figure was digitised for this dataset and none is needed: every value is
+    printed in the running text or in Eq. 1. Nothing in queue_cases/H1.1/review/
+    is used on the page.
+
+columns:
+  - {name: quantity, unit: "-", description: "what the number is"}
+  - {name: value, unit: varies, description: "as printed, except the two rows marked reconstructed"}
+  - {name: unit, unit: "-", description: "unit of the value"}
+  - {name: kind, unit: "-", description: "stated law | stated | stated (literature value quoted by Itoh) | stated (computed by the author from Eq. 1) | operating condition | reconstructed"}
+  - {name: where_stated, unit: "-", description: "location in the paper, and the attribution Itoh gives"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image or figure is
+  reproduced.

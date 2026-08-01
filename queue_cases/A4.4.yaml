@@ -5,18 +5,236 @@ catalog_reference: —
 priority: P1
 tier: T0
 structures: S3
-status: needs-paper
-reference: {}
+status: ready
+reference:
+  authors:
+  - Bosanquet, C. H.
+  year: 1944
+  container: British TA Report BR-507
+  doi: null
+  note: >-
+    Origin of the interpolation, NOT consulted - a wartime report, pre-DOI, not
+    on disk and not reachable. Knudsen (1909), Jackson (1977) and Mason &
+    Malinauskas (1983) are likewise cited but not consulted.
+reference_read_from:
+  authors:
+  - Krishna, R.
+  - Wesselingh, J. A.
+  year: 1997
+  container: Chemical Engineering Science 52(6) 861–911
+  doi: 10.1016/S0009-2509(96)00458-7
+  note: >-
+    The text actually read. Prints the dusty gas model as its eqs. (82)-(87),
+    the effective Knudsen diffusivity as eq. (85) (attributed to Jackson 1977
+    and Mason & Malinauskas 1983), Graham's law as eq. (107), the exact
+    effective diffusivity as eq. (109), and derives eq. (110) from it, naming
+    it "the Bosanquet formula". Every equation verified on a 600 dpi render on
+    2026-08-01.
 paper:
-  on_disk: null
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-S0009250996004587-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-01'
+blocker: null
+scope_decision: >-
+  BUILD, not covered_by A4.2, and deliberately not A4.3. A4.2 (published, same
+  review) is bulk multicomponent diffusion - [D] = [B]^-1 [Gamma], the
+  Duncan-Toor two-bulb cell, the review's pp. 863-872. Nothing on it involves a
+  pore; its own Reuse table defers Knudsen terms to A4.3. A4.4 is a different
+  physical regime (molecule-wall collisions competing with molecule-molecule
+  collisions), a different set of printed equations (pp. 884-893), and a
+  different closure. The catalogue also distinguishes them: A4.4 is S3/T0
+  "Pore-size-limited diffusion", A4.3 is S9/T1 "Dusty gas model,
+  Mason & Malinauskas (1983)". So this page is kept strictly BINARY and SCALAR
+  - eq. (109)/(110), one effective diffusivity per species - and explicitly
+  hands the n-component matrix form (eqs. 86-87), the viscous-flow term and the
+  review's ternary He/Ne/Ar Fig. 44 comparison against Remick & Geankoplis
+  (1974) to A4.3. The binary 2x2 [B^e] inversion IS used, but only as the
+  reference the scalar closure is measured against, which is what the case
+  requires. The Fig. 44 conditions are transcribed into the sidecar for
+  whoever builds A4.3; its data points are not.
+notes: >-
+  Built in queue_cases/A4.4/page/. Regenerates from build_page.py and executes
+  end to end in ~9 s.
+
+  ADVERSARIALLY VERIFIED 2026-08-01 (review/verification.md) and the four
+  MUST-FIX findings are closed in the page: (F1) the sqrt(nu_B) check no longer
+  claims to test the sign structure of eq. (82) - the [B^e] off-diagonal sign
+  flip is now an executed break row, measured BLIND (4.2e-7 -> 5.6e-7, inside
+  the finite-Kn residue), and the two checks that DO catch it are executed
+  beside it (closure comparison 1.0e0, Graham 2.6e-2); the "ideal-gas step" was
+  dropped from that list because the solver works in concentrations throughout.
+  (F2) "share no line of code" is replaced by the accurate "differ only in the
+  constitutive closure", with the consequence stated (the comparison cannot see
+  a discretisation error). (F3) the sweep runs at n = 600 and every appearance
+  of the headline names phi = 30. (F4) the 4.2e-7 Jackson deviation is
+  identified as a finite-Kn model residue, measured to scale as 1/Kn.
+
+  THE REPRINT TEST (AGENTS.md "When the model is read from a paper that
+  reprints it") PASSES, and comfortably - this is not an E1.1 situation.
+  Krishna & Wesselingh do not merely mention Knudsen diffusion in passing.
+  They devote a section to it ("The dusty gas model", pp. 884-887), print the
+  effective Knudsen diffusivity in closed form as eq. (85) with attribution to
+  Jackson (1977) and Mason & Malinauskas (1983), print the exact effective
+  diffusivity as eq. (109), DERIVE the transition closure from it as eq. (110),
+  and NAME it: "a relation usually referred to as the Bosanquet formula. As
+  noted above this formula is very restricted in its applicability." They also
+  state its three conditions verbatim - "(i) binary mixture, (ii) with no net
+  change in the number of moles, and (iii) satisfying eq. (107)" - and they USE
+  it, twice, as the foil against which the dusty gas model is argued (Kaza and
+  Jackson's uphill diffusion "impossible to explain with say the Bosanquet
+  formula (110)"; Elnashaie & Abasher and Reddy & Murty on effectiveness
+  factors). Named, derived, conditioned and used - the reprint carries the
+  case. They give no citation for Bosanquet himself, so the origin is recorded
+  separately as not consulted, exactly as B1.4, F1.3 and E1.2 do.
+
+  EQUATIONS, as read off 600 dpi renders of PDF pages 26, 27, 32, 33
+  (= journal pages 886, 887, 892, 893) on 2026-08-01:
+    eq. (82)  -(1/RT) grad p_i = sum_j (x_j N_i - x_i N_j)/D^e_ij + N_i/D^e_iM
+    eq. (83)  D^e_ij = (eps/tau) D_ij           eq. (84)  tau = 1 (cylindrical)
+    eq. (85)  D^e_iM = (eps/tau)(d_0/3) sqrt(8RT/(pi M_i))   [d_0 = DIAMETER]
+    eq. (86)  (N) = -(1/RT) [B^e]^-1 (grad p)
+    eq. (87)  B^e_ii = 1/D^e_iM + sum_{k!=i} x_k/D^e_ik ;  B^e_ij = -x_i/D^e_ij
+    eq. (105) grad p = -[sum_i N_i/D^e_iM] / [(1/RT)(1 + D_visc sum alpha'_i x_i/D^e_iM)]
+    eq. (107) sum_i N_i sqrt(M_i) = 0    (grad p = 0; gaseous mixtures)
+    eq. (109) 1/D_1 = 1/D^e_1M + sum_{j>=2} (x_j/D^e_1j)(1 - x_1 nu_j/(x_j nu_1))
+              - alpha'_1 x_1 (D_visc/D_1M) [sum_i (nu_i/nu_1)/D^e_iM]
+                / (1 + D_visc sum_i alpha'_i x_i/D^e_iM)
+    eq. (110) 1/D_1 = 1/D^e_1M + 1/D^e_12          "the Bosanquet formula"
+  Also printed and used: p. 887, "the Knudsen diffusivities D^e_iM are
+  independent of the pressure and directly proportional to the pore size and so
+  the fluxes N_i are directly proportional to the system pressure and pore
+  size", against the bulk-controlled regime where they are independent of both;
+  and p. 892, from Jackson (1977), for A -> nu_B B with complete conversion of
+  A the pellet centre pressure is p_0 = sqrt(nu_B) p, "Thus, for nu_B = 2, we
+  have a 40% increase in pressure as we proceed towards the centre".
+
+  WHAT CONFIRMED THE TRANSCRIPTION. The text layer is untrustworthy here in
+  demonstrable ways - it renders eq. (86)'s prefactor as "c_t/RT" where the
+  page prints 1/RT, and eq. (109)'s subscript nu_1 as "nu_{1i}" - so eq. (109)
+  was checked two ways before anything was built on it (the B3.1 pattern).
+  (a) It was re-derived symbolically from eq. (82) for n = 2 with a prescribed
+  flux ratio; the difference is identically zero, which fixes the disputed
+  subscript. (b) It collapses to eq. (110) exactly when the flux ratio is -1,
+  which is the review's own condition (ii). Eq. (85)'s d_0/3 was confirmed
+  independently by the review's own prose ("where d_0 is the pore diameter and
+  the square-root term represents the velocity of motion") and by the fact that
+  d_0/3 times the mean molecular speed is the standard kinetic-theory form.
+
+  VALIDATION ROUTE: route 3 (a stated numerical result) plus route 2 (internal
+  identities). NO FIGURE WAS DIGITISED and none is needed. Ranked before any
+  code was written:
+    1. Jackson's p_0 = sqrt(nu_B) p, quoted with its "40% increase" - a printed
+       result the solver encodes nowhere. This is the page's one check with
+       real power.
+    2. Graham's law eq. (107) recovered from an isobaric slab that is only told
+       the total concentrations at its two ends.
+    3. The two scaling claims of p. 887, as log-log slopes.
+    4. Symbolic transcription checks on eq. (109)/(110).
+    5. Two flux closures differing ONLY in the constitutive relation (2x2 [B^e]
+       vs scalar eq. 109) - they share the grid, the operators, the residual
+       assembly and the Jacobian, so the comparison tests the presumed flux
+       ratio and cannot see a discretisation error.
+    6. The geometry index of construct_div against the classical effectiveness
+       factor (slab/cylinder/sphere) in the rho = 1 limit, where the pellet
+       problem is linear - added after verification, because nothing else on
+       the page can see a wrong nu.
+
+  KEY NUMBERS. Jackson: solved 41.42% centre-pressure rise for nu_B = 2 against
+  the review's printed "40%" and its own closed form sqrt(2)-1 = 41.42%; worst
+  1.1e-6 relative over nu_B = 1, 2, 3, 4; spread 3.6e-8 over 18 combinations of
+  geometry x Thiele modulus x grid. The 4.2e-7 residual is the finite-Kn bulk
+  term of eq. (82), not solver accuracy: dev x Kn is constant to 0.04% over
+  Kn = 1e5..1e8 on a fixed grid. Geometry against the classical effectiveness
+  factor 1.7e-6, against 4.9% for the nearest wrong nu. Graham's law 1.6e-12.
+  Scaling slopes
+  0.9927 and 0.9963 against a stated 1 (Knudsen control), 0.0333 and 0.0626
+  against a stated 0 (bulk control) - the residues are finite-Kn effects over
+  30x sweeps. eq. (109) from eq. (82): exactly 0. eq. (109) -> eq. (110) at
+  rho = 1: exactly 0. 2x2 route vs scalar route 2.4e-15 where the stoichiometry
+  fixes the ratio, 9.9e-1 when the ratio is forced to 1, 1.0e0 when the [B^e]
+  off-diagonal signs are flipped. Grid order 2.21.
+  Graham's residual rises to 1.6e-1 when eq. (85)'s mass exponent is inverted
+  and to 2.6e-2 under the off-diagonal sign flip, so that check is not vacuous
+  either.
+  Worst RELATIVE Newton residual anywhere on the page 1.4e-10 (normalised by
+  the size of the terms the residual balances, not by their difference, which
+  vanishes in the no-reaction slab).
+
+  THE CONTRIBUTION. D_Bos/D_1 = 1 + (rho-1) x_1/(1+Kn), derived symbolically
+  from eqs. (109) and (110), where rho = -N_2/N_1 is the flux ratio the
+  application imposes and Kn = D^e_12/D^e_1M. Consequence, which is the reverse
+  of the usual instinct and is the reason the page exists: the error decays as
+  1/(1+Kn), so Bosanquet is EXACT under Knudsen control and WORST under bulk
+  control. Measured on solves, at NAMED conditions - a sphere running A -> 2B at
+  Thiele modulus 30 on 600 cells - it overestimates the effectiveness factor by
+  27.0% at Kn = 1e-3 (26.97% at n = 600, 26.96% grid-converged at n = 4800,
+  refined at the sweep's own conditions), 14.1% at Kn = 1 and 3e-7 (relative) at
+  Kn = 1e6. That percentage is conditions-specific and phi is named wherever it
+  appears: the same bulk-limit error is 25.5% at phi = 10 and 27.7% at
+  phi = 100, while the monotone decay with Kn - the actual result - is not.
+  It also underestimates the hydrogen flux in an isobaric
+  H2/N2 counter-diffusion cell by 41.3% and 0.04% at the same extremes; and it
+  puts the pellet centre pressure at 2.00 p where the dusty gas model says
+  1.00 p under bulk control. Also settled symbolically: the review's conditions
+  (ii) and (iii) are two conditions, not one, and close simultaneously only for
+  equal molar masses - the viscous term of eq. (109) carries
+  1/D^e_1M - 1/D^e_2M at rho = 1.
+
+  DELIBERATE-BREAK TABLE (printed on the page, on the headline sqrt(nu_B)
+  check, relative deviation from sqrt(2)):
+    no defect                                 4.2e-07
+    eq. (85) mass exponent +1/2 not -1/2      1.0e+00   CATCHES
+    eq. (85) mass dependence dropped          4.1e-01   CATCHES
+    stoichiometric coefficient 1 not nu_B     5.0e-01   CATCHES
+    [B^e] off-diagonal signs flipped          5.6e-07   BLIND (added after review)
+    Bosanquet closure at Kn = 1               2.1e-01   CATCHES (vs 1.7e-01 dgm)
+    Bosanquet closure at Kn = 1e6             4.1e-07   BLIND (they coincide there)
+    slab (nu=0) not sphere (nu=2)             4.2e-07   BLIND
+    5-cell grid                               6.6e-07   BLIND
+    maxfev = 1, rel residual 4.4e-08          5.9e-07   BLIND
+    phi = 3 (conversion incomplete)           8.8e-02   precondition, not a defect
+  Every BLIND row is a claim the page therefore does not make; each is named in
+  the prose, and each now points at the check that DOES catch it where one
+  exists (off-diagonal signs -> V1 and Graham; geometry -> V5). The unconverged
+  row is why every solve asserts its own residual.
+
+  PROSE/OUTPUT DRIFT: every number that appears in prose is interpolated at run
+  time via display(Markdown(f"...")) from the same variables the cells print.
+  No computed number is typed into a markdown cell.
+
+  ONE DEFECT FOUND AND FIXED DURING THE BUILD, recorded because it is the kind
+  a verifier should look for: the first version of the isobaric slab passed
+  M_B/M_A where eq. (85) needs M_A/M_B, which inverted D^e_BM/D^e_AM. Graham's
+  law caught it immediately (1.6e-01 instead of 1.6e-12) and the Bosanquet
+  error came out as a nonsensical +118%. This is the check that could fail,
+  failing.
+
+  TIER 6, and the page says so repeatedly. Nothing is compared with a
+  measurement. The review DOES contain a dusty-gas/experiment comparison - its
+  Fig. 44 against Remick & Geankoplis (1974) - but it is ternary, needs figure
+  digitisation and belongs to A4.3; only its printed conditions are
+  transcribed here, and none is used.
+
+  CONDITIONS, corrected after verification: "35.2 C and 1 atm" is NOT in
+  Krishna & Wesselingh. P. 872 prints only D12 = 8.33e-5, D13 = 6.8e-5,
+  D23 = 1.68e-5 m2/s, introduced as values that "can be estimated from the
+  kinetic gas theory" for the hydrogen-nitrogen-carbon dioxide system of Duncan
+  & Toor (1962), with no temperature and no pressure beside them. The 308.35 K
+  and 1 atm the page uses are Duncan & Toor's own experimental conditions, taken
+  from A4.9's dataset sidecar; the page and both sidecars now say so. They set
+  only a mean molecular speed and a total concentration and no validated number
+  depends on them. Related: they are NOT described as values Duncan & Toor
+  measured - neither paper establishes that.
+
+  INTEGRATOR NOTES. New dependency: sympy - already in requirements.txt (added
+  for J4.8), so nothing to add; V5 also imports scipy.special.iv, and scipy is
+  already a requirement (and present on Colab). models_entry.yaml is an APPEND: A4.4 is not in
+  models.yaml at all. meta.yaml status is already 'published'; slug
+  knudsen-bosanquet, directory pages/A4.4-knudsen-bosanquet/. The page loads
+  pages/A4.2-maxwell-stefan-vs-fick/data/krishna-wesselingh-1997-worked-examples.csv
+  cross-page for the three printed pair diffusivities, so that file must stay
+  where it is (the Colab path falls back to the raw GitHub URL). Nothing in
+  review/ needs maintainer attention - no figure was digitised and no page
+  image left the scratchpad, so review/ is empty by design.
+review_artifacts: []
+updated: '2026-08-01'

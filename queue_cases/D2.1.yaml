@@ -5,18 +5,180 @@ catalog_reference: Chem. Eng. Prog. Symp. Ser. 55 (1959)
 priority: P1
 tier: T0
 structures: S2
-status: needs-paper
-reference: {}
+status: ready
+reference:
+  authors:
+  - Barkelew, C. H.
+  year: 1959
+  container: Chemical Engineering Progress Symposium Series 55 37
+  doi: null
+  note: >-
+    Origin of the result, NOT consulted. Pre-DOI, not in
+    ~/papers/pymrm-gallery/, no open-access route found via Unpaywall, and
+    CrossRef could not resolve a DOI from the catalogue citation. The paper is
+    no longer needed: the reprint route carries the case, see notes.
+reference_read_from:
+  authors:
+  - Van Welsenaere, R. J.
+  - Froment, G. F.
+  year: 1970
+  container: Chemical Engineering Science 25(10) 1503-1516
+  doi: 10.1016/0009-2509(70)85073-4
+  note: >-
+    The text actually read. Their Section 5 ("Comparison with Barkelew's
+    criterion", journal pages 1511-1512) reprints his diagram as their Fig. 9
+    with the curve labels S = 4, 8, 16, 32, says what his axes mean, states the
+    envelope-tangency criterion, states the one numerical property of his
+    critical locus, and applies their own first criterion in his notation.
+    Section 6 supplies the anchors the parameter reading is checked against.
+    Verified on 600 dpi renders of journal pages 1504 and 1511-1513 on
+    2026-08-01.
 paper:
-  on_disk: null
-  open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250970850734-main.pdf
+  open_access: false
+  checked: '2026-08-01'
+blocker: null
+scope_decision: >-
+  BUILD, not covered_by D2.2, and the two pages were compared before deciding.
+  D2.2 (published, same paper) implements the two criteria as closed-form
+  inequalities in DIMENSIONAL variables, the p-T phase plane, and a sweep of
+  the critical inlet pressure over the operating plane, validated against the
+  30 numbers of its Section 6. It contains no dimensionless reduction, no
+  Barkelew groups, no envelope, and no similarity claim.
+
+  D2.1 is the other kind of answer to the same question: a dimensionless-group
+  reduction that collapses the whole two-parameter family onto one chart. The
+  content that is new here and cannot be folded into D2.2 is (i) the reduction
+  of their Eqs. 3-4 to the two-parameter Barkelew system, (ii) the envelope and
+  its tangency locus computed rather than drawn, (iii) the test of the
+  similarity claim itself - does tau_m at the tangency really collapse to one
+  number, and where does it stop - and (iv) a quantitative comparison of the
+  two papers' criteria, which Section 5 makes only qualitatively in text and
+  graphically in Fig. 8.
+
+  Overlap is deliberately minimal. D2.1 re-derives ONE thing D2.2 also has, the
+  criterion-1 critical inlet pressure by back-integration, because it is the
+  reference the Barkelew route is measured against; the two implementations
+  agree to 1.4e-8 relative at 625 K without either having seen the other. The
+  parameter table is duplicated into D2.1's own data/ with its own sidecar
+  rather than loaded cross-page, so the two pages stay independent; it was
+  re-read from the 600 dpi render for this page and agrees value for value.
+notes: >-
+  Built in queue_cases/D2.1/page/. Regenerates from build_page.py and executes
+  end to end in 22 s (19.8 s of compute).
+
+  WHAT SECTION 5 ACTUALLY PRINTS - the question the dispatch asked first. The
+  comparison is QUANTITATIVE IN THE TEXT, so route 3 applies and NO FIGURE WAS
+  DIGITISED. Verbatim, off the 600 dpi render of journal page 1512:
+  "It was observed that for all S-values tau_m at the point of tangency was
+  very close to 1.275." / "With Barkelew's dimensionless notation the first
+  criterion leads to tau_m = 1, so that tau_m/S = 1/S. As indicated in Fig. 9
+  the corresponding point on each S-curve lies a bit to the right of the points
+  of tangency between the S-curve and the envelope. Consequently, the first
+  criterion proposed in this paper is slightly more conservative than
+  Barkelew's." / "Barkelew's predictions agree extremely well with these based
+  upon the present methods."
+
+  Page 1511 additionally defines the axes in words - "N/S is the ratio of the
+  rate of heat transfer per unit volume at tau = 1 to the rate of heat
+  generation per unit volume at tau = 0. The parameter S corresponds to the
+  value tau would reach if the reactants were fed at the wall temperature and
+  if the reactor were operated adiabatically" - and states the criterion ("The
+  curves of constant S have an envelope ... The points of tangency therefore
+  correspond to critical conditions"). Their Fig. 8 marks Barkelew's critical
+  inlet pressures against their own, but only as marker positions, so that
+  comparison is RECOMPUTED on both sides rather than read.
+
+  THE REPRINT TEST PASSES. Section 5 names Barkelew, reproduces his diagram,
+  states his criterion, states a number characterising it, and uses his method.
+  This is not an E1.1 situation.
+
+  ONE RECONSTRUCTION, labelled as such on the page and in the sidecar. Their
+  notation list gives only "N dimensionless group defined by Barkelew", so the
+  dimensionless temperature is not printed anywhere. It is reconstructed as
+  tau = a (T - T_w)/T_w^2 with rate coefficient k_w e^tau, the unique reading
+  consistent with (a) "modified the temperature dependence of the rate
+  coefficient in such way that it may be characterized by only one constant
+  instead of two", (b) both verbal group definitions above, which name the wall
+  temperature as the reference, and (c) their own Eq. 32,
+  (dT)_ad = (B/A) p0. It gives S = a (dT)_ad/T_w^2 and N = C/(A k_w), and the
+  reduced system dy/dzeta = -y e^tau, dtau/dzeta = S y e^tau - N tau.
+
+  VALIDATION ROUTE: route 3 (a stated numerical result in the text), backed by
+  route 2 (an internal identity: with this reduction the maxima curve is
+  y ~ tau e^-tau and its peak is at tau = 1 exactly, which is what Section 5
+  states for their first criterion). Ranked before any code was written. The
+  only values taken from Figs. 9 and 10 are the labels printed inside them; the
+  marker positions were deliberately NOT measured, so this case needed no
+  maintainer review and review/ is empty by design.
+
+  KEY NUMBERS. tau_m at the envelope tangency: 1.2868, 1.2746, 1.2521, 1.2257
+  at S = 4, 8, 16, 32 against their stated 1.275 - mean |dev| 1.66 %, and
+  3.73 % over S = 3 to 200, where it falls monotonically to 1.1545 past a
+  maximum near S = 4. The collapse is real over the range Barkelew drew and
+  degrades outside it; that drift is the page's main new result. The ordering
+  claim holds for all 13 values of S: (N/S) at tau_m = 1 exceeds the tangency
+  by 34.3 % at S = 3 falling to 1.2 % at S = 200. Barkelew's critical inlet
+  pressure against the criterion-1 back-integration with the TRUE rate law over
+  Tw = 600-700 K: 1.77 % mean, 4.04 % worst, signed -2.43 % to +4.04 %,
+  crossing near 645 K - that is what "agree extremely well" is worth; at 625 K
+  the back-integration reproduces their printed (p0)_cr,1 = 0.01651 atm to
+  0.01 %. Separating the two approximations Section 5 conflates: the
+  exponential rate law alone is conservative by 5.1-7.6 % across the range, the
+  tangency criterion pushes the other way, and they partly cancel - which is
+  WHY the two methods agree better than either does alone; neither paper says
+  this. pymrm finite volume against adaptive phase-plane quadrature: 0.259 %
+  mean at n_zeta = 1600, observed order 0.99 (first-order upwind). Parameter
+  reading against four printed derived quantities: worst 0.090 % (their
+  ln K = -2.055 against -2.0568). Figs. 3 and 10 as a pair, p0 = 0.017 atm,
+  Tw = 625-628 K: with the true rate law all four have bounded hot spots
+  (660.8, 667.6, 678.7, 777.6 K); with Barkelew's exponential all four reach
+  the top of the paper's own 800 K axis, at z' = 0.751, 0.540, 0.461, 0.409 m.
+
+  DELIBERATE-BREAK TABLE (printed on the page; C1 = the 1.275 test,
+  C3 = Barkelew vs VWF critical pressure, C4 = pymrm vs quadrature).
+  Baseline C1 1.655 %, C3 1.770 %, C4 0.259 %.
+  exp(tau) -> 1 + tau: C1 no envelope exists, CATCHES.
+  cooling sign flipped: C1 no envelope exists, CATCHES.
+  reaction second order in y: C1 1.476 %, BLIND.
+  linearise the rate about T_M not T_w: C3 7.177 %, CATCHES.
+  tau = a(T-Tw)/Tw with the square dropped: C3 99.845 %, CATCHES.
+  nu = 1 in construct_div: C4 100.000 %, CATCHES.
+  n_zeta = 25 cells: C4 13.359 %, CATCHES.
+
+  Two blind spots are measured and stated rather than glossed. (1) Both
+  check-3 defects leave check 1 the IDENTICAL computation - the reduced system
+  contains no reference temperature and no dimensional parameter - so the 1.275
+  agreement is no evidence that the groups are right. (2) Check 1 is nearly
+  blind to the reaction order: over orders 0.5, 1, 2 and S = 4-32 the tangency
+  hot spot stays within 1.206-1.314, so their 1.275 characterises the
+  EXPONENTIAL TEMPERATURE DEPENDENCE and almost nothing else. The abscissa of
+  the tangency does move, by a factor 2.24 at S = 4, so the chart itself is
+  order-specific even though that number is not. The nu = 1 row reads exactly
+  100 % because the solve becomes degenerate (tau = 0 everywhere - a
+  cylindrical divergence carries 1/r and the first face is at zeta = 0), and
+  the page prints that value so the 100 % is not mistaken for a saturated
+  metric.
+
+  DETERMINISM. No continuation chain enters any reported number. Every root
+  find is a bracketed brentq whose sign change is asserted; the tangency
+  bracket is the pair of hot spots tau_m = 1.7 and 0.7, chosen as neutral round
+  numbers that straddle the answer without reference to 1.275. The pymrm domain
+  is set by a 200-cell pre-pass per case, not warm-started from a neighbour.
+
+  TIER 6, stated on the page, in meta.yaml, in both sidecars and in the README.
+  Barkelew's chart correlates his own numerical integrations; every Van
+  Welsenaere & Froment number is likewise their own computed value. Neither
+  paper contains an experiment.
+
+  INTEGRATOR NOTES. models_entry.yaml is an APPEND - D2.1 is not in models.yaml
+  at all; insert it in section D immediately before D2.2, whose `related:` list
+  already names D2.1, so no edit is needed there. slug
+  barkelew-runaway-diagram, directory pages/D2.1-barkelew-runaway-diagram/;
+  slug and title match page/meta.yaml. page/meta.yaml status is `in-progress`
+  and the integrator flips it to `published`. No new dependency: scipy's
+  PchipInterpolator and LSODA are the only additions over D2.2's imports.
+  The entry carries a `reference_read_from` block, the same shape A4.4 and
+  H1.1 use.
+review_artifacts: []
+updated: '2026-08-01'

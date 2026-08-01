@@ -687,19 +687,62 @@ models:
   - id: H1.1
     slug: sieverts-permeation
     title: "Sieverts-law hydrogen permeation through Pd membranes"
+    description: >
+      The exponent is one half because the molecule splits in two, and that single
+      fact decides how a palladium membrane behaves. The permeance Itoh prints as a
+      formula is derived here instead - a pymrm radial solve of the wall lands on
+      his 4.47e-5 mol/s - and the half-power law is then given the two consequences
+      it is usually quoted without: a permeator empties in a FINITE length (on a
+      clean permeate side), where an exponent of 1 never does, and spare membrane
+      capacity is worth its square. Those numbers put Itoh's own membrane 18x from
+      being the limiting resistance, which is the condition that puts the reactor of
+      H1.4 on its fast-permeation ceiling and leaves the permeance no observable to
+      move.
     section: H
-    status: planned
+    status: published
+    page: pages/H1.1-sieverts-permeation/
     tier: T0
     priority: P1
-    structures: [S7]
+    structures: [S3, S5]
     phases: [gas]
-    data: {tier: 2, method: table}
+    predicts:
+      - the permeation rate constant of a cylindrical Pd tube from D, C_0 and the radii
+      - the dissolved-hydrogen profile through the wall (logarithmic in r)
+      - axial hydrogen depletion in a membrane channel, and the finite length at which it ends
+      - the capacity ratio at which permeation stops being the limiting resistance
+      - the apparent pressure exponent produced by a finite surface step in series with the wall
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac]
+    reference:
+      authors: ["Itoh, N."]
+      year: 1987
+      container: "AIChE Journal 33(9) 1576-1578"
+      doi: 10.1002/aic.690330921
+      note: >
+        The paper actually read, and the source of every equation. Names the law
+        and uses it, printing it as Eq. 1 with the cylindrical permeance
+        alpha_H = 2 pi l_0 D C_0 / ln(r_o/r_i) and evaluating it at 473 K.
+        Every character verified on the native 300 dpi bitmap. Itoh prints NO
+        permeation measurement and NO temperature dependence, and never tests
+        the exponent. Same source as H1.4.
+    origin_not_consulted: >
+      Bohmholdt, G. and Wicke, E. (1967) - the half-power pressure law, as Itoh
+      attributes it; Sieverts, A. and Danz, W. (1936) - the solubility constant
+      C_0 = 1280 mol/m3, the ONLY thing Itoh cites them for; Nagamoto, H. and
+      Inoue, H. (1985) - the diffusivity D = 9.23e-10 m2/s. All recorded without
+      DOIs: no copy was available and no citation could be verified against an
+      original, so container and year come from Itoh's reference list only.
+      Itoh does not reprint any of their results - he cites Bohmholdt & Wicke for
+      the exponent and then writes his own Eq. 1 - which is why the read paper,
+      not the origin, is in `reference`.
+    data: {tier: 2, method: stated in text, status: complete}
     note: >
-      Promoted into the first wave after H1.12 was deferred. Permeation data is
-      commonly tabulated, and the pressure exponent n (0.5 vs 1) is itself a
-      published controversy worth showing against data — see Caravella et al.
-      (2010) on the empirical exponent.
-    related: [H1.2, H1.3, H1.4]
+      Promoted into the first wave after H1.12 was deferred. The catalogue's
+      second citation, Caravella et al. (2010) on the empirical pressure
+      exponent, is not on disk and is not used: the page treats the exponent by
+      derivation and never claims to test it against data. A future page
+      comparing measured exponents needs a permeation dataset and is recorded as
+      a follow-up on queue_cases/H1.1.yaml.
+    related: [H1.4, H1.3, H1.5, H1.7]
 
   - id: H1.4
     slug: itoh-membrane-dehydrogenation

@@ -4,19 +4,218 @@ title: Sieverts law H2 permeation
 catalog_reference: Sieverts; exponent analysis by Caravella et al. (2010)
 priority: P1
 tier: T0
-structures: S7
-status: needs-paper
+structures: S3,S5
+status: published
 reference:
-  doi: 10.1021/jp1006582
+  authors:
+  - Itoh, N.
+  year: 1987
+  container: AIChE Journal 33(9) 1576-1578
+  doi: 10.1002/aic.690330921
+origin_not_consulted: >
+  Bohmholdt, G. and Wicke, E. (1967), Z. physikalische Chemie, Neue Folge 56,
+  133 - the half-power pressure law, as Itoh attributes it; Sieverts, A. and
+  Danz, W. (1936), Z. physik. Chem. (B) 34, 158 - the solubility constant
+  C_0 = 1280 mol/m3, the only thing Itoh cites them for; Nagamoto, H. and Inoue,
+  H. (1985), Chem. Eng. Commun. 34, 315 - the diffusivity D. Recorded without
+  DOIs: no copy was available and no citation could be verified against an
+  original, so container and year come from Itoh's reference list alone. Not
+  consulted; nothing on the page derives from them beyond the two constants Itoh
+  quotes. Itoh does not REPRINT any of their results - he cites Bohmholdt &
+  Wicke for the exponent and then writes his own Eq. 1 - so the reprint test of
+  AGENTS.md is not met for them and the paper actually read stays in
+  `reference`, as on H1.4 and B1.6.
 paper:
-  on_disk: null
-  open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
+  on_disk: '/home/eajfpeters/papers/pymrm-gallery/AIChE Journal - September 1987 - Itoh - A membrane reactor using palladium.pdf'
+  open_access: false
+  checked: '2026-08-01'
+blocker: null
+scope_decision: >
+  NOT covered by H1.4, and built as its own page. H1.4 USES the half-power
+  permeation law as one closure inside a two-channel reactor model; H1.1 is
+  ABOUT the law. Nothing on this page duplicates H1.4: the wall is solved as a
+  radial BVP so that Eq. 1's alpha_H is derived rather than quoted (H1.4 only
+  checks the arithmetic of the formula), the channel is a single-domain
+  permeator with a prescribed permeate composition (H1.4's is the coupled
+  two-domain reactor), and the two headline results - the capacity ratio
+  Pi_crit that separates membrane-limited from flow-limited operation, and the
+  y_H ~ Pi^(-1/n) scaling that makes spare capacity worth its square under a
+  half-power law - appear in neither the source nor H1.4.
+
+  The decisive argument for a separate page is that these results EXPLAIN
+  H1.4's verified finding. Its verifier measured that varying alpha_H over
+  x0.3-x10 moves the conversion by 1.4e-11, and recorded that as a
+  resolving-power limitation without a mechanism. The mechanism is Pi = 51.4
+  against Pi_crit = 2.84: permeation is 18x from being the limiting resistance,
+  which is the condition (with equilibrium kinetics) that puts H1.4's model on
+  its co-current fast-permeation ceiling - and on that ceiling the conversion is
+  a function of K_p and the purge split alone, so alpha_H has no observable left
+  to move. That is a real, previously unclaimed result.
+
+  CARE WITH THE TWO NUMBERS THAT GO WITH IT. The 5.5 % stripping length and the
+  3.8e-4 driving mole fraction describe the same membrane run as a SEPARATOR ON
+  A CLEAN PERMEATE against the duty his reaction sets - not Itoh's reactor. His
+  permeate is loaded with an argon purge, so at the ceiling both sides carry the
+  same H2 mole fraction, y = 7.2e-3 (19x that 3.8e-4), the driving difference
+  tends to zero, and with y' > 0 there is no finite extinction length at all.
+  The page, the README, meta.yaml and models_entry.yaml all carry the qualifier;
+  it must not be dropped again.
+
+  SOURCE DECISION. The catalogue cites "Sieverts; exponent analysis by
+  Caravella et al. (2010)". Neither is on disk. Itoh (1987) is, and it passes
+  the AGENTS.md reprint test for the LAW: it NAMES the law ("assumed to obey
+  the half-power pressure law (Bohmholdt and Wicke, 1967) ... proportional to
+  the difference between the roots of the hydrogen partial pressures"), prints
+  it as Eq. 1 with the cylindrical permeance, and USES it numerically with an
+  evaluated alpha_H = 4.47e-5 mol/s. So `needs-paper` was not the right call
+  for the law itself.
+
+  It does NOT carry the exponent controversy. Itoh assumes n = 1/2 and never
+  tests it, prints no permeation measurement, and prints no temperature
+  dependence. The page therefore treats the exponent by derivation, never by
+  comparison with data, and says so in three places. The Caravella-style
+  exponent-vs-data page remains unbuilt; see follow_up.
+
+  ATTRIBUTION, recorded because a page about a named law must get it right:
+  Itoh attributes the half-power exponent to Bohmholdt and Wicke (1967). He
+  cites Sieverts and Danz (1936) for exactly one thing - the solubility
+  constant C_0 = 1280 mol/m3, the amplitude of c = C_0 sqrt(p/P_0).
+  models_entry.yaml and this file record ITOH as `reference` (with his DOI) and
+  all three cited classics under `origin_not_consulted`, the J3.1 form: Itoh
+  does not reprint any of their results, their citations are transcribed from
+  his reference list and carry no verifiable DOI, and Bohmholdt & Wicke is not
+  the origin of the law this case is named for. The attribution itself is
+  unchanged and is stated prominently on the page and in the CSV sidecar.
+notes: >
+  Staged at queue_cases/H1.1/page/. Runtime 15 s; 28 agreement metrics.
+  Headline: the printed alpha_H = 4.47e-5 mol/s is reproduced to -0.032 % by a
+  pymrm radial solve that DERIVES it rather than evaluating Eq. 1's formula.
+  That is a transcription-and-derivation check, not a physical validation -
+  Itoh reports no permeation measurement, so the validation situation is tier 6
+  and the page's Data section says so.
+
+  THE HEADLINE IS NOT CIRCULAR, AND THE PAGE SAYS WHY. The radii were selected
+  by requiring the alpha_H identity to close, so that identity cannot be
+  evidence about them - it discriminates the two candidate readings of the
+  printed "17.0 mm" (2.4 % against 0.03 %) and nothing more. The page states
+  that plainly in the parameters section, in check 1 and in check 2. The
+  INDEPENDENT witness is Figure 1, re-read on the native 300 dpi bitmap of
+  journal page 1577: it prints the dimension values 0.2, 17(phi), 28(phi) and
+  140 with the unit [mm], and the 17(phi) arrowheads terminate at rows 268 and
+  342 on the INNER faces of the two membrane lines, with the wall dimensioned
+  separately as 0.2 (tips at rows 259 and 267, straddling the band from
+  outside). That gives r_i = 8.5 mm from the drawing alone, contradicting the
+  text's "17.0 mm OD". Printed values are recorded as fact; the arrowhead
+  placement is an interpretation and is labelled as one - see follow_up. Note
+  also that alpha_H fixes only r_o/r_i = 1.023522, so the printed 200 um wall is
+  load-bearing: (4.25 mm, 100 um), (8.5 mm, 200 um) and (17 mm, 400 um) all
+  satisfy the identity identically.
+
+  Every check is broken on purpose and the tables are printed: six injected
+  defects on the wall, five on the channel. Two honest weaknesses are measured
+  rather than asserted - a wrong `nu` costs -1.16 % against the baseline solve
+  (-1.19 % against the printed value; same defect, different reference) on a
+  wall 2.4 % of the tube radius, 45 % at r_o/r_i = 3, and a grid as coarse as
+  n_r = 3 costs 2e-9. So the alpha_H identity is nearly blind to geometry and
+  discretisation and is decisive only about the CONSTANTS. Of the five channel
+  breaks, the two that converged to a wrong answer move the error 340x and
+  2900x; two more break the solve rather than the answer (217x and 1028x, both
+  reported as non-converged) and one makes the assembly singular. 340x is the
+  quoted minimum.
+
+  INTEGRATOR: models_entry.yaml is an IN-PLACE UPGRADE of the existing
+  `status: planned` H1.1 entry in models.yaml (currently ~lines 687-702). slug
+  (`sieverts-permeation`) and title are unchanged and match page/meta.yaml. Two
+  deliberate changes are flagged in that file's header comment: `structures`
+  [S7] -> [S3, S5] (S7 is what H1.4 does; this page has no second solved
+  domain), and the reference block, which now carries Itoh with his DOI plus an
+  `origin_not_consulted` entry for Bohmholdt & Wicke, Sieverts & Danz and
+  Nagamoto & Inoue.
+
+  The r_i = 8.5 mm / r_o = 8.7 mm reconstruction established on H1.4 is
+  re-derived here and is load-bearing for the one external comparison; the CSV
+  marks both rows `reconstructed`, the page prints both readings side by side,
+  and Figure 1's arrowheads are re-read here from the bitmap as the second,
+  independent witness.
+
+  NUMERICS, corrected after adversarial verification: above Pi_crit the
+  extinction point falls inside the domain and the FLAT-START Newton stalls -
+  but that is a globalisation failure, not a mathematical impossibility. The
+  cell residual is continuous and strictly increasing, negative at w = 0 and
+  positive at w_(i-1), so a unique non-negative root exists at every cell and
+  every Pi; past the front w decays quadratically per cell, underflows to
+  exactly 0 within nine cells and stays there. Newton loses it because the
+  sink's Jacobian diverges like w^(-1/2) while NumJac perturbs with an ABSOLUTE
+  eps_jac = 1e-6, so the differenced derivative is noise across the whole tail
+  and the line search parks on a slightly negative w. The page now marches the
+  same bidiagonal system for an initial guess (Permeator.march_guess, six
+  lines), runs the finite-volume sweep over the WHOLE range 0.2 to 60 including
+  Itoh's Pi = 51.4 (16 of 30 points needed the march; min w = 0, worst residual
+  5e-13), and adds check 5a: a grid ladder at Itoh's Pi converging at first
+  order (0.99) with every value non-negative. Section 4a shows the flat-start
+  failure and the fix side by side. The earlier claim that the discrete system
+  "has no non-negative solution at the transition cell" was FALSE and has been
+  removed from all six locations; the Reuse section now warns against reaching
+  for a free-boundary method here.
+follow_up:
+  kind: reading-confirmation-plus-optional-page
+  question: >
+    TWO QUESTIONS, neither blocking. The page is complete and correct either
+    way.
+
+    (1) CONFIRM A DRAWING READING. Figure 1 of Itoh (1987), on journal page
+    1577, prints four dimension VALUES - 0.2, 17(phi), 28(phi) and 140 - with
+    the unit [mm]. Those are printed numbers and are used as such. What the page
+    also uses is an INTERPRETATION of where the arrowheads land, read here on
+    the native 300 dpi bilevel bitmap (pdfimages, not a 600 dpi upsample):
+
+      * "0.2", arrow column 705: tips at row 259 pointing DOWN and row 267
+        pointing UP, facing each other across the upper membrane band (rows
+        262-266) from outside - the wall thickness.
+      * "17(phi)", arrow column 754: tips at row 268 pointing UP and row 342
+        pointing DOWN, facing apart onto the INNER faces of the two membrane
+        lines - the bore.
+      * "28(phi)", arrow column 809: the line runs from row 239, just under the
+        inner face of the upper shell band, to a tip at row 368 pointing DOWN
+        onto the inner face of the lower shell band. The lower tip is crisp; the
+        upper arrowhead's point is the least clean of the six (its narrowest
+        pixel row is 255, not 239), so it is quoted as context, not evidence.
+
+    Read that way, Figure 1 dimensions the palladium tube's INNER diameter as
+    17 mm, i.e. r_i = 8.5 mm and r_o = 8.7 mm - which contradicts the running
+    text's "200 um thick, 17.0 mm OD". Is that arrowhead reading right?
+
+    (2) DOES AN EXPONENT-VS-DATA PAGE BELONG IN THE GALLERY, AND FROM WHICH
+    SOURCE? H1.1 as built derives the exponent and its consequences but tests it
+    against nothing, because Itoh prints no permeation measurement. Caravella et
+    al. (2010), doi 10.1021/jp1006582, is the catalogue's named source for the
+    empirical exponent; it is not on disk (checked 2026-07-31, no open-access
+    route via Unpaywall).
+  detail: >
+    Why (1) is worth an answer. The r_i = 8.5 mm / r_o = 8.7 mm reconstruction
+    is load-bearing for the page's one external comparison, and the alpha_H
+    identity that selects it is CIRCULAR as evidence about the tube - the radii
+    are that identity's own output. The page says so plainly in three places, so
+    it stands on its own without an answer here. But if the arrowhead reading is
+    confirmed, the headline stops being a self-consistency check and becomes two
+    independent readings of the same paper agreeing, which is strictly stronger.
+    Nothing else on the page moves either way: alpha_H is used as printed, and
+    r_i enters elsewhere only through the membrane area quoted in section 5.
+    Note also that alpha_H constrains only r_o/r_i = 1.023522, so the PRINTED
+    200 um wall is what turns the ratio into a radius; (4.25 mm, 100 um),
+    (8.5 mm, 200 um) and (17 mm, 400 um) all satisfy the identity identically.
+    No page image is committed - the arrowhead evidence is recorded as pixel row
+    and column numbers in the CSV sidecar and on the page, which are facts about
+    a scan rather than a reproduction of it.
+  what_it_would_add: >
+    (1) turns the page's weakest-looking result into its strongest, at zero
+    computational cost - nothing is recomputed, only relabelled.
+
+    (2) the one thing this page cannot do: place a real membrane on the
+    n_app(lambda) axis of section 5. Everything needed is already implemented -
+    q_series(pi, lambda) and n_apparent(pi, lambda) - so the addition is a
+    dataset plus a fit, not new modelling.
   artifacts: []
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+  blocking: false
+updated: '2026-08-02'
+doi_source: builder-H1.1-2026-08-01
