@@ -5,18 +5,302 @@ catalog_reference: Mason & Malinauskas (1983)
 priority: P1
 tier: T1
 structures: S9
-status: in-progress
-reference: {}
+status: published
+reference:
+  authors:
+  - Krishna, R.
+  - Wesselingh, J. A.
+  year: 1997
+  container: Chemical Engineering Science 52(6) 861–911
+  doi: 10.1016/S0009-2509(96)00458-7
+  note: >-
+    The paper actually read, and on disk. Prints the dusty gas model as its
+    eqs. (82)-(87), the viscous-flow treatment as eqs. (90)-(101), the pressure
+    relation as eq. (105), Graham's law as eq. (107) and the single-component
+    slip-plus-Poiseuille form as eq. (103), all with attribution to Mason &
+    Malinauskas and Jackson. Every equation and constant used was read off a
+    600 dpi render of journal pages 886-893 on 2026-08-01.
+origin_not_consulted: >-
+  Mason & Malinauskas (1983) - the catalogue's own citation for this case -
+  together with Jackson (1977), Mason & del Castillo (1985) and Knudsen (1909).
+  None is on disk, none is reachable, none was consulted. The reprint route of
+  AGENTS.md applies and passes comfortably: Krishna & Wesselingh devote a
+  section to the dusty gas model, print every equation it needs in closed form,
+  attribute each, and use the model themselves. Kaza & Jackson (1980),
+  Haynes (1978) and Remick & Geankoplis (1974) are likewise known only through
+  the review's sentences about them, and nothing on the page is attributed to
+  any of them.
 paper:
-  on_disk: null
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-S0009250996004587-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-01'
+blocker: null
+scope_decision: >-
+  BUILD, and it does not overlap A4.4 or A4.2. A4.2 (published) is bulk
+  multicomponent diffusion with no wall - [D] = [B]^-1 [Gamma], the Duncan-Toor
+  cell, the review's pp. 863-872. A4.4 (published) is the SCALAR pore closure -
+  eq. (109), the Bosanquet relation eq. (110), and the closed form
+  D_Bos/D_1 = 1 + (rho-1) x_1/(1+Kn); its own scope note explicitly hands this
+  page the n-component matrix form (eqs. 86-87), the viscous-flow term and the
+  Fig. 44 comparison. This page is exactly those three, and it CITES A4.4's
+  result rather than re-deriving it - V5 checks that the matrix route collapses
+  onto A4.4's eq. (109) face by face (1.2e-13). The catalogue also separates
+  them: A4.3 is S9/T1, A4.4 is S3/T0.
+notes: >-
+  Built in queue_cases/A4.3/page/. Regenerates from build_page.py and executes
+  end to end in 25 s.
+
+  SENT BACK ONCE by adversarial verification (queue_cases/A4.3/review/
+  verification.md) and reworked. Three findings were real and are fixed below:
+  F1 the uphill threshold was one arbitrary composition's answer and the
+  screening rule built on it was false; F2 the 6.9 % viscous relief was measured
+  at a Knudsen number a 1 um pore cannot have, and the conclusion inverts under a
+  consistent sweep; F3 the claim that eq. (85) was "pinned separately by V2 and
+  V3" was false for the d_0/3 prefactor. F4-F7 were one-line corrections and are
+  also done. The transcription, the solver, V1, the break tables, the scope split
+  and the figure quarantine all survived the attack unchanged and are untouched.
+
+  VALIDATION ROUTE, ranked before any code was written: route 2 (internal
+  identities the paper must satisfy) plus route 3 (stated results in the text).
+  NO FIGURE IS USED BY THE PAGE. The ranking that produced it:
+    1. An independent numerical solution sharing no code - eq. (82) as an ODE
+       system in the concentrations with the constant fluxes as unknown
+       parameters, solved by scipy collocation. The only agreement number on the
+       page with no shared TRANSPORT code, and the headline. It does share
+       knudsen_D and pair_matrix (eqs. 83 and 85 evaluated into numbers), so it
+       cannot catch a mistake inside those. Eq. (85)'s MASS EXPONENT is pinned
+       separately by V3. Its d_0/3 PREFACTOR and eq. (83)'s eps/tau are pinned by
+       NOTHING on the page - measured, in a section of its own, by breaking the
+       prefactor in every route at once. The page says this.
+    2. eq. (103) - a printed closed form (Knudsen slip + Poiseuille) that the
+       solver does not contain and has no special case for. The one check with
+       power over the viscous term.
+    3. Symbolic recovery of eqs. (105), (107) and (103) from eq. (101), which
+       checks the one transcription everything rests on (the B3.1 pattern).
+    4. The four exponents the review states IN WORDS on p. 887, stored in the
+       dataset as numbers so a log-log slope is compared with something read off
+       the page rather than typed into the notebook.
+    5. Jackson's p_0 = sqrt(nu_B) p, quoted with its "40 % increase".
+    6. Collapse to the published A4.4's eq. (109)/(110).
+
+  KEY NUMBERS.
+    V1 independent collocation      8.7e-06 worst over six decades of pore size,
+                                    converging at order 2.00 against it - so the
+                                    residual IS pymrm's discretisation error
+    V2 eq. (103) recovered          1.0e-13
+    V3 Graham's law, predicted      2.5e-11 ; pressure uniformity 5.4e-16
+    V4 free-molecule / MS limits    1.8e-04 (first order in d_0) / 7.9e-06
+    V5 collapse to A4.4's eq. 109   1.2e-13
+    V6 p. 887 exponents             worst departure 0.021 from a printed 0 or 1
+    V7 grid order / 100-cell error  2.03 / 3.9e-07
+    symbolic eqs. 105/107/103       identically 0
+    [B^e] wall-free left null vec   1.3e-16 ; dominance margin 0.92 of diagonal
+    worst relative Newton residual  1.8e-08, over ALL 639 non-break solves on the
+                                    page (V4B at d_0 = 100 mm). The old 1.2e-10
+                                    was a max over six of the eleven groups and
+                                    was described as "anywhere" - F4.
+
+  MEASURED BLIND SPOT (F3), in a section of its own on the page. Breaking
+  eq. (85)'s d_0/3 to d_0/2 in EVERY route at once:
+    V1 (both routes)   3.97e-07 -> 2.75e-06   x6.9, BLIND by V1's own >100x rule
+    V2 (eq. 103)      -1.04e-13 -> -2.81e-13  BLIND (its reference calls the same
+                                              knudsen_D, so both sides move)
+    V3 (Graham)        5.72e-14 -> 8.18e-14   BLIND (the prefactor cancels out of
+                                              sum N_i sqrt(M_i) identically)
+  d_0/30 leaves V2 at -1.5e-11 and V3 at 0.0. NOTHING PINS THE d_0/3, and the
+  page carries it as a blind-spot row, not a caveat. The transcription itself is
+  correct - the verifier re-read it independently - but the coverage claim was
+  not, and it was wrong in the direction that reads as candour.
+
+  DELIBERATE-BREAK TABLE on V1 (deviation from the collocation reference):
+    (no defect)                                3.97e-07
+    eq. (87) off-diagonal sign flipped         1.94e+01   CATCHES
+    Knudsen term deleted                       SINGULAR   CATCHES - see below
+    eq. (85) mass exponent +1/2 not -1/2       9.97e-01   CATCHES
+    scalar (diagonal) closure                  2.91e+00   CATCHES
+    5-cell grid                                1.70e-04   CATCHES (discretisation)
+  on V2 (deviation from eq. 103): no defect -1.0e-13; viscous term deleted
+  -2.4e-02; eq. (91)'s 32 -> 8 +7.3e-02; alpha' = 0 -2.4e-02.
+  on V3 (Graham residual): no defect 5.7e-14; eq. (85) exponent +1/2 9.1e-01;
+  mass dependence dropped 6.3e-01; eq. (87) sign flipped 3.8e-02; scalar closure
+  1.2e-01; 5-cell grid 1.2e-15 (BLIND, and the page says so).
+
+  DELETING THE KNUDSEN TERM DOES NOT PRODUCE A WRONG ANSWER - IT PRODUCES NONE.
+  [B^e] becomes the pure Maxwell-Stefan matrix, which is singular, and the solve
+  raises. That is the page's Background claim (the wall term supplies the
+  missing velocity reference and is what makes the matrix invertible)
+  demonstrated rather than asserted. It is recorded in agreement.json as a
+  boolean rather than as inf, which is not valid JSON.
+
+  WHAT THE PAGE ADDS, all measured:
+    (a) A general n-component dusty gas solver in pymrm, with the viscous term.
+        A4.2 has the bulk Maxwell-Stefan matrix; A4.4 does build the binary 2x2
+        [B^e] with the wall term, but only as the yardstick for its scalar
+        closure, for two species and with no viscous term. Nothing in the
+        gallery had the general n x n form, and nothing had the viscous flux.
+    (b) "Neglect of the viscous flow contribution is not very serious (Haynes,
+        1978)" turned into a screening group assembled from the review's own
+        eqs. (85), (91) and (106): D_visc/D^e_iM = 3 p d_0/(32 eta v_bar_i),
+        linear in pore size, reproduced from the assembled code to 2.2e-16. It
+        is 2.64e-4 for H2 in a 1 nm pore and 0.26 in a 1 um one. THAT GROUP
+        CANNOT BE SWEPT ALONE (F2): eq. (85) makes Kn a function of the same
+        d_0, running the other way (138.9 at 1 nm, 0.139 at 1 um). Tying both to
+        d_0 over 21 pore sizes from 1 nm to 100 um, the viscous term changes the
+        pellet-centre pressure by 0.009 % at 1 nm, 0.62 % at 1 um, and NEVER MORE
+        THAN 0.63 % anywhere (maximum at 562 nm, Kn = 0.25). So the review's "not
+        very serious" holds EVERYWHERE, not only for catalysts - the opposite of
+        the sent-back version's headline. Physical reason: a pore large enough
+        for viscous conductance to matter has almost no reaction-generated
+        pressure rise left to relieve (p_0/p = 1.0346 at 1 um, 1.0003 at 100 um).
+        The page also prices the confounded reading explicitly: freezing Kn at
+        1e4 while dialling only the viscous group to its 1 um value gives 6.9 %,
+        an elevenfold overstatement of a pressure rise no 1 um pore has.
+    (c) Kaza & Jackson's uphill diffusion given the right axis (F1). THERE IS NO
+        CRITICAL PORE SIZE. Bisecting for the diameter at which N_N2 changes sign
+        gives 212.21 nm at x_N2 = 0.49 - but 4245.7 nm at 0.4830 and 0.913 nm at
+        0.4999, a factor 4650 across near-end compositions that ALL lie inside
+        the uphill window [0.4823, 0.5002] measured at 1 mm. At x_N2 = 0.5
+        exactly, N2 is uphill at every diameter from 1 nm to 1 mm, with
+        |N_N2/N_H2| = 5.9e-05 at the smallest. What pore size controls is the
+        WIDTH of the composition window: the half-width 0.5 - x*_N2 falls from
+        1.77e-2 at 1 mm to 1.09e-4 at 1 nm, a log-log slope of 0.98 in d_0, and
+        never closes. The bisection is still deterministic and grid-independent
+        (7.7e-06 at x = 0.49, 1.5e-07 at x = 0.4980 over 50 -> 400 cells) and the
+        page says explicitly that THAT number measures the solver, not the
+        threshold.
+    (d) Jackson's p_0 = sqrt(nu_B) p given its preconditions. The general
+        Knudsen-limit result is p_0/p = 1 + (nu_B sqrt(M_B/M_A) - 1) x_A,s,
+        reproduced to 1.6e-04 across surface composition and mass ratio;
+        sqrt(nu_B) needs pure A at the surface AND mass-conserving stoichiometry
+        AND Knudsen control. At Kn = 0.01 the rise is 1.0023, not 1.4141. The
+        -5.0e-05 residual at Kn = 1e4 is exactly 1/Kn (-5.005e-06 at 1e5,
+        -5.005e-07 at 1e6) and does NOT shrink with phi (-5.093e-05 at phi = 200,
+        slightly larger) - F5.
+    (e) An inert species in a reacting pellet: zero flux (3e-15 of the
+        reactant's) with a concentration varying 22.5 % at Kn = 1 and 36.6 %
+        under bulk control. The zero flux is CONSERVATION and the page says so;
+        the content is that a scalar closure WITH A FINITE POSITIVE DIFFUSIVITY
+        forces the variation to be exactly zero - run on the page (0.00e+00 at
+        all three Kn), not asserted. The qualifier is required (F6): the review's
+        own eq. (109) degenerates to D -> 0 for an inert (nu_C = 0) and predicts
+        nothing there.
+    (f) The invertibility of [B^e] as a THEOREM. Sum_i B_ij = 0 identically for
+        the wall-free matrix because D_ij is symmetric, so (1,...,1) is an exact
+        left null vector for any composition and any n >= 2; the wall term makes
+        every column sum 1/D^e_jM > 0 and the matrix strictly column-diagonally
+        dominant, hence nonsingular by Levy-Desplanques. Checked on the assembled
+        b_matrix for n = 2..6 (1.3e-16 relative; margin 0.92 of the diagonal) and
+        demonstrated by V1's knudsen=False injection, which raises rather than
+        returning a wrong answer.
+
+  ONE BUG FOUND AND FIXED DURING THE BUILD, recorded because a verifier should
+  look for its class: the V5 comparison against A4.4's eq. (109) first used the
+  SURFACE value of D^e_ij and came out at 5e-2, which reads exactly like a small
+  disagreement about physics. D^e_ij is inversely proportional to pressure and
+  the pressure is not uniform in a reacting pellet; using the local value gives
+  1.2e-13. The V5 preamble on the page says this.
+
+  HONESTY. Tier 6 throughout, stated in the title block, in "The data", in the
+  Validation blind-spot table and in "What pymrm adds". Nothing on the page
+  tests a diffusivity VALUE - every route is handed the review's own printed
+  numbers - and nothing pins eq. (85)'s d_0/3 either, which is now a measured
+  row in the blind-spot table rather than a claim of coverage. eps/tau = 1 is the
+  printed tau = 1 plus an ASSUMED eps = 1, flagged
+  wherever used. The gas viscosity in the viscous group is a representative
+  value, not from the review, and enters that group and nothing else. The uphill
+  example is NOT Kaza & Jackson's and is not presented as theirs. Graham's law
+  is labelled an algebraic identity rather than evidence, and the symbolic
+  section derives it.
+
+  PROSE/OUTPUT DRIFT: every computed number in prose is interpolated at run time
+  via display(Markdown(rf"...")) from the same variables the cells print. No
+  computed number is typed into a markdown cell.
+
+  INTEGRATOR NOTES. No new dependency: numpy, scipy, sympy, matplotlib, and
+  sympy is already in requirements.txt. models_entry.yaml is an APPEND - A4.3 is
+  not in models.yaml at all. meta.yaml status is already 'published'; slug
+  dusty-gas-model, directory pages/A4.3-dusty-gas-model/. The page loads
+  pages/A4.2-maxwell-stefan-vs-fick/data/krishna-wesselingh-1997-worked-examples.csv
+  cross-page for the three printed pair diffusivities, so that file must stay
+  where it is (the Colab path falls back to the raw GitHub URL). Use
+  `reference:` for Krishna & Wesselingh and `origin_not_consulted:` for Mason &
+  Malinauskas et al.; do NOT add reference_read_from, which would name the same
+  paper twice.
+  NOTHING IN queue_cases/A4.3/review/ MAY BE COMMITTED except README.md and
+  make_overlay.py, both written to carry no extracted coordinate and no
+  page-image bytes. The rest of that directory is the unreviewed extraction and
+  the page render, and is git-ignored.
+follow_up:
+  kind: optional-figure-digitisation
+  question: >-
+    The review's Fig. 44 (journal p. 887) compares the dusty gas model with
+    Remick & Geankoplis's (1974) He/Ne/Ar capillary measurements, and it has
+    been digitised - 15 markers (the measurements) and the three drawn curves
+    (Krishna & Wesselingh's own calculation), kept in separate rows. Four
+    questions, set out in queue_cases/A4.3/review/README.md: is the marker count
+    right; is the shape-to-species mapping right (triangle = He, circle = Ne,
+    square = Ar, assigned twice and independently - by shape and by position -
+    which agree on all 15); do the crosshairs sit on the marker centres,
+    especially in the leftmost and rightmost clusters where markers sit visibly
+    above their curves; and do the traced curves follow the printed ones across
+    the three masked-out rectangles?
+  detail: >-
+    NOT BLOCKING. The page is complete and correct as a tier 6 page, validated on
+    an independent collocation solution, on eq. (103), and on the four exponents
+    the review states in words. Saying yes would add one Results section and two
+    PARAMETER-FREE experimental checks - Graham's law on the measured fluxes
+    (nothing but three fluxes and three molar masses enters it, and re-weighting
+    the same fluxes by 1 or by 1/sqrt(M) instead of sqrt(M) misses by an order of
+    magnitude, so it discriminates rather than merely passing) and the
+    free-molecule asymptote from the printed d_0 = 39 um - and would take the
+    data tier from 6 to 4, giving section A a rare experimentally-validated page.
+    PLEASE BATCH WITH F3.5 AND G1.7, which are already waiting on a figure
+    review; three answered in one sitting is the workflow that worked on
+    2026-07-29. The overlay, the extraction CSV, its sidecar and the page render
+    are all in queue_cases/A4.3/review/ and are git-ignored; only README.md (the
+    questions) and make_overlay.py (the reproducible recipe, carrying the axis
+    calibration and the mask rectangles but no extracted coordinate) are tracked.
+  artifacts:
+  - queue_cases/A4.3/review/A4.3-fig44-overlay.png
+  - queue_cases/A4.3/review/A4.3-fig44-points.csv
+resume:
+  staged_at: queue_cases/A4.3/page/
+  blocking: false
+  established: >-
+    The page itself is finished and needs nothing. The extraction is finished
+    too: axis calibration from the tick marks (abscissa px 934 = 10 Pa,
+    px 2088 = 1e5 Pa; ordinate py 1935 = 1, py 3121 = 1e-4), 15 markers with
+    shape and position classification agreeing on every one, 690 samples per
+    model curve, and a provenance sidecar already written. Do not re-extract.
+  answer_changes:
+    all_four_fine: >-
+      Move krishna-wesselingh-1997-fig44.csv and its .meta.yaml from review/ into
+      the page's data/, add a Results section comparing the solver with the 15
+      measured points, add the two parameter-free experimental checks to the
+      Validation section, flip the sidecar status from awaiting-review to
+      complete, and change data.tier from 6 to 4 in meta.yaml and models.yaml.
+    marker_missing_or_spurious: >-
+      Re-run make_overlay.py with the mask rectangle adjusted; only the new
+      section changes.
+    shape_mapping_wrong: >-
+      Stop and re-extract. A swap would also break the He > Ne > Ar ordering that
+      holds at every measured pressure, so check that first.
+    crosshair_misplaced: >-
+      That point's flux moves; re-check the sentence attributing marker-to-curve
+      offsets to experimental scatter rather than to extraction error.
+    curve_mistraced: >-
+      Only the three pair diffusivities reconstructed from the curves move; no
+      measured claim uses them.
+    declined: >-
+      Nothing to do. Delete this follow_up block and the review/ directory.
+  files_to_touch:
+  - queue_cases/A4.3/page/build_page.py
+  - queue_cases/A4.3/page/meta.yaml
+  - queue_cases/A4.3/review/
+  do_not_redo: >-
+    The extraction, the axis calibration, the series assignment, the provenance
+    sidecar, or anything in the existing page. The page does not depend on the
+    figure in any way.
+review_artifacts:
+- queue_cases/A4.3/review/A4.3-fig44-overlay.png
+updated: '2026-08-02'

@@ -1,0 +1,149 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.3
+slug: dusty-gas-model
+title: "The dusty gas model"
+section: A
+status: published
+tier: T1
+priority: P1
+structures: [S9]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 25
+datasets:
+  - krishna-wesselingh-1997-dgm-constants.csv
+
+validation: >
+  V1. The n-component solver is checked against an independent collocation
+  solution of the same equations - eq. (82) written longhand as an ODE system in
+  the concentrations with the constant fluxes as unknown parameters, solved by
+  scipy.integrate.solve_bvp. It shares no line of the TRANSPORT code - no
+  b_matrix, no pymrm operator, no grid, and not even the same unknowns - but it
+  does share knudsen_D and pair_matrix, the two helpers that evaluate eqs. (83)
+  and (85) into numbers, so it cannot catch a mistake inside those. Eq. (85)'s
+  MASS EXPONENT is pinned separately by V3; its d_0/3 PREFACTOR and eq. (83)'s
+  eps/tau are pinned by NOTHING on this page and are transcription-only. That is
+  measured on the page in a section of its own: breaking d_0/3 -> d_0/2 in every
+  route at once moves V1 only x6.9 (BLIND by V1's own >100x rule), V2 from
+  -1.0e-13 to -2.8e-13 and V3 from 5.7e-14 to 8.2e-14, and it is carried as a
+  blind-spot row rather than a caveat. The two routes
+  agree to the pymrm discretisation error over six decades of pore size, and the
+  agreement improves at second order with grid refinement.
+  V2. Eq. (103), the review's printed single-component closed form (Knudsen slip
+  plus Poiseuille flow), is recovered from the general solver, which contains no
+  special case for n = 1. This is the only check with power over the viscous
+  term; deleting the term or mis-reading eq. (91)'s 32 both move it by percent.
+  V3. Graham's law, eq. (107), is a prediction and not an input: the capillary is
+  given equal total concentration at its two ends and finds the flux ratio
+  itself. It is an ALGEBRAIC IDENTITY of eq. (82), derived symbolically on the
+  page, and it is labelled as one; what it tests is eq. (85)'s mass exponent and
+  eq. (87)'s antisymmetry, and nothing else.
+  V4. Both asymptotes: the free-molecule limit against N_i = -D^e_iM grad c_i,
+  first order in pore diameter, and the Maxwell-Stefan limit against an
+  independent collocation solve closed by Graham's law. The latter can only be
+  approached, because [B^e] is singular without the wall term - which the break
+  table demonstrates by injecting exactly that defect and getting no solution
+  rather than a wrong one.
+  V5. Exact collapse to the published page A4.4's scalar result: the local
+  effective diffusivity the matrix route produces equals eq. (109) with the flux
+  ratio the stoichiometry imposes, face by face. Note D^e_ij is inversely
+  proportional to pressure and the pressure is not uniform in a reacting pellet,
+  so the comparison must use the LOCAL value; the surface value leaves 5e-2, which
+  reads like a small disagreement about physics and is a bookkeeping slip.
+  V6. The four exponents the review states in words on its page 887 (fluxes
+  independent of pressure and pore size under bulk control, proportional to both
+  under Knudsen control) recovered as log-log slopes of the n-component solver.
+  V7. Grid convergence at the expected second order.
+  Symbolic: eqs. (105), (107) and (103) all derived from eq. (101) with zero
+  residual, which checks the transcription of the one equation the solver
+  implements. Separately, the wall-free [B^e] is shown to have (1,...,1) as an
+  exact left null vector for any composition and any n >= 2 (symmetry of D_ij
+  alone), and the full [B^e] to be strictly column-diagonally dominant with
+  margin 1/D^e_jM - checked on the assembled b_matrix for n = 2..6 to 1.3e-16.
+  Deliberate-break tables are printed for V1, V2 and V3, and every blind spot
+  they expose is named in the prose as a claim the page therefore does not make.
+  The worst relative Newton residual is taken over ALL 639 non-break solves on
+  the page (1.8e-08, from V4B's approach to the Maxwell-Stefan limit), not over
+  a subset.
+
+adds: >
+  (1) A general n-component dusty gas solver in pymrm. A4.2 has the bulk
+  Maxwell-Stefan matrix and A4.4 builds the binary 2x2 [B^e], but only as the
+  reference its scalar closure is measured against, for two species and with no
+  viscous term. Nothing in the gallery had the general n x n form, and nothing
+  had the viscous flux at all.
+  (2) The review's remark that "neglect of the viscous flow contribution is not
+  very serious (Haynes, 1978)" turned into a screening group,
+  D_visc/D^e_iM = 3 p d_0 /(32 eta v_bar_i), assembled from its own eqs. (85),
+  (91) and (106) - and into a bound. That group cannot be swept on its own,
+  because eq. (85) makes Kn a function of the same d_0 running the other way.
+  Tying both to d_0, viscous flow changes the pellet-centre pressure by 0.009 %
+  at 1 nm and 0.62 % at 1 um, and never by more than 0.63 % anywhere from 1 nm to
+  100 um (maximum at 562 nm, Kn = 0.25). So "not very serious" holds EVERYWHERE,
+  not only for catalysts: a large pore has plenty of viscous conductance but
+  almost no reaction-generated pressure rise left to relieve. Freezing Kn at 1e4
+  instead gives 6.9 % at the 1 um viscous group - an elevenfold overstatement of
+  a pressure rise no 1 um pore has - and the page prices that mistake explicitly.
+  (3) Kaza & Jackson's uphill diffusion, which the review reports qualitatively,
+  given the right axis. There is no critical pore size: the diameter at which
+  N2's flux reverses moves by a factor 4650 (4246 nm to 0.91 nm) across near-end
+  compositions that all lie inside the uphill window, and at equal end
+  compositions N2 is uphill at every diameter from 1 nm to 1 mm. What pore size
+  controls is the WIDTH of the composition window, whose half-width falls from
+  1.77e-2 at 1 mm to 1.09e-4 at 1 nm - a log-log slope of 0.98 in d_0 - and never
+  closes.
+  (4) Jackson's p_0 = sqrt(nu_B) p given its preconditions - it is the corner
+  case (pure A at the surface, mass-conserving stoichiometry, Knudsen control) of
+  a closed form the solver reproduces across all three, and under bulk control
+  the real pressure rise is far smaller. The residual at Kn = 1e4 is exactly
+  1/Kn and does NOT shrink when phi is pushed.
+  (5) A demonstration that a scalar diffusivity is not merely inaccurate: an
+  inert species in a reacting pellet carries exactly zero flux with a
+  concentration that varies by tens of percent, and a scalar closure with a
+  FINITE POSITIVE diffusivity predicts a flat profile at every Knudsen number -
+  run on the page (0.00e+00), not asserted. The qualifier is necessary: the
+  review's own eq. (109) degenerates to D -> 0 for an inert and predicts nothing.
+  (6) The invertibility of [B^e] as a theorem rather than an observation:
+  (1,...,1) is an exact left null vector of the wall-free matrix for any
+  composition and any n >= 2 by the symmetry of D_ij, and the wall term makes
+  every column sum 1/D^e_jM > 0, hence the matrix strictly column-diagonally
+  dominant and nonsingular by Levy-Desplanques.
+
+agreement: >
+  Against printed results: eq. (103) recovered to machine precision; the four
+  p. 887 exponents to a few thousandths; Jackson's sqrt(nu_B) to the finite-Kn
+  residual of the run, which is exactly 1/Kn; eq. (109) of the published A4.4 to
+  machine precision. Internal: an independent collocation solution of the same equations
+  agreed to the pymrm discretisation error over six decades of pore size, with
+  second-order convergence towards it; Graham's law and pressure uniformity as
+  predictions rather than inputs; both asymptotes at their expected rates; grid
+  order 2.
+
+caveats: >
+  TIER 6. Nothing on this page is compared with a measurement. The review does
+  contain one experimental comparison for the dusty gas model - its Fig. 44
+  against Remick & Geankoplis (1974) - and that figure has been digitised, but
+  the extraction has not been through the gallery maintainer's visual review, so
+  it is parked in queue_cases/A4.3/review/ (git-ignored) and no cell on this page
+  loads it. Adopting it would add a Results section and two parameter-free
+  experimental checks and would change nothing already here.
+  The page tests no diffusivity VALUE: the pair diffusivities are the review's
+  own printed numbers for H2/N2/CO2 (p. 872, cross-page from A4.2) and every
+  route on the page is handed the same ones. NOTHING ON THE PAGE PINS eq. (85)'s
+  d_0/3 PREFACTOR either - that is measured, by breaking it in every route at
+  once and watching V1 move x6.9, V2 -1.0e-13 -> -2.8e-13 and V3 5.7e-14 ->
+  8.2e-14. It rests on transcription: read twice off a 600 dpi render, with the
+  review's own sentence naming d_0 the pore DIAMETER. eps/tau = 1 combines the
+  printed tau = 1 for a cylindrical pore with an ASSUMED eps = 1, and is flagged
+  wherever it is used. The gas viscosity in the viscous screening group is a
+  representative value and is not from the review; it enters that group and
+  nothing else. Surface diffusion, pore-size distributions, viscous selectivity
+  (alpha'_i != 1), thermal diffusion and non-ideal mixtures are all discussed by
+  the review and none is implemented. The uphill-diffusion example is not Kaza &
+  Jackson's - that paper was not consulted - and is not presented as theirs.

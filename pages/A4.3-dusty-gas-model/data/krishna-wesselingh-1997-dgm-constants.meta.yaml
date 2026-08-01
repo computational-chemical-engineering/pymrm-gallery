@@ -1,0 +1,99 @@
+dataset_id: krishna-wesselingh-1997-dgm-constants
+title: >
+  Structural constants of the dusty gas model, the Poiseuille permeability and
+  the two scaling claims of journal page 887, transcribed from
+  Krishna & Wesselingh (1997), pp. 886-893
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Wesselingh, J. A."
+  year: 1997
+  container: "Chemical Engineering Science 52(6) 861-911"
+  doi: 10.1016/S0009-2509(96)00458-7
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+origin_not_consulted:
+  works:
+    - "Mason, E. A. & Malinauskas, A. P. (1983), Gas Transport in Porous Media: the Dusty Gas Model"
+    - "Jackson, R. (1977), Transport in Porous Catalysts"
+    - "Mason, E. A. & del Castillo, L. F. (1985)"
+  note: >
+    The dusty gas model originates with these works, which the review cites for
+    eqs. (81)-(85) and (99)-(101).  None is on disk and none was consulted.
+    Everything in this file was read from Krishna & Wesselingh (1997), which
+    prints all of them in full with attribution.
+
+acquisition:
+  method: table
+  figure: "equations (82)-(87), (91), (98)-(101), (103), (105)-(107) and the prose of journal page 887"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    Every value was read off a 600 dpi render of the printed page on
+    2026-08-01, never from the PDF text layer.  These are NOT measurements:
+    they are the structural constants of a model, plus four exponents the
+    review states in words.  The four p887 rows encode two printed sentences:
+    "The diffusivities D^e_ij are inversely proportional to the pressure and
+    independent of pore size and so in the bulk diffusion controlled regime the
+    fluxes N_i are independent of system pressure and pore size" (exponent 0,
+    twice) and "the Knudsen diffusivities D^e_iM are independent of the pressure
+    and directly proportional to the pore size and so the fluxes N_i are
+    directly proportional to the system pressure and pore size" (exponent 1,
+    twice).  They are stored as exponents so that a log-log slope can be
+    compared with a number that came off the page rather than with a number
+    typed into the notebook.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-01
+  estimated_error: "none - printed integers and exponents, read at 600 dpi"
+
+validation:
+  eq105_derived: >
+    Eq. (105) is not an independent transcription and is not stored here.
+    Summing eq. (101) over the n species makes the Maxwell-Stefan friction
+    double sum vanish identically by antisymmetry and reproduces eq. (105) term
+    for term, including the 1/RT prefactor and the
+    (1 + D_visc sum_i alpha'_i x_i / D^e_iM) denominator.  The two readings
+    therefore check each other, and the notebook does that check symbolically.
+  eq107_derived: >
+    Setting grad p = 0 in that same sum gives sum_i N_i / D^e_iM = 0, and
+    eq. (85)'s D^e_iM proportional to M_i^(-1/2) turns it into
+    sum_i N_i sqrt(M_i) = 0, which is eq. (107) as printed.  The mass exponents
+    of eq. (85) and eq. (107) are therefore consistent with each other, and a
+    misreading of either breaks the identity.  Both are stored above so the
+    notebook can inject a wrong one and show the identity break.
+  eq103_derived: >
+    Setting n = 1 and alpha'_1 = 1 in eq. (101) gives
+    N_1 = -(D^e_1M/RT + c_1 B_0/eta) grad p, which is eq. (103) as printed -
+    including the c_1 rather than c_t inside the viscous term.
+
+columns:
+  - {name: group,        unit: "-", description: "eq83 | eq84 | eq85 | eq87 | eq91 | eq101 | eq103 | eq107 | p887 | molar"}
+  - {name: symbol,       unit: "-", description: identifier used in the notebook}
+  - {name: value,        unit: "-", description: numeric value in the stated units}
+  - {name: units,        unit: "-", description: SI units, or - for a dimensionless exponent}
+  - {name: printed_as,   unit: "-", description: how the value appears on the printed page}
+  - {name: journal_page, unit: "-", description: journal page number, or - if not from the review}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No figure image and no page image is reproduced.
+
+caveat: >
+  TIER 6.  Nothing on page A4.3 is compared with a measurement.  The review does
+  contain one experimental comparison for the dusty gas model - its Fig. 44,
+  against Remick & Geankoplis (1974) - and that figure HAS been digitised, but
+  the extraction has not been through the maintainer's visual review, so it is
+  parked in queue_cases/A4.3/review/ (git-ignored) and is not loaded by the
+  notebook.  See the follow_up block in queue_cases/A4.3.yaml.
+  The review prints no binary pair diffusivities for the He/Ne/Ar system of that
+  figure and none for any porous medium; the dimensional illustrations on the
+  page therefore borrow the H2/N2/CO2 pair diffusivities the review prints on
+  its page 872, cross-page from the published A4.2 dataset, and say so.
+  eps/tau = 1 comes from the printed tau = 1 for a cylindrical pore together
+  with an ASSUMED eps = 1 (one straight open pore), which the review does not
+  print and which is flagged wherever it is used.

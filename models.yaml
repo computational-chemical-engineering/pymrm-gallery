@@ -104,6 +104,49 @@ models:
     data: {tier: 6, method: table, status: complete}
     related: [A4.2, A4.3, A4.5, A4.6, B1.1]
 
+  - id: A4.3
+    slug: dusty-gas-model
+    title: "The dusty gas model"
+    description: >
+      Pore diffusion in its n-component form, and the three things one effective
+      diffusivity per species cannot express: an inert species carrying zero flux
+      with a concentration that varies by 22.5 %, uphill diffusion whose
+      composition window narrows in proportion to pore size but never closes, and
+      a reaction-generated internal pressure. Plus the viscous term, reduced to a
+      screening group 3 p d_0/(32 eta v_bar) which - swept consistently, with the
+      Knudsen number tied to the same d_0 - bounds the review's "not very serious"
+      at 0.63 % of the internal pressure at every pore size from 1 nm to 100 um.
+    section: A
+    status: published
+    page: pages/A4.3-dusty-gas-model/
+    tier: T1
+    priority: P1
+    structures: [S9]
+    phases: [gas]
+    reference:
+      authors: ["Krishna, R.", "Wesselingh, J. A."]
+      year: 1997
+      container: "Chemical Engineering Science 52(6) 861–911"
+      doi: 10.1016/S0009-2509(96)00458-7
+      note: >
+        The paper actually read. Prints the dusty gas model as eqs. (82)-(87), the
+        viscous-flow treatment as eqs. (90)-(101), the pressure relation as
+        eq. (105), Graham's law as eq. (107) and the single-component slip-plus-
+        Poiseuille form as eq. (103), all with attribution. Every equation and
+        constant verified on 600 dpi renders of journal pages 886-893 on
+        2026-08-01.
+    origin_not_consulted: >
+      Mason & Malinauskas (1983); Jackson (1977); Mason & del Castillo (1985);
+      Knudsen (1909). The origins of the dusty gas model, cited by the review for
+      eqs. (81)-(85) and (99)-(101). None is on disk or reachable and none was
+      consulted. Kaza & Jackson (1980), Haynes (1978) and Remick & Geankoplis
+      (1974) are likewise known only through the review's sentences about them,
+      and no result on the page is attributed to any of them.
+    predicts: [multicomponent pore fluxes, Knudsen diffusivity, viscous flow contribution, internal pellet pressure, Graham's law flux ratio, uphill diffusion composition window, effective diffusivity of an inert species]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, clip_approach]
+    data: {tier: 6, method: table, status: complete}
+    related: [A4.4, A4.2, A4.9, B1.1]
+
   - id: A1.1
     slug: ergun-pressure-drop
     title: "Ergun equation for packed-bed pressure drop"
