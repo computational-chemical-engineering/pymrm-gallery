@@ -294,6 +294,53 @@ above — 30 % against 104.8 %, "twenty" against 21, "15–20 %" against 8.4–2
 prose instead of typing them, and before reporting `ready`, re-read every
 markdown number against what the cells actually print.
 
+### The reprint route: what it has produced, and where it stops
+
+Every paper on disk is consumed, and 226 cases have no reachable source — so the
+only route still open is a paper on disk that prints someone *else's* result.
+`AGENTS.md` states the test; this is what running it eight times taught.
+
+**It works, and it is not marginal.** `B1.6` (Prater, via Weisz & Hicks),
+`F1.3` (Wilkinson, via Krishna & Ellenberger), `E1.2` (the Davidson bubble, via
+Kunii & Levenspiel), `J3.1` (Butler–Volmer, via Doyle), `B1.4` (Weisz–Prater,
+via Weisz & Hicks), `H1.1` (the half-power law, via Itoh) and `A4.4` (Bosanquet,
+via Krishna & Wesselingh) all came from it.
+
+**Two verdicts bound it, and both are worth knowing before dispatching.**
+
+- `E1.1` → **needs-paper**. Kunii & Levenspiel print the two-phase relation but
+  never name, attribute or test it. A reprint that merely *contains* the equation
+  cannot source a page *about* the result.
+- `J3.3` → **covered**. Doyle names, attributes and tests porous electrode
+  theory — the test passes comfortably — but the theory *is* J3.4's structure,
+  and the two places it is open to examination are where J3.4 already spends its
+  validation. Passing the reprint test does not entitle a case to a page.
+
+So ask two questions, in order: *does the source name and use the result?* and
+*does an existing page already examine it?* The second killed a case the first
+had cleared.
+
+**Check the source carries the case before dispatching, not after.** A `grep`
+costs seconds. `J4.1` (Monod) was dropped from a batch because ASM1 mentions
+Monod exactly once — the E1.1 failure caught at the cheapest possible moment. I
+also dispatched `E1.1` on a premise that turned out false, and its builder
+refuted me by reading the citation list; and briefly claimed `F3.4` before
+noticing its source is a book that is not on disk.
+
+**Expect the received attribution to be wrong.** Three of the last four cases
+found the printed page contradicting the name the catalogue uses:
+
+| case | catalogue says | the source actually says |
+|---|---|---|
+| `B1.4` | Weisz & Prater 1954 | "It was shown by WEISZ **[9]**" — Z. Phys. Chem. 1957 |
+| `E1.2` | Davidson & Harrison | "the Davidson bubble", once, in a list of assumptions; no entry in the literature cited |
+| `H1.1` | Sieverts | half-power law attributed to Bohmholdt & Wicke 1967; Sieverts & Danz cited only for C₀ |
+
+None of these changes what the page builds — eq. (1) really is the Weisz–Prater
+group — but each changes what the page may *claim*. Record the origin under
+`origin_not_consulted:` (the `J3.1` form) when the source cites rather than
+reprints it, and `reference_read_from:` when it genuinely reprints the result.
+
 ### `NumJac(shape)` on a one-field 1-D problem builds a dense Jacobian
 
 Found while building `B1.4`, confirmed independently, and it was live on three
