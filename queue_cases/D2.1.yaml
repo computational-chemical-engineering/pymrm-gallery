@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Prog. Symp. Ser. 55 (1959)
 priority: P1
 tier: T0
 structures: S2
-status: ready
+status: published
 reference:
   authors:
   - Barkelew, C. H.
@@ -56,16 +56,35 @@ scope_decision: >-
   two papers' criteria, which Section 5 makes only qualitatively in text and
   graphically in Fig. 8.
 
-  Overlap is deliberately minimal. D2.1 re-derives ONE thing D2.2 also has, the
-  criterion-1 critical inlet pressure by back-integration, because it is the
-  reference the Barkelew route is measured against; the two implementations
-  agree to 1.4e-8 relative at 625 K without either having seen the other. The
-  parameter table is duplicated into D2.1's own data/ with its own sidecar
-  rather than loaded cross-page, so the two pages stay independent; it was
-  re-read from the 600 dpi render for this page and agrees value for value.
+  CODE OVERLAP WITH D2.2 IS LARGE, AND THAT IS FINE - stated accurately here
+  because an earlier draft of this file overstated the independence twice, and
+  the scope call should rest on content, not on either claim.
+  (1) D2.1's `p0_crit_vwf` and D2.2's `back_integrate` are NOT independent
+  implementations. They integrate the SAME ODE (their Eq. 5) from the SAME
+  starting point (T_M from Eq. 8, p_M from Eq. 7) with the SAME library,
+  differing only in `method` and `rtol`. The 1.4e-8 relative agreement at 625 K
+  is scipy agreeing with scipy to tolerance; it is a port check, not evidence
+  of an independent route. The real check on that quantity is against the
+  PRINTED 0.01651 atm, which it reproduces to 0.01 %, and even that is the same
+  check D2.2 already carries.
+  (2) Beyond that one function, D2.1's `Tube`, `T_M`, `C_of_R`, `kexp`, `A`,
+  `B`, `C_BASE` and the whole boundary-condition/operator block are copied from
+  D2.2 down to the comments. AGENTS.md asks builders to copy the nearest page,
+  so this is intended, not a defect.
+  The parameter table is duplicated into D2.1's own data/ with its own sidecar
+  rather than loaded cross-page, so the two pages stay independent as artifacts;
+  it was re-read from the 600 dpi render for this page and agrees value for
+  value.
+
+  ON CONTENT THE BUILD CALL STANDS, and that is what it should be judged on:
+  the dimensionless reduction, the computed envelope and tangency locus, the
+  step-size study, the drift, the exact criterion/rate-law decomposition and
+  the reaction-order study are all genuinely absent from D2.2, and D2.2 has no
+  similarity claim to test.
 notes: >-
   Built in queue_cases/D2.1/page/. Regenerates from build_page.py and executes
-  end to end in 22 s (19.8 s of compute).
+  end to end in 27 s (25.3 s of compute). Revised 2026-08-01 after adversarial
+  verification; see review/verification.md for the five findings fixed.
 
   WHAT SECTION 5 ACTUALLY PRINTS - the question the dispatch asked first. The
   comparison is QUANTITATIVE IN THE TEXT, so route 3 applies and NO FIGURE WAS
@@ -93,78 +112,151 @@ notes: >-
   states his criterion, states a number characterising it, and uses his method.
   This is not an E1.1 situation.
 
-  ONE RECONSTRUCTION, labelled as such on the page and in the sidecar. Their
-  notation list gives only "N dimensionless group defined by Barkelew", so the
-  dimensionless temperature is not printed anywhere. It is reconstructed as
-  tau = a (T - T_w)/T_w^2 with rate coefficient k_w e^tau, the unique reading
-  consistent with (a) "modified the temperature dependence of the rate
-  coefficient in such way that it may be characterized by only one constant
-  instead of two", (b) both verbal group definitions above, which name the wall
-  temperature as the reference, and (c) their own Eq. 32,
-  (dT)_ad = (B/A) p0. It gives S = a (dT)_ad/T_w^2 and N = C/(A k_w), and the
-  reduced system dy/dzeta = -y e^tau, dtau/dzeta = S y e^tau - N tau.
+  ONE RECONSTRUCTION, labelled as such on the page, in README.md, in meta.yaml
+  and in models_entry.yaml. Their notation list gives only "N dimensionless
+  group defined by Barkelew", so the dimensionless temperature is not printed
+  anywhere. It is reconstructed as tau = a (T - T_w)/T_w^2 with rate
+  coefficient k_w e^tau. THREE PARTS OF THAT ARE FORCED BY PRINT AND ONE IS
+  NOT, and the page now says which is which rather than calling it pinned.
+  Forced: (a) the N/S sentence fixes the cooling term as N tau and the
+  generation as S y e^tau, hence tau proportional to (T - T_w) with
+  tau(T_w) = 0; (b) the S sentence - the one, and the only one, that names the
+  wall temperature, by feeding the reactants at it - plus their Eq. 32,
+  (dT)_ad = (B/A) p0, gives S = a (dT)_ad/T_w^2; (c) their own printed
+  tau_m = 1 for criterion 1 forces the exponent to be tau itself and not
+  lambda*tau, because the maxima curve y ~ tau e^(-lambda tau) peaks at
+  1/lambda. NOT forced: the temperature at which the Arrhenius exponent is
+  LINEARISED. a(T-T_w)/T_w^2 is the tangent to ln k at the wall, but the
+  tangent at T_M and the chord from T_w to T_M satisfy every printed sentence
+  equally well. That is a Frank-Kamenetskii convention, not a constraint from
+  the paper.
+  It gives S = a (dT)_ad/T_w^2 and N = C/(A k_w), and the reduced system
+  dy/dzeta = -y e^tau, dtau/dzeta = S y e^tau - N tau.
 
   VALIDATION ROUTE: route 3 (a stated numerical result in the text), backed by
   route 2 (an internal identity: with this reduction the maxima curve is
   y ~ tau e^-tau and its peak is at tau = 1 exactly, which is what Section 5
   states for their first criterion). Ranked before any code was written. The
-  only values taken from Figs. 9 and 10 are the labels printed inside them; the
-  marker positions were deliberately NOT measured, so this case needed no
-  maintainer review and review/ is empty by design.
+  only values taken from Figs. 9 and 10 INTO THE COMMITTED DATA are the labels
+  printed inside them; the Fig. 9 marker positions were deliberately NOT
+  measured. Four Fig. 10 blow-up positions WERE measured, because they are the
+  only printed object that can discriminate the one unforced step above - see
+  the follow_up block, and review/extract_figure10.py.
 
-  KEY NUMBERS. tau_m at the envelope tangency: 1.2868, 1.2746, 1.2521, 1.2257
-  at S = 4, 8, 16, 32 against their stated 1.275 - mean |dev| 1.66 %, and
-  3.73 % over S = 3 to 200, where it falls monotonically to 1.1545 past a
-  maximum near S = 4. The collapse is real over the range Barkelew drew and
-  degrades outside it; that drift is the page's main new result. The ordering
-  claim holds for all 13 values of S: (N/S) at tau_m = 1 exceeds the tangency
-  by 34.3 % at S = 3 falling to 1.2 % at S = 200. Barkelew's critical inlet
-  pressure against the criterion-1 back-integration with the TRUE rate law over
-  Tw = 600-700 K: 1.77 % mean, 4.04 % worst, signed -2.43 % to +4.04 %,
-  crossing near 645 K - that is what "agree extremely well" is worth; at 625 K
-  the back-integration reproduces their printed (p0)_cr,1 = 0.01651 atm to
-  0.01 %. Separating the two approximations Section 5 conflates: the
-  exponential rate law alone is conservative by 5.1-7.6 % across the range, the
-  tangency criterion pushes the other way, and they partly cancel - which is
-  WHY the two methods agree better than either does alone; neither paper says
-  this. pymrm finite volume against adaptive phase-plane quadrature: 0.259 %
-  mean at n_zeta = 1600, observed order 0.99 (first-order upwind). Parameter
-  reading against four printed derived quantities: worst 0.090 % (their
-  ln K = -2.055 against -2.0568). Figs. 3 and 10 as a pair, p0 = 0.017 atm,
-  Tw = 625-628 K: with the true rate law all four have bounded hot spots
-  (660.8, 667.6, 678.7, 777.6 K); with Barkelew's exponential all four reach
-  the top of the paper's own 800 K axis, at z' = 0.751, 0.540, 0.461, 0.409 m.
+  KEY NUMBERS. tau_m at the envelope tangency, at a step size Richardson-
+  extrapolated to h -> 0 and confirmed by a second extrapolation pair: 1.2879,
+  1.2763, 1.2547, 1.2293 at S = 4, 8, 16, 32 against their stated 1.275 - mean
+  |dev| 1.575 %, and 3.512 % over S = 3 to 200, where it falls monotonically to
+  1.1622 past a maximum near S = 4. THE STEP SIZE IS PART OF THE RESULT: the
+  two-point difference in ln S has an O(h^2) truncation error (observed order
+  1.99) whose bias GROWS WITH S, the same direction as the drift, so a
+  plausible fixed h = 0.04 would have read the fall from S = 4 to S = 200 as
+  -10.277 % instead of -9.764 %, inflating the page's own conclusion by 5 %.
+  The collapse is real over the range Barkelew drew and degrades outside it;
+  that drift is the page's main new result. The ordering claim holds for all 13
+  values of S: (N/S) at tau_m = 1 exceeds the tangency by 34.4 % at S = 3
+  falling to 1.2 % at S = 200. Barkelew's critical inlet pressure against the
+  criterion-1 back-integration with the TRUE rate law over Tw = 600-700 K:
+  1.774 % mean, 4.080 % worst, signed -2.39 % to +4.08 %, crossing at 645.1 K
+  (a bracketed root-find printed on the page) - that is what "agree extremely
+  well" is worth; at 625 K the back-integration reproduces their printed
+  (p0)_cr,1 = 0.01651 atm to 0.01 %. SEPARATING THE TWO APPROXIMATIONS SECTION
+  5 MIXES, now printed as a table on the page and not only plotted: rate law
+  alone -5.06 % (600 K) to -7.69 % (700 K), criterion alone +2.81 % to
+  +12.76 %, total -2.39 % to +4.08 %, and the product of the two reproduces the
+  total to 1.4e-14 points because the decomposition is exact rather than a fit.
+  Opposite signs at all 21 wall temperatures and the total smaller in magnitude
+  than both components at all of them - which is WHY the two methods agree
+  better than either does alone; neither paper says this. The criterion half is
+  a purely dimensionless ratio, so it does not inherit the reconstruction.
+  pymrm finite volume against adaptive phase-plane quadrature: 0.260 % mean at
+  n_zeta = 1600, observed order 0.99 (first-order upwind). Parameter reading
+  against four printed derived quantities: worst 0.090 % (their ln K = -2.055
+  against -2.0568). Figs. 3 and 10 as a pair, p0 = 0.017 atm, Tw = 625-628 K:
+  with the true rate law all four have bounded hot spots (660.8, 667.6, 678.7,
+  777.6 K); with Barkelew's exponential all four reach the top of the paper's
+  own 800 K axis, at z' = 0.751, 0.540, 0.461, 0.409 m.
 
   DELIBERATE-BREAK TABLE (printed on the page; C1 = the 1.275 test,
-  C3 = Barkelew vs VWF critical pressure, C4 = pymrm vs quadrature).
-  Baseline C1 1.655 %, C3 1.770 %, C4 0.259 %.
-  exp(tau) -> 1 + tau: C1 no envelope exists, CATCHES.
-  cooling sign flipped: C1 no envelope exists, CATCHES.
-  reaction second order in y: C1 1.476 %, BLIND.
-  linearise the rate about T_M not T_w: C3 7.177 %, CATCHES.
-  tau = a(T-Tw)/Tw with the square dropped: C3 99.845 %, CATCHES.
+  C3 = Barkelew vs VWF critical pressure, C4 = pymrm vs quadrature,
+  C5 = the parameter reading). Baseline C1 1.575 %, C3 1.774 %, C4 0.260 %,
+  C5 0.090 %.
+  exp(tau) -> 1 + tau: C1 no sign change, the envelope is gone, CATCHES.
+  cooling sign flipped in the phase-plane rhs: C1 brentq bracketing raises
+  ValueError, CATCHES. (Previously mislabelled "no envelope exists" - the two
+  failure modes are now reported separately.)
+  reaction second order in y: C1 1.339 %, BLIND.
+  linearise the rate about T_M not T_w: C3 7.221 %, CATCHES. This is the row
+  that tests the one unforced step of the reconstruction.
+  cooling sign flipped in BarkelewTube.reaction ONLY: C4 inf, CATCHES.
+  S 10 % wrong in BarkelewTube.reaction ONLY: C4 inf, CATCHES. These two are
+  new: the page previously claimed check 4 could see nothing about the model
+  "since both routes call the same reaction function". THEY DO NOT SHARE ONE -
+  tau_max_phase writes dtau/dy in its own local rhs and BarkelewTube.reaction
+  writes the zeta-form separately - and the check has real power over the
+  finite-volume transcription.
   nu = 1 in construct_div: C4 100.000 %, CATCHES.
-  n_zeta = 25 cells: C4 13.359 %, CATCHES.
+  n_zeta = 25 cells: C4 13.396 %, CATCHES.
+  c_p multiplied by rho_g: C5 12.415 %, CATCHES.
 
-  Two blind spots are measured and stated rather than glossed. (1) Both
-  check-3 defects leave check 1 the IDENTICAL computation - the reduced system
-  contains no reference temperature and no dimensional parameter - so the 1.275
-  agreement is no evidence that the groups are right. (2) Check 1 is nearly
-  blind to the reaction order: over orders 0.5, 1, 2 and S = 4-32 the tangency
-  hot spot stays within 1.206-1.314, so their 1.275 characterises the
-  EXPONENTIAL TEMPERATURE DEPENDENCE and almost nothing else. The abscissa of
-  the tangency does move, by a factor 2.24 at S = 4, so the chart itself is
-  order-specific even though that number is not. The nu = 1 row reads exactly
-  100 % because the solve becomes degenerate (tau = 0 everywhere - a
-  cylindrical divergence carries 1/r and the first face is at zeta = 0), and
-  the page prints that value so the 100 % is not mistaken for a saturated
-  metric.
+  ONE ROW IS PRINTED BECAUSE IT CANNOT FAIL, in its own table and labelled as
+  such. tau = a(T-Tw)/Tw with the square dropped enters C3 only through the
+  factor T2(Tw), so p0 is multiplied by exactly 1/Tw and the 99.845 % is
+  arithmetic. The page reproduces that number from the baseline table WITHOUT
+  re-running an ODE (agreement 0.00e+00 points) to demonstrate the point. It
+  tests nothing about the reconstruction; presented next to the informative
+  rows it read as evidence that C3 discriminates the groups, which it is not.
+
+  WHAT THE CHECKS ARE BLIND TO, measured in a separate printed table and named
+  as claims the page does NOT make. (1) Both group defects leave check 1 the
+  IDENTICAL computation - the reduced system contains no reference temperature
+  and no dimensional parameter - so the 1.275 agreement is no evidence that the
+  groups are right. (2) Check 1 is nearly blind to the reaction order: over
+  orders 0.5, 1, 2 and S = 4-32 the tangency hot spot stays within 1.211-1.315,
+  so their 1.275 characterises the EXPONENTIAL TEMPERATURE DEPENDENCE and
+  almost nothing else. The abscissa of the tangency does move, by a factor 2.24
+  at S = 4, so the chart itself is order-specific even though that number is
+  not. (3) Check 3 DOES NOT MOVE AT ALL under B x 1.1 (1.7741 % before and
+  after, relative move 8.7e-10 %) and that is structural: p0 is proportional to
+  1/B on both sides, since substituting p = q/B removes B from their Eq. 5 and
+  from p_M. Check 3 therefore says nothing whatever about (-dH), rho_b or
+  p_B0. It is also nearly blind to C - U x 1.2 moves it 6.3 %, and the page's
+  own c_p x rho_g trap only 13.9 %, to 2.0198 %, inside anything a reader would
+  call agreement. THAT TRAP IS CAUGHT BY CHECK 5, not check 3: ln K goes
+  -2.0568 -> -1.7999 against the printed -2.055, 12.4 % off. The README no
+  longer calls that error "silent"; it names the check that is not silent about
+  it. (4) The nu = 1 row reads exactly 100 % because the solve becomes
+  degenerate (tau = 0 everywhere - a cylindrical divergence carries 1/r and the
+  first face is at zeta = 0), and the page prints that value so the 100 % is
+  not mistaken for a saturated metric.
+
+  THE DECISIVE TEST OF THE RECONSTRUCTION, and why it is not yet page evidence.
+  Their Fig. 10 is the four cases computed WITH the simplified rate law, so
+  where each curve leaves the top of the printed 800 K axis depends directly on
+  the linearisation temperature. Measured off a 600 dpi render by
+  review/extract_figure10.py (six marks - two frame edges, four curves - fitted
+  linearly over 72 clean rows and extrapolated to the top frame row, worst
+  residual 1.5 px; the printed 0.5 tick lands 0.03 % of full scale from the
+  frame midpoint, confirming the axis): z' = 0.4082, 0.4725, 0.5448, 0.7555 m
+  for Tw = 628, 627, 626, 625. The page computes 0.4090, 0.4613, 0.5398,
+  0.7511 m, i.e. +0.21, -2.36, -0.91, -0.58 %. Every alternative the printed
+  sentences permit fails QUALITATIVELY: the T_M tangent runs away in 1 of 4
+  cases (+37.4 %), the chord T_w->T_M in 2 of 4 (+29.5, +59.2 %), and dropping
+  the square in none of them (the hottest case reaches 629.45 K, 1.45 K above
+  the wall). Because these are curve positions read off a scan rather than
+  printed values, they are QUARANTINED in one notebook cell with the review
+  status disclosed in prose, are in no CSV and have no sidecar, and no other
+  cell reads them. The page stands without them - the reconstruction is
+  defensible on the printed sentences alone, just less decisively. See
+  follow_up.
 
   DETERMINISM. No continuation chain enters any reported number. Every root
   find is a bracketed brentq whose sign change is asserted; the tangency
   bracket is the pair of hot spots tau_m = 1.7 and 0.7, chosen as neutral round
   numbers that straddle the answer without reference to 1.275. The pymrm domain
   is set by a 200-cell pre-pass per case, not warm-started from a neighbour.
+  The converged tangency is memoised with lru_cache - it is a pure function of
+  (S, h), so that is arithmetic reuse and not a warm start.
 
   TIER 6, stated on the page, in meta.yaml, in both sidecars and in the README.
   Barkelew's chart correlates his own numerical integrations; every Van
@@ -180,5 +272,40 @@ notes: >-
   PchipInterpolator and LSODA are the only additions over D2.2's imports.
   The entry carries a `reference_read_from` block, the same shape A4.4 and
   H1.1 use.
+follow_up:
+  kind: optional-figure-digitisation
+  question: 'Do the four numbered markers on queue_cases/D2.1/review/fig10_overlay.png
+    sit on the four Fig. 10 curves where they cross the top (T = 800 K) frame? Those
+    four positions - z'' = 0.4082, 0.4725, 0.5448, 0.7555 m for T_w = 628, 627, 626,
+    625 K - are the only printed object that can discriminate the ONE step of the
+    reconstruction that Section 5 does not force: the temperature at which the Arrhenius
+    exponent is linearised. The page''s reading (the tangent at T_w) reproduces all
+    four to 0.21-2.36 %; the tangent at T_M reaches 800 K in only 1 of the 4 cases
+    and is then 37.4 % out, the chord T_w->T_M in 2 of 4 at 29.5-59.2 %, and dropping
+    the square in none of them. If the markers are right, the page may present this
+    as evidence rather than as an indication.'
+  detail: Not blocking - the page is complete and correct without it. The reconstruction
+    is already defensible on three printed sentences plus the T_M row of the break
+    table (1.774 % -> 7.221 %); the Fig. 10 comparison only makes it decisive. Answering
+    yes changes prose only, no data file and no metric. The four values are quarantined
+    in one notebook cell, labelled as pending this review, and are in no CSV and no
+    sidecar. Extraction script at queue_cases/D2.1/review/extract_figure10.py; the
+    overlay and the crossings CSV are written there and are git-ignored, so no page
+    image is committed.
+  artifacts: []
+resume:
+  staged_at: queue_cases/D2.1/page
+  blocking: false
+  answer_changes:
+    answer_yes: Reword the Fig. 10 section from 'read the next table as an indication'
+      to a stated cross-check, and drop the 'pending review' qualifier from README.md,
+      meta.yaml caveats and models_entry.yaml. No code, data or metric changes.
+    answer_no: Delete the quarantined cell and its two markdown cells from build_page.py,
+      and the corresponding paragraph from README.md. Everything else stands unchanged;
+      no metric moves.
+    do_not_redo: The step-size study, the criterion/rate-law decomposition, the break
+      and blindness tables, the 0.01651 reproduction.
+  note: Cheap to answer - it is one look at one overlay image. Ignoring it costs the
+    page nothing.
 review_artifacts: []
 updated: '2026-08-01'

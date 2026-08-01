@@ -1,0 +1,68 @@
+dataset_id: van-welsenaere-froment-1970-parameters
+title: Base case parameters for the runaway analysis (Section 1)
+status: complete
+
+source:
+  authors:
+    - "Van Welsenaere, R. J."
+    - "Froment, G. F."
+  year: 1970
+  container: "Chemical Engineering Science 25(10) 1503-1516"
+  doi: 10.1016/0009-2509(70)85073-4
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+provenance_tier:
+  tier: 6
+  note: >
+    NOT MEASUREMENTS. This is the illustrative parameter set the paper adopts
+    for all its own computations; it is not fitted to data and the paper
+    reports no experiment.
+
+acquisition:
+  method: table
+  figure: "Section 1, journal page 1504 (the paper has no numbered tables)"
+  tool: "poppler pdftoppm at 600 dpi; values read from the rendered page image"
+  procedure: >
+    Read from a 600 dpi render of journal page 1504 for this page. The Elsevier
+    full-text API was used for prose only; it discards the mid-dot decimal
+    separator the 1970 typesetting uses, rendering R = 0.0125 m as `00125`,
+    M = 29.48 as `2948` and b = 19.837 as `19837`. Nothing was reconstructed
+    by inference.
+  operator: "Claude Opus 5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-08-01
+  estimated_error: >
+    None beyond the paper's own rounding; values are transcribed exactly as
+    printed.
+
+validation:
+  independent_check: >
+    Four derived quantities the paper prints, each depending on the whole
+    parameter set and none of which was used to obtain it, are recomputed on
+    the page: t_w (their Eq. 21b, printed 21.818), ln K (Eq. 22, printed
+    -2.055), T_M (Eq. 8, printed 656.6 K) and the adiabatic rise (Eq. 32,
+    printed 521.09 K at p0 = 0.0125 atm). A single mis-set decimal point
+    anywhere in the table breaks all four.
+  duplicate_reading: >
+    Page D2.2 carries the same table from a separate reading of the same
+    journal page, made on 2026-07-26. The two transcriptions agree
+    value for value. That is a weak check - the same reader class reading the
+    same image - and is recorded, not relied on.
+  units_trap: >
+    c_p is printed as kcal/m3.degC, i.e. it already includes the gas density.
+    Multiplying by rho_g "to fix the units" changes C = 2U/(c_p R) by a factor
+    of 1.293 and silently moves the runaway boundary. rho_g appears only in
+    A = M P rho_b/rho_g . p_B0.
+
+columns:
+  - {name: symbol,      unit: "-",    description: "symbol as used in the paper"}
+  - {name: value,       unit: varies, description: "value as printed"}
+  - {name: unit,        unit: "-",    description: "unit as printed"}
+  - {name: description, unit: "-",    description: "what the symbol means"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. No page image is reproduced.

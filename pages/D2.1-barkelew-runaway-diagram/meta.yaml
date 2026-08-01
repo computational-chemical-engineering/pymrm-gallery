@@ -1,0 +1,82 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: D2.1
+slug: barkelew-runaway-diagram
+title: "Barkelew's runaway diagram"
+section: D
+status: published
+tier: T0
+priority: P1
+structures: [S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 26
+datasets:
+  - van-welsenaere-froment-1970-parameters.csv
+  - van-welsenaere-froment-1970-barkelew.csv
+
+validation:
+  - the tangency hot spot against the 1.275 their Section 5 states for all S, at a step size Richardson-extrapolated to zero and confirmed by a second pair
+  - the ordering claim of Section 5, that tau_m/S = 1/S lies right of the tangency, over 13 values of S
+  - Barkelew's critical inlet pressure against the criterion-1 back-integration with the true rate law, 600-700 K, decomposed exactly into a rate-law part and a criterion part
+  - the pymrm reactor against an adaptive phase-plane quadrature that transcribes the reduced model separately, with the observed order of convergence
+  - the parameter reading against four derived quantities the paper prints
+  - a deliberate-break table for all four checks, a separate table of what each check is blind to, and one row printed because it CANNOT fail
+  - the blow-up positions of their Fig. 10 against every linearisation the printed text permits - the one decisive test of the reconstruction, and PENDING MAINTAINER REVIEW because the positions are read off a curve
+
+adds: >
+  Barkelew's construction is a tangency between a curve and the envelope of a
+  family, which in 1959 had to be drawn and judged by eye - which is why
+  Section 5 can only report that tau_m there was "very close to" one number for
+  the four curves that fitted on the sheet. Solving the reduced system on
+  demand turns the envelope into a computed locus and the tangency into a
+  bracketed root at a step size extrapolated to zero, so the tangency hot spot
+  becomes a quantity with a value at every S. It is 1.2879 at S = 4, falls
+  monotonically to 1.1622 at S = 200, and the collapse is therefore good to
+  1.575 % over the range Barkelew drew and 3.512 % over a range six times
+  wider. The step-size study is part of the result, not housekeeping: the
+  truncation bias grows with S, in the same direction as the drift, so an
+  unconverged step would have inflated the page's own conclusion by 5 %. The
+  page also separates the two approximations Section 5's comparison mixes - his
+  tangency criterion and his exponential rate law - and shows their errors have
+  opposite signs everywhere and partly cancel, which is why they agree better
+  than either does alone.
+
+agreement: >
+  The tangency hot spot deviates from their stated 1.275 by 1.575 % on average
+  over the four S-curves Barkelew drew (1.2879, 1.2763, 1.2547, 1.2293) and by
+  3.512 % over S = 3 to 200, where it falls to 1.1622. Barkelew's critical
+  inlet pressure agrees with the criterion-1 back-integration to 1.774 % mean
+  and 4.080 % worst over T_w = 600-700 K, crossing at 645.1 K, with nothing
+  fitted; at 625 K that back-integration reproduces their printed 0.01651 atm
+  to 0.01 %. That disagreement factorises exactly: the exponential rate law
+  alone is conservative by 5.06-7.69 %, the tangency criterion alone pushes the
+  other way by 2.81-12.76 %, and the two partly cancel. The pymrm reactor and
+  the phase-plane quadrature agree to 0.260 % mean at n_zeta = 1600, converging
+  at order 0.99 as first-order upwind should.
+
+caveats: >
+  Provenance tier 6. Barkelew's own 1959 paper is not on disk and was not
+  consulted; everything here is read from Van Welsenaere & Froment's Section 5,
+  which reprints his diagram and states the one number it prints about it. The
+  definition of his dimensionless temperature is a RECONSTRUCTION, stated as
+  such on the page: the reduced system, the reference temperature and the fact
+  that the exponent is tau itself are all forced by printed sentences, but the
+  temperature at which the exponent is LINEARISED is a modelling choice the
+  paper never states. No figure was digitised into the committed data. Four
+  positions were measured off their Fig. 10 - the only printed object that can
+  discriminate that choice, and it favours the page's reading by 0.2-2.4 %
+  against 29-59 % or no runaway at all for the alternatives - but they are
+  quarantined in one cell, are in no CSV, and are AWAITING MAINTAINER VISUAL
+  REVIEW; nothing else on the page depends on them. Neither paper contains any
+  experimental data, so nothing here is validated against measurement. The
+  1.275 check is blind to the dimensional definitions of N and S, and -
+  measured on the page - almost blind to the reaction order as well; the
+  critical-pressure check does not move at all under a rescaling of B and
+  barely moves under C, including the c_p x rho_g trap, which the parameter
+  reading catches instead.
