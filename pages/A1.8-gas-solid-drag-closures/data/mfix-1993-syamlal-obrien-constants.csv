@@ -1,0 +1,36 @@
+# Syamlal, M., Rogers, W. and O'Brien, T. J. (1993), "MFIX Documentation Theory
+# Guide", Technical Note DOE/METC-94/1004 (DE94000087), Morgantown Energy
+# Technology Center, U.S. Department of Energy. doi:10.2172/10145548
+#
+# Section 2.2.1 "Fluid-Solids Momentum Transfer", journal pages 10-11
+# (PDF pages 13-14). Every constant below was read off a 400 dpi render of the
+# embedded bilevel page image, which is that image's native resolution. The PDF
+# text layer of this document is unusable for digits: it renders 0.06 as "0.O6",
+# eps_g^2.65 as "_g-2'6s" and "Ergun (1952)" as "Ergun (f952)".
+#
+# The equations these constants belong to, as printed:
+#
+#   (11)  F_gm = 3 eps_sm eps_g rho_g / (4 V_rm^2 d_pm)
+#                * C_Ds(Re_m / V_rm) * |v_sm - v_g|
+#   (12)  V_rm = 0.5 ( A - 0.06 Re_m
+#                      + sqrt( (0.06 Re_m)^2 + 0.12 Re_m (2 B - A) + A^2 ) )
+#   (13)  A = eps_g^4.14
+#   (14)  B = 0.8 eps_g^1.28   if eps_g <= 0.85
+#           = eps_g^2.65       if eps_g >  0.85
+#   (15)  Re_m = d_pm |v_sm - v_g| rho_g / mu_g
+#   (16)  C_Ds(Re) = (0.63 + 4.8/sqrt(Re))^2
+#
+# and the text under (16) adds: "To use this formula in equation (11), note that
+# Re must be replaced with Re_m/V_rm."
+symbol,value,equation,role
+eq11_prefactor,0.75,11,"the 3/4 multiplying eps_sm eps_g rho_g / (V_rm^2 d_pm)"
+Vrm_half,0.5,12,"outer factor of the Garside-Al-Dibouni closed form"
+Vrm_linear,0.06,12,"coefficient of Re_m in the linear term, and inside the square in the radicand"
+Vrm_cross,0.12,12,"coefficient of Re_m (2B - A) in the radicand"
+A_exponent,4.14,13,"voidage exponent of A"
+B_coefficient,0.8,14,"prefactor of the dense branch of B"
+B_exponent_dense,1.28,14,"voidage exponent of the dense branch of B, eps_g <= 0.85"
+B_exponent_dilute,2.65,14,"voidage exponent of the dilute branch of B, eps_g > 0.85"
+B_switch_voidage,0.85,14,"the voidage at which B switches branch"
+CD_offset,0.63,16,"the additive constant of the Dalla Valle single-sphere drag function"
+CD_slope,4.8,16,"the coefficient of 1/sqrt(Re) in the Dalla Valle single-sphere drag function"

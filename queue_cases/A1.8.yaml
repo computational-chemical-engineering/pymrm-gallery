@@ -5,7 +5,10 @@ catalog_reference: Gidaspow (1994); Syamlal & O'Brien (1989)
 priority: P2
 tier: T1
 structures: S1
-status: unclaimed
+status: published
+page: pages/A1.8-gas-solid-drag-closures/
+staged_at: queue_cases/A1.8/page/
+models_entry: queue_cases/A1.8/models_entry.yaml
 reference:
   authors: ["Syamlal, M.", "Rogers, W.", "O'Brien, T. J."]
   year: 1993
@@ -24,27 +27,140 @@ doi_source: |
   William Rogers, Thomas J. O'Brien / DOE/METC-94/1004 (DE94000087) / December
   1993". That matches the Crossref record for 10.2172/10145548 exactly. 54 pp,
   freely downloadable from OSTI (US DOE public repository).
-notes: |
-  SCOPE — read before building. The case title names three drag laws; this
-  report carries only one of them in full.
 
-  * Syamlal-O'Brien: section 2.2.1 gives it complete — the terminal-velocity-to-
-    drag conversion attributed to Syamlal & O'Brien (1987) as eq. (11), the
-    Garside & Al-Dibouni (1977) closed form for V_rm as eq. (12) with A and B in
-    eqs (13) and (14), and the Dalla Valle (1948) single-sphere C_D. This report,
-    not the 1989 conference paper the catalogue cites, is the citable published
-    source for the correlation as it is actually implemented.
-  * Wen-Yu: NOT in this report. The strings "Wen and Yu" and "Wen & Yu" do not
-    occur anywhere in it. Wen & Yu (1966) is already on disk as the A1.6 file.
-  * Gidaspow: cited only in passing (Gidaspow 1986, for needing a low-solids-
-    fraction correlation). The blended Ergun/Wen-Yu form of Gidaspow (1994) is a
-    monograph and is not on disk; Ergun (1952) itself is, as the A1.1 file.
+scope_decision: |
+  BUILT, WITH ONE OF THE THREE NAMED CLOSURES AND TWO SUBSTITUTES. The report
+  carries Syamlal-O'Brien complete (eqs. 11-16, section 2.2.1) and neither of the
+  other two DRAG LAWS - "Wen and Yu"/"Wen & Yu" do not occur in it, and the
+  report prints no Gidaspow drag closure and no blend rule. Gidaspow (1986),
+  Appl. Mech. Rev. 39, 1-23, is cited exactly once in section 2.2.1, for the
+  observation that a packed-bed correlation must be supplemented at low solids
+  fraction.
 
-  So a page can source Syamlal-O'Brien from this report and Wen-Yu plus Ergun
-  from papers already held. The Gidaspow *blend rule* would still need the 1994
-  monograph and must not be written from memory.
+  CORRECTED 2026-08-03: it is NOT true that "Gidaspow appears only in passing".
+  Measured on the extracted text layer, the name occurs 28 times (18 body, 10
+  reference list) across ten reference entries, four of them Gidaspow-first-
+  author (1974 Round Table; Gidaspow & Ettehadieh 1983; Gidaspow et al. 1984;
+  Gidaspow 1986), and the report ADOPTS a Ding & Gidaspow (1990) expression as
+  its own eq. (88) plus a Syamlal & Gidaspow (1985) conductivity model. The text
+  layer mangles names so that count is a floor. Only the absence of a Gidaspow
+  DRAG law is load-bearing, and only that is claimed. Nothing about either
+  missing closure was written from memory.
 
-  TEXT LAYER: poor. pdftotext runs words together ("Fluid-SolidsMomentum") and
-  mangles digits ("0.O6Re", "_g-2'6s", "Ergun (f952)"). Read every constant off
-  a 600 dpi render — see docs/pdf-findings.md.
-updated: '2026-08-02'
+  The page instead builds the pair the report's OWN paragraph on journal page 10
+  names as the two kinds of data a drag law can come from - the packed-bed route
+  (Ergun 1952, via the published A1.1) and the terminal-velocity route
+  (Syamlal-O'Brien, plus Richardson & Zaki 1954, whose paper is on disk as the
+  A1.5 file and whose correlation the report explicitly says eq. (12) is a
+  closed-form substitute for). So it IS a three-way closure comparison, just not
+  the three the catalogue names, and every leg is sourced from a document on
+  disk.
+
+  Reading the report's own reference list turned up something the catalogue does
+  not know: the origin of eq. (11) is Syamlal & O'Brien (1987), "A Generalized
+  Drag Correlation for Multiparticle Systems", UNPUBLISHED REPORT. There is no
+  origin paper to acquire. This DOE report is the citable published source, and
+  the catalogue's "Syamlal & O'Brien (1989)" is a different item in the same list
+  (a bubble-simulation paper, AIChE Symp. Ser. No. 270, 85, 22-31).
+
+follow_up:
+  what_would_complete_the_case: |
+    Two documents, neither replaceable by memory. Everything else needed is
+    already on the page - the Ergun branch is built, and the size of a blend
+    rule's jump is a two-line computation once the rule is printed.
+  papers_needed:
+    - authors: ["Gidaspow, D."]
+      year: 1994
+      container: "Multiphase Flow and Fluidization, Academic Press"
+      needed_for: "the blended Ergun/Wen-Yu closure and the voidage at which it switches"
+      note: >
+        A monograph. Falls under the textbook-canonical class the maintainer has
+        already approved in principle; it is not on disk. This is the piece the
+        catalogue's case title asks for and the page explicitly does not supply.
+    - authors: ["Wen, C. Y.", "Yu, Y. H."]
+      year: 1966
+      container: "Chem. Eng. Progr. Symposium Series No. 62, 62, 100-111"
+      needed_for: "the Wen-Yu drag correlation - the dilute half of the blend"
+      note: >
+        A DIFFERENT paper from the A.I.Ch.E. Journal communication already on
+        disk, which A1.6 is built from and which contains no drag law. It is that
+        communication's own reference 23. Do not re-request the AIChE J paper.
+  when_they_arrive: |
+    Extend, do not rebuild. Add two closure functions beside F_syamlal_obrien and
+    F_ergun in the PyMRM implementation cell, add two columns to the Results
+    ratio map, to the Check 3 index comparison and to the Check 4 Geldart table,
+    and compute the jump at the blend's switch the same way section 4 already
+    computes the jump at Garside & Al-Dibouni's 0.85. Nothing in the extraction,
+    the datasets or the validation needs redoing.
+
+built:
+  date: '2026-08-02'
+  runtime_seconds: 4
+  datasets_shipped:
+    - data/mfix-1993-syamlal-obrien-constants.csv   # the 11 printed constants of eqs. (11)-(16)
+    - data/richardson-zaki-1954-table6.csv          # 18 measured velocity-voidage indices, Re 0.39-489
+  datasets_borrowed:
+    - {dataset: ergun-1952-parameters, from: A1.1}
+    - {dataset: ergun-1952-fig7-markers, from: A1.1}
+    - {dataset: geldart_1973_table1, from: A1.7}
+  headline: |
+    At a packed-bed voidage the two closure families agree in BOTH asymptotic
+    limits - 19 % viscous, 4 % inertial at eps_g = 0.44 - and disagree by a
+    factor 1.73 at Re_m = 4.09, which is a bubbling bed. Agreement in both limits
+    is not evidence of agreement. Qualified on the page: on Ergun's own abscissa
+    that dip is at Re/(1-eps) = 7.30 and his 244 recovered markers start at 7.45,
+    so the worst point is 2.0 % below his data; at eps_g = 0.50 the dip is at
+    9.72 and inside it.
+
+    Against Richardson & Zaki's Table VI (18 tabulated indices, nothing fitted)
+    the index implied by eq. (12) is +3.2 % at eps_g = 0.45 rising to +29.2 % at
+    0.95; in the viscous limit it reduces to 4.14 + 1 = 5.14 against their
+    tabulated 4.65, +10.5 %. CONDITIONAL: eq. (11) forces V_rm to be a slip
+    ratio, the report's own prose implies the superficial one, and under that
+    alternative the same numbers are -26.3 %, -24.2 %, -0.3 % with a viscous
+    limit of -11.0 % - the sign reverses. Both are printed and CI-tracked; the
+    page adopts the reading eq. (11) implements. Not settleable without Garside &
+    Al-Dibouni (1977), which is not on disk.
+
+    Against 8 minimum-fluidisation velocities Geldart measured on spherical
+    particles, all three closures overpredict at the derived voidage - Ergun
+    +42.1 %, Syamlal-O'Brien +101.2 %, Richardson-Zaki +111.1 %. None is
+    validated. The blanket refusal to rank was withdrawn after A1.6's
+    +4.8185 % at eps_mf = 0.42 on these same rows was recomputed and put on the
+    page: the absolute bias is a statement about a voidage nobody measured, but
+    the ordering is stable, and the voidage each closure would need in order to
+    be unbiased is 0.4147 (Ergun), 0.3708 (R-Z), 0.3538 (S-O'), the last two
+    below random loose packing. Neither closure-to-closure ratio is
+    measurement-facing: v_t cancels out of S-O'/R-Z to 2.2e-16, and the
+    S-O'/Ergun ratio (0.97-1.68) TURNS OVER on the last cut, so it is not
+    monotone in Re.
+
+    The Check-3 break table is swept over six voidages, not one. At eps_g = 0.50
+    alone the dilute B exponent 2.65 and the switch voidage 0.85 moved nothing in
+    any of the four checks, while the page's own headline at eps_g = 0.95 sits on
+    that untested branch. Swept, 7 of 15 mis-readings invisible at 0.50 become
+    visible.
+
+    Incidental: eq. (14)'s branch switch at eps_g = 0.85 is continuous to
+    0.049 %, so it is a change of functional form and not a step. The
+    discontinuous closure the catalogue names is a different one and is not on
+    disk.
+  integration_notes: |
+    * APPEND queue_cases/A1.8/models_entry.yaml to models.yaml. An earlier
+      version of this note said to UPGRADE IN PLACE because "models.yaml already
+      holds A1.8 as `planned`". THAT IS WRONG and following it would fail:
+      checked against the file on 2026-08-03, A1.8 appears in models.yaml only
+      inside the `related:` lists of A1.5, A1.6 and A1.7, and
+      `scripts/check_metadata.py --report-missing` lists A1.8 among the catalog
+      IDs not yet in the file. There is no entry to upgrade.
+    * A1.1's `related:` is [A1.5, A1.6, A2.3, B1.1, E2.1] - verified, does not
+      contain A1.8 and should. A1.5's, A1.6's and A1.7's already do.
+    * structures is S3 in meta.yaml and models_entry.yaml, not the catalogue's
+      S1 - deliberate, matching A1.1, A1.6 and A1.7.
+      docs/catalog-A-foundations.md has been given the same footnote A1.6 got
+      (2026-08-03); no further edit needed there.
+    * docs/pdf-findings.md now records the 400 dpi / bilevel finding for this PDF
+      and the Richardson & Zaki 300 dpi equivalent, and its Gidaspow sentence has
+      been corrected.
+    * No new dependency. No review/ directory: nothing was digitised.
+updated: '2026-08-03'

@@ -1,0 +1,180 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A1.8
+slug: gas-solid-drag-closures
+title: "Two ways to close gas-solid drag: Syamlal-O'Brien against Ergun, and against the velocity-voidage law it stands in for"
+section: A
+status: published
+tier: T1
+priority: P2
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - mfix-1993-syamlal-obrien-constants
+  - richardson-zaki-1954-table6
+borrowed_datasets:
+  - {dataset: ergun-1952-parameters, from: A1.1}
+  - {dataset: ergun-1952-fig7-markers, from: A1.1}
+  - {dataset: geldart_1973_table1, from: A1.7}
+
+scope: >
+  The catalogue names three closures - Gidaspow, Syamlal-O'Brien and Wen-Yu. The
+  document on disk (the MFIX Theory Guide) carries Syamlal-O'Brien complete and
+  neither of the other two: the strings "Wen and Yu" and "Wen & Yu" do not occur
+  in it, and it prints no Gidaspow DRAG closure and no blend rule - Gidaspow
+  (1986) is cited exactly once in section 2.2.1, for the observation that a
+  packed-bed correlation must be supplemented at low solids fraction. Do NOT
+  restate that as "Gidaspow is cited only in passing": the name occurs 28 times
+  in the extracted text across ten reference entries, and the report adopts a
+  Ding & Gidaspow (1990) expression as its own eq. (88). Only the absence of a
+  Gidaspow drag law is load-bearing, and only that is claimed. Nothing about
+  either missing closure is written from memory. The page instead builds the pair
+  the report's own paragraph on
+  journal page 10 names - the packed-bed route (Ergun, via A1.1) and the
+  terminal-velocity route (Syamlal-O'Brien, and Richardson-Zaki behind it) - and
+  states in its opening paragraph, in its Reuse section and here exactly which
+  two documents would complete the three-way comparison.
+
+validation:
+  - "V_rm(eps_g = 1) = 1 at every Reynolds number, to 2.2e-16: the radicand of eq. (12) becomes a perfect square. LABELLED AS AN IDENTITY - the published break table shows it is blind to all three voidage exponents, to the 0.8 and to the switch voidage, because 1^x = 1"
+  - "the two-fluid force balance returns v_slip = V_rm v_t to 9.3e-15 over four decades of particle size and three voidages, which is the design property of eq. (11) that the report does not state. ALSO AN IDENTITY - the break table shows it moves by 23x, 98 %, 28 % and 63 % under four structural mis-readings of eq. (11) and by nothing at all under any constant of eq. (12) or eq. (16)"
+  - "against Richardson and Zaki's Table VI, 18 tabulated velocity-voidage indices over Re 0.39-489 and no fitting: the index implied by eq. (12) is biased +3.2 % at eps_g = 0.45, +5.4 % at 0.50 and +29.2 % at 0.95, growing monotonically with voidage because the closed form is not a power law. In the viscous limit it is a one-liner - eq. (13) forces n = 4.14 + 1 = 5.14 against their tabulated 4.65, i.e. +10.5 %. CONDITIONAL ON A READING: eq. (11) forces V_rm to be a SLIP-velocity ratio while the report's own prose introducing V_rm implies the SUPERFICIAL one, and the two are exactly one unit of index apart. Under the alternative the same comparison gives -26.3 %, -24.2 % and -0.3 %, and the viscous limit -11.0 % - the sign reverses. Both columns are printed and CI-tracked; the page adopts the reading eq. (11) implements and says why. Garside and Al-Dibouni (1977), which would settle it, is not on disk"
+  - "the Check-3 break table is swept over six voidages, not run at one. This is a correction: at eps_g = 0.50 alone, B_exponent_dilute (2.65) and B_switch_voidage (0.85) moved nothing in ANY of the four checks - Check 1 sits at eps_g = 1 where 1^x = 1, Check 2 never reads eq. (14), Check 4's voidages are all on the dense branch - while the page's own headline, +29.2 % at eps_g = 0.95, is computed ON the untested branch and moves -15.3 points under 2.65 -> 1.65. Swept, 7 of 15 injected mis-readings invisible at 0.50 become visible: -15.3 points at 0.95 for the dilute exponent, -41.1 for deleting the dilute branch, +17.5 at 0.60 and +44.5 at 0.95 for the switch. The one constant still not settled by data is a SMALL displacement of the switch, bounded by the +0.049 % continuity of eq. (14) at 0.85"
+  - "against 8 minimum-fluidisation velocities Geldart measured in 1973 on spherical particles, at the voidage A1.7 derives from his own two reported columns: Ergun +42.1 %, Syamlal-O'Brien +101.2 %, Richardson-Zaki +111.1 %. All three overpredict, no closure is validated, and the absolute bias is a statement about a voidage nobody measured - at a textbook 0.42 the same three are +4.8 %, +59.6 % and +56.8 %. The ORDERING is stable: the voidage each closure would need in order to be unbiased on these rows is 0.4147 (Ergun), 0.3708 (Richardson-Zaki) and 0.3538 (Syamlal-O'Brien), the last two below random loose packing. NEITHER Check-4 ratio is measurement-facing: v_t cancels identically out of Syamlal-O'Brien/Richardson-Zaki (2.2e-16), so 0.74-1.12 is Check 3 restated at Geldart's eight (eps_0, Re_t) pairs. The Syamlal-O'Brien/Ergun ratio runs 0.97-1.68 and TURNS OVER on the last cut (1.6812 at 263 um, 1.6717 at 318 um) - it is not monotone in Re"
+  - "Table VI reproduces its own two printed log10 columns to 8.0e-04 and 5.4e-04, while a single-digit slip in either moves that residual to 1.00 - the transcription check the paper pays for, and the reason one damaged cell could be read at all"
+  - "four published numbers recomputed by independent code and reproduced: A1.6's exact-Ergun bias on the eight Diakon rows comes back +58.43 % at Geldart's reported eps_MB against its published 58.435, +42.06 % at the settled eps_0 against its 42.060, and +4.82 % at a textbook eps_mf = 0.42 against its 4.8185; Wen and Yu's eq. (1) on the same rows -25.21 % against its -25.214. The eps = 0.42 number is the one that argues AGAINST this page's conclusion and an earlier version omitted it. A1.1's refit of Ergun's constants is reproduced from its own marker file to 2.6e-06 % on the worse of the two constants (4.6e-07 % on k1)"
+
+adds: >
+  Nothing computational - no operator is assembled and no solve is run, which is
+  the same call A1.1 and A1.6 make for a closure relation, and the page says so
+  where a reader would look for a solver.
+
+  What the page adds against reading the report is four things. It puts the two
+  drag families on one axis: written as drag coefficients they can be divided,
+  and the quotient turns out to behave far worse in the middle than at either
+  end - at eps_g = 0.44 the two agree to 19 % in the viscous limit and 4 % in the
+  inertial one and disagree by a factor 1.73 at Re_m = 4, which is a bubbling
+  bed. (Qualification stated beside that headline: on Ergun's own abscissa the
+  0.44 dip sits at Re/(1-eps) = 7.30 and his 244 recovered markers start at 7.45,
+  so the worst point is 2.0 % below his data; at eps_g = 0.50 the dip is at 9.72,
+  inside it. No validity range for eq. (12) is available on disk either.) It
+  identifies V_rm as a slip-velocity ratio and proves it from the momentum
+  equations, a factor of eps_g the report never states and which is worth a whole
+  unit on every index in the comparison that follows - and it shows that the
+  report's own prose implies the OTHER reading, prints both, and states that the
+  sign of the result depends on which is right. It costs the
+  substitution the report makes - eq. (12) exists only because Richardson and
+  Zaki's correlation is implicit, and nobody says what that convenience buys. And
+  it quantifies the sentence everyone paraphrases: at Re = 1 the Ergun form gives
+  7.9 % of the drag on an isolated sphere and at Re = 0.01 it gives 0.10 %, which
+  is why a blend rule exists at all.
+
+  One incidental correction to an expectation. Eq. (14) is a two-branch
+  definition, but the branches meet to +0.049 % in B and the largest jump this
+  produces in V_rm anywhere in Reynolds number is 0.049 %. It is a change of
+  functional form, not a step - the discontinuous closure the catalogue names is
+  a different one, switches at a different voidage, and is not on disk.
+
+agreement: >
+  Measured, against two datasets neither closure was fitted to. Richardson and
+  Zaki's 18 indices: +3.2 % bias at eps_g = 0.45 rising to +29.2 % at 0.95, on a
+  15-point row-to-row spread, and the sign is not uniform at the dense end (12 of
+  18 rows above at 0.45, all 18 above from 0.60 up) - under the reading eq. (11)
+  implements; under the alternative reading the same numbers are -26.3 % and
+  -0.3 %. Geldart's 8 spherical cuts at the derived voidage: every closure
+  overpredicts, by +42.1 % (Ergun), +101.2 % (Syamlal-O'Brien) and +111.1 %
+  (Richardson-Zaki).
+
+  The page therefore validates none of the three, and attributes the absolute
+  bias to a voidage nobody measured rather than to the closures: at a textbook
+  eps_mf = 0.42 the same three are +4.8 %, +59.6 % and +56.8 %. An earlier
+  version refused to rank at all; that refusal does not survive A1.6's +4.8 % on
+  these same rows and has been narrowed to the one statement the data support -
+  Ergun is the least biased at every voidage tried, and the voidage each closure
+  needs in order to be unbiased is 0.4147, 0.3708 and 0.3538, the last two below
+  random loose packing.
+
+  Neither of the two closure-to-closure ratios is evidence: v_t cancels
+  identically out of Syamlal-O'Brien/Richardson-Zaki, so 0.74-1.12 is Check 3
+  restated in different symbols and would read the same if Geldart had never run
+  the experiment. Geldart's U_0 enters only the per-cent columns.
+
+caveats: >
+  NOTHING IS CLAIMED ABOUT GIDASPOW'S DRAG CLOSURE OR ABOUT WEN-YU DRAG. Neither
+  drag law is in the document on disk. The eps_g = 0.8 discontinuity a comparison
+  of blended closures would be for is neither computed nor asserted.
+
+  Both identity checks are labelled as identities and each is published with the
+  break table that measures what it cannot see. Check 1 is blind to all three
+  voidage exponents; Check 2 is blind to every constant of eqs. (12) and (16).
+  Neither is offered as evidence that the closure describes anything.
+
+  THE PAGE'S OWN JOINT-SUFFICIENCY CLAIM WAS FALSE AND IS CORRECTED ON THE PAGE
+  RATHER THAN QUIETLY PATCHED. With the Check-3 break table run at eps_g = 0.50
+  only, two of the eleven printed constants - the dilute B exponent 2.65 and the
+  switch voidage 0.85 - were exercised by nothing in any of the four checks,
+  while the page's headline +29.2 % at eps_g = 0.95 sits on that untested branch.
+  Sweeping the table over voidage recovers both. What is still not settled by any
+  data comparison is a small displacement of the switch, and that is bounded by
+  the +0.049 % continuity of eq. (14) rather than assumed away.
+
+  THE CENTRAL CHECK-3 RESULT IS CONDITIONAL ON A READING THE DOCUMENT DOES NOT
+  SETTLE. Eq. (11) forces V_rm to be a slip-velocity ratio; the report's own
+  sentence introducing V_rm implies Richardson and Zaki's superficial one. The
+  two are one unit of index apart and the alternative reverses the sign of every
+  number in Check 3. Both are printed and tracked.
+
+  NEITHER CHECK-4 RATIO CONTAINS A MEASUREMENT. v_t cancels out of
+  Syamlal-O'Brien/Richardson-Zaki to 2.2e-16. The Richardson-Zaki column is also
+  not independent of Syamlal-O'Brien: both take their terminal velocity from the
+  same eq. (16), and the Dalla Valle slope moves the Richardson-Zaki bias by 61
+  points while moving the Ergun bias by exactly zero.
+
+  n_table6 holds Table VI's index constant outside Re 0.39-489. Four of the 21
+  context rows fall below the bottom of the table; none of the eight Diakon rows
+  the result is taken on does.
+
+  The headline factor-1.73 dip at eps_g = 0.44 sits at Re/(1-eps) = 7.30, which
+  is 2.0 % BELOW the lowest of Ergun's own 244 recovered markers (7.45). At
+  eps_g = 0.50 the dip is at 9.72 and inside them.
+
+  The inertial half of every closure is essentially untested against measurement.
+  Every Geldart row is a group A powder at a single-particle Re_t below 28 and a
+  bed Reynolds number below 2. Table VI reaches Re = 489 but constrains
+  eqs. (12)-(14) only - Check 3 is exactly blind to the single-sphere drag curve,
+  which is tested by Check 4 and by nothing else here.
+
+  Ergun is not treated as a reference standard, because A1.6 has shown it is not
+  one on this dataset: at the voidage Geldart himself reports the same balance is
+  +58 % biased, worse than the empirical u_mf correlation it was being used to
+  judge. That number is recomputed here rather than quoted, as is A1.6's
+  +4.8185 % at eps_mf = 0.42 - the number that argues against this page's own
+  conclusion, which an earlier version omitted. The three readings A1.6 leaves
+  open are not resolved here either. Sphericity does not separate any of the
+  comparisons: Ergun in d_sv is exactly phi_s-free and neither of the other two
+  closures has a shape factor, so on these rows the only free assumption is the
+  voidage.
+
+  Richardson and Zaki's Table VI is tier 2 but one step from a raw measurement:
+  each n_0 is a fitted slope, then extrapolated along a second fitted line to
+  d/D = 0. The runs are liquid-solid while the report is a gas-solid code. And
+  Garside and Al-Dibouni fitted their relation to overlapping literature, so the
+  comparison measures the cost of one closed form standing in for another, not
+  two independent witnesses agreeing.
+
+  The 13 non-Diakon Geldart rows carry no printed sphericity and Syamlal-O'Brien
+  has no shape factor to give them, so whole-table numbers are printed as context
+  and are not the page's result. The gas density used for that comparison is
+  assumed - Geldart prints none - and the break table shows it is worth 7 points
+  out of 101.
+
+  No pymrm operator appears, and nothing on this page is digitised. The one
+  digitised dataset it loads is A1.1's, used only to bound Ergun's own constants,
+  and it inherits that page's stated recall limitation.

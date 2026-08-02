@@ -192,7 +192,7 @@ models:
     # against an independent quadrature.
     pymrm_api: []
     data: {tier: 4, method: digitised, status: complete}
-    related: [A1.5, A1.6, A2.3, B1.1, E2.1]
+    related: [A1.5, A1.6, A1.8, A2.3, B1.1, E2.1]
 
   - id: A1.5
     slug: richardson-zaki
@@ -428,6 +428,162 @@ models:
       method: table
       status: complete
     related: [A1.6, A1.1, A1.8, E1.1, E1.2, E2.1]
+
+  - id: A1.8
+    slug: gas-solid-drag-closures
+    title: "Two ways to close gas-solid drag: Syamlal-O'Brien against Ergun, and against the velocity-voidage law it stands in for"
+    description: >
+      The scalar that decides almost everything a two-fluid fluidised-bed
+      simulation does is the gas-solids drag coefficient, and the MFIX Theory
+      Guide states in one paragraph why there is no single answer: there are two
+      kinds of experiment it can be built from, packed-bed pressure drop and
+      hindered settling, and the first "must be supplemented" where it was never
+      measured. This page builds both and divides them. At a packed-bed voidage
+      they agree in the viscous limit to 19 % and in the inertial limit to 4 % -
+      and disagree by a factor 1.73 in between, at Re_m = 4, which is a bubbling
+      bed and not an exotic corner; agreement in both limits turns out to be no
+      evidence of agreement at all. In the dilute limit the packed-bed form gives
+      7.9 % of the drag on an isolated sphere at Re = 1 and 0.10 % at Re = 0.01,
+      which is that sentence made quantitative and the whole reason a blend rule
+      exists. The Syamlal-O'Brien branch needs none: V_rm(1) = 1 exactly, at every
+      Reynolds number, because the radicand of eq. (12) is a perfect square. The
+      page also derives what the report never states - that V_rm is a
+      slip-velocity ratio, proved from the momentum equations to 9.3e-15 - and
+      uses it to cost the substitution eq. (12) makes for the Richardson-Zaki
+      correlation it is admitted to be standing in for: against their Table VI,
+      18 tabulated indices over Re 0.39-489, the implied index is biased +3.2 % at
+      eps_g = 0.45 and +29.2 % at 0.95, and in the viscous limit the whole thing
+      reduces to 4.14 + 1 against their tabulated 4.65. That result is conditional
+      on a reading the document does not settle - eq. (11) forces V_rm to be a
+      slip-velocity ratio while the report's own prose introducing it implies
+      Richardson and Zaki's superficial one, the two are exactly one unit of index
+      apart, and under the alternative the same comparison reads -26.3 % and
+      -0.3 % with the viscous limit at -11.0 %. Both are printed and tracked. Put
+      to 8 minimum-fluidisation velocities Geldart measured on spherical particles
+      in 1973, all three closures overpredict at the voidage his own columns imply
+      - Ergun +42 %, Syamlal-O'Brien +101 %, Richardson-Zaki +111 % - so none is
+      validated, and the absolute bias is a statement about a voidage nobody
+      measured: at a textbook 0.42 the three are +4.8 %, +59.6 % and +56.8 %. What
+      the data do support is the ordering, seen most cleanly by inverting the
+      question: the voidage each closure would need in order to be unbiased on
+      those rows is 0.4147 for Ergun and 0.3708 and 0.3538 for the other two, the
+      last of which is below the random loose packing of spheres. The two
+      closure-to-closure ratios are reported as algebra rather than evidence - the
+      terminal velocity cancels identically out of Syamlal-O'Brien over
+      Richardson-Zaki - and the Syamlal-O'Brien over Ergun ratio runs 0.97 to 1.68
+      and turns over on the last of the eight cuts rather than running monotonically
+      with Reynolds number. The catalogue's other two drag closures are absent from
+      the document on disk and nothing is written about them from memory.
+    section: A
+    status: published
+    page: pages/A1.8-gas-solid-drag-closures/
+    tier: T1
+    priority: P2
+    structures:
+      - S3
+    phases:
+      - gas-solid
+    predicts:
+      - gas-solids momentum-exchange coefficient F_gm over the whole (voidage, Reynolds) plane
+      - hindered settling velocity of a uniform suspension, and the velocity-voidage index it implies
+      - single-sphere terminal velocity on the Dalla Valle drag curve
+      - minimum fluidisation velocity from three different closures, given a voidage
+      - packed-bed friction coefficient read as a drag law rather than as a pressure drop
+    pymrm_api: []
+    reference:
+      authors:
+        - Syamlal, M.
+        - Rogers, W.
+        - "O'Brien, T. J."
+      year: 1993
+      container: Technical Note DOE/METC-94/1004 (DE94000087), Morgantown Energy Technology Center,
+        U.S. Department of Energy
+      doi: 10.2172/10145548
+    also:
+      - authors: ["Ergun, S."]
+        year: 1952
+        container: Chemical Engineering Progress 48(2) 89-94
+        doi: null
+        note: "The packed-bed branch. Read on A1.1, which supplies both the printed constants and the refit."
+      - authors: ["Richardson, J. F.", "Zaki, W. N."]
+        year: 1954
+        container: Transactions of the Institution of Chemical Engineers 32, 35-53
+        doi: null
+        note: >
+          The velocity-voidage correlation the MFIX report says can be evaluated
+          "only numerically", and which eq. (12) is a closed-form substitute for.
+          Read from the verbatim Golden Jubilee reprint, Trans IChemE 75 (Dec 1997)
+          S82-S100, doi:10.1016/S0263-8762(97)80006-8, on 300 dpi renders. Table VI
+          is shipped with this page. This is A1.5's source paper; A1.5 remains
+          unclaimed and only one of its tables is used here.
+    origin_not_consulted:
+      - authors: ["Syamlal, M.", "O'Brien, T. J."]
+        year: 1987
+        container: '"A Generalized Drag Correlation for Multiparticle Systems", Unpublished report'
+        note: >
+          The origin of eq. (11), as the 1993 report's own reference list gives it,
+          read on a 400 dpi render of report page 44. IT IS AN UNPUBLISHED REPORT,
+          so the 1993 DOE Theory Guide is not merely a convenient source for this
+          correlation - it is the citable PUBLISHED one, and the reprint route of
+          AGENTS.md is the only route this case has.
+      - authors: ["Syamlal, M.", "O'Brien, T. J."]
+        year: 1989
+        container: '"Computer Simulation of Bubbles in a Fluidized Bed", in Fluidization and Fluid
+          Particle Systems: Fundamentals and Applications, Ed. L.-S. Fan, AIChE Symposium Series
+          No. 270, 85, 22-31'
+        note: >
+          The catalogue's own citation for this case, corrected from the report's
+          reference list (the catalogue gives only "Syamlal & O'Brien (1989)"). Not
+          on disk, and it is a bubble-simulation paper rather than the drag
+          derivation - that is the 1987 unpublished report above.
+      - authors: ["Garside, J.", "Al-Dibouni, M. R."]
+        year: 1977
+        container: I&EC Process Design and Development 16, 206-214
+        note: "The origin of eqs. (12)-(14). Not on disk; read from the 1993 report."
+      - authors: ["Dalla Valle, J. M."]
+        year: 1948
+        container: "Micromeritics, Pitman, London"
+        note: "The origin of eq. (16). Not on disk; read from the 1993 report."
+      - authors: ["Gidaspow, D."]
+        year: 1994
+        container: "Multiphase Flow and Fluidization, Academic Press"
+        note: >
+          NOT ON DISK AND NOT USED. The blended Ergun/Wen-Yu closure the catalogue
+          names for this case. The 1993 report prints NO Gidaspow drag closure and
+          NO blend rule; it cites a different Gidaspow paper - "Hydrodynamics of
+          Fluidization and Heat Transfer: Supercomputer Modeling", Appl. Mech. Rev.
+          39, 1-23 (1986) - exactly once in section 2.2.1, for the observation that
+          a packed-bed correlation must be supplemented at low solids fraction.
+          That is the whole of the load-bearing claim. It is NOT true that
+          "Gidaspow is cited only in passing", as an earlier version of this entry
+          said: the name occurs 28 times in the extracted text across ten reference
+          entries, four of them Gidaspow-first-author, and the report adopts a Ding
+          & Gidaspow (1990) expression as its own eq. (88) and a Syamlal & Gidaspow
+          (1985) conductivity model. Nothing about the 1994 blended closure appears
+          on the page; its voidage switch and the size of its jump are explicitly
+          NOT computed.
+      - authors: ["Wen, C. Y.", "Yu, Y. H."]
+        year: 1966
+        container: "Chem. Eng. Progr. Symposium Series No. 62, 62, 100-111"
+        note: >
+          NOT ON DISK AND NOT USED. The drag correlation the catalogue names. The
+          strings "Wen and Yu" and "Wen & Yu" do not occur anywhere in the 1993
+          report. This is a DIFFERENT paper from the A.I.Ch.E. Journal
+          communication on disk that A1.6 is built from, which contains no drag
+          law; it is that communication's own reference 23.
+    data:
+      tier: 2
+      method: table
+      status: complete
+      own_tier: 2
+      tier_from: A1.8
+    related:
+      - A1.1
+      - A1.6
+      - A1.7
+      - A1.5
+      - E1.2
+      - E2.1
 
   - id: A2.1
     slug: danckwerts-boundary-conditions

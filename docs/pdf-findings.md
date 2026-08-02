@@ -347,6 +347,13 @@ image's own resolution and, for a genuinely ambiguous character, compare it with
 an unambiguous instance of both candidates elsewhere on the same line — that is
 what settled `-5` against `-7` here.
 
+**Two more files in the same class, found 2026-08-02/03:** the MFIX Theory Guide
+(`A1.8`) is bilevel CCITT at **400 dpi** on all 54 pages, and the Richardson &
+Zaki Golden Jubilee reprint (`A1.5`, `A1.8`) carries a bilevel **300 dpi**
+stencil over a 200 dpi grey background. Both pages read their constants at those
+resolutions, correctly. Better than rendering at all: `pdfimages -png` extracts
+the stored bitmap and bypasses the rasteriser.
+
 ### Look for the 1995 Golden Jubilee reprint before rendering pages
 
 *Chemical Engineering Science* reprinted a set of its classics **verbatim** in the
@@ -553,11 +560,50 @@ OSTI. The document is legible on screen but its text layer is one of the worst
 here: words are run together (`Fluid-SolidsMomentumTransfer`,
 `ConservationofMass`), digits are substituted (`0.O6Re` with a capital O,
 `Ergun (f952)` for 1952, `_g-2'6s` for ε_g^−2.65), and equation numbers come out
-as `(121` and `(1''`. Read every constant off a 600 dpi render.
+as `(121` and `(1''`. Read every constant off a page image — **at 400 dpi, not
+600**, for the reason below.
+
+**400 dpi is this file's ceiling, and 600 dpi would be interpolation.** Every one
+of the 54 pages is a *single* CCITT-G4 image with `bpc = 1` (bilevel) at
+**400 × 400 ppi** (a handful report 401 × 400 from rounding), 3520–3646 px wide by
+4472–4572 tall:
+
+```bash
+pdfimages -list Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf
+```
+
+There is no higher native resolution to reach. `pdftoppm -r 600` upsamples a
+1-bit image and invents grey that is not in the file. Better still, skip the
+rasteriser entirely and pull the page image out as it is stored:
+
+```bash
+pdfimages -png -f 13 -l 14 <file.pdf> out    # eqs. (11)-(16), journal pages 10-11
+```
+
+**The same check on the Richardson & Zaki Golden Jubilee reprint**
+(`1-s2.0-S0263876297800068-main.pdf`, `A1.5`'s source, whose Table VI `A1.8`
+ships): each page carries a **`stencil` at 300 × 300 dpi, `bpc = 1`** over a
+200 dpi grey background image. So 300 dpi is that file's native resolution too,
+and `A1.8`'s "300 dpi renders" is right for the same reason.
+
+*This is the `H1.4` lesson (below, "600 dpi is not always 600 dpi") turning up a
+second and third time in one week. The `AGENTS.md` rule "read constants off
+600 dpi renders" needs its precondition stated wherever it is written:* **or at
+the embedded image's native resolution, whichever is lower — run `pdfimages
+-list` first; for a bilevel scan, 600 dpi is interpolation.**
 
 Its section 2.2.1 does carry the Syamlal–O'Brien drag law complete — eq. (11) for
 the terminal-velocity-to-drag conversion, eq. (12) for Garside & Al-Dibouni's
 closed-form *V*ᵣₘ with *A* and *B* in (13)–(14), and Dalla Valle's single-sphere
 *C*_D. It does **not** contain Wen–Yu (the strings "Wen and Yu" and "Wen & Yu" do
-not occur) and cites Gidaspow only in passing, so it sources one of the three
-drag laws the case names. See `queue_cases/A1.8.yaml`.
+not occur) and prints **no Gidaspow drag closure and no blend rule**, so it
+sources one of the three drag laws the case names.
+
+**Do not shorten that to "cites Gidaspow only in passing" — four files said so
+and it is false.** Gidaspow (1986) is cited exactly once *in §2.2.1*, which is
+the load-bearing part; but across the whole report the name occurs **28 times**
+in the extracted text (18 body, 10 reference list) over ten reference entries,
+four of them Gidaspow-first-author, and the report **adopts** a Ding & Gidaspow
+(1990) expression as its own eq. (88) and a Syamlal & Gidaspow (1985)
+conductivity model. The absence of a Gidaspow *drag* law is the claim; the
+absence of Gidaspow is not. See `queue_cases/A1.8.yaml`.

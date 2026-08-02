@@ -1,0 +1,90 @@
+dataset_id: mfix-1993-syamlal-obrien-constants
+title: "The eleven printed constants of the Syamlal-O'Brien drag closure, MFIX Theory Guide section 2.2.1"
+status: complete
+
+source:
+  authors: ["Syamlal, M.", "Rogers, W.", "O'Brien, T. J."]
+  year: 1993
+  container: "Technical Note DOE/METC-94/1004 (DE94000087), Morgantown Energy Technology Center, U.S. Department of Energy"
+  doi: 10.2172/10145548
+  access: "freely downloadable from OSTI, https://www.osti.gov/servlets/purl/10145548 - a U.S. Department of Energy public repository"
+  licence: "U.S. Government work prepared under DOE sponsorship; no copyright asserted on the report"
+
+conditions: >
+  Section 2.2.1 "Fluid-Solids Momentum Transfer", journal pages 10-11 (PDF pages
+  13-14). The constants belong to the fluid-solids drag coefficient F_gm of the
+  report's equation (9), which enters the gas- and solids-phase momentum
+  equations (7) and (8) as the term I_gm = -eps_sm grad P_g - F_gm(v_sm - v_g)
+  + (mass-transfer term). They are stated for uniform, smooth, SPHERICAL
+  particles: the report's own paragraph "Four" on page 9 says the formulations
+  "deal with uniform, smooth, spherical particles" and that for non-spherical
+  and rough particles "there are no well-accepted ways of treating such
+  effects". There is therefore no sphericity anywhere in this closure.
+
+  Attribution as the report's own reference list gives it, read on a 400 dpi
+  render of report page 44: equation (11), the terminal-velocity-to-drag
+  conversion, to Syamlal and O'Brien (1987), "A Generalized Drag Correlation for
+  Multiparticle Systems", UNPUBLISHED REPORT - so this DOE report is the citable
+  published source for that equation, not merely a convenient one; equation (12)
+  with (13) and (14) to Garside and Al-Dibouni (1977), I&EC Proc. Des. Dev. 16,
+  206-214; equation (16) to Dalla Valle (1948), Micromeritics, Pitman, London.
+  None of those three is on disk and none was consulted.
+
+  The catalogue's citation for this case, "Syamlal & O'Brien (1989)", is a
+  different item in the same reference list - "Computer Simulation of Bubbles in
+  a Fluidized Bed", AIChE Symposium Series No. 270, 85, 22-31 - and is a
+  bubble-simulation paper rather than the drag derivation.
+
+acquisition:
+  method: "read from page renders"
+  figure: "equations (11)-(16), journal pages 10-11"
+  tool: "poppler pdftoppm at 400 dpi, read visually"
+  procedure: >
+    The embedded page images are bilevel CCITT at 400 dpi, so 400 dpi is this
+    file's native resolution and rendering higher would only interpolate. Each
+    equation was cropped and read visually.
+
+    THE TEXT LAYER MUST NOT BE USED FOR ANY DIGIT IN THIS FILE. It renders
+    0.06 Re as "0.O6Re" with a capital letter O, eps_g^2.65 as "_g-2'6s",
+    "Ergun (1952)" as "Ergun (f952)", equation number (12) as "(121" and (16) as
+    "(1''", and runs words together ("Fluid-SolidsMomentumTransfer"). Every
+    value here was read off the image; nothing was repaired by inference.
+
+    Two readings that the text layer gets wrong and the image settles. (a) The
+    radicand of equation (12) is (0.06 Re_m)^2 + 0.12 Re_m (2B - A) + A^2; the
+    text layer gives "0.06Re=)2.0.12Rem(2_l-A)+A a". (b) The two branches of
+    equation (14) are 0.8 eps_g^1.28 for eps_g <= 0.85 and eps_g^2.65 for
+    eps_g > 0.85 - the dilute branch carries NO prefactor, which the page's
+    first validation check turns into a test.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: >
+    None beyond the printed precision. These are transcribed characters, not
+    digitised positions.
+
+columns:
+  - {name: symbol, unit: "-", description: "name used for the constant on the page; not the report's own notation, which is positional"}
+  - {name: value, unit: "-", description: "the printed value; all eleven are dimensionless"}
+  - {name: equation, unit: "-", description: "the report's equation number, 11 to 16"}
+  - {name: role, unit: "-", description: "where the constant sits in that equation"}
+
+licence_note: >
+  A work prepared by employees and contractors of the U.S. Government under DOE
+  sponsorship. The report itself is not committed here; only the numerical
+  constants, which are facts and are not protected by copyright in any case
+  (Feist, 1991).
+
+caveat: >
+  TIER 6 as a dataset in its own right: these are the coefficients of a
+  correlation, not measurements, and reproducing the correlation from them is
+  reproduction, not validation. The page's measured comparisons come from two
+  OTHER datasets - Richardson and Zaki's Table VI, shipped alongside this file,
+  and Geldart's Table 1, borrowed from A1.7.
+
+  What this file cannot support: any claim about Wen-Yu drag or about
+  Gidaspow's blended closure. The strings "Wen and Yu" and "Wen & Yu" do not
+  occur anywhere in this report, and Gidaspow is cited in section 2.2.1 only in
+  passing, for the observation that a packed-bed correlation "must be
+  supplemented with a drag correlation for low values of the solids volume
+  fractions". Neither closure is printed here and neither may be written from
+  memory.

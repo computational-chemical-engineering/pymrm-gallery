@@ -1,0 +1,100 @@
+dataset_id: richardson-zaki-1954-table6
+title: "Richardson and Zaki's velocity-voidage index n_0 at 18 particle Reynolds numbers, extrapolated to zero wall effect"
+status: complete
+
+source:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1954
+  container: "Transactions of the Institution of Chemical Engineers 32, 35-53"
+  doi: null
+  access: "read from the verbatim Golden Jubilee reprint, Trans IChemE 75 (Dec 1997) S82-S100, institutional subscription (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+reprint:
+  container: "Trans IChemE 75 (December 1997) S82-S100, Jubilee Supplement"
+  doi: 10.1016/S0263-8762(97)80006-8
+  note: >
+    The 1954 original was not consulted. The Jubilee Supplement is a verbatim
+    re-photograph of it: every page carries the 1954 typesetting, including the
+    mid-dot decimal separator, under a 1997 running head. Table VI is on reprint
+    page S94.
+
+conditions: >
+  The index n is defined by the paper's equation (29), V_c/V_i = eps^n, where
+  V_c is the falling velocity of the suspension relative to a fixed horizontal
+  plane and V_i is its value extrapolated to eps = 1. The paper's Summary and
+  Conclusions states the equivalence the whole table rests on: "the falling
+  velocity of a suspension relative to a fixed horizontal plane is equal to the
+  upward velocity of liquid (based on the empty tube) required to maintain a
+  suspension at the same concentration". So V_c is a SUPERFICIAL velocity in
+  both processes, and V_i -> V_0, the single-particle terminal velocity, as
+  d/D -> 0.
+
+  n_0 is n extrapolated to d/D = 0, i.e. with the wall effect removed. It is
+  read off Figure 18, which plots n against d/D with one line per Reynolds
+  number; the Re values labelling those lines are exactly the Re column of this
+  table. Re itself is defined in the table header as V_0 d rho / mu, i.e. it
+  uses the SINGLE-PARTICLE terminal velocity, not the hindered one.
+
+  The underlying measurements are the paper's own sedimentation and fluidisation
+  runs together with those of Steinour (sedimentation) and Lewis, Gilliland and
+  Bauer (fluidisation), which the paper says "have been joined". Two asymptotes
+  bracket the table and are printed beside it: equation (33), n = 4.65 +
+  19.5 d/D for Re < 0.2, and equation (34), n = 2.39 for Re greater than about
+  500.
+
+acquisition:
+  method: table
+  figure: "TABLE VI, reprint page S94"
+  tool: "poppler pdftoppm at 300 dpi, read visually"
+  procedure: >
+    The embedded page image is a bilevel stencil at 300 dpi, so 300 dpi is this
+    file's native resolution. Every value was read character by character off
+    that render.
+
+    The text layer is not trustworthy for digits here - it is the usual pre-1980
+    mid-dot failure (docs/pdf-findings.md), rendering "4.17" as "4 ·17" and the
+    log_n0 cell of that row as "0·1;2".
+
+    THE TABLE CARRIES ITS OWN ROUND-TRIP CHECK AND IT IS WHY THAT CELL COULD BE
+    READ AT ALL. Columns 2 and 4 are log10 of columns 1 and 3, so recomputing
+    them tests the transcription of every row. The damaged cell resolves to 0.62
+    because log10(4.17) = 0.6201 and no other two-decimal value is consistent.
+    The check is run on the page.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: >
+    None beyond the printed precision, which is three significant figures on
+    Re and n_0. Note the paper prints n_0 as "3.0" and "2.5" on two rows, i.e.
+    two significant figures where the rest carry three.
+
+columns:
+  - {name: Re, unit: "-", description: "single-particle terminal Reynolds number V_0 d rho / mu, as defined in the table header"}
+  - {name: log_Re, unit: "-", description: "the paper's own log10(Re) column, kept for the round-trip check"}
+  - {name: n_0, unit: "-", description: "the velocity-voidage index n of eq. (29), extrapolated to d/D = 0"}
+  - {name: log_n0, unit: "-", description: "the paper's own log10(n_0) column, kept for the round-trip check"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced.
+
+caveat: >
+  TIER 2 - a table printed in the paper. But it is one step removed from a raw
+  measurement and the page says so wherever it uses it: each n_0 is a SLOPE of
+  log V_c against log eps, fitted by the authors to a run of measurements, and
+  then EXTRAPOLATED along a second fitted line to d/D = 0. Comparing a closure
+  with this column is a comparison against the authors' reduction of their own
+  and two other laboratories' measurements. It is not reproduction of anyone's
+  arithmetic - nothing in the MFIX closure was fitted to it, and Garside and
+  Al-Dibouni's correlation is a different one, which is exactly why the MFIX
+  report adopts theirs instead - but it is not a raw measurement either.
+
+  Three further limits. (a) The runs are liquid-solid; the report the page is
+  built from is a gas-solid code. Nothing in eq. (29) is phase-specific, but the
+  data are not gas-fluidisation data. (b) The table gives no voidage range, so
+  the window over which an implied index is computed is a choice made on the
+  page and its sensitivity is printed. (c) n_0 has the wall effect removed,
+  while a bed with finite d/D has a larger n by 19.5 d/D in the viscous regime;
+  any comparison against a real column must add that back or state that it has
+  not.

@@ -22,7 +22,7 @@ Legend: **S** = structure code, **T** = tier, **P** = build priority
 | A1.5 | Richardson–Zaki | *Trans. IChemE* 32 (1954) | Bed expansion / hindered settling | S1 | T0 | P1 |
 | A1.6 | Wen–Yu minimum fluidisation | *Chem. Eng. Prog. Symp.* (1966) † | u_mf from particle properties | S3 ‡ | T0 | P1 |
 | A1.7 | Geldart classification | *Powder Technol.* 7:285 (1973) | Fluidisation regime from ρ, d_p | — | T0 | P1 |
-| A1.8 | Gidaspow / Syamlal–O'Brien / Wen–Yu drag | Gidaspow (1994); Syamlal & O'Brien (1989) | Gas–solid interphase drag closures | S1 | T1 | P2 |
+| A1.8 | Gidaspow / Syamlal–O'Brien / Wen–Yu drag | Gidaspow (1994); Syamlal & O'Brien (1989) § | Gas–solid interphase drag closures | S1 ‡ | T1 | P2 |
 | A1.9 | EMMS drag | Li & Kwauk (1994) | Meso-scale-corrected drag, heterogeneous flow | S1 | T3 | P3 |
 
 † `A1.6`'s page is built from Wen & Yu's *A.I.Ch.E. Journal* **12**(3) 610–612
@@ -32,10 +32,26 @@ it is not on disk, and the page reconstructs the derivation instead, validating
 the reconstruction by recovering both printed constants to under 0.1 %. It is
 recorded as `origin_not_consulted` in `models.yaml`.
 
-‡ `A1.6` was catalogued `S1` and is built as `S3`, following `A1.1` and `A1.7`:
-it is an algebraic closure with no operator, grid or solve (`pymrm_api: []`).
-Corrected 2026-08-02. Note that `check_metadata.py` compares `meta.yaml` against
-`models.yaml` only and would not have caught the mismatch with this file.
+‡ `A1.6` and `A1.8` were catalogued `S1` and are built as `S3`, following `A1.1`
+and `A1.7`: they are algebraic closures with no operator, grid or solve
+(`pymrm_api: []`). Corrected 2026-08-02 (`A1.6`) and 2026-08-03 (`A1.8`). Note
+that `check_metadata.py` compares `meta.yaml` against `models.yaml` only and
+would not have caught the mismatch with this file.
+
+§ `A1.8`'s page is built from the **MFIX Documentation Theory Guide**, Syamlal,
+Rogers & O'Brien (1993), DOE/METC-94/1004,
+[doi:10.2172/10145548](https://doi.org/10.2172/10145548), and the catalogue's two
+citations are both wrong for what it delivers. The report's own reference list
+gives the origin of its eq. (11) as Syamlal & O'Brien (1987), *"A Generalized
+Drag Correlation for Multiparticle Systems," **Unpublished report***, so there is
+**no origin paper to acquire** and the 1993 DOE report is the citable *published*
+source. "Syamlal & O'Brien (1989)" is a different item in the same list — a
+bubble-simulation paper, AIChE Symp. Ser. No. 270, **85**, 22–31. And the report
+contains **neither** of the other two named drag closures: no Wen–Yu (the strings
+do not occur) and no Gidaspow drag law or blend rule. The page therefore builds
+Syamlal–O'Brien against Ergun (via `A1.1`) and Richardson & Zaki (via `A1.5`'s
+source), and names the two documents that would complete the three-way
+comparison — Gidaspow's 1994 monograph and the Wen & Yu Symposium Series paper.
 
 **Gallery angle for A1.** One page overlaying Ergun, Kozeny–Carman,
 Forchheimer, and the Eisfeld wall correction against a single Δp dataset, with
