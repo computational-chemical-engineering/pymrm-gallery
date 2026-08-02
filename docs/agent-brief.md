@@ -75,6 +75,22 @@ cannot detect.
 **Interpolate computed values into your prose; never retype them.** Four pages in
 that same batch stated a number the notebook contradicted two cells above.
 
+### If you load another page's CSV, read that page
+
+The dataset is not a bare table. It belongs to a page that has already
+established things about those exact rows, and none of that travels with the
+file. `AGENTS.md` carries the rule; the part you will be tempted to skip is:
+
+**a number you are about to state that also exists in a dataset you loaded must
+be printed beside yours and reconciled.** Never retype a value that is a row in a
+CSV you already read.
+
+Both directions have bitten published pages. `A1.6` ignored a voidage `A1.7`
+already computed and flagged, and built its headline on the inverse of it.
+`J3.1` loaded a `V_cutoff` and a stated result, used neither, and reported a
+number read past the cutoff. In both cases the wrong value reached the Reuse
+section, which is where this class does real damage — check it there.
+
 ### Rules that do not bend
 
 - **Never fabricate data.** No synthetic points, no textbook restatement passed

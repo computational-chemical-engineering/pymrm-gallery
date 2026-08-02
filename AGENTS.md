@@ -144,6 +144,32 @@ that every deferred entry explains itself and has no page directory.
   invented numbers is worse than no page.
 - Every `data/*.csv` requires a `data/*.meta.yaml` provenance sidecar. The
   schema and the legal basis are in [`docs/data-strategy.md`](docs/data-strategy.md).
+- **Loading another page's dataset means reading that page.** A CSV borrowed
+  through `load_data(..., page=...)` is not a bare table of numbers — it belongs
+  to a page that has already established findings about those very rows, and
+  those findings do not travel with the file. Two obligations:
+
+  1. In your own *The data* section, list every finding the source page states
+     about the rows you use — flagged rows, derived quantities it already
+     computes, known bad cells, discrepancies against the paper — and say whether
+     each affects you.
+  2. **If a number you are about to state also exists in a dataset you loaded,
+     print it beside yours and reconcile the two. Never retype a value that is a
+     row in a CSV you already read.**
+
+  Rule 2 is the cheap one and it catches most of this class. Measured on the
+  2026-08-02 sweep of the eight pages that borrow data, it alone would have
+  caught five of the nine findings, plus the defect that prompted the sweep:
+  `A1.6` built its central argument on an inverted voidage of 0.399 while
+  `A1.7` — the page supplying the CSV — already computed 0.444 from Geldart's own
+  columns and already flagged the two rows that give it with no inference at all.
+  At that voidage the reference balance `A1.6` held up as the standard came out
+  **+58 % biased, worse than the correlation it was judging**, and the error
+  reached the Reuse advice. `J3.1` did the same thing in the other direction: it
+  loaded a `V_cutoff` and a stated result, used neither, and reported an
+  overpotential taken past the cutoff — 3.7 mV where its own data give 1.7.
+
+  Reuse advice is where this class does its damage, so check it there explicitly.
 - Never commit source PDFs. DOIs and extracted CSVs only.
 - Never reproduce a source figure image. Extract the points and re-plot.
 
