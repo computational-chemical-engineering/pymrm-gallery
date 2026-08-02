@@ -1,0 +1,102 @@
+dataset_id: wakao-funazkri-1978-fig3-line
+title: The correlation drawn inside Figure 3, traced from its own ink
+status: provisional          # extraction complete, maintainer review NOT yet done
+
+source:
+  authors:
+    - "Wakao, N."
+    - "Funazkri, T."
+  year: 1978
+  container: "Chemical Engineering Science 33(10) 1375-1384"
+  doi: 10.1016/0009-2509(78)85120-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  quantity: >
+    The row of the drawn correlation's ink, column by column, on the same 600
+    dpi crop as wakao-funazkri-1978-fig3.csv, together with what the shipped
+    axis calibration makes of it.
+  role: >
+    THIS IS NOT DATA. It is a control experiment. Figure 3 prints its own
+    correlation across the plot and labels it (Sh-2)/Sc^(1/3) = 1.1 Re^0.6, so
+    the true answer for this curve is known in advance: a power law fitted to it
+    must return 1.1 and 0.6, and anything else is axis calibration error
+    measured on an object with no scientific content. It is shipped so the page
+    can RUN that control rather than quote its result from a sidecar.
+  what_it_found: >
+    The 2026-08-02 calibration averaged the left- and right-hand decade ticks
+    into a single row origin. Under it this curve fits back as alpha = 1.126,
+    beta = 0.5949 - high in alpha and low in beta, which are the same signs as
+    the disagreement the page was at that point claiming about the markers. The
+    offset is not random: traced by Reynolds decade it runs -3.4, +0.7, +2.3 px,
+    i.e. a tilt across the plot, which is the 5.6 px left/right tick skew. With
+    the column-dependent calibration the curve fits back as 1.107 / 0.5984.
+
+acquisition:
+  method: digitised
+  figure: "Figure 3, journal page 1383 (PDF page 9), the drawn correlation only"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage; `setup3.trace_line`"
+  procedure: >
+    Straight ink is isolated by binary opening with a 61 px line element at 18
+    orientations, with the frame and ticks removed by connectivity. For every
+    column, the surviving ink within 22 px of the computed position of
+    1.1 Re^0.6 is grouped into runs, and the column is USED ONLY IF there is
+    exactly one run and it is no wider than 6 px. Two runs, or a fat one, means
+    a marker is sitting on the line at that column and its ink would pull the
+    centroid off the curve; that filter is the whole difference between tracing
+    a line and tracing the chain of markers merged into it. 410 columns survive
+    it, out of the roughly 1550 the drawn curve crosses.
+
+    The columns that survive are therefore NOT uniformly spaced - whole
+    stretches of the curve are covered by markers. Any fit to this file should
+    bin by column first (the page uses one median per 100 px bin) or it will
+    weight the crowded regions.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  calibration: >
+    Identical to wakao-funazkri-1978-fig3.csv, and the `Re` and
+    `Sh_minus_2_over_Sc13` columns here are computed with the shipped
+    column-dependent ordinate. The parameter file carries both calibrations, so
+    the page recomputes the flat one from `col_px`/`row_px` and shows the
+    difference.
+  estimated_error: >
+    The traced run is 1-6 px tall (`run_px`) - a sloping stroke cut vertically
+    and thinned by the morphological opening - and the centroid of a single run
+    locates it to well under a pixel. But the curve was drawn by hand or by a
+    mechanical plotter in 1978 and is not exactly a straight line in log-log:
+    the residual
+    scatter about the fitted power law is 3.5 px after the skew correction, an
+    order of magnitude more than the centroid error. That scatter, not the
+    tracing, is what limits the control to about half a per cent in alpha.
+
+review:
+  status: pending
+  requested: 2026-08-02
+  artifacts:
+    - "queue_cases/A3.4/review/A3.4-fig3-extraction-overlay.png"
+  question: >
+    Nothing specific is asked about this file: it is a control and it returns
+    the known answer. It is listed here only so that the reviewer knows the
+    Figure 3 calibration is no longer the one they saw.
+
+missing:
+  - "The stretches of the curve covered by marker chains, which are exactly the
+     columns the single-thin-run filter rejects. They are missing by design, not
+     by failure, and their absence is why a fit to this file must be binned by
+     column."
+
+columns:
+  - {name: col_px, unit: px, description: "column in the 600 dpi crop"}
+  - {name: row_px, unit: px, description: "ink centroid of the drawn curve in that column"}
+  - {name: run_px, unit: px, description: "vertical extent of the ink run, i.e. the drawn stroke width there"}
+  - {name: Re, unit: "-", description: "particle Reynolds number of that column"}
+  - {name: Sh_minus_2_over_Sc13, unit: "-", description: "what the shipped calibration makes of that row; should equal 1.1 Re^0.6"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The figure image is NOT reproduced; the curve is re-plotted from
+  the extracted coordinates.

@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Sci. 33:1375 (1978)
 priority: P1
 tier: T1
 structures: S3
-status: needs-input
+status: published
 reference:
   authors:
   - Wakao, N.
@@ -16,103 +16,179 @@ paper:
   on_disk: ~/papers/pymrm-gallery/1-s2.0-0009250978851203-main.pdf
   open_access: null
   checked: 2026-07-30
-blocker:
-  kind: figure-digitisation-review
-  question: 'Figure 2 (journal page 1382) has been digitised: 81 marker positions
-    kept out of 87 automatic candidates, six rejected by visual audit at 600 dpi.
-    Two questions. (1) Do all 81 kept crosshairs sit on real glyphs? The contact sheet
-    shows every one of them at 2x, numbered. (2) Recall in the band above Re = 100
-    is the real issue - of order 110 markers appear to be drawn and 81 were kept,
-    so roughly a quarter are missed where glyphs overlap each other and the eq. (12)
-    curve. The page uses those points ONLY for the trend in the residual with Reynolds
-    number, which a missing marker does not move. Is that use acceptable with the
-    recall as it stands, or should the dense band be completed by hand before the
-    page is published?
+staged_at: queue_cases/A3.4/page/
+follow_up:
+  kind: figure-digitisation-confirmation
+  blocking: false
+  note: The page SHIPS with the figure results disclosed as pending re-confirmation, the way
+    F3.5 does. Batch this with the other overlay reviews; nothing waits on it.
+  question: |
+    Three things, all new since the 2026-08-02 answer.
 
-    '
-  detail: 'The axis calibration is not in doubt and does not need reviewing. All three
-    curves drawn on Figure 2 are known functions - eq. (12), Ranz-Marshall eq. (9),
-    and Petrovic-Thodos eq. (11) - and recomputing them from their own equations puts
-    all three on the printed curves to within a line width (see A3.4-fig2-axis-calibration.png).
-    That check also settles two things the paper leaves unstated: that j_D in eq.
-    (11) is defined on the superficial velocity, so Sh = j_D Re Sc^(1/3), and that
-    the voidage used to draw the line is eps_b = 0.40.
+    (1) Figure 2, re-centred. Every glyph is shown at 2x with the fitted outline in
+    green and the old crosshair as an orange x (A3.4-fig2-recentred-audit.png). Do the
+    fitted centres look right?
 
-    A second decision is wanted on Figure 3, the liquid-phase plot that alpha and
-    beta were actually fitted on. It carries ~250 filled markers of eleven shapes,
-    heavily merged in the dense band; distance-transform splitting of merged blobs
-    was judged too unreliable to attempt and it was NOT digitised. Without it the
-    values 1.1 and 0.6 are tested here only against the gas data they were checked
-    against. A free refit on the 81 gas points gives alpha = 1.17 +/- 0.22, beta =
-    0.555 +/- 0.037, so both printed values sit within 1.22 standard errors - but
-    that is a weak test compared with Figure 3. Worth the effort, or leave it?
+    (2) Figure 2, count. Nine markers were added in the dense band, drawn in red. Are
+    they real? And eleven of the eighty-one old crosshairs turned out to be a second or
+    third mark on a glyph another crosshair already had - the fits land on the same
+    point - so they were merged. Are those really double counts, or are they the F2.3
+    case in reverse, two markers drawn on top of each other?
 
-    Nothing else blocks the page. The results that carry it need no data at all: the
-    pymrm solve of eq. (4) against eq. (7), the liquid/gas asymmetry, the Sh -> 2
-    limit, and the reproduction of the paper''s own recalculation.
+    (3) Figure 3. 182 filled markers at the shipped erasure band, shape-fitted
+    (A3.4-fig3-extraction-overlay.png, and A3.4-fig3-candidate-audit.png with the worst
+    fit first). Do they sit on real markers? The sharp version of the question, which
+    the band sweep now poses precisely: switching the erasure band OFF gains 35 more
+    centres, and those 35 sit a median of 3.6 px from the drawn correlation and score a
+    median 0.684 against 0.793 for the shipped set. Are they markers the band is
+    destroying, or fragments of the drawn line surviving the 61 px straight-ink
+    removal? The page ships band_hw = 5 on the judgement that they are mostly the
+    latter, says so, and carries the whole sweep (free alpha 1.296 to 1.440) as the
+    uncertainty. The low-scoring end of the contact sheet would settle it.
 
-    '
+    Note that the Figure 3 axis calibration CHANGED in this pass - a column-dependent
+    row origin, correcting a 5.6 px left/right decade-tick skew - so the overlays are
+    not the ones reviewed before.
   artifacts:
-  - queue_cases/A3.4/review/A3.4-fig2-extraction-overlay.png
-  - queue_cases/A3.4/review/A3.4-fig2-candidate-audit.png
+  - queue_cases/A3.4/review/A3.4-fig2-recentred-overlay.png
+  - queue_cases/A3.4/review/A3.4-fig2-recentred-audit.png
+  - queue_cases/A3.4/review/A3.4-fig3-extraction-overlay.png
+  - queue_cases/A3.4/review/A3.4-fig3-candidate-audit.png
   - queue_cases/A3.4/review/A3.4-fig2-axis-calibration.png
-notes: 'Page built and executing in queue_cases/A3.4/page/ (31 cells, ~25 s). The
-  spine is that eq. (4) - steady 1-D convection-diffusion-reaction with Danckwerts
-  boundary conditions - is a genuine S3 pymrm problem whose closed form is the paper''s
-  own eq. (7), so the correction the paper performs by hand becomes a root find on
-  a solved BVP.
+notes: |
+  Page complete and executing (54 cells, ~5 s). Both answers from the 2026-08-02
+  review are acted on: "worth the effort" -> Figure 3 digitised and Figure 2's dense
+  band worked again; "the marker is often off centre, fit the shape and take the
+  centre of the shape" -> implemented, and MEASURED rather than asserted.
 
-  Four data-free results, all reproducing the paper: (1) the pymrm discretisation
-  converges onto eq. (7) at first order (error ratios 2.00 over four doublings) and
-  one Richardson step lands within 2.0e-6; (2) eq. (2) and the Pe = 2 assumption it
-  replaces differ by exactly 1 + 40/(Sc.Re), so the re-analysis can only bite below
-  Sc.Re = 40 - Re < 67 for a gas, Re < 0.04 for a liquid - which predicts both halves
-  of conclusion 1 before any number is computed; (3) the liquid-phase correction is
-  at most 1.33 % over 3 <= Re <= 1e4; (4) pushing Petrovic-Thodos eq. (11) through
-  eq. (7) at their Pe = 2 and re-inverting with eq. (2) returns eq. (12) to 1.8 %
-  mean and 4.5 % worst over 100 <= Re <= 900, nothing fitted, moving under half a
-  per cent when L/d_p goes from 10 to 40. The paper never prints this comparison.
+  SENT BACK BY ADVERSARIAL REVIEW 2026-08-02 (review/verification.md) AND REWORKED.
+  The page's headline was that a free fit to Figure 3 rejects the printed alpha and
+  beta by five to six standard errors. That claim is WITHDRAWN. It did not survive
+  three things, all now on the page:
+   * the fitting metric. Unweighted least squares in LINEAR y on the same markers -
+     an equally defensible loss function - gives 1.157 / 0.5844 rather than 1.344 /
+     0.5496. Theil-Sen gives 1.190 / 0.5558. The disagreement was a property of the
+     estimator as much as of the data. NOTE for whoever reads verification.md: the
+     reviewer justified the linear metric by saying the paper's Figure 4 is a
+     linear-axis plot. It is not - read on the 600 dpi render of page 1383 (right
+     column), Fig 4 is log-log like every other figure in the paper, with
+     (Sc^1/3 Re^0.6)^2 running 1 to 1e6 and Sh 1 to 1e4, and the square is taken
+     "to enlarge the plot in the x-axis direction". The page therefore argues the estimator point on its
+     own merits and does NOT claim the authors fitted in linear space;
+   * the error model. The residuals carry a 5.0-sigma quadratic term and positive
+     autocorrelation; Newey-West standard errors are 1.4-1.9x the ordinary ones and
+     a cluster bootstrap over the Reynolds bins is 2.5x, giving a 95 % interval for
+     alpha of 1.04 to 1.53, which CONTAINS 1.1;
+   * a real calibration bug, and fixing it was the most valuable thing in the pass.
 
-  Against the 81 digitised Figure 2 markers, eq. (12) sits at 26.5 % mean absolute
-  deviation with a +4.9 % bias - that scatter belongs to 1943-1969 gas-phase data,
-  not to the correlation. The number that matters is the trend: eq. (11)''s bias runs
-  -36 % below Re = 30 through -21 %, -2 % and +13 % above Re = 300, while eq. (12)''s
-  stays flat. That is exactly what the paper claims about its own figure.
+  THE CALIBRATION BUG. Figure 3's left- and right-hand decade ticks disagree by
+  5.6 px: the render is rotated by 0.203 deg. The first pass averaged the two sides,
+  which is right in the middle of the plot and wrong at both ends, and because the
+  error is a TILT it fed straight into beta. The symptom was already in the sidecar
+  and had been recorded as CONFIRMATION: fitting the drawn correlation's own ink -
+  an object known to be exactly 1.1 Re^0.6 - returned alpha 2.4 % high and beta
+  0.9 % low, the same signs as the accusation. With a column-dependent row origin
+  the control returns 1.107 / 0.598 (so the line WAS drawn from the printed
+  constants) and the marker fit moves 1.367 / 0.5460 -> 1.344 / 0.5496. The drawn
+  line is now shipped as its own dataset so the control RUNS on the page.
+
+  THE HEADLINE IS NOW THE NUMBER THAT DOES NOT MOVE: alpha with beta held at the
+  printed 0.6, whole sample, = 1.1000 against the printed 1.1 in the same log metric
+  the free fits use. It stays inside 1.0976-1.1179 across all six erasure-band
+  settings AND both axis calibrations, and inside 1.0067-1.1179 once the estimator is
+  varied as well: within 9 % of the printed value, never more than 2 % above it,
+  against 1.05 to 1.47 for the free alpha over the same choices. THAT CONTRAST is the
+  result. Do not overclaim it, as an intermediate draft of this pass briefly did: the
+  beta-fixed alpha is not a fixed point of the analysis. Linear-y least squares gives
+  1.047 where the log metric gives 1.100, and Re >= 50 gives 1.0199. Both columns are
+  printed. Everything else is reported as a sensitivity family.
+
+  THE ERASURE BAND IS NOW SHIPPED AS DATA. wakao-funazkri-1978-fig3.csv carries six
+  marker sets, band_hw = 0, 3, 5, 7, 10, 14 -> n = 210, 195, 182, 166, 147, 126, free
+  alpha 1.296 -> 1.440. That spread is a half-width of 0.072 against an iid standard
+  error of 0.052 and a clustered one of 0.132: the extraction dominates the error bar
+  the page was quoting and is comparable with the honest one, so the two together are
+  about 3x what was reported. band_hw = 5 is shipped, justified on a measurement
+  (turning the band off gains 35 centres that sit a median 3.6 px from the drawn
+  line and score 0.684 against 0.793), and disclosed as a judgement.
+
+  THE BREAK TABLE NOW RECOMPUTES EVERY COLUMN UNDER EVERY DEFECT. It previously
+  copied untouched columns from the baseline row - the repository's signature defect,
+  inside the table built to guard against it - so "each defect moves the metric it
+  should and only that one" was asserted, not measured. Measured, the off-diagonal
+  is exactly 0.0e+00 over 30 cells, because the three metric groups share no input;
+  and the free-fit alpha and beta are in the table now as well as the beta-fixed
+  alpha. Worth recording, because the earlier draft had it backwards: against an AXIS
+  defect the beta-fixed alpha is the MOST sensitive of the three (+47.6 % under the
+  decade-swap, against +0.0 % for the free alpha), not the least. It is the most
+  stable against the erasure band and against everything in the bed model, which is a
+  different statement and is the one result 5 makes.
+
+  Deviation of eq. (12) from the data it was FITTED on: 17.6 % mean absolute,
+  +2.3 % bias, against 27.2 % and +9.7 % on the gas data it was CHECKED against.
+
+  Also fixed this pass: the citation named Kaguei, S., who is not an author of this
+  paper (title page reads "N WAKAO and T FUNAZKRI"); the re-centring statistics are
+  now reported on the 65 markers that actually moved as well as on all 81 rows, 16
+  of which are zero by construction; "random, not systematic" retired for the 2.6-SEM
+  row shift; the NMS explanation of the double counts dropped (eight of the twelve
+  merged pairs were 1.4-5.0 px apart, so 8 px suppression cannot be the cause);
+  "three known functions" corrected to two plus a slope; Figure 2's ~4 px common
+  curve offset (~2.7 % in Sh) measured and disclosed but deliberately NOT corrected,
+  because the only evidence for it is the three curves one of which supplied eps_b;
+  and the eq. (9) dashed-band erasure count printed.
+
+  The technique write-up is in queue_cases/A3.4/review/README.md and is meant for
+  promotion into docs/handoff.md. Short version: score a parametric glyph template
+  (body coverage minus an outer margin annulus, weighted by a don't-care mask)
+  instead of a density peak, fit (shape, size, sub-pixel centre), and detect by
+  matching pursuit so merged glyphs are explained one at a time. Four traps, each of
+  which cost a cycle: the margin annulus must be several px wide or every fit
+  collapses onto the smallest template and scores 1.00; SciPy's default Nelder-Mead
+  simplex is degenerate when the start is the origin, so the polish silently does
+  nothing; a normalised coverage score is unbounded when most of the template is
+  masked away, so a second "evidence" gate with a support floor is needed; and
+  erasing a curve as absent ink rather than as don't-care destroys every marker
+  sitting on it. Two further lessons were added after the review and are the most
+  transferable part: a printed curve is a free calibration control, and a control
+  that fails in the direction of your result is a symptom; and the erasure width
+  must be swept and every marker set shipped.
 
   Extraction notes for whoever picks this up: the Elsevier PII full text is excellent
-  for prose and useless for numbers on this scan (eq. 12 comes back as "2 + 1 1 Sc
-  3 Re 6"); every constant was read off 600 dpi renders. The trick worth reusing is
-  that when a figure draws curves whose equations are printed, those curves calibrate
-  the axes exactly AND can be erased at their computed position before marker detection
-  - the dashed Ranz-Marshall curve scores as markers otherwise, because its dashes
-  are compact ink.
-
-  '
-updated: '2026-07-30'
+  for prose and useless for numbers on this scan (eq. 12 comes back as
+  "2 + 1 1 Sc 3 Re 6"); every constant was read off 600 dpi renders.
+updated: '2026-08-02'
 resume:
   staged_at: queue_cases/A3.4/page/
-  established: 'Page complete and executing (31 cells, ~25 s). Four results need no
-    data at all and are already validated: pymrm reproduces the paper''s closed-form
-    eq. 7 at first order (ratios 2.00, Richardson to 2.0e-6); eq. 2 and the Pe = 2
-    assumption differ by exactly 1 + 40/(Sc.Re), so the re-analysis can only bite
-    below Sc.Re = 40; the liquid correction is at most 1.33 %; and pushing Petrovic-Thodos
-    through eq. 7 returns eq. 12 to 1.8 % mean. 81 of ~110 markers recovered from
-    Fig. 2. Axis calibration is NOT in doubt - all three printed curves are known
-    functions and land on the printed lines to within a line width, which also settles
-    that j_D is on superficial velocity and eps_b = 0.40.'
-  answer_changes:
-    accept: Promote unchanged. The digitised points are used ONLY for the trend in
-      the residual with Reynolds number, which missing markers do not move.
-    reject_some: Name them; drop and re-run build_page.py. The four data-free results
-      are unaffected, so the page survives any subset.
-    demand_full_recall: A new extraction pass on the dense band above Re = 100. The
-      page can publish without it - say so and it goes as built.
-    figure3_yes: Digitise Fig. 3 (~250 filled markers, 11 shapes, heavily merged)
-      so that 1.1 and 0.6 are tested against the liquid data they were FITTED on rather
-      than the gas data they were checked against. Expensive; the free refit on gas
-      already gives alpha = 1.17 +/- 0.22, beta = 0.555 +/- 0.037.
-    figure3_no: No change. Page already states this limitation.
+  established: Everything. The page is finished and executing; both figures are extracted;
+    the centring technique is implemented, measured and written up; the 2026-08-02 adversarial
+    review has been worked through in full (see review/verification.md and the notes above).
+    The follow_up below is a confirmation request, not a blocker.
+  do_not_redo: Extraction of either figure, the Figure 3 skew re-calibration and its drawn-line
+    control, the erasure-band sweep, Figure 2's axis calibration (settled 2026-07-30 by three
+    printed curves; its ~4 px common offset is measured and deliberately left uncorrected,
+    see the fig2 sidecar), the four data-free results, the centring measurement, the deliberate-break
+    table.
   files_to_touch:
-  - queue_cases/A3.4/page/build_page.py
   - models.yaml
-  do_not_redo: Extraction, calibration, the four data-free results.
+  - queue_cases/A3.4/models_entry.yaml
+  answer_changes:
+    fig2_recentring_ok: No change; drop the follow_up and delete review/*.png.
+    fig2_recentring_wrong: Name the markers. Either raise FIT_OK in the extraction script,
+      or fall back to the 2026-07-30 crosshairs, which are still in the CSV as Re_prev/Sh_prev
+      - the page recomputes everything from them in one line.
+    fig2_merges_are_really_two_markers: Name them; lower DEDUP below 6 px and re-emit. Moves
+      the count from 79 back towards 90; changes no conclusion.
+    fig3_ok: No change; promote. This is the expected answer.
+    fig3_recall_too_low: The page already says so and reports which direction the bias runs.
+      The quantitative version is the shipped band sweep. If a hand pass on the merged band
+      is wanted, the free fit is the number to re-run; the beta-fixed alpha will not move.
+    fig3_false_positives: 'Name them; add their indices to a reject list in the extraction
+      script and re-emit. Do NOT repeat the claim this file used to make - that ''the fit
+      is insensitive, alpha moved only 1.371 to 1.376 across a detection-threshold sweep spanning
+      132 to 182 markers''. That was true of the detection THRESHOLD and false of the erasure
+      BAND at the same marker count: 126 markers at band_hw = 14 gives alpha = 1.440 against
+      1.344 at the shipped setting. A sensitivity claim stated without naming its knob is
+      worthless. The band sweep is now shipped in the CSV and the page computes the spread
+      from it; the number that survives any of this is alpha at beta = 0.6, which is 1.098
+      to 1.114 across the whole sweep.'

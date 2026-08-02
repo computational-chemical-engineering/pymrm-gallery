@@ -1,0 +1,233 @@
+dataset_id: wakao-funazkri-1978-fig3
+title: Liquid-phase Sherwood numbers as (Sh-2)/Sc^(1/3) vs Re (Figure 3)
+status: provisional          # extraction complete, maintainer review NOT yet done
+
+source:
+  authors:
+    - "Wakao, N."
+    - "Funazkri, T."
+  year: 1978
+  container: "Chemical Engineering Science 33(10) 1375-1384"
+  doi: 10.1016/0009-2509(78)85120-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  quantity: >
+    (Sh - 2)/Sc^(1/3), the reduced group the figure plots directly, against the
+    particle Reynolds number. Sh has been REEVALUATED by the authors with the
+    axial effective dispersion coefficient of their eq. (2),
+    eps_b D_ax / D_v = 20 + 0.5 Sc Re; these are not the Sh' values the original
+    investigators published.
+  Schmidt_number: >
+    not needed and not printed. The ordinate is already divided by Sc^(1/3),
+    which is why this figure - and not Figure 2 - is the one the correlation was
+    fitted on: Sh = 2 + alpha Sc^(1/3) Re^beta reduces on these axes to the
+    plain power law y = alpha Re^beta.
+  system: "liquid-phase particle-to-fluid mass transfer in packed beds"
+  Reynolds_definition: "Re = d_p U eps_b / nu, i.e. on the superficial velocity"
+  role: >
+    THE FITTED SET. The paper states it explicitly: "In liquid-phase system Sh
+    values are large and good to be used for the determination of alpha and
+    beta. Figure 3 is a plot of the liquid-phase Sh data as (Sh-2)/Sc^(1/3)."
+    Figure 2, the gas-phase plot, is the check; this is the fit.
+  sources_pooled:
+    - "McCune and Wilhelm [24]"
+    - "Gaffney and Drew [2?]"
+    - "Ishino et al. [26]"
+    - "Evans and Gerald [27]"
+    - "Dunn et al. [29]"
+    - "Wakao et al. [3?]"
+    - "Williamson et al. [32]"
+    - "Wilson and Geankoplis [33]"
+    - "Kasaoka and Nitta [34]"
+    - "Upadhyay and Tripathi [35]"
+    - "Kumar et al. [38]"
+  note: >
+    The eleven sources are distinguished only by marker shape. The shape the
+    detector fitted is recorded in `shape_fitted`, but it is ADVISORY and
+    nothing in the page reads it: eq. (12) contains no term that distinguishes a
+    source, so the correlation is tested against positions alone. Several of the
+    eleven glyphs (Kasaoka and Nitta, Kumar et al., Evans and Gerald) are not in
+    the template bank at all and will have been fitted by the nearest
+    centro-symmetric shape.
+
+acquisition:
+  method: digitised
+  figure: "Figure 3, journal page 1383 (PDF page 9)"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage + a shape-fitting detector"
+  procedure: >
+    SHAPE FIT, not ink density. Every marker is located by fitting a parametric
+    glyph template - filled circle, square, diamond, hexagon, star, wide
+    diamond, and triangles at four orientations - to the ink at sub-pixel
+    resolution, and the reported coordinate is the CENTRE OF THE FITTED SHAPE.
+    The score of a template of size s placed at (y, x) is
+
+        <ink over the glyph body> - <ink over a thin outer margin annulus>,
+
+    both weighted by a mask that is zero wherever the ink is known not to be a
+    marker. The margin term is what makes the score peak at the centre and what
+    fixes the size: slide the template off-centre and it loses body ink and
+    gains margin ink; shrink it inside a merged blob and the margin fills. The
+    annulus runs from 1.16 to 1.62 times the glyph size, and it has to be that
+    wide - with a 1-px annulus every fit collapsed onto the smallest template
+    that would sit inside a blob.
+
+    Fitting is a discrete search over (shape, size, integer offset) followed by
+    a Nelder-Mead polish of (dy, dx, log size) with an explicit initial simplex.
+    Detection is matching pursuit in rounds: all peaks of the coverage map above
+    threshold are fitted, kept if they pass the score and evidence gates, and
+    the ink they explain is removed before the maps are recomputed. That is how
+    merged glyphs are separated - each is explained in turn instead of
+    collapsing into one centroid.
+
+    Removed before detection, as `don't care` rather than as absence of ink:
+      * any locally straight ink over 61 px at any of 18 orientations - the
+        drawn correlation line and the axis frame;
+      * ink connected to the frame and within 28 px of it - every tick;
+      * straight ink over 25 px within `band_hw` px of the COMPUTED position of
+        (Sh-2)/Sc^(1/3) = 1.1 Re^0.6 - the rest of the drawn line.
+    The legend block and the equation annotation were excluded by bounding box.
+
+    THE FILE CARRIES SIX MARKER SETS, NOT ONE. That last band is the only
+    mechanism here that can destroy a real marker, its half-width is a free
+    choice, and it moves the fitted alpha by more than the ordinary standard
+    error a regression on this file will print. So the whole detection was re-run at band_hw = 0, 3, 5, 7,
+    10 and 14 px and every set is shipped, one block of rows each:
+      band_hw   0   3   5   7  10  14
+      markers 210 195 182 166 147 126
+    band_hw = 5 is the SHIPPED set, the one every headline number uses. Select
+    it before doing anything else with this file. The others exist so that the
+    systematic uncertainty is computed on the page rather than asserted in this
+    sidecar.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  calibration: >
+    Both axes are logarithmic, on a crop of the 4592 x 6000 page render taken at
+    (400, 2450).
+
+    ABSCISSA, least squares on the printed decade ticks of the top axis plus the
+    frame edges, which are themselves the Re = 1 and Re = 10^4 gridlines:
+      Re = 1 at column 144.09, 402.66 px per decade.
+
+    ORDINATE, COLUMN-DEPENDENT. This is the correction made on 2026-08-02 after
+    review, and it matters. Both the left and the right axis carry all four
+    decade ticks, and the two sides DISAGREE: the left-hand ticks sit 5.6 px
+    above the right-hand ones, because the page render is rotated by 0.203
+    degrees. Each side is fitted separately and the origin and decade height are
+    interpolated linearly between the two tick columns:
+      left  (column 153):  y = 1 at row 1144.28, 336.41 px per decade
+      right (column 1742): y = 1 at row 1149.92, 337.25 px per decade
+    The first pass averaged the two sides (y = 1 at row 1147.10, 336.83 px per
+    decade, also recorded in the parameter file as `row0_fig3`/`pxdec_y_fig3`).
+    That is right in the middle of the plot and wrong by ~2.8 px at either end,
+    and the error is a TILT, so it feeds straight into beta. See
+    `calibration_check` for what it was worth.
+  estimated_error: >
+    Positions: about +/- 0.5 % in Re and +/- 0.5 % in y from placing the fitted
+    centre of a ~16 px glyph on axes with ~400 and ~340 px decades. A marker
+    clipped by the drawn correlation line is worse; those are the low-scoring
+    end of `fit_score`.
+
+    The ordinate skew that the first pass left uncorrected was worth +2.4 % in
+    alpha and -0.9 % in beta on the drawn-line control, and moved the marker fit
+    from alpha = 1.367 / beta = 0.5460 to 1.344 / 0.5496. What remains after the
+    correction is +0.7 % / -0.3 % on the control, i.e. inside the width of the
+    drawn stroke.
+
+    NEITHER OF THOSE IS THE LARGEST TERM. The erasure band is the dominant
+    SYSTEMATIC: across the six shipped settings the free alpha runs 1.296 to
+    1.440, a half-width of 0.072, against an ordinary-least-squares standard
+    error of 0.052 and a cluster-bootstrap one of 0.132. So the band alone
+    exceeds the error bar a regression on this file will print, and is
+    comparable with the honest clustered one; combining the two, a fit quoted
+    from this file without the band sweep understates its uncertainty on alpha
+    by about a factor of three.
+    The number that survives all of it is alpha with beta held at 0.6: 1.0976 to
+    1.1179 across the whole sweep AND both axis calibrations, 1.1000 on the
+    shipped set in the log metric. It is not a fixed point - linear-y least
+    squares gives 1.047 and restricting to Re >= 50 gives 1.0199, so over
+    estimators as well the range is 1.0067 to 1.1179 - but every one of those is
+    within 9 % of the printed 1.1 and none is more than 2 % above it, where the
+    free alpha runs up to a third high. The page prints all of those columns.
+
+    A residual the extraction can measure but not remove: the abscissa has no
+    independent skew calibration, because only the top axis carries readable
+    interior ticks. The vertical frame lines suggest a row-dependent column
+    shift of 4 to 6 px over the plot height, consistent with the same rotation.
+    It is not corrected and is not in the numbers above.
+
+calibration_check: >
+  The correlation the figure draws is printed inside it:
+  (Sh-2)/Sc^(1/3) = 1.1 Re^0.6. That curve is a control experiment whose answer
+  is known in advance, and it is now SHIPPED as a dataset in its own right -
+  `wakao-funazkri-1978-fig3-line.csv`, 410 traced columns - so that the page
+  runs the control instead of quoting it from here.
+
+  Fitting a power law to the traced ink (one median per 100 px column bin, then
+  a fit to the bin medians) returns
+
+    flat calibration, as first shipped:  alpha = 1.126, beta = 0.5949
+    column-dependent calibration:        alpha = 1.107, beta = 0.5984
+
+  against the printed 1.1 and 0.6. The first pass reported its version of the
+  first line as confirmation that "the axes are calibrated by the paper's own
+  printed function". It was not: a control that comes back 2-4 % high in alpha
+  and 1 % low in beta, with the SAME SIGNS as the disagreement being claimed
+  about the markers, is a symptom. Tracing the offset column by column showed it
+  was a tilt of about +6 px across the plot, which is exactly the left/right
+  tick skew above. Correcting the skew removes about 70 % of the alpha error on
+  the control and confirms what it should: the line WAS drawn from the printed
+  constants.
+
+review:
+  status: pending
+  requested: 2026-08-02
+  artifacts:
+    - "queue_cases/A3.4/review/A3.4-fig3-extraction-overlay.png"
+    - "queue_cases/A3.4/review/A3.4-fig3-candidate-audit.png"
+  question: >
+    Do the 182 fitted glyphs of the shipped set (band_hw = 5) sit on real
+    markers? The contact sheet shows every candidate at 2x, worst fit first.
+
+    And the specific question the band sweep now poses precisely, which is the
+    one that matters: switching the erasure band off entirely gains 35 centres
+    the shipped set does not have, and those 35 sit a median of 3.6 px from the
+    drawn correlation and score a median 0.684 against 0.793 for the shipped
+    set. Are they markers the band is destroying, or fragments of the drawn line
+    surviving the 61 px straight-ink removal? The page ships band_hw = 5 on the
+    judgement that they are mostly the latter, states that as a judgement, and
+    carries the whole sweep (free alpha 1.296 to 1.440) as the uncertainty. A
+    look at the low-scoring end of the contact sheet would settle it.
+
+    NOTE: the axis calibration changed in this pass (column-dependent row
+    origin, correcting a 5.6 px decade-tick skew), so these overlays are not the
+    ones reviewed before.
+
+missing:
+  - "Markers hidden inside the legend block (upper part of the plot area) or
+     behind the equation annotation (lower right), both excluded wholesale.
+     Neither region overlaps the data band."
+  - "Markers merged into the chains along the drawn correlation line. About 182
+     of an estimated 200-245 glyphs were recovered at the shipped band setting;
+     the estimate comes from the total marker ink divided by the median area of
+     an isolated glyph, so it is itself uncertain. The loss is DIRECTIONAL -
+     markers nearest the printed correlation are the ones most likely to be
+     missed - and the band sweep bounds it from one side only."
+
+columns:
+  - {name: band_hw, unit: px, description: "half-width of the erasure band around the computed position of 1.1 Re^0.6 used for THIS block of rows. SELECT band_hw == 5 for the shipped point set; the other five blocks are the systematic-uncertainty sweep"}
+  - {name: Re, unit: "-", description: "particle Reynolds number on the superficial velocity, d_p U eps_b / nu"}
+  - {name: Sh_minus_2_over_Sc13, unit: "-", description: "(Sh - 2)/Sc^(1/3), the group the figure plots; Sh reevaluated with eq. (2)"}
+  - {name: col_px, unit: px, description: "fitted centre, column, in the 600 dpi crop"}
+  - {name: row_px, unit: px, description: "fitted centre, row, in the 600 dpi crop"}
+  - {name: shape_fitted, unit: "-", description: "template that fitted best. ADVISORY ONLY - not a series label"}
+  - {name: fit_score, unit: "-", description: "body coverage minus margin coverage of the fitted template, in [-1, 1]"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The figure image is NOT reproduced; the points are re-plotted
+  from the extracted coordinates.
