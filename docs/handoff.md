@@ -1,18 +1,22 @@
-# Handoff — state as of 2026-08-01
+# Handoff — state as of 2026-08-02
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
 
 **Read [“The check that cannot fail”](#the-check-that-cannot-fail--the-defect-the-verifier-exists-to-catch)
-before writing any validation cell.** On 2026-07-31/08-01 six pages went through
-adversarial verification and four carried the same defect. It is now the most
-common finding in this repository.
+before writing any validation cell.** Across 2026-07-31 to 08-02, nineteen pages
+went through adversarial verification and **thirteen** carried some form of it —
+a check that could not fail, a claimed sensitivity the check did not have, or an
+independence claim that did not survive checking. It is by a wide margin the most
+common finding in this repository, and it has twice been found *inside the break
+table built to guard against it* (`A3.4`, `D2.1`).
 
 ## Built and live
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-21 page directories, 22 published catalog entries, both CI workflows green.
+34 page directories, 35 published catalog entries, both CI workflows green.
+(The two counts differ because `B1.1` covers `B1.5` and `A2.1` covers `A2.2`.)
 
 ### Added 2026-07-31/08-01
 

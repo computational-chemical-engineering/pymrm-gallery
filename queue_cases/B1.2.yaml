@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Sci. 6 (1957)
 priority: P1
 tier: T0
 structures: S3, S13
-status: needs-input
+status: published
 reference:
   authors:
   - Aris, R.
@@ -13,9 +13,9 @@ reference:
   container: Chemical Engineering Science 6(6) 262-268
   doi: 10.1016/0009-2509(57)85028-3
   reprint:
-    note: 'Reprinted verbatim for the journal''s Golden Jubilee as Chemical Engineering
-      Science 50(24) 3899-3903 (1995). The 1995 re-typesetting OCRs cleanly; the 1957
-      scan does not. Read the reprint.
+    note: 'Reprinted verbatim for the journal''s Golden Jubilee as Chemical Engineering Science
+      50(24) 3899-3903 (1995). The 1995 re-typesetting OCRs cleanly; the 1957 scan does not.
+      Read the reprint.
 
       '
     doi: 10.1016/0009-2509(96)81819-7
@@ -24,115 +24,87 @@ paper:
   on_disk: partial
   open_access: false
   checked: '2026-07-31'
-  detail: 'Full text obtained legitimately through the Elsevier article retrieval
-    API (PII 0009250957850283) under the institutional subscription documented in
-    docs/handoff.md, and cross-checked against the 1995 reprint''s full text (PII
-    0009250996818197). Unpaywall reports oa_status "closed"; there is no open-access
-    or arXiv copy. The entitlement returns only a ONE-PAGE PREVIEW PDF for both printings,
-    saved to ~/papers/pymrm-gallery/1-s2.0-0009250957850283-main.pdf (1 page, journal
-    page 262). The entitlement endpoint itself returns AUTHENTICATION_ERROR, so the
-    full PDF is not available by this route.
+  detail: 'Full text obtained legitimately through the Elsevier article retrieval API (PII
+    0009250957850283) under the institutional subscription documented in docs/handoff.md,
+    and cross-checked against the 1995 reprint''s full text (PII 0009250996818197). Unpaywall
+    reports oa_status "closed"; there is no open-access or arXiv copy. The entitlement returns
+    only a ONE-PAGE PREVIEW PDF for both printings, saved to ~/papers/pymrm-gallery/1-s2.0-0009250957850283-main.pdf
+    (1 page, journal page 262). The entitlement endpoint itself returns AUTHENTICATION_ERROR,
+    so the full PDF is not available by this route.
 
     '
-blocker:
-  kind: review
-  question: Two printed numbers in Aris 1957 could not be confirmed, and neither is
-    used by any model on the page - both are simply printed as discrepancies. (1)
-    Table 1's cylinder column at Lambda = 5 and 10 reads 0.197 and 0.100, where the
-    paper's own eq. 16 gives 0.1897 and 0.0975; the plate and sphere columns are correct
-    at those same points, so these look like arithmetic slips - but that cannot be
-    asserted from arithmetic alone. (2) The third number in section 4's mixture example
-    is 0.397 in the 1995 reprint, 0.897 in the 1957 OCR, and recomputes to 0.4936,
-    while the other two numbers in the same sentence reproduce exactly. If printing
-    them as discrepancies is acceptable, this page goes to ready unchanged.
-  detail: '(a) Table 1, cylinder column: printed 0.197 at Lambda = 5 and 0.100 at
-    Lambda = 10, against 0.1897 and 0.0975 from the paper''s own eq. 16 (+3.8% and
-    +2.6%). The plate and sphere columns are correct at those moduli and the other
-    19 entries agree to 0.0008, so this looks like two arithmetic slips in the original
-    rather than a transcription error - but that cannot be asserted from arithmetic
-    alone. The 1957 scan and the 1995 reprint show the same digits.
+blocker: null
+notes: 'BUILT AND VERIFIED, staged at queue_cases/B1.2/page/. Not promoted: B1.2 has no models.yaml
+  entry and models.yaml was not touched. Promotion = move the directory to pages/B1.2-aris-shape-factor/
+  and add the matching entry.
 
-    (b) Section 4''s mixture example, third number: the 1995 reprint prints 0.397,
-    the 1957 scan''s OCR gives 0.897, and eq. 19 recomputed gives 0.4936. The other
-    two numbers in the same sentence (mean modulus 1.316, eta 0.658) reproduce EXACTLY,
-    which pins down both the formula and the fact that the example uses the flat-plate
-    curve - so the third number is the anomaly. The page prints all three candidates
-    and uses none of them.
+  Scope: B1.2 alone. The catalogue''s B1 gallery-angle note asks for no comparison page here;
+  it flags B1.1+B1.5 as the flagship and notes that B1.12''s deferral leaves S13 undemonstrated.
+  This page partly fills that gap - construct_div with nu on a radial domain that does not
+  start at the origin (spherical shell), plus multi-axis assembly in 2-D and 3-D - though
+  not the callable-nu form B1.12 was to demonstrate.
 
-    Neither number is used by any model on the page; both are reported as discrepancies.
-    If the maintainer is content with that, status becomes ready with no code change.
+  Complements rather than duplicates B1.1, which already plots the Aris collapse for Thiele''s
+  three geometries. This page is about the shapes with no closed form: four spherical shells,
+  five finite cylinders, a square rod and a cube.
 
-    '
-  artifacts: []
-notes: 'BUILT AND VERIFIED, staged at queue_cases/B1.2/page/. Not promoted: B1.2 has
-  no models.yaml entry and models.yaml was not touched. Promotion = move the directory
-  to pages/B1.2-aris-shape-factor/ and add the matching entry.
+  Headline results. The band over 14 shapes is 0.1164 at Lambda = 1.12 against Aris''s plate-sphere
+  0.0918 - 27% wider. The sphere is NOT the lower envelope: at the same v_p/s_x = a/3 the
+  cube lies 0.0261 (3.7%) below it, with the cylinder of length 2a between them. Aris''s own
+  equal-volume claim (the Leva shape factor) still holds; the page shows the two are different
+  questions.
 
-  Scope: B1.2 alone. The catalogue''s B1 gallery-angle note asks for no comparison
-  page here; it flags B1.1+B1.5 as the flagship and notes that B1.12''s deferral leaves
-  S13 undemonstrated. This page partly fills that gap - construct_div with nu on a
-  radial domain that does not start at the origin (spherical shell), plus multi-axis
-  assembly in 2-D and 3-D - though not the callable-nu form B1.12 was to demonstrate.
+  Resolved a genuine ambiguity in the paper. His case (iv) double series is never evaluated,
+  and his p is defined two incompatible ways (nomenclature: radius:length; running text: length
+  = 2a/p), differing by the factor of 2 the axial eigenvalue is most sensitive to. A 2-D axisymmetric
+  pymrm solve matches the series as printed to 4.2e-4 under the nomenclature reading and is
+  out by 47% under the running-text reading. The series is right as printed; the running text
+  is the error.
 
-  Complements rather than duplicates B1.1, which already plots the Aris collapse for
-  Thiele''s three geometries. This page is about the shapes with no closed form: four
-  spherical shells, five finite cylinders, a square rod and a cube.
+  REUSABLE LESSON FOR THE GALLERY: Chemical Engineering Science reprinted a dozen pre-1970
+  classics verbatim in its 1995 Golden Jubilee issue (vol. 50). Those reprints are clean re-typesettings
+  with usable text layers. For an old CES paper whose scan OCRs badly, look for the reprint
+  BEFORE resorting to page-image reading - search CrossRef for the same title and filter to
+  volume 50 (1995). This is a candidate addition to docs/pdf-findings.md.
 
-  Headline results. The band over 14 shapes is 0.1164 at Lambda = 1.12 against Aris''s
-  plate-sphere 0.0918 - 27% wider. The sphere is NOT the lower envelope: at the same
-  v_p/s_x = a/3 the cube lies 0.0261 (3.7%) below it, with the cylinder of length
-  2a between them. Aris''s own equal-volume claim (the Leva shape factor) still holds;
-  the page shows the two are different questions.
-
-  Resolved a genuine ambiguity in the paper. His case (iv) double series is never
-  evaluated, and his p is defined two incompatible ways (nomenclature: radius:length;
-  running text: length = 2a/p), differing by the factor of 2 the axial eigenvalue
-  is most sensitive to. A 2-D axisymmetric pymrm solve matches the series as printed
-  to 4.2e-4 under the nomenclature reading and is out by 47% under the running-text
-  reading. The series is right as printed; the running text is the error.
-
-  REUSABLE LESSON FOR THE GALLERY: Chemical Engineering Science reprinted a dozen
-  pre-1970 classics verbatim in its 1995 Golden Jubilee issue (vol. 50). Those reprints
-  are clean re-typesettings with usable text layers. For an old CES paper whose scan
-  OCRs badly, look for the reprint BEFORE resorting to page-image reading - search
-  CrossRef for the same title and filter to volume 50 (1995). This is a candidate
-  addition to docs/pdf-findings.md.
-
-  Validation summary: Table 1, 19/21 entries to 7.8e-4; the shell expression against
-  its 5 printed values to 4.1e-4 plus both stated limits (1.1e-16, 5.8e-10); pymrm
-  1-D vs the closed forms 2.4e-4; 2-D vs the printed series 4.2e-4; 2-D square rod
-  and 3-D cube vs independent eigenfunction expansions 8.2e-6 and 7.5e-5 with second-order
-  refinement (ratio 2.29); eq. 18 extrapolates to 1 within 0.0011; eqs. 19-20 reproduce
-  1.316 and 0.658 exactly.
+  Validation summary: Table 1, 19/21 entries to 7.8e-4; the shell expression against its 5
+  printed values to 4.1e-4 plus both stated limits (1.1e-16, 5.8e-10); pymrm 1-D vs the closed
+  forms 2.4e-4; 2-D vs the printed series 4.2e-4; 2-D square rod and 3-D cube vs independent
+  eigenfunction expansions 8.2e-6 and 7.5e-5 with second-order refinement (ratio 2.29); eq.
+  18 extrapolates to 1 within 0.0011; eqs. 19-20 reproduce 1.316 and 0.658 exactly.
 
   Numerical caveat carried on the page: beyond Lambda ~ 5 the cube curve is its eigenfunction
-  series, not a pymrm solve, because a 24^3/32^3 grid does not resolve the O(1/lambda)
-  reacting layer (the two differ by 11% at Lambda = 20).
+  series, not a pymrm solve, because a 24^3/32^3 grid does not resolve the O(1/lambda) reacting
+  layer (the two differ by 11% at Lambda = 20).
 
   '
-updated: '2026-07-31'
+updated: '2026-08-02'
 resume:
   staged_at: queue_cases/B1.2/page/
-  established: 'Page complete and executing (~34 s), status effectively ready. Solves
-    the question Aris declined as ''excessively difficult'' over 14 shapes: the collapse
-    band is 0.1164 at Lambda = 1.12 against his plate-sphere 0.0918, 27 % wider, and
-    the sphere is not the floor - at equal V/A the cube lies 3.7 % below it. Resolved
-    a real ambiguity: his case (iv) p is defined two incompatible ways, and the 2-D
-    solve matches the series AS PRINTED to 4.2e-4 but is 47 % out under the running-text
-    reading. Eqs. 15-17 vs Table 1: 19/21 to 7.8e-4. Paper obtained via the Elsevier
-    PII endpoint; the 1995 Golden Jubilee reprint OCRs cleanly and every transcribed
-    number is one both printings agree on.'
+  established: 'Page complete and executing (~34 s), status effectively ready. Solves the
+    question Aris declined as ''excessively difficult'' over 14 shapes: the collapse band
+    is 0.1164 at Lambda = 1.12 against his plate-sphere 0.0918, 27 % wider, and the sphere
+    is not the floor - at equal V/A the cube lies 3.7 % below it. Resolved a real ambiguity:
+    his case (iv) p is defined two incompatible ways, and the 2-D solve matches the series
+    AS PRINTED to 4.2e-4 but is 47 % out under the running-text reading. Eqs. 15-17 vs Table
+    1: 19/21 to 7.8e-4. Paper obtained via the Elsevier PII endpoint; the 1995 Golden Jubilee
+    reprint OCRs cleanly and every transcribed number is one both printings agree on.'
   answer_changes:
     accept: Promote unchanged - this is the expected answer. Move to pages/B1.2-aris-shape-factor/,
       add a models.yaml entry (B1.2 has none yet), flip meta.yaml to published.
     they_are_errors: Say so and the page can name them as errors rather than discrepancies.
       One paragraph changes; no computation does.
-    they_are_correct: Then the page's eq. 16 reading is wrong somewhere and the Table
-      1 cylinder column needs re-deriving. Nothing else would be affected - no model
-      on the page uses either number.
+    they_are_correct: Then the page's eq. 16 reading is wrong somewhere and the Table 1 cylinder
+      column needs re-deriving. Nothing else would be affected - no model on the page uses
+      either number.
   files_to_touch:
   - queue_cases/B1.2/page/build_page.py
   - models.yaml (no B1.2 entry exists)
   do_not_redo: The 14-shape sweep, the case (iv) resolution, the Table 1 comparison.
-  note: Cheapest of the three parked cases - no images to inspect, answerable in about
-    two minutes.
+  note: Cheapest of the three parked cases - no images to inspect, answerable in about two
+    minutes.
+decision_answered:
+  date: '2026-08-02'
+  answer: Fine — accept branch.
+  means: Printing the two unconfirmed Table 1 cylinder entries as discrepancies is acceptable;
+    promoted unchanged, no computation altered.

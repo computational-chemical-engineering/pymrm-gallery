@@ -406,6 +406,45 @@ models:
     page: pages/B1.1-thiele-weisz-hicks/
     related: [B1.2, B1.4, B1.5, D1.4, J4.7, A4.9]
 
+  - id: B1.2
+    slug: aris-shape-factor
+    title: "Aris generalised shape modulus"
+    description: >
+      One length scale — volume over external surface — collapses the
+      effectiveness factor of any pellet shape onto nearly one curve. Aris
+      quantified that on the three shapes with closed-form answers and called the
+      general case "an excessively difficult task"; this page does it over
+      fourteen, and finds the sphere is not the floor.
+    section: B
+    status: published
+    page: pages/B1.2-aris-shape-factor/
+    tier: T0
+    priority: P1
+    structures: [S3, S13]
+    phases: [gas-solid]
+    reference:
+      authors: ["Aris, R."]
+      year: 1957
+      container: "Chemical Engineering Science 6(6) 262-268"
+      doi: 10.1016/0009-2509(57)85028-3
+    also:
+      note: >
+        Reprinted verbatim as Chemical Engineering Science 50(24) 3899-3903
+        (1995), doi:10.1016/0009-2509(96)81819-7. The 1995 re-typesetting has a
+        clean text layer and is the version to read; the 1957 scan OCRs badly,
+        and the two printings were diffed against each other to settle digits.
+    predicts: [effectiveness factor for arbitrary pellet shape, generalised Thiele modulus, shape-independence band, mixture-averaged modulus]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton]
+    data: {tier: 6, method: table, status: complete}
+    note: >
+      Two numbers printed in Aris's Table 1 could not be confirmed and are
+      reported as discrepancies rather than corrected - the cylinder column at
+      Lambda = 5 and 10, printed 3.8 % and 2.6 % above what his own eq. 16 gives,
+      where the plate and sphere columns are correct at the same moduli. No model
+      on the page uses either. The maintainer accepted printing them as
+      discrepancies on 2026-08-02.
+    related: [B1.1, B1.3, B1.4, B1.6, J4.7]
+
   - id: B1.4
     slug: weisz-prater-criterion
     title: "The Weisz-Prater criterion: what an observed rate can tell you"
