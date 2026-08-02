@@ -9,25 +9,108 @@ status: needs-paper
 reference:
   authors:
   - Gunn, D. J.
-  year: 1993
-  container: Chemical Engineering and Processing 32(6) 333-338
-  title_as_printed: On axial dispersion in fixed beds
+  year: 1987
+  container: Chemical Engineering Science 42(2) 363-373
+  title_as_printed: Axial and radial dispersion in fixed beds
+  note: >
+    This is the catalogued source, taken from the citation list of the 1993 note
+    below (its ref. [5]). It is NOT on disk. Gunn 1969, Trans. Instn Chem. Engrs
+    47 351-359, "Theory of axial and radial dispersion in packed beds" (ref. [2]
+    of the same note), would serve equally well and is also not on disk.
 paper:
-  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-025527019380020H-main.pdf
+  on_disk: null
+  related_paper_on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-025527019380020H-main.pdf
   open_access: null
   checked: '2026-08-02'
-  identified_by: read the paper's own first pages, not the filename
-blocker: null
-notes: null
+  identified_by: >
+    read at 600 dpi on 2026-08-02 by the A2.5 builder. The PDF on disk is Gunn,
+    D. J., "On axial dispersion in fixed beds", Chemical Engineering and
+    Processing 32 (1993) 333-338 - a 1993 rebuttal, not the 1987 paper this case
+    is catalogued against.
+blocker:
+  kind: needs-paper
+  question: >
+    Please supply EITHER Gunn, D. J., "Axial and radial dispersion in fixed
+    beds", Chem. Eng. Sci. 42(2) 363-373 (1987), OR Gunn, D. J., "Theory of axial
+    and radial dispersion in packed beds", Trans. Instn Chem. Engrs 47 (1969)
+    351-359. Either one is enough; the second is where the model is derived.
+  detail: >
+    The 1993 note that arrived on 2026-08-02 IS about the right model and prints
+    it in full as its Eq. (42):
+
+      D/(Ud) = (ReSc/eps.Gamma)(1-p)^2
+             + (Re^2 Sc^2/eps^2 Gamma^2) p(1-p)^3 (exp[-eps.Gamma/(p(1-p)ReSc)] - 1)
+             + eps/(tau ReSc)
+
+    but it is not evaluable from that paper alone. Three things are missing.
+
+    (a) p(Re), the "probability of axial displacement", is the model's one
+        empirical function and is never printed. The note says only that finding
+        it from liquid-phase data "has been carried out for beds of spheres,
+        solid cylinders and hollow cylinders [2, 5]" - i.e. in the two papers
+        requested above.
+    (b) eps, the bed porosity used in the figures, is not stated.
+    (c) Gamma = 4(1-eps)alpha_1^2/eps therefore cannot be formed either, although
+        tau = 1.4 IS given, in the Figure 1 caption.
+
+    Without p(Re) the page would have to invent it or back-fit it from Gunn's own
+    Figure 1, which is the fabrication route this case must not take. The
+    equation itself is transcribed and the transcription is legible; only the
+    empirical function is absent.
+  artifacts:
+  - the 1993 note, at ~/papers/pymrm-gallery/1-s2.0-025527019380020H-main.pdf
+  - "the scope decision that established this: queue_cases/A2.5.yaml, scope_decision"
+
+notes: >
+  Reviewed on 2026-08-02 by the A2.5 builder, who read both papers and decided
+  NOT to absorb this case into A2.5. The full argument is in
+  queue_cases/A2.5.yaml under `scope_decision`; the short form is that (i) the
+  model cannot be evaluated from the paper on disk, (ii) the two models are not
+  algebraically identical and the 1993 note is in fact an argument about exactly
+  that limit - E&R's Pe -> 2 versus Gunn's Ud/D -> 2p/(1-p) - so the A2.1/A2.2
+  merge precedent does not apply, and (iii) no existing page examines this
+  content, so the J3.3 `covered` precedent does not apply either.
+
+  Two things from the 1993 note are already recorded on the A2.5 page, so they do
+  not need redoing: Gunn puts the Peclet maximum of Edwards & Richardson's own
+  data "at a Reynolds number of ~4" (A2.5 computes 3.195 from Eq. 18), and he
+  quotes the argon-air Schmidt group as 0.77 where Edwards & Richardson use 0.72.
+
+  When a paper does arrive, note that the 1993 note also reproduces Tsotsas &
+  Schlunder's Figure 6 as its own Figure 3, and its Figures 1 and 2 carry
+  experimental data from seven sources with Schmidt numbers from 0.77 to 4600 -
+  which would make the eventual A2.6 page a strong candidate for an
+  experimentally validated one, and a natural place to test the Schmidt-group
+  dependence that A2.5 explicitly cannot (only one gas pair was ever run).
 updated: '2026-08-02'
 resume:
   blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
+  trigger: Gunn 1987 (Chem. Eng. Sci. 42 363) or Gunn 1969 (Trans. IChemE 47 351) appears in ~/papers/pymrm-gallery/
   on_arrival:
   - add the filename to docs/papers-on-disk.yaml under this catalogue ID
   - set status back to unclaimed and clear paper.checked so find_papers re-runs
   - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+  established: >
+    The 1993 note has been read in full at 600 dpi and mapped. Eq. (42), Eq. (43)
+    and Eq. (14) are transcribed in this file and in queue_cases/A2.5.yaml; the
+    scope decision against merging into A2.5 is made and argued. The only thing
+    missing is p(Re) (and eps).
+  do_not_redo: >
+    The scope comparison with A2.5, and the reading of the 1993 note. Do not
+    re-derive whether Gunn and Edwards & Richardson are the same model - they are
+    not, and the reason is written down. Do not attempt to build A2.6 from the
+    1993 note alone.
+  answer_changes:
+    Gunn 1987 or 1969 supplied: >
+      A2.6 becomes buildable and is a strong tier-2 candidate: Eq. (42) with the
+      supplied p(Re), tested against the 1993 note's Figures 1 and 2, which carry
+      gas- and liquid-phase data over Sc = 0.77 to 4600. Cross-check the shared
+      Edwards & Richardson series against pages/A2.5-*/data/edwards-richardson-1968-fig9.csv,
+      which is an independent digitisation of the same measurements.
+    neither can be obtained: >
+      A2.6 stays needs-paper indefinitely. Do NOT reconstruct p(Re) from Gunn's
+      Figure 1; that is fitting the model's one free function to the figure it is
+      then compared against.
+  files_to_touch:
+  - queue_cases/A2.6.yaml
+  - queue_cases/A2.6/page/

@@ -6,17 +6,56 @@ priority: P1
 tier: T0
 structures: ''
 status: needs-paper
-reference: {}
+reference:
+  authors:
+  - Uppal, A.
+  - Ray, W. H.
+  - Poore, A. B.
+  year: 1974
+  title: On the dynamic behavior of continuous stirred tank reactors
+  container: Chemical Engineering Science 29(4) 967-985
+  doi: 10.1016/0009-2509(74)80089-8
 paper:
-  on_disk: null
+  on_disk: api-text/Uppal-Ray-Poore-1974-CES-29-967.ELSEVIER-API-TEXT.txt
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-02'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
+    but not its page images, and the text layer is the publisher's OCR of the original scan.
+  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+
+
+    Text layer: mixed, and the most promising of the set. The running text destroys the equations
+    outright (eq. 3 arrives as "dt~=_x,+Da(1-x,)exp{1+xzzl''Yl") and drops decimals in the
+    body ("B = 150, ss =0~4", "Da = 00006017"), but the *figure labels* survive clean: "B=15.0
+    BETA= 0.40" and "Da=0.0006017" both appear verbatim in the Fig. 7 and Fig. 8 captions.
+    So the numerical cases are recoverable and mutually confirming, while the analytic criteria
+    are not.
+
+
+    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
+    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
+    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
+    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
+    therefore stays needs-paper.
+
+
+    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
+    and a reliable account of what is in the paper and where — enough to rank the request.'
+  artifacts:
+  - ~/papers/pymrm-gallery/api-text/Uppal-Ray-Poore-1974-CES-29-967.ELSEVIER-API-TEXT.txt
+  - https://api.elsevier.com/content/article/pii/0009250974800898
+notes: 'The 1976 sequel is also fetched and on disk: ''The classification of the dynamic behavior
+  of continuous stirred tank reactors - influence of reactor residence time'', CES 31(3) (1976)
+  205-214, doi 10.1016/0009-2509(76)85058-0, PII 0009250976850580, file api-text/Uppal-Ray-Poore-1976-CES-31-205.ELSEVIER-API-TEXT.txt.
+
+
+  If the PDF arrives this is a strong page: the model is the standard dimensionless non-adiabatic
+  CSTR, and the validation is rank 2 in the builder brief — the paper''s own analytic multiplicity
+  and limit-cycle criteria, independently re-derived, checked against a numerical continuation.
+  That check can fail, which is the point.'
+updated: '2026-08-02'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
+  0009250974800898). Identity confirmed from the article's own header — title, journal, volume,
+  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Uppal-Ray-Poore-1974-CES-29-967.ELSEVIER-API-TEXT.txt

@@ -453,3 +453,111 @@ upper bound on any real gas effect, and the page says so.
    confound.
 3. Fix one deviation convention per page and state it. Reciprocals diverge as
    soon as the scatter is more than a few percent.
+
+---
+
+## The Elsevier API text is not "safe after 1980" — measured on 15 articles, 2026-08-02
+
+The correction recorded in [`handoff.md`](handoff.md#elsevier-full-text--use-this-instead-of-ocr)
+says the API text drops decimal points "for pre-1980 scans". That framing is too
+narrow and has already misled one dispatch. **The cut is not a date, it is
+whether the article is a scan or born-digital**, and Elsevier was still scanning
+into the 1990s.
+
+Fifteen articles were fetched with the authorised key and inspected. The
+diagnostic that separates them in one line is the count of well-formed decimals
+(`\d+\.\d+`) against the character count:
+
+| Article | chars | well-formed decimals | verdict |
+|---|---|---|---|
+| Krishna & Baur (2003), Sep. Purif. Technol. 33 | 218 k | many | **born-digital, usable for numbers** |
+| Hulburt & Katz (1964), CES 19 | 84 k | 335 | theory paper, no tables; prose good |
+| Uppal, Ray & Poore (1974), CES 29 | 67 k | 80 | body mangled, **figure labels clean** |
+| Uppal, Ray & Poore (1976), CES 31 | 43 k | 79 | as above |
+| Robeson (1991), J. Membr. Sci. 62 | 70 k | 26 | **decimals gone**, and this is 1991 |
+| Szekely & Evans (1970), CES 25 | 52 k | 19 | prose only |
+| Mars & van Krevelen (1954), CES 3 | 72 k | 17 | worst of the set, see below |
+| Froment & Bischoff (1961), CES 16 | 46 k | 13 | prose only |
+| van den Broeke & Krishna (1995), CES 50 | 73 k | — | scan; **Table 4 absent entirely** |
+| van Deemter et al. (1956), CES 5 | 62 k | 7 | tables present, numerically destroyed |
+| Whitman (1923 / IJHMT 1962) | 19 k | 7 | prose good, data are in figures |
+| Nývlt (1968), J. Cryst. Growth 3 | 25 k | 7 | prose only |
+| Calderbank & Moo-Young (1961), CES 16 | 81 k | **5** | 81 kB of text, five readable numbers |
+
+**Robeson 1991 is the one to remember.** Sixty-nine kilobytes of clean-looking
+English, and Table 2's Lennard-Jones kinetic diameters arrive as
+
+> `Gas He H2 CO2 OZ NZ CH4 Kinetic diameter (A) 2 6 2 89 3 3 3 46 3 64 3 8`
+
+for 2.6, 2.89, 3.3, 3.46, 3.64, 3.8 — the decimal point is rendered as a space,
+so a six-value row becomes an eleven-value row and nothing looks wrong until you
+count. Symbols degrade the same way: `P,` for *P*ₓ and `at,` for α.
+
+**Mars & van Krevelen 1954 is the extreme.** The 1954 typesetting uses a mid-dot
+decimal separator and the OCR picks a *different glyph for it within a single
+table row*:
+
+> `825 150 82·5 0·095 0·107 300 73'0 0-120 500 59·0 0'107`
+
+`·`, `'` and `-` are all the same decimal point. Any rule of the form "replace ·
+with ." silently corrupts two-thirds of the table.
+
+**van Deemter 1956** loses them entirely: Table 1 reads `0 163 1100 0 2? 0 30`,
+with `?` standing in for digits the OCR could not resolve. Both of its tables are
+the experimental data a page would validate against, so the API route buys this
+case nothing at all.
+
+### There is no page-image fallback for these
+
+The obvious remedy — render the page at 600 dpi, as for a Wiley scan — is not
+available, because the API does not serve the page. Checked on every article
+above:
+
+- `GET /content/object/pii/<PII>` returns `{"choices":null}`. No page images, no
+  figure objects.
+- `GET /content/article/pii/<PII>` with `Accept: application/pdf` returns a
+  **one-page entitlement preview**, and `content/article/entitlement/pii/<PII>`
+  answers `AUTHENTICATION_ERROR — Requestor configuration settings insufficient
+  for access to this resource`. This is the same behaviour already recorded for
+  `B1.2` in [`papers-on-disk.yaml`](papers-on-disk.yaml).
+
+So the key is a **prose-and-metadata** instrument, not an extraction instrument.
+
+### What it is genuinely good for
+
+Three things, and they are worth the request volume:
+
+1. **Verifying identity.** The header carries title, journal, volume, issue and
+   page range, and the body carries the author list. That is a title page in all
+   but name, and it is how the `H1.9` mis-mapping and the `F1.6` / `F3.4`
+   book-review DOIs were caught on 2026-08-02.
+2. **Telling you which table a page needs**, so a PDF request can be ranked
+   instead of guessed.
+3. **Born-digital articles**, roughly 2000 onward, where it really is clean.
+   Krishna & Baur (2003) returns Ð, Θ, θ, Γ, `Pa−1` and five tables with headers
+   intact, and is being used as the source for `H1.9` and `A4.7`.
+
+### The Elsevier text also drops whole tables
+
+Not just characters. In van den Broeke & Krishna (1995) the body refers to
+"Table 4" five times — it is the table of single-component Maxwell-Stefan
+diffusivities, the one thing that case most needs — and **the table itself is not
+in the returned text**. Tables 1, 2 and 3 are. So "the API returned 73 kB, the
+paper is covered" is not a safe inference: check that each table you are counting
+on has a *caption* in the text, not merely a cross-reference to it.
+
+## The MFIX Theory Guide (`A1.8`) — good scan, bad text layer
+
+`Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf`, 54 pp, from
+OSTI. The document is legible on screen but its text layer is one of the worst
+here: words are run together (`Fluid-SolidsMomentumTransfer`,
+`ConservationofMass`), digits are substituted (`0.O6Re` with a capital O,
+`Ergun (f952)` for 1952, `_g-2'6s` for ε_g^−2.65), and equation numbers come out
+as `(121` and `(1''`. Read every constant off a 600 dpi render.
+
+Its section 2.2.1 does carry the Syamlal–O'Brien drag law complete — eq. (11) for
+the terminal-velocity-to-drag conversion, eq. (12) for Garside & Al-Dibouni's
+closed-form *V*ᵣₘ with *A* and *B* in (13)–(14), and Dalla Valle's single-sphere
+*C*_D. It does **not** contain Wen–Yu (the strings "Wen and Yu" and "Wen & Yu" do
+not occur) and cites Gidaspow only in passing, so it sources one of the three
+drag laws the case names. See `queue_cases/A1.8.yaml`.

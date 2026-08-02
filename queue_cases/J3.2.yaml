@@ -5,14 +5,67 @@ catalog_reference: Newman & Thomas-Alyea, Electrochemical Systems
 priority: P1
 tier: T0
 structures: S10
-status: unclaimed
+status: needs-paper
 reference:
+  authors: ["Pabst, M."]
+  year: 2014
+  title: Analytical solution of the Poisson-Nernst-Planck equations for an electrochemical
+    system close to electroneutrality
+  container: The Journal of Chemical Physics 140, 224113
   doi: 10.1063/1.4881599
 paper:
   on_disk: null
-  open_access: http://juser.fz-juelich.de/search?p=id:%22FZJ-2014-03663%22
-  checked: '2026-07-31'
-blocker: null
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+  open_access: https://juser.fz-juelich.de/record/154315/files/FZJ-2014-03663.pdf
+  checked: '2026-08-02'
+doi_source: |
+  DOI checked against Crossref 2026-08-02, not against the document — the file
+  could not be opened, see blocker. Crossref gives: Pabst, M., "Analytical
+  solution of the Poisson-Nernst-Planck equations for an electrochemical system
+  close to electroneutrality", J. Chem. Phys., AIP Publishing, 13 June 2014.
+  So the DOI is NOT junk, contrary to what its `crossref-auto` provenance
+  suggested — it is a real Poisson-Nernst-Planck paper and topically apt. But it
+  is not the catalogue reference, and nobody has read it.
+blocker:
+  kind: source
+  question: |
+    Which document should J3.2 be built from — Newman & Thomas-Alyea's
+    "Electrochemical Systems" (the catalogue reference, a monograph not on
+    disk), or Pabst (2014) J. Chem. Phys. 140, 224113 (an analytical solution of
+    Poisson-Nernst-Planck close to electroneutrality, which the auto-resolver
+    found)? If Pabst, please supply the published PDF: the Jülich open-access
+    copy is the *submitted* version and cannot be fetched non-interactively.
+  detail: |
+    Two separate problems, neither of which a builder can solve alone.
+
+    1. The catalogue reference is a monograph. Newman & Thomas-Alyea is not on
+       disk. Whether a named monograph on disk may source a textbook-canonical
+       case is settled (see docs/standing-decisions.yaml) — but the book still
+       has to be on disk, and it is not.
+
+    2. The auto-resolved DOI is a different, and arguably better, source. Pabst
+       (2014) is exactly this case's structure (S10) and, being an *analytical*
+       solution, would give a rank-2 validation under the builder brief — an
+       identity the model must satisfy — rather than a digitised figure. That is
+       worth having for a T0/P1 case.
+
+       Its only open-access copy is at JuSER (Forschungszentrum Jülich), record
+       154315, file FZJ-2014-03663.pdf. The direct file URL is recorded above
+       and was obtained from the OpenAIRE index. juser.fz-juelich.de serves a
+       JavaScript bot challenge (`/fast-challenge/`, 248-byte stub) to curl and
+       to WebFetch alike, with or without a browser user-agent, cookie jar or
+       referer; working around it would be scraping past an access control, so
+       it was not attempted. It opens normally in a browser.
+
+       OpenAlex also flags that copy as `submittedVersion`. So even once
+       downloaded it is an author manuscript and its identity and equation
+       numbering must be checked against the published JCP article before
+       anything is transcribed from it.
+  artifacts:
+    - https://juser.fz-juelich.de/record/154315
+    - https://juser.fz-juelich.de/record/154315/files/FZJ-2014-03663.pdf
+notes: |
+  Demoted from `unclaimed` to `needs-paper` on 2026-08-02. It was never
+  buildable: nothing was on disk, the DOI had never been verified against a
+  document, and the DOI does not name the catalogue's reference. Leaving it
+  `unclaimed` would have sent a builder to a paper nobody holds.
+updated: '2026-08-02'

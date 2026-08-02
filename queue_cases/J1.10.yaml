@@ -6,17 +6,48 @@ priority: P1
 tier: T0
 structures: S4
 status: needs-paper
-reference: {}
+reference:
+  authors:
+  - van Deemter, J. J.
+  - Zuiderweg, F. J.
+  - Klinkenberg, A.
+  year: 1956
+  title: Longitudinal diffusion and resistance to mass transfer as causes of nonideality in
+    chromatography
+  container: Chemical Engineering Science 5(6) 271-289
+  doi: 10.1016/0009-2509(56)80003-1
 paper:
-  on_disk: null
+  on_disk: api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-02'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
+    but not its page images, and the text layer is the publisher's OCR of the original scan.
+  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+
+
+    Text layer: prose only. Tables 1 and 2 are present but numerically destroyed — every decimal
+    point is a space and some digits are ''?'': Table 1 reads "0 163 1100 0 2? 0 30" and Table
+    2 "0 091 42 1 00". Both tables are the experimental data a page would validate against,
+    so the API route does not unblock this case at all.
+
+
+    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
+    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
+    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
+    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
+    therefore stays needs-paper.
+
+
+    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
+    and a reliable account of what is in the paper and where — enough to rank the request.'
+  artifacts:
+  - ~/papers/pymrm-gallery/api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
+  - https://api.elsevier.com/content/article/pii/0009250956800031
+notes: There is a 1995 CES reprint of this paper (doi 10.1016/0009-2509(96)81813-6) if the
+  original PII is ever unavailable; it is the same scan.
+updated: '2026-08-02'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
+  0009250956800031). Identity confirmed from the article's own header — title, journal, volume,
+  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt

@@ -6,17 +6,45 @@ priority: P1
 tier: T0
 structures: S11
 status: needs-paper
-reference: {}
+reference:
+  authors:
+  - Hulburt, H. M.
+  - Katz, S.
+  year: 1964
+  title: 'Some problems in particle technology: a statistical mechanical formulation'
+  container: Chemical Engineering Science 19(8) 555-574
+  doi: 10.1016/0009-2509(64)85047-8
 paper:
-  on_disk: null
+  on_disk: api-text/Hulburt-Katz-1964-CES-19-555.ELSEVIER-API-TEXT.txt
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-02'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
+    but not its page images, and the text layer is the publisher's OCR of the original scan.
+  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+
+
+    Text layer: prose good and unusually clean for 1964 (335 well-formed decimals, no table
+    captions at all — this paper is theory, not data). The moment-reduction argument reads
+    intelligibly. Equations still need the page image.
+
+
+    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
+    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
+    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
+    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
+    therefore stays needs-paper.
+
+
+    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
+    and a reliable account of what is in the paper and where — enough to rank the request.'
+  artifacts:
+  - ~/papers/pymrm-gallery/api-text/Hulburt-Katz-1964-CES-19-555.ELSEVIER-API-TEXT.txt
+  - https://api.elsevier.com/content/article/pii/0009250964850478
+notes: This is the origin of the population balance equation and its method of moments, so
+  it also underwrites J2.2 and J5.1. Worth requesting on breadth alone.
+updated: '2026-08-02'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
+  0009250964850478). Identity confirmed from the article's own header — title, journal, volume,
+  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Hulburt-Katz-1964-CES-19-555.ELSEVIER-API-TEXT.txt

@@ -7,12 +7,62 @@ tier: T1
 structures: S9
 status: unclaimed
 reference:
-  doi: 10.1016/0009-2509(95)00102-b
+  authors: ["Krishna, R.", "Baur, R."]
+  year: 2003
+  title: Modelling issues in zeolite based separation processes
+  container: Separation and Purification Technology 33(3) 213-254
+  doi: 10.1016/S1383-5866(03)00008-X
+reference_secondary:
+  authors: ["van den Broeke, L. J. P.", "Krishna, R."]
+  year: 1995
+  title: Experimental verification of the Maxwell-Stefan theory for micropore diffusion
+  container: Chemical Engineering Science 50(16) 2507-2522
+  doi: 10.1016/0009-2509(95)00102-B
+  note: |
+    The catalogue cites this as "Krishna & van den Broeke". The published author
+    order is the reverse — van den Broeke is first author. Fix the citation on
+    any page that uses it.
 paper:
-  on_disk: null
-  open_access: https://linkinghub.elsevier.com/science/article/pii/000925099500102B
-  checked: '2026-07-31'
+  on_disk: api-text/Krishna-Baur-2003-SepPurifTechnol-33-213-zeolite-modelling.ELSEVIER-API-TEXT.txt
+  on_disk_secondary: api-text/vandenBroeke-Krishna-1995-CES-50-2507-micropore-MS.ELSEVIER-API-TEXT.txt
+  open_access: https://pure.uva.nl/ws/files/2908656/853_9632y.pdf
+  checked: '2026-08-02'
 blocker: null
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+doi_source: |
+  Both DOIs verified 2026-08-02 against the Elsevier full text the authorised
+  API key returned, reading the article header (title, journal, volume, issue,
+  page range) and the author list in the body:
+    * 10.1016/S1383-5866(03)00008-X -> "Modelling issues in zeolite based
+      separation processes", Sep. Purif. Technol. 33(3) 213-254, Krishna, R.;
+      Baur, R. Matches the catalogue's "Krishna & Baur (2003)".
+    * 10.1016/0009-2509(95)00102-B -> "Experimental verification of the
+      Maxwell-Stefan theory for micropore diffusion", Chem. Eng. Sci. 50(16)
+      2507-2522, Van Den Broeke, L.J.P.; Krishna, R.
+  The catalogue's crossref-auto DOI (the 1995 paper) resolves correctly; what
+  was wrong was which of the two references actually carries this case.
+notes: |
+  BUILD FROM THE 2003 REVIEW, NOT THE 1995 PAPER. Two reasons.
+
+  1. Subject. The 1995 paper's adsorbents are Kureha microporous *activated
+     carbon* and a Takeda *carbon molecular sieve* — there is no zeolite
+     experiment in it. Every occurrence of "zeolite" or "silicalite" in its text
+     is in the introduction or the reference list. The 2003 review is about
+     zeolites throughout (MFI, 4A, CBMC/MD-derived parameters).
+  2. Text quality. The 2003 review is born-digital: the API text preserves
+     Ð, Θ, θ, Γ, "Pa−1" and subscripted symbols, and Tables 1-5 (DSL isotherm
+     parameters for alkanes in MFI at 300 K; C5/C6 isomers at 362 K; transition
+     probabilities and zero-loading diffusivities; pure-component Langmuir
+     parameters and M-S diffusivities for N2/CH4 in 4A at 193 K) come through
+     with their headers intact. The 1995 paper is a scan: species labels are
+     corrupted ("CaH6" for C3H6, "C3Hs" for C3H8, "COz" for CO2), the corrected
+     diffusivity D-bar renders as "/)~(0)", and **Table 4 — the very table of
+     single-component M-S diffusivities the case needs — is absent from the API
+     text altogether**, present only as cross-references from the body. Its
+     Table 1, 2 and 3 do survive with decimal points intact.
+
+  If the 1995 experiments are wanted, request the PDF; UvA-DARE holds an open
+  copy at the open_access URL above (repeated HTTP 503 on 2026-08-02, so it is
+  an availability problem, not an access problem — retry).
+
+  Note H1.9 was mapped to the same 1995 PII and is now corrected; see that file.
+updated: '2026-08-02'

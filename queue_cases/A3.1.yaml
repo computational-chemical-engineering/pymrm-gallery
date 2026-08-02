@@ -6,17 +6,49 @@ priority: P1
 tier: T0
 structures: S3
 status: needs-paper
-reference: {}
+reference:
+  authors:
+  - Whitman, W. G.
+  year: 1923
+  title: The two-film theory of gas absorption
+  container: Chemical and Metallurgical Engineering 29(4) 146-148; reprinted in International
+    Journal of Heat and Mass Transfer 5(5) (1962) 429-433
+  doi: 10.1016/0017-9310(62)90032-7
 paper:
-  on_disk: null
+  on_disk: api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-02'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
+    but not its page images, and the text layer is the publisher's OCR of the original scan.
+  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+
+
+    Text layer: prose good; the two overall-coefficient equations (5) and (6) are legible,
+    but the HCl absorption data live in Figs 2-3 and did not come through.
+
+
+    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
+    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
+    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
+    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
+    therefore stays needs-paper.
+
+
+    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
+    and a reliable account of what is in the paper and where — enough to rank the request.'
+  artifacts:
+  - ~/papers/pymrm-gallery/api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt
+  - https://api.elsevier.com/content/article/pii/0017931062900327
+notes: 'REPRINT ROUTE — this is the AGENTS.md case, and it is a strong one. IJHMT reprinted
+  Whitman verbatim in its series ''Pioneer Papers in Convective Mass Transfer, 5'', with the
+  header ''W. G. WHITMAN: The two-film theory of gas absorption, Chemical and Metallurgical
+  Engineering 29, 146-148 (1923). Reprinted with permission from Chemical Engineering, Copyright
+  1923, McGraw-Hill Publishing Co.'' plus an Editor''s Foreword. The 1923 original is pre-DOI
+  and unreachable; this reprint has its own DOI and is reachable with the API key. Cite Whitman
+  1923 as `reference` and the 1962 reprint as `reference_read_from`.'
+updated: '2026-08-02'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
+  0017931062900327). Identity confirmed from the article's own header — title, journal, volume,
+  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt

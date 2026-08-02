@@ -6,17 +6,47 @@ priority: P1
 tier: T0
 structures: S3+S12
 status: needs-paper
-reference: {}
+reference:
+  authors:
+  - Szekely, J.
+  - Evans, J. W.
+  year: 1970
+  title: A structural model for gas-solid reactions with a moving boundary
+  container: Chemical Engineering Science 25(6) 1091-1107
+  doi: 10.1016/0009-2509(70)85053-9
 paper:
-  on_disk: null
+  on_disk: api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-02'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
+    but not its page images, and the text layer is the publisher's OCR of the original scan.
+  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+
+
+    Text layer: prose only; scan OCR, decimals unreliable.
+
+
+    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
+    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
+    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
+    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
+    therefore stays needs-paper.
+
+
+    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
+    and a reliable account of what is in the paper and where — enough to rank the request.'
+  artifacts:
+  - ~/papers/pymrm-gallery/api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
+  - https://api.elsevier.com/content/article/pii/0009250970850539
+notes: 'Part II is also fetched and on disk: ''A structural model for gas-solid reactions
+  with a moving boundary-II. The effect of grain size, porosity and temperature on the reaction
+  of porous pellets'', CES 26(11) (1971) 1901-1913, doi 10.1016/0009-2509(71)86033-5, PII
+  0009250971860335, file api-text/Szekely-Evans-1971-CES-26-1901-grain-model-II.ELSEVIER-API-TEXT.txt.
+  Part II is the one that carries the porosity/grain-size parameter study, so it is probably
+  the one a page needs.'
+updated: '2026-08-02'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
+  0009250970850539). Identity confirmed from the article's own header — title, journal, volume,
+  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
