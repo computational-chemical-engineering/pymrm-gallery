@@ -1,0 +1,105 @@
+dataset_id: geldart-1973-table1
+title: Measured minimum fluidization and minimum bubbling velocities, bed voidage and bed expansion for 22 narrow size fractions of three low-density powders
+status: complete
+
+source:
+  authors: ["Geldart, D."]
+  year: 1973
+  container: "Powder Technology 7(5) 285-292"
+  doi: 10.1016/0032-5910(73)80037-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Section 4.2, journal page 287. Three low-density powders: fresh cracking
+  catalyst, spent cracking catalyst, and Diakon, a plastic moulding powder with
+  spherical particles. All had a wide size distribution as received and were
+  separated by sieving into the fractions listed. Each fraction was sized by a
+  microscope count of at least 650 particles. A 5-cm-diameter glass column with a
+  filter-paper distributor was used to fluidize 200 g powder fractions, giving bed
+  heights of approximately 20 cm. Fluidizing gas is air at room temperature and
+  pressure; Geldart uses mu = 1.8e-4 poise and g = 981 cm/s2 throughout the paper.
+
+  U_0 was measured in the usual way from the pressure-drop / gas-velocity curve.
+  U_MB was measured by increasing the air velocity until the first clearly
+  recognizable bubble, usually about 0.5 cm diameter, was seen to break the bed
+  surface, then reducing the flow until only one or two small bubbles were
+  visible; this was repeated several times per fraction and the values averaged.
+  d_sv is the surface/volume mean, 1 / sum(x / d_sv), from the microscope count.
+
+  SECTION 4.2 STATES THE METHOD FOR U_0 AND U_MB ONLY. It says nothing about how
+  eps_MB or H_MB/H_0 were obtained, and eps_MB in particular is not a directly
+  readable quantity - the natural route to it is bed height, the 200 g charge and
+  rho_s, and rho_s is printed as approximate for both catalysts. Those two
+  columns are therefore recorded here as REPORTED, not measured, and no page may
+  describe them as measurements.
+
+acquisition:
+  method: table
+  figure: "TABLE 1, journal page 288"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    These are MEASUREMENTS, not the author's own arithmetic. Every value was read
+    character by character off a 600 dpi render of the printed page. The PDF text
+    layer of this 1973 Elsevier scan is unreliable - it renders the paper's own
+    title as "Types of Gas Fhidization" - and nothing here was transcribed
+    mechanically or repaired by inference.
+
+    Two things about the printed table are recorded rather than corrected:
+
+    (1) The particle densities in the table stub are printed as
+    "rho_s = 1.18 g cm-3" for Diakon but "rho_s ~= 1 g cm-3" and
+    "rho_s ~= 1.5 g cm-3" for the fresh and spent catalyst. The approximately-equal
+    sign is the author's. The column rho_s_exact carries that distinction, because
+    any per-row quantity that divides by (rho_s - rho_f) inherits the uncertainty
+    for the two catalysts and not for Diakon.
+
+    (2) The heading of the fifth column is printed with a degraded subscript that
+    renders as "U_MP" or "U_MR" on the scan. It is U_MB: the surrounding text
+    (section 4.2, "an average value of the minimum bubbling velocity was then
+    calculated. The results are presented in Table 1") and the adjacent columns
+    eps_MB and H_MB/H_0 leave no other reading. This is a judgement about a
+    heading, not about a value; no digit was inferred.
+
+    The one missing U_0 (fresh catalyst, as received, 65 um) is printed as an em
+    dash and is stored as an empty field.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: >
+    None beyond the printed precision, which is two or three significant figures.
+    These are transcribed characters, not digitised positions. Note that the
+    spent-catalyst row at 90-105 um prints U_0 as "0.4", one significant figure,
+    where every other row prints two.
+
+columns:
+  - {name: powder, unit: "-", description: "Diakon, fresh catalyst or spent catalyst"}
+  - {name: rho_s, unit: "g/cm3", description: "particle density including internal porosity, as printed in the table stub"}
+  - {name: rho_s_exact, unit: "-", description: "True where the paper prints '=', False where it prints '~=' "}
+  - {name: nominal_range, unit: "um", description: "nominal sieve range as printed; '-105' means minus 105 um"}
+  - {name: d_sv_um, unit: "um", description: "actual surface/volume mean size from the microscope count"}
+  - {name: U_0, unit: "cm/s", description: "measured superficial velocity at minimum fluidization"}
+  - {name: U_MB, unit: "cm/s", description: "measured superficial velocity at minimum bubbling"}
+  - {name: eps_MB, unit: "-", description: "bed voidage at the minimum bubbling point, AS REPORTED - the paper does not say how it was obtained"}
+  - {name: H_MB_over_H_0, unit: "-", description: "bed height at minimum bubbling divided by the settled height, AS REPORTED - the paper does not say how it was obtained"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced.
+
+caveat: >
+  TIER 2 - a table printed in the paper, and the values in it are the author's own
+  laboratory measurements. Comparing a correlation with these columns is
+  validation against measurement, not reproduction of an author's arithmetic.
+
+  Three limits on what they can test. (a) They are all group A or borderline
+  group A/B powders: the table's title is "Experimental results on Group A
+  powders" and the density range is 1 to 1.5 g/cm3. Nothing here touches the C/A
+  boundary or the B/D boundary, and no page may claim otherwise. (b) The two
+  catalyst densities are approximate, so any per-row quantity that divides by
+  (rho_s - rho_f) carries that uncertainty for 14 of the 22 rows. (c) U_MB was
+  fitted by the paper itself: equation (2), U_MB = 100 d_sv, is the line drawn
+  through these very points in the paper's Figure 1, so comparing equation (2)
+  with the U_MB column measures the quality of a fit and not its predictive
+  power. The U_0 column carries no such circularity - equation (3) is Davies and
+  Richardson's and was not fitted here.

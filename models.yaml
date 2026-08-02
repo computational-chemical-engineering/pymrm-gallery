@@ -189,6 +189,72 @@ models:
     data: {tier: 4, method: digitised, status: complete}
     related: [A1.5, A1.6, A2.3, B1.1, E2.1]
 
+  - id: A1.7
+    slug: geldart-classification
+    title: "Geldart's powder groups: the boundaries, and what his own table says about them"
+    description: >
+      The four letters everyone quotes come from two inequalities, and both are
+      quantitative predictions that can be checked. Recomputed from the
+      expressions Geldart derives them from, they are 229.4 and 1.016e6 against
+      the printed 225 and 1e6 — his own roundings, and harmless. The A/B
+      criterion sorts 20 of the 21 fractions of his own measured Table 1 the same
+      way their measured U_MB/U_0 does, the two routes sharing no input column —
+      but a null model that calls every powder group A already scores 19, so the
+      page reports the score on the three rows that can discriminate, 2 of 3, and
+      states the tie-break on the two rows that print U_MB = U_0 exactly. On the
+      single row where the criterion and the strict ratio part company, Geldart's
+      own prose sides with the criterion.
+      The correlation underneath it, Davies and Richardson's minimum
+      fluidization velocity, is the sloppy half: the constant each measured row
+      implies spans a factor 6.4 about a median of 0.98. And the B/D boundary
+      turns out to be the Davidson cloud-existence condition written in other
+      symbols — Geldart's 1/sqrt(2) against Davies-Taylor's 0.711, 0.55 % apart,
+      less than the rounding he applied to his own answer — which makes the whole
+      diagram a contour map of the smallest bubble a powder can wrap a cloud
+      around.
+    section: A
+    status: published          # staged; integrator flips to published on merge
+    page: pages/A1.7-geldart-classification/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    predicts:
+      - Geldart group (A, B or D) of a powder from its mean size and density
+      - minimum bubbling velocity, eq. (2)
+      - minimum fluidization velocity, eq. (3)
+      - the A/B and B/D boundary constants, recomputed from eqs. (5) and (7)
+      - smallest bubble diameter that carries a Davidson cloud, across the (density, size) plane
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_coefficient_matrix
+    reference:
+      authors: ["Geldart, D."]
+      year: 1973
+      container: "Powder Technology 7(5) 285-292"
+      doi: 10.1016/0032-5910(73)80037-3
+    origin_not_consulted:
+      - authors: ["Davies, L.", "Richardson, J. F."]
+        year: 1966
+        container: "Trans. Inst. Chem. Engrs. 44 T293"
+        note: >
+          Geldart's reference 11, the origin of eq. (3). Not on disk; eq. (3) is
+          used exactly as Geldart prints it on journal page 289.
+      - authors: ["Verloop, J.", "Heertjes, P. M."]
+        year: 1970
+        container: "Chem. Eng. Sci. 25 825"
+        note: "Geldart's reference 10, the origin of eq. (9). Not on disk."
+      - authors: ["Oltrogge, R. D."]
+        year: 1972
+        container: "Ph. D. Thesis, Univ. of Michigan"
+        note: "Geldart's reference 36, the origin of eq. (10). Not on disk."
+    data:
+      tier: 2
+      method: table
+      status: complete
+    related: [A1.6, A1.1, A1.8, E1.1, E1.2, E2.1]
+
   - id: A2.1
     slug: danckwerts-boundary-conditions
     title: "The Danckwerts boundary conditions, and Wehner & Wilhelm's proof of them"

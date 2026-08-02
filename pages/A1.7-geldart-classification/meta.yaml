@@ -1,0 +1,174 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A1.7
+slug: geldart-classification
+title: "Geldart's powder groups: the boundaries, and what his own table says about them"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - geldart_1973_table1.csv
+
+validation:
+  - the A/B criterion, eq. (6), classifies 20 of the 21 fractions of Geldart's own Table 1 that carry a measured U_0 the same way the measured U_MB/U_0 ratio does; the two routes share no input column, the criterion side never seeing a velocity and the measurement side never seeing a size or a density. THAT SCORE IS NOT THE HEADLINE - see the next bullet
+  - the classes are badly unbalanced, so the page prints a null baseline beside the score and quotes the discriminating rows instead. 19 of the 21 comparable rows are measured group A, so a constant "everything is group A" predictor scores 19/21 (Diakon 6/8) against the criterion's 20/21 (Diakon 7/8) - one row of information. The only rows on which the two predictors can differ are the 3 the criterion calls group B, Diakon at 220, 263 and 318 um, and on those the criterion is right 2 of 3. That 2-of-3 is the reported result; all five numbers are computed on the page and exported to agreement.json
+  - the margin rests on a tie-break, which the page states and costs. Two Diakon rows print U_MB = U_0 exactly (3.11/3.11 and 4.11/4.11), so their ratio is 1.000. Eq. (4) is DISPLAYED on journal page 289 as U_MB/U_0 >= 1 but RESTATED in words in the same section 4.3 one page earlier as "(U_MB/U_0 > 1 for group A powders)", in the sentence that assigns those very fractions to group B. The page takes the strict form because it is the only reading that reproduces the author's verdict; break table 2 carries a row showing that the non-strict reading gives 18/21, Diakon 5/8, 0 of 3 on the discriminating rows - and a null baseline of 21/21
+  - on the single row where eq. (6) and the strict measured ratio part company - the 220 um Diakon fraction, (rho_s-rho_f)d' = 259 so eq. (6) says B, U_MB/U_0 = 2.51/2.44 = 1.029 so the strict ratio says A - Geldart's own section 4.3 says that fraction "should be classified as belonging to group B". GELDART SIDES WITH EQ. (6), against a mechanical reading of his own velocity columns; the page tabulates all three verdicts
+  - the constant in eq. (6) recomputes from eq. (5) with Geldart's own K_MB, mu and unit conversion to 229.36 against the printed 225, +1.94 %; the constant in eq. (8) recomputes from eq. (7) with his d_B = 25 cm and eps_0 = 0.4 to 1.0159e6 against the printed 1e6, +1.59 %. Both are his own roundings, both in the same direction, and no row of Table 1 falls in the gap either creates - both gaps computed, the eq. (8) one because the largest (rho_s-rho_f)d'^2 in Table 1 is 1.192e5, a factor 8.4 below 1e6
+  - the worked example on journal page 289 reproduces to 1.94 % worst case over its four velocity numbers (a coincidence of digits with the eq. (6) rounding above; the two quantities are unrelated) (U_0 = 0.4360 against a printed 0.43 read off his Fig. 2, U_MB = 1 exactly, the ratio 2.294 against a printed 2.33 which is 1/0.43, and 1.177 against a printed 1.2 for 100 um sand); his separate remark that a 1 g/cm3 powder turns group B "above about 250 um" is -8.3 % from the 229 um his own eq. (6) gives and is reported as the loose sentence it is
+  - equation (3), which is Davies and Richardson's and was NOT fitted to this table, tested against the measured U_0 column: the constant each row implies spans 0.46 to 2.94 times the printed 8e-4, a factor 6.4, with a median of 0.981; restricted to Diakon above 100 um, the only fractions with an exactly printed density, it is 0.79 to 1.16
+  - a solids balance links the two remaining REPORTED columns, eps_0 = 1 - (1-eps_MB) H_MB/H_0; all 22 rows return a physically admissible 0.441 to 0.570 and the two rows printing H_MB/H_0 = 1.000 return eps_0 = eps_MB to 5.6e-17, which is structural and tests only that those two cells were transcribed as 1.000. Section 4.2 states the method for U_0 and U_MB only and says nothing about how eps_MB and H_MB/H_0 were obtained, so the page calls those two reported rather than measured and uses them for transcription only
+  - equations (9) and (10) transcribed and placed: in (rho_s-rho_f, d') coordinates they are drho d'^1.5 = 28735 and 2299. Eq. (10) crosses Geldart's line XY at 104 um, 2.16 g/cm3 - inside both of Fig. 3's labelled axis ranges (20-1000 um, 0.2-7 g/cm3), consistent with his drawing it there as line O-O. Eq. (9) crosses XY at 16310 um, 0.0138 g/cm3, which is far BELOW the diagram rather than beyond its right edge, so that crossing is not evidence about the figure; what it establishes is that eq. (9) lies to the right of XY throughout the plotted region, by a factor 8.0 in size at drho = 7 and 2.4 at drho = 0.2. The eq. (9) line is NOT off-scale - 938 um at drho = 1 against XY's 225 um - so Geldart's "lies much too far to the right" is relative to XY and to his data, not to the axis
+  - the left-hand side of eq. (7) is (g d_B/2)^(1/2) = 0.7071 sqrt(g d_B) and its right-hand side is U_0/eps_0, so eq. (7) IS the condition u_br <= u_f that E1.2 derives as the no-cloud threshold for the Davidson bubble; Davies-Taylor's 0.711 against Geldart's 0.7071 moves the eq. (8) constant by 0.55 %, less than the 1.59 % by which Geldart rounded his own answer to 1e6. The PHYSICS of that equivalence is standard and is stated in words in both documents (Geldart's sections 3.4 and 4.4, E1.2's "slow bubble: no cloud"); what is added here is the arithmetic that closes it, and the page says so rather than claiming novelty
+  - three deliberate-break tables, one per check. The eq. (6)/(8) constants move by 90 % to 10000 % under every plausible mis-reading of mu, g, K_MB, the 8e-4, eps_0 or d_B. The Table 1 classification falls from 20/21 to 16/21 (Diakon 7/8 to 4/8) for a boundary mis-read as 150, to 3/21 for swapped velocity columns and to 1/21 for an inverted criterion, and to 18/21 (Diakon 5/8) for the non-strict tie-break. Building u_br from the bubble radius rather than its diameter moves the eq. (8) constant by -29 %
+  - four named blind spots, all measured rather than asserted. rho_f moves nothing anywhere (both criteria are written in the density difference); the eq. (3) SPREAD barely moves under a wrong exponent (6.35 -> 5.69) while its median moves by three orders of magnitude, so a scatter alone would not catch it; a 0.10 error in one eps_MB lands inside the range the other rows already span and is invisible to the voidage check; and the whole-table A/B score is nearly powerless because 19 of 21 rows are group A, which is why the null baseline and the 3-row discriminating score are printed beside it
+
+adds: >
+  Nothing to the classification, and the page says so in the pymrm section rather
+  than burying it. Geldart's criteria are two inequalities in two variables; they
+  need no solver, and sections 1 to 4 of the page would run without pymrm
+  installed. What the reimplementation adds is four things, none of which is a
+  solver.
+
+  The boundary constants are Geldart's own arithmetic rounded, and the rounding
+  is harmless. 225 should be 229.36 and 1e6 should be 1.0159e6, low by 1.94 % and
+  1.59 %. No powder in Table 1 falls in either gap - both gaps computed, the
+  eq. (8) one because the largest (rho_s-rho_f)d'^2 in the table is 1.192e5 - so
+  no verdict moves. The recomputation is what licenses that statement, and it
+  also fixes the constants for anyone re-deriving the boundary at a different mu
+  or K_MB, which is exactly what section 5.1 of the paper asks for when it
+  discusses raised pressure.
+
+  The A/B criterion sorted against a measurement, row by row, AND SCORED
+  HONESTLY. Geldart's own test of it is one sentence of prose about Diakon.
+  Doing it arithmetically across all 21 fractions with a measured U_0 gives 20
+  agreements - but 19 of those 21 rows are measured group A, so a null model
+  that predicts group A for everything already scores 19/21 and the criterion is
+  worth one row over it. The page prints that baseline, names the only three
+  rows on which the two predictors can differ (Diakon at 220, 263 and 318 um)
+  and reports the criterion's score on those: 2 of 3. It also states the
+  tie-break that produces the margin - two rows print U_MB = U_0 exactly, eq. (4)
+  is displayed as >= but applied in section 4.3 as >, the strict form is used
+  because it reproduces the author's verdict, and break table 2 costs the
+  alternative at 18/21 - and it reports the boundary's sharpness, the last group
+  A row sitting 0.5 % inside it and measured group A.
+
+  The one genuine conflict resolved the right way round. On the 220 um fraction
+  eq. (6) says group B, the strict ratio test on the measured velocities says
+  group A, and section 4.3 says group B - so GELDART'S OWN PROSE SIDES WITH
+  EQ. (6), against a mechanical reading of his velocity columns. The criterion
+  does not disagree with its author; the strict ratio test does, on the single
+  row where the author had already said not to read it strictly.
+
+  The weak half of the boundary identified and quantified. The A/B line is the
+  ratio U_MB/U_0 and only U_0 comes from something not fitted to this table.
+  Inverting eq. (3) row by row shows the constant it would need spans a factor
+  6.4 across Geldart's own powders even though its median is 0.98 times the
+  printed 8e-4: the centre is right and the scatter is the problem. That is the
+  number a reader needs before carrying the boundary to a new powder and it is
+  not in the paper. It is also why A1.6 (Wen and Yu) is a separate case -
+  replacing eq. (3) is the obvious next move and this page does not make it.
+
+  The B/D boundary re-read as a cloud condition. Equation (7) says a 25 cm bubble
+  rises more slowly than the interstitial gas, which is the condition under which
+  the Davidson bubble has no cloud - E1.2's (R_c/R)^3 = (u_br + 2u_f)/(u_br - u_f)
+  has a pole exactly there. Geldart's 1/sqrt(2) and Davies-Taylor's 0.711 differ
+  by 0.55 %, less than the 1.59 % by which Geldart rounded his own answer, so the
+  two are the same boundary. The physics of that is standard - both documents say
+  in words that a slow bubble carries no cloud - and the page says so; what is
+  added is the arithmetic that closes the identity, and the re-reading it
+  licenses: the classification diagram as a contour map of the smallest bubble a
+  powder can wrap a cloud around, with group D as the region where 25 cm is not
+  enough. This is the one place a solver earns its keep: the page shows the same
+  25 cm bubble in three powders - a thin cloud at R_c/R = 1.025 far inside group
+  B, a cloud swollen to 3.23 just inside the line, and no dividing streamline at
+  all in group D - from a computed flow field rather than from the formula being
+  examined. It is also the one part of the page that inherits E1.2, and the page
+  states that dependency: if E1.2's operator or closed form changes, these cloud
+  numbers move with it.
+
+agreement: >
+  Tier 2 data, and the comparison that matters is against measurement. Geldart's
+  Table 1 is 22 narrow size fractions of three powders that he fluidised himself
+  in a 5 cm column, with U_0 from the pressure-drop curve and U_MB from the first
+  visible bubble. The A/B criterion agrees with those measurements on 20 of the
+  21 rows that have a U_0 - but that score carries about one row of information,
+  because a null model predicting group A for everything scores 19/21, and it
+  depends on a stated tie-break. The number the page reports is 2 of the 3 rows
+  on which the criterion and the null model can differ. Equation (3) against the
+  same measured U_0 column is far looser -
+  a factor 6.4 in the constant it implies, median 0.981 - and that number is
+  reported as the page's least flattering result rather than hidden.
+
+  The remaining numbers are internal. The two boundary constants recompute to
+  +1.94 % and +1.59 % of the printed 225 and 1e6; the worked example on journal
+  page 289 reproduces to 1.94 % worst case; the voidage identity closes to
+  5.6e-17 and is labelled structural; the pymrm cloud radius matches E1.2's
+  closed form to 1.9e-6, which is discretisation error against a formula E1.2
+  already validated and is not counted as evidence here.
+
+caveats: >
+  Every powder in Table 1 is group A or borderline A/B - the table's own title
+  says so, the densities span 1 to 1.5 g/cm3 and the sizes 25 to 318 um. So the
+  A/B boundary is the ONLY boundary on this page tested against data. The C/A
+  boundary is not reproduced at all, because Geldart prints no expression for it:
+  on his Fig. 3 it is a shaded band PQ "drawn so as to separate empirically open
+  and half-closed points". The B/D work is algebra - recomputing 1e6, and
+  identifying eq. (7) with the Davidson cloud condition - and Geldart himself
+  calls that criterion tentative.
+
+  The A/B agreement is weak in two separate ways and the page quantifies both.
+  First, the classes are lopsided: 19 of the 21 comparable rows are measured
+  group A, so a null model scores 19/21 against the criterion's 20/21, all the
+  information sits in the 3 rows the criterion calls group B, and the score there
+  is 2 of 3. Second, it is not fully independent of the data it is tested on: the
+  100 inside the 225 is eq. (2), a line fitted through this table's own U_MB
+  column in the paper's Fig. 1; the page reports eq. (2)'s 9.6 % mean residual
+  against that column explicitly as a fit residual and never counts it as
+  agreement. What IS independent is the U_0 side, and section 3 shows it is the
+  sloppy half. On top of both, the margin over the null model depends on a
+  tie-break: two rows print U_MB = U_0 exactly and eq. (4) is displayed as >= but
+  applied in the text as >, so the strict form is used, stated, justified from
+  section 4.3 and costed in break table 2.
+
+  Section 4.2 states how U_0 and U_MB were measured and says nothing about
+  eps_MB or H_MB/H_0. Those two columns are therefore called REPORTED, not
+  measured, and are used only for a transcription check. If eps_MB was in fact
+  derived from bed height, the 200 g charge and rho_s, then on the 14 catalyst
+  rows it inherits an approximate rho_s, and so does the eps_0 recovered from it.
+
+  Two of the three particle densities are printed as approximate ("rho_s ~= 1",
+  "rho_s ~= 1.5" against Diakon's "rho_s = 1.18"), so 14 of the 22 rows carry a
+  density uncertainty of unstated size. Every per-row quantity that divides by
+  the density difference is reported for Diakon separately for that reason.
+
+  rho_f = 1.2e-3 g/cm3 is NOT printed in the paper; it is air at ambient. Nothing
+  on the page depends on it - the break table shows rho_f = 0 moving no constant
+  and no classification - and the page therefore makes no claim about it.
+
+  Equation (3) originates with Davies and Richardson, Trans. Inst. Chem. Engrs.
+  44 (1966) T293, Geldart's reference 11. That paper is NOT on disk and was not
+  consulted; eq. (3) is used exactly as Geldart prints it. The same holds for
+  eq. (9) (Verloop and Heertjes) and eq. (10) (Oltrogge). The Davies-Taylor
+  coefficient 0.711 is not printed by Geldart either; it comes from E1.2, where
+  it is likewise taken as given.
+
+  Nothing here is digitised. Every equation, constant and table value was read
+  visually off 600 dpi renders of journal pages 285-292; the PDF text layer of
+  this 1973 Elsevier scan renders the paper's own title as "Types of Gas
+  Fhidization" and was not used. The only figure-derived quantities on the page
+  are Fig. 3's LABELLED axis ticks - 20, 50, 100, 200, 500, 1000 um on the
+  abscissa and 0.2, 0.5, 1, 2, 3, 4, 5, 6, 7 g/cm3 on the ordinate - which are
+  printed text, not digitised coordinates. The page makes no claim about which
+  curves are drawn on that figure; that eq. (9) "is not shown on Fig. 3" is
+  Geldart's own statement and is quoted, not checked.

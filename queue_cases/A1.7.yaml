@@ -4,30 +4,278 @@ title: Geldart classification
 catalog_reference: Powder Technol. 7:285 (1973)
 priority: P1
 tier: T0
-structures: ''
-status: in-progress
+structures: S3
+status: published
 reference:
   authors:
   - Geldart, D.
   year: 1973
   container: Powder Technology 7(5) 285-292
-  title_as_printed: Types of gas fluidization
+  doi: 10.1016/0032-5910(73)80037-3
+  title_as_printed: Types of Gas Fluidization
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0032591073800373-main.pdf
   open_access: null
   checked: '2026-08-02'
-  identified_by: read the paper's own first pages, not the filename
+  identified_by: >
+    read the paper's own first page at 600 dpi. Confirmed: "Types of Gas
+    Fluidization", D. Geldart, Postgraduate School of Powder Technology,
+    University of Bradford; Powder Technology 7 (1973) 285-292; received
+    22 May 1972, revised 1 November 1972. Exactly the paper the catalogue names.
+    The PDF text layer is unusable (it renders the title as "Types of Gas
+    Fhidization") and was not used for anything.
 blocker: null
-notes: null
+
+staged_at: queue_cases/A1.7/page/
+data_tier: 2
+
+scope_decision: >
+  DECIDED BEFORE ANY CODE, after reading all eight journal pages.
+
+  Geldart 1973 is a classification, not a differential equation, so the "solve it
+  in pymrm" reflex does not apply and a page that merely redrew his Figure 3
+  would be thin. But the classification is delivered as TWO PRINTED INEQUALITIES
+  - (rho_s-rho_f)d' <= 225 for group A, (rho_s-rho_f)d'^2 >= 1e6 for group D -
+  each DERIVED IN THE PAPER from expressions it also prints, and the paper
+  contains a table of the author's own MEASUREMENTS on 22 size fractions. So
+  route 3 is available twice over and route 4 is never needed. The page is
+  therefore: reproduce the boundaries from the printed expressions, test the A/B
+  one against the measured table, measure the correlation it rests on against the
+  same table, and connect the B/D one to E1.2. Nothing is digitised.
+
+  Four things settled the shape:
+
+  (1) TABLE 1 IS EXPERIMENTAL DATA, and that is the single most important find.
+  Journal page 288, "Experimental results on Group A powders": 22 narrow sieve
+  fractions of Diakon, fresh and spent cracking catalyst, each sized by a
+  microscope count of >=650 particles and fluidised as 200 g charges in a 5 cm
+  glass column, with measured U_0, U_MB, eps_MB and H_MB/H_0. This is DATA TIER 2
+  and it makes the page a validation-against-measurement page, not a tier-6
+  reproduction. Look for it before settling for tier 6 - it is there.
+
+  (2) THE A/B TEST HAS TWO ROUTES THAT SHARE NO INPUT COLUMN. Eq. (6) classifies
+  from (d_sv, rho_s) and never sees a velocity; eq. (4) applied to the measured
+  U_MB/U_0 never sees a size or a density. 20 of the 21 rows with a measured U_0
+  agree. One residual link exists and is named on the page: eq. (2), which
+  supplies the 100 inside the 225, is a line fitted through this table's own U_MB
+  column in the paper's Fig. 1. The page reports eq. (2)'s residual against that
+  column explicitly AS A FIT RESIDUAL and never counts it as agreement.
+
+  (3) EQ. (3) IS THE INDEPENDENT HALF AND IT IS THE LOOSE ONE. The A/B boundary
+  is U_MB/U_0 and only U_0 comes from outside (Davies & Richardson, Geldart's
+  ref. 11, not on disk). Tested against the measured U_0 column it needs a
+  constant spanning a factor 6.4 about a median of 0.981 x the printed 8e-4.
+  Geldart never performs this comparison. This is the page's least flattering
+  number and it is reported prominently.
+
+  SECOND PASS, 2026-08-02. The staged page came back from adversarial
+  verification (queue_cases/A1.7/review/verification.md) "safe to publish after
+  four fixes". No printed number was wrong and nothing was fabricated; the
+  defects were presentational and interpretive. All four must-fix findings and
+  all four should-fix findings are now closed:
+
+  F1, the tie-break. Two Diakon rows print U_MB = U_0 exactly and the code's
+  strict ">" - correct, but undisclosed - produced the whole margin. Now stated
+  in the results section, justified from section 4.3 (which prints the criterion
+  as "> 1 for group A powders" and assigns those very fractions to group B), and
+  costed in break table 2 as its own row. No number changed.
+
+  F2, the null baseline. The 20/21 was quoted as if it carried weight; a constant
+  "everything is group A" predictor scores 19/21. The page now prints the null
+  baseline beside every score, names the 3 rows on which the two predictors can
+  differ, reports 2-of-3 on those as the headline, and exports all of it.
+
+  F3, the backwards sentence. "The criterion and its author disagree in exactly
+  the same place" was wrong: on the 220 um row Geldart's prose sides WITH eq. (6)
+  against the strict ratio test. Restated, with all three verdicts tabulated, on
+  the page, in meta.yaml, in models_entry.yaml and here.
+
+  F4, the eq. (9) claim. The "16x beyond the largest labelled tick" was the
+  XY-crossing, which sits below the plot, not to its right. Replaced with the
+  in-window comparison. See key_numbers.eq9_placement.
+
+  F5 eps_MB relabelled reported; F6 the section 4.3 blockquote now includes
+  "powders"; F7 the identity's novelty softened to "the arithmetic, not the
+  physics" and the E1.2 dependency stated on the page; F8 meta.yaml status set to
+  in-progress, the eq. (8) gap computed rather than asserted, and "starts around
+  1000 um" corrected to the computed 817 um.
+
+  (4) THE CROSS-PAGE RESULT IS EXACT ALGEBRA, NOT AN ANALOGY. Eq. (7)'s left side
+  is (g d_B/2)^(1/2) = 0.7071 sqrt(g d_B), its right side is U_0/eps_0 = u_f. So
+  eq. (7) IS "u_br <= u_f" - E1.2's no-cloud condition for the Davidson bubble -
+  at d_B = 25 cm. Davies-Taylor's 0.711 against Geldart's 0.7071 moves the eq. (8)
+  constant by 0.55 %, less than the 1.59 % by which Geldart rounded his own
+  1.0159e6 to 1e6. Group D is the region where a 25 cm bubble carries no cloud,
+  and the whole diagram can be read as a contour map of the smallest cloud-
+  bearing bubble. CALIBRATE THE NOVELTY CLAIM: the physics is standard and is in
+  both documents in words (Geldart's sections 3.4 and 4.4, E1.2's "slow bubble:
+  no cloud"). What is absent from both is the ARITHMETIC that closes the
+  identity, and the page now says exactly that.
+
+  WHAT THE PAGE DELIBERATELY DOES NOT DO. No C/A boundary: Geldart prints no
+  expression for it, only the hand-drawn shaded band PQ on Fig. 3. No test of the
+  B/D boundary against data: Table 1 stops at 318 um and 1.5 g/cm3. No pretence
+  that pymrm helps with the classification: the PyMRM implementation section says
+  in its first sentence that Geldart's criteria need no solver, and the one solve
+  on the page (E1.2's percolation operator, reused and credited) exists only to
+  answer the cloud question the classification raises and does not answer.
+
+validation_route: >
+  Route 3 twice (a worked example with printed intermediates on journal page 289,
+  and the measured Table 1), plus route 2 for the boundary reconstructions and
+  the solids-balance identity, plus the E1.2 cross-page identity. ROUTE 4 NOT
+  USED - nothing on the page is digitised. The only figure-derived quantities are
+  Fig. 3's LABELLED axis ticks (20, 50, 100, 200, 500, 1000 um on the abscissa;
+  0.2, 0.5, 1, 2, 3, 4, 5, 6, 7 g/cm3 on the ordinate), which are printed text,
+  and the cell that uses them says so. The page makes no claim about which curves
+  are drawn on Fig. 3; that eq. (9) "is not shown" there is Geldart's statement,
+  quoted and not checked.
+
+key_numbers:
+  eq6_constant: 229.36 recomputed vs 225 printed (+1.94 %); no Table 1 row in the gap
+  eq8_constant: 1.0159e6 recomputed vs 1e6 printed (+1.59 %); no Table 1 row in the gap either, the largest (rho_s-rho_f)d'^2 in the table being 1.192e5
+  AB_criterion_the_reported_result: 2 of the 3 rows that can discriminate (Diakon 220, 263, 318 um)
+  AB_criterion_whole_table: 20 of 21 rows, Diakon 7 of 8 - NOT the headline, see the null baseline
+  AB_null_baseline: >
+    "everything is group A" scores 19 of 21 (Diakon 6 of 8), so the whole-table
+    20/21 is worth exactly one row of information. 19 of the 21 comparable rows
+    are measured group A. This is the "agreement that almost cannot fail" trap of
+    docs/handoff.md in its unbalanced-classes form, and the page prints the
+    baseline, names the 3 discriminating rows and scores them separately.
+  AB_tiebreak: >
+    LOAD-BEARING AND STATED ON THE PAGE. Two Diakon rows print U_MB = U_0 exactly
+    (263 um: 3.11/3.11; 318 um: 4.11/4.11), so their ratio is 1.000. Eq. (4) is
+    DISPLAYED on journal page 289 as U_MB/U_0 >= 1, but RESTATED in words in the
+    same section 4.3 one page earlier as "(U_MB/U_0 > 1 for group A powders)" -
+    in the sentence that assigns those very fractions to group B. The page takes
+    the STRICT form on that authority. Break table 2 carries a row for the
+    alternative: >= gives 18/21, Diakon 5/8, 0 of 3 on the discriminating rows,
+    against a null baseline of 21/21.
+  the_one_disagreement: >
+    Diakon 210-250 um fraction, d_sv = 220 um. Eq. (6): (rho_s-rho_f)d' = 259, so
+    B. Strict ratio test: U_MB/U_0 = 2.51/2.44 = 1.029, so A. Geldart's section
+    4.3: "these largest fractions should be classified as belonging to group B",
+    so B. GELDART SIDES WITH EQ. (6), against a mechanical reading of his own
+    velocity columns. The criterion does not disagree with its author; the strict
+    ratio test does, on the one row where the author had already said not to read
+    it strictly. The page tabulates all three verdicts.
+  worked_example_p289: 1.94 % worst case over four velocities
+  eq3_vs_measured_U0: implied constant 0.46 to 2.94 x the printed 8e-4, factor 6.4, median 0.981
+  eps0_recovered: 0.441 to 0.570 over all 22 rows; identity closes to 5.6e-17 and is STRUCTURAL. eps_MB and H_MB/H_0 are called REPORTED, not measured - section 4.2 states the method for U_0 and U_MB only
+  eq9_placement: >
+    CORRECTED. Eq. (9) crosses XY at 16310 um, 0.0138 g/cm3 - which is far BELOW
+    Fig. 3's ordinate, not beyond its abscissa, so that crossing says nothing
+    about the figure. What it establishes is that the two lines never meet inside
+    the diagram: eq. (9) is 2.4x (drho = 0.2) to 8.0x (drho = 7) to the right of
+    XY in size, and is NOT off-scale - 938 um at drho = 1 against XY's 225 um,
+    inside the labelled abscissa. Geldart's "much too far to the right" is
+    relative to XY and to his data. Eq. (10) crosses XY at 104 um, 2.16 g/cm3,
+    inside the plot, consistent with its being drawn as line O-O.
+  eq2_fit_residual: 9.6 % mean absolute, 36.9 % worst - a FIT RESIDUAL, labelled as such
+  cloud_boundary: 0.711 vs 1/sqrt(2) moves the eq. (8) constant 0.55 %
+  pymrm_cloud: R_c/R matches E1.2's closed form to 1.9e-6 (discretisation error, not evidence)
+
+deliberate_break_tables: >
+  Three in the notebook plus one one-off, all with the numbers printed.
+
+  (1) Boundary constants: mu, K_MB, the 8e-4 or g mis-read move eq. (6) and
+  eq. (8) by 90 % to 10000 %; eps_0 = 0.5 moves eq. (8) by +27 %, d_B = 50 cm by
+  +44 %. BLIND SPOT, measured: rho_f = 0 moves nothing at all, in either
+  constant, because both are written in the density difference.
+
+  (2) Table 1 classification, scored on all rows and on Diakon alone. Baseline
+  20/21 and 7/8. TIE-BREAK ROW (not a defect): eq. (4) applied as displayed, >=
+  instead of >, -> 18/21 and 5/8. REFERENCE ROW (not a defect): the null model
+  "group A for everything" -> 19/21 and 6/8. Boundary mis-read as 150 -> 16/21
+  and 4/8; as 500 or 2250 -> 19/21 and 6/8; d' left in cm -> 19/21 and 6/8;
+  velocity columns swapped -> 3/21 and 3/8; criterion inverted -> 1/21 and 1/8.
+  BLIND SPOT: rho_s in place of the difference -> unchanged. NAMED WEAKNESS,
+  now quantified rather than gestured at: 14 of 22 fractions sit so far inside
+  group A that the whole-table score is insensitive; the null-model row is what
+  makes that concrete, and the page reports the 3-row discriminating score
+  (2 of 3) as its result.
+
+  (3) The two column-based checks. Eq. (3) exponent read as d^1 -> median falls
+  from 0.981 to 0.010, as d^3 -> rises to 80.2; but the SPREAD only moves 6.35 ->
+  5.69, so quoting a scatter alone would not catch it and the page says so.
+  Voidage: a decimal slip in eps_MB or in H/H0 is caught by the 0.35-0.65 range
+  test; a 1.05 read on the two H/H0 = 1.000 rows is caught by the identity;
+  BLIND SPOT, measured: a +0.10 error in one eps_MB lands inside the range the
+  other rows already span and is invisible.
+
+  (4) The cross-page identity: u_br built from the bubble radius instead of its
+  diameter moves the eq. (8) constant by -29 %, so the 0.55 % coefficient
+  agreement is not an accident of a formula that would agree anyway.
+
+blind_spots_named_on_the_page:
+- >-
+  the whole-table A/B score is nearly powerless because the classes are lopsided;
+  a null model scores 19/21, and the page reports the 3-row discriminating score
+  instead
+- the A/B margin depends on a tie-break on the two rows printing U_MB = U_0; the
+  page states it, justifies it from section 4.3 and costs the alternative
+- eps_MB and H_MB/H_0 are REPORTED, not stated to be measured; section 4.2
+  describes the measurement of U_0 and U_MB only
+- rho_f is not printed in the paper and nothing on the page depends on it; the page
+  makes no claim that it was read or used correctly
+- the C/A boundary is not reproduced at all - Geldart prints no expression
+- the B/D boundary is never tested against data; the cloud identity is algebra
+- the A/B agreement is not fully independent, through eq. (2)'s fit to the U_MB column
+- the pymrm cloud number is E1.2's operator reproducing E1.2's closed form and is
+  discretisation error, not evidence about Geldart
+- eq. (2)'s 9.6 % residual is a fit residual and is never counted as agreement
+
+files:
+- queue_cases/A1.7/page/index.ipynb
+- queue_cases/A1.7/page/build_page.py
+- queue_cases/A1.7/page/meta.yaml
+- queue_cases/A1.7/page/README.md
+- queue_cases/A1.7/page/agreement.json
+- queue_cases/A1.7/page/data/geldart_1973_table1.csv
+- queue_cases/A1.7/page/data/geldart_1973_table1.meta.yaml
+- queue_cases/A1.7/models_entry.yaml
+
+integrator_notes: >
+  Target directory pages/A1.7-geldart-classification/. A1.7 is NOT in models.yaml;
+  splice queue_cases/A1.7/models_entry.yaml into section A. slug and title there
+  match meta.yaml exactly.
+
+  Runtime 4 s, executed with nbclient (timeout 1800, kernel python3, resources
+  path "."). No errors, nothing suppressed. pymrm 2.3.1.dev3.
+
+  The notebook loads its CSV through gallery_utils.load_data with
+  page="A1.7-geldart-classification", so the Colab raw-URL fallback resolves once
+  the directory is at that path.
+
+  Section order follows the AGENTS.md contract: Background, The published model,
+  Parameters and assumptions, The data, PyMRM implementation, Results,
+  Validation, What pymrm adds, Reuse. No Quarto callouts or shortcodes anywhere.
+
+  The page reuses E1.2's percolation operator (its solve_mode / davidson_bubble,
+  condensed, with the sabotage hooks removed) and E1.2's closed form for R_c/R,
+  and says so in the code docstring, in the PyMRM implementation section and in
+  the validation caveats. If E1.2 changes, this page's cloud numbers move with
+  it - a statement now ON THE PAGE, in the PyMRM implementation section and in
+  "What pymrm adds", not only here.
+
+  queue_cases/A1.7/review/ contains only verification.md, the adversarial
+  verification report. Nothing was digitised, so there is no overlay to review
+  and no page image anywhere in the tree.
+
+  meta.yaml and models_entry.yaml both carry status: in-progress. Flip both to
+  published on merge.
+
+notes: >
+  Attribution check, per the handoff's "expect the received attribution to be
+  wrong": here it is right. The catalogue names Geldart, Powder Technol. 7:285
+  (1973), and that is exactly the paper on disk and exactly the origin of the
+  classification. What is NOT Geldart's, and is recorded as origin_not_consulted
+  in models_entry.yaml, is eq. (3) (Davies & Richardson 1966, his ref. 11),
+  eq. (9) (Verloop & Heertjes, ref. 10) and eq. (10) (Oltrogge, ref. 36). None of
+  those three is on disk; all are used exactly as Geldart prints them.
+
+  Two degraded glyphs in the scan were resolved from surrounding text and are
+  recorded as judgements, not inferred digits: the exponent in eq. (7) is a half
+  power, and the heading of Table 1's fifth column is U_MB (the printed subscript
+  scans as "MP").
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
