@@ -4,10 +4,9 @@ From Aris, R., *On shape factors for irregular particles — I. The steady state
 problem. Diffusion and reaction*, Chemical Engineering Science **6**(6) 262–268
 (1957), doi:10.1016/0009-2509(57)85028-3.
 
-**Staged, not published.** `B1.2` has no entry in `models.yaml`. Promoting this
-page means moving the directory to `pages/B1.2-aris-shape-factor/` and adding the
-matching `models.yaml` entry. Nothing outside `queue_cases/B1.2/` has been
-touched.
+**Published.** `models.yaml` carries the `B1.2` entry with `status: published`
+and `page: pages/B1.2-aris-shape-factor/`. One review blocker is still open —
+see below and `meta.yaml`'s `blocker` block.
 
 ## Contents
 
@@ -46,6 +45,23 @@ What stands in for it: the paper's own algebra reproduces 19 of the 21 Table 1
 entries to ≤ 0.0008, and all five spherical-shell entries to ≤ 0.0004. No
 mis-transcription survives that. **Two entries are flagged rather than
 corrected** — see `meta.yaml`'s `blocker` block.
+
+**Retried 2026-08-02, still not obtainable.** A 1957 PDF is now in
+`~/papers/pymrm-gallery/` (`1-s2.0-0009250957850283-main.pdf`), but it is that
+same one-page preview — one page, journal page 262, the same byte size the
+Elsevier API returns for `application/pdf` on the PII. The 1995 reprint's PDF is
+a one-page preview too. `content/object/pii` holds no page images for either
+PII: the 1957 printing has no objects, the 1995 reprint has two 40 × 30 GIFs of
+the inline symbol *v*_p/*s*_x. There is no API route to page 265 / 3901, and the
+blocker needs a full PDF from the maintainer.
+
+What the retry *did* settle, from the equations rather than the print, is what
+the two cells cannot be. The plate and sphere columns are right at Λ = 5 and 10
+to 0.0003; the first five rows of the cylinder column reproduce eq. 16; and no
+single rescaling of Λ fits both cells — 0.197 would need 0.961× the stated
+modulus and 0.100 would need 0.974×. So the column is eq. 16 at the stated Λ,
+and a differently defined modulus is ruled out. Two arithmetic slips are what is
+left, but that remains an inference and the page says so.
 
 ## The check the paper pays for
 

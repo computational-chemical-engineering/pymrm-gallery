@@ -148,9 +148,14 @@ Jubilee (50(24) 3899-3903, PII `0009250996818197`), and that re-typesetting OCRs
 cleanly. Both were retrieved, and every transcribed number is one on which the
 two agree.
 
-The entitlement returns a **one-page preview PDF only**, so the gallery's usual
-discipline of reading numbers off a 600 dpi render was not available for Table 1
-(journal page 265). What stands in for it is the paper's own algebra: eqs. 15-17
+The entitlement returns a **one-page preview PDF only** — page 262 of the 1957
+printing, page 3899 of the 1995 reprint — and Table 1 is on page 265 / 3901.
+This was re-checked on 2026-08-02: both preview PDFs were fetched again and
+rendered, and the article-object endpoint was queried for page images, which
+neither PII has. The 1957 file archived on disk for this page is that same
+one-page preview. So the gallery's usual discipline of reading numbers off a
+600 dpi render is **still** not available for Table 1, and no route to it has
+been found. What stands in for it is the paper's own algebra: eqs. 15-17
 reproduce 19 of the 21 entries to within the printed rounding, which no
 mis-transcription would survive. The two that do not are reported below as a
 discrepancy, not silently corrected."""))
@@ -181,6 +186,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.sparse import eye_array
 from scipy.sparse.linalg import spsolve
+from scipy.optimize import brentq
 from scipy.special import iv, jn_zeros
 from pymrm import construct_grad, construct_div
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
@@ -403,14 +409,46 @@ print(f"\n19 of 21 entries agree to {worst_ok:.4f} — the printed rounding.")
 for L in (5.0, 10.0):
     pr = float(tab1[(tab1["shape"] == "cylinder") & (tab1["Lambda"] == L)]["eta_printed"].iloc[0])
     print(f"  cylinder at Lambda = {L:4.1f}: printed {pr:.3f}, eq. 16 gives "
-          f"{eta_cylinder(L):.4f}  ({(pr - eta_cylinder(L)) / eta_cylinder(L):+.1%})")'''))
+          f"{eta_cylinder(L):.4f}  ({(pr - eta_cylinder(L)) / eta_cylinder(L):+.1%})")
+
+# The contrast the discrepancy rests on: at those same two moduli the other two
+# columns are right, so nothing global (a shifted Lambda, a misread header) is
+# wrong with the last two rows of the table.
+other_worst = max(abs(pr - ca) for s, L, pr, ca in rows
+                  if s != "cylinder" and L >= 5.0)
+print(f"\nplate and sphere at Lambda = 5 and 10: worst error {other_worst:.4f}")
+
+# Could the cylinder column instead be eq. 16 at some *other* modulus — a factor
+# of 2 in the radius, say? Then one factor would have to fit both rows.
+print("what Lambda the printed cylinder values would need, if eq. 16 held:")
+for L in (5.0, 10.0):
+    pr = float(tab1[(tab1["shape"] == "cylinder") & (tab1["Lambda"] == L)]["eta_printed"].iloc[0])
+    L_eq = brentq(lambda x: eta_cylinder(x) - pr, 0.5, 40.0)
+    print(f"  printed {pr:.3f} at Lambda = {L:4.1f} needs Lambda = {L_eq:.3f}"
+          f"  ({L_eq / L:.3f} x)")'''))
 
 cells.append(md(r"""Nineteen of the twenty-one entries come back to three
 decimals. The two that do not are both in the **cylinder** column, at the two
-largest moduli, and both are printed *high*. The plate and sphere columns are
-correct there, and the same digits appear in the 1957 printing and in the 1995
-reprint, so this is not an OCR artefact — it looks like two arithmetic slips at
-the end of the column, where the Bessel-function tables of the day ran thin.
+largest moduli, and both are printed *high*.
+
+Three things narrow what that can be:
+
+- the **plate and sphere columns are right at those same two moduli**, to the
+  printed rounding, so nothing global has gone wrong with the last two rows;
+- the **first five rows of the cylinder column are right**, so the column really
+  is eq. 16 evaluated at the stated $\Lambda$, not some other quantity;
+- **no single rescaling of $\Lambda$ rescues them.** If the column had used a
+  differently defined modulus — a diameter for a radius, say — one factor would
+  fit both rows. The printed values need two different ones.
+
+The same digits appear in the 1957 printing and in the 1995 reprint, so this is
+not an OCR artefact either. What is left is two arithmetic slips at the end of
+one column, where the Bessel-function tables of the day ran thin.
+
+**But that is an inference, not a reading.** The two cells have never been seen
+on a page image, only through two text layers that agree; the entitlement stops
+at page 262 and no page-image route exists. A maintainer holding the full PDF
+can close this in ten seconds, and until then it stays open.
 
 Reported, not repaired. A printed number is either read or flagged, never
 inferred; and since nineteen entries confirm the transcription of eqs. 15-17,

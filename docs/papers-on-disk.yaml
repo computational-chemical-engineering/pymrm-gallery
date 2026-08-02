@@ -28,7 +28,7 @@ J1.5: tf9555101540.pdf                         # Glueckauf 1955
 J3.4: Doyle_1993_J._Electrochem._Soc._140_1526.pdf
 J4.8: 1-s2.0-0043135487900583-main.pdf         # Henze et al. 1987, ASM1
 H1.4: "AIChE Journal - September 1987 - Itoh - A membrane reactor using palladium.pdf"  # Itoh 1987, AIChE J 33(9) 1576 — was wrongly listed as H1.9 (the MS zeolite membrane case) until 2026-07-31
-B1.2: (API full text only)                     # Aris 1957 via Elsevier PII 0009250957850283 + 1995 reprint PII 0009250996818197; see queue_cases/B1.2.yaml
+B1.2: 1-s2.0-0009250957850283-main.pdf         # Aris 1957 - BUT ONE PAGE ONLY (journal p. 262). See note below.
 J3.5: Marquis_2019_J._Electrochem._Soc._166_A3693.pdf  # Marquis et al. 2019, SPMe, open access (IOP)
 
 # Supplied 2026-08-02. Seven papers, all section A - the section find_papers had
@@ -41,3 +41,18 @@ A2.1: 1-s2.0-0009250953800011-main.pdf         # Danckwerts, Continuous flow sys
 A2.2: 1-s2.0-0009250956800146-main.pdf         # Wehner & Wilhelm, Boundary conditions of flow reactor, CES 6(2) 89-93 (1956)
 A2.5: 1-s2.0-0009250968870563-main.pdf         # Edwards & Richardson, Gas dispersion in packed beds, CES 23 (1968) 109-123
 A2.6: 1-s2.0-025527019380020H-main.pdf         # Gunn, On axial dispersion in fixed beds, Chem. Eng. Process. 32 (1993) 333-338
+
+# B1.2 is on disk but is NOT a full paper - checked 2026-08-02, do not re-check.
+#
+# `1-s2.0-0009250957850283-main.pdf` is Aris 1957, and it is ONE PAGE: journal
+# page 262, the first page. It is byte-size identical to what the Elsevier API
+# returns for `application/pdf` on that PII, i.e. it is the entitlement preview,
+# not a scan someone obtained separately. The 1995 verbatim reprint (PII
+# 0009250996818197) returns a one-page preview too, its page 3899.
+#
+# This matters because B1.2's open question is two cells of Table 1, on journal
+# page 265 / 3901. Neither preview reaches it, and `content/object/pii` has no
+# page images for either PII (1957: no objects; 1995: two 40x30 GIFs of the
+# inline symbol v_p/s_x). There is no API route to the table. Only a full PDF
+# from the maintainer closes B1.2's blocker - listing it here as "on disk" without
+# this note would make the next agent think it already had been.
