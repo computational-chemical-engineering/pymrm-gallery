@@ -415,14 +415,21 @@ cells.append(code('''def U_ocp(u):
     return P["U_theta"] + RTF * (np.log((C_T - cs) / cs) + P["beta"] * cs + P["zeta"])
 
 
-def kappa_from_delta(delta=1.95, I=10.0):
+# delta is a row of the stated-results CSV loaded above, not a constant to retype:
+# if that transcription is ever corrected, kappa follows it.
+DELTA_STATED = float(dstat.loc[dstat.quantity == "delta", "value"].iloc[0])
+
+
+def kappa_from_delta(delta=None, I=10.0):
     """J3.4's reconstruction of the unprinted conductivity from Doyle's Eq. 28."""
+    delta = DELTA_STATED if delta is None else delta
     pre = alpha * F_CONST * I * dc / (R_GAS * T)
     return 1.0 / (delta / pre - 1.0 / sigma)
 
 
 BRUG = eps_c ** 1.5
 KAPPA = kappa_from_delta() / BRUG            # bulk value; kappa_eff = KAPPA * eps^1.5
+print(f"delta read from the J3.4 stated-results CSV = {DELTA_STATED}")
 T0 = P["t0_a"] + P["t0_b"] * P["c_0"]        # transference number at c_0 (leading order)
 print(f"kappa (bulk, reconstructed on J3.4) = {KAPPA:.4f} S/m;  t+(c_0) = {T0:.4f}")
 
@@ -591,7 +598,15 @@ class Cell:
 cells.append(code('''# ------------------------------- the reduced models -------------------------
 def bv_invert(cs, i_loc, pre):
     """Closed-form inversion of Doyle Eq. 17: Phi_1 - Phi_2 at transfer current
-    i_loc (A per m2 of interfacial area), exchange prefactor pre."""
+    i_loc (A per m2 of interfacial area), exchange prefactor pre.
+
+    RESTRICTION: exact only for alpha_a = alpha_c. The substitution below is
+    z = exp(alpha f eta'), which turns Eq. 17 into a quadratic ONLY when its two
+    exponents are +alpha f eta' and -alpha f eta' with the SAME alpha. Doyle's
+    cell has alpha_a = alpha_c = 0.5, so it is exact here; with an asymmetric
+    pair the positive root is not a solution of Eq. 17 and there is no error,
+    only a wrong number. Quantified in Validation item 6 below. (J3.1 derives
+    the same condition for the Eq. 17 -> Eq. 16/30 collapse.)"""
     cs = np.clip(cs, 1.0, C_T - 1.0)
     B = i_loc / pre
     z = (B + np.sqrt(B * B + 4.0 * cs * (C_T - cs))) / (2.0 * cs)   # positive root
@@ -1264,6 +1279,51 @@ except RuntimeError as exc:
           f"{clamped:.0f} mV")
     print(f"    with no warning. dfn_on_grid refuses it instead:\\n      {exc}")'''))
 
+cells.append(md(r"""#### 6. The one restriction `bv_invert` carries, measured
+
+The Reuse section below offers `bv_invert` to any model with Doyle's kinetics,
+so the condition under which it is exact has to be stated and tested rather than
+assumed. Writing $z=e^{\alpha f\eta'}$ turns Eq. 17 into a quadratic in $z$ only
+when its two exponents are $+\alpha_a f\eta'$ and $-\alpha_c f\eta'$ with
+$\alpha_a=\alpha_c$. This cell feeds the closed form back through Eq. 17 — at
+Doyle's own symmetric pair, and at two asymmetric pairs a reader might plausibly
+have."""))
+
+cells.append(code('''# ---- 6. bv_invert is exact only for alpha_a = alpha_c ------------------------
+def i_eq17_ab(eta_p, cs, pre, aa, ac):
+    """Doyle Eq. 17 with the two transfer coefficients kept separate."""
+    return pre * (cs * np.exp(aa * eta_p / RTF)
+                  - (C_T - cs) * np.exp(-ac * eta_p / RTF))
+
+
+CS_T = 0.30 * C_T                       # a mid-discharge surface concentration
+PRE_T = PRE0
+print("bv_invert fed back through Eq. 17 (eta' = the closed form's answer):")
+print(f"{'alpha_a':>9}{'alpha_c':>9}{'i / A m-2':>12}{'eta_closed/mV':>15}"
+      f"{'eta_true/mV':>13}{'i recovered / i asked':>23}")
+BV_ASYM_WORST, BV_SYM_WORST = 0.0, 0.0
+for aa, ac in [(0.5, 0.5), (0.3, 0.7), (0.4, 0.6)]:
+    for i_t in (0.05, 0.5, 5.0):
+        # the closed form knows only ONE alpha; a reuser would pass alpha_a
+        B = i_t / PRE_T
+        z = (B + np.sqrt(B * B + 4.0 * CS_T * (C_T - CS_T))) / (2.0 * CS_T)
+        eta_closed = (RTF / aa) * np.log(z)
+        eta_true = brentq(lambda e: i_eq17_ab(e, CS_T, PRE_T, aa, ac) - i_t, -3.0, 3.0)
+        ratio = i_eq17_ab(eta_closed, CS_T, PRE_T, aa, ac) / i_t
+        if aa == ac:
+            BV_SYM_WORST = max(BV_SYM_WORST, abs(ratio - 1.0))
+        else:
+            BV_ASYM_WORST = max(BV_ASYM_WORST, abs(ratio - 1.0))
+        print(f"{aa:>9.1f}{ac:>9.1f}{i_t:>12.2f}{1e3*eta_closed:>15.3f}"
+              f"{1e3*eta_true:>13.3f}{ratio:>23.4f}")
+print(f"\\nAt alpha_a = alpha_c the closed form reproduces the requested current to "
+      f"{BV_SYM_WORST:.1e}.")
+print(f"At alpha_a != alpha_c it delivers up to {1.0 + BV_ASYM_WORST:.0f} TIMES the "
+      f"requested current, and it fails\\nsilently: every eta_closed above is finite "
+      f"and plausible, it is simply not the root of Eq. 17.\\nThis page's own cell is "
+      f"symmetric (alpha_a = alpha_c = {P['alpha_a']:.1f}), so nothing above is "
+      f"affected -\\nthe restriction belongs to the function, not to the results.")'''))
+
 # ------------------------------------------------------------ what pymrm adds
 cells.append(md(r"""## What pymrm adds
 
@@ -1351,6 +1411,9 @@ cells.append(code('''metrics = {
     "spme_dt_spread_mV": dt_spread,
     "spme_grid_spread_mV": grid_spread,
     "dfn_dt_convergence_I025": dfn_dt_converged,
+    # the restriction bv_invert carries (item 6)
+    "bv_invert_symmetric_max_current_dev": BV_SYM_WORST,
+    "bv_invert_asymmetric_max_current_dev": BV_ASYM_WORST,
 }
 report_agreement("J3.5", metrics)'''))
 
@@ -1371,10 +1434,21 @@ $c=0$ root-find cost microseconds and decide *before* any solve whether the
 reduction may be used. Any reduced model worth shipping should travel with its
 own version of these.
 
-**The closed-form Butler–Volmer inversion.** `bv_invert` solves Doyle's
-Eq. 17 for the overpotential in closed form (a quadratic in $e^{\eta'}$,
-thanks to the $c_s$, $c_T - c_s$ asymmetric prefactors). Any model with that
-kinetics — including the J3.4 DFN itself, in a preconditioner — can reuse it.
+**The closed-form Butler–Volmer inversion, under one condition.** `bv_invert`
+solves Doyle's Eq. 17 for the overpotential in closed form (a quadratic in
+$e^{\alpha f\eta'}$, thanks to the $c_s$, $c_T - c_s$ asymmetric prefactors).
+A model with that kinetics — including the J3.4 DFN itself, in a
+preconditioner — can reuse it **provided $\alpha_a = \alpha_c$**, which is what
+makes the substitution $z = e^{\alpha f\eta'}$ collapse Eq. 17 to a quadratic at
+all. Doyle's cell has $\alpha_a = \alpha_c = 0.5$, so everything on this page is
+inside the condition; a reader with an asymmetric pair is not, and gets no error
+— only a wrong overpotential. Validation item 6 measures it: at
+$\alpha_a=0.3$, $\alpha_c=0.7$ and at $0.4/0.6$ the closed form returns a
+plausible finite overpotential that is simply not the root of Eq. 17, and the
+current it actually delivers is out by orders of magnitude. That cell prints
+the factors. `J3.1` derives
+the same $\alpha$ condition for Doyle's Eq. 17 → Eq. 16/30 collapse; this page
+had been advertising the function without it until 2026-08-02.
 
 **What not to reuse.** The linearised electrolyte correction above the
 $I = 10.2$ A/m² the page computes for this cell — where the first-order

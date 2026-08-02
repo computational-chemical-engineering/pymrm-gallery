@@ -306,6 +306,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from IPython.display import display, Markdown
 from scipy.optimize import brentq
 from scipy.sparse.linalg import MatrixRankWarning
 from pymrm import construct_grad, construct_div, NumJac, newton, stencil_block_diagonals
@@ -1414,7 +1415,15 @@ print("Cell class ready.")'''))
 cells.append(md(r"""### What the cell actually runs at
 
 The exact law (`eq17`) is solved at the three currents of Doyle's Figure 2 that
-reach the cutoff, and the surface overpotential is read out of the solution."""))
+reach the cutoff, and the surface overpotential is read out of the solution.
+
+**Where the readout stops is part of the result.** `Cell.march` is `J3.4`'s and
+halts at `v_stop = 1.55` V, 150 mV *below* the cutoff the paper states and the
+parameter file carries ($V_{\text{cutoff}} = 1.7$ V) — that margin exists so the
+stepper has somewhere to go, not because the cell is meant to be operated there.
+Every envelope number below is therefore read at $V_{\text{cutoff}}$, which is
+what `J3.4` does with the same runs, and the march endpoint is printed beside it
+and labelled as the stepper artefact it is."""))
 
 cells.append(code('''runs, dtseq = {}, {}
 for I in (5.0, 10.0, 20.0):
@@ -1422,16 +1431,33 @@ for I in (5.0, 10.0, 20.0):
     print(f"I = {I:4.0f} A/m2 : {len(runs[I]):4d} steps, "
           f"u_final = {runs[I][-1, 0]:.3f}, V_final = {runs[I][-1, 1]:.3f} V")
 
+
+def u_at_V(run, level):
+    """Utilisation at which the monotone-falling cell potential passes `level`."""
+    u, v = np.asarray(run[:, 0], float), np.asarray(run[:, 1], float)
+    return float(np.interp(-level, -v, u)) if v.min() < level else np.nan
+
+
+# Read at the paper's own cutoff, which is a loaded parameter, not a typed one.
+V_CUT = P["V_cutoff"]
+U_CUT = {I: u_at_V(r, V_CUT) for I, r in runs.items()}
+
 env = []
 for I, r in runs.items():
-    c_end = r[:, 0] < 0.80                       # exclude the transport-limited tail
+    # the envelope ends at whichever comes first in utilisation: the start of
+    # the transport-limited tail (u = 0.80) or the paper's cutoff. At I = 20 the
+    # cutoff is the binding one, and a u < 0.80 mask alone would let the whole
+    # post-cutoff tail into the maximum - which is the defect corrected here.
+    c_end = r[:, 0] <= min(0.80, U_CUT[I])
     env.append({
         "I / A m-2": I,
         "i_loc/i_0 if uniform": (I / (a_spec * dc)) / i0_init,
+        f"u at {V_CUT} V cutoff": U_CUT[I],
         "cathode mean |eta_s| / mV": 1e3 * r[c_end, 7].max(),
         "cathode peak |eta_s| / mV": 1e3 * r[c_end, 4].max(),
         "anode eta_s1 / mV": 1e3 * r[c_end, 6].max(),
-        "cathode peak, full run / mV": 1e3 * r[:, 4].max(),
+        "cathode peak PAST the cutoff / mV": 1e3 * r[:, 4].max(),
+        "march endpoint u (v_stop=1.55)": r[-1, 0],
     })
 env_tab = pd.DataFrame(env)
 print()
@@ -1441,11 +1467,31 @@ ETA_CATH_10 = float(runs[10.0][runs[10.0][:, 0] < 0.80, 4].max())
 ETA_CATH_MEAN_10 = float(runs[10.0][runs[10.0][:, 0] < 0.80, 7].max())
 ETA_AN_10 = float(runs[10.0][runs[10.0][:, 0] < 0.80, 6].max())
 ETA_AN_20 = float(runs[20.0][runs[20.0][:, 0] < 0.80, 6].max())
+m20 = runs[20.0][:, 0] <= min(0.80, U_CUT[20.0])
+ETA_CATH_20 = float(runs[20.0][m20, 4].max())
+ETA_CATH_20_FULL = float(runs[20.0][:, 4].max())
+U_END_20 = float(runs[20.0][-1, 0])
+V_END_20 = float(runs[20.0][-1, 1])
+U19_20 = u_at_V(runs[20.0], 1.9)
 print()
 print("The cathode PEAK sits in the first cell next to the separator, where the "
       "reaction crowds;\\nit is a boundary-layer value and is grid-sensitive "
       "(quantified in Validation).\\nThe cell-averaged value is not, and both are "
-      "reported.")'''))
+      "reported.")
+
+# Reconcile against the stated results loaded from J3.4, rather than restating
+# the march endpoint: the CSV carries the paper's own number for this collapse.
+print()
+print(f"I = 20 A/m2, where the collapse is read:")
+print(f"  V = 1.9 V crossing                 : u = {U19_20:.4f}   "
+      f"(J3.4 reports 0.264 for the same curve)")
+print(f"  V = {V_CUT} V, the paper's cutoff       : u = {U_CUT[20.0]:.4f}")
+print(f"  march endpoint, V = {V_END_20:.3f} V       : u = {U_END_20:.4f}   "
+      f"<- a v_stop artefact, not a published condition")
+print(f"  Doyle p. 1529, loaded from the CSV : u_at_sharp_drop = "
+      f"{S['u_at_sharp_drop']:.2f}  (\\"about 30%\\")")
+print(f"  I = 10 A/m2 at the same cutoff     : u = {U_CUT[10.0]:.4f}   "
+      f"(J3.4 reports 0.831; Doyle states 0.84)")'''))
 
 cells.append(md(r"""### The result: the two electrodes of the same cell are three decades apart
 
@@ -1481,10 +1527,11 @@ costs 0.6 mV at $I=10$ and 4.2 mV at $I=20$. And **Tafel is wrong at both** —
 catastrophically at the cathode, where $i\ll i_0$ is exactly the regime Tafel is
 not for.
 
-At $I=20$ the cell is transport-limited and collapses at $u=0.40$; the cathode
-peak overpotential rises to 3.7 mV there as the electrolyte depletes and $i_0$
-falls with it. That is the largest kinetic overpotential anywhere in any of these
-runs, and it is still four times inside the 1 % linear window."""))
+At $I=20$ the cell is transport-limited and collapses, and the cathode peak
+overpotential rises as the electrolyte depletes and $i_0$ falls with it. That
+collapse is read at Doyle's own 1.7 V cutoff — the cell below prints where it
+lands and what the peak is there, together with the correction this page had to
+make to those two numbers."""))
 
 cells.append(code('''print("Cathode, at the peak |eta_s| the solve finds (I = 10 A/m2):")
 print(f"  |eta_s|                     = {1e3*ETA_CATH_10:.4f} mV "
@@ -1533,7 +1580,32 @@ ETA_SEP_DECADES = float(np.log10(ETA_AN_10 / ETA_CATH_MEAN_10))
 ETA_SEP_DECADES_PEAK = float(np.log10(ETA_AN_10 / ETA_CATH_10))
 print(f"  separation between the two electrodes at I = 10: "
       f"{ETA_SEP_DECADES:.2f} decades on the cell-averaged cathode value, "
-      f"{ETA_SEP_DECADES_PEAK:.2f} on its peak")'''))
+      f"{ETA_SEP_DECADES_PEAK:.2f} on its peak")
+
+# Stated as computed output rather than as typed prose, because the two numbers
+# it replaces were typed and survived review for exactly that reason.
+display(Markdown(f"""
+**The $I=20$ collapse, read at the cutoff.** The cell reaches
+$V={V_CUT}$ V — Doyle's stated cutoff, loaded from the `J3.4` parameter file — at
+$u={U_CUT[20.0]:.4f}$, and crosses 1.9 V at $u={U19_20:.4f}$, which is `J3.4`'s
+0.264 for the same curve. Doyle p. 1529 says the potential "drops sharply when
+about 30 % of the cathode material is utilized", and
+`u_at_sharp_drop = {S['u_at_sharp_drop']:.2f}` sits in the stated-results file
+loaded at the top of this page. Inside that envelope the cathode peak
+overpotential reaches **{1e3*ETA_CATH_20:.3f} mV**, still
+{thr[0.01]/ETA_CATH_20:.1f} times inside the 1 % linear window and
+{thr[0.05]/ETA_CATH_20:.1f} times inside the 5 % one.
+
+**Correction.** An earlier version of this page reported
+{1e3*ETA_CATH_20_FULL:.1f} mV at $u={U_END_20:.2f}$ and called it the largest
+kinetic overpotential anywhere in these runs. Both numbers were taken at the
+*march endpoint* — $u={U_END_20:.4f}$ at $V={V_END_20:.3f}$ V, which is where
+`v_stop = 1.55` V stops the stepper, {1e3*(V_CUT-V_END_20):.0f} mV past the
+published cutoff and outside the operating envelope this section is about. The
+superlative was wrong independently of that: the lithium foil at $I=20$ runs at
+{1e3*ETA_AN_20:.1f} mV, more than an order of magnitude above any cathode value
+here, so no cathode number is the largest overpotential anywhere.
+"""))'''))
 
 cells.append(md(r"""### Superficial or interfacial? The factor that decides the regime
 

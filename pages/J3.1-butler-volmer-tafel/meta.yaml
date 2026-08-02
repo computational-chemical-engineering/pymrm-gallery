@@ -131,6 +131,25 @@ caveats: >
   at the 1 % tolerance or at I = 20. What is tolerance-independent is the 2.9
   decades of separation between them.
 
+  Corrected 2026-08-02: the operating-envelope numbers at I = 20 A/m2 were being
+  read at the march endpoint (u = 0.4033 at V = 1.473 V) rather than at the
+  V_cutoff = 1.7 V the loaded J3.4 parameter file carries and Doyle states. The
+  march inherits J3.4's v_stop = 1.55 V, which is 150 mV below that cutoff and
+  exists to give the stepper room, so the endpoint is a stepper artefact. An
+  earlier version of the page reported "collapses at u = 0.40" with a cathode peak
+  of 3.7 mV and called that the largest kinetic overpotential anywhere in these
+  runs. Read at the cutoff the collapse is at u = 0.3707 (1.9 V crossing at
+  u = 0.2638, which is J3.4's 0.264; Doyle's stated u_at_sharp_drop is 0.30, and
+  the same run at I = 10 gives u = 0.8312 at the cutoff against J3.4's 0.831 and
+  Doyle's 0.84), and the cathode peak inside the envelope is 1.679 mV, a factor
+  2.2 smaller. The superlative was independently wrong - the lithium foil at
+  I = 20 runs at 46.6 mV - and has been removed rather than restated. No agreement
+  metric changed: the I = 5 and I = 10 readouts are taken under a u < 0.80 mask
+  that is stricter than their cutoffs, and the anode maximum at I = 20 falls
+  before the cutoff. Only the I = 20 cathode row of the envelope table moved
+  (peak 3.705 -> 1.679 mV, mean 0.305 -> 0.064 mV), and the page prints the
+  past-cutoff value beside it, labelled.
+
   The cancellation anomaly in the linear threshold (81 mV at alpha_a = 0.42
   against 36 mV at 0.50) is a true property of the function but is fragile: its
   location is set by the tolerance, jumping at alpha_a = 0.4103 for a 5 %

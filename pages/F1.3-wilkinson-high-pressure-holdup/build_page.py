@@ -207,10 +207,15 @@ Four sources, none of them new, and two of them not a dataset at all.
    page. These are the *authors'* statistics over 1,735 runs whose raw values are
    not published. They are context, not a target.
 4. **Six numbers read by eye off Figure 6** — three
-   $(\rho_G, \varepsilon_{df})$ pairs from panel (b) and three
-   $(\rho_G, U_{df})$ pairs from panel (a), at the three gas densities that
-   figure labels. They are read against the printed axis ticks to two
-   significant figures, with no software digitisation and no coordinates
+   $(\rho_G, \varepsilon_{df})$ pairs from panel (a) and three
+   $(\rho_G, U_{df})$ pairs from panel (b), at the three gas densities that
+   figure labels. *The panels themselves carry no (a)/(b) marks, and the
+   velocity panel is printed above the voidage one, so the caption is the only
+   authority: "Influence of gas density on the (a) dense-phase gas voidage, and
+   (b) superficial gas velocity through the dense phase". An earlier version of
+   this page named the two panels the other way round in prose while the code
+   comment quoted the caption correctly; the values were never affected.*
+   They are read against the printed axis ticks to two significant figures, with no software digitisation and no coordinates
    extracted. **They are plot markers, not a dataset**: no CSV, no sidecar, and
    none of the four validation checks below uses them. They replace a pair of
    coarser one-significant-figure bands that an earlier draft of this page

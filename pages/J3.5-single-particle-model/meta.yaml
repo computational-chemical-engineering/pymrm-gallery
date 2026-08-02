@@ -29,6 +29,7 @@ validation:
   - salt conservation in the SPMe integrator to 4e-13 of the cell inventory (structural)
   - the coulomb-counting identity on the DFN to 7e-16, which is Marquis et al.'s Eq. 32 holding exactly at constant current
   - numerical independence at the sweep's lowest current, where the signal is smallest - SPMe time step 0.4 %, SPMe grid 2.1 %, DFN time step converged to 0.8 % under a further 4x refinement (the untightened default is 220 % off), and I = 0.125 shown to be below the DFN integrator's floor at every step tried
+  - the one restriction bv_invert carries, measured (item 6, added 2026-08-02) - fed back through Eq. 17 the closed form reproduces the requested current to 5.5e-14 at alpha_a = alpha_c, and delivers up to 1892 times it at alpha_a = 0.3 / alpha_c = 0.7 and 838 times at 0.4 / 0.6, silently. This page's cell is symmetric, so no result is affected; the restriction is on the function the Reuse section offers
 
 adds: >
   The SPM and SPMe are re-derived by Marquis et al.'s asymptotic method for the
@@ -72,6 +73,17 @@ caveats: >
   a published simulation (no measurements exist anywhere in this chain), and
   every number on this page is reduced-model against full-model. Nothing here
   is validated against experiment.
+
+  Corrected 2026-08-02: the Reuse section offered bv_invert to "any model with
+  that kinetics" without the condition that makes it exact. The closed form is a
+  quadratic in exp(alpha f eta') only when Eq. 17's two exponents share one
+  alpha, i.e. alpha_a = alpha_c; Doyle's cell has 0.5/0.5, which hid the
+  restriction. It is now stated in the docstring and in Reuse, and measured in
+  Validation item 6. J3.1 had already derived the same condition for the
+  Eq. 17 -> Eq. 16/30 collapse. Separately, delta = 1.95 is now read from the
+  J3.4 stated-results CSV the page loads instead of being retyped as a default
+  argument of kappa_from_delta; the value is unchanged, so every existing metric
+  is bit-identical.
 
   Marquis et al.'s own Table IV (RMS errors for their graphite/LCO cell) is NOT
   reproduced: the OCP and electrolyte property functions their cell needs are

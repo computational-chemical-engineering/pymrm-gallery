@@ -141,6 +141,46 @@ redistribution_basis: >
 This is also the file an agent reads to decide whether it may reuse the dataset,
 which makes the whole gallery machine-auditable.
 
+## 3a. `data.tier` when a page borrows another page's dataset
+
+`models.yaml` carries exactly one `data:` block per page, and the gallery's tag
+cloud renders `data:tier6` as *"Reference or exact solution, not experiment"*.
+So the field is read as a claim about **what the page's results were tested
+against**, not as a record of which files the page directory happens to ship.
+`load_data(..., page=<other>)` therefore counts.
+
+**The rule.** `data.tier` is the **lowest tier number among all datasets the
+page's reported results depend on, including datasets loaded cross-page.**
+`data.method` describes that same tier-defining dataset. When it is a borrowed
+one, add the two optional keys that keep the page's own situation visible:
+
+```yaml
+data: {tier: 4, method: digitised, status: complete, own_tier: 6, tier_from: A4.9}
+```
+
+and say the same thing in prose in `meta.yaml`'s `caveats` — which dataset is
+borrowed, from which page, and what the page's own data is.
+
+Two conditions on "depend on":
+
+- **A borrowed dataset that only decorates does not change the tier.** `A4.4` and
+  `A4.3` load `A4.2`'s pair diffusivities, but those are tier-6 worked-example
+  values, so nothing moves; a page whose borrowed measurements never reach a
+  reported number stays at its own tier and should say so.
+- **Tier is not a claim of independent validation.** `A4.2` reaches tier 4
+  through `A4.9`'s digitised Duncan & Toor measurements, and its own page states
+  that the 0.59 mole % is the same computation `A4.9` published — a port check,
+  not independent corroboration. Tier records the provenance of the numbers
+  compared against; the strength of the comparison belongs in `caveats` and in
+  the page's Validation section.
+
+*Decided 2026-08-02, on the cross-page audit finding that `F1.3` took `data.tier:
+4` from `F1.4`'s borrowed figure while `A4.2` kept its own `6` although its
+headline experimental comparison is against `A4.9`'s tier-4 measurements. A
+reader filtering `models.yaml` for `data.tier: 4` to find pages tested against
+measurement got one and missed the other. `A4.2` was moved to 4; both now carry
+`own_tier`/`tier_from`.*
+
 ## 4. Honest assessment of feasibility per section
 
 | Section | Data outlook | Notes |

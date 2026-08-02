@@ -13,7 +13,7 @@ cells = []
 cells.append(md(r"""---
 title: "Maxwell–Stefan vs Fick for multicomponent mixtures"
 description: "One physics, two bookkeepings: the Fick matrix [D] and the Maxwell–Stefan diffusivities describe the same mixture, and the page shows where the scalar effective diffusivity everyone actually uses falls apart."
-categories: [sec:A, struct:S9, tier:T0, data:tier6, phase:gas]
+categories: [sec:A, struct:S9, tier:T0, data:tier4, phase:gas]
 date: 2026-07-31
 ---
 
@@ -172,8 +172,15 @@ cannot be trusted with signs or exponents.
 **Worked example 1** (p. 872, "Ideal ternary gas mixtures revisited"):
 H₂ (1)/N₂ (2)/CO₂ (3), $\mathrm{D}_{12} = 8.33$, $\mathrm{D}_{13} = 6.8$,
 $\mathrm{D}_{23} = 1.68 \times 10^{-5}$ m² s⁻¹ ("from the kinetic gas
-theory" — numerically identical to the values Duncan & Toor measured at
-35.2 °C and 1 atm). $[B]$ and $[D]$ are printed at the equilibrium composition
+theory" — numerically identical to the values Duncan & Toor *state* for their
+own run at 35.2 °C and 1 atm). **Neither paper says these were measured**, and
+this page does not: Duncan & Toor (p. 40) call them "the best experimental
+values available (16) corrected to the thermostat temperature by the method
+suggested by Hirschfelder, Curtis, and Bird", i.e. literature values with a
+temperature correction applied, while Krishna & Wesselingh call the same three
+numbers kinetic-theory values. The `A4.9` page, which owns the dataset, makes
+the same distinction, and the provenance sidecar loaded below carries it.
+$[B]$ and $[D]$ are printed at the equilibrium composition
 $x = (0.25, 0.5, 0.25)$, together with a flux estimate for nitrogen.
 
 **Worked example 2** (p. 871, "Non-ideal ternary mixtures"): acetone
@@ -254,7 +261,11 @@ SPECIES = ["H$_2$", "N$_2$", "CO$_2$"]
 n_c, n_i = 3, 2                   # species, independent mole fractions
 
 # Maxwell-Stefan pair diffusivities as printed in the review (p. 872), m2/s.
-# Identical to Duncan & Toor's measured 0.833 / 0.680 / 0.168 cm2/s.
+# Numerically identical to the 0.833 / 0.680 / 0.168 cm2/s Duncan & Toor STATE
+# (p. 40) - which they describe as the best experimental values available in the
+# literature, corrected to their thermostat temperature by the Hirschfelder-
+# Curtis-Bird method, not as anything they measured. The review calls the same
+# three numbers kinetic-theory values. Neither provenance is "measured here".
 d_ms = np.zeros((3, 3))
 d_ms[0, 1] = d_ms[1, 0] = 8.33e-5      # H2 - N2
 d_ms[0, 2] = d_ms[2, 0] = 6.8e-5       # H2 - CO2
@@ -280,7 +291,16 @@ Two datasets, of different kinds, and the page keeps them apart:
 2. **The Duncan–Toor measurements** (tier 4 — experimental): the digitised,
    maintainer-reviewed bulb-composition dataset published with page `A4.9`,
    loaded cross-page. Its provenance, extraction method and error estimate
-   live in that page's sidecar; nothing was re-digitised for this page."""))
+   live in that page's sidecar; nothing was re-digitised for this page. This
+   is the dataset every experimental number on this page is measured against,
+   so it is the one that sets the catalogue's `data.tier` for the page — 4,
+   with `own_tier: 6` recorded beside it (`docs/data-strategy.md` §3a).
+
+   Two findings `A4.9` establishes about these rows carry over and are used
+   here: bulb 1 is the H₂ + N₂ charge (the review numbers the bulbs the other
+   way round — see the note in *Parameters*), and the ±0.005 mole-fraction
+   digitisation floor is 0.5 mole %, which is why the 0.59 mole % agreement
+   below is reported as resolution-limited rather than as a tight fit."""))
 
 # --------------------------------------------------------------------------- 8
 cells.append(code("""wx = load_data("krishna-wesselingh-1997-worked-examples.csv", page=PAGE)
@@ -1083,10 +1103,12 @@ print(f"   N2 bulb-difference error                    : "
 print("   This is the SAME computation A4.9 published (same solver, grid, step "
       "count and\\n   dataset), so its 0.59 mole % is necessarily reproduced, not "
       "independently\\n   corroborated - it confirms the port is faithful, nothing "
-      "more. For scale: the\\n   review's own predictions deviate 0.45 mole %, the "
-      "experimental error is\\n   2.6 mole %, and A4.9's digitisation floor is "
-      "+/-0.005 mole fraction = 0.5 mole %,\\n   so the Maxwell-Stefan agreement is "
-      "resolution-limited and should not be read as\\n   tighter than that.")
+      "more. For scale: DUNCAN &\\n   TOOR (1962, p. 40, not the review - neither "
+      "number appears in it) report that their\\n   own Maxwell-Stefan predictions "
+      "deviate 0.45 mole % from their measurements and\\n   quote an expected "
+      "experimental error of 2.6 mole %; A4.9's digitisation floor is\\n   +/-0.005 "
+      "mole fraction = 0.5 mole %. So the Maxwell-Stefan agreement is\\n   "
+      "resolution-limited and should not be read as tighter than that.")
 
 # Structural defect of the scalar closure, for the record: applied to ALL
 # THREE species it gives fluxes that do not sum to zero, violating the isobaric

@@ -290,7 +290,25 @@ The `C gamma_c` row is the one that matters most: it is a **fully substituted
 evaluation of equation 9 with a printed answer**, which makes the cloud volume a
 worked example rather than a formula this page has to take on trust. The three
 $K_{bc}$/$H_{bc}$ rows are the printed totals against which the derived
-through-flow is reassembled."""))
+through-flow is reassembled.
+
+**One printed slip sits inside the `C u_b` row above, and `E2.1`'s sidecar
+records it.** The $u_0 = 13.2$ cm/s that enters $u_b = 13.2-2.1+42.8$ is printed
+in appendix C as $u_0 = (6.6 + 9.9 + 13.2 + 20)/5 = 13.2$ cm/s — *four terms
+divided by five*, verified here on the same 600 dpi render. Nothing on this page
+changes because of it: 13.2 is the value Kunii and Levenspiel use in every
+subsequent step, it is confirmed independently by their own
+$u_b = 13.2-2.1+42.8 = 53.9$, and this page uses $u_0$ only inside that one
+reproduction row. `E2.1` stores the expression as printed and declines to infer
+the missing term; so does this page. It is flagged here because the row is one
+of those this page says it re-read, and a reader re-reading it should not have
+to rediscover the arithmetic.
+
+This is the second `E2.1` slip this page carries through. The other — appendix
+B's printed $(1-\varepsilon_f)u_b$, which implies $\varepsilon_{mf} = 0.447$
+rather than the stated 0.50 — *does* touch a verdict, so it is not merely noted
+but tested: the cell in *Results* re-runs appendix B's cloud comparison at the
+implied value and reports that the verdict survives."""))
 
 cells.append(code('''DATA_PAGE = "E2.1-kunii-levenspiel-bubbling-bed"   # cross-page reuse; see E2.1
 ref = load_data("kunii_levenspiel_1968_appendix_values.csv", page=DATA_PAGE)
@@ -735,6 +753,18 @@ for name, got, want in rows:
 results["appendix_worst_pct"] = float(max(100 * abs(g_ - w) / w for _, g_, w in rows))
 results["gamma_c_from_pymrm_cloud_pct"] = float(100 * abs(gc_num - printed[("C", "gamma_c")])
                                                 / printed[("C", "gamma_c")])
+# u_0 = 13.2 cm/s is TYPED into BEDS above, and appendix C prints it as a sum of
+# FOUR terms divided by five - (6.6 + 9.9 + 13.2 + 20)/5 - a slip E2.1's sidecar
+# records and declines to repair. It is not in doubt: the CSV's own u_b and u_br
+# invert to it, which is checked here rather than asserted.
+u0_from_csv = printed[("C", "u_b")] - printed[("C", "u_br")] + C["umf"]
+print(f"\\n   appendix C's u_0, back out of the PRINTED u_b and u_br: "
+      f"{u0_from_csv:.1f} cm/s")
+print(f"   the value used here (typed from the appendix)               : "
+      f"{C['u0']:.1f} cm/s")
+print("   The appendix prints u_0 = (6.6 + 9.9 + 13.2 + 20)/5 = 13.2 - four terms")
+print("   over five (E2.1's sidecar records the slip). The inversion above is why")
+print("   13.2 is used anyway, and no term is inferred to repair the sum.")
 print(f"\\n   The last two lines are the point. Equation 9 never enters the solve -")
 print("   only the two boundary conditions and u_f, u_br do - so substituting the")
 print("   cloud computed here for the printed formula is a real test of the")

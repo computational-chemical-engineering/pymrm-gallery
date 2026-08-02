@@ -23,6 +23,7 @@ validation:
   - a stated result reproduced - Jackson's pellet-centre pressure p_0 = sqrt(nu_B) p, quoted by Krishna & Wesselingh on p. 892 with "a 40% increase" for nu_B = 2 - recovered by the pymrm dusty-gas solve to 4.2e-7 relative at nu_B = 2 and 1.1e-6 worst over nu_B = 1, 2, 3, 4, with a spread of 3.6e-8 across 18 combinations of geometry, Thiele modulus and grid. The residual 4.2e-7 is not solver accuracy: it is the finite-Kn bulk term of eq. (82), measured to scale as 1/Kn (deviation x Kn constant to 0.04% from Kn = 1e5 to 1e8 on a fixed grid), so the check is a statement about the Knudsen limit rather than about numerics
   - a second stated result - Graham's law, eq. (107) - emerges from the isobaric slab to 1.6e-12; the solver is given equal total concentration at both ends and never told the constraint. It is an identity of eqs. (82)+(85) once grad p = 0, so it checks the M^-1/2 exponent of eq. (85) and the sign structure of eq. (82), not the model - and inverting that exponent lifts the residual to 1.6e-1, so it is not vacuous
   - the review's two scaling claims (p. 887) measured as log-log slopes of the slab flux - 0.993 and 0.996 against a stated 1 under Knudsen control, 0.033 and 0.063 against a stated 0 under bulk control, the residues being finite-Kn effects over 30x sweeps
+  - what the borrowed 35.2 C, 1 atm and pair diffusivities are worth, measured rather than asserted (item 5b) - T -> 400 K and D x 1.3 each move exactly the two p. 887 exponent deviations, by 11-14 % and 23-26 %, and leave the other 38 result metrics bit-identical; both perturbed deviations stay far below 0.1, so the recovered exponents are unchanged in verdict
   - transcription of eq. (109) settled twice, symbolically - re-derived from eq. (82) for a binary with a prescribed flux ratio (difference identically 0) and collapsing to eq. (110) exactly at flux ratio 1, which is the review's own condition (ii)
   - two flux closures that differ ONLY in the constitutive relation - the 2x2 [B^e] inversion, which presumes no flux ratio, against the scalar eq. (109), which does; they share the grid, the operators, the residual assembly and the Jacobian, so the comparison tests the presumption and not the discretisation. They agree to 2.4e-15 over 9 solves where the stoichiometry fixes the ratio, differ by 9.9e-1 when the ratio is forced to 1, and differ by 1.0e0 when the signs of the [B^e] off-diagonals are flipped - a defect the headline check cannot see
   - defect-sensitivity table for the headline check - eq. (85)'s mass exponent flipped moves it 100%, the mass dependence dropped 41%, a wrong stoichiometric coefficient 50%; it is blind to geometry (1e-12), to a 5-cell grid (6.6e-7 vs 4.2e-7 undefected), to an unconverged solve (relative residual 4.4e-8 against 1.1e-14, answer unchanged) and to a sign flip in the [B^e] off-diagonals (deviation 4.2e-7 -> 5.6e-7, i.e. inside the finite-Kn residue). Each blind row is a claim the page does not make; the sign flip is instead caught by the closure comparison (1.0e0) and by Graham's law (2.6e-2)
@@ -91,7 +92,18 @@ caveats: >
   beside them: the 35.2 C and 1 atm at which they are used here are Duncan &
   Toor's own conditions, taken from page A4.9's dataset sidecar and not from
   this review. They enter only through a mean molecular speed and a total
-  concentration, and no validated number depends on them. Likewise eps/tau = 1
+  concentration. Corrected 2026-08-02: this file and the page used to say "no
+  validated number depends on them", which is an overstatement and fails a break
+  test. What holds is that no CONCLUSION depends on them. Substituting T = 400 K,
+  and separately scaling the borrowed diffusivities by 1.3, each move exactly 2
+  of the 40 result metrics - scaling_slope_dev_knudsen 0.00730 -> 0.00830 (+14 %)
+  and scaling_slope_dev_bulk 0.06264 -> 0.05580 (-11 %) at 400 K; 0.00564 (-23 %)
+  and 0.07871 (+26 %) at D x 1.3 - and leave the other 38 bit-identical. The two
+  that move are the p. 887 exponent-recovery deviations, the page's only
+  quantities read off a dimensional sweep; both stay one to two orders of
+  magnitude below the 0.1 that would put the review's stated exponents in doubt,
+  so the verdict is unaffected. Results item 5b prints the table and the four
+  perturbed values are reported as metrics. Likewise eps/tau = 1
   is eq. (84)'s printed tau = 1 together with an ASSUMED porosity of 1.
   The effectiveness-factor percentages are quoted at a named Thiele modulus
   (phi = 30) and grid (n = 600); they vary with phi, and the phi-sensitivity is

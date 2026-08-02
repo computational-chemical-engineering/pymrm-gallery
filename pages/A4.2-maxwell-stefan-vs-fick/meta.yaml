@@ -18,6 +18,7 @@ pymrm_min_version: "2.3"
 runtime_seconds: 33
 datasets:
   - krishna-wesselingh-1997-worked-examples.csv
+  - duncan-toor-1962-run1.csv                 # loaded cross-page from A4.9
 
 validation:
   - both printed matrices of the ideal-gas worked example (p. 872) recomputed from the printed diffusivities via eqs. 26-27, [D] to 1.03% max per element (print-rounding limited)
@@ -67,6 +68,12 @@ caveats: >
   not measurements. The experimental comparison uses the tier-4 digitised
   Duncan & Toor dataset published with page A4.9, loaded cross-page; its
   provenance and +/-0.005 mole-fraction error live in that page's sidecar.
+  models.yaml therefore records data.tier 4 with own_tier 6 and
+  tier_from A4.9, per the cross-page rule in docs/data-strategy.md 3a
+  (changed 2026-08-02; it previously read tier 6, which hid the page from a
+  data.tier 4 filter even though its headline experimental deviations rest on
+  those measurements). Tier 4 records the provenance of the numbers compared
+  against, not a claim of independent validation - see the sentence above.
   That error is 0.5 mole %, so the 0.59 mole % Maxwell-Stefan agreement sits
   at the digitisation floor and must not be read as tighter than the data.
   Every Wilke number is conditioned on which species is eliminated; the page

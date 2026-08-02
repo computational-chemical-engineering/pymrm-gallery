@@ -134,6 +134,27 @@ Measured by injecting five mis-transcriptions one at a time, not asserted:
    reading the anode's error — and produced almost the same 0.44 mV. Two
    different defects, one plausible-looking answer.
 
+## A fourth, found by cross-page audit (2026-08-02)
+
+The *I* = 20 A/m² envelope numbers were read at the **march endpoint** instead of
+at the 1.7 V cutoff the loaded `J3.4` parameter file carries. `Cell.march`
+inherits `v_stop = 1.55` V, 150 mV below Doyle's own cutoff, so its endpoint is a
+stepper artefact. The page said "collapses at *u* = 0.40" with a cathode peak of
+3.7 mV, "the largest kinetic overpotential anywhere". Read at the cutoff:
+
+| | value |
+|---|---|
+| *u* at 1.9 V, *I* = 20 | 0.2638 — `J3.4`'s 0.264 |
+| *u* at the 1.7 V cutoff | **0.3707** (Doyle states "about 30 %"; the CSV carries 0.30) |
+| march endpoint, *V* = 1.473 V | 0.4033 — the old "0.40" |
+| cathode peak inside the cutoff | **1.679 mV**, against 3.705 mV over the full run |
+| same run, *I* = 10, at the cutoff | 0.8312 — `J3.4`'s 0.831, Doyle's 0.84 |
+
+The model was right; only the readout was. The superlative was wrong
+independently — the lithium foil at *I* = 20 runs at 46.6 mV — and has been
+removed rather than restated. No agreement metric moved: the *I* = 5 and *I* = 10
+readouts use a `u < 0.80` mask stricter than their cutoffs.
+
 ## Data
 
 No dataset of its own, and **no figure was digitised**. Two files are loaded

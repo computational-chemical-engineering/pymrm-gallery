@@ -343,14 +343,23 @@ def i0_cathode(c, cs):
             * (C_T - cs) ** alpha * cs ** alpha)
 
 
-def kappa_from_delta(delta=1.95, I=10.0):
+# delta and nu are ROWS of the stated-results CSV loaded above. They are read
+# from it rather than retyped as defaults, so a correction to the transcription
+# reaches kappa - which is the reconstructed, load-bearing input of this page.
+INIT = "initial concentrations"
+DELTA_STATED, NU_STATED = tgt[("delta", INIT)], tgt[("nu", INIT)]
+
+
+def kappa_from_delta(delta=None, I=10.0):
     """Invert Eq. 28."""
+    delta = DELTA_STATED if delta is None else delta
     pre = alpha * F_CONST * I * dc / (R_GAS * T)
     return 1.0 / (delta / pre - 1.0 / sigma)
 
 
-def kappa_from_nu(nu_val=68.0):
+def kappa_from_nu(nu_val=None):
     """Invert Eq. 29 at the initial state."""
+    nu_val = NU_STATED if nu_val is None else nu_val
     i0 = i0_cathode(P["c_0"], P["u_0"] * C_T)
     pre = 2 * alpha * F_CONST * a_spec * i0 * dc ** 2 / (R_GAS * T)
     return 1.0 / (nu_val ** 2 / pre - 1.0 / sigma)
@@ -361,8 +370,8 @@ BRUG = eps_c ** 1.5
 KAPPA = k_delta / BRUG                       # bulk value; kappa_eff = KAPPA * eps^1.5
 
 print(f"i_0,2 at the initial state (Eq. 30) = {i0_cathode(P['c_0'], P['u_0']*C_T):.2f} A/m2")
-print(f"kappa_eff from Eq. 28, delta = 1.95 : {k_delta:.4e} S/m")
-print(f"kappa_eff from Eq. 29, nu    = 68   : {k_nu:.4e} S/m")
+print(f"kappa_eff from Eq. 28, delta = {DELTA_STATED:<4g}: {k_delta:.4e} S/m")
+print(f"kappa_eff from Eq. 29, nu    = {NU_STATED:<4g}: {k_nu:.4e} S/m")
 print(f"the two routes differ by {100*abs(k_delta/k_nu-1):.0f} %")
 print()
 print(f"bulk kappa = kappa_eff / eps^1.5    = {KAPPA:.4f} S/m")

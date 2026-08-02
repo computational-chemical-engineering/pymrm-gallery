@@ -60,7 +60,12 @@ models:
       doi: 10.1016/S0009-2509(96)00458-7
     predicts: [Fick matrix from MS diffusivities, effective diffusivity breakdown, osmotic diffusion, reverse diffusion, diffusion barrier]
     pymrm_api: [construct_grad, construct_div, NumJac, newton]
-    data: {tier: 6, method: table, status: complete}
+    # tier 4 by the cross-page rule in docs/data-strategy.md §3a: the page's own
+    # dataset is the tier-6 K&W worked examples, but its reported experimental
+    # deviations (0.59 / 3.14 mole %) rest on A4.9's tier-4 digitised Duncan &
+    # Toor measurements, loaded cross-page. meta.yaml's caveats say so.
+    data: {tier: 4, method: digitised, status: complete, own_tier: 6,
+           tier_from: A4.9}
     related: [A4.9, A4.3]
 
   - id: A4.4
@@ -1126,7 +1131,11 @@ models:
         Reprints Wilkinson's correlation in full as its Eqs. 1-4, together with
         Reilly et al. (1994) Eq. 8, the Table 2 liquid properties and the Table 3
         deviations. Every equation was verified on a 600 dpi render of that paper.
-    data: {tier: 4, method: digitised, status: complete}
+    # tier 4 by the cross-page rule in docs/data-strategy.md §3a: the page's own
+    # dataset is the tier-2 Table 2 liquid properties; the deviations it reports
+    # are measured against F1.4's tier-4 digitised Figure 11, loaded cross-page.
+    data: {tier: 4, method: digitised, status: complete, own_tier: 2,
+           tier_from: F1.4}
     related: [F1.4, F1.9, F2.3, F1.1, F3.1]
 
   - id: F2.3

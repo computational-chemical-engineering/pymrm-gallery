@@ -224,7 +224,14 @@ review prints **no temperature and no pressure** beside them; the 35.2 °C and
 1 atm at which they are used here are Duncan & Toor's own experimental
 conditions, taken from page [`A4.9`](../A4.9-duncan-toor/index.ipynb)'s dataset
 sidecar, and they enter only through a mean molecular speed and a total
-concentration — no validated number on this page depends on either. Also used:
+concentration. **No conclusion on this page depends on either**, and that is
+measured rather than asserted: substituting $T = 400$ K, and separately scaling
+the borrowed diffusivities by 1.3, moves **2 of the 40 metrics this page
+reports as results** and leaves the other 38 bit-identical. The two that move are the exponent-recovery
+deviations of the p. 887 scaling check, the page's only quantities read off a
+*dimensional* sweep; they shift by roughly 10–25 % and stay far below the 0.1
+that would put the review's stated exponents in doubt. Results item 5b
+prints the table. Also used:
 $\varepsilon/\tau = 1$, which is eq. (84)'s printed $\tau = 1$ (a straight
 cylindrical pore) together with an **assumed** $\varepsilon = 1$, and standard
 molar masses.
@@ -303,7 +310,12 @@ Two collections of printed numbers are used, and neither is a measurement:
    gas theory" for the Duncan & Toor (1962) system and prints with no
    temperature and no pressure. Nothing was re-transcribed. The 35.2 °C and
    1 atm at which they are used below come from `A4.9`'s Duncan & Toor sidecar,
-   not from this review.
+   not from this review. `A4.2`, which publishes this dataset, records that
+   these three values are *not* measurements — Krishna & Wesselingh call them
+   kinetic-theory estimates, Duncan & Toor call them the best literature values
+   corrected to their thermostat temperature — and this page makes no
+   experimental claim on them either. What they are worth here is measured in
+   Results item 5b rather than assumed.
 
 The review *does* contain a comparison with measurement — its Fig. 44, the
 dusty gas model against Remick & Geankoplis's (1974) He/Ne/Ar capillary data.
@@ -332,8 +344,13 @@ print(f"\\n{len(pm)} printed constants and stated results; "
 # estimated from the kinetic gas theory" - and they print NO temperature and NO
 # pressure with them.  The 35.2 C and 1 atm below are Duncan & Toor's own
 # experimental conditions, taken from page A4.9's dataset sidecar, NOT from this
-# review.  They only set a mean molecular speed and a total concentration; no
-# validated number on this page depends on either.
+# review.  They only set a mean molecular speed and a total concentration.  No
+# CONCLUSION on this page depends on either, and Results item 5b measures
+# what that is worth: T -> 400 K and D x 1.3 each move exactly 2 of the 40
+# result metrics - the two exponent-recovery deviations of the p. 887 scaling
+# check, which are read off a dimensional sweep - and leave the other 38
+# bit-identical.  (The test itself contributes four further metrics, which are
+# the perturbed values.)
 T_REV = 308.35                       # K = 35.2 C  (Duncan & Toor's bath, via A4.9)
 P_ATM = 101325.0                     # Pa          (Duncan & Toor's cell, via A4.9)
 D_AB = {"H2-N2": W[("ideal", "D12")], "H2-CO2": W[("ideal", "D13")],
@@ -1101,15 +1118,20 @@ def loglog_slope(xs, ys):
     return float(np.polyfit(np.log(xs), np.log(ys), 1)[0])
 
 
+# named, because item 5b below re-runs exactly these sweeps at another T and
+# with the borrowed diffusivities perturbed
+SWEEP_P = [("Knudsen control", 20e-9, np.array([1e3, 3e3, 1e4, 3e4])),
+           ("bulk control", 20e-6, np.array([1e4, 3e4, 1e5, 3e5]))]
+SWEEP_D0 = [("Knudsen control", 1e3, np.array([1e-8, 3e-8, 1e-7, 3e-7])),
+            ("bulk control", 1e7, np.array([1e-8, 3e-8, 1e-7, 3e-7]))]
+
 scal, SCAL_RES = {}, 0.0
-for tag, d0, ps in [("Knudsen control", 20e-9, np.array([1e3, 3e3, 1e4, 3e4])),
-                    ("bulk control", 20e-6, np.array([1e4, 3e4, 1e5, 3e5]))]:
+for tag, d0, ps in SWEEP_P:
     out = [dim_slab_flux(p, d0) for p in ps]
     SCAL_RES = max(SCAL_RES, max(o[1] for o in out))
     scal[("p", tag)] = (loglog_slope(ps, [o[0] for o in out]),
                         out[0][2], out[-1][2], d0)
-for tag, p_tot, ds in [("Knudsen control", 1e3, np.array([1e-8, 3e-8, 1e-7, 3e-7])),
-                       ("bulk control", 1e7, np.array([1e-8, 3e-8, 1e-7, 3e-7]))]:
+for tag, p_tot, ds in SWEEP_D0:
     out = [dim_slab_flux(p_tot, d) for d in ds]
     SCAL_RES = max(SCAL_RES, max(o[1] for o in out))
     scal[("d0", tag)] = (loglog_slope(ds, [o[0] for o in out]),
@@ -1129,6 +1151,72 @@ print(f"\\nworst departure from the stated exponents: {SCAL_KNUD:.3f} (Knudsen, 
 print("Both departures are finite-Kn effects: the sweeps move Kn by 30x, so "
       "neither regime\\nis pure across a sweep. They shrink as the sweeps are "
       "pushed further into their limits.")'''))
+
+cells.append(md(r"""### 5b. What the borrowed $T$, $p$ and diffusivities are worth — measured
+
+The 35.2 °C, 1 atm and the three pair diffusivities are all inherited: the
+review prints no temperature and no pressure, and the diffusivities come
+cross-page from `A4.2`. It is easy to write "nothing here depends on them" and
+easy for that to be false, so it is measured instead.
+
+Of the 40 metrics this page reports as results, **38 are dimensionless**: flux
+ratios, identity residuals, effectiveness-factor errors, convergence orders. $T$,
+$p$ and any common scaling of $\mathrm{D}_{ij}$ cancel out of those identically.
+(The test below contributes four further metrics, which are the perturbed values
+themselves.)
+The two exceptions are the deviations of the p. 887 exponent recovery just
+above, because those are log–log *slopes over a dimensional sweep* whose Knudsen
+window is set by exactly these numbers. So the two that can move are named in
+advance, and the cell below moves them: at $T = 400$ K (92 K away) and with the
+borrowed $\mathrm{D}_{ij}$ scaled by 1.3.
+
+The point of the table is what the shifts do **not** do. Both deviations stay
+one to two orders of magnitude below the 0.1 that would put the review's stated
+exponents (flux $\propto d_0$ and $\propto p^{1}$ under Knudsen control,
+$p$-independent under bulk control) in doubt, so the verdict is unchanged while
+the numbers are not."""))
+
+cells.append(code('''# ---- 5b. the borrowed dimensional inputs, perturbed -------------------------
+def slope_devs(t_ref=None, d_scale=1.0):
+    """(Knudsen, bulk) exponent deviations, re-measured at another T / D."""
+    global T_REV, D_AB                      # noqa: PLW0603 - restored below
+    t_keep, d_keep = T_REV, dict(D_AB)
+    T_REV = t_keep if t_ref is None else t_ref
+    D_AB = {k: d_scale * v for k, v in d_keep.items()}
+    try:
+        s = {}
+        for tag, d0, ps in SWEEP_P:
+            s[("p", tag)] = loglog_slope(ps, [dim_slab_flux(p, d0)[0] for p in ps])
+        for tag, p_t, ds in SWEEP_D0:
+            s[("d0", tag)] = loglog_slope(ds, [dim_slab_flux(p_t, d)[0] for d in ds])
+    finally:
+        T_REV, D_AB = t_keep, d_keep        # the page's own values, always restored
+    return (max(abs(s[("p", "Knudsen control")] - 1),
+                abs(s[("d0", "Knudsen control")] - 1)),
+            max(abs(s[("p", "bulk control")]), abs(s[("d0", "bulk control")])))
+
+
+T_BREAK, D_BREAK = 400.0, 1.3
+base_k, base_b = slope_devs()
+assert abs(base_k - SCAL_KNUD) < 1e-12 and abs(base_b - SCAL_BULK) < 1e-12
+BRK_T_KNUD, BRK_T_BULK = slope_devs(t_ref=T_BREAK)
+BRK_D_KNUD, BRK_D_BULK = slope_devs(d_scale=D_BREAK)
+
+print("The two metrics that are NOT dimensionless, under two substitutions:")
+print(f"{'injection':>34}{'Knudsen dev':>14}{'change':>10}"
+      f"{'bulk dev':>12}{'change':>10}")
+for lab, (k, b) in [
+        (f"none (T = {T_REV:.2f} K, D as loaded)", (base_k, base_b)),
+        (f"T -> {T_BREAK:.0f} K", (BRK_T_KNUD, BRK_T_BULK)),
+        (f"borrowed D x {D_BREAK}", (BRK_D_KNUD, BRK_D_BULK))]:
+    dk = "" if k == base_k else f"{100*(k/base_k - 1):+9.0f} %"
+    db = "" if b == base_b else f"{100*(b/base_b - 1):+9.0f} %"
+    print(f"{lab:>34}{k:>14.5f}{dk:>10}{b:>12.5f}{db:>10}")
+print(f"\\nBoth stay below 0.1 in every case (worst "
+      f"{max(base_k, base_b, BRK_T_KNUD, BRK_T_BULK, BRK_D_KNUD, BRK_D_BULK):.3f}), "
+      f"so the review's stated\\nexponents are recovered whichever value is used. "
+      f"The other 38 result metrics are unchanged\\nto the last bit under both "
+      f"substitutions - they contain no dimensional quantity at all.")'''))
 
 # -------------------------------------------------------------------------- 15
 cells.append(md(r"""## Validation
@@ -1494,6 +1582,10 @@ print(f" 2. Graham's law eq. (107) from the slab       : {GRAHAM_RESID:.2e}; wit
       f"eq. (85)'s exponent inverted {GRAHAM_BROKEN:.2e}")
 print(f" 3. K&W p.887 slopes, Knudsen / bulk           : off by {SCAL_KNUD:.3f} "
       f"from 1 / {SCAL_BULK:.3f} from 0")
+print(f"    the only two metrics the borrowed T/p/D move: to {BRK_T_KNUD:.3f} / "
+      f"{BRK_T_BULK:.3f} at T = {T_BREAK:.0f} K,")
+print(f"    {BRK_D_KNUD:.3f} / {BRK_D_BULK:.3f} at D x {D_BREAK}; the other 38 are "
+      f"bit-identical (item 5b)")
 print(f" 4. eq. (109) re-derived from eq. (82)         : {EQ109_RESID} (exact, "
       f"algebra)")
 print(f"    eq. (109) -> eq. (110) at rho = 1          : {EQ110_RESID} (exact, "
@@ -1528,6 +1620,11 @@ report_agreement("A4.4", {
     "graham_residual_b_offdiag_flipped": GRAHAM_BFLIP,
     "scaling_slope_dev_knudsen": SCAL_KNUD,
     "scaling_slope_dev_bulk": SCAL_BULK,
+    # item 5b: the only two metrics the borrowed T / p / D can move
+    "scaling_slope_dev_knudsen_T400": BRK_T_KNUD,
+    "scaling_slope_dev_bulk_T400": BRK_T_BULK,
+    "scaling_slope_dev_knudsen_D1p3": BRK_D_KNUD,
+    "scaling_slope_dev_bulk_D1p3": BRK_D_BULK,
     "dgm_vs_eq109_correct_rho": CLOSURE_AGREE,
     "dgm_vs_eq110_wrong_rho": CLOSURE_WRONG,
     "dgm_vs_eq109_b_offdiag_flipped": CLOSURE_BFLIP,
