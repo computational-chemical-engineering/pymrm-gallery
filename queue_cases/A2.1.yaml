@@ -5,65 +5,37 @@ catalog_reference: Danckwerts, Chem. Eng. Sci. 2:1 (1953)
 priority: P1
 tier: T0
 structures: S4
-status: needs-paper
+status: in-progress
 reference:
   authors:
   - Danckwerts, P. V.
   year: 1953
   title: 'Continuous flow systems: distribution of residence times'
-  container: Chemical Engineering Science 2(1) 1–13
+  container: Chemical Engineering Science 2(1) 1-13
   doi: 10.1016/0009-2509(53)80001-1
+  title_as_printed: 'Continuous flow systems: distribution of residence times'
 paper:
-  on_disk: false
-  open_access: false
-  checked: '2026-07-30'
-blocker:
-  kind: paper
-  question: Can the maintainer supply Danckwerts (1953), DOI 10.1016/0009-2509(53)80001-1
-    (PII 0009250953800011)? Second, may an agent use the institutional Elsevier key
-    at ~/.config/elsevier/apikey for this case? The documented PII endpoint is the
-    one remaining legitimate route, but reading that credential file is blocked by
-    the Bash permission classifier, so it could not be attempted. A Bash permission
-    rule, or the maintainer running the documented curl themselves, would unblock
-    the case without any new subscription.
-  detail: 'Not in ~/papers/pymrm-gallery/ — all 21 PDFs there were checked by first-page
-    title, and none is Danckwerts. No open-access copy exists: Unpaywall, Semantic
-    Scholar and OpenAlex all independently return oa_status "closed" with no repository
-    copy, for the 1953 original and for both 1995 CES-classic reprint DOIs (10.1016/0009-2509(96)81810-0,
-    10.1016/0009-2509(96)81811-2). A web search surfaced no authorised repository
-    deposit; the only freely readable item is Garfield''s 1979 Citation Classics commentary,
-    which is a one-page author retrospective, not the paper.
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250953800011-main.pdf
+  open_access: null
+  checked: '2026-08-02'
+  identified_by: read the paper's own first pages, not the filename
+blocker: null
+notes: 'Scope discrepancy worth flagging to whoever dispatches cases. This case was handed
+  out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed. The catalogue
+  assigns A2.1 to Danckwerts boundary conditions (S4, T0, P1); packed-bed axial dispersion
+  is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was followed, per the instruction
+  to take the exact title and canonical reference from docs/catalog-A-foundations.md. A2.5
+  is already independently marked needs-paper, so the dispatch appears to have crossed the
+  two IDs.
 
-    No substitution was made. The closest obtainable alternative is Standart, "The
-    thermodynamic significance of the Danckwerts'' boundary conditions", Chem. Eng.
-    Sci. 23 645–655 (1968), DOI 10.1016/0009-2509(68)89009-8 — but it is also closed
-    on Unpaywall, and it is a commentary that re-derives the conditions rather than
-    the canonical source, so it would not be a clean stand-in even if obtained. Wehner
-    & Wilhelm (1956) covers the same ground but is separately catalogued as A2.2 and
-    must not be consumed here.
-
-    Note the DOI previously recorded in this entry, 10.1016/0009-2509(68)89009-8,
-    was the Standart 1968 paper, not Danckwerts 1953 — an automated match on the word
-    "Danckwerts". It has been corrected to 10.1016/0009-2509(53)80001-1, verified
-    against CrossRef (Danckwerts, Chem. Eng. Sci. 2, 1–13, 1953).'
-  artifacts: []
-notes: 'Scope discrepancy worth flagging to whoever dispatches cases. This case was
-  handed out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed.
-  The catalogue assigns A2.1 to Danckwerts boundary conditions (S4, T0, P1); packed-bed
-  axial dispersion is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was
-  followed, per the instruction to take the exact title and canonical reference from
-  docs/catalog-A-foundations.md. A2.5 is already independently marked needs-paper,
-  so the dispatch appears to have crossed the two IDs.
-
-  When the paper arrives, the page is cheap and needs no figure digitisation. Danckwerts
-  1953 is analytic, so the validation should come from checks the paper itself pays
-  for rather than from data: the closed-vessel solution must collapse to plug flow
-  as Pe→∞ and to a CSTR as Pe→0; the RTD must integrate to unity with a mean of exactly
-  the space time for any Pe (the property that makes the closed BCs the right ones
-  — the open-vessel BCs fail this); and the first-order conversion must reproduce
-  the Wehner–Wilhelm closed form. Cross-link A2.3, which is published and supplies
-  the D_ax that these BCs then close.'
-updated: '2026-07-30'
+  When the paper arrives, the page is cheap and needs no figure digitisation. Danckwerts 1953
+  is analytic, so the validation should come from checks the paper itself pays for rather
+  than from data: the closed-vessel solution must collapse to plug flow as Pe→∞ and to a CSTR
+  as Pe→0; the RTD must integrate to unity with a mean of exactly the space time for any Pe
+  (the property that makes the closed BCs the right ones — the open-vessel BCs fail this);
+  and the first-order conversion must reproduce the Wehner–Wilhelm closed form. Cross-link
+  A2.3, which is published and supplies the D_ax that these BCs then close.'
+updated: '2026-08-02'
 resume:
   blocking: true
   trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
@@ -71,21 +43,20 @@ resume:
   - add the filename to docs/papers-on-disk.yaml under this catalogue ID
   - set status back to unclaimed and clear paper.checked so find_papers re-runs
   - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Scope discrepancy worth flagging to whoever dispatches cases. This
-    case was handed out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed.
+  established: 'Scope discrepancy worth flagging to whoever dispatches cases. This case was
+    handed out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed.
     The catalogue assigns A2.1 to Danckwerts boundary conditions (S4, T0, P1); packed-bed
-    axial dispersion is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was
-    followed, per the instruction to take the exact title and canonical reference
-    from docs/catalog-A-foundations.md. A2.5 is already independently marked needs-paper,
-    so the dispatch appears to have crossed the two IDs.
+    axial dispersion is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was followed,
+    per the instruction to take the exact title and canonical reference from docs/catalog-A-foundations.md.
+    A2.5 is already independently marked needs-paper, so the dispatch appears to have crossed
+    the two IDs.
 
     When the paper arrives, the page is cheap and needs no figure digitisation. Danckwerts
-    1953 is analytic, so the validation should come from checks the paper itself pays
-    for rather than from data: the closed-vessel solution must collapse to plug flow
-    as Pe→∞ and to a CSTR as Pe→0; the RTD must integrate to unity with a mean of
-    exactly the space time for any Pe (the property that makes the closed BCs the
-    right ones — the open-vessel BCs fail this); and the first-order conversion must
-    reproduce the Wehner–Wilhelm closed form. Cross-link A2.3, which is published
-    and supplies the D_ax that these BCs then close.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route
-    appears (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+    1953 is analytic, so the validation should come from checks the paper itself pays for
+    rather than from data: the closed-vessel solution must collapse to plug flow as Pe→∞ and
+    to a CSTR as Pe→0; the RTD must integrate to unity with a mean of exactly the space time
+    for any Pe (the property that makes the closed BCs the right ones — the open-vessel BCs
+    fail this); and the first-order conversion must reproduce the Wehner–Wilhelm closed form.
+    Cross-link A2.3, which is published and supplies the D_ax that these BCs then close.'
+  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
+    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).

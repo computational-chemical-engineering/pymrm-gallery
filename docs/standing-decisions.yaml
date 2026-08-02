@@ -11,77 +11,29 @@
 # Fields: id, title, question, detail, blocking (true if work is stalled on it),
 #         raised (date).
 
-- id: textbook-canonical-sources
-  title: May a textbook-canonical T0 case be built without its primary paper?
-  raised: '2026-07-31'
-  blocking: false
-  question: >
-    About twenty P1/T0 cases are on the papers list only because find_papers
-    could not reach a journal PDF, while the result itself is a closed form no
-    two sources disagree about — Langmuir's isotherm, Michaelis–Menten,
-    Chapman–Enskog, Knudsen/Bosanquet, the Stefan tube, Monod, Flory–Schulz.
-    May these be built citing a standard monograph as the source, or do you want
-    the original paper for every one of them?
-  detail: >
-    The published-work-only policy is about manuscripts in preparation, so a
-    monograph does satisfy it; the real risk is different. The builder brief
-    forbids "textbook restatement passed off as the source's", and a page written
-    from memory would be exactly that — it is the fabrication route for cases
-    like these, because the model is remembered rather than read.
+# ALL THREE STANDING DECISIONS WERE ANSWERED ON 2026-08-02 and are recorded in
+# docs/handoff.md. Nothing repo-wide is outstanding.
+#
+#   textbook-canonical-sources -> YES. The ~20 P1/T0 cases whose result is a
+#     closed form nobody disagrees about may be built without the original
+#     paper. See AGENTS.md, "Published work only", for the standard that still
+#     applies: a page written from memory is still the forbidden thing, so name
+#     what the model was read from even when it is a monograph.
+#
+#   history-purge -> YES, done. git-filter-repo removed the three overlay PNGs
+#     and stripped every base64 image payload from five commits of
+#     docs/dashboards/needs-input.html; force-pushed 2026-08-02. All 66 commits
+#     preserved, the tip byte-identical (591 files, same blob hashes), .git
+#     27 MB -> 14 MB. Backup bundle at ~/pymrm-gallery-backup-20260802-1803.
+#     ANY OTHER CLONE MUST `git fetch && git reset --hard origin/main` - a plain
+#     pull would merge the old history back and reintroduce the images.
+#
+#   elsevier-key-permission -> ALLOWED. The key at ~/.config/elsevier/apikey
+#     reads and the PII endpoint answers (verified end to end on
+#     0009250970850734, 47 kB). A durable permission rule in
+#     ~/.claude/settings.json is still worth adding - the agent is blocked from
+#     editing its own permissions, by design - but nothing is stalled without
+#     it. Standing caveat from docs/handoff.md is unchanged: the API text is
+#     good for prose and unusable for numbers on pre-1980 scans.
 
-    So this is only safe with a named book actually to hand. If you have Bird,
-    Stewart & Lightfoot, Taylor & Krishna, Levenspiel, Froment & Bischoff or
-    Ruthven as PDFs, dropping them into ~/papers/pymrm-gallery/ would unblock
-    the whole class at once and would be worth more than any single paper on the
-    papers dashboard.
-
-    A useful part of this class needs no such decision, and is being taken first:
-    where a paper already on disk states the relation, that paper is the source.
-    B1.6 (Prater's relation) is the example — Weisz & Hicks 1962, already on
-    disk for B1.1/B1.5, prints it as their eq. 7 and attributes it to Prater.
-
-- id: history-purge
-  title: Purge copyrighted overlays from git history
-  raised: '2026-07-29'
-  blocking: false
-  question: >
-    May I rewrite the published history of this public repo to remove the review
-    overlays, which requires a force-push?
-  detail: >
-    Three overlay PNGs were committed and later deleted (e9a3cc8), so they are
-    gone from the working tree but still reachable in history. Scope grew on
-    2026-07-31: docs/dashboards/needs-input.html is itself tracked and inlined
-    the same overlays as base64 - three in 7a2ed33, then eight in each of
-    4d24b87, d0ae665, 1359629 and cdcfd4b. Inlining publishes the image exactly
-    as committing the PNG does, and every data sidecar's redistribution_basis
-    says the figure image is not reproduced.
-
-    The leak is stopped going forward: scripts/dashboards.py now builds the
-    tracked pages without images (they name each overlay instead) and only
-    --with-images writes docs/dashboards/private/, which is git-ignored. That
-    fixes new commits; it does not touch what is already published.
-
-    Removing the history needs git-filter-repo plus a force-push, which breaks
-    every existing clone and rewrites the hashes on the commits above. Not doing
-    it leaves the images retrievable by anyone who knows the SHAs. Nothing is
-    blocked either way.
-
-- id: elsevier-key-permission
-  title: Allow the Bash tool to read the Elsevier API key
-  raised: '2026-07-30'
-  blocking: false
-  question: >
-    Can ~/.config/elsevier/apikey be added to the Bash permission allowlist, so
-    the article-retrieval API can be used without a prompt on every call?
-  detail: >
-    The key is at ~/.config/elsevier/apikey (mode 600, outside the repo,
-    .gitignore blocks credential filenames). Reading it trips the permission
-    classifier, so every full-text fetch stalls waiting for a human.
-
-    This is the highest-leverage unblock in the queue. Section A is 33 cases
-    short of a paper and find_papers found an open-access route for almost none
-    of them - they are 1937-75 classics that predate DOIs. A large share are
-    Elsevier (Chemical Engineering Science), which the institutional key reaches
-    through the PII endpoint. Note the standing caveat in docs/handoff.md: the
-    API text is good for prose and structure and unusable for numbers on
-    pre-1980 scans, which still have to be read off 600 dpi renders.
+[]
