@@ -68,6 +68,16 @@ Before putting an agreement number on a page:
   is decoration. Do this; it is cheap and nothing else substitutes for it.
 - **Is the residual structural?** Conservation checks are often exact by
   construction.
+- **Does the knob you refine actually control the thing you are refining?** A
+  time-step study that ramps `dt_n = dt0 · growth^n` and then refines `dt0` alone
+  measures nothing: on a geometric schedule the step at a given Fourier number is
+  set by the growth rate, not by `dt0`. Found on `A4.7` mid-build (2026-08-02) —
+  an 8× sweep of `dt0` moved the answer 4.51e-3 → 4.39e-3 and looked converged.
+  Switching to `dt = dt_frac · elapsed` gave a clean first order (0.96) and showed
+  the true error was **1.5e-3**, i.e. the flattering number was also the wrong
+  one. Swept the other pages: `J1.5`, `I1.2` and `A4.2` all refine `dt` uniformly
+  and are unaffected. Same question applies to any refinement study — grid,
+  tolerance, domain length.
 
 Keeping such a check is fine — label it as the identity it is, and say what it
 cannot detect.
