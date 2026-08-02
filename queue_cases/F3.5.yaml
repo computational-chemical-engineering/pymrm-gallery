@@ -5,7 +5,7 @@ catalog_reference: Versteeg & van Swaaij (1988); Danckwerts & Sharma
 priority: P1
 tier: T1
 structures: S3+S10
-status: needs-input
+status: published
 reference:
   authors:
   - Bosch, H.
@@ -18,32 +18,6 @@ paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/F3_5.pdf
   open_access: https://ris.utwente.nl/ws/files/6532984/Bosch89gas2.pdf
   checked: '2026-07-31'
-blocker:
-  kind: figure-digitisation-review
-  question: Three figure extractions need your eye before this page can publish, because the
-    page's defence of its own reconstruction now rests on them. (1) In F3.5-fig2-overlay.png
-    and F3.5-fig3-overlay.png, do the traced curve centres sit on the printed curves? (2)
-    Both figures are labelled alpha = 0.4 in their insets, but their own speciation reads
-    alpha = 0.2 - charge sums 3998/3997 against [K+] = 4000, electroneutral to 0.1 %, and
-    swapping the two ion assignments breaks it by -20/-20/+40 %. Do you agree the insets are
-    wrong and the page may say so? (3) In F3.5-fig4-overlay.png the dashed CO2 curve and the
-    solid promoted-HCO3- curve run about 11 px apart at the right edge; the script identifies
-    the upper intermittent one as the dashed curve at 2.18. Is that the right curve? The earlier
-    independent read gave 2.16, so the two disagree.
-  detail: 'Why this blocks rather than being optional: the unpromoted bulk CO2 read off these
-    figures gives the correction scalar s = 1.419 / 1.405 / 1.510 using no enhancement factor
-    and no Table 2 at all. That is the ONLY route to s that is not fitted to a combination
-    of the printed J and E, so it is what answers the circularity objection the verifier raised.
-    Without it the page still publishes, but with an openly fitted scalar and no independent
-    support - materially weaker. Everything else on the page is done and needs nothing: Table
-    1 (15 rows) and Table 2 (32 numbers) re-read at 600 dpi and exact, the reconstruction,
-    the adverse desorption evidence, and the validation battery relabelled. Batch this with
-    G1.7''s two overlays - one review pass covers both.'
-  artifacts:
-  - queue_cases/F3.5/review/extract_figs.py
-  - queue_cases/F3.5/review/F3.5-fig2-overlay.png
-  - queue_cases/F3.5/review/F3.5-fig3-overlay.png
-  - queue_cases/F3.5/review/F3.5-fig4-overlay.png
 notes: 'Paper identity resolved 2026-07-31: the catalogue''s citation "Versteeg & van Swaaij
   (1988); Danckwerts & Sharma" points at the group''s kinetics paper; the auto-resolved DOI
   (crossref) landed on Bosch, Versteeg & van Swaaij (1989) CES 44(11) 2735-2743, which IS
@@ -80,31 +54,143 @@ notes: 'Paper identity resolved 2026-07-31: the catalogue''s citation "Versteeg 
   Figure readings are quoted as a cross-check pending maintainer visual review - no CSV, no
   dataset, nothing on the page depends on them; see follow_up below.
 
-  Tier 6: the paper contains no tabulated measurements. Runtime ~45 s.
+  CURVE-IDENTITY CORRECTION applied 2026-08-02 after the maintainer''s first review pass ("in
+  fig 2 you missed the top solid line: CO3_p. In fig3 the top dashed line is CO3_u and the
+  solid line is CO3_p"). Fig. 2''s promoted CO3-- was missed because that solid rule leaves
+  the plot box through the top at the right-hand edge, above the row the read band started
+  at; Fig. 3''s two carbonate curves converge to within one line width at the frame and had
+  been fused into one run, so they are now tracked over the strip where they are still two
+  rules (out to x/delta = 0.96) and each extrapolated to x/delta = 1. Both corrections are
+  policed by a NEW falsifiable test the first pass could not even state: the promoted bulk
+  must satisfy [K+] + [AmH+] = [HCO3-] + 2[CO3--] + [AmCOO-], which needs the promoted CO3--
+  of every figure. All three balance on the corrected reading, worst deviation 0.20 % (0.11 %
+  on the unpromoted test), and the promoted carbonate that charge balance DEMANDS agrees with the curve actually
+  read to within 4.1 mol/m3 in every figure. Without Fig. 2''s promoted CO3-- the solid bulk
+  there is short of anion charge by a factor of five, which is how the error shows up.
+
+  THE alpha = 0.2 CONCLUSION SURVIVES, and so does s. The two mis-read curves are promoted
+  carbonates and enter neither the loading identification nor the bulk CO2 that gives s. The
+  unpromoted charge sums are now 3998.3 / 4000.2 / 3995.5 against [K+] = 4000 (Fig. 3 moved
+  from 3997 as its dashed carbonate was disentangled from the solid one); s = 1.419 / 1.405 / 1.510
+  (mean 1.445) is bit-identical to the first pass. Four metrics added to agreement.json:
+  s_from_figures_mean, fig_charge_dev_unpromoted_max, fig_charge_dev_promoted_max, and
+  amine_flux_closure (advertised in meta.yaml but previously untracked, the same gap the
+  verifier caught for vkh_dev). Overlays
+  regenerated in review/ (git-ignored); review/README.md records what changed and what to look
+  at.
+
+  Collateral fixes found by the prose-vs-output audit run alongside the correction, all
+  small and none touching the model: front-matter date; "HCO3- ~ 804-806" (was 804-805, the
+  reading is 803.8/805.5); "1.3% below the figure" (was "within 1.3%", the value is 1.33%);
+  the implied-cb rounding sensitivity is now computed and prints 9%, not the hard-coded ~13%;
+  the gas-side bound now says which E it is evaluated at (the reconstructed run''s 153) and
+  notes it still holds at the page''s largest E, 171; the paper''s Table 3 range F(DEA) 2.7-5.0
+  is transcribed as printed with a note that the paper''s own Table 2 goes down to 2.51;
+  amine_flux_closure added to metrics; five stale check numbers in source comments realigned
+  with the labels the cells actually print; runtime_seconds 45 -> 40.
+
+  Tier 6: the paper contains no tabulated measurements. Runtime ~40 s.
 
   '
+follow_up:
+  kind: figure-digitisation-review
+  blocking: false
+  question: >-
+    Two things, in one look at the three regenerated overlays in
+    queue_cases/F3.5/review/ (batch these with the other cases' overlays - one review pass
+    covers them all).
+
+    (1) CONFIRM THE CORRECTED CARBONATE IDENTITIES. Your note was applied: Fig. 2 now reads
+    ten curves with the top solid one labelled CO3_p (1635 mol/m3, above the 1600 tick - the
+    rule leaves the plot box through the top), and Fig. 3 now reads nine, with the top DASHED
+    curve CO3_u (1598) and the SOLID one just below it CO3_p (1592). In F3.5-fig3-overlay.png
+    the two blue squares mark where that pair was last resolved as two separate rules
+    (x/delta = 0.957) and the blue leaders show the 116 px extrapolation to the read column;
+    is that extrapolation acceptable, or would you rather the page quoted the last resolved
+    value? Do the red circles sit on the rules they are labelled with, and do the pale axis
+    rules land on the printed ticks?
+
+    (2) STILL OPEN FROM THE FIRST PASS, unanswered. In F3.5-fig4-overlay.png the dashed CO2
+    curve and the solid promoted-HCO3- curve run about 13 px apart at the right edge; the
+    script identifies the upper intermittent one (#2) as the dashed CO2 curve at 2.18. Is that
+    the right curve? An earlier independent read gave 2.16, so the two disagree. What the
+    Fig. 3 correction turned up, offered as evidence but not as an answer: the LOWER rule of
+    that pair (#3) reads 2.164 if it is put on the left axis - so "2.16" is most likely the
+    solid promoted-HCO3- rule read on the CO2 axis, not a different reading of the same curve.
+    The pair is cleanly resolved into two tracks here, unlike Fig. 3's carbonates, and the
+    split holds with the tracking strip ended at x/delta = 0.90, 0.93, 0.97 and 1.00 (dashed
+    2.177-2.184 at duty 0.27-0.66, solid at duty 0.99-1.39). Your eye still decides.
+  detail: >-
+    NOT BLOCKING - the page ships with the figure result disclosed as pending, exactly as it
+    was. What the answer buys: the Figs 2/3/4 reading is the page's only route to the
+    correction scalar s that does not go through the printed enhancement factors, and is
+    therefore what answers the circularity finding against the reconstruction. It gives
+    s = 1.419 / 1.405 / 1.510 (mean 1.445) against the fitted 1.4585, with no Table 2 and no
+    E in the calculation. Confirming it lets the "pending maintainer visual review" label come
+    off; it does not change any number.
+
+    The corrected reading now carries TWO independent falsifiable checks, both printed on the
+    page. (a) The dashed curves against the potassium, [HCO3-] + 2[CO3--] = [K+] = 4000
+    mol/m3: 3998.3 / 4000.2 / 3995.5, i.e. 0.11 % worst case, and swapping the two ion assignments
+    breaks it by -20 / -20 / +40 %. (b) NEW, and the test that caught the errors you flagged:
+    the solid curves must satisfy [K+] + [AmH+] = [HCO3-] + 2[CO3--] + [AmCOO-]. It cannot be
+    written down without the promoted CO3-- of every figure, and with Fig. 2's missing the
+    solid bulk there was short of anion charge by a factor of five. On the corrected reading
+    all three figures balance, worst deviation 0.20 %, and the promoted carbonate that charge balance
+    demands sits within 4.1 mol/m3 of the curve actually read. review/README.md sets out what
+    changed and what to look at.
+  artifacts:
+  - queue_cases/F3.5/review/README.md
+  - queue_cases/F3.5/review/extract_figs.py
+  - queue_cases/F3.5/review/F3.5-fig2-overlay.png
+  - queue_cases/F3.5/review/F3.5-fig3-overlay.png
+  - queue_cases/F3.5/review/F3.5-fig4-overlay.png
+  answer_changes:
+    confirmed: >-
+      Delete the "pending maintainer visual review" labels from build_page.py (the Review
+      status block above the FIG_READ cell), meta.yaml and README.md, and delete review/.
+      No number changes.
+    curves_or_alpha_still_wrong: >-
+      Remove the FIG_READ cell and the alpha = 0.2 profile panel from build_page.py, drop the
+      three fig_* / s_from_figures_mean metrics, restate the circularity section as openly
+      fitted with no independent route, and publish the rest. Nothing else on the page depends
+      on the figures.
+    fig3_extrapolation_not_acceptable: >-
+      Quote Fig. 3's carbonate pair at the last resolved column instead (CO3_u 1595.7, CO3_p
+      1587.9 at x/delta = 0.957, against 1598.2 and 1591.9 extrapolated). Fig. 3's unpromoted
+      charge sum then reads 3995.2 instead of 4000.2 and its promoted balance -0.40 % instead
+      of -0.20 %, so both checks get worse, which is the argument for the extrapolation. s is
+      untouched either way: it comes from the CO2 curve, not the carbonates.
+    fig4_curve_is_2.16_not_2.18: >-
+      'One number changes: FIG_READ[4]["CO2_u"], and the s it implies (1.510 -> ~1.50). No
+      structural change.'
+  files_to_touch:
+  - queue_cases/F3.5/page/build_page.py
+  - queue_cases/F3.5/page/meta.yaml
+  - queue_cases/F3.5/page/README.md
+  - queue_cases/F3.5.yaml
+  - queue_cases/F3.5/review/
+  do_not_redo: >-
+    The extraction (corrected 2026-08-02 and re-run), the Table 1/2 transcription, the
+    reconstruction, the desorption analysis, the validation relabelling.
 resume:
   staged_at: queue_cases/F3.5/page/
-  blocking: true
-  established: Page built, executes in 42 s, agreement.json byte-identical across two clean
-    runs. Paper identity confirmed (Bosch, Versteeg & van Swaaij 1989). Table 1 and Table
+  blocking: false
+  established: Page built, executes in ~40 s, no cell errors, agreement.json regenerated with
+    32 metrics. Paper identity confirmed (Bosch, Versteeg & van Swaaij 1989). Table 1 and Table
     2 verified exact on 600 dpi renders. Headline demoted to J_u within 3.8 %. The adverse
     out-of-sample evidence (printed constants give F = 3.72, -2.3 %, against the reconstruction's
     3.35, -12.0 %) is reported as evidence AGAINST the reconstruction. Validation split into
     two real checks (PFO 3.5e-5, VKH 0.1 %) and consistency checks labelled structurally guaranteed.
-    Extraction script and three numbered overlays staged in review/. Do not re-derive or re-extract.
-  answer_changes:
-    all_three_confirmed: Flip to ready and integrate unchanged - the figure cross-check is
-      already written into the page, labelled pending review; delete that label.
-    curves_or_alpha_wrong: Remove the FIG_READ block and the alpha = 0.2 profile panel from
-      build_page.py, restate the circularity section as openly fitted with no independent
-      route, and publish the rest. Nothing else depends on the figures.
-    fig4_curve_is_2.16_not_2.18: 'One number changes: FIG_READ[4] cb, and the s it implies
-      (1.510 -> ~1.50). No structural change.'
+    Figure extraction corrected 2026-08-02 for the two curve identities the maintainer flagged;
+    alpha = 0.2 and s = 1.419/1.405/1.510 both survive unchanged. Extraction script, review
+    README and three regenerated numbered overlays staged in review/ (only .md and .py there
+    are trackable; overlays, CSVs and page renders are git-ignored). Do not re-derive or
+    re-extract.
   files_to_touch:
   - queue_cases/F3.5/page/build_page.py
   - queue_cases/F3.5.yaml
   do_not_redo: the extraction, the Table 1/2 transcription, the reconstruction, the desorption
     analysis, the validation relabelling
-updated: '2026-08-01'
+updated: '2026-08-02'
 doi_source: crossref-auto, verified against PDF 2026-07-31

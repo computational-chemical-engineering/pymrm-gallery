@@ -1,0 +1,48 @@
+dataset_id: bosch1989-table1-parameters
+title: Model parameters for absorption of CO2 into amine-promoted carbonate solutions (Table 1)
+status: complete
+
+source:
+  authors: ["Bosch, H.", "Versteeg, G. F.", "van Swaaij, W. P. M."]
+  year: 1989
+  container: "Chemical Engineering Science 44(11) 2735-2743"
+  doi: 10.1016/0009-2509(89)85216-9
+  access: "open access via University of Twente institutional repository (ris.utwente.nl)"
+  licence: "all rights reserved (printed numeric parameters are facts; page images not reproduced)"
+
+conditions:
+  temperature_K: 363
+  system: "CO2 into 2000 mol/m3 K2CO3 with 600 mol/m3 DEA or HDA promoter"
+  note: >
+    Parameters the paper itself flags as estimates: c_Am and c_carb were
+    "guessed on the basis of previous work referred to by the authors" (their
+    section 5.3); the HDA equilibrium description is uncertain because Savage
+    et al. (1984) omit HDA's structural formula. k_2 for HDA comes from the
+    Versteeg-van Swaaij (1988) correlation, their eq. (11).
+
+acquisition:
+  method: transcribed
+  figure: "Table 1, journal page 2738"
+  tool: "poppler pdftoppm at 600 dpi, values read from the page image"
+  procedure: >
+    The PDF is a 1989 Pergamon scan whose text layer mangles exponents
+    (e.g. "7.29 x lo-''" for 7.29e-8), so every value was read from a 600 dpi
+    render of page 2738, not from the OCR. Single-valued rows are printed
+    centred across the DEA/HDA columns and apply to both amines; K_p, K_c and
+    k_2 carry separate values per amine. Cross-checks applied: K_w = 3.33e-7
+    mol2/m6 corresponds to pKw = 12.48 at 90 C (literature value); K_c2
+    corresponds to pKa2 = 10.14; k_OH agrees with the 25 C literature value
+    extrapolated to 363 K with a ~55 kJ/mol activation energy plus the ionic
+    strength correction the paper cites from Savage et al. (1980); k_2(HDA)
+    = 1581 is consistent with the paper's own correlation (11) evaluated with
+    a pKa near 10.9.
+  operator: "Claude (builder agent), maintainer review pending"
+  date: 2026-07-31
+  estimated_error: "transcription believed exact (3 significant figures as printed)"
+
+columns:
+  - {name: parameter, unit: "-", description: "symbol as printed in Table 1"}
+  - {name: units, unit: "-", description: "SI units of value_DEA and value_HDA, as printed"}
+  - {name: value_DEA, unit: "see units column", description: "value for the DEA-promoted system"}
+  - {name: value_HDA, unit: "see units column", description: "value for the HDA-promoted system"}
+  - {name: source_in_paper, unit: "-", description: "what the paper says the value came from"}

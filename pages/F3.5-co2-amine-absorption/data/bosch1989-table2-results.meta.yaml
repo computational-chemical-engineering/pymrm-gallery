@@ -1,0 +1,54 @@
+dataset_id: bosch1989-table2-results
+title: Numerical absorption results for CO2 into amine-promoted carbonate solutions (Table 2)
+status: complete
+
+source:
+  authors: ["Bosch, H.", "Versteeg, G. F.", "van Swaaij, W. P. M."]
+  year: 1989
+  container: "Chemical Engineering Science 44(11) 2735-2743"
+  doi: 10.1016/0009-2509(89)85216-9
+  access: "open access via University of Twente institutional repository (ris.utwente.nl)"
+  licence: "all rights reserved (printed numeric results are facts; page images not reproduced)"
+
+conditions:
+  temperature_K: 363
+  system: "CO2 into 2000 mol/m3 K2CO3, unpromoted and with 600 mol/m3 DEA or HDA"
+  note: >
+    PROVENANCE TIER 6. These are the outputs of the authors' own numerical
+    model (the Versteeg et al. 1989/1990 method), NOT measurements. The only
+    experimental numbers in the paper are the approximate promotion factors of
+    Savage et al. (1984), whose glyphs print in this scan as "+-4" (DEA) and
+    "+-6" (HDA) and are almost certainly "~4" and "~6"; they are used only in
+    that weak sense.
+    Subscript u = unpromoted. E is the enhancement factor J/(k_L (c_i - c_b)),
+    F the promotion factor J_promoted/J_unpromoted.
+
+acquisition:
+  method: transcribed
+  figure: "Table 2, journal page 2739"
+  tool: "poppler pdftoppm at 600 dpi, values read from the page image"
+  procedure: >
+    All 32 values read from a 600 dpi render of page 2739 (the image, not the
+    OCR text layer, which gives F_HDA = 3.74 in row 3 where the print shows
+    3.76). Internal check the table pays for: the eight printed F values must
+    equal the ratios of the printed fluxes, F = J_promoted/J_u; all eight
+    agree to 0.18 %, i.e. to print rounding. That ties 20 of the 32 numbers
+    together (4 J_u + 4 J_DEA + 4 J_HDA + 4 F_DEA + 4 F_HDA); the 12 it does
+    NOT test are exactly the twelve enhancement factors. A second identity,
+    J = E k_L (c_i - c_b), links each (J, E) pair to the bulk dissolved-CO2
+    concentration and is exploited on the page.
+  operator: "Claude (builder agent), maintainer review pending"
+  date: 2026-07-31
+  estimated_error: "transcription believed exact (3 significant figures as printed)"
+
+columns:
+  - {name: alpha, unit: "-", description: "carbonate-to-bicarbonate conversion (loading), as printed"}
+  - {name: p_co2_kpa, unit: kPa, description: "CO2 partial pressure"}
+  - {name: J_u, unit: "mol m-2 s-1", description: "absorption flux, unpromoted solution"}
+  - {name: E_u, unit: "-", description: "enhancement factor, unpromoted solution"}
+  - {name: J_DEA, unit: "mol m-2 s-1", description: "absorption flux, DEA-promoted"}
+  - {name: E_DEA, unit: "-", description: "enhancement factor, DEA-promoted"}
+  - {name: F_DEA, unit: "-", description: "promotion factor, DEA (printed; equals J_DEA/J_u)"}
+  - {name: J_HDA, unit: "mol m-2 s-1", description: "absorption flux, HDA-promoted"}
+  - {name: E_HDA, unit: "-", description: "enhancement factor, HDA-promoted"}
+  - {name: F_HDA, unit: "-", description: "promotion factor, HDA (printed; equals J_HDA/J_u)"}

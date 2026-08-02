@@ -1,0 +1,111 @@
+# Page metadata. Staged in queue_cases/, not yet in pages/.
+# models.yaml is canonical; this file must not contradict it.
+id: F3.5
+slug: co2-amine-absorption
+title: "CO2 absorption into amine-promoted carbonate solutions"
+section: F
+status: published
+tier: T1
+priority: P1
+structures: [S3, S10]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 40
+datasets:
+  - bosch1989-table1-parameters.csv
+  - bosch1989-table2-results.csv
+
+validation:
+  # PRIMARY - these test the discretisation and use an external reference
+  - pseudo-first-order film against the closed form E = Ha(cosh Ha - cb/ci)/(sinh Ha (1 - cb/ci)), 3.5e-5 max over 0.1 <= Ha <= 300; the one check that resolves the reaction layer, backed by grid doubling (1.3e-5) and a tenfold k_inst (2.2e-5)
+  - Van Krevelen-Hoftijzer, an external published approximation, within 0.1% at Ha = 119 with nothing tuned to it
+  - the same network solved as a Higbie penetration model (transient S4) differs by at most 10.5%, so the reproduction does not hinge on the film idealisation (its +1.42% quadrature bias is calibrated on the physical-absorption case and divided out)
+  # CONSISTENCY CHECKS - true by construction; they catch coding slips only
+  - physical-absorption limit E = 1 to 5.4e-11: exact for any conservative scheme on a linear profile, so this is dimensional bookkeeping, not accuracy
+  - the dimensional 7-species code against an independently written dimensionless two-species assembly, 1.0e-8 - shared grid, operators and discretisation, so it tests the non-dimensionalisation only
+  - reversible reaction collapses onto its irreversible limit as Keq is scaled up 1e6, residual 9.7e-6 - same Film class both sides, so self-consistency
+  - carbon-flux uniformity 6.5e-10 and amine-flux closure 1.2e-10 are genuine (mixed diffusivities); charge flux 1.1e-9 and electroneutrality 2.8e-11 are STRUCTURALLY GUARANTEED (all ions share D_ion, all reactions conserve charge, both boundaries Dirichlet) and are kept as regression guards, not evidence
+  - all twelve enhancement factors below the instantaneous total-base-capacity ceiling; gas-side share of the total resistance 2.3e-5, which is what licenses the Dirichlet interface
+
+adds: >
+  A reproduction of the model, not an improvement of it. What the
+  reimplementation adds: a forensic reading of the paper's parameter set - the
+  printed equilibrium constants are internally inconsistent with the paper's
+  own Table 2 and with all three of its concentration-profile figures, and the
+  model's structure localises the discrepancy to K3 = Kw/Kc2 (effective value
+  about 1.46x below printed). It is a reconstruction, not a closure: the
+  Kc2-versus-Kw split inside K3 is undetermined by the data, why the constant
+  differs is not established, and the paper's two out-of-sample numbers prefer
+  the printed constants. Also: the 1989 special-purpose research code reduced
+  to ~100 lines on pymrm operators that run absorption and desorption, any
+  amine, any loading, and collapse to every classical limit on demand; and the
+  film-vs-penetration sensitivity (up to ~10%) the paper could not cheaply
+  report.
+
+agreement: >
+  Deviation is (model - paper)/paper throughout. With Table 1 exactly as
+  printed, all twelve enhancement factors come out 8.4-21.4% high and the
+  twelve fluxes 10-92% high, systematically. The paper's own
+  J = E kL (ci - cb) identity implies a bulk CO2 1.42-1.49x above what the
+  printed constants give; one scalar on K3 = Kw/Kc2 (1.4585) reproduces the
+  four unpromoted fluxes J_u within 3.8% - the HEADLINE, because it is the
+  quantity the fit residual actually lands in - the eight promoted E within
+  7.6% and the eight promotion factors within 5.6%. The four unpromoted E
+  agree to 0.6%, but that number is flattered: the fitted cb sits in E's
+  denominator, so E is 2.6x less sensitive to the scalar than the flux is,
+  and the four E_u deviations (+0.2/+0.6/+0.6/+0.6%) are one offset repeated.
+  Refitting the scalar to E_u alone gives 1.4735, 1.0% away; the four
+  per-condition scalars the identity demands span 1.419-1.490. Corroboration
+  that uses no enhancement factor at all: the unpromoted bulk CO2 read off
+  Figures 2, 3 and 4 implies s = 1.419, 1.405 and 1.510 (mean 1.445), and the
+  alpha = 0.2 solve reproduces Figure 2's HDA profile (374 -> 485 against
+  369 -> 484 measured). ADVERSE: the paper's only two out-of-sample numbers
+  both prefer the constants exactly as printed - desorption F = 3.72 (-2.3%)
+  printed against 3.35 (-12.0%) reconstructed, and a driving-force reduction
+  of 34.7% against 39.1% for the paper's "about one third". Reported on the
+  page as evidence against the reconstruction.
+
+caveats: >
+  Provenance tier 6 - the comparison targets are the authors' own numerics;
+  the only measured values in the paper are Savage et al.'s promotion factors,
+  printed as "+-4" (DEA) and "+-6" (HDA) and almost certainly "~4" and "~6",
+  which both the paper's numbers and this page bracket. The reconstruction is
+  a single fitted scalar, stated openly: it is fitted to the four implied
+  cb = ci - J/(E kL), which are built from the printed J AND the printed E, so
+  it is not independent of the enhancement factors. Its location is a
+  three-way choice: Kc1 is decisively rejected (E_u stays 19.8% high), while
+  Kc2 and Kw are indistinguishable on every unpromoted quantity and nearly so
+  on the promoted E (7.6% vs 7.5%); only the promotion factors mildly prefer
+  Kc2 (5.6% vs 8.6%), and the code implements the Kc2 branch. Why K3 differs
+  from its printed parts is NOT determined here: an ionic-strength effect has
+  the right sign but 0.164 pK units is small for ~5 M and the paper itself says
+  non-idealities were not taken into account; a ~10 K error in the Kw reference
+  temperature fits equally well. The paper is internally inconsistent about
+  loading - Figures 2 and 3 are labelled alpha = 0.4 but plot the alpha = 0.2
+  composition (electroneutral against [K+] = 4000 mol/m3, which the 0.4 reading
+  is not), while Table 2 and Figure 4 agree with each other; this page follows
+  Table 2. All figure readings are a reconstruction cross-check PENDING
+  MAINTAINER VISUAL REVIEW; no CSV is shipped and nothing on the page depends
+  on them (extraction script and overlays in queue_cases/F3.5/review/, the
+  overlays git-ignored). They were corrected on 2026-08-02 after a first
+  review pass found two curve-identity errors - Figure 2's promoted CO3--
+  was missed entirely and Figure 3's two carbonate curves, which converge to
+  within one line width at the frame, were fused into one - and the corrected
+  reading now passes two independent charge balances with worst deviations of
+  0.11% on the unpromoted one against [K+] and 0.20% on the promoted one,
+  [K+] + [AmH+] = [HCO3-] + 2[CO3--] + [AmCOO-]. The three s values and the alpha = 0.2
+  identification are unchanged by the correction, which touched only promoted
+  carbonate curves; the corrected reading is itself pending confirmation. The residual promoted-E deviations (up to 7.6%) are
+  unexplained and are consistent with the paper's own warnings that the HDA
+  equilibrium description is uncertain and the concentrations were guessed.
+  H3O+ is eliminated analytically (justified at bulk pH 10) and the
+  instantaneous equilibria are imposed at k_inst = 1e7 1/s (insensitivity
+  shown). The paper's numerical engine is described only as the Versteeg et
+  al. method; its section 4.2 calls the profiles "film model" results, and
+  the film variant indeed matches Table 2 better than the penetration variant
+  does.

@@ -371,6 +371,38 @@ analytically through the divergence operator.
 than no convention, because agents follow it. When a rule turns out to be
 dimension-dependent, say so where the rule is written.*
 
+### A curve the tracker never saw is invisible to every check built on it
+
+`F3.5`'s maintainer review returned two corrections — Figure 2 was missing its
+top solid curve, and Figure 3's two carbonates had been fused into one. Both had
+the same root cause, and the useful part is *why the extraction could not catch
+it itself*.
+
+The missing Fig. 2 curve **leaves the plot box through the top**, ending above
+the highest tick, so a tracker whose read band starts at the frame never sees it.
+The Fig. 3 pair converge to within one line width at the frame — a single 8 px run
+where one rule is 6–7 px — so they merged. Neither failure produces a *wrong*
+number; both produce a *missing* one, and nothing in the extraction complains.
+
+**The check that would have caught it could not be written until the curves were
+right.** Charge balance on the promoted solution needs the promoted carbonate of
+every figure — exactly the curve that was missing. Once added, all three figures
+balance to 0.20 %, and the carbonate that charge balance *demands* sits within
+4.1 mol/m³ of the curve actually read. Before the correction, Fig. 2's solid bulk
+was short of anion charge by a factor of **5.25** — a factor of five sitting in
+plain sight, invisible because the test that would reveal it was unbuildable.
+
+So: **before trusting a multi-curve extraction, count the curves against a
+conservation law the figure must satisfy.** If the law needs a species you did
+not extract, that absence is the finding. And check the frame — a curve can exit
+through the top of the box, and a pair can merge at the edge where you are most
+likely to read them.
+
+Worth noting what did *not* move: the α = 0.2 identification and the scalar `s`
+were unchanged, because the two mis-read curves were *promoted* carbonates, which
+enter neither. A correction that changes nothing downstream is still worth
+making — it is what licenses the claim that nothing downstream changed.
+
 ### An old page's errors travel into the new page that reuses it
 
 `F1.3` lifted a sentence from the published `F1.4` — the reuse `AGENTS.md`
