@@ -152,8 +152,8 @@ bulk-download tool.
 ## Recommended next moves
 
 Every paper on disk has now been consumed. `J3.4`, `E2.1`, `F2.3`, `B3.1` and
-`I1.2` are published; `A3.4` and `A1.1` are parked on figure review; `G1.8` is
-parked on a judgement call. So the next moves are not "build the next paper on
+`I1.2` are published; `A1.1`, `G1.7` and `G1.8` are published after the 2026-08-02 review;
+`A3.4` is in rework. So the next moves are not "build the next paper on
 disk" — there isn't one.
 
 1. **Drain the two parked figure reviews if answers have arrived** (`F3.5`,
@@ -437,35 +437,56 @@ yielding two estimates 19 % apart, stated openly as a reconstruction. That is th
 line between reconstruction and fabrication: every input traceable to something
 printed.
 
-### `G1.8` is blocked — a model that closes for one curve out of four
+### `G1.8` — resolved: the legend is offset by one row against the curves
 
-Everything needed to reproduce Herskowitz & Smith's Figure 6 was found and each
-piece verified on a 600 dpi render: **Table 1**'s sphere row (page 8 cites
-"Table 2", which actually holds the pressure-drop constants — an error in the
-paper), Eq. 19 for χ, Eq. 20 for *f*_e, Eq. 21 for α_gLS, with α_gs → ∞ and
-*C*\*_L = 1 as stated.
+*This section replaces an earlier one titled "G1.8 is blocked". Every number in
+it was superseded on 2026-08-02; the old text is gone rather than annotated,
+because a stale finding sitting in the handoff is how the next agent re-derives
+the wrong thing.*
 
-Three independent checks pass. Eq. 20 reproduces the four *f*_e values printed
-inside the figure exactly. Table 1's sphere expression reduces to the classical
-sphere effectiveness factor when *f*_e = 1, which fixes φ on the *V*/*S* length.
-The chain collapses to χ = (1 − *f*_e)·η_s(φ)·φ²/α_gLS, whose log-log slope is
-1.03 against 1.10–1.13 measured.
+Herskowitz & Smith's Figure 6 reproduced for exactly one of its four curves, and
+the other three missed by **1.69×, 4.14× and 2.52×** at φ = 10. The earlier
+conclusion — that nothing reconciled it, that the required α_gs showed no
+pattern, and that the required *f*_e correction "grows with L_m" — was wrong on
+the last point (it is **non-monotone**) and wrong in framing the whole thing as
+irreducible.
 
-**And then it reproduces only the lowest curve.** L_m = 0.50 comes out at 3.767
-against 3.752 digitised at φ = 10 — 0.4 %, nothing fitted. L_m = 1.0, 2.0 and 7.0
-are out by 1.69×, 4.03× and 2.34×. The line positions are not in doubt: an
-overlay of the fits sits on the printed curves and the legend rows align with the
-curve endpoints.
+**Ask which L_m each drawn curve *is*, instead of how wrong the model is.**
+Solving the chain for the liquid rate that puts each printed curve where it sits
+gives **0.508, 2.046, 7.061, 10.18** against the legend's 0.50, 1.0, 2.0, 7.0.
+Three of the four are the paper's own printed values attached to the wrong rows.
+Read that way the deviations fall from +69/+314/+152 % to **+2/+2/+6 %**, and an
+independent re-digitisation from scratch put them at 0.14 %, 2.35 %, 0.59 % of
+the printed values.
 
-Nothing reconciles it cleanly. Matching each curve needs α_gs = 2462, 16.2, 4.7,
-10.3 — no pattern, all contradicting "very large". Fitting *f*_e instead needs
-0.721, 0.864, 0.958, 0.974 against the printed 0.72, 0.77, 0.83, 0.94, a
-correction that grows with L_m.
+Two lessons generalise beyond this case.
 
-So either the upper three curves used something unstated, or the figure is wrong.
-**Do not publish the page claiming agreement.** Asserting a 1983 AIChE review is
-in error is not a call to make from arithmetic alone; it is a question for the
-maintainer. Full detail is in the staged sidecar's `model_closure_attempt:` block.
+**When a model misses a family of curves, invert it.** The residuals were not
+noise and not a single bad constant — they were the right answers against the
+wrong labels, which only shows up if you solve for the parameter instead of
+scoring the fit.
+
+**A separable model turns a figure's own spacing into evidence.** χ = g(L_m)·h(φ)
+separates, so a gap between curves in decades is log₁₀ g(L_i)/g(L_j) whatever
+h(φ) is. The printed reading forces d log g/d log L_m = −1.380, −2.024, −0.725 —
+not constant, so no power law, and not even monotone. The shifted reading forces
+−0.690, −1.120, −2.546 against the model's −0.684, −1.122, −2.414. This needs no
+fitting and survives errors in the ordinate calibration.
+
+The maintainer was asked with the figure inlined in a private decision artifact
+and four options, and chose the shift. **That is the pattern to repeat** — see
+[[gallery-decision-requests-need-the-artifact]]: name the PDF, show the figure,
+state the alternatives and what each changes.
+
+Two printed defects are recorded on the page: the legend offset, and page 8's
+citation of "Table 2" for the spherical solution when Table 2 holds the
+pressure-drop constants and the sphere row is in Table 1.
+
+**And one caveat the page carries:** the residual log–log slope gap does *not*
+go away under the shift, because the chain factorises into an L_m prefactor times
+a φ shape — all four L_m give an identical slope, so reassignment moves it by
+exactly zero. It is +0.007 to +0.046 depending on the abscissa calibration, and
+that abscissa is the weak axis. Unexplained, and stated as such.
 
 ### Working the catalogue with parallel agents — the operating procedure
 

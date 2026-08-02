@@ -57,6 +57,17 @@ repository. The errors agents actually make:
   finite-difference stencils with `scipy.sparse.diags`.
 - **`nu` in `construct_div`** is geometry: `0` Cartesian, `1` cylindrical, `2`
   spherical, or a callable for an arbitrary area profile. State it in a comment.
+- **At a jump in diffusivity, the face value is the HARMONIC mean.** Two cells
+  with different D are two resistances in series, so the face conductivity is
+  `2 D_L D_R / (D_L + D_R)`, not `(D_L + D_R)/2`. The difference is an **order**,
+  not a factor: at the jump the arithmetic mean converges at *first* order and the
+  harmonic at *second*, so the error ratio grows ∝ n without bound. Measured on
+  `A2.1`'s three-section vessel, refining only the bed: **84× at n = 100, 172× at
+  200, 347× at 400, 696× at 800.** Quote the order, never a single factor — on a
+  coarse grid the gap looks small enough to dismiss the rule. And it **fails
+  silently**: the wrong mean still gives a smooth, plausible profile (f(0+)
+  0.667011 against 0.667012, exit unchanged to 4e-9). Only matters where D
+  actually jumps; harmless where it is smooth.
 - **`NumJac` stencil**: `NumJac(shape)` couples the **last axis in full** —
   correct for a pointwise `reaction(c)` when the last axis is the field index.
   `axes_blocks=[-2,-1]` for phase-and-species coupling. Two traps, both measured

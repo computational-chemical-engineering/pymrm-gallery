@@ -5,7 +5,7 @@ catalog_reference: Ramachandran & Chaudhari (1983); Herskowitz & Smith, AIChE J 
 priority: P1
 tier: T1
 structures: S8
-status: in-progress
+status: published
 reference:
   authors:
   - Herskowitz, M.
@@ -16,25 +16,63 @@ paper:
   on_disk: ~/papers/pymrm-gallery/AIChE Journal - 1983 - Herskowitz.pdf
   open_access: null
   checked: '2026-07-31'
-status_note: was left unclaimed by mistake; the 2026-07-29 build is blocked on a maintainer
-  question
+status_note: built 2026-08-02 on the maintainer's Option A. Page staged at
+  queue_cases/G1.8/page/, runs in ~9 s, agreement.json written. ADVERSARIALLY VERIFIED
+  2026-08-02 (queue_cases/G1.8/review/verification.md) - verdict "safe to publish after
+  five fixes"; the accusation itself was independently re-earned (Table 1's sphere row
+  re-derived symbolically to exactly 0, Figure 6 re-digitised from scratch at 600 dpi
+  giving L_m = 0.5007/2.047/7.041/10.170, nine alternative mis-implementations all
+  failing). All five required fixes applied and the page re-executed; the verifier's
+  recommended separability argument adopted as well. Ready for integration.
 blocker: null
 resume:
-  staged_at: docs/staged-data/G1.8/
-  established: Figure 6 digitised and maintainer-reviewed; Table 1 sphere row, Eqs. 19-21
-    all verified on 600 dpi renders; three independent checks pass (printed f_e values exact,
-    sphere limit, log-log slope 1.03 vs 1.10-1.13); L_m = 0.50 closes to 0.4 %. Do not re-derive
-    or re-digitise anything.
-  answer_changes:
-    publish_as_discrepancy: Build the page presenting the chain, the one curve that closes,
-      and the quantified failure of the other three as the finding itself; never claim agreement.
-    hold: No change; case stays parked.
-    drop: Mark deferred with blocker.detail pointing at the closure attempt.
+  staged_at: queue_cases/G1.8/page/
+  established: >
+    Page built and executed. Figure 6 digitised and maintainer-reviewed (twice - the
+    extraction on 2026-07-29, the READING on 2026-08-02); Table 1 sphere row, Eqs. 19-21
+    and the "Table 2" mis-citation all re-verified on 600 dpi renders by the builder.
+    The shift reconstruction, the deliberate-break table, the grid study and the two
+    rejected alternative hypotheses are all in the notebook. Do not re-derive or
+    re-digitise anything.
+  do_not_redo: extraction, verification checks, reconciliation attempts, the reconstruction
   files_to_touch:
   - queue_cases/G1.8/page/
   - models.yaml
-  do_not_redo: extraction, verification checks, reconciliation attempts
-notes: null
+notes: >
+  INTEGRATION NOTE: G1.8 already exists in models.yaml as `status: planned`
+  (slug trickle-bed-partial-wetting, related [G1.6, G1.5, B1.1]). Upgrade that record
+  IN PLACE from queue_cases/G1.8/models_entry.yaml - appending makes check_metadata.py
+  report a duplicate id. The brief for this build said G1.8 was absent from models.yaml;
+  it is not.
+
+  Move page/ to pages/G1.8-trickle-bed-partial-wetting/ (PAGE in the notebook already
+  uses that name). No review/ overlays exist: nothing was digitised in this build, and
+  queue_cases/G1.8/review/ holds only verification.md (text, no page images).
+
+  INTEGRATION MUST-DO from the verification (finding 7 / fix 9, OUT OF SCOPE for the
+  builder because docs/ was not in scope): docs/handoff.md section "G1.8 is blocked" and
+  docs/staged-data/G1.8/...meta.yaml carry six now-wrong numbers and one now-REVERSED
+  conclusion. Fix or delete BOTH when the page is integrated, or the next agent
+  re-derives the wrong thing. Specifically: alpha_gs = 2462/16.2/4.7/10.3 (correct is
+  1057/16.2/4.6/9.2 - the old run used the figure's rounded f_e = 0.72 instead of
+  Eq. 20's 0.7184); "a correction that grows with L_m" (it is non-monotone); "log-log
+  slope 1.03 against 1.10-1.13" (that compared a LOCAL slope near phi = 10 to GLOBAL
+  fits; like-for-like the model is 1.0767); "3.767 against 3.752 ... 0.4 %" (with Eq. 20
+  it is 3.7884, i.e. +1.0 %); "the legend rows align with the curve endpoints top to
+  bottom, so the curve-to-L_m assignment IS as printed" (now the opposite of the
+  published finding); and a parallelism note listing slopes "1.098, 1.098, 1.112, 1.131"
+  (the CSV's first two are 1.1051 and 1.0976).
+built:
+  date: '2026-08-02'
+  runtime_seconds: 9
+  headline: >
+    Read as printed, the paper's chain reproduces one of Figure 6's four curves
+    (+1.0 % at phi = 10) and misses the rest by +69 %, +314 %, +152 %. With the legend
+    block read as offset by one row from its second entry down (curves = L_m 0.50, 2.0,
+    7.0, ~10) all four close to +1.0/+1.9/+1.6/+6.4 % with nothing fitted for the first
+    three. Two printed defects reported: the page-8 "Table 2" citation (it is Table 1),
+    and the legend misalignment. One residual reported as UNEXPLAINED: measured log-log
+    slopes 1.098-1.131 against the model's 1.077.
 updated: '2026-08-02'
 decision_answered:
   date: '2026-08-02'

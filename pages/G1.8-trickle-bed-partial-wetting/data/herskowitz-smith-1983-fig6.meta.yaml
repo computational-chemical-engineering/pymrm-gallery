@@ -1,0 +1,207 @@
+dataset_id: herskowitz-smith-1983-fig6
+title: Partial-wetting effect on the overall effectiveness factor (Figure 6)
+status: complete
+
+source:
+  authors: ["Herskowitz, M.", "Smith, J. M."]
+  year: 1983
+  container: "AIChE Journal 29(1) 1-18"
+  doi: 10.1002/aic.690290102
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+what_these_rows_are: >
+  NOT measurements and NOT markers. Figure 6 carries four drawn lines, which are
+  the authors' own model output (Table 1 sphere row with Eqs. 19-21), and the
+  figure contains no data points at all. Each row of the CSV is a straight line
+  FITTED to one drawn curve in (log phi, log chi): its slope, its position
+  expressed as chi at phi = 10, the phi interval over which the curve was traced,
+  and the rms residual of that straight-line fit. There is therefore no
+  point-by-point dataset behind this file - any comparison at a phi other than
+  the four fitted lines' own parametrisation is a comparison of the model against
+  a fitted line, not against raw traced pixels. The page says so wherever it uses
+  the lines away from phi = 10.
+
+  Consequently the page built on this file is TIER 6 (the authors' own computed
+  curves), not tier 4 and never experimental validation. The digitisation
+  supplies only the position of curves the paper itself computed.
+
+why_this_figure: >
+  The gallery originally queued Figure 2 (wetting efficiency against liquid rate,
+  seven literature sources). On review that was dropped: it needs the series
+  identity of about 45 small overlapping markers on a coarse grid-crossed scan,
+  and the correlation it supports depends on particle diameter and flow rate, so
+  the identity cannot be ignored the way it could on F1.4. Figure 6 is the actual
+  model for an S8 partial-wetting page, and it states every parameter it used.
+  Figure 2 is cited, not digitised.
+
+conditions:
+  printed_in_figure: "Sc_L = 100; d_p = 1.5e-3 m; eps_p = 0.5; eps_B = 0.4; tau = 2; mu_L = 8e-4 kg/(m s); C*_L = 1.0"
+  legend_as_printed: "L_m = 0.50, 1.0, 2.0, 7.0 kg/(m2 s), with f_e = 0.72, 0.77, 0.83, 0.94 printed alongside"
+  chi_definition: "Eq. 19: chi = (eta_o - eta_o(f_e=1)) / eta_o(f_e=1)"
+  note_on_the_legend: >
+    The four (L_m, f_e) legend pairs are internally consistent with Eq. 20
+    (f_e = 0.77 L_m^0.1) to the printed precision, so the legend block is
+    self-consistent. What is NOT consistent is its alignment against the drawn
+    curves - see legend_misalignment below.
+
+acquisition:
+  method: digitised
+  figure: "Figure 6, journal page 8 (= PDF page 8)"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  procedure: >
+    Four straight lines on log-log axes. The grid cuts each line into segments, so
+    run-length line stripping fragments them; instead the eight known horizontal
+    gridline rows and four vertical gridline columns are erased by position, the
+    remaining gaps bridged by a closing with a diagonal structuring element, and
+    each line recovered as one connected component. A straight line is then fitted
+    in (log phi, log chi).
+
+    Axes calibrated from the gridlines: 415.5 px per decade in chi (residuals
+    under 0.006 decades over 0.01 to 20) and 421.9 px per decade in phi.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-07-29
+  estimated_error: "fit rms 0.023 to 0.029 decades, i.e. about 6 % in chi"
+
+validation:
+  eq_20_self_check: >
+    The figure prints f_e = 0.72, 0.77, 0.83 and 0.94 alongside its four L_m
+    values. Eq. 20 of the same paper, f_e = 0.77 * L_m^0.1, gives 0.718, 0.770,
+    0.825 and 0.936 - all four agree to the printed precision. This confirms the
+    reading of Eq. 20 and the internal consistency of the legend block. It does
+    NOT confirm which curve each legend row belongs to; that is a separate
+    question and is what legend_misalignment below is about.
+  sphere_limit: >
+    Table 1's sphere row reduces to the classical sphere effectiveness factor
+    eta = (3 phi coth 3 phi - 1)/(3 phi^2) when f_e = 1 and the external
+    resistance vanishes, which fixes phi on the V/S characteristic length of
+    Eq. 3. Reproduced numerically on the page.
+  parallelism: >
+    The four fitted slopes, in the row order of the CSV, are 1.1051, 1.0976,
+    1.1122 and 1.1311 - parallel to within 3 %, which is what a penalty scaling as
+    a power of the Thiele modulus should look like. They are NOT exactly parallel,
+    so the inter-curve gaps the page uses drift with phi (by up to 0.031 decades
+    across the digitised window) and are quoted at phi = 10.
+
+  calibration_caveat: >
+    The ordinate is the strong axis (415.5 px/decade, residuals under 0.006
+    decades). The ABSCISSA is the weak one: the four labelled verticals
+    (phi = 1, 5, 10, 50) do not sit on a common logarithmic ruler, and a
+    least-squares fit through them leaves about +0.013 decades at phi = 10, i.e.
+    that gridline is misplaced in the artwork by roughly 4 px. The 421.9 px/decade
+    recorded above is therefore about 1 % above the value the other three
+    verticals support. This matters only for the fitted SLOPES, which scale
+    linearly with it: an independent 600 dpi re-digitisation calibrating at
+    418.6 px/decade measures a mean slope of 1.1028 against these rows' 1.1115 -
+    exactly the ratio of the two calibrations, so the two traces agree and only
+    their rulers differ. The page quotes the slope residual as a range spanning
+    defensible calibrations, not as a single number. The chi_at_phi_10 positions,
+    which carry the page's finding, are unaffected: the same re-digitisation
+    reproduces them to within 0.9 %.
+
+legend_misalignment:
+  resolved: 2026-08-02
+  finding: >
+    Evaluating the paper's own chain (Table 1 sphere row, Eqs. 19-21, alpha_gs
+    -> infinity, C*_L = 1) at the legend's four L_m values reproduces only the
+    topmost curve. At phi = 10 the deviations (model - figure)/figure are +1.0 %,
+    +69.2 %, +314.3 % and +151.8 %.
+
+    Solving instead for the L_m that puts each drawn curve where it sits gives
+    0.508, 2.046, 7.061 and 10.18. Three of those are the printed legend values
+    0.50, 2.0 and 7.0 to within 2.3 % - well inside the digitisation's own ~6 %
+    uncertainty in chi - reused in a different order. Reading the four drawn
+    curves as L_m = 0.50, 2.0, 7.0 and ~10 brings the deviations at phi = 10 to
+    +1.0 %, +1.9 %, +1.6 % and +6.4 %, with nothing fitted for the first three.
+
+    The legend's second row (L_m = 1.0, f_e = 0.77) corresponds to no drawn
+    curve, and the fourth drawn curve (L_m ~ 10) has no legend row. The legend
+    block is therefore misaligned by one row against the curves from its second
+    row down.
+  maintainer_decision:
+    date: 2026-08-02
+    answer: "Option A - the shift is the explanation."
+    means: >
+      Build the page on the shifted reading, state the misalignment as a finding,
+      and show both readings so a reader can see why.
+  what_this_does_not_establish: >
+    The reconstruction fixes which L_m each DRAWN CURVE corresponds to. It cannot
+    say whether the defect is in the legend (rows attached to the wrong curves)
+    or in the plotting (curves computed for the wrong L_m values). Both produce
+    exactly the same figure, and the page claims only the former as the effect,
+    not the mechanism.
+  alternatives_tested_and_rejected: >
+    (a) A finite gas-solid Biot number rescuing the printed reading: matching each
+    curve individually at phi = 10 needs alpha_gs = 1057, 16.2, 4.6 and 9.2 - no
+    pattern, no single value, spread over a factor of 230, and all but the first
+    contradict the paper's stated "very large". (b) A corrected f_e per curve:
+    needs 0.7212, 0.8641, 0.9578, 0.9743, which CONTRADICT the f_e column printed
+    inside the figure (0.72, 0.77, 0.83, 0.94) that Eq. 20 already reproduces to
+    the printed precision - decisive on its own. It also fails on curvature: a
+    power law has a CONSTANT log-log slope, and the required values do not
+    (0.261 -> 0.149 -> 0.014), so the kindest single power law pinned to the two
+    extreme values, 0.780 L_m^0.114, misses the middle two by -9.7 % and -11.8 %.
+    (Two earlier notes in this file were wrong and are corrected here: the
+    correction to f_e was described as "growing with L_m" - it is non-monotone -
+    and the non-monotonicity of that CORRECTION was offered as the reason a power
+    law cannot work. It is not a reason: a non-monotone difference between two
+    monotone functions is ordinary, and the required f_e values themselves are
+    monotone. The curvature argument above is what actually excludes a power law.)
+
+    (c) A general argument that supersedes both, added 2026-08-02: every variant of
+    Eqs. 20-21 makes chi separable as g(L_m) h(phi), so a gap between two curves in
+    decades is log10 g(L_i)/g(L_j) whatever h is. The figure's three measured gaps
+    therefore FORCE d log g / d log L_m with nothing fitted. Read as printed they
+    demand -1.380, -2.024, -0.725 over [0.5,1], [1,2], [2,7] - not constant, so no
+    product of powers of L_m supplies it, and not even monotone. Read shifted they
+    demand -0.690, -1.120, -2.546 over [0.5,2], [2,7], [7,10] against the model's
+    -0.684, -1.122, -2.414, within 5 %. All alternatives are recomputed and printed
+    on the page.
+
+second_printed_defect: >
+  Page 8 states "The overall effectiveness factor is calculated from the
+  approximate solution for a spherical particle given in Table 2." Table 2 holds
+  the pressure-drop constants beta and gamma; the spherical solution is the third
+  row of Table 1 (page 4). Confirmed against 600 dpi renders of both pages and
+  against the notation list. Independent of the legend misalignment.
+
+review:
+  reviewed_by: "gallery maintainer"
+  date: 2026-07-29
+  verdict: "switch the page to this figure; do not digitise Figure 2"
+  findings: >
+    The maintainer chose Figure 6 over Figure 2, judged Figure 2 not worth
+    digitising given the overlap problem, and confirmed that the 12 marker
+    positions recovered from Figure 2 in the earlier attempt were themselves fine.
+    Figure 2 is to be cited rather than extracted.
+  second_review:
+    date: 2026-08-02
+    what_was_put_to_the_maintainer: >
+      A private decision artifact with Figure 6 inlined and four options,
+      asking whether the legend's L_m column is misaligned by one row against
+      the drawn curves.
+    what_was_reviewed: >
+      THE READING, not the extraction. The maintainer looked at the figure
+      alongside the reconstruction and endorsed the conclusion drawn from the
+      four fitted lines. This was NOT a marker-by-marker audit - Figure 6 has no
+      markers - and it was not a re-check of the four fits' pixel geometry. It
+      licenses the use of these four rows as the positions of the four drawn
+      curves, and the interpretation built on them.
+    answer: "Option A - the shift is the explanation."
+    changed_in_this_file: "nothing in the numeric rows; the CSV is byte-identical to the 2026-07-29 staged file."
+
+columns:
+  - {name: L_m_kg_m2_s, unit: kg m-2 s-1, description: "liquid mass velocity as PRINTED in the legend for this curve (see legend_misalignment: the shifted reading reassigns these)"}
+  - {name: f_e, unit: "-", description: "wetting efficiency printed beside the curve in the legend"}
+  - {name: slope_dlogchi_dlogphi, unit: "-", description: "fitted log-log slope of the line"}
+  - {name: chi_at_phi_10, unit: "-", description: "fitted chi at Thiele modulus 10, i.e. the line's position"}
+  - {name: phi_min, unit: "-", description: "lower end of the digitised range"}
+  - {name: phi_max, unit: "-", description: "upper end of the digitised range"}
+  - {name: fit_rms_decades, unit: decades, description: "rms residual of the straight-line fit"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced.

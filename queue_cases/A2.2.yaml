@@ -5,30 +5,46 @@ catalog_reference: Chem. Eng. Sci. 6 (1956)
 priority: P1
 tier: T0
 structures: S4
-status: needs-paper
+status: covered
+covered_by: A2.1
 reference:
   authors:
   - Wehner, J. F.
   - Wilhelm, R. H.
   year: 1956
-  container: Chemical Engineering Science 6(2) 89-98
+  container: Chemical Engineering Science 6(2) 89-93
   title_as_printed: Boundary conditions of flow reactor
+  doi: 10.1016/0009-2509(56)80014-6
+  note: 'The catalogue records 89-98. The paper''s own header reads "Chemical Engineering
+    Science, 1956, Vol. 6, pp. 89 to 93", verified on a 600 dpi render, and its last printed
+    page is 93.
+
+    '
+  page_range_note: The text layer renders the header as 'pp. 89 to 98'; read on a 600 dpi
+    render it is 'pp. 89 to 93', and the PDF holds exactly five journal pages starting at
+    89. Corrected 2026-08-02 - the pre-1980 digit-mangling trap in docs/pdf-findings.md.
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250956800146-main.pdf
   open_access: null
   checked: '2026-08-02'
   identified_by: read the paper's own first pages, not the filename
 blocker: null
-notes: null
+notes: "Absorbed into A2.1 on 2026-08-02, after both papers were read in full. The\ncomplete\
+  \ argument, including the steelman for keeping this case separate and\nwhy it fails, is\
+  \ in queue_cases/A2.1.yaml under `scope_decision`. In brief:\n\n- Wehner & Wilhelm's eq.\
+  \ (20) for the reaction section is algebraically\n  identical to Danckwerts' eq. (33) and\
+  \ they say so on p. 91, so the decisive\n  quantitative check for either page is the same\
+  \ object. Verified: independent\n  transcriptions of the two papers agree to 1.1e-16.\n\
+  - What they add is the DERIVATION of Danckwerts' conditions, which Danckwerts\n  himself\
+  \ justified only by \"Intuition suggests...\". A boundary condition and\n  its justification\
+  \ are one result.\n- Their three-section model IS built on the A2.1 page, as one pymrm domain\
+  \ with\n  piecewise diffusivity: their eqs. (19), (20), (21) and (22) are all\n  reproduced,\
+  \ their conclusion that the reaction section is invariant to both\n  end sections is tested\
+  \ over five decades of Pe_a and four of Pe_c, and their\n  derivation of df/dz(1) = 0 is\
+  \ recovered rather than imposed.\n- Their criticism of Hulburt's solution - \"not consistent\
+  \ with the limit of a\n  stirred reactor\" - is turned into a number there too: it is exactly\
+  \ the\n  naive-Dirichlet-inlet error, quantified against their own eq. (22).\n\nNothing\
+  \ in this paper is left unused, so there is no residual case here. If a\nfuture maintainer\
+  \ wants A2.2 back as a page, the only material not already on\nA2.1 is the non-steady-state\
+  \ discussion in their Appendix (contributed by\nAcrivos), which neither paper solves.\n"
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).

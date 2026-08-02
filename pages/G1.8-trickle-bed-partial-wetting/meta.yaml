@@ -1,0 +1,107 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+# NOTE for the integrator: G1.8 ALREADY EXISTS in models.yaml as `status: planned`.
+# Upgrade that record in place (see ../models_entry.yaml); do not append a second one.
+id: G1.8
+slug: trickle-bed-partial-wetting
+title: "Trickle-bed reactor with partial catalyst wetting"
+section: G
+status: published
+tier: T1
+priority: P1
+structures: [S8]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 9
+datasets:
+  - herskowitz-smith-1983-fig6.csv
+
+validation:
+  - Eq. 20 reproduces all four wetting efficiencies printed inside Figure 6 (0.718/0.770/0.825/0.935 against 0.72/0.77/0.83/0.94), and mis-reading its coefficient or exponent moves that check by 25x to 436x
+  - the pymrm finite-volume sphere reproduces Table 1's sphere row to 3.1e-4 over the whole digitised phi window, with observed grid order rising from 2.1 to 2.8 as the surface layer resolves; wrong nu, a wrong length scale in the Robin condition and an under-resolved grid all move it by 1e3 to 3e5
+  - Table 1's sphere row reduces to the classical sphere effectiveness factor at f_e = 1 with no external resistance, which is what fixes phi on the V/S length
+  - the legend misalignment reconstructed from the four curve positions (returning 0.508/2.046/7.061/10.18 against the printed 0.50/2.0/7.0), and the same four positions re-expressed as inter-curve gaps in decades (0.415/0.609/0.394 at phi = 10 against 0.412/0.611/0.374 shifted, 0.191/0.221/0.611 as printed) - NOT a second independent witness, and labelled as such on the page: the gaps are the positions with one degree of freedom (a common multiplicative offset in chi) removed, they need the ordinate's decades-per-pixel, and they drift by up to 0.031 decades across the window
+  - because chi = g(L_m) h(phi) separates, the figure's own gaps force d log g / d log L_m with no model at all - as printed they demand -1.380/-2.024/-0.725, non-monotone and so unreachable by any product of powers of L_m; shifted they demand -0.690/-1.120/-2.546 against the model's -0.684/-1.122/-2.414, within 5 %. This kills every reparameterisation at once, not just the two fitted rivals
+  - the two alternative explanations fitted and rejected on their own terms - a per-curve alpha_gs needing 1057/16.2/4.6/9.2 (spread 230x), and a per-curve f_e whose required values contradict the f_e column printed inside the figure and whose log-log slope is not constant (0.261 -> 0.149 -> 0.014), so that the kindest single power law 0.780 L^0.114 misses the middle two by -9.7 % and -11.8 %
+  - check 4's declared limit measured rather than asserted: four injected defects stay inside its 3.8-11.4 % tolerance and one (Eq. 21 6.91 -> 7.91, 1.72 %) beats the 2.30 % baseline, because at L_m ~ 1 the 1.05 L^0.3 term carries 87 % of 1/alpha_gLs; it is also weak against a +/-5 % ordinate-scale error (6.3 % / 10.6 %)
+  - the alpha_gs -> infinity assumption swept rather than assumed, showing the result is conditional on it exactly (alpha_gs = 1000 still costs 3.0 % at phi = 30)
+  - the collapse identity kept but LABELLED powerless, and measured to be so - corrupting the sphere term leaves it at 1e-15 while the pymrm comparison moves to 1.2
+  - the reaction order swept beyond where Table 1 exists (m = 1, 1.5, 2)
+
+adds: >
+  For Figure 6 itself, nothing - the figure is an evaluation of a closed form the
+  paper prints, and the page says so. What the pymrm route adds is (i) an
+  independent check on that transcription, since the finite-volume solve of
+  Eq. 3 with the Robin conditions 4a/4b shares no code with Table 1's algebra and
+  moves by 1e3-1e5 under a wrong geometry or a wrong length scale; (ii) reaction
+  orders the closed form cannot reach - at m = 2 the partial-wetting gain is
+  13 % larger than first order at phi = 2 and 13 % smaller at phi = 45, so
+  Figure 6 overstates the gain for a second-order hydrogenation in the regime it
+  is most often quoted for; and (iii) the paper's stated assumptions as
+  arguments rather than hard-wired limits, which is what makes the alpha_gs
+  audit three lines. It does NOT lift the paper's Eq. 6 superposition, which
+  would need a 2D axisymmetric sphere with two boundary patches, and the page
+  says that too.
+
+agreement: >
+  Deviation is (model - figure)/figure throughout. Read as printed, the paper's
+  own chain reproduces one of Figure 6's four curves (+1.0 % at phi = 10) and
+  misses the other three by +69 %, +314 % and +152 %. Read with the legend block
+  offset by one row from its second entry down - so the drawn curves are
+  L_m = 0.50, 2.0, 7.0 and ~10 - all four close to +1.0 %, +1.9 %, +1.6 % and
+  +6.4 % at phi = 10, and to within 8 % over phi = 2-30 for the three curves that
+  reuse printed L_m values (15 % including the fourth at the round L_m = 10,
+  11 % at its reconstructed 10.18). Nothing is fitted for those three curves:
+  the reconstruction returns the paper's own printed 0.50, 2.0 and 7.0 to within
+  1.6 %, 2.3 % and 0.9 %, all inside the digitisation's own resolving power of
+  11 %, 8 % and 4 % in L_m. One residual is reported as UNEXPLAINED: the four
+  drawn lines measure log-log slopes 1.098-1.131 (mean 1.111) against the model's
+  1.077 over the same window, and L_m cannot produce that because the chain
+  factorises into an L_m-dependent prefactor times a phi-dependent shape. The
+  SIGN of that gap is robust; the SIZE is not, and the page quotes it as a range.
+  The dominant uncertainty is the abscissa calibration rather than the fit rms -
+  the four labelled phi verticals do not sit on a common log ruler (phi = 10 is
+  about 4 px off) - so an independent 600 dpi re-digitisation measures a mean
+  slope of 1.1028 against this CSV's 1.1115, exactly the ratio of the two
+  calibrations, and across defensible calibrations the gap spans +0.007 to +0.046
+  (+3 % to +19 % end to end) against the +0.035 / +14 % of this CSV alone. The
+  pymrm solve reproduces Table 1's sphere row to 3.1e-4.
+
+caveats: >
+  TIER 6, and never experimental validation. Figure 6 carries no data points at
+  all - its four lines are the authors' own computed model output - so
+  reproducing them tests a transcription and a chain of algebra, not a model
+  against nature. The dataset holds four FITTED STRAIGHT LINES, not traced
+  points, so every deviation quoted away from phi = 10 is model against a fitted
+  line; the model's own best straight-line fit over the same window leaves an rms
+  of 0.019 decades against the digitisation's 0.024-0.029, so the reduction to a
+  straight line discards curvature of the same size as the model's and the
+  dataset cannot distinguish the two. The maintainer's 2026-08-02 review was of
+  the READING - the figure alongside the reconstruction - not a marker-by-marker
+  audit, which this figure does not admit. The finding fixes which L_m each drawn
+  curve corresponds to; it cannot say whether the slip is in the legend or in the
+  plotting, and the page claims only the effect, not the mechanism. L_m ~ 10 for
+  the fourth curve is a labelled reconstruction (10.18 rounded), the only number
+  on the page not printed somewhere in the paper. Everything is conditional on
+  alpha_gs = infinity exactly: at phi = 30 even alpha_gs = 1000 moves chi by
+  3.0 %. The paper's Eq. 6 superposition of two whole-surface particles is
+  assumed by every route on the page and tested by none of them; so are the
+  constants inside Eq. 21, which come from the Goto & Smith and Specchia
+  correlations, neither of which is on disk. At m = 1 the pellet problem is
+  linear, so `maxfev = 1` is not a meaningful defect and the pymrm/Table 1
+  comparison's power against a non-converged solve is untested - the printed
+  Newton residual guards that instead. The reconstruction check (check 4) is
+  structurally blind to the 6.91 L^0.6 term of Eq. 21, which carries only 13 % of
+  1/alpha_gLs at L_m ~ 1: four injected corruptions of it stay inside the check's
+  own 3.8-11.4 % tolerance and one (6.91 -> 7.91) beats the 2.30 % baseline. The
+  curve-spacing test is NOT an independent witness - it is the same four
+  positions with a common multiplicative offset in chi removed, it needs the
+  ordinate's decades-per-pixel, and its value is what rules out an ordinate-scale
+  error, which check 4 also cannot reject. The page also reports a second printed
+  defect independent of the legend: page 8 cites "Table 2" for the spherical
+  solution, which is in Table 1.
