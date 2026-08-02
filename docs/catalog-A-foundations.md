@@ -28,7 +28,11 @@ Legend: **S** = structure code, **T** = tier, **P** = build priority
 **Gallery angle for A1.** One page overlaying Ergun, Kozeny–Carman,
 Forchheimer, and the Eisfeld wall correction against a single Δp dataset, with
 the wall-effect regime highlighted, is far more useful than four pages. Ergun's
-original data are tabulated in the 1952 paper and are digitisable.
+original data are **not** tabulated: the 1952 paper contains no tables at all,
+and no text layer either (`pdftotext` returns four bytes for four pages), so the
+640 experiments survive only as scatter in its figures. The dataset on the built
+page was digitised from Figures 5 and 7 off 600 dpi renders, as was every
+constant quoted from the paper.
 
 ## A2 — Dispersion and residence time
 

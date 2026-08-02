@@ -149,21 +149,45 @@ models:
 
   - id: A1.1
     slug: ergun-pressure-drop
-    title: "Ergun equation for packed-bed pressure drop"
+    title: "Four packed-bed pressure-drop correlations, against the data Ergun fitted"
+    description: >
+      The two constants everyone quotes, 150 and 1.75, fitted in 1952 to 640
+      experiments that survive only as scatter in the figures of a scan with no text
+      layer and no tables. 244 of those markers are recovered and the constants are
+      refitted from them, coming back to 1.3 % and 3.0 % from three sources
+      calibrated separately - and on the same axes Kozeny-Carman, Darcy-Forchheimer
+      and the Eisfeld-Schnitzlein wall correction become a quantitative comparison
+      instead of a qualitative ranking. The two most-used correlations in the field
+      disagree by a quarter, and about the turbulent constant, not the famous 150.
     section: A
-    status: planned
+    status: published
+    page: pages/A1.1-ergun-pressure-drop/
     tier: T0
     priority: P1
     structures: [S3]
     phases: [gas-solid]
+    covers: [A1.1, A1.2, A1.3, A1.4]
     reference:
       authors: ["Ergun, S."]
       year: 1952
-      container: "Chemical Engineering Progress 48 89–94"
-    note: >
-      Build as a comparison page against Kozeny–Carman, Forchheimer and the
-      Eisfeld–Schnitzlein wall correction on one dataset.
-    related: [A1.2, A1.3, A1.4]
+      container: "Chemical Engineering Progress 48(2) 89–94"
+      doi: null
+    also:
+      authors: ["Eisfeld, B.", "Schnitzlein, K."]
+      year: 2001
+      container: "Chemical Engineering Science 56(14) 4321–4329"
+      doi: 10.1016/S0009-2509(00)00533-9
+    predicts:
+      - packed-bed friction factor and pressure gradient, viscous and inertial terms
+      - the tube-to-particle wall correction and the sign change it undergoes with flow regime
+      - permeability and inertial coefficient of a Darcy-Forchheimer medium, fitted
+      - outlet pressure of an isothermal compressible bed
+    # No pymrm operator is used and the page says so: these are algebraic closures,
+    # and the compressible-bed integration at the end is a closed form checked
+    # against an independent quadrature.
+    pymrm_api: []
+    data: {tier: 4, method: digitised, status: complete}
+    related: [A1.5, A1.6, A2.3, B1.1, E2.1]
 
   - id: A2.3
     slug: taylor-aris-dispersion
@@ -793,6 +817,37 @@ models:
     related: [F3.2, F3.3, F3.5, B1.1, A4.9]
 
   # ---------------------------------------------------------------- section G
+  - id: G1.7
+    slug: wammes-high-pressure-trickle-bed
+    title: "Wammes–Westerterp high-pressure trickle-bed hydrodynamics"
+    description: >
+      Trickle-bed hydrodynamics at up to 7.5 MPa: the pressure-gradient
+      correlation contains the liquid hold-up and the hold-up correlation
+      contains the pressure gradient, so they only predict anything as a coupled
+      pair - closed here against the figures they were derived from, with the
+      gas-density-not-pressure claim reduced to a matched-pair number, plus the
+      plug-flow CO2-absorption model behind the paper's interfacial-area
+      measurements as a pymrm S3 solve.
+    section: G
+    status: published
+    page: pages/G1.7-wammes-high-pressure-trickle-bed/
+    tier: T1
+    priority: P1
+    structures: [S3]
+    phases: [gas-liquid-solid]
+    predicts:
+      - total external liquid hold-up under trickle flow at elevated gas density
+      - two-phase pressure gradient
+      - gas-phase CO2 conversion of the chemically enhanced absorption experiment
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    reference:
+      authors: ["Wammes, W. J. A.", "Westerterp, K. R."]
+      year: 1991
+      container: "Chemical Engineering & Technology 14(6) 406–413"
+      doi: 10.1002/ceat.270140608
+    data: {tier: 4, method: digitised, status: complete}
+    related: [G1.8, F1.4, F2.3, F3.1]
+
   - id: G1.8
     slug: trickle-bed-partial-wetting
     title: "Trickle-bed reactor with partial catalyst wetting"

@@ -1,0 +1,105 @@
+dataset_id: wammes-1991-fig6
+title: Pressure gradient vs gas density (Figure 6)
+status: complete
+
+source:
+  authors:
+    - "Wammes, W. J. A."
+    - "Westerterp, K. R."
+  year: 1991
+  container: "Chemical Engineering & Technology 14(6) 406-413"
+  doi: 10.1002/ceat.270140608
+  access: "open access via University of Twente institutional repository (ris.utwente.nl)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  system: "ethanol - 3 mm glass spheres"
+  bed_porosity: 0.39
+  bed_height_m: 2.70
+  column_inner_diameter_m: 0.051
+  temperature_K: 293
+  gas: >
+    Nitrogen or helium; the figure does not label which gas per point. Points
+    with rho_g < 1.15 kg/m3 must be helium (nitrogen would need sub-atmospheric
+    pressure); points with rho_g > 12 kg/m3 must be nitrogen (helium would need
+    more than the 7.5 MPa ceiling, Table 2's rho = 0.16 P); the two middle
+    density clusters are ambiguous and carry assumed_gas = ambiguous. The
+    ambiguity only affects the gas viscosity used in the model. On these rows
+    the He/N2 viscosity ratio reaches 1.146, but it enters as Re_g^-0.37, and
+    flipping all eight rows to the other gas is measured on the page: it moves
+    dP/L by at most 3.9 % per point and the overall bias by +1.5 points.
+  note: >
+    The porosity 0.39 is printed in Section 2.1 for the 0.53 m absorption bed of
+    the same spherical packing; the paper does not separately state the porosity
+    of the 2.70 m hydrodynamic bed. Same packing material is assumed. The
+    sphere diameter is printed as 3 +/- 0.5 mm.
+
+acquisition:
+  method: digitised
+  figure: "Figure 6, journal page 410"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage connected components"
+  procedure: >
+    Log-log axes calibrated from the printed decade tick marks (x decades at
+    rho_g = 0.1, 1, 10, 100 kg/m3; y decades at dP/L = 1e3..1e6 N/m3;
+    piecewise-linear in log space between measured decade centres). The minor
+    tick positions reproduce the calibration to within 3 px, confirming the log
+    placement. Twenty markers in four series (open/filled circle/square, series
+    identity from the printed legend); 16 found as isolated connected
+    components, plus one side-by-side and one stacked filled-square +
+    open-circle pair. Open markers located by interior-hole centroid; filled
+    markers by centroid after binary erosion (6-7 iterations) removes attached
+    dotted-line pixels; merged filled squares by eroded centroid of the
+    square's core. Marker shape classification by corner-ink fraction
+    (squares >= 0.83, circles <= 0.67) agrees with the visible curve
+    memberships for all 20 points.
+  operator: "Claude (Fable 5), builder agent"
+  date: 2026-07-31
+  estimated_error: >
+    +/- 3 px calibration plus +/- 2-4 px marker placement on 470 px (x) and
+    325 px (y) decades: about +/- 2 % in rho_g and +/- 3 % in dP/L; the two
+    markers recovered from merged pairs are good to about +/- 5 %.
+
+review:
+  reviewed_by: "gallery maintainer, against the numbered overlay queue_cases/G1.7/review/fig6_overlay.png"
+  date: 2026-08-02
+  verdict: "confirmed - 'the overlays look very good'; the extraction is approved as it stands"
+  findings: >
+    All 20 numbered crosses sit on a real data marker, one cross per marker,
+    with none missed. The corner-ink shape classification is confirmed
+    visually: the four series (open/filled circle/square) are correctly told
+    apart, so the (v_l, v_g) legend values attached to each row are the right
+    ones.
+
+    The two touching filled-square + open-circle pairs - the leftmost cluster
+    near rho_g = 0.45 kg/m3 and the pair near rho_g = 1.6 kg/m3 (crosses 17/18
+    and 19/20 on the overlay) - were checked specifically at the maintainer's
+    request, being the only four markers recovered from merged components.
+    They are confirmed: each pair is split correctly between its open circle
+    and its filled square, and neither centre sits on its neighbour. Those four
+    rows carry `extraction_note` values ending "of merged pair" and keep their
+    stated +/- 5 % uncertainty; no row's value changed as a result of the
+    review.
+
+    The review does NOT resolve the gas-identity ambiguity, and was not asked
+    to: the figure itself carries no per-point gas label, so the eight rows
+    marked `assumed_gas = ambiguous` remain ambiguous. That is a limitation of
+    the source figure, not of the extraction, and it enters the model only
+    through the gas viscosity (under 4 % in dP/L - see `conditions.gas`).
+  changes_made: none - the CSV is unchanged from the reviewed version
+
+columns:
+  - {name: marker, unit: "-", description: "marker shape in the source figure (series identity)"}
+  - {name: v_l_m_s, unit: m/s, description: "superficial liquid velocity, from the printed legend"}
+  - {name: v_g_m_s, unit: m/s, description: "superficial gas velocity, from the printed legend"}
+  - {name: rho_g_kg_m3, unit: kg/m3, description: "gas density, digitised (log axis)"}
+  - {name: dP_L_N_m3, unit: N/m3, description: "two-phase pressure gradient, digitised (log axis)"}
+  - {name: assumed_gas, unit: "-", description: "helium / nitrogen where density forces it, else ambiguous"}
+  - {name: extraction_note, unit: "-", description: "how the marker centre was located"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The figure image is NOT reproduced; the points are re-plotted
+  from the extracted coordinates.

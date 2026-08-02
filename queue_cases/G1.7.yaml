@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Sci. (1991)
 priority: P1
 tier: T1
 structures: S3
-status: needs-input
+status: published
 reference:
   authors:
   - Wammes, W. J. A.
@@ -27,7 +27,31 @@ identity_note: >
   carries the validation figures, so it is the right paper for this case; the
   CES companion is NOT needed. models_entry.yaml, meta.yaml and the page all
   record the actual CET reference and note the catalogue's original citation.
-blocker:
+blocker: null
+review_answered:
+  date: '2026-08-02'
+  by: gallery maintainer
+  answer: 'The overlays look very good.'
+  applied: >
+    Both overlays confirmed - the 16 Fig. 7 crosses and the 20 Fig. 6 crosses,
+    including the four split touching pairs that were flagged for specific
+    attention (fig7 13/14 and 15/16; fig6 17/18 and 19/20). Verdict recorded in
+    the review blocks of both sidecars, which move from pending-review to
+    complete; models_entry data.status to complete; page/meta.yaml to published
+    and its caveats updated; page prose in build_page.py updated in "The data".
+    No CSV row changed, so the agreement numbers are unchanged. Two accuracy
+    fixes made while there, both in the matched-pair gas-density section: the
+    two series' v_l values are the same NOMINAL settings, not bit-identical
+    digitised values, and the mismatch and what it is worth are now printed
+    rather than asserted; and the model overpredicts the size of the density
+    effect (13.1 % against a measured 9.2 %), which the prose now states
+    instead of implying agreement. Notebook regenerated and executed clean.
+  outstanding_for_integrator: >
+    Move queue_cases/G1.7/page/ to pages/G1.7-wammes-high-pressure-trickle-bed/,
+    APPEND models_entry.yaml to section G of models.yaml (G1.7 has no record
+    there yet), and delete queue_cases/G1.7/review/, which holds copyrighted
+    page images and is git-ignored.
+former_blocker:
   kind: needs-input
   question: >
     Figure digitisation review (the only human gate left): do the numbered
@@ -90,5 +114,5 @@ notes: >
   equal to the printed short-bed value (the +10 % pressure bias sits inside
   that uncertainty and the page shows the sensitivity); Fig. 6 gas identity
   ambiguous for the two middle density clusters (<= 4 % effect via viscosity).
-updated: '2026-07-31'
+updated: '2026-08-02'
 doi_source: verified-against-page-render

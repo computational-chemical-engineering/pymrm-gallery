@@ -1,0 +1,95 @@
+dataset_id: wammes-1991-fig7
+title: Dynamic liquid hold-up vs superficial liquid velocity (Figure 7)
+status: complete
+
+source:
+  authors:
+    - "Wammes, W. J. A."
+    - "Westerterp, K. R."
+  year: 1991
+  container: "Chemical Engineering & Technology 14(6) 406-413"
+  doi: 10.1002/ceat.270140608
+  access: "open access via University of Twente institutional repository (ris.utwente.nl)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  system: "demineralised water - 3.2 x 3.2 mm porous alumina cylinders"
+  bed_porosity: 0.43
+  bed_height_m: 2.70
+  column_inner_diameter_m: 0.051
+  temperature_K: 293
+  gas: >
+    Nitrogen at rho_g = 52.2 kg/m3 (P about 4.5 MPa via Table 2's rho = 1.15 P).
+    The rho_g = 10.4 kg/m3 series could be nitrogen at about 0.9 MPa or helium
+    at about 6.5 MPa; the paper's point is that it does not matter. Gas
+    viscosity is interpolated in pressure between Table 2's two nitrogen values,
+    and enters the coupled solve only through Re_g^-0.37.
+  note: >
+    The porosity 0.43 is printed in Section 2.1 for the 0.53 m absorption bed of
+    the same cylindrical packing; the paper does not separately state the
+    porosity of the 2.70 m hydrodynamic bed. Same packing material is assumed.
+
+acquisition:
+  method: digitised
+  figure: "Figure 7, journal page 411"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage connected components"
+  procedure: >
+    Linear axes calibrated from the printed tick marks (five x ticks at
+    v_l*10^3 = 0..16, seven y ticks at beta_dyn = 0.0..0.6, piecewise-linear
+    interpolation between measured tick centres; tick-position residuals against
+    a global linear fit are within 3 px, i.e. 0.03e-3 m/s and 0.002 in beta).
+    The four series differ by marker shape (open/filled circle/square) and are
+    well separated except for two filled-square + open-circle pairs at
+    v_l = 2e-3 and 4e-3 m/s that touch. Open markers were located by the
+    centroid of their interior white hole, which is insensitive to attached
+    dotted-line pixels; filled markers by the component centroid. For the two
+    merged pairs the open circle was located by its hole centroid and the
+    filled square by its top edge plus half the nominal 35 px marker height,
+    with x taken from the mean of the other markers in the same column
+    (columns are vertical to within 1.5 px).
+  operator: "Claude (Fable 5), builder agent"
+  date: 2026-07-31
+  estimated_error: >
+    +/- 3 px from calibration plus +/- 2 px marker placement: about
+    +/- 0.05e-3 m/s in v_l and +/- 0.003 in beta_dyn; the two reconstructed
+    filled-square centres in the merged pairs are good to about +/- 4 px
+    (+/- 0.0025 in beta_dyn).
+
+review:
+  reviewed_by: "gallery maintainer, against the numbered overlay queue_cases/G1.7/review/fig7_overlay.png"
+  date: 2026-08-02
+  verdict: "confirmed - 'the overlays look very good'; the extraction is approved as it stands"
+  findings: >
+    All 16 numbered crosses sit on a real data marker, one cross per marker,
+    with none missed and none on a dotted guide line, an axis tick or a legend
+    glyph. The four series are correctly told apart by shape (open/filled
+    circle/square), so the (v_g, rho_g) legend values attached to each row are
+    the right ones.
+
+    The two touching filled-square + open-circle pairs, at v_l = 2e-3 and
+    4e-3 m/s, were checked specifically at the maintainer's request, since
+    those are the only four markers whose centres were reconstructed rather
+    than measured directly (crosses 13/14 and 15/16 on the overlay). They are
+    confirmed: the split puts one cross on the open circle and one on the
+    filled square in each pair, and neither centre has drifted onto its
+    neighbour. Those four rows are the ones carrying `extraction_note` values
+    "hole centroid of merged pair" and "top-of-merged pair"; their stated
+    +/- 4 px uncertainty stands, and no row's value changed as a result of the
+    review.
+  changes_made: none - the CSV is unchanged from the reviewed version
+
+columns:
+  - {name: marker, unit: "-", description: "marker shape in the source figure (series identity)"}
+  - {name: v_g_m_s, unit: m/s, description: "superficial gas velocity, from the printed legend"}
+  - {name: rho_g_kg_m3, unit: kg/m3, description: "gas density, from the printed legend"}
+  - {name: v_l_m_s, unit: m/s, description: "superficial liquid velocity, digitised"}
+  - {name: beta_dyn, unit: "-", description: "dynamic liquid hold-up based on void volume, digitised"}
+  - {name: extraction_note, unit: "-", description: "how the marker centre was located"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The figure image is NOT reproduced; the points are re-plotted
+  from the extracted coordinates.

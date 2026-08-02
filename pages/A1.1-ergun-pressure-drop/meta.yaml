@@ -1,0 +1,109 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A1.1
+slug: ergun-pressure-drop
+title: "Four packed-bed pressure-drop correlations, against the data Ergun fitted"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+covers:
+  - A1.1   # Ergun equation
+  - A1.2   # Kozeny-Carman
+  - A1.3   # Darcy-Forchheimer
+  - A1.4   # Eisfeld-Schnitzlein wall correction
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 6
+datasets:
+  - ergun-1952-fig7-markers
+  - ergun-1952-fig5-present-markers
+  - ergun-1952-parameters
+  - eisfeld-2001-wall-correction
+  - eisfeld-2001-table1-sources
+
+validation:
+  - "refitting Ergun's own two constants from 244 markers digitised out of his Figure 7 gives k1 = 151.9 and k2 = 1.697 against the printed 150 and 1.75, i.e. +1.3 % and -3.0 %"
+  - "the three panels are three different experimental sources with three independently fitted axis calibrations, and fitted separately they give k1 = 146.6, 154.6, 151.0 - a spread of +/-2.7 % about their mean"
+  - "the round trip cannot be circular: detection keys on the enclosed white interior of an open circle, a drawn line has none, and the half of the top panel that contains the printed eq. (14b) line and no markers returns zero points"
+  - "Figures 5 and 7 are the same runs on two ordinates (stated by Ergun, journal page 93); digitised independently with separate calibrations they agree on binned median f_v to 2.9 % with no trend"
+  - "the grid ladder fit reproduces the printed graph-paper lines to 1.3 % or better, and the four independently calibrated panels agree on the decade width to 1.7 %"
+  - "the line Ergun labels Kozeny-Carman on Fig. 6 measures f_v = 149.2 +/- 0.5, i.e. his own k1 = 150 (-0.5 %) and not Carman's 180 (-17.1 %)"
+  - "both analytic limits are exact by construction: f_v -> k1 as Re -> 0 (Kozeny-Carman form) and f_k -> k2 as Re -> infinity (Burke-Plummer form); Eisfeld's eq. (3) reduces to 154 + 1.321178 x as D/dp -> infinity, against K1 = 154 and 1/k2^2 = 1.321178"
+  - "the compressible-bed integration is done two independent ways - the closed form p = sqrt(p_in^2 - 2Kz) and a direct solve_ivp of dp/dz = -K/p - agreeing to 1.7e-14"
+
+adds: >
+  Ergun's 150 and 1.75 are quoted everywhere and the 640 experiments behind them
+  have been effectively unreadable since 1952: the paper is a pure scan with no
+  text layer, no tables, and its data survives only as scatter in four figures.
+  This page recovers 244 of those points and gets the constants back to 1.3 % and
+  3.0 %, from three sources fitted separately.
+
+  On top of that it makes the four-correlation comparison quantitative instead of
+  qualitative. Kozeny-Carman is 7.5 % high at N_Re/(1-eps) = 10, 45 % low at 100
+  and a factor of ten low at 1000. Eisfeld & Schnitzlein's refitted infinite-bed
+  form sits 2.7 % above Ergun's viscous constant and 25 % below his inertial one -
+  the disagreement between the two most-used correlations in the field is about
+  the turbulent constant, not the famous 150. And the wall correction exceeds the
+  gap between any two of them once D/dp < 10, which is where Morcom's packings
+  sit: 3.7 to 10.6 for his spheres, tablets and nodules, a range Ergun explicitly
+  discarded from Burke & Plummer's data and kept in Morcom's.
+
+  One small correction to the folklore, possible only because the figure was
+  measured rather than read about: the line labelled "Kozeny-Carman" on Ergun's
+  Figure 6 is drawn at f_v = 149, i.e. at his own 150, not at Carman's 180.
+
+agreement: >
+  Experimental, against the data the correlation was fitted to. Ergun's eq. (13c)
+  describes the 244 recovered markers with a bias of +0.35 %, a mean absolute
+  deviation of 5.16 % and an rms of 7.13 %. Refitting the two constants freely
+  (which is what Darcy-Forchheimer is) improves that only to 6.99 % rms, and moves
+  k1 and k2 by 1.3 % and 3.0 % - the equation is at its own optimum on its own
+  data. For scale, Eisfeld & Schnitzlein measure a relative rms of 19.05 % for the
+  same equation over 2391 points from twelve other laboratories; the factor of 2.7
+  is the price of extrapolating a fit and is the honest error bar for design.
+
+caveats: >
+  The digitisation was reviewed by the maintainer against the numbered overlays
+  on 2026-08-02 and approved: the ringed centres are on real markers, including
+  in the dense chain where markers merge into the drawn eq. (14b) line, and no
+  ring is on something that is not a marker. A few markers per panel were
+  missed, and the dataset carries that as a stated limitation rather than a
+  footnote - see limitations.recall in
+  data/ergun-1952-fig7-markers.meta.yaml.
+
+  Incomplete recall is the dataset's main limitation. The 244 points are not
+  Ergun's 640: a marker is detected by the enclosed white region inside its
+  ring, so where markers overlap into a solid blob there is no interior left to
+  find, and the low-Reynolds half of the "Present investigation" panel is
+  largely such a chain; Figures 6 and 8 carry further sources (Oman & Watson)
+  that were not attempted. It affects precision and any count - the number of
+  markers in a region is not the number of experiments Ergun ran there, and the
+  panel-level k2 for the present-investigation panel is separately poorly
+  determined because its markers stop at N_Re/(1-eps) = 136. It does not affect
+  the calibration, the coordinates of the recovered markers, or the central
+  values of the fits: what was reported is a few scattered misses, and random
+  misses cost precision without moving a fit. A systematic loss would bias it,
+  and would have to be common to three panels calibrated independently to
+  survive the +/-3 % agreement between them; the one mechanism that could
+  produce it - a series drawn with crosses or triangles, which enclose nothing -
+  was excluded by direct inspection before extraction.
+
+  D/dp is attached to sources, never to points: Ergun's axes carry no such term,
+  so the wall-effect regime is identified from Eisfeld & Schnitzlein's Table 1
+  re-cataloguing of the same primary references, and the two extractions need not
+  contain the same runs. It follows that the wall correction is evaluated and
+  compared on this page but NOT validated - that would need the D/dp of each
+  individual run, which no source on this page provides.
+
+  No pymrm operator appears. These are algebraic closures and the page says so;
+  the compressible-bed integration at the end is closed-form plus an independent
+  quadrature, and is there to show what the differences cost in a design number,
+  not to manufacture a discretisation.

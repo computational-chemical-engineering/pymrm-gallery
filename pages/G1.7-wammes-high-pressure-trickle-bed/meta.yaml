@@ -1,0 +1,80 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: G1.7
+slug: wammes-high-pressure-trickle-bed
+title: "Wammes–Westerterp high-pressure trickle-bed hydrodynamics"
+section: G
+status: published         # figure review answered and recorded 2026-08-02
+tier: T1
+priority: P1
+structures: [S3]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 5
+datasets:
+  - wammes-1991-fig7.csv
+  - wammes-1991-fig6.csv
+  - wammes-1991-parameters.csv
+
+validation:
+  - Table 2's gas-density coefficients recomputed from the ideal gas law at 293 K (N2 -0.0%, He +2.7%), and the paper's He-7.0-MPa == N2-1.0-MPa density-equivalence argument reproduced
+  - the printed fitted-range caps recomputed from the printed operating envelope (Ga_l of water on 3.2 mm packing IS the 0.32e6 cap to 0.5%; Re_l at v_l,max = 51 vs cap 55)
+  - the Eq. (7)/(8) prefactor discrepancy quantified (factor 155 x 6^-0.37 = 80) and the implemented friction factor shown to reproduce Eq. (8) as an identity
+  - the pymrm S3 plug-flow solve of Eqs. (1)-(2) against the paper's own closed form Eq. (3), with observed first-order grid convergence and an a_gl round trip
+  - coupled Eqs. (8)+(9) against 16 digitised Fig. 7 hold-up points, deviations compared with the paper's own 8% mean relative error
+  - coupled Eqs. (8)+(9) against 20 digitised Fig. 6 pressure-gradient points, compared with the paper's own 12%, with in-range/out-of-range Re_g split and a porosity sensitivity sweep
+  - the gas-density claim tested on the one properly matched pair in the data (two series sharing v_g and the same four nominal v_l settings, differing only 5x in rho_g) - measured shift 9.2%, predicted 13.1%, i.e. the mechanism is confirmed in sign and order of magnitude and overpredicted in size
+  - the a_s-per-bed-volume convention in Eq. (9) confirmed against the data (the alternative reading is off by 1.44x)
+
+adds: >
+  The paper states that its pressure-gradient correlation (which contains the
+  hold-up) and its hold-up correlation (which contains the pressure gradient)
+  "can be" combined to predict both quantities from operating conditions, but
+  never shows the closed loop. This page closes it - 36 operating points solved
+  simultaneously with NumJac + newton - and shows the coupled pair reproduces
+  the paper's hold-up figure to 2.9% and its pressure-gradient figure to ~10%
+  with nothing fitted. The gas-density mechanism becomes a matched-pair number
+  that can disagree, and mildly does: a 5x density change moves the measured
+  hold-up by 9.2%, while routing the whole effect through the pressure gradient
+  - which is what Eq. (9) does - predicts 13.1%. The plug-flow CO2-absorption model
+  behind the paper's interfacial-area measurements is discretised with pymrm
+  operators and converges at first order onto the paper's own closed form.
+
+agreement: >
+  Deviation is (model - measured)/measured throughout. The coupled pair
+  reproduces the 16 digitised Fig. 7 dynamic-hold-up points with mean absolute
+  deviation 2.9% (bias -2.0%, worst 6.8%) against the paper's own stated 8%
+  mean relative error for Eq. (9), and the 20 digitised Fig. 6
+  pressure-gradient points with mean absolute deviation 10.4% (bias +10.3%;
+  8.9% over the 12 points inside Eq. 8's fitted Reynolds range) against the
+  paper's stated 12%. Nothing is fitted anywhere. The systematic +10% pressure
+  bias is within the porosity uncertainty of the tall bed, whose value is not
+  printed in this paper: the bias vanishes at eps = 0.3987, i.e. under +0.01 on
+  the printed 0.39, and +0.02 overshoots to -11.8%. That is a sensitivity, not
+  a fit - the page keeps the printed 0.39 and says so.
+
+caveats: >
+  The measured points are the same experiments the correlations were fitted to,
+  so this is a reproduction test on the correlations' own data - it validates
+  the transcription, the closure and the printed constants, not the
+  correlations' predictive power on new systems. Both figures are digitised
+  (tier 4); the maintainer reviewed both numbered overlays on 2026-08-02 and
+  confirmed them - every cross on a real marker, one per marker, none missed,
+  the four series correctly told apart by shape, and the four reconstructed
+  centres in the touching pairs checked individually - so no CSV row changed.
+  The bed porosities (0.43/0.39) are printed for the short absorption
+  bed and assumed for the 2.70 m hydrodynamic bed (the page prints the
+  porosity that would zero the pressure bias, 0.3987, and keeps 0.39); the sphere diameter is
+  3 +/- 0.5 mm; Fig. 6 does not say which gas each point used (density forces
+  helium below 1.15 kg/m3 and nitrogen above 12; the rest affects only the gas
+  viscosity, under 4% in dP/L). Eq. (7) as printed lacks the prefactor that
+  Eq. (8) carries; the page implements Eq. (8) and documents the discrepancy.
+  The one Fig. 7 point below beta_t = 0.25 and the four above Re_g = 5000 are
+  mild extrapolations of Eq. (8), reported as such. The correlations are
+  algebra; pymrm's operators enter only through the S3 absorption model, and
+  the page says so.
