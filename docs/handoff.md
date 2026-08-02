@@ -18,24 +18,38 @@ table built to guard against it* (`A3.4`, `D2.1`).
 34 page directories, 35 published catalog entries, both CI workflows green.
 (The two counts differ because `B1.1` covers `B1.5` and `A2.1` covers `A2.2`.)
 
-### Added 2026-07-31/08-01
+### Added 2026-07-31 to 08-02 — twenty pages
 
 | Page | What it shows | Validation |
 |---|---|---|
-| `A4.2` Maxwell–Stefan vs Fick | Two bookkeepings of one physics; the scalar closure fails *structurally* | Two worked matrix examples; MS invariant to species ordering to 3.9e-16 where Wilke moves 1.44–4.31 mole % |
-| `J3.5` SPM / SPMe | Asymptotic reductions of `J3.4`, and what their slope test resolves | Their Tables II+III, 21/21; error exponent drifts 2.07→2.70, stated as a window |
+| `A4.2` Maxwell–Stefan vs Fick | Two bookkeepings of one physics; the scalar closure fails *structurally* | MS invariant to species ordering to 3.9e-16 where Wilke moves 1.44–4.31 mole % |
+| `J3.5` SPM / SPMe | Asymptotic reductions of `J3.4`, and what their slope test resolves | Tables II+III 21/21; the exponent drifts 2.07→2.70, stated as a window |
 | `H1.4` Itoh Pd membrane reactor | Conversion past equilibrium — and how little the measurement tests | Stated 99.7 %; **45 % low on 1−X**, the quantity that varies |
 | `F1.3` Wilkinson holdup | A correlation whose one pressure term fails | 6.8 decades low at helium — the authors' own published finding |
 | `E1.2` Davidson bubble | Eqs. 9 and 10 are one flow field read twice | The printed 4.5 recovered to 1.1e-6, never an input |
 | `B1.6` Prater relation | An identity, and the two ways it breaks | Defect-sensitivity table; film and Le ≠ 1 breakdowns |
+| `J3.1` Butler–Volmer | The law, and where each limit stops being safe | Eq. 17 collapses to the separately-printed Eq. 30, factor for factor |
+| `B1.4` Weisz–Prater criterion | The inverse problem: what an observed rate can tell you | Non-uniqueness *inside* the safe band — Φ = 0.32 admits η = 226 |
+| `H1.1` Sieverts permeation | The half-power law in its own right | α_H derived, not quoted; Figure 1's printed bore breaks the circularity |
+| `A4.4` Knudsen / Bosanquet | Bosanquet is exact under Knudsen control, worst under bulk | `D_Bos/D₁ = 1 + (ρ−1)x₁/(1+Kn)`, re-derived independently |
+| `D2.1` Barkelew diagram | The collapse drifts | τ_m 1.2879→1.1622 over S = 4–200, Richardson-extrapolated |
+| `A4.3` Dusty gas model | The n-component form and the viscous term | Wall term proved to make [B] invertible; Haynes's remark holds everywhere |
+| `A1.1` Ergun | Four correlations against the data Ergun fitted | **experimental** — k₁ = 151.9, k₂ = 1.697 vs his 150 and 1.75 |
+| `G1.7` Wammes–Westerterp | High-pressure trickle-bed hydrodynamics | **experimental** — 2.9 % holdup vs the paper's own 8 % |
+| `F3.5` CO₂–amine absorption | A reconstruction, with the evidence against it reported too | J_u within 3.8 %; desorption *favours* the printed constants |
+| `G1.8` Trickle-bed partial wetting | The legend is offset one row against the curves | Separability forces the spacing; three curves land on printed values |
+| `A2.1` Danckwerts BCs (covers `A2.2`) | The canonical outward-normal case | Closed form at order 2.00; the outlet trap is *undetectable* |
+| `A1.7` Geldart classification | The boundaries, and what his own table says | **experimental** — but a null predictor scores 19/21, so 2-of-3 is the claim |
+| `A3.4` Wakao–Funazkri | The correlation, and what the figure can and cannot settle | α = 1.100 with β fixed; the free fit is estimator-dependent |
+| `B1.2` Aris shape modulus | The general case Aris called "excessively difficult" | 14 shapes; the sphere is **not** the floor — the cube lies 3.7 % below |
 
-Also corrected on the live `F1.4`: a measured band quoted wrongly
-(`U_df` 0.02–0.035 m/s against 0.0161/0.0230/0.0269), found because `F1.3`
-inherited the sentence and its verifier re-read the figure.
+Also corrected on already-published pages: `F1.4`'s mis-quoted measured band,
+`A4.2`'s provenance overclaim, and a dense-Jacobian trap on `B1.1`, `B1.6` and
+`F3.1` (6.3× and 2.8× runtime, answers bit-identical).
 
-Four of these six used the **reprint route** — the origin paper unreachable, a
-paper on disk printing it in full with attribution. See `reference_read_from` in
-[`AGENTS.md`](../AGENTS.md).
+Eight of these came from the **reprint route** — the origin paper unreachable, a
+paper on disk printing it in full with attribution. See `reference_read_from` and
+`origin_not_consulted` in [`AGENTS.md`](../AGENTS.md).
 
 | Page | What it shows | Validation |
 |---|---|---|
@@ -155,28 +169,30 @@ bulk-download tool.
 
 ## Recommended next moves
 
-Every paper on disk has now been consumed. `J3.4`, `E2.1`, `F2.3`, `B3.1` and
-`I1.2` are published; `A1.1`, `G1.7` and `G1.8` are published after the 2026-08-02 review;
-`A3.4` is in rework. So the next moves are not "build the next paper on
-disk" — there isn't one.
+**Seven papers arrived on 2026-08-02, all in section A** — the section
+`find_papers` had shown to be irreducible by automation. Four are already
+published (`A1.7`, `A2.1` covering `A2.2`, plus `A1.1` and `A3.4` completed on
+the maintainer's figure review). The rest are mapped in
+[`papers-on-disk.yaml`](papers-on-disk.yaml) and in progress or unclaimed:
+`A1.5` Richardson & Zaki, `A1.6` Wen & Yu, `A2.5` Edwards & Richardson,
+`A2.6` Gunn.
 
-1. **Drain the two parked figure reviews if answers have arrived** (`F3.5`,
-   `G1.7`). Both are finished pages; read the `resume:` blocks, do not re-derive.
-   `A3.4`, `A1.1` and `E2.1`'s optional Figure 9 are also waiting on the same
-   kind of look.
-2. **Work the reprint route.** Four pages came from it in one session. The test,
-   from `AGENTS.md`: a paper on disk that prints the result *and* names or tests
-   it. `E1.1` is the counterexample that bounds the method — Kunii & Levenspiel
-   print the two-phase relation but never name, attribute or test it, so it
-   cannot source a page *about* that postulate. Candidates not yet tried include
-   `B1.4` (does Weisz & Hicks state the Weisz–Prater criterion, or only cite it?),
-   `J3.3` (Doyle prints the porous-electrode equations, but check the overlap with
-   `J3.4` before building), and `F1.9` (likely `covered_by` `F1.3` now — check
-   first).
-3. **Nothing else moves without the maintainer.** 227 cases need a PDF, and
-   `find_papers.py --fetch` over all 266 found five open-access routes. The two
-   unblocks worth more than any single paper are the Elsevier key permission and
-   a few monographs on disk; both are standing decisions.
+1. **Finish the section-A batch.** Those four are the only cases with an
+   unconsumed paper on disk. Two carry a known trap: the `A1.6` PDF's first page
+   of extracted text is a *different article*, and its catalogue citation names
+   the wrong journal.
+2. **Work the reprint route.** Eight pages came from it. The test, from
+   `AGENTS.md`: a paper on disk that prints the result *and* names or tests it.
+   Two verdicts bound it — `E1.1` failed because Kunii & Levenspiel print the
+   two-phase relation but never name, attribute or test it; `J3.3` *passed* the
+   test and was still `covered`, because the theory is J3.4's structure. Ask both
+   questions, in that order.
+3. **Nothing else moves without the maintainer.** 217 cases need a PDF, and
+   `find_papers.py --fetch` over all 266 found five open-access routes. The
+   textbook-canonical class is now approved, so a few monographs on disk
+   (Bird/Stewart/Lightfoot, Taylor & Krishna, Levenspiel, Froment & Bischoff)
+   would open ~20 T0 cases at once — worth more than any single paper on the
+   papers dashboard.
 
 ### When a printed constant is wrong, prove it from the paper's own results
 
