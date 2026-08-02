@@ -1,0 +1,143 @@
+dataset_id: rz-1954-fluidisation-spheres
+title: Measured expansion exponent n and intercept for 29 (particle-liquid, column) fluidisation runs with spheres, Tables III and IV
+status: complete
+
+source:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1954
+  container: "Transactions of the Institution of Chemical Engineers 32, 35-53"
+  doi: null
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+reference_read_from:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1997
+  container: "Chemical Engineering Research and Design 75 (Supplement), S82-S100 (Trans IChemE Vol 75, December 1997, Jubilee Supplement)"
+  doi: 10.1016/S0263-8762(97)80006-8
+  note: >
+    Verbatim reprint; Tables III and IV are both on REPRINT page S91. The original
+    1954 page numbers are not printed on the reprint - see the sedimentation
+    sidecar for the full statement. All page references are reprint pages.
+
+conditions: >
+  Equipment section, reprint page S88. Liquid circulated by a centrifugal pump
+  from a 25-gal galvanised iron feed tank through one of three Rotameters into a
+  column consisting of an equalising section, a test section and an expansion
+  section, returning through a bag filter. Two columns were used:
+
+    LARGE: test section 2.44 in. i.d. Perspex, 6 ft long, between brass flanges;
+           particles supported on a 70-mesh screen reinforced by a perforated
+           brass disc; equalising section a 2 5/8 in. i.d. brass pipe 7 in. long
+           fitted with six 50-mesh screens; expansion section a 3 in. i.d. iron
+           pipe 1 ft long.
+    SMALL: test section and equalising section 1.5 in. i.d. Perspex, 4 ft 9 in.
+           and 1 ft 3 in. long, supporting screen recessed between them; a
+           galvanised-iron straightening section 1.5 in. i.d. and 2 ft long above
+           the test section.
+
+  Liquid held at 20 C. Scales graduated to one millimetre on both columns.
+  Sufficient solids were introduced, then bed height and pressure drop across the
+  column were measured over a range of velocities, the flow being increased in
+  stages.
+
+  As in sedimentation, the tabulated SLOPE and INTERCEPT are the authors' line
+  fits to log Vc against log eps, not raw observations; the raw expansion curves
+  are printed only as figures and are NOT reproduced or digitised anywhere.
+
+  THE COLUMN DIAMETERS ARE NEVER PRINTED IN CENTIMETRES. This file records
+  D_cm = 6.1976 (2.44 in) and 3.81 (1.5 in), which are the inch values converted.
+  That conversion is corroborated: all 16 printed d/D values of Table III
+  reproduce from the printed d and those two diameters to better than 0.3 %, and
+  the page measures it.
+
+  TABLE IV'S LIQUIDS. Glycerol-water (rho = 1.135, mu = 6.075 cP), "Oil O2"
+  (rho = 0.818, mu = 3.81 cP) and "Oil R.O. I" (rho = 0.875, mu = 15.01 cP), all
+  printed. The two oils are singled out by the authors on reprint page S95: "Some
+  of the experimental results at higher values of d/D do not follow the
+  correlations given previously but they were obtained with oil, which caused the
+  smaller glass spheres to agglomerate into flocs and to adhere to the tube
+  walls." is_oil = 1 marks those rows.
+
+acquisition:
+  method: table
+  figure: "TABLE III and TABLE IV, reprint page S91"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    Read character by character off 600 dpi renders; the PDF text layer was not
+    used for any number. Rows for which a column prints a dash (that column was
+    not run) are OMITTED from this file rather than carried as blanks, so every
+    row here has a printed slope and a printed intercept.
+
+    EXPONENTS. Every printed d/D exponent was checked against d/D x D = d using
+    the two column diameters above; all 16 Table III values and all 13 Table IV
+    values agree to better than 0.25 %, which is what simultaneously certifies the
+    d column, the d/D column and the two column diameters. The Re column was
+    checked against Re = V0 d rho / mu (with water at 20 C for Table III, see
+    below), and the log10 V0 column against log10 of the printed V0.
+
+    PRINTED ANOMALIES, RECORDED AND NOT CORRECTED:
+
+    (1) Table IV, ballotini d = 1.029e-1 cm in glycerol-water: V0 is printed 7.35
+        with log10 V0 printed 0.877, but log10(7.35) = 0.8663. The printed Re of
+        14.45 implies V0 = 7.517 and the printed log implies 7.535; the V0 cell
+        reads "7.35" unambiguously at 600 dpi. The two cells are mutually
+        inconsistent by 0.011 decades (2.6 % in velocity). Flagged
+        V0_and_log10_V0_disagree. NOT REPAIRED. This row's V0 enters no result on
+        the page; its slope and intercept do.
+
+    (2) Table IV, glass spheres: the particle diameter is printed "4.2 x 15^-1",
+        where the "15" is a damaged "10". THE DAMAGED CELL OCCURS TWICE, once in
+        each glass-sphere block of Table IV - the glycerol-water block (Re = 267)
+        and the Oil R.O. I block (Re = 78.25) - and each block carries two
+        (row, column) entries, so FOUR rows of this file are affected and ALL
+        FOUR are flagged d_printed_as_4.2x15^-1. Verified on a 600 dpi render of
+        reprint page S91 on 2026-08-02: both cells read "4.2 x 15^-1". THIS IS A
+        LABELLED RECONSTRUCTION, not a reading: it is corroborated (a) by Table
+        III, which prints 4.2 x 10^-1 for the same particle, (b) by the printed
+        d/D of 6.77e-2 and 11.0e-2, which return 4.196e-1 and 4.191e-1 against the
+        two column diameters, and (c) by the printed Re in each block - Re = 78.25
+        with V0 = 31.9, rho = 0.875, mu = 15.01 cP returns 4.20e-1, and Re = 267
+        with V0 = 34.05, rho = 1.135, mu = 6.075 cP returns 4.20e-1.
+
+    (3) Table IV, glass spheres in glycerol-water, 2.44 in. column: d/D is printed
+        "6.77" with no "x 10^-2", although the 1.5 in. entry on the same row
+        prints "11.0 x 10^-2" and Table III prints "6.77 x 10^-2" for the same
+        particle and column. Recorded as 6.77e-2 and flagged
+        d_over_D_printed_without_exponent.
+
+    (4) Table III prints NO liquid properties. mu_cP = 1.0 and rho_g_cm3 = 1.0 on
+        the Table III rows are AMBIENT-WATER VALUES SUPPLIED HERE, not printed
+        values; liquid_properties_printed = 0 marks every such row. They are used
+        on the page for one purpose only - re-checking the printed Re column,
+        which they reproduce to better than 1 % on all eight Table III particles -
+        and for no result. Table IV prints mu and rho for every liquid;
+        liquid_properties_printed = 1 there.
+
+    Two Re cells deviate from Re = V0 d rho / mu by more than 0.5 %: the anomaly
+    (1) row above (+2.3 %) and lead shot d = 2.466e-1 in Oil R.O. I (-3.8 %). Both
+    are recorded as printed.
+
+columns:
+  table: "III or IV, as printed"
+  particle: "as printed"
+  d_cm: "particle diameter, cm (see anomaly 2 for one reconstructed cell)"
+  rho_s_g_cm3: "particle density, g/cm3, as printed"
+  liquid: "as printed; 'Water' supplied for Table III, whose title says so"
+  mu_cP: "liquid viscosity, cP. TABLE III: NOT PRINTED, ambient water supplied. TABLE IV: printed."
+  rho_g_cm3: "liquid density, g/cm3. Same caveat."
+  Re_printed: "the Re column as printed"
+  V0_cm_s: "the terminal falling velocity column, cm/s, as printed"
+  log10_V0_printed: "the Log10 V0 column as printed"
+  column_in: "2.44 or 1.5, the column diameter in inches, from the column heading"
+  D_cm: "that diameter in cm. NOT PRINTED; the inch value converted. See conditions."
+  d_over_D_printed: "the d/D column for that column, as printed"
+  intercept_log10_Vc_at_eps1: "the 'Intercept at eps = 1' column for that column, i.e. log10 V_i"
+  slope_n: "the 'Slope' column for that column: THE MEASURED EXPONENT n"
+  is_oil: "1 for Oil O2 and Oil R.O. I, the liquids the authors' own text excludes at high d/D"
+  liquid_properties_printed: "0 where mu and rho were supplied rather than read"
+  flag: "semicolon-separated anomaly tags, see acquisition.procedure"
+
+not_printed_and_supplied_here:
+  - "D_cm for both columns (the inch values converted; corroborated to 0.3 % by the printed d/D column)"
+  - "mu_cP = 1.0 and rho_g_cm3 = 1.0 on all Table III rows (ambient water; used only to re-check the printed Re column)"

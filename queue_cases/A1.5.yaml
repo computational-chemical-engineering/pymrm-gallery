@@ -5,7 +5,8 @@ catalog_reference: Trans. IChemE 32 (1954)
 priority: P1
 tier: T0
 structures: S1
-status: in-progress
+status: published
+page: pages/A1.5-richardson-zaki/
 reference:
   authors:
   - Richardson, J. F.
@@ -13,22 +14,240 @@ reference:
   year: 1954
   container: Transactions of the Institution of Chemical Engineers 32 35-53
   title_as_printed: 'Sedimentation and fluidisation: Part I'
+reference_read_from:
+  authors:
+  - Richardson, J. F.
+  - Zaki, W. N.
+  year: 1997
+  container: Chemical Engineering Research and Design 75 (Supplement), S82-S100 (Trans
+    IChemE Vol 75, December 1997, Jubilee Supplement)
+  doi: 10.1016/S0263-8762(97)80006-8
+  note: >
+    Verbatim reprint. Every page carries the original running footer "TRANS. INSTN
+    CHEM. ENGRS, Vol. 32, 1954" and the reprint's own running head "JUBILEE
+    SUPPLEMENT - Trans IChemE, Vol 75, December 1997". THE ORIGINAL PAGE NUMBERS
+    35-53 ARE NOWHERE PRINTED ON THE REPRINT: it renumbers the paper S82-S100, 19
+    pages, which is consistent with 35-53 but does not verify it. The page and all
+    four sidecars cite REPRINT pages throughout, marked as such, and the
+    catalogue's 35-53 is left as the catalogue has it rather than asserted as read.
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-S0263876297800068-main.pdf
   open_access: null
   checked: '2026-08-02'
   identified_by: read the paper's own first pages, not the filename
 blocker: null
-notes: null
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+staged_at: queue_cases/A1.5/page/
+
+scope_decision: >
+  BUILT AS A DATA PAGE, NOT A CORRELATION PAGE. The catalogue entry is "bed
+  expansion / hindered settling" and the obvious page is u/u_t = eps^n. Reading the
+  paper first changed that. Richardson and Zaki (1954) prints EIGHT tables - 66
+  measured exponents across Tables I-IV, 18 extrapolated n0 values in Table VI, the
+  slopes of Fig. 18 in Table VII, six non-spherical particles in Table V and their
+  shape factors in Table VIII - and only then the correlation, in FIVE expressions
+  over four Reynolds windows. It also prints TWO wall laws, eq. (40) for
+  sedimentation and eq. (41) for fluidisation, and the famous one-line form is
+  neither of them: it is eq. (28), log V_c = n log eps + log V_i, with V_i replaced
+  by V_0, i.e. the sedimentation case with the wall term dropped.
+
+  So the page is built around the tables. The validation route was ranked before
+  any code, per the brief:
+
+    1. A TABLE OF MEASUREMENTS - available, and taken. But it is NOT a hold-out:
+       eqs. (33)-(39) were fitted to these very slopes via Fig. 18. The page
+       therefore reports the 1.20 % mean deviation as a FIT RESIDUAL in four
+       separate places and puts a null baseline beside it in every Reynolds
+       window. There is no hold-out set anywhere in this paper, and the only rows
+       the authors themselves exclude are confounded (see notes).
+    2. STATED NUMERICAL RESULTS - the fitted n per regime, the "mean value of
+       -0.25" for Table VII, and the coefficients 17.5 and 18. All three checked;
+       all three are slightly off their own arithmetic, harmlessly.
+    3. INTERNAL IDENTITIES - Tables VI x VII (an exact transformation, 11 rows),
+       the branch crossovers, eq. (39) meeting eq. (34) at Re = 500, and the K
+       definition recomputed from the printed d_s and d_p. Two of these fail, in
+       informative ways.
+    4. DIGITISED FIGURE - NOT USED. No figure point was read, no overlay was
+       produced, queue_cases/A1.5/review/ holds only the verifier's report, and the
+       case is NOT gated on a maintainer figure review.
+
+  THE ONE GENUINELY TWO-SIDED TEST is the wall term, and it is the page's headline
+  - on the rows that can fail: Table II's intercept column reproduces its own
+  log10 V_0 column, so the sedimentation fit is made on Table I alone (see notes).
+  Eqs. (40) and (41) are the same statement log V_0 - log V_i = alpha (d/D) with
+  alpha = 0 and alpha = 1, and both sides are printed columns, so alpha can be
+  fitted separately on the sedimentation and the fluidisation tables. Each fit is a
+  falsification test of the law the authors applied to the OTHER data set, neither
+  law can be right on both, and the tables pick the authors' assignment in both
+  cases.
+
+  Excluded from scope: the mixed-size bed (Figs. 15-17, no tabulated numbers); the
+  theoretical cell model of eqs. (43)-(45), which the paper says is "reported in
+  detail elsewhere" in a paper not on disk and whose eq. (44) does not render at
+  600 dpi; and the pressure-drop relations (8) and (9), which are standard and are
+  not tested here.
+
+notes: >
+  KEY NUMBERS.
+  66 (row, tube) comparisons of the correlation against the measured slopes; 58
+  non-oil, mean |dev| 1.20 %, worst 6.75 %, rms 1.78 %. Per-branch against a
+  constant-n null fitted to the same rows: eq. (33) 0.95 % vs 3.07 % on 20 rows;
+  eq. (37) 1.559 % vs 1.538 % on its 5 rows, WHICH DECIDES NOTHING (below);
+  eq. (38) 2.11 % vs 15.80 % on 23 rows; eq. (39) 1.87 % vs 3.42 % on 4 rows;
+  eq. (34) IS the constant, and the mean of the 6 measured slopes above Re = 500 is
+  2.3900 against its printed 2.39. Pooled, one constant n = 4.00 gives 31.2 %.
+
+  EQ. (37) IS NOT ADJUDICATED. The 0.021-point gap by which the null beats it
+  reverses three ways, all printed on the page: (a) two of the five rows are
+  Table I runs N and O, printed Re = 0.302, above the title of the table they are
+  printed in, and the two largest residuals in the window - placed with eq. (33)
+  they deviate by +0.49 % and +1.26 % and the remaining three rows give RZ
+  0.746 % vs the null's 1.071 %; (b) 2 of 5 leave-one-outs put RZ ahead; (c)
+  charging the in-sample null its one free parameter gives 1.538 x sqrt(5/4) =
+  1.719 %. An earlier draft said "marginally worse than a constant"; withdrawn.
+
+  THE OIL ROWS ARE CONFOUNDED. The 8 rows in the two oils miss by a mean 9.5 % and
+  a worst 29.5 %, exactly as the authors' own text says they will. But inside the
+  eq. (38) window every one of the 4 rows above the stated d/D limit of 4e-2 is an
+  oil row and there are NO non-oil rows there, so "the oil flocculated the spheres"
+  and "the correlation was never claimed above d/D = 0.04" predict the same four
+  failures. The page reports that the tables support neither over the other.
+
+  WALL COEFFICIENT alpha. HEADLINE IS TABLE I ONLY: -0.235, cluster 95 % CI
+  [-1.776, +0.170] on 22 rows in 10 clusters, still excluding +1. Fluidisation
+  +1.095, CI [+0.830, +1.508]; fluidisation non-oil +1.052. rms residual 0.0161 vs
+  0.0222 decades (Table I, alpha = 0 vs 1) and 0.0781 vs 0.0379 (fluidisation).
+
+  WHY TABLE II IS OUT OF THAT FIT - A CHECK THAT CANNOT FAIL, INSIDE THE PAGE'S
+  STRONGEST RESULT. Table II's "intercept at eps = 1" column IS its printed
+  log10 V_0 column: on all 15 rows and across two and three tube diameters per
+  group the residual y = log10 V_0 - intercept is 0.0000 or 0.0004 decades (rms
+  0.00026) against Table I's -0.030 to +0.010 (rms 0.01611); the one row that
+  differs is run 12, whose 0.45 is the group's -0.457 with the minus sign lost.
+  Fitted alone those 14 rows give alpha = +0.009, CI [+0.000, +0.012]. Pooling all
+  36 rows gives -0.064, CI [-0.407, +0.076] - the same verdict on an interval 4.0x
+  narrower than the informative half of the data supports. Both fits are printed;
+  the wide one is quoted. Tables III/IV do not have this problem (intercepts
+  differ from log10 V_0 by up to 0.147 decades).
+
+  ROBUSTNESS, printed on the page. On the common d/D range 4.08e-3 to 0.037 the
+  fluidisation alpha is +2.267, CI [+1.204, +3.475] - EXCLUDING eq. (41)'S 1 -
+  against sedimentation's -0.101, CI [-1.217, +0.212] on the 14 Table I rows
+  there. And alpha is not constant in d/D: +2.162 [+1.207, +3.305] below
+  d/D = 0.05, +1.033 [+0.775, +1.347] above, a factor 2.09, which a single linear
+  term in d/D cannot do. The two-law verdict stands; eq. (41)'s coefficient does
+  not hold across its own range. Run 12 is a TABLE II row and so is not in the
+  headline fit at all; on the pooled fit it gives -0.436 as printed and -0.067
+  with the minus sign restored, against -0.064 excluded - a printing error, not a
+  fragility (no defensible handling moves alpha by more than 0.003). Paired form:
+  through-origin slope 0.79, CI [0.47, 1.34], on the 6 of 10 pairs that can
+  resolve it, individual ratios 0.16 to 1.89; the other 4 pairs are predicted to
+  differ by 0.010 decades or less, at or below the printed rounding, and cannot
+  test anything. ALL BOOTSTRAPS ARE SEEDED and two consecutive runs of the
+  notebook are byte-identical.
+
+  IDENTITIES: eq. (39) at Re = 500 vs eq. (34), -0.015 % - A TRANSCRIPTION CHECK,
+  not two independent fits meeting: Table VI's last row prints n0 = 2.39 at
+  Re = 489, which is eq. (34)'s constant, eq. (36)/(39) passes within +0.24 % of it
+  there, and Table VII's row at the same Re prints the d/D slope as 0.0. The page
+  labels it that way. Tables VI x VII, worst 0.635 %, mean 0.196 %, on the 11 rows
+  carrying both a printed slope and a printed |(d/D)_(n->0)| - 10 of them shared
+  with Table VI, the eleventh (Re = 0.2) checked against eq. (33)'s 4.65, and the
+  Re = 489 row excluded because its printed slope is 0. Crossovers -1.82 % (Re = 0.2), +2.30 % (Re = 1),
+  -13.9 % (Re = 200 at d/D = 0.04, 0.000 % at d/D = 0), -0.015 % (Re = 500).
+  4.35/0.25 = 17.400 printed as 17.5; 4.45/0.25 = 17.800 printed as 18; the effect
+  at d/D = 0.04 is +0.08 % and +0.16 %. Table VII's own mean is 0.24573 against the
+  stated 0.25.
+
+  NON-SPHERICAL: eq. (42) rms 1.59 % vs a constant-n null of 7.94 %, but 1.60 % vs
+  2.66 % once the plates are dropped - six of the seven particles have K between
+  0.517 and 0.710. Table VIII's n equals the 2.44 in. column slope of Tables V and
+  III on all 7 rows to 0.000 (the 1.5 in. slope differs by up to 0.150), so eq.
+  (42) carries an unremoved eq. (41) wall term. K recomputed from the printed d_s,
+  d_p and definition fails on 4 of 7 rows (3 distinct shapes), worst -45.6 %.
+
+  RESIDUAL STRUCTURE: eqs. (33)-(39) contain no fluid property; a cluster bootstrap
+  over the 23 particle/liquid groups finds every correlation between the residual
+  and log mu, log rho, log rho_s, rho_s/rho, log Re and d/D consistent with zero. A
+  null result, reported as one; the individual-row bootstrap would have been about
+  half as wide.
+
+  TRANSCRIPTION: d/D x D = d to 0.78 % on 34 of 37 sedimentation rows and 0.21 % on
+  all 29 fluidisation rows (which is also what fixes the two column diameters in
+  cm, never printed); Re to 0.44 % and 3.80 %; log10 V0 to 0.0061 and 0.0107
+  decades; Stokes' law to 0.67 % on Table I, AND OVER-PREDICTING TABLE II BY 19 TO
+  66 % on its settling rows and returning the wrong sign on the three rows where
+  the particles rise - the right answer for a table headed Re > 0.2, and why the
+  pair is quoted rather than the Table I half alone.
+
+  PYMRM: F(phi) = phi V0 (1-phi)^n integrated as a 1-D conservation law with one
+  constant construct_div (nu = 0) and an exact Godunov face flux, explicit at
+  CFL 0.4. L1 against the exact shock converges at mean order 1.000, 2.27e-4 at
+  nx = 400. THE SOLIDS BALANCE IS EXACTLY 0 AND CANNOT FAIL: the break table shows
+  0 for a wrong n, a wrong V0, an unstable CFL and a 25-cell grid, 1e-15 for a
+  flipped sign and a reversed upwind; only nu = 1 moves it (0.37). L1 moves x111
+  for nu = 1, x187 for a reversed upwind, x6000 for a flipped sign - but only x1.5
+  for n = 3.00 judged against its own shock speed and x1.2 for a 1 % V0 error, so
+  the solve has no opinion about the correlation and the page says so.
+
+  FIVE PRINTED ERRORS FOUND, NONE REPAIRED BY INFERENCE: Table I runs H and N print
+  d/D = 5.8e-3 against 5.05e-3 from the printed d and D (+14.8 %); run S prints
+  6.97e-3 against 7.19e-3 (-3.0 %); Table II run 12's intercept is printed WITHOUT
+  ITS MINUS SIGN (0.45 against its group's -0.457); Table IV's ballotini in
+  glycerol-water prints V0 = 7.35 with log10 V0 = 0.877, inconsistent by 0.011
+  decades; and Table IV prints the glass-sphere diameter as "4.2 x 15^-1", a damaged
+  10 - TWICE, once in the glycerol-water block (Re = 267) and once in the Oil
+  R.O. I block (Re = 78.25), affecting four (row, column) entries, all four now
+  flagged; recorded as a labelled reconstruction with three corroborations in each
+  block (re-verified on a 600 dpi render of reprint page S91, 2026-08-02).
+
+  ONE FINDING FOR THE INTEGRATOR TO WEIGH: Table I runs N and O carry a printed Re
+  of 3.02e-1, above the table's own title of "Reynolds Number < 0.2". V0 is
+  confirmed by both the printed log10 V0 and Stokes' law to 0.27 %, so the Re
+  column is right and the title does not cover that row. It is assigned to the
+  eq. (37) branch by its printed Re, and the page reports what eq. (33) would have
+  given.
+
+  BLIND SPOTS NAMED ON THE PAGE, all as claims the page does NOT make: the page is
+  not experimentally validated (no hold-out set); it says nothing about eps outside
+  roughly 0.42 to 0.96; nothing rests on Table V's d_s column, which is the one
+  column of the paper illegible at 600 dpi; the wall verdict is about alpha, not
+  about the mechanism; three quantities used are not printed (ambient water, the
+  column diameters in cm, g = 981) and none enters a result; and the batch-settling
+  balance is not Richardson and Zaki's - they write no conservation law.
+
+integrator_notes: >
+  - A1.5 IS NOT IN models.yaml. Splice queue_cases/A1.5/models_entry.yaml under
+    section A; slug and title are identical to page/meta.yaml.
+  - The page directory is queue_cases/A1.5/page/ and moves to
+    pages/A1.5-richardson-zaki/.
+  - scripts/check_metadata.py was NOT run: it validates pages/ against models.yaml
+    and A1.5 is in neither yet. Run it after the splice.
+  - THE CITATION NEEDS A DECISION. The document on disk is the 1997 Jubilee
+    Supplement reprint and the original page numbers 35-53 are nowhere printed on
+    it. models_entry.yaml cites the 1954 original (as the reprint's own running
+    footer does) with reference_read_from carrying the reprint and its DOI, per the
+    AGENTS.md reprint convention. The catalogue's "32, 35-53" is left as the
+    catalogue has it; the page explicitly declines to assert that range as read. If
+    the maintainer wants it verified, the 1954 printing itself is needed.
+  - queue_cases/A1.5/review/ holds the adversarial verification report only; this
+    case is NOT gated on a figure review and nothing on the page is digitised. The
+    findings of that report (the eq. (37) claim, the Table II identity, the
+    restricted-range interval, the eq. (39)/(34) relabelling, the unseeded
+    bootstraps, the cite_data range and the doubled 4.2 x 15^-1 glyph) have all
+    been applied to the page, the four sidecars and the CSV.
+  - agreement.json carries 90 metrics; notebook runtime ~20 s. Every bootstrap is
+    seeded and two consecutive executions produce byte-identical outputs and an
+    identical agreement.json.
+  - Two origins are cited but not consulted, and both are in models_entry.yaml
+    under origin_not_consulted: Steinour (ref. 4) and Lewis, Gilliland and Bauer
+    (ref. 9), whose slopes also enter Fig. 18. Nothing on the page separates their
+    contribution from the authors' own, because the paper does not.
+  - A1.6 (Wen-Yu) appeared under queue_cases/ while this case was being built, so
+    it is evidently in flight in parallel. It supplies the minimum-fluidisation
+    velocity at which a bed stops obeying A1.1 and starts obeying A1.5, and the
+    Reuse section of this page names that gap and marks A1.6 as "not built here".
+    If A1.6 lands first, that sentence is the only thing on this page that needs
+    re-reading.
+
+resume: null

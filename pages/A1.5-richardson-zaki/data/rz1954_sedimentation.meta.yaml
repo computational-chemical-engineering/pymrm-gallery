@@ -1,0 +1,141 @@
+dataset_id: rz-1954-sedimentation
+title: Measured settling exponent n and intercept for 37 (run, tube) sedimentation experiments, Tables I and II
+status: complete
+
+source:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1954
+  container: "Transactions of the Institution of Chemical Engineers 32, 35-53"
+  doi: null
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+reference_read_from:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1997
+  container: "Chemical Engineering Research and Design 75 (Supplement), S82-S100 (Trans IChemE Vol 75, December 1997, Jubilee Supplement)"
+  doi: 10.1016/S0263-8762(97)80006-8
+  note: >
+    A VERBATIM REPRINT of the 1954 paper, not a restatement of it: the running
+    footer of every page reads "TRANS. INSTN CHEM. ENGRS, Vol. 32, 1954" and the
+    running head reads "JUBILEE SUPPLEMENT - Trans IChemE, Vol 75, December 1997".
+    Tables I and II are on REPRINT pages S88 and S89.
+
+    THE ORIGINAL 1954 PAGE NUMBERS ARE NOWHERE PRINTED ON THE REPRINT. The reprint
+    renumbers the paper S82-S100 (19 pages). The catalogue's "32, 35-53" is 19
+    consecutive pages and is therefore consistent, but this has NOT been verified
+    from the document and no page of the gallery asserts the 35-53 range as read.
+    Every page reference in the dataset and on the page is a REPRINT page.
+
+conditions: >
+  Equipment section, reprint pages S86-S88. Sedimentation in vertical
+  flat-bottomed Pyrex tubes about 70 cm high with internal diameters of 1.9, 2.8,
+  3.2, 4.8 and 5 cm (Table II also uses 2.7, 3.8 and 6.2 cm tubes, which the
+  equipment section does not list). Paper scales graduated to one millimetre were
+  fixed to the tubes. A controlled-temperature chamber held the liquid at 20 C, to
+  keep viscosity and density constant and avoid convection currents. The
+  suspension was agitated by a handle, the tube set vertical, and the rate of fall
+  of the sludge line observed through a glass window.
+
+  For each liquid-solid system log Vc was plotted against log eps; the SLOPE of
+  that plot is n and the INTERCEPT at eps = 1 is log10 Vi. Both are what the
+  tables record, and both are therefore the authors' own line fits to their raw
+  observations, not raw observations themselves. The raw settling curves are not
+  printed. THE SLOPE COLUMN IS THE MEASUREMENT this dataset exists for.
+
+  Table I is titled "Reynolds Number < 0.2" and its terminal-velocity column is
+  headed "Terminal falling velocity Stokes' law V0", i.e. that column is COMPUTED
+  from Stokes' law, not measured. Table II is titled "Reynolds Number > 0.2" and
+  its column is headed "Terminal falling velocity" with no qualifier; how it was
+  obtained is not stated.
+
+  Runs 8, 9 and 12 carry the printed note "In Runs Number 8, 9 and 12 the
+  particles are RISING in the fluid" (rho_s = 2.623 < rho = 2.89 for ballotini in
+  bromoform).
+
+acquisition:
+  method: table
+  figure: "TABLE I (reprint page S88) and TABLE II (reprint page S89)"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    Read character by character off 600 dpi renders. THE PDF TEXT LAYER WAS NOT
+    USED FOR ANY NUMBER: it renders the paper's equation (1) as "F = 317 pVd" and
+    Table I's title as "Summal'lf of 1M RuulU Obtainellfrom
+    SedifMl'ItalionEzperifMnts", which is the pre-1980 Elsevier scan failure
+    docs/pdf-findings.md records.
+
+    EXPONENTS. The mantissas render cleanly; the superscript exponent glyphs
+    frequently do not - "-2", "-3" and "-8" are often indistinguishable at 600 dpi
+    on this letterpress scan. Rather than guess, every exponent in Table I was
+    settled from quantities printed IN THE SAME ROW, using four identities the
+    table itself supplies:
+
+      (i)   d/D x D = d, on two or three tubes per group;
+      (ii)  the printed log10 V0 column;
+      (iii) Re = V0 d rho / mu, from four printed columns;
+      (iv)  Stokes' law V0 = d^2 (rho_s - rho) g / (18 mu), which is what the
+            Table I column heading says the column is.
+
+    Each row of Table I is over-determined by three or four of these, and all four
+    agree on every row. exponent_resolved = 1 marks the Table I groups. Table II's
+    exponents were legible and are marked 0. NO EXPONENT WAS REPAIRED BY INFERENCE
+    FROM WHAT LOOKED PLAUSIBLE; the identities are printed arithmetic, not
+    judgement.
+
+    The four identities are re-run on the page (section 1) and their residuals
+    printed, so a reader can see exactly how far the transcription is certified.
+
+    PRINTED ANOMALIES, RECORDED AND NOT CORRECTED:
+
+    (1) Table I runs H/I/J and N/O, tube D = 1.9 cm: d/D is printed 5.8e-3, but
+        d/D from the printed d = 9.6e-3 and D = 1.9 is 5.05e-3 (+14.8 %). The
+        other two tubes of the same groups (2.8 and 4.8 cm) agree with the printed
+        d to 0.6 %, so the 1.9 cm entry is the odd one out. Flagged
+        d_over_D_inconsistent. THE PRINTED VALUE IS KEPT, because the printed d/D
+        is what the paper plotted in Fig. 18 and therefore what eqs. (33)-(39)
+        were fitted against.
+
+    (2) Table I run S, tube D = 3.2 cm: d/D printed 6.97e-3 against 7.19e-3 from
+        d = 2.3e-2 and D = 3.2 (-3.0 %). Two other groups in the same 3.2 cm tube
+        reproduce to 0.3 %. Kept as printed.
+
+    (3) Table II run 12: the intercept is printed "0.45" WITHOUT A MINUS SIGN,
+        while the other two tubes of the same group and the group's own log10 V0
+        column all read -0.457. It is also printed to one fewer digit. Flagged
+        intercept_printed_without_minus_sign, kept exactly as printed, and
+        EXCLUDED from the wall-law fit on the page, which reports both the
+        as-printed and the sign-restored residual.
+
+    (4) Table I runs N and O: the printed Re is 3.02e-1, ABOVE the table's own
+        title of "Reynolds Number < 0.2". V0 = 2.34e-1 is confirmed independently
+        by the printed log10 V0 (-0.632) and by Stokes' law (0.2346, 0.27 %), and
+        Re from the printed V0, d, rho and mu is 0.303. The Re column is
+        therefore right and the table title does not cover this row. Flagged
+        Re_above_table_title.
+
+    No other cell of either table disagrees with the four identities by more than
+    1 % (d/D), 0.5 % (Re), 0.007 decades (log10 V0) or 0.7 % (Stokes on Table I).
+
+columns:
+  table: "I or II, as printed"
+  runs: "run letter or number as printed"
+  particle: "as printed"
+  d_cm: "particle diameter, cm"
+  rho_s_g_cm3: "particle density, g/cm3"
+  liquid: "as printed"
+  mu_cP: "liquid viscosity, centipoise, as printed"
+  rho_g_cm3: "liquid density, g/cm3, as printed"
+  V0_cm_s: "terminal falling velocity column, cm/s. TABLE I: computed from Stokes' law by the authors. TABLE II: source not stated."
+  Re_printed: "the Re = V0 d rho / mu column as printed"
+  log10_V0_printed: "the Log10 V0 column as printed"
+  D_cm: "tube diameter, cm, as printed"
+  d_over_D_printed: "the d/D column AS PRINTED (see anomalies 1 and 2)"
+  intercept_log10_Vc_at_eps1: "the 'Intercept at eps = 1' column, i.e. log10 V_i"
+  slope_n: "the 'Slope' column: THE MEASURED EXPONENT n. This is the measurement."
+  exponent_resolved: "1 if any exponent in this group was settled from a row identity rather than read off the glyph"
+  flag: "semicolon-separated anomaly tags, see acquisition.procedure"
+
+not_printed_and_supplied_here: >
+  Nothing. Every value in this file is a printed cell of Table I or Table II.
+  g = 981 cm/s2, used on the page for the Stokes check, is NOT in this file and is
+  not printed in the paper either.

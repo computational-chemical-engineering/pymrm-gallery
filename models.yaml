@@ -189,6 +189,102 @@ models:
     data: {tier: 4, method: digitised, status: complete}
     related: [A1.5, A1.6, A2.3, B1.1, E2.1]
 
+  - id: A1.5
+    slug: richardson-zaki
+    title: "Richardson-Zaki: the exponent, the wall term, and what the paper's own tables say about both"
+    description: >
+      u/u_t = eps^n is one of the most-quoted expressions in particle
+      technology and it is not what the 1954 paper writes. The paper writes
+      log V_c = n log eps + log V_i and then spends four pages establishing that
+      V_i is NOT V_0 in fluidisation: log V_0 = log V_i + d/D. The famous form is
+      the sedimentation special case with the wall term dropped. Richardson and
+      Zaki is a data paper - eight printed tables, 66 measured exponents, two
+      wall laws and a piecewise n(Re, d/D) in five expressions - and this page
+      transcribes all eight off 600 dpi renders, certifies the transcription
+      against four identities the tables themselves carry, and finds five printed
+      errors doing it.
+      The correlation reproduces its own 58 non-oil rows to 1.20 % mean, but that
+      is a FIT RESIDUAL and the page refuses to call it anything else: eqs.
+      (33)-(39) were fitted to these very slopes. What is informative is the null
+      baseline beside it. Of the five printed expressions only eq. (38) clearly
+      earns its complexity (rms 2.1 % against a constant's 15.8 % on 23 rows);
+      eq. (33) earns it modestly; eq. (34) IS a constant, and the mean of the six
+      measured slopes above Re = 500 is 2.3900 against its printed 2.39; and eq.
+      (37) cannot be separated from a constant in either direction on the five
+      rows in its window - the 0.02-point gap between them reverses under all
+      three sensitivities the page prints.
+      The one genuinely two-sided test is the wall term, and the page reports
+      what half of that data can and cannot do. Table II's intercept column
+      reproduces its own log10 V_0 column on all 15 rows, so 14 of the 36
+      sedimentation rows carry an identically zero residual and cannot detect a
+      wall effect of any size; the sedimentation fit is therefore made on Table I
+      alone. Fitting the single coefficient alpha in log V_0 - log V_i =
+      alpha (d/D) gives -0.235 (95 % CI -1.78 to +0.17) on the 22 Table I rows
+      and +1.095 (+0.83 to +1.51) on the fluidisation tables: each interval
+      excludes the other law, and the two data sets pick exactly the equations
+      the authors applied to them. The COEFFICIENT 1, though, does not survive
+      its own range: on the d/D range the two data sets share the fluidisation
+      alpha is +2.267 (+1.20 to +3.47), excluding 1, and it falls from +2.16
+      below d/D = 0.05 to +1.03 above it. Three arithmetic findings on top: the
+      17.5 and 18 of eqs. (37) and (38) are 17.4 and 17.8 rounded up from the
+      division displayed on the line above them, the branch boundary at Re = 200
+      is discontinuous by up to 14 % in n because eq. (39) drops the wall term,
+      and eq. (39) meets the separately-stated eq. (34) at Re = 500 to 0.015 % -
+      which is a transcription check, not two independent fits meeting, because
+      Table VI's last row prints that same 2.39.
+    section: A
+    status: published
+    page: pages/A1.5-richardson-zaki/
+    tier: T0
+    priority: P1
+    structures: [S1]
+    phases: [liquid-solid]
+    predicts:
+      - the expansion / hindered-settling index n from Re and d/D, eqs. (33), (34), (37), (38), (39)
+      - the intercept velocity V_i from V_0 and the wall term, eqs. (40) and (41)
+      - the voidage-velocity relation V_c = V_i eps^n, eq. (28)
+      - the index n for non-spherical particles from Heywood's shape factor, eq. (42)
+      - the batch settling flux F(phi) = phi V_0 (1-phi)^n and the interface velocity it implies
+    pymrm_api:
+      - construct_div
+    reference:
+      authors: ["Richardson, J. F.", "Zaki, W. N."]
+      year: 1954
+      container: "Transactions of the Institution of Chemical Engineers 32, 35-53"
+      doi: null
+    reference_read_from:
+      authors: ["Richardson, J. F.", "Zaki, W. N."]
+      year: 1997
+      container: "Chemical Engineering Research and Design 75 (Supplement), S82-S100 (Trans IChemE Vol 75, December 1997, Jubilee Supplement)"
+      doi: 10.1016/S0263-8762(97)80006-8
+      note: >
+        A VERBATIM REPRINT, not a restatement: the running footer of every page
+        reads "TRANS. INSTN CHEM. ENGRS, Vol. 32, 1954". The reprint renumbers
+        the paper S82-S100 and the ORIGINAL PAGE NUMBERS 35-53 ARE NOWHERE
+        PRINTED ON IT. Nineteen consecutive pages is consistent with 35-53, but
+        the page does not assert that range as read; every page reference on the
+        page and in the sidecars is a reprint page, marked as such.
+    origin_not_consulted:
+      - authors: ["Steinour, H. H."]
+        year: 1944
+        container: "Ind. Eng. Chem. 36 618, 840, 901"
+        note: >
+          Richardson and Zaki's reference 4. Their Fig. 18, from which eqs.
+          (35)-(39) are fitted, uses Steinour's sedimentation slopes as well as
+          their own. Not on disk; nothing on the page separates his rows from
+          theirs, because the paper does not.
+      - authors: ["Lewis, W. K.", "Gilliland, E. R.", "Bauer, W. C."]
+        year: 1949
+        container: "Ind. Eng. Chem. 41 1104"
+        note: >
+          Richardson and Zaki's reference 9, cited for the fluidisation slopes
+          that also enter Fig. 18. Not on disk; same caveat.
+    data:
+      tier: 2
+      method: table
+      status: complete
+    related: [A1.6, A1.7, A1.1, E1.1, A1.8]
+
   - id: A1.6
     slug: wen-yu-minimum-fluidisation
     title: "Wen and Yu's minimum fluidisation velocity: where 33.7 and 0.0408 come from, and what they cost"

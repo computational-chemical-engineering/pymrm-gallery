@@ -1,0 +1,140 @@
+dataset_id: rz-1954-nonspherical
+title: Shape factors, terminal velocities and expansion exponents for seven particles, Tables V and VIII merged
+status: complete
+
+source:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1954
+  container: "Transactions of the Institution of Chemical Engineers 32, 35-53"
+  doi: null
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+reference_read_from:
+  authors: ["Richardson, J. F.", "Zaki, W. N."]
+  year: 1997
+  container: "Chemical Engineering Research and Design 75 (Supplement), S82-S100 (Trans IChemE Vol 75, December 1997, Jubilee Supplement)"
+  doi: 10.1016/S0263-8762(97)80006-8
+  note: "Verbatim reprint; TABLE V is on REPRINT page S92 and TABLE VIII on REPRINT page S96."
+
+conditions: >
+  Fluidisation of six non-spherical particles in water in the same two columns as
+  Table III (2.44 in. and 1.5 in.), reprint page S92. All are within the fully
+  turbulent region: the printed Re run from 2650 to 5650 in Table V and 3020 to
+  7150 in Table VIII, and the paper states that for spheres in this region n is
+  independent of Re and d/D with the constant value 2.39.
+
+  Table VIII adds a SEVENTH row, the 1/4 in. ball bearings, whose fluidisation
+  data are in Table III rather than Table V. The two tables are merged here on the
+  particle; that row's velocity, intercept, slope and d/D columns come from
+  Table III and are marked in the flag column.
+
+  Table V prints its own definitions as a footnote:
+    d_s = diameter of sphere of equal volume to particle
+    d_p = diameter of a circle of the same area as the projected profile of the
+          particle when lying in its most stable position
+    S   = (surface area of a sphere of the same volume as particle)
+          / (surface area of the non-spherical particle)
+    K   = (pi/6) . d_s^3 / d_p^3        [Heywood's volumetric shape factor]
+
+  Table V's terminal-velocity columns are headed "Calculated terminal falling
+  velocity V_ot" and "Experimental terminal falling velocity V_oe". The route used
+  for the CALCULATED column is not printed; the paper says only, in general terms,
+  that V0 "can be calculated from the published experimental data such as the
+  relation between R/(rho V0^2) and V0 d rho / mu for particles of various shapes".
+  That calculation is therefore NOT REPRODUCIBLE from this paper and the gallery
+  page does not attempt it.
+
+acquisition:
+  method: table
+  figure: "TABLE V (reprint page S92) and TABLE VIII (reprint page S96)"
+  tool: "poppler pdftoppm at 600 dpi, read visually"
+  procedure: >
+    Read character by character off 600 dpi renders; the PDF text layer was not
+    used for any number.
+
+    ***THE d_s COLUMN OF TABLE V IS NOT LEGIBLE AT 600 dpi.*** It is set in a
+    small bold face and every glyph after the decimal point is blotted in this
+    scan. It is the only column of the whole paper that cannot be read character
+    by character. d_s_legible = 0 marks all six such cells (the ball-bearing row
+    is 0.635 cm, a 1/4 in. sphere, and is legible from Table III's d column).
+
+    The recorded d_s values are the best visual reading, and each is corroborated
+    two ways, both stated so that a reader can judge them:
+
+      (a) the printed Re column of Table V, with Re = V_ot d_s rho / mu and water
+          at 20 C, returns d_s = 0.720, 0.720, 0.563 and 0.788 for the four rows
+          that print both Re and V_ot - matching the recorded 0.72, 0.72, 0.5632
+          and 0.7874;
+      (b) the nominal dimensions printed in the Shape column give, by elementary
+          geometry, d_s = 0.7268 (1/4 x 1/4 in. cylinder), 0.5632 (3/16 in.
+          hexagonal prism), 0.4575 (1/8 x 1/4 in. cylinder), 0.7879 (1/4 in.
+          cube) and 0.4963 (1/4 x 1/4 x 1/16 in. plate).
+
+    NO PAGE MAY REST A HEADLINE NUMBER ON THIS COLUMN, and the gallery page does
+    not: it is used for one internal check, recomputing K from the printed d_s,
+    d_p and the printed definition, and the result of that check is reported as
+    "eq. (42)'s abscissa cannot be reconstructed from the paper for three of its
+    seven points" rather than as a claim about which cell is wrong.
+
+    d_p, S, K, the two velocity columns, the two log columns, the intercepts, the
+    slopes and the d_p/D columns of Table V all render legibly, as do all six
+    columns of Table VIII.
+
+    PRINTED ANOMALIES, RECORDED AND NOT CORRECTED:
+
+    (1) Table V, glass cylinders: Log V_ot is printed 1.366 while V_ot is printed
+        36.8, and log10(36.8) = 1.5658. The other three rows that print both agree
+        to 0.0002. Flagged log10_V0t_disagrees. NOT REPAIRED; neither cell enters
+        a result.
+
+    (2) Table V, glass cylinders: d_p/D for the 1.5 in. column is printed
+        "8.84 x 10^-2" where the steel-cylinder row immediately below, same d_p,
+        prints "18.84 x 10^-2" and d_p/D = 0.717/3.81 = 0.1882. A dropped leading
+        "1". Recorded as 18.84e-2 and flagged
+        dp_over_D_15_printed_without_leading_1. THIS IS A LABELLED
+        RECONSTRUCTION.
+
+    (3) Table VIII, steel hexagonal prisms: Log S is printed -0.0718 while
+        log10(0.8467) = -0.07227. A 0.1 % discrepancy; the other five Log S cells
+        agree to 0.0001. Recorded as printed, no flag on the row because nothing
+        uses Log S.
+
+    Table VIII's Log K column reproduces log10(printed K) to better than 0.0002 on
+    all seven rows, which certifies the K column.
+
+    A CROSS-TABLE IDENTITY THAT CLOSES EXACTLY: Table VIII's n column equals the
+    2.44 IN. COLUMN slope of Tables V and III on all seven rows, to the last
+    printed digit (max difference 0.000), and differs from the 1.5 in. slope by up
+    to 0.15. That is what establishes which column eq. (42) was fitted to, and it
+    is checked on the page.
+
+columns:
+  particle: "Shape column of Table V / Particles column of Table VIII"
+  nominal_dimensions: "as printed in the Shape / Particles column"
+  d_s_cm: "Table V d_s. SEE THE LEGIBILITY WARNING ABOVE."
+  d_s_legible: "0 where the glyph could not be read character by character"
+  rho_s_g_cm3: "Table V rho_s"
+  S_printed: "Table V S"
+  d_p_cm: "Table V d_p"
+  K_printed: "Table V K (and Table VIII K, which agrees)"
+  V0t_calc_cm_s: "Table V 'calculated terminal falling velocity V_ot'; blank where the table prints a dash"
+  V0e_exp_cm_s: "Table V 'experimental terminal falling velocity V_oe'"
+  Re_printed: "Table V Re where printed, otherwise Table VIII Re"
+  Re_source: "V or VIII, which table the Re came from"
+  log10_V0t_printed: "Table V Log V_ot; blank where dashed (see anomaly 1)"
+  log10_V0e_printed: "Table V Log V_oe"
+  intercept_244: "Table V 2.44 in. column 'Intercept at eps = 1'"
+  slope_244: "Table V 2.44 in. column 'Slope'"
+  intercept_15: "Table V 1.5 in. column 'Intercept at eps = 1'"
+  slope_15: "Table V 1.5 in. column 'Slope'"
+  dp_over_D_244: "Table V d_p/D for the 2.44 in. column"
+  dp_over_D_15: "Table V d_p/D for the 1.5 in. column (see anomaly 2)"
+  n_table8: "Table VIII n column"
+  log10_K_printed: "Table VIII Log K"
+  log10_S_printed: "Table VIII Log S"
+  flag: "semicolon-separated anomaly tags"
+
+not_printed_and_supplied_here:
+  - "the ball-bearing row's d_s and d_p, both 0.635 cm, taken from Table III's d for the same 1/4 in. spheres; for a sphere d_s = d_p = d by definition, and the printed K of 0.524 equals pi/6 to 0.08 %, which confirms it"
+  - "water at 20 C (mu = 1 cP, rho = 1 g/cm3), used only in the corroboration of the illegible d_s column described above, never in a result"
