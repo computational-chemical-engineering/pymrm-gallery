@@ -1,11 +1,13 @@
 id: A2.1
 section: A
-title: Danckwerts boundary conditions
+title: The Danckwerts boundary conditions, and Wehner & Wilhelm's proof of them
 catalog_reference: Danckwerts, Chem. Eng. Sci. 2:1 (1953)
 priority: P1
 tier: T0
 structures: S4
-status: in-progress
+status: published
+covers:
+- A2.2
 reference:
   authors:
   - Danckwerts, P. V.
@@ -14,49 +16,184 @@ reference:
   container: Chemical Engineering Science 2(1) 1-13
   doi: 10.1016/0009-2509(53)80001-1
   title_as_printed: 'Continuous flow systems: distribution of residence times'
+also:
+  authors:
+  - Wehner, J. F.
+  - Wilhelm, R. H.
+  year: 1956
+  title: Boundary conditions of flow reactor
+  container: Chemical Engineering Science 6(2) 89-93
+  doi: 10.1016/0009-2509(56)80014-6
+  title_as_printed: Boundary conditions of flow reactor
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250953800011-main.pdf
+  also_on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250956800146-main.pdf
   open_access: null
   checked: '2026-08-02'
-  identified_by: read the paper's own first pages, not the filename
+  identified_by: read both papers' own first pages, not the filenames
 blocker: null
-notes: 'Scope discrepancy worth flagging to whoever dispatches cases. This case was handed
-  out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed. The catalogue
-  assigns A2.1 to Danckwerts boundary conditions (S4, T0, P1); packed-bed axial dispersion
-  is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was followed, per the instruction
-  to take the exact title and canonical reference from docs/catalog-A-foundations.md. A2.5
-  is already independently marked needs-paper, so the dispatch appears to have crossed the
-  two IDs.
 
-  When the paper arrives, the page is cheap and needs no figure digitisation. Danckwerts 1953
-  is analytic, so the validation should come from checks the paper itself pays for rather
-  than from data: the closed-vessel solution must collapse to plug flow as Pe→∞ and to a CSTR
-  as Pe→0; the RTD must integrate to unity with a mean of exactly the space time for any Pe
-  (the property that makes the closed BCs the right ones — the open-vessel BCs fail this);
-  and the first-order conversion must reproduce the Wehner–Wilhelm closed form. Cross-link
-  A2.3, which is published and supplies the D_ax that these BCs then close.'
+scope_decision:
+  taken: (b) one page covering both A2.1 and A2.2
+  decided: '2026-08-02'
+  argument: |
+    Both papers were read in full before deciding.
+
+    THE DECISIVE FACT. Wehner & Wilhelm's eq. (20) for the reaction section is
+    algebraically identical to Danckwerts' eq. (33), and they say so in their own
+    words on p. 91: "The solution for the reaction section (equation 20) is
+    identical with that of DANCKWERTS." Verified on the page: transcribed
+    independently from 600 dpi renders of the two papers, the two expressions
+    agree to 1.1e-16 over the whole bed. So the decisive quantitative validation
+    for either page - the closed-form conversion - is one and the same object. A
+    separate A2.2 page would have to validate against the formula A2.1 already
+    validates against. That is exactly the situation that made J3.3 `covered`
+    rather than built (handoff.md: passing the reprint test does not entitle a
+    case to a page when an existing page already examines it in the same place).
+
+    THE CONTENT ARGUMENT. Danckwerts states the outlet condition on intuition
+    alone - "Intuition suggests that neither of these situations can arise, so
+    that the boundary condition must be: dc/dy = 0, y = L". Wehner & Wilhelm
+    exist to replace that sentence with a derivation. A page whose subject IS a
+    boundary condition cannot outsource the justification of that condition to
+    another page; the condition and its justification are one result. The
+    catalogue's own `predicts` fields say the same thing twice: A2.1
+    "Inlet/outlet closure for axial dispersion", A2.2 "Correct open/closed vessel
+    BCs".
+
+    THE STEELMAN FOR TWO PAGES, AND WHY IT FAILS. The strongest case for keeping
+    A2.2 separate is that its three-section model (fore | reactor | after, six
+    boundary conditions, three coupled ODEs) is a different pymrm exercise -
+    multi-domain assembly rather than a single closed domain. That is true, and
+    the three-section model is built here. But its whole point is that the
+    reaction section is INVARIANT to both end sections (their own conclusions 1
+    and 2, verified on the page over five decades of Pe_a and four of Pe_c, with
+    the exit value moving by 5.1e-08). A model that by construction produces
+    nothing the closed-vessel model does not is a demonstration in service of the
+    boundary condition, not a model in its own right.
+
+    NOT DECIDED BY CONVENIENCE. Merging cost more work, not less: the page had to
+    build a second, larger model (three sections, piecewise diffusivity,
+    stretched grids, harmonic face averaging of D) that a Danckwerts-only page
+    would not have needed.
+
+    WHAT IS DELIBERATELY LEFT OUT. Danckwerts 1953 is mostly a residence-time
+    paper - F- and C-diagrams, the E/I/F relations, hold-back H, segregation S,
+    the packed-bed erf RTD (his eqs. 15-22), laminar and turbulent pipe flow,
+    blenders, scale models. None of that is built here. It is A2.4's material
+    (tanks-in-series / RTD), and it uses a DIFFERENT closure: his eq. (16)
+    conditions are the open vessel, c = 1 at x = -inf and c = 0 at x = +inf,
+    valid only for 4D/Lu << 1, and he says himself that "the expression for F
+    given in equation (19) is unsuitable for use in equation (29) because of the
+    approximations which have been made". The page quotes that sentence and stops
+    there. Whoever builds A2.4 should read Danckwerts pp. 2-9, not p. 10.
+  consequence_for_A2.2: >
+    status set to `covered`, covered_by A2.1. No page directory and no
+    models.yaml entry of its own.
+
+notes: |
+  Catalogue corrections found while building, neither of which changes what the
+  page builds:
+
+  1. The catalogue records Wehner & Wilhelm as Chem. Eng. Sci. 6(2) 89-98. The
+     paper's own header reads "Chemical Engineering Science, 1956, Vol. 6,
+     pp. 89 to 93" and its last printed page is 93. models_entry.yaml uses 89-93.
+  2. The earlier dispatch confusion is resolved: this case is Danckwerts boundary
+     conditions (S4, T0, P1) as the catalogue says; packed-bed axial dispersion
+     is A2.5 / A2.6 and both remain needs-paper.
+
+  Extraction notes for whoever verifies. Both scans are 1950s Pergamon and the
+  text layer is useless for equations: Danckwerts' running head comes out as
+  "P. V. DANE-~73", and every digit 3 in an equation number scans as an 8, so
+  his eqs. (30)-(37) appear in the text layer as (80)-(87). Every symbol used was
+  read off a 600 dpi render (pdftoppm -r 600 -f N -l N -png). Pages that matter:
+  Danckwerts p. 6 (eqs. 15-17 and the open-vessel conditions), p. 10 (eqs. 30-37
+  - both boundary conditions, the closed form, the two limits and the small-D
+  asymptote); Wehner & Wilhelm p. 89 (eqs. 1-3, Pe = Lu/D, R = kL/u), p. 91
+  (eqs. 19-22), p. 92 (Fig. 4 and its printed parameter labels).
+
+  Wehner & Wilhelm material NOT on the page, listed exhaustively so that no
+  future reader has to re-derive the scope: their Appendix (contributed by
+  Acrivos), eqs. (23)-(26), on the non-steady state, which neither paper solves;
+  and the p. 92 paragraph reconciling df/dz(1) = 0 with the plug-flow gradient
+  -R*exp(-R) ("The key term in this development is {1 - exp(a*Pe_b(z-1))}"), a
+  boundary-layer / non-uniform-limit argument. Neither would support a page of
+  its own; both would be natural additions to A2.1 if it is revisited.
+
+  The reference operating point Pe_b = 2.667, R = 2, Pe_a = 1 comes from text
+  labels printed INSIDE Wehner & Wilhelm's Fig. 4. No curve was digitised and no
+  value was read off an axis. Note 2.667 is 8/3 to the printed precision, which
+  makes their a = sqrt(1 + 4R/Pe_b) exactly 2 - stated on the page as an
+  inference about their arithmetic, and used in no calculation.
+
+verification:
+  report: queue_cases/A2.1/review/verification.md
+  verdict: safe to publish after five fixes; nothing fabricated, no transcription
+    wrong, boundary conditions correct, every headline claim survives
+  fixes_applied: '2026-08-02'
+  what_changed: |
+    F1. The harmonic-vs-arithmetic face-average penalty is now reported as an
+        ORDER with a four-point grid study (1.00 against 2.00; ratio 84 / 172 /
+        347 / 696 at n_b = 100 / 200 / 400 / 800), because 347x was a property of
+        the page's grid, not of the arithmetic mean. AGENTS.md was corrected
+        upstream for the same reason. The "fails silently" half is kept and now
+        prints what a reader would actually see.
+    F2. "after section flat?" is labelled STRUCTURAL, beside the fore-section
+        flux that already was, and the label is demonstrated: truncating the
+        after section from 20 decay lengths to 0.2 (a new `P_after` argument)
+        leaves it just as flat and the bed unchanged to 1.8e-12.
+    F3. The recovered df/dz(1) is printed beside the SAME 3-point fit applied to
+        the exact eq. 33, where the true gradient is zero: 84 % of the number is
+        the estimator. The last bed cell equals the after-section value to
+        5.0e-16, so the flat => zero-gradient chain is exact in the discrete
+        system and the z = 1 condition is discretely identical to the closed
+        vessel's - which is also now said in the check-3 framing (F6).
+    F4. Wehner & Wilhelm's own p. 90 sentence, "There is a discontinuity at this
+        boundary as reported which will be shown later to be not necessarily
+        correct", is quoted in the opening, in the published-model section and in
+        check 3, and reconciled with a measurement: the cell-to-cell fall across
+        z = 0 runs 3.0e-03 at Pe_a = 1 to 2.7e-01 at Pe_a = 1000 against a full
+        closed-vessel step of 0.332, so the step is the Pe_a -> infinity limit.
+    F5. The notebook `description:` said "eight decades"; the naive-inlet sweep
+        is 4.2. Now "four decades", matching meta.yaml and models_entry.yaml.
+    F7. A2.2.yaml no longer contradicts itself about what is left unused; both
+        files now name the Acrivos appendix (eqs. 23-26) and the p. 92
+        boundary-layer paragraph explicitly.
+    F8. Both deferred-correction loops now assert convergence. This turned up a
+        real defect the verifier had not seen: the THREE-SECTION loop had never
+        met its 1e-14 tolerance on the geometrically stretched grids, whose
+        sparse-solve roundoff floor is ~1e-13..1e-11, so it had been exiting
+        silently at max_it every time. Tolerance there is now 1e-11 with the
+        reason in a comment; 34 runs converge in at most 50 of 80 iterations, and
+        148 closed-vessel runs reach 1e-14 in at most 31. The published numbers
+        are unchanged. `strict=False` is used in exactly one place, the break
+        table, where three injected defects stall instead of converging - which
+        the table now reports as a second alarm.
+    F9. The eq. 37 decay exponent is fitted over the asymptotic end Pe >= 1e3 and
+        reads 2.00; the old 1.95 came from a window whose bottom end has
+        R^2/Pe = 0.4. Both numbers are printed, with the reason. The unused
+        `f_exact_ref :=` assignment is gone.
+    Also: the outlet blind spot is now demonstrated rather than asserted - the
+    assembled matrix and RHS are bit-identical (max|dA| = 0.0) for outlet
+    a = +1, -1 and 1e7, against 1.8e+03 for a flipped inlet sign, and setting
+    d = 0.05 makes the outlet sign matter again (0.24692 vs 0.22193).
+
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Scope discrepancy worth flagging to whoever dispatches cases. This case was
-    handed out as "A2.1 — axial dispersion in packed beds", slug axial-dispersion-packed-bed.
-    The catalogue assigns A2.1 to Danckwerts boundary conditions (S4, T0, P1); packed-bed
-    axial dispersion is A2.5 (Edwards–Richardson) and A2.6 (Gunn). The catalogue was followed,
-    per the instruction to take the exact title and canonical reference from docs/catalog-A-foundations.md.
-    A2.5 is already independently marked needs-paper, so the dispatch appears to have crossed
-    the two IDs.
 
-    When the paper arrives, the page is cheap and needs no figure digitisation. Danckwerts
-    1953 is analytic, so the validation should come from checks the paper itself pays for
-    rather than from data: the closed-vessel solution must collapse to plug flow as Pe→∞ and
-    to a CSTR as Pe→0; the RTD must integrate to unity with a mean of exactly the space time
-    for any Pe (the property that makes the closed BCs the right ones — the open-vessel BCs
-    fail this); and the first-order conversion must reproduce the Wehner–Wilhelm closed form.
-    Cross-link A2.3, which is published and supplies the D_ax that these BCs then close.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+page:
+  staged_at: queue_cases/A2.1/page/
+  slug: danckwerts-boundary-conditions
+  runtime_seconds: 5
+  data: none - tier 6, analytical, nothing digitised
+  agreement_metrics: queue_cases/A2.1/page/agreement.json
+  integrator_notes: |
+    - A2.1 is not in models.yaml. Append the block in
+      queue_cases/A2.1/models_entry.yaml in section-A order, immediately before
+      the A2.3 entry.
+    - Do NOT add an A2.2 entry: it is carried by `covers: [A2.2]` on A2.1, the
+      B1.1/B1.5 pattern.
+    - slug and title in meta.yaml match models_entry.yaml exactly.
+    - No data/ directory and no sidecars; `datasets: []`.
+    - No new dependency; everything used is already in requirements.txt.
+    - Nothing was digitised, so there is no review/ overlay, no copyrighted page
+      image anywhere under queue_cases/A2.1/, and no figure-review gate.

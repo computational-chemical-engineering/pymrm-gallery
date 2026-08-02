@@ -1,0 +1,97 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.1
+slug: danckwerts-boundary-conditions
+title: "The Danckwerts boundary conditions, and Wehner & Wilhelm's proof of them"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S4]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 5
+datasets: []
+
+validation:
+  - four independent transcriptions of two differently typeset 1950s papers (Danckwerts eqs. 33 and 34, Wehner & Wilhelm eqs. 20, 21 and 22) agree to 1.1e-16, and the sensitivity of that agreement to a single mis-read digit is measured, not asserted - 2.9e-02 for one wrong coefficient
+  - pymrm against Danckwerts' closed form eq. (34) at the parameters printed on Wehner & Wilhelm's Fig. 4, converging at observed order 2.00 with the van Leer deferred correction (2.2e-07 at n=1600) and order 1.00 with bare upwind
+  - the bare-upwind error is not merely first order, it is numerical diffusion u*dz/2 - comparing against eq. 34 at Pe_eff = 1/(1/Pe + 1/2n) leaves only a second-order residual, observed order 2.00
+  - eight decades of Peclet number against eq. 34, worst 1.9e-04 at Pe = 1e4 where the cell Peclet number reaches 6
+  - Danckwerts' two exact limits, eq. 35 (plug flow) to 4.5e-08 and eq. 36 (stirred tank) to 2.2e-09, and his eq. 37 asymptote confirmed as exact to first order in 1/Pe by an observed decay exponent of 2.00, fitted over the asymptotic end Pe >= 1e3 (a fit over the whole plotted range reads 1.95, and the page says why)
+  - "Wehner & Wilhelm's three-section problem solved as one pymrm domain, imposing NO Danckwerts condition anywhere: it reproduces the closed-vessel profile to 8.0e-06 with Pe_a swept over five decades and Pe_c over four, and the exit value moves by 5.1e-08 across all seven runs"
+  - the fore section against their eq. 19 to 9.0e-07 and the exit value against their eq. 21 to 8.1e-07; the zero gradient at z=1 is recovered rather than imposed, and the 3-point fit that recovers it is calibrated against the same fit applied to the exact eq. 33, which shows 84 % of the reported gradient to be the estimator's own truncation error and the remaining residual to fall at order 2.00
+  - "labelled as STRUCTURAL, not as measurements: the after section being flat (peak-to-peak 2.6e-11) and the fore-section flux being constant. Neither can fail - the discrete equations force c_i = c_{i+1} downstream for any Pe_c and any truncation, demonstrated by cutting the after section from 20 decay lengths to 0.2 with the peak-to-peak following the cell count and the bed unchanged to 1.8e-12, and force zero divergence upstream. Only the flux's VALUE of 1.0 carries information, as a domain-truncation check, and the last bed cell equals the after-section value to 5.0e-16 so the chain from flat to df/dz(1)=0 is exact in the discrete system rather than second-order"
+  - "the harmonic face average of D at a jump is worth an ORDER, not a factor: refining only the bed, the arithmetic mean converges at observed order 1.00 in the fore section and the harmonic at 2.00, so the error ratio grows in proportion to n - 84x at n_b=100, 172x at 200, 347x at 400 and 696x at 800 - and it fails silently, the exit value moving by only 9e-10"
+  - "defect sensitivity measured by injection: a mis-signed inlet condition moves the agreement to 1.97, the naive Dirichlet inlet to 0.497, a wrong nu to 1.00, a mis-signed reaction to 26.1, a Dirichlet outlet to 0.998"
+  - "the same measurement names two blind spots: the sign of `a` at the outlet is undetectable by any test, and the page proves it in the strongest available form rather than by a null result - with b = d = 0 the assembled matrix and right-hand side are bit-identical for a = +1, -1 and 1e7 (max|dA| = 0.0), while a flipped inlet sign moves the matrix by 1.8e+03 and setting d = 0.05 makes the outlet sign matter again (f(exit) 0.24692 against 0.22193); and under-resolution is only weakly detected where the grid is not strained (n = 10 costs 0.6 % at Pe = 2.667 but 4.1 % at Pe = 200)"
+  - the naive Dirichlet-inlet solve against its own closed form (Hulburt = Danckwerts / f(0), with f(0) from Wehner & Wilhelm eq. 22) to 7.1e-05 over four decades of Peclet number
+  - "every deferred correction asserts its own convergence rather than returning silently at the iteration cap: 148 closed-vessel solves reach 1e-14 in at most 31 of 80 iterations, and 33 three-section solves reach 1e-11 - the roundoff floor of the geometrically stretched grid - in at most 50. The assertion is relaxed in exactly one place, the break table, where three of the injected defects stall instead of converging and the solver is therefore a second alarm"
+
+adds: >
+  Nothing to the result - Danckwerts' conditions are right, Wehner & Wilhelm's
+  derivation is correct and the closed form is exact. What is new is the size of
+  the mistake and where the checks run out. The naive inlet condition c(0) = c*
+  is wrong by 179 % in f at Pe = 0.1, 50 % at the Peclet number Wehner and
+  Wilhelm printed on their own Figure 4, and 1 % by Pe = 200; as Pe tends to zero
+  it predicts no conversion at all where the answer must be a stirred tank. Both
+  papers had that algebra, neither plotted it. The outward-normal trap is
+  measured and found to be asymmetric: a flipped sign at the inlet is a 197 %
+  error, at the outlet it is undetectable by any test whatsoever because b = d =
+  0 there makes the assembled matrix and right-hand side bit-identical for
+  a = +1, -1 and 1e7 - so verifying the outlet condition proves nothing about the
+  inlet condition. And bare upwind convection adds a numerical diffusivity u*dz/2 that
+  is indistinguishable from a lower Peclet number (a 200-cell grid at Pe = 200
+  really runs at Pe_eff = 133), so a boundary-condition study done on an upwind
+  grid can measure its own truncation error and call it physics; the page shows
+  the deferred correction removing it and restoring second order.
+
+agreement: >
+  Not applicable in the experimental sense - this is a tier 6 analytical page and
+  neither source paper reports a measurement bearing on the boundary conditions.
+  The check with the most power is Wehner & Wilhelm's three-section problem,
+  which never writes a Danckwerts condition and still reproduces the closed
+  vessel to 8.0e-06 with the two end-section Peclet groups swept over five and
+  four decades. The check with the most resolution is the closed form: 2.2e-07 at
+  n = 1600 at observed order 2.00, and 1.9e-04 or better across eight decades of
+  Peclet number. Danckwerts' limits come out at 4.5e-08 (plug flow) and 2.2e-09
+  (stirred tank). The transcription is verified four ways to 1.1e-16 across two
+  papers, and injecting one wrong digit lifts that to 2.9e-02.
+
+caveats: >
+  Tier 6 and emphatically NOT experimental validation. Neither paper measures
+  anything that tests these boundary conditions; Danckwerts' one experimental
+  figure (water through Raschig rings) belongs to his open-vessel residence-time
+  analysis, which he says himself cannot be carried into the reactor problem, so
+  it is not used and no figure on either paper is digitised. Nothing here tests
+  whether a real packed bed obeys the axial-dispersion model - only what the
+  model means once adopted. The demonstration that df/dz = 0 emerges at the bed
+  exit is a reproduction of Wehner & Wilhelm's chain of reasoning, not an
+  independent proof of its premise: imposing boundedness at the far downstream
+  truncation is itself a zero-gradient condition applied one section away, and
+  the page says so. Nor is the three-section route independent CODE - it shares
+  the whole operator stack and the solver with the closed-vessel solve, and its
+  effective condition at z = 1 is discretely identical to bc_out = {a:1, b:0,
+  d:0}; what it establishes is that the Danckwerts closure is the right reduction
+  of a different problem statement. Two of the printed residuals are STRUCTURAL
+  and are labelled as such on the page: the fore-section flux being constant
+  (zero discrete divergence with no source), so only its VALUE of 1.0 carries
+  information as a domain-truncation check, and the after section being flat,
+  which the discrete equations force for any Pe_c and any truncation length. The
+  recovered df/dz(1) is likewise 84 % the truncation error of the 3-point fit
+  that recovers it, measured by applying the same fit to the exact eq. 33. And
+  Wehner & Wilhelm's own qualification of the inlet discontinuity - "not
+  necessarily correct" - is quoted and reconciled: in their three-section model f
+  is continuous at z = 0 and the closed-vessel step is the Pe_a to infinity
+  limit, with the measured cell-to-cell fall running from 3.0e-03 at Pe_a = 1 to
+  2.7e-01 at Pe_a = 1000 against a full step of 0.332. The closed-form comparison has weak
+  power against under-resolution at the reference Peclet number, measured at
+  0.6 % for a 10-cell grid, and grid convergence is therefore reported as a table
+  rather than a tolerance. The residence-time half of Danckwerts 1953 - the F-
+  and C-diagrams, hold-back, segregation, the laminar-pipe distribution - is not
+  built here; A2.4 is the catalog entry for it.

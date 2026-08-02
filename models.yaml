@@ -189,6 +189,56 @@ models:
     data: {tier: 4, method: digitised, status: complete}
     related: [A1.5, A1.6, A2.3, B1.1, E2.1]
 
+  - id: A2.1
+    slug: danckwerts-boundary-conditions
+    title: "The Danckwerts boundary conditions, and Wehner & Wilhelm's proof of them"
+    description: >
+      Two conditions close the axial-dispersion reactor: a flux balance at the
+      inlet that makes the concentration jump across the bed entrance, and a
+      zero gradient at the outlet. Both checked against the closed form and
+      against a three-section problem that never writes them, both broken on
+      purpose, and the naive c(0) = c_in inlet's error measured across four
+      decades of Peclet number.
+    section: A
+    status: published
+    page: pages/A2.1-danckwerts-boundary-conditions/
+    tier: T0
+    priority: P1
+    structures: [S4]
+    phases: [liquid]
+    covers: [A2.2]
+    reference:
+      authors: ["Danckwerts, P. V."]
+      year: 1953
+      container: "Chemical Engineering Science 2(1) 1–13"
+      doi: 10.1016/0009-2509(53)80001-1
+    also:
+      authors: ["Wehner, J. F.", "Wilhelm, R. H."]
+      year: 1956
+      container: "Chemical Engineering Science 6(2) 89–93"
+      doi: 10.1016/0009-2509(56)80014-6
+    predicts:
+      - inlet and outlet closure for the axial-dispersion reactor
+      - conversion of a first-order reaction with axial dispersion
+      - the concentration discontinuity at the bed entrance
+      - the error made by a Dirichlet inlet condition, as a function of Peclet number
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_convflux_upwind
+      - construct_coefficient_matrix
+      - interp_cntr_to_stagg_tvd
+    data: {tier: 6, method: analytical, status: complete}
+    related: [A2.2, A2.3, A2.4, A2.5, A2.6, D1.2]
+    note: >
+      Covers A2.2. Wehner & Wilhelm's eq. (20) for the reaction section is
+      algebraically identical to Danckwerts' eq. (33) and they say so on p. 91,
+      so a separate A2.2 page would validate against the same closed form. What
+      they add is the derivation of the conditions, which is built here as the
+      three-section model. Note the catalogue records the Wehner & Wilhelm page
+      range as 89-98; the paper's own header reads "pp. 89 to 93" and its last
+      page is 93.
+
   - id: A2.3
     slug: taylor-aris-dispersion
     title: "Taylor–Aris dispersion"
