@@ -1,0 +1,40 @@
+# Block to splice into models.yaml. A4.4 is NOT yet in models.yaml, so append
+# this in section A (next to A4.2, which comes from the same review).
+# slug and title are identical to queue_cases/A4.4/page/meta.yaml.
+- id: A4.4
+  slug: knudsen-bosanquet
+  title: "Knudsen diffusion and the Bosanquet relation"
+  description: >
+    The Bosanquet interpolation 1/D = 1/D_K + 1/D_AB is an approximation, not
+    an identity — and its error is worst in the bulk-diffusion limit and
+    vanishes under Knudsen control, the opposite of the usual instinct.
+    Quantified against the dusty gas model across the whole transition: for a
+    spherical pellet running A -> 2B at a Thiele modulus of 30 it overestimates
+    the effectiveness factor by 27 % under bulk control (grid-converged 26.96 %;
+    25.5 % at phi = 10, 27.7 % at phi = 100) and by 3e-5 % under Knudsen
+    control.
+  section: A
+  status: published
+  page: pages/A4.4-knudsen-bosanquet/
+  tier: T0
+  priority: P1
+  structures: [S3]
+  phases: [gas]
+  reference:
+    authors: ["Krishna, R.", "Wesselingh, J. A."]
+    year: 1997
+    container: "Chemical Engineering Science 52(6) 861–911"
+    doi: 10.1016/S0009-2509(96)00458-7
+  reference_read_from:
+    authors: ["Krishna, R.", "Wesselingh, J. A."]
+    year: 1997
+    note: >
+      The origins are unreachable and were not consulted — Knudsen (1909),
+      Bosanquet's 1944 British report BR-507, Jackson (1977) and Mason &
+      Malinauskas (1983). The review prints eqs. (82)-(87), (105), (107),
+      (109) and (110) in full, attributes them, and names the Bosanquet
+      formula; all were verified on 600 dpi renders.
+  predicts: [Knudsen diffusivity, effective diffusivity in the transition regime, Bosanquet error vs Knudsen number, internal pellet pressure, effectiveness factor, Graham's law flux ratio]
+  pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, clip_approach]
+  data: {tier: 6, method: table, status: complete}
+  related: [A4.2, A4.3, A4.5, A4.6, B1.1]

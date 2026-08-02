@@ -1,0 +1,47 @@
+# Block to splice into models.yaml. H1.4 already exists there as status: planned
+# (slug and title below match it, and match page/meta.yaml) - upgrade in place,
+# do not append a duplicate.
+id: H1.4
+slug: itoh-membrane-dehydrogenation
+title: "Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium"
+description: >
+  Hydrogen leaves through a palladium wall, so a dehydrogenation capped at
+  18.7 % equilibrium conversion runs to a measured 99.7 %. The model puts that
+  operating point on its co-current fast-permeation ceiling and lands on the
+  measured number with nothing fitted - and the page measures how little the
+  comparison resolves (nothing about the kinetics or the permeance), after two
+  misprints in the 3-page communication are resolved from the paper's own
+  statements.
+section: H
+status: published
+page: pages/H1.4-itoh-membrane-dehydrogenation/
+tier: T0
+priority: P1
+structures:
+- S7
+phases:
+- gas-solid
+predicts:
+- conversion beyond the equilibrium limit
+- axial flow and hydrogen-fraction profiles in both channels
+- co-current vs counter-current purge (prediction)
+pymrm_api:
+- construct_convflux_upwind
+- construct_div
+- NumJac
+reference:
+  authors:
+  - Itoh, N.
+  year: 1987
+  container: "AIChE Journal 33(9) 1576–1578"
+  doi: 10.1002/aic.690330921
+data:
+  tier: 2
+  method: stated in text
+  status: complete
+related:
+- H1.1
+- H1.5
+- H1.7
+- F2.3
+- D2.2

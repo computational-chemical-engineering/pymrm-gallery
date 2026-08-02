@@ -1,0 +1,70 @@
+# Block to splice into models.yaml, section F. F1.3 is not yet in models.yaml as
+# its own record - it appears only inside F1.4's `related:` list - so APPEND this
+# entry rather than upgrading one in place, and check first that no `- id: F1.3`
+# already exists.
+#
+# slug and title are identical to queue_cases/F1.3/page/meta.yaml.
+#
+# NOTE ON THE REFERENCE. The model is Wilkinson et al. (1992); that paper was not
+# available and is not on disk. The equations were read from its reprint as
+# Eqs. 1-4 of Krishna & Ellenberger (1996), which IS on disk. The reference block
+# below names the origin, and `reference_read_from` names the text actually used.
+# The DOI 10.1002/aic.690380408 was resolved from the full citation printed in
+# Krishna & Ellenberger's own literature-cited list (authors, volume 38, page 544,
+# year 1992) and confirmed against CrossRef on all four fields - it is verified,
+# not a title-similarity guess.
+- id: F1.3
+  slug: wilkinson-high-pressure-holdup
+  title: "Wilkinson high-pressure bubble-column gas holdup"
+  description: >
+    The four-equation correlation that predicts bubble-column gas holdup from
+    fluid properties alone, run end to end. Pressure enters it in one place only,
+    the gas density, and that is where it fails: at atmospheric densities its
+    transition equation puts the regime change 1.4-1.7 decades too low at air and
+    argon and 6.8 decades too low at helium, which empties the small-bubble
+    population and accounts for one half of the statistic that replaced it - the
+    other half being the rise-velocity pair, eqs. 3 and 4 jointly. The gap does
+    not close with density: Reilly's transition closure exceeds Wilkinson's at
+    every density up to 1000 kg/m3, so the two never cross, and above 6.7 kg/m3
+    neither has support in this source.
+  section: F
+  status: in-progress
+  page: queue_cases/F1.3/page/
+  tier: T1
+  priority: P1
+  structures: [S1]
+  phases: [gas-liquid]
+  predicts:
+    - regime-transition gas holdup and superficial velocity from fluid properties
+    - small-bubble and large-bubble rise velocities
+    - large-bubble holdup above the transition
+    - total gas holdup
+    - the gas-density (hence pressure) dependence of all of the above
+  pymrm_api: []          # algebraic closure; no pymrm operator is used, and the page says so
+  reference:
+    authors: ["Wilkinson, P. M.", "Spek, A. P.", "van Dierendonck, L. L."]
+    year: 1992
+    container: "AIChE Journal 38(4) 544-554"
+    doi: 10.1002/aic.690380408
+  reference_read_from:
+    authors: ["Krishna, R.", "Ellenberger, J."]
+    year: 1996
+    container: "AIChE Journal 42(9) 2627-2634"
+    doi: 10.1002/aic.690420923
+    note: >
+      Reprints Wilkinson's correlation in full as its Eqs. 1-4, together with
+      Reilly et al. (1994) Eq. 8, the Table 2 liquid properties and the Table 3
+      deviations. Every equation was verified on a 600 dpi render of that paper.
+  data: {tier: 4, method: digitised, status: complete}
+  related: [F1.4, F1.9, F2.3, F1.1, F3.1]
+  # Integrator notes:
+  #  * No new pip dependencies. numpy, pandas, matplotlib, scipy, pyyaml only.
+  #  * The page loads two datasets CROSS-PAGE from F1.4
+  #    (load_data(..., page="F1.4-krishna-ellenberger-holdup")), so it must be
+  #    integrated while F1.4 remains published, exactly as A4.2 depends on A4.9.
+  #  * Its own dataset, data/krishna-ellenberger-1996-table2-liquids.csv, is a
+  #    printed-table transcription (tier 6 in isolation) with a sidecar; the
+  #    tier-4 label above reflects the digitised Figure 11 points the validation
+  #    rests on, which are F1.4's maintainer-reviewed dataset.
+  #  * No figure was digitised for this page and no review gate is outstanding.
+  #  * Runtime about 4 s.

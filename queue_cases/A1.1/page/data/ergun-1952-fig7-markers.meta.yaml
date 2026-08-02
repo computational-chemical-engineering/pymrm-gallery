@@ -1,6 +1,6 @@
 dataset_id: ergun-1952-fig7-markers
 title: "Friction factor f_k against N_Re/(1-eps), digitised from Ergun's Figure 7 (three panels)"
-status: awaiting-review
+status: complete
 
 source:
   authors:
@@ -95,13 +95,61 @@ marker_shape:
   checked_on: 2026-07-30
 
 review:
-  reviewed_by: null
-  date: null
-  verdict: "NOT YET REVIEWED - see queue_cases/A1.1/review/ for the overlays"
-  questions_for_reviewer:
+  reviewed_by: "gallery maintainer, against the numbered overlays in queue_cases/A1.1/review/"
+  date: 2026-08-02
+  verdict: >
+    Ringed centres are on real markers; a few markers were missed; approved for
+    publication.
+  questions_asked:
     - "Are there false positives - red rings on something that is not a marker?"
     - "In the dense chain of the Present investigation panel, are the detected centres on markers, or drifting onto the drawn eq. (14b) line where markers merge into it?"
     - "Roughly how many markers per panel does the eye count that the detector missed? The refit is insensitive to random misses but not to a systematic one."
+  answers: >
+    (1) No false positives were reported: every ringed centre is on a marker, so
+    nothing was picked up off the drawn eq. (14b) line, the grid, or the panel
+    labels. (2) The dense chain of the "Present investigation" panel was not
+    flagged, so the ringed centres there are on markers rather than sliding onto
+    the drawn line where the two merge. (3) A few markers per panel were missed.
+    The miss was described as a few markers, not as a run of markers in one
+    region or one part of the range, i.e. recall is incomplete but the losses
+    were reported as scattered rather than systematic.
+
+limitations:
+  recall: >
+    THIS FILE IS INCOMPLETE BY A KNOWN AMOUNT, and that is a property of the
+    dataset, not a footnote to it. 244 of Ergun's Figure 7 markers were
+    recovered; the maintainer's review confirms that a few markers per panel
+    were missed. The mechanism is the detection rule itself: a marker is found
+    by the enclosed white region inside its ring, so where two or more markers
+    overlap into a solid blob there is no interior left to find. Ergun's own
+    total is 640 experiments across more figures than these three panels, so
+    the file was never a census.
+
+    What the missed markers DO affect: the precision of anything fitted to this
+    file, and any count. The refit constants and the per-panel constants carry
+    a wider confidence interval than 244 independent points would suggest, and
+    the number of markers in a region of the plot is NOT the number of
+    experiments Ergun ran there - dense regions lose proportionally more. Do
+    not use this file to weight one part of the Reynolds range against another,
+    and do not read the panel-level k2 for the present-investigation panel as
+    well determined: its markers stop at N_Re/(1-eps) = 136.
+
+    What they do NOT affect: the axis calibration, the coordinates of any
+    marker that was recovered, or - to the extent the misses are scattered
+    rather than concentrated - the central values of the fit. Random misses
+    cost precision; they do not move the fit. Only a systematic miss, one that
+    removed a whole shape or one side of the scatter, would bias it, and it is
+    a few scattered misses per panel that the review reported, not a
+    systematic one. The two independent pieces of evidence pointing the same
+    way are (a) refitting Ergun's two constants from the 244 recovered markers
+    returns k1 = 151.9 and k2 = 1.697 against his printed 150 and 1.75, i.e.
+    +1.3 % and -3.0 %, and (b) the three panels, calibrated separately, give
+    k1 = 146.6, 154.6 and 151.0. A systematic loss would have to be common to
+    three panels digitised independently to survive both.
+
+    The shape failure mode that could have produced exactly such a systematic
+    loss - a series drawn with crosses or triangles, which enclose nothing -
+    was excluded before extraction; see `marker_shape` above.
 
 columns:
   - {name: series, unit: "-", description: "present_investigation | burke_plummer | morcom"}

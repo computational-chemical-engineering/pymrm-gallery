@@ -1,0 +1,57 @@
+# Block to splice into models.yaml, section A.
+#
+# IN-PLACE UPGRADE, NOT AN APPEND. A1.1 is already in models.yaml (currently at
+# line ~150) as `status: planned` with slug `ergun-pressure-drop`. The slug below
+# is the same one; the title is replaced, because the page is the four-way
+# comparison the catalogue asked for rather than the Ergun equation alone, and
+# it matches page/meta.yaml exactly. Do not append a duplicate id.
+#
+# The existing entry's free-text `note:` ("Build as a comparison page against
+# Kozeny-Carman, Forchheimer and the Eisfeld-Schnitzlein wall correction on one
+# dataset") is the build instruction and should be dropped once built.
+#
+# A1.2 (Kozeny-Carman), A1.3 (Darcy-Forchheimer) and A1.4 (Eisfeld-Schnitzlein)
+# are NOT separate records in models.yaml and do not need to be created: the
+# `covers:` field below is how B1.1/B1.5 handle the same situation. Their
+# queue_cases files are already `status: covered`.
+id: A1.1
+slug: ergun-pressure-drop
+title: "Four packed-bed pressure-drop correlations, against the data Ergun fitted"
+description: >
+  The two constants everyone quotes, 150 and 1.75, fitted in 1952 to 640
+  experiments that survive only as scatter in the figures of a scan with no text
+  layer and no tables. 244 of those markers are recovered and the constants are
+  refitted from them, coming back to 1.3 % and 3.0 % from three sources
+  calibrated separately - and on the same axes Kozeny-Carman, Darcy-Forchheimer
+  and the Eisfeld-Schnitzlein wall correction become a quantitative comparison
+  instead of a qualitative ranking. The two most-used correlations in the field
+  disagree by a quarter, and about the turbulent constant, not the famous 150.
+section: A
+status: published
+page: pages/A1.1-ergun-pressure-drop/
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+covers: [A1.1, A1.2, A1.3, A1.4]
+reference:
+  authors: ["Ergun, S."]
+  year: 1952
+  container: "Chemical Engineering Progress 48(2) 89–94"
+  doi: null
+also:
+  authors: ["Eisfeld, B.", "Schnitzlein, K."]
+  year: 2001
+  container: "Chemical Engineering Science 56(14) 4321–4329"
+  doi: 10.1016/S0009-2509(00)00533-9
+predicts:
+  - packed-bed friction factor and pressure gradient, viscous and inertial terms
+  - the tube-to-particle wall correction and the sign change it undergoes with flow regime
+  - permeability and inertial coefficient of a Darcy-Forchheimer medium, fitted
+  - outlet pressure of an isothermal compressible bed
+# No pymrm operator is used and the page says so: these are algebraic closures,
+# and the compressible-bed integration at the end is a closed form checked
+# against an independent quadrature.
+pymrm_api: []
+data: {tier: 4, method: digitised, status: complete}
+related: [A1.5, A1.6, A2.3, B1.1, E2.1]

@@ -30,7 +30,24 @@ acquisition:
     Three of the constants are checkable against the figures rather than merely
     transcribed, because Figure 2 draws eqs. (9), (11) and (12) and all three
     recompute onto their printed curves at 600 dpi. See the calibration_check
-    block of the Figure 2 sidecar.
+    block of the Figure 2 sidecar - including its `residual_offset`, which
+    records that all three sit about 4 px above where the Figure 2 calibration
+    puts them.
+  axis_constants: >
+    The `*_fig2` and `*_fig3` rows are NOT read from the paper. They are the two
+    figures' axis calibrations, measured on the 600 dpi renders by
+    `extraction/setup2.py` and `extraction/setup3.py`, and they are in this file
+    so that the page can convert pixel coordinates itself - which is what makes
+    the Figure 3 skew correction a computation the reader can see rather than a
+    transformation already baked into a CSV.
+
+    Figure 3's ordinate calibration is COLUMN-DEPENDENT: `row0_fig3_left` /
+    `pxdec_y_fig3_left` apply at column `tickcol_fig3_left` and the `_right`
+    pair at `tickcol_fig3_right`, interpolated linearly in between. `row0_fig3`
+    and `pxdec_y_fig3` are the superseded both-sides average, kept only so the
+    page can show what the correction moved. Figure 2's calibration is the
+    2026-07-30 one and is NOT column-dependent; see that sidecar for why the
+    analogous correction is not applied there.
 
 derived:
   - name: eps_b_figure2

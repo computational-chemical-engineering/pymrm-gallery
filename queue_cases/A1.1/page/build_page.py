@@ -218,8 +218,13 @@ Figure 5." Two digitisations of one set of runs, on differently scaled axes,
 with independently fitted calibrations — a free consistency check that the paper
 pays for.
 
-**The digitisation has not yet been reviewed by a maintainer.** Overlays are in
-`queue_cases/A1.1/review/`. Read the sidecar before reusing the CSV."""))
+**The digitisation has been reviewed by a maintainer against numbered overlays,
+and passed with one stated limitation.** No ring is on anything that is not a
+marker, and none has slid onto the drawn line in the dense chain — but a few
+markers per panel were missed. The next cell prints the recorded verdict, and
+what that limitation does and does not affect is set out in the sidecar under
+`limitations.recall` and again at the end of this page. Read it before reusing
+the CSV: this file is a large sample of Ergun's Figure 7, not a census of it."""))
 
 cells.append(code('''obs = load_data("ergun-1952-fig7-markers.csv", page=PAGE)
 obs5 = load_data("ergun-1952-fig5-present-markers.csv", page=PAGE)
@@ -754,22 +759,38 @@ print("   by others.")'''))
 
 cells.append(md(r"""**The honest limits of this page.**
 
-The 244 points are not Ergun's 640. Markers that overlap into a solid blob have
-no interior for the detector to find, and the low-Reynolds half of the "Present
-investigation" panel is largely such a chain; Figures 6 and 8 carry further
-sources that were not attempted at all. Points are lost from the middle of dense
-clusters, symmetrically about the trend, so this costs precision and not
-accuracy — but it means the refit is over a subset, and the panel-level $k_2$
-for the present-investigation panel (1.88) is poorly determined because its
-markers stop at $N_{Re}/(1-\epsilon) = 136$.
+**Incomplete recall, and it is a limitation of the dataset rather than a
+footnote to it.** The 244 points are not Ergun's 640. A maintainer has reviewed
+the numbered overlays and the verdict is recorded in the sidecar: the ringed
+centres are on real markers — nothing was picked off the drawn eq. (14b) line,
+the graph paper or the panel labels, including in the dense chain where markers
+and line merge — but a few markers per panel were missed. The mechanism is the
+detection rule itself: a marker is found by the enclosed white region inside its
+ring, so where several markers overlap into a solid blob there is no interior
+left to find, and the low-Reynolds half of the "Present investigation" panel is
+largely such a chain. Figures 6 and 8 carry further sources (Oman & Watson) that
+were not attempted at all.
 
-**The digitisation has not been reviewed.** A maintainer reviews every figure
-extraction in this gallery visually, and this one is queued, not cleared. The
-specific open question is marker shape: Figure 5's Morcom panel distinguishes
-tablets, cylinders, nodules and spheres by symbol, while every marker read from
-Figure 7 was a circle. If Figure 7 also mixes shapes, the crosses and triangles
-carry no enclosed interior and are being missed systematically rather than at
-random — which would matter.
+*What that affects.* Precision, and any count. Every constant fitted on this
+page is fitted to a sample, so it carries a wider interval than 244 independent
+points would suggest; and the number of markers in a region of the plot is not
+the number of experiments Ergun ran there, because dense regions lose
+proportionally more. The panel-level $k_2$ for the present-investigation panel
+is poorly determined for a second and unrelated reason — its markers stop at
+$N_{Re}/(1-\epsilon) = 136$, so there is little inertial range to fit.
+
+*What it does not affect.* The axis calibration, the coordinates of any marker
+that was recovered, and — because what was reported is a few scattered misses
+rather than a run of them — the central values. Random misses add variance; they
+do not move a fit. Only a systematic loss would bias it, and two independent
+things argue against one here: the refit returns Ergun's own constants to within
+a few percent, and three panels calibrated separately agree on $k_1$ to ±3 %, so
+any systematic loss would have to be common to three independent digitisations.
+The one failure mode that could have produced exactly that — a series drawn with
+crosses or triangles, which enclose nothing and would vanish as a group — was
+excluded before extraction by inspecting Figure 7 at 4× magnification: it
+carries no shape legend and every marker in it is an open circle. Figure 5's
+Morcom panel does mix four symbols, which is why the question was asked.
 
 **$D/d_p$ is attached to sources, never to points.** Ergun's axes do not carry
 it. The wall-effect regime is identified from Eisfeld & Schnitzlein's

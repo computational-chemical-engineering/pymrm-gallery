@@ -1,0 +1,95 @@
+# Block to splice into models.yaml, section E. E1.2 is NOT yet a record in
+# models.yaml (checked: only E2.1 exists in section E), so this is an APPEND, in
+# section-E order, before E2.1. Verify no `- id: E1.2` exists first.
+#
+# slug and title are identical to queue_cases/E1.2/page/meta.yaml.
+#
+# NOTE ON THE REFERENCE, and it is deliberate. `reference` is Kunii & Levenspiel
+# (1968) because that is the text actually read: equations 3, 9, 10, 11 and 17
+# and every printed number were transcribed from 600 dpi renders of journal pages
+# 482, 490, 491 and 492.
+#
+# The attribution carried in `also` is DELIBERATELY THIN, because the source is
+# thin. The name Davidson appears in the body of K&L 1968 exactly once, on
+# journal page 490 (PDF page 10), inside a parenthesis listing the model's
+# simplifying assumptions: "many simplifying assumptions were made in developing
+# this model (the Davidson bubble, bed with single size of bubbles, ...)". That
+# is the whole of it. K&L do NOT list Davidson & Harrison in their literature
+# cited (journal page 492, checked on both columns); Davidson, J. F. appears
+# there only as a co-author of Orcutt, Davidson & Pigford (1958); equations 3 and
+# 9 and the 0.711 carry no citation; and the derivations are credited to Kunii &
+# Levenspiel (1968b), I&EC Fundamentals 7 446, not on disk. So `also` carries the
+# surname and nothing else: no initials-plus-year citation, no title, no
+# publisher, no city, because none of those appear in any document read here.
+# The monograph usually named as the origin was NOT consulted and its
+# bibliographic detail is general knowledge, not a transcription, so it is not
+# put in structured metadata. The derivation on the page is done from scratch.
+#
+# Integrator notes:
+#  * SLUG. The slug is `davidson-bubble`, not `davidson-harrison-bubble`: no
+#    document read here attributes the model to two authors. The page directory
+#    must therefore be pages/E1.2-davidson-bubble/. The catalogue title in
+#    queue_cases/E1.2.yaml keeps "Davidson-Harrison bubble" because the catalogue
+#    key is stable, but nothing rendered says it.
+#  * No new pip dependencies. numpy, scipy, matplotlib, pandas, pyyaml, nbformat
+#    only - all already in requirements.txt.
+#  * The page owns NO dataset. It loads E2.1's printed-appendix CSV cross-page,
+#    load_data(..., page="E2.1-kunii-levenspiel-bubbling-bed"), so it must be
+#    integrated while E2.1 remains published - the same dependency F1.3 has on
+#    F1.4 and A4.2 has on A4.9. `datasets: []` in meta.yaml is correct.
+#  * No figure was digitised; there is no review gate and no queue_cases/E1.2/review/
+#    content to inspect before staging.
+#  * Runtime about 9 s.
+- id: E1.2
+  slug: davidson-bubble
+  title: "The Davidson bubble: rise velocity, cloud and through-flow"
+  description: >
+    A single bubble in an incipiently fluidised bed is a Laplace problem with a
+    uniform-pressure hole in it, and one pymrm solve of it produces both the
+    cloud that Kunii and Levenspiel's equation 9 gives and the 4.5 that opens
+    their equation 10 - two consecutive equations, stated and never derived, that turn out to be
+    one flow field read twice. The through-flow coefficient comes out to 1.1e-6
+    without ever being an input. The cloud, unlike the through-flow, has a pole
+    rather than a limit at u_br = u_f, and the source paper's own appendix B bed
+    sits on the wrong side of it.
+  section: E
+  status: in-progress
+  page: queue_cases/E1.2/page/
+  tier: T0
+  priority: P1
+  structures: [S3]
+  phases: [gas-solid]
+  predicts:
+    - cloud radius and cloud volume around a rising bubble
+    - through-flow of gas percolating through a bubble
+    - the convective term of the bubble-to-cloud interchange coefficient
+    - the threshold in bubble velocity below which no cloud exists
+    - gas and solids streamline patterns around a bubble in the bubble frame
+    - the two-dimensional (slab-bed) counterparts of all of the above
+  pymrm_api:
+    - construct_grad
+    - construct_div
+    - construct_coefficient_matrix
+  reference:
+    authors: ["Kunii, D.", "Levenspiel, O."]
+    year: 1968
+    container: "Industrial & Engineering Chemistry Process Design and Development 7(4) 481-492"
+    doi: 10.1021/i260028a001
+  also:
+    authors: ["Davidson"]
+    year: null
+    container: null
+    doi: null
+    note: >
+      Recorded exactly as strongly as the read source supports, and no more.
+      Kunii and Levenspiel name "the Davidson bubble" once, on journal page 490,
+      in a parenthesis listing the model's simplifying assumptions. They give a
+      surname and nothing else: no initials, no year, no title, no publisher, and
+      no entry in their literature cited (journal page 492). The monograph
+      usually named as the origin of these results was NOT consulted, is the
+      source of nothing on the page, and its bibliographic detail - authors,
+      year, title, publisher, city - is general background rather than anything
+      transcribed from a document read here, so it is deliberately not recorded
+      in this block.
+  data: {tier: 6, method: table, status: complete}
+  related: [E2.1, E1.1, B1.1, B1.6, A2.3]

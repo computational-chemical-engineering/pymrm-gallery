@@ -1,0 +1,42 @@
+# Block to splice into models.yaml. Keep slug and title identical to page/meta.yaml.
+- id: A3.4
+  slug: wakao-funazkri
+  title: "Wakao–Funazkri particle–fluid mass and heat transfer"
+  description: >
+    Sh = 2 + 1.1 Sc^(1/3) Re^0.6, rebuilt from the re-analysis that produced it.
+    The bed model the paper inverts by hand — steady 1-D convection–diffusion–
+    reaction with Danckwerts boundary conditions — is solved with pymrm, so the
+    paper's own closed form becomes a validation target and the inversion becomes
+    a root find. Both figures the correlation rests on are digitised, including
+    the liquid-phase Figure 3 the two constants were actually fitted on.
+  section: A
+  tier: T1
+  priority: P1
+  structures: [S3]
+  phases: [gas-solid]
+  predicts:
+    - particle-to-fluid Sherwood and Nusselt numbers in packed beds
+    - the correction from a plug-flow-inverted coefficient to a dispersion-inverted one
+    - the axial effective dispersion coefficient of a mass-transferring species
+  pymrm_api:
+    - construct_grad
+    - construct_div
+    - construct_convflux_upwind
+    - construct_boundary_value_matrices
+  reference:
+    authors: ["Wakao, N.", "Funazkri, T."]
+    year: 1978
+    container: "Chemical Engineering Science 33(10) 1375–1384"
+    doi: "10.1016/0009-2509(78)85120-3"
+  data:
+    tier: 4
+    method: digitised
+    status: provisional
+    note: >
+      Two digitised figures, both pending maintainer confirmation. Figure 2
+      (79 gas markers) was reviewed on 2026-08-02 and re-extracted by shape fit
+      in response; Figure 3 (182 liquid markers at the shipped erasure band,
+      plus five further marker sets shipped as a systematic-uncertainty sweep,
+      plus the drawn correlation traced as a calibration control) is new. The
+      three results that carry the page use no data at all.
+  related: [A3.5, D1.3, B1.1, A2.3]

@@ -1,0 +1,39 @@
+# APPEND, not an in-place upgrade: G1.7 has no record in models.yaml at all
+# (checked 2026-08-02). Insert this block in section G. `slug` and `title` below
+# are identical to page/meta.yaml.
+#
+# Block to splice into models.yaml, section G. The catalogue previously carried
+# this case with catalog_reference "Chem. Eng. Sci. (1991)"; the paper actually
+# built (and the one the OA copy is) is the Chem. Eng. Technol. 14 (1991)
+# synthesis paper by the same group, which itself derives both correlations.
+# The CES 46 (1991) 409-417 companion is the atmospheric study.
+- id: G1.7
+  slug: wammes-high-pressure-trickle-bed
+  title: "Wammes–Westerterp high-pressure trickle-bed hydrodynamics"
+  description: >
+    Trickle-bed hydrodynamics at up to 7.5 MPa: the pressure-gradient
+    correlation contains the liquid hold-up and the hold-up correlation
+    contains the pressure gradient, so they only predict anything as a coupled
+    pair - closed here against the figures they were derived from, with the
+    gas-density-not-pressure claim reduced to a matched-pair number, plus the
+    plug-flow CO2-absorption model behind the paper's interfacial-area
+    measurements as a pymrm S3 solve.
+  section: G
+  status: published
+  page: pages/G1.7-wammes-high-pressure-trickle-bed/
+  tier: T1
+  priority: P1
+  structures: [S3]
+  phases: [gas-liquid-solid]
+  predicts:
+    - total external liquid hold-up under trickle flow at elevated gas density
+    - two-phase pressure gradient
+    - gas-phase CO2 conversion of the chemically enhanced absorption experiment
+  pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+  reference:
+    authors: ["Wammes, W. J. A.", "Westerterp, K. R."]
+    year: 1991
+    container: "Chemical Engineering & Technology 14(6) 406–413"
+    doi: 10.1002/ceat.270140608
+  data: {tier: 4, method: digitised, status: complete}
+  related: [G1.8, F1.4, F2.3, F3.1]

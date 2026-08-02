@@ -41,34 +41,90 @@ acquisition:
   method: digitised
   figure: "Figure 2, journal page 1382 (PDF page 8)"
   tool: "poppler pdftoppm at 600 dpi + scipy.ndimage"
+  passes:
+    - date: 2026-07-30
+      what: >
+        First pass. Detection by local ink excess: box-filtered ink density
+        minus the largest value explainable by a locally straight structure
+        (grey-scale opening with a long line element, maximised over six
+        orientations), then non-maximum suppression at 8 px. 87 candidates, 81
+        kept after a visual audit at 600 dpi which rejected four line junctions,
+        one annotation leader and one axis label.
+      review: >
+        Maintainer, 2026-08-02: "Mostly symbols are identified well, but often
+        the marker is off centre. It might be helpful to try to fit the shape
+        and then take the center of the shape."
+    - date: 2026-08-02
+      what: >
+        SHAPE FIT. Every one of the 81 crosshairs was re-located by fitting a
+        parametric glyph template - open circle, square, triangles at three
+        orientations, plus - to the ink at sub-pixel resolution, and the
+        reported coordinate is the CENTRE OF THE FITTED SHAPE. The score of a
+        template of size s placed at (y, x) is
+
+            <ink over the glyph body> - <ink over an outer margin annulus>,
+
+        both weighted by a mask that is zero wherever the ink is known not to be
+        a marker. Sliding the template off-centre loses body ink and gains
+        margin ink, so the optimum is a registration of the shape rather than a
+        peak of ink density.
+
+        A marker keeps its fitted centre only when the fit scores at least 0.50;
+        12 of the 81 scored below that - all of them glyphs the curve removal
+        had eaten into - and kept the 2026-07-30 crosshair instead. Both
+        coordinates are in the file for every one of them.
+
+        The same detector was then run as a matching pursuit over the whole plot
+        area with the 81 as seeds. It proposed 11 further markers; 2 were
+        rejected by visual audit (one on the "Single spheres" leader, one where
+        that leader crosses the eq. 11 line) and 9 kept.
+
+        Removed before detection, as `don't care` rather than as absence of ink:
+        locally straight ink over 37 px at any of 18 orientations (the eq. 12
+        and eq. 11 curves, the two annotation leaders); ink connected to the
+        frame within 30 px of it (the frame and every tick); and a band of
+        half-width 9 px about the COMPUTED position of eq. (9). That last one
+        has to be done by position: the Ranz-Marshall curve is dashed and its
+        dashes are 12-20 px of compact ink, which no shape test can tell from a
+        marker.
+      effect: >
+        Measured on the page, on the 81 paired positions: the fitted centre lies
+        -0.01 +/- 2.59 px from the crosshair along Re and +0.62 +/- 2.19 px
+        along Sh, a median distance of 2.3 px. The column shift is consistent
+        with zero; the row shift is 2.5 standard errors from zero and amounts to
+        -0.41 % in Sh. Refitting eq. (12) on the same 81 markers moves alpha
+        from 1.168 to 1.152 and beta from 0.5550 to 0.5572 - under a tenth of
+        one standard error either way. The displacement was scatter, not bias.
+
+        It also changed the COUNT in both directions. 11 of the 81 crosshairs
+        turned out to be a second or third mark on a glyph another crosshair
+        already had: two crosshairs on one glyph produce two fits at the same
+        point, which is how a shape fit detects a double count and a density
+        threshold cannot. 81 recorded positions are 70 distinct glyphs; with the
+        9 added, the figure yields 79.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
   procedure: >
     Only the experimental markers were extracted. The three curves drawn on the
     figure - eq. (12) solid, Ranz-Marshall eq. (9) dashed, Petrovic-Thodos
-    eq. (11) straight - are the authors' models and were excluded.
-
-    Detection used a local ink excess: box-filtered ink density minus the
-    largest value explainable by a locally straight structure (grey-scale
-    opening with a long line element, maximised over six orientations), then
-    non-maximum suppression at 8 px. The dashed Ranz-Marshall curve was erased
-    before detection, because its dashes are compact ink and score as markers;
-    it was erased at its COMPUTED position, from eq. (9), not by tracing.
-    Candidates whose residual ink after removing all three computed curves was
-    below threshold were dropped, then every surviving candidate was audited
-    visually at 600 dpi on a contact sheet and six of eighty-seven rejected -
-    four line junctions, one annotation leader, one axis label.
+    eq. (11) straight - are the authors' models and were excluded at their
+    COMPUTED positions, never traced.
 
     Axes are logarithmic and were calibrated from the printed decade ticks on
     all four sides: Re = 1 at column 442.0 with 405.2 px per decade,
     Sh = 1 at row 1225.25 with 337.67 px per decade (crop origin at
-    0.50*width, 0.70*height of the 4592 x 6000 page render).
-  operator: "Claude Opus 5 (assisted)"
-  date: 2026-07-30
+    0.50*width, 0.70*height of the 4592 x 6000 page render). This calibration is
+    unchanged from the first pass and was not re-derived.
   estimated_error: >
-    Positions: about +/- 0.7 % in Re and +/- 0.5 % in Sh from placing the centre
-    of a ~20 px glyph on axes with ~400 and ~340 px decades, plus up to 1 % of
-    systematic axis error from the ~5 px skew between the tick rows on opposite
-    sides of the frame. Markers that overlap a drawn curve have their centroid
-    pulled by up to a few pixels.
+    Positions: about +/- 0.5 % in Re and +/- 0.5 % in Sh from placing the fitted
+    centre of a ~22 px glyph on axes with ~400 and ~340 px decades, plus up to
+    1 % of systematic axis error from the ~5 px skew between the tick rows on
+    opposite sides of the frame. Markers clipped by a removed curve are worse;
+    those are the low `fit_score` rows, and the 16 with fit_score < 0.50 carry
+    the older crosshair instead (`recentred = False`). Those 16 have zero
+    displacement BY CONSTRUCTION and must be excluded from any statistic about
+    how far the re-centring moved a marker; on the 65 that did move, the median
+    displacement is 3.29 px, not the 2.28 px of all 81 rows together.
 
 calibration_check:
   method: >
@@ -84,32 +140,74 @@ calibration_check:
     The third of these also fixes two things the paper does not state next to
     eq. (11): that j_D is defined on the superficial velocity, giving
     Sh = j_D Re Sc^(1/3), and that the voidage used to draw the line is 0.40.
+  caveat: >
+    TWO known functions plus a slope, not three. eq. (11) contains eps_b, and
+    eps_b is fitted to the very line it is checked against, so it constrains the
+    calibration in slope but not in offset.
+  residual_offset: >
+    Measured 2026-08-02 by `setup2.trace_curves`, which takes the ink centroid
+    column by column wherever the straight ink near the computed curve is a
+    single run no wider than 8 px (that filter is what keeps markers sitting on
+    a curve out of the measurement). Drawn ink minus computed row, negative
+    meaning the ink is ABOVE the computed position:
+      eq. (12)  n = 701   -4.06 +/- 2.30 px   = +2.80 % in Sh
+      eq. (11)  n = 582   -5.06 +/- 1.89 px   = +3.51 % in Sh
+      eq.  (9)  n = 206   -2.08 +/- 6.27 px   = +1.43 % in Sh
+    Each is inside a line width on its own; all three the SAME WAY is an
+    ordinate origin about 4 px low, which makes every extracted Sh in this file
+    roughly 2.7 % high and moves the page's +9.7 % eq. (12) bias to about
+    +12.7 %. NOT CORRECTED, deliberately: the only evidence for it is those
+    three drawn curves, one of which supplied eps_b, so correcting the ordinate
+    on it would make this whole check circular. Contrast Figure 3, where the
+    analogous skew is measured on eight printed decade ticks and the drawn line
+    is an independent control - there it IS corrected.
   artifact: "queue_cases/A3.4/review/A3.4-fig2-axis-calibration.png"
 
 review:
   status: pending
-  requested: 2026-07-30
+  requested: 2026-08-02
+  history:
+    - {date: 2026-07-30, question: "do the 81 kept crosshairs sit on real glyphs?"}
+    - {date: 2026-08-02, answer: "mostly yes; the marker is often off centre - fit the shape"}
   artifacts:
-    - "queue_cases/A3.4/review/A3.4-fig2-extraction-overlay.png"
-    - "queue_cases/A3.4/review/A3.4-fig2-candidate-audit.png"
+    - "queue_cases/A3.4/review/A3.4-fig2-recentred-overlay.png"
+    - "queue_cases/A3.4/review/A3.4-fig2-recentred-audit.png"
     - "queue_cases/A3.4/review/A3.4-fig2-axis-calibration.png"
   question: >
-    Recall in the dense band above Re = 100 is the open question. Roughly 110
-    markers appear to be drawn and 81 were kept, so of order 25 % are missed
-    where glyphs overlap each other and the eq. (12) line. Do the 81 kept
-    markers all sit on real glyphs (the contact sheet shows each at 2x), and is
-    the omission in the dense band acceptable for a test of the residual TREND
-    with Reynolds number, which is what the page uses it for?
+    Three things, all new since the 2026-08-02 answer. (1) Do the re-centred
+    positions look right? The contact sheet shows every glyph at 2x with the
+    fitted outline in green and the old crosshair as an orange x. (2) Are the 9
+    added markers real? They are drawn in red. (3) Are the 11 crosshairs that
+    the shape fit merged into another really double counts rather than two
+    markers drawn on top of each other - the F2.3 case, where overlapping
+    squares were mistaken for one glyph, ran the other way and is the reason
+    this is asked.
 
 missing:
-  - "An estimated 25-30 markers in the band Re > 100, where glyphs overlap each
-     other and the eq. (12) curve. Not recovered; see review.question."
+  - "Markers in the band Re > 100 where glyphs overlap each other and the eq. 12
+     curve. The 2026-08-02 pass added 9 there and the count is now 79 distinct
+     glyphs against an estimated 100-110 drawn, so recall is still short. The
+     page uses these points for a residual TREND with Reynolds number and for a
+     deliberately weak refit; neither is moved much by a missing marker."
   - "Markers hidden inside the legend box region, if any. The legend occupies
      the upper-left quarter of the plot area and was excluded wholesale."
+  - "Markers lying on the dashed Ranz-Marshall curve, which is removed by
+     computed position because its dashes are compact ink."
 
 columns:
-  - {name: Re, unit: "-", description: "particle Reynolds number on the superficial velocity, d_p U eps_b / nu"}
-  - {name: Sh, unit: "-", description: "Sherwood number reevaluated with the axial dispersion coefficient of eq. (2)"}
+  - {name: marker_id, unit: "-", description: "distinct glyph. Rows sharing an id are the same glyph recorded more than once by the 2026-07-30 pass; the page uses one row per id"}
+  - {name: Re, unit: "-", description: "particle Reynolds number of the GLYPH, on the superficial velocity"}
+  - {name: Sh, unit: "-", description: "Sherwood number of the glyph, reevaluated with the axial dispersion coefficient of eq. (2)"}
+  - {name: Re_prev, unit: "-", description: "Reynolds number of this row's 2026-07-30 crosshair; blank for markers found on 2026-08-02"}
+  - {name: Sh_prev, unit: "-", description: "Sherwood number of this row's 2026-07-30 crosshair; blank for markers found on 2026-08-02"}
+  - {name: col_px, unit: px, description: "reported centre, column, in the 600 dpi crop"}
+  - {name: row_px, unit: px, description: "reported centre, row, in the 600 dpi crop"}
+  - {name: col_px_prev, unit: px, description: "2026-07-30 crosshair, column"}
+  - {name: row_px_prev, unit: px, description: "2026-07-30 crosshair, row"}
+  - {name: shape_fitted, unit: "-", description: "template that fitted best. ADVISORY ONLY - not a series label; the eight sources are not resolved"}
+  - {name: fit_score, unit: "-", description: "body coverage minus margin coverage of the fitted template, in [-1, 1]"}
+  - {name: recentred, unit: "-", description: "True if the shape fit was accepted (score >= 0.50); False means the row carries the 2026-07-30 crosshair"}
+  - {name: pass, unit: "-", description: "the extraction pass this row's crosshair came from"}
 
 redistribution_basis: >
   Numerical values are facts and are not protected by copyright (Feist

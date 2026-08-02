@@ -1,0 +1,62 @@
+# Block to splice into models.yaml (new entry; D2.1 is not yet present there).
+# slug and title match queue_cases/D2.1/page/meta.yaml exactly.
+# Insert in section D, immediately BEFORE the existing D2.2 entry.
+# NOTE for the integrator: D2.2's `related:` list already names D2.1, so no
+# edit is needed there.
+- id: D2.1
+  slug: barkelew-runaway-diagram
+  title: "Barkelew's runaway diagram"
+  description: >
+    The 1959 chart that collapses the runaway boundary of a cooled tubular
+    reactor onto two dimensionless groups - rebuilt from the paper that
+    reprints it, with the envelope computed instead of drawn, and the collapse
+    tested over a range six times wider than the four curves that fitted on
+    Barkelew's sheet.
+  section: D
+  status: published
+  tier: T0
+  priority: P1
+  structures: [S2]
+  phases: [gas-solid]
+  reference:
+    authors: ["Barkelew, C. H."]
+    year: 1959
+    container: "Chemical Engineering Progress Symposium Series 55 37"
+    doi: null
+  reference_read_from:
+    authors: ["Van Welsenaere, R. J.", "Froment, G. F."]
+    year: 1970
+    container: "Chemical Engineering Science 25(10) 1503-1516"
+    doi: 10.1016/0009-2509(70)85073-4
+    note: >
+      Their Section 5 is explicitly a comparison with Barkelew: it reprints his
+      diagram as their Fig. 9, states what his axes mean, states the one
+      numerical property of his critical locus (tau_m = 1.275 at the tangency,
+      for all S) and applies their own first criterion in his notation
+      (tau_m = 1). Barkelew's own paper is pre-DOI, is not on disk and was NOT
+      consulted. The definition of his dimensionless temperature is a
+      reconstruction, labelled as such on the page: the reduced system, the
+      reference temperature and the fact that the exponent is tau itself are
+      forced by printed sentences, but the temperature at which the exponent is
+      linearised is a modelling choice the paper never states. Verified on a
+      600 dpi render of journal pages 1504 and 1511-1513.
+  predicts: [runaway boundary, hot spot temperature, critical inlet partial pressure]
+  pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+  data: {tier: 6, method: table, status: complete}
+  note: >
+    Tier 6: neither paper contains experimental data. No figure was digitised
+    into the committed data - the only values in the CSVs from Figs. 9 and 10
+    are labels printed inside them. The tangency hot spot, at a step size
+    Richardson-extrapolated to zero, matches their stated 1.275 to 1.575 % over
+    the four S-curves Barkelew drew and 3.512 % over S = 3 to 200; Barkelew's
+    critical inlet pressure matches the criterion-1 back-integration to 1.774 %
+    mean over 600-700 K, and that disagreement factorises exactly into a
+    rate-law part (-5.06 to -7.69 %) and a criterion part (+2.81 to +12.76 %)
+    with opposite signs that partly cancel. The page prints a deliberate-break
+    table, a table of what each check is blind to, and one row printed because
+    it cannot fail. Four Fig. 10 blow-up positions were measured to
+    discriminate the one unforced step of the reconstruction; they are
+    quarantined on the page and awaiting maintainer review, and nothing depends
+    on them.
+  page: pages/D2.1-barkelew-runaway-diagram/
+  related: [D2.2, D2.3, D2.4, D1.1, B1.5]

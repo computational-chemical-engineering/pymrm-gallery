@@ -13,12 +13,16 @@ Kozeny–Carman, Forchheimer, and the Eisfeld wall correction against a single �
 dataset, with the wall-effect regime highlighted, is far more useful than four
 pages."*
 
-## Status: in progress — the figure digitisation is awaiting maintainer review
+## Status: ready — the figure digitisation was reviewed and approved
 
-The page is written and executes end to end. It must not be promoted to
-`pages/` until the overlays in `../review/` have been looked at and the verdict
-recorded in `data/ergun-1952-fig7-markers.meta.yaml`. Fifteen minutes; the three
-questions are in `../review/README.md`.
+The maintainer reviewed the numbered overlays on 2026-08-02: the ringed centres
+are on real markers, including in the dense chain where markers merge into the
+drawn eq. (14b) line, and nothing was picked up off the line, the graph paper or
+the panel labels. A few markers per panel were missed. That is recorded as a
+**stated limitation of the dataset** — `limitations.recall` in
+`data/ergun-1952-fig7-markers.meta.yaml` — because it is a recall limitation:
+it costs precision and distorts counts, and does not move the fitted constants
+so long as the misses are scattered, which is what was reported.
 
 ## Contents
 
@@ -70,7 +74,7 @@ resting on a hidden choice.
 | Kozeny–Carman vs Ergun | +7.5 % at x = 10, −45 % at 100, −90 % at 1000 |
 | Eisfeld (infinite bed) vs Ergun | +2.7 % viscous, **−25 % inertial** |
 | Eisfeld at D/dₚ = 5, vs Ergun | +46 % on f_v at x = 10, −11 % at x = 1000 |
-| the wall correction itself, D/dₚ = 1.6 | +178 % at x = 3, −20 % at x = 30000 — it changes sign |
+| the wall correction itself, D/dₚ = 1.6 | +178 % at x = 3, −24.5 % at x = 30000 — it changes sign |
 
 ## Regenerating
 

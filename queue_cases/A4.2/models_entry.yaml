@@ -1,0 +1,32 @@
+# Block to splice into models.yaml. The id already exists there with
+# status: planned — upgrade it IN PLACE (do not append a duplicate).
+# slug and title are identical to the planned entry and to page/meta.yaml.
+- id: A4.2
+  slug: maxwell-stefan-vs-fick
+  title: "Maxwell–Stefan vs Fick for multicomponent mixtures"
+  description: >
+    The Maxwell-Stefan diffusivities and the composition-dependent Fick matrix
+    are the same physics in two bookkeepings — shown to machine precision —
+    while the scalar effective diffusivity fails structurally: osmotic
+    diffusion, uphill diffusion, and the diffusion barrier.
+  section: A
+  status: published
+  tier: T0
+  priority: P1
+  structures: [S9]
+  phases: [gas]
+  reference:
+    authors: ["Krishna, R.", "Wesselingh, J. A."]
+    year: 1997
+    container: "Chemical Engineering Science 52(6) 861–911"
+    doi: 10.1016/S0009-2509(96)00458-7
+  predicts: [Fick matrix from MS diffusivities, effective diffusivity breakdown, osmotic diffusion, reverse diffusion, diffusion barrier]
+  pymrm_api: [construct_grad, construct_div, NumJac, newton]
+  data: {tier: 6, method: table, status: complete}
+  page: pages/A4.2-maxwell-stefan-vs-fick/
+  related: [A4.9, A4.3]
+  # Note for the integrator: the page's own dataset is tier 6 (the review's
+  # printed worked-example matrices). The experimental comparison on the page
+  # reuses A4.9's tier-4 digitised Duncan & Toor dataset cross-page
+  # (load_data(..., page="A4.9-duncan-toor")), so A4.2 must be integrated
+  # after/alongside A4.9 remaining published. No new pip dependencies.
