@@ -1,0 +1,271 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A1.6
+slug: wen-yu-minimum-fluidisation
+title: "Wen and Yu's minimum fluidisation velocity: where 33.7 and 0.0408 come from, and what they cost"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - wen-yu-1966-table1
+  - geldart_1973_table1.csv    # loaded cross-page from A1.7-geldart-classification
+
+reference:
+  authors: ["Wen, C. Y.", "Yu, Y. H."]
+  year: 1966
+  container: "A.I.Ch.E. Journal 12(3) 610-612 (May 1966)"
+  doi: 10.1002/aic.690120343
+  title_as_printed: "A Generalized Method for Predicting the Minimum Fluidization Velocity"
+  note: >
+    THE CATALOGUE CITATION FOR A1.6 IS THE OTHER PAPER. queue_cases/A1.6.yaml
+    carried "Chem. Eng. Prog. Symp. (1966)", which is this communication's own
+    reference 23 - Wen, C. Y. and Yu, Y. H., Chem. Eng. Progr. Symposium Series
+    No. 62, 62 (1966). That companion paper contains the derivation and is NOT on
+    disk and was NOT consulted. Everything on this page is read from the A.I.Ch.E.
+    Journal communication, which prints the correlation (its eq. 1), the two
+    voidage-group approximations it rests on (eqs. 2 and 3), their validity
+    ranges, and the accuracy comparison in its Table 1. Both citations are real
+    papers by the same authors in the same year; they must not be conflated.
+
+origin_not_consulted:
+  authors: ["Wen, C. Y.", "Yu, Y. H."]
+  year: 1966
+  container: "Chem. Eng. Progr. Symposium Series No. 62, 62"
+  note: >
+    Reference 23 of the communication, cited there as the source of eq. (1).
+    Not on disk. The derivation of eq. (1) from the Ergun force balance is
+    therefore RECONSTRUCTED on this page, not transcribed; the evidence that the
+    reconstruction is the authors' is that it recovers 33.7 and 0.0408 to
+    -0.08 % and +0.04 %.
+
+validation:
+  - "the derivation is reconstructed and recovers the printed constants: substituting eqs. (2) = 11 and (3) = 14 into the Ergun force balance with Ergun's printed 150 and 1.75 gives 24.5 Re^2 + 1650 Re = N_Ga, whose positive root is eq. (1) with C1 = 33.673469 against a printed 33.7 (-0.079 %) and C2 = 0.040816 against a printed 0.0408 (+0.040 %). The Ergun equation is NOT printed in this communication; its constants come from A1.1, which read them off Ergun's own 1952 paper, so what this establishes is which friction law the correlation encodes"
+  - "the break table gives that recovery its power AND its limit. Five wrong readings - eqs. (2) and (3) swapped, eq. (2) as 1.1, eq. (3) as 4, Kozeny-Carman's 180, Eisfeld-Schnitzlein's 154/1.32 - move the constants by 19.9 % to 250 %, the smallest of them 253x the deviation of the reading actually used. But A1.1's refit of Ergun's own constants to his own figure (151.94/1.6967) moves them 4.4 %, so the check resolves 150 from 180 or 154 and does NOT resolve 150 from 151.9. Only the products k1 x eq.(2) and k2 x eq.(3) are identifiable at all: k1 = 300 with eq. (2) = 5.5 reproduces both constants exactly"
+  - "eqs. (2) and (3) are two equations in two unknowns and pin the effective particle down uniquely: (1-eps) eps^3 = 11/14^2 has two roots in (0,1), and the one inside the paper's own stated phi_s range 0.136-1.0 is eps_mf = 0.4744 at phi_s = 0.6689 - not a sphere. Forcing phi_s = 1 makes the two approximations contradict each other: eq. (2) alone demands eps_mf = 0.3828 and eq. (3) alone 0.4149, 8.4 % apart. 0.3828 is the branch that survives into the viscous term, and it sits BELOW the 0.385 lower bound of the paper's own stated eps_mf range"
+  - "the cost of the approximation is quantified against the same force balance solved exactly, and it is strongly asymmetric. For spheres at the eps_mf = 0.42 Wen and Yu print for their own data, eq. (1) is 28.9 % low in the viscous limit and 1.9 % low in the turbulent limit; over the eps_mf values they quote (0.385, 0.386, 0.40, 0.42, 0.46) the viscous-limit deviation spans -49.6 % to -2.1 %. The square root in eq. (1) halves the error of eq. (3) and leaves the error of eq. (2) undiminished"
+  - "the split between the two candidate explanations is NOT one number, and the page quotes it one limit at a time. Pushing A1.1's refit of Ergun's constants (151.9 and 1.697, from 244 markers digitised out of Ergun's Figure 7) through the same derivation moves the PREDICTION by -1.27 % in the viscous limit and +1.55 % in the turbulent one, against -28.92 % and -1.88 % from the voidage approximation at eps_mf = 0.42. Like for like that is 22.7x at the viscous limit and 1.21x at the turbulent one - the two costs move in OPPOSITE directions across the range, so at the coarse end, where the page tells the reader to expect a good answer, the voidage approximation and the uncertainty in 150/1.75 are the same size (1.9 % against 1.6 %). Quoting the worst voidage cost against the worst Ergun cost would give 19x, but those are different limits; the page prints that comparison and rejects it. (Measured against the printed 33.7/0.0408 rather than the recovered pair the two ratios are 25x and 1.19x; the page prints both and uses the recovered pair, so that Wen and Yu's own rounding is not folded into a statement about Ergun's constants.) Note the constants move more than the prediction: C1 and C2 shift partly together, which the page states rather than quoting the 4.4 % as if it were a prediction error"
+  - "Wen and Yu's own Table 1 checked against itself. Its three row counts sum to 267, which footnote * gives as the Narsimhan basis, and the count-weighted rms of its three Narsimhan entries is 46.24 % against a printed 46 % - a check that tests all four Narsimhan numbers and all three counts at once, and that moves to 39.5 / 48.5 / 85.0 / 39.7 / 59.6 under five deliberate mis-readings. The Equation (1) column does NOT close ON THE PRINTED COUNTS: its rows pool to 36.47 % against a printed 34 % on 284 points, and the 17 extra points would need a NEGATIVE variance (-1572) to bring it down. What is proved is that the printed row counts cannot be the basis of the Equation (1) column - NOT that the column is unreachable: with an unconstrained split of the 284 among the three classes the printed 34 IS reachable (it needs sum n v^2 = 328304, and the achievable range with those three row values is [128848, 401508]). The page states the narrower claim. The result is robust to what 'standard deviation' means: read about the group means, pooling gives sum n (s^2 + (m-M)^2)/N >= the value used, so the contradiction only widens. Reported, not repaired; footnote + says the two columns use different bases"
+  - "EXPERIMENTAL. Equation (1) against 21 minimum fluidization velocities measured by Geldart in 1973 - held out by construction, since Wen and Yu's 284 points are pre-1966 literature and nothing is fitted. Bias -17.4 %, mean absolute deviation 33.3 %, rms 38.1 %, against the authors' own claim of +/- 25 % average deviation and 34 % standard deviation on their own points. THE VERDICT TURNS ON AN UNDEFINED STATISTIC AND BOTH READINGS ARE PRINTED: the paper defines neither. Read as rms about zero the held-out scatter is 38.1 %, worse than their 34 %; read as a standard deviation about the mean it is sqrt(38.13^2 - 17.41^2) = 33.9 %, an exact match with their 34 %. Nothing in the paper chooses, so the page states both rather than the one that flatters the gap"
+  - "the eight Diakon cuts are the cleanest subset AVAILABLE - spherical per Geldart's prose, so phi_s is taken as 1 and his surface/volume diameter is taken as Wen and Yu's volume-equivalent diameter, and it is the only powder whose density Geldart prints exactly. There eq. (1) is low on every one of the eight rows, by 25.2 % on average (per-row -54.5 % to -5.5 %, rms 29.0 %; no row is near the mean, and the spread is a factor of ten), MAD 25.2 %, all of it bias. Davies and Richardson's eq. (3), the correlation A1.7 uses inside Geldart's group A/B boundary, is -0.75 % biased with MAD 15.8 % on the same rows"
+  - "THE phi_s = 1 ASSUMPTION IS LOAD-BEARING AND ITS SENSITIVITY IS QUANTIFIED. Eq. (1) is built on the volume-equivalent d_p and Geldart tabulates d_sv = phi_s d_p, so the prediction scales as (d_sv/phi_s)^2 while the reference it is scored against is exactly phi_s-free (verified numerically: inverting at phi_s = 1, 0.9 and 0.6 returns identical u_mf to 3e-12 %). All of the sphericity risk therefore lands on the reported number. The Check 4 break table carries phi_s rows: 1.00 -> -25.2 %, 0.95 -> -17.2 %, 0.90 -> -7.8 %, and phi_s = 0.864 would account for 100 % of the bias. phi_s = 1 rests on six words of Geldart's prose and no printed number, so the measured verdict is a JOINT test of the voidage approximation and of Diakon's sphericity and the page cannot separate them"
+  - "the inversion is a REPARAMETERISATION of the bias, not an independent closure, and the page says so. Inverting the unapproximated Ergun balance row by row at phi_s = 1 asks what voidage would reproduce Geldart's spherical cuts: median 0.4090, range 0.3891-0.4723, in the same band as the 0.386 / 0.40 / 0.42 Wen and Yu quote from the literature and above the 0.3828 that eq. (2) forces. But both sides of that comparison share phi_s = 1, the same d_sv/mu/g/drho and Ergun's k1 = 150, and the gap IS the deviation by construction - its one falsifiable element is whether the demanded voidage is physically sensible. The exact balance at Wen and Yu's own printed voidages brackets zero bias (-22.95 % at 0.386, -12.34 % at 0.40, +4.82 % at 0.42), but the bracket is wide and not centred: at 0.386 the UNAPPROXIMATED balance is almost as far off as eq. (1) is"
+  - "CONTRARY EVIDENCE, REPORTED NOT RESOLVED: Geldart's own reported voidage contradicts the inverted one. His Table 1 prints eps_MB and H_MB/H_0 for every row, and on the two coarsest Diakon cuts he prints U_MB = U_0 and H_MB/H_0 = 1.000, so minimum bubbling IS minimum fluidisation at the settled height and eps_mf = eps_MB = 0.444 with no inference at all - against the 0.3994 and 0.3891 the inversion demands on those same two rows. Evaluated at Geldart's printed eps_MB the unapproximated balance is +58.4 % biased over the eight rows (+47.5 % and +61.1 % on the two no-inference rows, worse than eq. (1)'s -14.1 % and -5.5 % there, in the opposite direction); at the settled eps_0 = 1-(1-eps_MB)H_MB/H_0 it is +42.1 %. Sphericity cannot explain it: the exact Ergun u_mf written in d_sv is exactly phi_s-independent. So the page does NOT claim the bias belongs to eqs. (2) and (3) rather than to the Ergun equation. Three readings are left open - eq. (2)'s voidage is too low; or Geldart's U_0 sit systematically below the Ergun balance at his own reported voidage; or Diakon is not perfectly spherical - and nothing here chooses. Caveat stated alongside: Geldart gives a measurement method for U_0 and U_MB only, and A1.7's sidecar records eps_MB and H_MB/H_0 as REPORTED, method unstated"
+  - "null baselines and residual independence, on the same eight rows. A constant velocity scores 81.1 % (mean) or 64.1 % (median) MAD, so the d^2 scaling is doing real work; refitting eq. (1)'s single viscous constant to these very rows leaves 14.7 %, so 58 % of its error survives ANY one-parameter correction. NO standard error is quoted on that refitted constant, because the constant each row demands rises with size at Spearman rho = +0.833, p = 0.010 over 8 rows - the residuals are not independent, and the page says so instead of quoting a spread as an uncertainty"
+  - "the measured comparison break table moves for every link in the unit chain: d_sv in mm rather than um +58802 %, mu as Pa s rather than poise +501 %, g in SI -99 %, U_MB used in place of U_0 -34.4 %, the exact Ergun equation at eps_mf = 0.42 in place of eq. (1) +4.8 %. It does NOT move for rho_f: dropping it from the density difference shifts the bias by 0.08 points and a decade error by 0.28, so the page asserts nothing about rho_f, which neither paper prints"
+  - "resolving power, computed rather than assumed. Every measured row is at (N_Re)_mf between 3.4e-4 and 0.824, where the inertial term of eq. (1) contributes at most 1.22 %; quartering or quadrupling the turbulent constant at a fixed viscous limit moves the Diakon bias by -0.89 and +0.24 points. This dataset tests k1 x eq. (2) = 1650 and nothing else, so the page's best claim about the correlation (that the approximation is at its best in the turbulent limit) is exactly the claim no measurement here can support"
+  - "three of the 21 rows, all catalyst and none Diakon, are finer than the 0.002 in. lower bound of the d_p range eqs. (2) and (3) are stated to cover, and two are below the stated d_p/D bound; the whole Diakon subset is inside both"
+
+adds: >
+  Nothing to the correlation, and the page says so in the section where a reader
+  would expect a solver. Equation (1) is the positive root of a quadratic, the
+  unapproximated Ergun balance is the positive root of another, and no operator,
+  grid or Newton solve appears anywhere. Sections 1 to 5 would run with pymrm
+  uninstalled, exactly as on A1.1 and F1.4. What the reimplementation adds is
+  four things, none of which is a solver.
+
+  The derivation, made explicit and made falsifiable. This communication says
+  eq. (1) came from the Ergun equation and prints the two approximations, but the
+  algebra between them is in a companion paper that is not on disk. Doing it
+  recovers 33.7 and 0.0408 to -0.08 % and +0.04 %, and every alternative reading
+  of the inputs moves the answer by tens of per cent - which fixes, from the
+  outside, which friction-law constants the correlation encodes. The same table
+  states the limit: it cannot separate 150 from A1.1's refitted 151.9.
+
+  The effective particle. Equations (2) and (3) are usually quoted as two
+  independent conveniences. They are not independent: together they determine
+  phi_s = 0.669 and eps_mf = 0.474 uniquely, which is not a sphere; and forced
+  onto a sphere they contradict each other by 8.4 % in eps_mf, with the branch
+  that survives into the viscous term sitting at 0.383, below the paper's own
+  stated eps_mf floor. That single number is the whole explanation of the
+  measured bias, and it is computed here rather than asserted.
+
+  The error budget, split, using A1.1's refit of Ergun's own constants to Ergun's
+  own figure - and split ONE LIMIT AT A TIME, because the two costs move in
+  opposite directions across the range. The voidage approximation is 28.9 % in
+  the viscous limit and 1.9 % in the turbulent one at eps_mf = 0.42; the
+  friction-law uncertainty is 1.3 % viscous and 1.6 % turbulent. Like for like
+  that is 22.7x at the viscous end and 1.21x at the turbulent end, where the two
+  are the same size. Neither the asymmetry nor that crossover is visible from the
+  form of eq. (1), and both are what a reader needs in order to set a design
+  margin: expect underprediction for fine powders, and for coarse ones expect an
+  answer no better than Ergun's own constants are known.
+
+  A measurement the correlation never saw, and a contradiction inside it. The
+  paper contains no data - the 284 points exist only as scatter in its Figure 4,
+  which was deliberately not digitised. Geldart's Table 1, already in the gallery
+  for A1.7, supplies 21 measured u_mf from another laboratory seven years later.
+  Inverting the unapproximated balance on the eight spherical cuts asks what
+  voidage would reproduce them, and the answer sits in the same band as the
+  literature values Wen and Yu quote and above the one their correlation uses.
+  That inversion is a reparameterisation of the bias, not an independent
+  corroboration - it shares phi_s = 1, the sizes, the gas properties and Ergun's
+  k1 with the thing it is compared to - and the page says so. Its one falsifiable
+  element is whether the demanded voidage is physically sensible, and there the
+  same table supplies contrary evidence: Geldart's own reported bed voidage is
+  higher (0.444 on two rows where U_MB = U_0 and H_MB/H_0 = 1.000, so no
+  inference is needed at all), and at that voidage the unapproximated balance
+  overpredicts his velocities by 58 % - worse than eq. (1) underpredicts them.
+  What this page adds is that both numbers are computed from the same table, on
+  the same page, with neither hidden and neither resolved. A1.7 named this
+  comparison as its own obvious next move; this is it.
+
+agreement: >
+  Two kinds, kept apart. The internal one is a reconstruction of the authors'
+  algebra that recovers their two printed constants to -0.079 % and +0.040 %, and
+  a pooling identity inside their Table 1 that closes to 0.5 % on the column
+  whose basis the footnotes state.
+
+  The experimental one is Wen and Yu's equation (1) against 21 minimum
+  fluidization velocities Geldart measured in 1973 and they never saw: bias
+  -17.4 %, MAD 33.3 %, rms 38.1 % over all rows, against their own claimed
+  +/- 25 % average and 34 % standard deviation. The paper defines neither
+  statistic, and the comparison flips with the definition: rms about zero is
+  38.1 % (worse than their 34 %), a standard deviation about the mean is 33.9 %
+  (an exact match). Both are printed. On the eight spherical cuts, where the
+  density is printed exactly and the diameter definitions coincide IF Diakon is
+  a perfect sphere, it is low on every row, by 25.2 % on average and by anything
+  from 5.5 % to 54.5 % row by row. Davies and Richardson's competing expression,
+  which A1.7 uses, is -0.75 % biased on the same eight rows with MAD 15.8 %,
+  against a 14.7 % floor set by refitting a single constant to those rows.
+
+  Two things must be read beside those numbers and are on the page, not in a
+  footnote. FIRST, the unapproximated Ergun balance is not a settled reference
+  here. At the per-row voidage those cuts demand it is unbiased BY CONSTRUCTION,
+  which is not a check that can fail; at the bed voidage Geldart himself reports
+  it is +58 % biased, including +47.5 % and +61.1 % on two rows where he prints
+  U_MB = U_0 and H_MB/H_0 = 1.000 so that eps_mf = eps_MB = 0.444 needs no
+  inference. Which of those is right is left open. SECOND, phi_s = 1 for Diakon
+  is an assumption read off six words of prose, and the headline scales as
+  phi_s^-2 while the reference does not move with phi_s at all: 0.95 gives
+  -17.2 %, 0.90 gives -7.8 %, and 0.864 would erase the bias entirely.
+
+  Read the deviation numbers with the resolving-power result beside them too:
+  every row is at (N_Re)_mf below 0.83, where eq. (1)'s inertial term contributes
+  at most 1.22 %, and section 3 shows that is the corner of the correlation's
+  range where the approximation is worst. The measured result is a verdict on the
+  viscous half of equation (1) and on nothing else.
+
+caveats: >
+  THE CATALOGUE CITATION POINTS AT A DIFFERENT PAPER. A1.6 was catalogued as
+  "Chem. Eng. Prog. Symp. (1966)". That is a real Wen and Yu paper of the same
+  year - it is this communication's reference 23 - and it contains the
+  derivation, but it is not on disk and was not consulted. The page is built from
+  the A.I.Ch.E. Journal communication, 12(3) 610-612. The correction is recorded
+  in reference.note and in origin_not_consulted, and both citations appear on the
+  page.
+
+  THE DERIVATION IS RECONSTRUCTED, NOT TRANSCRIBED. The communication states that
+  eq. (1) was obtained "by employing the fixed-bed pressure drop equation of
+  Ergun" and cites Ergun and Orning, Ind. Eng. Chem. 41 (1949) 1179 - a paper
+  also not on disk - but prints neither that equation nor the algebra. The Ergun
+  constants used here are Ergun's 1952 pair, read on A1.1, and the sphericity is
+  written into the Ergun form as D_p = phi_s d_p, which is a convention this page
+  adopts and neither paper states. The evidence that this is what Wen and Yu did
+  is the recovery of both constants to under 0.1 %, which is strong and is
+  circumstantial.
+
+  NOTHING IN FIGURE 4 WAS CHECKED. The 284 points behind every statistic the
+  paper reports exist only as scatter in that figure and were not digitised; the
+  routes taken instead are all higher up the ladder in docs/agent-brief.md.
+  Table 1 is the authors' own arithmetic and reproducing anything in it would be
+  reproduction, not validation - the page checks it against itself instead.
+
+  THE MEASURED COMPARISON DOES NOT TEST THE SHAPE-FACTOR CLAIM, which is
+  eq. (1)'s main selling point. That would need non-spherical powders with a
+  known phi_s, and neither paper supplies one. Geldart's two cracking catalysts
+  have no printed sphericity, so on their 13 rows his surface/volume d_sv is
+  substituted for Wen and Yu's volume-equivalent d_p; since d_sv = phi_s d_p this
+  UNDERSTATES d_p and therefore the predicted velocity, by an amount that is not
+  known. The direction is stated, no correction is applied, and the headline is
+  taken on the eight Diakon rows. Both catalyst densities are printed by Geldart
+  as approximate ("~= 1", "~= 1.5") against Diakon's exact 1.18; the spent
+  catalyst in particular has measured velocities so low for its stated density
+  that BOTH correlations overpredict it badly, which is a property of those six
+  rows and not a result about either. Three catalyst rows are also finer than the
+  smallest particle eqs. (2) and (3) were fitted over.
+
+  AND THE SAME GAP REACHES THE HEADLINE ITSELF: phi_s = 1 FOR DIAKON IS AN
+  ASSUMPTION, NOT A MEASUREMENT, AND THE REPORTED NUMBER IS A STRONG FUNCTION OF
+  IT. It is read off Geldart's section 4.2 sentence "a plastic moulding powder
+  having spherical particles", verified on a 600 dpi render of journal page 287;
+  he prints no numerical sphericity anywhere. Because eq. (1) is built on
+  d_p = d_sv/phi_s while the unapproximated reference is exactly phi_s-free, the
+  headline moves as phi_s^-2 and the reference does not move at all: the break
+  table gives -25.2 % at phi_s = 1, -17.2 % at 0.95, -7.8 % at 0.90, and
+  phi_s = 0.864 would account for the whole bias. An ordinary 0.95 for sieved
+  suspension-polymerised beads removes a third of the headline. The measured
+  verdict is therefore a JOINT test of the voidage approximation and of Diakon's
+  sphericity, and nothing on the page separates them; the number is quoted at
+  phi_s = 1 with that sensitivity printed beside it, not with an error bar it
+  does not have.
+
+  THE UNAPPROXIMATED ERGUN BALANCE IS NOT A SETTLED REFERENCE ON THIS DATASET,
+  AND THE PAGE'S OWN DATA SAY SO. Geldart's Table 1 prints eps_MB and H_MB/H_0;
+  on the two coarsest Diakon cuts it prints U_MB = U_0 and H_MB/H_0 = 1.000, so
+  minimum bubbling is minimum fluidisation at the settled height and
+  eps_mf = eps_MB = 0.444 with no inference at all - against 0.3994 and 0.3891
+  from the inversion on those same rows. At the printed eps_MB the exact balance
+  is +58.4 % biased over the eight rows (+47.5 % and +61.1 % on the two clean
+  ones); at the settled eps_0 it is +42.1 %. Both are worse than eq. (1)'s
+  -25.2 %, in the other direction, and sphericity cannot explain it because the
+  exact Ergun u_mf written in d_sv is exactly phi_s-independent. The page
+  therefore does NOT claim that the bias belongs to eqs. (2) and (3) rather than
+  to the Ergun equation: it reports the inverted voidage, the reported voidage,
+  and the fact that nothing here chooses between them. Caveat alongside: Geldart
+  states a measurement method for U_0 and U_MB only, and A1.7's data sidecar
+  records eps_MB and H_MB/H_0 as REPORTED, method unstated - but they are the
+  only bed voidages either paper prints.
+
+  THE ALGEBRA/MEASUREMENT "CLOSURE" IS A REPARAMETERISATION, NOT AN INDEPENDENT
+  AGREEMENT, and the page labels it as one. Inverting a measured U_0 for the
+  voidage the same balance needs is a change of variables on that measurement:
+  the gap between eq. (2)'s 0.383 and the inverted value IS the deviation, by
+  construction, for any data whatsoever, and both sides use phi_s = 1, the same
+  d_sv/mu/g/drho and Ergun's k1 = 150. Its only falsifiable content is whether
+  the demanded voidage is physically plausible, which the previous caveat puts in
+  doubt. Davies and Richardson's -0.75 % is not independent corroboration either:
+  its constant 1250 corresponds to k1(1-eps)/eps^3 at eps = 0.413, essentially
+  the voidage the dataset demands, which is why the page frames it as a null
+  baseline already at the one-parameter floor rather than as a second witness.
+
+  THE INERTIAL HALF OF EQ. (1) IS UNTESTED HERE and this is the page's largest
+  blind spot. Every measured row is a group A powder at (N_Re)_mf below 0.83; the
+  inertial term contributes at most 1.22 %, and changing the turbulent constant
+  by a factor of four in either direction moves the reported bias by less than
+  0.9 points. Section 3's finding that the approximation is at its BEST in the
+  turbulent limit is algebra against the Ergun equation, not a measurement, and
+  the page says so where it is stated.
+
+  rho_f = 1.2e-3 g cm-3 is not printed by either paper; it is air at ambient,
+  inherited from A1.7. The break table measures its influence - 0.08 points on
+  the reported bias if it is dropped from the density difference, 0.28 for a
+  decade error - and the page therefore makes no claim about it rather than
+  presenting insensitivity as a result.
+
+  THE SIZE TREND IN THE DIAKON RESIDUALS IS REPORTED, NOT EXPLAINED. The viscous
+  constant each cut demands rises with size (Spearman rho = +0.833, p = 0.010,
+  n = 8) - rises, not monotonically: the printed sequence 752/1091/1330/1079/
+  1389/1274/1429/1581 has two reversals. Sphericity, cohesion at the fine end,
+  wall effects and the voidage of a sieved cut all vary along that axis and
+  nothing here separates them. It is why no standard error is quoted on the
+  refitted constant, and it is also why the per-row deviations span a factor of
+  ten rather than sitting at a constant offset.
+
+  Nothing on this page is digitised, and no figure was traced. Every constant,
+  equation and table value from Wen and Yu was read visually off 600 dpi renders
+  of journal pages 610-612. THE PDF TEXT LAYER OF THIS SCAN OPENS WITH A
+  DIFFERENT ARTICLE - a communication on activity coefficients whose notation and
+  literature-cited block occupy the top of journal page 610 - and anyone
+  re-extracting this paper must confirm the page before transcribing. Geldart's
+  equation (3), his Table 1 rows and his mu and g were re-read from the source
+  PDF for this page rather than taken on trust from A1.7.

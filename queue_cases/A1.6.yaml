@@ -1,35 +1,126 @@
 id: A1.6
 section: A
-title: Wen–Yu minimum fluidisation
+title: Wen-Yu minimum fluidisation
 catalog_reference: Chem. Eng. Prog. Symp. (1966)
+catalog_reference_correction: >
+  WRONG DOCUMENT, and the correction matters. "Chem. Eng. Prog. Symp. (1966)" is
+  a real Wen & Yu paper - it is reference 23 of the paper that was read, and it
+  contains the derivation - but it is NOT on disk and was NOT consulted. The
+  paper on disk and the one the page is built from is the A.I.Ch.E. Journal
+  communication, 12(3) 610-612 (May 1966), doi:10.1002/aic.690120343, which
+  prints eq. (1), its two voidage-group approximations, their validity ranges and
+  the accuracy comparison but NOT the derivation and NOT the Ergun equation.
+  Both citations are recorded in the page's meta.yaml (reference and
+  origin_not_consulted) and in models_entry.yaml. Do not conflate them.
 priority: P1
 tier: T0
-structures: S1
-status: in-progress
+structures: S3
+structures_correction: >
+  CHANGED FROM S1, DELIBERATELY, AND THE INTEGRATOR SHOULD KNOW. This case was
+  catalogued as S1; the built page, its meta.yaml and models_entry.yaml all say
+  S3 - algebraic closure - which is what A1.1 and A1.7 use and is the right code
+  for a page with no operator, no grid and no solve (pymrm_api is []).
+  scripts/check_metadata.py compares meta.yaml against models.yaml only and will
+  NOT catch a disagreement with the catalogue, so it is recorded here.
+  docs/catalog-A-foundations.md still says S1 and is outside this case's working
+  directory; it needs the same edit.
+status: ready
 reference:
   authors:
   - Wen, C. Y.
   - Yu, Y. H.
   year: 1966
   container: AIChE Journal 12(3) 610-612
-  title_as_printed: A generalized method for predicting the minimum fluidization velocity
+  doi: 10.1002/aic.690120343
+  title_as_printed: A Generalized Method for Predicting the Minimum Fluidization Velocity
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/AIChE Journal - May 1966 - Wen - A generalized
     method for predicting the minimum fluidization velocity.pdf
   open_access: null
   checked: '2026-08-02'
-  identified_by: read the paper's own first pages, not the filename
+  identified_by: read the paper's own pages at 600 dpi, not the filename
+  extraction_trap: >
+    The first page of EXTRACTED TEXT belongs to a different article - a
+    communication on activity coefficients whose notation list and
+    literature-cited block occupy the top of journal page 610. Wen & Yu begin
+    partway down that page at "C. Y. WEN and Y. H. YU". Confirm the page before
+    transcribing. The text layer is otherwise good for this Wiley scan and agrees
+    with the 600 dpi renders on every number used.
 blocker: null
-notes: null
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+staged_at: queue_cases/A1.6/page/
+notes: >
+  Built 2026-08-02; framing revised 2026-08-02 after adversarial verification
+  (queue_cases/A1.6/review/verification.md). Staged page executes in ~4 s and
+  calls report_agreement("A1.6") with 48 metrics. Validation route taken, highest first: (2) internal identities
+  - the derivation of eq. (1) reconstructed from the Ergun force balance recovers
+  the printed 33.7 and 0.0408 to -0.079 % and +0.040 %, and Wen & Yu's own Table 1
+  is pooled against itself; (3) EXPERIMENTAL - eq. (1) against 21 minimum
+  fluidisation velocities from Geldart (1973) Table 1, loaded cross-page from
+  A1.7's data directory, held out by construction. Route (4), digitising the
+  paper's Figure 4, was NOT used and NO REVIEW OVERLAY EXISTS - nothing was
+  digitised, so there is no page image anywhere under queue_cases/A1.6/.
+  queue_cases/A1.6/review/ contains only verification.md, the adversarial
+  verifier's text report; it holds no copyrighted page image and must not be
+  treated as one. No maintainer input is needed.
+
+  Headline results: eqs. (2) and (3) solved simultaneously imply phi_s = 0.669 at
+  eps_mf = 0.474, which is not a sphere; forced to phi_s = 1 they contradict each
+  other by 8.4 %, and the branch that survives into the viscous term is 0.383,
+  below the paper's own stated eps_mf floor of 0.385. Against the unapproximated
+  balance for spheres at eps_mf = 0.42, eq. (1) is 28.9 % low in the viscous limit
+  and 1.9 % low in the turbulent one. A1.1's refit of Ergun's own constants moves
+  the prediction by -1.27 % viscous and +1.55 % turbulent, so LIKE FOR LIKE the
+  voidage approximation outweighs the friction-law uncertainty by 22.7x at the
+  viscous limit and by only 1.21x at the turbulent one - the page quotes both and
+  explicitly rejects the single "18x", which pits the worst voidage cost (viscous)
+  against the worst Ergun cost (turbulent). Measured: bias -17.4 %, rms 38.1 % over
+  21 rows against the authors' claimed 34 % - but the paper defines neither
+  statistic, and a standard deviation about the mean gives 33.9 %, an exact match;
+  both readings are printed. On the 8 spherical Diakon cuts eq. (1) is low on
+  EVERY row, by 25.2 % on average and by -5.5 % to -54.5 % row by row (rms 29.0 %,
+  no row near the mean).
+
+  TWO FRAMING CORRECTIONS MADE AFTER ADVERSARIAL REVIEW, both now on the page.
+  (1) The inversion to a "demanded voidage" (median 0.409) is a reparameterisation
+  of the bias, not an independent closure, and the page says so; and Geldart's own
+  table contradicts it. He prints eps_MB and H_MB/H_0, and on the two coarsest
+  Diakon cuts U_MB = U_0 with H_MB/H_0 = 1.000, so eps_mf = eps_MB = 0.444 with no
+  inference at all. At that voidage the exact Ergun balance is +58.4 % biased over
+  the eight rows (+47.5 % and +61.1 % on those two), worse than eq. (1)'s -25.2 %
+  in the other direction, and sphericity cannot explain it because the exact Ergun
+  u_mf written in d_sv is exactly phi_s-independent. The page therefore no longer
+  claims "the bias belongs to eqs. (2) and (3), not to the Ergun equation"; it
+  reports both voidages and leaves the question open, and the Reuse advice about
+  ergun_re_mf is qualified accordingly. (2) phi_s = 1 for Diakon rests on six
+  words of Geldart's prose; the headline scales as phi_s^-2 while the reference is
+  phi_s-free, so the break table now carries phi_s = 0.95 (-17.2 %) and 0.90
+  (-7.8 %), and phi_s = 0.864 would erase the bias entirely.
+
+  Three break tables and a resolving-power cell. The largest blind spot is stated:
+  every measured row is at (N_Re)_mf < 0.83 where eq. (1)'s inertial term
+  contributes at most 1.22 %, so the measured verdict covers the viscous half of
+  the correlation and nothing else. Wen & Yu's Table 1 is shown not to close ON
+  THE PRINTED COUNTS (-1572 variance required); the stronger "cannot close at all"
+  is NOT claimed, since an unconstrained split of the 284 can reach the printed 34.
+
+  NO pymrm operator appears - both routes are closed-form roots - and the page
+  says so in its "PyMRM implementation" section, following A1.1 and F1.4.
+  pymrm_api is therefore [] in models_entry.yaml.
+integrator:
+  page_dir: queue_cases/A1.6/page/  ->  pages/A1.6-wen-yu-minimum-fluidisation/
+  models_yaml: append queue_cases/A1.6/models_entry.yaml; A1.6 does not exist in
+    models.yaml yet, so APPEND rather than upgrade an entry in place
+  new_dependencies: none (numpy, pandas, scipy, matplotlib, pyyaml already in requirements.txt)
+  cross_page_dependency: >
+    The page loads pages/A1.7-geldart-classification/data/geldart_1973_table1.csv
+    via load_data(..., page="A1.7-geldart-classification"). A1.7 is published, so
+    the local path and the raw-GitHub fallback both resolve. If that CSV is ever
+    moved or renamed, this page breaks. The Geldart equation (3), his Table 1 rows
+    used here, and his mu and g were re-read from the source PDF for this page
+    rather than trusted from A1.7.
+  related_to_update: >
+    Optional, and none of it is required for this page to build. A1.7's "Related"
+    line says A1.6 is "not built here"; A1.1's Reuse section calls A1.6 planned.
+    Both are now stale by one page. A1.1's and A1.7's related lists already name
+    A1.6, so models.yaml needs no edit on their side.

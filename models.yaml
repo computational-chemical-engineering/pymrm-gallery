@@ -189,6 +189,79 @@ models:
     data: {tier: 4, method: digitised, status: complete}
     related: [A1.5, A1.6, A2.3, B1.1, E2.1]
 
+  - id: A1.6
+    slug: wen-yu-minimum-fluidisation
+    title: "Wen and Yu's minimum fluidisation velocity: where 33.7 and 0.0408 come from, and what they cost"
+    description: >
+      The one-line estimate of u_mf that everyone uses, taken apart. Substituting
+      the paper's two voidage-group approximations into the Ergun force balance
+      recovers its printed 33.7 and 0.0408 to -0.08 % and +0.04 %, which fixes from
+      the outside which friction law it encodes - a thing the communication does
+      not state, since it prints neither the Ergun equation nor the derivation.
+      Solved simultaneously, those two approximations pin the effective particle
+      down uniquely: sphericity 0.669 at a voidage of 0.474, which is not a sphere;
+      forced onto a sphere they contradict each other by 8.4 %, and the branch that
+      survives into the viscous term sits at 0.383, below the paper's own stated
+      voidage floor. That is why the correlation is 28.9 % low against the
+      unapproximated balance for fine spheres and only 1.9 % low for coarse ones -
+      an asymmetry invisible in its form. Compared like for like, that voidage cost
+      outweighs the uncertainty in Ergun's own constants (A1.1's refit of them) by
+      22.7x in the viscous limit but only 1.21x in the turbulent one, where the two
+      are the same size. Tested against 21 minimum fluidisation velocities Geldart
+      measured seven years later and the authors never saw, it is biased -17.4 %
+      with a 38.1 % rms about zero against their claimed 34 % - though a standard
+      deviation about the mean, which the paper never defines either way, gives
+      33.9 % and matches them exactly. On the eight spherical cuts it is low on
+      every row, by 25.2 % on average and by anything from 5.5 % to 54.5 % row by
+      row. The page then reports what would have been easy to leave out: the same
+      balance is unbiased at those powders' own inverted voidage only because that
+      inversion is a change of variables on the same measurement, and at the bed
+      voidage Geldart himself reports - 0.444 with no inference at all on two rows
+      where he prints U_MB = U_0 and H_MB/H_0 = 1.000 - it is +58 % biased, worse
+      than the correlation it is being used to judge. Which reading is right is
+      left open, as is the sphericity the headline rides on: phi_s = 1 comes from
+      six words of Geldart's prose, and 0.864 would erase the bias entirely.
+    section: A
+    status: published
+    page: pages/A1.6-wen-yu-minimum-fluidisation/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-solid]
+    predicts:
+      - minimum fluidisation velocity from particle size, densities and gas properties, with no voidage or shape factor
+      - particle Reynolds number at incipient fluidisation, eq. (1)
+      - the same quantity from the unapproximated Ergun force balance, given eps_mf and phi_s
+      - the effective eps_mf and phi_s that the correlation's constants encode
+      - the voidage a measured u_mf implies, by inversion of the force balance
+    pymrm_api: []
+    reference:
+      authors: ["Wen, C. Y.", "Yu, Y. H."]
+      year: 1966
+      container: "A.I.Ch.E. Journal 12(3) 610-612"
+      doi: 10.1002/aic.690120343
+    origin_not_consulted:
+      - authors: ["Wen, C. Y.", "Yu, Y. H."]
+        year: 1966
+        container: "Chem. Eng. Progr. Symposium Series No. 62, 62"
+        note: >
+          Reference 23 of the communication and the catalogue's original citation
+          for this case. It contains the derivation of eq. (1). Not on disk; the
+          derivation is reconstructed on the page and the reconstruction is
+          validated by recovering both printed constants to under 0.1 %.
+      - authors: ["Ergun, S.", "Orning, A. A."]
+        year: 1949
+        container: "Ind. Eng. Chem. 41, 1179"
+        note: >
+          Reference 7 of the communication, cited there as the fixed-bed pressure
+          drop equation used. Not on disk. The Ergun constants on the page are the
+          1952 pair read on A1.1.
+    data:
+      tier: 2
+      method: table
+      status: complete
+    related: [A1.1, A1.7, A1.5, A1.8, E1.1, E2.1]
+
   - id: A1.7
     slug: geldart-classification
     title: "Geldart's powder groups: the boundaries, and what his own table says about them"

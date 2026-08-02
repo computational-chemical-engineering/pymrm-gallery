@@ -20,10 +20,22 @@ Legend: **S** = structure code, **T** = tier, **P** = build priority
 | A1.3 | Darcy–Forchheimer | — | Δp in foams, monoliths, general porous media | S3 | T0 | P1 |
 | A1.4 | Eisfeld–Schnitzlein wall correction | *Chem. Eng. Sci.* 56 (2001) | Δp at low tube-to-particle ratio | S3 | T2 | P2 |
 | A1.5 | Richardson–Zaki | *Trans. IChemE* 32 (1954) | Bed expansion / hindered settling | S1 | T0 | P1 |
-| A1.6 | Wen–Yu minimum fluidisation | *Chem. Eng. Prog. Symp.* (1966) | u_mf from particle properties | S1 | T0 | P1 |
+| A1.6 | Wen–Yu minimum fluidisation | *Chem. Eng. Prog. Symp.* (1966) † | u_mf from particle properties | S3 ‡ | T0 | P1 |
 | A1.7 | Geldart classification | *Powder Technol.* 7:285 (1973) | Fluidisation regime from ρ, d_p | — | T0 | P1 |
 | A1.8 | Gidaspow / Syamlal–O'Brien / Wen–Yu drag | Gidaspow (1994); Syamlal & O'Brien (1989) | Gas–solid interphase drag closures | S1 | T1 | P2 |
 | A1.9 | EMMS drag | Li & Kwauk (1994) | Meso-scale-corrected drag, heterogeneous flow | S1 | T3 | P3 |
+
+† `A1.6`'s page is built from Wen & Yu's *A.I.Ch.E. Journal* **12**(3) 610–612
+communication, not from the Symposium Series paper listed here. The Symposium
+paper is reference 23 of the communication and carries the derivation of eq. (1);
+it is not on disk, and the page reconstructs the derivation instead, validating
+the reconstruction by recovering both printed constants to under 0.1 %. It is
+recorded as `origin_not_consulted` in `models.yaml`.
+
+‡ `A1.6` was catalogued `S1` and is built as `S3`, following `A1.1` and `A1.7`:
+it is an algebraic closure with no operator, grid or solve (`pymrm_api: []`).
+Corrected 2026-08-02. Note that `check_metadata.py` compares `meta.yaml` against
+`models.yaml` only and would not have caught the mismatch with this file.
 
 **Gallery angle for A1.** One page overlaying Ergun, Kozeny–Carman,
 Forchheimer, and the Eisfeld wall correction against a single Δp dataset, with
