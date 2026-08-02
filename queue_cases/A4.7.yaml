@@ -5,7 +5,31 @@ catalog_reference: Krishna & van den Broeke (1995); Krishna & Baur (2003)
 priority: P2
 tier: T1
 structures: S9
-status: unclaimed
+status: published
+page: pages/A4.7-zeolite-micropore-maxwell-stefan/
+staged_at: queue_cases/A4.7/page/
+data_tier: |
+  TIER 6 - REPRODUCTION, NOT VALIDATION. (The `tier: T1` field above is the
+  COMPLEXITY tier and is a different axis; do not read it as a data tier.) Every
+  target on this page is a number Krishna & Baur themselves computed. Every
+  experimental comparison inside the page's scope lives only in a figure - Garg &
+  Ruthven's ethane uptake, Shah's benzene diffusivities, Millot's Arrhenius data
+  - none is digitised, and no claim on the page rests on one. Reproducing these
+  numbers establishes that the page implements the review's equations and reads
+  its parameters correctly; it says nothing about whether the Maxwell-Stefan
+  description of zeolite diffusion is right. The same sentence appears in the
+  notebook, meta.yaml, models_entry.yaml and the page README.
+
+  NOT REPRODUCED: the review's Fig. 10(a) reports an inflection in the 3MP
+  desorption kinetics. Neither of the review's two stated loading dependences of
+  eth produces a turning point in the desorption rate here; the review does not
+  say which one 3MP follows; the claim lives in an undigitised figure. Reported
+  as a non-reproduction and left unresolved.
+
+  NOTE ON THE H1.9 TIER REFERENCE BELOW: text-printed numbers are TIER 2 on
+  docs/data-strategy.md's ladder, method `table`. Tier 4 means DIGITISED FROM A
+  FIGURE. An earlier version of this file and of H1.9.yaml said H1.9 "can reach
+  tier 4"; that was wrong on the repo's own ladder and is corrected.
 reference:
   authors: ["Krishna, R.", "Baur, R."]
   year: 2003
@@ -20,8 +44,8 @@ reference_secondary:
   doi: 10.1016/0009-2509(95)00102-B
   note: |
     The catalogue cites this as "Krishna & van den Broeke". The published author
-    order is the reverse — van den Broeke is first author. Fix the citation on
-    any page that uses it.
+    order is the reverse - van den Broeke is first author. NOT USED BY THE PAGE;
+    the page says so explicitly under Reuse so no reader goes looking for it.
 paper:
   on_disk: api-text/Krishna-Baur-2003-SepPurifTechnol-33-213-zeolite-modelling.ELSEVIER-API-TEXT.txt
   on_disk_secondary: api-text/vandenBroeke-Krishna-1995-CES-50-2507-micropore-MS.ELSEVIER-API-TEXT.txt
@@ -40,29 +64,234 @@ doi_source: |
       2507-2522, Van Den Broeke, L.J.P.; Krishna, R.
   The catalogue's crossref-auto DOI (the 1995 paper) resolves correctly; what
   was wrong was which of the two references actually carries this case.
+source_quality_confirmed: |
+  The source sweep's claim that the 2003 API text is born-digital and safe for
+  numbers was tested rather than taken on trust, by three checks that would each
+  have failed on a mis-transcribed table and none of which was used to choose a
+  value:
+    1. Table 2's 3MP row alone reproduces the review's two printed worked
+       loadings, 5.5958 vs 5.596 and 0.09282 vs 0.093.
+    2. Table 3's jump frequencies with the cell dimensions printed beside them
+       reproduce the review's printed D_x(0) to 0.002 % and D_y(0) to 0.29 %
+       through eq. (23), and Table 3's own D_i(0) column through eq. (24) to
+       0.070 % - for BOTH its species, the second of which is an exact doubling.
+    3. Table 1's C1 and nC4 rows with the two Section 4.1 diffusivities
+       reproduce the ratio of the two printed permeation fluxes to 0.17 %.
+  Conclusion: the 2003 text is usable for numbers. The pre-1980 decimal-point
+  warning in docs/pdf-findings.md does not apply to it.
+scope_decision: |
+  A4.7 AND H1.9 ARE TWO PAGES, NOT ONE. Decided 2026-08-02 after reading the
+  whole review. Both case files carry this argument.
+
+  THE CUT IS SINGLE-COMPONENT / MIXTURE, NOT MICROPORE / MEMBRANE.
+
+    A4.7 (built) = Sections 2.1-2.5 and 4.1: the M-S flux law for one sorbate
+      against a stationary framework, eqs. (5)-(14); the thermodynamic
+      correction factor, eqs. (16) and (33); the weak/strong confinement
+      scenarios, eqs. (17)-(20); Karger's zero-loading relations, eqs. (23) and
+      (24); transient uptake in a crystallite, eqs. (25)-(31); and the
+      single-component membrane permeation of Section 4.1.
+
+    H1.9 (specified, not built) = Sections 3.1-3.4, 4.2-4.3: eq. (42) and the
+      exchange coefficients D_ij, the Vignes interpolation eq. (43), [B] and
+      [Gamma] as matrices eqs. (38)-(46), the self-diffusivity eqs. (53)-(56),
+      IAST eqs. (62)-(65), and the MFI-membrane separations of C1/nC4 and the
+      hexane isomers.
+
+  WHY NOT ONE PAGE (the steelman, and why it fails).
+
+    Steelman: it is one paper, one flux law and one isotherm class, and the code
+    is shared - the DSL isotherm and the correction factor are needed by both.
+    AGENTS.md itself says to copy a page and substitute the physics, so shared
+    code is the norm and not an argument for merging. A single page would also
+    avoid stating eq. (14) twice.
+
+    Why it fails: the merged page would have two unrelated headline claims (the
+    loading dependence of a scalar diffusivity; a mixture selectivity of 487
+    where the pure components predict 1.73), two unrelated validations, and two
+    unrelated machineries - the mixture side needs a matrix [Gamma], an n x n
+    friction system and a nonlinear IAST solve, none of which appears anywhere
+    above. It would also cross sections A and H, which the catalogue keeps
+    apart. Most concretely: H1.9's material is where the review's EXPERIMENTAL
+    comparisons are (Bakker's S_P = 380 and 60, Funke's 24 and 1.3), and the
+    gallery values those highly enough that they should not be a subsection of
+    somebody else's page.
+
+  WHY NOT THE OBVIOUS CUT (micropore vs membrane).
+
+    CORRECTED 2026-08-03 after adversarial verification. The reason previously
+    given here was FALSE and is replaced. It said: "the page about that flux law
+    would have had nothing quantitative to check itself against". A4.7's own
+    summary table refutes that - only ONE of its nine printed targets comes from
+    Section 4.1. Under the micropore/membrane cut A4.7 would still have had
+    D_x(0), D_y(0), the Table 3 average, the running-text average, the CH4
+    average, both 3MP loadings and F at Sh = 10: eight targets, worst deviation
+    0.78 %.
+
+    What IS true: those two numbers, 34 and 3.1 mmol/m2/s, are the only place in
+    the whole 42-page review where the single-component flux law produces a
+    printed number (swept over every "mmol m-2 s-1" in the text; everything else
+    is Section 4.2's mixture). The correct, narrower form of the argument is
+    threefold:
+
+      1. The flux-ratio check is the only one on the page that exercises eth and
+         Gamma INSIDE A FLUX. A page about a flux law should keep the one check
+         that tests the flux law, even though it would not have been left
+         without checks.
+      2. Different machinery and a different headline. The mixture side needs a
+         matrix [Gamma], the exchange coefficients D_ij, an n x n friction
+         system and a non-linear IAST solve, none of which appears in A4.7, and
+         its headline is a selectivity of 487 against a pure-component 1.73.
+      3. Different catalogue section, and the mixture side is where the review's
+         EXPERIMENTAL numbers are (Bakker, Funke et al.). Those should not be a
+         subsection of somebody else's page.
+
+    The A4.7 page states this reasoning under Reuse in the corrected form.
+
+    A reader is therefore never left wondering why a membrane calculation
+    appears on a micropore page.
+
+  WHAT IS SCOPED OUT OF BOTH, and why.
+
+    Sections 4.4-4.7 - the N2/CH4 uptake in 4A (Table 4), the O2/N2
+    chromatographic separation (Table 5), the C5/C6 breakthroughs (Table 6) and
+    the pulsed hexane separation. All four are mixture problems in a packed bed
+    or crystallite whose ONLY validation is a figure. The parameter tables are
+    clean and transcribable, but the review prints no numerical result for any
+    of them, so a page would have nothing to be scored against. They are
+    recorded in H1.9's spec as candidate future cases (a packed-bed
+    chromatography page in section J would be the natural home), not as work
+    left undone here.
+build_summary: |
+  Built 2026-08-02. Staged at queue_cases/A4.7/page/, notebook regenerated and
+  executed clean, runtime ~79 s. models_entry.yaml written.
+
+  Validation is rank 1-3 on the builder brief's ladder and no figure was
+  digitised. Eight printed targets, worst deviation 0.78 %:
+    * Karger eq. (23): D_x(0) 0.002 %, D_y(0) 0.29 %
+    * eq. (24) vs Table 3: 0.070 %, and 0.070 % again for its doubled species
+    * DSL eq. (32) vs the two printed 3MP loadings: 0.19 % worst
+    * eqs. (30)+(31): Sh = 10 at F = 75.59 % vs the printed 75 %
+    * permeation flux ratio: 10.949 vs 34/3.1 = 10.968, -0.17 %
+    * eq. (23)+(24) on the review's SECOND worked example, CH4: 2.743e-7 vs the
+      printed 2.75e-7, -0.25 % with D_z halved (+5.0 % without) - the one
+      out-of-sample test on the page
+  Internal: eq. (33) vs numerical differentiation 2.5e-6; the single-site
+  collapse to eq. (16) 1.3e-10; pymrm vs the exact series 1.21e-5 relative after
+  Richardson extrapolation in dt, observed temporal order 0.96.
+
+  FINDINGS ON THE PAPER, both reported on the page:
+    1. The review prints TWO values for one orientation-averaged zero-loading
+       diffusivity: 6.85e-14 (Table 3) and 6.58e-14 (running text), 4.1 % apart.
+       Resolved: the printed D_z(0) = 0.827e-14 is exactly half what eq. (23)
+       gives (half the computed value lands 0.010 % from the printed one), and
+       the two averages are each internally consistent with a different D_z.
+       Table 3 is the one arithmetically consistent with the equation AS
+       PRINTED. The review's SECOND application of eq. (23), to CH4, then points
+       the other way: it prints 2.75e-7 m2/s and no D_z at all, and the halved
+       relation reproduces it to 0.25 % where the relation as printed misses by
+       5.0 %. So the review's PRACTICE is the halved form in both worked
+       examples and Table 3 is the odd one out. The page still does NOT decide
+       which is physically right, because the origin of the factor 2 cannot be
+       settled from the review alone - it may be in Karger's original (not on
+       disk, recorded under origin_not_consulted).
+    2. THREE printed defects, all recorded, none silently fixed. eq. (23c) is
+       printed with "nu_zz + nu_zz" in a denominator that must be
+       "nu_str + nu_zz". eq. (25) is printed with a leading + where the
+       divergence of an outward flux requires -. And the sentence supplying the
+       CH4 jump frequencies prints "nu_str" TWICE ("for transport along the
+       zig-zag channels nu_str = 3.6e11 s-1"), where the second must be nu_zz;
+       reading it as nu_zz is a REPAIR BY INFERENCE and is flagged as one on the
+       page, in the CSV row's note and in both sidecars. AGENTS.md forbids
+       repairing a printed value by inference without saying so.
+    3. The case's own premise does not survive in the form it is usually
+       stated. "The M-S diffusivity is far less loading-dependent than the Fick
+       one" is true by 10x in the review's weak-confinement scenario and false
+       by 10x in its strong-confinement scenario - the review states both, in
+       CONSECUTIVE PARAGRAPHS of Section 2.1, and contrasts them explicitly
+       twice (end of 2.1 and again in 2.3). An earlier version of this file and
+       of the page said "three pages apart" and "never puts them side by side";
+       that was false about the source and is corrected. What is new is only
+       that the two are quantified against each other on one axis. The factor of
+       10 is also algebraically forced - Gamma = 1/(1-theta) and eq. (19)'s
+       eth = (1-theta) are exact reciprocals, and the number is 1/(1-theta_max)
+       for the chosen theta_max = 0.9 - so the finding is the DIRECTION, not the
+       size. What does survive: given either stated loading dependence, the pole
+       in the Fick diffusivity at saturation lives entirely in Gamma. The
+       formulation removes a divergence, not a dependence.
+    4. The "two extrema in Gamma" claim holds for all four species the review
+       names and for three it does not (C2, nC4, nC5); the maximum sits at
+       Theta = Theta_sat,A in every case, which is 8, 9 or 12 rather than the 4
+       the review's sentence attaches it to.
+
+       THIS IS THE ONE HEADLINE WITH NO PRINTED TARGET BEHIND IT, and the page
+       now says so. Only the C1 and nC4 rows of Table 1 are certified by
+       anything (the permeation flux ratio, 0.17 %). GAMMA_IDENTITY is blind to
+       a wrong parameter by construction - it differentiates the same Isotherm
+       object it tests - so it catches a mis-transcribed FORMULA and never a
+       mis-transcribed NUMBER. In place of a validation that cannot be built
+       from this source, the page injects four plausible single-character
+       transcription slips and reports what each does: nC5 Theta_sat,B 0.5 read
+       as 0 rewrites the survey's count and its printed sentence; 2MB 4.2 read
+       as 0.42 moves that species' Gamma minimum 5.71 -> 4.19 while every binary
+       verdict still reads "as stated"; a decade slip in 2MP's b_B moves
+       nothing; and GAMMA_IDENTITY never leaves ~1e-7 under any of them.
+    5. Fig. 10(a)'s reported inflection in the 3MP desorption kinetics is NOT
+       reproduced under either stated loading dependence of the M-S
+       diffusivity. Reported as unresolved; the claim lives in an undigitised
+       figure and the review does not say which scenario 3MP follows.
+
+  BREAK TABLE: sixteen rows. The two that barely move are kept and explained -
+  the harmonic/arithmetic face mean (1.0e-3, now measured on the HARDEST problem
+  on the page, the 3MP desorption where Gamma sweeps 31.6 down to 8.8; it was
+  previously measured on the mildest case and reported as 1.9e-4, 5.4x too small
+  for a row whose job is to license "no result above depends on it"; both are now
+  printed side by side) and
+  the centre boundary condition (exactly 0.0, because construct_div weights the
+  r = 0 face by an area of zero in spherical geometry; verified directly on the
+  operator, so the defect cannot exist rather than the check being weak). The
+  last two rows are of a different kind and are labelled so: they break the
+  TRANSCRIPTION of Table 1 rather than the code, and quantify the two-extrema
+  survey's exposure rather than its correctness.
+
+  ONE MORE DEFECT FOUND IN VERIFICATION AND FIXED: cell 21 printed
+  "eq. (30) -> Sh = 10.00 at F = 0.75", which is an np.interp artefact on the
+  26-point log grid. The exact value is 10.078, and the artefact happened to
+  reproduce the review's ROUNDED 10 exactly, two cells before Validation reports
+  a 0.78 % deviation on that same quantity. The eq. (30) row is now solved with
+  brentq and the pymrm rows interpolate in log Fo (0.07 % residual instead of
+  0.78 %), so Results and Validation are one statement. Separately, the Sh mask
+  RESOLVED was 1.5e-2 in code against "1.5e-3" in the comment beside it; it is
+  now 1.5e-3, tied to the measured production time error printed in Validation,
+  and every "last resolved Sh" moved with it (33.67 -> 37.28 at theta_s = 0.9).
+
+  ONE DEFECT FOUND AND FIXED DURING THE BUILD, worth recording because it is the
+  handoff's most common finding: the first version marched with a geometrically
+  growing time step, dt_n = dt0 * growth^n. On that schedule dt at a given
+  Fourier number is set by the growth rate and is almost independent of dt0, so
+  the "time-step independence" study moved the error from 4.51e-3 to 4.39e-3
+  over an 8x range and looked converged. It was measuring nothing. Replaced by
+  dt = dt_frac * elapsed time, floored and capped, where scaling all three knobs
+  scales dt everywhere - which then showed a clean first order (0.96) and
+  revealed the real error was 1.5e-3, not the 4e-3 floor the old study implied.
+  If any other gallery page uses a geometric dt ramp and refines dt0 alone, its
+  time-step check has the same problem.
 notes: |
   BUILD FROM THE 2003 REVIEW, NOT THE 1995 PAPER. Two reasons.
 
   1. Subject. The 1995 paper's adsorbents are Kureha microporous *activated
-     carbon* and a Takeda *carbon molecular sieve* — there is no zeolite
+     carbon* and a Takeda *carbon molecular sieve* - there is no zeolite
      experiment in it. Every occurrence of "zeolite" or "silicalite" in its text
      is in the introduction or the reference list. The 2003 review is about
      zeolites throughout (MFI, 4A, CBMC/MD-derived parameters).
-  2. Text quality. The 2003 review is born-digital: the API text preserves
-     Ð, Θ, θ, Γ, "Pa−1" and subscripted symbols, and Tables 1-5 (DSL isotherm
-     parameters for alkanes in MFI at 300 K; C5/C6 isomers at 362 K; transition
-     probabilities and zero-loading diffusivities; pure-component Langmuir
-     parameters and M-S diffusivities for N2/CH4 in 4A at 193 K) come through
-     with their headers intact. The 1995 paper is a scan: species labels are
-     corrupted ("CaH6" for C3H6, "C3Hs" for C3H8, "COz" for CO2), the corrected
-     diffusivity D-bar renders as "/)~(0)", and **Table 4 — the very table of
-     single-component M-S diffusivities the case needs — is absent from the API
-     text altogether**, present only as cross-references from the body. Its
-     Table 1, 2 and 3 do survive with decimal points intact.
+  2. Text quality. The 2003 review is born-digital; the 1995 paper is a scan
+     whose species labels are corrupted and whose Table 4 - the single-component
+     M-S diffusivities - is absent from the API text altogether.
 
-  If the 1995 experiments are wanted, request the PDF; UvA-DARE holds an open
-  copy at the open_access URL above (repeated HTTP 503 on 2026-08-02, so it is
-  an availability problem, not an access problem — retry).
-
-  Note H1.9 was mapped to the same 1995 PII and is now corrected; see that file.
+  If the 1995 experiments are wanted, they would be a SEPARATE case: a carbon
+  molecular sieve breakthrough page, tier 4, with real measurements. That is
+  worth more than either of these two pages on the data-tier axis and nobody has
+  claimed it. UvA-DARE holds an open copy of the PDF at the open_access URL
+  above (repeated HTTP 503 on 2026-08-02, so it is an availability problem, not
+  an access problem - retry).
 updated: '2026-08-02'

@@ -1,0 +1,179 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.7
+slug: zeolite-micropore-maxwell-stefan
+title: "Maxwell–Stefan diffusion in zeolite micropores"
+section: A
+status: published
+tier: T1
+priority: P2
+structures: [S9, S4]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 105
+datasets:
+  - krishna-baur-2003-sorption-parameters.csv
+  - krishna-baur-2003-printed-results.csv
+
+validation:
+  - Karger eq. (23) reproduces the review's printed D_x(0) to 0.002 % and D_y(0) to 0.29 % from Table 3's jump frequencies and the cell dimensions printed beside them
+  - the review prints two different values for one orientation-averaged diffusivity, 6.85e-14 (Table 3) and 6.58e-14 (running text), 4.1 % apart; eq. (24) recovers Table 3's to 0.070 % and the text's to 0.013 % from the text's own printed D_z, and the whole gap is a factor of exactly 2 in that D_z (half the computed value lands within 0.010 % of the printed one)
+  - the DSL isotherm eq. (32) with Table 2's 3MP row alone gives the review's two printed worked loadings, 5.5958 against 5.596 and 0.09282 against 0.093
+  - >-
+    eq. (33) agrees with a numerically differentiated dln f/dln Theta to 2.5e-6
+    over five components and 25 pressures, and collapses to eq. (16) at 1.3e-10
+    when the second site is removed. BOTH ARE ALGEBRAIC IDENTITIES and the page
+    labels them as such - the first differentiates the same isotherm object it
+    tests, so it detects a mis-transcribed FORMULA (it goes to 1.0 when a site
+    term is dropped) and never a mis-transcribed PARAMETER.
+  - >-
+    the review applies eq. (23) a SECOND time, to CH4, and prints 2.75e-7 m2/s;
+    recomputed it is 2.743e-7 with D_z halved (-0.25 %) and 2.888e-7 with
+    eq. (23c) as printed (+5.0 %). The 2MH example fixed the factor of two from
+    a printed D_z; the CH4 example prints no D_z, so this is an out-of-sample
+    test, and it decides that the review's PRACTICE is the halved relation in
+    both of its worked examples.
+  - >-
+    the "two extrema" survey has NO printed target and nothing on the page
+    guards it - GAMMA_IDENTITY cannot see a wrong parameter - so its EXPOSURE is
+    measured instead. Four plausible single-character transcription slips are
+    injected. One (nC5 Theta_sat,B 0.5 read as 0) rewrites the survey's count
+    and its printed sentence. One (2MB 4.2 read as 0.42) moves that species'
+    Gamma minimum from 5.71 to 4.19 while every binary verdict still reads "as
+    stated". One moves nothing. None moves GAMMA_IDENTITY out of its ~1e-7
+    finite-difference floor.
+  - >-
+    eqs. (30)+(31) put the LDF's Sh = 10 at F = 75.59 %, against the 75 % the
+    review states; equivalently Sh(F = 0.75) = 10.078 against the printed 10,
+    the same 0.78 % read the other way. Results and Validation print both, so
+    the two cells cannot drift apart - an earlier version located F = 0.75 by
+    linear interpolation on a 26-point log grid and printed 10.00, an artefact
+    that reproduced the review's rounded claim exactly.
+  - the single-component permeation flux RATIO, in which the unprinted membrane thickness and the framework density both cancel, is 10.949 against the review's printed 34/3.1 = 10.968 (-0.17 %); dropping the thermodynamic factor moves it by 3.73x
+  - pymrm against the exact series eq. (30): first order in dt (observed 0.96), and 1.21e-5 relative at n_r = 200 once the time error is Richardson-extrapolated out
+  - >-
+    the non-linear uptake curves head for the long-time limit eq. (18) demands,
+    Sh -> (2/3) pi^2/(1 - theta_s) = 9.40, 16.45 and 65.80; at the last resolved
+    Fourier number the two lower ones sit 2 % and 7 % from theirs while the
+    constant-D control is 13 % high for the reason its own one-mode expansion
+    gives, so the check establishes the direction and the 1/(1-theta_s) scale
+    rather than the limit. The mask that defines "last resolved" is 1 - F >
+    1.5e-3, which is the measured production time error printed in Validation;
+    an earlier version carried 1.5e-2 in the code against 1.5e-3 in the comment
+    beside it, and every number in this row moved with it.
+  - >-
+    sixteen-row break table. Every check is broken deliberately and moves,
+    except two that are reported as structural - the harmonic/arithmetic face
+    mean (1.0e-3, measured on the HARDEST problem on the page, the 3MP
+    desorption where Gamma sweeps 31.6 down to 8.8, not on the mildest one; D is
+    smooth so the rule has no jump to bite on) and the centre boundary condition
+    (exactly 0.0, because construct_div weights the r = 0 face by an area of
+    zero in spherical geometry, verified on the operator itself). The last two
+    rows are of a different kind and are labelled so - they break the
+    TRANSCRIPTION of Table 1, not the code, and quantify the two-extrema
+    survey's exposure rather than its correctness.
+
+adds: >
+  The review's single-component results are reproduced, not improved on. Five
+  things are not in it. (1) The 4.1 % disagreement between its own two printed
+  values of the orientation-averaged zero-loading diffusivity is located rather
+  than noticed: x and y reproduce to 0.29 %, D_z is out by a factor of exactly
+  two, Table 3 is the value arithmetically consistent with eq. (23) AS PRINTED
+  and the running text is consistent with its own printed D_z, and Table 3's second species - whose jump
+  frequencies are exactly doubled - confirms the reading independently to
+  0.070 %. The review's SECOND application of eq. (23), to CH4, then tests the
+  factor out of sample: it prints 2.75e-7 m2/s and prints no D_z at all, and the
+  halved relation reproduces it to 0.25 % where eq. (23c) as printed misses by
+  5.0 %. So the review's practice is the halved relation in BOTH worked examples
+  and Table 3 is the odd one out; the page still declines to say whether the
+  factor originates with Karger or with the review's arithmetic, because Karger
+  1973 is not on disk. (2) The claim the case exists to examine is decided against the
+  review's own evidence: "the M-S diffusivity is far less loading-dependent than
+  the Fick one" is true by a factor of ten in its weak-confinement scenario
+  (eqs. 17-18) and false by the same factor in its strong-confinement scenario
+  (eqs. 19-20). The page is the first place the two are quantified against each
+  other on one axis, and that is ALL it claims: the review states both scenarios
+  in CONSECUTIVE PARAGRAPHS of Section 2.1 and contrasts them explicitly twice,
+  at the end of 2.1 and again in 2.3, so nothing here is a discovery about what
+  the authors knew. The factor of ten is also NOT a measurement: Gamma =
+  1/(1-theta) and eq. (19)'s eth = (1-theta) are exact reciprocals, so the two
+  swings are equal over any loading range whatever and the number 10 is set
+  entirely by the choice theta_max = 0.9, being 1/(1-theta_max). What is not
+  forced is the DIRECTION, which flips between the review's own two scenarios.
+  What survives is narrower still and is stated instead: given either of the
+  review's two loading dependences, the pole in D at saturation lives entirely
+  in Gamma - the formulation removes a divergence, not a dependence. (Stated
+  that way because boundedness of eth is an empirical input, eqs. 17 and 19, not
+  a theorem about the M-S formulation.) (3) The "two extrema in Gamma" claim is
+  run on every row of Table 1 rather than the four species it names: all four
+  behave as stated, and three it does not name (C2, nC4, nC5) do too - and in
+  every case, named or not, the maximum sits at Theta = Theta_sat,A, which is 8,
+  9 or 12 rather than 4. THIS IS THE ONE HEADLINE WITH NO PRINTED TARGET BEHIND
+  IT and the page says so: only the C1 and nC4 rows of Table 1 are certified by
+  anything, GAMMA_IDENTITY is blind to a wrong parameter by construction, and a
+  perturbation table measures the exposure in place of a validation that cannot
+  be built from this source.
+  (4) The membrane thickness the review never prints is reconstructed at about
+  40 um, from its two single-component fluxes and the only MFI density it prints
+  (in an unrelated figure caption). The 0.17 % agreement between the two
+  reconstructions is NOT a second check - it is the flux-ratio comparison
+  inverted, and the page prints both to show they are one number. (5) Krishna & Baur's Sh = 10 and page J1.5's Glueckauf 15 are
+  shown to be one constant, and their apparently conflicting 75 % and 44 % are
+  reconciled: eq. (31) is a time average, J1.5's k_eff is instantaneous, and
+  solved exactly they are 75.59 % and 43.32 %.
+
+agreement: >
+  Eight printed targets reproduced, worst deviation 0.78 % (the review's 75 %
+  against a computed 75.59 %); the rest are 0.002-0.29 %. A ninth printed
+  number, the running text's orientation-averaged diffusivity, is out by 4.2 %
+  and is reported as a printed inconsistency rather than folded into the score.
+  Internal: eq. (33) against numerical differentiation 2.5e-6; the single-site
+  collapse 1.3e-10; the pymrm sphere against the exact series 1.21e-5 relative
+  after Richardson extrapolation in dt, with an observed temporal order of 0.96.
+  Nothing is fitted.
+
+caveats: >
+  TIER 6 AND REPRODUCTION, NOT VALIDATION. Every target is a number Krishna &
+  Baur themselves computed. Every experimental comparison inside this page's
+  scope lives only in a figure - Garg & Ruthven's ethane uptake, Shah's benzene
+  diffusivities, Millot's Arrhenius data - and digitising a figure needs a
+  maintainer review that is not available, so nothing here rests on one and no
+  measurement is claimed. (The review's MIXTURE membrane selectivities from
+  Bakker and Funke et al. ARE stated in its running text rather than a figure,
+  so case H1.9 can compare against measurement where this page cannot. Note the
+  tier: on docs/data-strategy.md's ladder a number printed as text is TIER 2,
+  method `table`; tier 4 means digitised from a figure. H1.9 would be tier 2,
+  not tier 4 - an earlier version of this file said tier 4 and was wrong on the
+  repo's own ladder. Recorded in queue_cases/H1.9.yaml.)
+
+  Scope: this page is SINGLE-COMPONENT only. Mixture diffusion - the exchange
+  coefficients D_ij of eq. (42), the matrix thermodynamic factor of eq. (38),
+  IAST, membrane selectivity, the 4A uptake and the packed-bed breakthroughs -
+  is case H1.9 and is not touched. The reasoning for cutting the review at
+  single-component/mixture rather than at micropore/membrane is written on the
+  page and in both case files.
+
+  The production uptake curves carry about 0.15 % of backward-Euler time error,
+  measured and stated; the non-linear Sherwood numbers are therefore good to
+  about half a unit, which is stated beside them. The review's Fig. 10(a)
+  reports an inflection in the 3MP desorption kinetics that this page does not
+  reproduce under either of the review's two stated loading dependences of the
+  M-S diffusivity; since the claim lives in an undigitised figure and the review
+  does not say which scenario 3MP follows, the page reports the failure and does
+  not resolve it. THREE printed defects are recorded and none is silently fixed:
+  the sign of eq. (25); the nu_zz + nu_zz in the denominator of eq. (23c); and
+  the symbol nu_str printed TWICE in the sentence that supplies the CH4 jump
+  frequencies, where the second must be nu_zz. The third is a repair by
+  inference and is flagged as one on the page, in the CSV row's note and in both
+  sidecars, because AGENTS.md forbids repairing a printed value by inference
+  without saying so.
+
+  Also stated on the page rather than left for a reader to find: the divergence
+  in Gamma is demonstrated over theta = 0.5...0.999 while the page's own worked
+  example never gets past the crystal only 89 % full, so the reframing is argued in a regime
+  no computation on the page visits.

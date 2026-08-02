@@ -21,41 +21,247 @@ doi_source: |
   verified 2026-08-02 against the Elsevier full text returned by the authorised
   API key: header reads "Modelling issues in zeolite based separation processes
   / Separation and Purification Technology / 33 / 3 / 213-254 / 1 November 2003",
-  authors "Krishna, R.  Baur, R." — the catalogue's "Krishna & Baur (2003)".
+  authors "Krishna, R.  Baur, R." - the catalogue's "Krishna & Baur (2003)".
 
   CORRECTION. This case previously carried doi 10.1016/0009-2509(95)00102-b with
   doi_source: crossref-auto, shared with A4.7. That is a valid DOI but the wrong
   paper for this case, and it had never been checked by a human. See notes.
+scope_decision: |
+  NOT COVERED BY A4.7. Decided 2026-08-02 by the A4.7 builder, after reading the
+  whole review; the same argument is in queue_cases/A4.7.yaml under
+  `scope_decision` and the A4.7 page states it under Reuse. Summary:
+
+  THE CUT BETWEEN THE TWO CASES IS SINGLE-COMPONENT / MIXTURE, NOT MICROPORE /
+  MEMBRANE. A4.7 (built) took Sections 2.1-2.5 and the single-component
+  permeation of Section 4.1. This case takes Sections 3.1-3.4 and 4.2-4.3 - the
+  mixture theory and the MFI-membrane separations it was built for.
+
+  Steelman for merging, and why it fails: it is one paper, one flux law, one
+  isotherm class, and the DSL/Gamma code is shared. But the mixture side needs
+  machinery that appears nowhere in A4.7 (a matrix [Gamma], the exchange
+  coefficients D_ij, an n x n friction system, a nonlinear IAST solve), its
+  headline is a different claim (a permeation selectivity of 487 where the pure
+  components predict 1.73), it sits in a different catalogue section, and - the
+  decisive point - it is where the review's EXPERIMENTAL comparisons live. Those
+  should not be a subsection of somebody else's page.
+
+  Why not the obvious micropore/membrane cut. CORRECTED 2026-08-03 after
+  adversarial verification; the reason previously given here was false. It said
+  the cut "would have left A4.7 with nothing quantitative to check itself
+  against". A4.7's own summary table refutes that: only ONE of its nine printed
+  targets comes from Section 4.1, and under the other cut it would still have
+  had eight, worst deviation 0.78 %. What is true is only the first half - the
+  two fluxes 34 and 3.1 mmol/m2/s are the ONLY place in the review where the
+  single-component flux law produces a printed number (swept over every
+  "mmol m-2 s-1"; everything else is Section 4.2's mixture). The correct,
+  narrower reason is that the flux-ratio check is the only one on A4.7 that
+  exercises eth and Gamma INSIDE A FLUX, so it belongs with the page about the
+  flux law - together with the three reasons above (different machinery,
+  different headline, different section, and the experimental numbers being on
+  the mixture side), which are what actually carry the decision.
+specification: |
+  A COMPLETE BUILD SPEC. Everything below was established while building A4.7
+  and does not need re-deriving.
+
+  ## What this page is
+
+  Mixture Maxwell-Stefan diffusion in zeolites, worked on the MFI membrane. The
+  claim: mixture permeation selectivity cannot be predicted from pure-component
+  permeation, because (a) the mixture isotherm is not multicomponent Langmuir -
+  size and configurational entropy effects need IAST - and (b) the exchange
+  coefficients D_ij are finite, so a fast species is slowed by a slow one.
+
+  ## The equations
+
+    eq. (42)  the n-component M-S flux relations, with D_i and D_ij
+    eq. (43)  D_ij = D_i^(t_i/(t_i+t_j)) D_j^(t_j/(t_i+t_j))  (Vignes-type)
+    eq. (38)  the MATRIX thermodynamic factor, Gam_ij = (t_i/t_j) dln f_i/dln t_j
+    eq. (39)  [Gamma] for a multicomponent Langmuir: Gam_ij = delta_ij + t_i/(1-sum t)
+    eq. (44)  [B]:  B_ii = 1/D_i + sum_j t_j/D_ij ;  B_ij = -t_i/D_ij
+    eq. (45)  (N) = -rho [Theta_sat][B]^-1 [Gamma] (grad theta)
+    eq. (46)  [D] = [B]^-1 [Gamma];  [L] = [B]^-1 [theta]
+    eq. (47)  the D_ij -> infinity limit (the Habgood model)
+    eqs. (53)-(56)  self-diffusivity;  eq. (55) D*_1 = D_1/(1+theta_1)
+    eqs. (57)-(59)  the membrane: Dirichlet loadings at both faces, transient
+    eq. (60)  permeation selectivity S_P = (N_2/N_1)(p_2,0/p_1,0)
+    eq. (61)  sorption selectivity S = (Theta_2/Theta_1)(p_1/p_2)
+    eqs. (62)-(65)  IAST: Raoult analogue, surface potential, total loading
+
+  Two of these are algebraic identities and must be labelled as such, not
+  presented as evidence: eq. (43) applied to i = j gives D_ii = D_i exactly, and
+  eq. (55) follows from eq. (54) by substitution. A4.7 already prints both as
+  identities; do not re-present them as checks.
+
+  ## Validation, ranked (builder brief ladder)
+
+  RANK 3, AND AGAINST MEASUREMENT - this is the important one, and it is easy to
+  miss because the numbers are in prose rather than a table. The review states
+  four experimental values in its running text, NOT in a figure:
+
+    * Bakker [79], 95-5 C1/nC4 across MFI at 300 K:   S_P = 380
+    * Bakker [79], 50-50 C1/nC4:                      S_P = 60
+    * Funke et al. [87], nC6/3MP at 15 kPa upstream:  S_P = 24
+    * Funke et al. [87], the same pair, pure components: S_P = 1.3
+
+  ENCODE THESE AS `data: {tier: 2, method: table}`, NOT TIER 4. Corrected
+  2026-08-03; an earlier version of this spec said tier 4, and that is wrong on
+  this repo's own ladder. docs/data-strategy.md sec.1: tier 2 is "tables printed
+  in papers - numbers already in numeric form", which is what a number printed
+  in running text is; tier 4 is "digitised from figures". Tier 2 is BETTER than
+  4, not worse - there is no digitisation error at all. The reason the
+  distinction matters is in that document's own warning: a reader filtering
+  models.yaml for `data.tier: 4` to find pages tested against measurement is
+  exactly what a mis-encoding breaks.
+
+  Record the origin under `origin_not_consulted` for Bakker's thesis and for
+  Funke et al.; neither is on disk, and the review is the text actually read.
+  A4.7 is tier 6 because every one of its comparisons is with the authors' own
+  computed output; this case can do better because these four are measurements.
+
+  RANK 3, against the authors' own computations. Every one of these is printed:
+
+    95-5 C1/nC4, finite D_ij:   N_C1 = 0.12, N_nC4 = 3.09 mmol/m2/s, S_P = 487
+                                peak C1 flux 0.44 mmol/m2/s at t = 0.73 s
+    95-5 C1/nC4, D_ij -> inf:   peak C1 17.2, steady C1 4.72, nC4 3.06, S_P = 12.3
+    50-50 C1/nC4:               S_P = 202 (finite) and 5.4 (infinite)
+    multicomponent Langmuir with equal saturation capacities: S_P = 800, constant
+    sorption selectivity in the Henry limit (Theta_mix < 8):  S = 2200
+    equimolar nC6/3MP at 66 kPa, 362 K, D_nC6 = 5 D_3MP:      S_P = 43.2
+    3MP/2,2DMB binary at 30 kPa: about 7;  ternary with nC6:  above 30
+
+  RANK 2, internal identities that can fail:
+    * The three printed selectivities must equal eq. (60) on their own printed
+      fluxes: (3.09/0.12)(19) = 489 vs the printed 487, and (3.06/4.72)(19) =
+      12.32 vs the printed 12.3. Arithmetic only - say so.
+    * eq. (45) with n = 1 must collapse to eq. (12), and eq. (46) to eq. (14).
+    * IAST must reduce to the multicomponent Langmuir when all saturation
+      capacities are equal. That is the review's own explanation of why the
+      Langmuir predicts a constant S_P, and it is a real test of the IAST solve.
+    * [B]^-1 must be computed WITHOUT forming [B] at least once. See A4.2's
+      finding: coding [B] twice cannot detect an error inside [B], and it
+      replaced that check with the raw friction system. Reuse A4.2's approach.
+
+  ## Two numbers to check first, because one of them may not hold
+
+    (a) THE HENRY-LIMIT SORPTION SELECTIVITY. The review states S = 2200 for
+        nC4 over C1 "calculated from the corresponding Henry coefficients". From
+        Table 1 the Henry coefficient is H_i = sum_s Theta_sat,s b_s, so
+          H_nC4 = 9(1.63e-2) + 1(1.14e-5) = 0.146711
+          H_C1  = 11(4.86e-6) + 8(2.38e-7) = 5.5364e-5
+          S = H_nC4/H_C1 = 2650
+        which is 20 % above the printed 2200. Computed while writing this spec
+        and independently reproduced (2649.9, +20.4 %) by A4.7's verifier, but
+        NOT verified by any published page - treat it as an open question, not a
+        fact.
+        If it survives, it is a printed-value finding; if the definition of S in
+        the Henry limit is something else, that is worth knowing before the
+        page is built.
+
+    (b) THE MEMBRANE THICKNESS, which the review never prints. A4.7
+        reconstructed it from each of the two single-component fluxes
+        separately, using the only MFI density the review prints (1800 kg/m3, in
+        the caption of Fig. 40): 39.97 um from the C1 flux and 40.04 um from the
+        nC4 flux, 0.17 % apart. That is a RECONSTRUCTION and A4.7 labels it as
+        one. It matters here because delta cancels out of every selectivity but
+        NOT out of an absolute mixture flux. Prefer the delta-free comparisons -
+        N_nC4(mixture)/N_nC4(pure) = 3.09/3.1 and N_C1(mixture)/N_C1(pure) =
+        0.12/34 - and use the reconstructed delta only as a secondary check,
+        clearly labelled.
+
+  ## Parameters
+
+  Tables 1 and 2 are ALREADY TRANSCRIBED, with sidecars, in
+  pages/A4.7-zeolite-micropore-maxwell-stefan/data/
+  krishna-baur-2003-sorption-parameters.csv (plus the Section 4.1 diffusivities,
+  the MFI cell dimensions and Table 3). Load them cross-page with
+  load_data(..., page="A4.7-zeolite-micropore-maxwell-stefan").
+
+  IF YOU DO, THE CROSS-PAGE RULE APPLIES IN FULL (AGENTS.md, "Data rules"):
+    1. List in your own "The data" section every finding A4.7 states about the
+       rows you use, and say whether each affects you. The ones that will:
+         - A4.7 reproduces the two printed 3MP loadings from Table 2 to 0.19 %,
+           so that row is certified.
+         - A4.7 reproduces the printed single-component flux RATIO from the
+           Table 1 C1 and nC4 rows to 0.17 %, so those rows are certified.
+         - A4.7 finds the review's printed D_z(0) to be exactly half what
+           eq. (23) gives, and its two printed orientation-averaged
+           diffusivities to disagree by 4.1 %. That is in Table 3 and Section
+           2.2 and does NOT touch anything this case needs - say so rather than
+           leaving it unaddressed.
+         - A4.7 finds Gamma's "two extrema" claim to hold for three species the
+           review does not name (C2, nC4, nC5) as well as the four it does.
+           Relevant if you quote the review's sentence - AND note that A4.7
+           states plainly that this survey has no printed target behind it, that
+           its GAMMA_IDENTITY check is blind to a wrong parameter by
+           construction, and that a plausible single-digit slip in one Table 1
+           row moves the count. If you rely on those rows, carry that caveat.
+         - A4.7 records THREE printed defects, one of which is a repair by
+           inference: the review prints "nu_str" twice in the sentence supplying
+           the CH4 jump frequencies. The other two are the sign of eq. (25) and
+           the nu_zz + nu_zz denominator of eq. (23c). None affects the mixture
+           material, but say so rather than leaving them unaddressed.
+         - A4.7 reproduces the review's SECOND application of eq. (23), to CH4,
+           and finds that the review's practice uses a halved D_z in both of its
+           worked examples. Does not touch this case; state it and move on.
+    2. NEVER RETYPE A NUMBER THAT IS A ROW IN A CSV YOU LOADED. The single-
+       component fluxes 34 and 3.1, the pure-component selectivity 1.73, the
+       upstream pressures 95 and 5 kPa and the two diffusivities 1e-9 and 1e-11
+       are ALL rows in A4.7's krishna-baur-2003-printed-results.csv. Print them
+       beside yours and reconcile. This is exactly where the A1.6 and J3.1
+       failures happened, and the review's whole rhetorical setup - "we might
+       expect S_P to be 1.73; it is 487" - runs through those very numbers.
+
+  Parameters you will need to transcribe yourself (all clean in the API text,
+  all with their headers intact):
+    * Section 3.3, Sanborn & Snurr CH4/CF4 in FAU at 300 K: Theta_1,sat = 10,
+      Theta_2,sat = 6.1 molecules per supercage; D_1(0) = 35e-9 m2/s constant
+      (eq. 17), D_2(0) = 20e-9 with eq. (19).
+    * Section 3.4, Snurr & Karger CH4/CF4 in MFI at 200 K: total loading 12
+      molecules per unit cell; D_1(0) = 60e-10, D_2(0) = 25e-10 m2/s;
+      Theta_1,sat = 22, Theta_2,sat = 13.
+    * Section 4.3 / Fig. 29-30 captions: D_nC6 = 5 D_3MP; D_3MP = 2 D_2,2DMB;
+      the crystal size is set by D_3MP/delta^2 = 0.125 s^-1.
+
+  ## Traps
+
+    * The mixture isotherm is IAST, NOT multicomponent Langmuir. Using the
+      Langmuir gives a CONSTANT S_P of 800 - which the review prints, so it is a
+      useful counterfactual, but it is not the model.
+    * eq. (39) is thermodynamically consistent only when all saturation
+      capacities are equal, which the review states and which is exactly the
+      case where it fails here (C1 and nC4 have Theta_sat 19 and 10).
+    * The 4A results go the OTHER way: the review concludes that Habgood's
+      N2/CH4 uptake is better described by D_ij -> infinity, while MFI needs a
+      finite D_ij. A page that only shows finite D_ij winning would be
+      misreporting the review's own conclusion 9.
+    * Do not present the D_ij -> infinity comparison as validation of finite
+      D_ij against measurement unless you use Bakker's 380 and 60. Against the
+      review's own simulations it is model-versus-model.
+
+  ## Scoped out of this case too, and why
+
+  Sections 4.4-4.7 - the N2/CH4 uptake in 4A (Table 4), the O2/N2
+  chromatographic separation (Table 5), the C5/C6 breakthroughs (Table 6) and
+  the pulsed hexane separation. All are mixture problems whose only validation
+  is a figure; the review prints no numerical result for any of them. The
+  parameter tables are clean and would transcribe easily, so these are viable
+  FUTURE cases - a packed-bed chromatography page in section J is the natural
+  home - but not part of H1.9 and not work left undone.
 notes: |
-  METADATA CORRECTED 2026-08-02 — the previous DOI did not source this case.
+  METADATA CORRECTED 2026-08-02 - the previous DOI did not source this case.
 
   10.1016/0009-2509(95)00102-B is van den Broeke & Krishna, "Experimental
   verification of the Maxwell-Stefan theory for micropore diffusion", CES 50
   (1995) 2507-2522. It reports breakthrough experiments in a **packed bed** of
   Kureha microporous activated carbon and a Takeda carbon molecular sieve. It
-  contains no membrane, no permeation model and no zeolite experiment: every
-  occurrence of "membrane", "zeolite" and "silicalite" in its full text is in
-  the introduction or the reference list (Kapteijn/Bakker/Zheng on silicalite
-  membranes, Rao & Sircar on carbon membranes). A page on a Maxwell-Stefan
-  *zeolite membrane* cannot be sourced from it. Same failure mode as F3.5 and
-  G1.7: a crossref-auto DOI that resolves cleanly to the wrong document.
+  contains no membrane, no permeation model and no zeolite experiment.
 
-  The catalogue's other named reference does carry the case. Krishna & Baur
-  (2003) states as its second objective "to show how the M-S approach can be
-  incorporated into the modelling and design of practical devices such as
-  membrane permeation units and fixed bed adsorbers", and works the MFI-membrane
-  separation of hexane isomers (nC6 / 3MP) explicitly, with a transient model
-  whose solution follows "the transience in permeation flux N1 as steady state
-  is approached".
-
-  SOURCE QUALITY: good, and unusually so. The 2003 text is born-digital, not a
-  scan. Ð, Θ, θ, Γ and "Pa−1" survive; the Nomenclature block is intact; Tables
-  1-5 arrive with headers and numbers (Table 1 DSL parameters for alkanes in MFI
-  at 300 K; Table 2 for C5/C6 isomers at 362 K; Table 3 transition probabilities
-  and zero-loading diffusivities; Table 4 Langmuir parameters and M-S
-  diffusivities for N2 and CH4 in 4A at 193 K). The "API text is unusable for
-  numbers" warning in docs/pdf-findings.md is about pre-1980 scans and does not
-  apply here. Spot-check a few values against the published PDF anyway.
+  SOURCE QUALITY: good, and now confirmed rather than asserted. A4.7 put the
+  2003 API text through three checks that would each have failed on a
+  mis-transcribed table - the Table 2 3MP loadings, the Table 3 Karger
+  diffusivities, and the Table 1 permeation flux ratio - and all three passed.
+  The "API text is unusable for numbers" warning in docs/pdf-findings.md is
+  about pre-1980 scans and does not apply here.
 
   In AGENTS.md terms this is the reprint route: the review is by the same
   authors, prints the model, names it and applies it. Where a page cites an

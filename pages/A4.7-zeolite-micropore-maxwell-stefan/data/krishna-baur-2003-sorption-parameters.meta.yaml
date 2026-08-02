@@ -1,0 +1,167 @@
+dataset_id: krishna-baur-2003-sorption-parameters
+title: Sorption isotherm parameters, jump frequencies and M-S diffusivities printed by Krishna & Baur (2003)
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Baur, R."
+  year: 2003
+  container: "Separation and Purification Technology 33(3) 213-254"
+  doi: 10.1016/S1383-5866(03)00008-X
+  access: >
+    Elsevier full-text API (article/pii/S138358660300008X) with an authorised
+    institutional key held outside the repository. Lawful access; no PDF and no
+    page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+conditions:
+  table1: >
+    Dual-site Langmuir (DSL, eq. 32) parameters fitted to CBMC simulations of
+    the pure-component isotherms of linear, 2-methyl and di-methyl alkanes in
+    MFI (silicalite-1) at 300 K, printed as Table 1. Loadings are in molecules
+    per unit cell. The review states explicitly that the total saturation
+    loading Theta_sat = Theta_sat,A + Theta_sat,B is NOT a fitted parameter but
+    is taken from the plateau of the simulated isotherm.
+  table2: >
+    DSL parameters for the C5 and C6 alkane isomers in MFI at 362 K, Table 2,
+    likewise fitted to CBMC simulations. Note that 2,2DMB carries
+    Theta_sat,B = 0.0, so its printed b_B has no effect on any loading; it is
+    stored because it is printed, and it happens to be identical to 3MP's b_B.
+  benzene: >
+    DSL parameters for benzene on MFI at 303 K. These are NOT in a table; the
+    review prints them inside the caption of Fig. 9, fitted to the experimental
+    isotherm of Guo et al. They are stored because the same caption states the
+    thermodynamic factor "can be expected to also exhibit two extrema", which
+    is a claim the parameters alone are enough to test.
+  table3: >
+    Transition probabilities and zero-loading diffusivities for the binary KMC
+    study of Section 3.3. Species 1 is 2-methylhexane (2MH), with straight- and
+    zig-zag-channel jump frequencies obtained from transition state theory by
+    Smit et al.; species 2 is a hypothetical partner whose frequencies are
+    exactly twice species 1's. The tabulated D_MS(0) is described in the text as
+    "calculated using the Karger formulae given by Eqs. (23) and (24)".
+  ch4_jump_frequencies: >
+    Section 2.2 applies eq. (23) a SECOND time, to CH4 in MFI at 300 K, using
+    jump frequencies taken from the KMC study of Paschek & Krishna, and prints
+    the resulting Ð(0) = 2.75e-7 m2/s. Those two frequencies are stored here so
+    that the review's second worked application of eq. (23) is checkable from
+    the same CSV as its first.
+
+    PRINTED DEFECT, FLAGGED NOT SILENTLY REPAIRED. The review prints the SAME
+    symbol for both channel systems: "The jump frequency along the straight
+    channels is taken as nu_str = 4.2x10^11 s^-1; for transport along the
+    zig-zag channels nu_str = 3.6x10^11 s^-1." The second must be nu_zz - the
+    sentence names the zig-zag channels, eq. (23) needs both frequencies, and
+    3.6e11 is what reproduces the printed 2.75e-7. Storing it under nu_zz is a
+    repair by inference; it is recorded here, in the row's own note, and on the
+    page beside the two other printed defects (the eq. (23c) denominator and
+    the sign of eq. 25). AGENTS.md forbids repairing a printed value by
+    inference without saying so, which is why this paragraph exists.
+  cell_dimensions: >
+    The MFI diffusion-unit-cell dimensions a = 2.01, b = 1.99, c = 1.34 nm are
+    printed in the running text of Section 2.2, immediately before the worked
+    application of eq. (23), and are attributed to Fig. 1. They are the input
+    that makes that worked example checkable. The review reuses the same MFI
+    lattice for its CH4 application of eq. (23), and the page reuses these
+    dimensions there.
+  membrane_diffusivities: >
+    The two M-S diffusivities used for the single-component MFI membrane
+    permeation calculations of Section 4.1, D_C1 = 1e-9 and D_nC4 = 1e-11
+    m2/s, both stated as constants. The membrane thickness delta is NOT
+    printed anywhere in the review for this case.
+  ethane_4A: >
+    D_MS/rc^2 = 2.45e-4 s^-1 for ethane in 4A zeolite, Section 2.3, taken by
+    the review from Garg & Ruthven and used for the uptake curves of Fig. 5.
+    Stored for completeness; this page does not reproduce Fig. 5, which carries
+    the only measurements in that section and would need digitisation.
+
+acquisition:
+  method: table
+  figure: "Tables 1, 2 and 3; the caption of Fig. 9; and in-text values in Sections 2.1, 2.2, 2.3 and 4.1"
+  tool: "Elsevier full-text API, text/plain, transcribed by hand"
+  procedure: >
+    These are NOT measurements. Every row is a parameter the authors printed -
+    fitted to molecular simulation (Tables 1, 2), to an experimental isotherm
+    (benzene), or taken from another paper (Table 3's frequencies, the ethane
+    diffusivity) - collected so that a reimplementation of eqs. (15), (16),
+    (23), (24), (32) and (33) can be checked against the review's own worked
+    results.
+
+    The 2003 review is BORN-DIGITAL, not a scan. This matters, because
+    docs/pdf-findings.md records that the same API drops decimal points
+    wholesale on pre-1980 scans. It does not here: the returned text preserves
+    the Maxwell-Stefan symbol D-with-stroke, Theta, theta, Gamma, "Pa-1" and
+    the subscripted site labels, and all six tables arrive with their headers
+    and their decimal points intact. Three independent confirmations that the
+    numbers survived transcription are on the page itself and none of them was
+    used to choose a value:
+
+      1. Table 2's 3MP row reproduces the review's own printed loadings
+         5.596 and 0.093 molecules per unit cell at 100 kPa and 0.5 Pa.
+      2. Table 3's frequencies reproduce the review's own printed
+         D_x(0) = 5.05e-14 and D_y(0) = 13.9e-14 m2/s through eq. (23),
+         and Table 3's own D_MS(0) through eq. (24).
+      3. Table 1's C1 and nC4 rows, with the two Section 4.1 diffusivities,
+         reproduce the ratio of the review's two printed permeation fluxes.
+
+    Where a printed cell is a dash (site B of 2,2DMB and 2,2DMP in Table 1) the
+    stored value is 0.0 and the printed_as column records the dash.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: >
+    None beyond the printed precision, which is two to three significant
+    figures. These are transcribed characters, not digitised positions.
+
+validation:
+  table2_3MP: "DSL eq. (32) with the stored 3MP row gives Theta = 5.5958 at 100 kPa against the review's printed 5.596, and 0.09282 at 0.5 Pa against its printed 0.093"
+  table3_karger: "eq. (23) with the stored frequencies and cell dimensions gives D_x(0) = 5.050e-14 and D_y(0) = 1.386e-13 against the printed 5.05e-14 and 13.9e-14"
+  table3_average: "eq. (24) over the three computed components gives 6.855e-14 against Table 3's printed 6.85e-14 for species 1 and, doubled, 1.371e-13 against its printed 13.7e-14 for species 2"
+  gamma_identity: >
+    eq. (33) agrees with a numerically differentiated dln f/dln Theta to 2.5e-6
+    on every stored DSL row, and collapses to eq. (16) when Theta_sat,B = 0.
+    THIS CHECK CANNOT FAIL ON A WRONG NUMBER: it differentiates the same
+    isotherm object it tests, so it is sensitive to a mis-transcribed FORMULA
+    and blind to a mis-transcribed PARAMETER. The page says so and quantifies
+    the exposure with a perturbation table instead.
+  ch4_karger: >
+    eq. (23) with the stored CH4 frequencies and the same cell dimensions gives
+    2.743e-7 m2/s when D_z is halved the way the review's 2MH example requires,
+    against the printed 2.75e-7 (-0.25 %), and 2.888e-7 without the halving
+    (+5.0 %). So the review applies the halved relation in BOTH of its worked
+    examples.
+  table1_unguarded: >
+    NO CHECK ON THIS PAGE CONSTRAINS THE TABLE 1 ROWS AS NUMBERS, except the C1
+    and nC4 rows, which the permeation flux ratio certifies to 0.17 %. The
+    "two extrema in Gamma" survey rests on the other ten rows with nothing to
+    fail against, and the page states that and measures how far a plausible
+    single-digit slip would move its conclusions.
+
+columns:
+  - {name: source_table, unit: "-", description: "where in the review the value is printed: Table 1, Table 2, Table 3, a figure caption, or a numbered section"}
+  - {name: system, unit: "-", description: "zeolite framework (MFI or 4A)"}
+  - {name: temperature_K, unit: K, description: "temperature the parameters belong to; blank where the quantity is not temperature-specific"}
+  - {name: component, unit: "-", description: "sorbate, or the structural object the value describes (unit cell)"}
+  - {name: symbol, unit: "-", description: "identifier used in the notebook; b_A/b_B are DSL affinities, Theta_sat_A/Theta_sat_B the site capacities, nu_zz/nu_str the channel jump frequencies, D_MS the Maxwell-Stefan diffusivity"}
+  - {name: value, unit: "see units column", description: "numeric value in SI units"}
+  - {name: units, unit: "-", description: "SI units of value"}
+  - {name: printed_as, unit: "-", description: "the value as it appears in the review"}
+  - {name: note, unit: "-", description: "free text; blank where nothing needs saying"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image, figure or
+  full-text excerpt is reproduced.
+
+caveat: >
+  TIER 6. Nothing in this file is a measurement of a diffusivity. The DSL
+  parameters of Tables 1 and 2 are fits to CBMC molecular simulations; Table 3's
+  jump frequencies come from transition state theory; the two membrane
+  diffusivities of Section 4.1 are stated constants with no source given in the
+  review. The one row fitted to experiment is the benzene isotherm of the Fig. 9
+  caption, and even there what is stored is the fit, not the measurements.
+  Reproducing these numbers tests the reimplementation of the review's equations
+  and the transcription; it says nothing about whether the Maxwell-Stefan
+  description is right.

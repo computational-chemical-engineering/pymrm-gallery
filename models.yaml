@@ -152,6 +152,110 @@ models:
     data: {tier: 6, method: table, status: complete}
     related: [A4.4, A4.2, A4.9, B1.1]
 
+  - id: A4.7
+    slug: zeolite-micropore-maxwell-stefan
+    title: "Maxwell–Stefan diffusion in zeolite micropores"
+    description: >
+      Inside a zeolite the measured Fick diffusivity can rise tenfold as the
+      crystal fills, or fall, or turn twice. The Maxwell-Stefan formulation says
+      the reason is bookkeeping: what is measured is a mobility multiplied by a
+      thermodynamic factor read off the adsorption isotherm. This page
+      implements that separation from Krishna & Baur's review, reproduces the
+      results it prints as numbers, and then asks whether the claim survives the
+      review's own evidence - which it does not, in the form it is usually
+      stated. "The M-S diffusivity is far less loading-dependent than the Fick
+      one" is true by a factor of ten in the review's weak-confinement scenario
+      (eqs. 17-18) and false by the same factor in its strong-confinement
+      scenario (eqs. 19-20). The review states both, in consecutive paragraphs
+      of Section 2.1, and contrasts them explicitly twice; what is new here is
+      only that the two are quantified against each other on one axis. The
+      factor of ten is algebraically forced, not measured - Gamma = 1/(1-theta)
+      and eq. (19)'s eth = (1-theta) are exact reciprocals and the number is set
+      entirely by the choice theta_max = 0.9 - so the finding is the DIRECTION,
+      not the size. What survives both scenarios is narrower and is what the
+      page claims instead: given either of the review's two loading dependences,
+      the pole in the Fick diffusivity at saturation lives entirely in Gamma,
+      so the formulation removes a divergence rather than a dependence.
+      Along the way the review's two printed values for one orientation-averaged
+      zero-loading diffusivity, 4.1 % apart, are resolved: x and y reproduce
+      Karger's eq. (23) to 0.29 %, the printed D_z is out by a factor of exactly
+      two, and Table 3 is the value arithmetically consistent with the equation
+      as printed while the running text is consistent with its own printed D_z.
+      The review's SECOND application of eq. (23), to CH4, then tests that
+      factor out of sample - it prints 2.75e-7 m2/s and no D_z at all - and the
+      halved relation reproduces it to 0.25 % where the relation as printed
+      misses by 5.0 %, so the review's practice is the halved form in both of
+      its worked examples and Table 3 is the odd one out. The page does not say
+      whether the factor originates with Karger or with the review, because
+      Karger 1973 is not on disk. The dual-site
+      Langmuir isotherm reproduces the review's two worked 3MP loadings to
+      0.19 %; the single-component membrane flux ratio - in which the unprinted
+      membrane thickness cancels - lands 0.17 % from the printed 34/3.1, and
+      dropping the thermodynamic factor moves it by 3.73x, which is what gives
+      that check its power. The pymrm sphere agrees with the classical series to
+      1.21e-5. Fifteen break rows; the two that do not move are kept and
+      explained, one of them because construct_div weights the r = 0 face by an
+      area of exactly zero, so the centre boundary condition cannot be wrong in
+      spherical geometry. The page's third headline - the "two extrema in Gamma"
+      survey run over every Table 1 row - has NO printed target behind it and
+      says so: the only diagnostic touching those rows differentiates the same
+      isotherm object it tests and is blind to a wrong parameter, so the page
+      injects four plausible transcription slips and reports how far each moves
+      the survey's conclusions instead. Everything here is REPRODUCTION, NOT
+      VALIDATION: the targets are numbers the authors computed, the data tier is
+      6, and the review's Fig. 10(a) inflection in the 3MP desorption kinetics
+      is not reproduced under either stated scenario and is reported unresolved.
+    section: A
+    status: published
+    page: pages/A4.7-zeolite-micropore-maxwell-stefan/
+    tier: T1
+    priority: P2
+    structures: [S9, S4]
+    phases: [gas-solid]
+    predicts:
+      - the Fick diffusivity from the Maxwell-Stefan one and the isotherm, D = eth * Gamma, eq. (14)
+      - the thermodynamic correction factor of a single-site and a dual-site Langmuir isotherm, eqs. (16) and (33)
+      - zero-loading diffusivities in MFI from channel jump frequencies, Karger's eqs. (23) and (24)
+      - transient uptake and release in a spherical crystallite with a loading-dependent diffusivity, eqs. (25)-(28)
+      - the time-averaged Sherwood number and where the linear-driving-force constant comes from, eqs. (30) and (31)
+      - the steady single-component permeation flux across a zeolite membrane, eq. (12) integrated
+    pymrm_api:
+      - construct_grad
+      - construct_div
+    reference:
+      authors: ["Krishna, R.", "Baur, R."]
+      year: 2003
+      container: "Separation and Purification Technology 33(3) 213-254"
+      doi: 10.1016/S1383-5866(03)00008-X
+    origin_not_consulted:
+      - authors: ["Karger, J."]
+        year: 1973
+        container: "cited by the review as its reference [24] for the MFI anisotropy relations"
+        note: >
+          The review reprints the relations as its eq. (23) and applies them to
+          TWO worked examples (2MH and CH4), which is what this page reproduces.
+          The original is not on disk and is not consulted; the page cannot say
+          whether the factor of two it finds in the review's printed D_z
+          originates here or in the review's arithmetic. What the CH4 example
+          does narrow: the review's practice uses the halved relation in both
+          applications, so the factor is not an isolated slip in one printed
+          number. What is settled without the original is that eq. (23c)'s
+          printed nu_zz + nu_zz is a typo - substituting eqs. (23a,b) into the
+          resistance identity c^2/D_z = a^2/D_x + b^2/D_y returns the corrected
+          form exactly.
+      - authors: ["Skoulidas, A. I.", "Sholl, D. S."]
+        year: 2002
+        container: "cited by the review as [18,21] for the CH4, CF4, He, Ar, Ne loading dependences"
+        note: >
+          The source of the weak- and strong-confinement scenarios eqs. (17) and
+          (19). The review states both; the MD data behind them are in its Figs. 3
+          and 4 and are not digitised.
+    data:
+      tier: 6
+      method: table
+      status: complete
+    related: [A4.2, A4.3, A4.4, A4.9, J1.5, H1.9, J1.4]
+
   - id: A1.1
     slug: ergun-pressure-drop
     title: "Four packed-bed pressure-drop correlations, against the data Ergun fitted"
