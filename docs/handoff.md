@@ -1,22 +1,43 @@
-# Handoff — state as of 2026-08-02
+# Handoff — state as of 2026-08-03
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
 
 **Read [“The check that cannot fail”](#the-check-that-cannot-fail--the-defect-the-verifier-exists-to-catch)
-before writing any validation cell.** Across 2026-07-31 to 08-02, nineteen pages
-went through adversarial verification and **thirteen** carried some form of it —
-a check that could not fail, a claimed sensitivity the check did not have, or an
-independence claim that did not survive checking. It is by a wide margin the most
-common finding in this repository, and it has twice been found *inside the break
-table built to guard against it* (`A3.4`, `D2.1`).
+before writing any validation cell.** Across 2026-07-31 to 08-03, twenty-four
+pages went through adversarial verification and **eighteen** carried some form of
+it — a check that could not fail, a claimed sensitivity the check did not have,
+or an independence claim that did not survive checking. It is by a wide margin
+the most common finding in this repository, and it has now been found **five
+times inside the break table or diagnostic built to guard against it**: `A3.4`,
+`D2.1`, `A1.5` (14 of 36 rows in the headline wall-law fit were an identity),
+`A1.8` (every check sat on the dense branch, so two constants could be deleted
+outright), and `A4.7` (the sole diagnostic differentiated the same object it
+tested, so it was guaranteed for any parameter values).
+
+**A second class was found and swept on 2026-08-02**: a page that loads another
+page's CSV and does not read that page. See the rule in
+[`AGENTS.md`](../AGENTS.md) under Data rules, and
+[`cross-page-audit-2026-08-02.md`](cross-page-audit-2026-08-02.md). It reached a
+reported number on `J3.1` and the Reuse advice on `A1.6`.
 
 ## Built and live
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-34 page directories, 35 published catalog entries, both CI workflows green.
+40 page directories, 41 published catalog entries, both CI workflows green.
 (The two counts differ because `B1.1` covers `B1.5` and `A2.1` covers `A2.2`.)
+
+### Added 2026-08-02 to 08-03 — six pages
+
+| Page | What it shows | Validation |
+|---|---|---|
+| `A1.5` Richardson–Zaki | `u/u_t = ε^n` is not what the paper writes; the wall term is the result | 66 slopes off 600 dpi renders, 5 printed errors found; eq. (34) **is** its window's mean, 2.390000 vs printed 2.39 |
+| `A1.6` Wen & Yu u_mf | Where 33.7 and 0.0408 come from, and what they cost | Held out against Geldart's 21 velocities: −17.4 %; at *his* voidage the reference balance is +58 % — worse than what it judges |
+| `A2.5` Edwards–Richardson | How much of a fitted dispersion coefficient is the grid | **experimental** — 55 points digitised by computing and *erasing* the printed curve; null baseline 30.3 % |
+| `A1.8` Gas–solid drag closures | Two closures agreeing in both limits and not in between | Factor **1.73** at Re_m = 4.09 where the limits are 1.192 and 0.957 |
+| `A4.7` Zeolite micropore M–S | The M–S form removes a *divergence*, not a dependence | 8 printed targets, worst 0.78 %; the factor-of-two confirmed out-of-sample on CH₄ |
+| `B1.2` Aris (repair) | No rescaled modulus explains Table 1's two cells | 0.197 needs Λ×0.961, 0.100 needs ×0.974 — two slips, and the page says it is an inference |
 
 ### Added 2026-07-31 to 08-02 — twenty pages
 
@@ -78,30 +99,53 @@ chance to move the ratio and still needs figure digitisation.
 
 ### The queue, and why it is paper-starved
 
-266 catalogued cases: 22 published, 6 needing maintainer input, 3 covered,
-2 deferred, 5 unclaimed, and **227 blocked on a source PDF**. That last number is
-irreducible by automation — `find_papers.py` was run over all 266 on 2026-07-31
-and found open-access routes for five. Most of section A predates DOIs entirely.
+266 catalogued cases as of 2026-08-03: **41 published**, 5 covered, 3 deferred,
+1 unclaimed, and **216 blocked on a source PDF**. Nothing is waiting on a
+maintainer decision — `standing-decisions.yaml` is empty and every parked figure
+review has been answered.
 
-So the productive vein is not acquisition but the **reprint route**, and the two
-standing decisions that would widen it: the Elsevier API key permission, and
-whether a named monograph on disk may source the textbook-canonical cases. Both
-are in [`standing-decisions.yaml`](standing-decisions.yaml) and on the decisions
-dashboard.
+That 216 is irreducible by automation, and this has now been established twice
+rather than assumed. `find_papers.py` over all 266 found five open-access routes;
+a targeted sweep of the 66 T0/P1 cases on 2026-08-02, with the authorised
+Elsevier key, unblocked **zero** — see *Papers available* for why. Most of
+section A predates DOIs entirely.
 
-**Two finished pages are parked on one batched figure review** (`F3.5`, `G1.7`).
-Batching is deliberate — five figures came back in a single sitting on
-2026-07-29. Neither needs any further work; both carry complete `resume:` blocks.
+So the productive veins are the **reprint route**, cases whose origin turns out
+to need no paper at all (`A1.8`), and — the largest single lever, still unspent —
+**one monograph on disk** for the approved textbook-canonical class.
 
 ## Papers available
 
-**Twenty-two PDFs** at `~/papers/pymrm-gallery/`, and **every one has now been
+**Thirty PDFs** at `~/papers/pymrm-gallery/`, and **every one has now been
 consumed by a published or parked page.** Inventory with per-file text-layer
 quality is in [`pdf-findings.md`](pdf-findings.md); the catalogue-ID → filename
 map is [`papers-on-disk.yaml`](papers-on-disk.yaml) and must be updated by hand
 whenever a PDF arrives — automatic matching misses publisher-PII filenames, and a
 mis-mapped entry asks the maintainer for a paper they already supplied (`H1.4`
 was listed under `H1.9` until 2026-07-31).
+
+**A filename is not a paper — open it before you believe it.** This has now cost
+four separate errors. Two auto-resolved DOIs point at *book reviews* of the
+monograph the catalogue names (`F1.6` → a one-page review of Deckwer, `F3.4` →
+one of Danckwerts); `H1.9`'s recorded 1995 PII is a packed-bed carbon paper with
+no membrane in it; and on 2026-08-02 an agent read
+`1-s2.0-0009250957850283-main.pdf` as a scan of Aris 1957 and dispatched work on
+that basis. **It is one page** — the Elsevier entitlement preview, journal page
+262 — and `B1.2`'s open question is on page 265. `papers-on-disk.yaml` now
+carries a loud comment saying so. New rule worth keeping: when
+`catalog_reference` is a monograph, an auto-resolved *journal* DOI is likelier to
+be a review of the book than the work itself.
+
+**Do not expect the Elsevier API to unblock a pre-1995 case.** Swept across 66
+T0/P1 cases on 2026-08-02 and it unblocked **zero**. The key reaches the text,
+but `content/object/pii` returns no page images and the PDF endpoint returns a
+one-page preview, so **there is nothing to render at 600 dpi** — and the text
+drops decimal points on every scan through 1991 (Robeson's Table 2 comes back as
+`2 6 2 89 3 3 3 46 3 64 3 8`). Correcting an earlier caveat: **1995 is not
+"post-scan era" either** — that PII corrupts species labels and omits its Table 4
+entirely. Krishna & Baur 2003 *is* born-digital and clean, which is why it
+sources `A4.7`. The ranked, publisher-batched request list is in
+[`source-sweep-2026-08-02.md`](source-sweep-2026-08-02.md).
 
 Three arrived during the 2026-07-31 sweep: `Marquis_2019…` (`J3.5`, gold OA from
 IOP), `F3_5.pdf` and `G1_7.pdf` (both from the University of Twente repository).
@@ -169,30 +213,39 @@ bulk-download tool.
 
 ## Recommended next moves
 
-**Seven papers arrived on 2026-08-02, all in section A** — the section
-`find_papers` had shown to be irreducible by automation. Four are already
-published (`A1.7`, `A2.1` covering `A2.2`, plus `A1.1` and `A3.4` completed on
-the maintainer's figure review). The rest are mapped in
-[`papers-on-disk.yaml`](papers-on-disk.yaml) and in progress or unclaimed:
-`A1.5` Richardson & Zaki, `A1.6` Wen & Yu, `A2.5` Edwards & Richardson,
-`A2.6` Gunn.
+**The section-A batch is finished and the queue is now genuinely paper-bound.**
+216 of 266 cases need a PDF, 41 are published, 5 are covered, 3 deferred, and at
+the time of writing exactly **one** case (`H1.9`) is buildable from material in
+hand. Every PDF on disk has been consumed.
 
-1. **Finish the section-A batch.** Those four are the only cases with an
-   unconsumed paper on disk. Two carry a known trap: the `A1.6` PDF's first page
-   of extracted text is a *different article*, and its catalogue citation names
-   the wrong journal.
-2. **Work the reprint route.** Eight pages came from it. The test, from
+1. **Ask for papers in publisher batches, not one at a time.** The marginal cost
+   of a second paper inside one login is near zero, and
+   [`source-sweep-2026-08-02.md`](source-sweep-2026-08-02.md) ranks them that
+   way. The ACS batch is the best single ask: **9 papers unblocking 11 T0/P1
+   cases**, and ACS scans have the best text layers in the repo. One item is
+   free — Luedeking & Piret's 2000 Biotechnol. Bioeng. reprint is open access and
+   downloads from a browser (curl gets a Cloudflare 403), unblocking `J4.4`.
+2. **The textbook-canonical approval is banked but inert.** The ~20 T0 cases are
+   approved to build without the original paper, but `AGENTS.md` still forbids
+   writing from memory, and **none of the monographs is on disk**
+   (Bird/Stewart/Lightfoot, Taylor & Krishna, Levenspiel, Froment & Bischoff).
+   One book unlocks more than any paper on the dashboard. Until then the class
+   cannot move.
+3. **Five cases do not belong in `needs-paper` at all.** `D1.1`–`D1.5` are T0/P1
+   with a *structure code* rather than a citation as their `catalog_reference`.
+   No paper unblocks them; they need a scope decision.
+4. **Work the reprint route.** Nine pages came from it. The test, from
    `AGENTS.md`: a paper on disk that prints the result *and* names or tests it.
    Two verdicts bound it — `E1.1` failed because Kunii & Levenspiel print the
    two-phase relation but never name, attribute or test it; `J3.3` *passed* the
    test and was still `covered`, because the theory is J3.4's structure. Ask both
-   questions, in that order.
-3. **Nothing else moves without the maintainer.** 217 cases need a PDF, and
-   `find_papers.py --fetch` over all 266 found five open-access routes. The
-   textbook-canonical class is now approved, so a few monographs on disk
-   (Bird/Stewart/Lightfoot, Taylor & Krishna, Levenspiel, Froment & Bischoff)
-   would open ~20 T0 cases at once — worth more than any single paper on the
-   papers dashboard.
+   questions, in that order. One new route is already located and unused:
+   **`A3.1` Whitman 1923 is reprinted verbatim in IJHMT 5 (1962) 429–433** under
+   its own DOI.
+5. **Some cases need no paper ever.** `A1.8`'s origin is an *unpublished* 1987
+   report, so the DOE Theory Guide on disk is the citable published source and
+   the case is closed rather than parked. Check the reference list of what you
+   have before adding to the request pile.
 
 ### When a printed constant is wrong, prove it from the paper's own results
 
