@@ -1,0 +1,231 @@
+dataset_id: edwards-richardson-1968-fig9
+title: Peclet number against Reynolds number for large particles (Figure 9)
+status: complete
+
+source:
+  authors:
+    - "Edwards, M. F."
+    - "Richardson, J. F."
+  year: 1968
+  container: "Chemical Engineering Science 23(2) 109-123"
+  doi: 10.1016/0009-2509(68)87056-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; figure image not reproduced)"
+
+conditions:
+  system: "argon pulse in air"
+  bed: "non-porous glass ballotini, 3.5 in. and 4 in. i.d. perspex columns"
+  particle_sizes_cm: [0.607, 0.300, 0.203, 0.0728, 0.0377]
+  molecular_diffusivity_cm2_s: 0.205
+  reynolds_definition: "Re = u d_p eps / nu, u the interstitial velocity, so the
+    numerator is the SUPERFICIAL velocity times d_p"
+  peclet_definition: "Pe = u d_p / D_L, u interstitial"
+  note: >
+    Figure 9 is the Peclet-number replot of Figure 7. It carries five marker
+    shapes, one per bead size, but Eq. (18) - the curve drawn through them -
+    contains no particle-size term, so only positions were extracted and no row
+    carries a series label. This is the F1.4 shortcut: ask which columns the
+    model under test actually reads.
+
+acquisition:
+  method: digitised
+  figure: "Figure 9, journal page 116"
+  tool: "poppler pdftoppm at 600 dpi + scipy.ndimage; two independent detectors, unioned"
+  procedure: >
+    (1) The axes were calibrated by least squares on all twelve printed x ticks
+    (0.01 to 50) and all seven y ticks (0.02 to 2). The fits give 597.78 px per
+    decade in Re with tick residuals at most 3.1 px, and 604.56 px per decade in
+    Pe with residuals at most 3.8 px.
+
+    (2) The dashed curve through the points IS Eq. (18), whose four constants are
+    printed in the text, so its pixel path was COMPUTED rather than traced and
+    then erased in a band of +/- 9 px before marker detection. That the computed
+    path lands on the printed dashes over the whole 3.7 decades is an independent
+    confirmation of both the calibration and the transcription of Eq. (18).
+
+    (3) Markers were found twice and the results unioned: by matching pursuit
+    over five glyph templates (open circle, filled circle, open triangle, filled
+    triangle, cross, all about 33 px across), and by connected components on the
+    curve-erased image with k-means splitting of merged groups. Candidates were
+    required to carry at least 130 px of ink that the erased curve cannot
+    account for. That threshold was intended to stop a bare stretch of the
+    dashed line being reported as a data point, and IT DID NOT: one k-means
+    centroid landed on the horizontal dash spanning x = 2022-2058, y = 267-276
+    with exactly 130 px of curve-independent ink, because the ink of the three
+    glyphs fused around it is counted in the same disk. The threshold is
+    therefore recorded as what it is - a size filter on ink, not a test that a
+    glyph is present - and the defect it failed to catch was found instead by
+    step (5).
+
+    (4) Every centre is the ink centroid of the ORIGINAL (un-erased) image inside
+    a 17 px disk, so erasing the curve cannot bias a marker that sits on it. This
+    rule is right for an isolated glyph and WRONG for a merged one, where the
+    ink in the disk belongs to more than one marker; see step (5).
+
+    (5) The whole figure was then audited for merged blobs: every connected
+    group of the curve-erased image was compared with the rows falling inside it,
+    and the ink left unexplained by a 19 px disk around every row was swept for
+    blobs above 60 px. Four groups failed the audit. In those, each glyph was
+    identified visually on the 600 dpi render and its centre taken as the
+    best-fit position of ITS OWN template (ring, triangle outline or cross),
+    refined by a 3-point parabola on the coverage score - not as the blob's ink
+    centroid. The two rules were compared on five isolated open circles before
+    being applied: median disagreement 0.70 px, worst 3.92 px, against a 5 px
+    systematic already carried below. The re-fitted rows are therefore on the
+    same footing as the rest of the file.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: >
+    Random: about +/- 0.5 % in Re and +/- 0.6 % in Pe from the tick residuals
+    above, plus roughly +/- 1 % from placing the centre of a 33 px glyph.
+
+    Systematic, and larger: the centre used is the INK centroid, which for a
+    filled triangle sits about 5 px (1.9 % in Pe) away from the centre of its
+    bounding box. Which of the two the draughtsman put on the data point is not
+    knowable from the figure. The notebook measures what a uniform +/- 5 px shift
+    of every point does to the headline agreement and reports it.
+
+review:
+  reviewed_by: "not yet reviewed by the maintainer"
+  status: pending
+  artifact: "queue_cases/A2.5/review/fig9-overlay.png (git-ignored)"
+  what_to_check: >
+    Two things, and note that the third question this file used to ask - whether
+    any row sits on a bare stretch of the dashed curve - has been ANSWERED, not
+    left open: one did, it is named under `corrected` below, and it has been
+    moved onto the open circle beside it.
+
+    (a) The `unrecovered_markers` below: are they markers, and is the middle one
+    (Re = 1.79, an open circle whose lower arc is fused into a filled triangle)
+    resolvable enough to include? The file records exactly what including it
+    would do.
+
+    (b) Whether the draughtsman centred each glyph on the data point or centred
+    its ink. For a filled triangle the two differ by about 5 px, which is 1.9 %
+    in Peclet number, and the notebook reports the headline under a uniform
+    +/- 5 px shift for this reason.
+  note: >
+    NON-BLOCKING. The page states its agreement with and without the two
+    perturbations above, and no conclusion on the page turns on a single marker.
+
+corrected:
+  note: >
+    Four clusters were redone on 2026-08-03 by the merged-blob audit of
+    acquisition step (5), each as a UNIT: every old row inside the cluster box
+    was discarded and replaced by one fitted centre per glyph visible on the
+    render. Patching point by point is what leaves a stale centroid behind, so
+    the mapping below is cluster to cluster, not row to row. Ten rows went in,
+    eleven centres came out. `review/extract-fig9.py` carries the boxes, the
+    seeds and the fit, and reproduces this file from the page render.
+  clusters:
+    - box: [968, 660, 1040, 745]
+      old_rows: [[992.2, 710.4], [1004.0, 687.2]]
+      new_centres: [[1012.8, 690.9], [995.7, 700.1], [996.6, 727.4]]
+      glyphs: ["open circle", "open triangle", "open circle"]
+      moved_px: [9.5, 10.9]
+      note: "three glyphs, two rows: k = round(max(w,h)/34) = 2 on a 66x66 px
+             blob. The third glyph, an open circle at Re = 0.178, carried no row
+             at all and was invisible to the leftover-ink sweep because the two
+             neighbouring rows' 19 px disks covered its ink."
+    - box: [1135, 465, 1210, 570]
+      old_rows: [[1159.4, 543.4], [1173.7, 508.9], [1179.0, 488.8]]
+      new_centres: [[1168.2, 490.6], [1182.4, 515.9], [1160.5, 544.0]]
+      glyphs: ["open circle", "open circle", "open triangle"]
+      moved_px: [11.0, 11.2, 1.3]
+      note: "two touching open circles read as merged-blob centroids"
+    - box: [1365, 295, 1435, 375]
+      old_rows: [[1397.2, 340.7], [1409.6, 322.7]]
+      new_centres: [[1410.5, 321.5], [1392.0, 366.6]]
+      glyphs: ["open triangle", "open circle"]
+      moved_px: [1.5, 26.5]
+      note: "one row sat in the neck between the triangle and the circle,
+             26.5 px from the circle it was meant to mark"
+    - box: [1985, 262, 2055, 345]
+      old_rows: [[2015.6, 284.2], [2027.1, 315.8], [2038.7, 278.3]]
+      new_centres: [[2005.8, 273.9], [2026.6, 291.8], [2026.6, 316.1]]
+      glyphs: ["cross", "open circle", "open triangle"]
+      moved_px: [14.2, 13.3, 0.6]
+      note: "the row at (2038.7, 278.3) sat on a BARE DASH of the computed
+             Eq. (18) curve, spanning x = 2022-2058, y = 267-276, with exactly
+             the 130 px of curve-independent ink the acceptance threshold
+             demands - contributed by the three glyphs fused around it"
+  effect: >
+    n went from 54 to 55, the mean absolute deviation of Eq. (18) against the
+    markers from 12.08 % to 11.75 %, the bias from -0.27 % to +0.003 %, and the
+    count above Pe = 2 from 31 to 30. No conclusion on the page changes; the
+    headline moves by a third of a percentage point.
+
+missing:
+  unrecovered_markers:
+    - pixel_x: 1394.1
+      pixel_y: 337.7
+      reynolds: 0.82
+      peclet: 2.08
+      leftover_ink_px: 171
+      why: "fused into the open circle at Re = 0.82 and the open triangle at
+             Re = 0.87. Cross, filled-triangle and filled-circle templates all
+             score within 0.06 of each other on the visible ink, so neither the
+             identity nor the centre is fixed."
+    - pixel_x: 1596.5
+      pixel_y: 272.3
+      reynolds: 1.79
+      peclet: 2.67
+      leftover_ink_px: 309
+      why: "an open circle whose lower arc merges into the filled triangle at
+             Re = 1.81 and whose upper arc merges into a dash. A ring fit at
+             (1592.0, 263.0) covers 95 % of the outline with an empty interior,
+             so this is the one of the three that is nearly resolvable - see
+             `effect_if_included`. It is left out because the arc that fixes its
+             lower half is ink the neighbouring glyph also explains."
+    - pixel_x: 1681.7
+      pixel_y: 192.3
+      reynolds: 2.49
+      peclet: 3.62
+      leftover_ink_px: 275
+      why: "two arms of a cross behind the open circle at Re = 2.65; the other
+             two arms are inside the circle's ink. The centre would have to be
+             inferred from one quadrant."
+  effect_if_included: >
+    adding that circle - a ring fit at (1592.0, 263.0), which the calibration
+    puts at Re = 1.76, Pe = 2.77 - would move the mean absolute deviation from
+    11.75 % to 11.62 %, the bias from +0.003 % to +0.08 %, and the count above
+    Pe = 2 from 30 to 31 - inside the systematics the notebook
+    already reports, which is why the choice is put to the maintainer rather
+    than made here
+  recovered_by_hand:
+    - "The lowest-Re point, a filled circle drawn across the left frame line. The
+       frame mask cuts columns out of it, so its extent was read off the 600 dpi
+       render (rows 1506-1539, columns 192-226) and the centre of that box was
+       used. It is the point at Re = 0.00857."
+  note: >
+    An earlier version of this file said 'roughly three or four markers in the
+    dense cluster near the maximum'. That was wrong twice over: the count is
+    three, and they sit at Re = 0.82, 1.79 and 2.49 - one of them a decade below
+    the maximum of Eq. (18) at Re = 3.20. A fourth, at Re = 0.178, was not
+    missing at all in the sense meant here: it was simply absent, undisclosed,
+    and is now in the file.
+
+validation:
+  internal_consistency: >
+    The extracted Reynolds range is 0.00857 to 49.1, against the 0.008 to 50 the
+    abstract and the conclusions both print - neither number was used in the
+    calibration. Refitting Eq. (16)'s constant beta to these 55 points with gamma
+    held at the paper's 0.73 returns 8.98 against the printed 9.7; refitting both
+    - a different estimator - returns gamma = 0.702 and beta = 8.58. The
+    extraction and the page-image transcription of Eq. (17) are therefore
+    independent witnesses that agree. The notebook quotes each estimator's
+    bootstrap interval beside its own estimate; the two are not interchangeable.
+
+columns:
+  - name: reynolds
+    unit: dimensionless
+    description: "Re = u d_p eps / nu as printed on the abscissa"
+  - name: peclet
+    unit: dimensionless
+    description: "Pe = u d_p / D_L as printed on the ordinate"
+  - name: pixel_x
+    unit: px
+    description: "marker centre in the 600 dpi page render, for audit"
+  - name: pixel_y
+    unit: px
+    description: "marker centre in the 600 dpi page render, for audit"

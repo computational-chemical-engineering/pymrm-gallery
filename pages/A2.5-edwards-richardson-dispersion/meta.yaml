@@ -1,0 +1,123 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.5
+slug: edwards-richardson-dispersion
+title: "Where the axial dispersion coefficient comes from: Edwards & Richardson's packed bed"
+section: A
+status: published
+tier: T1
+priority: P1
+structures: [S4]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 321
+datasets:
+  - edwards-richardson-1968-fig9
+  - edwards-richardson-1968-stated
+  - edwards-richardson-1968-table1
+
+validation:
+  - "EXPERIMENTAL - Eq. (18) against 55 marker positions digitised from Figure 9: mean absolute deviation 11.75 %, median 9.96 %, bias +0.003 %, log scatter 0.1367 in ln Pe (14.6 %), over 3.7 decades of Reynolds number. Deviations are (model - measured)/measured throughout"
+  - "the informative null on the same 55 points: Eq. (15), which has the right molecular branch and the right high-Re limit but no radial-mixing correction, misses by 29.9 % with a -29.8 % bias, because its ceiling of Pe = 2 sits below 30 of the 55 measured points (the largest is Pe = 4.16). Two further nulls are printed, at 670 % and 281 %"
+  - "the digitisation and the page-image transcription as independent witnesses: refitting beta to the 55 points with gamma held at the printed 0.73 returns 8.98 against the printed 9.7 (7.4 %), with a 95 % moving-block bootstrap interval [7.50, 9.94]. Refitting BOTH parameters is a different estimator and returns gamma = 0.702, beta = 8.58, with intervals [0.672, 0.745] and [6.90, 9.50]. Each interval is quoted beside its own estimate. NO exclusion is claimed and none is supported: across block sizes 3, 6, 9 and 12 the gamma-fixed upper limit runs from 9.69 to 10.22, so whether the printed 9.7 falls inside is decided in the second decimal by the block size, and a +/- 5 px extraction shift moves beta by more than the gap"
+  - "Eq. (18)'s printed constants derived from Eq. (17)'s: gamma x eps/Sc = 0.3751 against the printed 0.38 (1.28 %) and beta x eps/Sc = 4.985 against the printed 5.0 (0.31 %). One mis-read digit moves these to 14.8 % and 10.6 %"
+  - "the paper's gas crossover Reynolds number, 1.8, reproduced as 1.830 from 2 gamma eps D_M/nu using only printed values and nu = Sc D_M. That is +1.7 %, NOT an exact reproduction, and the page says so; gamma = 0.63 would give 1.579 and gamma = 0.78 would give 1.955"
+  - "gamma itself recovered as 0.150/0.205 = 0.7317 against the printed 0.73, and eps = 0.37 recovered as the mean voidage of Table 1's five large sizes, 0.3716. Table 1's eight voidages also reproduce 1 - bulk/material density to at most 0.0018 absolute, mean 0.0006 - printed in The data"
+  - "the maximum of Eq. (18) located at Pe = 3.186, Re = 3.195, against the conclusions' 'a maximum, greater than 3'. Gunn (1993) puts a maximum 'at a Reynolds number of about 4', but that is for his Figure 1's COMBINED gas-phase set - Gunn & Pryce's frequency-response data together with E&R's - not for E&R's points alone, and the page attributes it that way"
+  - "the whole measurement simulated and inverted: a pulse propagated through a pymrm bed, sampled at two detectors 100 cm apart, and inverted with the paper's own Eqs. (6) and (7), returns the input dispersion coefficient to 1.4e-05 relative at n = 3200 with van Leer plus Crank-Nicolson, at observed order 3.01"
+  - "the numerical dispersion of the cheaper schemes PREDICTED before the runs, with no fitted constant: u h/2 for first-order upwind plus u^2 dt/2 for implicit Euler accounts for the measured excess to within 0.4 % over eight runs and a factor of eight in grid spacing. At n = 400 the bare upwind scheme reports a dispersion coefficient 4.5 times the truth from response curves that look perfectly smooth"
+  - "the two-zone channelling model against an independent closed form: D_add = th1^2 th2^2 (u1-u2)^2/kappa, obtained by expanding the two-zone system rather than by assembling it, is reproduced by the pymrm solve to 3.1e-05 at n = 2000, converging at ratio 8 per grid halving - AND that check is itself broken on purpose: doubling kappa in the solve only raises the residual by a factor 173 to 3.5e-01, and replacing the theta-weighted mass matrix with the identity by a factor 1058 to 2.1e+00, with the recovered coefficient going negative"
+  - "defect sensitivity measured by injection, and the two solver checks found to be COMPLEMENTARY: a wrong geometry (nu = 1) leaves the recovered D_L right to 0.15 % and moves the area ratio to 0.376; the coarsest upwind grid does the reverse, putting D_L out by a factor 5.66 while the area ratio stays at 1.000000. A detector 0.3 cm from an absorbing outlet moves the area ratio to 0.888; cutting the record off at 65 % of its length moves the recovered D_L to 0.433; a flipped dispersive-flux sign makes the equation backwards-parabolic and the deferred correction refuses to converge"
+  - "and the same table shows the pair is NOT jointly sufficient: substituting the voidage printed on the adjacent row of Table 1 (0.361 for 0.383) moves u by 6.1 % and D_L by 6.9 % while D_hat/D_L, u_hat/u and A2/A1 stay identical to five decimals. Every diagnostic here is computed inside the simulation, so none of them tests the parameter chain that feeds it; the page says so and names what does guard that chain"
+  - "every deferred correction asserted its own convergence - about 64 000 time steps across the page, the worst needing 27 iterations of a cap of 40"
+  - "digitisation systematics bounded by injection: shifting every point by the worst ordinate tick residual (3.8 px) or by the ink-centroid-versus-box ambiguity of a triangular glyph (5 px) moves the mean absolute deviation by at most 0.09 percentage points but the bias by up to 1.9 percentage points, so the bias is reported and not claimed"
+
+adds: >
+  Three things the paper does not contain. First, the location of the Peclet
+  maximum: Edwards and Richardson bound it ("greater than 3") and never solve for
+  it; Eq. (18) puts it at Pe = 3.186, Re = 3.195. Second, a numerical-dispersion
+  budget for the measurement itself. Their Appendix B computes the second
+  response curve from the first by explicit finite differences and tests
+  convergence by halving the intervals; this page shows what the untested version
+  costs, and that the error is not noise but a plausible dispersion coefficient -
+  u h/2 + u^2 dt/2, predicted to 0.4 %. Third, and most substantially, their own
+  shape diagnostic turned round. They report that with fine particles the
+  computed second response curve peaks LATER than the measured one and attribute
+  it to channels forming. A two-zone bed constrained to their measured D_L =
+  0.503 cm2/s reproduces that sign when the minority zone by VOLUME is the
+  slower one, and the opposite sign when it is the faster one - in 10 of the 12
+  volume splits scanned, and in all 8 of the 8 where the peak moves by more than
+  0.05 % of the transit time at all; the two exceptions sit at th1 = 0.35 and
+  0.65, near an even split, and neither displaces the peak by as much as
+  0.011 %. The claim is therefore
+  conditional: WHEN such a bed displaces the peak measurably, the direction E&R
+  report is the one a slow minority zone gives. The size of that displacement
+  bounds nothing - it is at most 0.36 % of the transit time at the published
+  th1 = 0.15 slice but 1.14 %, with an 18.7 % shape residual, once the volume
+  fraction is allowed to move. What the page concludes is the either/or its own
+  notebook states: a discrepancy large enough to see implies either a slow
+  region rather than a channel, or structure coarser than any two-zone
+  description tuned to 0.503 cm2/s can hold. The page also puts a number on
+  their own qualitative explanation - the anomalous run sits at 88 % of the
+  minimum fluidisation velocity tabulated for those same beads, from two printed
+  values on different pages - and prints, beside it, the sentence in the same
+  paragraph of the paper that cuts against that reading.
+
+agreement: >
+  Experimentally validated, with the usual caveat about which part is a
+  prediction. Eq. (18) reproduces 55 marker positions digitised from Figure 9 to
+  a mean absolute deviation of 11.75 % with a bias of +0.003 % over 3.7 decades of
+  Reynolds number - but gamma and beta were fitted by the authors to those very
+  markers, so that number is a goodness of fit. What is independent is the SHAPE:
+  the correlation without its radial-mixing term misses by 29.9 % and cannot
+  exceed Pe = 2 at all, where 30 of the 55 measured points do. And the refit is
+  independent in the other direction: recovering beta = 8.98 against the printed
+  9.7 from a fresh reading of the figure tests the digitisation and the page-image
+  transcription against each other, and its bootstrap interval is wide enough
+  that no difference from the printed value is claimed. On the solver side the
+  two-point moment inversion returns its input to 1.4e-05, and the numerical
+  dispersion of the cheaper schemes is predicted to 0.4 % from u h/2 + u^2 dt/2.
+
+caveats: >
+  The 11.75 % is a goodness of fit, not a prediction - see above. The page tests
+  no particle-size dependence: Figure 9's five marker shapes were deliberately
+  not extracted, because Eq. (18) contains no particle-size term, so the paper's
+  claim of "no consistent trend with particle size" is untested here. Only one
+  gas pair was ever run, so the kinematic viscosity in the Reynolds number is
+  untested - the authors say so themselves. On the extraction: four merged
+  clusters were re-fitted glyph by glyph after an audit, one row that had landed
+  on a bare stretch of the dashed curve was moved onto the marker beside it, one
+  marker that carried no row at all was added, and three glyphs remain fused
+  into their neighbours and are listed in the sidecar with the measured effect of
+  including the most nearly resolvable of them (11.75 % -> 11.62 %, 30 -> 31
+  above Pe = 2). The maintainer review is pending and NON-BLOCKING, and the
+  question it asks is now the right one - the sidecar no longer asks whether a
+  row sits on a bare dash, because that has been answered. The moment-recovery
+  check is about the solver, not the physics: it says nothing about whether a
+  real packed bed obeys the dispersion equation. Two checks are labelled for what
+  they are - the area ratio and the recovered velocity are near-structural, and
+  the break table measures exactly what each is blind to rather than asserting
+  it; the area ratio does catch a wrong geometry, which is why it is kept. And
+  the break table now also records what the pair does NOT cover: the parameter
+  chain, where a swapped Table 1 row moves every physical number by 6-7 % and no
+  diagnostic on the page moves at all. The outlet boundary condition is a
+  measured blind spot: with 80 cm of bed past the second detector, a Dirichlet
+  outlet and a zero-gradient outlet return identical numbers. The 0.44 %
+  agreement between Eq. (17) and Eq. (18) at one Reynolds number is arithmetic,
+  not evidence - the two share every constant. The gas crossover Reynolds number
+  is reproduced to 1.7 %, not exactly. One printed check does NOT come out at
+  all: the liquid crossover Reynolds number 3e-4 requires a kinematic viscosity
+  of 0.018 cm2/s where water at 20 C is 0.0100, and the discrepancy is stated
+  rather than repaired. Figure 15's detector separation is not printed in the
+  paper; the reconstruction assumes the 100 cm section of Figure 13, and the page
+  reports what the paper's other test section, 21.3 cm, would give. The two-zone
+  section is a demonstration of sufficiency, not an identification: one apparent
+  D_L cannot fix three parameters, and the page claims only what the SIGN of the
+  shape discrepancy implies, and only where that sign is resolvable. Gunn's 1993
+  note on the same data is catalogued as A2.6 and is not built here, because it
+  prints its Eq. (42) but not the p(Re) function that makes it evaluable.

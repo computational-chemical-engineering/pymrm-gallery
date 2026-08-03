@@ -1,0 +1,67 @@
+dataset_id: edwards-richardson-1968-table1
+title: Particle properties (Table 1)
+status: complete
+
+source:
+  authors:
+    - "Edwards, M. F."
+    - "Richardson, J. F."
+  year: 1968
+  container: "Chemical Engineering Science 23(2) 109-123"
+  doi: 10.1016/0009-2509(68)87056-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts transcribed, not the typesetting)"
+
+acquisition:
+  method: "transcribed from a 600 dpi page render"
+  tool: "poppler pdftoppm -r 600, read as an image"
+  procedure: >
+    The text layer renders this table as 0607 / 0,203 / o%l97 / 0*0064- and drops
+    two of the bulk densities entirely, so it was read from the page image. The
+    printed table also gives diameters by water displacement, by micrometer and
+    by sieve analysis separately; only the row labelled d_p, which the authors
+    say is the average of whichever methods were used, is carried here.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: "transcription only; the reproducibility of the voidage
+    measurement is stated in the text as +/- 4 per cent"
+
+validation:
+  internal_consistency: >
+    The mean voidage of the five large sizes - the ones Figures 7 and 9 cover -
+    is 0.3716, which is where Eq. (18)'s 'using e = 0.37' comes from. Bulk
+    density divided by material density gives the solid fraction, whose
+    complement should be the voidage: the eight rows reproduce the printed
+    voidage to at most 0.0018 in absolute terms (worst on the 0.0728 cm row,
+    1 - 1.72/2.76 = 0.3768 against the printed 0.375), mean 0.0006. The notebook
+    prints this comparison in `The data`. Neither check was used in constructing
+    the file.
+
+    An earlier version of this block claimed a worst residual of 0.021 and said
+    the notebook printed the comparison when it did not. Both are corrected: the
+    number was wrong by an order of magnitude, and a validation claim whose
+    computation exists nowhere is exactly the defect the page's own break table
+    is built to prevent.
+
+columns:
+  - name: material
+  - name: nominal_label
+    description: "the 'Nominal Dia., cm' entry, as printed"
+  - name: d_p_cm
+    unit: cm
+    description: "the d_p row of the table"
+  - name: size_range_min_cm
+    unit: cm
+  - name: size_range_max_cm
+    unit: cm
+  - name: voidage
+    unit: dimensionless
+  - name: material_density_g_cm3
+    unit: g/cm3
+  - name: bulk_density_g_cm3
+    unit: g/cm3
+  - name: u_mf_cm_s
+    unit: cm/s
+    description: "minimum fluidisation velocity; blank where the table prints a dash"
+  - name: u_mf_approximate
+    description: "yes where the printed value carries a tilde"

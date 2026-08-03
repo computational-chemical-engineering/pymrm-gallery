@@ -1,0 +1,55 @@
+dataset_id: edwards-richardson-1968-stated
+title: Constants, ranges and worked-run conditions printed in the paper
+status: complete
+
+source:
+  authors:
+    - "Edwards, M. F."
+    - "Richardson, J. F."
+  year: 1968
+  container: "Chemical Engineering Science 23(2) 109-123"
+  doi: 10.1016/0009-2509(68)87056-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts transcribed, not the typesetting)"
+
+acquisition:
+  method: "transcribed from 600 dpi page renders"
+  tool: "poppler pdftoppm -r 600, read as images"
+  procedure: >
+    The PDF text layer of this 1968 Pergamon scan drops the mid-dot decimal
+    separator, so it renders 0.607 as 0607, 0.203 as 0,203 and 0.0097 as
+    o%l97. Every value in this file was therefore read off the page image. No
+    number was repaired by inference; where a value could not be read it is
+    absent rather than guessed.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-02
+  estimated_error: "transcription only; the printed precision is the precision"
+
+validation:
+  internal_consistency: >
+    Three of these rows are checkable against each other and against Eq. (17),
+    and the notebook does all three. (a) 0.150 / 0.205 = 0.7317, which is where
+    gamma = 0.73 comes from. (b) Eq. (18)'s constants must be Eq. (17)'s scaled
+    by eps/Sc: 0.73 x 0.37 / 0.72 = 0.3751 against the printed 0.38, and
+    9.7 x 0.37 / 0.72 = 4.985 against the printed 5.0. (c) The maximum of Eq.
+    (18) is Pe = 3.19 at Re = 3.20, against the conclusions' 'a maximum, greater
+    than 3' and against Gunn (1993), who puts the maximum of the same data at
+    Re about 4.
+  known_discrepancy: >
+    The gas crossover Reynolds number 1.8 is reproduced to 1.7 % by the paper's
+    own numbers (2 gamma eps D_M / nu with nu = Sc D_M = 0.1476 cm2/s gives
+    1.830, which is +1.66 % - not 'exactly', and the notebook prints the
+    deviation). The liquid figure 3 x 10^-4 is NOT: the same expression needs a
+    kinematic viscosity of about 0.018 cm2/s, where water at 20 C is 0.0100 and
+    would give 5.4 x 10^-4. The page states this rather than repairing it.
+
+columns:
+  - name: quantity
+    description: "identifier used in the notebook"
+  - name: value
+    description: "the number as printed"
+  - name: unit
+  - name: page
+    description: "journal page number the value was read from"
+  - name: source
+    description: "where on that page, quoted"

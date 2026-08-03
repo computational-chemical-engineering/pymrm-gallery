@@ -739,6 +739,69 @@ models:
       range as 89-98; the paper's own header reads "pp. 89 to 93" and its last
       page is 93.
 
+  - id: A2.5
+    slug: edwards-richardson-dispersion
+    title: "Where the axial dispersion coefficient comes from: Edwards & Richardson's packed bed"
+    description: >
+      The experimental side of axial dispersion: a pulse of argon in air, two
+      response curves, and the two-point moment method that turns them into D_L.
+      The whole measurement is simulated in pymrm and inverted with the paper's own
+      equations, which shows how much of a fitted dispersion coefficient can be the
+      grid; the correlation is tested against 55 points digitised from Figure 9,
+      against the null that has no radial-mixing term, and against the paper's own
+      fine-particle failure.
+    section: A
+    status: published
+    page: pages/A2.5-edwards-richardson-dispersion/
+    tier: T1
+    priority: P1
+    structures:
+    - S4
+    phases:
+    - gas
+    reference:
+      authors:
+      - Edwards, M. F.
+      - Richardson, J. F.
+      year: 1968
+      container: "Chemical Engineering Science 23(2) 109–123"
+      doi: 10.1016/0009-2509(68)87056-3
+    predicts:
+    - axial dispersion coefficient of a gas in a packed bed
+    - the Peclet-Reynolds curve and the location of its maximum
+    - the molecular-diffusion floor gamma D_M at low Reynolds number
+    - what a two-detector pulse experiment reports as D_L for a given bed
+    - the numerical dispersion a transient scheme adds to an inferred D_L
+    pymrm_api:
+    - construct_grad
+    - construct_div
+    - construct_convflux_upwind
+    - interp_cntr_to_stagg_tvd
+    data:
+      tier: 2
+      method: digitised
+      status: complete
+    related:
+    - A2.1
+    - A2.3
+    - A2.6
+    - A2.2
+    - D1.2
+    note: >
+      Experimentally validated, but read the caveat: gamma and beta were fitted by
+      the authors to the same Figure 9 markers this page digitises, so the 11.75 %
+      mean deviation is a goodness of fit. The independent content is the shape -
+      Eq. (15), without the radial-mixing term, cannot exceed Pe = 2 where 30 of
+      the 55 measured points do - and the recovery of beta = 8.98 against the
+      printed 9.7 from a fresh reading of the figure, quoted with its own
+      bootstrap interval and with no claim of a difference. Gunn's 1993 note
+      replots these data and is catalogued as A2.6; it is deliberately not merged
+      here, because it prints its Eq. (42) but not the p(Re) function that makes it
+      evaluable, which lives in Gunn 1969 (Trans. IChemE 47 351) and Gunn 1987
+      (Chem. Eng. Sci. 42 363). Gunn's "maximum at Re about 4" is for his Fig. 1's
+      combined gas-phase set, not for E&R's points alone. The figure review is
+      pending and non-blocking.
+
   - id: A2.3
     slug: taylor-aris-dispersion
     title: "Taylor–Aris dispersion"

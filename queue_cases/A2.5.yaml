@@ -5,7 +5,8 @@ catalog_reference: Chem. Eng. Sci. 23 (1968)
 priority: P1
 tier: T1
 structures: S4
-status: in-progress
+status: published
+page: pages/A2.5-edwards-richardson-dispersion/
 reference:
   authors:
   - Edwards, M. F.
@@ -13,22 +14,174 @@ reference:
   year: 1968
   container: Chemical Engineering Science 23(2) 109-123
   title_as_printed: Gas dispersion in packed beds
+  doi: 10.1016/0009-2509(68)87056-3
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250968870563-main.pdf
   open_access: null
   checked: '2026-08-02'
-  identified_by: read the paper's own first pages, not the filename
+  identified_by: >
+    read the paper's own first pages at 600 dpi. Title page reads "Gas dispersion
+    in packed beds, M. F. EDWARDS and J. F. RICHARDSON, Department of Chemical
+    Engineering, University College, Swansea"; running head "Chemical Engineering
+    Science, 1968, Vol. 23, pp. 109-123. Pergamon Press."
 blocker: null
-notes: null
+
+scope_decision:
+  verdict: A2.5 alone. A2.6 is NOT covered and stays a separate case.
+  decided: '2026-08-02'
+  decided_by: the A2.5 builder, after reading both papers at 600 dpi
+  the_two_papers:
+    A2.5: >
+      Edwards & Richardson (1968), Chem. Eng. Sci. 23(2) 109-123, "Gas dispersion
+      in packed beds". A measurement paper: argon pulses in air, 0.008 < Re < 50,
+      five bead sizes, and an empirical correlation (their Eq. 17).
+    A2.6: >
+      Gunn, D. J. (1993), Chem. Eng. Process. 32(6) 333-338, "On axial dispersion
+      in fixed beds". A rebuttal, whose stated primary purpose is "to show that
+      the criticisms by Tsotsas and Schlunder (1988) of an earlier paper (Gunn,
+      1969) are based upon elementary mathematical errors on the part of Tsotsas
+      and Schlunder".
+  argument: >
+    Three reasons, in order of how decisive they are.
+
+    (1) THE MERGED PAGE COULD NOT HAVE BEEN BUILT. Gunn 1993 prints his model as
+    Eq. (42), D/(Ud) = (ReSc/eps.Gamma)(1-p)^2 + (Re^2Sc^2/eps^2Gamma^2)p(1-p)^3
+    (exp[-eps.Gamma/(p(1-p)ReSc)] - 1) + eps/(tau.ReSc), and it is NOT evaluable
+    from that paper. The empirical function p(Re) - which the paper itself
+    describes and says "has been carried out for beds of spheres, solid cylinders
+    and hollow cylinders [2, 5]" - is nowhere printed. Neither is eps, and
+    Gamma = 4(1-eps)alpha_1^2/eps needs it. Refs [2] and [5] are Gunn 1969
+    (Trans. IChemE 47 351-359) and Gunn 1987 (Chem. Eng. Sci. 42 363-373),
+    neither on disk. Merging would have meant inventing p(Re) or back-fitting it
+    from Gunn's own Figure 1 - fabrication, or a reconstruction so weak it would
+    need its own maintainer review. Note also that A2.6's catalogue entry already
+    names Chem. Eng. Sci. 42 (1987) as its source, so the PDF that arrived is a
+    related paper, not the catalogued one.
+
+    (2) THE TWO MODELS ARE NOT THE SAME, AND THE AUTHORS SAY SO. The A2.1/A2.2
+    precedent turned on an ALGEBRAIC IDENTITY that the source paper states in
+    words. Here the opposite holds. E&R's Eq. (14) fixes Pe -> 2 at large Re from
+    the mixing-cell argument; Gunn's Eq. (43) gives Ud/D -> 2p/(1-p), which is 2
+    only if p = 0.5, and the entire quoted dispute with Tsotsas and Schlunder is
+    about whether that limit is deducible at all. The two papers also disagree on
+    numbers for the same measurements: Gunn quotes the argon-air Schmidt group as
+    0.77 where E&R use 0.72, and puts the Peclet maximum "at a Reynolds number of
+    ~4" where Eq. (18) puts it at 3.195 - though that "~4" is for his Figure 1's
+    COMBINED gas-phase set, Gunn & Pryce's frequency-response data together with
+    E&R's, not for E&R's points alone, and the page now attributes it that way.
+    A merged page would have to flatten a live disagreement into one narrative.
+
+    (3) THE J3.3 TEST DOES NOT FIRE. J3.3 was marked `covered` because an
+    existing page already examined the same content at the same two points.
+    A2.6's content - a stochastic derivation of dispersion from a fast/slow
+    stream unit cell, with p(Re) as its one empirical function, and the
+    dependence on the Schmidt group that the 1993 note is arguing about - is
+    examined nowhere in this gallery. A2.5 examines a two-constant empirical
+    correlation and the measurement that produced it. Different model, different
+    validation, different failure mode.
+
+    WHAT THE A2.5 PAGE DOES CARRY. Gunn 1993 is cited in two places: as another
+    reader's placing of the Peclet maximum on a figure that includes E&R's data
+    ("~4" against Eq. 18's 3.195, with the attribution to the combined set stated
+    rather than glossed), and as the reason A2.6 is not built here. The Sc = 0.77
+    versus 0.72 discrepancy is recorded as printed, not repaired.
+  a26_status_set_to: needs-paper
+  a26_reason: >
+    Not "unclaimed with the paper on disk". Gunn 1993 genuinely does not contain
+    what A2.6 needs, and the request written into queue_cases/A2.6.yaml is
+    specific about which paper and which function.
+
+validation_route: >
+  Route 1 (measurements) was available and taken, but only through a figure:
+  Edwards & Richardson print NO table of dispersion coefficients - the data exist
+  only as Figures 7, 8, 9 and 14. Figure 9 was digitised, 55 markers, positions
+  only. Routes 2 (stated numerical results) and 3 (internal identities) were
+  taken as well and carry most of the page's non-circular content, because gamma
+  and beta were fitted by the authors to the very markers digitised.
+
+  Digitisation was cheap and safe here for two reusable reasons. The dashed curve
+  through the markers IS Eq. (18), whose constants are printed, so its pixel path
+  was COMPUTED and erased before detection - and its landing on the printed
+  dashes over 3.7 decades is an independent check on the axis calibration. And
+  Eq. (18) has no particle-size term, so the five marker shapes carry no
+  information the test needs (the F1.4 shortcut); no row carries a series label.
+
+key_numbers:
+  eq18_vs_55_markers: 11.75 % mean absolute deviation, bias +0.003 %, log scatter 0.1367 in ln Pe (14.6 %)
+  null_eq15_no_correction: 29.9 % mean absolute deviation with a -29.8 % bias; its ceiling Pe = 2 sits below 30 of the 55 points
+  beta_refit_from_the_digitisation: >
+    8.98 with gamma held at 0.73, block-bootstrap 95 % interval [7.50, 9.94];
+    8.58 with both parameters free, interval [6.90, 9.50]. Each interval is
+    quoted beside its own estimate and no exclusion is claimed - across block
+    sizes 3-12 the gamma-fixed upper limit runs 9.69 to 10.22, straddling the
+    printed 9.7
+  eq18_constants_from_eq17: 0.3751 vs printed 0.38 (1.28 %) and 4.985 vs printed 5.0 (0.31 %)
+  gas_crossover_Re: 1.830 computed against 1.8 printed, i.e. +1.7 % - not exact
+  liquid_crossover_Re: NOT reproduced - 3e-4 implies nu = 0.018 cm2/s where water is 0.0100; stated, not repaired
+  table1_voidage_vs_densities: eight rows reproduce 1 - bulk/material density to 0.0018 absolute, printed in The data
+  peclet_maximum: Pe = 3.186 at Re = 3.195, against the paper's "greater than 3"; Gunn's "~4" is for his combined gas-phase set, not E&R alone
+  moment_inversion_recovery: 1.4e-05 relative at n = 3200, observed order 3.01
+  numerical_dispersion_prediction: u h/2 + u^2 dt/2 predicts the excess to 0.4 % over 8 runs
+  two_zone_vs_closed_form: 3.1e-05 at n = 2000; break-tested, x173 and x1058 on two injected defects
+  parameter_chain_blind_spot: the adjacent Table 1 voidage moves u by 6.1 % and D_L by 6.9 % and moves no diagnostic on the page
+  two_zone_sign: holds in 10 of 12 volume splits and in 8 of 8 with |lag| > 0.05 %; the exceptions sit near an even split with |lag| <= 0.011 %
+  two_zone_magnitude: at most 0.36 % of transit time at th1 = 0.15, but 1.14 % with an 18.7 % shape residual once th1 moves - it bounds nothing
+  fig15_anomaly: measured 0.503 cm2/s against Eq. (17)'s 0.1498, and that run sits at 88 % of the tabulated u_mf (with the paper's own preceding sentence, which cuts the other way, printed beside it)
+  fig15_delta_x: NOT printed in the paper; 100 cm assumed from Fig. 13, and the 21.3 cm alternative is run and reported
+
+deliverables:
+  page: queue_cases/A2.5/page/
+  models_entry: queue_cases/A2.5/models_entry.yaml
+  review_artifact: queue_cases/A2.5/review/fig9-overlay.png  (git-ignored - it IS the page image)
+  extraction_script: queue_cases/A2.5/review/extract-fig9.py  (NOT ignored - .gitignore line 44 keeps *.py in review/)
+  runtime_seconds: 321
+  datasets:
+  - edwards-richardson-1968-fig9.csv (55 rows, digitised; four merged clusters re-fitted 2026-08-03)
+  - edwards-richardson-1968-stated.csv (38 printed scalars)
+  - edwards-richardson-1968-table1.csv (8 particle rows)
+
+follow_up:
+  blocking: false
+  kind: figure review
+  artifact: queue_cases/A2.5/review/fig9-overlay.png
+  already_answered: >
+    This block used to ask "does no red circle sit on a bare stretch of the
+    dashed curve?" as an open question. It is not open: one did. The row at
+    (2038.7, 278.3) sat on the horizontal Eq.-(18) dash spanning x = 2022-2058,
+    with exactly the 130 px of curve-independent ink the acceptance threshold
+    demanded - contributed by the three glyphs fused around it. It has been moved
+    onto the open circle beside it, and the sidecar now describes the threshold
+    as the size filter it is rather than as a test that a glyph is present.
+    Asking a maintainer to check something the extraction can answer, and whose
+    answer is no, is worse than not asking.
+  question: >
+    Two things, neither of which changes a conclusion. (a) The sidecar lists
+    three glyphs still fused into their neighbours, at Re = 0.82, 1.79 and 2.49.
+    The middle one is an open circle whose ring fit at (1592.0, 263.0) covers
+    95 % of the outline with an empty interior - near enough to resolvable that
+    the call is the maintainer's. Including it moves the headline from 11.75 %
+    to 11.62 % and the count above Pe = 2 from 30 to 31; that is recorded in the
+    sidecar under `missing.effect_if_included`. Should it go in? (b) Did the
+    draughtsman centre each glyph on the data point, or centre its ink? For a
+    filled triangle the two differ by about 5 px, which is 1.9 % in Peclet number.
+  why_non_blocking: >
+    The page reports its headline agreement with and without both bounding
+    perturbations (+/- 3.8 px and +/- 5 px applied to every point): the mean
+    absolute deviation moves by at most 0.09 percentage points, and mostly the
+    BIAS moves, by up to 1.9 points - which is why the bias is reported and not
+    claimed. The one marker whose inclusion is genuinely in question moves the
+    headline by 0.13 points, less than either perturbation, and the refit of beta
+    is quoted with a block-bootstrap interval far wider than its difference from
+    the printed value.
+
+notes: >
+  Provenance notes for the integrator. The 1968 Pergamon text layer drops the
+  mid-dot decimal separator: it renders 0.607 as 0607, 0.203 as 0,203 and 0.0097
+  as o%l97, and it turned Figure 8's label "D_L = gamma D_M = 0.150 cm2/sec" into
+  "0.130". Every number in the three CSVs was read off a 600 dpi render, and
+  nothing was repaired by inference. docs/pdf-findings.md has no entry for this
+  file yet; it runs about 4,900 characters per page. docs/papers-on-disk.yaml
+  needs a line mapping A2.5 to 1-s2.0-0009250968870563-main.pdf and A2.6 to
+  1-s2.0-025527019380020H-main.pdf (the latter with the caveat above, since it is
+  not the catalogued Gunn paper).
 updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route
-    via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears
-    (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
