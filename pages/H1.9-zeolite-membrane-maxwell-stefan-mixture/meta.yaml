@@ -1,0 +1,348 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.9
+slug: zeolite-membrane-maxwell-stefan-mixture
+title: "Maxwell–Stefan mixture diffusion in a zeolite membrane"
+section: H
+status: published
+tier: T1
+priority: P2
+structures: [S9, S4]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 640
+datasets:
+  - bakker-funke-mfi-membrane-selectivities.csv
+  - krishna-baur-2003-mixture-printed-results.csv
+  - krishna-baur-2003-mixture-parameters.csv
+
+validation:
+  - >-
+    VALIDATION AGAINST MEASUREMENT (tier 2, four values printed in the review's
+    running text). Funke et al.'s n-hexane / 3-methylpentane permeation
+    selectivity of 24 at 15 kPa upstream is reproduced as 25.0, +4.3 %, from
+    nothing but the Table 2 pure-component isotherm fits and the single
+    diffusivity ratio D_nC6 = 5 D_3MP. Nothing was fitted - and the three things
+    that were CHOSEN are swept at the point of comparison, because the review's
+    one sentence about that run fixes none of them: "15 kPa" read as the TOTAL
+    hydrocarbon pressure (15 kPa each instead gives 33.1, +38 %), the feed
+    assumed equimolar (y_nC6 = 0.4 or 0.6 gives S_P = 22.6 or 27.2, and bare
+    flux ratios of 15.0 and 40.8), and the printed diffusivity ratio taken as
+    exactly 5 (4 or 6 gives 21.1 or 28.9). The alternatives span 1.6x, against a
+    +4.3 % agreement with a measurement printed to two figures with no stated
+    uncertainty. The total-pressure and equimolar readings are the
+    better-supported ones - the review gives its own 43.2 point as a TOTAL of
+    66 kPa where the Fig. 29(a) caption says p_i0 = 33 kPa, and every Section
+    4.3 simulation is equimolar - but they are readings and the page says so.
+  - >-
+    Bakker's two methane / n-butane selectivities are NOT reproduced
+    quantitatively and the page says so. The M-S model with finite exchange
+    coefficients gives 488 against the measured 380 (1.28x) and 203 against 60
+    (3.38x); with the exchange coefficients removed it gives 12.4 and 5.4, i.e.
+    31x and 11x TOO LOW. The measurements therefore discriminate decisively
+    between the two implementations - the gap between them is two orders of
+    magnitude and both points sit on the same side of it - while agreeing
+    quantitatively with neither. The review calls the first comparison "quite
+    close", which at 1.28x is defensible, and quotes the second in the next
+    sentence without comment.
+  - >-
+    REPRODUCTION of the review's own computed results. All five printed
+    permeation selectivities: 488.2 against 487, 12.37 against 12.3, 202.9
+    against 202, 5.44 against 5.4, and 43.201 against 43.2. Worst 0.74 %. None
+    of these involves the membrane thickness, the framework density or the
+    absolute size of the diffusivities, all of which cancel out of a
+    selectivity, so they test the coupled flux relations and the mixture
+    isotherm and nothing else.
+  - >-
+    The four printed mixture FLUXES to 0.41 %, using the ~40 um membrane
+    thickness A4.7 reconstructed from the two SINGLE-COMPONENT fluxes of
+    Section 4.1. THIS IS NOT A TEST OF THAT RECONSTRUCTION AND THE PAGE SAYS SO
+    AT THE POINT OF USE. delta, rho_MFI, the unit-cell mass and N_A cancel
+    identically out of all four: the conversion collapses to
+    N_i = 34 J_i / (D_C1 psi_C1(95 kPa)), and swinging rho_MFI 1800 -> 1200 ->
+    3600 -> 900 kg m^-3 (delta 40 -> 27 -> 80 -> 20 um) leaves every one of the
+    four fluxes BIT-IDENTICAL, which the page demonstrates in a labelled
+    powerless-check disclosure rather than asserting. So the comparison is the
+    delta-free flux-RATIO check printed ten lines below it, rescaled by the
+    stored 34; both worst deviations are printed side by side (0.0040656 against
+    0.0040675, differing only by the n=1 solver's error against the analytic
+    psi) so the coincidence is visible. It is kept because it does test the
+    MIXTURE physics - IAST, a matrix [Gamma] and finite Dij all enter J_i - and
+    an earlier version of this page presented it as an out-of-sample test of
+    delta on the 1/delta power, which it never was.
+  - >-
+    THE TRANSIENT IS GRID-REFINED UNDER THE TRANSIENT, WHICH IS A DIFFERENT
+    RESOLUTION PROBLEM FROM THE STEADY ONE, and the coarse-grid numbers an
+    earlier version reported were an artefact. The steady profile is smooth; the
+    transient carries a self-sharpening n-butane front, because nC4's site A is
+    98.8 % full at the upstream face (b_A p = 81.5) and empty at the swept face:
+    the largest cell-to-cell jump in the nC4 loading reaches 77 % of the face
+    value early in the transient against 3.6 % at steady state, 21x. That is the
+    mechanism; the evidence is blunter, and is that the steady selectivity is
+    converged to 4e-05 at n_z = 40 while the peak time is still 10 % out at
+    n_z = 30. Refining n_z = 30 / 60 / 120 / 240 at fixed
+    dt_frac moves the peak TIME 0.7241 -> 0.6685 -> 0.6583 -> 0.6558 s at
+    observed order 2.5 then 2.0, Richardson-extrapolating to 0.6550 s, so the
+    production n_z = 120 carries 0.5 % of spatial error - 19x smaller than its
+    disagreement with the review. The peak HEIGHTS cross sign on refinement:
+    0.4334 -> 0.4452 (finite) and 16.60 -> 17.51 (infinite), i.e. -1.5 % and
+    -3.5 % at n_z = 30 becoming +1.2 % and +1.8 % converged. The earlier
+    attribution - "both are LOW, which is what backward Euler does to a maximum"
+    - is WITHDRAWN, not reworded: the dominant error was spatial. Halving
+    dt_frac at n_z = 120 moves the height a further +0.8 % and the time a
+    further -1.2 %, and halving again +0.4 % and -0.9 % (dt_frac = 0.05 / 0.025
+    / 0.0125 gives t_peak 0.6583 / 0.6507 / 0.6448 s and heights 0.4452 / 0.4487
+    / 0.4506). The step study is three-level rather than two, because a
+    two-level one is what let the coarse grid pass unnoticed; the successive
+    differences fall by 1.9x on the height, consistent with backward Euler's
+    first order, but only 1.3x on the time, so no extrapolation in dt is offered
+    for the time - only the direction, which is unambiguous. Both refinements
+    push the same way and the reported values are the coarsest of the three, so
+    they understate the disagreement.
+  - >-
+    THE ONE REAL DISAGREEMENT, REPORTED AS AN OPEN TENSION RATHER THAN
+    RECONCILED. Converged, the transient methane peak arrives at 0.658 s against
+    the printed 0.73 s, -9.8 %. That peak time is the ONLY quantity on the page
+    that carries the reconstructed membrane thickness at all, and it carries it
+    as delta^2, so closing the gap needs delta +5.3 % (40.0 -> 42.1 um) - and
+    +6.4 % against the 0.6448 s the finest step tried gives. Rounding does not cover it:
+    half a unit on the two-figure printed 34 mmol m^-2 s^-1 that delta was
+    inverted from is only 1.5 %. An earlier version of this page argued that
+    moving delta would break the steady-flux agreement so there was nothing to
+    reconcile; that argument is void twice over, because the required move is
+    percent-scale rather than +0.4 %, and because the four printed fluxes do not
+    contain delta at all and therefore constrain it not at all. The page names
+    the candidate homes - rho_MFI = 1800 kg m^-3 read off a figure caption and
+    constrained by nothing else here or on A4.7; the Si96O192 unit-cell mass,
+    hard-coded from atomic weights and traceable to nothing printed; the
+    two-figure 34; or the review's transient not being the calculation
+    reproduced here, since it prints no thickness, grid or time step - and
+    decides between none of them. Nothing was adjusted.
+  - >-
+    TWO PRINTED NUMBERS ARE NOT REPRODUCED AND BOTH ARE INVESTIGATED RATHER
+    THAN EXPLAINED AWAY. (a) The Henry-limit sorption selectivity of 2200: the
+    dual-site Henry coefficients of Table 1 give 2649.9, +20.5 %, and the IAST
+    solve reaches the same limit from an entirely different code path, so it is
+    not an arithmetic slip in the Henry formula. Solving for the value each of
+    the four C1/nC4 Table 1 parameters would need to make the ratio 2200, and
+    feeding it back into the single-component flux ratio that A4.7 certifies
+    those rows with (observed 0.17 %), moves that check by between 4.2 % and
+    24 % - so no single-character transcription slip explains 2200 without
+    breaking the certification. What is NOT settled is where 2200 comes from;
+    the review's Fig. 24 is drawn against CBMC fugacities and a Henry
+    coefficient from the simulation rather than from the fit stays possible.
+    (b) The multicomponent-Langmuir counterfactual: its STRUCTURAL claim is
+    reproduced exactly (S_P independent of upstream composition to 1.02x over feeds
+    running from 95 % to 5 % methane, where IAST spans more than a factor of
+    three over exactly the same five feeds) and its VALUE is not (about 1680 against
+    the printed 800). The review does not state which affinity it used once the
+    dual-site fit is collapsed to a single site, and nothing was tuned.
+  - >-
+    Three internal checks on the IAST solve, each able to fail: the
+    forward/inverse round trip at 2.6e-14; the closed-form surface potential
+    eq. (64) against adaptive quadrature at 1.0e-12, which the break table
+    moves to 0.18 when a site is dropped; and the reduction of IAST to the
+    multicomponent Langmuir when all saturation capacities are equal, at
+    1.3e-15 - the theorem the review's own argument rests on. The same
+    comparison with the real Table 1 capacities (19 and 10) is out by 6159 %,
+    which is why IAST is needed at all.
+  - >-
+    [Gamma] by implicit differentiation of eqs. (62)-(65) against central
+    differences of the IAST inverse map, 1.6e-07 (the finite-difference floor);
+    the break table takes it to 138 when one term is dropped. STATED
+    LIMITATION: both routes call the same IAST solve, so an error inside
+    eqs. (62)-(65) moves them together - which is what the three checks above
+    are for.
+  - >-
+    eq. (44)'s [B], assembled and inverted, against the raw friction system of
+    eq. (42) solved MATRIX-FREE by GMRES - 200 random 2- and 3-component states,
+    6.2e-14, and 687 % when the exchange sum is dropped from B_ii. This is
+    A4.2's replacement for a check that compared [B] against itself, reused;
+    the GMRES route never forms [B] and cannot inherit an error in eq. (44).
+  - >-
+    THREE ALGEBRAIC IDENTITIES ARE LABELLED AS SUCH AND NOT SCORED: eq. (43) at
+    i = j returning D_ii = D_i; eq. (55) following from eq. (54) by
+    substitution; and eq. (46) collapsing to eq. (14) at n = 1 (2.2e-16 - the
+    sum in eq. 44 is empty by construction). The collapse that CAN fail is
+    reported instead: the n = 1 SOLVER against the closed-form eq. (12)
+    integral, 1.1e-04 at n_z = 120.
+  - >-
+    Grid convergence at observed order 2.4, production error 3.8e-05; the
+    convergence assertion is div N = 0 at steady state (flux z-independence to
+    1e-13), never the Newton iteration count. Where a cold start does not
+    converge the solve falls back to a FIXED pressure-continuation path, and
+    path independence is checked on the one feed where both routes converge.
+    Three decades of sweep-gas pressure move S_P by 2e-06, and the three
+    plausible readings of the review's unstated loading dependence of eth span
+    1.02x.
+  - >-
+    Twelve-row break table. Every check moves. The weakest row is reported as
+    the weakest: solving the slab as a cylinder shifts the SELECTIVITY by only
+    3.7 % where every other row moves by a factor, because both species pass
+    through the same construct_div and an area profile largely cancels out of a
+    ratio - the absolute fluxes are the right quantity to test a geometry with
+    and they move far more. One row is of a different kind and is labelled: it
+    breaks the READING of eq. (60) rather than the code. It settles WHICH
+    READING IS MEANT - multiplying by the pressure ratio instead of dividing
+    lands a factor of 361 from every printed selectivity - and it is NOT a claim
+    that the paper prints eq. (60) wrongly. An earlier version of this page made
+    that claim; it is withdrawn. The Elsevier text flattens eqs. (60) and (61)
+    identically, as compound fractions; the page reads (61) that way and must
+    read (60) the same way; and the review's own worked value 3.1/34.0/(5/95) =
+    1.73 agrees with that reading, so equation and worked value are consistent.
+
+adds: >
+  The review's mixture results are reproduced, not improved on. Six things are
+  not in it. (1) Its own experimental comparisons are scored, and the words
+  validation and reproduction are kept apart: Funke's 24 is matched to 4.3 %
+  with nothing fitted - inside a 1.6x band of three readings the review's one
+  sentence about that run leaves open, all swept where the comparison is made -
+  while Bakker's 380 and 60 come out 1.28x and 3.38x, the
+  second quoted by the review in the sentence after the first and passed over
+  without comment. The measurements discriminate decisively between finite and
+  infinite exchange coefficients (two orders of magnitude apart, data on one
+  side) and agree quantitatively with neither. (2) The printed Henry-limit
+  sorption selectivity of 2200 does not follow from Table 1 - two independent
+  routes give 2649.9 - and the obvious explanation is EXCLUDED rather than
+  assumed: every single-parameter change to the C1 or nC4 row that would make
+  the ratio 2200 moves A4.7's certifying flux-ratio check by 4.2 % to 24 %
+  against an observed 0.17 %. Where 2200 does come from is left open, because
+  the review's figure is drawn against CBMC fugacities rather than against the
+  fit. (3) A4.7's reconstructed membrane thickness is tested on the ONE power of
+  delta this page actually carries, and it misses by about 10 %. The four
+  mixture fluxes look like a second, independent handle on delta and are not
+  one: delta, rho_MFI, the unit-cell mass and N_A cancel identically, and a
+  four-fold swing in the framework density leaves all four bit-identical, so
+  that comparison is the delta-free flux-ratio check rescaled - printed side by
+  side on the page rather than deleted. The transient peak TIME does carry
+  delta, as delta^2, and it had never been refined in space: refined under the
+  transient it lands 9.8 % below the printed 0.73 s (and 11.7 % below at the
+  finest step tried), needing delta +5.3 % to close. Nothing else here forbids
+  that, precisely because nothing else here contains delta, so it is left as an
+  OPEN TENSION with its candidate homes named. The two peak heights cross sign
+  on the same refinement, and the "backward Euler damps a maximum" attribution
+  the coarse grid supported is withdrawn. (4) Two of the
+  review's structural claims are separated from its numbers and do not stand or
+  fall together: the multicomponent Langmuir really does make S_P
+  composition-independent (1.02x over feeds from 95 % to 5 % methane, against IAST's factor of three
+  over the same five) and its printed
+  800 is not reproduced; "Theta_mix > 4 above 1 kPa" is true but loose by 6.4x;
+  "S_P > 10 above 2 kPa" crosses at 2.5 kPa. (5) Every check on the coupled
+  machinery has a second route that shares no code with the first - [Gamma] by
+  implicit differentiation against central differences, [B] assembled against
+  the matrix-free friction system, the closed-form surface potential against
+  quadrature - and the three algebraic identities the review uses are labelled
+  as identities and left unscored. (6) The review's own counter-example is
+  carried rather than dropped: MFI needs finite exchange coefficients and
+  zeolite 4A does not, so the finding is that eth_ij is a property of the host
+  topology and these two hosts sit at opposite limits of it.
+
+agreement: >
+  VALIDATION (measurement): Funke et al.'s mixture selectivity to +4.3 %, inside
+  a 1.6x band of three readings the review leaves open;
+  Bakker's two to 1.28x and 3.38x, reported as disagreement.
+  REPRODUCTION: nine steady-state targets - five printed selectivities and four
+  printed fluxes - worst 0.74 %, most under 0.5 %. The transient is
+  grid-refined under the transient (n_z = 30/60/120/240, order 2.5 then 2.0);
+  converged, the two peak heights are +1.2 % and +1.8 % HIGH - they were 1.5 %
+  and 3.5 % low on the coarse grid, and the "backward Euler damps a maximum"
+  reading of that sign is withdrawn - and the peak TIME is -9.8 %, the one real
+  disagreement on the page, needing delta +5.3 % to close and left open. Two printed
+  numbers are not reproduced and are reported as findings rather than folded in:
+  the Henry-limit selectivity (+20.5 %) and the multicomponent-Langmuir
+  counterfactual (2.1x). Internal: IAST round trip 2.6e-14, surface potential
+  against quadrature 1.0e-12, IAST-to-Langmuir collapse 1.3e-15, [Gamma] by two
+  routes 1.6e-07, [B] against the matrix-free friction system 6.2e-14. Grid
+  order 2.4. Nothing is fitted.
+
+caveats: >
+  TIER 2, BUT READ THROUGH A REVIEW. The four measured selectivities are what
+  make this page tier 2 rather than tier 6, and they come from Bakker's PhD
+  thesis and Funke et al., NEITHER OF WHICH IS ON DISK OR WAS CONSULTED. Both
+  are recorded under origin_not_consulted. A wrong number in the review would
+  travel into this page undetected, and the review states no uncertainty for any
+  of the four. Everything else on the page is the authors' own computed output
+  and comparing against it is REPRODUCTION, not validation; the page uses those
+  two words consistently and never blurs them.
+
+  THE MEMBRANE THICKNESS IS A RECONSTRUCTION, NOT A PRINTED VALUE, AND EXACTLY
+  ONE QUANTITY ON THE PAGE CARRIES IT. The review never prints it. Every
+  selectivity is independent of it, and so - contrary to what an earlier version
+  of this page claimed - are the four "absolute" mixture fluxes, out of which
+  delta, rho_MFI, the unit-cell mass and N_A cancel identically. The transient
+  peak TIME is the only survivor, and it disagrees by -9.8 % once the transient
+  is grid-refined, needing delta +5.3 % (40.0 -> 42.1 um). That is an open
+  tension, not a reconciliation, and it is the page's one real disagreement.
+  Note also that the pure-component C1 flux is
+  GUARANTEED to come out at 34 because delta was calibrated on it, and the pure
+  nC4 flux carries A4.7's 0.17 % flux-ratio deviation and nothing more - neither
+  is new evidence, and the page says so before using either.
+
+  TWO CONSTANTS ARE HARD-CODED AND TRACEABLE TO NOTHING ON THE PAGE: the
+  Si96O192 unit cell and the atomic masses 28.0855 and 15.999 it is built from.
+  They cancel out of everything except the peak time - which is now the only
+  thing that constrains them, and which does not agree.
+
+  MODELLING CHOICES THE REVIEW DOES NOT FIX, all measured rather than
+  assumed: the loading dependence of eth inside the mixture (Section 3.2 says
+  "e.g. Eq. (17) or Eq. (19)" and never chooses; the three plausible readings
+  span 1.02x and eq. (17) is used because it is what A4.7 established for the
+  single components); the downstream sweep pressure ("vanishing values"; three
+  decades move S_P by 2e-06); for the multicomponent-Langmuir
+  counterfactual, which single-site affinity to use once the dual-site fit is
+  collapsed - which is why that counterfactual is not reproduced; and, for the
+  Funke comparison, whether "15 kPa" is a total or a per-component pressure and
+  what the feed composition was, both swept on the page (1.6x across the
+  alternatives, against a +4.3 % agreement). A further choice is made silently
+  by eq. (19) in the SELF-DIFFUSIVITY section and is now stated there: eq. (19)
+  as printed uses the species' own occupancy and the cell uses the TOTAL
+  occupancy. Nothing on the page depends on it - that section has no printed
+  target - but the membrane's version of the same ambiguity is measured, and
+  this one was not stated.
+
+  SCOPED OUT, AND WHY. Sections 4.4-4.7 (the N2/CH4 uptake in zeolite 4A, the
+  O2/N2 chromatographic separation, the C5/C6 breakthroughs and the pulsed
+  hexane separation) and the MD/KMC verification of Figs. 17-21. All are mixture
+  problems whose only validation is a figure and for which the review prints no
+  numerical result. Digitising a figure needs a maintainer review and none is
+  available. Their parameter tables are clean and they are viable future cases -
+  a packed-bed chromatography page in section J is the natural home. The
+  self-diffusivity section on this page therefore shows the size and sign of the
+  correlation effect and explicitly claims nothing about whether the review is
+  right about it.
+
+  THE REVIEW'S 4A CONCLUSION POINTS THE OTHER WAY and is carried on the page
+  rather than dropped: Section 4.4 finds Habgood's N2/CH4 uptake in zeolite 4A
+  better described by eth_ij -> infinity. A page showing only finite eth_ij
+  winning would misreport conclusion 9.
+
+  TWO PRINTED DEFECTS on the mixture side, neither repaired silently: eq. (37)
+  is printed "L_ij = L_ij" where the Onsager reciprocal relations require
+  L_ij = L_ji (nothing on the page uses eq. 37, since the Onsager matrix is
+  never formed), and the caption of Fig. 21 prints Theta_1,sat twice where the
+  second must be Theta_2,sat (NOT a repair by inference - the running text of
+  Section 3.4 supplies the correct pair). BOTH READINGS COME FROM THE ELSEVIER
+  FULL TEXT; there is no page image of this paper on disk and nothing was read
+  off a 600 dpi render. Both involve only subscripts, which the text dump
+  reproduces reliably.
+
+  THERE IS NO THIRD DEFECT, and the claim that there was is withdrawn. An
+  earlier version of this page asserted that eq. (60) is PRINTED as
+  S_P = (N_2/N_1)(p_2,0/p_1,0) and USED as the reciprocal. The text dump does
+  not support that: it flattens eqs. (60) and (61) identically, with the same
+  spacing, which is the ordinary flattening of a COMPOUND fraction; the page
+  reads eq. (61) that way and must read eq. (60) the same way; and the review's
+  own worked value 3.1/34.0/(5/95) = 1.73 is the compound-fraction reading, so
+  equation and worked value agree. The break-table row stays, relabelled: it
+  settles which reading is MEANT (the alternative lands a factor of 361 from
+  every printed selectivity), not that the paper is wrong. A text dump is a poor
+  witness for anything involving a fraction, and this is the case in point.
+
+  Sections 3.3 and 3.4's parameters are transcribed but have NO printed target
+  behind them - the review's comparisons for them are Figs. 17-21 - so they are
+  an unguarded transcription and no claim on the page depends on them.

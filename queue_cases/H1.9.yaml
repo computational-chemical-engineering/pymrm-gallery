@@ -5,7 +5,8 @@ catalog_reference: Krishna & van den Broeke (1995); Krishna & Baur (2003)
 priority: P2
 tier: T1
 structures: S9
-status: unclaimed
+status: published
+page: pages/H1.9-zeolite-membrane-maxwell-stefan-mixture/
 reference:
   authors: ["Krishna, R.", "Baur, R."]
   year: 2003
@@ -269,4 +270,266 @@ notes: |
 
   Do NOT confuse with H1.4 (Itoh 1987, Pd membrane reactor), whose PDF was filed
   under this ID until 2026-07-31.
-updated: '2026-08-02'
+updated: '2026-08-03'
+built: |
+  BUILT 2026-08-03. Staged at queue_cases/H1.9/page/, models_entry.yaml written
+  beside it. Nothing was moved into pages/ and nothing shared was touched.
+
+  ## What the review prints on the mixture side, and how it came out
+
+  Nine steady-state targets, worst 0.74 %:
+    S_P 95-5 finite   488.23 vs 487      +0.25 %
+    S_P 95-5 infinite  12.36 vs 12.3     +0.53 %
+    S_P 50-50 finite  202.93 vs 202      +0.46 %
+    S_P 50-50 infinite  5.44 vs 5.4      +0.74 %
+    S_P nC6/3MP 66 kPa 43.201 vs 43.2    +0.002 %  (grid-converged, cold start)
+    N_C1 / N_nC4, 95-5, finite    0.1205 / 3.0961 vs 0.12 / 3.09
+    N_C1 / N_nC4, 95-5, infinite  4.7186 / 3.0708 vs 4.72 / 3.06
+
+  [SUPERSEDED - see `verified_and_fixed:` at the end of this file. The three
+  numbers in the next sentence were coarse-grid artefacts and the attribution
+  was wrong. Converged: heights +1.2 % and +1.8 % HIGH, peak time 0.658 s,
+  -9.8 %.]
+  Two transient peak heights are the worst rows, 1.5 % and 3.5 % LOW, both in
+  the direction backward Euler damps a maximum; halving the step recovers 0.9 %.
+  The peak TIME is 0.724 s against the printed 0.73 s.
+
+  VALIDATION AGAINST MEASUREMENT (this is the point of the case):
+    Funke et al., nC6/3MP at 15 kPa : 25.03 computed vs 24 measured, +4.3 %
+    Bakker, 95-5                    : 488 vs 380  (1.28x)
+    Bakker, 50-50                   : 203 vs 60   (3.38x)
+  With the exchange coefficients removed the same model gives 12.4 and 5.4 -
+  31x and 11x too LOW. So the two measurements discriminate decisively between
+  the two implementations while agreeing quantitatively with neither, and the
+  page says exactly that. The review calls the first "quite close" and quotes
+  the second in the next sentence without comment.
+
+  ## The 2200 open question: RESOLVED AS FAR AS THE SOURCE ALLOWS, NOT EXPLAINED
+
+  The spec asked whether the review's Henry-limit sorption selectivity of 2200
+  survives. It does not. Three things are now established that were not:
+
+  1. 2649.9 is confirmed from Table 1 (H_i = sum_s Theta_sat,s b_s), +20.5 %.
+  2. It is NOT an arithmetic slip in the Henry formula: the IAST solve of
+     eqs. (62)-(65) reaches the same limit as P -> 0 by a completely different
+     code path, to 1e-07.
+  3. THE TRANSCRIPTION EXPLANATION IS EXCLUDED. Solving for the value each of
+     the four C1/nC4 Table 1 parameters would need in order to make the ratio
+     2200, and feeding that value back into A4.7's certifying single-component
+     flux ratio, moves that check by +4.16 % (nC4 b_A, the tightest escape) up
+     to +24 % - against the 0.17 % actually observed and the ~3 % that
+     two-significant-figure printed fluxes allow. No single-character slip in
+     those two rows explains 2200 without breaking the one check that certifies
+     them. This is the cross-page rule doing real work.
+
+  WHAT IS STILL OPEN and should NOT be re-derived: where 2200 comes from. The
+  review's Fig. 24 is plotted against CBMC fugacities, not against the DSL fit,
+  so a Henry coefficient taken from the simulation data rather than from Table 1
+  remains a live possibility and nothing printed in the review decides it. The
+  page records it as a printed-value discrepancy, not as an error.
+
+  Subsidiary finding: the review's "practically constant below Theta_mix = 8" is
+  fair on a log axis - IAST falls 32 % (0.17 decades) over that range against
+  1.9 decades afterwards - but 2200 is not the plateau's Henry-limit VALUE. IAST
+  passes through 2200 at Theta_mix = 6.4, inside the plateau.
+
+  ## The membrane thickness gift, tested twice
+
+  A4.7's ~40 um was recomputed from the same stored rows and then used to
+  predict the four MIXTURE fluxes (0.41 % worst) and the transient peak TIME
+  (0.8 %). Those are two different powers of delta - 1/delta and delta^2 - so a
+  wrong delta cannot satisfy both by rescaling, which makes the pair a stronger
+  test than either alone. The page states plainly that the PURE C1 flux is
+  guaranteed to come out at 34 because delta was fitted to it, and that the pure
+  nC4 flux is A4.7's flux-ratio check restated; neither is presented as evidence.
+
+  ## What the page cannot conclude, and says so
+
+  * The multicomponent-Langmuir counterfactual S_P = 800 is NOT reproduced. Its
+    STRUCTURAL claim is (S_P composition-independent to 1.024x from 95 % to 5 %
+    methane, where IAST spans 4.5x over the same five feeds); the value comes out
+    at about 1680. The review never says which single-site affinity it used once
+    the dual-site fit of Table 1 is collapsed, so the calculation is
+    underdetermined. Nothing was tuned toward 800.
+  * Sections 3.3 and 3.4 (Sanborn & Snurr, Snurr & Karger) have NO printed
+    target - only Figs. 17-21. The parameters are transcribed and the
+    self-diffusivity machinery is exercised, but the page states that this shows
+    the size and sign of the correlation effect and is not evidence that the
+    review is right about it.
+  * Sections 4.4-4.7 are scoped out for the reason the spec gave: figure-only
+    validation, no maintainer for a digitisation review. The 4A conclusion
+    (Dij -> infinity wins there) is QUOTED on the page so that the review's own
+    conclusion 9 is not misreported.
+  * Three of the review's statements are its own readings off its own figures
+    and are scored loosely and separately: "Theta_mix > 4 above 1 kPa" (true but
+    loose by 6.4x; the threshold is 0.156 kPa), "S_P > 10 above 2 kPa" (crossing
+    at 2.51 kPa), and the 3MP/2,2DMB pair "about 7" binary / "in excess of 30"
+    ternary (computed 8.4 and 82).
+
+  ## Two printed defects found on the mixture side, neither repaired silently
+
+  * eq. (37) prints "L_ij = L_ij; i,j=1,2,...n (i != j)" in the sentence saying
+    the Onsager reciprocal relations demand [L] be SYMMETRIC. It must be
+    L_ij = L_ji. Nothing on the page uses eq. (37) - the Onsager matrix is never
+    formed - so nothing is affected.
+  * the caption of Fig. 21 prints "Theta_1,sat = 22 and Theta_1,sat = 13"; the
+    second subscript must be 2. NOT a repair by inference: Section 3.4's running
+    text gives the pair correctly, so the text supplies the reading.
+
+  [SUPERSEDED - WITHDRAWN. See `verified_and_fixed:` at the end of this file.
+  There is no third defect: the Elsevier text flattens eqs. (60) and (61)
+  identically as compound fractions, and the review's own worked value agrees
+  with that reading of (60). The break-table row stays, relabelled as settling
+  which reading is MEANT.]
+  A third reading is recorded rather than assumed: eq. (60) is PRINTED as
+  S_P = (N_2/N_1)(p_2,0/p_1,0) and USED as the reciprocal. The review's own
+  worked value 3.1/34.0/(5/95) = 1.73 divides, the division reproduces every
+  printed selectivity, and the break table shows the literal reading lands a
+  factor of 361 away from all of them.
+
+  ## Notes for the verifier
+
+  * The two algebraic identities the spec flagged (eq. 43 at i=j, eq. 55 from
+    eq. 54) are stated as identities and NOT scored. A third was found and given
+    the same treatment: eq. (46) at n = 1 is an identity because the sum in
+    eq. (44) is empty by construction. The n = 1 collapse that CAN fail - the
+    solver against the closed-form eq. (12) integral - is what is reported.
+  * A4.2's matrix-free friction check is reused: eq. (44)'s [B] against eq. (42)
+    solved by GMRES without ever assembling [B]. 6.2e-14, and 687 % when the
+    exchange sum is dropped from B_ii.
+  * The GAMMA check has a stated blind spot: both routes call the same IAST
+    solve, so an error inside eqs. (62)-(65) moves them together. That is what
+    the three IAST checks are for, and the surface-potential-vs-quadrature one
+    is the only one of the three the IAST solve cannot influence.
+  * Where a cold Newton start does not converge (the 50-50 feeds, the ternary,
+    the hexane sweep) the solver falls back to a FIXED pressure-continuation
+    path. Convergence is asserted from div N = 0 (flux z-independence, ~1e-13),
+    never from the iteration count, and path independence is checked on the one
+    feed where both routes converge (6.7e-16). No reported number comes from an
+    unverified warm-start chain.
+  * [SUPERSEDED: runtime is now about 10 minutes.] Runtime about 4.7 minutes.
+    Two consecutive executions give identical
+    content, figures and agreement.json; only the raw .ipynb bytes differ, as on
+    every page in this repo.
+verified_and_fixed: |
+  VERIFIED 2026-08-03 (report at queue_cases/H1.9/review/verification.md, verdict
+  SEND BACK) and FIXED the same day. The page is still `ready` and still staged at
+  queue_cases/H1.9/page/; nothing was moved into pages/ and nothing shared was
+  touched. THIS BLOCK SUPERSEDES THE `built:` BLOCK ABOVE wherever they differ -
+  in particular every transient number in it, and its eq. (60) paragraph.
+
+  ## The two findings that sent it back
+
+  1. THE TRANSIENT WAS NEVER GRID-REFINED. The page grid-studied the STEADY
+     selectivity and step-studied the TRANSIENT, so nothing ever refined the grid
+     under the transient - and it needed to, because the transient carries a
+     self-sharpening n-butane front (nC4's site A is 98.8 % full at the upstream
+     face, b_A p = 81.5, and empty at the swept face) that the smooth steady
+     profile does not have. The reported peak numbers were coarse-grid artefacts.
+     Refining n_z at fixed dt_frac = 0.05:
+
+       n_z        30        60       120       240     printed
+       t_peak  0.7241    0.6685    0.6583    0.6558    0.73 s
+                -0.8 %    -8.4 %    -9.8 %   -10.2 %
+       peak    0.4334    0.4442    0.4452    0.4449    0.44
+                -1.5 %    +1.0 %    +1.2 %    +1.1 %
+       (inf)  16.605    17.311    17.507       -        17.2
+                -3.5 %    +0.6 %    +1.8 %
+     (the page runs the infinite-exchange case to n_z = 120 only; a standalone
+     n_z = 240 run during the fix gave 17.559, +2.1 %, i.e. the same trend.)
+
+     Observed order on t_peak 2.5 then 2.0, Richardson 0.6550 s, so the new
+     production n_z = 120 carries 0.5 % of spatial error - 19x smaller than the
+     disagreement. Time step at n_z = 120: dt_frac 0.05 / 0.025 / 0.0125 gives
+     t_peak 0.6583 / 0.6507 / 0.6448 and heights 0.4452 / 0.4487 / 0.4506, so
+     both refinements push the same way and the reported values understate the
+     disagreement. The old claim "both peaks are LOW, which is what backward
+     Euler does to a maximum" is WITHDRAWN: the dominant error was spatial and
+     both heights cross to HIGH.
+
+     Consequence: the peak time is -9.8 %, not -0.8 %, and closing it needs
+     delta +5.3 % rather than +0.4 %. It is now the page's one real
+     disagreement, reported as an OPEN TENSION with four candidate homes named
+     (rho_MFI = 1800 off a figure caption, the hard-coded Si96O192 cell mass,
+     the two-figure printed 34, or the review's transient not being the
+     calculation reproduced here).
+
+  2. THE 1/delta "OUT-OF-SAMPLE TEST" WAS VACUOUS. delta, rho_MFI, the unit-cell
+     mass and N_A cancel identically out of all four mixture fluxes: the
+     conversion collapses to N_i = 34 J_i / (D_C1 psi_C1(95 kPa)). Swinging
+     rho_MFI 1800 -> 1200 -> 3600 -> 900 (delta 40.0 -> 26.6 -> 79.9 -> 20.0 um)
+     leaves all four bit-identical. It was the delta-free flux-ratio check
+     printed ten lines below it, restated: flux_worst_rel_dev 0.0040656 against
+     flux_ratio_delta_free_worst 0.0040675. The claim is withdrawn; the check is
+     KEPT and labelled as a powerless-check disclosure, with the rho sweep and
+     both deviations printed on the page, because it does test the MIXTURE
+     physics. So delta is tested on ONE power, not two - and on that one power
+     it fails by ~10 %.
+
+     NOTE FOR THE NEXT READER: the verification report's own consequence for
+     finding 1 - "delta would have to move +6 %, which WOULD move every steady
+     flux by -6 % and WOULD break the flux agreement" - is wrong, and wrong by
+     its own finding 2. The printed fluxes contain no delta, so moving delta
+     moves them by exactly zero. There is no flux/peak-time tension to trade
+     off; there is a peak-time disagreement that nothing else on the page
+     constrains, which is worse rather than better.
+
+  ## The other seven fixes
+
+  * The eq. (60) "printed inverted" claim is WITHDRAWN everywhere (notebook,
+    meta.yaml, README, this file's `built:` block, the printed-results sidecar).
+    The Elsevier text flattens (60) and (61) identically as compound fractions,
+    the page reads (61) that way, and the review's own worked value
+    3.1/34.0/(5/95) = 1.73 agrees with the same reading of (60). Equation and
+    worked value are consistent and there is no defect. The break-table row
+    stays, relabelled: it settles WHICH READING IS MEANT (361x away otherwise).
+    The two real defects (eq. 37, the Fig. 21 caption) now say on the page that
+    they were read from a text dump and not from a page image.
+  * The page's OWN displayed eq. (60) in cell 2 was garbled - it rendered the
+    multiplication as the model's form and the division as "as printed", the
+    reverse of its own code, with a dead \Big/1. Rewritten as two compound
+    fractions.
+  * The Funke +4.3 % now carries its error budget where the comparison is made,
+    six rows, cold solves: "15 kPa" as TOTAL (25.03, as built) vs 15 kPa EACH
+    (33.11, +38 %); equimolar (as built) vs y_nC6 = 0.4 / 0.6 (S_P 22.56 / 27.18
+    by eq. 60, bare flux ratios 15.04 / 40.77); D ratio 5 (as built) vs 4 / 6
+    (21.07 / 28.94). Spread 1.6x. NOTE: the verification report quoted the
+    composition lever as 15.0 and 40.8, which are bare FLUX RATIOS; the measured
+    24 is an S_P, and under eq. (60) the same two feeds give 22.6 and 27.2. Both
+    columns are printed so the reader can pick. Cavalcante & Ruthven [86] added
+    to origin_not_consulted in models_entry.yaml and in two sidecars.
+  * README's "no number that is a row in a borrowed CSV is retyped anywhere"
+    reworded to what is true (results, not narrative prose).
+  * The header sentence "it stops falling with feed composition at all, which is
+    the trend Bakker measured" - which said the opposite of the page's own
+    figure - rewritten.
+  * The self-diffusivity cell now STATES that it applies eq. (19) on the TOTAL
+    occupancy where eq. (19) as printed uses the species' own, and prints what
+    the two readings differ by. Nothing depends on it (no printed target).
+  * models_entry.yaml's integration note corrected: models.yaml has NO H1.9
+    entry, so the block must be APPENDED. (H1.9 appears only inside A4.2's and
+    A4.7's `related:` lists, which is what made a grep look like a hit.)
+  * NOT changed, deliberately: data.method stays `table`. The report's nit
+    suggests `stated`, but its own explicit verdict 1 upholds `table` on
+    docs/data-strategy.md's ladder, and tier 2 is not in question.
+
+  ## New and changed agreement.json metrics
+
+  Changed by the regrid: peak_time_rel_dev -0.00809 -> -0.0982;
+  peak_flux_finite_rel_dev -0.01507 -> +0.01188; peak_flux_infinite_rel_dev
+  -0.03460 -> +0.01783; worst_peak_height_rel_dev 0.03460 -> 0.01783;
+  peak_height_dt_halved_shift 0.00949 -> 0.00785. Added:
+  peak_time_dt_halved_shift, peak_time_rel_dev_at_nz30,
+  peak_flux_finite_rel_dev_at_nz30, peak_time_grid_err_at_production,
+  peak_time_grid_order, delta_shift_needed_for_peak_time,
+  transient_front_sharpening, flux_delta_cancellation_residual,
+  funke_choice_spread. Every steady metric is unchanged to the last digit -
+  no steady solve was touched.
+
+  ## Runtime
+
+  About 10 minutes now, not 4.7: the transient is run at n_z = 120 for both
+  exchange models over the full time range, plus five coarser/finer grid rows
+  and two extra time steps. meta.yaml runtime_seconds updated to 640. Two
+  consecutive executions still give identical content, figures and
+  agreement.json; only the raw .ipynb bytes differ, as on every page here.

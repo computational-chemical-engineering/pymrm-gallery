@@ -1,0 +1,161 @@
+dataset_id: bakker-funke-mfi-membrane-selectivities
+title: Measured permeation selectivities of MFI zeolite membranes, as stated in the running text of Krishna & Baur's review
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Baur, R."
+  year: 2003
+  container: "Separation and Purification Technology 33(3) 213-254"
+  doi: 10.1016/S1383-5866(03)00008-X
+  access: >
+    Elsevier full-text API (article/pii/S138358660300008X) with an authorised
+    institutional key held outside the repository. Lawful access; no PDF and no
+    page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+origin_not_consulted:
+  - authors: ["Bakker, W. J. W."]
+    year: 1999
+    title: "Structured systems in gas separation (PhD thesis, Delft University of Technology)"
+    reference_number_in_review: "[79]"
+    note: >
+      The origin of the 380 and 60. NOT on disk and NOT consulted. The review is
+      the document actually read; it states both values in the running text of
+      Section 4.2 and attributes them to this thesis. It does not state the
+      experimental uncertainty, the membrane thickness, the support, or how many
+      runs each value averages.
+  - authors: ["Cavalcante, C. L.", "Ruthven, D. M."]
+    year: 1995
+    title: "Adsorption of branched and cyclic paraffins in silicalite. 2. Kinetics"
+    reference_number_in_review: "[86]"
+    note: >
+      NOT the origin of any row in this file, and recorded here because it is
+      the origin of the one PARAMETER the Funke comparison turns on. The review
+      writes "we take the zero-loading M-S diffusivity of nC6 to be five times
+      that of 3MP, following Cavalcante and Ruthven". NOT on disk and NOT
+      consulted; the review states the ratio and the attribution and nothing
+      here checks either. The page measures what the ratio is worth rather than
+      assuming it exact: 4 or 6 instead of 5 moves the computed S_P from 25.0 to
+      21.1 or 28.9, against the measured 24 in the row below.
+  - authors: ["Funke, H. H.", "Argo, A. M.", "Falconer, J. L.", "Noble, R. D."]
+    year: 1997
+    title: "Separations of cyclic, branched, and linear hydrocarbon mixtures through silicalite membranes"
+    reference_number_in_review: "[87]"
+    note: >
+      The origin of the 24 and the 1.3. NOT on disk and NOT consulted. The review
+      states both in the running text of Section 4.3 and marks them as the large
+      filled square and the large filled circle on its Fig. 29(c). The
+      bibliographic details above are the review's citation as printed; they were
+      not verified against the article itself.
+
+conditions:
+  bakker: >
+    Permeation of methane / n-butane mixtures across an MFI (silicalite)
+    membrane at 300 K, total upstream pressure 100 kPa, downstream side swept.
+    Two feed compositions, 95-5 and 50-50. The quantity is the n-butane over
+    methane permeation selectivity of eq. (60), S_P = (N_2/N_1)/(p_2,0/p_1,0).
+    The review compares 380 against its own computed 487 ("quite close to the
+    estimations of the M-S model including interchange") and quotes 60 for the
+    50-50 case beside its own computed 202 without comment.
+  funke: >
+    Permeation of an n-hexane / 3-methylpentane mixture across an MFI membrane
+    with an upstream pressure of 15 kPa; the review's Section 4.3 places this at
+    362 K, the temperature of its own simulations and of Table 2. S_P = 24. The
+    same authors measured S_P = 1.3 from PURE-component permeation of the same
+    pair, which is the comparison the review is making: the mixture is roughly
+    twenty times more selective than the pure components predict.
+
+acquisition:
+  method: table
+  figure: "in-text stated experimental results, Sections 4.2 and 4.3"
+  tool: "Elsevier full-text API, text/plain, transcribed by hand"
+  procedure: >
+    These are MEASUREMENTS, not the authors' computed output, which is what
+    separates this file from the other two on this page. They are printed as
+    numbers in running text rather than plotted, so they are TIER 2 on
+    docs/data-strategy.md's ladder (method `table`: numbers already in numeric
+    form), not tier 4 - there is no digitisation and no digitisation error. No
+    value here was adjusted, reconciled or inferred.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-03
+  estimated_error: >
+    Unknown and unstated. The review gives no uncertainty for any of the four,
+    and none is on disk. 380 and 60 are printed to two and one significant
+    figures respectively; 24 and 1.3 to two. Any agreement claimed against them
+    should be read against that, and against the fact that neither original was
+    consulted.
+
+validation:
+  funke_mixture: >
+    The M-S model with IAST and finite exchange coefficients, given nothing but
+    the Table 2 pure-component isotherm fits and the diffusivity ratio
+    D_nC6 = 5 D_3MP, computes 25.0 at 15 kPa upstream against the measured 24,
+    +4.3 %. Nothing was fitted. This is the page's only quantitative agreement
+    with a measurement.
+
+    NOTHING FITTED IS NOT NOTHING CHOSEN, and the review's single sentence about
+    this run fixes none of the three things the number depends on. The page
+    sweeps all three where the comparison is made. (a) "An upstream pressure of
+    15 kPa" is read here as the TOTAL hydrocarbon pressure; 15 kPa of EACH gives
+    33.1, +38 %. The total reading is the better supported one - the review
+    gives its own 43.2 point as "a total pressure of 66 kPa" where the Fig.
+    29(a) caption gives the same condition as p_i0 = 33 kPa - but it is a
+    reading. (b) The feed is assumed EQUIMOLAR, which is what every simulation
+    in Section 4.3 is and the curve the review places Funke's square on; y_nC6 =
+    0.4 or 0.6 gives S_P = 22.6 or 27.2 (bare flux ratios 15.0 and 40.8). (c)
+    The diffusivity ratio is taken as exactly 5; 4 or 6 gives 21.1 or 28.9, and
+    it comes from Cavalcante & Ruthven, recorded above as not consulted. The
+    alternatives span 1.6x. The +4.3 % is one point inside that band, against a
+    measurement printed to two figures with no stated uncertainty.
+  bakker: >
+    The same model computes 488 against 380 (1.28x) for the 95-5 feed and 203
+    against 60 (3.4x) for the 50-50 feed. With the exchange coefficients removed
+    (eq. 47) it computes 12.4 and 5.4, i.e. 31x and 11x TOO LOW. So the two
+    measurements discriminate decisively between the two implementations - the
+    gap between them is two orders of magnitude and both data points sit on the
+    same side of it - while agreeing quantitatively with neither. The page says
+    that in those words and does not describe 3.4x as agreement.
+  funke_pure: >
+    1.3 is not compared against anything computed on this page. It is the
+    experimental counterpart of the review's own pure-component argument and is
+    stored because the mixture measurement is meaningless without it. The
+    page's own pure-component selectivity, 1.73, is A4.7's stored row for a
+    DIFFERENT system (C1/nC4 at 300 K) and the two are never scored against
+    each other.
+
+columns:
+  - {name: measurement_id, unit: "-", description: "key used in the notebook"}
+  - {name: origin, unit: "-", description: "the work that made the measurement, as the review cites it; NOT consulted"}
+  - {name: zeolite, unit: "-", description: "membrane material"}
+  - {name: temperature_K, unit: K, description: "temperature; for the Funke rows this is the temperature of the review's Section 4.3, not restated at the measurement"}
+  - {name: mixture, unit: "-", description: "the permeating pair"}
+  - {name: composition, unit: "-", description: "feed composition, or 'pure components' for a pure-component selectivity"}
+  - {name: upstream_pressure_Pa, unit: Pa, description: "total upstream pressure"}
+  - {name: S_P_measured, unit: "-", description: "measured permeation selectivity, eq. (60)"}
+  - {name: printed_as, unit: "-", description: "the value as it appears in the review's running text"}
+  - {name: description, unit: "-", description: "the sentence the value is taken from and any caveat"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image, figure or
+  full-text excerpt is reproduced.
+
+caveat: >
+  TIER 2, AND READ THROUGH A REVIEW. These four numbers are measurements, so
+  comparing against them is VALIDATION rather than reproduction, and the page
+  keeps that word for these four rows alone. But they were read from a review
+  article, not from the papers that made them: neither Bakker's thesis nor
+  Funke et al. is on disk, both are recorded under origin_not_consulted, and
+  nothing here has been checked against either original. A wrong number in the
+  review would travel straight into this file undetected. The review reports no
+  uncertainty for any of the four.
+
+  The Funke rows carry one further inference, stated rather than hidden: the
+  review gives 362 K for its own Section 4.3 simulations and does not restate a
+  temperature beside the measured 24, so the temperature column for those rows
+  is the section's temperature and not a value printed beside the measurement.
+  Nothing on the page uses that column.

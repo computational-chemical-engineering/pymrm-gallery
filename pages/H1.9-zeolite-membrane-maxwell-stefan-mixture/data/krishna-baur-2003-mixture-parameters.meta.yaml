@@ -1,0 +1,141 @@
+dataset_id: krishna-baur-2003-mixture-parameters
+title: Parameters that appear only in the mixture sections of Krishna & Baur (2003)
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Baur, R."
+  year: 2003
+  container: "Separation and Purification Technology 33(3) 213-254"
+  doi: 10.1016/S1383-5866(03)00008-X
+  access: >
+    Elsevier full-text API (article/pii/S138358660300008X) with an authorised
+    institutional key held outside the repository. Lawful access; no PDF and no
+    page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+relationship_to_other_datasets: >
+  The DSL isotherm parameters of Tables 1 and 2, the MFI density, the Section
+  4.1 M-S diffusivities and the single-component permeation results are NOT in
+  this file. They are in page A4.7's two datasets and are loaded cross-page with
+  load_data(..., page="A4.7-zeolite-micropore-maxwell-stefan"). This file holds
+  only what appears in Sections 3.3, 3.4 and 4.3 and therefore has no
+  single-component counterpart.
+
+conditions:
+  section_3_3: >
+    Sanborn & Snurr's MD simulations of the Fick matrix [D] for CH4 (1) and CF4
+    (2) in Faujasite at 300 K, as analysed by Krishna [64] and summarised in the
+    review. The saturation capacities are those Krishna found reproduce Sanborn
+    & Snurr's dln f_i/dln theta_j data. CH4 is taken to follow the weak
+    confinement scenario (eq. 17, M-S diffusivity independent of loading) and
+    CF4 the strong one (eq. 19). The review's comparison is Figs. 17, 19 and 20;
+    it prints no numerical result, so nothing on this page is scored against it.
+  section_3_4: >
+    Snurr & Karger's MD simulations of self-diffusivities in a CH4 (1) / CF4 (2)
+    mixture in MFI at 200 K, at a fixed total loading of 12 molecules per unit
+    cell with the methane loading varied from 0 to 12. The zero-loading
+    diffusivities are estimated by the review from Snurr & Karger's own
+    pure-component self-diffusivity data. Comparison is Fig. 21; again no
+    numerical result is printed.
+  section_4_3: >
+    The hexane-isomer membrane separations. The review never prints an absolute
+    M-S diffusivity for any of these species - only ratios, and one group
+    D_3MP/delta^2 = 0.125 s^-1 that fixes the time scale without fixing either
+    the diffusivity or the membrane thickness. That is sufficient for every
+    selectivity the review prints, because a selectivity is invariant to the
+    overall magnitude of the diffusivities and to the membrane thickness, and it
+    is why this page computes the hexane selectivities and not the hexane
+    fluxes.
+
+acquisition:
+  method: table
+  figure: "in-text stated parameters, Sections 3.3, 3.4 and 4.3; the captions of Figs. 21 and 29-31"
+  tool: "Elsevier full-text API, text/plain, transcribed by hand"
+  procedure: >
+    Transcribed characters, not digitised positions. No value was adjusted or
+    inferred. Where the same quantity is printed in two places (the Section 3.4
+    saturation capacities appear both in the running text and in the caption of
+    Fig. 21) both were read and the discrepancy is recorded in the row note
+    rather than resolved silently.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-03
+  estimated_error: "None beyond the printed precision (two or three significant figures)."
+
+origin_not_consulted:
+  - authors: ["Cavalcante, C. L.", "Ruthven, D. M."]
+    year: 1995
+    title: "Adsorption of branched and cyclic paraffins in silicalite. 2. Kinetics"
+    reference_number_in_review: "[86]"
+    applies_to_rows: "Section 4.3 / nC6 / D_ratio_to_3MP"
+    note: >
+      The origin of the D_nC6 = 5 D_3MP row, which is the single parameter the
+      whole hexane result turns on. The review writes "we take the zero-loading
+      M-S diffusivity of nC6 to be five times that of 3MP, following Cavalcante
+      and Ruthven". NOT on disk and NOT consulted. The review states the ratio
+      and the attribution; nothing here checks either, and neither the review
+      nor this file carries an uncertainty for it. The page measures what it is
+      worth instead: 4 or 6 in place of 5 moves the computed S_P at Funke's
+      condition from 25.0 to 21.1 or 28.9.
+
+printed_defect:
+  where: "caption of Fig. 21"
+  printed: "The saturation loadings are Theta_1,sat = 22 and Theta_1,sat = 13 molecules per unit cell."
+  reading: "the second subscript must be 2"
+  basis: >
+    NOT a repair by inference. The running text of Section 3.4 gives the same
+    pair as "we therefore take Theta_1,sat = 22 and Theta_2,sat = 13 on the
+    basis of information on mixture isotherms", so the review states the correct
+    assignment elsewhere and the caption is the defective copy. Recorded here,
+    in the CSV row's note, and on the page beside eq. (37).
+
+validation:
+  section_4_3_ratios: >
+    The only rows on this page with a printed target behind them. Using
+    D_nC6 = 5 D_3MP and the Table 2 isotherms, the computed nC6/3MP permeation
+    selectivity at 33 kPa upstream partial pressures is 43.201 against the
+    review's printed 43.2 - grid-converged, and reproduced from a cold start
+    with no continuation. The same machinery at 15 kPa gives 25.0 against Funke
+    et al.'s measured 24.
+  section_3_3_and_3_4: >
+    NO PRINTED TARGET. The review's only comparisons for these parameters are
+    Figs. 17-21, which are not digitised. The page uses the Section 3.4 rows to
+    show the size and sign of the correlation effect on a self-diffusivity
+    (removing the exchange raises the methane self-diffusivity by 1.6x to 3.0x
+    across the composition range) and states plainly that this is a
+    demonstration and not evidence that the review is right about it. The
+    Section 3.3 rows are transcribed for completeness and are not used to
+    support any claim.
+
+columns:
+  - {name: source_section, unit: "-", description: "the numbered section or figure caption the value is printed in"}
+  - {name: system, unit: "-", description: "host zeolite, or 'mixture'/'ternary' where the row is a mixture-level condition"}
+  - {name: temperature_K, unit: K, description: "temperature of the simulation the parameter belongs to"}
+  - {name: component, unit: "-", description: "species, or 'mixture'/'ternary' for a mixture-level row"}
+  - {name: symbol, unit: "-", description: "symbol for the quantity"}
+  - {name: value, unit: "see units column", description: "numeric value in SI units"}
+  - {name: units, unit: "-", description: "units of value"}
+  - {name: printed_as, unit: "-", description: "the value as it appears in the review"}
+  - {name: note, unit: "-", description: "provenance of the individual row, including the one printed defect"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image, figure or
+  full-text excerpt is reproduced.
+
+caveat: >
+  TIER 6. These are inputs the authors chose, not measurements.
+
+  Only the Section 4.3 rows are certified by a printed target. The Section 3.3
+  and 3.4 rows have none - the review's comparisons for them are figures - so
+  they are an unguarded transcription in exactly the sense A4.7's Table 1 survey
+  is, and the page carries no claim that depends on them being right. If a
+  future case needs them quantitatively, they should be re-read from a page
+  image first.
+
+  D_3MP/delta^2 = 0.125 s^-1 fixes a time scale and NOT a membrane thickness,
+  because D_3MP is never printed. No absolute hexane flux is computable from
+  what the review supplies, and the page does not attempt one.

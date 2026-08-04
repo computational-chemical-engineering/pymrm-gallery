@@ -1,0 +1,206 @@
+dataset_id: krishna-baur-2003-mixture-printed-results
+title: Mixture results Krishna & Baur (2003) print as numbers, used as the reproduction targets for this page
+status: complete
+
+source:
+  authors:
+    - "Krishna, R."
+    - "Baur, R."
+  year: 2003
+  container: "Separation and Purification Technology 33(3) 213-254"
+  doi: 10.1016/S1383-5866(03)00008-X
+  access: >
+    Elsevier full-text API (article/pii/S138358660300008X) with an authorised
+    institutional key held outside the repository. Lawful access; no PDF and no
+    page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+conditions:
+  membrane_C1_nC4: >
+    Section 4.2. A 95-5 (and separately a 50-50) mixture of methane and
+    n-butane permeating an MFI membrane at 300 K, total upstream pressure
+    100 kPa, downstream partial pressures held at vanishing values by a sweep
+    gas. Isotherms from Table 1, M-S diffusivities 1e-9 and 1e-11 m2/s from
+    Section 4.1, mixture isotherm from IAST, exchange coefficients from
+    eq. (43). The review also runs every case with the exchange coefficients
+    taken infinite (eq. 47, the Habgood limit) and prints those results too.
+    THE MEMBRANE THICKNESS IS NEVER PRINTED, so the absolute fluxes stored here
+    can only be reproduced with a reconstructed thickness; the selectivities do
+    not need one.
+  langmuir_counterfactual: >
+    Section 4.2, last paragraph before the quaternary example: "If we had used
+    the multicomponent Langmuir isotherm, taking the saturation capacities of C1
+    and nC4 to be equal to one another, the S_P would be predicted to be
+    independent of the upstream composition and have a constant value of 800."
+    Stored as a target because it is printed as a number, but note that the
+    review does not say WHICH saturation capacity it set the two equal to, nor
+    which affinity it used once the dual-site fit of Table 1 is collapsed to a
+    single site. The page reproduces the composition-independence and does not
+    reproduce the 800; see `validation`.
+  henry_selectivity: >
+    Section 4.2: "For mixture loadings, Theta_mix = Theta_1 + Theta_2, below 8,
+    the sorption selectivity of nC4 with respect to C1 is practically constant
+    and equals that calculated from the corresponding Henry coefficients, i.e.
+    2200." Two claims, stored as two rows (sorp_S_henry and
+    sorp_Theta_plateau) and checked separately.
+  hexanes: >
+    Section 4.3 and the captions of Figs. 29-31. Equimolar mixtures of hexane
+    isomers permeating MFI at 362 K with the Table 2 isotherms, IAST for the
+    mixture and eq. (43) for the exchange coefficients. Upstream partial
+    pressures 33 kPa each unless stated. The diffusivities are given only as
+    RATIOS (D_nC6 = 5 D_3MP; D_3MP = 2 D_2,2DMB; D_nC6 = D_3MP = 10 D_2,2DMB in
+    the ternary), which is sufficient for a selectivity and not for a flux.
+  figure_read_rows: >
+    THREE ROWS ARE THE AUTHORS' OWN READINGS OFF THEIR OWN FIGURES rather than
+    printed computed results, and are marked as such so that they are not
+    scored with the rest: hex_P_theta4 ("at 362 K this corresponds to a total
+    upstream pressure in excess of 1 kPa"), hex_P_SP10 ("values of S_P in excess
+    of 10 can be obtained when the pressure in the upstream compartment
+    increases beyond 2 kPa") and hex_SP_3MP_DMB_binary / _ternary ("the value of
+    7 obtained by binary mixture permeation" / "selectivities in excess of 30").
+    The last of these is a LOWER BOUND, not an equality, and the CSV's
+    printed_as column records that.
+
+acquisition:
+  method: table
+  figure: "in-text stated results, Sections 4.2 and 4.3; the captions of Figs. 29-31"
+  tool: "Elsevier full-text API, text/plain, transcribed by hand"
+  procedure: >
+    These are NOT measurements. Each row is a number the authors computed and
+    printed, collected so that an independent implementation of the review's own
+    equations can be scored against it. Comparing against them is REPRODUCTION,
+    not validation, and the page uses those words. The measured selectivities
+    that make this page tier 2 live in a separate file,
+    bakker-funke-mfi-membrane-selectivities.csv, deliberately kept apart.
+    No value in this file was adjusted, reconciled or inferred.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-03
+  estimated_error: >
+    None beyond the printed precision, which is two or three significant
+    figures throughout (487, 202, 12.3, 5.4, 43.2, 0.12, 3.09, 4.72, 3.06,
+    0.44, 0.73). Transcribed characters, not digitised positions. The three
+    figure-read rows are of unknown precision and are not scored.
+
+validation:
+  selectivities: >
+    All five printed selectivities are reproduced within the printed precision:
+    488.2 against 487, 12.37 against 12.3, 202.9 against 202, 5.44 against 5.4,
+    and 43.201 against 43.2. Worst 0.75 %. None involves the membrane thickness,
+    the framework density or the absolute size of the diffusivities, all of
+    which cancel out of a selectivity.
+  fluxes: >
+    The four printed mixture fluxes are reproduced to better than 0.5 % using
+    the membrane thickness A4.7 reconstructed from the two SINGLE-COMPONENT
+    fluxes of Section 4.1 (about 40 um, from the 1800 kg/m3 in the caption of
+    Fig. 40). THIS IS NOT A TEST OF THAT RECONSTRUCTION, and an earlier version
+    of this sidecar and of the page said it was. delta, rho_MFI, the unit-cell
+    mass and Avogadro's number cancel identically out of all four: the
+    conversion collapses to N_i = 34 J_i / (D_C1 psi_C1(95 kPa)), and swinging
+    the framework density 1800 -> 1200 -> 3600 -> 900 kg/m3 leaves every one of
+    the four fluxes bit-identical, which the page demonstrates. The comparison
+    is the delta-free flux-RATIO comparison rescaled by the stored 34, and both
+    worst deviations are printed side by side so the coincidence is visible. It
+    is kept and labelled, because it does test the MIXTURE physics - IAST, a
+    matrix [Gamma] and finite Dij all enter J_i.
+  peak_time: >
+    THE ONE REAL DISAGREEMENT, and the only quantity here that carries the
+    reconstructed thickness at all - through delta^2. Grid-refined UNDER THE
+    TRANSIENT (n_z = 30/60/120/240; the steady grid study refines a smooth
+    profile and does not cover a moving front), the methane flux peaks at
+    0.6583 s against the printed 0.73 s, -9.8 %, and the peak height at 0.4452
+    against the printed 0.44, +1.2 %. Both the height's SIGN and the time's
+    magnitude are grid artefacts at n_z = 30, where an earlier version of this
+    page stopped: there the pair read -1.5 % and -0.8 %. Closing the time needs
+    delta +5.3 %, which nothing else on the page forbids, because nothing else
+    on the page contains delta. Reported as an open tension; nothing adjusted.
+  henry_selectivity: >
+    NOT REPRODUCED, and this is the page's main printed-value finding. The
+    dual-site Henry coefficients of Table 1, H_i = sum_s Theta_sat,s b_s, give
+    H_nC4/H_C1 = 2649.9 against the printed 2200, +20.4 %. The IAST solve
+    reaches the same limit as the pressure goes to zero from an entirely
+    different code path, so it is not an arithmetic slip in the Henry formula.
+    Solving for the value each of the four C1/nC4 Table 1 parameters would need
+    in order to make the ratio 2200, and feeding that value back into the
+    single-component flux ratio (the one check A4.7 certifies those rows with,
+    observed at 0.17 %), moves that check by between 4.2 % and 24 % - so no
+    single-character transcription slip explains 2200 without breaking the
+    certification. WHAT IS NOT SETTLED: where 2200 comes from. The review's
+    Fig. 24 is drawn against CBMC fugacities rather than against the DSL fit, so
+    a Henry coefficient taken from the simulation data instead of from Table 1
+    remains possible and nothing printed in the review decides it. Recorded as a
+    printed-value discrepancy, not as an error.
+  henry_plateau: >
+    The subsidiary claim, that the sorption selectivity is "practically
+    constant" for Theta_mix below 8, is fair on a log axis: IAST falls 32 %
+    (0.17 decades) over that range against 1.9 decades afterwards. The printed
+    2200 is not the plateau's Henry-limit VALUE; IAST passes through it at
+    Theta_mix = 6.4, inside the plateau.
+  langmuir: >
+    The STRUCTURAL claim is reproduced exactly and the VALUE is not. With the
+    multicomponent Langmuir and equal saturation capacities S_P is independent
+    of upstream composition to 1.02x over a 20:1 range of feed composition,
+    where IAST spans 4.4x - which is precisely the review's argument for IAST.
+    The computed value is about 1690, 2.1x the printed 800. The review does not
+    state which single-site affinity it used, the Table 1 site-A values are used
+    here, and the counterfactual is reported as unreproduced rather than tuned.
+    (The common saturation capacity turns out not to matter: with equal
+    capacities the occupancies are independent of their common value and it
+    cancels out of a flux ratio, checked on the page at 4 and at 19.)
+  figure_read_rows: >
+    Scored loosely and separately. Theta_mix = 4 is reached at 0.156 kPa against
+    "in excess of 1 kPa" - the statement is true but loose by 6.4x. S_P crosses
+    10 at 2.5 kPa against "beyond 2 kPa". The binary 3MP/2,2DMB selectivity
+    computes to 8.4 against "the value of 7", and the ternary to 82 against "in
+    excess of 30", which is satisfied.
+
+columns:
+  - {name: result_id, unit: "-", description: "key used in the notebook"}
+  - {name: where, unit: "-", description: "the numbered section or caption the value is printed in"}
+  - {name: quantity, unit: "-", description: "symbol for the quantity"}
+  - {name: value, unit: "see units column", description: "numeric value in SI units, except fluxes which are kept in the printed mmol/m2/s"}
+  - {name: units, unit: "-", description: "units of value"}
+  - {name: printed_as, unit: "-", description: "the value as it appears in the review, including 'in excess of' where the review states a bound rather than a value"}
+  - {name: description, unit: "-", description: "what the number is and under what conditions"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image, figure or
+  full-text excerpt is reproduced.
+
+caveat: >
+  TIER 6. Every row is the authors' own computed output. Reproducing them
+  establishes that this page implements the review's mixture equations and reads
+  its parameters correctly - it is REPRODUCTION, not validation. The page's
+  tier-2 rating comes from the separate file of measured selectivities, not from
+  this one.
+
+  Three rows are the authors' readings off their own figures rather than printed
+  computed results and are marked in the CSV; one of them
+  (hex_SP_3MP_DMB_ternary) is a lower bound rather than a value. None of the
+  three is folded into the page's headline deviation.
+
+  Two printed defects were found on the mixture side and neither is repaired
+  silently: eq. (37) is printed as "L_ij = L_ij" in the sentence stating that
+  the Onsager reciprocal relations require [L] to be symmetric, where it must be
+  L_ij = L_ji (nothing on the page uses eq. 37 - the Onsager matrix is never
+  formed); and the caption of Fig. 21 prints "Theta_1,sat = 22 and
+  Theta_1,sat = 13" where the second subscript must be 2. The second is NOT a
+  repair by inference, because the running text of Section 3.4 supplies the same
+  pair correctly; it is recorded in the parameter file's row note. Both readings
+  come from the Elsevier full text - there is no page image of this paper on
+  disk - and both involve only subscripts, which a text dump reproduces
+  reliably.
+
+  THERE IS NO THIRD DEFECT. An earlier version of this file and of the page
+  stated that eq. (60) is PRINTED as S_P = (N_2/N_1)(p_2,0/p_1,0) and USED as
+  the reciprocal. The text dump does not support that. It flattens eq. (60) as
+  "Sp  =N2  N1   p20  p10" and eq. (61) as "S=Th2  Th1   p2  p1" - identical
+  spacing, the ordinary flattening of a COMPOUND fraction. The page reads
+  eq. (61) that way and must read eq. (60) the same way, and the review's own
+  worked value 3.1/34.0/(5/95) = 1.73 is that same compound-fraction reading, so
+  equation and worked value agree. What the break table settles is WHICH READING
+  IS MEANT - the alternative lands a factor of 361 from every printed
+  selectivity - not that the paper is wrong. A text dump is a poor witness for
+  anything involving a fraction, and this is the case in point.

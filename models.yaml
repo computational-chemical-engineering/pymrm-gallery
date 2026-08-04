@@ -1743,6 +1743,161 @@ models:
     related: [H1.8, H1.13, A2.3]
 
   # ---------------------------------------------------------------- section I
+  - id: H1.9
+    slug: zeolite-membrane-maxwell-stefan-mixture
+    title: "Maxwell–Stefan mixture diffusion in a zeolite membrane"
+    description: >
+      A 95-5 methane/n-butane mixture on a silicalite membrane. The pure
+      components predict a butane-over-methane permeation selectivity of 1.73;
+      Krishna & Baur compute 487 and Bakker measured 380. Two things do it, and
+      this page separates them: the mixture isotherm is not the multicomponent
+      Langmuir - size and configurational entropy push the LARGER molecule out
+      near saturation, so the butane loading falls as the pressure rises, which no
+      Langmuir isotherm can produce - and the exchange coefficients between the
+      two sorbates are FINITE, so the fast species is dragged along by the slow
+      one. Removing the exchange alone takes the selectivity from 488 to 12.4.
+      This is where the review's experimental comparisons live, and unlike its
+      single-component half they are stated as numbers rather than plotted, so the
+      page is TIER 2 and the comparison is validation rather than reproduction.
+      Funke et al.'s measured 24 for a hexane-isomer mixture comes out at 25.0,
+      +4.3 %, from nothing but pure-component isotherm fits and one diffusivity
+      ratio - and inside a 1.6x band of three readings the review's one sentence
+      about that run leaves open (whether its "15 kPa" is a total or a
+      per-component pressure, what the feed composition was, and the diffusivity
+      ratio taken as exactly 5), all swept where the comparison is made, because
+      nothing fitted is not nothing chosen.
+      Bakker's two methane/butane values do not: 488 against 380 (1.28x)
+      and 203 against 60 (3.38x), the second quoted by the review one sentence
+      after the first and passed over without comment. With the exchange removed
+      the same model gives 12.4 and 5.4 - 31x and 11x too LOW - so the
+      measurements discriminate decisively between the two implementations while
+      agreeing quantitatively with neither, and the page says that in those words.
+      The review's own computations reproduce cleanly: all five printed
+      selectivities (487, 12.3, 202, 5.4, 43.2) to better than 0.75 %, and all
+      four printed mixture fluxes to 0.41 % using the ~40 um membrane thickness
+      A4.7 reconstructed from the SINGLE-component fluxes. That flux comparison is
+      NOT a test of the reconstruction and the page says so where it is made:
+      delta, rho_MFI, the unit-cell mass and Avogadro's number cancel identically
+      out of all four, and swinging the framework density over a factor of four
+      leaves every one of them bit-identical, so it is the delta-free flux-ratio
+      check rescaled by the stored 34 - kept, labelled and printed beside its own
+      twin, because it does test the mixture physics. The transient methane peak
+      TIME is the one quantity here that carries delta, as delta^2, and it had
+      never been refined in space: the steady profile is smooth but the transient
+      carries a self-sharpening butane front. Refined under the transient
+      (n_z = 30/60/120/240, order 2.5 then 2.0) it lands at 0.658 s against the
+      printed 0.73 s, -9.8 %, and both further grid and step refinement move it
+      further away. Closing that needs delta +5.3 %, which nothing else on the
+      page forbids precisely because nothing else contains delta, so it is
+      reported as an OPEN TENSION with its candidate homes named - the 1800 kg
+      m^-3 read off a figure caption, the hard-coded unit-cell mass, the
+      two-figure printed 34, or the review's transient not being the calculation
+      reproduced here. The two peak heights cross sign on the same refinement,
+      from 1.5 % and 3.5 % low to 1.2 % and 1.8 % high, and the earlier "backward
+      Euler damps a maximum" reading of that sign is withdrawn.
+      Two printed numbers do NOT reproduce and both are investigated
+      rather than explained away. The Henry-limit sorption selectivity of 2200
+      comes out at 2649.9 from Table 1 by two independent routes, and the obvious
+      explanation is EXCLUDED: every single-parameter change to the C1 or nC4 row
+      that would make the ratio 2200 moves A4.7's certifying flux-ratio check by
+      4.2 % to 24 % against an observed 0.17 %. Where 2200 does come from is left
+      open, because the review's Fig. 24 is drawn against CBMC fugacities rather
+      than against the fit. And the multicomponent-Langmuir counterfactual splits
+      in two: its structural claim reproduces exactly - S_P independent of
+      upstream composition to 1.02x over feeds from 95 % down to 5 % methane,
+      where IAST spans more than a factor of three over the same five feeds -
+      while its printed 800 does not (about 1680), because the review never says
+      which affinity it used once the dual-site fit is collapsed to a single site.
+      Every check on the coupled machinery has a second route sharing no code with
+      the first: [Gamma] by implicit differentiation of the IAST equations against
+      central differences, [B] assembled from eq. (44) against the raw friction
+      system of eq. (42) solved matrix-free by GMRES (A4.2's fix, reused - 6e-14,
+      and 687 % when a term is dropped from B_ii), and the closed-form surface
+      potential against adaptive quadrature. The three algebraic identities the
+      review uses - eq. (43) at i=j, eq. (55) from eq. (54), eq. (46) at n=1 - are
+      labelled as identities and left unscored. And the review's own
+      counter-example is carried rather than dropped: zeolite 4A goes the other
+      way, so the finding is that the exchange coefficient is a property of the
+      host topology and MFI and 4A sit at opposite limits of it.
+    section: H
+    status: published
+    page: pages/H1.9-zeolite-membrane-maxwell-stefan-mixture/
+    tier: T1
+    priority: P2
+    structures: [S9, S4]
+    phases: [gas-solid]
+    predicts:
+      - mixture adsorption isotherms from pure-component fits by ideal adsorbed solution theory, eqs. (62)-(65)
+      - the matrix of thermodynamic factors for a non-ideal mixture isotherm, eq. (38)
+      - exchange coefficients between sorbates from pure-component diffusivities, the Vignes-type eq. (43)
+      - the n-component Maxwell-Stefan flux relations in a zeolite, eqs. (42), (44) and (45)
+      - transient and steady multicomponent permeation across a zeolite membrane, eqs. (57)-(59)
+      - permeation and sorption selectivities, eqs. (60) and (61)
+      - self-diffusivities in a multicomponent mixture, eqs. (53)-(56)
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - NumJac
+    reference:
+      authors: ["Krishna, R.", "Baur, R."]
+      year: 2003
+      container: "Separation and Purification Technology 33(3) 213-254"
+      doi: 10.1016/S1383-5866(03)00008-X
+    origin_not_consulted:
+      - authors: ["Bakker, W. J. W."]
+        year: 1999
+        container: "PhD thesis, Delft University of Technology; the review's reference [79]"
+        note: >
+          The source of the measured methane/n-butane permeation selectivities of
+          380 and 60, which the review states in the running text of Section 4.2.
+          Not on disk and not consulted; the review is the document actually read.
+          It reports no uncertainty for either value and does not state the
+          membrane thickness or support used.
+      - authors: ["Funke, H. H.", "Argo, A. M.", "Falconer, J. L.", "Noble, R. D."]
+        year: 1997
+        container: "cited by the review as its reference [87] for the hexane-isomer membrane measurements"
+        note: >
+          The source of the measured n-hexane/3-methylpentane selectivity of 24 at
+          15 kPa upstream, and of the 1.3 the same authors obtained from PURE
+          components. Both are stated in the running text of Section 4.3 and
+          marked on its Fig. 29(c). Not on disk and not consulted. The
+          bibliographic details are the review's citation as printed and were not
+          verified against the article.
+      - authors: ["Cavalcante, C. L.", "Ruthven, D. M."]
+        year: 1995
+        container: "Ind. Eng. Chem. Res. 34 185-191; the review's reference [86]"
+        note: >
+          The origin of the ONE diffusivity ratio that drives the entire hexane
+          result: "we take the zero-loading M-S diffusivity of nC6 to be five
+          times that of 3MP, following Cavalcante and Ruthven". Not on disk and
+          not consulted; the review states the ratio and the attribution, and
+          nothing here checks either. The ratio is not fitted, but it is a single
+          experimental number from a third paper, and the page measures what it
+          costs: 4 or 6 instead of 5 gives S_P = 21.1 or 28.9 against the 25.0
+          that is compared with Funke's measured 24.
+      - authors: ["Myers, A. L.", "Prausnitz, J. M."]
+        year: 1965
+        container: "cited by the review as its reference [83] for ideal adsorbed solution theory"
+        note: >
+          The review states IAST in full as its eqs. (62)-(65), names it and uses
+          it throughout Sections 4.2 and 4.3, so it sources the page under the
+          reprint route. The original is not on disk.
+      - authors: ["Habgood, H. W."]
+        year: 1958
+        container: "cited by the review as [69,70]; the Dij -> infinity limit of eq. (47) is the Habgood model"
+        note: >
+          The review names the infinite-exchange limit after Habgood, states it as
+          eq. (47), and tests it against his own 4A uptake data in Section 4.4 -
+          where it CONCLUDES IN HABGOOD'S FAVOUR, the opposite of what it finds
+          for MFI. The page carries that conclusion but cannot reproduce it: the
+          4A comparison exists only as Figs. 32-34 and the review prints no
+          numerical result for it.
+    data:
+      tier: 2
+      method: table
+      status: complete
+    related: [A4.7, A4.2, A4.3, A4.9, J1.5, J1.4]
+
   - id: I1.2
     slug: catalytic-converter-lightoff
     title: "Monolith catalytic converter light-off"
