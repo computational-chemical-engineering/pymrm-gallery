@@ -201,6 +201,21 @@ Constraints:
 - Include at least one validation: analytical limit, conservation check, grid or
   time-step independence, or a physical bound.
 - Call `report_agreement(...)` so CI can detect regressions.
+- **Every metric you report needs a break-table row — something that moves it.**
+  This is the single strongest predictor of page quality measured in this repo.
+  On the 2026-08-05 sweep of all 41 built pages, **nine of the ten findings that
+  reached a published headline were on a page with no defect-injection table**,
+  while **ten of the fifteen wholly clean pages had one**. Where you cannot
+  construct a row that moves a metric, say so on the page and label that metric
+  structural — an identity is worth keeping once it is named as one.
+  Two things the table will not save you from on its own:
+  **`check_agreement.py` does not compare metrics below `ABS_FLOOR = 1e-12`**, so
+  74 of the 920 published metrics are outside the regression suite entirely — a
+  number pinned at 1e-16 is unprotected, not proven. And **a break table does not
+  travel when you copy a page's directory**: `A4.2` inherited `A4.9`'s
+  Newton-residual identity, and `J3.1` inherited `J3.4`'s `Cell.march` without
+  the fix `J3.5` had already made to it. Rebuild the table for the physics you
+  substituted in.
 
 Then run `python scripts/check_metadata.py` before opening a PR.
 

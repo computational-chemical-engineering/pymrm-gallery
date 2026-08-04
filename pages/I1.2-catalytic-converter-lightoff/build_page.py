@@ -159,7 +159,7 @@ from pymrm import (generate_grid, construct_grad, construct_div,
                    compute_boundary_values, NumJac, newton, clip_approach)
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
 
-PAGE = "I1.2-oh-cavendish-converter"
+PAGE = "I1.2-catalytic-converter-lightoff"
 plt.rcParams.update({"figure.dpi": 110, "axes.grid": True, "grid.alpha": 0.3})'''))
 
 cells.append(md(r"""## Parameters and assumptions
