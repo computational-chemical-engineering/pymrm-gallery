@@ -5,18 +5,98 @@ catalog_reference: Fletcher & Kerstein; Solomon
 priority: P3
 tier: T2
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Grant, D. M.", "Pugmire, R. J.", "Fletcher, T. H.", "Kerstein, A. R."]
+  year: 1989
+  title: Chemical Model of Coal Devolatilization Using Percolation Lattice Statistics
+  container: Energy & Fuels 3 (1989) 175-186
+  affiliation: Departments of Chemistry and Fuels Engineering, University of Utah; Combustion
+    Research Facility, Sandia National Laboratories, Livermore
+  note: CPD, part 1.
+  companions:
+  - authors: ["Fletcher, T. H.", "Kerstein, A. R.", "Pugmire, R. J.", "Solum, M. S.", "Grant,
+        D. M."]
+    year: 1992
+    title: Chemical Percolation Model for Devolatilization. 3. Direct Use of 13C NMR Data
+      To Predict Effects of Coal Type
+    container: Energy & Fuels 6 (1992) 414-431
+    on_disk: ef00034a011.pdf
+    note: >
+      CPD as it is actually used today - adds vapour-liquid equilibrium and
+      cross-linking, and takes the coal-dependent structure coefficients
+      DIRECTLY from 13C NMR measurements instead of fitting them to measured
+      yields. This is the more useful of the two CPD papers for a page.
+      CPD PART 2 IS NOT ON DISK.
+  - authors: ["Solomon, P. R.", "Hamblen, D. G.", "Carangelo, R. M.", "Serio, M. A.", "Deshpande,
+        G. V."]
+    year: 1988
+    title: General Model of Coal Devolatilization
+    container: Energy & Fuels 2 (1988) 405-422
+    on_disk: ef00010a006.pdf
+    note: >
+      This is FG-DVC, the OTHER model on the catalogue row - a functional-group
+      model for gas evolution combined with a statistical model for tar
+      formation, with depolymerisation, cross-linking and internal/external
+      transport.
+      FIRST-PAGE TRAP: PDF page 1 opens with the ACKNOWLEDGEMENT AND FUNDING
+      PARAGRAPHS OF THE PRECEDING ARTICLE (thanking Dr. Clint Williford and
+      Dr. Karl Vorres); the Solomon et al. by-line and abstract are lower on the
+      same page.
 paper:
-  on_disk: null
+  on_disk: ef00014a011.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    All three read from their own first pages - journal line, title, by-line,
+    affiliations and abstract in each case - and cross-checked against each
+    file's embedded ACS article metadata, which prints the volume, first and last
+    page for each (Energy & Fuels_3_..._175_186, _6_..._414_431,
+    _2_4_..._405_422). Only ONE filename can be the value in
+    docs/papers-on-disk.yaml, so the map keys CPD part 1 and names the other two
+    in its comment; all three are listed here.
+blocker: null
+text_layer:
+  quality: >
+    Good for prose in all three - these are the best-OCR'd scans in the drop
+    after the born-digital ones. Equations and the many structural parameters
+    still need image reads.
+  render_at: 300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native in all three.
+what_it_carries: >
+  Both named models, in their origin papers, plus the coal-type generalisation:
+  * CPD 1989: percolation lattice statistics in CLOSED FORM, explicitly to avoid
+    Monte Carlo; the critical bridge population depending only on site
+    coordination number; tar identified with finite clusters and light gases with
+    bridge material; predictions for a lignite, a subbituminous and a
+    high-volatile bituminous coal.
+  * CPD 1992 (part 3): vapour-liquid equilibrium, cross-linking/metaplast
+    reattachment, a generalised vapour-pressure correlation for high-molecular-weight
+    hydrocarbons, COAL-INDEPENDENT kinetic parameters, and structure coefficients
+    taken from NMR - the paper stresses this is "in contrast to the previous and
+    common practice of adjusting input coefficients to precisely match measured
+    tar and total volatiles yields", which is precisely the anti-circularity the
+    gallery cares about.
+  * FG-DVC 1988: the functional-group + statistical tar model, with one cross-link
+    per CO2 or CH4 molecule evolved, compared against Pittsburgh Seam coal and
+    North Dakota (Beulah) lignite for volatile yields, extract yields, cross-link
+    densities and tar molecular weight distributions, over pressure, temperature,
+    rank and heating rate.
+validation_route: >
+  PRINTED PARAMETER TABLES in all three, and the CPD 1992 paper's whole argument
+  is that its inputs are measured (NMR) rather than fitted - so the page can
+  state the inputs' provenance without circularity. The yield comparisons
+  themselves are largely FIGURES; a page that exercises the models on the printed
+  structure coefficients is fine, one that validates against the measured yield
+  curves needs the review gate, and no maintainer is available as of 2026-08-05.
+notes: >
+  P3/T2 - this is a large extraction (three papers, 42 pages, a lattice
+  statistics model) for a low-priority case. Do not dispatch it ahead of the
+  T0/P1 work in this drop. Its value is that it is now COMPLETELY sourced, which
+  is rare; park it as a known-good future build.
+  Cluster with B3.7 (Kobayashi, the two-reaction model these supersede - and
+  CPD 1989's own introduction cites it by name) and B3.9 (Di Blasi, biomass).
+updated: '2026-08-05'
+doi_source: >
+  No DOIs resolved. Containers, volumes and page ranges read off each document
+  and confirmed against each file's embedded ACS article metadata on 2026-08-05.
+  The case previously had an empty reference block.

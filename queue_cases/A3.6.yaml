@@ -5,7 +5,7 @@ catalog_reference: Chem. Eng. Sci. 16 (1961)
 priority: P1
 tier: T0
 structures: S3
-status: unclaimed
+status: ready
 reference:
   authors:
   - Calderbank, P. H.
@@ -15,40 +15,124 @@ reference:
   container: Chemical Engineering Science 16(1-2) 39-54
   doi: 10.1016/0009-2509(61)87005-X
 paper:
-  on_disk: api-text/Calderbank-MooYoung-1961-CES-16-39.ELSEVIER-API-TEXT.txt
-  open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
-
-
-    Text layer: prose only. 80.9 kB of text but just 5 well-formed decimal numbers in it —
-    the scan''s decimal separators are gone. Do not transcribe constants.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Calderbank-MooYoung-1961-CES-16-39.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/000925096187005X
-notes: null
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  000925096187005X). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Calderbank-MooYoung-1961-CES-16-39.ELSEVIER-API-TEXT.txt
-
-paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-000925096187005X-main.pdf
+  open_access: null
   checked: '2026-08-05'
-  identified_by: read the article's own first pages, not the filename
+  identified_by: >-
+    the article's OWN PRINTED HEADER on a 300 ppi page image, cropped and
+    enlarged with nearest-neighbour interpolation. NOT from the text layer, NOT
+    from the filename, NOT from the PII alone.
   citation_as_read: "Calderbank & Moo-Young, Chem. Eng. Sci. 16, 39-54 (1961)"
+  citation_trap: >-
+    THE TEXT LAYER OF THIS PDF IS WRONG ABOUT THE YEAR AND THE VOLUME. pdftotext
+    returns line 1 as "Chemcal En@neenng Snence, 1981, 1'01 19, pp 39 to 54" -
+    i.e. 1981, volume 19 - and corrupts one of the four running footers to 1991.
+    The page image reads "Chemical Engineering Science, 1961, Vol 16, pp 39 to 54
+    Pergamon Press Ltd, London  Printed in Great Britain"; three running footers
+    (journal pages 44, 47, 49) independently read "Chem Engng Sci Vol 16, Nos 1
+    and 2  December, 1961"; the PII 0009-2509(61)87005-X encodes 61; the page
+    range matches on both readings. RESOLVED: 1961, volume 16. The scan is
+    CCITT-G4 bilevel at 300 ppi NATIVE (pdfimages -list) with each page stored as
+    a stack of 2250 x 115 px strips, so all renders were made at 300 ppi - 600
+    dpi would be 2x interpolation and would add nothing.
+  superseded: >-
+    api-text/Calderbank-MooYoung-1961-CES-16-39.ELSEVIER-API-TEXT.txt is still on
+    disk and is still unusable for numbers (its decimal separators are gone).
+    NOTHING on the page comes from it.
+staged_at: queue_cases/A3.6/page/
+models_entry: queue_cases/A3.6/models_entry.yaml
+built:
+  date: '2026-08-05'
+  runtime_seconds: 5
+  metrics: 39
+  break_table: 29 injected defects, 79 rows, 73 move, 39 of 39 metrics covered
+  validation_rank: >-
+    Ranks 2 and 3 of the builder brief's ladder, and no figure was digitised. The
+    paper prints (a) two THEORETICAL derivations of eq. (1)'s constant that the
+    authors do themselves and that owe nothing to any fit - 0.28 and 0.34,
+    reproduced here as 0.276000 (-1.4 %) and 0.339599 (-0.12 %); (b) two complete
+    algebraic chains from eq. (4) to packed-bed and pipe j-factors, every
+    constant printed; and (c) a Range of Variables table carrying the two sides
+    of the regime split. All six figures are scatter correlation plots and none
+    was touched: the digitisation route needs a maintainer review, none is
+    available, and nothing this page claims requires one.
+  headline_findings:
+  - >-
+    EQ. (6) AS PRINTED CANNOT PRODUCE EQ. (7). The chain forces the voidage as
+    (1-Sigma)^0.36 Sigma^(-1) - Sigma^(-1) because P/v carries Sigma^(-4) and
+    eq. (4) takes its fourth root - while eq. (6) prints ((1-Sigma)/Sigma)^(1/3),
+    the same exponent on both. At the paper's own Sigma = 0.41 the printed form
+    gives j_d = 0.359 Re^(-1/3), -48.0 % on the printed eq. (7) constant of 0.69,
+    and the corrected form 0.651, -5.7 %. Neither reaches eq. (7). The prefactor
+    is NOT in doubt: 0.13 x 35.4^(1/4) = 0.317098 against the printed 0.318.
+  - >-
+    EQ. (9) DOES NOT MEET CHILTON-COLBURN WHERE THE PAPER SAYS IT DOES. They
+    cross at N_Re = 4480 (3716 with the exact -5/16 exponent), not 10,000, and
+    the worst deviation over 2000-20,000 is 15.2 % (17.2 % exact), ONE-SIGNED at
+    the top of the range, not "+/- 12 per cent". The eq. (9) constant itself
+    reproduces exactly: 0.13 x 0.0396^(1/4) = 0.0579919 against a printed 0.058.
+    THAT EXACT REPRODUCTION IS WHAT LOCALISES THE PACKED-BED PROBLEM to the
+    voidage rather than to eq. (4), the flow-work argument or the j_d definition.
+  - >-
+    THE SMALL-BUBBLE ROW'S D_L EXPONENT IS A MISPRINT. Printed 10^-4; eq. (1) on
+    that row's own property corners then stands 21.2x above the row's own printed
+    k_L ceiling. 10^-6 lands 1.7 % below it; 10^-5 is ruled out at 4.56x. The
+    test has a CONTROL and it passes: the large-bubble row, printed 10^-6,
+    reproduces its printed k_L window with no adjustment at all.
+  - >-
+    THE TRANSITION, WHICH THE PAPER DESCRIBES THREE TIMES AND MODELS NOWHERE, IS
+    NOW A CURVE. One group Lambda = u_s/(gdot delta_Leveque) carries it;
+    d ln k_L / d ln D_L interpolates monotonically from 2/3 to 1/2, is halfway
+    (7/12) at Lambda = 0.2721 and within 10 % of the mobile value by
+    Lambda = 1.507.
+  - >-
+    THE PAPER'S OWN THEORY BRACKETS ITS OWN FIT. Froessling + Allen gives 0.276,
+    Friedlander + Stokes gives 0.340, and the fitted constant is 0.31. Both
+    recomputed from scratch; the Froessling route is done in both directions
+    because its coefficient is not printed in this article.
+  scope_declared:
+  - >-
+    NOTHING ON THE PAGE JUDGES 0.31, 0.42 OR 0.13. They are regression lines
+    through Figs 1, 2 and 6 (eq. (4)'s is stated to be one, with a standard
+    deviation of 66 per cent). The corner evaluations against the Range of
+    Variables table are labelled a GOODNESS OF FIT, not a validation, in the
+    notebook and in all four metadata files, because 0.42 was fitted to the very
+    runs whose k_L range it is compared against.
+  - >-
+    The two pure boundary-layer exponents are fixed by dimensional analysis once
+    the velocity profile is set, so they test the implementation and not the
+    physics. Stated where the numbers are printed, not in a footnote. The break
+    table shows what they DO catch: swapping the profiles swaps them.
+  - >-
+    Overlap with A3.3 declared. This page's mobile branch reduces to the same
+    penetration problem; the two are NOT independent confirmations of each other,
+    and the check here is against the closed form 2 sqrt(D u_s / pi L). No
+    number, dataset or sentence from A3.1, A3.3 or A3.4 is reused, and no other
+    page's CSV is loaded, so the cross-page reconciliation rule does not arise.
+  - >-
+    Two further rows of the Range of Variables D_L column print 10^-1 and 10^5
+    cm2/s. The 10^5 is impossible in any phase. Both are recorded in the sidecar
+    and scoped out rather than guessed at.
+  - >-
+    Nine papers this article cites - Froessling, Higbie, Allen, Friedlander, Chu,
+    Fallat, Baird, Kolmogoroff, Batchelor - are neither on disk nor consulted and
+    are listed under origin_not_consulted in models_entry.yaml. Froessling's
+    0.552 is the only external constant carrying a reported number, and the 0.28
+    reproduction is done in BOTH directions so that a version depending on
+    nothing outside this article exists (the paper's own 0.28 and 1/4 imply
+    0.5600).
+notes: >-
+  Ready. Page staged at queue_cases/A3.6/page/ with index.ipynb generated by
+  build_page.py and executed clean in 4.6 s of cell time; models_entry.yaml written; nothing
+  moved into pages/ and models.yaml untouched. Nine required sections in order,
+  two CSVs each with a columns: sidecar, 39 metrics in agreement.json of which 3
+  are exactly 0.0 and therefore below check_agreement.py's ABS_FLOOR - each has a
+  break row that makes it non-zero and a named companion metric that CI does
+  compare. scripts/check_metadata.py passes with 0 warnings.
+updated: '2026-08-05'
+doi_source: >-
+  Confirmed 2026-08-05 from the article's own printed header on a 300 ppi page
+  image (see paper.citation_trap), from three running footers, and from the
+  publisher PII. The earlier Elsevier full-text fetch of 2026-08-02 is superseded
+  for numbers: its text layer drops the 1961 typesetting's mid-dot decimals
+  wholesale and no constant on the page was taken from it.

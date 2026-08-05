@@ -723,3 +723,183 @@ survived a full-page look and died on a **cropped** re-read at native 300 dpi.
 The whole book uses the mid-dot decimal (`2·648`, `0·4291`), and the OCR also
 reads leading zeros as the letter `o`. **Crop, go to 300 dpi, and read numerics
 twice.** A full-page screenshot is for locating a table, not for transcribing it.
+
+---
+
+## The 2026-08-05 third drop — 34 files, 91 total
+
+First drop that leaves section A. Per-file text-layer quality and **native**
+resolution below; the identification of each file is in
+[`papers-on-disk.yaml`](papers-on-disk.yaml) and the buildability ranking is in
+[`source-map-2026-08-05b.md`](source-map-2026-08-05b.md).
+
+### The native-resolution rule was wrong at both ends, and this drop proved it
+
+The standing rule in this file — *every scan checked in this repo is CCITT-G4
+bilevel at 300 or 400 ppi native, so a 600 dpi render is interpolation and has
+never once been right* — held for 24 of the 34 files and **failed for six**.
+
+| File | Native | Encoding | Render at |
+|---|---|---|---|
+| `process-calculation-by-watson.pdf` (Hougen & Watson, C1.1) | **150 ppi** | CCITT-G4 | **150, cropped** |
+| `2015.205681.Industrial-Chemical.pdf` (Hougen & Watson 1936, unmapped) | **600 ppi** | CCITT-G4 | 600 |
+| `ef070025k.pdf` (Abad, B3.10) | **600 ppi** | CCITT-G4 | 600 |
+| `1-s2.0-S0009250997003850-main.pdf` (Pan & Zhu, unmapped) | **600 ppi** | CCITT-G4 | 600 |
+| `ie8b02111.pdf` (Criado, B3.5) | 600 ppi (figures only) | JPEG | 600 for figures |
+| `90131.pdf` (Kiani & Wachs, unmapped) | 600 ppi (figures only) | JPEG | 600 for figures |
+
+Two files have **no page images at all** — born-digital, nothing to render:
+`s11244-018-0948-8.pdf` (Prins, C1.2) and `1-s2.0-S0360128507000214-main.pdf`
+(Di Blasi, B3.9). Two are **JPEG at 300 ppi** rather than bilevel and will
+render softer: `413a375.pdf` (B2.6) and `1-s2.0-S1631074817301091-main.pdf`
+(C2.19 companion).
+
+**Restated rule: run `pdfimages -list` per file and believe it.** Never assume
+300. Never render above native — upsampling a 1-bit image adds nothing at any
+of 150, 300, 400 or 600.
+
+### The 150 ppi book — read on crops, and it works
+
+`process-calculation-by-watson.pdf` is Hougen & Watson, *Chemical Process
+Principles* (combined volume, 1157 pages), and at **150 ppi native it is the
+lowest-resolution scan in this repository — half the previous floor.** That
+sounds fatal and is not, because the 1943/47 Wiley typography is large and
+clean.
+
+Measured, on book p. 941 (PDF p. 957), cropped to the upper 45 % of the page and
+rendered at native 150 dpi: `2940b = −175`, `b = −0.05952`,
+`a = (337 + 15.00)/9 = 39.11`, `L_r = 39.11 − 10.71 = 28.40` — every digit
+legible, including a five-decimal coefficient. Subscripted symbols on book
+p. 913 (`c_A2l2`, `K'_A c²_l`) also read cleanly.
+
+**A whole-page 150 dpi render is not good enough for subscripts. A cropped one
+is.** This is the Chapman & Cowling lesson again, one resolution step lower:
+crop first, then read.
+
+Its **text layer is the usual trap**: prose excellent and fully searchable —
+which is how the negative findings about the book were established — while
+equations are destroyed. Eq. (69), the Thiele modulus, extracts as
+`s^=/(mr)=/hr\-7r` and `niT = Thiele modulus = -^•x`. Prose by grep, numbers by
+crop.
+
+**PDF page = book page + 16**, verified at book pp. 913 and 941.
+
+### The 504-page book with no text layer at all
+
+`2015.205681.Industrial-Chemical.pdf` (Hougen & Watson, *Industrial Chemical
+Calculations*, 2nd edn, 1936) returns **nothing** from `pdftotext` and
+`pdffonts` lists **no font at all** — not even a bad OCR layer. Nothing whatever
+could be inferred without rasterising, exactly like Li & Kwauk (`A1.9`) in the
+previous drop. Rendered at 600 ppi native its title page, imprint page and
+Contents are crisp.
+
+It maps to **no catalogue case** — see `papers-on-disk.yaml` for why.
+
+### Word-splitting: the failure mode that makes `grep` lie
+
+`BF02822675.pdf` (Sohn 1978, `B3.4`) extracts its entire body **with a space
+between every letter**:
+
+> `A law g o v e r n i n g the r a t e of r e a c t i o n of a solid p a r t i c l e`
+
+Reference lists extract normally, so the file looks fine at a glance. **A
+keyword grep on this file returns nothing and you will conclude the content is
+absent.** Strip spaces before searching, or go to the image.
+
+`1-s2.0-S008207847780341X-main.pdf` (Kobayashi, `B3.7`) does the same
+intermittently, and additionally renders exponents as `104 - 2 • 105 K/s` and
+`6.6 • 104 s -1` — i.e. **the exponents of a two-competing-rate model come back
+as concatenated digits.** Treat every implausible magnitude as a lost separator
+and go to the image; never repair it by inference (the `D2.2` rule).
+
+### The worst text layer in the drop
+
+`1-s2.0-S0082078482802816-main.pdf` (I. W. Smith, *The Combustion Rates of Coal
+Chars: A Review*, 1982 — the `B3.6` near-miss) extracts **37 characters from
+page 3**. It mixes a 200 ppi image with 300 ppi CCITT-G4 pages. Any check on
+this file must be done on renders; a grep proves nothing. That is precisely why
+`B3.6`'s reprint question was written down rather than answered cheaply.
+
+### Five files open with the previous article's text
+
+This is now the single most common trap in the repository — three were already
+known (`A3.11` Dixon & Cresswell, the unmapped Wilke & Lee, and `B1.2`'s
+one-page preview is a different failure), and **five more arrived in this one
+drop**:
+
+| File | Case | Page 1 actually begins with |
+|---|---|---|
+| `i260040a020.pdf` | `B1.7` Mears | a catalytic-cracking paper's Summary and Literature Cited — *and it discusses "the Voorhies (1945) relationship"*, which makes it look like `B2.1` |
+| `i160071a009.pdf` | `B2.4` Beeckman–Froment | a dissolved-oxygen-probe paper's nomenclature list |
+| `i160028a013.pdf` | `C2.3` Dyson & Simon | a Japanese catalyst study's Literature Cited, ending "supported by … the Ministry of Education, Japan" |
+| `ef00010a006.pdf` | `B3.8` Solomon (FG-DVC) | the preceding article's acknowledgements, thanking Dr. Clint Williford |
+| `ac60131a045.pdf` | *unmapped* (Kissinger) | a carotenoid paper's reference list |
+
+**Always scroll past the first screen.** In four of the five the real by-line is
+lower down the *same* page.
+
+### Publisher metadata named the wrong paper
+
+`i160028a013.pdf` carried `Title: Kinetic study of the dehydrogenation of
+ethanol` during acquisition — the title of a **different file in the same drop**
+(`1-s2.0-0009250964850922-main.pdf`, Franckaerts & Froment 1964). The document
+is Dyson & Simon 1968 on ammonia synthesis.
+
+What settled it was not the metadata but the **ACS download stamp printed on
+every page**: `pubs.acs.org/iecfa7/article-pdf/7/4/605/19276144/i160028a013.pdf`
+— volume 7, issue 4, first page 605. That stamp is present on every ACS file in
+this repository and is the cheapest reliable identity check available for them;
+use it. (`ef070025k.pdf` needed it too: its `Title` metadata is `No Job Name`.)
+
+### Per-file summary, third drop
+
+Extracted characters from PDF page 3, as a crude text-layer score, with the
+native resolution beside it.
+
+| File | Case | txt/p3 | Native | Note |
+|---|---|---|---|---|
+| `s11244-018-0948-8.pdf` | `C1.2` | 4944 | *(no images)* | born-digital, perfect |
+| `1-s2.0-S0360128507000214-main.pdf` | `B3.9` | 5350 | *(no images)* | born-digital, perfect |
+| `90131.pdf` | — | 5345 | 600 JPEG | born-digital |
+| `ie8b02111.pdf` | `B3.5` | 5548 | 600 JPEG | born-digital |
+| `ef070025k.pdf` | `B3.10` | 6355 | 600 G4 | good |
+| `ef00014a011.pdf` | `B3.8` | 6674 | 300 G4 | best of the scans |
+| `ef00010a006.pdf` | `B3.8` | 6662 | 300 G4 | good; first-page trap |
+| `ef00034a011.pdf` | `B3.8` | 5914 | 300 G4 | good |
+| `AIChE…Gheorghiu…pdf` | `B1.13` | 5398 | 300 G4 | good |
+| `1-s2.0-S1631074817301091-main.pdf` | `C2.19` | 4981 | 300 JPEG | good |
+| `ie50424a010.pdf` | `B2.1` | 4814 | 300 G4 | fair |
+| `i260040a020.pdf` | `B1.7` | 4549 | 300 G4 | fair; first-page trap |
+| `BF02822675.pdf` | `B3.4` | 4056 | 300 G4 | **letter-spaced — grep fails** |
+| `i160046a001.pdf` | `B1.10` | 3858 | 300 G4 | fair |
+| `ac60131a045.pdf` | — | 3574 | 300 G4 | first-page trap |
+| `i160028a013.pdf` | `C2.3` | 3370 | 300 G4 | first-page trap; wrong metadata |
+| `1-s2.0-0021951772902278-main.pdf` | `B2.3` | 3456 | 300 G4 | poor abstract OCR |
+| `Can J Chem Eng…Vanden Bussche.pdf` | `D3.3` | 3331 | 300 G4 | fair |
+| `ie50686a006.pdf` | `C2.10`/`D3.4` | 3295 | 300 G4 | fair |
+| `i160071a009.pdf` | `B2.4` | 2834 | 300 G4 | first-page trap |
+| `1-s2.0-0009250988851273-main.pdf` | `C2.4`/`D3.3` | 2639 | 300 G4 | poor |
+| `1-s2.0-0009250961800304-main.pdf` | `B2.2` | 2635 | 300 G4 | poor; year OCR'd "1901" |
+| `1-s2.0-S0009250997003850-main.pdf` | — | 2185 | **600** G4 | fair |
+| `1-s2.0-0009250962870158-main.pdf` | `B1.9` | 2105 | 300 G4 | poor |
+| `1-s2.0-0009250970850539-main.pdf` | `B3.2` | 1834 | 300 G4 | poor |
+| `AIChE…Bischoff…pdf` | `B1.3` | 1787 | 300 G4 | poor |
+| `1-s2.0-0009250964850922-main.pdf` | `C2.19` | 1748 | 300 G4 | poor |
+| `1-s2.0-S0009250954800054-main.pdf` | `C1.3` | 1595 | 300 G4 | poor — **but replaces the worst api-text in the repo** |
+| `413a375.pdf` | `B2.6` | 1474 | 300 JPEG | poor; Cyrillic abstract survives |
+| `1-s2.0-S008207847780341X-main.pdf` | `B3.7` | 1179 | 300 G4 | poor; **exponents concatenated** |
+| `1-s2.0-S0082078482802816-main.pdf` | *(B3.6 near-miss)* | **37** | 200+300 | **worst in drop** |
+| `process-calculation-by-watson.pdf` | `C1.1` | 279 | **150** | book; prose good, equations gone |
+| `process-calculation-by-watson (1).pdf` | *(duplicate)* | 279 | **150** | byte-identical duplicate |
+| `2015.205681.Industrial-Chemical.pdf` | — | **0** | **600** | book; **no text layer, no fonts** |
+
+### Two extraction routes retired by this drop
+
+`C1.3` (Mars–van Krevelen) and `B2.2` (Froment–Bischoff I) and `B3.2`
+(Szekely–Evans I) were all keyed to `api-text/` files, and the block in
+`papers-on-disk.yaml` warns that route drops decimal points on every pre-1995
+scan — with Mars & van Krevelen named as **the worst case in the whole set**
+(four different glyphs for one decimal point inside a single table row). All
+three now have real 300 ppi page images. **Do not quote a constant from those
+api-text files again.** Their part-II companions (`CES 17 (1962) 105` and
+`CES 26 (1971) 1901`) remain api-text only.

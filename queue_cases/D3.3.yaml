@@ -4,19 +4,92 @@ title: Methanol synthesis reactor (Lurgi/quasi-isothermal)
 catalog_reference: Graaf; Vanden Bussche & Froment
 priority: P1
 tier: T1
-structures: ''
-status: needs-paper
+status: unclaimed
 reference:
-  doi: 10.1016/0009-2509(93)80150-o
+  authors: ["Graaf, G. H.", "Stamhuis, E. J.", "Beenackers, A. A. C. M."]
+  year: 1988
+  title: Kinetics of low-pressure methanol synthesis
+  container: Chemical Engineering Science 43(12) 3185-3195 (1988)
+  companion:
+    authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+    year: 1996
+    title: The STAR Configuration for Methanol Synthesis in Reversed Flow Reactors
+    container: Canadian Journal of Chemical Engineering 74 (October 1996) 729-734
+    doi: 10.1002/cjce.5450740524
+    on_disk: Can J Chem Eng - October 1996 - Vanden Bussche - The STAR configuration
+      for methanol synthesis in reversed flow reactors.pdf
+    note: >
+      ALSO ON DISK; only one filename can be the value in
+      docs/papers-on-disk.yaml, so the map keys Graaf and names this one here.
+      *** This is NOT the Vanden Bussche & Froment paper C2.5 is catalogued to.
+      See the warning below. ***
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-0009250988851273-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+  checked: '2026-08-05'
+  identified_by: >
+    Graaf: see queue_cases/C2.4.yaml.
+    Vanden Bussche & Froment: read from its own first page - the display title
+    "The STAR Configuration for Methanol Synthesis in Reversed Flow Reactors",
+    the by-line "K. M. VANDEN BUSSCHE and G. F. FROMENT / Laboratorium voor
+    Petrochemische Techniek, Krijgslaan 281, B9000 Ghent, Belgium", the bilingual
+    English/French abstract, and the file's own Subject metadata
+    "Can J Chem Eng 1996.74:729-734". 6 pp, complete.
+blocker: null
+
+the_companion_is_not_C2.5: >
+  *** DO NOT USE THIS FILE FOR C2.5, AND DO NOT LET IT CLOSE C2.5's REQUEST. ***
+  C2.5 is catalogued to Vanden Bussche & Froment, J. Catal. 161:1 (1996), the
+  CO2-based kinetic model. The paper on disk is a different 1996 paper in a
+  different journal on a different problem, and - the decisive point - it does
+  not use its authors' own kinetics at all. Its own text says the reactor model
+  "was combined with a set of kinetic equations ... proposed by Graaf et al.
+  (1988)". Its reference list carries Graaf, not J. Catal. 161.
+  So for D3.3 this file is a genuine bonus: it is a methanol-synthesis reactor
+  paper that runs on the SAME kinetics D3.3's primary source supplies. For C2.5
+  it is worth nothing. Full record on queue_cases/C2.5.yaml.
+
+what_it_carries: >
+  * Graaf et al. 1988: the three-reaction LHHW kinetics (CO hydrogenation, CO2
+    hydrogenation, water-gas shift) with fitted rate and adsorption constants -
+    the source term for any methanol reactor page.
+  * Vanden Bussche & Froment 1996: a transient fixed-bed methanol reactor,
+    operated with periodic flow reversal, with the drawback of the plain
+    reversed-flow reactor (strongly varying exit concentrations, which "disturb
+    the operation of downstream equipment" and "significantly decrease the time
+    averaged conversion") stated as the motivation, and the STAR configuration
+    introduced to fix it. Reports that STAR exceeds the single reversed-flow
+    reactor's conversion "by at least 5 percent", and gives operating conditions
+    in its Table 2.
+  Together they are a kinetics source plus a transient reactor study on the same
+  chemistry.
+
+scope: >
+  D3.3's title names a LURGI / QUASI-ISOTHERMAL reactor. Neither document is
+  that: Graaf is a spinning-basket kinetics study and Vanden Bussche is a
+  reversed-flow reactor. A page can legitimately build the quasi-isothermal
+  tubular reactor from Graaf's kinetics and then use Vanden Bussche's transient
+  case as a contrasting operating mode - but it must not claim to reproduce a
+  published Lurgi design, because no such design is on disk. A1.8 / A3.13
+  discipline: name the missing component on the page.
+
+validation_route: >
+  PRINTED TABLES from Graaf (constants) and Vanden Bussche's Table 2 (operating
+  conditions) plus its stated "+5 percent" conversion result, which is a
+  reproducible target for a transient solve. The concentration-vs-time curves
+  in the 1996 paper are FIGURES; a page can stand without them.
+notes: >
+  SHARED FILE with C2.4 (the kinetics page). Build C2.4 first.
+  The reversed-flow half also touches I1.7, which is catalogued to Matros &
+  Bunimovich and stays needs-paper - see queue_cases/I1.7.yaml. Decide the
+  C2.4 / D3.3 / I1.7 scope split before dispatching more than one builder.
+updated: '2026-08-05'
+doi_source: >
+  The former value was `10.1016/0009-2509(93)80150-o` with doi_source
+  crossref-auto - a 1993 CES DOI, which matches NEITHER document named on this
+  row (Graaf's kinetics paper is CES 43 (1988), not 1993). It has been removed.
+  The companion DOI 10.1002/cjce.5450740524 above IS verified against the
+  document: it is the Wiley DOI for Can. J. Chem. Eng. 74:729-734, and the
+  file's own Subject metadata prints that volume and page range, which agree
+  with the printed article. No verified DOI is recorded for Graaf; see
+  queue_cases/C2.4.yaml.

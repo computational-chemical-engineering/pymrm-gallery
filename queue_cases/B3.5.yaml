@@ -5,18 +5,84 @@ catalog_reference: Grasa & Abanades, IECR 45 (2006)
 priority: P1
 tier: T1
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Criado, Y. A.", "Arias, B.", "Abanades, J. C."]
+  year: 2018
+  title: Effect of the Carbonation Temperature on the CO2 Carrying Capacity of CaO
+  container: Industrial & Engineering Chemistry Research 57(37) 12595-12599 (2018)
+  doi: 10.1021/acs.iecr.8b02111
+  affiliation: Instituto Nacional del Carbón, CSIC (Abanades group)
+  type: Research Note (5 pp)
+reference_read_from_required: >
+  *** THIS IS NOT THE CATALOGUED PAPER. *** B3.5 names Grasa & Abanades, IECR 45
+  (2006) - the origin of the widely used CaO deactivation (carrying-capacity
+  decay) curve - and THAT PAPER IS NOT ON DISK. The document on disk is the same
+  group, twelve years later, READJUSTING the parameters of that same curve for
+  carbonation temperatures below 650 C. Its own abstract: "The parameters on the
+  CaO deactivation curve THAT IS WIDELY EMPLOYED have been readjusted to accord
+  with a more general decay model that takes into account the effect of the
+  carbonation temperature on the thickness of the CaCO3 product layer".
+  So this is the AGENTS.md REPRINT ROUTE, not the origin: use
+  `reference_read_from` for every constant taken from the 2018 note and
+  `origin_not_consulted` for Grasa & Abanades 2006. Say on the page which
+  document each number came from.
+  BEFORE BUILDING, apply the E1.1 test explicitly: a 5-page research note that
+  refits a curve does not necessarily PRINT the original curve's functional form
+  and its original parameters. If it does not, the page can only build the 2018
+  model, and must say the 2006 baseline was not read.
+priority_note: >
+  P1/T1 on the catalogue, but the reprint caveat above lowers its real
+  readiness. Ranked below the clean origin-paper unlocks in
+  docs/source-map-2026-08-05b.md.
 paper:
-  on_disk: null
+  on_disk: ie8b02111.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Read from the PDF's own first page: the ACS header "Research Note / Cite
+    This: Ind. Eng. Chem. Res. 2018, 57, 12595-12599 / pubs.acs.org/IECR", the
+    title, the three-author by-line and the full abstract. The ACS download stamp
+    gives article-pdf/57/37/12595/, i.e. volume 57, issue 37, first page 12595.
+    5 pp, complete. Born-digital (real text layer; the page images are figures
+    only, at 600 ppi).
+blocker: null
+text_layer:
+  quality: >
+    Excellent - born-digital ACS. Text, subscripts and the ligature-heavy
+    typography extract correctly (the only artefact is the fi/ffi ligatures
+    rendering as "eﬃcient", harmless). No page render needed for text; figures
+    are embedded images at 600 ppi.
+  render_at: >
+    Text: not applicable. Figure images are 600 x 600 ppi native - render at 600
+    if a curve must be digitised, not above.
+what_it_carries: >
+  Carrying capacity of a high-purity natural Ca material measured across
+  450-725 C, i.e. across and below the 650 C / 10-15 vol % CO2 reference
+  conditions almost all published work uses; a general decay model in which the
+  carbonation temperature sets the CaCO3 product-layer thickness that ends the
+  fast kinetically controlled regime; and the readjusted parameters of the
+  standard deactivation curve.
+  Motivation stated in the abstract and worth putting on the page: recent process
+  schemes propose operating the carbonator BELOW 650 C, and "there is a lack of
+  correlations for estimating the evolution of the carrying capacity along
+  cycling at temperatures below 650 C".
+validation_route: >
+  PRINTED PARAMETERS at minimum (the readjusted decay-curve constants are the
+  paper's deliverable). The cycle-by-cycle capacity data are likely FIGURES in a
+  5-page note - check before promising a comparison, because a figure route
+  needs the review gate and no maintainer is available as of 2026-08-05.
+notes: >
+  Cross-links: B3.10 (oxygen-carrier reduction/oxidation) was unblocked in the
+  same drop from another Spanish CSIC paper, and I1.8 (chemical looping
+  combustion reactor) stays needs-paper. The three are one looping cluster;
+  decide scope before dispatching.
+  A page here is a genuinely good pymrm demonstration - N-cycle capacity decay is
+  S1 plus a recursion, and the interesting result (capacity vs cycle vs
+  temperature surface) is a sweep the note could only sample.
+updated: '2026-08-05'
+doi_source: >
+  Read from the document 2026-08-05: the "Cite This" line and the ACS download
+  stamp give the journal, year, volume, issue and page range. The DOI above is
+  the standard ACS form for that article; it has NOT been resolved against
+  Crossref. The case previously had an empty reference block.

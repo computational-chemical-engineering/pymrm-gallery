@@ -5,18 +5,76 @@ catalog_reference: Metall. Trans. (1978)
 priority: P1
 tier: T1
 structures: S1
-status: needs-paper
+status: unclaimed
 reference:
+  authors: ["Sohn, H. Y."]
+  year: 1978
+  title: The Law of Additive Reaction Times in Fluid-Solid Reactions
+  container: Metallurgical Transactions B, Volume 9B, March 1978, pp. 89-96
   doi: 10.1007/bf02822675
+  affiliation: Department of Metallurgy and Metallurgical Engineering, University of Utah,
+    Salt Lake City, UT 84112
+catalog_reference_incomplete: >
+  The catalogue row says "Metall. Trans. (1978)". The journal is Metallurgical
+  Transactions **B** and the volume designation is **9B** - read off the running
+  head of every page ("METALLURGICAL TRANSACTIONS B / VOLUME 9B, MARCH 1978-89"
+  and "96-VOLUME 9B, MARCH 1978"). Add the B and the page range 89-96 to the
+  catalogue row when the page is built. Benign, but the A-vs-B distinction
+  matters for retrieval.
 paper:
-  on_disk: null
+  on_disk: BF02822675.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+  checked: '2026-08-05'
+  identified_by: >
+    Read from the PDF's own first page: the title "The Law of Additive Reaction
+    Times in Fluid-Solid Reactions", the by-line "H. Y. SOHN" with the footnote
+    "H. Y. SOHN is Associate Professor, Department of Metallurgy and
+    Metallurgical Engineering, University of Utah, Salt Lake City, UT 84112", and
+    the full abstract; volume and page range from the running heads on the first
+    and last pages. 8 pp, complete.
+blocker: null
+text_layer:
+  quality: >
+    UNUSUAL AND WORTH KNOWING: the abstract and body extract with a SPACE
+    INSERTED BETWEEN EVERY LETTER ("A law g o v e r n i n g the r a t e of r e a
+    c t i o n"). Searching this file with ordinary word queries FAILS - grep for
+    a word and you will conclude, wrongly, that it is not there. Strip spaces
+    before searching, or read the image. Reference lists extract normally.
+  render_at: 300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native.
+what_it_carries: >
+  The law itself, with its scope stated precisely in the abstract: the time to
+  reach a given conversion is the SUM of the time in the absence of intrapellet
+  diffusion resistance and the time under intrapellet-diffusion control; EXACT
+  for a nonporous solid, a useful approximation for a porous one. The stated
+  limitations are equally explicit and must go on the page: isothermal solid,
+  intrinsic kinetics at least approximately first order in the fluid reactant,
+  and effective diffusivity unchanged during reaction.
+  It also gives the DIFFERENTIAL form (rate at a given conversion, not just
+  conversion vs time), which the abstract notes remains valid when bulk
+  temperature and concentration vary with time - the property that lets the
+  single-particle law be dropped into packed-, moving- and fluidised-bed models.
+  And it reports that with an appropriate fluid-solid reaction modulus the
+  numerical criteria for the chemical-control and diffusion-control asymptotic
+  regimes "remain identical for all systems considered".
+  Passes the E1.1 test outright.
+validation_route: >
+  ANALYTICAL, and unusually strong. The law is an additivity claim that can be
+  tested against a directly solved fluid-solid particle problem in pymrm across
+  the regime map, with the ERROR of the approximation measured rather than
+  asserted, and the "exact for a nonporous solid" claim confirmed as an
+  identity. Both B3.1 (published) and B3.2 (unblocked in the same drop) are the
+  two limits it bridges. No data needed, no figures, NO MAINTAINER.
+notes: >
+  This is the best-shaped page in the section-B half of this drop: a closed-form
+  claim with explicitly stated validity limits, two sibling cases already or
+  newly available to bound it, and a validation route that is a measurement of
+  the approximation's own error. Build after B3.2.
+  Watch the handoff.md "check that cannot fail" trap: if the additivity residual
+  is computed from the same solve that generated both limits, it may be
+  structural. Use an independently discretised particle solve for the reference.
+updated: '2026-08-05'
+doi_source: >
+  crossref-auto until 2026-08-05, now verified-against-the-document: the DOI
+  stem BF02822675 is the filename, and the journal, volume (9B), month (March
+  1978) and page range (89-96) printed in the running heads agree with the
+  Springer record for that DOI.

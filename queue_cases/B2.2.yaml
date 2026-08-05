@@ -5,46 +5,75 @@ catalog_reference: Chem. Eng. Sci. 16 (1961), 17 (1962)
 priority: P1
 tier: T0
 structures: S4
-status: needs-paper
+status: unclaimed
 reference:
-  authors:
-  - Froment, G. F.
-  - Bischoff, K. B.
+  authors: ["Froment, G. F.", "Bischoff, K. B."]
   year: 1961
   title: Non-steady state behaviour of fixed bed catalytic reactors due to catalyst fouling
-  container: Chemical Engineering Science 16(3-4) 189-201
+  container: Chemical Engineering Science 16(3-4) 189-201 (1961)
   doi: 10.1016/0009-2509(61)80030-4
+  affiliation: Laboratorium voor Organische Technische Chemie, Rijksuniversiteit Gent, Belgium
+  received: 27 January 1961
+  part_ii:
+    title: 'Kinetic data in reactors with catalyst decay'
+    container: Chemical Engineering Science 17 (1962) 105
+    on_disk: false
+    api_text: api-text/Froment-Bischoff-1962-CES-17-105-fouling-II.ELSEVIER-API-TEXT.txt
+    note: >
+      The second half of the catalogue's citation. NO PDF ARRIVED; only the
+      Elsevier api-text, which the block in docs/papers-on-disk.yaml warns
+      drops decimal points on every pre-1995 scan. Build Part I from the PDF and
+      say on the page that Part II was not read from an image.
 paper:
-  on_disk: api-text/Froment-Bischoff-1961-CES-16-189-fouling-I.ELSEVIER-API-TEXT.txt
+  on_disk: 1-s2.0-0009250961800304-main.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
-
-
-    Text layer: prose only; scan OCR, decimals unreliable.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Froment-Bischoff-1961-CES-16-189-fouling-I.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/0009250961800304
-notes: 'Part II is also fetched and on disk: Froment & Bischoff, ''Kinetic data and product
-  distributions from fixed bed catalytic reactors subject to catalyst fouling'', CES 17(2)
-  (1962) 105-114, doi 10.1016/0009-2509(62)80022-0, PII 0009250962800220, file api-text/Froment-Bischoff-1962-CES-17-105-fouling-II.ELSEVIER-API-TEXT.txt.
-  The catalogue names both years.'
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  0009250961800304). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Froment-Bischoff-1961-CES-16-189-fouling-I.ELSEVIER-API-TEXT.txt
+  checked: '2026-08-05'
+  identified_by: >
+    Read from the PDF's own first page: the running head "Chemical Engineering
+    Science, 1961, Vol. 16, pp. 189 to 201. Pergamon Press Ltd., London.", the
+    title, the by-line "G. F. FROMENT and K. B. BISCHOFF" with the Ghent
+    affiliation, "(Received 27 January 1961)" and the full abstract. 13 pp,
+    complete. The OCR renders the year in the running head as "1901"; the
+    volume, page range and received-date are unambiguous and the PII
+    (0009250961800304) decodes to 1961.
+blocker: null
+supersedes_extraction_route: >
+  B2.2 was previously keyed in docs/papers-on-disk.yaml to
+  api-text/Froment-Bischoff-1961-CES-16-189-fouling-I...txt. There is now a real
+  scan of PART I. Read every number off the image; keep the api-text only for
+  prose and search. PART II IS STILL API-TEXT ONLY.
+text_layer:
+  quality: >
+    Poor. 1961 Pergamon scan; the OCR mangles even the by-line ("G. F. FI~OMENT",
+    "K. B. BISCI~FF") and the abstract ("rate coelllcients", "in the cast of").
+    Every rate coefficient, every fouling parameter and every profile value must
+    come off a cropped image.
+  render_at: 300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native; 600 dpi is interpolation.
+what_it_carries: >
+  The model the case is named for, in the authors' own abstract: a rate equation
+  for formation of the fouling compound coupled to the continuity equation for
+  the main product, for TWO mechanisms - fouling by a reaction PARALLEL to the
+  main reaction, and by one CONSECUTIVE to it. The decisive modelling choice is
+  stated explicitly: activity is related "directly to the CARBON CONTENT of the
+  catalyst, rather than to time, as has been done until now", with two
+  functional forms tried (exponential and hyperbolic). The result is that the
+  deposited carbon forms a PROFILE along the bed - descending for a parallel
+  mechanism, ascending for a consecutive one - and the paper then discusses what
+  those profiles do to the rate and temperature profiles.
+  Passes the E1.1 test outright.
+validation_route: >
+  The descending-vs-ascending carbon profile is a QUALITATIVE signature that a
+  pymrm sweep reproduces directly and that no fitting can fake, which makes it a
+  strong page even before any number is matched. Whether the profiles are also
+  tabulated has NOT been checked off the renders. Check before promising a
+  quantitative comparison.
+notes: >
+  Same author as C2.10/D3.4 (Froment 1967) and same co-author as B1.3 (Bischoff
+  1965) - three of this drop's files are by these two men, and the deactivation,
+  o-xylene and generalised-modulus pages can share conventions.
+  Build after B2.1 (Voorhies), whose coking law this generalises.
+updated: '2026-08-05'
+doi_source: >
+  Elsevier full text fetched and read 2026-08-02; upgraded 2026-08-05 to
+  verified-against-the-document - title, authors, container, volume, page range
+  and received-date all read off the scan's own first page.

@@ -7,16 +7,79 @@ tier: T1
 structures: ''
 status: needs-paper
 reference:
-  doi: 10.1002/cjce.5450740524
+  authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+  year: 1996
+  title: A Steady-State Kinetic Model for Methanol Synthesis and the Water Gas Shift Reaction
+    on a Commercial Cu/ZnO/Al2O3 Catalyst
+  container: Journal of Catalysis 161(1) 1-10 (1996)
+  doi: null
+  note: >
+    Title and container as the catalogue records them. NOT verified against any
+    document, because the document is not on disk. See the DOI warning below.
 paper:
   on_disk: null
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-05'
 blocker:
   kind: paper
   question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
+  detail: >
+    The J. Catal. 161 (1996) paper is not on disk and no open-access copy has
+    been found. A Vanden Bussche & Froment 1996 paper IS on disk and it is a
+    DIFFERENT paper - see near_miss_on_disk below. Do not let its presence close
+    this request.
   artifacts: []
+
+doi_was_wrong: >
+  *** THE RECORDED DOI WAS WRONG AND IT COST A WASTED ACQUISITION. ***
+  Until 2026-08-05 this case carried `doi: 10.1002/cjce.5450740524` with
+  `doi_source: crossref-auto`. That is a CANADIAN JOURNAL OF CHEMICAL
+  ENGINEERING DOI. The catalogue row says Journal of Catalysis. CrossRef, asked
+  for "Vanden Bussche & Froment (1996)", returned the authors' OTHER 1996
+  paper - and that is the paper that has now arrived in the 2026-08-05 third
+  drop, because the request was made from the DOI rather than from the title.
+  The DOI has been removed rather than corrected, because no J. Catal. DOI has
+  been verified against a document.
+  This is the sixth instance of the standing failure recorded in handoff.md
+  ("a DOI resolved from a terse citation is usually wrong"; F1.6 and F3.4
+  resolved to book reviews). It is a NEW variant worth naming: here the year
+  agreed, the authors agreed, and the container did not - and container
+  disagreement was not being checked. ADD THE CONTAINER TO THE CHECK.
+
+near_miss_on_disk: >
+  `Can J Chem Eng - October 1996 - Vanden Bussche - The STAR configuration for
+  methanol synthesis in reversed flow reactors.pdf` = Vanden Bussche, K. M. &
+  Froment, G. F., "The STAR Configuration for Methanol Synthesis in Reversed
+  Flow Reactors", Canadian Journal of Chemical Engineering 74 (October 1996)
+  729-734. Same two authors, same year, different journal, different problem: it
+  introduces a transient reversed-flow reactor configuration that avoids the
+  exit-concentration swings of a single reversed-flow reactor.
+
+  IT IS NOT A REPRINT ROUTE FOR THIS CASE EITHER, and that is the part that
+  would be easy to get wrong. The STAR paper does not use its own authors'
+  kinetics. Its own text: "The reactor model was combined with a set of kinetic
+  equations ... proposed by Graaf et al. (1988)", and again "Using the Graaf
+  kinetic equations, a ... 5.1 mol% methanol". Its reference list carries Graaf,
+  Stamhuis & Beenackers and does NOT carry J. Catal. 161. So the document on
+  disk prints the COMPETING model - C2.4's - and C2.5's rate equations appear
+  nowhere in it.
+
+  This is the A3.5 pattern exactly (a companion study by the same group on a
+  different problem), with the extra twist that the near-miss actively contains
+  the rival model. C2.5 STAYS needs-paper.
+
+  The file is genuinely useful elsewhere and is recorded on
+  queue_cases/D3.3.yaml (methanol synthesis reactor) and noted on
+  queue_cases/I1.7.yaml (reverse-flow reactor). Do not request it again.
+
+consequence: >
+  The C2.4-vs-C2.5 comparison page the catalogue asks for ("direct comparison
+  page with C2.4") CANNOT be built. C2.4 is now unblocked and buildable on its
+  own; build it as a single-model page and say the comparison is pending.
 notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+updated: '2026-08-05'
+doi_source: >
+  none. The former crossref-auto DOI was removed on 2026-08-05 after it was
+  shown to point at a different paper by the same authors - see doi_was_wrong.
+  Do not re-add an auto-resolved DOI here; require the container to match
+  "Journal of Catalysis" and verify against the document.

@@ -4,19 +4,46 @@ title: Ammonia synthesis converter (multi-bed, quench/intercooled)
 catalog_reference: Dyson & Simon (1968); Temkin
 priority: P1
 tier: T0
-structures: ''
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Dyson, D. C.", "Simon, J. M."]
+  year: 1968
+  title: A Kinetic Expression with Diffusion Correction for Ammonia Synthesis on Industrial
+    Catalyst
+  container: Industrial & Engineering Chemistry Fundamentals 7(4) 605-610 (1968)
+  doi: 10.1021/i160028a013
 paper:
-  on_disk: null
+  on_disk: i160028a013.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Same document as C2.3 - see queue_cases/C2.3.yaml for the full
+    identification, including the two traps that had to be cleared (page 1 opens
+    with the preceding article's Literature Cited, and the file's Title metadata
+    named a different paper in the same drop).
+blocker: null
+scope: >
+  READ THIS BEFORE DISPATCHING. The document supplies the RATE EXPRESSION and
+  the pellet effectiveness-factor correction, plus an equilibrium treatment, a
+  conversion-temperature plane at 50 atm and a comparison against the reported
+  exit conversions of Nielsen's experimental converter. It does NOT contain a
+  multi-bed quench or intercooled converter design with bed depths, quench
+  fractions and inlet temperatures - which is what D3.2's title names.
+  So D3.2 is buildable as "the Dyson-Simon rate law driving a multi-bed adiabatic
+  converter", with the bed configuration stated as a chosen illustrative case
+  rather than reproduced from a source, and that limitation named on the page.
+  This is the A1.8 / A3.13 situation again: build what the document carries, say
+  which named component is missing, and name what would complete it (a converter
+  design paper - Nielsen's, which Dyson & Simon cite and which is NOT on disk).
+validation_route: >
+  PRINTED TABLE (Table I, constants for Equation 39) plus the paper's own
+  equilibrium and rate arithmetic. The Nielsen exit-conversion comparison is a
+  FIGURE; a page can stand without it. No maintainer needed for the printed part.
+notes: >
+  SHARED FILE with C2.3. Build C2.3 (the rate law) first and have D3.2 import
+  it. Do not dispatch two builders onto one transcription of Table I.
+updated: '2026-08-05'
+doi_source: >
+  Verified against the document 2026-08-05 - the DOI stem i160028a013 is printed
+  in the ACS download stamp on every page, with volume 7, issue 4, first page
+  605.

@@ -5,50 +5,78 @@ catalog_reference: Chem. Eng. Sci. Spec. Suppl. 3 (1954)
 priority: P1
 tier: T0
 structures: S1
-status: needs-paper
+status: unclaimed
 reference:
-  authors:
-  - Mars, P.
-  - van Krevelen, D. W.
+  authors: ["Mars, P.", "van Krevelen, D. W."]
   year: 1954
   title: Oxidations carried out by means of vanadium oxide catalysts
-  container: Chemical Engineering Science 3 (Special Supplement, Proceedings of the Conference
-    on Oxidation Processes) 41-59
+  container: Special Supplement to Chemical Engineering Science, vol. 3 (1954) 41-59
   doi: 10.1016/S0009-2509(54)80005-4
+  affiliation: Staatsmijnen in Limburg, Central Laboratory, Geleen, Netherlands
 paper:
-  on_disk: api-text/Mars-vanKrevelen-1954-CES-3-41.ELSEVIER-API-TEXT.txt
+  on_disk: 1-s2.0-S0009250954800054-main.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+  checked: '2026-08-05'
+  identified_by: >
+    Read from the PDF's own first page: the running head "Special Supplement to
+    Chemical Engineering Science, vol. 3, 1954", the title, and the by-line
+    "P. MARS and D. W. VAN KREVELEN / Staatsmijnen in Limburg, Central
+    Laboratory, Geleen, Netherlands". The article carries a trilingual summary
+    (English "Summary", French "Resume", German "Zusammenfassung"); THE BODY IS
+    ENGLISH. 19 pp, complete.
+blocker: null
 
+supersedes_extraction_route: >
+  *** THIS IS THE BIGGEST EXTRACTION UPGRADE IN THE 2026-08-05 THIRD DROP. ***
+  C1.3 was previously keyed in docs/papers-on-disk.yaml to
+  api-text/Mars-vanKrevelen-1954-CES-3-41.ELSEVIER-API-TEXT.txt, and the
+  comment block above that key names it as the single WORST item in the whole
+  api-text set: "four different glyphs used for one decimal point inside a
+  single table row". There was no page image for it, because
+  content/object/pii returns {"choices":null} for this PII and the PDF endpoint
+  returns a one-page entitlement preview.
+  There is now a real 19-page scan. The api-text remains useful for prose and
+  for searching; EVERY NUMBER MUST NOW COME OFF THE PAGE IMAGE INSTEAD. Do not
+  quote a constant from the api-text on this case again.
 
-    Text layer: prose only, and the worst of the set for numbers. The 1954 typesetting uses
-    a mid-dot decimal separator and the OCR renders it inconsistently as ''.'', ''·'', "''"
-    or ''-'' within a single table row: Table 2 comes back as "82·5 0·095 ... 73''0 0-120
-    ... 96-5 0''291". Every one of those is a decimal point. This is the Van Welsenaere &
-    Froment failure mode; treat the whole table as unreadable rather than repairing it.
+text_layer:
+  quality: >
+    Scan OCR, 1954 typesetting. Prose readable but with heavy letter/digit and
+    accent damage (the French and German summaries are badly mangled; "reaction"
+    appears as "rl!action", "vitesse" as "vitessc"). Treat as unreliable for
+    every number, exactly as for the api-text.
+  render_at: >
+    300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native; 600 dpi is interpolation.
+    Read the rate constants and the oxidation-rate tables off cropped 300 dpi
+    renders.
 
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Mars-vanKrevelen-1954-CES-3-41.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/S0009250954800054
-notes: Tables 1-4 and 8 are all present in the text, so the paper is rich in tabulated kinetics
-  — exactly the rank-1/rank-3 validation the builder brief wants. That makes the PDF worth
-  requesting.
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  S0009250954800054). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Mars-vanKrevelen-1954-CES-3-41.ELSEVIER-API-TEXT.txt
+what_it_carries: >
+  The origin of the redox (Mars-van Krevelen) mechanism, in the authors' own
+  words: oxidation of benzene, toluene, naphthalene and anthracene over vanadium
+  oxide in a FLUID BED (chosen, as the summary says, because these reactions are
+  so exothermic that a uniform temperature is otherwise unobtainable), with the
+  partial pressures of both reactants varied as widely as possible. Both
+  reactants are shown to influence the rate; the rate expression is derived and
+  interpreted as two successive steps - reaction of the aromatic with surface
+  oxygen, and re-oxidation of the partly reduced surface. The paper then shows
+  the same form describes literature SO2-oxidation data, and uses it to compute
+  the optimum temperature profile of a fixed-bed SO2 converter and the catalyst
+  split between the stages of a multi-stage reactor, comparing against practice.
+  Passes the E1.1 test outright: derives, names and tests the result.
+validation_route: >
+  PRINTED TABLES plus the paper's own multi-stage SO2 converter calculation,
+  which is a worked design the page can reproduce end to end. Confirm the table
+  inventory off the renders before promising it - the api-text's table
+  reconstruction cannot be trusted and was not used for this note.
+notes: >
+  C1.3 is now the strongest T0/P1 kinetics build available: an origin paper, a
+  real scan, a mechanism that is one line of pymrm source term, and a printed
+  reactor calculation to check against. Build it after C1.1 so the LHHW page
+  exists to contrast the redox form with.
+updated: '2026-08-05'
+doi_source: >
+  Elsevier full text fetched and read 2026-08-02 (api-text route), and on
+  2026-08-05 the DOI printed in the PDF's own metadata
+  ("doi:10.1016/S0009-2509(54)80005-4") was checked against the document's
+  running head, title and page range. Upgraded from api-verified to
+  verified-against-the-document.

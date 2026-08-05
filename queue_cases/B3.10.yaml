@@ -2,21 +2,72 @@ id: B3.10
 section: B
 title: Oxygen-carrier reduction/oxidation
 catalog_reference: Abad & Adánez, Chem. Eng. Sci. (2007)
+catalog_reference_is_wrong: >
+  WRONG JOURNAL. The document on disk is Energy & Fuels 21(4) 1843-1853 (2007),
+  read off its own running head ("Energy & Fuels 2007, 21, 1843-1853") and its
+  ACS download stamp (article-pdf/21/4/1843/). Right authors, right group, right
+  year - wrong container.
+  There IS a separate Abad et al. paper in Chem. Eng. Sci. 62 (2007) on mapping
+  the operating range for Cu-, Fe- and Ni-based carriers; it is NOT on disk and
+  it is not the reduction-KINETICS paper this case needs. Fix the catalogue row
+  when the page is built and do not propagate "Chem. Eng. Sci." into meta.yaml or
+  models.yaml.
+  Same class of error as A1.6 (wrong Wen & Yu paper), A2.9 (wrong journal) and
+  A1.8. Note also the pattern that keeps recurring in this repository: author +
+  year agree, container does not, and container was not being checked.
 priority: P2
 tier: T1
 structures: S12
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Abad, A.", "García-Labiano, F.", "de Diego, L. F.", "Gayán, P.", "Adánez,
+      J."]
+  year: 2007
+  title: Reduction Kinetics of Cu-, Ni-, and Fe-Based Oxygen Carriers Using Syngas (CO
+    + H2) for Chemical-Looping Combustion
+  container: Energy & Fuels 21(4) 1843-1853 (2007)
+  doi: 10.1021/ef070025k
+  affiliation: Instituto de Carboquímica (CSIC), Department of Energy and Environment, Miguel
+    Luesma Castán 4, Zaragoza 50018, Spain
+  received: 18 January 2007; revised 30 March 2007
 paper:
-  on_disk: null
+  on_disk: ef070025k.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    The file's Title metadata reads "No Job Name" - useless. Identified from the
+    document itself: the running head "Energy & Fuels 2007, 21, 1843-1853", the
+    title, the five-author by-line with the Zaragoza CSIC affiliation and the
+    received/revised dates. 11 pp, complete.
+blocker: null
+text_layer:
+  quality: >
+    Good for prose (accented Spanish names survive: "Garcı́a-Labiano", "Gayán",
+    "Adánez", "Giroudière"). Rate constants, reaction orders and activation
+    energies must still come off images.
+  render_at: 600 dpi. CCITT-G4 bilevel at 600 x 600 ppi NATIVE in this file -
+    higher than the repo's usual 300. Do not render above 600.
+what_it_carries: >
+  Reduction kinetics for three oxygen carriers (Cu-, Ni-, Fe-based) with syngas
+  (CO + H2) - i.e. the particle-conversion kinetics the case names, for all three
+  of the carriers the CLC literature actually uses, in one paper. Framed in the
+  CLC context (CO2 capture without a separation step).
+validation_route: >
+  PRINTED KINETIC PARAMETERS (the paper's deliverable is a kinetic parameter set
+  per carrier per gas). Whether the conversion-vs-time curves are tabulated or
+  only plotted has NOT been checked off the renders; check before promising an
+  overlay. The parameters alone support a page.
+notes: >
+  Consumes B3.1 (shrinking core, PUBLISHED) and B3.2/B3.4 (grain model and
+  additive reaction times, both unblocked in this same drop) - the carriers are
+  modelled with exactly those particle models, so this case is a natural
+  DOWNSTREAM build. Do not dispatch it before B3.2 and B3.4.
+  I1.8 (chemical looping combustion REACTOR) is catalogued to Adánez et al.,
+  PECS 38 (2012), which is NOT on disk; this file is particle kinetics, not a
+  reactor model, and does not unblock I1.8. Recorded there.
+updated: '2026-08-05'
+doi_source: >
+  Read from the document 2026-08-05 - the DOI stem ef070025k is the filename and
+  the ACS download stamp gives volume 21, issue 4, first page 1843, agreeing with
+  the printed running head. The case previously had an empty reference block and
+  the catalogue named the wrong journal.

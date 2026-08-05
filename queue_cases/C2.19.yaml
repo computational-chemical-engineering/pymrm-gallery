@@ -2,21 +2,85 @@ id: C2.19
 section: C
 title: Ethanol dehydrogenation
 catalog_reference: (in this suite's teacher exercises)
+catalog_reference_was_empty: >
+  C2.19's reference column names no literature at all, only an internal teacher
+  exercise. The references below are supplied from documents on disk. AGENTS.md
+  forbids building from a teacher exercise alone, so this case was not
+  buildable before this drop regardless of how easy the model is.
 priority: P1
 tier: T2
-structures: ''
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Franckaerts, J.", "Froment, G. F."]
+  year: 1964
+  title: Kinetic study of the dehydrogenation of ethanol
+  container: Chemical Engineering Science 19 (1964) 807-818
+  affiliation: Laboratorium voor Petrochemische Techniek, Rijksuniversiteit Gent, Belgium
+  companion:
+    authors: ["Tayrabekova, S.", "Mäki-Arvela, P.", "Peurla, M.", "Paturi, P.", "Eränen,
+        K.", "Ergazieva, G. E.", "Aho, A.", "Murzin, D. Yu.", "Dossumov, K."]
+    year: 2018
+    title: Catalytic dehydrogenation of ethanol into acetaldehyde and isobutanol using
+      mono- and multicomponent copper catalysts
+    container: Comptes Rendus Chimie 21 (2018) 194-209
+    doi: 10.1016/j.crci.2017.05.005
+    on_disk: 1-s2.0-S1631074817301091-main.pdf
+    note: >
+      ALSO ON DISK. Only one filename can be the value in
+      docs/papers-on-disk.yaml (find_papers.py calls .is_file() on it), so the
+      map keys Franckaerts & Froment and names this one in its comment. Do not
+      request either.
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-0009250964850922-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Franckaerts & Froment read from the PDF's own first page: running head
+    "Chemical Engineering Science, 1964, Vol. 19, pp. 807-818. Pergamon Press
+    Ltd., Oxford. Printed in Great Britain.", title and the two-author Ghent
+    by-line. Tayrabekova et al. read from its own first page: "C. R. Chimie 21
+    (2018) 194e209", the Elsevier/ScienceDirect masthead, the full author list
+    and the Almaty/Åbo Akademi/Turku affiliations; born-digital, and its
+    embedded metadata (title, DOI, container) agrees with the printed page.
+blocker: null
+text_layer:
+  quality: >
+    Franckaerts & Froment: 1964 Pergamon scan, poor - even the by-line extracts
+    with corruption ("G. F. FROMENT t"). Every rate constant, every adsorption
+    constant and every table cell must come off the image.
+    Tayrabekova et al.: born-digital and clean, but the PDF substitutes 'e' for
+    en-dashes in page ranges ("194e209") and drops diacritics from author names
+    in the extracted text; harmless for numbers.
+  render_at: >
+    Franckaerts & Froment: 300 dpi, CCITT-G4 bilevel at 300 x 300 ppi native.
+    Tayrabekova et al.: JPEG at 300 ppi; text is a real text layer, no render
+    needed except for figures.
+what_it_carries: >
+  * Franckaerts & Froment 1964 is the classical LHHW kinetic study of ethanol
+    dehydrogenation to acetaldehyde over a copper catalyst - integral-reactor
+    data, model discrimination among LHHW candidates, and the fitted rate and
+    adsorption constants. It is the paper the suite's teacher exercise
+    descends from, and it is by the same author as C2.1's and C2.10's sources.
+  * Tayrabekova et al. 2018 is a modern mono- and multicomponent Cu/ZnO/Cr2O3
+    study on industrial-size alumina beads, with characterisation and
+    activity/selectivity data - a second, independent dataset seventy years
+    later on the same reaction.
+validation_route: >
+  PRINTED TABLES in both. Confirm the exact inventory off the 1964 renders
+  before promising a parity plot.
+notes: >
+  Franckaerts & Froment 1964 is ALSO the natural source for B1.11
+  (multicomponent pellet with MS/DGM, whose catalogue row literally names
+  "Ethanol dehydrogenation ... pellets"). B1.11 has NOT been flipped by this
+  pass, because whether the paper reports the pellet-scale information B1.11
+  needs has not been checked. Check that before dispatching B1.11, and do not
+  dispatch both cases onto the same transcription.
+  The 1964 + 2018 pairing is the "one reaction, two eras, one page" shape that
+  A1.1 and A4.9 use well.
+updated: '2026-08-05'
+doi_source: >
+  Franckaerts & Froment: no DOI resolved. The container above is read from the
+  document's own running head; the Elsevier PII is 0009250964850922. Treat any
+  auto-resolved DOI for it as unverified.
+  Tayrabekova et al.: DOI printed in the document and in its own metadata, read
+  there 2026-08-05.

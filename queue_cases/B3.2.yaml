@@ -5,48 +5,74 @@ catalog_reference: Szekely & Evans, Chem. Eng. Sci. 25 (1970)
 priority: P1
 tier: T0
 structures: S3+S12
-status: needs-paper
+status: unclaimed
 reference:
-  authors:
-  - Szekely, J.
-  - Evans, J. W.
+  authors: ["Szekely, J.", "Evans, J. W."]
   year: 1970
   title: A structural model for gas-solid reactions with a moving boundary
-  container: Chemical Engineering Science 25(6) 1091-1107
+  container: Chemical Engineering Science 25(6) 1091-1107 (1970)
   doi: 10.1016/0009-2509(70)85053-9
+  affiliation: Department of Chemical Engineering, State University of New York at Buffalo,
+    Buffalo, N.Y. 14214, U.S.A.
+  received: 15 June 1969
+  part_ii:
+    container: Chemical Engineering Science 26 (1971) 1901
+    on_disk: false
+    api_text: api-text/Szekely-Evans-1971-CES-26-1901-grain-model-II.ELSEVIER-API-TEXT.txt
+    note: NO PDF ARRIVED for Part II; api-text only, and that route drops decimal
+      points on pre-1995 scans.
 paper:
-  on_disk: api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
+  on_disk: 1-s2.0-0009250970850539-main.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
-
-
-    Text layer: prose only; scan OCR, decimals unreliable.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/0009250970850539
-notes: 'Part II is also fetched and on disk: ''A structural model for gas-solid reactions
-  with a moving boundary-II. The effect of grain size, porosity and temperature on the reaction
-  of porous pellets'', CES 26(11) (1971) 1901-1913, doi 10.1016/0009-2509(71)86033-5, PII
-  0009250971860335, file api-text/Szekely-Evans-1971-CES-26-1901-grain-model-II.ELSEVIER-API-TEXT.txt.
-  Part II is the one that carries the porosity/grain-size parameter study, so it is probably
-  the one a page needs.'
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  0009250970850539). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I.ELSEVIER-API-TEXT.txt
+  checked: '2026-08-05'
+  identified_by: >
+    Read from the PDF's own first page: the running head "Chemical Engineering
+    Science, 1970, Vol. 25, pp. 1091-1107. Pergamon Press. Printed in Great
+    Britain.", the title, the by-line "J. SZEKELY and J. W. EVANS" with the SUNY
+    Buffalo affiliation, "(Received 15 June 1969)" and the abstract. 17 pp,
+    complete. Matches the catalogue exactly.
+blocker: null
+supersedes_extraction_route: >
+  B3.2 was previously keyed in docs/papers-on-disk.yaml to
+  api-text/Szekely-Evans-1970-CES-25-1091-grain-model-I...txt. There is now a
+  real 17-page scan of PART I. Read every number off the image. PART II IS STILL
+  API-TEXT ONLY.
+text_layer:
+  quality: >
+    Mediocre. 1970 Pergamon scan; word-splitting and symbol damage throughout
+    ("Abstract-Gas-solid", "al rractian at the phase boundary"). Every parameter
+    and every conversion-time value must come off a cropped image - the same
+    discipline B3.1 (published) needed, where the shrinking-core equations had
+    to be read off renders and then verified by independent derivation.
+  render_at: 300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native.
+what_it_carries: >
+  The grain model as its authors state it, and the reason it exists: the
+  shrinking-core model puts structural parameters into an EMPIRICAL rate
+  constant, whereas here "the progress of the reaction [is described] in terms of
+  the porosity, grain size, gas phase and solid state diffusivities and a
+  heterogeneous reaction rate constant, WHICH IS NOW INDEPENDENT OF STRUCTURE."
+  Passes the E1.1 test outright.
+  Note the authors' own honesty caveat, which the page must carry: "By taking
+  'reasonable values' for these parameters the model was found to reproduce the
+  GENERAL TRENDS exhibited by the experimental data of other investigators."
+  That is a trend claim, not a fit - do not present it as a validated prediction.
+validation_route: >
+  Structural, plus the published B3.1 as an independent reference. B3.1
+  (Yagi-Kunii shrinking core) is live in the gallery and validated to 6.9e-16
+  against an independent derivation, and the grain model must REDUCE to it in
+  the appropriate limit - that is a check the source pays for and that cannot be
+  satisfied by accident. Build that limit first.
+  The paper's own comparisons are against other investigators' data reproduced
+  as figures; treat any overlay as needing the review gate, for which no
+  maintainer is available as of 2026-08-05.
+notes: >
+  Natural triptych with the published B3.1 and with B3.4 (Sohn's law of additive
+  reaction times), whose source arrived in the same drop and which is explicitly
+  a closed-form bridge between the shrinking-core and grain pictures. Sohn's
+  paper cites Szekely & Evans. Build B3.2 and B3.4 in that order and have B3.4
+  import both.
+updated: '2026-08-05'
+doi_source: >
+  Elsevier full text fetched and read 2026-08-02; upgraded 2026-08-05 to
+  verified-against-the-document - title, authors, container, volume, page range
+  and received-date read off the scan's own first page.
