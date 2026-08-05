@@ -1,0 +1,73 @@
+dataset_id: hougen-watson-1947-tableA-rates
+title: "Table A - differential rates for codimer hydrogenation over supported Ni at 200, 275, 325 C"
+status: complete
+
+source:
+  authors:
+    - "Hougen, O. A."
+    - "Watson, K. M."
+  year: 1947
+  title: "Chemical Process Principles, Part Three: Kinetics and Catalysis (combined volume)"
+  container: "John Wiley & Sons, New York; Chapman & Hall, London. Chap. XIX, Illustration 2, Table A, book pp. 944-945"
+  doi: null
+  doi_note: >
+    The source is a book with no DOI. Identity was established from the book's
+    own title page, imprint page and printed Contents, not from metadata or the
+    filename (which says only "watson"). PDF page = book page + 16.
+  access: "book scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+  data_origin: >
+    The measurements are experimental, from the pilot-plant differential-reactor
+    study the book cites in its own footnote 18: J. Tschernitz, S. Bornstein,
+    R. B. Beckmann and O. A. Hougen, Trans. Am. Inst. Chem. Engrs. 42, 883-903
+    (1946). That paper was NOT consulted (origin_not_consulted); every number
+    here is read from the book, which reprints the data as Table A and works the
+    estimation on them.
+
+acquisition:
+  method: table
+  figure: "Table A, book pp. 944-945 (PDF pages 960-961)"
+  tool: "poppler pdftoppm at 150 dpi (native), then cropped and enlarged 4x nearest-neighbour"
+  procedure: >
+    The scan is CCITT-G4 bilevel at 150 x 150 ppi native - the lowest native
+    resolution in this repository - so 150 dpi is the correct render resolution
+    and anything higher is interpolation. The text layer's prose is good but its
+    equations and table columns are scrambled (the 275 C block comes back with
+    columns interleaved), so EVERY numeric was read from cropped page-image
+    enlargements, never from the text layer. Each temperature block was cropped
+    and read as a unit, then re-read cell by cell.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the book's own printing: pressures to 3-4 significant figures,
+    rates to 3. The 200 C block transcription is PROVEN correct by checksum:
+    the book prints its own least-squares sums (book p. 952, eqs. f-i), and the
+    transcribed columns reproduce Sum pH = 9.129, Sum pU = 12.178,
+    Sum pS = 7.531 exactly, and every product sum to within the book's own
+    2-decimal rounding of R. The 275 and 325 blocks have no printed sums; they
+    are checked against the reproduction of Tables E and F instead.
+
+validation:
+  internal_consistency: >
+    Run 3c's rate is derivable from the book's own specimen calculation (book
+    pp. 945-946): 1206 ml/hr x 0.710 g/ml / (112.9 g/mol x 454 g/lb) = 0.01671
+    lb-mol/hr liquid leaving, x 6.54 % conversion change = 0.001093 lb-mol/hr,
+    / 0.0440 lb catalyst = 0.02484 lb-mol/(hr lb). Table A prints 0.0250 for
+    run 3c (the specimen is worked at the run's actual average 200.5 C while
+    the table is normalised to 200 C; the book does not print the adjustment).
+    The page reproduces this arithmetic.
+  what_it_tests: >
+    FIT DATA, not held-out data. Every constant in Chap. XIX's Illustration 2
+    (Tables D-G and eq. q) was fitted BY THE BOOK to these 40 runs. The page
+    re-derives those constants from these rows, so agreement tests the
+    reproduction of the estimation, not the predictive power of the rate law.
+    No held-out measurement exists anywhere in the source.
+
+columns:
+  - {name: run,               unit: "-",                    description: "run label as printed (e.g. 12ab = averaged runs 12a and 12b)"}
+  - {name: temp_C,            unit: "degC",                 description: "nominal temperature level of the block: 200, 275 or 325"}
+  - {name: pi_atm,            unit: "atm",                  description: "total pressure pi"}
+  - {name: pH_atm,            unit: "atm",                  description: "average partial pressure of hydrogen over the differential bed"}
+  - {name: pU_atm,            unit: "atm",                  description: "average partial pressure of codimer (the Unsaturate)"}
+  - {name: pS_atm,            unit: "atm",                  description: "average partial pressure of hydrogenated codimer (the Saturate)"}
+  - {name: r_lbmol_per_lb_hr, unit: "lb-mol/(lb cat hr)",   description: "measured rate of hydrogenation"}

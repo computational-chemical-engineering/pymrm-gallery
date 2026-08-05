@@ -1,0 +1,55 @@
+dataset_id: hougen-watson-1947-tablesDEF-constants
+title: "Tables D, E, F - least-squares constants for 18 postulated mechanisms at three temperatures, with the printed rejection verdicts"
+status: complete
+
+source:
+  authors:
+    - "Hougen, O. A."
+    - "Watson, K. M."
+  year: 1947
+  title: "Chemical Process Principles, Part Three: Kinetics and Catalysis (combined volume)"
+  container: "John Wiley & Sons / Chapman & Hall. Chap. XIX, Tables D (book p. 953), E (p. 954), F (p. 955)"
+  doi: null
+  access: "book scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Tables D, E, F on book pp. 953-955 (PDF pages 969-971)"
+  tool: "poppler pdftoppm at 150 dpi (native), cropped and enlarged 3-4x nearest-neighbour"
+  procedure: >
+    Read from cropped page-image enlargements; the text layer scrambles these
+    tables' column order. The 'Reasons for Rejection' column was re-read from a
+    dedicated crop of that column for each table.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the book's own printing (3 significant figures)"
+
+validation:
+  internal_consistency: >
+    These are the BOOK'S OWN fitted constants, reproduced on the page from
+    Table A. The page finds: (1) rows sharing one linearised regression print
+    identical values, as they must (c=j=k=o=p at each temperature); (2) three
+    isolated printed inconsistencies among duplicates - r's c = 4.95 vs 4.45 at
+    275 C, c's a = 9.97 vs j/k/o/p/r's 9.96 at 325 C, q's a = 53.9 vs b's 54.0
+    at 325 C; (3) forensically, the 200 C rows of the pHpU/r family (c, g, j,
+    k, m, o, p, r) and of mechanism h derive from normal equations in which the
+    Sum(R pS) element is corrupted - substituting a single wrong value (about
+    685 in place of the true 277.5) reproduces BOTH the c-family row and the
+    g/m row, two independent witnesses; and (4) the 325 C b/q row is consistent
+    with a Sum(R pH) element 40 % high. None of the four flips an
+    acceptance/rejection verdict: recomputed at full precision, the acceptable
+    set is still exactly {d, h} at every temperature, though the reason strings
+    change where a sign artefact disappears (e.g. a is NOT negative for the
+    200 C c-family at full precision).
+  what_it_tests: >
+    Reference values for reproducing the book's estimation. Not measurements.
+
+columns:
+  - {name: mechanism, unit: "-",    description: "mechanism letter a-r as printed in Table B (book pp. 947-949); 17 catalytic mechanisms plus r = uncatalysed"}
+  - {name: temp_C,    unit: "degC", description: "temperature level: 200 (Table D), 275 (Table E), 325 (Table F)"}
+  - {name: a,         unit: "mixed", description: "constant a of the linearised regression R = a + b pU + c pS + f pH (or f sqrt(pH) for atomic-hydrogen mechanisms); units depend on the mechanism's transform"}
+  - {name: b,         unit: "mixed", description: "coefficient of pU"}
+  - {name: c,         unit: "mixed", description: "coefficient of pS"}
+  - {name: f,         unit: "mixed", description: "coefficient of pH or sqrt(pH)"}
+  - {name: verdict,   unit: "-",    description: "printed verdict: 'acceptable', or rejection reasons joined by ';' - x0 = 'x should be 0', xpos = 'x should be +'"}

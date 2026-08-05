@@ -1,0 +1,49 @@
+dataset_id: hougen-watson-1947-eqq-thermo
+title: "Temperature coefficients of the final recommended rate equation (q), and the Table G foot"
+status: complete
+
+source:
+  authors:
+    - "Hougen, O. A."
+    - "Watson, K. M."
+  year: 1947
+  title: "Chemical Process Principles, Part Three: Kinetics and Catalysis (combined volume)"
+  container: "John Wiley & Sons / Chapman & Hall. Chap. XIX, eq. (q) on book p. 956 and the foot of Table G on book p. 957"
+  doi: null
+  access: "book scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "eq. (q), book p. 956 (PDF page 972); Table G foot, book p. 957 (PDF page 973)"
+  tool: "poppler pdftoppm at 150 dpi (native), cropped and enlarged 4x nearest-neighbour"
+  procedure: >
+    Both printings of every constant were read and BOTH are transcribed where
+    they disagree. ln K = -dH/(RT) + dS/R with R = 1.987 cal/(gmol K) and
+    T in Kelvin on the era's T(K) = t(C) + 273.16 convention.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the book's own printing"
+
+validation:
+  internal_consistency: >
+    EQ. (q) AND TABLE G DISAGREE ON dS_S: eq. (q) prints ln K_S = +13700/RT -
+    30.96/R, Table G prints dS_S = -30.46. The page adjudicates from the
+    book's own printed K_S row (0.489, 0.0646, 0.0222): with dH_S = -13700,
+    dS_S = -30.46 reproduces those three values to 4, 1.2 and 0.4 per cent,
+    while -30.96 misses them by 22-25 per cent. Table G's -30.46 is correct
+    and eq. (q)'s -30.96 is the misprint. An implementation typed straight
+    from the (more convenient) eq. (q) box inherits a K_S about 22 per cent
+    low. The combined rows A + dH_H + dH_U = -2310 and B + dS_H + dS_U =
+    -8.76 are consistent with the component values (-8.75 by exact
+    arithmetic; the book rounds to -8.76).
+  what_it_tests: >
+    FIT quantities - the book's own two-step temperature correlation of the
+    constants it fitted to Table A. Using them to 'predict' Table A rates is a
+    reproduction of the correlation on its own fitting data, and the page
+    labels it as such.
+
+columns:
+  - {name: name,          unit: "-", description: "constant name: dH_x in cal/gmol, dS_x in cal/(gmol K), A (cal/gmol) and B (cal/(gmol K)) for ln(Ek) = -A/RT + B/R; the _eqq suffix marks eq. (q)'s variant reading"}
+  - {name: value,         unit: "cal/gmol or cal/(gmol K)", description: "printed value"}
+  - {name: printed_where, unit: "-", description: "which printing carries it (eq. q, book p. 956, or Table G foot, book p. 957)"}

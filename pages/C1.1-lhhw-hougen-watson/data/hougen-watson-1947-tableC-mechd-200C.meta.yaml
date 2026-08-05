@@ -1,0 +1,52 @@
+dataset_id: hougen-watson-1947-tableC-mechd-200C
+title: "Table C (last five columns) - the book's own per-run evaluation of mechanism d at 200 C"
+status: complete
+
+source:
+  authors:
+    - "Hougen, O. A."
+    - "Watson, K. M."
+  year: 1947
+  title: "Chemical Process Principles, Part Three: Kinetics and Catalysis (combined volume)"
+  container: "John Wiley & Sons / Chapman & Hall. Chap. XIX, Table C, book pp. 950-951"
+  doi: null
+  access: "book scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table C (rotated broadside on the page), book pp. 950-951 (PDF pages 966-967)"
+  tool: "poppler pdftoppm at 150 dpi (native), cropped, rotated, enlarged 4x nearest-neighbour"
+  procedure: >
+    The table is printed rotated 90 degrees; each column band was cropped,
+    rotated upright and read enlarged. Only the last five columns (R exp,
+    R calc, delta, delta^2, per cent delta) are transcribed here; the first
+    eleven columns are products of Table A columns and are recomputed on the
+    page rather than transcribed. The printed sums Sum delta^2 = 3.002 and
+    average +-8.44 per cent are recorded in the header comment.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the book's own printing (R to 2 decimals)"
+
+validation:
+  internal_consistency: >
+    ONE PRINTED CELL IS WRONG AND PROVABLY SO FROM ITS OWN ROW: run 25a's
+    R_calc prints 5.40, but the same row's delta (-0.40), delta^2 (0.160) and
+    per cent (-6.35) all require R_calc = 5.90 (= 6.30 - 0.40), and the
+    recomputed value from the book's own constants is 5.90. A digit slip
+    (5.40 for 5.90), not a computational error - the downstream columns were
+    computed from the correct value. The page reports it and repairs nothing.
+  what_it_tests: >
+    Reference values for reproducing the book's own goodness-of-fit
+    arithmetic. delta is in the TRANSFORMED variable R = sqrt(pH pU / r), not
+    in the rate: because R is proportional to 1/sqrt(r), the book's
+    +-8.44 per cent average corresponds to roughly +-17 per cent in the rate
+    itself. The page measures that factor.
+
+columns:
+  - {name: run,                unit: "-", description: "run label, 200 C block of Table A"}
+  - {name: R_exp_printed,      unit: "sqrt(atm^2 lb hr/lb-mol)", description: "R = sqrt(pH pU / r) from the measurement, as printed (2 decimals)"}
+  - {name: R_calc_printed,     unit: "sqrt(atm^2 lb hr/lb-mol)", description: "R from the fitted four-constant equation (m), as printed. Run 25a's value is a printed digit slip; see validation"}
+  - {name: delta_printed,      unit: "same as R", description: "R_calc - R_exp as printed"}
+  - {name: delta_sq_printed,   unit: "R^2",  description: "delta squared as printed; column sums to the printed 3.002"}
+  - {name: pct_delta_printed,  unit: "%",   description: "100 delta / R_exp as printed; absolute values average to the printed +-8.44"}

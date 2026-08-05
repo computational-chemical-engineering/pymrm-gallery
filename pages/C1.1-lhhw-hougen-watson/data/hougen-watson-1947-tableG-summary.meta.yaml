@@ -1,0 +1,47 @@
+dataset_id: hougen-watson-1947-tableG-summary
+title: "Table G - summary of thermodynamic constants for the accepted mechanism d"
+status: complete
+
+source:
+  authors:
+    - "Hougen, O. A."
+    - "Watson, K. M."
+  year: 1947
+  title: "Chemical Process Principles, Part Three: Kinetics and Catalysis (combined volume)"
+  container: "John Wiley & Sons / Chapman & Hall. Chap. XIX, Table G, book p. 957"
+  doi: null
+  access: "book scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table G, book p. 957 (PDF page 973)"
+  tool: "poppler pdftoppm at 150 dpi (native), cropped and enlarged 3x nearest-neighbour"
+  procedure: >
+    Read from cropped enlargements. Note the a(325) cell reads 3.753 on the
+    render where the text layer suggests 3.763 - the render is authoritative.
+    Table F's d row prints the same constants to fewer digits (3.75, 1.60,
+    0.039, 0.697).
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the book's own printing"
+
+validation:
+  internal_consistency: >
+    The derived rows are arithmetic on the corrected rows and all close:
+    K_U = b/a, K_S = c/a, K_H = f/a, alpha = 1/(a^2 K_H K_U), K_H K_U and
+    alpha K_H K_U reproduce the printed values to the printed digits. The
+    'corrected' rows are the book's least-squares straight lines on
+    log(constant) vs 1/T through the three 'experimental' values; the page
+    re-fits those lines (worst deviation about 7 per cent at 200 C, consistent
+    with the book's hand arithmetic).
+  what_it_tests: >
+    Reference values for reproducing the book's two-step temperature
+    correlation. FIT quantities throughout - nothing here is a held-out
+    measurement.
+
+columns:
+  - {name: quantity,  unit: "-", description: "row label: {a,b,c,f}_experimental (per-temperature fits, = Table D/E/F row d at more digits), {a,b,c,f}_corrected (read off the log-vs-1/T lines), alpha_Ek, K_U, K_S, K_H, KH_KU, alpha_KH_KU (derived from the corrected constants)"}
+  - {name: val_200C,  unit: "mixed", description: "value at 200 C; a,b,c,f carry the mixed units of the linearised regression; K's are 1/atm; alpha is lb-mol/(lb cat hr)"}
+  - {name: val_275C,  unit: "mixed", description: "value at 275 C"}
+  - {name: val_325C,  unit: "mixed", description: "value at 325 C"}
