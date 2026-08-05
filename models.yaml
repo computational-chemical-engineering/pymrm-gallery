@@ -1153,6 +1153,199 @@ models:
         dataset is loaded.
     related: [A3.1, A3.2, F3.1, F3.5, A2.3, J1.5, A2.1]
 
+  - id: A3.6
+    slug: calderbank-moo-young
+    title: "Calderbank-Moo-Young continuous-phase transfer"
+    description: >
+      Calderbank & Moo-Young's claim is that in a dispersion whose particles move
+      freely under gravity the continuous-phase mass-transfer coefficient depends
+      on nothing but the physical properties - not bubble size, not slip velocity,
+      not agitator power - and that it does so in TWO regimes: below about 2 1/2 mm
+      bubbles move as rigid spheres under hindered flow and k_L Sc^(2/3) = 0.31
+      (drho mu g / rho^2)^(1/3); above it, form drag dominates, Higbie's unhindered
+      flow obtains, and k_L Sc^(1/2) = 0.42 (drho mu g / rho^2)^(1/3). The whole
+      content of the split is the exponent on the Schmidt group, i.e. D^(2/3)
+      against D^(1/2), which makes a single evaluation point useless - it sits on
+      one branch and says nothing about the other. This page therefore works both
+      sides and the transition. The highest-ranked validation is the paper's own:
+      in the note added in proof the authors derive eq. (1)'s constant TWICE
+      without fitting anything, and print both answers. Recomputed from scratch,
+      Froessling with Allen's free-rise velocity gives 0.276000 against their
+      printed 0.28 (-1.4 %) and Friedlander with Stokes' law gives 0.339599 against
+      their 0.34 (-0.12 %); the two predictions bracket the fitted 0.31. Because
+      Froessling's coefficient is not printed in this article the first is done in
+      both directions, so that the paper's own 0.28 and 1/4 are shown to imply
+      0.5600 against Froessling's published 0.552. The exponent split is then
+      rebuilt in pymrm as what it physically is: a concentration boundary layer,
+      u(y) dc/dx = D d2c/dy2 with u = u_s + gdot*y and v = 0, marched in x with
+      construct_coefficient_matrix carrying u(y). The rigid limit reproduces the
+      Leveque similarity result to 7.7e-6 and the mobile limit reproduces
+      2 sqrt(D u_s / pi L) to 7.5e-6, both Richardson-extrapolated in the march
+      step at observed orders 1.11 and 1.09; the exponents come back as 0.666667
+      and 0.500000, and the page states that dimensional analysis fixes both, so
+      those two numbers test the implementation and not the physics. What is NOT
+      fixed by dimensional analysis is the transition, which the paper describes
+      three times - Fig. 3's intermediate bubbles, the decline of large-bubble
+      coefficients in deep pools, and the effect of surface-active agents - and
+      models nowhere. All three are the same statement, that the interface stops
+      moving, and one group Lambda = u_s / (gdot delta_Leveque) carries it: the
+      exponent interpolates monotonically, is halfway at Lambda = 0.2721 and within
+      10 % of the mobile value by Lambda = 1.507. The paper's two correlations are
+      the two ends of one curve. The paper's own algebra is then re-run in full.
+      Eq. (5) applied to Chu's pressure drop reproduces the printed P/v as an exact
+      symbolic identity, and eq. (4) plus that P/v reproduces eq. (6)'s prefactor
+      (0.13 x 35.4^(1/4) = 0.317098 against 0.318). But the voidage group does not:
+      the chain forces Sigma^(-1) because P/v carries Sigma^(-4) and eq. (4) takes
+      its fourth root, while eq. (6) prints the same 1/3 exponent on both parts, and
+      NEITHER reading reaches eq. (7)'s printed 0.69 - the printed form gives 0.359
+      (-48 %) and the corrected one 0.651 (-5.7 %). What licenses calling that
+      wrong is that the SAME machinery reproduces the pipe branch exactly:
+      0.13 x 0.0396^(1/4) = 0.0579919 against the printed 0.058, exponent
+      -(1/16+1/4) = -0.3125 against -0.31. That branch then contradicts its own
+      summary claim: eq. (9) and Chilton-Colburn cross at N_Re = 4480, not 10,000,
+      and differ by up to 15.2 % over 2000-20,000 - more than the +/- 12 % claimed,
+      though the +/- itself is right, the deviation taking both signs. Both
+      findings are reported with every alternative printed and neither is repaired.
+      A third defect is proved from the paper's own correlation: the small-bubble
+      row of the Range of Variables table prints D_L x 10^-4, which puts eq. (1)
+      21.2x above that row's own printed k_L ceiling, while 10^-6 lands 1.7 % below
+      it and 10^-5 is ruled out at 4.6x - and the test has a control, the
+      large-bubble row, which reproduces with no adjustment. The stagnant floor 2.0
+      of the paper's more precise form is recovered from construct_div(nu=2) as
+      2.0000193. Twenty-nine injected defects cover all 39 metrics, including the
+      A2.6 failure mode on purpose (reading the transition from the local
+      coefficient instead of the mean moves Lambda_1/2 by +77 %). NOTHING here
+      judges the three fitted constants: they are regression lines through Figs 1,
+      2 and 6, no figure is digitised, and the corner evaluations against the
+      paper's own property ranges are labelled a goodness of fit rather than a
+      validation, because 0.42 was fitted to the very runs whose k_L range it is
+      compared against.
+    section: A
+    status: published
+    page: pages/A3.6-calderbank-moo-young/
+    tier: T0
+    priority: P1
+    structures: [S3, S4]
+    phases: [gas-liquid]
+    predicts:
+      - the continuous-phase mass-transfer coefficient for small bubbles and rigid spheres, eq. 1
+      - the same for large bubbles with mobile interfaces, eq. 2
+      - the Schmidt exponent that discriminates the two mechanisms, 2/3 against 1/2
+      - the stagnant-sphere floor of the more precise form, N_Sh = 2.0 + 0.31 N_Ra^(1/3)
+      - the coefficient under mechanically induced turbulence, eq. 4
+      - packed-bed and pipe j-factors derived from eq. 4 by a flow-work argument, eqs. 6-9
+      - the power required to just suspend solids in a mixing vessel, eq. 10
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_coefficient_matrix
+    reference:
+      authors: ["Calderbank, P. H.", "Moo-Young, M. B."]
+      year: 1961
+      container: "Chemical Engineering Science 16(1-2) 39-54"
+      doi: 10.1016/0009-2509(61)87005-X
+    origin_not_consulted:
+      - authors: ["Froessling, N."]
+        year: 1938
+        container: "Beitr. Geophys. 32, 170 - this paper's reference [4]"
+        note: >
+          The boundary-layer correlation behind the 2/3 exponent and behind the
+          printed constant 0.28. NOT on disk and NOT consulted. Its coefficient is
+          not printed in Calderbank & Moo-Young either, so the page reproduces 0.28
+          in BOTH directions - forward from the value 0.552 that Froessling is
+          universally quoted for, and inverted, so that the paper's own 0.28 and
+          Allen's 1/4 imply 0.5600 with nothing external at all.
+      - authors: ["Higbie, R."]
+        year: 1935
+        container: "Trans. Amer. Inst. Chem. Engrs 31, 365 - this paper's reference [5]"
+        note: >
+          The penetration model behind the 1/2 exponent. Not on disk, not
+          consulted. The page's mobile branch is checked against the closed form
+          2 sqrt(D u_s / pi L), which it derives, and attributes nothing to Higbie
+          beyond the exponent Calderbank & Moo-Young attribute to him. A2.2/A3.3
+          own penetration and surface renewal as cases in their own right.
+      - authors: ["Allen, H. S."]
+        year: 1900
+        container: "Phil. Mag. 50, 323 - this paper's reference [49]"
+        note: >
+          The free-rise velocity used in the note added in proof. Not on disk. The
+          page uses the equation EXACTLY as Calderbank & Moo-Young print it,
+          constant 1/4 included, and separately checks that 1/4 against the drag
+          law C_D = 10 Re^(-1/2) Allen is quoted for, which gives 0.2610 (+4.4 %).
+      - authors: ["Friedlander, S. K."]
+        year: 1957
+        container: "AIChE J. 3, 43 - this paper's reference [50]"
+        note: >
+          The Stokes-region mass-transfer result behind the printed 0.34. Not on
+          disk, not consulted; its constant 0.89 IS printed by Calderbank &
+          Moo-Young and is transcribed from there.
+      - authors: ["Chu, J. C."]
+        year: 1953
+        container: "Chem. Engng Progr. 49, 141 - this paper's reference [38]"
+        note: >
+          The packed-bed pressure-drop correlation. Not on disk. Transcribed as
+          printed, and the page shows that eq. (5) applied to it reproduces the
+          paper's own P/v as an exact symbolic identity, which certifies the
+          transcription without the original.
+      - authors: ["Fallat, R. J."]
+        year: 1959
+        container: "Master's Thesis, University of California - this paper's reference [37]"
+        note: >
+          The measured packed-bed j-factor eq. (7) is compared against. A thesis;
+          not on disk and not obtainable. Its correlation is transcribed as
+          printed, and A3.4 (Wakao-Funazkri) is the page to use for packed-bed
+          Sherwood numbers.
+      - authors: ["Baird, M. H. I."]
+        year: 1960
+        container: "Ph.D. Thesis, University of Cambridge - this paper's reference [22]"
+        note: >
+          The spherical-cap-bubble data and the theoretical
+          K_L = 0.975 D^(1/2)(g/d)^(1/4) that the note added in proof says eq. (2)
+          represents. Not on disk. The page uses only the equation as printed, and
+          shows that the two coincide at one diameter per liquid, none of which
+          falls inside the 0.20-0.80 cm the large-bubble runs covered.
+      - authors: ["Kolmogoroff, A. N."]
+        year: 1941
+        container: "C. R. Acad. Sci. USSR 30, 301 and later - this paper's reference [28]"
+        note: >
+          Local isotropy, the basis of eq. (4). Not on disk, not consulted; the
+          page uses only the scaling Calderbank & Moo-Young print from it and does
+          not examine eq. (4)'s derivation beyond checking that its stated
+          exponents x = 1/3, y = 3/2 give k_L proportional to D^(2/3) with no d.
+      - authors: ["Batchelor, G. K."]
+        year: 1953
+        container: "The Theory of Homogeneous Turbulence, CUP - cited alongside
+          Kolmogoroff for local isotropy"
+        note: >
+          Named with Kolmogoroff wherever the page discusses the eq. (4) scaling
+          basis. Not on disk, not consulted; nothing on the page rests on it
+          beyond the same printed scaling.
+    data:
+      tier: 6
+      method: >
+        Transcribed from pdftoppm renders of the Elsevier scan at its NATIVE 300
+        ppi (pdfimages -list: CCITT-G4 bilevel, 300x300 ppi, each page stored as a
+        stack of 2250 x 115 px strips), with EVERY numeric cropped and re-read at
+        digit scale before being written down. Two CSVs: 33 printed constants,
+        exponents and stated results; and the two "This work" rows of the Range of
+        Variables table, which are the two sides of the regime split. NO FIGURE IS
+        DIGITISED - the paper's six figures are all scatter correlation plots, the
+        route needs a maintainer review that is not available, and nothing this
+        page claims needs one.
+      status: complete
+      caveat: >
+        THE FITTED CONSTANTS ARE NOT JUDGED HERE. 0.31, 0.42 and 0.13 are
+        regression lines through Figs 1, 2 and 6 - the last stated in so many words
+        to be "the equation of the regression line drawn through the data", with a
+        standard deviation of 66 per cent - and the only evidence about them is the
+        scatter in those figures. The corner evaluations of eqs. (1) and (2)
+        against the paper's own Range of Variables table are therefore a GOODNESS
+        OF FIT, not a validation, and are labelled so on the page and in every
+        metadata file. What they support is a transcription check and the proof
+        that the small-bubble row's printed D_L exponent (10^-4) is a misprint for
+        10^-6.
+    related: [A3.1, A3.2, A3.3, A3.4, F3.1, F1.4]
+
   - id: A3.12
     slug: yagi-kunii-effective-conductivity
     title: Yagi–Kunii effective thermal conductivity

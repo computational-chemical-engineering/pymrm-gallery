@@ -1,0 +1,275 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.6
+slug: calderbank-moo-young
+title: "Calderbank-Moo-Young continuous-phase transfer"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3, S4]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 5
+datasets:
+  - calderbank-mooyoung-1961-printed-numbers.csv
+  - calderbank-mooyoung-1961-range-of-variables.csv
+
+validation:
+  - >-
+    THE PAPER'S OWN TWO THEORETICAL DERIVATIONS OF EQ. (1), REPRODUCED FROM
+    SCRATCH. In the note added in proof the authors derive the constant of their
+    correlation (1) twice without fitting anything, and print both answers.
+    Froessling combined with Allen's free-rise velocity gives them 0.28;
+    recomputed here as 0.552 * sqrt(1/4) = 0.276000, which is -1.43 % on the
+    printed value. Friedlander's Stokes-region result combined with Stokes' law
+    gives them 0.34; recomputed as 0.89 * (1/18)^(1/3) = 0.339599, -0.12 %. The
+    second uses nothing from outside this article except the 18 of Stokes' law.
+    The first needs Froessling's coefficient, which this article does not print,
+    so it is done in BOTH directions: forward from Froessling's published 0.552,
+    and inverted, so that the paper's own 0.28 and 1/4 are shown to imply a
+    coefficient of 0.5600 against Froessling's 0.552 (+1.45 %). The two
+    predictions bracket the fitted 0.31 (0.276 below, 0.340 above), which is
+    reported as the paper's own internal check and not as a validation of the
+    fit. Allen's printed 1/4 is separately checked against the drag law he
+    proposed, C_D = 10 Re^(-1/2), which gives (2/15)^(2/3) = 0.2610, +4.4 %.
+  - >-
+    THE PACKED-BED CHAIN, AND THE STEP THAT DOES NOT CLOSE. Eq. (5) applied to
+    Chu's pressure-drop correlation reproduces the P/v the paper prints as an
+    EXACT symbolic identity (sympy residual 0.0, exponent for exponent, carrying
+    35.4, 0.44, 1.44, 2.56 and Sigma^-4). Inserting it into eq. (4) reproduces
+    eq. (6)'s prefactor: 0.13 * 35.4^(1/4) = 0.317098 against the printed 0.318,
+    -0.28 %. But the voidage group does NOT reproduce: the chain forces
+    (1-Sigma)^0.36 * Sigma^(-1), because P/v carries Sigma^-4 and eq. (4) takes
+    its fourth root, while eq. (6) prints ((1-Sigma)/Sigma)^(1/3) - the same
+    exponent on both. At the paper's own Sigma = 0.41 the printed form gives
+    j_d = 0.3590 Re^(-1/3) and the Sigma^-1 form 0.6505 Re^(-1/3), against the
+    printed eq. (7) constant of 0.69: -48.0 % and -5.7 %. NEITHER READING OF
+    EQ. (6) REACHES EQ. (7). All three candidates are printed against Fallat's
+    own measured j_d = 0.626 Re^(-0.322) over three decades, where eq. (7) is
+    within 4.6 %, the Sigma^-1 reading within 6.4 % and the chain's own -0.36
+    exponent within 28.0 %. Nothing is repaired.
+  - >-
+    THE PIPE CHAIN IS THE CONTROL, AND IT REPRODUCES EXACTLY. The same machinery
+    on the Blasius equation gives 0.13 * 0.0396^(1/4) = 0.0579919 against the
+    printed 0.058 (-0.014 %) and an exponent of -(1/16 + 1/4) = -0.3125 against
+    the printed -0.31. That is what localises the packed-bed problem to the
+    voidage rather than to eq. (4)'s constant, the flow-work argument or the
+    definition of j_d - the F2.3 order of operations, applied before anything is
+    called wrong.
+  - >-
+    A STATED RESULT THAT DOES NOT REPRODUCE, REPORTED NOT REPAIRED. The paper
+    says eq. (9) "agrees with" Chilton-Colburn at N_Re = 10,000 with a maximum
+    deviation of +/- 12 per cent over 2000-20,000. Recomputed from the two
+    printed power laws they cross at N_Re = 4480 (3716 with the exact -5/16
+    exponent), a factor 2.2 from the claim; at 10,000 they differ by 8.5 %; and
+    the worst case over the stated range is 15.2 % (17.2 % exact; 17.9 % in the
+    paper's own (CC-eq9)/eq9 direction). The deviation takes both signs inside
+    the range, so the "+/-" is right about the shape; the size and the crossing
+    are what the sentence gets wrong. Both readings of the exponent are printed.
+  - >-
+    A PRINTED TABLE EXPONENT PROVED WRONG FROM THE PAPER'S OWN CORRELATION, WITH
+    A CONTROL. The small-bubble row of the Range of Variables table prints
+    D_L = 3.4-17.8 x 10^-4 cm2/s. Evaluating eq. (1) at that row's own property
+    corners gives k_L in [0.0329, 0.2118] cm/s against the row's own printed
+    k_L range of 0.0024-0.010 cm/s: 21.2x too high at the top. Reading the
+    exponent as -6 gives [0.00153, 0.00983], landing 1.7 % below the printed
+    ceiling; -5 is ruled out at 4.56x. The exponent is the only free choice and
+    -6 is selected uniquely. THE TEST HAS A CONTROL AND THE CONTROL PASSES: the
+    same corner evaluation of eq. (2) on the large-bubble row, whose printed
+    exponent is -6, gives [0.00573, 0.0717] cm/s against a printed
+    [0.007, 0.080] - within 10-18 % with no adjustment at all. Two further rows
+    of the same column print 10^-1 and 10^5 cm2/s and are scoped out rather than
+    guessed at.
+  - >-
+    THE STAGNANT FLOOR, WITH pymrm. The 2.0 of the paper's more precise form
+    (N_Sh = N_Nu = 2.0 + 0.31 N_Ra^(1/3), journal page 44) is the conduction
+    limit of a sphere. Solved with construct_grad + construct_div(nu=2) on a
+    stretched shell and extrapolated in R/R_inf, it comes back as 2.0000193,
+    +9.7e-6 on the printed value. IT SEES THE GEOMETRY: nu = 0 gives 2.0e-4 and
+    nu = 1 gives 0.217, and a closed outer boundary gives 1e-9.
+  - >-
+    THE REGIME SPLIT REBUILT AS A BOUNDARY LAYER, CHECKED AGAINST TWO CLOSED
+    FORMS THAT SHARE NO CODE WITH pymrm. u(y) dc/dx = D d2c/dy2 with
+    u = u_s + gdot*y and v = 0 - divergence-free EXACTLY, not a neglected term -
+    marched in x with construct_coefficient_matrix carrying u(y) and the
+    operator factorised once. The rigid limit (u_s = 0) reproduces the Leveque
+    similarity result to +7.7e-6 Richardson-extrapolated (-1.4e-4 raw at
+    n = 800); the mobile limit (gdot = 0) reproduces 2 sqrt(D u_s / pi L) to
+    +7.5e-6 (-1.6e-4 raw). Observed orders 1.11 and 1.09 in the march step, which
+    IS the error: refining n_y from 400 to 1600 moves the answer by 1.5e-5 in
+    relative error, doubling the far field by 8.4e-7, and refining n_x by an
+    order of magnitude more. The exponents d ln k_L / d ln D_L then come back as
+    0.666667 and 0.500000 against the paper's printed 2/3 and 1/2 - and the page
+    says plainly that BOTH LIMITS ARE FIXED BY DIMENSIONAL ANALYSIS once the
+    profile is set, so those two numbers test the implementation, not the
+    physics. What they catch is the wrong profile, and the break table shows they
+    do: swapping the profiles swaps the exponents.
+  - >-
+    TWENTY-NINE INJECTED DEFECTS, 79 ROWS, AND 39 OF 39 METRICS COVERED. The
+    break table is organised by defect rather than by metric, and each defect
+    recomputes every metric it can reach, so a coverage check at the end names
+    any metric no defect touches - there are none. 73 of the 79 rows move.
+    Included are the transcription traps (Chu's 35.4 as 354, Blasius's 0.0396 as
+    0.396, eq. (4)'s 0.13 as 0.18, Chu's 0.44 as 0.50, Allen's 1/4 as 1/2,
+    Stokes' 18 as 24, Friedlander's 0.89 as 0.98, Fallat's voidage as 0.30,
+    Baird's 0.975 as 0.75, the eqs. (1)/(2) constants swapped, eq. (1)'s Schmidt
+    exponent read as 1/2, eq. (4)'s 1/4 read as 1/3, and the small-bubble D
+    exponent left at the printed -4) and the model defects (nu = 0 and nu = 1 on
+    the sphere, a closed outer boundary, each branch of the boundary layer run
+    with the OTHER branch's velocity profile, the far field truncated at 3 delta,
+    the interface left flux-free, and the convergence order measured at
+    n = 12/24/48 outside the asymptotic range). ONE ROW IS THE A2.6 FAILURE MODE
+    ON PURPOSE: reading the transition from the LOCAL coefficient at x = L
+    instead of the mean moves Lambda_1/2 from 0.272 to 0.483, +77 %. SIX ROWS DO
+    NOT MOVE and are kept and labelled - two are structural (the sphere shell
+    taken 10x deeper, which the (1 - R/R_inf) extrapolation exists to remove; and
+    kbar from the boundary gradient instead of the mass balance, which backward
+    Euler makes agree by construction) and four are simply out of reach of the
+    defect concerned (Fallat's exponent does not enter the eq. (7) reconstruction
+    and the eq. (6) constant does not enter the printed-eq.-(7) comparison).
+  - >-
+    THE TABLE'S OWN LIMIT IS STATED ON THE PAGE. Every row perturbs an input and
+    watches a number move, so no row can detect a baseline that is wrong rather
+    than insensitive: a systematic march error cancels out of the ratio between
+    a perturbed and an unperturbed run. That is why the two theoretical
+    reproductions (0.28, 0.34) and the two closed-form comparisons (Leveque,
+    Higbie) exist - each reaches a printed or exact number by a route sharing no
+    code with what it is compared against - and why the convergence study and the
+    Richardson extrapolation, not the break table, are what bound the numerics.
+  - >-
+    WHICH PRINTED CONSTANTS THE CHECKS EXERCISE IS COMPUTED, NOT ASSERTED. The
+    notebook walks p()'s read log over every printed-number row and prints the
+    ones no check reads, with an assert tying the declared-unexercised set to
+    the log. Every constant
+    entering an equation used here is exercised. THREE ARE NOT, and the page says
+    so: the 66 per cent standard deviation of eq. (4) and the 10^7 span of Fig. 6
+    are properties of a figure this page never reads, so they could be deleted
+    from the paper and nothing here would move; and the 2 1/2 mm split enters no
+    formula - it is CORROBORATED by the Range of Variables diameters
+    (0.20-0.80 cm against 0.02-0.06 cm) but not tested, and the large-bubble row
+    starting at 2.0 mm, BELOW the stated boundary, is noted.
+
+adds: >
+  Three things, and two refusals.
+  (1) The transition is turned into a number. The paper describes it three times
+  - Fig. 3's intermediate bubbles, the decline of large-bubble coefficients in
+  deep pools, and the effect of surface-active agents - and models it nowhere.
+  All three say the same thing: the interface stops moving. Written as
+  u(y) = u_s + gdot*y, one group Lambda = u_s/(gdot*delta_Leveque) controls it,
+  the exponent interpolates monotonically from 2/3 to 1/2, the halfway point
+  (n = 7/12) is at Lambda = 0.2721 and the exponent is within 10 % of the mobile
+  value by Lambda = 1.507. The paper's two correlations are the two ends of one
+  curve.
+  (2) The paper's arithmetic is re-run and two steps do not close - eq. (6) ->
+  eq. (7), and the Chilton-Colburn comparison - with the pipe chain reproducing
+  exactly beforehand, which is what licenses calling anything wrong.
+  (3) A printed table exponent is corrected from the paper's own correlation,
+  with a control that passes.
+  THE REFUSALS. This page cannot judge 0.31, 0.42 or 0.13: they are regression
+  lines through Figs 1, 2 and 6, the only evidence about them is the scatter in
+  those figures, and digitisation needs a maintainer review that is not
+  available. Two things are said about them without touching a figure - the
+  paper's own theoretical routes bracket 0.31, and corner evaluation of eqs. (1)
+  and (2) on the Range of Variables table brackets the measured k_L windows -
+  and BOTH ARE LABELLED GOODNESS OF FIT, not validation, because 0.42 was fitted
+  to the very runs whose k_L range it is compared against. And the boundary-layer
+  model does not predict the constants: it reproduces the exponents and the
+  interpolation, which is the mechanism claim. 0.31 and 0.42 absorb bubble shape,
+  slip velocity, swarm hindrance and the interfacial-area definition, none of
+  which a flat interface of contact length L contains.
+
+agreement: >
+  Two printed theoretical predictions reproduced from scratch: 0.276000 against
+  0.28 (-1.43 %) and 0.339599 against 0.34 (-0.12 %). Two derived constants
+  reproduced from the paper's own chains: 0.317098 against eq. (6)'s 0.318
+  (-0.28 %) and 0.0579919 against eq. (9)'s 0.058 (-0.014 %). The stagnant
+  Sherwood floor 2.0000193 against the printed 2.0 (+9.7e-6). pymrm against two
+  closed forms at +7.7e-6 and +7.5e-6 extrapolated (-1.4e-4 and -1.6e-4 raw,
+  observed orders 1.11 and 1.09). Exponents 0.666667 and 0.500000 against the
+  printed 2/3 and 1/2, LABELLED as implementation checks because dimensional
+  analysis fixes them. TWO PRINTED CLAIMS DO NOT REPRODUCE AND ARE REPORTED AS
+  METRICS RATHER THAN RECONCILED: eq. (7) is -48.0 % from eq. (6) as printed and
+  -5.7 % from the reading the derivation forces, and the eq. (9) /
+  Chilton-Colburn crossing is at N_Re = 4480 with a worst deviation of 15.2 %
+  against the printed 10,000 and +/- 12 %. THREE METRICS ARE EXACTLY 0.0 - the
+  symbolic identities chu_identity_resid, eq10_exponent_resid and ra_form_resid -
+  and are therefore BELOW check_agreement.py's ABS_FLOOR of 1e-12 and outside CI
+  entirely; each has a break row that makes it non-zero and a companion metric
+  that CI does compare (eq6_prefactor_rel_dev, eq10_implied_const, and
+  sh_stagnant_extrap together with crossover_Sc). NOTHING ON THIS PAGE IS FITTED,
+  and nothing on it judges the paper's three fitted constants.
+
+caveats: >
+  TIER 6, AND THE FIGURES ARE WHERE THE EVIDENCE IS. The paper contains no
+  individual measurement. Several hundred k_L values, the authors' own plus
+  twenty-two other published sources, appear only as points on Figs 1, 2 and 6.
+  Those three figures are where the three fitted constants come from and are the
+  only place they could be judged. NO FIGURE IS DIGITISED HERE: the route needs a
+  maintainer review and none is available, and it is not needed for anything this
+  page does claim. The consequence is stated rather than worked around - this
+  page cannot say whether 0.31, 0.42 or 0.13 are good.
+
+  THE CORNER-EVALUATION CHECKS ARE GOODNESS OF FIT, NOT VALIDATION, and are
+  labelled so in the notebook, in this file, in models_entry.yaml and in the CSV
+  sidecar. Eq. (2)'s constant was fitted to the large-bubble runs whose k_L range
+  it is being compared against; eq. (1)'s to the small-bubble ones. Their value
+  is as transcription checks - a mis-read constant or exponent moves them by
+  orders - and as the demonstration that the small-bubble D_L exponent is
+  misprinted, which is a use they can support.
+
+  CITATION TRAP ON THIS FILE, AND HOW IT WAS SETTLED. The PDF's text layer prints
+  the header as "1981 ... Vol 19" and corrupts one running footer to 1991. The
+  citation was established from the article's OWN PRINTED HEADER on a 300 ppi
+  page image, cropped and enlarged with nearest-neighbour: "Chemical Engineering
+  Science, 1961, Vol 16, pp 39 to 54  Pergamon Press Ltd, London". Three running
+  footers independently read "Vol 16, Nos 1 and 2  December, 1961", the PII
+  0009-2509(61)87005-X encodes 61, and the page range matches. Not from the text
+  layer, not from the filename, not from the PII alone.
+
+  TRANSCRIPTION PROVENANCE. pdfimages -list reports every image on every page as
+  CCITT-G4 bilevel at 300x300 ppi native (each page is a stack of 2250 x 115 px
+  strips), so all renders were made at 300 ppi; 600 dpi would be 2x
+  interpolation. EVERY numeric was cropped and re-read at digit scale before
+  being written down, because the 1961 typesetting sets the decimal point as a
+  mid-dot that this scan mostly loses. Two readings were settled that way and are
+  recorded in the sidecar: eq. (4)'s constant is 0.13 (the English abstract's
+  copy of the same equation is OCR-ed as 0.18, while the French and German
+  abstracts both print 0,13), and its standard deviation is 66 per cent, not 6.6
+  - the two sixes are set with no gap where every genuine decimal on the same
+  page has one.
+
+  THREE CONSTANTS COME FROM OUTSIDE THIS ARTICLE and are named where they are
+  used: Froessling's 0.552 (the paper's ref. [4], not printed here), the 18 of
+  Stokes' law, and Allen's C_D = 10 Re^(-1/2) (ref. [49], used only to CHECK the
+  paper's printed 1/4, not to replace it). The Froessling reproduction is done in
+  both directions so that the version depending on nothing external - the paper's
+  own 0.28 and 1/4 implying a coefficient of 0.560 - is available separately.
+  g = 981 cm/s2 is the only other unprinted input anywhere on the page.
+
+  THE BOUNDARY LAYER IS A MECHANISM MODEL, NOT A BUBBLE MODEL. A flat interface
+  of contact length L with u = u_s + gdot*y. It reproduces the two exponents and
+  the interpolation; it does not and cannot predict 0.31 or 0.42. Its two pure
+  limits are fixed by dimensional analysis, so the exponents test the
+  implementation rather than the physics, and the page says so where the numbers
+  are printed rather than in a footnote.
+
+  OVERLAP WITH A3.3, DECLARED. This page's mobile branch reduces to the same
+  penetration problem A3.3 solves. The two are NOT independent confirmations of
+  each other: this page's mobile-branch check is against the closed form
+  2 sqrt(D u_s / pi L), not against A3.3's output, and no number, dataset or
+  sentence from A3.3, A3.1 or A3.4 is reused here.
+
+  SCOPE. Higbie (1935), Froessling (1938), Allen (1900), Friedlander (1957),
+  Chu (1953), Fallat (1959), Baird (1960), Kolmogoroff and Batchelor are all
+  cited by this paper and NONE is on disk or consulted. Every result attributed
+  to them here is transcribed from what Calderbank & Moo-Young print, and nothing
+  is attributed to them beyond that. They are recorded under
+  origin_not_consulted in models_entry.yaml. The heat-transfer halves of eqs. (1)
+  and (4), the four competing suspension-power laws on journal page 51, and the
+  whole of the Fig. 4/Fig. 5 sieve-tray material are not examined here.

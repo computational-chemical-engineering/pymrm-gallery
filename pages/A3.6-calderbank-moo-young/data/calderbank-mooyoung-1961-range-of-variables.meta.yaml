@@ -1,0 +1,108 @@
+dataset_id: calderbank-mooyoung-1961-range-of-variables
+title: The two "This work" rows of Calderbank & Moo-Young's Range of Variables table - the two sides of the regime split
+status: complete
+
+source:
+  authors:
+    - "Calderbank, P. H."
+    - "Moo-Young, M. B."
+  year: 1961
+  container: "Chemical Engineering Science 16(1-2) 39-54"
+  doi: 10.1016/0009-2509(61)87005-X
+  access: >
+    Institutional subscription (TU Eindhoven), lawful access. The Elsevier PDF is
+    held outside this repository and is not committed. No page image is
+    reproduced anywhere in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    pdftoppm -r 300 render of PDF page 5 (the landscape spread carrying journal
+    pages 42-43), rotated -90 degrees, then cropped row by row and column by
+    column and read at 2-4x nearest-neighbour zoom. 300 ppi is the scan's NATIVE
+    resolution (pdfimages -list: CCITT-G4 bilevel, 300x300 ppi throughout).
+    THE POWERS OF TEN IN THE D_L COLUMN WERE THE FIRST THING CROPPED, because
+    they are exactly where this table fails.
+  figure: "none - this is the paper's own printed table, not a figure"
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-05
+  estimated_error: >
+    None on the transcription of the two rows kept. The uncertainty is in the
+    PAPER: see printed_defect below.
+
+conditions:
+  what_these_rows_are: >
+    MARGINAL RANGES, not paired observations. Each cell is the span of that one
+    variable across the runs summarised by the row; nothing says the maximum
+    viscosity went with the maximum diffusivity. Evaluating a correlation at the
+    corners therefore gives a WINDOW that should bracket the printed k_L window,
+    and that is all it can do. No individual measurement is printed anywhere in
+    the article.
+  why_only_two_rows: >
+    These two are the regime split. `this_work_large` is the unhindered-flow /
+    eq. (2) data set, `this_work_small` the hindered-flow / eq. (1) one, and the
+    diameter columns separate cleanly at the paper's own 2 1/2 mm boundary
+    (0.20-0.80 cm against 0.02-0.06 cm). Having both is what lets this page
+    evaluate on BOTH SIDES of the split rather than at one convenient point.
+  printed_defect_in_the_D_L_COLUMN: >
+    THE SMALL-BUBBLE ROW'S DIFFUSIVITY EXPONENT IS WRONG AS PRINTED, and the
+    proof comes from the paper's own correlation and its own printed k_L range,
+    not from plausibility.
+    Printed: D_L = 3.4 - 17.8 x 10^-4 cm2/sec. Evaluating eq. (1) at the corners
+    of the same row gives k_L in [0.0329, 0.2118] cm/s against the row's own
+    printed k_L range of 0.0024 - 0.010 cm/s: 13.7x too high at the bottom and
+    21.2x at the top. Reading the exponent as -6 instead gives [0.00153,
+    0.00983] cm/s against that same printed [0.0024, 0.010] - the top of the
+    predicted window lands within 1.7 per cent of the top of the printed one.
+    The exponent is the ONLY free choice: 10^-5 gives [0.0071, 0.0456], still
+    4.6x high at the top, so -6 is selected uniquely among the three candidates.
+    The same test applied to the large-bubble row, whose printed exponent is -6,
+    reproduces its printed k_L range without any adjustment at all - so the test
+    has a control and the control passes.
+    THE SCAN IS NOT AT FAULT: the crop reads "3 4 - 17 8 x 10^-4" cleanly at
+    digit scale, exactly as "1 9 - 48 1 x 10^-6" does one row above. This is the
+    paper's own typesetting.
+    D_L_exp_printed therefore carries -4, as printed. The notebook uses -6 for
+    every quantitative statement, prints both, and says so.
+  two_further_rows_scoped_out: >
+    The table has three more "This work" rows. Two of them print diffusivities
+    that cannot be right in any phase - 2.6 - 9.5 x 10^-1 cm2/sec and
+    6.5 - 9.3 x 10^5 cm2/sec - and no reading of the paper fixes the second at
+    all. They are not transcribed, not used, and not guessed at. That the same
+    column fails in three of five rows is itself the reason this page leans on
+    the two rows whose exponents it can check.
+  units: >
+    CGS throughout, as printed: k_L cm/sec, D_L cm2/sec, densities g/cm3,
+    viscosity cP (= 0.01 P), diameter cm. g = 981 cm/s2 is NOT printed in the
+    paper and is supplied by the notebook; it is the only input to the corner
+    evaluation that does not come off this table.
+
+columns:
+  - {name: row_id,            unit: "-",      description: stable key}
+  - {name: regime,            unit: "-",      description: the row label as printed in the Reference column}
+  - {name: correlation,       unit: "-",      description: which of the paper's correlations governs this side of the split}
+  - {name: kL_lo,             unit: cm/sec,   description: lowest measured liquid-phase mass-transfer coefficient in the row}
+  - {name: kL_hi,             unit: cm/sec,   description: highest measured liquid-phase mass-transfer coefficient in the row}
+  - {name: kL_units,          unit: "-",      description: units as printed}
+  - {name: D_L_lo_mant,       unit: "-",      description: mantissa of the lowest diffusivity}
+  - {name: D_L_hi_mant,       unit: "-",      description: mantissa of the highest diffusivity}
+  - {name: D_L_exp_printed,   unit: "-",      description: power of ten EXACTLY AS PRINTED - see printed_defect above for the small-bubble row}
+  - {name: D_L_units,         unit: "-",      description: units as printed}
+  - {name: drho_lo,           unit: g/cm3,    description: lowest phase density difference}
+  - {name: drho_hi,           unit: g/cm3,    description: highest phase density difference}
+  - {name: rho_c_lo,          unit: g/cm3,    description: lowest continuous-phase density}
+  - {name: rho_c_hi,          unit: g/cm3,    description: highest continuous-phase density}
+  - {name: rho_units,         unit: "-",      description: units as printed}
+  - {name: mu_c_lo,           unit: cP,       description: lowest continuous-phase viscosity}
+  - {name: mu_c_hi,           unit: cP,       description: highest continuous-phase viscosity}
+  - {name: mu_units,          unit: "-",      description: units as printed}
+  - {name: d_lo,              unit: cm,       description: smallest dispersed-phase diameter}
+  - {name: d_hi,              unit: cm,       description: largest dispersed-phase diameter}
+  - {name: d_units,           unit: "-",      description: units as printed}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). Two rows of a table of ranges are extracted; no figure, no page image
+  and no substantial portion of the text is reproduced.

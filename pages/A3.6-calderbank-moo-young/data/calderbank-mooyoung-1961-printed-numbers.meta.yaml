@@ -1,0 +1,134 @@
+dataset_id: calderbank-mooyoung-1961-printed-numbers
+title: Every printed constant, exponent and stated numerical result in Calderbank & Moo-Young (1961) that this page uses
+status: complete
+
+source:
+  authors:
+    - "Calderbank, P. H."
+    - "Moo-Young, M. B."
+  year: 1961
+  container: "Chemical Engineering Science 16(1-2) 39-54"
+  doi: 10.1016/0009-2509(61)87005-X
+  access: >
+    Institutional subscription (TU Eindhoven), lawful access. The Elsevier PDF is
+    held outside this repository at
+    ~/papers/pymrm-gallery/1-s2.0-000925096187005X-main.pdf and is not committed.
+    No page image is reproduced anywhere in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    pdftoppm -r 300 renders of the 16 PDF pages, read by eye, with a
+    nearest-neighbour zoomed crop taken for EVERY numeric in this file before it
+    was written down. 300 ppi is the scan's NATIVE resolution: pdfimages -list
+    reports every image on every page as CCITT-G4 bilevel at 300x300 ppi (the
+    page is sliced into 2250 x 115 px horizontal strips), so rendering at 600
+    would be 2x interpolation and would add no information.
+  figure: >
+    none used. The paper has six figures (Figs 1-6) and every one of them is a
+    scatter correlation plot. NONE is digitised here: the digitisation route
+    needs a maintainer review and none is available, and it is not needed,
+    because everything this page checks is printed as a number. Figs 1, 2 and 6
+    are where the three fitted constants come from and are therefore the ONLY
+    place the fits could be judged - which is exactly why this page does not
+    claim to judge them.
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-05
+  estimated_error: >
+    None on the transcription: every value was read at digit scale on the native
+    render and each is printed to the precision shown. Where the paper's own
+    arithmetic does not close, the page reports the gap rather than adjusting a
+    transcription to make it close.
+
+conditions:
+  CITATION_TRAP_ON_THIS_FILE: >
+    THE TEXT LAYER OF THIS PDF PRINTS THE WRONG YEAR AND THE WRONG VOLUME. Its
+    first line comes back from pdftotext as
+    "Chemcal En@neenng Snence, 1981, 1'01 19, pp 39 to 54", i.e. 1981 and volume
+    19. Both are OCR damage. The header ON THE PAGE IMAGE, cropped at 300 ppi
+    and enlarged 3x with nearest-neighbour, reads
+    "Chemical Engineering Science, 1961, Vol 16, pp 39 to 54  Pergamon Press Ltd,
+    London  Printed in Great Britain". The running footer on journal pages 44,
+    47, 49 and 51 independently reads "Chem Engng Sci Vol 16, Nos 1 and 2
+    December, 1961" (the text layer corrupts one of those four to 1991, which is
+    the same trap a third time). The publisher PII 0009-2509(61)87005-X encodes
+    61, and the page range 39-54 matches. THE CITATION WAS ESTABLISHED FROM THE
+    ARTICLE'S OWN PRINTED HEADER ON AN IMAGE, not from the text layer, not from
+    the filename and not from the PII.
+  what_this_paper_contains: >
+    Correlations and their supporting algebra. The measured quantities behind
+    them - several hundred k_L values from aerated mixing vessels, sieve and
+    sintered-plate columns, plus published heat- and mass-transfer data from
+    twenty-two other sources - appear ONLY as points on Figs 1, 2 and 6. The
+    paper tabulates the RANGE of each variable (see the companion CSV) but not a
+    single individual measurement. Every row in this file is therefore a
+    constant, an exponent, or a statement the authors make about their own
+    algebra. The page's data tier is 6.
+  fitted_versus_predicted_MATTERS_HERE: >
+    Three of these constants are REGRESSION OUTPUTS and three are THEORETICAL
+    PREDICTIONS, and the distinction decides what may be claimed.
+    FITTED: 0.31 (eq. 1) and 0.42 (eq. 2) are the two correlation lines drawn
+    through Fig. 1; 0.13 (eq. 4) is stated in so many words to be "the equation
+    of the regression line drawn through the data" of Fig. 6, with a standard
+    deviation of 66 per cent. Comparing any of the three against the data of
+    Figs 1, 2 or 6 would be a goodness of fit, NOT a validation, and this page
+    does not do it.
+    PREDICTED: 0.28 (Froessling + Allen) and 0.34 (Friedlander + Stokes) are
+    derived by the authors from theory in the note added in proof, with nothing
+    fitted; 2.0 is the stagnant-sphere conduction limit. Those three are
+    predictions and are what this page reproduces.
+  transcription_trap_1_mid_dot_decimals: >
+    The 1961 Pergamon typesetting sets the decimal point as a mid-dot, and this
+    scan drops most of them. "0 31", "0 42", "0 13", "35 4", "0 0396", "0 318",
+    "0 069" all come back from the text layer without any separator at all, and
+    the eq. (3) constant of the ENGLISH abstract is OCR-ed as "0 18" while the
+    French and German abstracts of the same equation both give 0,13. The value
+    is 0.13: read on a zoomed crop of eq. (4) on journal page 50, where "0" and
+    "13" are separated by a mid-dot gap and "1" and "3" are not.
+  transcription_trap_2_66_not_6_6: >
+    The standard deviation of eq. (4) is 66 per cent, not 6.6. Checked on a
+    zoomed crop: the two sixes are set with NO gap between them, whereas every
+    genuine decimal on the same page ("0 13") has a clear gap where the mid-dot
+    sits. 66 per cent is also the only reading consistent with a figure that
+    spans 10^7 in its variables.
+  printed_defect_found_eq6_to_eq7: >
+    RECORDED, NOT REPAIRED. Eq. (6) prints the voidage group as
+    ((1-Sigma)/Sigma)^(1/3) - the same exponent on both. Inserting the paper's
+    OWN P/v expression (which the page reproduces as an exact symbolic identity)
+    into eq. (4) gives (1-Sigma)^0.36 * Sigma^(-1): the exponent on Sigma alone
+    must be -1, because P/v carries Sigma^-4 and eq. (4) takes its fourth root.
+    The prefactor of eq. (6) is not in doubt - 0.13*35.4^(1/4) = 0.3171 against
+    the printed 0.318 - so the disagreement is isolated to the voidage exponent.
+    Neither reading reaches the printed eq. (7): at Sigma = 0.41 the printed form
+    gives j_d = 0.359 Re^-1/3 and the Sigma^-1 form 0.651 Re^-1/3, against the
+    printed 0.69 Re^-1/3. Both alternatives are computed and printed on the page.
+    THE SAME MACHINERY REPRODUCES THE PIPE CHAIN EXACTLY (0.13*0.0396^(1/4) =
+    0.05799 against the printed 0.058), which is what localises the problem to
+    the packed-bed branch rather than to the transcription or to eq. (4).
+  stated_result_that_does_not_reproduce: >
+    The paper states that its eq. (9) "agrees with" Chilton-Colburn at
+    N_Re = 10,000 with a maximum deviation of +/- 12 per cent over 2000-20,000.
+    Recomputed from the two printed power laws, they cross at N_Re = 4480 using
+    the printed exponent -0.31 (3716 using the exact -5/16 that the chain gives),
+    and the largest deviation over 2000-20,000 is 15.2 per cent (17.2 per cent
+    with the exact exponent), one-signed at the top of the range. Both are
+    reported on the page; nothing is adjusted to make the printed claim hold.
+
+columns:
+  - {name: id,            unit: "-",     description: stable key used by the notebook to look the row up}
+  - {name: journal_page,  unit: "-",     description: page of Chem. Engng Sci. 16 on which the value is printed}
+  - {name: equation,      unit: "-",     description: the paper's own equation number, where the value carries one}
+  - {name: quantity,      unit: "-",     description: what the number is}
+  - {name: printed_value, unit: varies,  description: the value exactly as printed, decimal point restored}
+  - {name: units,         unit: "-",     description: units as printed (CGS throughout; viscosity in cP)}
+  - {name: printed_text,  unit: "-",     description: the equation or sentence transcribed from the native 300 ppi render, mid-dot decimals left as printed gaps}
+  - {name: kind,          unit: "-",     description: "fitted_constant | derived_constant | quoted_constant | theory_prediction | theory_exponent | theory_limit | stated_result | stated_range | stated_scatter | stated_boundary | input"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). Short transcriptions of the equations and sentences carrying each
+  number are included so that a reader can audit the transcription without the
+  PDF; no figure, no page image and no substantial portion of the text is
+  reproduced.
