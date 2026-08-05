@@ -86,6 +86,58 @@ models:
       - A4.4
       - A4.9
 
+  - id: A4.6
+    slug: chapman-enskog
+    title: "Chapman–Enskog binary diffusion"
+    description: >
+      A binary diffusivity derived from the intermolecular potential rather than
+      fitted to diffusion data, put against the 39 usable pairs of Chapman &
+      Cowling's Table 22 of measured D12. It predicts them to a few per cent —
+      but the Lennard-Jones constants it needs are a two-parameter fit to
+      viscosity, and swapping in the book's own virial-derived constants for the
+      same molecules more than doubles the error. The page separates what the
+      theory contributes from what the fit does, and uses pymrm to answer the
+      question the book sets aside: which D12 a transient Loschmidt cell
+      actually reports when the second approximation makes D12
+      composition-dependent.
+    section: A
+    status: published
+    page: pages/A4.6-chapman-enskog/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas]
+    reference:
+      authors: ["Chapman, Sydney", "Cowling, T. G."]
+      year: 1970
+      container: >
+        The Mathematical Theory of Non-Uniform Gases: An Account of the Kinetic
+        Theory of Viscosity, Thermal Conduction and Diffusion in Gases, 3rd
+        edition, prepared in co-operation with D. Burnett. Cambridge University
+        Press; reissued in the Cambridge Mathematical Library with a Foreword by
+        Carlo Cercignani (1990), reprinted 1993. ISBN 0 521 40844 X.
+      doi: null
+      note: >
+        The ORIGIN, not a reprint, and the document actually read - so there is no
+        `reference_read_from`. The catalogue recorded no citation at all for this
+        case ("—") before the monograph reached disk on 2026-08-05. Equations
+        (9.8, 7-8), (9.81, 1), (10.2, 1), (10.42, 1), (12.1, 6), (14.2, 1),
+        (14.2, 4), (14.21, 1-6), (14.3, 1-2), (14.4, 1) and Tables 6, 11, 17 and
+        22 were read off cropped 300 dpi renders (the scan's NATIVE resolution) of
+        the page images. The origins of the fitted force constants
+        (Hirschfelder, Bird & Spotz 1948/49) and of the tabulated collision
+        integrals (Monchick & Mason 1961; Itean, Glueck & Svehla 1961) were NOT
+        consulted; they reach the page through the book's own tables, which is
+        what it prints and attributes.
+    predicts: [binary gas diffusivity, collision integrals, composition dependence of D12, apparent D of a transient diffusion cell]
+    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, interp_cntr_to_stagg, newton]
+    # tier 2: Table 22 is 50 MEASURED D12 values compiled by the authors from the
+    # literature, with their references printed. Measurements at one remove - the
+    # original experimental papers were not consulted - and no figure is digitised
+    # anywhere on the page.
+    data: {tier: 2, method: table, status: complete}
+    related: [A4.2, A4.3, A4.4, A4.5, A4.7, A4.9, A2.3]
+
   - id: A4.9
     slug: duncan-toor
     title: "Duncan–Toor ternary gas diffusion"
@@ -1545,6 +1597,130 @@ models:
         that the small-bubble row's printed D_L exponent (10^-4) is a misprint for
         10^-6.
     related: [A3.1, A3.2, A3.3, A3.4, F3.1, F1.4]
+
+  - id: A3.8
+    slug: onda-correlations
+    title: "The Onda correlations, and which of their fourteen constants the paper can see"
+    description: >
+      Three coupled correlations - wetted area, liquid-side and gas-side coefficients
+      - with the area feeding the liquid side and not the gas side. Eq. (4) is eq. (3)
+      rearranged and printed with no working shown, so recovering it two independent
+      ways pins all four gas-side constants at once: 0.774443 and -0.300000 against
+      the printed 0.771 and -0.30. Combining eqs. (1) and (2) then forces the local
+      slope of k_L a against L into (2/3, 0.800) for any packing and any liquid - a
+      bound containing no prefactor, so no refit can move it - and two of the six
+      exponents Onda prints in his own Table 1, both spheres, sit above the ceiling.
+      All fourteen constants are placed inside a pymrm counter-current absorber and
+      their elasticities computed three ways, which is what shows that eq. (1)'s 0.75
+      is exactly inert wherever the packing and the liquid share a surface tension,
+      and that eq. (3)'s 1/3 is worth 0.73 % of packed height in an air system.
+    section: A
+    status: published
+    page: pages/A3.8-onda-correlations/
+    tier: T1
+    priority: P1
+    structures:
+      - S3
+    phases:
+      - gas-liquid
+    predicts:
+      - wetted area of a packed column, a_w/a_t, from liquid rate and surface tensions
+      - liquid-side mass transfer coefficient k_L in a packed column
+      - gas-side mass transfer coefficient k_G in a packed column, on either branch
+      - the packed height for a stated separation, via a counter-current two-film column
+      - which phase controls, as a function of the equilibrium slope
+      - the local slope of k_L a against liquid rate, and the ceiling it cannot exceed
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - compute_boundary_values
+      - interp_cntr_to_stagg_tvd
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - "Onda, K."
+        - "Takeuchi, H."
+        - "Okumoto, Y."
+      year: 1968
+      container: "Journal of Chemical Engineering of Japan 1(1) 56-62"
+      doi: 10.1252/jcej.1.56
+      note: >
+        Identified by READING the article, not from its filename - the file on disk is
+        `1_56.pdf` and a bare numeric filename carries no metadata. Page 56 carries the
+        title, the three-author byline and the affiliation; the feet read "VOL.1 NO.1
+        1968" and the folios run 56-62. The DOI was then VERIFIED against CrossRef,
+        which returns the same title, the same three surnames, the same container,
+        volume 1, issue 1, pages 56-62, 1968 - not an auto-resolution from a terse
+        citation. All equations and table cells were read from renders at the scan's
+        NATIVE 300 ppi (pdfimages -list reports CCITT-G4 bilevel at 300 ppi
+        throughout), each cropped to a single line and re-read at that resolution.
+        Two other articles share the same PDF; the one beginning on page 62 reprints
+        eqs. (1)-(3) verbatim and is used only as the second printing against which
+        the transcription is checked.
+    origin_not_consulted: >
+      Eq. (1) is not derived in this article - it is carried over from ref. 18, Onda,
+      K., Takeuchi, H. and Koyama, Y., Kagaku Kogaku 31, 126 (1967), which is NOT on
+      disk and was not consulted. The 1968 article prints eq. (1) in full and uses it
+      throughout, which is what the page builds on; nothing about the 1967 paper is
+      claimed. That reference is also where the critical surface tensions sigma_c of
+      the packing materials live - they appear nowhere in the 1968 article - which is
+      why the page carries sigma_c/sigma as a swept parameter rather than a constant.
+      Eq. (5) is Shulman et al., AIChE Journal 1, 253 (1955), ref. 22: not on disk,
+      not consulted, used only as Onda reprints it on page 59 with attribution.
+    data:
+      tier: 3
+      method: table
+      status: complete
+      note: >
+        Tier 3 in origin - Table 1 reduces the authors' own measurements - but NOT
+        out-of-sample: page 57 states those runs were replotted against eq. (2) in
+        Fig. 2. The correlation constants are tier 6, being the authors' fits.
+        Nothing is digitised and no maintainer figure review is needed.
+    related:
+      - A3.1
+      - A3.9
+      - A3.10
+      - F3.1
+      - F3.5
+      - A2.6
+    note: >
+      Read the tier carefully. NOTHING on this page is an out-of-sample test of
+      eqs. (2) or (3): they were fitted to the k_L a and k_G a data any comparison
+      here would use, including the authors' own Table 1 runs. The two results that
+      escape that circularity are named as such. (i) The eq. (4) identity - the
+      authors rearrange eq. (3) into a j_D factor for spheres and print 0.771 and
+      -0.30 with no working; a sympy reduction and a 4000-sample numerical regression
+      both give 0.774443 and -0.300000, i.e. +0.447 % and 1.7e-16, agreeing with each
+      other to 2.2e-16. The 0.447 % is consistent with the authors' own rounding (the
+      page prints the two obvious intermediate roundings and shows a_t D_p = 3.4076
+      rather than the printed 3.4 gives 0.771 exactly) and NO claim of a mis-set
+      constant is made. (ii) The exponent window: eqs. (1) and (2) force
+      dln(k_L a)/dlnL into (2/3, 0.800) with no prefactor in the bound, and two of
+      Onda's own six printed exponents - both spheres, 0.86 and 0.83 - are ABOVE the
+      ceiling. Null baselines are reported beside it and one of them wins: a single
+      fitted constant n = 0.7450 scores 0.0533 mean absolute error against 0.0667 for
+      Onda's ceiling - but Onda's own window midpoint scores the identical 0.0533
+      with zero free parameters, so six rows with no error bars cannot separate a
+      fitted constant from Onda's window, and the page says so.
+
+      Two printed exponents are essentially untestable and the page reports both:
+      eq. (1)'s 0.75 is EXACTLY inert whenever sigma_c = sigma (replacing it by 7.5
+      leaves all twelve printed digits of the packed height), and this article prints
+      sigma_c for no material; eq. (3)'s 1/3 moves the packed height by 0.73 % when
+      doubled, because Sc_G = 0.971 for air. Both branches of eq. (3) are exercised -
+      branch factor 2.615 on the constant, 2.024 on the packed height - which is the
+      A1.8 defect avoided by construction.
+
+      a = a_w, Onda's central assumption, is untested and untestable from this
+      article, and no break row can be written for it. The illustrative absorber's
+      fluid properties are standard-table air and water and are NOT Onda's; the only
+      geometry taken from the paper is a_t D_p = 6(1-eps) = 3.4 for spheres, page 58.
+      The pymrm-versus-closed-form column check is a discretisation check ONLY and is
+      labelled as one. The page does NOT compare Onda with Billet-Schultes (A3.9) or
+      Rocha-Bravo-Fair (A3.10) - neither source is on disk - and says that comparison
+      belongs to whichever of those two is built second; A3.6 and A3.7 are stirred
+      tanks and nothing transfers.
 
   - id: A3.12
     slug: yagi-kunii-effective-conductivity

@@ -1,0 +1,109 @@
+dataset_id: chapman-cowling-1970-table6
+title: "Collision integrals for the Lennard-Jones 12,6 model - Chapman & Cowling (1970), Table 6"
+status: complete
+
+source:
+  authors:
+    - "Chapman, Sydney"
+    - "Cowling, T. G."
+  year: 1970
+  container: >
+    The Mathematical Theory of Non-Uniform Gases, 3rd edn, Cambridge University
+    Press (Cambridge Mathematical Library reissue 1990, reprinted 1993).
+    Table 6, book p. 185.
+  doi: null
+  access: "monograph held on the maintainer's disk (lawful access)"
+  licence: "all rights reserved (numeric facts extracted; no page image reproduced)"
+
+conditions:
+  what_it_is: >
+    "Values of W^(1)_12(1), W^(2)_12(2), A, B, C for the 12,6 model", at sixteen
+    values of kT/eps_12 running 0.3 to 100.0. These are NOT measurements. Book
+    p. 184 attributes them to the machine integrations of Monchick & Mason
+    (J. Chem. Phys. 35, 1676 (1961)) and Itean, Glueck & Svehla (NASA TN D-481,
+    1961), with a detailed tabulation by Liley (Purdue TPRC Report 15, 1963).
+  normalisation: >
+    Eq. (10.2, 1) gives W^(l)_12(r) in closed form for rigid elastic spheres and
+    states "In particular, W^(1)_12(1) = 1, W^(2)_12(2) = 2". So both tabulated
+    quantities equal 1 for rigid spheres; they are the reduced collision
+    integrals usually written Omega^(1,1)* and Omega^(2,2)*.
+  A_B_C: >
+    Pure numbers defined at eq. (9.8, 7):
+    A = Omega^(2)_12(2)/5 Omega^(1)_12(1);
+    B = {5 Omega^(1)_12(2) - Omega^(1)_12(3)}/5 Omega^(1)_12(1);
+    C + 1 = 2 Omega^(1)_12(2)/5 Omega^(1)_12(1).
+    For rigid spheres these give A = 2/5, B = 3/5, C = 1/5 exactly; for
+    Maxwellian molecules C = 0.
+  header_fraction: >
+    THE ONE READING THAT COULD NOT BE READ. The third column's header carries a
+    fraction whose glyph is destroyed in the scan - a solid vertical blob at
+    300 ppi, illegible at any magnification. It is 1/2, i.e. the column is
+    (1/2) W^(2)_12(2), and it is stored here as `W22_half`.
+
+    This is a RECONSTRUCTION from printed material, not a guess, and it is
+    established twice, independently:
+      (a) eq. (9.8, 7) with the rigid-sphere normalisation of eq. (10.2, 1)
+          requires A = 2 x col3 / (5 x col1). Over the sixteen rows that holds
+          to a maximum relative deviation of 2.9e-4. With 1/3 in the header the
+          same identity is off by 50 %.
+      (b) recomputing Omega^(2,2)* from the 12,6 potential by direct quadrature
+          (done on the page, using no table at all) reproduces col3 to 0.30 %
+          at worst over all sixteen rows, and misses (3/2) x col3 by 34 %.
+    A prior source note on this book recorded the fraction as 1/3. It is not.
+    The distinction changes nothing numerical on this page - only W^(1)_12(1)
+    enters D12, and A is printed as its own column - but it is recorded so the
+    next reader of this table does not have to settle it again.
+
+acquisition:
+  method: table
+  figure: "Table 6, book p. 185 = PDF p. 209 (stored ROTATED, 2503 x 1603)"
+  tool: "poppler pdftoppm -r 300 (the NATIVE resolution), rotated, cropped into two halves, read visually"
+  procedure: >
+    CCITT-G4 bilevel scan at 300 ppi native. The ABBYY text layer mangles these
+    numbers (0.4291 comes back as "o-4291"; the last row's 100.0 loses its
+    mid-dot decimal and reads as 1000) and was not used. The page was rendered
+    at 300 dpi, rotated upright, cropped in two and read at 2x magnification of
+    the crop. The sixteen row labels were counted twice.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the printed precision; transcribed characters, not digitised positions"
+
+validation:
+  A_identity: >
+    A = 2 x col3 / (5 x col1) from eq. (9.8, 7) + (10.2, 1): max relative
+    deviation 2.9e-4 over all sixteen rows.
+  C_identity: >
+    Eq. (14.4, 1) states dln[D12]_1/dlnT = 2 - (5/2)C. Since [D12]_1 goes as
+    T^(3/2)/W^(1)_12(1), this requires dlnW/dlnT* = (5/2)C - 1/2. A cubic spline
+    through the sixteen log-log points gives that with an r.m.s. residual of
+    0.0037, i.e. the C column and the W^(1)(1) column agree about the slope.
+  independent_quadrature: >
+    Recomputing Omega^(1,1)* and Omega^(2,2)* from the 12,6 potential by
+    numerical integration of the classical deflection angle reproduces columns 1
+    and 3 to 0.18 % and 0.30 % at worst over all sixteen rows. Both worst cases
+    are on the kT/eps = 100 row, where the quadrature is converged to five digits
+    under a 2.8x refinement - so that residual is a difference between two
+    numerical integrations of the same integral, not an error in this one. Every
+    other row agrees to better than 0.1 %. The two lowest rows are the orbiting
+    regime, where the classical deflection integral diverges at a critical impact
+    parameter; panelling the b integral brings them in, and the page shows the
+    residual self-convergence (0.07 % at kT/eps = 0.3) rather than asserting it.
+
+columns:
+  - {name: kT_over_eps12, unit: "-", description: "reduced temperature kT/eps_12"}
+  - {name: W11, unit: "-", description: "W^(1)_12(1), the reduced collision integral entering [D12]_1; equals 1 for rigid spheres"}
+  - {name: W22_half, unit: "-", description: "(1/2) W^(2)_12(2), the reduced collision integral entering viscosity; equals 1 for rigid spheres. The 1/2 is a reconstruction - see conditions.header_fraction"}
+  - {name: A, unit: "-", description: "eq. (9.8, 7); 2/5 for rigid spheres"}
+  - {name: B, unit: "-", description: "eq. (9.8, 7); 3/5 for rigid spheres"}
+  - {name: C, unit: "-", description: "eq. (9.8, 7); 1/5 for rigid spheres, 0 for Maxwellian molecules"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced.
+
+caveat: >
+  TIER 6 - computed, not measured. These are numerical integrations of an
+  assumed potential. Reproducing them tests the transcription and the quadrature;
+  it says nothing about whether real molecules obey the 12,6 law.

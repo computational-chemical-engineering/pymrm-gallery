@@ -5,7 +5,8 @@ catalog_reference: —
 priority: P1
 tier: T0
 structures: ''
-status: unclaimed
+status: published
+page: pages/A4.6-chapman-enskog/
 reference:
   authors: ["Chapman, Sydney", "Cowling, T. G."]
   year: 1970
@@ -112,7 +113,50 @@ does_not_carry: >
     * A4.2 (Maxwell-Stefan) - the multicomponent diffusion coefficients are in
       Chapter 18, but A4.2 is already published from Krishna & Wesselingh 1997.
 
-validation_route: printed table (Table 22, ~45 gas pairs; Table 6, 15 rows)
+validation_route: >
+  printed tables, no figure anywhere. Table 22 gives FIFTY measured D12 (not the
+  ~45 first estimated), of which 39 are usable because Table 17 has no 12,6
+  constants for NH3, C2H4 or C2H6. Table 6 has SIXTEEN rows, running to 100.0.
+
+built:
+  page: queue_cases/A4.6/page/
+  models_entry: queue_cases/A4.6/models_entry.yaml
+  slug: chapman-enskog
+  runtime_seconds: 205
+  headline: >
+    Chapman-Enskog first approximation vs the 39 usable measured pairs: mean
+    absolute deviation 3.65 %, bias -2.74 %, worst -10.06 % (N2-CO2), 29/39
+    inside 5 %. Null model (collision integral deleted, Table 11 diameters):
+    17.24 %. The SAME theory with the book's own virial-derived force constants:
+    10.23 % against 4.13 % for the viscosity-fitted ones on the same 27 pairs -
+    so the headline is a joint statement about the theory and about which
+    property its parameters were fitted to, and the page says so.
+  out_of_sample: >
+    YES with respect to the diffusion data. Table 17's eps/k and sigma are
+    fitted to pure-gas VISCOSITY (book p. 235, explicit), the combination rules
+    are assumptions from section 12.41, and Table 6 is a numerical integration
+    fitted to nothing. Table 23's constants ARE derived from D12(T) and are
+    deliberately NOT used - that is the circularity trap, one table away.
+  corrections_to_the_source_map: >
+    Two, both from cropped native-resolution reads.
+      * Table 22 has FIFTY rows, not "roughly forty-five".
+      * Table 6's third column is (1/2) W^(2)_12(2), NOT (1/3). The fraction
+        glyph is destroyed in the scan and cannot be read at any magnification;
+        it was established twice from printed material - eq. (9.8, 7) with the
+        rigid-sphere normalisation of eq. (10.2, 1) (2.9e-4 against 1/2, 0.50
+        against 1/3), and an independent quadrature of the 12,6 potential
+        (0.30 % against 1/2, 34 % against 1/3). It changes no diffusivity, since
+        only W^(1)(1) enters [D12]_1.
+  also_read_and_used: >
+    Table 11 (book p. 228) was NOT in the source map's list and is needed: it is
+    the only place in the book that prints MOLECULAR WEIGHTS (so no external
+    periodic table is required), it supplies the pure-gas viscosities that
+    eq. (14.21, 3) needs for the second approximation, and section 14.32 states
+    that Table 22's last column is built from ITS sigma, not Table 17's.
+  a41_confirmed_negative: >
+    Re-checked while building. The book's only Wilke is Buddenberg & Wilke
+    (1949) on the viscosity of a mixture, section 12.43. A4.1 stays needs-paper;
+    nothing on the A4.6 page sources it.
 notes: >
   First monograph ever to reach ~/papers/pymrm-gallery/. See
   docs/source-map-2026-08-05.md for the precise statement of what it does and

@@ -4,25 +4,93 @@ title: Onda correlations
 catalog_reference: J. Chem. Eng. Japan 1 (1968)
 priority: P1
 tier: T1
-structures: ''
-status: unclaimed
-reference: {}
-paper:
-  on_disk: null
-  open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+structures: 'S3'
+status: published
+page: pages/A3.8-onda-correlations/
+slug: onda-correlations
 
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/1_56.pdf
+  open_access: null
   checked: '2026-08-05'
-  identified_by: read the article's own first pages, not the filename
-  citation_as_read: "Onda et al., mass transfer coefficients between gas and liquid phases in packed columns"
+  identified_by: >
+    Read the article's own first pages, not the filename. Journal page 56 carries
+    the title "MASS TRANSFER COEFFICIENTS BETWEEN GAS AND LIQUID PHASES IN PACKED
+    COLUMNS", the byline "KAKUSABURO ONDA, HIROSHI TAKEUCHI** AND YOSHIO OKUMOTO
+    / Dept. of Chem. Eng., University of Nagoya, Nagoya" and the footnote
+    "Received on July 10, 1967"; the running feet read "JOURNAL OF CHEMICAL
+    ENGINEERING OF JAPAN" and "VOL.1 NO.1 1968" and the printed folios run 56-62,
+    so the filename 1_56.pdf encodes volume 1, page 56.
+  doi_verified: >
+    Yes. CrossRef for 10.1252/jcej.1.56 returns title "MASS TRANSFER COEFFICIENTS
+    BETWEEN GAS AND LIQUID PHASES IN PACKED COLUMNS", authors ONDA / TAKEUCHI /
+    OKUMOTO, container "JOURNAL OF CHEMICAL ENGINEERING OF JAPAN", volume 1,
+    issue 1, pages 56-62, year 1968. Title, all three surnames, volume, issue,
+    page range and year agree with the page images.
+  native_resolution: >
+    pdfimages -list reports all seven pages as CCITT-G4 bilevel, 2456 x 3330 px
+    at 300 x 300 ppi. Every render was at 300 dpi; each equation and table row
+    was cropped to a single line and re-read at that resolution. The PDF is
+    encrypted RC4 (copying permitted) and has no usable text layer for numerals.
+  other_articles_in_the_same_pdf: >
+    Page 56 opens with the closing column of a PRECEDING bubble-column paper on
+    porous-plate distributors; page 62 begins the FOLLOWING article, "Gas
+    absorption with chemical reaction in packed columns" by Onda, Sada and
+    Takeuchi. Neither is used for its own content. The companion article reprints
+    eqs. (1)-(3) verbatim in its introduction, and is used only as the second,
+    independently typeset printing against which the transcription is checked.
+
+reference:
+  authors: ["Onda, K.", "Takeuchi, H.", "Okumoto, Y."]
+  year: 1968
+  container: "Journal of Chemical Engineering of Japan 1(1) 56-62"
+  doi: 10.1252/jcej.1.56
+
+blocker: null
+
+staged_at: queue_cases/A3.8/page/
+models_entry: queue_cases/A3.8/models_entry.yaml
+review_needed: false
+review_note: >
+  No figure is digitised, so there is nothing for a maintainer figure review to
+  answer. The paper prints its constants, its reduced Table 1 and its four error
+  bands as numerals; Figs. 1, 2, 3 and 7 are scatter plots of the fits, Fig. 8 is
+  Z_cal against Z_act and Fig. 9 is the resistance split for distillation, and all
+  are explicitly scoped out on the page.
+
+headline_numbers:
+  eq4_identity: >
+    Eq. (4) recovered from eq. (3) two independent ways (sympy reduction; 4000-
+    sample numerical evaluate-and-regress): prefactor 0.774443 and exponent
+    -0.300000 against Onda's printed 0.771 and -0.30, i.e. +0.447 % and 1.7e-16,
+    with the two routes agreeing to 2.2e-16.
+  exponent_window: >
+    Eqs. (1)+(2) force dln(k_L a)/dlnL into (0.666667, 0.800000]. Table 1's six
+    printed exponents: 4 inside, 2 above the ceiling (both spheres, 0.86 and
+    0.83), worst excess +0.060. Null baselines: Onda's ceiling scores 0.0667 mean
+    |error|, n = 2/3 scores 0.0967, n = 1 scores 0.2367, and a single FITTED
+    constant n = 0.7450 scores 0.0533 - and Onda's own window MIDPOINT (0.7333,
+    zero free parameters) scores the same 0.0533, so the comparison cannot
+    separate a fitted constant from Onda's window; only the ceiling
+    representative loses. What it bounds is the evidential value of six rows.
+  shulman: >
+    Eq. (4) vs Shulman's eq. (5) over the paper's own stated 100 < X < 10,000:
+    -14.95 % / cross at 1485.6 / +12.12 %, worst 14.95 %, mean 6.97 %, against a
+    constant-j_D null that is ~100 % out at each end.
+  inert_exponents: >
+    eq. (1)'s 0.75 is EXACTLY inert at sigma_c = sigma (relative change 0 to
+    twelve digits); eq. (3)'s 1/3 moves packed height by 0.73 % when doubled,
+    since Sc_G = 0.971 for air.
+  column: >
+    Z = 0.8063 m for 95 % removal at the illustrative operating point; branch
+    factor 2.615 on the constant and 2.024 on the height; pymrm vs closed form at
+    order 1.990, 1.90e-6 at n = 800, extrapolated 1.04e-8; the A2.6 cell-centre
+    reading is 384x worse at order 1.007.
+
+runtime_seconds: 8
+notes: >
+  65 break-table rows over 22 metrics, every metric moved by at least one row.
+  46 metrics reported; 7 fall below check_agreement.py's ABS_FLOOR = 1e-12 and
+  are listed on the page as pinned rather than proven. No other page's CSV is
+  loaded, so the cross-page rule does not apply.
+updated: '2026-08-05'

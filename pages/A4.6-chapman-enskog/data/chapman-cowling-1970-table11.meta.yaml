@@ -1,0 +1,87 @@
+dataset_id: chapman-cowling-1970-table11
+title: "Molecular weights, viscosities and viscosity diameters at S.T.P. - Chapman & Cowling (1970), Table 11"
+status: complete
+
+source:
+  authors:
+    - "Chapman, Sydney"
+    - "Cowling, T. G."
+  year: 1970
+  container: >
+    The Mathematical Theory of Non-Uniform Gases, 3rd edn, Cambridge University
+    Press (Cambridge Mathematical Library reissue 1990, reprinted 1993).
+    Table 11, book p. 228.
+  doi: null
+  access: "monograph held on the maintainer's disk (lawful access)"
+  licence: "all rights reserved (numeric facts extracted; no page image reproduced)"
+
+conditions:
+  what_it_is: >
+    "Viscosities and molecular diameters of gases at S.T.P." Section 12.2:
+    "Table 11 gives experimental values of mu for a number of the common gases
+    at S.T.P., and also equivalent diameters at 0 degC. derived from them, using
+    (12.1, 6)." So mu is MEASURED and sigma is CALCULATED from it; the molecular
+    weight column is a physical constant.
+  units: >
+    The printed headers are "10^7 x mu (poise)" and "10^8 x sigma (cm.)", with a
+    footnote "1 poise = 1 g./cm. sec." Stored as printed, i.e. the column
+    mu_1e7_poise holds the printed number.
+  air: >
+    Air has neither a molecular weight nor a diameter printed (em dashes in both
+    columns); those two cells are stored blank. Its viscosity is printed and
+    kept. Section 12.2 notes that air is the usual relative-viscosity standard
+    and that even for air "the probable error of a weighted mean of values of mu
+    is about 0.1 per cent of the true value. For other gases the probable error
+    may be several times as large."
+  why_this_table_is_here: >
+    Three reasons, none of them decorative. (1) It is the ONLY place in the book
+    that prints molecular weights, so the page needs no external periodic table.
+    (2) Its viscosities are the [mu_1]_1 of eq. (14.21, 3), needed for the
+    second approximation. (3) Its sigma column is the one that builds the last
+    column of Table 22 - section 14.32 names p. 228 explicitly - so the two
+    tables can be checked against each other.
+
+acquisition:
+  method: table
+  figure: "Table 11, book p. 228 = PDF p. 252"
+  tool: "poppler pdftoppm -r 300 (the NATIVE resolution), read visually"
+  procedure: >
+    CCITT-G4 bilevel scan at 300 ppi native; the ABBYY text layer drops the
+    mid-dot decimal separator and was not used. Rendered at 300 dpi and read
+    from the page image, every numeral twice.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the printed precision"
+
+validation:
+  sigma_from_mu: >
+    Eq. (12.1, 6) is the rigid-sphere viscosity of eq. (10.21, 1),
+    [mu]_1 = (5/16) sqrt(k m T / pi)/sigma^2, with the exact-value correction of
+    section 12.1 (mu = 1.016 [mu]_1 for rigid spheres). Inverting it on the
+    printed mu and M reproduces the printed sigma to a maximum relative
+    deviation of 8.7e-4 over all 23 gases that have both. Dropping the 1.016
+    raises that to 8.8e-3, i.e. an order of magnitude, which is how the page
+    establishes that the correction is included in (12.1, 6).
+  against_table_22: >
+    Half-sums of this sigma column reproduce the last column of Table 22 to a
+    worst absolute deviation of 0.0075 x 1e-8 cm, consistent with rounding.
+
+columns:
+  - {name: gas, unit: "-", description: "gas name as printed"}
+  - {name: formula, unit: "-", description: "formula key used across this page's datasets; A = argon, as in the book"}
+  - {name: M, unit: "g/mol", description: "molecular weight as printed; blank for air"}
+  - {name: mu_1e7_poise, unit: "1e-7 poise", description: "MEASURED viscosity at S.T.P., as printed (10^7 x mu)"}
+  - {name: sigma_1e8_cm, unit: "1e-8 cm", description: "equivalent rigid-sphere viscosity diameter at 0 degC, CALCULATED by the authors from mu via eq. (12.1, 6); blank for air"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced.
+
+caveat: >
+  MIXED TIER. mu is measured (tier 2); sigma is derived from it through a model
+  (tier 6) and is a rigid-sphere effective diameter, not a Lennard-Jones sigma -
+  p. 236 warns that "neither sigma nor r_m is exactly comparable with the
+  effective diameter of 12.2 (Table 11)". The two must not be interchanged, and
+  this page keeps them in separate files for that reason.

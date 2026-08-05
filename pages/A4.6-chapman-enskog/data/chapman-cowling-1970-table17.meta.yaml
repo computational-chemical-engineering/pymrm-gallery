@@ -1,0 +1,106 @@
+dataset_id: chapman-cowling-1970-table17
+title: "Lennard-Jones 12,6 force constants - Chapman & Cowling (1970), Table 17"
+status: complete
+
+source:
+  authors:
+    - "Chapman, Sydney"
+    - "Cowling, T. G."
+  year: 1970
+  container: >
+    The Mathematical Theory of Non-Uniform Gases, 3rd edn, Cambridge University
+    Press (Cambridge Mathematical Library reissue 1990, reprinted 1993).
+    Table 17, book p. 237.
+  doi: null
+  access: "monograph held on the maintainer's disk (lawful access)"
+  licence: "all rights reserved (numeric facts extracted; no page image reproduced)"
+
+conditions:
+  what_it_is: >
+    "Values of eps/k, sigma and r_m for the 12,6 model". THESE ARE FITTED
+    PARAMETERS, and the page turns on saying so. Book p. 235: "Values of sigma,
+    r_m and eps/k obtained (mainly by Hirschfelder, Bird and Spotz) from the
+    VISCOSITIES of various gases are given in Table 17. They apply to ranges of
+    temperatures including 0 degC." The fitting procedure is described on the
+    same page: eq. (12.33, 3) implies that log(mu/sqrt(T)) against log T differs
+    between gases only by a shift of origin, so sigma and eps follow from the
+    displacement needed to superpose the standard curve on the measured one.
+  two_parameter_sets: >
+    The table has TWO parameter blocks. Columns 1-3 are the "Viscosity values".
+    Columns 4-5 are headed "Other values" and are, per p. 236-237, "calculated
+    from other physical data ... mainly obtained from virial coefficients, but
+    in the last five cases they are less accurate values derived from
+    liquefaction data". Book p. 235 warns in a footnote: "Values of eps/k and
+    sigma given by other authors often differ appreciably from those of
+    Table 17."
+
+    The page uses this second block as its parameter-source sensitivity test:
+    the SAME theory with the SAME collision integrals, run on the book's own
+    alternative constants, more than doubles the disagreement with the measured
+    D12 of Table 22. That is the evidence for the page's central caveat, that
+    the headline accuracy is a joint statement about kinetic theory and about
+    which property the constants were fitted to.
+  two_valued_cells: >
+    For HCl, SO2, Cl2, Kr and Xe the "Other values" eps/k cell prints two
+    comma-separated numbers (two independent determinations). Those are stored
+    verbatim as strings and are excluded from the numeric sensitivity test
+    rather than being silently reduced to one of the two.
+  r_m: >
+    Book p. 236: "the 'low-velocity diameter' sigma gives the distance of
+    closest approach of two molecules with negligible initial relative velocity;
+    r_m (= 2^(1/6) sigma) is the distance at which the molecular interaction
+    changes from a repulsion to an attraction". So r_m is not independent
+    information; it is used here only as a transcription check.
+  polar_gases: >
+    Book p. 235: "For polar gases the attractive part of the molecular potential
+    energy includes a term proportional to r^-3 (cf. (10.43, 3)), not taken into
+    account in (12.33, 1), and the fit with experiment is less close." SO2 and
+    HCl are in this table and are polar; the page keeps the one Table 22 pair
+    that uses either (H2-SO2) and flags it rather than dropping it.
+  co2_note: >
+    Book p. 235 records that Fig. 10 uses sigma = 3.96e-8 cm for carbon dioxide
+    rather than the 4.00e-8 cm printed here. The page uses the printed table
+    value; the alternative is recorded so nobody reads the discrepancy as an
+    error.
+
+acquisition:
+  method: table
+  figure: "Table 17, book p. 237 = PDF p. 261"
+  tool: "poppler pdftoppm -r 300 (the NATIVE resolution), cropped, read visually"
+  procedure: >
+    CCITT-G4 bilevel scan at 300 ppi native. Rendered at 300 dpi, cropped to the
+    table and read at 2x magnification of the crop. The mid-dot decimal
+    separator is the trap on this book; every numeral was read twice.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the printed precision"
+
+validation:
+  r_m_identity: >
+    r_m = 2^(1/6) sigma, stated on book p. 236, holds for all 18 rows to a
+    maximum absolute deviation of 0.0052 x 1e-8 cm - within one rounding unit of
+    the printed 3 significant figures. This tests the sigma and r_m columns
+    against each other.
+
+columns:
+  - {name: gas, unit: "-", description: "gas name as printed"}
+  - {name: formula, unit: "-", description: "formula key used across this page's datasets; A = argon, as in the book"}
+  - {name: eps_k_visc, unit: "K", description: "eps/k from VISCOSITY (Hirschfelder, Bird & Spotz); a fitted parameter"}
+  - {name: sigma_visc_1e8_cm, unit: "1e-8 cm", description: "Lennard-Jones sigma from viscosity; a fitted parameter"}
+  - {name: rm_visc_1e8_cm, unit: "1e-8 cm", description: "r_m = 2^(1/6) sigma, printed; not independent"}
+  - {name: eps_k_other, unit: "K", description: "eps/k from other physical data (mainly virial coefficients); STRING where the book prints two comma-separated determinations; blank where the book prints an em dash"}
+  - {name: sigma_other_1e8_cm, unit: "1e-8 cm", description: "sigma from other physical data; blank where the book prints an em dash"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced.
+
+caveat: >
+  TIER 6 - FITTED. Every number in this file is a regression output, obtained by
+  sliding a theoretical curve onto measured viscosity (columns 3-5) or onto
+  equilibrium data (columns 6-7). Nothing here is a direct measurement, and
+  nothing here was fitted to a diffusion coefficient - which is what makes the
+  page's comparison against Table 22 out of sample, and also what limits how far
+  that comparison can be read as a test of kinetic theory alone.

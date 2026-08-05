@@ -1,0 +1,252 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.8
+slug: onda-correlations
+title: "The Onda correlations, and which of their fourteen constants the paper can see"
+section: A
+status: published
+tier: T1
+priority: P1
+structures: [S3]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 8
+datasets:
+  - onda-1968-correlation-constants.csv
+  - onda-1968-table1.csv
+  - onda-1968-stated-results.csv
+
+validation:
+  - >
+    THE HEADLINE, and the only check that pins all four constants of eq. (3) at
+    once. Eq. (4) is eq. (3) rearranged into a j_D factor for spheres, printed by
+    the authors with no working shown, so recovering it tests 5.23, 0.7, 1/3 and
+    -2.0 against a fifth number printed independently of them. Done TWO
+    independent ways: a sympy reduction that does no hand algebra, and a purely
+    numerical route that evaluates eq. (3) at 4000 random combinations of G,
+    mu_G, rho_G, D_G and D_p spanning several decades each and regresses ln j_D
+    on ln X. Both give a prefactor of 0.774443 and an exponent of -0.300000,
+    against Onda's printed 0.771 and -0.30: +0.447 % on the prefactor and
+    1.7e-16 on the exponent, with the two routes agreeing to 2.2e-16. The 0.447 %
+    is consistent with the authors' own rounding - the cell prints the two
+    obvious intermediate roundings (0.774396 and 0.774221, both above 0.771) and
+    shows that a_t D_p = 3.4076 rather than the printed 3.4 reproduces 0.771
+    exactly - and no claim of a mis-set constant is made. The numerical route
+    also proves the 1/3 STRUCTURALLY: it samples Sc_G over 0.0205 to 82.5 and the
+    single-variable fit in X alone has a worst residual of 3.6e-15, which is only
+    possible if the Schmidt number cancels out of j_D exactly. Break rows move
+    every part of it - 5.23 -> 5.28 moves the deviation by 3.15x, -2.0 -> -2.6 by
+    -116x, 0.7 -> 0.6 moves the exponent to -0.40, and 1/3 -> 1/2 moves the fit
+    residual from 3.6e-15 to 0.73
+  - >
+    A STRUCTURAL CEILING THE CORRELATION CANNOT EXCEED, and Onda's own Table 1
+    breaks it. Combining eqs. (1) and (2) forces the local slope
+    n = dln(k_L a)/dlnL into (2/3, 0.8] for ANY packing, ANY liquid and ANY flow
+    rate: the L-dependence of eq. (1) collapses to the single composite exponent
+    0.1 + 2(-0.05) + 2(0.2) = 0.4, giving n = 2/3 + 0.4 phi(psi)/3 with phi in
+    (0,1). The window contains no prefactor at all - not 1.45, not 0.0051, not
+    sigma_c/sigma, not a_t D_p, not any Schmidt number - so no refit can move it,
+    which is what makes it testable against a table those fits have already seen.
+    Table 1 prints six measured n. FOUR lie inside; TWO, both spheres (1/2-in in
+    CCl4 at n = 0.86 and 1-in in CH3OH at n = 0.83), sit ABOVE the 0.800 ceiling,
+    the worst by +0.060. Table 1's n spans 0.16 where the window is only 0.1333
+    wide. The window is derived twice - analytically, and by numerically
+    differentiating the composed a_w(L) and k_L(L) as coded, agreeing to 9.9e-11
+    over four decades of L - and doubling the analytic formula in ONE route moves
+    that agreement to 0.128
+  - >
+    the NULL BASELINES, reported beside the window because the window on its own
+    flatters it. Mean |error| in n: Onda at his own ceiling 0.0667 with zero free
+    parameters, against 0.0967 for the null that drops the wetted-area coupling
+    entirely (n = 2/3) and 0.2367 for n = 1. So the wetted-area term IS doing
+    work, by a factor 1.45. But a single FITTED constant, n = 0.7450, scores
+    0.0533 - beating only the CEILING representative (0.0667); Onda's own window
+    midpoint scores the identical 0.0533 with zero free parameters, so the
+    comparison cannot separate them. With six rows, no
+    replicates and no error bars on n, that comparison cannot separate the two,
+    and the page says so rather than resting on the window's cleanliness
+  - >
+    the one comparison in the article against data the authors did not fit:
+    eq. (4) against Shulman et al.'s eq. (5), which correlates the sublimation of
+    DRY NAPHTHALENE packings - gas-solid, no liquid, no wetted area. Onda says
+    only that the agreement is "fairly good" over the stated range
+    100 < X < 10,000. Quantified: -14.95 % at X = 100, crossing at X = 1485.6,
+    +12.12 % at X = 10,000, worst 14.95 % and mean 6.97 %. Null baseline beside
+    it - j_D itself falls by a factor 3.98 across those two decades, so a single
+    constant would be about 100 % out at each end, making the correlations agree
+    6.7x better than a constant does. Labelled for what it is: correlation
+    against correlation, not correlation against measurement, since Shulman's own
+    scatter about eq. (5) is not printed here
+  - >
+    an elasticity table computed THREE ways, which is what makes every printed
+    constant live somewhere. dlnZ/dp for each of the thirteen continuous
+    parameters, from (a) an analytic chain rule that collapses onto two numbers,
+    the gas-side resistance share f_G and the wetting function phi; (b) central
+    finite differences on the packed height Z; (c) the same differences pushed
+    through the pymrm column solve itself, so the check reaches the operator
+    assembly, the boundary conditions and the Newton solve. (a) vs (b) agree to
+    1.8e-7, (a) vs (c) to 1.4e-7 - the latter floored by the column's own
+    discretisation error at n = 400. Dropping the a_w -> k_L feedback from the
+    chain rule (the 1/3 that survives the cancellation between area gained and
+    Reynolds number lost) moves the agreement to 1.16, a factor 6.6e6
+  - >
+    TWO PRINTED EXPONENTS ARE ESSENTIALLY UNTESTABLE, and both are reported.
+    (i) eq. (1)'s 0.75 has semi-elasticity proportional to ln(sigma_c/sigma), so
+    whenever the packing's critical surface tension equals the liquid's it is
+    EXACTLY inert, not merely small: at sigma_c/sigma = 1 replacing 0.75 by 7.5
+    leaves every one of the twelve printed digits of Z unchanged (relative change
+    identically 0). At the page's sigma_c/sigma = 0.85 the same substitution
+    moves Z by 119.6 %. This article prints sigma_c for NO packing material - it
+    is in ref. 18 - so a reuser has no sigma_c and must treat the ratio as a
+    swept parameter, which the page does over 0.5 to 1.5 (a_w/a_t 0.337 to 0.608,
+    Z by a factor 1.636). (ii) eq. (3)'s 1/3 has semi-elasticity -f_G ln(Sc_G),
+    and Sc_G = 0.971 for air, so ln(Sc_G) = -0.029: replacing 1/3 by 2/3 moves
+    the packed height by 0.73 %. Almost every gas of industrial interest has
+    Sc_G within a factor two of 1, so a design calculation cannot see this
+    exponent - which is exactly why the eq. (4) identity, where it appears
+    structurally through the Schmidt cancellation, is the check that pins it
+  - >
+    BOTH BRANCHES of eq. (3) exercised, at the geometry the paper itself assigns
+    to the lower one. The branch factor on the constant is 5.23/2.00 = 2.615; on
+    the PACKED HEIGHT for the same duty it is 2.024 (0.4649 m -> 0.9409 m),
+    smaller because the liquid film carries 36.6 % of the resistance there and
+    does not move with it. Reported as a height rather than as a coefficient
+    ratio for that reason. This is the A1.8 defect avoided by construction: every
+    metric that touches k_G has a break row on the branch
+  - >
+    the pymrm counter-current column against the closed form of the same BVP, and
+    the A2.6 half-cell trap measured rather than merely avoided. Reading the gas
+    outlet through compute_boundary_values (the same reconstruction the flux
+    operator used) converges at order 1.990 to 1.90e-6 at n = 800,
+    Richardson-extrapolated to 1.04e-8, and closes the solute balance to 4.4e-16.
+    Reading it at the CENTRE of the last cell instead - the A2.6 defect - gives
+    7.29e-4 at the same n, 384x worse, at order 1.007, and breaks the solute
+    balance. Both are reported side by side because the defective reading looks
+    perfectly monotone and converged. LABELLED: this check tests the
+    discretisation, the boundary conditions and the operator assembly ONLY. The
+    two routes solve the same equations with the same K_G a, so it is blind to
+    every error upstream of it - a wrong Onda constant, a wrong resistance
+    addition, a wrong c_av all move both routes identically
+  - >
+    dimensional consistency of all seven groups verified SYMBOLICALLY in Onda's
+    own unit system (m, kg, hr, kg-mole, atm, K) rather than assumed. The Weber
+    group closes only with sigma in kg/hr2, which is what page 62's Nomenclature
+    states; a mis-read rho_L^2 or a dropped square would break it
+  - >
+    the transcription checked against a SECOND PRINTING inside the same PDF: the
+    companion article beginning on journal page 62 restates eqs. (1)-(3) verbatim
+    in its introduction, renumbered, and both printings agree character for
+    character on all fourteen constants. Stated limitation: this cannot catch a
+    constant mis-set identically in both printings, which is one editorial event
+    away; only the eq. (4) identity escapes that, because it tests four constants
+    against a fifth number derived from them
+  - >
+    65 break-table rows over 22 metrics; every one of the 22 has at least one row
+    that moves it. Seven of the 46 reported metrics fall below
+    check_agreement.py's ABS_FLOOR = 1e-12 and are therefore NOT compared by CI
+    at all - they are listed explicitly on the page as pinned rather than proven,
+    each has a break row, and none carries a headline
+
+caveats:
+  - >
+    NOT AN OUT-OF-SAMPLE TEST, anywhere. Eqs. (2) and (3) were fitted to the
+    k_L a and k_G a data of Figs. 1, 2 and 3, which include the authors' own
+    Table 1 runs - page 57 says so explicitly. The exponent window is the only
+    quantity on the page a refit could not have absorbed, and even that is scored
+    on six rows with no error bars, where a single fitted constant does better
+  - >
+    a = a_w, Onda's central assumption, is untested here and untestable from this
+    article: a_w never appears except multiplied by a coefficient, so nothing
+    separates the two. No break row can be written for it. It is a structural
+    blind spot of the whole correlation set, not of this page
+  - >
+    the illustrative absorber's fluid properties (air and water at 25 C) are
+    standard-table values and are NOT Onda's, who publishes none. sigma_c/sigma =
+    0.85, m = 1, G = 2000 kg/(m2 hr) and the 95 % duty are page choices. No
+    metric derived from the column is a claim about the paper. Every elasticity
+    is reported alongside f_G and phi, the two numbers that carry the whole
+    operating-point dependence, so a reader can re-scale rather than re-run. The
+    ONE thing taken from the paper is the geometry: a_t D_p = 6(1-eps) = 3.4 for
+    spheres is printed on page 58 and is the only packing geometry this article
+    supplies, which is why every calculation uses spheres
+  - >
+    the L range of Table 1's runs is NOT printed anywhere in the article and
+    Fig. 2's abscissa is Re_L, not L, so no numerical n is computed for any
+    individual row. The comparison uses only the structural window, which needs
+    no property data at all
+  - >
+    NOTHING IS DIGITISED. The paper prints its constants, its reduced table and
+    its error bands as numerals, so no figure is read and no maintainer figure
+    review is needed. Figs. 1, 2, 3 and 7 are scatter plots of the fits, Fig. 8
+    is Z_cal against Z_act and Fig. 9 is the resistance split for distillation;
+    all four are explicitly out of scope
+  - >
+    the four error bands (+-20 %, +-20 %, +-30 %, +-30 %) are the authors' own
+    assessments of their own fits against their own data. They are quoted on the
+    page as claims and are never used as uncertainties on anything computed here
+  - >
+    no three-way comparison with Billet-Schultes (A3.9) or Rocha-Bravo-Fair
+    (A3.10) - neither source is on disk, and the page says the comparison belongs
+    to whichever of those two is built second. A3.6 and A3.7 are stirred-tank
+    correlations with a different geometry and a different a; nothing here
+    transfers to them and none of their content is duplicated
+
+reference:
+  authors:
+    - "Onda, K."
+    - "Takeuchi, H."
+    - "Okumoto, Y."
+  year: 1968
+  container: "Journal of Chemical Engineering of Japan 1(1) 56-62"
+  doi: 10.1252/jcej.1.56
+  note: >
+    Identified by READING the article - the file on disk is named `1_56.pdf` and
+    a bare numeric filename carries no metadata. Journal page 56 carries the
+    title, the three-author byline and the affiliation; the running feet read
+    "VOL.1 NO.1 1968" and the folios run 56-62. The DOI was then VERIFIED against
+    CrossRef, which returns the same title, the same three surnames, the same
+    container, volume 1, issue 1, pages 56-62, 1968. It is not an auto-resolution
+    from a terse citation.
+
+    All equations and table cells were read from renders at the scan's NATIVE
+    300 ppi (pdfimages -list reports CCITT-G4 bilevel at 300 ppi throughout, so a
+    larger render only interpolates), each cropped to a single line and re-read at
+    that resolution. The PDF is encrypted RC4 with copying permitted and has no
+    usable text layer for numerals.
+
+    Two other articles share the same seven-page PDF and neither is used for its
+    own content: page 56 opens with the closing column of a preceding
+    bubble-column paper, and page 62 begins "Gas absorption with chemical
+    reaction in packed columns" by Onda, Sada and Takeuchi. That companion
+    article is used for exactly one purpose - it reprints eqs. (1)-(3) verbatim,
+    giving the second printing against which the transcription is checked.
+
+origin_not_consulted: >
+  Eq. (1) is not derived in this article. It is carried over from ref. 18, Onda,
+  K., Takeuchi, H. and Koyama, Y., Kagaku Kogaku 31, 126 (1967), which is NOT on
+  disk and was not consulted. The 1968 article prints eq. (1) in full and uses it
+  throughout, which is what this page builds on; nothing about the 1967 paper is
+  claimed. That reference is also where the critical surface tensions sigma_c of
+  the packing materials live - they appear nowhere in the 1968 article - which is
+  why sigma_c/sigma is carried here as a swept page parameter rather than a
+  looked-up constant.
+
+  Eq. (5) is Shulman, H. L., Ullrich, C. F., Proulx, A. Z. and Zimmerman, J. O.,
+  AIChE Journal 1, 253 (1955), ref. 22. Not on disk and not consulted; the page
+  uses only the correlation as Onda reprints it on page 59, with attribution, and
+  makes no claim about Shulman's data or scatter.
+
+data:
+  tier: 3
+  method: table
+  status: complete
+  note: >
+    Tier 3 in origin because Table 1 reduces the authors' own measurements, but
+    NOT out-of-sample: page 57 states those runs were replotted against eq. (2)
+    in Fig. 2. The correlation constants themselves are tier 6, being the
+    authors' fits. Nothing is digitised.

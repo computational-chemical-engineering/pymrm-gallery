@@ -1,0 +1,123 @@
+dataset_id: chapman-cowling-1970-table22
+title: "Measured binary diffusion coefficients at S.T.P. - Chapman & Cowling (1970), Table 22"
+status: complete
+
+source:
+  authors:
+    - "Chapman, Sydney"
+    - "Cowling, T. G."
+  year: 1970
+  container: >
+    The Mathematical Theory of Non-Uniform Gases: An Account of the Kinetic
+    Theory of Viscosity, Thermal Conduction and Diffusion in Gases, 3rd edition,
+    prepared in co-operation with D. Burnett. Cambridge University Press.
+    Reissued in the Cambridge Mathematical Library with a Foreword by Carlo
+    Cercignani, 1990; reprinted 1993. ISBN 0 521 40844 X. Table 22, book p. 263.
+  doi: null
+  access: "monograph held on the maintainer's disk (lawful access)"
+  licence: "all rights reserved (numeric facts extracted; no page image reproduced)"
+
+conditions:
+  state: >
+    "Coefficients of diffusion at S.T.P." Section 14.32 states the values are
+    "reduced to 0 degC", and a footnote on book p. 262 states "Here (and
+    throughout this book) values of D12 are expressed in cm.^2/sec". The
+    pressure is not stated in words; it is 1 atm, established on the page from
+    the book's own sigma12 column (see validation.pressure below).
+  what_D12_is: >
+    MEASURED. Section 14.32: "Table 22 gives the experimental values of D12 for
+    several pairs of gases". The "ref" column is the book's own reference number
+    into the list of experimental papers at the end of its chapter 14; an
+    asterisk means "other experimental values, for which no reference is given
+    here, are quoted in the paper referred to". An em dash means no reference is
+    printed. The individual experimental papers were NOT consulted. Section
+    14.32 also notes that International Critical Tables values were used where
+    available.
+  what_sigma12_is: >
+    NOT an independent measurement. Section 14.32: "From these the values of
+    sigma_12 given by (14.2, 1) have been calculated; these are effective values
+    s'_12 of sigma_12 for diffusion." So this column is a deterministic function
+    of the D12 column, and the page uses it only as a transcription check on
+    D12 and to pin the pressure convention.
+  what_half_sum_is: >
+    1/2(sigma_1 + sigma_2) where sigma_1, sigma_2 are "the viscosity diameters
+    of TABLE 11 (p. 228)" - explicitly NOT the Lennard-Jones sigma of Table 17.
+    Section 14.32 states that these viscosity half-sums "are in general larger
+    by about 10 per cent than those of sigma12 obtained from D12".
+  accuracy: >
+    The book's own two warnings, and the page repeats both. Section 14.2:
+    "Observations of the mutual diffusion of pairs of gases are difficult to
+    make, and such observations as have been made are liable to a fairly large
+    experimental error." Section 14.32: "The accuracy of D12 measurements is not
+    high, and the values quoted may, in unfavourable cases, be in error by
+    several per cent."
+  composition: >
+    Section 14.32: "The values of D12 quoted in Table 22 refer, where possible,
+    to mixtures in which each constituent is present in moderate proportions",
+    and section 14.3 notes that in some cases "the proportions of the mixture
+    were either not recorded, or not kept constant, by the experimenter". No
+    composition is recorded per row, so none is stored.
+
+acquisition:
+  method: table
+  figure: "Table 22, book p. 263 = PDF p. 287 (stored ROTATED, 2503 x 1605)"
+  tool: "poppler pdftoppm -r 300 (the NATIVE resolution), rotated, cropped into three strips, read visually"
+  procedure: >
+    The PDF is a CCITT-G4 bilevel scan at 300 x 300 ppi native with an ABBYY
+    FineReader 8 text layer. The text layer returns this table as an unreadable
+    run of capitals and must not be used. Rendering above 300 dpi would
+    interpolate a 1-bit image and adds nothing.
+
+    The page was rendered at 300 dpi, rotated upright, cropped into three
+    vertical strips and read at 2x magnification of the crop. Every numeral was
+    read twice. The 1970 typesetting uses a raised mid-dot decimal separator,
+    which is the specific trap on this book.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the printed precision. These are transcribed characters, not
+    digitised positions. D12 is printed to 3 significant figures (Kr-Xe to 4);
+    sigma12 and the half-sum to 3.
+
+validation:
+  pressure: >
+    Inverting eq. (14.2, 1) on the printed D12 column reproduces the printed
+    sigma12 column with a mean signed residual of +0.00016 x 1e-8 cm at 1 atm
+    and 273.15 K, against a printed resolution of 0.005. At 1 bar the mean
+    signed residual is +0.02257, i.e. one-signed and 137x larger. So the state
+    is 1 atm, established rather than assumed, and the D12 and sigma12 columns
+    are mutually consistent for all 50 rows (worst single residual 0.00509).
+  half_sum_against_table_11: >
+    Rebuilding 1/2(sigma_1 + sigma_2) from the sigma column of Table 11 (a
+    different table, transcribed separately) reproduces the printed column to a
+    worst absolute deviation of 0.0075 x 1e-8 cm, consistent with 3-significant-
+    figure rounding. Rebuilding it from Table 17's Lennard-Jones sigma instead
+    is wrong by up to 0.740, which is how the page confirms section 14.32's
+    statement about which table the column comes from.
+  stated_result: >
+    The book's own "about 10 per cent" is recovered: the mean of
+    half_sum/sigma12 - 1 over the 50 rows is 10.46 %, median 9.44 %.
+
+columns:
+  - {name: gas1, unit: "-", description: "first-named gas, formula as used throughout the page; A = argon, as in the book"}
+  - {name: gas2, unit: "-", description: "second-named gas"}
+  - {name: ref, unit: "-", description: "the book's own reference number(s) into its chapter-14 list, verbatim; '*' as printed; em dash where none is given"}
+  - {name: D12_cm2_s, unit: "cm^2/s", description: "MEASURED mutual diffusion coefficient at S.T.P., reduced to 0 degC"}
+  - {name: sigma12_1e8_cm, unit: "1e-8 cm", description: "effective diffusion diameter s'_12, CALCULATED by the authors from D12 via eq. (14.2, 1); not independent of D12"}
+  - {name: half_sum_sigma_1e8_cm, unit: "1e-8 cm", description: "1/2(sigma_1 + sigma_2) from the VISCOSITY diameters of Table 11 (p. 228)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image, figure or
+  typographic layout is reproduced.
+
+caveat: >
+  TIER 2 - these are experimental measurements, collected by Chapman & Cowling
+  from the literature and reduced to a common state, with the original papers
+  cited by number and NOT consulted. They are therefore measurements at one
+  remove: the page validates against the book's compilation, not against the
+  original experiments. The book's own accuracy warning ("may, in unfavourable
+  cases, be in error by several per cent") bounds what any agreement here can
+  mean, and no agreement below a few per cent should be read as significant.

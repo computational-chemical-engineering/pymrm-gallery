@@ -1,0 +1,124 @@
+dataset_id: onda-1968-correlation-constants
+title: The printed constants and exponents of Onda's Eqs. (1)-(5)
+status: complete
+
+source:
+  authors:
+    - "Onda, K."
+    - "Takeuchi, H."
+    - "Okumoto, Y."
+  year: 1968
+  container: "Journal of Chemical Engineering of Japan 1(1) 56-62"
+  doi: 10.1252/jcej.1.56
+  access: "PDF on disk at ~/papers/pymrm-gallery/1_56.pdf (7 pages, journal pages 56-62)"
+  licence: "numerical facts extracted; no page image or figure reproduced"
+
+identification:
+  how: >
+    The file is named 1_56.pdf and a bare numeric filename carries no metadata,
+    so the article was identified by READING IT. Page 56 of the render carries
+    the title "MASS TRANSFER COEFFICIENTS BETWEEN GAS AND LIQUID PHASES IN
+    PACKED COLUMNS", the byline "KAKUSABURO ONDA, HIROSHI TAKEUCHI** AND YOSHIO
+    OKUMOTO / Dept. of Chem. Eng., University of Nagoya, Nagoya", and the
+    footnote "Received on July 10, 1967". The running feet read "JOURNAL OF
+    CHEMICAL ENGINEERING OF JAPAN" and "VOL.1 NO.1 1968", and the printed folios
+    run 56, 57, 58, 59, 60, 61, 62. So the filename encodes volume 1, page 56.
+
+    That reading was then checked against CrossRef for DOI 10.1252/jcej.1.56,
+    which returns title "MASS TRANSFER COEFFICIENTS BETWEEN GAS AND LIQUID
+    PHASES IN PACKED COLUMNS", authors ONDA / TAKEUCHI / OKUMOTO, container
+    "JOURNAL OF CHEMICAL ENGINEERING OF JAPAN", volume 1, issue 1, pages 56-62,
+    year 1968. Title, all three author surnames, volume, issue, page range and
+    year agree with the page images. The DOI is therefore VERIFIED, not
+    auto-resolved from a terse citation.
+  what_else_is_in_the_file: >
+    Page 56 of the render (journal page 56) opens with the closing column of the
+    PRECEDING article - a bubble-column paper on porous-plate distributors, with
+    its own Summary, Acknowledgment, Nomenclature and six references. None of
+    that belongs to Onda et al. and none of it is used here. Page 62 likewise
+    begins the FOLLOWING article, "GAS ABSORPTION WITH CHEMICAL REACTION IN
+    PACKED COLUMNS" by Onda, Sada and Takeuchi. That companion article is used
+    for exactly one purpose, stated under `validation` below: it reprints all
+    three correlations verbatim, giving a second independent printing against
+    which the transcription is checked.
+
+acquisition:
+  method: equations
+  figure: "Eq. (1) p.56; Eq. (2) p.57; Eqs. (3) and (4) p.58; Eq. (5) p.59"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE ppi), cropped per equation and read visually"
+  procedure: >
+    pdfimages -list reports all seven pages as CCITT-G4 bilevel images, 2456 x
+    3330 px at 300 x 300 ppi. Rendering above 300 dpi would only interpolate, so
+    every render is at 300. Each equation was then CROPPED to a single line and
+    re-read at that resolution rather than read at page scale, because the 1968
+    typesetting sets exponents at roughly a quarter of body size and a full-page
+    read cannot separate 0.05 from 0.05 with a minus sign, or -2.0 from -2.6.
+    The PDF is encrypted (RC4, copy permitted) and carries no usable text layer
+    for numerals.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the printed precision. These are transcribed characters, not
+    digitised positions. 2/3, -1/2 and 1/3 are printed as fractions and are
+    stored here as their exact decimal expansions; every other value is printed
+    as a decimal and is stored exactly as printed.
+
+validation:
+  second_printing: >
+    Eqs. (1), (2) and (3) are printed TWICE inside this same PDF. The companion
+    article that begins on journal page 62 - Onda, Sada & Takeuchi, "Gas
+    absorption with chemical reaction in packed columns" - restates all three in
+    its introduction, renumbered (a_w becomes its Eq. 1, k_G its Eq. 2, k_L its
+    Eq. 3). Both printings were cropped and read independently and agree
+    character for character on all thirteen constants: 1.45, 0.75, 0.1, -0.05,
+    0.2 / 5.23, 0.7, 1/3, -2.0 / 0.0051, 2/3, -1/2, 0.4. That is a genuine
+    transcription check - two separate typesettings of the same equations - and
+    it is the reason no constant on this page rests on a single reading.
+  internal_identity: >
+    Eq. (4) is Eq. (3) rearranged by the authors for spheres. Recomputing it
+    from the four constants of Eq. (3) recorded here gives a prefactor of
+    5.23 * 6^0.3 * 3.4^-2 = 0.774443 and an exponent of exactly -0.30, against
+    the separately printed 0.771 and -0.30. The prefactor agrees to 0.45 %. This
+    is checked on the page and would break under a misread of ANY of Eq. (3)'s
+    four constants.
+  dimensional_consistency: >
+    Every group in Eqs. (1)-(3) is dimensionless in the paper's own unit system
+    (m, kg, hr, kg-mole, atm, K), which the Nomenclature on page 61 fixes:
+    a in m2/m3, D in m2/hr, g in m/hr2, G and L in kg/(m2 hr), mu in kg/(m hr),
+    rho in kg/m3, R in m3-atm/(kg-mole K), k_G in kg-mole/(m2 hr atm), k_L in
+    m/hr. The Weber group L^2/(rho_L sigma a_t) is dimensionless only if sigma
+    is in kg/hr2, and page 62's Nomenclature states exactly that: "sigma =
+    surface tension [dynes/cm] or [kg/hr2]". sigma_c/sigma is a ratio and is
+    unaffected.
+
+columns:
+  - {name: equation, unit: "-", description: "equation number as printed in the paper (1-5)"}
+  - {name: role, unit: "-", description: "prefactor or exponent"}
+  - {name: symbol, unit: "-", description: "name used for this constant in the notebook"}
+  - {name: value, unit: "-", description: "numerical value; fractions expanded to double precision"}
+  - {name: printed_as, unit: "-", description: "the characters actually printed on the page"}
+  - {name: page, unit: "-", description: "journal page number carrying this equation"}
+  - {name: term, unit: "-", description: "the dimensionless group or role the constant belongs to"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image and no figure
+  is reproduced here or on the page.
+
+caveat: >
+  TIER 6 - these are the authors' fitted constants, not measurements. Eqs. (2)
+  and (3) were fitted to the k_L a and k_G a data plotted in Figs. 1, 2 and 3,
+  which include the authors' own runs of Table 1. Eq. (1) is carried over from
+  ref. 18 (Onda, Takeuchi & Koyama 1967) and is not refitted here. Nothing on
+  this page treats agreement between these constants and Table 1 as
+  out-of-sample.
+
+  Eq. (3) is BRANCHED: the prefactor 5.23 applies to the upper group of Fig. 3
+  and 2.00 to "Raschig rings and Berl saddles smaller than 15 mm" (page 58),
+  which the Conclusion on page 61 restates as "Raschig rings smaller than 15 mm
+  and Berl saddles smaller than 1/2 in". Page 60 adds that for 1/2-in spheres in
+  VAPORIZATION "the constant of Eq.(3) might be changed into 2.00" as well. Both
+  branches are exercised on the page; the branch criterion is stated, not
+  guessed.

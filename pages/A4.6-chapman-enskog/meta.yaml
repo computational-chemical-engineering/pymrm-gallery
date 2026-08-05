@@ -1,0 +1,104 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.6
+slug: chapman-enskog
+title: "Chapman–Enskog binary diffusion"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 205
+datasets:
+  - chapman-cowling-1970-table6.csv
+  - chapman-cowling-1970-table11.csv
+  - chapman-cowling-1970-table17.csv
+  - chapman-cowling-1970-table22.csv
+
+# Ranked by measured power, not by how small the residual looks. Every entry has
+# a row in the notebook's defect-injection table, or is labelled structural.
+validation:
+  # --- PRIMARY: the only checks that can see a wrong PHYSICAL answer ----------
+  - PRIMARY - the Chapman-Enskog first approximation against the 39 usable pairs of Table 22's 50 MEASURED D12 at S.T.P. Mean absolute deviation 3.65 %, bias -2.74 %, r.m.s. 4.57 %, worst -10.06 % (N2-CO2); 29 of 39 inside 5 %, 38 of 39 inside 10 %. Out of sample - the Lennard-Jones constants were fitted to pure-gas VISCOSITY (book p. 235) and no diffusion measurement enters the prediction. Measured power - deleting the collision integral moves it to 13.85 %, changing the eps combination rule to 8.53 %, mis-reading one force constant by a factor 10 to 8.64 %, scaling sigma_12 by 1 % to 4.97 %
+  - PRIMARY CAVEAT, reported as prominently as the headline - the same theory with the book's OWN alternative force constants (Table 17's "Other values", mainly from virial coefficients) gives 10.23 % on the 27 pairs that have both sets, against 4.13 % for the viscosity constants. Nothing in the kinetic theory changed between those two numbers. So the headline is a joint statement about the theory AND about which property its parameters were fitted to, and the page says so rather than quoting the flattering half
+  - NULL MODEL, so the headline cannot be an artefact of an insensitive metric - the same expression with the collision integral deleted and Table 11's viscosity diameters gives 17.24 % mean absolute deviation with a -17.24 % bias (every pair under-predicted), 4.7x worse. That bias is predicted independently by the book's own statement that the viscosity half-sum exceeds the diffusion sigma_12 "by about 10 per cent", reproduced at 10.46 % over all 50 rows
+  # --- INDEPENDENT RECOMPUTATION: what a break table cannot do ----------------
+  - The collision integrals are RECOMPUTED FROM THE 12,6 POTENTIAL by quadrature of the classical deflection angle, using no table at all - outermost turning point by bracketed bisection, the inverse-square-root singularity removed by u = r0/r = 1 - s^2. It reproduces Table 6's W^(1)(1) to 0.18 % and the third column to 0.30 % at worst over all sixteen rows - both worst cases on the kT/eps = 100 row, where the quadrature is itself converged to five digits under a 2.8x refinement, so that residual is a difference between two numerical integrations of the same integral rather than an error in this one; every other row agrees to better than 0.1 %. Substituting it for Table 6 changes every predicted D12 by at most 0.066 % and moves the headline from 3.647 % to 3.655 %. This is the only check on the page that can catch a baseline that is wrong rather than merely sensitive
+  - The same quadrature settles a reading that could not be read - Table 6's third column header carries a fraction destroyed in the scan. It is 1/2, not the 1/3 the prior source note recorded, on two independent grounds: the quadrature (0.30 % against 1/2, 34 % against 1/3, a factor of 112) and eq. (9.8, 7)'s A identity (2.9e-4 against 1/2, 0.50 against 1/3). It affects no diffusivity - only W^(1)(1) enters [D12]_1 - and is recorded so the next reader does not re-derive it
+  # --- FOUR PRINTED-TABLE ROUND TRIPS: transcription, not physics -------------
+  - Table 22's sigma12 column rebuilt from its D12 column through eq. (14.2, 1) - worst 0.00509 x 1e-8 cm on a column printed to 0.005, over all 50 rows. This also PINS THE STATE: the mean signed residual is +0.00016 at 1 atm against +0.02257 (one-signed, 137x larger) at 1 bar, so "S.T.P." is established from the book's arithmetic rather than assumed
+  - Table 22's half-sum column rebuilt from TABLE 11's sigma - worst 0.0075 x 1e-8 cm, consistent with rounding; rebuilt from Table 17's Lennard-Jones sigma instead it is wrong by 0.740 (99x), which confirms section 14.32's statement about which table it comes from
+  - Table 11's sigma rebuilt from its printed mu and M through eq. (12.1, 6) - max relative deviation 8.7e-4 across 23 gases, rising to 8.8e-3 if the 1.016 exact-value correction of section 12.1 is dropped, which is how the page establishes that (12.1, 6) contains it
+  - Table 17's r_m against 2^(1/6) sigma (stated on p. 236) - worst 0.0052 x 1e-8 cm, within one rounding unit
+  - Table 6's A column against eq. (9.8, 7) with the rigid-sphere normalisation of eq. (10.2, 1) - max relative deviation 2.9e-4; and Table 6's C column against eq. (14.4, 1)'s dln[D12]/dlnT = 2 - (5/2)C, r.m.s. 0.0037 on the log-log slope, which ties two independently transcribed columns together
+  # --- FOUR PRINTED NUMERICAL RESULTS of the second approximation -------------
+  - Eqs. (14.21, 2-6) checked against the four exact results section 14.3 prints, all recovered to 1e-12 or better - Delta_1 = m1^2/(13 m1^2 + 30 m2^2 + 16 m1 m2) for rigid spheres at five mass ratios; Delta_1 -> 1/13 in the Lorentz limit; [D12]_2/[D12]_1 = 1.083333 against the printed 1.083; the end-to-end variation 8.3333 % against the printed "8 1/3 per cent"; and Kihara's B = 3/4 giving 11.1111 % against the printed "1/9, or 11.1 per cent". The rigid-sphere A = 2/5, B = 3/5, C = 1/5 they need come from eq. (10.2, 1) in closed form, so nothing is fitted. Six transcribed equations have to be right simultaneously for any of these to come out
+  - Section 14.3's stated bound "the variation of D12 with composition is unlikely to exceed about 6 per cent" - the second approximation gives a maximum end-to-end swing of 3.28 % over the 39 pairs, in the direction section 14.3 predicts (D12 rises with the concentration of the heavier molecule). An inequality the computation could have violated
+  # --- NUMERICS of the pymrm cell --------------------------------------------
+  - The closed diffusion cell against its constant-D closed form (a cosine series summed to 2000 terms) - space converges at observed order 2, time at order 1 (backward Euler), worst Newton residual anywhere 1.1e-13, asserted on every step rather than inferred. The refinement is on the two knobs that control the two errors, uniformly, so it is not the A4.7 trap
+  # --- STRUCTURAL, named as such ---------------------------------------------
+  - STRUCTURAL - D12 is identically symmetric in m1, m2, so swapping the masses in every pair moves the headline by exactly zero. It confirms the bookkeeping and can detect nothing about the physics; the defect table carries the row and says so
+  # --- WHAT THE PAGE STATES IT CANNOT DO -------------------------------------
+  - Stated on the page - two "wrong" choices score BETTER than the published conventions (geometric-mean sigma_12 gives 3.26 %, a 1 bar reference 3.10 %). Neither is adopted, because eq. (14.2, 1) prints the arithmetic mean and the sigma12 round trip pins 1 atm. The page says the headline therefore sits on a shallow optimum, should be quoted to one decimal at most, and must not be read as evidence that the conventions are optimal
+  - Stated on the page - perturbation testing establishes sensitivity, never correctness. A consistently mis-transcribed Table 6 or a wrong Loschmidt number would move under every row of the defect table and still be wrong. The independent quadrature and the four round trips are the only checks that compare the baseline against something computed a different way
+
+adds: >
+  Three things, in increasing order of what the book could not have done.
+
+  (1) A NUMBER ON "FAIRLY WELL". Section 14.4 says only that D12 computed on the
+  12,6 model with combination-rule constants "in general agree fairly well with
+  the experimental values". The book prints no error statistic anywhere. This
+  page evaluates it for all 39 pairs of Table 22 that Table 17 can serve: 3.65 %
+  mean absolute deviation, -2.74 % bias, worst -10.06 %.
+
+  (2) THE FIT SEPARATED FROM THE THEORY. The book prints two sets of force
+  constants for the same molecules and warns that other authors' values "often
+  differ appreciably", but never runs the comparison. Running it shows the
+  identical theory gives 4.13 % with viscosity-fitted constants and 10.23 % with
+  virial-fitted ones on the same 27 pairs. That reframes the headline: what
+  Chapman-Enskog supplies is a TRANSFER from one measured property to another,
+  and the accuracy of the transfer depends on which property you start from. A
+  page that reported only the 3.65 % would be reporting a property of the
+  viscosity fit as a property of kinetic theory.
+
+  (3) THE COMPOSITION DEPENDENCE THE BOOK HAD TO SET ASIDE. Section 14.31 states
+  plainly that "the variation of D12 with the proportions of a mixture is
+  ignored" when the experimental results are discussed, and section 14.3 notes
+  that the proportions "were either not recorded, or not kept constant, by the
+  experimenter". But the apparatus behind many of those numbers is a closed tube
+  whose composition runs from 0 to 1 along its own length, so the neglected
+  quantity is not a small nuisance - it is the difference between two things
+  called D12. pymrm resolves it: solving the closed cell with
+  D12 = [D12]_2(x1) and inverting the constant-D closed form for the apparent D,
+  exactly as an experimenter would, gives +2.53 % above [D12]_1 for He-Xe,
+  +1.80 % for H2-N2 and +0.31 % for the equal-mass control N2-CO. It is NOT the
+  equimolar second approximation (+2.68 / +1.89 / +0.31 %): the cell falls short
+  by 0.15, 0.09 and 0.00 percentage points, the shortfall growing with mass
+  disparity and vanishing for the control. So a transient cell reports a
+  weighted average over a composition history, not a value at a stated
+  composition, and the mapping between them needs a solver. The page states
+  clearly that this is a model of the apparatus, not the apparatus, and is not a
+  correction to be applied to Table 22.
+
+  What the page does NOT claim: it is a reproduction of the book's own theory
+  validated against the book's own compiled measurements, and it extends the
+  book only in the three ways above. Nothing here improves on Chapman-Enskog.
+
+scope: >
+  Binary, dilute, monatomic-or-effectively-spherical gases at S.T.P. Deliberately
+  excluded: the Fuller-Schettler-Giddings empirical correlation for the same
+  quantity (catalogue A4.5 - the page names it and argues the joint comparison
+  belongs there, since A4.5 must transcribe its own source anyway and can load
+  this page's Table 22 cross-page); multicomponent diffusion (A4.2, A4.9);
+  pore transport (A4.3, A4.4); and the Wilke mixture rule (A4.1), which this
+  monograph does not carry - its only Wilke is Buddenberg & Wilke (1949) on the
+  viscosity of a mixture, cited once in section 12.43. Table 23's force
+  constants are also excluded on purpose: they are derived from the temperature
+  dependence of D12 itself, so using them would make the comparison circular.

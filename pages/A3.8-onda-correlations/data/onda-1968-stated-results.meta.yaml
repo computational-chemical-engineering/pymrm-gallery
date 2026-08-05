@@ -1,0 +1,61 @@
+dataset_id: onda-1968-stated-results
+title: Scalar statements printed in the text of Onda, Takeuchi & Okumoto (1968)
+status: complete
+
+source:
+  authors:
+    - "Onda, K."
+    - "Takeuchi, H."
+    - "Okumoto, Y."
+  year: 1968
+  container: "Journal of Chemical Engineering of Japan 1(1) 56-62"
+  doi: 10.1252/jcej.1.56
+  access: "PDF on disk at ~/papers/pymrm-gallery/1_56.pdf"
+  licence: "numerical facts extracted; no page image or figure reproduced"
+
+acquisition:
+  method: text
+  figure: "prose and figure captions, journal pages 56-61"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE ppi), each sentence cropped and re-read"
+  procedure: >
+    Each value is a numeral printed in running text or in a figure caption. The
+    `statement` column quotes the sentence it was read from, so the reading can
+    be checked without re-deriving it. Nothing here is a position measured on a
+    plot: the three L values are printed in the captions and legends of Figs. 4
+    and 6 as text ("L = 7800 kg/m2 hr", "L = 8000 kg/m2 hr", "L = 5000 kg/m2
+    hr"), not read off an axis.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the printed precision"
+
+validation:
+  atDp_arithmetic: >
+    The paper writes "since a_t D_p is 6(1-eps) = 3.4 for spheres". Those two
+    statements are consistent only at eps = 0.43333, which is a normal random
+    sphere-packing voidage, and 3.4/6 = 0.566667 exactly. The page uses 3.4 as
+    printed and reports the voidage it implies rather than assuming one.
+  shulman_range_is_used_as_printed: >
+    100 and 10,000 bound the range over which the paper claims Eqs. (4) and (5)
+    agree "fairly good". The page evaluates the two correlations over exactly
+    that range and puts a number on "fairly good"; it does not extrapolate
+    beyond it.
+
+columns:
+  - {name: quantity, unit: "-", description: "name used for this value in the notebook"}
+  - {name: value, unit: "-", description: "the printed number"}
+  - {name: unit, unit: "-", description: "unit as printed, or '-' when dimensionless"}
+  - {name: page, unit: "-", description: "journal page number carrying the statement"}
+  - {name: statement, unit: "-", description: "the printed sentence the value was read from"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image and no figure
+  is reproduced here or on the page.
+
+caveat: >
+  TIER 6. The four error bands (+-20 %, +-20 %, +-30 %, +-30 %) are the authors'
+  own assessments of their own fits against the data those fits were made on.
+  They are quoted on the page as the paper's claims and are never used as
+  uncertainties on anything computed here.
