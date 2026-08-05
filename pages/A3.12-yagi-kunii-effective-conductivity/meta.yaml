@@ -1,0 +1,134 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.12
+slug: yagi-kunii-effective-conductivity
+title: "Yagi–Kunii effective thermal conductivity"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S6]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 12
+datasets:
+  - yagi-kunii-1957-table1.csv
+  - yagi-kunii-1957-table3.csv
+  - yagi-kunii-1957-table4.csv
+  - yagi-kunii-1957-air-conductivity.csv
+  - yagi-kunii-1957-figures13to17-curve-ends.csv
+  - yagi-kunii-1957-figure12-endpoints.csv
+
+validation:
+  # PRIMARY - printed identities the paper must satisfy, and printed results it states
+  - "Eq. (16) is Eq. (15) with both radiation coefficients zero and gamma = 1; residual 4.4e-16 over 20000 random parameter draws"
+  - "Eq. (14) is the kg -> 0 limit of Eq. (13); the residual vanishes as O(kg) with observed order 1.0000 over four decades"
+  - "Eq. (13) reassembled from the Eqs. (9)-(12) resistance network, an independent transcription; residual 8.9e-16"
+  - "Eq. (19)'s printed constant 0.743 recovered from the closed form with 2*pi*l (0.743353, i.e. the printed value truncated to three digits) and from a pymrm nu=1 annulus solve with exact ln (0.744188, +0.16 %, which IS the paper's rounding of ln10 to 2.3). Eq. (17) AS PRINTED is a factor of 2.00095 off - it sets pi*l where the cylindrical solution needs 2*pi*l. The pymrm route is a DISCRETISATION check, not independent evidence about the geometry constant: its 2*pi is typed in, and substituting pi returns the disputed printed value"
+  - "Table 4's printed ks/kg = 4.48 recovered from its own ks = 0.20 and the paper's separately printed kg(400 degC) = 0.0447, to -0.13 %"
+  - "THE SECOND, INDEPENDENT COMPUTATION: Eq. (15) evaluated from Table 4's parameters against the ends of the paper's own printed THEORETICAL curves in Figures 13-17, read off their labelled tick ladders at the scan's native 300 ppi. 14 of the 17 readings reproduce to a mean 2.4 % and a worst 4.2 %, including BOTH curves Figure 13 prints for the iron-sphere bed (beta = 1.0 and 0.9) and both Raschig-ring curves, whose beta is argued from geometry and is not 1. This is the only check on the page that can catch a wrong BASELINE rather than an insensitive one, and the only quantitative evidence about the emissivity p"
+  - "three stated conclusions reproduced from Table 4's printed parameters: radiation passes half of ke0 at 461 degC for iron spheres and 265 degC for insulating firebrick, 233 degC if the firebrick's printed ks/kg is held instead (paper: 'higher than 400 degC'); ke0/kg for 0.18 mm cement clinker varies only 9.5 % over 200-1000 degC against 154 % for the 5 mm grade (paper: 'nearly constant for particles smaller than 0.35 mm'); randomly packed Raschig rings run 12.9-24.4 % above regularly packed with no fitted parameter (paper: 'about 20% greater')"
+  # AGAINST MEASUREMENT - other authors', as re-tabulated by Yagi & Kunii
+  - "Table 3's 17 rows with a printed measurement, against the paper's own calculated column: mean |deviation| 15.3 %, bias -3.5 %, worst 52.0 %. Weak by construction - see the caveats"
+  # AN INTERNAL-CONSISTENCY CHECK, NOT A CROSS-CHECK BETWEEN TWO MEASUREMENTS
+  - "Table 1's Eq. (6) intercept against Table 3's Exp. column on the five shared references: 8.8 % at worst, and EXACTLY 0.000000 % on three of the five. That is identity, not agreement - Table 3 daggers all five as 'Extrapolated values, N_ReM -> 0', so both columns are the authors' own zero-flow extrapolation of the same third-party flow experiments. The comparison is kept as a transcription and internal-consistency check and is labelled as one. Rows are paired by PACKING, not row order: reference 15 carries four intercepts in Table 1 and pairing by row order gives -70 %"
+  # THE PAGE'S OWN RESULT
+  - "the reduction bias: Eq. (19) reports a temperature-averaged conductivity against a volume-averaged abscissa, so a bed obeying Eq. (15) exactly plots a nearly constant +9.8 to +11.5 % above the Eq. (15) curve at the five temperature drops Figure 12 actually shows (195-260 degC, mean bed temperatures 110-690 degC). Swept far past the apparatus to dt = 800 degC it reaches +21.7 %, reported as a labelled extrapolation. Checked against the closed-form identity k_app = <ke0>_T to 1.5e-6"
+  - "grid convergence of the nu=1 annulus solve, observed order 1.97, and agreement with the exact-ln closed form to 3.7e-07"
+  # STRUCTURAL
+  - "heat rate constant across all faces to ~1e-13 in the annulus solve - the scheme is conservative and both ends are Dirichlet, so this is exact by construction. A regression guard on the assembly, not evidence about the geometry"
+  # DEFECT INJECTION
+  - "a single recompute() rebuilds all 77 published metrics under 25 injected defects; 77 of 77 are moved by at least one, and TWO assertions - one in Validation, one at the end of What pymrm adds - tie every metric to recompute() to 1e-8, with the sets asserted identical so nothing escapes the sweep. Includes a CONTROL on the deletion test (halving the numerator, flagged on 6 of 14 rows at 46.7 %), three injections that attack the p-structure of Eqs. (7) and (8) - which every p = 1 evaluation is blind to - and one that pairs Table 1 to Table 3 by row order instead of packing. The page states what the table CANNOT detect, starting with a baseline that is wrong rather than insensitive"
+
+adds: >
+  Two results, both from putting the correlation back inside the apparatus it came
+  out of. First, the paper's own reduction formula is biased against its own model:
+  Eq. (19) inverts the CONSTANT-coefficient cylindrical solution, and for steady
+  radial conduction the conductivity it returns is exactly the average of ke0 taken
+  uniformly in TEMPERATURE, while the abscissa the paper plots it against is the
+  VOLUME-weighted mean temperature, which for a logarithmic profile sits 0.703 of
+  the way from the hot face to the cold one. At the five temperature drops the
+  apparatus actually ran - 195 to 260 degC, read off the endpoints of Figure 12's
+  own labelled ordinate - a bed obeying Eq. (15) exactly plots a nearly CONSTANT
+  +9.8 to +11.5 % above the Eq. (15) curve, from a mean bed temperature of 110 degC
+  to one of 690 degC. That is a more useful result than a range: a uniform 10 %
+  offset applies to every point of Figures 13-17. Second, the authors' remark that
+  their measured radial profiles "seem nearly straight" is evidence AGAINST a
+  constant conductivity - a constant-ke0 annulus at this bore ratio departs from a
+  straight line by 13.7 % of the temperature drop - but only PARTIAL evidence for
+  Eq. (15), which at those same drops still departs by 7.4-8.3 %, a factor of 1.7 to
+  1.9 rather than the 4.5 a sweep to dt = 600 degC would suggest. Neither result is
+  reachable without solving the variable-coefficient problem.
+
+  The rest of the page is reproduction. Eq. (15) is algebra; nothing about the
+  correlation is improved, no constant is re-fitted, and no new data are brought
+  to it.
+
+agreement: >
+  The three printed identities close to 4.4e-16, order 1.0000 and 8.9e-16.
+  Eq. (19)'s constant 0.743 is recovered as 0.743353 from the closed form with 2*pi*l
+  and the paper's own 2.3 for ln10 - the printed value truncated to three digits - and
+  as 0.744188 from a pymrm nu=1 annulus solve carrying ln exactly (+0.16 %, which is
+  the 2.3 rounding). Table 4's ks/kg round trip closes to 0.13 %. Eq. (15) evaluated
+  from Table 4's parameters reproduces the ends of the paper's own printed theoretical
+  curves in Figures 13-17 to a mean of 2.4 % over 14 readings, worst 4.2 %. Against
+  measurement, Table 3's 17 rows give a mean |deviation| of 15.3 % with a -3.5 % bias,
+  dominated by two rows near 52 %. Three stated conclusions of the paper are
+  reproduced from printed parameters: the 400 degC radiation threshold (computed
+  233-509 degC depending on packing and on which of Table 4's two firebrick columns is
+  held), the flatness of fine cement clinker (9.5 % over 200-1000 degC against 154 %
+  for the coarse grade), and the Raschig-ring packing effect (12.9-24.4 % against the
+  stated "about 20%").
+
+caveats: >
+  Data tier 2 - all four printed tables are facts in numeric form, and Table 3's Exp.
+  column is third-party measurement - but the validation against that measurement is
+  WEAK, for a structural reason the page measures rather than hides. Eq. (15) needs
+  phi, the effective contact-film thickness, which the paper supplies only as Figures 9
+  and 10; those are not digitised here, because that needs a maintainer review and none
+  is available. With phi free per row, the solid-to-solid radiation coefficient h_rs is
+  algebraically degenerate with it: deleting Eq. (7) entirely and re-solving for phi
+  reproduces every printed calculated value to 2.2e-16, and the compensating phi never
+  leaves the span the baseline inversion already occupies (0.0077-0.058) nor Figure 9's
+  axis - so the degeneracy is real and not an artefact of a wide search. The void-to-
+  void coefficient h_rv resists deletion on only 2 of 14 rows. The gamma(kg/ks)
+  conduction term is DIFFERENT and an earlier draft of this page got it wrong: deleting
+  it is "reachable" only if phi is allowed up to 1, and the phi it actually demands runs
+  to 0.42, with 12 of the 14 rows above every value Table 4 prints and 2 off the top of
+  Figure 9's ordinate. gamma IS identifiable from this table; h_rs is not. So ONE of the
+  model's five ingredients is invisible here, not three - and it is the radiation
+  mechanism, the paper's central claim, on a table whose hottest row is 300 degC while
+  the claim concerns temperatures above 400 degC. What would break the degeneracy is a
+  temperature sweep on one packing, which is exactly what Figures 13 to 17 are; their
+  measured points are the authors' ONLY measurements of their own, they exist only as
+  plotted markers, and this page does not read them. What the page DOES read from those
+  figures is the ends of the printed THEORETICAL curves - the authors' computed output,
+  not their data - and from Figure 12 only the two endpoints of each profile. Both are
+  separate datasets with their own sidecars saying exactly that. On the emissivity: p is
+  never printed anywhere in the paper, and p = 1 is assumed. The curve-end comparison is
+  the only evidence about it and it is consistent with p = 1 (+2.4 % mean) and equally
+  with p = 0.9 (-1.3 %), while excluding p <~ 0.8 (-4.9 %); p = 0.8 would move the
+  1000 degC iron-sphere value by -16 %. At p = 1 both radiation coefficients collapse to
+  the same 0.1952(T/100)^3, so every other metric on the page is blind to the emissivity
+  structure of Eqs. (7) and (8); three break rows and four p != 1 metrics were added for
+  exactly that. Table 3's calculated column cannot be reproduced from printed material at
+  all - at eps = 0.40 it implies phi values spanning a factor of 7.6, or 2.3 without the
+  one pathological row, while Table 4 assigns that voidage the single value 0.034 - so
+  the forward calculation from Table 4's printed phi(eps) line misses the paper's own
+  column by 10.6 % on average. For the two insulating-firebrick rows Table 4's ks/kg =
+  4.48 (printed for those rows only) is what the authors held constant, not ks = 0.20:
+  holding ks misses their own Figure 16 curve by 50-61 % at low temperature and holding
+  the ratio matches it to a few per cent. The page keeps ks = 0.20 as its base case and
+  reports the firebrick crossover both ways. Two printed defects are recorded and proved
+  from the paper's own results: Eq. (17) sets pi*l where 2*pi*l is required (its own
+  Eq. (19) proves it), and gamma = 1.2 mm/9.0 mm is printed as 0.0134 where the division
+  gives 0.1333 (Table 4 carries the ratio, so the paper's calculations are unaffected).
+  The variable-k annulus solve is a fixed point on the face conductivities and is
+  n-LIMITED: converged and stable to four digits over n = 100-800, but it does not reach
+  tolerance at n = 1200 without relaxation. Ranz (1952), the source of Eq. (1), is cited
+  but not consulted - it is not on disk, and nothing about it is written from memory.

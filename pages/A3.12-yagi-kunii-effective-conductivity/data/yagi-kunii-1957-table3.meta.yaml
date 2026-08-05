@@ -1,0 +1,96 @@
+dataset_id: yagi-kunii-1957-table3
+title: "Table 3 - other authors' measured ke0/kg, beside Yagi & Kunii's own calculated value"
+status: complete
+
+source:
+  authors:
+    - "Yagi, Sakae"
+    - "Kunii, Daizo"
+  year: 1957
+  container: "AIChE Journal 3(3) 373-381"
+  doi: 10.1002/aic.690030317
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 3, journal page 377"
+  tool: >
+    poppler pdftoppm. First pass at 600 dpi; every digit then re-read at the scan's NATIVE 300 ppi on 2026-08-05 (pdfimages -list: 2400x3299 CCITT-G4 at 300x300, so 600 dpi was interpolation); every cell confirmed unchanged.
+  procedure: >
+    Read from a page render (see acquisition.tool), not from the text layer. `pdftotext -layout` on this
+    1957 Wiley scan interleaves the two table columns with the surrounding body text
+    and drops the em dashes, so rows arrive shuffled and a value can land in the wrong
+    column - the Coal/H2 row, for instance, comes back with its reference marker
+    attached to the row above. Nothing numeric here came from the text layer.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the paper's own rounding and its own flags. Yagi & Kunii mark
+    estimated inputs with an asterisk and extrapolated experimental values (N_ReM -> 0)
+    with a dagger; both are carried as separate integer columns rather than folded
+    into the numbers.
+
+provenance_of_the_measurements: >
+  These are NOT Yagi & Kunii's measurements. Every experimental value in this table
+  was measured by someone else and is re-tabulated here; the reference column holds
+  Yagi & Kunii's own citation numbers, which resolve as 3 Bunnell/Irvin/Olson/Smith,
+  4 Campbell & Huntington, 5 Coberly & Marshall, 9 Hatta & Maeda, 13 Kannuluick &
+  Martin, 14 Kling, 15 Maeda & Kawazoe, 18 Okada & Toyabe, 24 Schuman & Voss.
+  The "Calcd." column is Yagi & Kunii's own output from their Eq. (15) or (16),
+  so reproducing it is REPRODUCTION, while the "Exp." column is measurement.
+
+validation:
+  internal_consistency: >
+    The four rows whose average diameter is printed as an em dash cannot carry a
+    radiation term at all - both radiation coefficients enter Eq. (15) only through
+    the group Dp*h_r/kg - and the paper says the analysis used "Equation (15) or (16)".
+    Inverting Eq. (16) on those rows returns effective film thicknesses phi of
+    0.0337 at eps = 0.35 and 0.0667 at eps = 0.513, which bracket the single printed
+    anchor (phi = 0.034 at eps = 0.40, curve B of Figure 9) in the right direction
+    and with the right monotonicity. A mis-read eps or ks breaks that ordering.
+  what_it_tests: >
+    The Exp. column is the only tabulated measurement anywhere in the paper, and it is
+    other people's. It tests Eq. (15)/(16) only in the temperature window it covers,
+    10 to 300 deg C, where the radiation terms are small - see the page's mechanism
+    decomposition.
+
+known_issues:
+  - "LOAD-BEARING: seven rows carry the dagger the table footnotes as 'Extrapolated
+     values, N_ReM -> 0', recorded in exp_extrapolated. Those Exp. values are NOT
+     stagnant measurements - they are Yagi & Kunii's own extrapolation of somebody
+     else's FLOW experiment to zero flow, which is exactly what Table 1's ke0/kg
+     intercept is. The daggered references are precisely the five that also appear in
+     Table 1, so the two columns are not independent and their agreement (exactly 0.0 %
+     on three of the five) is identity, not corroboration. Any page comparing the two
+     must say so."
+  - "Four rows carry no printed Exp. value (ref 4 Dp = 12, ref 5 Dp = 12.7, ref 15
+     Dp = 16.5). The temperature and voidage cells on those rows are blank because they
+     repeat the row above, so it is genuinely ambiguous whether the Exp. cell repeats
+     too. They are recorded as missing and excluded from every deviation statistic on
+     the page, and the page says so."
+  - "Dp is printed as an em dash for all six rows of refs 13 and 24, so Eq. (15) cannot
+     be evaluated on them at all; only the radiation-free Eq. (16) can."
+  - "phi, the one remaining input Eq. (15)/(16) needs, is NOT in this table. It comes
+     from Figures 9 and 10, which this page does not digitise. Every use of this table
+     therefore either inverts for phi or takes phi from the printed Table 4 line."
+
+not_transcribed:
+  - "Figures 9 and 10, which carry phi(eps) for air and phi/phi_air(kg/kair) for other
+     fluids. Digitising them needs a maintainer review that is not available, and the
+     four (eps, phi) pairs printed in Table 4 give a usable substitute for the air case."
+
+columns:
+  - {name: reference, unit: "-", description: "Yagi & Kunii's literature-cited number for the observer"}
+  - {name: solid, unit: "-", description: "packing material as printed"}
+  - {name: fluid, unit: "-", description: "interstitial fluid as printed"}
+  - {name: Dp_mm, unit: mm, description: "average particle diameter; blank where the paper prints an em dash"}
+  - {name: exp_ke0_over_kg, unit: "-", description: "measured ke0/kg, as re-tabulated by Yagi & Kunii; blank where no value is printed"}
+  - {name: exp_extrapolated, unit: "-", description: "1 where the paper daggers the value as extrapolated to N_ReM -> 0"}
+  - {name: temp_C, unit: "deg C", description: "temperature of the measurement"}
+  - {name: est_temp, unit: "-", description: "1 where the paper stars the temperature as estimated"}
+  - {name: eps, unit: "-", description: "fraction void"}
+  - {name: est_eps, unit: "-", description: "1 where the paper stars the voidage as estimated"}
+  - {name: ks_kcal_m_hr_C, unit: "kcal/(m hr degC)", description: "thermal conductivity of the solid"}
+  - {name: est_ks, unit: "-", description: "1 where the paper stars ks as estimated"}
+  - {name: calcd_ke0_over_kg, unit: "-", description: "Yagi & Kunii's own calculated value from Eq. (15) or (16)"}

@@ -1,0 +1,94 @@
+dataset_id: yagi-kunii-1957-table4
+title: "Table 4 - the authors' own packings, and every input Eq. (15) needs"
+status: complete
+
+source:
+  authors:
+    - "Yagi, Sakae"
+    - "Kunii, Daizo"
+  year: 1957
+  container: "AIChE Journal 3(3) 373-381"
+  doi: 10.1002/aic.690030317
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 4, journal page 377, plus the beta and gamma expressions argued on journal page 379"
+  tool: >
+    poppler pdftoppm. First pass at 600 dpi; every digit then re-read at the scan's NATIVE 300 ppi on 2026-08-05 (pdfimages -list: 2400x3299 CCITT-G4 at 300x300, so 600 dpi was interpolation); every cell confirmed unchanged.
+  procedure: >
+    Read from a page render (see acquisition.tool). The text layer scrambles this table badly - it merges
+    the cement-clinker and insulating-firebrick blocks, splits "0.20 at 400 deg C const."
+    across columns, and renders the Raschig-ring beta expression as
+    "P = 1 X (1/3) f (l/d?) X (2/3)". The two Raschig beta expressions and the
+    gamma = ls/Dp argument were read from the running text on journal page 379, where
+    they are derived, not from the table cell.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "None beyond the paper's own rounding."
+
+provenance_of_the_measurements: >
+  This table is the authors' OWN experimental programme: iron spheres, porcelain
+  packings, cement clinker, insulating firebrick and Raschig rings, all with motionless
+  air. The table itself contains no measured conductivity - it is the parameter set.
+  The measured ke0/kg for these packings appear ONLY in Figures 13 to 17, plotted
+  against mean bed temperature, and are not tabulated anywhere in the paper. A footnote
+  says the complete tabular material was deposited as document 5305 with the American
+  Documentation Institute; that deposit is not in hand.
+
+validation:
+  internal_consistency: >
+    The insulating-firebrick rows print both ks (0.20 at 400 deg C) and ks/kg (4.48).
+    Dividing 0.20 by the kg the paper's own Cowling table gives at 400 deg C, 0.0447,
+    returns 4.474 against the printed 4.48 - a round trip through a second printed
+    table, which a mis-read digit in either would break.
+  what_it_tests: >
+    With this table the whole of Eq. (15) can be evaluated from printed numbers for the
+    authors' own packings, at any temperature. What cannot be done is compare the result
+    to their measurement, because that measurement is only in the figures.
+
+known_issues:
+  - "The ks/kg column carries a number ONLY on the two insulating-firebrick rows (4.48);
+     every other row prints an em dash. The page's comparison against the printed
+     theoretical curves of Figure 16 shows why that matters: evaluating Eq. (15) with
+     ks = 0.20 held constant misses the authors' own low-temperature curve by 50-61 %,
+     while holding ks/kg = 4.48 constant matches it to 0.9-6.6 %. So for those two rows
+     the RATIO is the input the authors used, not ks. The page keeps ks = 0.20 as its
+     base case (it is the column Table 4 labels ks, and every other packing uses it) and
+     reports the firebrick radiation-crossover temperature both ways, 265 and 233 degC."
+  - "ks is printed once per material block and applies to every row of the block
+     (cement clinker 1.7, insulating firebrick 0.20, Raschig rings 1.40). The value is
+     repeated on each row here; the paper prints it centred on the block."
+  - "The iron-sphere row prints TWO values of beta, '1.0 and 0.9'. Those are two
+     calculated curves in Figure 13, not a range. beta = 1.0 is used as the base case
+     and 0.9 is carried as beta_alt."
+  - "The fourth cement-clinker row (nominal 0.35~0.01 mm) sits inside the cement-clinker
+     block in the printed table, above the insulating-firebrick heading, so ks = 1.7
+     applies to it. Reading it as a firebrick row instead is the natural mistake and
+     changes ks by a factor of 8.5."
+  - "The paper prints gamma = ls/Dp = 1.2 mm / 9.0 mm = 0.0134 for the Raschig rings.
+     That division gives 0.1333. The value carried here is the ratio 1.2/9 that Table 4
+     itself prints; see the page's Validation section, which treats the 0.0134 as a
+     printed defect and measures what using it would cost."
+
+not_transcribed:
+  - "Figures 13 to 17, the authors' own measured ke0/kg against mean bed temperature.
+     They are the paper's only measurement of its own, they are figures, and digitising
+     them needs a maintainer review that is not available. Scoped out explicitly."
+
+columns:
+  - {name: solid, unit: "-", description: "packing as printed"}
+  - {name: nominal_diam, unit: mm, description: "nominal dimension as printed, verbatim"}
+  - {name: eps, unit: "-", description: "fraction void"}
+  - {name: Dp_mm, unit: mm, description: "mean diameter used in the calculation"}
+  - {name: Dp_note, unit: "-", description: "the paper's qualifier on Dp"}
+  - {name: ks_kcal_m_hr_C, unit: "kcal/(m hr degC)", description: "thermal conductivity of the solid"}
+  - {name: ks_note, unit: "-", description: "the paper's qualifier on ks, verbatim"}
+  - {name: ks_over_kg_printed, unit: "-", description: "ks/kg where the paper prints one; blank where it prints an em dash"}
+  - {name: phi, unit: "-", description: "effective fluid-film thickness in the void / Dp, read by the authors off line B of Figure 9"}
+  - {name: beta_expr, unit: "-", description: "beta as printed, verbatim"}
+  - {name: beta, unit: "-", description: "beta evaluated"}
+  - {name: beta_alt, unit: "-", description: "second beta where the paper prints two"}
+  - {name: gamma_expr, unit: "-", description: "gamma as printed, verbatim"}
+  - {name: gamma, unit: "-", description: "gamma evaluated"}

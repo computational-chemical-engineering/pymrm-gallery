@@ -1,11 +1,12 @@
 id: A3.12
 section: A
-title: Yagi–Kunii effective conductivity
+title: Yagi–Kunii effective thermal conductivity
 catalog_reference: AIChE J 3 (1957)
 priority: P1
 tier: T0
 structures: S6
-status: ready
+status: published
+page: pages/A3.12-yagi-kunii-effective-conductivity/
 reference:
   authors:
   - Yagi, S.
@@ -41,32 +42,49 @@ paper:
 built:
   staged_at: queue_cases/A3.12/page/
   models_entry: queue_cases/A3.12/models_entry.yaml
-  runtime_seconds: 7
+  runtime_seconds: 12
   datasets:
   - yagi-kunii-1957-table1.csv
   - yagi-kunii-1957-table3.csv
   - yagi-kunii-1957-table4.csv
   - yagi-kunii-1957-air-conductivity.csv
-  metrics: 53
+  - yagi-kunii-1957-figures13to17-curve-ends.csv
+  - yagi-kunii-1957-figure12-endpoints.csv
+  metrics: 77
   break_table: >
     Rebuilt for this page's physics, not inherited. A single recompute() function
-    rebuilds all 53 published metrics under 20 injected defects; 53 of 53 are moved
-    by at least one, and an assertion checks recompute() reproduces the narrative
-    cells before any injection. Five metrics sit below check_agreement.py's
-    ABS_FLOOR = 1e-12 and are named on the page as outside the CI regression suite.
+    rebuilds all 77 published metrics under 25 injected defects; 77 of 77 are moved
+    by at least one. TWO assertions tie the narrative cells to recompute() at rtol
+    1e-8 - one in Validation for the 65 metrics defined by then, one at the end of
+    'What pymrm adds' for all 77 - plus an assertion that the two metric SETS are
+    identical, so nothing escapes the sweep and nothing is swept but unreported.
+    Three injections attack the p-structure of Eqs. (7) and (8), which every p = 1
+    evaluation is blind to; one pairs Table 1 to Table 3 by row order instead of
+    packing; one perturbs the Figure 12 endpoints by their stated reading error.
+    Six metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 and the page states
+    the exposure precisely (CI skips only when BOTH values are below the floor).
+    The page also states what the table CANNOT detect, first among them a baseline
+    that is wrong rather than insensitive - which is what S1 below was.
   scoped_out: >
-    Figures 13-17, the authors' ONLY measurements of their own (ke0/kg against mean
-    bed temperature for five packings, 0-1000 degC). They are figures; digitising
-    them needs a maintainer review and none is available. Figures 9 and 10, which
-    carry phi(eps) and phi/phi_air(kg/kair), are also not digitised - Table 4 prints
-    four (eps, phi) pairs from line B of Figure 9 and those are used instead. The
-    complete tabular material is deposited as American Documentation Institute
-    document 5305, which is not in hand.
+    The MEASURED points of Figures 13-17, the authors' ONLY measurements of their own
+    (ke0/kg against mean bed temperature for five packings, 0-1000 degC). They exist
+    only as plotted markers; digitising them needs a maintainer review and none is
+    available. Figures 9 and 10, which carry phi(eps) and phi/phi_air(kg/kair), are
+    also not digitised - Table 4 prints four (eps, phi) pairs from line B of Figure 9
+    and those are used instead. The complete tabular material is deposited as American
+    Documentation Institute document 5305, which is not in hand.
+    NOT scoped out, and added on the fixer pass: the ENDS of the printed THEORETICAL
+    curves in Figures 13-17 (the authors' computed output, 17 readings) and the two
+    endpoints of each of Figure 12's five profiles (10 readings off a labelled
+    ordinate). Both are separate CSVs with sidecars stating exactly what was and was
+    not read, and neither is a marker digitisation of measured data.
   findings:
   - "Eq. (17) as printed is a factor of two low: it sets pi*l where the steady
      cylindrical solution requires 2*pi*l. Proved from the paper's own Eq. (19)
      constant 0.743 and its three printed dimensions - ratio 2.00095. Eq. (19)
-     itself is correct, so no measurement in the paper is affected."
+     itself is correct, so no measurement in the paper is affected. The pymrm nu=1
+     solve is NOT independent evidence for this and the page no longer says it is:
+     its 2*pi is typed in, and substituting pi returns the disputed printed value."
   - "gamma = ls/Dp = 1.2 mm/9.0 mm is printed as 0.0134 on journal page 379; the
      division gives 0.1333. Table 4 carries the ratio 1.2/9, so the paper's own
      calculations are unaffected; using the printed decimal shifts ke0/kg by
@@ -74,26 +92,87 @@ built:
   - "THE HEADLINE: with phi read off Figure 9 per row, the solid-to-solid radiation
      coefficient h_rs is algebraically degenerate with it. Deleting Eq. (7)
      outright and re-solving for phi reproduces every printed Calcd. value to
-     2.2e-16 (0 of 14 rows lose reachability); the same holds for the gamma(kg/ks)
-     solid-conduction term. h_rv resists deletion on only 2 of 14. A control -
-     halving the numerator - is flagged on 6 of 14, so the test is not blind. The
-     paper's central claim (radiation dominant above 400 degC) concerns a regime
-     no row of Table 3 reaches; its hottest is 300 degC."
+     2.2e-16 (0 of 14 rows lose reachability), and the compensating phi runs
+     0.0075-0.054 - the same span the baseline inversion already occupies, and
+     inside Figure 9's axis on every row, so the degeneracy is not an artefact of a
+     wide search. h_rv resists deletion on only 2 of 14 at 14.2 %. A control -
+     halving the numerator - is flagged on 6 of 14 at 46.7 %, so the test is not
+     blind. The paper's central claim (radiation dominant above 400 degC) concerns a
+     regime no row of Table 3 reaches; its hottest is 300 degC."
+  - "CORRECTED on the fixer pass: gamma(kg/ks) is NOT degenerate in the same way, and
+     the first draft's 'three of five ingredients are unidentifiable' was an artefact
+     of searching phi up to 1. Absorbing the gamma deletion demands phi up to 0.4195,
+     with 12 of the 14 rows above every value Table 4 prints (0.034-0.060) and 2 off
+     the top of Figure 9's ordinate (0.2). A film 42 % of the particle diameter
+     contradicts the paper's own words. ONE ingredient is invisible on Table 3, not
+     three."
+  - "CORRECTED on the fixer pass: Table 1's intercept and Table 3's Exp. column are
+     NOT two independent tabulations. Table 3's footnote daggers all five shared
+     references as 'Extrapolated values, N_ReM -> 0' - both columns are the authors'
+     own zero-flow extrapolation of the same third-party flow experiments - and three
+     of the five agree to EXACTLY 0.000000 % because they are one number printed
+     twice. The evidence was already in the page's own CSV (exp_extrapolated) and
+     unread. The comparison is kept as a transcription and internal-consistency check.
+     The Celite argument survives in a narrower form: ONE measurement, reduced twice
+     by the same authors, 8.8 % apart, with their calculation 52 % below both. Rows
+     are now paired by PACKING; pairing reference 15 by row order gives -70 %."
+  - "CORRECTED on the fixer pass: the reduction-bias headline is now quoted at the
+     temperature drops the apparatus actually ran. Figure 12's five profiles have
+     endpoints on a labelled 0-900 degC ordinate giving dt = 195-260 degC, where the
+     bias is a nearly CONSTANT +9.8 to +11.5 % from a mean bed temperature of 110 to
+     690 degC. The old '2.4 % to 21.7 % over dt = 50-800' is kept as a labelled
+     extrapolation - 800 degC is about 3x the largest drop in Figure 12 and t_m = 500
+     was arbitrary. Straightness likewise: a factor of 1.7-1.9 at the real drops, not
+     the 4.5 the swept minimum at dt = 600 gives. And the remark is strong evidence
+     AGAINST a constant conductivity but only partial evidence FOR Eq. (15), which
+     still bows by 7.4-8.3 % of dt where a constant k bows by 13.7 %."
+  - "NEW, and the page's one check that can catch a wrong BASELINE rather than an
+     insensitive one: Eq. (15) evaluated from Table 4's parameters reproduces the ENDS
+     of the paper's own printed THEORETICAL curves in Figures 13-17 to a mean of 2.4 %
+     over 14 readings, worst 4.2 %. That includes both curves Figure 13 prints for the
+     iron-sphere bed (beta = 1.0 and 0.9) and both Raschig-ring curves, whose beta is
+     argued from geometry and is nowhere near 1. It is far stronger evidence that
+     p = 1 is what the authors used than Figure 3's caption - though it is equally
+     consistent with p = 0.9 (-1.3 % mean) and only excludes p <~ 0.8 (-4.9 %)."
+  - "NEW: for the two insulating-firebrick rows the authors held Table 4's printed
+     ks/kg = 4.48 constant, not its ks = 0.20. Holding ks misses their own Figure 16
+     curve by 50-61 % at the low-temperature end; holding the ratio matches to
+     0.9-6.6 %. That is presumably why ks/kg is printed for those rows and an em dash
+     for every other. The page keeps ks = 0.20 as base case and reports the firebrick
+     radiation crossover both ways, 265 and 233 degC; the paper's conclusion is
+     unaffected either way."
+  - "NEW: at p = 1 both radiation coefficients collapse to the same 0.1952(T/100)^3,
+     so before this pass exchanging Eqs. (7) and (8) wholesale moved exactly 1 of 53
+     metrics - and that one was the output of the assumption under test. Four p != 1
+     metrics and three p-structure injections were added; the exchange now moves 6."
   - "Table 3's calculated column cannot be reproduced from printed material: at
-     eps = 0.40 it implies phi from 0.0077 to 0.0582, a factor of 7.6, while
-     Table 4 assigns that voidage the single value 0.034. Forward calculation from
-     Table 4's printed phi(eps) line misses the paper's own column by 10.6 % mean."
-  - "The emissivity p is never printed anywhere in the paper. p = 1 is assumed on
-     the strength of Figure 3's 'black body surface A'/B'' wording; p = 0.8 moves
-     the 1000 degC iron-sphere value by -16.4 %."
-  - "Reference 5 (Coberly & Marshall, Celite cylinders) is a genuine outlier in
-     Table 3: its measured value appears TWICE in the paper, as Table 1's Eq. (6)
-     intercept (10.4) and Table 3's Exp. column (11.4), agreeing to 8.8 %, while
-     the calculated value is 5.5 - 52 % below both. The outlier is the calculation,
-     not a bad measurement."
+     eps = 0.40 it implies phi from 0.0077 to 0.0582, a factor of 7.6 - or 2.3 with
+     the one pathological row (ref 5's 12.7 mm Celite bed) removed, which is the row
+     the page separately argues is the paper's worst calculation. Table 4 assigns that
+     voidage the single value 0.034. Forward calculation from Table 4's printed
+     phi(eps) line misses the paper's own column by 10.6 % mean."
+  - "The emissivity p is never printed anywhere in the paper. p = 1 is assumed;
+     p = 0.8 moves the 1000 degC iron-sphere value by -16.4 %."
   - "The theoretical alpha = 0.179 for rhombohedral spheres over-predicts the
      lateral-mixing slope actually observed in Table 1 by 1.33 to 1.63 times even
      at the most favourable beta. The paper says so in words but never numerically."
+  - "delta is printed as smaller than 10^-5 on journal page 376, not 10^-6. No
+     numerical effect (delta is set to 0 either way) but it was a printed constant
+     read wrong and is corrected."
+  fixer_pass:
+    date: '2026-08-05'
+    verification: queue_cases/A3.12/review/verification.md
+    resolved: [S1, S2, S3, S4, S5, S6, S7, S8, S9]
+    disputed: >
+      One number in the verification report is wrong: it says four of the fourteen
+      compensating phi values for the gamma deletion lie off Figure 9's 0.2 axis. Two
+      do (0.4195 and 0.2906); the next largest is 0.1781. The direction of the finding
+      is unaffected and 12 of 14 do exceed Table 4's largest printed phi.
+      The report's delete_hrv_worst_shortfall_pct = 14.15 is confirmed, but only after
+      fixing can_match: Eq. (15) is monotone DECREASING in phi (a thicker film is more
+      resistance), so the old max() happened to be right for that row and would have
+      been wrong for any target unreachable from below. The fix takes whichever
+      bracket end is nearer the target.
 notes: >
   The 1955 Yagi & Kunii CES paper already on disk as the B3.1 file does NOT reprint
   the conductivity model; it is the shrinking-core paper and is unrelated. The 1957
@@ -106,3 +185,37 @@ doi_source: >
   crossref-verified 2026-08-02 and now confirmed against the document itself
   (2026-08-05): the Wiley footer stamp on every page of the PDF carries
   10.1002/aic.690030317.
+
+# FIGURE REVIEW OWED - published without one, deliberately, and this records why.
+#
+# Two of the six datasets on this page are digitisations, and unlike every other
+# digitisation in the gallery (A1.1, A3.4, F3.5, G1.7, G1.8, A2.5) neither has had
+# a maintainer overlay review:
+#
+#   yagi-kunii-1957-figure12-endpoints.csv       10 endpoint readings, Fig. 12
+#   yagi-kunii-1957-figures13to17-curve-ends.csv 17 curve-end readings, Figs. 13-17
+#
+# Both are readings of the AUTHORS' OWN COMPUTED CURVES and of profile endpoints,
+# not of their measured data - the measured markers in Figures 13-17 are
+# deliberately scoped out and the sidecar says so. So this is reproduction, not
+# validation, and the page's tier and framing reflect that.
+#
+# They are still load-bearing: Figure 12's endpoints fix the Delta t = 195-260 C
+# range at which the reduction-bias headline is quoted, and the curve-ends carry
+# the p = 1 bound (2.44 % mean over 14 non-firebrick readings). If either
+# extraction is wrong, both numbers move.
+#
+# The builder also ran an INTERIOR-point comparison and correctly did NOT publish
+# it, because reading the interior thermocouples is a digitisation needing the
+# review that is unavailable. Its result is in the fixer's report.
+#
+# ASK: overlays for both, on the established pattern.
+review_owed:
+  kind: figure
+  raised: '2026-08-05'
+  blocking: false
+  detail: >
+    Two digitisations published without the overlay review every comparable page
+    received. Both read the authors' computed curves rather than their measured
+    data, so the reproduction/validation line is not crossed - but the numbers
+    they carry are load-bearing and unchecked by a human.

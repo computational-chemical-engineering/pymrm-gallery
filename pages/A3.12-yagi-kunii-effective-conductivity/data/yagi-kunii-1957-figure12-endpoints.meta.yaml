@@ -1,0 +1,63 @@
+dataset_id: yagi-kunii-1957-figure12-endpoints
+title: "Figure 12 - the two endpoints of each of the five radial temperature profiles"
+status: complete
+
+source:
+  authors:
+    - "Yagi, Sakae"
+    - "Kunii, Daizo"
+  year: 1957
+  container: "AIChE Journal 3(3) 373-381"
+  doi: 10.1002/aic.690030317
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: figure-endpoints
+  figure: "Figure 12, journal page 378"
+  tool: >
+    poppler pdftoppm at the scan's NATIVE 300 ppi (pdfimages -list reports
+    2400x3299 CCITT-G4 at 300x300 for every page; rendering at 600 dpi would be
+    interpolation). Axis ticks and marker centroids located with scipy.ndimage.
+  procedure: >
+    The ordinate is labelled 0 to 900 degC. Its ten ticks were located on the right
+    axis at y = 1743.0 .. 2953.0 px, giving 134.444 px per 100 degC, and the same
+    ladder was confirmed on the left axis. The twenty markers were found as the white
+    holes of the open-circle glyphs (15-17 px across, area >= 15 px), giving four
+    abscissa columns; only the markers in the first and last column - the ones sitting
+    ON the OUTSIDE and INSIDE axes - are recorded. Values rounded to the nearest degree.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    About +-2 degC per endpoint, i.e. +-3 degC on a temperature drop; +-1.5 % on the
+    smallest drop recorded.
+
+provenance_of_the_measurements: >
+  These are the authors' own thermocouple readings in their own apparatus (Figure 11),
+  with motionless air. They are a MEASUREMENT, but of temperature, not of conductivity:
+  no conductivity is read from this figure and none is claimed from it.
+
+validation:
+  internal_consistency: >
+    The five drops come out 195, 218, 212, 242 and 260 degC - a narrow band, which is
+    what a fixed apparatus run at five bed levels should give, and independent evidence
+    that the ordinate calibration is right (a calibration error would scale all five).
+  what_it_tests: >
+    Nothing about the model. It fixes the range over which the page's own result - the
+    bias built into Eq. (19)'s reduction - may honestly be quoted.
+
+known_issues:
+  - "The abscissa carries no scale, only the words OUTSIDE and INSIDE. Nothing here uses
+     it: the endpoints are identified by which axis the marker sits on, not by position."
+  - "The figure does not say which packing was in the bed, so the page evaluates the bias
+     with the Table 4 iron-sphere parameters it uses elsewhere and says so."
+
+not_transcribed:
+  - "The two interior markers of each profile, and therefore the shape of the profile.
+     Reading them is a marker digitisation and would need a maintainer review; the page
+     makes no claim that depends on them."
+
+columns:
+  - {name: run, unit: "-", description: "profile index, 1 = coldest, 5 = hottest"}
+  - {name: t_outside_C, unit: degC, description: "temperature at the marker on the OUTSIDE axis"}
+  - {name: t_inside_C, unit: degC, description: "temperature at the marker on the INSIDE axis"}

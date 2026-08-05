@@ -1,0 +1,42 @@
+dataset_id: yagi-kunii-1957-air-conductivity
+title: "The air conductivity Yagi & Kunii themselves used, 0 to 1200 deg C"
+status: complete
+
+source:
+  authors:
+    - "Yagi, Sakae"
+    - "Kunii, Daizo"
+  year: 1957
+  container: "AIChE Journal 3(3) 373-381"
+  doi: 10.1002/aic.690030317
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "unnumbered table on journal page 377, printed under Table 3"
+  tool: >
+    poppler pdftoppm. First pass at 600 dpi; every digit then re-read at the scan's NATIVE 300 ppi on 2026-08-05 (pdfimages -list: 2400x3299 CCITT-G4 at 300x300, so 600 dpi was interpolation); every cell confirmed unchanged.
+  procedure: >
+    Read from a page render (see acquisition.tool). The paper attributes these values to Cowling,
+    "Mathematical Theory of Non-Uniform Gases" (its reference 6), which is not on disk;
+    what is transcribed here is Yagi & Kunii's printed table, not Cowling's book.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "None beyond the paper's own rounding to three significant figures."
+
+why_this_matters: >
+  Every ke0/kg on the page is a ratio to kg, so kg is an input to the model and not a
+  detail. Using a modern correlation instead would make the reproduction of the paper's
+  own numbers depend on a quantity the paper did not use. The page interpolates linearly
+  in temperature between these seven printed points and nowhere else.
+
+validation:
+  internal_consistency: >
+    Table 4 prints ks = 0.20 kcal/(m hr degC) at 400 deg C for insulating firebrick and,
+    separately, ks/kg = 4.48. 0.20 / 0.0447 = 4.474, so this table and Table 4 agree
+    through a division neither of them shows.
+
+columns:
+  - {name: temp_C, unit: "deg C", description: "temperature"}
+  - {name: kg_kcal_m_hr_C, unit: "kcal/(m hr degC)", description: "thermal conductivity of air as printed"}

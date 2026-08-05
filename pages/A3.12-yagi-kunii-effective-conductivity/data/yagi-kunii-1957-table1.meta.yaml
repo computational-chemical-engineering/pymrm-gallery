@@ -1,0 +1,75 @@
+dataset_id: yagi-kunii-1957-table1
+title: "Table 1 - the lateral-mixing group (alpha*beta) recovered from other authors' flow data"
+status: complete
+
+source:
+  authors:
+    - "Yagi, Sakae"
+    - "Kunii, Daizo"
+  year: 1957
+  container: "AIChE Journal 3(3) 373-381"
+  doi: 10.1002/aic.690030317
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 1, journal page 373"
+  tool: >
+    poppler pdftoppm. First pass at 600 dpi; every digit then re-read at the scan's NATIVE 300 ppi on 2026-08-05 (pdfimages -list: 2400x3299 CCITT-G4 at 300x300, so 600 dpi was interpolation); every cell confirmed unchanged.
+  procedure: >
+    Read from a page render (see acquisition.tool). In the text layer this table is interleaved with the
+    abstract and the first column of body text, and the header equation comes back as
+    "k d k g = ke\"/ko 4- ( o~P)N~~N", so nothing was taken from it.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "None beyond the paper's own rounding."
+
+provenance_of_the_measurements: >
+  Again NOT the authors' own data. Every row is a third party's flow experiment,
+  re-expressed by Yagi & Kunii in the standard form of their Eq. (6),
+  ke/kg = ke0/kg + (alpha*beta) N_PeM, so that a single slope (alpha*beta) and a single
+  intercept ke0/kg summarise it. Both columns are therefore Yagi & Kunii's own
+  reduction of somebody else's measurement - a third category, neither the authors'
+  measurement nor a pure model output.
+
+validation:
+  internal_consistency: >
+    The paper states two things about this table that it can be checked against:
+    that (alpha*beta) covers "a narrow range, i.e., 0.1 to 0.14" for spheres, cylinders,
+    pellets or broken granules, and that a Raschig-ring bed's lateral mixing "can be
+    assumed to be about twice that for ordinary solid packing". Both are computed on
+    the page from these rows.
+  what_it_tests: >
+    Nothing about the static term. This table carries the FLOW-dependent contribution,
+    the mechanism Yagi & Kunii take from Ranz. It is the only place in the paper where
+    that mechanism is confronted with data.
+
+known_issues:
+  - "Reference markers are typeset centred over multi-row blocks. Where a row carries
+     no marker of its own, the block owner is inferred from the marker's vertical
+     position and the row is flagged reference_inferred = 1. The (alpha*beta) values
+     themselves are unambiguous; only the attribution is."
+  - "Dp_mm and DT_mm are printed as block listings of the diameters used in that study
+     and are NOT paired row-wise with alpha_beta. Continuation rows are blank here so no
+     false pairing is implied. Dp_over_DT is row-wise and is what Figure 7 plots against."
+  - "The final block (reference 29, the authors' own collaborators) prints
+     'ke0/kg by Eq. (15)' in the ke0/kg column instead of a number, i.e. that intercept
+     was taken from the model rather than fitted. It is blank here."
+
+not_transcribed:
+  - "Figures 5, 6 and 7, which plot (alpha*beta) against Dp/DT for Berl saddles and
+     Raschig rings. Table 1 already prints the numbers those figures carry for the rows
+     used here, so there is nothing to gain from digitising them."
+
+columns:
+  - {name: reference, unit: "-", description: "Yagi & Kunii's literature-cited number for the observer"}
+  - {name: reference_inferred, unit: "-", description: "1 where the reference is read from marker position rather than a marker on the row"}
+  - {name: solid, unit: "-", description: "packing as printed"}
+  - {name: gas, unit: "-", description: "fluid as printed"}
+  - {name: Dp_mm, unit: mm, description: "block listing of solid diameters; not row-wise"}
+  - {name: DT_mm, unit: mm, description: "block listing of bed diameters; not row-wise"}
+  - {name: NReM_range, unit: "-", description: "Reynolds-number range covered, as printed"}
+  - {name: ke0_over_kg, unit: "-", description: "intercept of Eq. (6), the motionless-fluid term; blank where an em dash is printed"}
+  - {name: alpha_beta, unit: "-", description: "slope of Eq. (6) against N_PeM, the lateral-mixing group"}
+  - {name: Dp_over_DT, unit: "-", description: "particle-to-bed diameter ratio, as printed"}

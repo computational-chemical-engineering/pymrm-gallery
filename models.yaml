@@ -1153,6 +1153,73 @@ models:
         dataset is loaded.
     related: [A3.1, A3.2, F3.1, F3.5, A2.3, J1.5, A2.1]
 
+  - id: A3.12
+    slug: yagi-kunii-effective-conductivity
+    title: Yagi–Kunii effective thermal conductivity
+    description: >
+      The stagnant packed-bed conductivity as a sum of five mechanisms — solid
+      conduction, the contact film, two radiation paths and lateral mixing — and a
+      measurement of which of them the paper's own data actually switch on.
+    section: A
+    status: published
+    tier: T0
+    priority: P1
+    structures:
+    - S6
+    phases:
+    - gas-solid
+    predicts:
+    - effective thermal conductivity of a packed bed, static and flow-dependent parts
+    - the temperature at which radiation takes over
+    - the bias built into the paper's own data-reduction formula
+    pymrm_api:
+    - construct_grad
+    - construct_div
+    - construct_coefficient_matrix
+    data:
+      tier: 2
+      method: table
+      status: complete
+    page: pages/A3.12-yagi-kunii-effective-conductivity/
+    reference:
+      authors:
+      - Yagi, S.
+      - Kunii, D.
+      year: 1957
+      container: AIChE Journal 3(3) 373–381
+      doi: 10.1002/aic.690030317
+    origin_not_consulted:
+      authors:
+      - Ranz, W. E.
+      year: 1952
+      container: Chem. Eng. Progr. 48, 247
+      note: >
+        Source of Eq. (1), the lateral-mixing mechanism. Not on disk — the only Ranz
+        item held is a one-page 1993 "Citation Classic" reminiscence about Ranz &
+        Marshall (1952), which carries no correlations. Nothing about Ranz is written
+        from the gallery's memory; the page states only what Yagi & Kunii print.
+    note: >
+      Two printed defects are recorded on the page and proved from the paper's own
+      results: Eq. (17) sets pi*l where the cylindrical solution requires 2*pi*l (its
+      own Eq. (19)'s constant 0.743 proves it, ratio 2.00095), and gamma = 1.2 mm/9.0 mm
+      is printed as 0.0134 where the division gives 0.1333. The page's central finding
+      is a degeneracy: with phi read off Figure 9, the solid-to-solid radiation
+      coefficient can be deleted outright and every printed calculated value still
+      reproduced to 2.2e-16, with a compensating phi that never leaves the band the
+      baseline inversion already occupies. The gamma(kg/ks) term is NOT degenerate in the
+      same way — absorbing its deletion needs phi up to 0.42 against a printed 0.034-0.060.
+      data.tier is 2: all four tables are printed, and Table 3's Exp. column is third-party
+      measurement. The MEASURED points of Figures 13–17, the authors' only measurements of
+      their own, are NOT digitised — that is what would turn the radiation terms from
+      unexamined into tested, and it needs a maintainer figure review. What the page does
+      read from those figures is the ends of their printed THEORETICAL curves, the authors'
+      computed output, which Eq. (15) reproduces to a mean of 2.4 % over 14 readings; that
+      is the page's one check able to catch a wrong baseline rather than an insensitive one.
+    related:
+    - A2.3
+    - B3.1
+    - D1.5
+
   - id: A3.15
     slug: graetz-nusselt
     title: "Graetz–Nusselt problem"
