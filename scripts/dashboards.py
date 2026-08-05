@@ -210,6 +210,57 @@ def doi_link(e):
 
 
 # ---------------------------------------------------------------- papers page
+def papers_requested():
+    """The curated ask from docs/papers-requested.yaml, maintained by hand.
+
+    The raw needs-paper list below it is ~200 cases, which is a wall rather than
+    a request. This block is what to send first and what sending it unblocks,
+    grouped by publisher so one login clears several cases."""
+    f = ROOT / "docs" / "papers-requested.yaml"
+    if not f.is_file():
+        return None
+    try:
+        return yaml.safe_load(f.read_text(encoding="utf-8")) or None
+    except Exception:
+        return None
+
+
+def requested_block():
+    req = papers_requested()
+    if not req:
+        return []
+    P = ['<section class="card" style="margin-top:26px">',
+         '<h2>The curated ask — send these first</h2>']
+    if req.get("intro"):
+        P.append(f'<p class="lede" style="margin:6px 0 14px">{esc(req["intro"])}</p>')
+    for g in req.get("groups", []):
+        P.append(f'<h3 style="margin:18px 0 4px">{esc(g["name"])}</h3>')
+        if g.get("why"):
+            P.append(f'<p class="muted" style="margin:2px 0 8px">{esc(g["why"])}</p>')
+        P.append("<ul>")
+        for it in g.get("items", []):
+            it = esc(it)
+            it = re.sub(r"doi:(10\.\S+?)( |$|—)",
+                        r'<a href="https://doi.org/\1" target="_blank" rel="noopener">doi:\1</a>\2',
+                        it)
+            P.append(f"<li>{it}</li>")
+        P.append("</ul>")
+    nap = req.get("not_a_paper_problem")
+    if nap:
+        P.append('<h3 style="margin:18px 0 4px">Not a paper problem — needs a decision, not a document</h3>')
+        if nap.get("intro"):
+            P.append(f'<p class="muted" style="margin:2px 0 8px">{esc(nap["intro"])}</p>')
+        P.append("<ul>")
+        for it in nap.get("items", []):
+            it = esc(it)
+            it = re.sub(r"(https://claude\.ai/\S+)",
+                        r'<a href="\1" target="_blank" rel="noopener">\1</a>', it)
+            P.append(f"<li>{it}</li>")
+        P.append("</ul>")
+    P.append("</section>")
+    return P
+
+
 def papers_page(es):
     need = [e for e in es if e["status"] == "needs-paper"]
     unclaimed = [e for e in es if e["status"] == "unclaimed"]
@@ -221,8 +272,10 @@ def papers_page(es):
  <h1>Papers I need from you</h1>
  <p class="lede">Each of these is a case an agent reached and could not proceed on, because the
  source is neither on disk nor reachable as open access. <strong>Everything else is being worked
- automatically.</strong> Drop PDFs into <code>~/papers/pymrm-gallery/</code> — filename does not
- matter, they get matched by DOI and metadata.</p>
+ automatically.</strong> Drop PDFs into <code>~/papers/pymrm-gallery/</code> — any filename works,
+ because every file is identified by <em>reading its own title page</em> before it is mapped.
+ (An earlier version of this page said files "get matched by DOI and metadata"; that is exactly
+ the error five mis-identifications this week traced to, and it is not how mapping works here.)</p>
  <ul class="stats">"""]
     for lab, n, hot in (("blocked on a PDF", len(need), True), ("of those, P1", len(p1), True),
                         ("not yet reached", len(unclaimed), False), ("published", len(done), False),
@@ -234,11 +287,16 @@ def papers_page(es):
                  '<button class="btn ghost" id="dois">Copy DOIs only</button></div>')
     P.append("</header>")
 
+    P.extend(requested_block())
+
     if not need:
         P.append('<div class="empty" style="margin-top:30px"><b>Nothing is waiting on you.</b>'
                  'No case has hit a paper wall yet. This page fills in as agents work through the '
                  'catalogue — check back, or watch the other dashboard for decisions.</div>')
     else:
+        P.append('<h2 style="margin-top:30px">Every blocked case, by section</h2>'
+                 '<p class="muted">The complete list. The curated ask above is the '
+                 'ranked subset worth acting on first.</p>')
         for sec in sorted({e["section"] for e in need}):
             grp = sorted([e for e in need if e["section"] == sec],
                          key=lambda e: (e.get("priority", "P3"), e["id"]))

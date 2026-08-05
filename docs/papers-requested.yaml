@@ -1,0 +1,88 @@
+# The curated ask. Rendered at the TOP of docs/dashboards/papers-needed.html,
+# above the raw list of every blocked case.
+#
+# Why this file exists: the dashboard's full list is ~196 cases, which is a wall
+# rather than a request. This is the ranked version - what to send first, and
+# what sending it unblocks. Ordered so that the marginal cost of a second paper
+# inside one login is near zero.
+#
+# Maintained BY HAND. Update it when a batch lands. Verified 2026-08-05 against
+# queue_cases/*.yaml and the 91 PDFs on disk; every entry below was checked NOT
+# to be on disk already (8 blocked cases turned out to have their paper in hand
+# and are excluded).
+
+intro: >
+  53 cases at tier T0 / priority P1 are still blocked. These are the highest-value
+  ones, grouped so a single session at one publisher clears several. Everything not
+  listed here is either lower priority, already in hand, or needs a decision from
+  you rather than a document.
+
+groups:
+
+  - name: "Textbooks — the largest single lever, still unspent"
+    why: >
+      You approved the textbook-canonical class on 2026-08-02: ~20 T0 cases whose
+      result is a closed form nobody disputes may be built without the original
+      paper. It has been INERT ever since, because AGENTS.md still forbids writing
+      from memory and no textbook was on disk. Chapman & Cowling arrived today and
+      unlocks exactly one case (A4.6), not the class - it is an origin monograph
+      for a single result, not a textbook. Any ONE of these four is worth more than
+      any single paper below.
+    items:
+      - "Bird, Stewart & Lightfoot — Transport Phenomena"
+      - "Taylor & Krishna — Multicomponent Mass Transfer"
+      - "Levenspiel — Chemical Reaction Engineering (unblocks A2.4 directly)"
+      - "Froment & Bischoff — Chemical Reactor Analysis and Design"
+
+  - name: "ACS batch — one login, several cases"
+    why: >
+      ACS scans have the best text layers in the repo. Note the whole 2026-08-05
+      upload already cleared C2.10, C2.3, B1.7, B2.1 and B2.4 from this batch.
+    items:
+      - "Voltz, Morgan, Liederman et al. (1973), Ind. Eng. Chem. Prod. Res. Dev. — doi:10.1021/i360048a006 — C2.13"
+      - "Langmuir (1918), J. Am. Chem. Soc. 40(9) 1361 — doi:10.1021/ja02242a004 — J1.1"
+      - "Brunauer, Emmett & Teller (1938), J. Am. Chem. Soc. 60(2) 309 — doi:10.1021/ja01269a023 — J1.3 (BET)"
+      - "Chiu, Carratt & Soong (1983), Macromolecules 16(3) 348 — doi:10.1021/ma00237a002 — J5.3"
+
+  - name: "Wiley / AIChE batch — one login, seven cases"
+    why: >
+      One of these is FREE: Luedeking & Piret's 2000 Biotechnol. Bioeng. reprint is
+      open access and downloads from a browser (curl gets a Cloudflare 403).
+    items:
+      - "Bischoff (1965), AIChE J 11(2) 351 — doi:10.1002/aic.690110229 — B1.3"
+      - "Bhatia & Perlmutter (1980), AIChE J 26(3) 379 — doi:10.1002/aic.690260308 — B3.3"
+      - "Myers & Prausnitz (1965), AIChE J 11(1) 121 — doi:10.1002/aic.690110125 — J1.4 (IAST)"
+      - "Heck, Wei & Katzer (1976), AIChE J 22(3) 477 — doi:10.1002/aic.690220310 — I1.3"
+      - "Larkins, White & Jeffrey (1961), AIChE J 7(2) 231 — doi:10.1002/aic.690070213 — G1.1"
+      - "Deckwer, Burckhart & Zoll (1984), AIChE J 30(4) 675 — doi:10.1002/aic.690300421 — F2.1"
+      - "Andrews (1968), Biotechnol. Bioeng. 10(6) 707 — doi:10.1002/bit.260100602 — J4.2"
+      - "Luedeking & Piret (1959), J. Biochem. Microbiol. Technol. — doi:10.1002/jbmte.390010406 — J4.4 (free, see above)"
+
+  - name: "Elsevier batch — identity already confirmed, lowest risk"
+    why: >
+      The Elsevier API reaches the TEXT of these but not a page image, and the text
+      drops decimal points on every scan through 1991 - so a real PDF is needed,
+      not an API fetch. Best of these is Uppal, Ray & Poore: the validation is the
+      paper's own analytic multiplicity criteria re-derived, a check that can fail.
+    items:
+      - "Uppal, Ray & Poore (1974), Chem. Eng. Sci. 29(4) 967 — doi:10.1016/0009-2509(74)80089-8 — D2.4 (and the 1976 sequel)"
+      - "van Deemter, Zuiderweg & Klinkenberg (1956), Chem. Eng. Sci. 5(6) 271 — doi:10.1016/0009-2509(56)80003-1 — J1.10"
+      - "Hulburt & Katz (1964), Chem. Eng. Sci. 19(8) 555 — doi:10.1016/0009-2509(64)85047-8 — J2.1"
+      - "Nyvlt (1968), J. Cryst. Growth 3-4 377 — doi:10.1016/0022-0248(68)90179-6 — J2.3"
+      - "Robeson — ask for the 2008 upper-bound paper, NOT the 1991 one: born-digital, and the 1991 scan's Table 2 comes back from the API as '2 6 2 89 3 3 3 46 3 64 3 8' — H1.8"
+
+  - name: "Named individually — no batch, but high value"
+    items:
+      - "Toomey & Johnstone (1952), Chem. Eng. Prog. 48(5) 220 — E1.1. Already checked: Kunii & Levenspiel state the two-phase relation but never name, attribute or test it, so the reprint route FAILS here and only the original will do."
+      - "Ranz & Marshall (1952), Chem. Eng. Progr. 48, 141-146 AND 173-180 — A3.5. Two files on disk look like this and are not: a one-page 1993 'Citation Classic' reminiscence, and Charlesworth & Marshall's companion study on drops containing dissolved solids. Before re-requesting, worth checking whether Charlesworth reprints enough to source it by the reprint route."
+      - "Higbie (1935), Trans. AIChE 31 — A3.2. Completes the film / penetration / surface-renewal trio; A3.1 and A3.3 are both published and both deliberately decline the three-way comparison, which A3.2 would own."
+      - "Wilke (1950), Chem. Eng. Prog. 46 — A4.1. Chapman & Cowling does NOT cover it: its only Wilke is Buddenberg & Wilke 1949 on viscosity, and the 1950 diffusion mixture rule is never stated. Also note ie50546a056.pdf on disk is the WRONG Wilke (Wilke & Lee 1955)."
+      - "Hougen & Watson (1943, 1947) — C1.1. Check the process-calculation-by-watson.pdf already on disk before requesting; it may already cover this."
+
+not_a_paper_problem:
+  intro: >
+    These will never be unblocked by a document, and should not sit in the paper
+    queue. They need a decision from you.
+  items:
+    - "D1.1-D1.5 — five T0/P1 cases whose catalog_reference is a STRUCTURE CODE (S2, S4, S7, S8, S6), not a citation, with empty reference blocks. Every one of the five structures is already built and published, except D1.5's: S6 has exactly one page (A2.3, Taylor-Aris), which is 2D transport with no reaction and no wall heat transfer. So D1.1-D1.4 are arguably covered, and D1.5 is a genuine gap in the gallery. Decision page: https://claude.ai/code/artifact/8f5d6624-e867-4468-9220-65268f44add8"
+    - "A1.8 is the precedent for a third outcome: its origin turned out to be an UNPUBLISHED 1987 report, so the DOE Theory Guide already on disk is the citable published source and the case is closed, not parked. Worth checking the reference list of what you already have before adding to this list."
