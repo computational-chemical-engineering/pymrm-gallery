@@ -1,0 +1,91 @@
+dataset_id: graetz-1882-printed-constants
+title: "Every constant Graetz prints in Sections 2-4, with its journal page"
+status: complete
+
+source:
+  authors:
+    - "Graetz, L."
+  year: 1882
+  container: "Annalen der Physik 254(1) 79-94"
+  doi: 10.1002/andp.18822540106
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "running text and displayed equations, journal pages 82-93"
+  tool: "poppler pdfimages -png (300 dpi native bilevel bitmap); read from the page images"
+  procedure: >
+    As for the observations file: the text layer is unusable for numbers and every
+    value here was read off the stored 300 dpi bitmap (which is the file's native
+    resolution - rendering higher only interpolates). Ambiguous glyphs were
+    magnified 10x and compared against unambiguous instances of both candidate
+    digits elsewhere on the same page.
+    ONE GLYPH HAD TO BE ARGUED RATHER THAN READ, and a headline claim turns on
+    it: the third digit-group of `series_coeff_mu10` is broken on the bitmap and
+    renders as a bracket. At 16x it has an open left side, two left-hand
+    terminals and no closed upper bowl, so it is a 3 and the coefficient is
+    3.4938e-9. See printed_defects for what the alternative reading would have
+    cost.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "None beyond the paper's own rounding."
+
+validation:
+  internal_consistency: >
+    The five series coefficients are over-determined: the same page prints the
+    power series V(x) term by term, and collapsing it at x = mu must reproduce
+    them. That reading is confirmed by an independent exact-rational solution of
+    the recurrence (see what_it_tests). And log p1 = 9.96030, log p2 = 8.09658
+    must give the 0.91264 and 0.01249 that appear in the working formula three
+    lines below: 10^(9.96030-10) = 0.912640 and 10^(8.09658-10) = 0.0124898. Both
+    check. `k_water_lorberg_carried_30C` = 0.0940 is the value page 93 obtains by
+    carrying Weber's data to 30 C with Lorberg's temperature coefficient, and it
+    must sit close to `k_water_graetz_30C` = 0.0945, which is the comparison
+    Graetz himself draws: it does, at 0.5 %.
+  what_it_tests: >
+    Solving V'' + V'/x + (1 - x^2/mu^2) V = 0 with exact rational arithmetic
+    reproduces `series_coeff_mu2` = 0.1875, `series_coeff_mu4` = 0.007921 and
+    `series_coeff_mu6` = 0.00014404 exactly, and reproduces all five printed
+    terms of the V(x) power series term for term. It does NOT reproduce
+    `series_coeff_mu8` (exact 1.4507983788e-6 against the printed 1.4592e-6,
+    +0.58 %) or `series_coeff_mu10` (exact 9.2671448198e-9 against the printed
+    3.4938e-9, a factor of 2.65). Those two are arithmetic slips in the paper,
+    established against a derivation rather than against another printing.
+
+printed_defects:
+  - "`mu1_working_formula` = 2.4013. The exponent of the working formula on
+     journal page 90 should carry the root mu_1 = 2.7043 that page 87 derives, and
+     it does not. Inverting Graetz's own formula for all 51 observations settles
+     it: with 2.7043 the formula returns his printed k/c column to 0.71 % mean
+     deviation, with 2.4013 to 26.3 %. It is a misprint, not a different
+     calculation. Note that 2.401 appears on page 86 as the brass-wall-corrected
+     Bessel root, a plausible compositor's substitution."
+  - "`series_coeff_mu8` and `series_coeff_mu10` are wrong; see what_it_tests.
+     CAUTION ON THE mu^10 READING. Its third digit-group is a broken glyph (see
+     acquisition.procedure). Read as 3 - which is what the magnified glyph is -
+     the printed value is 3.4938e-9, a factor of 2.65 from exact. Read as 9 it
+     would be 9.4938e-9, only 2.4 % from exact, i.e. an ordinary rounding slip
+     and no 'factor of 2.65' claim at all. The notebook prints both alternatives
+     side by side. The mu^8 slip (+0.58 %) does not depend on this glyph, and
+     neither does anything else on the page."
+  - "`graetz_root_mu2` = 6.50 is 2.68 % below the true second eigenvalue
+     6.6790309. It cannot be recovered from his own printed polynomial either -
+     truncated at mu^10 that polynomial has its second positive root at 5.955, and
+     truncated with the *correct* coefficients it has no second positive root at
+     all. The 10-term series locates mu_1 to 1e-4 and cannot locate mu_2."
+
+columns:
+  - {name: quantity, unit: "-",    description: "identifier used in the notebook"}
+  - {name: value,    unit: varies, description: "value exactly as printed"}
+  - {name: unit,     unit: "-",    description: "unit, c.g.s. and minutes throughout"}
+  - {name: source,   unit: "-",    description: "journal page the value is printed on"}
+  - {name: note,     unit: "-",    description: "context, and any flag"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The 1882 work is out of
+  copyright; the restriction that applies is to the publisher's scan, and no page
+  image is reproduced.

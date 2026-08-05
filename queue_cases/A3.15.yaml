@@ -5,18 +5,103 @@ catalog_reference: Graetz (1883)
 priority: P1
 tier: T0
 structures: S6
-status: needs-paper
-reference: {}
+status: published
+page: pages/A3.15-graetz-nusselt/
+reference:
+  authors: ["Graetz, L."]
+  year: 1882
+  container: "Annalen der Physik 254(1) 79-94"
+  doi: 10.1002/andp.18822540106
+  title: "Ueber die Wärmeleitungsfähigkeit von Flüssigkeiten. Erste Abhandlung"
 paper:
-  on_disk: null
+  on_disk: "~/papers/pymrm-gallery/Annalen der Physik - 1882 - Graetz - Ueber die W rmeleitungsf higkeit von Fl ssigkeiten.pdf"
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  note: >
+    Arrived 2026-08-05. 17 pages, every one a single bilevel CCITT-G4 image at
+    300 x 300 dpi, so 300 dpi is the file's native resolution and `pdftoppm -r
+    600` is interpolation - the H1.4 / A1.8 / A1.5 caveat again. Use
+    `pdfimages -png` to pull the stored bitmaps. The text layer is unusable for
+    numbers (0.1875 -> `0.1575`, 5.52024 -> `3,53054`, density 0.872 -> `0,672`,
+    the year 1882 -> `1588`) but fine for prose and for locating equations.
+    Catalogue year 1883 is wrong; see the models entry.
+staged_at: queue_cases/A3.15/page/
+built: '2026-08-05'
+verified: '2026-08-05'
+fixed: '2026-08-05'
+runtime_seconds: 66
+notes: >
+  Built 2026-08-05. Page staged at queue_cases/A3.15/page/ with index.ipynb
+  executed, meta.yaml, README.md, two CSVs with sidecars, and
+  queue_cases/A3.15/models_entry.yaml. Nothing moved into pages/ and models.yaml
+  is untouched, per the builder brief. INTEGRATOR: there is NO A3.15 entry in
+  models.yaml - APPEND models_entry.yaml, do not try to upgrade an entry in
+  place. (Verified 2026-08-05: `grep "A3\.15" models.yaml` returns nothing; the
+  only A3.x entry is A3.4. The earlier "already exists as planned" note here was
+  wrong.)
+
+  Headline: Graetz's amplitudes p_i, which he declared out of reach and
+  calibrated experimentally, are computed here (p_1 = 0.819050, p_2 = 0.097527)
+  two independent ways agreeing to 4.2e-4. Substituting them removes his fit,
+  and his three calibration runs then spread by 15.6 % in k/c against 0.77 %
+  propagated thermometry error - 20 sigma, monotone in flow rate. So the page's
+  result is a DISAGREEMENT, stated as such: computing the constants makes his
+  conductivities worse (16.6-24.5 % lower, destroying his agreement with
+  Lorberg), which means the calibration was absorbing a real systematic effect.
+  The page does not diagnose it and says so.
+
+  Three printed defects found, all established against derivations or against the
+  paper's own data, none by inference: the mu^8 and mu^10 series coefficients
+  (+0.58 % and x2.65), mu_2 = 6.50 vs 6.679031, and the exponent 2.4013 in the
+  page-90 working formula where page 87 gives 2.7043 (settled at 0.71 % vs
+  26.3 % over all 51 runs). Plus one internal inconsistency in the data: the
+  turpentine specific heat implied by the k column is 0.4317 +/- 0.0003 against
+  a stated 0.45. Nothing on the page depends on it.
+
+  VERIFIED and FIXED 2026-08-05. Verdict: safe to publish. The verification
+  report is at queue_cases/A3.15/review/verification.md; the transcription was
+  re-read independently (51 rows, 36 constants, ZERO errors) and the central
+  15.6 %/20-sigma result was re-derived by two routes sharing no code with the
+  page. Both misprint claims proved. The verifier's headline was that the page
+  UNDER-sold its result, so the fixer pass mostly ADDED evidence:
+
+  (a) OUT-OF-SAMPLE test added (new section 8h) - Graetz's own p. 89 consistency
+      test, run on all 51 rows. With his fitted constants it passes (water 3.6 %,
+      cuso4 4.8 %, alcohol 7.2 %); with the computed constants it fails on every
+      liquid spanning three heads (17.0 / 20.9 / 17.8 %), same direction each
+      time, on 48 runs that were never fitted. Strongest evidence on the page and
+      it needs no error model. It also retires the previously unsupported Reuse
+      sentence.
+  (b) THERMOMETRY BUDGET now names what it excludes. Published budget (E1,E2
+      only) 0.77 % -> 20.4 sigma; +E3 0.87 % -> 17.9; +E3 +1 % weighing/timing
+      1.66 % -> 9.4; +E3 without the sqrt(5) 1.95 % -> 8.0. The page reports the
+      RANGE and states that a coarsening break row can never reveal an omitted
+      source. The old "even one reading on a 1-degree scale leaves it at 2 sigma"
+      sentence - which argued AGAINST the page and mislabelled a five-reading row
+      as one - is gone.
+  (c) mu1_rel_err_2d = 5.5e-6 is now labelled a CANCELLATION, not an accuracy
+      (new section 3b): 600/256 gives 4.5e-5, 1200/128 gives 3.8e-5, so refining
+      either axis alone is 7-8x worse; the fit window and domain length agree.
+      The observed orders 1.94/2.12 stand and are named as the load-bearing pair.
+  (d) AREA amplitude cross-check added: the 2-D solve's own area mean gives
+      p_1,area = 0.581370 against the series' 0.581121 (4.3e-4). The 119 %
+      counter-direction row now has an independent witness.
+  (e) mu^10 BROKEN-GLYPH caution recorded on the page and in the constants
+      sidecar: read as 3 (x2.65); read as 9 it would be 2.4 % from exact and the
+      x2.65 claim would collapse. The mu^8 slip does not depend on it.
+  (f) Smaller: "three pages earlier" -> 4, now computed from the CSV page column;
+      the axial-conduction claim is now tested at his SLOWEST water run (worst
+      case, 5.9e-6, the 6th figure exactly as he claims) instead of a mislabelled
+      "fastest" row, so `axial_conduction_rel_effect` moved 3.7e-7 -> 5.9e-6;
+      0.0940 is now carried in the constants CSV; meta.yaml's caveats no longer
+      assert the flow "is not fully developed Poiseuille" (the notebook says that
+      cannot be settled without a viscosity the paper never prints) and now
+      counts three candidates, not two.
+  (g) Five metrics added: p1_area_rel_err_2d, kc_spread_out_of_sample_{water,
+      cuso4,alcohol}, kc_spread_thermometry_sigma_wide. 22 metrics total; every
+      one still has something in section 8 that moves it.
+
+  INTEGRATOR: APPEND models_entry.yaml to models.yaml - there is no A3.15 entry
+  to upgrade. Runtime is now 66 s (was 26 s); two consecutive re-executions gave
+  byte-identical agreement.json and identical cell outputs and figure bytes.
+updated: '2026-08-05'

@@ -1,0 +1,93 @@
+dataset_id: graetz-1882-observations
+title: "Graetz's 51 flow-calorimeter observations for six liquids (Section 4)"
+status: complete
+
+source:
+  authors:
+    - "Graetz, L."
+  year: 1882
+  container: "Annalen der Physik 254(1) 79-94"
+  doi: 10.1002/andp.18822540106
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "the six observation tables of Section 4, journal pages 91-93"
+  tool: "poppler pdfimages -png (the stored bitmap, not a re-render); read from the page images"
+  procedure: >
+    Every page of this file is a single bilevel CCITT-G4 image at 300 x 300 dpi
+    (`pdfimages -list`), so 300 dpi IS the native resolution and `pdftoppm -r
+    600` would be pure interpolation - the caveat recorded in
+    docs/pdf-findings.md for H1.4, A1.8 and A1.5. The bitmaps were extracted with
+    `pdfimages -png` to bypass the rasteriser and read directly. Nothing numeric
+    came from the text layer, which is unusable: it renders the series
+    coefficient 0.1875 as `0.1575`, the Bessel zero 5.52024 as `3,53054`, the
+    turpentine density 0.872 as `0,672`, and the closing date 1882 as `1588`.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the paper's own rounding. Temperatures are printed to 0.01 K
+    (thermometers E1 and E2 are divided in 1/10 degree, E3 in 1/5 degree, journal
+    page 82); masses to 1e-4 g; k/c and k to four decimals.
+
+validation:
+  internal_consistency: >
+    Two columns of every table are derived from the others, so the transcription
+    checks against itself. (i) T must equal (T_in + T_out)/2, which the paper
+    states on page 90. It does exactly in 44 of the 51 rows; the seven that
+    differ are off by 0.05-0.51 K and include the three calibration rows, which
+    are means of five observations each and so carry a mean of means. (ii) k must
+    equal c times k/c. The implied c is 1.0019 +/- 0.0006 for water (stated 1.001
+    at 23 C, 1.003 at 35 C), 0.9494 +/- 0.0007 for copper sulfate (stated 0.95),
+    0.6197 +/- 0.0005 for alcohol (stated 0.62), 0.9615 +/- 0.0022 for the NaCl
+    solution (stated 0.96) and 0.9387 +/- 0.0017 for the zinc sulfate solution
+    (stated 0.94) - all consistent. Turpentine is the exception: the implied
+    value is 0.4317 +/- 0.0003 against a stated c = 0.45, a 4.1 % gap with a
+    scatter of 0.07 %, so it is a printed slip in one of the two, not noise. It
+    does not touch anything on the page, which works in k/c throughout.
+  what_it_tests: >
+    These are measurements, not the author's own simulation output. The k/c
+    column is nevertheless a *derived* quantity: it is what Graetz's two-term
+    formula returns for the measured (T_in, T_out, T_bath, G), using two
+    amplitudes he fitted to the three starred rows. The raw measurement is the
+    four temperature-and-mass columns; the page inverts those independently.
+
+flagged_rows:
+  - "The three rows with calibration_row = 1 (copper sulfate, heads I, II and III)
+     are the ones Graetz used to fit p1, p2 and k/c. Each is the mean of five
+     observations, and he arranged their mean temperatures to agree within a few
+     tenths of a degree. Three constants fitted to three rows leaves zero degrees
+     of freedom, so their agreement with his formula is exact by construction and
+     is not evidence. Anything validating against those rows must say so."
+  - "Water has no specific_heat column value: Graetz gives c = 1.001 at 23 C and
+     1.003 at 35 C rather than one number, and applies it row by row."
+
+not_transcribed:
+  - "The individual observations behind the three starred means (five each).
+     Only the means are printed."
+  - "Figure 3 of plate I, the apparatus schematic. It carries no data."
+
+columns:
+  - {name: liquid,            unit: "-",       description: "water | cuso4 | alcohol | nacl | znso4 | turpentine"}
+  - {name: tube_length_cm,    unit: cm,        description: "l, the brass tube length, printed above each table"}
+  - {name: density_g_cm3,     unit: g/cm3,     description: "rho, printed above each table (1.000 assumed for water)"}
+  - {name: specific_heat,     unit: "-",       description: "c, printed below each table; blank for water (see flagged_rows)"}
+  - {name: pressure_head,     unit: "-",       description: "I = upper (71 cm), II = middle (50 cm), III = lower (17 cm) outflow"}
+  - {name: T_in_C,            unit: degC,      description: "T_1, liquid entering the brass tube, thermometer E1"}
+  - {name: T_out_C,           unit: degC,      description: "U, liquid leaving it, thermometer E2"}
+  - {name: T_bath_C,          unit: degC,      description: "T_0, the cooling water round the tube, thermometer E3"}
+  - {name: mass_flow_g_min,   unit: g/min,     description: "G, weight collected in one minute"}
+  - {name: k_over_c_printed,  unit: cm2/min,   description: "k/c as Graetz computes it from his two-term formula"}
+  - {name: T_mean_C_printed,  unit: degC,      description: "T, the temperature his k refers to; he defines it as (T_1+U)/2"}
+  - {name: k_printed,         unit: "g-cal/(cm min K)", description: "k = c*(k/c), his reported conductivity"}
+  - {name: calibration_row,   unit: "-",       description: "1 for the three starred rows used to fit p1 and p2, else 0"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3), which cannot be overridden
+  by contract. The work is in any case from 1882 and long out of copyright in its
+  own right; the restriction that applies is to the publisher's scan, and no page
+  image is reproduced.

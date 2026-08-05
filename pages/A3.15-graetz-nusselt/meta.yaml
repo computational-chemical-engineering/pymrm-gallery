@@ -1,0 +1,129 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.15
+slug: graetz-nusselt
+title: "Graetz–Nusselt problem"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S6]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 66
+datasets:
+  - graetz-1882-observations.csv
+  - graetz-1882-printed-constants.csv
+
+validation:
+  # PRIMARY - against what the paper prints
+  - "the power series Graetz prints for V(mu) = 0, reproduced with exact rational arithmetic. Four of his six coefficients are right to every digit printed; mu^8 is 0.58 % out and mu^10 is a factor of 2.65 out"
+  - "his eigenvalues: mu_1 = 2.7043 recovered to 2.4e-5, the four J_0 zeros of his plug-flow case to 4.3e-5. His mu_2 = 6.50 is 2.7 % below the true 6.679031, and neither his own truncated polynomial nor the corrected one has a root there - the 10-term series can place mu_1 and cannot place mu_2"
+  - "his calibration re-solved from the three starred copper-sulfate rows: log p_1 recovered to 2.3e-5, log p_2 to 0.8 %. This checks the transcription and his arithmetic and NOTHING ELSE - three constants fitted to three observations"
+  - "the exponent printed in his working formula for k is 2.4013 where p. 87 derives 2.7043. Inverting the formula for all 51 runs settles it: 0.71 % mean deviation from his own k/c column with 2.7043, 26.3 % with 2.4013"
+  - "his claim that dropping axial conduction affects beta_1 'erst in der sechsten Stelle': tested at the WORST of his water runs, the slowest, where the effect is largest - 5.9e-6, so the 6th significant figure, exactly what he claims. At his fastest run it is 3.6e-7, an order further down"
+  # PRIMARY - limits the series does not give
+  - "the Leveque entrance limit, with its constant 2/(Gamma(4/3) 9^(1/3)) = 1.076732 derived rather than quoted, recovered to 2.9e-4 with its own three-rung refinement ladder read at x = 1e-8"
+  - "the asymptotic Nusselt number 3.65679 = mu_1^2/2, the textbook 3.657 for a tube at constant wall temperature"
+  # REFINEMENT - both axes, separately, plus the inlet region separately
+  - "the 2-D solve against the eigenfunction route (no shared code) refined on each axis independently: observed order 1.94 in n_z and 2.12 in n_r for mu_1, read over the first 4x of each ladder because the last rung sits on the other axis's floor and a ratio read there is not an order. The ORDERS are the load-bearing result. mu_1 reads 5.5e-6 and p_1 4.2e-4 at n_z = 600, n_r = 128, but section 3b shows the 5.5e-6 is a partial CANCELLATION of the axial and radial errors and not the accuracy of the solve: refining n_r alone (600/256) gives 4.5e-5 and n_z alone (1200/128) 3.8e-5, 8.3x and 7.0x worse, and the fit window and the domain length say the same. The honest accuracy at that grid is ~4.5e-5 in mu_1, and the page says so"
+  - "the area amplitude, which nothing else on the page checked: the far field of the 2-D solve's own area mean gives p_1,area = 0.581370 against the series projection's 0.581121, 4.3e-4. That is the independent witness for the 119 % area-mean row"
+  - "the inlet is refined separately, at X = 1e-3 with its own grading, because that is where the resolution bites: order 1.9, and a uniform radial mesh misses the Leveque constant by 89 %"
+  # STRUCTURAL / CROSS-CHECK
+  - "the axial-conduction shift in the 2-D solve is C/Pe^2 with C = -4.6091, against -4.5755 from first-order perturbation of the eigenvalue problem - 0.7 %, and the two share no code"
+  - "N_i = -V'(1)/mu_i^2 to 3.2e-8. STRUCTURAL: it follows from the ODE, so it checks the quadrature and not the physics, and it is labelled as such on the page"
+  - "the k/c spread across his three pressure heads using his fitted constants is 0.00 % BY CONSTRUCTION and is reported as the structural row it is, not as agreement"
+  # OUT OF SAMPLE - the test Graetz proposes for himself on p. 89
+  - "the 15.6 % spread is derived on his three starred rows, which are also the three rows he fitted. It is then re-run OUT OF SAMPLE on every liquid he measured at more than one pressure head - 48 of the 51 runs were never fitted to anything. With his fitted constants his own consistency test passes, as he says it does (water 3.6 %, cuso4 4.8 %, alcohol 7.2 %); with the computed constants it fails on all three liquids that span three heads (water 17.0 %, cuso4 20.9 % over all eleven rows, alcohol 17.8 %) and always in the same direction. This needs no error model at all and is the strongest evidence on the page"
+  - "the spread does not come from truncating at 10 modes (20 modes give the same three k/c to 2.4e-15; his runs sit at x >= 0.021 where mode 11 is damped by 1e-17) and it does not come from the eigenfunction route at all: inverting the same three rows through the 2-D solve's own theta_cup(x), with no eigenfunction anywhere, gives the same 15.58 %"
+  # DEFECT INJECTION - section 8 of the notebook
+  - "a defect-injection table with a row for every metric: nu_r = 1 -> 0 (mu_1 out by 38 %), plug instead of Poiseuille (11 %, and it lands exactly on Graetz's own sigma_1), TVD off (order collapses 1.94 -> 0.96), n_r = 8, a uniform radial mesh for the Leveque test, the Bessel weight for the series, a wrong mu_2 for the calibration refit, a coarser thermometer scale for the uncertainty, and three different constant sets for the amplification ratio. The nu_r row in the Leveque table does NOT move and the page says why: at x = 1e-8 the wall is locally flat"
+  - "AND WHAT THAT TABLE CANNOT DO, stated on the page: the thermometry rows only make an ASSUMED error source coarser, so no row of that shape can ever reveal an OMITTED source. The omissions are therefore named instead of tested. The published budget carries E1 and E2 only and gives 0.77 % -> 20.4 sigma; adding E3, whose 0.2 K division is in this page's own constants file, gives 0.87 % -> 17.9 sigma; adding a 1 % weighing/timing error gives 1.66 % -> 9.4 sigma; dropping the sqrt(5) averaging gives 1.95 % -> 8.0 sigma. The honest headline is that RANGE, 20 down to 8 sigma, and 20 is its optimistic end"
+
+adds: >
+  Graetz wrote that expressing the amplitudes p_i in closed form "requires an
+  exhaustive investigation of the function V(r,beta,R), which is probably not
+  simple", and determined them experimentally instead - fitting p_1, p_2 and k/c
+  to three runs of copper sulfate at three pressure heads. This page computes
+  them: p_1 = 0.819050, p_2 = 0.097527, and the whole set to ten modes, two
+  independent ways (an eigenfunction projection, and the far-field decay of a 2-D
+  finite-volume solve that never forms an eigenfunction). It also supplies the
+  two limits his series cannot: the Leveque entrance law at one end and
+  Nu = mu_1^2/2 = 3.65679 at the other.
+  The result of substituting them is not the expected one. His calibration has
+  three constants and three observations, so its exact fit is guaranteed and
+  proves nothing; with the computed amplitudes and no fit at all, those same three
+  runs no longer agree on a single k/c - they spread by 15.6 %, monotonically with
+  flow rate, against 0.77 % propagated from the half-division reading error of
+  the 1/10-degree thermometers he describes. That is 20 sigma on his stated
+  thermometry and 8 sigma on the widest budget the paper supports; the page
+  reports the range and names what the narrow budget excludes. Stronger than
+  either, the same failure reproduces OUT OF SAMPLE - his own p. 89 consistency
+  test, run on 48 runs that were never fitted, passes with his constants and
+  fails with the computed ones on every liquid measured at three heads. His
+  fitted p_2 is
+  7.8x smaller than the true one. Removing the fit moves every conductivity down
+  by 16.6 to 24.5 %, destroying the agreement he had with Lorberg's recomputation of
+  Weber (his 0.0945 for water against 0.0940). So the empirical calibration was
+  absorbing a real systematic effect in the apparatus that his own method could
+  not see, and the honest verdict runs against the framing: computing the
+  constants makes his numbers worse, and what it establishes is that the
+  apparatus does not obey the model.
+  Separately, the page settles a printed defect his own data decide (2.4013 for
+  2.7043 in the working formula), finds two wrong coefficients in his series, and
+  shows his stated preference for the highest pressure head is a trade-off he
+  does not state: the inversion amplifies a temperature error 3.1x more there
+  than at the lowest head.
+
+agreement: >
+  Against what the paper prints: four of six series coefficients exact to every
+  digit, mu_1 to 2.4e-5, the four plug-flow Bessel zeros to 4.3e-5, log p_1 from
+  his own calibration to 2.3e-5, and his working formula reproduces his k/c column
+  to 0.71 % over all 51 runs. Against limits he did not have: the Leveque constant
+  to 2.9e-4 and Nu_inf = 3.65679. The 2-D solve agrees with the eigenfunction
+  route at observed order 1.94 (axial) and 2.12 (radial) - those orders are the
+  load-bearing numbers. It reads 5.5e-6 in mu_1 and 4.2e-4 in p_1 at the
+  published grid, but the 5.5e-6 is a partial cancellation of the two axes'
+  errors, not the accuracy of the solve: refining either axis alone makes it 7-8x
+  worse, and ~4.5e-5 is the honest figure. The area amplitude agrees to 4.3e-4 by
+  the same two routes, and the axial-conduction sensitivity matches first-order
+  perturbation theory to 0.7 %.
+
+caveats: >
+  Data tier 1 - these are measurements - but the k/c and k columns of his tables
+  are derived, not measured, and any comparison against them is a comparison
+  against his own two fitted constants. The page inverts the four raw
+  temperature-and-mass columns instead and says so.
+  The central result is a DISAGREEMENT, and the page does not diagnose it. The
+  15.6 % spread is monotone in flow rate, reproduces out of sample on 48 runs
+  that were never fitted, and sits at 20 sigma on his stated thermometry - or at
+  8 sigma on the widest error budget that can be built from the paper, which is
+  the range the page reports rather than the single number. So it is a real
+  systematic effect, but WHICH effect is not established here. Three candidates
+  are noted and none is demonstrated:
+  (1) a velocity profile that is not fully developed. His printed heads and
+  measured flows put the volumetric rate all but exactly proportional to head, so
+  the flow is laminar and Poiseuille is the right family; whether it is DEVELOPED
+  over the tube turns on the entrance length, which needs a viscosity the paper
+  never prints, so this page can neither establish nor exclude it. Note also that
+  the other extreme, plug flow, moves the inferred k/c further DOWN, so a flatter
+  profile does not on its own close the gap.
+  (2) heat exchanged outside the cooled length - in the corks or the glass tubes
+  carrying the thermometers. Any flow-independent loss weighs more at low flow,
+  which is the right direction, but the paper gives no dimensions for it.
+  (3) the area-versus-cup mean, below - which goes the wrong way.
+  Testing (1) needs a momentum solve and an external viscosity; (2) needs
+  apparatus detail the paper does not give.
+  Graetz's own page-88 mean is the AREA mean, while a collected sample gives the
+  cup mean. Using the area amplitudes makes the spread 119 %, so the distinction
+  matters enormously - but it cannot be the whole explanation, because it goes the
+  wrong way.
+  The turpentine specific heat is internally inconsistent (implied 0.4317 against
+  a stated 0.45). Nothing on the page depends on it; everything works in k/c.
+  No modern reference conductivity is used anywhere: every comparison value is one
+  the paper itself prints.

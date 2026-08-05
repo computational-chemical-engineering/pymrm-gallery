@@ -1153,6 +1153,69 @@ models:
         dataset is loaded.
     related: [A3.1, A3.2, F3.1, F3.5, A2.3, J1.5, A2.1]
 
+  - id: A3.15
+    slug: graetz-nusselt
+    title: "Graetz–Nusselt problem"
+    description: >
+      The developing thermal boundary layer in a tube — and the two constants
+      Graetz could not compute. He solved the eigenvalue problem in 1882 and then
+      wrote that expressing the amplitudes in closed form "requires an exhaustive
+      investigation of the function V(r,beta,R), which is probably not simple",
+      so he fitted p_1, p_2 and k/c to three runs of copper sulfate at three
+      pressure heads instead. This page computes them — p_1 = 0.819050,
+      p_2 = 0.097527 — two independent ways, and supplies the two limits his
+      series cannot: the Levêque entrance law and Nu_inf = mu_1^2/2 = 3.65679,
+      the 3.657 every heat-transfer text prints.
+      What that establishes is not what the framing suggests. His calibration has
+      three constants and three observations, so its exact fit is guaranteed and
+      is not evidence; with the computed amplitudes and nothing fitted, those same
+      three runs spread by 15.6 % in k/c, monotonically with flow rate, against
+      0.77 % propagated from the 1/10-degree thermometers he describes — twenty
+      sigma. Removing the fit moves every conductivity down by 16.6–24.5 % and
+      destroys the agreement he had with Lorberg's recomputation of Weber. The
+      empirical calibration was absorbing a real systematic effect his own method
+      could not see, and the page says so rather than claiming an improvement.
+      Along the way: two of his six series coefficients are arithmetically wrong,
+      his second eigenvalue 6.50 is 2.7 % low and his 10-term series cannot place
+      it at all, and the exponent printed in his working formula for k is 2.4013
+      where it should be 2.7043 — settled by his own 51 observations, 0.71 %
+      against 26.3 %.
+    section: A
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S6]
+    phases: [liquid]
+    predicts:
+      - developing temperature or concentration profile in laminar tube flow
+      - cup-mean outlet temperature versus tube length and flow rate
+      - local and asymptotic Nusselt number, entrance region to fully developed
+      - the Graetz eigenvalues and expansion amplitudes
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_convflux_upwind
+      - interp_cntr_to_stagg_tvd
+      - vanleer
+    data: {tier: 1, method: table, status: complete}
+    page: pages/A3.15-graetz-nusselt/
+    reference:
+      authors: ["Graetz, L."]
+      year: 1882
+      container: "Annalen der Physik 254(1) 79–94"
+      doi: 10.1002/andp.18822540106
+    note: >
+      The catalogue recorded this as "Graetz (1883)". The paper on disk is the
+      Erste Abhandlung, signed München 15. Oct. 1882, and the publisher dates the
+      issue 1882; 1883 is the volume's other dating. The Zweite Abhandlung
+      (Ann. Phys. 261, 1885) is a different paper and was not consulted.
+      Data are measurements, so this is one of the few tier-1 pages — but the k/c
+      and k columns of his tables are derived through his own two fitted
+      constants, and the page inverts the raw temperature and mass columns
+      instead. Every reference value used for comparison is one the paper itself
+      prints; no modern conductivity is quoted anywhere.
+    related: [A2.3, A2.1, A3.4]
+
   - id: A3.4
     slug: wakao-funazkri
     title: "Wakao–Funazkri particle–fluid mass and heat transfer"
