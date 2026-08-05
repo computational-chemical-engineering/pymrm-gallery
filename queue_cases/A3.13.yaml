@@ -5,18 +5,143 @@ catalog_reference: (1970s)
 priority: P2
 tier: T1
 structures: S6
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Zehner, P.", "Schlünder, E. U."]
+  year: 1970
+  title: Wärmeleitfähigkeit von Schüttungen bei mäßigen Temperaturen
+  container: Chemie Ingenieur Technik 42 (1970) 933-941 (in German)
+  note: >
+    THE ORIGIN, AND IT IS NOT ON DISK. This citation is taken from the reference
+    lists of the two papers that ARE on disk (Mou et al. ref. [26]; Kandula's
+    final reference) - i.e. it is read, not remembered. The "Bauer" half of the
+    case title is a second, also-absent paper: Bauer, R. & Schlünder, E. U.
+    (1978), "Effective radial thermal conductivity of packings in gas flow",
+    Int. Chem. Eng. 18, 189, which is what added contact conduction, thermal
+    RADIATION and the Smoluchowski effect to the 1970 model. The catalogue's
+    "(1970s)" covers both.
+reference_read_from:
+  authors: ["Mou, Xiaofeng", "Zhou, Wei", "Bao, Zewei", "Huang, Weixing"]
+  year: 2025
+  title: Modification and experimental validation of simplified Zehner-Bauer-Schlünder
+    model for estimating effective thermal conductivity of gas–solid metal powder beds
+  container: Powder Technology 453 (2025) 120604
+  doi: 10.1016/j.powtec.2024.120604
+  affiliation: School of Chemical Engineering, Sichuan University, Chengdu 610065, PR China
+  note: >
+    Reprint route, per AGENTS.md "When the model is read from a paper that
+    reprints it". Prints the model as its Eq. (7) with
+    B = 1.25((1-eps)/eps)^(10/9) and the contact fraction delta = 1.7e-3, names
+    it, attributes it to Zehner/Bauer/Schlünder, and TESTS it against measured
+    data - so it passes the E1.1 test that Kunii & Levenspiel failed.
+secondary_read_from:
+  authors: ["Kandula, Max"]
+  year: 2010
+  title: On the Effective Thermal Conductivity of Porous Packed Beds with Uniform
+    Spherical Particles
+  container: ASRC Aerospace / NASA John F. Kennedy Space Center, document KSC-2010-007;
+    NASA NTRS accession 20100036467, 15 pp
+  note: >
+    Also reprints, names and tests the Zehner-Schlünder 1970 model, over a
+    conductivity ratio k2/k1 from 8 to 1200 and solids fraction up to about 0.8.
+    Weaker than Mou for building because ALL FIVE of its comparisons are FIGURES -
+    it has no data table at all.
+published_work_check: >
+  Checked on both, because AGENTS.md forbids building on a manuscript in
+  preparation, under review or in revision (the J6.6 deferral).
+    * Mou et al. is PUBLISHED: Powder Technology volume 453, article number
+      120604, issue-assigned 2025, with a DOI. The filename's PII decodes to
+      2024 (S0032591024012488) because that is the article-in-press year; the
+      issue is 2025. Not a preprint, not in press.
+    * Kandula is a NASA technical report released through NTRS - a public agency
+      document, the same category as the DOE/METC report A1.8 is built from and
+      that was accepted there as the citable published source. Note it cites one
+      of Kandula's OWN other works as "submitted to Int. J. Heat mass transfer,
+      October 2009"; that is a reference inside the report, not this document's
+      own status.
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-S0032591024012488-main.pdf
+  also_on_disk: 20100036467.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Both opened on 2026-08-05 and read from their own first pages.
+    Mou et al.: "Powder Technology 453 (2025) 120604 / Modification and
+    experimental validation of simplified Zehner-Bauer-Schlünder model ... /
+    Xiaofeng Mou, Wei Zhou, Zewei Bao, Weixing Huang / School of Chemical
+    Engineering, Sichuan University, Chengdu 610065, PR China".
+    Kandula: "On the Effective Thermal Conductivity of Porous Packed Beds with
+    Uniform Spherical Particles / M. Kandula / ASRC Aerospace, John F. Kennedy
+    Space Center, FL, USA", with its own abstract, nomenclature, five figures and
+    a reference list ending at Zehner & Schlünder (1970). A NASA-STYLE REPORT
+    NUMBER FOR A FILENAME was checked deliberately - it is a real technical
+    report, not an NTRS abstract record and not a one-page preview.
+blocker: null
+
+scope_decision: >
+  BUILDABLE, BUT NOT FOR THE RADIATION TERM THE CASE TITLE NAMES. Read this
+  before dispatching; it is the A1.8 situation repeating.
+
+  A3.13's catalogue line is "Zehner-Bauer-Schlünder ... Stagnant bed
+  conductivity INCL. RADIATION". Neither document on disk delivers radiation:
+
+    * Kandula is about Zehner & SCHLÜNDER (1970), the point-contact ZS model.
+      Radiation and contact conduction are Bauer's 1978 additions and are not in
+      the 1970 model.
+    * Mou et al. print, as their Eq. (7), the SIMPLIFIED ZBS (S-ZBS) model with
+      the Smoluchowski correction folded in. Their own Introduction states
+      plainly that Syamlal & Gidaspow simplified ZBS "by ignoring the
+      Smoluchowski AND RADIATION effects" to obtain S-ZBS. Setting k_g* back to
+      k_g in their Eq. (7) recovers S-ZBS itself, so the main article does carry
+      a complete, evaluable model - but not the radiative one.
+    * The FULL ZBS with radiation lives in Mou's SUPPLEMENTARY MATERIALS
+      (Eq. S2, Table S2). THE SUPPLEMENT IS NOT ON DISK; the PDF is the 17-page
+      main article only. Do not cite Eq. S2 or Tables S1-S9 as read - the article
+      refers to them nine times and none of them is in the file.
+
+  So: build the ZS / S-ZBS core against Mou's printed tables, state on the page
+  which named component is absent, and name the document that would complete it
+  (Bauer & Schlünder 1978, Int. Chem. Eng. 18, 189; or the German original
+  Zehner & Schlünder, Chem. Ing. Tech. 42 (1970) 933-941). That is exactly what
+  A1.8 did with the missing Gidaspow and Wen-Yu closures.
+
+text_layer:
+  mou: >
+    Born-digital Elsevier PDF, clean. Greek letters, subscripts, equation bodies
+    and table headers all survive. No render needed. (20 MB, because the figures
+    are high-resolution.)
+  kandula: >
+    Envision OCR over a CCITT-G4 bilevel scan at 300 x 300 ppi native. POOR:
+    "eefcient" for efficient, "Zhner-Schlunder" for Zehner-Schlünder, "z, 0.6"
+    and "^ 0.6" for the same phi = 0.6, and the model equation comes back as
+    "ke _ k2/k1 / k1 (1— V) + V42/kt)". Read every equation and every number off
+    a render AT 300 DPI - not 600, the images are bilevel.
+
+what_it_carries: >
+  From Mou et al., all in the main article and all in PRINTED TABLES:
+    * Table 1: physical property parameters of four metal powders (LaNi5, 17-4
+      PH, 316 L, IN 718) - particle size distribution d10/d50/d90, volume mean
+      diameter, material density, solid thermal conductivity, and bed porosity
+      (0.53, 0.46, 0.45, 0.44).
+    * Table 2: predicted vs experimental ETC under nitrogen, argon and helium at
+      p_g = 0.1-3.0 MPa, T_ave = 20 C, with the relative error printed per row.
+    * Table 3: predicted vs experimental ETC for NaCl, 316 L, LaNi5, IN 718 and
+      SS 304 beds at atmospheric pressure under air and argon, drawn from four
+      independent literature sources.
+    * Eqs. (1)-(9) and (14): the ETC cell relation, the Smoluchowski-modified gas
+      conductivity, the thermal accommodation coefficient, the modified S-ZBS
+      model Eq. (7) with B and delta, and the relative-error definition Eq. (14).
+    * The authors' own accuracy claim - "Mean prediction error of modified S-ZBS
+      model for experimental data is below 2 %", maximum RE below 20 % - which is
+      a ready-made `report_agreement` target and an honesty check: a page
+      claiming better than 2 % mean error is claiming more than the authors did.
+
+  No maintainer is needed for this route: it is a printed table throughout.
+
+validation_route: printed tables (Mou Tables 1-3); Kandula is figure-only and is the secondary
+notes: >
+  Kandula's figures span a much wider conductivity ratio (8 to 1200) than Mou's
+  metal powders, so digitising them would extend the page's range - but that is
+  the figure route and parks at the review gate that currently has no maintainer.
+  Build the printed-table page first and record the extension as future work.
+updated: '2026-08-05'

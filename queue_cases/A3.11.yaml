@@ -5,18 +5,89 @@ catalog_reference: AIChE J 25 (1979)
 priority: P2
 tier: T1
 structures: S6
-status: needs-paper
+status: unclaimed
 reference:
+  authors: ["Dixon, Anthony G.", "Cresswell, David L."]
+  year: 1979
+  title: Theoretical Prediction of Effective Heat Transfer Parameters in Packed Beds
+  container: AIChE Journal 25(4) 663-676 (1979)
   doi: 10.1002/aic.690250413
+  affiliation: University of Edinburgh; Systems Engineering Group, E.T.H.-Zentrum, Zurich
+  received: Manuscript received September 6, 1978; revision received March 19, accepted March 29, 1979
 paper:
-  on_disk: null
+  on_disk: "AIChE Journal - July 1979 - Dixon - Theoretical prediction of effective heat transfer parameters in packed beds.pdf"
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
-doi_source: crossref-auto
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own title block: "Theoretical
+    Prediction of Effective Heat Transfer Parameters in Packed Beds / ANTHONY G.
+    DIXON ... and DAVID L. CRESSWELL", with "AIChE Journal (Vol. 25, No. 4)" and
+    "July, 1979 Page 671" in the running heads and the Wiley download stamp
+    giving the DOI. Complete, 14 pp, journal pages 663-676, ending in the
+    Notation and Acknowledgment.
+    TRAP: PDF PAGE 1 OPENS WITH THE REFERENCE LIST OF THE PRECEDING ARTICLE - an
+    LNG / saturated-liquid-density paper citing Kay, Klosek & McKinley, Soave and
+    so on. Dixon & Cresswell begins halfway down that same page. Anyone who reads
+    only the first screen will conclude this is the wrong file. It is not.
+doi_source: >
+  crossref-VERIFIED against the document on 2026-08-05. The recorded
+  crossref-auto DOI 10.1002/aic.690250413 is printed in the Wiley Online Library
+  stamp down the margin of every page ("aiche.onlinelibrary.wiley.com/doi/
+  10.1002/aic.690250413 by Technical University Eindhoven ... [05/08/2026]"),
+  and volume, issue, year and page range all agree with the printed running
+  heads. Verified against the document, not merely against Crossref metadata.
+blocker: null
+
+text_layer:
+  quality: >
+    Prose usable, DIGITS BADLY DEGRADED - this is a textbook pre-1980 case.
+    Observed: "Z.0" for 2.0, "1 9 7 8 ~" for 1978c, "Bif(Y2- 1)" for Bi_f(y^2-1),
+    "a ~ ( 0 - 1, -=at(o+)" for a boundary condition, "GcpR/ka,etf" for
+    Gc_p R/k_a,eff. Subscripts collapse into the baseline throughout the
+    Notation. Read every number and every symbol off a page image.
+  render_at: >
+    300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native (2328 x 3370 px on a
+    576 x 810 pt page); 600 dpi is interpolation.
+
+what_it_carries: >
+  * The theory the case is for: effective axial and radial thermal
+    conductivities and the apparent wall heat transfer coefficient, all derived
+    from a TWO-PHASE continuum model containing separately measurable underlying
+    processes, with the paper's own claim that "no empirical or adjustable
+    constants are involved" (stated twice, in the abstract region and again in
+    the body). The interdependence of lambda_er and h_w that the catalogue names
+    is the paper's central point.
+  * A full Notation section defining every dimensionless group used - apparent,
+    fluid/wall and solid/wall Biot numbers, the interphase heat transfer groups,
+    the effective and fluid Peclet numbers on both d_p and R bases. Transcribe
+    from that section rather than assuming the usual definitions; the paper is
+    explicit that all parameters are "defined in terms of total area (void +
+    nonvoid) normal to the direction of heat transfer", which is not universal.
+  * Table 1: "Comparison of Yagi and Wakao's method of data analysis with
+    nonlinear least squares", showing that the older method gives Biot-number
+    estimates with a large negative bias. That is a printed numeric table AND a
+    ready-made break-table row: it is a defect-injection result the authors
+    performed themselves.
+  * An analytical solution due to Olbrich (1970) that the theory is checked
+    against, and an appendix-numbered equation (A.M.) defining a further axial
+    Peclet number.
+
+  Table 1 is the only data table; everything else is figures. That is enough for
+  one printed-number validation without a maintainer, but not for a rich data
+  page. Rank accordingly.
+
+related_on_disk: >
+  A3.12's source - Yagi & Kunii, AIChE J 3(3) 1957, "Studies on effective thermal
+  conductivities in packed beds" - is on disk and A3.12 HAS A LIVE BUILDER as of
+  2026-08-05. Dixon & Cresswell's Table 1 is explicitly a critique of the Yagi
+  and Wakao data-analysis method. Coordinate: whichever page is built second must
+  read the first and reconcile, per AGENTS.md's rule on borrowed datasets. Do not
+  build both in ignorance of each other.
+
+validation_route: printed numbers (Table 1) plus the Olbrich analytical solution; the rest is figures
+notes: >
+  S6 (two-dimensional axial-plus-radial), so this is a real pymrm page rather
+  than a correlation plot - construct_div with nu=1 for the cylindrical geometry
+  and a Robin wall condition. Check the A1.8/A3.12 sign convention on the
+  outward normal before writing the wall bc.
+updated: '2026-08-05'

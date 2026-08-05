@@ -607,3 +607,119 @@ four of them Gidaspow-first-author, and the report **adopts** a Ding & Gidaspow
 (1990) expression as its own eq. (88) and a Syamlal & Gidaspow (1985)
 conductivity model. The absence of a Gidaspow *drag* law is the claim; the
 absence of Gidaspow is not. See `queue_cases/A1.8.yaml`.
+
+---
+
+## The 2026-08-05 second drop — sixteen files, per-file text-layer notes
+
+Added by the source-mapping pass; the catalogue-ID map and the identification
+evidence are in [`papers-on-disk.yaml`](papers-on-disk.yaml) and in each
+`queue_cases/<ID>.yaml`. Full ranking in
+[`source-map-2026-08-05.md`](source-map-2026-08-05.md).
+
+### 600 dpi is wrong for every scanned file in this batch
+
+`pdfimages -list` was run on all sixteen. **Every scanned file in this drop is
+CCITT-G4 or JBIG2 bilevel at 300 ppi native**, except Fuller et al. (JPEG RGB,
+also 300 ppi) and Li & Kwauk (JBIG2, ~285 ppi). So `pdftoppm -r 600` upsamples a
+1-bit image on all of them and invents grey that is not in the file — the same
+finding already recorded above for `A1.8`'s MFIX report (400 ppi) and for
+Richardson & Zaki (300 ppi). **Render at 300 dpi, or pull the stored image out
+directly with `pdfimages -png`.**
+
+That now makes it three separate weeks running. The `AGENTS.md` rule "read
+constants off 600 dpi renders" has never once been literally correct for a file
+in this repository; the correct rule is *at the embedded image's native
+resolution, or lower*.
+
+### Per file
+
+| File | Case | Pages | Text layer | Native | Verdict on numbers |
+|---|---|---|---|---|---|
+| Chapman & Cowling, *Non-Uniform Gases* 3rd edn | `A4.6` | 448 | ABBYY 8, ~2.0 k/pg | CCITT-G4 **bilevel 300 ppi** | prose good; **numbers no** |
+| Li & Kwauk, *Particle-Fluid Two-Phase Flow* | `A1.9` | 214 | **NONE — 1 byte/page** | JBIG2 bilevel ~285 ppi | renders only, everything |
+| Billet & Schultes 1999, Trans IChemE 77A | `A3.9` | 7 | **NONE — RC4, copy disabled** | CCITT-G4 bilevel 300 ppi | renders only; very legible |
+| Dixon & Cresswell 1979, AIChE J 25 | `A3.11` | 14 | 4.8 k/pg | CCITT-G4 bilevel 300 ppi | prose ok; **digits destroyed** |
+| Martin & Nilles 1993, CIT 65 (German) | `A3.14` | 10 | 4.5 k/pg | CCITT-G4 bilevel 300 ppi | see German section below |
+| Westerterp et al. 1995, AIChE J 41 | `A2.7` | 16 | 5.4 k/pg | CCITT-G4 bilevel 300 ppi | prose excellent; **equations absent** |
+| Zwietering 1959, CES 11 | `A2.8` | 15 | 3.2 k/pg | CCITT-G4 bilevel 300 ppi | **τ read as the digit 7 — see below** |
+| Baldyga & Bourne 1989 I, Chem. Eng. J. 42 | `A2.9` | 10 | 3.4 k/pg | CCITT-G4 bilevel 300 ppi | prose good; **equation bodies dropped** |
+| Baldyga & Bourne 1989 II, Chem. Eng. J. 42 | `A2.9` | 9 | 3.0 k/pg | CCITT-G4 bilevel 300 ppi | same |
+| Rocha, Bravo & Fair 1993, IECR 32 | `A3.10` | 11 | 4.1 k/pg | CCITT-G4 bilevel 300 ppi | prose fair; **figure captions worst** |
+| Fuller, Schettler & Giddings 1966, IEC 58 | `A4.5` | 10 | 6.0 k/pg | **JPEG RGB** 300 ppi | **best in batch — table survives** |
+| Wilke & Lee 1955, IEC 47 | *none* | 5 | 5.1 k/pg | CCITT-G4 bilevel 300 ppi | formulae case-mangled |
+| Kandula 2010, NASA KSC-2010-007 | `A3.13` 2nd | 15 | 1.7 k/pg | CCITT-G4 bilevel 300 ppi | **worst text layer in batch** |
+| Mou et al. 2025, Powder Technol. 453 | `A3.13` | 17 | 3.2 k/pg | born-digital | clean, no render needed |
+| Bezzo & Macchietto 2004, CACE 28 | `A2.10` | 13 | 3.8 k/pg | born-digital | clean, no render needed |
+| Mills & Chang 2013, CES 90 | *(none — see `A4.8`)* | 7 | 4.2 k/pg | born-digital | clean, no render needed |
+
+### Zwietering 1959 — the tau trap, and it is a new one
+
+Worth its own entry because it fails *silently and numerically*, which is the
+dangerous kind. Acrobat 3.0 Capture reads the Greek **τ as the digit 7**,
+consistently, throughout the paper. On the page:
+
+> ξ(λ) = τ  (II, 12)   …   τ/2 + (var t)/2τ   …   f(t) = (1/τ) exp(−t/τ)
+
+comes back from the text layer as
+
+> `4th) = 7`   …   `7/2 + (var t)/27`   …   `f(t) = (l/7) exp (- t/l)`
+
+So `27` is *2τ*, not twenty-seven, and `(P/37)` is *(t̄²/3τ)*. Unlike the Robeson
+missing-decimal-point case, nothing here looks malformed — every string is a
+plausible number. Any parameter taken from this text layer is wrong. **Read the
+whole paper on renders.**
+
+Incidental correction found the same way: the article runs to a printed folio
+**15**, not 11. It is `Chem. Eng. Sci. 11(1) (1959) 1–15`; the ubiquitous
+"1–11" citation is short by four pages.
+
+### Martin & Nilles 1993 — the second German paper in the repo
+
+`A3.15`'s builder is working through Graetz 1882; the same care applies here, and
+this file has four specific failure modes:
+
+- **Umlauts and eszett are stripped.** `Wärmeleitung` → `Warmeleitung`,
+  `durchströmten` → `durchstromten`, `Schüttungsrohren` → `Schuttungsrohren`,
+  `Einfluß` → `EinfluB`. The document is correctly spelled; the OCR is not.
+- **German decimal comma.** `L/D = 0,43 bis 2,5` is 0.43 to 2.5. A blind
+  comma→point substitution is right here and wrong everywhere else in the repo;
+  a blind point assumption reads `0,43` as two values.
+- **Superscript powers of ten become the letters `lo`.** `10³ 10⁴ 10⁵` →
+  `lo3 lo4 lo5`. Every axis in this paper is logarithmic.
+- **Figures are `Abb.`, not `Fig.`** A grep for "Fig" returns nothing and will
+  make you conclude the paper has no figures. It has eleven — and no tables at
+  all, which is what makes `A3.14` a figure-only case.
+
+### Kandula 2010 — a NASA report number is not a guarantee
+
+`20100036467.pdf` is a genuine 15-page technical report (its own Title metadata
+is `KSC-2010-007.pdf`), checked page by page — not an NTRS abstract record and
+not a preview. But its Envision OCR is the worst in the batch at 1.7 k
+chars/page: `eefcient` for *efficient*, `Zhner-Schlunder` for
+*Zehner–Schlünder*, and the same φ = 0.6 appearing as `z, 0.6` and `^ 0.6` two
+lines apart. Its Zehner–Schlünder equation comes back as
+`ke _ k2/k1 / k1 (1— V) + V42/kt)`. Everything on renders.
+
+### Fuller et al. 1966 — the one good scan, and still check it
+
+The only non-bilevel scan in the drop (JPEG RGB, 8 bpc, 300 ppi), and the atomic
+diffusion-volume table survives OCR **with its decimal points intact**:
+`16.5 1.98 5.48 5.69 19.5 17.0 −20.2 7.07 6.70 2.88 17.9 16.6 20.1 5.59 16.1
+22.8 37.9 18.9`. Equations still degrade (`MOW1'3 + CSX>1/3]2` for the
+`(ΣV^⅓ + ΣV^⅓)²` denominator). **Verify the table against the image anyway** —
+a table that *looks* right is exactly the Robeson 1991 failure mode, and this is
+a 1966 paper with a published erratum that is not on disk.
+
+### Chapman & Cowling — the mid-dot swallows the last row of Table 6
+
+Worth one more line because it caught this pass in the act. Table 6 (book p. 185)
+tabulates the collision integrals at sixteen values of *kT*/ε₁₂ ending at
+**100·0**. Read off a full-page render at 200 dpi, the mid-dot vanishes and the
+last row reads `1000`; the row count went wrong at the same time, and the first
+draft of `queue_cases/A4.6.yaml` said "fifteen values … to 1000". Both errors
+survived a full-page look and died on a **cropped** re-read at native 300 dpi.
+
+The whole book uses the mid-dot decimal (`2·648`, `0·4291`), and the OCR also
+reads leading zeros as the letter `o`. **Crop, go to 300 dpi, and read numerics
+twice.** A full-page screenshot is for locating a table, not for transcribing it.

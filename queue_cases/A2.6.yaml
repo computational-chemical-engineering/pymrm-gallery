@@ -5,112 +5,294 @@ catalog_reference: Chem. Eng. Sci. 42 (1987)
 priority: P1
 tier: T1
 structures: S6
-status: needs-paper
+status: ready
 reference:
   authors:
   - Gunn, D. J.
   year: 1987
   container: Chemical Engineering Science 42(2) 363-373
   title_as_printed: Axial and radial dispersion in fixed beds
-  note: >
-    This is the catalogued source, taken from the citation list of the 1993 note
-    below (its ref. [5]). It is NOT on disk. Gunn 1969, Trans. Instn Chem. Engrs
-    47 351-359, "Theory of axial and radial dispersion in packed beds" (ref. [2]
-    of the same note), would serve equally well and is also not on disk.
+  doi: 10.1016/0009-2509(87)85066-2
 paper:
-  on_disk: null
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-0009250987850662-main.pdf
   related_paper_on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-025527019380020H-main.pdf
   open_access: null
-  checked: '2026-08-02'
+  checked: '2026-08-05'
   identified_by: >
-    read at 600 dpi on 2026-08-02 by the A2.5 builder. The PDF on disk is Gunn,
-    D. J., "On axial dispersion in fixed beds", Chemical Engineering and
-    Processing 32 (1993) 333-338 - a 1993 rebuttal, not the 1987 paper this case
-    is catalogued against.
-blocker:
-  kind: needs-paper
+    read the paper's own first page at 600 dpi on 2026-08-05. Title reads "AXIAL
+    AND RADIAL DISPERSION IN FIXED BEDS, D. J. GUNN, Department of Chemical
+    Engineering, University College of Swansea"; received 16 June 1984, accepted
+    in revised form 16 June 1986. The running head is the one this scan mangles -
+    the text layer gives "Chemicd Engineering Science. Vol. 42, No. 2, pp.
+    363-373, 1987" split across five lines - so the volume line was read off the
+    image, not the text layer.
+blocker: null
+
+blocker_resolved:
+  date: '2026-08-05'
+  was: needs-paper, parked 2026-08-02 by the A2.5 builder
+  the_question_was: >
+    p(Re), the model's one empirical function, is never printed in the 1993 note,
+    and neither is the porosity, so eq. (42) could not be evaluated without
+    back-fitting p to the very figure the model is then compared against.
+  the_answer: >
+    THE 1987 PAPER PRINTS p(Re) OUTRIGHT, as three equations on journal page 365,
+    read at 600 dpi:
+
+      p = 0.17 + 0.33 exp(-24/Re),   spheres,          tau = 1.4    (3)
+      p = 0.17 + 0.29 exp(-24/Re),   solid cylinders,  tau = 1.93   (4)
+      p = 0.17 + 0.20 exp(-24/Re),   hollow cylinders, tau = 1.8    (5)
+
+    The offset 0.17 and the scale 24 are shared by all three; only the amplitude
+    and the tortuosity change with shape. Nothing had to be reconstructed and
+    nothing was fitted.
+
+    It also prints eq. (1), the axial model itself, which is eq. (42) of the 1993
+    note written with 4 alpha_1^2 (1-eps) in place of eps.Gamma; the notebook
+    checks the two forms against each other over 2001 Reynolds numbers at two
+    Schmidt groups and gets 8.7e-11. And it prints the radial correlations, eqs
+    (9)-(12), the Sherwood correlation eq. (13), the Danckwerts and
+    convection-dominated boundary conditions eqs (14)-(15), and a printed
+    closed-form reactor solution, eqs (16)-(18).
+
+    THE POROSITY IS STILL NOT PRINTED for any figure. What the paper does print,
+    on journal page 368 in the tube-diameter argument, is "the voidage in the
+    bulk of a fixed bed of spheres is about 0.37". The page uses 0.37, states
+    that it is an assumption, and reports the sensitivity of every comparison to
+    it - which turns out to be the largest single uncertainty on the page,
+    larger than the effect of p(Re) itself.
+
+scope_decision_review:
+  reviewed: '2026-08-05'
   question: >
-    Please supply EITHER Gunn, D. J., "Axial and radial dispersion in fixed
-    beds", Chem. Eng. Sci. 42(2) 363-373 (1987), OR Gunn, D. J., "Theory of axial
-    and radial dispersion in packed beds", Trans. Instn Chem. Engrs 47 (1969)
-    351-359. Either one is enough; the second is where the model is derived.
-  detail: >
-    The 1993 note that arrived on 2026-08-02 IS about the right model and prints
-    it in full as its Eq. (42):
+    A2.5's builder argued A2.6 must stay separate partly because Gunn is an
+    ARGUMENT AGAINST the Edwards & Richardson limit: E&R fix Pe -> 2 from the
+    mixing-cell result, Gunn's eq. (43) gives Ud/D -> 2p/(1-p), which is 2 only
+    if p = 0.5. Does the 1987 paper support, weaken or change that?
+  verdict: >
+    IT SHARPENS IT, AND MAKES IT QUANTITATIVE. The separation stands, and the
+    reason is now stronger than when it was written.
 
-      D/(Ud) = (ReSc/eps.Gamma)(1-p)^2
-             + (Re^2 Sc^2/eps^2 Gamma^2) p(1-p)^3 (exp[-eps.Gamma/(p(1-p)ReSc)] - 1)
-             + eps/(tau ReSc)
+    The 1987 paper supplies exactly the number the argument was missing. For
+    SPHERES, eq. (3) gives p_inf = 0.17 + 0.33 = 0.50, so 2p/(1-p) = 2.0000 -
+    Gunn's model reproduces E&R's limit EXACTLY. To that extent the two papers
+    agree, and Gunn says so himself on journal page 366: "Pe approaches the
+    widely quoted value of 2 at Reynolds numbers approaching 1000". Evaluated,
+    eq. (1) gives 1.9862 at Re = 1000.
 
-    but it is not evaluable from that paper alone. Three things are missing.
+    But eqs (4) and (5), fitted to England and Gunn's CYLINDER measurements and
+    never seeing a sphere, give p_inf = 0.46 and 0.37, hence 1.7037 and 1.1746.
+    So the agreement at 2 is a property of the sphere fit, not of the model, and
+    the mixing-cell argument - which contains no particle shape at all - cannot
+    be what produces it. That is a stronger statement than "2 only if p = 0.5",
+    because it is now falsifiable and falsified for two of the three shapes the
+    same paper covers.
 
-    (a) p(Re), the "probability of axial displacement", is the model's one
-        empirical function and is never printed. The note says only that finding
-        it from liquid-phase data "has been carried out for beds of spheres,
-        solid cylinders and hollow cylinders [2, 5]" - i.e. in the two papers
-        requested above.
-    (b) eps, the bed porosity used in the figures, is not stated.
-    (c) Gamma = 4(1-eps)alpha_1^2/eps therefore cannot be formed either, although
-        tau = 1.4 IS given, in the Figure 1 caption.
+    The page also states the width of the claim honestly: two printed digits fix
+    the limit only to about +/-4 %, so 2.0000 is not exact in any meaningful
+    sense. What is outside rounding is the 1.70-fold spread between shapes.
 
-    Without p(Re) the page would have to invent it or back-fit it from Gunn's own
-    Figure 1, which is the fabrication route this case must not take. The
-    equation itself is transcribed and the transcription is legible; only the
-    empirical function is absent.
-  artifacts:
-  - the 1993 note, at ~/papers/pymrm-gallery/1-s2.0-025527019380020H-main.pdf
-  - "the scope decision that established this: queue_cases/A2.5.yaml, scope_decision"
+    NOTHING HERE CHANGES A2.5. Its content - the measurement, the two-point
+    moment method, the numerical-dispersion budget, the two-zone channelling
+    diagnostic - is untouched, and this page adds no correction to it. The two
+    numerical disagreements A2.5 already records are carried here unrepaired and
+    are now quantified: Gunn's Sc = 0.77 against E&R's 0.72 changes the headline
+    agreement by 0.6 percentage points, and Gunn's "maximum at Re about 4" is
+    attributed, as A2.5 attributes it, to his Figure 1's COMBINED gas-phase set.
+    For the record, eq. (1) itself peaks at Pe = 4.527 at Re = 3.151, against
+    A2.5's Pe = 3.186 at Re = 3.195 for eq. (18), and the largest measured Peclet
+    number in the file is 4.158.
+
+    A merge would still have been wrong, and for a fourth reason the original
+    argument did not have: this page is S6 and A2.5 is S4. The 2-D bed that uses
+    the axial and radial coefficients together has no counterpart in A2.5.
+
+deliverables:
+  page: queue_cases/A2.6/page/
+  models_entry: queue_cases/A2.6/models_entry.yaml
+  runtime_seconds: 9
+  review_artifact: none - NO figure was digitised for this page
+  datasets:
+  - gunn-1987-stated.csv (51 printed scalars, journal pages 365-371)
+  - gunn-1987-table1.csv (4 particle grades x 3 estimates of intraparticle diffusivity)
+  borrowed_datasets:
+  - "pages/A2.5-edwards-richardson-dispersion/data/edwards-richardson-1968-fig9.csv (55 markers)"
+  - "pages/A2.5-edwards-richardson-dispersion/data/edwards-richardson-1968-stated.csv"
+
+key_numbers:
+  peclet_limit_by_shape: >
+    2.0000 spheres, 1.7037 solid cylinders, 1.1746 hollow cylinders, from
+    Ud/D -> 2p_inf/(1-p_inf) with p_inf = 0.17 + the printed amplitude. Checked
+    against direct evaluation of eq. (1) at Re = 1e8 to 7.2e-08 on all three.
+    Two printed digits fix the limit only to about 4 %; the 1.70-fold spread
+    between shapes is what is outside rounding
+  eq8_worked_example: 1.65 x 0.37 / 0.6 = 1.0175 against the printed 1.02, -0.25 %
+  stated_numbers: >
+    seven reproduced, deviations 0.0 % to 11.4 %, each inside the precision of
+    the phrase it tests. Pe(1000) = 1.9862 vs "approaches 2"; the liquid/gas
+    maximum 10.891 at Re = 3.166 vs "a factor of 10 at Re ~ 3"; the crossover at
+    Re = 0.177 vs "0.2"; Table 1's ten entries averaging 0.0970 vs "about 10 %"
+  stated_range_that_fails: >
+    the UPPER end of "0.2 < Re < 300" is not a crossing at all - the liquid/gas
+    ratio decays asymptotically to 1 and is still 1.084 at Re = 300 and 1.025 at
+    Re = 1000. Reported, not repaired
+  cross_document_identity: >
+    eq. (1) [1987] vs eq. (42) [1993] with Gamma = 4(1-eps)alpha_1^2/eps, 8.7e-11
+    over 2001 Reynolds numbers at Sc = 0.77 and 800. STRUCTURAL - no break row,
+    and the page says so
+  expm1_finding: >
+    the two printed forms are algebraically identical and NOT numerically: written
+    as exp(x) - 1 rather than expm1(x), eq. (1)'s liquid branch loses 1.7e-06
+    relative at Sc = 800, because the second term cancels the first exactly in the
+    limit
+  eq1_vs_55_markers: >
+    20.30 % mean absolute deviation, +15.77 % bias, log scatter 0.1994, against
+    A2.5's 55 digitised markers. E&R's own eq. (18) on the same rows, recomputed
+    here, gives 11.7495 % and +0.0031 % - reproducing A2.5's published 11.75 %
+    and +0.003 % to 1e-05 absolute
+  nulls: >
+    24.88 % with p frozen at 0.17 (p(Re) deleted), 67.63 % with p frozen at 0.50
+    (the mixing-cell picture), 23.16 % with eq. (1)'s second term dropped, 29.91 %
+    for E&R's uncorrected eq. (15)
+  what_the_markers_cannot_resolve: >
+    deleting p(Re) altogether costs 4.6 percentage points, while the UNPRINTED
+    porosity moves the headline 9.1 points between eps = 0.34 and 0.40 - twice as
+    much - and monotonically, so these data would prefer a looser bed than 0.37.
+    Nothing on the page separates a porosity error from a model error
+  solver_eq17: 7.454e-07 at n_z = 800, observed order 1.99; STRUCTURALLY BLIND to nu, n_r and D_R
+  solver_bessel_mode: >
+    2.896e-05 at (800, 80), observed order 2.00 refining both axes, against a 2-D
+    closed form derived here (eq. 17 with k -> k + D_R (beta_1/R)^2). Break
+    factors x2646 on nu = 0, x252 on n_r = 5, x64 on bare upwind, x23 on a
+    zero-gradient outlet, x559 on a Dirichlet inlet
+  solver_pair_blind_spot: >
+    a 10 % error in D or D_R moves the two checks by 0.0 % and 6.3 %, against the
+    factor of four they move for one grid halving. The transport coefficients are
+    invisible to both, because the closed form is built from the same numbers -
+    stated on the page, not left to look like evidence
+  wall_channel: >
+    reading Price's superficial 1.65 as INTERSTITIAL raises unconverted reactant
+    leaving a 100-diameter bed by +5.46 % with no radial mixing and +1.16 % with
+    eq. (9)'s coefficient, so radial dispersion erodes 79 % of the channel. Gunn's
+    own corrected 1.0175 moves it by +0.001 %
+  outlet_boundary_condition: >
+    the zero-gradient outlet reports +0.92 % too much unreacted material, and that
+    number is IDENTICAL from L/d = 5 to L/d = 200. What length buys is the
+    interior: the same error 4 diameters in falls from +0.13 % to 9.3e-08 to
+    exactly zero in double precision. Over a 400-fold sweep in kL/U the outlet
+    error is 0.79 to 0.89 times lambda D/U
+  table1: >
+    worst within-row spread 16.0 %, mean 10.6 %, over four grades and three
+    independent methods; mean of the ten entries 0.0970 against the paper's own
+    "about 10 % of molecular". The isobaric counter-diffusion column is the
+    largest on 4 of 4 rows (one-sided sign test p = 0.0625) - printed, not claimed
+  metrics_below_abs_floor: >
+    NONE. All 39 reported metrics are above check_agreement.py's ABS_FLOOR of
+    1e-12; the smallest is 8.7e-11. The notebook prints this check itself
+
+break_table:
+  solver_rows: 8
+  correlation_rows: 17
+  note: >
+    Two families, because they fail under disjoint defects and neither
+    substitutes for the other. Every metric on the page has a row that moves it
+    except two, which are labelled structural on the page: the cross-document
+    identity against eq. (42), and eq. (17) substituted back into eq. (16).
+    Three more are guarded by a family rather than an individual row (the three
+    nulls, the two porosity points, and the recomputation of A2.5's published
+    headline, which is guarded by A2.5's own break table).
+
+    The sharpest correlation rows: eq. (1)'s second term dropped moves the
+    high-Re limit check by 1.4e7; alpha_1 taken as the first root of J_1 instead
+    of J_0 moves the headline agreement by +207 % and the liquid/gas ratio by
+    +41 %; eq. (10)'s 29 read as 2.9 moves D_axial/D_radial by +237 %; the wall
+    porosity 0.6 read as 0.5 moves eq. (8) by +20 %; eq. (3)'s 24 read as 2.4
+    moves Pe(1000) by +2.9 %; Table 1's two em dashes read as zeros move its mean
+    by -16.7 %.
+
+what_the_page_cannot_conclude:
+- >
+  That eq. (1) is validated against measurement. The comparison is a goodness of
+  fit with PARTIAL overlap - Gunn fitted p(Re) to a body of sphere and cylinder
+  data that includes E&R's points - at a porosity nobody printed, and deleting
+  p(Re) altogether costs less than a plausible porosity error.
+- >
+  Anything about the Schmidt-group dependence, which is what Gunn's Figure 1
+  exists to show over a 1000-fold range and is the reason this model is more than
+  a correlation. The gallery has no liquid-phase dispersion dataset. Jacques &
+  Vermeulen (1957) or Miller & King (1966) would supply one and would turn a
+  partly circular fit residual into a genuine test. This is the single most
+  valuable extension.
+- >
+  Anything about particle shape from measurement. Only the sphere branch is
+  tested; eqs (4), (5), (11) and (12) are evaluated and never checked against
+  data, so the headline shape result rests entirely on printed constants.
+- >
+  Anything about the radial correlation from measurement. Eq. (9) is used in the
+  2-D bed and checked for self-consistency, and its high-Reynolds-number values
+  (Pe_f -> 11, 7 and 5.7) are noted to reproduce the textbook radial Peclet
+  number - but no radial dispersion data are on disk.
+- >
+  Anything about eq. (13), the Sherwood correlation. It is transcribed into the
+  CSV because it is on the same pages and is the most-cited thing in the paper,
+  and it is never exercised. A page for it would belong in section A3 beside A3.4
+  (Wakao & Funazkri), which is the natural comparison, and would need a dataset
+  neither page has.
+- >
+  That the wall-channel or outlet-condition numbers generalise. Both are one
+  operating point, stated in full on the page; the paper contains no worked
+  reactor example, so nothing there constrains L/d, d_t/d or the Damkohler group.
+
+source_notes:
+  pdf_findings: >
+    docs/pdf-findings.md has no entry for 1-s2.0-0009250987850662-main.pdf yet.
+    One is needed and this is what it should say. The scan is a 1987 Pergamon
+    Acrobat Capture job, 11 pages, about 5,500 characters per page, and the text
+    layer is USABLE FOR PROSE AND UNUSABLE FOR EQUATIONS. Observed corruptions:
+    eq. (1) comes back as "4a;;;+,)(1 -PI?"; eq. (5) as
+    "p=O.i7+0.20exp(-24/Re)"; "Peclet" as "P&let" throughout; the running head
+    volume line split across five lines and mis-ordered; "Miller and King" as
+    "Miller and Ring" in the Figure 1 caption; Table 1's row label SA201 as
+    "SA20 1". Every constant used on the page was read off a 600 dpi render.
+  papers_on_disk: >
+    DEFECT TO FIX, found 2026-08-05: docs/papers-on-disk.yaml now carries the key
+    `A2.6:` TWICE - line 43 mapping it to 1-s2.0-025527019380020H-main.pdf (the
+    1993 note) and line 105 mapping it to 1-s2.0-0009250987850662-main.pdf (the
+    catalogued 1987 paper). YAML silently keeps the LAST one, so `yaml.safe_load`
+    returns the 1987 file and the earlier line is invisible to any tool while
+    still being read by humans. The 1987 mapping is the correct one; the 1993
+    line should be deleted from the mapping and re-added as a comment or under a
+    separate `secondary:` key, because that note IS a legitimate secondary source
+    for this case and the page cites it. Not fixed here - docs/ is outside the
+    builder's remit.
+  printing_errors_in_the_source:
+  - >
+    The caption of Figure 5 says the solid lines are "eq. (4)". Eq. (4) is the
+    probability function for solid cylinders; the figure is radial dispersion in
+    beds of SPHERES, so the lines must be eqs (9) and (10), as the body text says
+    two sentences earlier. Recorded in the dataset sidecar, not repaired.
+  - >
+    The tortuosity for spheres is 1.4 in eq. (3) and 1.2 in eq. (10) - the same
+    physical quantity in the same beds, 17 % apart, described by the paper only
+    as differing "by small amounts". Both are carried as separate CSV rows and
+    the page uses each in its own place; using the radial one axially is a
+    break-table row.
 
 notes: >
-  Reviewed on 2026-08-02 by the A2.5 builder, who read both papers and decided
-  NOT to absorb this case into A2.5. The full argument is in
-  queue_cases/A2.5.yaml under `scope_decision`; the short form is that (i) the
-  model cannot be evaluated from the paper on disk, (ii) the two models are not
-  algebraically identical and the 1993 note is in fact an argument about exactly
-  that limit - E&R's Pe -> 2 versus Gunn's Ud/D -> 2p/(1-p) - so the A2.1/A2.2
-  merge precedent does not apply, and (iii) no existing page examines this
-  content, so the J3.3 `covered` precedent does not apply either.
+  Built on 2026-08-05 by copying pages/A2.5-edwards-richardson-dispersion/ and
+  substituting the physics, as AGENTS.md requires. The break table was rebuilt
+  from scratch for the substituted physics - none of A2.5's rows apply, since
+  this page has no transient solve, no moment inversion and no two-zone model.
 
-  Two things from the 1993 note are already recorded on the A2.5 page, so they do
-  not need redoing: Gunn puts the Peclet maximum of Edwards & Richardson's own
-  data "at a Reynolds number of ~4" (A2.5 computes 3.195 from Eq. 18), and he
-  quotes the argon-air Schmidt group as 0.77 where Edwards & Richardson use 0.72.
+  The cross-page rule was followed in both directions. A2.5's nine findings about
+  the 55 borrowed rows are listed in this page's "The data" section with a
+  statement of whether each affects it; A2.5's published headline of 11.75 % is
+  RECOMPUTED from the same file rather than quoted, and reproduces to 1e-05; and
+  the two numbers this page states that also live in A2.5's data - the Peclet
+  maximum and the effect of including the one nearly-resolvable fused glyph - are
+  printed beside A2.5's own values.
 
-  When a paper does arrive, note that the 1993 note also reproduces Tsotsas &
-  Schlunder's Figure 6 as its own Figure 3, and its Figures 1 and 2 carry
-  experimental data from seven sources with Schmidt numbers from 0.77 to 4600 -
-  which would make the eventual A2.6 page a strong candidate for an
-  experimentally validated one, and a natural place to test the Schmidt-group
-  dependence that A2.5 explicitly cannot (only one gas pair was ever run).
-updated: '2026-08-02'
-resume:
-  blocking: true
-  trigger: Gunn 1987 (Chem. Eng. Sci. 42 363) or Gunn 1969 (Trans. IChemE 47 351) appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: >
-    The 1993 note has been read in full at 600 dpi and mapped. Eq. (42), Eq. (43)
-    and Eq. (14) are transcribed in this file and in queue_cases/A2.5.yaml; the
-    scope decision against merging into A2.5 is made and argued. The only thing
-    missing is p(Re) (and eps).
-  do_not_redo: >
-    The scope comparison with A2.5, and the reading of the 1993 note. Do not
-    re-derive whether Gunn and Edwards & Richardson are the same model - they are
-    not, and the reason is written down. Do not attempt to build A2.6 from the
-    1993 note alone.
-  answer_changes:
-    Gunn 1987 or 1969 supplied: >
-      A2.6 becomes buildable and is a strong tier-2 candidate: Eq. (42) with the
-      supplied p(Re), tested against the 1993 note's Figures 1 and 2, which carry
-      gas- and liquid-phase data over Sc = 0.77 to 4600. Cross-check the shared
-      Edwards & Richardson series against pages/A2.5-*/data/edwards-richardson-1968-fig9.csv,
-      which is an independent digitisation of the same measurements.
-    neither can be obtained: >
-      A2.6 stays needs-paper indefinitely. Do NOT reconstruct p(Re) from Gunn's
-      Figure 1; that is fitting the model's one free function to the figure it is
-      then compared against.
-  files_to_touch:
-  - queue_cases/A2.6.yaml
-  - queue_cases/A2.6/page/
+  NO figure was digitised for this page and none should be. There is no
+  maintainer available for a figure review, and the one figure-derived dataset
+  this page needs already exists, audited, on a published page.
+updated: '2026-08-05'

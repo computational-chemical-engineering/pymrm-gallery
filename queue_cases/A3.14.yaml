@@ -5,18 +5,99 @@ catalog_reference: Chem. Ing. Tech. 65 (1993)
 priority: P2
 tier: T1
 structures: S6
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Martin, Holger", "Nilles, Michael"]
+  year: 1993
+  title: Radiale Wärmeleitung in durchströmten Schüttungsrohren
+  title_en: Radial heat conduction in packed tubes with through-flow
+  container: Chemie Ingenieur Technik 65(12) 1468-1477 (1993)
+  language: German
+  affiliation: Institut für Thermische Verfahrenstechnik, Universität Karlsruhe (TH);
+    M. Nilles' new address given as BASF AG, ZET, Ludwigshafen
+  presented: >
+    Vortrag von H. Martin auf dem Jahrestreffen der Verfahrens-Ingenieure,
+    29. Sept. bis 2. Okt. 1992 in Wien (lecture at the 1992 process engineers'
+    annual meeting, Vienna) - so the journal article is the published record of a
+    conference lecture. It is a full journal article, not an abstract.
 paper:
-  on_disk: null
+  on_disk: "Chemie Ingenieur Technik - December 1993 - Martin - Radiale W rmeleitung in durchstr mten Sch ttungsrohren.pdf"
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own first page: "Radiale Wärmeleitung
+    in durchströmten Schüttungsrohren / Holger Martin und Michael Nilles", with
+    the footer "1468" and the PDF's own Subject metadata "Chemie Ingenieur
+    Technik 1993.65:1468-1477". Complete, 10 pp. The umlauts in the filename are
+    mangled by the filesystem encoding, not by the document.
+blocker: null
+
+language_warning: >
+  IN GERMAN, and it must be treated with the same care A3.15's builder is
+  currently applying to the 1882 Graetz paper. Specific traps in this file:
+    * The OCR STRIPS EVERY UMLAUT AND ESZETT. "Wärmeleitung" comes back as
+      "Warmeleitung", "durchströmten" as "durchstromten", "Schüttungsrohren" as
+      "Schuttungsrohren", "Einfluß" as "EinfluB". Do not conclude the paper uses
+      unaccented spellings; it does not.
+    * GERMAN DECIMAL COMMA. "L/D = 0,43 bis 2,5" means 0.43 to 2.5. A
+      decimal-point substitution applied blindly will corrupt every number, and
+      a reader expecting a point will read "0,43" as two values.
+    * SUPERSCRIPT POWERS OF TEN COLLAPSE INTO THE LETTERS "lo". Axis labels
+      10^3, 10^4, 10^5 come back as "lo3", "lo4", "lo5". Every figure axis in
+      this paper is logarithmic.
+    * Figures are "Abb." (Abbildung), not "Fig." - a grep for "Fig" finds
+      nothing and will make you think the paper has no figures. It has eleven.
+
+text_layer:
+  quality: >
+    Prose is usable German at about 4.5 k chars/page (Acrobat 5.0 Paper Capture),
+    good enough to follow the argument and to locate content. Numbers and symbols
+    are not reliable; see language_warning.
+  render_at: >
+    300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native (2416 x 3458 px on a
+    576 x 828 pt page); 600 dpi is interpolation.
+
+what_it_carries: >
+  * The subject the case is for. The paper reviews the standard two-parameter
+    quasi-homogeneous model - Coberly & Marshall (1951) and Brötz (1951),
+    "Standardmodell" after Tsotsas - writes out its governing equation and
+    boundary conditions (1a) etc. with the wall condition
+    -lambda_r dT/dr = alpha_w(T_w - T) at r = R, and then confronts it with
+    three independent 1991 experimental studies performed in parallel: Nilles
+    (steam-heated), Freiwald (electrically heated) and Borkink (water-cooled),
+    on tubes of comparable dimensions, covering D/d from 1.17 to 51.
+  * Radial temperature profiles (Abb. 5-7, 9, 10), the standard deviation of the
+    fitted parameters, the fraction of the total resistance carried by the wall
+    (Abb. 8), and lambda_r/lambda_f against Péclet number (Abb. 11) with symbols
+    keyed to the three data sets.
+  * Its stated purpose is to resolve, for the first time, the long-standing
+    discrepancies between empirical correlations for the wall and radial
+    parameters - which is exactly what the catalogue asks A3.14 to deliver.
+
+  IT CONTAINS NO TABLES AT ALL. Checked: the string "Tabelle" does not occur
+  anywhere in the ten pages. Every quantitative result is in Abb. 1-11.
+
+validation_route: >
+  FIGURE-ONLY. This is the constraint that ranks the case. There is no printed
+  table to reproduce, so any validation against the paper's measurements requires
+  digitising its figures, which produces review overlays of copyrighted page
+  images and parks at the figure-review gate. AS OF 2026-08-05 THERE IS NO
+  MAINTAINER AVAILABLE FOR THAT REVIEW, so a builder dispatched here will finish
+  the extraction and then stop.
+  Two honest alternatives if the case is dispatched anyway:
+    (a) build the standard two-parameter model itself, validate it against
+        analytical limits and grid independence, transcribe the correlations, and
+        report NO comparison against Martin & Nilles' data - saying so plainly;
+    (b) wait for a maintainer.
+  Do not fabricate a comparison, and do not quote numbers read off an axis as
+  though they were printed.
+
+related_on_disk: >
+  A3.12 (Yagi & Kunii 1957) and A3.11 (Dixon & Cresswell 1979) are both about
+  the same two parameters and both have their papers on disk; A3.12 HAS A LIVE
+  BUILDER as of 2026-08-05. Martin & Nilles is in part a verdict on that
+  literature, so whichever page is built last must read the others and reconcile.
+notes: >
+  Ranked below every printed-table case in docs/source-map-2026-08-05.md for the
+  validation_route reason above, despite being P2/T1 like several of them.
+updated: '2026-08-05'

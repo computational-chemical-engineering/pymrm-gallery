@@ -5,29 +5,87 @@ catalog_reference: Li & Kwauk (1994)
 priority: P3
 tier: T3
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Li, Jinghai", "Kwauk, Mooson"]
+  year: 1994
+  title: 'Particle-Fluid Two-Phase Flow: The Energy-Minimization Multi-Scale Method'
+  container: Metallurgical Industry Press, Beijing, 1994
+  note: >
+    The ORIGIN monograph, and exactly what the catalogue names. Not a reprint,
+    so `reference_read_from` is not needed.
 paper:
-  on_disk: null
+  on_disk: 7981631866938162.pdf
   open_access: null
-  checked: '2026-07-30'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-30'
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access
-    route via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route
-    appears (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+  checked: '2026-08-05'
+  identified_by: >
+    Rendered and read on 2026-08-05. The filename is a bare sixteen-digit number
+    and THERE IS NO TEXT LAYER AT ALL - `pdftotext` returns one byte (a form
+    feed) for each of the 214 pages - so nothing could be inferred without
+    rasterising. What was read: the cover (PARTICLE-FLUID TWO-PHASE FLOW / The
+    Energy-Minimization Multi-Scale Method / Jinghai Li and Mooson Kwauk /
+    Metallurgical Industry Press / Beijing / 1994), the Preface, the six-page
+    Contents, and body pages 39, 40, 158 and 165. It is the COMPLETE BOOK:
+    Chapters 1-5 plus Acronym, Notation, References (p. 187) and Index (p. 199).
+blocker: null
+
+text_layer:
+  quality: >
+    NONE. Zero characters on every one of the 214 pages. Everything - every
+    equation, every constant, every table - must be read off a page image. There
+    is no grep, no search, no API route.
+  render_at: >
+    285-300 dpi. The body pages are JBIG2 BILEVEL images 1770 x 2598 px on a
+    443 x 669 pt page, i.e. about 288 x 280 ppi native; the first two pages (the
+    colour cover) are 150 ppi JPEG. `pdftoppm -r 600` is pure interpolation.
+    Same finding as A1.8's MFIX report and A4.6's Chapman & Cowling - run
+    `pdfimages -list` first.
+  page_offset: >
+    PDF page = printed book page + 9 to + 11 (roman front matter absorbs the
+    difference). Verified: book p. 39 -> PDF 49, p. 40 -> PDF 50, p. 158 ->
+    PDF 167, p. 165 -> PDF 174. Contents is PDF 9-11.
+
+what_it_carries: >
+  Checked against what the case is FOR (the E1.1 test), by rendering.
+
+    * Section 2.6 "The EMMS Model" (book p. 39) states the model itself: a
+      nonlinear optimisation in eight variables under nine constraints, named in
+      the text as the Energy-Minimization Multi-Scale (EMMS) model, "from which
+      the parameter vector X and various energy consumptions can be calculated
+      without using any adjustable parameters". Model LG is written out - the
+      N_st extremum with its two branches about the saturation carrying capacity
+      K*, the six conservation equations F_i(X) = 0, and the non-negativity
+      conditions - followed by the dense-, dilute- and inter-phase slip
+      velocities U_sc, U_sf, U_si.
+    * Chapter 3 "Solution of the EMMS Model" gives the analytical and numerical
+      solutions, the GRG-2 algorithm actually used, and the stability conditions.
+    * Section 5.2.1 "Drag Coefficient and Slip Velocity" (book p. 163) is the
+      part the case title names: Figure 5-4 plots C_D and U_s for the cluster,
+      dilute, inter and global phases against gas velocity, showing the
+      meso-scale correction the case exists to demonstrate.
+    * A PRINTED NUMERIC TABLE to validate against. Book p. 158, inside the
+      worked example of section 5.1.3, tabulates (W_st)_PFC, (W_st)_FD,
+      eps_PFC, eps_FD, eps_ideal, eps_a and eps* at U_g = 2.0, 3.21 and
+      4.0 m/s - nine independent numbers plus the transition velocity
+      U_pt = 3.21 m/s. That is a deterministic reproduction target for the
+      solver, not a curve to digitise.
+    * Chapter 4 "Experimental Evidence" (book pp. 103-152) carries the measured
+      axial and local voidage profiles, phase structures and regime transitions.
+
+  Verdict: the book carries the result the case is for. A1.9 is buildable, with
+  a printed-number validation route in section 5.1.3.
+
+caveats: >
+  * "EMMS drag" as a CFD closure in the modern sense (the Yang/Wang
+    heterogeneity-index formulation used inside two-fluid models) POSTDATES this
+    book. What is here is the 1994 EMMS model and the drag coefficients it
+    produces. The page must say which one it is building and must not describe
+    the 1994 model as though it were the CFD closure.
+  * Everything is read off images. Budget for that: 214 pages, no search.
+
+validation_route: printed numbers (book p. 158 worked example, 3 velocities x 7 quantities)
+notes: >
+  Second of the two monographs that arrived on 2026-08-05. Priority is P3/T3, so
+  this ranks below the P1/P2 cases the same batch unblocked - see
+  docs/source-map-2026-08-05.md for the ranking.
+updated: '2026-08-05'

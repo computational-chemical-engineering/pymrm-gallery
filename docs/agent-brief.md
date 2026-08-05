@@ -105,8 +105,22 @@ section, which is where this class does real damage — check it there.
 
 - **Never fabricate data.** No synthetic points, no textbook restatement passed
   off as the source's. If a dataset cannot be obtained, halt.
-- **Never repair a mangled number by inference.** Read constants off 600 dpi
-  renders (`pdftoppm -r 600 -f N -l N -png f.pdf out`) and *look at the image*.
+- **Never repair a mangled number by inference.** Read constants off page
+  *images* and *look at them* — never off the text layer.
+
+  **Check the native resolution first: `pdfimages -list f.pdf`.** Every scan
+  checked in this repo — all sixteen in the 2026-08-05 batch, plus `A1.8`'s DOE
+  report — is **CCITT-G4 bilevel at 300 or 400 ppi native**. Rendering at 600 dpi
+  is therefore *interpolation*: it makes the image bigger without adding
+  information, and it has never once been the right number here. Render at the
+  native ppi (`pdftoppm -r <native> -f N -l N -png f.pdf out`).
+
+  **Then crop and re-read every numeric at native resolution.** A full-page read
+  is not enough. The agent mapping the 2026-08-05 batch read Table 6 of Chapman &
+  Cowling as "fifteen values to 1000"; it is sixteen values to **100·0** — the
+  mid-dot decimal vanished at page scale. That is the same trap as
+  `0.607` → `0607` in `A2.5`'s scan and `10-3` → the true `1e-5` in `A3.3`'s.
+  Whole-page legibility says nothing about digit legibility.
 - **Reconstruction is allowed; fabrication is not.** The line: every input traces
   to something printed. `J3.4`'s conductivity was not printed, so it was obtained
   by inverting two other published equations — and the page says so.

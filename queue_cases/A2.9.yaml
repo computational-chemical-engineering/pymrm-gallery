@@ -2,21 +2,85 @@ id: A2.9
 section: A
 title: Baldyga–Bourne engulfment
 catalog_reference: Chem. Eng. Sci. (1989)
+catalog_reference_is_wrong: >
+  WRONG JOURNAL. Both papers are in THE CHEMICAL ENGINEERING JOURNAL (Elsevier),
+  volume 42 (1989), ISSN 0300-9467 - not Chemical Engineering Science
+  (0009-2509). Read off the running head of both PDFs, and confirmed by the PII
+  prefix in both filenames. Same class of catalogue-citation error as A1.6 (wrong
+  Wen & Yu paper) and A1.8 (unpublished report plus a bubble-simulation paper).
+  Fix the catalogue row when a page is built; do not propagate "Chem. Eng. Sci."
+  into meta.yaml or models.yaml.
 priority: P2
 tier: T1
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Baldyga, J.", "Bourne, J. R."]
+  year: 1989
+  title: 'Simplification of Micromixing Calculations. I. Derivation and Application
+    of New Model'
+  container: The Chemical Engineering Journal 42 (1989) 83-92
+  affiliation: Technisch-Chemisches Laboratorium, ETH, CH-8092 Zürich, Switzerland
+  received: 24 October 1988; in final form 31 May 1989
+  companion:
+    title: 'Simplification of Micromixing Calculations. II. New Applications'
+    container: The Chemical Engineering Journal 42 (1989) 93-101
+    on_disk: 1-s2.0-0300946789850038-main.pdf
+    note: >
+      ALSO ON DISK. Only one filename can be the value in
+      docs/papers-on-disk.yaml (find_papers.py calls `.is_file()` on it), so the
+      map keys Part I and names Part II in its comment. Do not request either.
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-0300946789850026-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Both PDFs opened on 2026-08-05 and read from their own first pages. Part I:
+    "The Chemical Engineering Journal, 42 (1989) 83-92 / Simplification of
+    Micromixing Calculations. I. Derivation and Application of New Model /
+    J. BALDYGA ... Technisch-Chemisches Laboratorium, ETH, CH-8092 Zurich".
+    Part II: same journal and volume, "93-101 ... II. New Applications". Neither
+    is a preview or an abstract; both are complete (10 pp and 9 pp).
+blocker: null
+
+text_layer:
+  quality: >
+    Prose good; EQUATIONS ABSENT. Acrobat 3.0 Capture keeps the equation NUMBERS
+    - "(27)", "(28)" - and drops the equation bodies entirely, so the extracted
+    text reads as a commentary on equations that are not there. Reference numbers
+    are also mangled by letter/digit confusion ("[lo, 111" for [10, 11]).
+    Every equation and every table cell must come off a page image.
+  render_at: >
+    300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native in both files; 600 dpi is
+    interpolation.
+
+what_it_carries: >
+  * Part I derives the simplified E (engulfment) model from the earlier
+    engulfment-deformation-diffusion (EDD) model, stating explicitly when the
+    simplification is valid: Sc < 4000 and N > 2 (equivalently F < 1). E is
+    named as the engulfment rate and related to the kinematic viscosity and the
+    energy dissipation rate.
+  * Part I's Tables 1-5 are printed numeric tables of product distribution X_s
+    against the engulfment/reaction parameters - the effect of the discretisation
+    parameter u, of feed conditions, of Sc (or Da), and of buffer concentration.
+    Table 1 also carries the experimental Schmidt-number range 640 < Sc < 2560.
+  * Part II applies the model to six problems (two four-reaction, four
+    two-reaction) across plug flow, semi-batch and CSTR modes, with its own
+    Tables 1-5 of X_s. It also introduces self-engulfment for plug-flow regions.
+  * The chemistry throughout is the 1-naphthol / diazotised sulphanilic acid
+    test reaction that made the model famous, so the selectivity the page
+    reports is the one the model was validated on.
+
+  Both parts pass the E1.1 test outright: they derive, name and test the model
+  the case is for. The validation route is PRINTED TABLES, not figures - no
+  maintainer needed.
+
+validation_route: printed tables (Part I Tables 1-5, Part II Tables 1-5)
+notes: >
+  Micromixing selectivity is S1 (a pointwise ODE system), so this is a small
+  page. The interesting pymrm angle is that the E model exists precisely to
+  AVOID the PDE the EDD model needs - so a page that solves both and shows where
+  the simplification's Sc < 4000 / F < 1 bound bites would be a genuine
+  extension rather than a reproduction. Note that requires the earlier EDD
+  papers, which are NOT on disk; do not claim the comparison without them.
+updated: '2026-08-05'

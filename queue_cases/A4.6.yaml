@@ -5,18 +5,117 @@ catalog_reference: —
 priority: P1
 tier: T0
 structures: ''
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Chapman, Sydney", "Cowling, T. G."]
+  year: 1970
+  title: The Mathematical Theory of Non-Uniform Gases; An Account of the Kinetic Theory
+    of Viscosity, Thermal Conduction and Diffusion in Gases
+  container: >
+    Cambridge University Press, 3rd edition (1970), prepared in co-operation with
+    D. Burnett; reissued in paperback in the Cambridge Mathematical Library series
+    with a Foreword by Carlo Cercignani (1990), reprinted 1993, transferred to
+    digital printing 1999. ISBN 0 521 40844 X.
+  note: >
+    This is the ORIGIN, not a reprint. The catalogue left A4.6's reference blank;
+    this book is the primary account of the Chapman-Enskog solution of the
+    Boltzmann equation and of the transport coefficients that follow from it, by
+    one of the two people it is named after. `reference_read_from` is therefore
+    not needed and must not be invented.
 paper:
-  on_disk: null
+  on_disk: cambridge-mathematical-library-sydney-chapman-t.-g.-cowling-c.-cercignani-the-mathematical-theory-of-non-uniform-gases_-an-account-of-the-kinetic-theory-of-viscosity-thermal-conduction-a.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Opened and read on 2026-08-05. Not identified from the filename (which is a
+    library slug), not from a DOI, and not from publisher metadata. What was
+    read: the PDF's own title page ("THE MATHEMATICAL THEORY OF NON-UNIFORM
+    GASES ... SYDNEY CHAPMAN, F.R.S. ... T. G. COWLING, F.R.S. ... THIRD EDITION
+    ... CAMBRIDGE UNIVERSITY PRESS"), the imprint page ("First published 1939 /
+    Second edition 1952 / Third edition 1970 / Reissued as a paperback with a
+    Foreword by Carlo Cercignani in the Cambridge Mathematical Library Series
+    1990 / Reprinted 1993"), the Contents, Cercignani's Foreword, the Prefaces to
+    the First and Third editions, and the eight-page Chapter and Section Titles
+    list. It is the COMPLETE BOOK - 448 PDF pages, running from the half-title
+    through Chapters 1-19, the Historical Summary, the name and subject indexes
+    and the table of references to numerical data. It is NOT a review of the
+    book, which is the failure mode that produced F1.6 and F3.4, and it is not
+    an extract or a preview.
+blocker: null
+
+text_layer:
+  quality: >
+    ABBYY FineReader 8 Professional over CCITT-G4 BILEVEL page images at
+    300 x 300 ppi NATIVE. Prose is good and searchable. NUMBERS ARE NOT: the 1970
+    typesetting uses a raised mid-dot decimal separator, which the OCR turns into
+    a middle dot, an apostrophe or nothing at all, and a leading zero is
+    frequently read as the letter "o" (Table 6's 0.4291 comes back as "o-4291").
+    Table 22 comes back as an unreadable run of capitals. Read every number off a
+    page image.
+  render_at: >
+    300 dpi. NOT 600 - the embedded images are 1-bit CCITT-G4 at 300 ppi, so
+    `pdftoppm -r 600` upsamples and invents grey that is not in the file. Same
+    finding as A1.8's 400 ppi report. Run `pdfimages -list` before rendering.
+  page_offset: >
+    PDF page = printed book page + 24 in the body. Verified at book pages 176,
+    181, 186, 256, 258, 260 and 262. Table 6 is PDF page 209 (and that page is
+    stored ROTATED, 2502 x 1602). Table 22 is PDF page 287.
+
+what_it_carries: >
+  Checked section by section against what the case is FOR, because a monograph
+  that merely mentions a topic does not source a page about it (the E1.1 test).
+
+    * The formula itself. Section 14.2 quotes the first approximation [D12]1 for
+      five molecular models, of which (14.2, 4) is the 12,6 and exp;6 form - the
+      Chapman-Enskog binary diffusivity. Section 14.21 gives the second
+      approximation [D12]2 with the A, B, C, E coefficients and Kihara's
+      simplification. Section 9.81 derives them.
+    * The collision integrals, AS A PRINTED TABLE. Table 6 (book p. 185) gives
+      W12(1)(1), (1/3)W12(2)(2), A, B and C for the 12,6 model at SIXTEEN values
+      of kT/eps_12 running 0.3, 0.5, 0.7, 1.0, 1.3, 1.6, 2.0, 2.5, 3.0, 4.0,
+      5.0, 7.0, 10.0, 20.0, 50.0, 100.0 - counted off a 300 dpi render, twice.
+      (The OCR gives the last row as "1000" because the mid-dot decimal
+      separator vanishes; it is 100.0. A first pass through this file recorded
+      "fifteen values to 1000" for exactly that reason. Do not take the range
+      from the text layer.) This is the piece that decides the case:
+      the numbers are tabulated, not only plotted, so no figure digitisation is
+      needed. (Fig. 8 on the same page plots the same quantities for the 12,6
+      and exp;6 models - ignore it, use the table.)
+    * The force constants. Table 17, "Values of eps/k, sigma and r_m for the
+      12,6 model", and Table 18 for the exp;6 model.
+    * The validation data, ALSO AS A PRINTED TABLE. Table 22 (book p. 263),
+      "Coefficients of diffusion at S.T.P.", gives measured D12 for roughly
+      forty-five gas pairs, each with its literature reference, together with
+      the effective sigma_12 derived from it and the viscosity-derived
+      (1/2)(sigma_1 + sigma_2) for comparison. Table 23 gives the variation of
+      D12 with temperature; Tables 24 and 25 give self-diffusion coefficients.
+    * The book's own caveat, which the page must repeat: section 14.2 opens
+      "Observations of the mutual diffusion of pairs of gases are difficult to
+      make, and such observations as have been made are liable to a fairly large
+      experimental error", and section 14.32 says the quoted D12 "may, in
+      unfavourable cases, be in error by several per cent."
+
+  Verdict: the book carries the result the case is for, with a printed-table
+  validation route. A4.6 is buildable without a maintainer.
+
+does_not_carry: >
+  Do not let this book close cases it does not serve.
+    * A4.1 (Wilke mixture rule) - NOT here. The only Wilke in the book is
+      Buddenberg & Wilke (1949) for the VISCOSITY of a mixture, cited once in
+      section 12.43, and the name index has a single entry (p. 244). Wilke's
+      1950 diffusion mixture rule is not stated, named or attributed anywhere.
+      Straight E1.1 failure; A4.1 stays needs-paper.
+    * A4.3 (dusty gas) and A4.4 (Knudsen / Bosanquet) - no pore transport of any
+      kind. Both are already published anyway.
+    * A4.5 (Fuller-Schettler-Giddings, 1966) - postdates the third edition's
+      cut-off and is not discussed.
+    * A4.2 (Maxwell-Stefan) - the multicomponent diffusion coefficients are in
+      Chapter 18, but A4.2 is already published from Krishna & Wesselingh 1997.
+
+validation_route: printed table (Table 22, ~45 gas pairs; Table 6, 15 rows)
+notes: >
+  First monograph ever to reach ~/papers/pymrm-gallery/. See
+  docs/source-map-2026-08-05.md for the precise statement of what it does and
+  does not unlock, in particular why it is NOT the "textbook-canonical" lever
+  handoff.md is waiting on.
+updated: '2026-08-05'

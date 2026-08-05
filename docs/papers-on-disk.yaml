@@ -40,7 +40,13 @@ A1.7: 1-s2.0-0032591073800373-main.pdf         # Geldart, Types of gas fluidizat
 A2.1: 1-s2.0-0009250953800011-main.pdf         # Danckwerts, Continuous flow systems, Chem. Eng. Sci. 2(1) (1953)
 A2.2: 1-s2.0-0009250956800146-main.pdf         # Wehner & Wilhelm, Boundary conditions of flow reactor, CES 6(2) 89-93 (1956)
 A2.5: 1-s2.0-0009250968870563-main.pdf         # Edwards & Richardson, Gas dispersion in packed beds, CES 23 (1968) 109-123
-A2.6: 1-s2.0-025527019380020H-main.pdf         # Gunn, On axial dispersion in fixed beds, Chem. Eng. Process. 32 (1993) 333-338
+# A2.6's SECONDARY source, kept for reference - the 1993 note. It is not the
+# catalogued paper and it is not evaluable on its own (its eq. 42 defers p(Re)
+# to the 1987 paper). Mapped below as A2.6. Left un-keyed here because a
+# duplicate A2.6: key loads silently - YAML keeps the last - while reading as
+# authoritative to a human.
+#   1-s2.0-025527019380020H-main.pdf   Gunn, On axial dispersion in fixed beds,
+#                                      Chem. Eng. Process. 32 (1993) 333-338
 
 # B1.2 is on disk but is NOT a full paper - checked 2026-08-02, do not re-check.
 #
@@ -126,3 +132,184 @@ A3.15: "Annalen der Physik - 1882 - Graetz - Ueber die W rmeleitungsf higkeit vo
 # (1952). Still needed. Whether Charlesworth & Marshall reprints enough of the
 # correlation to source A3.5 by the AGENTS.md reprint route is an open question
 # nobody has checked - ask that before requesting the original.
+
+# ---------------------------------------------------------------------------
+# Supplied 2026-08-05, second drop (after 12:09). SIXTEEN files, bringing the
+# directory to 57. All of section A. Every one was identified by rendering or
+# extracting its OWN title page - not from the filename, not from a DOI, not
+# from publisher metadata. Two of the sixteen are MONOGRAPHS, the first books
+# ever to arrive here; see the block after the map.
+#
+# --- MONOGRAPHS ---
+A4.6: "cambridge-mathematical-library-sydney-chapman-t.-g.-cowling-c.-cercignani-the-mathematical-theory-of-non-uniform-gases_-an-account-of-the-kinetic-theory-of-viscosity-thermal-conduction-a.pdf"
+# ^ Chapman, S. & Cowling, T. G., "The Mathematical Theory of Non-Uniform Gases",
+#   3rd edn (1970), Cambridge University Press; reissued 1990 in the Cambridge
+#   Mathematical Library with a Foreword by C. Cercignani, reprinted 1993.
+#   COMPLETE BOOK, 448 PDF pages, ABBYY FineReader 8 text layer over CCITT-G4
+#   BILEVEL page images at 300 ppi NATIVE. Verified by reading the PDF's own
+#   title page, imprint page ("First published 1939 / Second edition 1952 /
+#   Third edition 1970 / Reissued as a paperback ... 1990 / Reprinted 1993"),
+#   contents and chapter-and-section-title pages. This is the BOOK, not a review
+#   of it - the trap that produced F1.6 and F3.4.
+#   PDF page = book page + 24 in the body (checked at pp. 176, 181, 186, 256-262).
+A1.9: 7981631866938162.pdf
+# ^ Li, Jinghai & Kwauk, Mooson, "Particle-Fluid Two-Phase Flow: The
+#   Energy-Minimization Multi-Scale Method", Metallurgical Industry Press,
+#   Beijing, 1994. COMPLETE BOOK, 214 PDF pages. The bare numeric filename gives
+#   nothing away and there is NO TEXT LAYER AT ALL (pdftotext returns one byte -
+#   a form feed - per page, all 214 of them), so it was identified by rendering
+#   the cover, the preface and the contents. Exactly the reference the catalogue
+#   names for A1.9. PDF page = book page + 9 to + 11 (checked at pp. 39, 40,
+#   158, 165).
+#
+# --- JOURNAL PAPERS ---
+A2.7: "AIChE Journal - September 1995 - Westerterp - Wave model for longitudinal dispersion  Development of the model (1).pdf"
+# ^ Westerterp, Dil'man & Kronberg, "Wave Model for Longitudinal Dispersion:
+#   Development of the Model", AIChE J. 41(9) 2013-2028 (1995). Confirms the
+#   DOI already recorded on the case (10.1002/aic.690410902) against the
+#   document. The "(1)" in the filename is a browser duplicate-download suffix,
+#   not a part number: this IS part 1 of the series; the companion "Wave model
+#   ... Analysis of the model" is NOT on disk.
+A2.8: 1-s2.0-0009250959800683-main.pdf
+# ^ Zwietering, Th. N., "The degree of mixing in continuous flow systems",
+#   Chem. Eng. Sci. 11(1) 1-15 (1959). Note the page range: the running head
+#   continues to a printed folio 15, so the widely quoted "1-11" is short by
+#   four pages. Trilingual abstract (English/French/German) - the body is
+#   English.
+A2.9: 1-s2.0-0300946789850026-main.pdf
+# ^ Baldyga, J. & Bourne, J. R., "Simplification of Micromixing Calculations.
+#   I. Derivation and Application of New Model", THE CHEMICAL ENGINEERING
+#   JOURNAL 42 (1989) 83-92. This is the derivation, so it is the key here.
+#   PART II IS ALSO ON DISK: `1-s2.0-0300946789850038-main.pdf` = "...
+#   II. New Applications", same journal and volume, 93-101. Only one filename
+#   can be the value (find_papers.py does `(PAPERS / name).is_file()` on it),
+#   so both are listed on queue_cases/A2.9.yaml instead. Do not request either.
+#   CATALOGUE ERROR: docs/catalog-A-foundations.md gives A2.9 as "Chem. Eng.
+#   Sci. (1989)". Wrong journal. Both parts are in The Chemical Engineering
+#   Journal (Elsevier), vol. 42 - the PII prefix 0300-9467 is that journal, not
+#   0009-2509. Same class of error as A1.6 and A1.8.
+A2.10: 1-s2.0-S0098135403002072-main.pdf
+# ^ Bezzo, F. & Macchietto, S., "A general methodology for hybrid
+#   multizonal/CFD models. Part II. Automatic zoning", Comput. Chem. Eng. 28
+#   (2004) 513-525, doi:10.1016/j.compchemeng.2003.08.010. Two authors, which is
+#   what the catalogue's "Bezzo & Macchietto (2004)" names. PART I is a
+#   DIFFERENT, THREE-AUTHOR paper (Bezzo, Macchietto & Pantelides) and is NOT on
+#   disk; Part II defines the zone model it uses but derives the framework in
+#   Part I.
+A3.9: Literature-PredictionofMassTransferColumns.pdf
+# ^ Billet, R. & Schultes, M., "Prediction of Mass Transfer Columns with Dumped
+#   and Arranged Packings - Updated Summary of the Calculation Method of Billet
+#   and Schultes", Trans. IChemE 77 Part A (September 1999) 498-504.
+#   Trans IChemE Part A *is* Chemical Engineering Research and Design, so the
+#   catalogue's "Chem. Eng. Res. Des. (1993, 1999)" is right for the 1999 half.
+#   The 1993 half (Billet & Schultes, Chem. Eng. Res. Des. 71) is NOT on disk.
+#   A "Literature-" filename is exactly the shape that has fooled people before -
+#   this one is the paper itself, not a literature review of it, verified by
+#   rendering page 1. NO TEXT LAYER (copy-protected RC4, and the pages are
+#   CCITT-G4 bilevel images at 300 ppi native); read on renders only.
+A3.10: ie00016a010.pdf
+# ^ Rocha, J. A., Bravo, J. L. & Fair, J. R., "Distillation Columns Containing
+#   Structured Packings: A Comprehensive Model for Their Performance.
+#   1. Hydraulic Models", Ind. Eng. Chem. Res. 32 (1993) 641-651.
+#   PART 2 (the MASS-TRANSFER model, IECR 35 (1996) 1660-1667) IS NOT ON DISK,
+#   and the catalogue names both. What is here delivers holdup, pressure drop
+#   and flooding only.
+A3.11: "AIChE Journal - July 1979 - Dixon - Theoretical prediction of effective heat transfer parameters in packed beds.pdf"
+# ^ Dixon, A. G. & Cresswell, D. L., "Theoretical Prediction of Effective Heat
+#   Transfer Parameters in Packed Beds", AIChE J. 25(4) 663-676 (1979),
+#   doi:10.1002/aic.690250413 (the Wiley download stamp on every page confirms
+#   it). WARNING: PDF page 1 opens with the REFERENCE LIST OF THE PRECEDING
+#   ARTICLE (an LNG-density paper); Dixon & Cresswell starts halfway down that
+#   same page. Do not conclude from the first screen that this is the wrong file.
+A3.13: 1-s2.0-S0032591024012488-main.pdf
+# ^ Mou, X., Zhou, W., Bao, Z. & Huang, W., "Modification and experimental
+#   validation of simplified Zehner-Bauer-Schlünder model for estimating
+#   effective thermal conductivity of gas-solid metal powder beds", Powder
+#   Technology 453 (2025) 120604, doi:10.1016/j.powtec.2024.120604.
+#   PUBLISHED, not a preprint: volume 453, article number 120604, issue-assigned
+#   2025. The PII decodes to 2024 (S0032591024...) because that is the
+#   article-in-press year; the issue is 2025. Born-digital, clean text layer.
+#   REPRINT ROUTE ONLY - it is not the origin. It names the origin as
+#   [26] Zehner & Schlünder, Chem. Ing. Tech. 42 (1970) 933-941 (in German) and
+#   [27] Bauer & Schlünder (1978). See the A3.13 caveat block below.
+#   A SECOND FILE ALSO BELONGS TO A3.13 and cannot be a second key here:
+#   `20100036467.pdf`. Both are listed on queue_cases/A3.13.yaml. It is:
+#   Kandula, M., "On
+#   the Effective Thermal Conductivity of Porous Packed Beds with Uniform
+#   Spherical Particles", ASRC Aerospace / NASA John F. Kennedy Space Center,
+#   internal document number KSC-2010-007 (the PDF's own Title metadata),
+#   NTRS accession 20100036467, 15 pp. A NASA-STYLE REPORT NUMBER FOR A
+#   FILENAME - checked, and it is a real technical report with its own title
+#   page and reference list, not a preview or an abstract record. Also a
+#   reprint route only: it cites the origin as Zehner & Schlünder (1970) and
+#   tests the model, but ALL FIVE of its comparisons are FIGURES - it contains
+#   no data table.
+A3.14: "Chemie Ingenieur Technik - December 1993 - Martin - Radiale W rmeleitung in durchstr mten Sch ttungsrohren.pdf"
+# ^ Martin, H. & Nilles, M., "Radiale Wärmeleitung in durchströmten
+#   Schüttungsrohren", Chem. Ing. Tech. 65(12) 1468-1477 (1993). IN GERMAN -
+#   same care as A3.15's 1882 Graetz paper. Two extra traps: the OCR strips
+#   every umlaut (Wärme -> Warme) and renders superscript powers of ten as the
+#   letters "lo" (10^3 -> lo3), and the paper uses the GERMAN COMMA DECIMAL
+#   SEPARATOR (0,43 bis 2,5). CONTAINS NO TABLES AT ALL - every result is in
+#   Abb. 1-11, so its validation route is figure digitisation.
+A4.5: ie50677a007.pdf
+# ^ Fuller, E. N., Schettler, P. D. & Giddings, J. C., "A New Method for
+#   Prediction of Binary Gas-Phase Diffusion Coefficients", Ind. Eng. Chem.
+#   58(5) 18-27 (1966), doi:10.1021/ie50677a007. Matches the catalogue exactly.
+#   Best-quality scan in this batch: JPEG RGB at 300 ppi, and the atomic
+#   diffusion-volume table survives OCR with its decimal points intact.
+
+# --- ON DISK, IDENTIFIED, BUT MAPPED TO NO CATALOGUE CASE ---
+#
+# `ie50546a056.pdf` is Wilke, C. R. & Lee, C. Y., "Estimation of Diffusion
+# Coefficients for Gases and Vapors", Ind. Eng. Chem. 47(6) 1253-1257 (1955).
+#
+# IT IS NOT A4.1. A4.1 is the Wilke MIXTURE rule for the effective diffusivity
+# of one species in a multicomponent gas, Wilke, Chem. Eng. Prog. 46 (1950) 95 -
+# a different paper, in a different journal, five years earlier, about a
+# different equation. Wilke & Lee 1955 is a critical review of binary-diffusivity
+# ESTIMATION methods (Gilliland, Arnold, Hirschfelder-Bird-Spotz) plus a new
+# correlation of their own. Do not file it under A4.1 and do not let its arrival
+# close A4.1's request.
+#
+# Its real value is as a comparison source for A4.5 and A4.6: it prints the
+# Hirschfelder-Bird-Spotz engineering form of the Chapman-Enskog equation with
+# attribution, and Fuller et al. 1966 (the A4.5 file above) benchmarks against
+# it explicitly. Its first page also opens with the tail of the PRECEDING
+# article (a soil-stabilisation / electro-osmosis paper); Wilke & Lee starts
+# halfway down journal page 1253.
+#
+# `1-s2.0-S0009250912007099-main.pdf` is Mills, A. F. & Chang, B. H.,
+# "Two-dimensional diffusion in a Stefan tube: The classical approach", Chem.
+# Eng. Sci. 90 (2013) 130-136, doi:10.1016/j.ces.2012.12.018. Born-digital,
+# clean.
+#
+# IT DOES NOT CLOSE A4.8. A4.8 is catalogued as the "classic MS validation
+# EXPERIMENT" - the ternary Stefan-tube measurement. Mills & Chang is a BINARY
+# (water vapour into air) 2-D Navier-Stokes + Maxwell-Stefan computation whose
+# purpose is to rebut Salcedo-Diaz et al. (2008) and the Kerkhof-Geboers
+# equations. It contains NO experimental data and NO tables of any kind; every
+# result is a figure. A4.8 still needs a paper with the measurements in it
+# (Carty & Schrodt 1975 is the usual one). Recorded on queue_cases/A4.8.yaml.
+
+# --- THE A3.13 CAVEAT: WHAT THE TWO ZBS FILES DO AND DO NOT CARRY ---
+#
+# A3.13 is catalogued as "Zehner-Bauer-Schlünder ... Stagnant bed conductivity
+# INCL. RADIATION". Neither file on disk delivers the radiation term.
+#
+#   * Kandula (2010) is about Zehner & SCHLÜNDER (1970) - the point-contact
+#     ZS model. Bauer's 1978 radiation and contact-conduction extensions are the
+#     part that makes it "ZBS", and they are not in the 1970 model.
+#   * Mou et al. (2025) print, as their Eq. (7), the SIMPLIFIED ZBS (S-ZBS)
+#     model with the Smoluchowski correction folded in. Their own §1 says
+#     plainly that Syamlal & Gidaspow simplified ZBS "by ignoring the
+#     Smoluchowski AND RADIATION effects" to get S-ZBS. The full ZBS with
+#     radiation appears in their SUPPLEMENTARY MATERIALS (Eq. S2 / Table S2),
+#     WHICH ARE NOT ON DISK - the PDF is the 17-page main article only.
+#
+# So A3.13 is buildable for the ZS / S-ZBS core against Mou's printed Tables
+# 1-3, and NOT for the radiation term its own title names. That is the A1.8
+# situation again: build what the documents carry, say on the page which named
+# component is missing, and name the document that would complete it (Bauer &
+# Schlünder 1978, Int. Chem. Eng. 18, 189, or the German original Zehner &
+# Schlünder, Chem. Ing. Tech. 42 (1970) 933-941).

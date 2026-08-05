@@ -10,13 +10,61 @@ reference: {}
 paper:
   on_disk: null
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-05'
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: >
+    Please supply Wilke, C. R. (1950), "Diffusional properties of multicomponent
+    gases", Chemical Engineering Progress 46, 95-104. Note the journal: Chem.
+    Eng. Progress, not Ind. Eng. Chem.
+  detail: >
+    Not in ~/papers/pymrm-gallery/ and no open-access route via Unpaywall.
+    CrossRef could not resolve a DOI confidently from the catalogue citation
+    (Chem. Eng. Progress is largely pre-DOI).
+
+    TWO NEAR-MISSES ARRIVED ON 2026-08-05 AND NEITHER CLOSES THIS CASE. Both were
+    checked deliberately, because "a Wilke paper turned up" is exactly the
+    inference that would close this case wrongly.
+
+    (1) `ie50546a056.pdf` IS NOT THIS PAPER. It is Wilke, C. R. & Lee, C. Y.,
+        "Estimation of Diffusion Coefficients for Gases and Vapors", Industrial
+        and Engineering Chemistry 47(6) 1253-1257 (June 1955) - a different
+        paper, in a different journal, five years later, with a co-author, about
+        a different equation. It is a critical review of methods for estimating
+        BINARY diffusivities (Gilliland, Arnold, Hirschfelder-Bird-Spotz) plus a
+        correlation of the authors' own. It contains no mixture rule for the
+        effective diffusivity of one species in a multicomponent gas, which is
+        what A4.1 is for. Identified by reading its own title block; note its
+        first page also carries the tail of the PRECEDING article (a
+        soil-stabilisation / electro-osmosis paper), so the top of journal page
+        1253 is not Wilke & Lee.
+        Its real home is as a secondary source for A4.5 and A4.6 - Fuller et al.
+        (1966) benchmark against it by name. Recorded in
+        docs/papers-on-disk.yaml under "ON DISK, IDENTIFIED, BUT MAPPED TO NO
+        CATALOGUE CASE".
+
+    (2) CHAPMAN & COWLING DOES NOT CARRY IT EITHER. The Mathematical Theory of
+        Non-Uniform Gases (3rd edn) arrived in the same batch and now sources
+        A4.6. It was searched for this rule and does not have it: the only Wilke
+        in the book is Buddenberg & Wilke (1949), cited once in section 12.43 for
+        the VISCOSITY of a gas mixture, with a single name-index entry at p. 244.
+        The 1950 diffusion mixture rule is not stated, not named and not
+        attributed anywhere in the book. Chapter 18 gives the exact
+        multicomponent (Maxwell-Stefan) diffusion coefficients instead, and
+        section 18.51 gives the one-gas-as-a-trace limit - but neither is
+        presented as, or connected to, Wilke's rule.
+        That is a straight E1.1 failure: the equation-adjacent theory is there,
+        the named result the case is about is not. Building A4.1 from Chapter 18
+        would be reconstructing an attribution the source does not make.
+  artifacts:
+  - "the Wilke & Lee 1955 paper, at ~/papers/pymrm-gallery/ie50546a056.pdf - NOT this case's paper"
+  - "the Chapman & Cowling verdict, in queue_cases/A4.6.yaml under `does_not_carry`"
+notes: >
+  Reprint route worth trying before requesting the original. Two candidates on
+  disk have already been eliminated: Wilke & Lee 1955 does not restate the rule
+  (checked), and Fuller et al. 1966 is about binary coefficients throughout.
+  The remaining candidate on disk is Krishna & Wesselingh 1997 (A4.2's source),
+  which discusses the effective-diffusivity approximation - read its treatment
+  and check whether it names and attributes Wilke before adding the 1950 paper
+  to a request list.
+updated: '2026-08-05'

@@ -9,14 +9,76 @@ status: needs-paper
 reference: {}
 paper:
   on_disk: null
+  related_paper_on_disk: /home/eajfpeters/papers/pymrm-gallery/1-s2.0-S0009250912007099-main.pdf
   open_access: null
-  checked: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    A Stefan-tube paper arrived in the 2026-08-05 batch and was read the same day.
+    It does NOT close this case; the detail is below. It is
+    Mills, A. F. & Chang, B. H., "Two-dimensional diffusion in a Stefan tube: The
+    classical approach", Chemical Engineering Science 90 (2013) 130-136,
+    doi:10.1016/j.ces.2012.12.018 (UCLA and Incheon University). Identified from
+    its own first page and confirmed against the PDF's Title/Subject metadata.
+    Born-digital, clean text layer, complete at 7 pp.
 blocker:
   kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  question: >
+    Please supply a paper containing MEASURED ternary Stefan-tube compositions -
+    the classic is Carty, R. & Schrodt, T. (1975), "Concentration profiles in
+    ternary gaseous diffusion", Ind. Eng. Chem. Fundam. 14, 276-278
+    (acetone/methanol/air). Any equivalent published dataset would do.
+  detail: >
+    WHY THE 2013 PAPER DOES NOT CLOSE THIS CASE. Read this before requesting
+    again, and before assuming the case is served.
+
+    A4.8 is catalogued as the "classic MS validation EXPERIMENT" - the whole
+    point of the case is that Maxwell-Stefan is tested against measurements that
+    Fick's law cannot reproduce, the same argument that makes A4.9 (Duncan-Toor)
+    the strongest early page in the gallery.
+
+    Mills & Chang is not that. It is a BINARY problem (water vapour evaporating
+    into air), solved in TWO dimensions with the Navier-Stokes equations plus a
+    Kramers-Kistemaker diffusion-slip wall condition, and its purpose is to rebut
+    Salcedo-Diaz et al. (2008) and the Kerkhof-Geboers "Unified Theory". It is a
+    polemic between two modelling frameworks.
+
+    It contains NO experimental data and NO tables of any kind. Every result -
+    axial and radial velocity profiles, the pressure field, species mass fluxes,
+    vapour mass fraction, absolute air velocity - is a figure (Figs. 1-9). So
+    even the model-versus-model comparison it does make is only reproducible by
+    digitising figures, which parks at the figure-review gate that currently has
+    no maintainer.
+
+    What it IS good for, and what should be recorded rather than rediscovered:
+    it states the one-dimensional classical solution ("diffusion with one
+    component stationary") and its history - Lee & Wilke (1954) and Heinzelmann
+    et al. (1965) on end effects, McDonald et al. (1971) and Meyer & Kostin
+    (1975) on the first 2-D solutions with a no-slip wall - and it quantifies the
+    diffusion-slip velocity for water into air as "at most about 25% of the bulk
+    velocity". If A4.8 is ever built as a 1-D-versus-2-D page rather than a
+    model-versus-data page, this is its source.
+  artifacts:
+  - the 2013 paper, at ~/papers/pymrm-gallery/1-s2.0-S0009250912007099-main.pdf
+  - the identification record in docs/papers-on-disk.yaml, under "ON DISK, IDENTIFIED,
+    BUT MAPPED TO NO CATALOGUE CASE"
+notes: >
+  A4.9 (Duncan-Toor) is published and its paper is on disk; A4.2 (Maxwell-Stefan)
+  is published. So the S9 machinery and the "Fick fails, MS succeeds" argument
+  both already have pages. A4.8 adds value only if it brings its own
+  measurements - which is precisely what is still missing.
+updated: '2026-08-05'
+resume:
+  blocking: true
+  trigger: a paper with measured ternary Stefan-tube compositions appears in ~/papers/pymrm-gallery/
+  on_arrival:
+  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
+  - set status to unclaimed and clear paper.checked so find_papers re-runs
+  - dispatch a build agent with the standard brief in docs/agent-brief.md
+  established: >
+    The 2013 Mills & Chang paper has been read in full and mapped. Its identity,
+    its content and the reason it does not serve this case are written down
+    above.
+  do_not_redo: >
+    Do not re-read Mills & Chang hoping to find a data table. There is none - the
+    seven pages were checked. Do not build A4.8 from it as though it were the
+    classic experiment.

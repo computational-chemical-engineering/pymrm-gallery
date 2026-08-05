@@ -5,18 +5,82 @@ catalog_reference: IECR 32 (1993), 35 (1996)
 priority: P2
 tier: T1
 structures: ''
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Rocha, J. Antonio", "Bravo, Jose L.", "Fair, James R."]
+  year: 1993
+  title: 'Distillation Columns Containing Structured Packings: A Comprehensive Model
+    for Their Performance. 1. Hydraulic Models'
+  container: Industrial & Engineering Chemistry Research 32 (1993) 641-651
+  doi: 10.1021/ie00016a010
+  affiliation: Separations Research Program, The University of Texas at Austin
 paper:
-  on_disk: null
+  on_disk: ie00016a010.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own first page: "Ind. Eng. Chem. Res.
+    1993, 32, 641-651 / Distillation Columns Containing Structured Packings: A
+    Comprehensive Model for Their Performance. 1. Hydraulic Models / J. Antonio
+    Rocha, Jose L. Bravo, and James R. Fair". Complete, 11 pp, ending in the
+    Nomenclature on journal page 651. The ACS download stamp on every page gives
+    the DOI. `ie00016a010.pdf` is an opaque ACS article id - nothing about the
+    identity is inferrable from the filename.
+doi_source: >
+  verified 2026-08-05 against the document. The ACS download stamp printed down
+  every page reads "pubs.acs.org/iecred/article-pdf/32/4/641/10683713/
+  ie00016a010.pdf", which fixes journal, volume, issue and first page, and the
+  PDF's own Author and Title metadata match the printed title block.
+blocker: null
+
+text_layer:
+  quality: >
+    Prose fair, NUMBERS BAD. The figure captions are the worst part - "Us 0.007
+    rrVe" for U_ls = 0.007 m/s, "4.i4bar" for 4.14 bar, "(kg/m3)0,5" for
+    (kg/m3)^0.5, "Fa = Ugs(pg)0S" for U_gs (rho_g)^0.5. Superscripts and
+    decimal points both degrade. Read every constant off a page image.
+    NOTE: the tables are numbered with ROMAN numerals (Table I ... Table IV), so
+    a grep for "Table 1" finds nothing and will make you think there are none.
+  render_at: >
+    300 dpi. CCITT-G4 bilevel at 300 x 300 ppi native; 600 dpi is interpolation.
+
+what_it_carries: >
+  * The hydraulic model in full: the diamond-shaped flow-channel geometry with
+    the corrugation side S as the equivalent diameter, effective gas and liquid
+    velocities, effective gravity, the Shi-Mersmann holdup correlation as fitted
+    (eqs. 9-16), the friction-factor pressure drop, and the flooding criterion.
+  * Table I: relative static holdups and the surface correction factor F_a for
+    six named metal structured packings (Glitsch Gempak 2AT and 2A, Flexipac 2,
+    Sulzer BX, Jaeger Maxpak, Norton Intalox 2T), with a surface description for
+    each. This is the packing-specific constant table the model needs.
+  * Table II: summary of the experimental data sources and the model fit
+    (McNulty & Hsieh 1982; Chen, Kitterman & Shieh 1982, 1983), listing packing
+    type with its S and epsilon - Flexipac 1-4, Gempak 1A-4A, crimp heights 6 to
+    25 mm, air/water at atmospheric pressure.
+  * Table III: distillation conditions for the pressure-drop tests (pressure
+    0.33 bar upward, with rho_g, rho_L, mu_g, mu_L and sigma for each).
+  * Table IV, and thirteen figures.
+
+  MIXED VALIDATION ROUTE, and this is the thing to decide before dispatching:
+  the CONSTANTS are in printed tables, but the HOLDUP AND PRESSURE-DROP DATA
+  THEMSELVES ARE IN FIGURES 3-13. A page that only exercises the correlation on
+  the printed conditions needs no digitisation; a page that validates against
+  the measurements does, and figure digitisation parks at the review gate that
+  currently has no maintainer.
+
+what_is_missing: >
+  PART 2 IS NOT ON DISK. The catalogue names "IECR 32 (1993), 35 (1996)"; the
+  1996 paper is "... 2. Mass-Transfer Model" (IECR 35, 1660-1667) and it is the
+  half that carries the MASS TRANSFER the case title implies. What is here
+  delivers holdup, pressure drop, capacity and flooding ONLY. Say so on the
+  page; do not describe an A3.10 page built from this file as covering
+  "structured packing hydraulics/MT".
+
+validation_route: printed tables for constants; FIGURE-ONLY for the holdup and pressure-drop data
+notes: >
+  See queue_cases/A3.9.yaml - Billet & Schultes (1999), unblocked in the same
+  batch, covers arranged packings too and has its data situation the other way
+  round (full constant tables, aggregate deviations, no raw data). A single page
+  overlaying both on arranged packings may be worth more than two pages. Decide
+  scope first.
+updated: '2026-08-05'

@@ -5,29 +5,73 @@ catalog_reference: Bezzo & Macchietto (2004)
 priority: P3
 tier: T2
 structures: S7
-status: needs-paper
+status: unclaimed
 reference:
+  authors: ["Bezzo, F.", "Macchietto, S."]
+  year: 2004
+  title: 'A general methodology for hybrid multizonal/CFD models. Part II. Automatic
+    zoning'
+  container: Computers and Chemical Engineering 28 (2004) 513-525
   doi: 10.1016/j.compchemeng.2003.08.010
+  affiliation: Centre for Process Systems Engineering, Imperial College, London
+  received: 18 August 2003; revised 18 August 2003; accepted 20 August 2003
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-S0098135403002072-main.pdf
   open_access: null
-  checked: '2026-07-30'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-  artifacts: []
-notes: null
-updated: '2026-07-30'
-doi_source: crossref-auto
-resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access
-    route via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route
-    appears (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own first page: "Computers and
+    Chemical Engineering 28 (2004) 513-525 / A general methodology for hybrid
+    multizonal/CFD models / Part II. Automatic zoning / F. Bezzo, S. Macchietto".
+    Complete, 13 pp. The TWO-AUTHOR by-line is what confirms this is the paper
+    the catalogue names ("Bezzo & Macchietto (2004)").
+doi_source: >
+  crossref-VERIFIED against the document on 2026-08-05. The recorded
+  crossref-auto DOI 10.1016/j.compchemeng.2003.08.010 is printed in the PDF's own
+  Title metadata field and again in the footer of journal page 513. This one was
+  right - unlike the F1.6 / F3.4 auto-resolutions.
+blocker: null
+
+text_layer:
+  quality: Born-digital Elsevier PDF (Acrobat Distiller 4.05, 2004). Clean.
+  render_at: not needed
+
+what_it_carries: >
+  * The zone model itself: each zone is a perfectly mixed vessel, with the mass
+    balance and species balance written out in section 4, step 4.
+  * A fully specified test case whose parameters are all printed: a
+    10 m x 2 m x 10 m tank with a 1 x 1 m offset inlet and outlet, water-like
+    fluid (rho = 1000 kg/m3, mu = 1e-3 kg/(m s)), inlet velocity 0.5 m/s
+    (500 kg/s), tracer switch from x_A = 1 to x_B = 1, meshed at 50 x 10 x 50 =
+    25,000 cells, zoned to about 100 zones.
+  * Tables 1 and 2: numeric assessment criteria for the zoning algorithms Theta
+    and Theta_H, and for the aggregation of zones smaller than five cells.
+  * The two automatic-zoning algorithms in full, which is the paper's own
+    contribution and what the title promises.
+
+scope_warning: >
+  READ THIS BEFORE DISPATCHING. Two things bound what a page can honestly claim.
+
+    * PART I IS NOT ON DISK. Part I is a DIFFERENT, THREE-AUTHOR paper (Bezzo,
+      Macchietto & Pantelides, 2003) and it is where the multizonal/CFD framework
+      is derived. Part II cites it repeatedly for the framework, the interface
+      definitions and the flowrate-subset algorithms. Part II is self-contained
+      for the ZONE MODEL and the ZONING ALGORITHMS; it is not self-contained for
+      the framework. Say on the page which document each equation came from.
+    * THE ZONE NETWORK COMES FROM A CFD SOLUTION THE GALLERY CANNOT REPRODUCE.
+      Step 1 of the test case is a steady-state 25,000-cell Navier-Stokes
+      solution, and the zoning algorithms consume its velocity and dissipation
+      fields. pymrm does not solve that. So an honest A2.10 page reproduces the
+      COMPARTMENT-MODEL half - given a network and inter-zone flows, integrate
+      the tracer response and compare mixing curves - and states plainly that
+      the network was taken from the paper rather than generated. Do not
+      manufacture a CFD field and present it as the paper's.
+  This is a scope decision, not a blocker. It is why the case is P3/T2 and why
+  it should not be dispatched ahead of the P1/P2 cases this batch unblocked.
+
+validation_route: printed tables (Tables 1 and 2), but see scope_warning
+notes: >
+  A2.4 (tanks-in-series) is the same structure at its simplest and is still
+  needs-paper; if A2.4 ever gets a source, build it first and copy its
+  directory, per AGENTS.md's structure-matching rule.
+updated: '2026-08-05'

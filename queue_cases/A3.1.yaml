@@ -5,50 +5,76 @@ catalog_reference: Chem. Metall. Eng. 29 (1923)
 priority: P1
 tier: T0
 structures: S3
-status: needs-paper
+status: ready
+staged_at: queue_cases/A3.1/page/
+models_entry: queue_cases/A3.1/models_entry.yaml
 reference:
   authors:
   - Whitman, W. G.
   year: 1923
   title: The two-film theory of gas absorption
-  container: Chemical and Metallurgical Engineering 29(4) 146-148; reprinted in International
-    Journal of Heat and Mass Transfer 5(5) (1962) 429-433
+  container: Chemical and Metallurgical Engineering 29(4) 146-148
+  doi: null
+  consulted: false
+  note: >-
+    THE ORIGIN, CITED AND NOT CONSULTED. Pre-DOI and unreachable. The page range
+    146-148 is the one printed in the 1962 reprint's own header; it is inherited,
+    not verified, and no individual 1923 page is cited anywhere on the page.
+reference_read_from:
+  authors:
+  - Whitman, W. G.
+  year: 1962
+  title: The two-film theory of gas absorption
+  container: International Journal of Heat and Mass Transfer 5(5) 429-433
   doi: 10.1016/0017-9310(62)90032-7
+  note: >-
+    THE TEXT ACTUALLY READ. A VERBATIM reprint of the 1923 article, published as
+    item 5 of "Pioneer papers in convective mass transfer", with the origin
+    stated in its own header ("W. G. WHITMAN: The two-film theory of gas
+    absorption, Chemical and Metallurgical Engineering 29, 146-148 (1923).
+    Reprinted with permission from Chemical Engineering, Copyright 1923,
+    McGraw-Hill Publishing Co."). Every equation (eqs. 1-8), all ten columns of
+    Table 1, the whole worked example on reprint page 432 and the printed axis
+    tick labels of Figs 2 and 3 were verified on 600 dpi renders (pdftoppm -r
+    600) on 2026-08-05. ALL PAGE REFERENCES ON THE PAGE ARE TO THIS PRINTING
+    (429-433). The OCR text layer is unusable for numbers: it returns eq. (7) as
+    "2,$~=PL~~2Lz", run 3's K_c as "om7" and run 2's c1 as "3:", because the 1962
+    typesetting uses a mid-dot decimal separator that the OCR discards.
+
+    The reprint opens with an Editor's Foreword signed "D.B.S." quoting Sherwood
+    & Pigford's 1951 preface ("after 28 years the theory itself has never been
+    adequately checked experimentally"). That is 1962 editorial commentary, NOT
+    Whitman, and the page says so explicitly and never attributes it to him. It
+    is quoted because it is the question the page answers with a number.
 paper:
-  on_disk: api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt
+  on_disk: 1-s2.0-0017931062900327-main.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
+  checked: '2026-08-05'
+notes: >-
+  BUILT VIA THE REPRINT ROUTE, and it passed both AGENTS.md tests: the 1962
+  printing does not merely contain the result, it IS the result, reprinted
+  verbatim and attributed in its own header; and no existing page examines it
+  (A3.3 Danckwerts, staged in the same batch, explicitly scopes Whitman out).
 
+  The extraction lesson worth carrying: THE EQUILIBRIUM CURVE DID NOT NEED
+  DIGITISING. Whitman's subscript convention makes (c1, p1) and (c3, p3)
+  equilibrium pairs, so Table 1's own columns print four equilibrium points
+  spanning 2.88 decades of pressure - enough to reconstruct the straight
+  semi-log line his Fig. 3 plots, with two degrees of freedom left over as a
+  transcription check (worst residual 0.383 % in p). No figure was digitised, so
+  no review gate was needed and the case never stalled. Look for this whenever a
+  paper's table defines a quantity as "the value in equilibrium with" something
+  else.
 
-    Text layer: prose good; the two overall-coefficient equations (5) and (6) are legible,
-    but the HCl absorption data live in Figs 2-3 and did not come through.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/0017931062900327
-notes: 'REPRINT ROUTE — this is the AGENTS.md case, and it is a strong one. IJHMT reprinted
-  Whitman verbatim in its series ''Pioneer Papers in Convective Mass Transfer, 5'', with the
-  header ''W. G. WHITMAN: The two-film theory of gas absorption, Chemical and Metallurgical
-  Engineering 29, 146-148 (1923). Reprinted with permission from Chemical Engineering, Copyright
-  1923, McGraw-Hill Publishing Co.'' plus an Editor''s Foreword. The 1923 original is pre-DOI
-  and unreachable; this reprint has its own DOI and is reachable with the API key. Cite Whitman
-  1923 as `reference` and the 1962 reprint as `reference_read_from`.'
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  0017931062900327). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Whitman-1923-two-film-theory-IJHMT-1962-reprint.ELSEVIER-API-TEXT.txt
+  The page's headline is a power analysis, not an agreement: Whitman's one
+  held-out prediction is 99.4 % gas-film controlled, so deleting the liquid film
+  entirely moves it 0.6 % and moves it CLOSER to the measurement, and removing
+  run 1 from the fit leaves k_c unbounded above. The single degree of freedom
+  the three runs offer (the run3/run2 rate ratio) is off by 0.934 % against a
+  printed precision of 0.29 %, and the page reports that against itself.
+updated: '2026-08-05'
+doi_source: >-
+  DOI 10.1016/0017-9310(62)90032-7 belongs to the 1962 REPRINT and is confirmed
+  from the PDF's own PII (0017-9310(62)90032-7) and from the article header on
+  reprint page 429, which prints the journal, volume and page range. The 1923
+  original has no DOI.

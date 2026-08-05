@@ -5,7 +5,7 @@ catalog_reference: AIChE J 3 (1957)
 priority: P1
 tier: T0
 structures: S6
-status: needs-paper
+status: ready
 reference:
   authors:
   - Yagi, S.
@@ -14,22 +14,95 @@ reference:
   title: Studies on effective thermal conductivities in packed beds
   container: AIChE Journal 3(3) 373-381
   doi: 10.1002/aic.690030317
+origin_not_consulted:
+  authors:
+  - Ranz, W. E.
+  year: 1952
+  container: Chem. Eng. Progr. 48, 247
+  note: >
+    Source of Eq. (1), the lateral-mixing mechanism the whole flow term rests on.
+    NOT on disk. The only Ranz item at ~/papers/pymrm-gallery/ is
+    A1993LB49000001.pdf, a one-page "This Week's Citation Classic" reminiscence
+    Ranz wrote in 1993 about Ranz & Marshall (1952); it carries no correlations.
+    The page records only what Yagi & Kunii themselves print about Eq. (1).
 paper:
-  on_disk: null
-  open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-  artifacts: []
-notes: DOI was already in the file as crossref-auto; confirmed against the OpenAlex record
-  title on 2026-08-02. Wiley, no API route, no OA copy. Note the SAME authors' 1955 CES paper
-  is already on disk as the B3.1 file, so check whether it reprints the conductivity model
-  before requesting.
-updated: '2026-08-02'
-doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then
-  checked field by field against the Crossref record: title, container, volume, issue, page
-  range and year all agree with the catalogue''s own citation string. NOT verified against
-  the document itself, because no copy could be obtained; the builder must still confirm the
-  title page when the PDF arrives, as on F3.5 and G1.7.'
+  on_disk: "AIChE Journal - September 1957 - Yagi - Studies on effective thermal conductivities in packed beds.pdf"
+  open_access: false
+  checked: '2026-08-05'
+  identity_verified: >
+    Confirmed against the document itself on 2026-08-05, not just the filename.
+    Title page reads "Studies on Effective Thermal Conductivities in Packed Beds",
+    SAKAE YAGI and DAIZO KUNII, University of Tokyo, A.I.Ch.E. Journal Vol. 3 No. 3
+    page 373, September 1957, with the Wiley stamp carrying doi 10.1002/aic.690030317.
+    The abstract matches the catalogue description: theory using the authors' own
+    assumptions plus Ranz's lateral mixing, an analysis of previously reported data,
+    and their own measurements with air over iron spheres, porcelain, cement clinker,
+    insulating firebrick and Raschig rings, correlated with Equation (15).
+built:
+  staged_at: queue_cases/A3.12/page/
+  models_entry: queue_cases/A3.12/models_entry.yaml
+  runtime_seconds: 7
+  datasets:
+  - yagi-kunii-1957-table1.csv
+  - yagi-kunii-1957-table3.csv
+  - yagi-kunii-1957-table4.csv
+  - yagi-kunii-1957-air-conductivity.csv
+  metrics: 53
+  break_table: >
+    Rebuilt for this page's physics, not inherited. A single recompute() function
+    rebuilds all 53 published metrics under 20 injected defects; 53 of 53 are moved
+    by at least one, and an assertion checks recompute() reproduces the narrative
+    cells before any injection. Five metrics sit below check_agreement.py's
+    ABS_FLOOR = 1e-12 and are named on the page as outside the CI regression suite.
+  scoped_out: >
+    Figures 13-17, the authors' ONLY measurements of their own (ke0/kg against mean
+    bed temperature for five packings, 0-1000 degC). They are figures; digitising
+    them needs a maintainer review and none is available. Figures 9 and 10, which
+    carry phi(eps) and phi/phi_air(kg/kair), are also not digitised - Table 4 prints
+    four (eps, phi) pairs from line B of Figure 9 and those are used instead. The
+    complete tabular material is deposited as American Documentation Institute
+    document 5305, which is not in hand.
+  findings:
+  - "Eq. (17) as printed is a factor of two low: it sets pi*l where the steady
+     cylindrical solution requires 2*pi*l. Proved from the paper's own Eq. (19)
+     constant 0.743 and its three printed dimensions - ratio 2.00095. Eq. (19)
+     itself is correct, so no measurement in the paper is affected."
+  - "gamma = ls/Dp = 1.2 mm/9.0 mm is printed as 0.0134 on journal page 379; the
+     division gives 0.1333. Table 4 carries the ratio 1.2/9, so the paper's own
+     calculations are unaffected; using the printed decimal shifts ke0/kg by
+     +9.2 % at 400 degC."
+  - "THE HEADLINE: with phi read off Figure 9 per row, the solid-to-solid radiation
+     coefficient h_rs is algebraically degenerate with it. Deleting Eq. (7)
+     outright and re-solving for phi reproduces every printed Calcd. value to
+     2.2e-16 (0 of 14 rows lose reachability); the same holds for the gamma(kg/ks)
+     solid-conduction term. h_rv resists deletion on only 2 of 14. A control -
+     halving the numerator - is flagged on 6 of 14, so the test is not blind. The
+     paper's central claim (radiation dominant above 400 degC) concerns a regime
+     no row of Table 3 reaches; its hottest is 300 degC."
+  - "Table 3's calculated column cannot be reproduced from printed material: at
+     eps = 0.40 it implies phi from 0.0077 to 0.0582, a factor of 7.6, while
+     Table 4 assigns that voidage the single value 0.034. Forward calculation from
+     Table 4's printed phi(eps) line misses the paper's own column by 10.6 % mean."
+  - "The emissivity p is never printed anywhere in the paper. p = 1 is assumed on
+     the strength of Figure 3's 'black body surface A'/B'' wording; p = 0.8 moves
+     the 1000 degC iron-sphere value by -16.4 %."
+  - "Reference 5 (Coberly & Marshall, Celite cylinders) is a genuine outlier in
+     Table 3: its measured value appears TWICE in the paper, as Table 1's Eq. (6)
+     intercept (10.4) and Table 3's Exp. column (11.4), agreeing to 8.8 %, while
+     the calculated value is 5.5 - 52 % below both. The outlier is the calculation,
+     not a bad measurement."
+  - "The theoretical alpha = 0.179 for rhombohedral spheres over-predicts the
+     lateral-mixing slope actually observed in Table 1 by 1.33 to 1.63 times even
+     at the most favourable beta. The paper says so in words but never numerically."
+notes: >
+  The 1955 Yagi & Kunii CES paper already on disk as the B3.1 file does NOT reprint
+  the conductivity model; it is the shrinking-core paper and is unrelated. The 1957
+  paper was supplied separately and is what this page is built from.
+  Text layer is unusable for numbers: it interleaves the two-column body with the
+  tables, renders Eq. (8) as ".b}]{(t P + 273)/100)3", and loses Eq. (15) entirely.
+  Every digit on the page was read from a 600 dpi pdftoppm render.
+updated: '2026-08-05'
+doi_source: >
+  crossref-verified 2026-08-02 and now confirmed against the document itself
+  (2026-08-05): the Wiley footer stamp on every page of the PDF carries
+  10.1002/aic.690030317.

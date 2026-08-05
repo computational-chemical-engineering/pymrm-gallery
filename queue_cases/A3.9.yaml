@@ -5,18 +5,92 @@ catalog_reference: Chem. Eng. Res. Des. (1993, 1999)
 priority: P2
 tier: T1
 structures: ''
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Billet, R.", "Schultes, M."]
+  year: 1999
+  title: 'Prediction of Mass Transfer Columns with Dumped and Arranged Packings:
+    Updated Summary of the Calculation Method of Billet and Schultes'
+  container: Trans IChemE, Vol 77, Part A, September 1999, 498-504
+  container_note: >
+    Trans IChemE Part A IS Chemical Engineering Research and Design, so the
+    catalogue's "Chem. Eng. Res. Des." is correct for the 1999 half. ISSN line on
+    page 498 reads "0263-8762/99/$10.00+0.00 / (c) Institution of Chemical
+    Engineers".
+  affiliation: Ruhr-University Bochum, Germany; Raschig GmbH, Ludwigshafen, Germany
 paper:
-  on_disk: null
+  on_disk: Literature-PredictionofMassTransferColumns.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Rendered and read on 2026-08-05. The file has NO TEXT LAYER (RC4-encrypted
+    with copy disabled, and every page is a bilevel scan), so identification was
+    by rasterising page 1 and reading its own masthead and title block. A
+    "Literature-" filename is exactly the shape that produced the A3.5 block -
+    a one-page Citation Classic reminiscence and a companion study. THIS ONE IS
+    THE PAPER, not a literature review of it, and not a summary written by
+    somebody else: the by-line is Billet and Schultes themselves and the subtitle
+    "Updated Summary of the Calculation Method of Billet and Schultes" is the
+    authors describing their own method. Complete, 7 pp, journal pages 498-504.
+blocker: null
+
+text_layer:
+  quality: >
+    NONE. `pdftotext` returns nothing: the PDF is encrypted (RC4, copy:no) and
+    the content is seven CCITT-G4 page images anyway. Everything must be read
+    off renders.
+  render_at: >
+    300 dpi. The seven page images are CCITT-G4 BILEVEL, 2475 x 3498 px at
+    300 x 300 ppi native. 600 dpi is interpolation. Legibility is very good -
+    Table 2a is comfortably readable at 150 dpi.
+
+what_it_carries: >
+  This is the best-provisioned source in the 2026-08-05 batch. It is a complete,
+  self-contained calculation method with everything a page needs printed:
+
+    * Equations (1)-(40+): HTU/NTU decomposition, the volumetric mass transfer
+      coefficients beta_V a_Ph and beta_L a_Ph (eqs. 6-8), effective interfacial
+      area a_Ph/a below and above the loading point (eqs. 9, 14, 15), liquid
+      holdup h_L (eqs. 11-13), pressure drop dp/H with the resistance
+      coefficient psi_L (eqs. 28-30), and the loading and flooding points
+      (eqs. 31-40).
+    * Table 1 (p. 499): the range of material properties and column loads over
+      which the method was fitted - gas load factor, liquid load, densities,
+      viscosities, surface tension and diffusion coefficients, each with its
+      range for each of the four predicted quantities - plus the number of
+      substance systems examined (13 loading/flooding, 20 holdup, 25 pressure
+      drop, 46 mass transfer).
+    * Table 2a and 2b (pp. 501-502): THE PACKING CONSTANTS. Roughly fifty dumped
+      packings and the arranged packings, each with size, N, a, epsilon, and the
+      six packing-specific constants C_S, C_Fl, C_h, C_P0, C_L, C_V. This is the
+      table the correlation is useless without, and it is printed in full and
+      cleanly legible.
+    * Table 3 (p. 503): THE AUTHORS' OWN ACCURACY BENCHMARK - average relative
+      deviations of the model equations against their database: loading and
+      flooding point 5%, column holdup 6.7%, pressure drop 9.1%, mass transfer
+      efficiency 12.4% (absorption and desorption) and 14.1% (rectification).
+      That is a ready-made `report_agreement` target and a ready-made honesty
+      check: a page reporting better agreement than 5% on flooding is reporting
+      something the authors did not claim.
+
+  Everything above is a PRINTED TABLE. No figure digitisation is needed, so no
+  maintainer is needed.
+
+what_is_missing: >
+  The 1993 half of the catalogue's citation (Billet & Schultes, Chem. Eng. Res.
+  Des. 71) is NOT on disk. The 1999 paper is an UPDATED SUMMARY of the same
+  method and supersedes it for the equations, so this is not a blocker - but do
+  not cite the 1993 paper as read, and note that the underlying experimental
+  database (over 3500 measured data, more than 50 test systems, over 70 packings,
+  per the Introduction) is NOWHERE in this paper. There are no raw data here,
+  only the fitted constants and the aggregate deviations of Table 3.
+
+validation_route: printed tables (Table 2a/2b constants; Table 3 deviations as the agreement target)
+notes: >
+  Strong candidate for a combined A3.9 + A3.10 page: Rocha-Bravo-Fair (A3.10,
+  also unblocked 2026-08-05) covers structured packings and Billet-Schultes
+  covers both dumped and arranged, so the two overlap on arranged packings and
+  can be overlaid on one holdup/pressure-drop axis. That is the A1 "one page,
+  four correlations, one dataset" pattern the catalogue recommends. Decide scope
+  before dispatching two builders.
+updated: '2026-08-05'

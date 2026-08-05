@@ -5,33 +5,106 @@ catalog_reference: Ind. Eng. Chem. 58 (1966)
 priority: P1
 tier: T0
 structures: ''
-status: needs-paper
+status: unclaimed
 reference:
   authors:
   - Fuller, E. N.
   - Schettler, P. D.
   - Giddings, J. C.
   year: 1966
-  title: A new method for prediction of binary gas-phase diffusion coefficients
+  title: A New Method for Prediction of Binary Gas-Phase Diffusion Coefficients
   container: Industrial & Engineering Chemistry 58(5) 18-27
   doi: 10.1021/ie50677a007
+  affiliation: University of Utah (J. C. Giddings, Professor of Chemistry; E. N. Fuller
+    and P. D. Schettler, graduate and postdoctoral fellows)
 paper:
-  on_disk: null
+  on_disk: ie50677a007.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall. CrossRef
-    could not resolve a DOI confidently from the catalogue citation either, so the citation
-    below is as the catalogue records it.
-  artifacts: []
-notes: ACS. Note there is a published erratum, 10.1021/ie50680a601, "Errata - A New Method
-  for Predicting Gas Diffusivities", Ind. Eng. Chem. 58 (1966) — request both, and check the
-  diffusion volumes against it.
-updated: '2026-08-02'
-doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then
-  checked field by field against the Crossref record: title, container, volume, issue, page
-  range and year all agree with the catalogue''s own citation string. NOT verified against
-  the document itself, because no copy could be obtained; the builder must still confirm the
-  title page when the PDF arrives, as on F3.5 and G1.7.'
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own title block: "EDWARD N. FULLER /
+    PAUL D. SCHETTLER / J. CALVIN GIDDINGS / A NEW METHOD FOR PREDICTION OF
+    BINARY GAS-PHASE DIFFUSION COEFFICIENTS", in INDUSTRIAL AND ENGINEERING
+    CHEMISTRY. The ACS download stamp on every page reads
+    "pubs.acs.org/iechad/article-pdf/58/5/18/10923705/ie50677a007.pdf", which
+    fixes volume 58, issue 5, first page 18; the file is 10 pp, so 18-27, matching
+    the catalogue exactly. Complete - it ends in the Conclusion. `ie50677a007.pdf`
+    is an opaque ACS article id and tells you nothing on its own.
+doi_source: >
+  UPGRADED from crossref-verified to VERIFIED AGAINST THE DOCUMENT, 2026-08-05.
+  The 2026-08-02 note said "the builder must still confirm the title page when
+  the PDF arrives, as on F3.5 and G1.7" - that has now been done. The PDF's own
+  Keywords metadata carries "article doi: 10.1021/ie50677a007", the download
+  stamp carries the same string, and the printed title, authors, volume, issue
+  and page range all agree with the Crossref record field by field.
+blocker: null
+
+still_needed: >
+  THE ERRATUM IS NOT ON DISK. The 2026-08-02 note on this case flagged a
+  published erratum - 10.1021/ie50680a601, "Errata: A New Method for Predicting
+  Gas Diffusivities", Ind. Eng. Chem. 58 (1966) - and asked for both documents.
+  Only the article arrived. Checked: the 10 pages contain no correction notice
+  and the strings "errata"/"erratum" do not occur.
+  CONSEQUENCE, and it is not a blocker but it must reach the page: the ATOMIC
+  DIFFUSION VOLUMES are exactly what an erratum to this paper would correct, and
+  they are the whole content of the correlation. Build the page, transcribe the
+  volumes off the page image, and say on the page that a 1966 erratum exists and
+  has not been consulted. Do not silently apply a "corrected" table from memory -
+  that is the fabrication route for this case.
+
+text_layer:
+  quality: >
+    THE BEST SCAN IN THE 2026-08-05 BATCH, and the only one that is not bilevel.
+    Prose is clean (6.0 k chars/page) and - unusually for a pre-1980 paper - the
+    DIFFUSION-VOLUME TABLE SURVIVES OCR WITH ITS DECIMAL POINTS INTACT
+    ("16.5, 1.98, 5.48, 5.69, 19.5, 17.0, -20.2, 7.07, 6.70, 2.88, 17.9, 16.6,
+    20.1, 5.59, 16.1, 22.8, 37.9, 18.9"). EQUATIONS still degrade
+    ("MOW1'3 + CSX>1/3]2" for the (V^1/3 + V^1/3)^2 denominator), so transcribe
+    those from the image. Verify the table against the image anyway - a table
+    that looks right is the failure mode Robeson 1991 exists to warn about.
+  render_at: >
+    300 dpi, or pull the images directly with `pdfimages -png`. Unlike everything
+    else in this batch the page images are JPEG RGB (8 bpc) at 300 x 300 ppi, so
+    a 600 dpi render at least interpolates smoothly rather than inventing grey on
+    a 1-bit stencil - but 300 ppi is still the native ceiling.
+
+what_it_carries: >
+  * The correlation itself, with its special "diffusion volumes" and the
+    additive-atomic-volume scheme, derived from the Stefan-Maxwell hard-sphere
+    model.
+  * The atomic and molecular diffusion volume table - the constants without
+    which the correlation cannot be evaluated.
+  * A COMPARISON AGAINST EIGHT OTHER CORRELATIONS with printed average errors,
+    summarised in Table II and detailed in Table III. Numbers quoted in the
+    Conclusion that a page can reproduce and check against: the diffusion-volume
+    correlation gives the best fit to the data used; the Hirschfelder-Bird-Spotz
+    method averages 6.4 % error; using estimated force constants the average is
+    8.9 %, or 5.4 % excluding the starred points; the Gilliland method is "the
+    most erratic".
+  * The authors' own honesty caveat, which the page must repeat: "the present
+    method can be no more reliable than the diffusion data used in its
+    development. Any systematic errors in the data would be reflected in the
+    atomic diffusion volumes."
+
+  Printed-table validation route throughout. No maintainer needed.
+
+related_on_disk: >
+  `ie50546a056.pdf` = Wilke, C. R. & Lee, C. Y., "Estimation of Diffusion
+  Coefficients for Gases and Vapors", Ind. Eng. Chem. 47(6) 1253-1257 (1955).
+  It is on disk, it maps to NO catalogue case of its own, and Fuller et al.
+  benchmark against it by name in their comparison ("Wilke and Lee's
+  modification of the HBS method is seen to improve results in some cases, but
+  the average overall error is increased by its use"). It is therefore a
+  legitimate secondary source for this page. IT IS NOT A4.1 - see
+  queue_cases/A4.1.yaml.
+  A4.6's source (Chapman & Cowling) is also on disk and gives the kinetic-theory
+  route the Hirschfelder-Bird-Spotz column of Fuller's comparison rests on, plus
+  its own Table 22 of measured D12 for ~45 gas pairs. A combined A4.5 + A4.6
+  page - one measured-D12 axis, the Chapman-Enskog prediction and the
+  Fuller-Schettler-Giddings prediction overlaid - is the strongest single
+  opportunity this batch creates. Decide scope before dispatching two builders.
+
+validation_route: printed tables (diffusion volumes; Tables II and III comparison errors)
+notes: >
+  T0/P1 - the highest-priority case unblocked by the 2026-08-05 batch.
+updated: '2026-08-05'

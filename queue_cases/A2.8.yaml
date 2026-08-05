@@ -5,18 +5,68 @@ catalog_reference: Chem. Eng. Sci. 11 (1959)
 priority: P2
 tier: T0
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors: ["Zwietering, Th. N."]
+  year: 1959
+  title: The degree of mixing in continuous flow systems
+  container: Chemical Engineering Science 11(1) 1-15 (1959)
+  affiliation: Staatsmijnen in Limburg, Centraal Laboratorium, Geleen, The Netherlands
+  received: 1 August 1958
+  note: >
+    PAGE RANGE CORRECTION. This paper is commonly cited as "11, 1-11". It is not:
+    the running head continues to a printed folio 15 on the last page, which
+    carries equations (II, 11) and (II, 12) and the three-item reference list.
+    Read off the page image, not the OCR. The catalogue string ("Chem. Eng. Sci.
+    11 (1959)") is not wrong, only incomplete.
 paper:
-  on_disk: null
+  on_disk: 1-s2.0-0009250959800683-main.pdf
   open_access: null
-  checked: '2026-07-31'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
-notes: null
-updated: '2026-07-31'
+  checked: '2026-08-05'
+  identified_by: >
+    Opened on 2026-08-05 and read from its own first page, which prints
+    "CHEMICAL ENGINEERING SCIENCE / GENIE CHIMIQUE / VOL. 11 No. 1 / 1959 / The
+    degree of mixing in continuous flow systems / TR. N. ZWIETERING" (the "TR."
+    is an OCR artefact of "Th."). Full 15-page article, not a preview. The
+    abstract is printed three times - English, French and German; the body is
+    English.
+blocker: null
+
+text_layer:
+  quality: >
+    BAD, AND DANGEROUS IN A SPECIFIC WAY. Acrobat 3.0 Capture over CCITT-G4
+    bilevel images. The Greek tau is systematically OCR'd as the DIGIT 7:
+    "xi(lambda) = tau" on the page comes back as "4th) = 7", "(tau/2)" as "7/2",
+    "2 tau" as "27", "t/tau" as "t/l". A reader who trusts the text layer will
+    silently substitute numbers for the paper's central symbol. Every equation
+    must be read off a page image.
+  render_at: >
+    300 dpi. The page images are CCITT-G4 bilevel at 300 x 300 ppi native, so
+    600 dpi is interpolation.
+
+what_it_carries: >
+  The two bounds the case is for, in full and by name.
+    * The life-expectation distribution is defined alongside Danckwerts' age
+      distribution, and the state of MAXIMUM MIXEDNESS is defined for an
+      arbitrary known RTD - explicitly as the opposite extreme to Danckwerts'
+      COMPLETE SEGREGATION. So both bounds are named and attributed in the
+      source, not merely present (the E1.1 test passes).
+    * The conversion is computed for both cases for a reaction of arbitrary
+      order, giving the two limits between which the real conversion must lie -
+      which is precisely what the catalogue asks the case to predict.
+    * The worked example is a series of ideal mixers, integrated "for different
+      values of K, viz. 5, 10, 20 and 30" (book p. 12), which gives the page a
+      set of specific cases to reproduce.
+  It is a THEORY paper: there is no experimental dataset. Validation must be by
+  analytical limit and bound - the two extremes must bracket every intermediate
+  model, both must collapse onto the same answer for a first-order reaction, and
+  the maximum-mixedness result must reduce to the CSTR answer for an exponential
+  RTD (which the paper's own eq. (II, 12) states: xi(lambda) = tau).
+
+validation_route: analytical bounds (no dataset in the paper; none needed)
+notes: >
+  A2.1 (Danckwerts 1953) is already published and its paper is on disk, so the
+  segregation bound has a source page to cross-check against. Worth reading
+  A2.1's page before building this one - AGENTS.md's "loading another page's
+  dataset means reading that page" applies if any of its RTD numbers are reused.
+updated: '2026-08-05'
