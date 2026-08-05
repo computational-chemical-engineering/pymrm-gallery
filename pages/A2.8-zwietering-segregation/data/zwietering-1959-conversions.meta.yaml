@@ -1,0 +1,95 @@
+dataset_id: zwietering-1959-conversions
+title: "Tables 1 and 2 - ce/c0 for a second-order reaction under four states of mixing"
+status: complete
+
+source:
+  authors:
+    - "Zwietering, Th. N."
+  year: 1959
+  title: "The degree of mixing in continuous flow systems"
+  container: "Chemical Engineering Science 11(1) 1-15"
+  doi: 10.1016/0009-2509(59)80068-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+  page_range_note: >
+    The article is almost universally cited as "11, 1-11". It is not. The last
+    page carries the printed folio 15 and holds eqs (II, 11) and (II, 12) and the
+    three-item reference list; the PDF has fifteen pages and the printed folios
+    run 1 to 15 without a gap. Verified by reading the folio off 300 dpi renders
+    of pages 1 and 15. The catalogue string "Chem. Eng. Sci. 11 (1959)" is
+    incomplete rather than wrong.
+
+acquisition:
+  method: table
+  figure: "Tables 1 and 2, journal page 11 (PDF page 11)"
+  tool: "poppler pdftoppm at 300 dpi (native), then cropped and re-read at 2x and 4x"
+  procedure: >
+    Read off page images, never from the text layer. The scan is Acrobat 3.0
+    Capture over CCITT-G4 bilevel images at 300 x 300 ppi native, so 300 dpi is
+    the correct render resolution and 600 dpi would be interpolation. The text
+    layer is actively dangerous here: the Greek tau is systematically OCR'd as
+    the DIGIT 7, so "xi(lambda) = tau" comes back as "4th) = 7". The 1959
+    typesetting also uses a raised mid-dot decimal separator - every value is set
+    as 0.298 with a mid dot - so each numeric cell was cropped out of the
+    full-page render and re-read at 2x and again at 4x for the J column and the
+    two leftmost columns, where 3 and 8 are the confusable pair in this face.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond Zwietering's own rounding: every cell is printed to three
+    decimals. His own computational error is a separate matter and is quantified
+    on the page.
+
+validation:
+  internal_consistency: >
+    THE CONVERSION BODIES OF THE TWO TABLES ARE INTERCHANGED WITH RESPECT TO
+    THEIR CAPTIONS. This is established from the paper's own printed closed
+    forms, with no model of ours involved.
+
+    Eq. (42), ce/c0 = [-1 + sqrt(-1 + 2 sqrt(1+2K))]/K, is derived on the same
+    page from eq. (41), whose 2/tau makes it unambiguously the TWO-vessel result.
+    Evaluated at K = 3, 5, 10, 20, 30, 50 it gives 0.357, 0.275, 0.186, 0.122,
+    0.094, 0.067 - which is Table 2's "3 real, ideally mixed vessels" row, all
+    six cells, exactly. Table 1's corresponding row reads 0.326 ... 0.049.
+
+    Eq. (38), derived from eq. (32) - the two-vessel frequency function - gives
+    0.322, 0.232, 0.140, 0.080, 0.056, 0.035 for complete segregation: Table 2's
+    top row, five of six cells exactly (the sixth, 0.0355, Zwietering prints as
+    0.035 rather than 0.036). Eqs. (39)+(40), also two-vessel, give Table 2's
+    second row.
+
+    So all three of Table 2's algebraic rows are the two-vessel results, while
+    the caption says three. Reproducing every row of both tables from first
+    principles gives a worst deviation of 0.0045 over the 44 printed values under
+    the interchanged reading and 0.0353 under the caption reading, with 40 of 44
+    inside 0.001 in the first case and 0 of 44 in the second.
+
+    The J column does NOT move with the body: Table 1's J values are the
+    two-vessel ones and Table 2's the three-vessel ones, which is what their
+    captions say. Two of each are exact rationals, (n-1)/(n+5) and
+    1 - 6(n-1)/((n+1)(n+5)), and they land on 0.7143, 0.1429, 0.6250 and 0.2500.
+
+    The direction is also the physical one: three tanks are a narrower
+    residence-time distribution than two, and for a second-order reaction a
+    narrower distribution converts more, so the smaller ce/c0 belongs to the
+    three-tank table. Table 1 prints the smaller values.
+  what_it_tests: >
+    Nothing in this dataset is fitted. Every one of the 44 values is a prediction
+    from two integers - the number of tanks and kc0*tau - so the whole table is a
+    held-out test of the four mixing models, not a calibration set.
+
+not_transcribed:
+  - "The two dashes in each maximum-mixedness row (K = 3 and K = 50). Zwietering
+     did not integrate eq. (31) there; the page computes them instead and reports
+     them as an extension rather than as agreement."
+  - "Figures 1, 2 and 3 are schematics of reactor arrangements with no data on
+     them, and are not digitised. There is no experimental measurement anywhere
+     in this paper."
+
+columns:
+  - {name: table,          unit: "-", description: "1 or 2, the printed table number"}
+  - {name: caption_tanks,  unit: "-", description: "number of equal stirred tanks named in that table's own caption (2 or 3). NOT necessarily the RTD the ce/c0 values belong to - see validation.internal_consistency"}
+  - {name: row_label,      unit: "-", description: "the row label exactly as printed"}
+  - {name: mixing_state,   unit: "-", description: "machine key for the row: complete_segregation, real_segregated, real_ideally_mixed, maximum_mixedness"}
+  - {name: K,              unit: "-", description: "kc0*tau, Zwietering's eq. (35); the column heading"}
+  - {name: ce_over_c0,     unit: "-", description: "exit concentration divided by feed concentration, as printed to three decimals"}

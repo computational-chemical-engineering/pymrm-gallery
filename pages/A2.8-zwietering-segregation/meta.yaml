@@ -1,0 +1,130 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.8
+slug: zwietering-segregation
+title: "Zwietering's micromixing bounds: what a residence-time distribution cannot tell you"
+section: A
+status: published
+tier: T0
+priority: P2
+structures: [S1, S3, S5]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 37
+datasets:
+  - zwietering-1959-conversions.csv
+  - zwietering-1959-segregation-degree.csv
+
+fit_or_test: >
+  ENTIRELY TEST, with zero fitted quantities. The model has exactly one input,
+  the dimensionless group K = k c0 tau, and it is read from Zwietering's own
+  column heading. Nothing is calibrated, no constant is adjusted, no property is
+  looked up, and no figure is digitised. All 44 printed conversions and all 8
+  printed degrees of segregation are held-out predictions from two integers - the
+  number of tanks and K. The one place where a choice was made is the assignment
+  of each table's conversion body to a residence-time distribution, and that
+  choice is decided by three closed forms Zwietering printed himself rather than
+  by which assignment scores better; both assignments are scored and both numbers
+  are reported.
+
+validation:
+  - "all 44 printed values of ce/c0 in Tables 1 and 2 reproduced with zero fitted parameters: worst 4.5e-03, rms 8.3e-04, 40 of 44 inside 0.001 - against 3.5e-02 worst and 0 of 44 inside 0.001 if the tables are read as captioned"
+  - "the interchange of the two tables' conversion bodies established from Zwietering's OWN printed closed forms and no model of ours: eq. (42), derived from eq. (41)'s 2/tau and therefore unambiguously the two-vessel chain, reproduces Table 2's ideally-mixed row to 4.1e-04 and Table 1's only to 3.3e-02; eq. (38) gives 5.3e-04 against 2.4e-02 and eqs. (39)+(40) give 7.7e-04 against 2.1e-02. The J column does NOT move with the body, which is what makes it an interchange rather than a relabelling"
+  - "the maximum-mixedness value computed a SECOND, independent way - conservative finite volume with a van Leer deferred correction and a Newton solve, against the non-conservative eq. (31) integrated as an initial-value problem by DOP853 with no grid and no flux - agreeing to 8.6e-07 over twelve cases, which is 0.02 % of the deviation being measured against Zwietering's own numbers"
+  - "BOTH refinement axes measured, not one: grid at observed order 2.00 with the deferred correction and 1.00 with bare upwind, and domain truncation decaying at 8.44 per unit of X so that at the production X = 6 it is 4.1e-15, a factor 2e8 below the grid error. The truncation decay is predicted rather than fitted - a perturbation at X is damped by exp(-int mu dx) with mu = 2 K gamma + E/w and the far-field error itself falls like 1/X - and observed over predicted lands within 8 % across four windows. The reference solver's tolerance is a third axis, converged to 2.6e-14"
+  - "four analytical limits, each able to fail: the exponential RTD collapsing onto the stirred-tank root (his eq. II,12) to 3.5e-14; a first-order reaction collapsing both bounds onto (1+K/n)^-n to 3.5e-14 - the two routes share the RTD functions, so the anchor is the exact closed-form value, not route independence; the plug-flow limit closing the bracket from 83 % of the segregated value at 2 tanks to 4.0 % at 300; and the bracket REVERSING through order one, +8.3e-03 at p = 1.1 and -7.4e-03 at p = 0.9"
+  - "seven of the eight printed degrees of segregation reproduced to 4.3e-05, four of them as exact rationals - (n-1)/(n+5) and 1 - 6(n-1)/((n+1)(n+5)) give 1/7, 1/4, 5/7 and 5/8 against the printed 0.1429, 0.2500, 0.7143 and 0.6250. J is a property of the RTD and the mixing state alone, so this exercises the age and life-expectation machinery that the conversion columns never touch"
+  - "how tight the bounds actually are, measured rather than asserted: the widest of the twelve printed cases is 2.12x (two tanks, K = 50) and the narrowest 1.12x, and Zwietering's two INTERMEDIATE reactors occupy mu = 0.23 to 0.85 of the band, coming no closer than 0.15 of the bracket width to either bound. So the bracketing check can fail"
+  - "defect-injection table of fifteen rows. All five physics defects move the answer by at least 2.5e-02 and all five discretisation defects by at least 3.1e-05, against a reported precision of 8.6e-07. Deleting the side feed and dropping to first order both push the answer BELOW the segregation bound, so the bracket catches them unaided"
+  - "STRUCTURAL and labelled as such: Zwietering's Appendix I variance identity, var alpha = var between + var within, closes to 6.1e-16, but his appendix proves it must, and the two sides share alpha_P so it tests the mean consistency of alpha_P and not its shape"
+  - "UNTESTED and labelled as such: the far-field boundary condition. Replacing the root of K g^p + n(g-1) = 0 by g = 1 moves the answer by 5.9e-07, which is the grid error - nothing at all. The backward integration is contracting, so by x = 6 every trace of the starting value is gone. Shortening the domain to X = 0.5 makes the same defect worth 2.1e-02, which is what proves the insensitivity belongs to the domain length and not to the check"
+
+adds: >
+  Nothing to the physics. Zwietering's bounds are right, his four states of mixing
+  are correctly formulated, and 40 of his 44 printed conversions are reproduced to
+  within 0.001 - the four that are not being the four cells of the one row he had
+  to integrate by hand.
+
+  What is new is arithmetic he could not afford in 1959, and three things that
+  follow from it. First, the conversion bodies of Tables 1 and 2 are interchanged
+  with respect to their captions - established from three closed forms he printed
+  himself, confirmed by the physical ordering (three tanks are a narrower RTD and
+  must convert more), and pinned down by the J column not moving with the body.
+  Second, his own hand-integration error is measurable: his two-tank
+  maximum-mixedness row carries a systematic +1.10 % bias, all four printed deviations of
+  one sign, while his three-tank row is exact to the printed precision and every
+  algebraic row in both tables is inside one unit in his last printed decimal. Third, the four em dashes are
+  filled in - he integrated eq. (31) only for K = 5, 10, 20 and 30, and the K = 50
+  two-tank value, 0.0753 against a segregated 0.035, is the widest bracket in
+  either table.
+
+  The pymrm-shaped contribution is the reformulation. Eq. (31) is normally
+  presented and solved as an initial-value problem in life expectancy. Written
+  conservatively as div(v gamma) = E - K w gamma^p with v = -w it is an ordinary
+  convection-reaction boundary-value problem with a decaying velocity field and a
+  distributed side feed - construct_convflux_upwind, construct_div and a pointwise
+  NumJac source - so the life-expectation coordinate behaves like any other
+  spatial axis and the van Leer deferred correction applies unchanged and delivers
+  second order.
+
+agreement: >
+  Not applicable in the experimental sense; this is a tier 6 analytical page and
+  the source contains no measurement of any kind. The strongest check is the 44
+  printed conversions, reproduced with zero fitted parameters to a worst 4.5e-03
+  and an rms 8.3e-04, with 40 of 44 inside one unit in his last printed decimal. The
+  check with the most resolution is the second independent computation of the
+  maximum-mixedness value, 8.6e-07 between a conservative finite-volume solve and
+  a gridless adaptive integration of the non-conservative form. The check with the
+  most power over the RTD machinery is the degree of segregation, seven of eight
+  to 4.3e-05 including four exact rationals. The headline result the page exists
+  for is not an agreement at all but a width: the two bounds differ by a factor
+  2.12 at the widest of Zwietering's twelve cases, and both of his intermediate
+  reactors sit well inside that band.
+
+caveats: >
+  Tier 6, and emphatically NOT experimental validation. Zwietering 1959 measures
+  nothing; its three figures are schematics of pipe-and-tank arrangements and
+  nothing is digitised. Every number here is checked against his arithmetic or
+  against an analytical limit.
+
+  The bounds are not shown to be ATTAINABLE by a real vessel. Both extremes are
+  imaginary reactors. What the page shows is that two ordinary reactors with the
+  same RTD sit at 0.23 and 0.70-0.85 of the band; whether anything physical
+  approaches either edge is not addressed here or in the paper.
+
+  One printed value is not reproduced and is not repaired. The three-tank degree
+  of segregation under maximum mixedness computes to 0.080296 against the printed
+  0.0831, a 3.4 % discrepancy. The two-tank companion reproduces to four decimals
+  and Appendix I's variance identity closes to 6.1e-16, so the quadrature is
+  probably right and the printed value probably a slip - but the page says
+  "probably" and adjusts neither number.
+
+  The interchange of the tables is an inference about typesetting, not about
+  physics. The evidence is strong and paper-internal, but what happened in 1959 is
+  not recoverable, and the page scores both readings rather than only the one it
+  argues for.
+
+  The far-field boundary condition is untested, not weakly tested. Measured, it
+  makes no difference whatsoever at the production domain length. The page says so
+  and does not claim it as a check.
+
+  Six of the reported metrics sit below check_agreement.py's ABS_FLOOR of 1e-12
+  and are therefore outside the CI regression suite entirely - the first-order
+  collapse and the variance identity among them. The page names all six such
+  metrics explicitly and shows, by injection, what the first-order collapse can
+  still catch (corrupting E/w lifts it eleven orders).
+
+  A2.4, tanks in series, is not built, so the residence-time distributions used
+  here have no page of their own to cross-check against; they are analytic Erlang
+  distributions verified in place. No other page's dataset is loaded: A2.1
+  publishes none, and the dispersion data on A2.3, A2.5 and A2.6 bear on measured
+  RTDs rather than analytic ones. The one sibling finding that does bear on this
+  page is A2.6's outlet-face trap, and it is measured in the break table.
+
+  The page range is 11(1), 1-15, not the 1-11 that is universally cited. Read off
+  the printed folio on a 300 dpi render of the last page.

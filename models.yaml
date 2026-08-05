@@ -897,6 +897,135 @@ models:
       exists to show - is NOT tested, because the gallery has no liquid-phase
       dispersion dataset. That is the single most valuable extension.
 
+  - id: A2.8
+    slug: zwietering-segregation
+    title: "Zwietering's micromixing bounds: what a residence-time distribution cannot tell you"
+    description: >
+      Complete segregation and maximum mixedness are the two extremes of micromixing
+      compatible with a given residence-time distribution, so for any reaction order
+      other than one they bracket the achievable conversion. The page reproduces all
+      44 conversions and all 8 degrees of segregation Zwietering printed, with zero
+      fitted parameters, and then asks the question the bounds exist to answer: how
+      wide is the bracket? It is wide, and it widens with reaction rate - a factor
+      2.12 between the two bounds at kc0*tau = 50 for a two-tank RTD, with both of
+      Zwietering's intermediate reactors sitting well inside it. His eq. (31) is
+      recast as a conservative convection-reaction problem in the life-expectation
+      coordinate, which turns a delicate backward integration into an ordinary pymrm
+      boundary-value problem, and it is checked against a gridless independent
+      integration to 8.6e-07. On the way, the conversion bodies of his Tables 1 and 2
+      turn out to be interchanged with respect to their captions - proved from three
+      closed forms he printed himself.
+    section: A
+    status: published
+    page: pages/A2.8-zwietering-segregation/
+    tier: T0
+    priority: P2
+    structures:
+      - S1
+      - S3
+      - S5
+    phases:
+      - liquid
+    predicts:
+      - the lower bound on exit concentration for a given RTD (complete segregation)
+      - the upper bound on exit concentration for a given RTD (maximum mixedness)
+      - conversion for n stirred tanks in series, each internally segregated
+      - conversion for n stirred tanks in series, each ideally mixed
+      - Danckwerts' degree of segregation J for each of those four states of mixing
+      - the width of the micromixing bracket as a function of reaction rate, RTD width and reaction order
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - interp_cntr_to_stagg_tvd
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - Zwietering, Th. N.
+      year: 1959
+      title: "The degree of mixing in continuous flow systems"
+      container: "Chemical Engineering Science 11(1) 1-15"
+      doi: 10.1016/0009-2509(59)80068-3
+      note: >
+        PAGE RANGE. Universally cited as 11, 1-11; it is 1-15. The last page carries
+        the printed folio 15 and holds eqs. (II, 11) and (II, 12) and the reference
+        list, and the printed folios run 1 to 15 without a gap. Verified on 300 dpi
+        renders of the first and last pages, not from metadata.
+    data:
+      tier: 6
+      method: "transcribed from 300 dpi page renders of Tables 1 and 2 (journal page 11); no figure digitised, because the paper contains no data figure"
+      status: complete
+    related:
+      - A2.1
+      - A2.3
+      - A2.4
+      - A2.5
+      - A2.6
+      - A2.9
+    note: >
+      Nothing is fitted anywhere on this page. The model takes one dimensionless
+      group, K = kc0*tau, straight from Zwietering's own column heading, so all 52
+      printed numbers are held-out predictions from two integers.
+
+      THE PRINTED DEFECT. The conversion bodies of Tables 1 and 2 are interchanged
+      with respect to their captions. This is established from the paper's own printed
+      closed forms and needs no model: eq. (42) is derived on the same page from
+      eq. (41), whose 2/tau makes it unambiguously the TWO-vessel ideally mixed chain,
+      and its six values are Table 2's third row exactly - Table 2 being captioned
+      three vessels. Eq. (38) (derived from eq. 32, the two-vessel frequency function)
+      and eqs. (39)+(40) land on Table 2's other two algebraic rows the same way.
+      Scored across all 44 values, the interchanged reading gives a worst deviation of
+      4.5e-03 with 40 of 44 inside 0.001; the caption reading gives 3.5e-02 with 0 of
+      44 inside 0.001. The physical ordering agrees (three tanks are the narrower RTD
+      and must convert more for a second-order reaction, and Table 1 prints the
+      smaller values), and the J column does NOT move with the body, which is what
+      makes this an interchange rather than a relabelling. The page scores both
+      readings and says what it cannot know.
+
+      A SECOND, SMALLER DEFECT, unresolved. Seven of the eight printed J values
+      reproduce, four of them as exact rationals. The eighth - maximum mixedness with
+      a three-tank RTD - computes to 0.080296 against the printed 0.0831. The two-tank
+      companion reproduces to four decimals and Appendix I's variance identity closes
+      to 6.1e-16, so the printed value is probably a slip, but the page does not
+      adjust either number.
+
+      ZWIETERING'S OWN INTEGRATION ERROR is measurable and is measured. Every
+      algebraic row in both tables is inside his three-decimal rounding. The only row
+      that is not is the maximum-mixedness row for the two-tank RTD - the one case he
+      had to integrate eq. (31) by hand - which carries a +1.10 % bias with all four printed
+      deviations of one sign. His three-tank maximum-mixedness row is exact to the
+      printed precision.
+
+      THE HEADLINE IS A WIDTH, NOT AN AGREEMENT. Over the twelve tabulated cases the
+      maximum-mixedness exit concentration runs from 1.12x to 2.12x the segregated
+      one, and the relative bracket WIDENS with K rather than closing - 13 % at K = 3,
+      112 % at K = 50 for two tanks. The bounds are not decoration: Zwietering's two
+      intermediate reactors occupy mu = 0.23 to 0.85 of the band and come no closer
+      than 0.15 of the bracket width to either edge, so a maximum-mixedness solve
+      wrong by more than that in the wrong direction would put a real reactor outside
+      its own bounds. The bracket closes only in the two places the theory says it
+      must: at reaction order one (to 3.5e-14 - the two routes share the RTD functions, so the anchor is the exact closed-form value, not route independence)
+      and in the plug-flow limit (4.0 % of the segregated value at 300 tanks).
+
+      TWO REFINEMENT AXES, both reported. Grid at observed order 2.00 with the van
+      Leer deferred correction and 1.00 with bare upwind; domain truncation decaying
+      at 8.44 per unit of X, hence 4.1e-15 at the production X = 6, a factor 2e8 below
+      the grid error. The truncation decay is predicted from the linearisation rather
+      than merely fitted and lands within 8 %.
+
+      WHAT THE PAGE SAYS IT CANNOT DO. The far-field boundary condition is untested -
+      replacing the root by gamma = 1 moves nothing at the production domain length,
+      and the page measures that rather than claiming the condition as a check.
+      Appendix I's variance identity is structural. Six metrics sit below
+      check_agreement.py's ABS_FLOOR and are named explicitly as outside CI.
+
+      A2.4 (tanks in series) is not built, so the RTDs used here have no page of their
+      own. No sibling page's CSV is loaded: A2.1 publishes none and the dispersion
+      datasets on A2.3, A2.5 and A2.6 concern measured rather than analytic RTDs. The
+      one sibling finding that transfers is A2.6's outlet-face trap, which is live
+      here (5.0e-04 on a uniform grid, 585x the reported precision) and is measured in
+      the break table rather than assumed away.
+
   - id: A2.3
     slug: taylor-aris-dispersion
     title: "Taylor–Aris dispersion"

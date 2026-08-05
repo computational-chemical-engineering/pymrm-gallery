@@ -1,0 +1,61 @@
+dataset_id: zwietering-1959-segregation-degree
+title: "The J column of Tables 1 and 2 - Danckwerts' degree of segregation for four states of mixing"
+status: complete
+
+source:
+  authors:
+    - "Zwietering, Th. N."
+  year: 1959
+  title: "The degree of mixing in continuous flow systems"
+  container: "Chemical Engineering Science 11(1) 1-15"
+  doi: 10.1016/0009-2509(59)80068-3
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "the J column of Tables 1 and 2, journal page 11, right of the double rule"
+  tool: "poppler pdftoppm at 300 dpi (native), J column cropped and re-read at 4x"
+  procedure: >
+    Read off a 300 dpi page image and then re-read from a 4x enlargement of the J
+    column alone, because the four-decimal values are where a misread digit would
+    be least recoverable and because 3 and 8 are the confusable pair in this
+    face - 0.7143 in particular reads as 0.7148 at page scale. The mid-dot
+    decimal separator is set as 0.7143. The text layer was not used.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "none beyond the printed four decimals"
+
+validation:
+  internal_consistency: >
+    Four of the eight values have exact closed forms that need no quadrature.
+    For n equal tanks in series, n vessels each ideally mixed on the molecular
+    scale give J = (n-1)/(n+5), which is 1/7 = 0.142857 and 2/8 = 0.2500; n
+    vessels each internally segregated with mixing at every junction give
+    J = 1 - 6(n-1)/((n+1)(n+5)), which is 5/7 = 0.714286 and 5/8 = 0.6250. All
+    four land on the printed values, and they land on the table whose CAPTION
+    matches - unlike the conversion bodies, which are interchanged.
+
+    The complete-segregation entry is 1.0000 by definition (the variance within a
+    point is zero), so it carries no information.
+
+    The remaining two are quadratures of Zwietering's eq. (28). The two-tank one
+    reproduces to four decimals: 0.027528 against the printed 0.0275. The
+    three-tank one does not: 0.080296 against the printed 0.0831, a 3.4 %
+    discrepancy that we cannot explain and do not repair. It is reported on the
+    page as an unresolved deviation, not absorbed.
+  what_it_tests: >
+    J is a property of the residence-time distribution and the state of mixing
+    alone - the reaction never enters it. Reproducing this column therefore tests
+    the age and life-expectation machinery of sections 3 to 7 of the paper, which
+    the conversion columns do not touch.
+
+not_transcribed:
+  - "Nothing. The J column is eight cells and all eight are here."
+
+columns:
+  - {name: table,         unit: "-", description: "1 or 2, the printed table number"}
+  - {name: caption_tanks, unit: "-", description: "number of equal stirred tanks named in that table's caption (2 or 3). For the J column the caption IS the right label - see validation.internal_consistency"}
+  - {name: row_label,     unit: "-", description: "the row label exactly as printed"}
+  - {name: mixing_state,  unit: "-", description: "machine key for the row"}
+  - {name: J,             unit: "-", description: "Danckwerts' degree of segregation, var(alpha_P)/var(alpha), eq. (18), as printed to four decimals"}

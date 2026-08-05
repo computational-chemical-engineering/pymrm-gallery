@@ -5,12 +5,14 @@ catalog_reference: Chem. Eng. Sci. 11 (1959)
 priority: P2
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/A2.8-zwietering-segregation/
 reference:
   authors: ["Zwietering, Th. N."]
   year: 1959
   title: The degree of mixing in continuous flow systems
   container: Chemical Engineering Science 11(1) 1-15 (1959)
+  doi: 10.1016/0009-2509(59)80068-3
   affiliation: Staatsmijnen in Limburg, Centraal Laboratorium, Geleen, The Netherlands
   received: 1 August 1958
   note: >
@@ -69,4 +71,55 @@ notes: >
   segregation bound has a source page to cross-check against. Worth reading
   A2.1's page before building this one - AGENTS.md's "loading another page's
   dataset means reading that page" applies if any of its RTD numbers are reused.
+staged_at: queue_cases/A2.8/page/
+models_entry: queue_cases/A2.8/models_entry.yaml
+built:
+  page_range_confirmed: >
+    1-15, from the printed folio on 300 dpi renders of PDF pages 1 and 15. The
+    PDF has fifteen pages and the folios run without a gap. The catalogue note
+    was correct.
+  validation_used: >
+    Better than the case yaml anticipated. The paper does NOT only carry
+    analytical bounds - journal page 11 holds TWO PRINTED TABLES with 44 values
+    of ce/c0 (four states of mixing x six values of kc0*tau x two RTDs, less four
+    em dashes) plus an eight-cell J column. That is the rank-3 "stated numerical
+    result" route, not the rank-2 "internal identity" route the case assumed, and
+    it was used as the primary check. The analytical limits were kept as
+    secondary checks and all four hold.
+  findings:
+    - >
+      THE CONVERSION BODIES OF TABLES 1 AND 2 ARE INTERCHANGED with respect to
+      their captions. Established from Zwietering's own printed closed forms and
+      no model: eq. (42), derived on the same page from eq. (41) whose 2/tau
+      makes it unambiguously the TWO-vessel ideally mixed chain, gives 0.357,
+      0.275, 0.186, 0.122, 0.094, 0.067 - which is Table 2's third row exactly,
+      Table 2 being captioned THREE vessels. Eq. (38) and eqs. (39)+(40), also
+      two-vessel, land on Table 2's other two algebraic rows. Over all 44 values
+      the interchanged reading gives worst 4.5e-03 and 40/44 inside 0.001; the
+      caption reading gives worst 3.5e-02 and 0/44. The J column does NOT move
+      with the body - Table 1's J values are the two-vessel ones, matching its
+      caption - so the finding is an interchange of the numeric bodies, not a
+      relabelling of the tables. The physical ordering agrees independently.
+    - >
+      The three-tank degree of segregation under maximum mixedness computes to
+      0.080296 against the printed 0.0831 (3.4 %). The two-tank companion
+      reproduces to four decimals and Appendix I's variance identity closes to
+      6.1e-16. UNRESOLVED and not repaired.
+    - >
+      Zwietering's own integration error is measurable. Every algebraic row in
+      both tables sits inside his three-decimal rounding. The only row outside it
+      is the maximum-mixedness row for the two-tank RTD - the one case he had to
+      integrate eq. (31) by hand - which carries a +1.10 % bias with all four printed
+      deviations of one sign. His three-tank maximum-mixedness row is exact to
+      the printed precision.
+    - >
+      The far-field boundary condition is UNTESTABLE at any sensible domain
+      length: replacing the root of K g^p + n(g-1) = 0 by g = 1 moves the answer
+      by 5.9e-07, i.e. by the grid error. Zwietering says as much in words; the
+      page turns it into a measurement and refuses to claim the condition as a
+      check.
+  text_layer_confirmed: >
+    The tau -> digit 7 substitution is real and pervasive. Every equation and
+    every number on the page was read from cropped 300 dpi renders at 2x, with
+    the four-decimal J column re-read at 4x.
 updated: '2026-08-05'
