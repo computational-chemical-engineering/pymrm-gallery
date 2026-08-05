@@ -5,7 +5,8 @@ catalog_reference: Chem. Eng. Sci. 42 (1987)
 priority: P1
 tier: T1
 structures: S6
-status: ready
+status: published
+page: pages/A2.6-gunn-dispersion-correlations/
 reference:
   authors:
   - Gunn, D. J.
@@ -151,14 +152,29 @@ key_numbers:
     here, gives 11.7495 % and +0.0031 % - reproducing A2.5's published 11.75 %
     and +0.003 % to 1e-05 absolute
   nulls: >
-    24.88 % with p frozen at 0.17 (p(Re) deleted), 67.63 % with p frozen at 0.50
-    (the mixing-cell picture), 23.16 % with eq. (1)'s second term dropped, 29.91 %
-    for E&R's uncorrected eq. (15)
+    22.96 % with p a FREE constant, p = 0.0793 - the strongest null and the one
+    the page reports against, because anything weaker flatters p(Re). Also
+    24.88 % with p frozen at 0.17, 67.63 % with p frozen at 0.50 (the mixing-cell
+    picture), 23.16 % with eq. (1)'s second term dropped, 29.91 % for E&R's
+    uncorrected eq. (15)
+  fit_set_overlap: >
+    PROBABLY OUT OF SAMPLE, argued from printed text rather than assumed. Gunn
+    1987 p. 365 says p was estimated from experiments "in which the effect of
+    molecular diffusion was very small"; Gunn 1993 p. 335 says that meant
+    liquid-phase measurements, ReSc >> 1, for all three shapes [2, 5] = Gunn 1969
+    and Gunn 1987, with gas-phase results used "to compare". These markers are gas
+    phase at Sc = 0.77 with ReSc = 0.0066 to 37.8, median 1.40, 26 of 55 below 1
+    and 47 of 55 below 10. The 1987 paper attributes eqs (4)/(5) to England & Gunn
+    (1970) and eq. (3) to nothing, and says E&R's estimates "are well supported by
+    eq. (1)". Not provably held out either, and the page does not upgrade the word
   what_the_markers_cannot_resolve: >
-    deleting p(Re) altogether costs 4.6 percentage points, while the UNPRINTED
-    porosity moves the headline 9.1 points between eps = 0.34 and 0.40 - twice as
-    much - and monotonically, so these data would prefer a looser bed than 0.37.
-    Nothing on the page separates a porosity error from a model error
+    deleting p(Re) costs 2.7 percentage points against the strongest null at
+    eps = 0.37, and 4.6 points when each model is given the porosity it prefers
+    (16.38 % at eps = 0.443 against 21.01 % at 0.433). The UNPRINTED porosity
+    moves the headline 9.1 points between eps = 0.34 and 0.40, 3.4 times as much,
+    and does so NON-monotonically: there is an interior minimum at eps = 0.4429,
+    MAD 16.38 %, and the residual rises again above it. Nothing on the page
+    separates a porosity error from a model error
   solver_eq17: 7.454e-07 at n_z = 800, observed order 1.99; STRUCTURALLY BLIND to nu, n_r and D_R
   solver_bessel_mode: >
     2.896e-05 at (800, 80), observed order 2.00 refining both axes, against a 2-D
@@ -166,41 +182,64 @@ key_numbers:
     factors x2646 on nu = 0, x252 on n_r = 5, x64 on bare upwind, x23 on a
     zero-gradient outlet, x559 on a Dirichlet inlet
   solver_pair_blind_spot: >
-    a 10 % error in D or D_R moves the two checks by 0.0 % and 6.3 %, against the
-    factor of four they move for one grid halving. The transport coefficients are
-    invisible to both, because the closed form is built from the same numbers -
-    stated on the page, not left to look like evidence
+    a 10 % error made CONSISTENTLY in D or D_R - operator, lam, k_eff and the
+    closed form together - moves the two checks by 0.0 % and 6.3 %, against the
+    factor of four they move for one grid halving. A coefficient wrong everywhere
+    is invisible to both, because the closed form is built from the same numbers.
+    The same 10 % injected into the OPERATOR ALONE, reference held fixed, moves
+    V5a x1369 and V5b x53.7 for D, and V5b x445 for D_R while leaving V5a at
+    exactly 1. Both experiments are on the page; the earlier draft labelled the
+    consistent rows "in the operator only", which is what they are not
   wall_channel: >
     reading Price's superficial 1.65 as INTERSTITIAL raises unconverted reactant
     leaving a 100-diameter bed by +5.46 % with no radial mixing and +1.16 % with
     eq. (9)'s coefficient, so radial dispersion erodes 79 % of the channel. Gunn's
     own corrected 1.0175 moves it by +0.001 %
   outlet_boundary_condition: >
-    the zero-gradient outlet reports +0.92 % too much unreacted material, and that
+    the zero-gradient outlet reports +1.03 % too much unreacted material, and that
     number is IDENTICAL from L/d = 5 to L/d = 200. What length buys is the
-    interior: the same error 4 diameters in falls from +0.13 % to 9.3e-08 to
-    exactly zero in double precision. Over a 400-fold sweep in kL/U the outlet
-    error is 0.79 to 0.89 times lambda D/U
+    interior: the same error 4 diameters in falls from +0.15 % to 9.4e-08 to
+    4.4e-16 at L/d = 20 - one unit in the last place - and to a true zero beyond.
+    Over a 400-fold sweep in kL/U the outlet error is 0.911 to 0.998 times
+    lambda D/U
+  second_independent_computation: >
+    V8. Two reactor numbers recomputed with scipy solve_bvp collocation, a
+    different mesh in a different solver, the reference asserting status == 0 and
+    its own rms residuals (worst 1.0e-10). The wall-channel cost with radial
+    dispersion off agrees to 1.4e-04 relative, which is the only check on the page
+    that reads the velocity profile, the area weights and the mixing-cup
+    weighting - V5a and V5b both run a uniform profile. The outlet-condition error
+    did NOT agree: it had been read at the last cell CENTRE, h/2 short of z = L,
+    and since eq. (18) and the zero-gradient outlet differ in outlet gradient by
+    construction the offset does not cancel in their ratio. That made the metric
+    11.4 % low and no break row could have found it. Read at the FACE at
+    h = 1/32 d it is 1.0339 % against the collocation 1.0353 %, -0.13 %
   table1: >
     worst within-row spread 16.0 %, mean 10.6 %, over four grades and three
     independent methods; mean of the ten entries 0.0970 against the paper's own
     "about 10 % of molecular". The isobaric counter-diffusion column is the
     largest on 4 of 4 rows (one-sided sign test p = 0.0625) - printed, not claimed
   metrics_below_abs_floor: >
-    NONE. All 39 reported metrics are above check_agreement.py's ABS_FLOOR of
+    NONE. All 51 reported metrics are above check_agreement.py's ABS_FLOOR of
     1e-12; the smallest is 8.7e-11. The notebook prints this check itself
 
 break_table:
-  solver_rows: 8
-  correlation_rows: 17
+  solver_rows: 9
+  correlation_rows: 20
   note: >
     Two families, because they fail under disjoint defects and neither
     substitutes for the other. Every metric on the page has a row that moves it
     except two, which are labelled structural on the page: the cross-document
     identity against eq. (42), and eq. (17) substituted back into eq. (16).
-    Three more are guarded by a family rather than an individual row (the three
-    nulls, the two porosity points, and the recomputation of A2.5's published
-    headline, which is guarded by A2.5's own break table).
+    Several more are guarded by a family rather than an individual row (the four
+    nulls, the porosity points and the optimum, and the recomputation of A2.5's
+    published headline, which is guarded by A2.5's own break table), and four by
+    a second independent computation of the same quantity, which is stronger.
+
+    Rows added after adversarial review: p_offset 0.17 read as 0.11 (Peclet limit
+    2 -> 1.571), the wall region 0.5d read as 1.0d (wall-channel cost +168 %), the
+    Danckwerts inlet written with the local u(r) instead of the area mean
+    (-1.1 %), and the two genuine operator-only coefficient injections.
 
     The sharpest correlation rows: eq. (1)'s second term dropped moves the
     high-Re limit check by 1.4e7; alpha_1 taken as the first root of J_1 instead
@@ -212,17 +251,18 @@ break_table:
 
 what_the_page_cannot_conclude:
 - >
-  That eq. (1) is validated against measurement. The comparison is a goodness of
-  fit with PARTIAL overlap - Gunn fitted p(Re) to a body of sphere and cylinder
-  data that includes E&R's points - at a porosity nobody printed, and deleting
-  p(Re) altogether costs less than a plausible porosity error.
+  That eq. (1) is validated against measurement. It is compared against 55
+  digitised markers at a porosity nobody printed, and deleting p(Re) costs less
+  than a plausible porosity error. The markers are PROBABLY outside the set Gunn
+  estimated p(Re) from - see fit_set_overlap - but "probably outside" is not "held
+  out", and the page does not upgrade the word.
 - >
   Anything about the Schmidt-group dependence, which is what Gunn's Figure 1
   exists to show over a 1000-fold range and is the reason this model is more than
   a correlation. The gallery has no liquid-phase dispersion dataset. Jacques &
-  Vermeulen (1957) or Miller & King (1966) would supply one and would turn a
-  partly circular fit residual into a genuine test. This is the single most
-  valuable extension.
+  Vermeulen (1957) or Miller & King (1966) would supply one, and would test the
+  model on the phase Gunn says p(Re) was actually estimated from. This is the
+  single most valuable extension.
 - >
   Anything about particle shape from measurement. Only the sphere branch is
   tested; eqs (4), (5), (11) and (12) are evaluated and never checked against
@@ -253,7 +293,14 @@ source_notes:
     "p=O.i7+0.20exp(-24/Re)"; "Peclet" as "P&let" throughout; the running head
     volume line split across five lines and mis-ordered; "Miller and King" as
     "Miller and Ring" in the Figure 1 caption; Table 1's row label SA201 as
-    "SA20 1". Every constant used on the page was read off a 600 dpi render.
+    "SA20 1". Every constant used on the page was read off a page render, never
+    off the text layer. CORRECTED 2026-08-05 after the native-resolution rule was
+    revised: `pdfimages -list` shows this scan is CCITT-G4 bilevel at 300 ppi
+    NATIVE, so the first pass at 600 dpi was interpolation. Eqs (1) and (2), the
+    Notation on journal page 372, the p(Re) constants, the wall paragraph on page
+    368 and all ten Table 1 entries were re-read on CROPPED renders at 300 ppi.
+    Two things were settled by that re-read and by nothing else: the subscript 0
+    in Re = d U_0 rho / mu, and the missing square in eq. (2)'s denominator.
   papers_on_disk: >
     DEFECT TO FIX, found 2026-08-05: docs/papers-on-disk.yaml now carries the key
     `A2.6:` TWICE - line 43 mapping it to 1-s2.0-025527019380020H-main.pdf (the

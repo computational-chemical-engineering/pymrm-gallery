@@ -1,0 +1,170 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.6
+slug: gunn-dispersion-correlations
+title: "Gunn's dispersion correlations, and what the number 2 depends on"
+section: A
+status: published
+tier: T1
+priority: P1
+structures: [S6]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 15
+datasets:
+  - gunn-1987-stated
+  - gunn-1987-table1
+borrowed_datasets:
+  - edwards-richardson-1968-fig9   # from pages/A2.5-edwards-richardson-dispersion
+  - edwards-richardson-1968-stated # from pages/A2.5-edwards-richardson-dispersion
+
+validation:
+  - "STRUCTURAL RESULT, from printed constants only: the high-Reynolds-number limit of eq. (1) is Ud/D -> 2p_inf/(1-p_inf), derived by expansion and confirmed against direct evaluation of eq. (1) at Re = 1e8 to 7.2e-08 for all three shapes. Eq. (3)'s constants give p_inf = 0.17 + 0.33 = 0.50 EXACTLY, hence Pe -> 2.0000 for spheres; eqs (4) and (5), fitted to cylinder data that never see a sphere, give 1.7037 and 1.1746. The 'widely quoted value of 2' is a sphere fact, and the spread between shapes is 1.70-fold against a two-digit rounding width of about 4 %"
+  - "ROUTE 1, a worked example with every input printed: eq. (8), 1.65 x 0.37 / 0.6 = 1.0175 against the printed 1.02 (-0.25 %). Reading the wall porosity as 0.5 instead of 0.6 gives 1.221, so the check has power"
+  - "ROUTE 3, seven numbers the paper states in words, deviations 0.0 % to 11.4 %, each inside the precision of the phrase it tests: Pe = 1.9862 at Re = 1000 against 'approaches ... 2'; p(1) = 0.170000 against 'constant below Re = 1'; p(1000) = 0.49217 against 'constant above 1000'; the liquid/gas maximum 10.89 at Re = 3.17 against 'a factor of 10 at Re ~ 3'; the crossover at Re = 0.177 against '0.2'; Table 1's ten entries averaging 0.0970 against 'about 10 % of molecular'. 88.7 % of p's excursion falls between Re = 1 and 200, which is the paper's 'major change from Re = 1 to 200'"
+  - "ONE STATED RANGE DOES NOT SURVIVE, and is reported rather than repaired: the upper end of '0.2 < Re < 300' is not a crossing at all. The liquid/gas ratio decays asymptotically to 1 and is still 1.084 at Re = 300 and 1.025 at Re = 1000. The lower end reproduces at 0.177"
+  - "CROSS-DOCUMENT IDENTITY (structural, labelled as such on the page): eq. (1) of the 1987 paper against eq. (42) of Gunn's 1993 note with Gamma = 4(1-eps)alpha_1^2/eps, 8.7e-11 over 2001 Reynolds numbers at two Schmidt groups. The two transcriptions were made from different documents by different agents three days apart, so it is evidence about the READING and about nothing else. It has NO break row and the page says so"
+  - "AND A NUMERICAL FINDING FROM THE SAME COMPARISON: the two printed forms are algebraically identical but not numerically. Written as exp(x) - 1 instead of expm1(x), eq. (1)'s liquid branch loses 1.7e-06 relative at Sc = 800, because the second term cancels the first exactly in the limit"
+  - "PRINTED NOTATION settles the group definitions the page depends on, and they are quoted rather than inferred: journal page 372 gives Re = d U_0 rho / mu with U_0 the superficial velocity, Pe = U d / D with U interstitial, and u, U, U_0 separately defined; Gunn 1993's Nomenclature says the same. Edwards & Richardson's Re = u d_p eps / nu is therefore the same superficial group and their Pe the same interstitial one, so the 55 markers need no conversion. Two indirect arguments derived before that page was read are kept as corroboration"
+  - "EXPERIMENTAL, through a BORROWED dataset: eq. (1) with eq. (3) against the 55 markers A2.5 digitised from Edwards & Richardson's Figure 9 - mean absolute deviation 20.3 % with a +15.8 % bias, against 11.75 % and +0.003 % for E&R's own two-constant fit, RECOMPUTED here from the same file and reproducing A2.5's published headline to 1e-05 absolute. E&R's is a pure fit residual; Gunn's is PROBABLY OUT OF SAMPLE but not provably held out, and the page argues that from printed text rather than assuming either way"
+  - "THE OVERLAP QUESTION, settled as far as the sources settle it: Gunn 1987 p. 365 says p was estimated from experiments 'in which the effect of molecular diffusion was very small'; Gunn 1993 p. 335 says that meant LIQUID-PHASE measurements, ReSc >> 1, for all three shapes, with gas-phase results used 'to compare'. These markers are gas phase at Sc = 0.77 with ReSc = 0.0066 to 37.8, median 1.40, 26 of 55 below 1 and 47 of 55 below 10 - they fail that criterion. The 1987 paper attributes eqs (4)/(5) to England & Gunn (1970) and eq. (3) to nothing, and describes E&R's points as 'well supported by eq. (1)', which is the language of comparison"
+  - "and the same comparison is honest about what it cannot resolve. The nulls are 24.9 % (p frozen at its low-Re plateau), 67.6 % (p frozen at 0.50, the mixing-cell picture), 29.9 % (E&R's uncorrected eq. 15) and - the STRONGEST null, which the page reports because anything weaker flatters p(Re) - 23.0 % for a FREE constant p = 0.0793. So deleting p(Re) costs 2.7 percentage points at eps = 0.37, and 4.6 points when each model is given the porosity it prefers (16.38 % at eps = 0.443 against 21.01 % at 0.433). The UNPRINTED porosity moves the headline 9.1 points between eps = 0.34 and 0.40, 3.4 times the cost of deleting p(Re) at that porosity"
+  - "SOLVER, closed form 1: the 2-D bed with a flat inlet against Gunn's own eq. (17), 7.5e-07 at n_z = 800, observed order 1.99. STRUCTURALLY BLIND to everything radial - nu = 0, n_r = 5 and a 10 % error in D_R all leave it at exactly 7.454e-07"
+  - "SOLVER, closed form 2 (derived here, not printed): feeding the first zero-flux Bessel mode J_0(beta_1 r/R) makes eq. (17) exact again with k -> k + D_R (beta_1/R)^2. 2.9e-05 at (800, 80), observed order 2.00 refining both axes, and it DOES read the radial operator: nu = 0 moves it x2646, n_r = 5 x252, a zero-gradient outlet x23, bare upwind x64, a Dirichlet inlet x559"
+  - "and what the pair can and cannot see is measured on FOUR coefficient rows, not two. Changed CONSISTENTLY - operator, lambda, k_eff and the closed form together - a 10 % error in D or D_R moves them by 0.0 % and 6.3 %, so a coefficient wrong everywhere is invisible and 2.9e-05 is no evidence that the coefficients are right. Injected into the OPERATOR ALONE with the reference held fixed, the same 10 % moves V5a x1369 and V5b x53.7 for D, and V5b x445 for D_R while leaving V5a at exactly 1. An operator/reference mismatch is caught loudly; only a shared error gets through"
+  - "BREAK TABLE, two families, twenty correlation rows and nine solver defect rows, because the two fail under disjoint defects. Dropping eq. (1)'s second term moves the high-Re limit check by 1.4e7; alpha_1 taken as the first root of J_1 instead of J_0 moves the headline agreement by +207 % and the liquid/gas ratio by +41 %; eq. (3)'s 24 read as 2.4 moves Pe(1000) by +2.9 %; p_offset 0.17 read as 0.11 moves the Peclet limit to 1.571; the wall porosity 0.6 read as 0.5 moves eq. (8) by +20 %; the wall region 0.5d read as 1.0d moves the wall-channel cost by +168 %; the two em dashes of Table 1 read as zeros move its mean by -16.7 %"
+  - "REACTOR CONSEQUENCE, wall channelling: reading Price's superficial 1.65 as an INTERSTITIAL ratio raises unconverted reactant leaving a 100-diameter bed by +5.46 % with no radial mixing and +1.16 % with the radial coefficient eq. (9) gives, so radial dispersion erodes 79 % of the channel. Gunn's own corrected ratio, 1.0175, moves it by +0.001 %. One operating point, a step wall profile, and an area-mean rather than local Danckwerts inlet - all three stated, the last measured as a break row worth 1.1 % of the answer"
+  - "REACTOR CONSEQUENCE, the outlet boundary condition: the zero-gradient outlet reports +1.03 % too much unreacted material at Gunn's dispersion coefficient and kL/U = 2, and that number is IDENTICAL from L/d = 5 to L/d = 200. A longer bed protects the interior profile (the error 4 diameters in falls from +0.15 % to 9.4e-08 to 4.4e-16 at L/d = 20 - one unit in the last place - and to a true zero beyond) and never the outlet. Over a 400-fold sweep in kL/U the outlet error is 0.911 to 0.998 times lambda D/U, so that group predicts the scaling exactly and bounds the magnitude to within 9 %"
+  - "A SECOND, INDEPENDENT COMPUTATION - and the defect it caught. Two reactor numbers are recomputed with scipy solve_bvp collocation, on a different mesh, in a different solver, with the reference asserting status == 0 and its own rms residuals (worst 1.0e-10) rather than being trusted. The wall-channel cost with radial dispersion off agrees to 1.4e-04 relative, confirming the velocity profile, the area weights and the mixing-cup weighting, none of which V5a or V5b touch because both run a uniform profile. The outlet-condition error did NOT agree: read at the last cell centre it was 11.4 % low on the grid this page first used, a first-order lambda h/2 bias that survived every sweep because those sweeps hold h fixed. Reading at the outlet FACE at h = 1/32 gives 1.0339 % against the collocation 1.0353 %, -0.13 %. No break row could have found this: break rows measure sensitivity, not accuracy"
+  - "every deferred correction asserted its own convergence: worst 19 iterations of a cap of 60, worst final residual 9.2e-13. Every one of the 51 reported metrics is above check_agreement.py's ABS_FLOOR of 1e-12, checked in the notebook; the smallest is 8.7e-11"
+
+adds: >
+  Four things the paper does not contain, and a correction to one of its own
+  remarks.
+
+  First, a number on the wall argument. Eqs (7)-(8) conclude that the interstitial
+  velocity in the wall region is within 2 % of the bulk, "suggesting that there
+  may be no significant differences". The consequence for a reactor depends on
+  L/d, on d_t/d and on the reaction rate, none of which appears in eq. (8); the
+  2-D bed puts it at +0.001 % for Gunn's corrected ratio and +5.46 % for the
+  uncorrected one, and separates how much radial dispersion erodes (79 %).
+
+  Also a second, independent computation of two of those reactor numbers, by
+  collocation rather than finite volume - the one thing a defect-injection table
+  structurally cannot supply, and the thing that caught this page's own
+  first-order error in the outlet metric.
+
+  Second, a closed form for the 2-D problem. Gunn prints eq. (17) for the 1-D
+  reactor; feeding the bed a zero-flux radial eigenmode gives the same expression
+  with k -> k + D_R (beta_1/R)^2. That is the only check on the page that reads
+  the radial operator, and the only reason the break table can tell an axial
+  defect from a radial one - the flat-inlet check against eq. (17) leaves nu = 0
+  at exactly its baseline value.
+
+  Third, the cost of the wrong outlet closure, measured - AND a correction to the
+  natural reading of Gunn's "not easy to implement except where the reactor is
+  long". A longer bed protects the interior profile and does nothing at all for
+  the outlet concentration, whose error is a length-independent multiplicative
+  bias of size lambda D/U. Since the outlet is usually what is being computed,
+  "make the reactor long" is not a workaround.
+
+  Fourth, the high-Reynolds-number limit as an identity rather than a claim, and
+  applied to all three of the paper's particle shapes rather than the one it
+  discusses. Pe -> 2 for spheres, 1.7037 for solid cylinders and 1.1746 for
+  hollow cylinders follows from constants the paper prints and never puts side by
+  side. The page also states the width of that claim: two printed digits fix the
+  limit only to about 4 %.
+
+  It also puts a number on a claim Gunn makes qualitatively about Table 1 - the
+  three independent estimates of intraparticle diffusivity agree to a worst
+  within-row spread of 16.0 % and a mean of 10.6 %, which is what "consistency of
+  bed-independent parameters" is worth here.
+
+agreement: >
+  Mixed, and the page separates the parts. The structural results are exact and
+  come from printed constants: the shape dependence of the high-Reynolds-number
+  Peclet group, and seven stated numbers reproduced to between 0.0 % and 11.4 %,
+  each inside the precision of the phrase it tests. The one stated range that does
+  not survive - the upper end of 0.2 < Re < 300 - is reported as it stands.
+
+  The comparison against measurement is the weakest part and is labelled that way.
+  Eq. (1) sits +15.8 % high on the 55 markers A2.5 digitised from Edwards and
+  Richardson's Figure 9, at 20.3 % mean absolute deviation against 11.75 % for
+  their own fit - the expected ordering, since E&R fitted two constants to exactly
+  those markers. It is not a clean held-out prediction either, but the printed
+  evidence says these gas-phase points are probably OUTSIDE the set Gunn estimated
+  p(Re) from, not inside it, and the page argues that rather than assuming. What
+  really limits it is resolving power: against the strongest null, a free constant
+  p at 23.0 %, deleting p(Re) costs 2.7 percentage points at eps = 0.37, while the
+  porosity the paper never prints moves the headline 9.1 points across a plausible
+  range and has an interior optimum at eps = 0.443.
+
+  On the solver side the two closed forms converge at order 1.99 and 2.00 to
+  7.5e-07 and 2.9e-05, and the break table measures what each is blind to rather
+  than asserting sensitivity. Two reactor numbers are additionally computed a
+  second time by collocation; one agreed to 1.4e-04 and the other did not, and
+  fixing what that revealed moved the outlet metric from 0.92 % to 1.03 %.
+
+caveats: >
+  The porosity is an ASSUMPTION. Eq. (1) needs one and the paper prints none for
+  any figure; 0.37 is taken from the tube-diameter argument on journal page 368.
+  It is the largest single lever on every comparison here. The residual against
+  the 55 markers is NOT monotone in eps: it has an interior minimum at eps = 0.443
+  (16.4 %, against 20.3 % at the assumed 0.37) and rises again above that, so
+  those data prefer a looser bed than Gunn quotes for the bulk but not an
+  arbitrarily loose one. Nothing on this page can separate a porosity error from a
+  model error, and the margin by which p(Re) beats a free constant p is itself
+  porosity-dependent - 2.7 points at eps = 0.37, 4.6 points at each model's own
+  preferred eps.
+
+  The measurement comparison is not a prediction and it is one particle shape and
+  one gas pair. Whether these markers are inside Gunn's fit set is decided from
+  printed text, not assumed: his stated criterion (molecular diffusion very small,
+  i.e. ReSc >> 1, which his 1993 note glosses as liquid-phase measurements) is
+  failed by all but 8 of these 55 gas-phase points, so the comparison is probably
+  out of sample - though nothing printed says they were held out either, and the
+  page does not upgrade the word. The Schmidt-group dependence - the thing Gunn's
+  Figure 1 exists to show, over a 1000-fold range, and the single most valuable
+  extension to this page - is not tested at all, because the gallery has no
+  liquid-phase dispersion dataset. Jacques & Vermeulen (1957) or Miller & King
+  (1966) would supply one.
+
+  The borrowed dataset carries A2.5's open questions with it: three glyphs remain
+  fused and carry no row (including the most nearly resolvable one, whose
+  inclusion moves this page's headline from 20.30 % to 20.65 %), a +/-5 px
+  ink-centroid systematic is unresolved (it moves the headline to 19.27 % or
+  21.59 %), and A2.5's figure review is pending and non-blocking. No new
+  digitisation was done here and none is proposed - there is no maintainer
+  available for a figure review.
+
+  The reactor operating point is chosen, not printed: the paper contains no worked
+  reactor example. Every number of it is stated on the page. The wall-channel
+  result is one operating point with a STEP porosity profile, which is what the
+  paper's "wall region of extent 0.5d" describes and no more; the erosion fraction
+  depends on L/d, d_t/d and the Damkohler group. The Danckwerts inlet is written
+  with the area-mean velocity rather than the local u(r); the alternative is a
+  break row and is worth 1.1 % of the wall-channel answer.
+
+  Two metrics are labelled structural and have no break row: the cross-document
+  identity against Gunn 1993's eq. (42), which is algebraically exact and is
+  evidence about two transcriptions only; and eq. (17) substituted back into eq.
+  (16), whose floor is round-off in the finite differences. Several more are
+  guarded by a family rather than an individual row (the four nulls, the porosity
+  sweep and its optimum, and the recomputation of A2.5's published headline), and
+  four are guarded by something stronger - a second, independent computation of
+  the same quantity. The two closed-form solver checks are measured to be jointly
+  insufficient: a 10 % error made consistently in D or D_R is invisible to both,
+  although the same error injected into the operator alone is not.
+
+  THREE printing inconsistencies in the source are recorded rather than repaired:
+  the caption of Figure 5 names "eq. (4)" where the body text and the figure both
+  require eqs (9) and (10); the tortuosity for spheres is 1.4 in eq. (3) and 1.2
+  in eq. (10), a 17 % difference the paper describes only as "small amounts"; and
+  eq. (2) prints its second denominator as 16 alpha_1^4 (1-eps) where eq. (1),
+  which it must reduce to at sigma_v^2 = 0, prints 16 alpha_1^4 (1-eps)^2 - Gunn
+  1993's eq. (42) confirms the square. The page uses only eq. (1).

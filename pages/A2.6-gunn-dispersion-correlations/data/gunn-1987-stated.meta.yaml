@@ -1,0 +1,122 @@
+dataset_id: gunn-1987-stated
+title: Constants, correlation coefficients and stated results printed in the paper
+status: complete
+
+source:
+  authors:
+    - "Gunn, D. J."
+  year: 1987
+  container: "Chemical Engineering Science 42(2) 363-373"
+  doi: 10.1016/0009-2509(87)85066-2
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts transcribed, not the typesetting)"
+
+conditions:
+  system: >
+    Correlations for axial and radial dispersion of mass in fixed beds of
+    spheres, solid cylinders and hollow cylinders, fitted by the author to
+    published measurements spanning Schmidt groups 0.77 to 1500 and Reynolds
+    numbers 0.01 to about 1000.
+  reynolds_definition: >
+    Re = d U_0 rho / mu, with U_0 the SUPERFICIAL velocity (Notation, journal page
+    372, read at 300 ppi native and re-read on a crop). The same Notation defines
+    u as "velocity outside bed", U as "interstitial velocity within bed" and U_0
+    as "superficial velocity", so all three are distinguished by the paper.
+    Gunn's 1993 Nomenclature agrees: "Re Reynolds number based upon particle
+    diameter and superficial velocity".
+  peclet_definition: >
+    Pe = U d / D or U d / D_R, with U the INTERSTITIAL velocity (Notation, journal
+    page 372). Edwards & Richardson's Pe = u d_p / D_L is the same group and their
+    Re = u d_p eps / nu is the same superficial Reynolds group, so no conversion
+    is needed between the two papers' axes.
+  note: >
+    The paper does NOT state the porosity used to draw the curves of its
+    Figures 1-4, although eq. (1) needs one. `voidage_bulk_spheres` = 0.37 is
+    printed on journal page 368 in the tube-diameter argument, not in the
+    caption of any figure, and the page uses it as an assumption and reports
+    the sensitivity of every number to it.
+
+acquisition:
+  method: >
+    Transcribed from page renders. The first pass rendered at 600 dpi; the scan is
+    CCITT-G4 bilevel at 300 ppi NATIVE (pdfimages -list), so 600 dpi was
+    interpolation and added no information. Eqs (1) and (2), the Notation on page
+    372 and the p(Re) constants were subsequently re-read on CROPPED renders at
+    the native 300 ppi, which is where the eq. (2) misprint below and the U_0
+    subscript in the Reynolds definition were both settled. Whole-page legibility
+    is not digit legibility; every numeric here was read on a crop.
+  tool: "poppler pdftoppm -r 300 (native), read as images, numerics re-read cropped"
+  procedure: >
+    The PDF text layer of this scan is unusable for equations. It renders eq.
+    (1) as "4a;;;+,)(1 -PI?", eq. (5) as "p=O.i7+0.20exp(-24/Re)", the running
+    head volume line as "Chemicd Engineering Science. Vol. 42, No. 2, pp.
+    363-373, 1987", "Peclet" as "P&let" throughout and "Miller and King" as
+    "Miller and Ring" in one place. Every value in this file was therefore read
+    off the page image. Nothing was repaired by inference; where a value could
+    not be read it is absent rather than guessed.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "transcription only; the printed precision is the precision"
+
+validation:
+  internal_consistency: >
+    Six of these rows are checkable against each other or against the paper's
+    own prose, and the notebook does all six.
+
+    (a) The high-Reynolds-number limit of eq. (1) is Ud/D -> 2p/(1-p). With
+    `p_offset` + `p_amplitude_spheres` = 0.17 + 0.33 = 0.50 exactly, that limit
+    is exactly 2 for spheres, which is the "widely quoted value of 2" the paper
+    itself names on journal page 366. The same two rows for the cylinders give
+    1.7037 and 1.1746, so the transcription is checked by a statement the paper
+    makes only for spheres.
+
+    (b) "Pe approaches ... 2 at Reynolds numbers approaching 1000": eq. (1) with
+    eq. (3) gives 1.9862 at Re = 1000.
+
+    (c) "constant values for p below Re = 1 and above 1000, with the major
+    change from Re = 1 to 200": p(1) = 0.170000, p(200) = 0.46268, p(1000) =
+    0.49217, so 88.7 % of the total excursion happens between Re = 1 and 200.
+    That is exp(-24/200) - exp(-24), and it is the value the notebook reports as
+    `fraction_of_p_excursion_1_to_200`.
+
+    (d) "a maximum difference of a factor of 10 at Re ~ 3" between the liquid-
+    and gas-phase Peclet groups: eq. (1) gives 10.89 at Re = 3.16 with
+    Sc = 0.77 and 800.
+
+    (e) The lower end of "0.2 < Re < 300": the two curves cross at Re = 0.177.
+    The upper end is NOT a crossing - the ratio decays to 1 asymptotically and
+    is still 1.084 at Re = 300 - and the notebook says so.
+
+    (f) Eq. (8) is a worked example with every input printed: 1.65 x 0.37 / 0.6
+    = 1.0175 against the printed 1.02.
+  known_discrepancy: >
+    `tau_axial_spheres` = 1.4 and `tau_radial_spheres` = 1.2 are the same
+    physical quantity in the same beds, and the paper acknowledges only that
+    "the tortuosities measured in the axial direction, and in the radial
+    direction, differ by small amounts". The difference is 17 %, and it moves
+    the low-Reynolds-number branch of the two correlations by that much.
+
+    The caption of Figure 5 says the solid lines are "eq. (4)". Eq. (4) is the
+    probability function for solid cylinders; the figure is radial dispersion in
+    beds of spheres, so the lines must be eqs (9) and (10), as the body text
+    says two sentences earlier. Recorded as a printing error, not repaired.
+
+    Eq. (2) on journal page 365 prints its second denominator as
+    16 alpha_1^4 (1 - eps), where eq. (1) on page 364 prints
+    16 alpha_1^4 (1 - eps)^2. Eq. (2) is eq. (1) generalised to a non-uniform
+    velocity and must reduce to it at sigma_v^2 = 0, so the square cannot be
+    absent; Gunn 1993's eq. (42) carries eps^2 Gamma^2 = 16 (1-eps)^2 alpha_1^4
+    with Gamma = 4(1-eps) alpha_1^2 / eps, agreeing with eq. (1). Both equations
+    were re-read on cropped 300 ppi renders. Recorded as a printing error in
+    eq. (2), not repaired; this file and the notebook use eq. (1) only.
+
+columns:
+  - name: quantity
+    description: "identifier used in the notebook"
+  - name: value
+    description: "the number as printed"
+  - name: unit
+  - name: page
+    description: "journal page number the value was read from"
+  - name: source
+    description: "where on that page, quoted"

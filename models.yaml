@@ -802,6 +802,101 @@ models:
       combined gas-phase set, not for E&R's points alone. The figure review is
       pending and non-blocking.
 
+  - id: A2.6
+    slug: gunn-dispersion-correlations
+    title: "Gunn's dispersion correlations, and what the number 2 depends on"
+    description: >
+      Gunn's stochastic fast/slow-stream model for dispersion in fixed beds, with the
+      one empirical function p(Re) that makes it evaluable, printed here as eqs (3)
+      to (5) for spheres, solid cylinders and hollow cylinders. Its
+      high-Reynolds-number limit is Ud/D -> 2p/(1-p), and eq. (3)'s two constants sum
+      to exactly a half - so the "widely quoted value of 2" is a sphere fact, and the
+      paper's own cylinder constants give 1.70 and 1.17. The axial and radial
+      correlations are then used together in a 2-D axisymmetric pymrm bed, checked
+      against Gunn's own printed closed form and against a Bessel-mode generalisation
+      of it, and used to put a number on his wall-channel argument and on the cost of
+      the wrong downstream boundary condition. The axial correlation is compared with
+      the 55 measured points A2.5 digitised, with the resolving power of that
+      comparison measured and the overlap question settled from printed text rather
+      than assumed.
+    section: A
+    status: published
+    page: pages/A2.6-gunn-dispersion-correlations/
+    tier: T1
+    priority: P1
+    structures:
+      - S6
+    phases:
+      - gas
+    reference:
+      authors:
+        - Gunn, D. J.
+      year: 1987
+      container: "Chemical Engineering Science 42(2) 363–373"
+      doi: 10.1016/0009-2509(87)85066-2
+    reference_secondary:
+      authors:
+        - Gunn, D. J.
+      year: 1993
+      container: "Chemical Engineering and Processing 32(6) 333–338"
+      note: >
+        Reprints the same model as its eq. (42) with Gamma = 4(1-eps)alpha_1^2/eps,
+        and prints the high-Reynolds-number identity as its eq. (43). It does NOT
+        print p(Re), which is why this case needed the 1987 paper. Both readings are
+        carried in the notebook and compared.
+    predicts:
+      - axial dispersion coefficient in a fixed bed, over Sc = 0.77 to 1500
+      - radial dispersion coefficient in a fixed bed
+      - the high-Reynolds-number Peclet limit as a function of particle shape
+      - the fluid-to-particle Sherwood group (eq. 13, transcribed but not exercised)
+      - conversion in a 2-D axial- and radial-dispersion reactor with a wall channel
+      - the error incurred by a zero-gradient downstream boundary condition
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_convflux_upwind
+      - interp_cntr_to_stagg_tvd
+    data:
+      tier: 2
+      method: "transcribed from page renders; the measured points are borrowed from A2.5"
+      status: complete
+    related:
+      - A2.5
+      - A2.1
+      - A2.3
+      - A3.4
+    note: >
+      The headline is structural and comes from printed constants only: eq. (3) gives
+      p_inf = 0.17 + 0.33 = 0.50 exactly, so Pe -> 2.0000 for spheres, while eqs (4)
+      and (5) - fitted to cylinder data that never see a sphere - give 1.7037 and
+      1.1746. Two printed digits fix that limit only to about 4 %, and the page says
+      so; the 1.70-fold spread between shapes is what is outside rounding.
+
+      The comparison against measurement is 20.3 % mean absolute deviation with a
+      +15.8 % bias against the 55 markers A2.5 digitised, where E&R's own eq. (18)
+      gives 11.75 %. Whether those markers are inside Gunn's fit set is decided from
+      printed text and not assumed: his criterion was experiments in which molecular
+      diffusion is very small (ReSc >> 1, which his 1993 note glosses as liquid-phase
+      measurements), and these gas-phase points run ReSc = 0.0066 to 37.8 with 47 of
+      55 below 10, so the comparison is probably OUT of sample - though nothing
+      printed says they were held out either. Two things bound what those markers
+      resolve, both measured: against the strongest null, a free constant p at 23.0 %,
+      deleting p(Re) costs 2.7 percentage points at eps = 0.37 and 4.6 at each model's
+      preferred eps, while the porosity the paper never prints moves the headline
+      9.1 points over eps = 0.34 to 0.40 and has an interior optimum at eps = 0.443.
+      No new digitisation was done; A2.5's file is loaded, its findings are listed on
+      the page, and its published headline is recomputed rather than quoted.
+
+      Two reactor numbers are computed a SECOND time by scipy solve_bvp collocation,
+      which is what a defect-injection table cannot do. The wall-channel cost agrees
+      to 1.4e-04; the outlet-condition error did not, and the disagreement was a
+      first-order lambda h/2 bias from reading the outlet at the last cell centre. It
+      is fixed, and the metric moved from 0.92 % to 1.03 %.
+
+      The Schmidt-group dependence over a 1000-fold range - the thing Gunn's Figure 1
+      exists to show - is NOT tested, because the gallery has no liquid-phase
+      dispersion dataset. That is the single most valuable extension.
+
   - id: A2.3
     slug: taylor-aris-dispersion
     title: "Taylor–Aris dispersion"

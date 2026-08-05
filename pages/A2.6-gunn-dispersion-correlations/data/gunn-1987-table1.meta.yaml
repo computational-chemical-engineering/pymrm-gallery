@@ -1,0 +1,73 @@
+dataset_id: gunn-1987-table1
+title: Table 1 - three independent estimates of intraparticle diffusivity
+status: complete
+
+source:
+  authors:
+    - "Gunn, D. J."
+  year: 1987
+  container: "Chemical Engineering Science 42(2) 363-373"
+  doi: 10.1016/0009-2509(87)85066-2
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts transcribed, not the typesetting)"
+
+conditions:
+  system: >
+    Four grades of permeable catalyst support (SA and LA series alumina
+    spheres). Each row is the ratio of effective to molecular diffusivity
+    D/D_AB, estimated three ways: from the frequency response of a fixed bed
+    (Gunn & England 1971), from its pulse response (Bashi & Gunn 1977), and
+    measured directly by isobaric counter-diffusion across a flat particle
+    (Bashi 1976).
+  note: >
+    Two cells are printed as em dashes - no pulse-response estimate exists for
+    SA203 or LA623 - and are left empty here rather than filled in.
+
+acquisition:
+  method: >
+    Transcribed from a page render. The first pass used 600 dpi; the scan is
+    CCITT-G4 bilevel at 300 ppi NATIVE, so all ten entries were re-read on a crop
+    of the table body at the native resolution, which is where a lost decimal
+    point would show. All ten confirmed digit for digit, and both em dashes are
+    em dashes rather than faint digits.
+  figure: "Table 1, journal page 368"
+  tool: "poppler pdftoppm -r 300 (native), table body re-read as a cropped image"
+  procedure: >
+    The text layer of this scan renders the row label SA201 as "SA20 1" and the
+    header as "intraparticiediffusivity", so the table was read from the page
+    image. Every printed digit is carried; nothing is derived.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: "transcription only; three decimal places as printed"
+
+validation:
+  internal_consistency: >
+    The table exists to support the paper's SECOND criterion for model validity -
+    "consistency of bed-independent parameters when estimated from bed response".
+    It can therefore be tested against itself: the three estimates in a row are
+    three measurements of one number by three unrelated methods. The largest
+    spread within a row is 16.0 % (SA201) and the mean over the four rows is
+    10.6 %. The paper asserts the consistency and never quantifies it.
+
+    The mean of the ten printed entries is 0.0970, against the paper's own
+    "about 10 % of molecular" on journal page 371 - a claim it attributes to
+    this table.
+  known_discrepancy: >
+    The isobaric counter-diffusion column is the largest of the three estimates
+    on all four rows. That is a one-sided pattern in four of four rows, which the
+    paper does not remark on. With four rows it is not evidence of much - a
+    one-sided sign test gives p = 0.0625 - and the notebook prints the count and
+    the p value rather than making a claim of it.
+
+columns:
+  - name: particle_type
+    description: "the 'Particle type' column, as printed"
+  - name: frequency_response
+    unit: dimensionless
+    description: "D/D_AB estimated from frequency response"
+  - name: pulse_response
+    unit: dimensionless
+    description: "D/D_AB estimated from pulse response; empty where the table prints an em dash"
+  - name: isobaric_counterdiffusion
+    unit: dimensionless
+    description: "D/D_AB measured from isobaric counter-diffusion across a flat particle"
