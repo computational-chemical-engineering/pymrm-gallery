@@ -1,0 +1,249 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.3
+slug: danckwerts-surface-renewal
+title: "Danckwerts surface renewal"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S4]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 60
+datasets:
+  - danckwerts-1951-printed-numbers.csv
+
+validation:
+  - >-
+    All six numerical statements in the paper's running text reproduce. Three are
+    looser than they look and the page says so rather than rounding them away:
+    the equivalent saturated layer is 2.141 mm against "about 2 mm" (+7 %), the
+    depth-of-penetration coefficient is 3.6428 against the printed 3.6 (+1.19 %),
+    and the depth at 1 hour is 6.83 mm using the paper's OWN 3.6 against "about
+    6 mm" (+14 %). BOTH of his millimetre figures sit BELOW what his own formula
+    gives, so both are roundings DOWN: 2.141 -> "about 2" is ordinary rounding,
+    while 6.83 -> "about 6" is a truncation where rounding would have given 7.
+    The +14 % is entirely that truncation - 3.6*sqrt(D*theta) with his own D and
+    exposure leaves no freedom. The
+    falling-film criterion gives L = 0.05097 against "about 0.05" (+1.9 %).
+    The truncated age average is short of sqrt(Ds) by 8.33 % at s*theta_c = 1.5
+    ("within 10 %" holds; the exact 10 % point is 1.3528), and surfaces older
+    than 0.33 s carry 6.93 % of the rate ("less than one tenth" holds).
+  - >-
+    The pymrm transient element, age-averaged by eq. 7, reproduces eq. 8 to
+    4.0e-5, eq. 10/30 to 1.6e-5 and eq. 12/34 to 3.9e-5 relative, with the
+    first-order time error Richardson-extrapolated out (raw at the production
+    grid, eq. 8 sits at 6.8e-4). The two routes share no code: pymrm operators
+    plus a time march on one side, scipy.special on the other.
+  - >-
+    BOTH axes refined, with observed orders 0.99 in the age step (backward Euler)
+    and 1.98 in the grid (second order, on a grid stretched by e^10 from surface
+    to base). The TIME error is the larger one at any affordable setting
+    (3.3e-4 vs 4.1e-5), which is why EVERY reported agreement on the page - the
+    closed forms, the second-order error and the instantaneous-limit deviation
+    alike - has it Richardson-extrapolated out, with the raw value printed beside
+    it so the size of what was removed is visible. The age grid is uniform in
+    w = sqrt(theta), so one knob halves the local step at EVERY age - a geometric
+    schedule does not have that property.
+  - >-
+    A PURE-DISCRETISATION CONTROL ON THE NONLINEAR SOLVER, and it is the check
+    that a break table cannot supply. Every defect-injection row perturbs an
+    input and watches a number move, so no row can catch a baseline that is
+    WRONG rather than insensitive - discretisation error cancels out of the
+    response and survives in the value. The control runs the same two-species
+    solver at c0'/c* = 1e6, where the reagent cannot deplete and the answer is
+    exactly sqrt(2): at the production n_t = 400 it invents +0.1006 %, and
+    extrapolation leaves +0.0104 %. An earlier draft of this page reported the
+    second-order error and the instantaneous-limit deviation unextrapolated, and
+    32 % and 25 % of them respectively were backward Euler. The frozen-reagent
+    break row is the control's twin and agrees with it to every printed digit.
+  - >-
+    A PRINTED DEFECT IN EQ. 25, proved from the paper's own equations and
+    reported rather than repaired. Eq. 25 prints its exponent as kG^2 theta / HD
+    while the erfc argument in the same equation is (kG/H) sqrt(theta/D), and
+    eq. 29 - which eq. 25 cites - fixes it at k^2 theta / D with k = kG/H. The
+    argument that carries it is PARAMETER-INDEPENDENT: eq. 9 is eq. 25's own
+    special case, so the corrected form must reproduce it at every (H, kG/H), and
+    over a 15-point sweep it does, worst case 4.1e-12 - while the printed form
+    reproduces it NOWHERE, its closest approach being 4.2 % off. (The single-point
+    collapse is 3.1e-13; the swept worst case is above check_agreement.py's floor
+    and is therefore the CI-protected version of the same statement.) DIVERGENCE
+    is the dramatic symptom but is CONDITIONAL: the printed integrand behaves as
+    exp{[k^2(H-1)/D - s]theta}/sqrt(theta), so it diverges only where
+    k^2(H-1) > sD - it does at H = 5, kG/H = 0.7, and at kG/H = 0.3 the same
+    printed expression converges to a finite and wrong number. Both behaviours
+    are printed.
+  - >-
+    Eq. 36's illustration is 6 % optimistic. At the printed c0'/c* = 50 the
+    paper's own ratio expression gives 0.94186 where eq. 36 demands more than
+    0.95; the exact threshold is 53.01. The printed closed form and a direct
+    quadrature of eq. 31 agree to 2.2e-16, which is what certifies both
+    transcriptions - they were read from the same page but are not the same
+    calculation.
+  - >-
+    THE CASE DANCKWERTS SAYS HE COULD NOT SOLVE. The second-order pair
+    (NumJac + newton, two fields, sharp front) is solved directly, so his 10 %
+    bound can be measured instead of assumed. At his own illustrative point
+    (r'c0'/s = 1, c0'/c* = 50) the pseudo-first-order substitution is in error by
+    +0.22 % (Richardson-extrapolated; +0.31 % raw at n_t = 400, of which
+    +0.1006 points is the discretisation control's own reading), not 10 %; the
+    10 % level is not reached until c0'/c* falls to about 1, where the error is
+    still only +8.84 %. His criterion demands c0'/c* > 53 where the exact 10 %
+    point is near 1, so it is conservative by that factor in the concentration
+    ratio - which is expected of a chain of inequalities, and the page says so.
+  - >-
+    An INDEPENDENT test of eqs. 15-17. Driving r'c0'/s to 3000 in the
+    second-order solver - which never forms beta and never evaluates an error
+    function - lands on eq. 15 with beta from eq. 16 to within 0.48 %
+    (extrapolated; 0.65 % raw) over three rows, one-signed, and SHOWN to shrink
+    with r'c0'/s by a printed sweep: 4.16 % at 300, 0.48 % at 3000, 0.15 % at
+    10000. The rows are (D'/D, c0'/c*) = (0.5, 1), (1, 3) and (2, 1): the middle
+    row was MOVED off c0'/c* = 1 because at c0' = c* with D' = D eq. 16 is
+    symmetric in erf and erfc, so a row there cannot see the one transcription
+    error the test exists to catch. All three rows now move under that swap.
+    The eq. 15 -> eq. 17 collapse
+    at D = D' is by contrast an ALGEBRAIC IDENTITY (6.2e-15) and is labelled one:
+    it certifies that eq. 16 was copied as a flux balance and nothing more.
+  - >-
+    Nineteen-row break table, covering every metric that carries a claim -
+    including the three that had no row at all in the first draft
+    (inst_vs_eq15_worst_pct, so_err_at_printed_50_pct, kL_coth_worst_rel), which
+    is how the unextrapolated headline numbers got through. Fourteen defects move
+    their metric, including the
+    Robin sign flip, a Dirichlet base on the reacting element (+3.8 %, because
+    the deep liquid must decay as c0 e^{-r theta}), the age integral truncated at
+    the paper's own s*theta_c = 1.5 (moves to exactly its -8.3 %), and the two
+    transcription traps (D read as 1e-3, the fraction read as 1/10), plus the
+    three new ones: the reagent frozen at c0' (the second-order error collapses
+    to the discretisation floor, +0.0104 %), eq. 16 swapped as the
+    instantaneous-limit target (0.48 % -> 198 %) and a closed base instead of a
+    well-mixed bulk at z = 1 (4.7e-6 -> -42 %). FIVE rows do
+    not move and are kept and labelled: three are definitional (the eq. 4
+    normalisation and mean age; eq. 13 against eq. 12; the n = 1/2 exponents of
+    eqs. 8, 21, 22 and the 1/4 of eq. 10, which differentiate closed forms and so
+    say nothing whatever about the numerics) and two are conditionally
+    structural (the harmonic face mean, because D is uniform here; the two flux
+    readings, because backward Euler conserves mass exactly).
+    ONE DEFECT-INJECTION TEST WAS INITIALLY POWERLESS AND IS RECORDED AS SUCH:
+    swapping erf and erfc in eq. 16 moves nothing at c0'/c* = 1, where the
+    equation is symmetric in the two, and 67 % at c0'/c* = 3.
+    AND THE TABLE'S OWN LIMIT IS STATED ON THE PAGE: every row perturbs an input
+    and watches a number move, so no row can detect a baseline that is wrong
+    rather than insensitive. That is what a break table cannot do and what the
+    discretisation control is for.
+
+adds: >
+  Three things, and one refusal.
+  (1) The second-order reaction Danckwerts states "no solution has so far been
+  found" for is solved directly, which turns eq. 36 from an assumption into a
+  measurement: his 10 % bound holds, and is loose by a factor of 53 in the
+  concentration ratio it demands (+0.22 % error at his own illustrative point,
+  extrapolated in the age step and controlled against a case whose answer is
+  known exactly).
+  (2) That same solver gives eqs. 15-17 the only test on the page that can fail,
+  because it reaches them without ever forming beta.
+  (3) The film picture and surface renewal are shown to be two ends of ONE
+  calculation. A layer of depth d over a well-mixed bulk, with the surface still
+  renewed at rate s, gives kL = sqrt(Ds) coth(d sqrt(s/D)) - a closed form the
+  paper does not contain, whose limits are its eq. 8 (z -> infinity) and eq. 1
+  with x_L = d (z -> 0). The exponent n = dln kL/dln D = 1/2 + z/sinh(2z)
+  interpolates: half-way between the theories at z = 1.089, within 10 % of 1/2
+  only beyond z = 2.250. Danckwerts' own depth-of-penetration rule reads as
+  z > 3.6, where n = 0.5054 - so his rule of thumb is conservative by 1.1 %, and
+  this page is the first place it is read as a number. pymrm reproduces coth z
+  to 4.7e-6 across the crossover.
+  The refusal: the sqrt(D) exponent is the paper's discriminating prediction and
+  NOTHING here tests it. The page maps where the exponent survives (any age
+  distribution, any patchwork of s, a first-order reaction at fixed r - all
+  exactly 1/2, because sqrt(D) factors out of eqs. 21 and 22) and where it does
+  not (any resistance in series with the liquid), which is useful; but it also
+  shows why a test is impossible from this source, and that is stated as the
+  page's main negative result rather than buried.
+
+agreement: >
+  Six printed targets reproduced, worst +14 % - and that worst case is the
+  paper's own rounding of its own formula, reported as such rather than
+  reconciled. Internal: pymrm against eqs. 8, 10/30 and 12/34 at 4.0e-5, 1.6e-5
+  and 3.9e-5; against coth z at 4.7e-6; against eq. 15 in the instantaneous limit
+  at 0.48 %. EVERY ONE of those is Richardson-extrapolated in the age step, with
+  the raw value printed beside it, because the time error dominates at any
+  affordable setting; a pure-discretisation control says how much that step is
+  worth (+0.1006 % raw, +0.0104 % extrapolated). Eq. 25 collapses onto eq. 9 at
+  3.1e-13, eq. 36's printed ratio onto
+  a direct quadrature of eq. 31 at 2.2e-16, and eq. 15+16 onto eq. 17 at 6.2e-15
+  - all three ALGEBRAIC IDENTITIES, all three BELOW check_agreement.py's
+  ABS_FLOOR of 1e-12 and therefore outside CI, and all three carried instead by
+  companion metrics that are not: eq25_collapse_worst_over_Hk (4.1e-12, the same
+  collapse swept over 15 (H, kG/H) points, which is the stronger statement
+  anyway) and eq25_printed_growth_rate for eq. 25; eq36_ratio_at_printed_50
+  (0.94186) and eq36_threshold_c0p_over_cstar (53.009), which come from the same
+  closed form, for eq. 36; and eq17_swapped_erf_dev (0.667) for eq. 17. Break
+  rows exist for all of them too, but a break row is not a metric and is not in
+  agreement.json, so it is not what carries them through CI. Nothing is fitted.
+
+caveats: >
+  TIER 6, AND NOT EVEN REPRODUCTION OF A COMPUTATION - THE PAPER IS PURE THEORY.
+  It contains no figures, no tables and no measurements, and Danckwerts says so:
+  "No attempt has been made to compare the expressions derived here with
+  published experimental measurements." Every target on this page is an
+  arithmetic statement he makes about his own equations.
+
+  THE PAGE CANNOT TEST THE sqrt(D) EXPONENT, WHICH IS THE THEORY'S ONLY
+  DISCRIMINATING CLAIM. The single physical number in the paper, s ~ 5 s^-1, is
+  obtained from published CO2/water coefficients that are not printed here, in a
+  handbook that is not on disk. THAT THE CALCULATION IS THE INVERSION OF
+  kL = sqrt(Ds) IS AN INFERENCE AND IS FLAGGED AS ONE, on the page and in the CSV
+  sidecar: the paper says only "tentative values of s, calculated from published
+  values of kL", and eq. 8 is the only relation in it joining the two. The
+  inference is safe - the implied kL, 7.07e-3 cm/s, is the right order for a
+  packed tower - but it is an inference, in the same class as the mu, rho and g
+  of the falling-film check. Film theory fits the
+  same datum exactly as well by inverting kL = D/x_L: at D = 1e-5 cm2/s the two
+  give kL = 7.07e-3 cm/s and x_L = 14.1 um, one free constant each, zero residual
+  each. Separating them needs at least two solutes at the same hydrodynamics -
+  the comparison Danckwerts recommends and does not perform - and the page
+  computes how demanding that is (a factor 1.53 in D at 5 % scatter, for a
+  3-sigma separation). Nor can the page settle either of the two questions the
+  paper closes with; both are experimental.
+
+  TRANSCRIPTION PROVENANCE. pdfimages -list reports every page of this scan as
+  CCITT-G4 bilevel at 300 ppi NATIVE, so the renders were made at 300 ppi;
+  rendering at 600 would be 2x interpolation and would add no information. The
+  two constants the PDF text layer gets wrong - the D = 1e-5 and the stacked
+  1/100 - were re-read on nearest-neighbour zoomed crops at that native
+  resolution, where both are unambiguous.
+
+  RECONSTRUCTED INPUTS, FLAGGED. The falling-film criterion L = l D mu / (g rho
+  d^4) is checked with mu = 0.01 P, rho = 1.0 g/cm3 and g = 981 cm/s2. None of
+  the three is printed anywhere in the article; "for water" is the whole
+  specification. The reconstruction is self-checking - the printed 0.05 comes
+  back to 1.9 %, a mis-read d exponent would move it by 1e4, and the PDF text
+  layer's D = 1e-3 would move it by 1e2 - but it is a reconstruction and is
+  labelled one on the page, in the CSV sidecar and here.
+
+  SCOPE. Whitman's two-film theory (A3.1) and Higbie's fixed-contact-time
+  penetration (A3.2) are separate cases with separate sources, and neither is
+  built here. Eq. 1 is used only as Danckwerts prints it; his "nonrandom packing"
+  case, which reduces to a fixed contact time, is described WITHOUT attaching a
+  name, because this paper cites Higbie only for evidence on interfacial
+  resistance and never for penetration theory. The three-way comparison should be
+  owned by whichever of A3.1/A3.2/A3.3 is built last, with all three sources in
+  hand; this page deliberately does not claim it.
+
+  The pointwise element flux at very short ages is NOT converged (5 % at
+  s*theta ~ 1e-3, 0.54 % beyond s*theta = 0.1) and no claim rests on it. What is
+  converged is the age average, because the quadrature runs on the cumulative
+  uptake, which is exactly zero at theta = 0.
+
+  Two earlier Danckwerts papers are cited by this one and are NOT on disk and NOT
+  consulted: Research 2, 494 (1949) and Trans. Faraday Soc. 46, 300 and 701
+  (1950). Eqs. 29, 31, 35 and the error bound behind eq. 36 are quoted by the
+  1951 paper from them; the 1951 text is the transcription source for all of
+  them and nothing is attributed to the originals beyond what it prints. They are
+  recorded under origin_not_consulted in models_entry.yaml.

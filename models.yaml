@@ -929,6 +929,135 @@ models:
       and the page says so instead of pointing a reader at it. The reaction cell
       is a limit check, not an enhancement model (F3.1 owns Hatta).
 
+  - id: A3.3
+    slug: danckwerts-surface-renewal
+    title: "Danckwerts surface renewal"
+    description: >
+      Danckwerts' objection to the stagnant liquid film is that the conditions
+      for one are absent: turbulence reaches the surface, and liquid running over
+      a packing does not keep its identity past the next discontinuity. His
+      replacement is one assumption - the chance of a surface element being
+      replaced does not depend on how long it has already been there - and that
+      forces the age distribution phi = s exp(-s theta), whose average over the
+      penetration flux gives k_L = sqrt(Ds). Film theory gives k_L proportional
+      to D, so the exponent on diffusivity is the falsifiable content, and this
+      page is built around what that exponent can and cannot settle. All six
+      numerical statements in the paper reproduce, three of them loosely enough
+      to be worth reporting rather than rounding away. A pymrm transient element,
+      marched on an age grid uniform in sqrt(theta) and averaged by his own
+      eq. 7, recovers eqs. 8, 10/30 and 12/34 to about 4e-5 by a route that
+      shares no code with the closed forms, with observed orders 0.99 in the age
+      step and 1.98 in the grid; the time error is the larger, so every reported
+      agreement on the page - the closed forms, the second-order error and the
+      instantaneous-limit deviation alike - is Richardson-extrapolated in the age
+      step, with the raw value printed beside it and a pure-discretisation
+      control (the same solver where the answer is exactly sqrt(2)) saying what
+      the step is worth: +0.1006 % raw at n_t = 400, +0.0104 % extrapolated. The exponent is then mapped across every system
+      the paper treats: it is exactly 1/2 for ANY age distribution, for a
+      patchwork of renewal rates and for a first-order reaction at fixed r,
+      because sqrt(D) factors straight out of eqs. 21 and 22 - and it collapses
+      only when a resistance sits in SERIES with the liquid, which is the case
+      the paper spends least time on. Three things go beyond the paper. The
+      second-order reaction Danckwerts states "no solution has so far been found"
+      for is solved directly, turning his 10 % error bound into a measurement:
+      it holds, and it is conservative by a factor of 53 in the concentration
+      ratio eq. 36 demands (+0.22 % at his own illustrative point, extrapolated;
+      +0.31 % raw, of which a third is the age step). That solver, which never
+      forms beta, then reaches eq. 15 with beta from eq. 16 to 0.48 % - the only
+      test of the instantaneous-reaction result on the page that can fail, as
+      against the eq. 15 -> eq. 17 collapse, which is an identity and is labelled
+      one - and the deviation is shown to be the finite-rate residue by a printed
+      sweep in r'c0'/s (4.16 % at 300, 0.15 % at 10000). And a layer of finite depth over a
+      well-mixed bulk, still renewed at rate s, gives k_L = sqrt(Ds)
+      coth(d sqrt(s/D)), a closed form the paper does not contain whose two
+      limits are its own eq. 8 and the film eq. 1 with x_L = d: the exponent
+      n = 1/2 + z/sinh(2z) interpolates, and Danckwerts' own depth-of-penetration
+      rule reads as z > 3.6, where n = 0.5054. A printed defect in eq. 25 is
+      proved from the paper's own eqs. 9 and 29 and reported, not repaired - the
+      exponent needs H squared, which is settled parameter-independently (over a
+      15-point (H, kG/H) sweep the H^2 form reproduces eq. 9 everywhere, worst
+      4.1e-12, and the printed form nowhere, closest 4.2 % off); as printed the
+      integral also diverges, but only where k^2(H-1) > sD. The page's
+      main negative result is stated plainly: the paper contains NOTHING that
+      could test the sqrt(D) exponent, because its one physical number, s ~ 5
+      per second, comes from inverting k_L = sqrt(Ds) - an inference, flagged as
+      one, since the paper says only "calculated from published values of k_L" -
+      which film theory fits exactly as well by inverting k_L = D/x_L: one free
+      constant each, zero residual each.
+    section: A
+    status: published
+    page: pages/A3.3-danckwerts-surface-renewal/
+    tier: T0
+    priority: P1
+    structures: [S4]
+    phases: [gas-liquid]
+    predicts:
+      - the surface-age distribution of a randomly renewed interface, eq. 4
+      - the liquid-film mass-transfer coefficient, k_L = sqrt(Ds), eq. 8
+      - the exponent on diffusivity, and which systems preserve it
+      - absorption with a gas-film or interfacial resistance in series, eqs. 9-11
+      - absorption with a first-order reaction in solution, eqs. 12-14
+      - absorption with an instantaneous reaction with a dissolved reagent, eqs. 15-17
+      - absorption under an arbitrary or nonuniform age distribution, eqs. 19-22, 25-26
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - NumJac
+      - newton
+    reference:
+      authors: ["Danckwerts, P. V."]
+      year: 1951
+      container: "Industrial and Engineering Chemistry 43(6) 1460-1467"
+      doi: 10.1021/ie50498a055
+    origin_not_consulted:
+      - authors: ["Danckwerts, P. V."]
+        year: 1949
+        container: "Research 2, 494 - cited by the 1951 paper as its reference (4)"
+        note: >
+          The source of the interfacial-resistance hypothesis behind eq. 29 and
+          of the reported apparent k_S for carbon dioxide and water. Not on disk,
+          not consulted. The page transcribes eq. 29 from the 1951 text and
+          attributes nothing to this paper beyond what the 1951 text prints.
+      - authors: ["Danckwerts, P. V."]
+        year: 1950
+        container: "Transactions of the Faraday Society 46, 300 and 701 - the 1951 paper's references (5) and (6)"
+        note: >
+          The 1951 paper quotes eq. 31 (the first-order element flux), eq. 35
+          (the instantaneous-reaction element flux) and the error bound behind
+          eq. 36 from these two. Neither is on disk and neither is consulted;
+          every one of those results is transcribed from the 1951 text, and the
+          page's checks on them - the eq. 31 quadrature against the eq. 36 ratio,
+          and the second-order solver against eq. 15 - use only what 1951 prints.
+      - authors: ["Sherwood, T. K."]
+        year: 1937
+        container: "Absorption and Extraction, McGraw-Hill - the 1951 paper's references (9), (10) and (11)"
+        note: >
+          The source Danckwerts attributes the film-theory expressions to, eq. 1
+          among them. Not on disk. Eq. 1 is used on this page only in the form
+          the 1951 paper prints it, and case A3.1 (Whitman) is where the two-film
+          picture belongs.
+      - authors: ["Perry, J. H."]
+        year: 1941
+        container: "Chemical Engineer's Handbook, pp. 1179 and 1184 - the 1951 paper's reference (8)"
+        note: >
+          The source of the published CO2/water k_L values from which Danckwerts
+          infers s ~ 5 per second. Not on disk, and the k_L values themselves are
+          not printed in the 1951 paper. The page uses s ~ 5 only as the paper's
+          own order of magnitude and states that it cannot test anything, because
+          it is obtained by inverting the relation under test - which the paper
+          does not say in so many words, so the page flags that step as an
+          inference.
+    data:
+      tier: 6
+      method: table
+      status: complete
+      note: >
+        The paper is pure theory - no figures, no tables, no measurements, and it
+        says so. The shipped CSV is the sixteen numeric statements in its running
+        text, which are reproduction targets rather than data. No other page's
+        dataset is loaded.
+    related: [A3.1, A3.2, F3.1, F3.5, A2.3, J1.5, A2.1]
+
   - id: A3.4
     slug: wakao-funazkri
     title: "Wakao–Funazkri particle–fluid mass and heat transfer"

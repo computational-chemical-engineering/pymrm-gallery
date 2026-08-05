@@ -1,0 +1,97 @@
+dataset_id: danckwerts-1951-printed-numbers
+title: Every numeric statement in the running text of Danckwerts (1951), and the targets this page is checked against
+status: complete
+
+source:
+  authors:
+    - "Danckwerts, P. V."
+  year: 1951
+  container: "Industrial and Engineering Chemistry 43(6) 1460-1467"
+  doi: 10.1021/ie50498a055
+  access: >
+    Institutional subscription (TU Eindhoven), lawful access. The ACS PDF is
+    held outside this repository at ~/papers/pymrm-gallery/ie50498a055.pdf and
+    is not committed. No page image is reproduced anywhere in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    pdftoppm -r 300 renders of pages 1461-1466, read by eye, plus
+    nearest-neighbour zoomed crops at the same resolution for the two constants
+    the PDF text layer mangles. 300 ppi is the scan's NATIVE resolution:
+    pdfimages -list reports every page as CCITT-G4 bilevel at 300x300 ppi, so
+    rendering at 600 would be 2x interpolation and would add no information.
+  figure: "none - the article contains no figures and no tables"
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-05
+  estimated_error: >
+    None on the transcription itself: every row was read off a render at the
+    scan's native 300 ppi and each value is printed to the precision shown. The
+    paper's own numbers are rounded, sometimes loosely, and the page reports the
+    deviations rather than reconciling them.
+
+conditions:
+  what_this_paper_contains: >
+    NOTHING MEASURED. The article is a theory paper with no figures and no
+    tables. Danckwerts states this himself: "No attempt has been made to compare
+    the expressions derived here with published experimental measurements."
+    Every row below is either an input he assumes, a definition, or a number he
+    computed from his own equations. This CSV is therefore a set of
+    REPRODUCTION targets, not data, and the page's data tier is 6.
+  the_one_row_that_touches_experiment: >
+    `s_packed_tower` (s ~ 5 s^-1) is inferred from published kL values for CO2
+    and water in packed towers, cited as Perry's Chemical Engineers' Handbook
+    (1941), pp. 1179 and 1184. That handbook is NOT on disk and the kL values
+    themselves are not printed in this article. The article says only "tentative
+    values of s, calculated from published values of kL"; THAT THE CALCULATION IS
+    THE INVERSION OF kL = sqrt(D s) - the very relation one would want to test -
+    IS AN INFERENCE, not something the paper states. It is a safe one (eq. 8 is
+    the only relation in the article joining s to kL, and the implied kL is the
+    right order for a packed tower) but it is labelled an inference here and on
+    the page, alongside the mu, rho and g of the falling-film check. The page
+    uses the row only as the paper's own order of magnitude and says so.
+  transcription_trap_1: >
+    `L_example_D` and `D_water` are both 1e-5 cm2/s. The PDF text layer renders
+    the first of them as "D = 10-3 sq. cm. per second" - the pre-1980 scan digit
+    trap that docs/pdf-findings.md warns about. The native 300 ppi render, zoomed
+    with nearest-neighbour interpolation, shows a clear
+    superscript minus five, and the worked value of L only comes out at the
+    printed 0.05 with 1e-5 (1e-3 gives 5.1). Read from the image, confirmed by
+    the paper's own arithmetic.
+  transcription_trap_2: >
+    `depth_fraction` is printed as the fraction one-hundredth, set as a small
+    stacked "1/100" that the text layer drops entirely. It is confirmed twice:
+    from the render, and because 2*erfcinv(0.01) = 3.6428 is the coefficient
+    3.6 the paper prints in the same sentence, whereas one-tenth would give
+    2.326.
+  printing_defect_found: >
+    Not a row here, because it is an equation rather than a number, but recorded
+    with the same evidence: Eq. 25 prints its exponent as kG^2 theta / HD while
+    the erfc argument in the SAME equation is (kG/H) sqrt(theta/D). Eq. 29,
+    which Eq. 25 explicitly cites, gives k^2 theta / D with k = kG/H, so the
+    exponent must be kG^2 theta / (H^2 D). The page proves it from the paper's
+    own Eq. 9, and the proof does not depend on where it is evaluated: over a
+    15-point (H, kG/H) sweep the H^2 form reproduces Eq. 9 everywhere (worst
+    4.1e-12) and the printed HD form reproduces it nowhere (closest 4.2 % off).
+    Both numbers are computed on the page and are in agreement.json as
+    eq25_collapse_worst_over_Hk and eq25_printed_best_dev_over_Hk. The printed
+    form also diverges, but only where k^2(H-1) > sD, so that symptom is
+    conditional and the page says so. Reported, not silently repaired.
+
+columns:
+  - {name: id,            unit: "-",  description: stable key used by the notebook to look the row up}
+  - {name: journal_page,  unit: "-",  description: page of Ind. Eng. Chem. 43 on which the statement appears}
+  - {name: quantity,      unit: "-",  description: what the number is}
+  - {name: printed_value, unit: varies, description: the value exactly as printed}
+  - {name: units,         unit: "-",  description: units as printed (CGS throughout)}
+  - {name: relation,      unit: "-",  description: the paper's own expression the value follows from, where it gives one}
+  - {name: printed_text,  unit: "-",  description: the sentence transcribed from the native 300 ppi render}
+  - {name: kind,          unit: "-",  description: "assumption | input | definition | stated_result"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). Short quotations of the sentences carrying each number are included
+  so that a reader can audit the transcription without the PDF; no figure, no
+  page image and no substantial portion of the text is reproduced.

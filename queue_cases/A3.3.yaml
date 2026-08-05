@@ -5,7 +5,8 @@ catalog_reference: Ind. Eng. Chem. 43 (1951)
 priority: P1
 tier: T0
 structures: S4
-status: ready
+status: published
+page: pages/A3.3-danckwerts-surface-renewal/
 reference:
   authors:
   - Danckwerts, P. V.
@@ -22,15 +23,33 @@ paper:
     of Ind. Eng. Chem. 43(6), and the Danckwerts article starts part-way down
     p. 1460 under a preceding article on methyl vinyl ether conductivity. Title,
     author, affiliation (Cambridge) and the received date (August 8, 1950) all
-    read cleanly at 600 dpi. Text layer is usable for prose and UNUSABLE for
-    numbers - see the traps below.
+    read cleanly. NATIVE RESOLUTION IS 300 ppi: pdfimages -list reports every
+    page as CCITT-G4 bilevel at 300x300, so renders are made at -r 300 and
+    anything higher is interpolation. Text layer is usable for prose and
+    UNUSABLE for numbers - see the traps below.
 blocker: null
 staged_at: queue_cases/A3.3/page/
 notes: >-
-  BUILT AND READY. Nine sections, build_page.py + index.ipynb executed (30 s),
-  meta.yaml, README.md, models_entry.yaml, agreement.json, one CSV with sidecar.
+  BUILT, VERIFIED, FIXED AND READY. Nine sections, build_page.py + index.ipynb
+  executed (57 s), meta.yaml, README.md, models_entry.yaml, agreement.json
+  (55 metrics), one CSV with sidecar.
   Nothing moved into pages/. A3.3 does not exist in models.yaml yet, so the
   models_entry.yaml block appends rather than upgrading.
+
+  FIXED AFTER ADVERSARIAL VERIFICATION (2026-08-05, review/verification.md,
+  verdict "safe after fixes"). Two headline numbers were discretisation-limited
+  because they alone were not Richardson-extrapolated: the second-order error at
+  Danckwerts' illustrative point was +0.31 % raw and is +0.2203 % extrapolated,
+  and the instantaneous-limit worst deviation was 0.2401 % raw and is 0.4848 %
+  extrapolated on the corrected row set. Every reported agreement is now
+  extrapolated, with the raw value printed beside it, and a PURE-DISCRETISATION
+  CONTROL (the same two-species solver at c0'/c* = 1e6, where the answer is
+  exactly sqrt 2) is a printed check: +0.1006 % raw at n_t = 400, +0.0104 %
+  extrapolated. The three metrics that had no break-table row - the two above
+  and kL_coth_worst_rel - now have one, and the table carries the general lesson
+  that caught this: every break row perturbs an input and watches a number move,
+  so none can catch a baseline that is wrong rather than insensitive. Break
+  table is now 19 rows (14 move, 5 structural).
 
   WHAT THE PAPER IS. Pure theory. No figures, no tables, no measurements, and
   Danckwerts says so explicitly. Validation is therefore tier 3 on the builder
@@ -38,7 +57,8 @@ notes: >-
   and no figure needed digitising, so no maintainer review is required and the
   case never stalled.
 
-  TWO TRANSCRIPTION TRAPS, both confirmed at 600 dpi and both now break-table
+  TWO TRANSCRIPTION TRAPS, both confirmed on nearest-neighbour zoomed crops at
+  the scan's native 300 ppi (and independently by the verifier) and both now break-table
   rows. (1) The falling-film example's D is printed 1e-5 and the PDF text layer
   renders it "10-3"; the worked L only comes out at the printed 0.05 with 1e-5.
   (2) The depth-of-penetration fraction is a stacked "1/100" that the text layer
@@ -47,20 +67,29 @@ notes: >-
 
   ONE PRINTED DEFECT FOUND AND REPORTED (not repaired): eq. 25's exponent is
   printed kG^2 theta / HD where eq. 29, which it cites, and the erfc argument in
-  the same equation both require H^2. Proved from the paper's own eq. 9 - with
-  H^2 the eq. 25 integral collapses onto eq. 9 to 3.1e-13, with the printed HD it
-  diverges.
+  the same equation both require H^2. Proved from the paper's own eq. 9, and the
+  proof is PARAMETER-INDEPENDENT: over a 15-point (H, kG/H) sweep the H^2 form
+  reproduces eq. 9 everywhere (worst 4.1e-12) and the printed form nowhere
+  (closest 4.2 % off). The printed form also DIVERGES, but only where
+  k^2(H-1) > sD - at H = 5, kG/H = 0.7 it does; at kG/H = 0.3 it converges to a
+  finite wrong number. Both behaviours are printed; the divergence is no longer
+  stated unconditionally anywhere.
 
   THREE OF THE PAPER'S OWN NUMBERS ARE LOOSE and the page reports rather than
   reconciles them: "about 6 mm" against 6.83 computed from his own 3.6 (+14 %),
-  "about 2 mm" against 2.141 (+7 %), and "c0'/c* > 50" where eq. 36's exact
+  "about 2 mm" against 2.141 (+7 %) - BOTH roundings DOWN, the first a
+  truncation where rounding would have given 7, the second ordinary rounding;
+  an earlier draft claimed he rounded the layer UP, which his own figures
+  contradict - and "c0'/c* > 50" where eq. 36's exact
   threshold is 53.01 - at exactly 50 his own criterion is not met (0.94186
   against the 0.95 it demands).
 
   WHAT THE PAGE CANNOT CONCLUDE, stated as its main negative result: the sqrt(D)
   exponent is the theory's only discriminating claim and this paper contains
-  nothing that could test it. s ~ 5 s^-1 is obtained by INVERTING k_L = sqrt(Ds)
-  from handbook coefficients that are not printed here; film theory fits the same
+  nothing that could test it. s ~ 5 s^-1 comes from handbook coefficients that
+  are not printed here; that the step is the INVERSION of k_L = sqrt(Ds) is an
+  INFERENCE and is flagged as one throughout (the paper says only "tentative
+  values of s, calculated from published values of k_L"). Film theory fits the same
   datum exactly as well by inverting k_L = D/x_L (7.07e-3 cm/s and 14.1 um
   respectively), one free constant each, zero residual each.
 
@@ -77,12 +106,19 @@ notes: >-
   METRICS BELOW CI's FLOOR. Four metrics are algebraic identities under
   check_agreement.py's ABS_FLOOR = 1e-12 and are therefore NOT compared by CI:
   eq25_collapse_to_eq9 (3.1e-13), eq36_closed_vs_quadrature (2.2e-16),
-  eq17_from_eq15_16 (6.2e-15) and eq13_vs_eq12 (exactly 0). Each has a companion
-  metric above the floor that carries its break row - eq25_printed_growth_rate,
-  the eq. 31 break row, and eq17_swapped_erf_dev. Do not treat the four as
-  protected.
+  eq17_from_eq15_16 (6.2e-15) and eq13_vs_eq12 (exactly 0). A break row is not a
+  metric and is not in agreement.json, so what carries them is a COMPANION METRIC
+  above the floor from the same calculation: eq25_collapse_worst_over_Hk
+  (4.1e-12, the same collapse swept over (H, kG/H)) and eq25_printed_growth_rate
+  for eq. 25; eq36_ratio_at_printed_50 and eq36_threshold_c0p_over_cstar for
+  eq. 36; eq17_swapped_erf_dev for eq. 17. eq13_vs_eq12 has no companion and is
+  labelled definitional. Do not treat the four as protected.
 
-  ONE DEFECT-INJECTION TEST WAS INITIALLY POWERLESS and the page records it:
-  swapping erf and erfc in eq. 16 moves nothing at c0'/c* = 1, because the
-  equation is symmetric in the two there. Re-run at c0'/c* = 3 it moves 67 %.
+  TWO DEFECT-INJECTION POINTS WERE DEGENERATE AND BOTH ARE FIXED, one of them
+  after verification: swapping erf and erfc in eq. 16 moves nothing at
+  c0'/c* = 1, because the equation is symmetric in the two there. The break-table
+  row was always evaluated at c0'/c* = 3 (67 %); the eq.-15 INDEPENDENCE TEST
+  still had its middle row sitting on the degenerate point, and that row is now
+  run at (D'/D, c0'/c*) = (1, 3) instead of (1, 1). All three of its rows now
+  move under the swap (41-199 %).
 updated: '2026-08-05'
