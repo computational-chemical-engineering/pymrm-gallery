@@ -1039,7 +1039,25 @@ $[B]$-based results against the raw friction system over the whole ternary
 composition triangle and over the whole transient, with no code in common.
 Check 3b is deliberately labelled for what it is — an algebraic identity
 between two ways of inverting the same $2\times2$ matrix, which would still
-agree if that matrix were wrong."""))
+agree if that matrix were wrong.
+
+**Checks 4 and 5's first number are also one algebraic identity, and this page
+did not label them.** `flux_nonuniformity` and `mole_balance_error` arrived here
+with `A4.9`'s dataset — this page and `A4.9` are the only two in the repository
+carrying those metric names, and the block was copied rather than rebuilt.
+`solve_capillary` drives $\nabla\!\cdot\!J$ to `tol=1e-12` with
+`construct_div(nu=0)`, so on a Cartesian grid the flux-uniformity number *is* the
+converged Newton residual re-divided by a scale; and with the flux uniform,
+$J_0 = J_L$, so the closed-cell mole balance is zero **iff** the uniformity check
+passes. Neither can detect a wrong diffusivity, a wrong $(L/A)$ or a wrong bulb
+volume. The injection row below shows the error class they *do* catch.
+
+Nothing on this page's conclusions rests on them — checks 3 and 6 are what carry
+the elimination-invariance argument, and check 3b was already labelled — but the
+numbers were presented bare beside checks that do have power, and both sit below
+`check_agreement.py`'s `ABS_FLOOR = 1e-12`, so CI does not compare them at all.
+*A check's power depends on the physics, not on the code: it does not survive
+being copied to another page.*"""))
 
 # -------------------------------------------------------------------------- 28
 cells.append(code("""# 1. Worked example 1: recomputed [D] vs the printed matrix (rounding-limited).
@@ -1069,19 +1087,54 @@ print(f"     the friction balance NOT used in the solve : {unused_balance:.1e} (
 #     call build_b, so this confirms the closed-form 2x2 inverse only.
 print(f"3b. algebraic identity, [B]-solve vs adjugate/det: {ms_fick_equiv:.2e}")
 
-# 4. Conservation: closed cell, so every species' total moles is constant.
+# 4. STRUCTURAL. Conservation: closed cell, so every species' total moles is
+#    constant. Zero iff check 5's flux uniformity holds - one identity, see below.
 tot0 = vol_1 * x1_0 + vol_2 * x2_0
 tot1 = vol_1 * x1_ms[-1] + vol_2 * x2_ms[-1]
 mole_err = float(np.abs(tot1 - tot0).max() / tot0.sum())
-print(f"4. species mole-balance error (closed cell)    : {mole_err:.2e}")
+print(f"4. species mole-balance error (closed cell)    : {mole_err:.2e}  [STRUCTURAL]")
 
-# 5. Quasi-steady + time-step independence.
+# 5. STRUCTURAL flux uniformity (the converged Newton residual restated), plus a
+#    genuine time-step study.
 j_chk = flux_ms(x_ss, x_n2co2, x_h2n2)
 flux_spread = float(np.abs(j_chk - j_chk.mean(axis=0)).max() / np.abs(j_chk).max())
 t_f, x1_f, _, _, _ = simulate(flux_ms, x1_0, x2_0, n_steps=800)
 dt_err = float(np.abs(np.interp(t_h, t_f, x1_f[:, 1]) - x1_ms[:, 1]).max())
 print(f"5. flux non-uniformity along capillary         : {flux_spread:.2e}"
-      f";  max N2 shift on halving dt: {dt_err:.2e}")
+      f"  [STRUCTURAL]")
+print(f"   max N2 shift on halving dt                  : {dt_err:.2e}")
+
+# 5b. What checks 4 and 5 can and cannot see. This block was copied from A4.9
+#     with its dataset; the break table did not travel, so here it is.
+def _flux_uniformity(maxfev=30, nu=0, dms=d_ms):
+    div_alt = construct_div(shape, z_f, nu=nu, axis=0)
+    def residual(x):
+        g, jac = numjac(
+            lambda xx: (div_alt @ flux_ms(xx, x_n2co2, x_h2n2, dms).reshape((-1, 1))
+                        ).reshape(shape), x)
+        return g.reshape((-1, 1)), jac
+    x0 = np.linspace(0, 1, n_z)[:, None] * (x_h2n2[:n_i] - x_n2co2[:n_i]) + x_n2co2[:n_i]
+    xs = newton(residual, x0, maxfev=maxfev, tol=1e-12).x.reshape(shape)
+    j = flux_ms(xs, x_n2co2, x_h2n2, dms)
+    return (float(np.abs(j - j.mean(axis=0)).max() / np.abs(j).max()),
+            float(j[0, 1] / j[0, 0]))
+
+d_bad = d_ms.copy(); d_bad[0, 1] = d_bad[1, 0] = d_ms[0, 1] / 10.0   # lost decade
+print("5b. what checks 4 and 5 can see - the block copied from A4.9, broken on purpose")
+print(f"    {'injected defect':<44}{'flux nonunif':>14}{'J2/J1':>9}")
+for label, kw in (("(baseline)", {}),
+                  ("D(H2-N2) 83.3 -> 8.33 e-6 (lost decade)", dict(dms=d_bad)),
+                  ("Newton stopped after 1 iteration", dict(maxfev=1)),
+                  ("construct_div(nu=1), wrong geometry", dict(nu=1))):
+    fs, ratio = _flux_uniformity(**kw)
+    print(f"    {label:<44}{fs:14.2e}{ratio:+9.4f}")
+struct_break_unconverged = _flux_uniformity(maxfev=1)[0]
+struct_break_wrong_nu = _flux_uniformity(nu=1)[0]
+struct_blind_lost_decade = _flux_uniformity(dms=d_bad)[0]
+print("    A tenfold error in the diffusivity that drives the whole exchange flips")
+print("    J2/J1 outright while the residual stays at machine zero. Checks 4 and 5")
+print("    detect an unconverged solve and a wrong nu - a wrong FORMULA, never a")
+print("    wrong NUMBER. Checks 3 and 6 are what carry this page's argument.")
 
 # 6. Elimination invariance (from the permutation runs above).
 print(f"6. elimination invariance of Maxwell-Stefan    : {ms_elim_spread:.1e} "
@@ -1130,6 +1183,12 @@ report_agreement("A4.2", {
     "ms_independent_equivalence": ms_indep_equiv,
     "unused_friction_balance": unused_balance,
     "ms_fick_algebraic_identity": ms_fick_equiv,
+    # The break rows for the two STRUCTURAL metrics below, copied from A4.9
+    # without their evidence. Both of those metrics sit under
+    # check_agreement.py's ABS_FLOOR = 1e-12 and are not compared by CI.
+    "structural_break_unconverged_newton": struct_break_unconverged,
+    "structural_break_wrong_nu": struct_break_wrong_nu,
+    "structural_blind_lost_decade": struct_blind_lost_decade,
     "mole_balance_error": mole_err,
     "flux_nonuniformity": flux_spread,
     "timestep_sensitivity": dt_err,

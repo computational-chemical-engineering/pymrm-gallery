@@ -32,8 +32,67 @@ it as validated against experiment.
 | *u* at the 1.7 V cutoff, *I* = 10 | 0.831 | 0.84 stated; 0.821 digitised |
 | optimum cathode porosity | 0.60 | 0.60 |
 | utilisation at that optimum | 0.928 | 0.97 |
-| total salt conservation | 1e−15 | — |
+| short-time anode concentration vs the semi-infinite solution | 7.7 mol/m³ | Fig. 4 to ±5 |
 | grid spread over a 4× refinement | 0.14 mV | — |
+| time-step spread (added 2026-08-05) | 0.27 mV, observed order 0.95 | — |
+| total salt conservation — **structural, see below** | 3e−16 | — |
+
+## The check that was ranked first and catches nothing it claimed
+
+`salt_conservation_drift` was **first of six** in the Validation section, under
+the claim that *"any sign error in the migration term, the transference number or
+the reaction coupling breaks it"*. It breaks on none of the three.
+
+It is a telescoping identity. With `r_c = eps*(c-c_o)/dt + div @ n_salt` and
+`n_salt[0] = n_salt[-1] = 0`, `sum(dx * div(n)) = n[N] - n[0] = 0` exactly, so
+`sum(eps*dx*c)` is constant for **any** interior flux expression and **any**
+parameters. Measured on the page's own residual:
+
+| injected defect | salt drift | short-time check | pore-wall check | *V*(*u* = 0.5) |
+| --- | --- | --- | --- | --- |
+| as published | 3.33e−16 | 7.7 mol/m³ | 1.1e−12 | 1.9850 V |
+| migration sign flipped in `n_salt` | **4.44e−16** | **169.8** | 4.4e−12 | **2.1643 V** (+179 mV) |
+| `(1−t⁰₊)` written as `t⁰₊` | **3.33e−16** | **72.7** | 4.8e−12 | **2.0911 V** (+106 mV) |
+| reaction coupling sign wrong in the solid | **3.33e−16** | 6.7 | — | **cell does not discharge** |
+| reaction coupling ×1.1 in the charge eq. | **2.22e−16** | 7.7 | **9.1e−02** | 1.9849 V |
+| no-anion BC on `n_salt` dropped at the Li | **8.67e−01** | 88.2 | — | cell dies |
+
+It is now ranked **last** and labelled `STRUCTURAL`. It is kept, because the last
+row is a real error class — the salt-flux boundary conditions — and nothing else
+on the page sees it. It is also 3.3e−16, below `check_agreement.py`'s
+`ABS_FLOOR = 1e-12`, so CI never compared it either.
+
+**The coverage the old ranking claimed does exist — it is just elsewhere.** The
+short-time semi-infinite comparison moves 22× on the migration sign and 9.4× on
+the transference number, so it is now ranked first; the Figure 2 comparison
+catches the reaction-coupling sign error, because the cell stops discharging.
+One gap is left stated rather than papered over: a coupling error in the *solid*
+balance alone (`ai` scaled, not sign-flipped) moves nothing here by more than a
+millivolt, and no check is constructible from the paper's published results.
+
+Note the pore-wall check is partly structural too: `r_p = div@i2 - ai` with
+`i2[0] = I` and `i2[-1] = 0` forces `sum(dx*ai) = -I` identically, so the *mean*
+flux is guaranteed. What it does catch is the same `ai` failing to appear in both
+balances.
+
+## The grid study was refining the wrong knob alone
+
+`Cell.march` fixes `dt, dt_max = 2e-5*t_ref, 6e-3*t_ref` growing ×1.3 — a schedule
+that is a function of the **current alone** and completely decoupled from `n_s`
+and `n_c`. So the grid-independence study held the temporal error *constant by
+construction*, and the page had no bound on it anywhere.
+
+`J3.5` had already implemented the correct fix — a `dt_scale` that multiplies
+`dt0` **and** `dt_max`, since on a growing schedule the step reached at a given
+time is set by the ceiling, not by the starting value. It was never inherited
+back. It is ported here. Measured: observed order 0.95, and the temporal error at
+the production schedule is **0.273 mV, 2.0× the 0.138 mV grid spread**. Both are
+far below the 25.5 mV model-vs-figure gap, so no conclusion moves — but the
+larger of the two numbers was the one nobody had.
+
+**`J3.1` shares this `march` and still does not have `dt_scale`.** Its
+`grid_V_spread_mV`, `grid_mean_eta_spread_frac` and `grid_peak_eta_ratio` are all
+in `agreement.json` and all hold `dt` constant. Not fixed here.
 
 ## The gap in the paper, and how it is closed
 

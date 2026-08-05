@@ -15,18 +15,23 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 4
+runtime_seconds: 11
 datasets:
   - kunii_levenspiel_1968_appendix_values.csv
 
+# Ranked by measured power, not by how small the residual looks. The ranking is a
+# claim, so the page measures it: every entry below has a row in the notebook's
+# defect-injection table. See PRIMARY vs STRUCTURAL.
 validation:
-  - all eight printed intermediates of appendix C (u_br, u_b, delta, K_bc, K_ce, gamma_c, gamma_e, K_r/K_m) recomputed from eqs. 2, 3, 10, 12, 15, 17, 45 and 51 to 0.46 % worst case
-  - appendix A's nine printed quantities, ending in (Sh)_over-all = 0.045 Re - 0.0101, reproduced to 0.57 % - the same flow model driving gas-solid mass transfer through eq. 27
-  - appendix B's (Nu)_apparent = 0.070 + 0.051 Re reproduced to 1.8 % using its printed 8.70, which localises the slip - its own stated eps_mf = 0.50 gives 7.87 and would move the slope by 10.6 %
-  - the pymrm distributed three-region solve, with the cloud and emulsion frozen, reproduces eq. 54 with observed first order 0.999 and 4.8e-7 after Richardson extrapolation - two independent routes to the same number
-  - the K_r -> 0 limit of eq. 49 is exactly K_m u_0/(u_0-u_mf) to 6e-9, not the K_m of eq. 57
-  - global mass balance on the extended solve closes to 8e-6
-  - the ceiling K_f = K_bc L_f/u_b is independent of u_0 to 3.7e-16, which is an analytic identity of the model
+  # --- PRIMARY: the only checks on this page that can see a wrong NUMBER -------
+  - PRIMARY - all eight printed intermediates of appendix C (u_br, u_b, delta, K_bc, K_ce, gamma_c, gamma_e, K_r/K_m) recomputed from eqs. 2, 3, 10, 12, 15, 17, 45 and 51 to 0.46 % worst case. Measured power - a 22 % error in eq. 10's 4.5 moves it 0.46 % -> 10.5 % (23x), a transposed 6.78 -> 8.76 in eq. 12 moves it to 29.4 %, and a transposed 0.711 -> 0.171 in eq. 51 to 217 %
+  - PRIMARY - appendix A's nine printed quantities, ending in (Sh)_over-all = 0.045 Re - 0.0101, reproduced to 0.57 % - the same flow model driving gas-solid mass transfer through eq. 27. Independent of appendix C in every input; moves to 7.3 % on the same 4.5 injection
+  - PRIMARY - appendix B's (Nu)_apparent = 0.070 + 0.051 Re reproduced to 1.8 % using its printed 8.70, which localises the slip - its own stated eps_mf = 0.50 gives 7.87 and would move the slope by 10.6 %. Moves to 16.6 % on the 4.5 injection
+  - PRIMARY - two grid ladders, one per branch. convect=False reproduces eq. 54 at observed order 0.999, 4.8e-7 after Richardson extrapolation; convect=True, the branch the reported 7-15 % extension is taken on, refines separately at observed order 1.02 with the reported n = 1600 value 0.34 % above the Richardson limit
+  # --- STRUCTURAL: algebraic identities. A wrong formula, never a wrong number --
+  - STRUCTURAL - the K_r -> 0 limit of eq. 49 is K_m u_0/(u_0-u_mf) to 6e-9, not the K_m of eq. 57. This is an identity - gamma_e is DEFINED by eq. 15's closure, so every coefficient cancels. It cannot detect any value of 0.711, 4.5, 5.85 or 6.78 (worst injected movement 1.2x), nor gamma_c and gamma_e being swapped. It does detect gamma_e off eq. 15's closure (7.9e-2) and a missing 1/(1-eps_mf) in eq. 50
+  - STRUCTURAL - global mass balance on the extended solve closes to 8e-6. This is an identity - the exchange block's columns sum to -delta*gamma_k*K_r and the three velocities sum to u_0 by construction, so the residual is first-order upwind truncation (observed order 0.91, halving on every refinement). It cannot detect any coefficient value (1.8x on the rows that leave the flow pattern intact). It does detect an asymmetric exchange block (0.58) and a velocity set that misses u_0 (5.5e-2)
+  - STRUCTURAL - the ceiling K_f = K_bc L_f/u_b is independent of u_0 to 3.7e-16. K_bc(d_b) and u_br(d_b) contain no u_0 at all, so this is forced for any coefficient values; it confirms the u_0-independence claim and nothing else. It also sits below check_agreement.py's ABS_FLOOR = 1e-12 and is therefore not compared by CI
 
 adds: >
   The published model is a continued fraction and an exponential, and the page
@@ -62,10 +67,20 @@ agreement: >
   Tier 6. Nothing on this page is compared with a measurement. The numbers are
   the paper's own printed results: appendix C's eight intermediates to 0.46 %,
   appendix A's nine quantities to 0.57 %, appendix B to 1.8 % with its printed
-  8.70. The internal checks are stronger - the distributed pymrm solve reproduces
-  the closed-form eq. 54 to 4.8e-7 after Richardson extrapolation with observed
-  order 0.999, the mass balance closes to 8e-6, the K_r -> 0 limit matches
-  u_0/(u_0-u_mf) to 6e-9, and the ceiling's independence of u_0 holds to 3.7e-16.
+  8.70. Those three appendix comparisons are the page's real evidence, and this
+  entry used to say the opposite - that "the internal checks are stronger" because
+  their residuals are smaller. They are not. The mass balance (8e-6), the K_r -> 0
+  limit (6e-9) and the ceiling's u_0-independence (3.7e-16) are algebraic
+  identities of the model as implemented: they are forced for any values of the
+  four printed coefficients, and the page now measures that. Under a 22 % error in
+  eq. 10's 4.5 the appendix C comparison moves 23x while the mass balance goes
+  8.1e-6 -> 9.3e-6 and still prints "closure 0.001 %". The identities are kept and
+  labelled STRUCTURAL, with what each cannot detect stated beside it; they catch a
+  wrong formula, never a wrong number. The one internal check that does carry
+  weight is the pair of grid ladders, one per branch - eq. 54 reproduced to 4.8e-7
+  after Richardson extrapolation at observed order 0.999 on the frozen branch, and
+  the convect=True branch refined separately at order 1.02 because that is where
+  the reported extension number is taken.
 
 caveats: >
   No experimental comparison. The paper's data is figures 3, 5, 7, 8 and 9, all

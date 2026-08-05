@@ -15,22 +15,35 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 40
+runtime_seconds: 61
 datasets:
   - doyle-fuller-newman-1993-fig2.csv
   - doyle-fuller-newman-1993-parameters.csv
   - doyle-fuller-newman-1993-stated-results.csv
 
+# Ranked by measured power, not by how small the residual looks. The ranking is a
+# claim, so the notebook measures it: every entry has a defect-injection row.
+# Salt conservation used to be listed first; it is now last, and labelled.
 validation:
-  - Eq. 16 (open-circuit potential, read from a page image) against the paper's own plotted dashed curve, 237 digitised points
-  - Eq. 26 and Eq. 27 recomputed against the S_c and S_s values the paper prints, which independently confirm D_s and the salt diffusivity
-  - the conductivity recovered twice, from Eq. 28 and from Eq. 29, and both checked against the paper's stated sigma/kappa = O(1e5)
-  - exact conservation of total salt, which the flux form of the salt balance makes a property of the discretisation
-  - grid independence over a 4x refinement
-  - the short-time concentration rise at the anode against the semi-infinite analytical solution and against the paper's Figure 4
-  - the long-time pore-wall flux against the charge-balance value and the paper's Figure 5
+  # --- PRIMARY ---------------------------------------------------------------
+  - PRIMARY - the short-time concentration rise at the anode against the semi-infinite analytical solution c(0,t)-c_0 = 2J sqrt(t/pi D), and against the paper's Figure 4. Mean 7.7 mol/m3 over five times, no conductivity in it and nothing fitted. Measured power - this is the check that catches two of the three error classes the old ranking wrongly credited to salt conservation - a flipped migration sign moves it 7.7 -> 169.8 mol/m3 (22x) and writing t0+ where (1-t0+) belongs moves it to 72.7 (9.4x)
+  - PRIMARY - the five digitised Figure 2 curves, pooled 25.5 mV. The headline, and what catches the third named class - a reaction-coupling sign error stops the cell discharging at all (u_end 0.87 -> 0.00 in 63 steps)
+  - PRIMARY - Eq. 16 (open-circuit potential, read from a page image) against the paper's own plotted dashed curve, 237 digitised points, 3.25 mV against a ~3 mV digitisation accuracy
+  - PRIMARY - Eq. 26 and Eq. 27 recomputed against the S_c and S_s values the paper prints, which independently confirm D_s and the salt diffusivity
+  - PRIMARY - the conductivity recovered twice, from Eq. 28 and from Eq. 29, and both checked against the paper's stated sigma/kappa = O(1e5)
+  # --- Numerical error bounds ------------------------------------------------
+  - grid independence over a 4x refinement, spread 0.138 mV
+  - time-step independence, NEW - Cell.march sets dt and dt_max from the current alone, completely decoupled from n_s and n_c, so the grid study above holds the temporal error constant by construction and the page had no bound on it. Ported J3.5's dt_scale, which multiplies both. Observed order 0.95 (implicit Euler); total temporal error at the production schedule 0.273 mV, 2.0x the grid spread. Both far below the 25.5 mV model-vs-figure gap, so no conclusion moves. J3.1 shares this march and still does not have dt_scale
+  # --- Partly structural -----------------------------------------------------
+  - PARTLY STRUCTURAL - the long-time pore-wall flux against the charge-balance value and the paper's Figure 5. r_p = div@i2 - ai with i2[0] = I and i2[-1] = 0 forces sum(dx*ai) = -I identically, so the MEAN is guaranteed for any coupling. It does detect the same ai failing to appear in the charge and solid balances (9.1e-2 when scaled in one only)
+  - the Bruggeman exponent in the salt flux, which the paper leaves ambiguous, discriminated by its own results
   - the utilisation at the 1.7 V cutoff against the 84 % the paper states
   - the porosity optimisation the paper reports as a single sentence
+  # --- STRUCTURAL ------------------------------------------------------------
+  - STRUCTURAL, DEMOTED FROM FIRST TO LAST - conservation of total salt, 3.3e-16. The old prose claimed "any sign error in the migration term, the transference number or the reaction coupling breaks it". It breaks on NONE of them - measured, the worst of the three moves it 3.33e-16 -> 4.44e-16 while the cell potential moves 179 mV. It is a telescoping identity - with n_salt = 0 at both ends, sum(dx*div(n)) = n[N] - n[0] = 0 for any interior flux and any parameters. What it DOES test is exactly those two boundary values - dropping the no-anion condition at the lithium moves it to 8.7e-01. It also sits below check_agreement.py's ABS_FLOOR = 1e-12, so CI does not compare it
+  # One gap is stated rather than papered over - a coupling error in the SOLID
+  # balance alone (ai scaled, not sign-flipped) moves nothing on this page by
+  # more than a millivolt, and no check is constructible from published results.
 
 adds: >
   The paper never prints the conductivity of its own electrolyte: Appendix A
@@ -59,8 +72,20 @@ agreement: >
   same sign at all four currents. The 1.7 V cutoff utilisation at I = 10 comes
   out at 0.831, between the 0.821 the digitised curve gives and the 0.84 the
   paper states. The porosity optimum is found at 0.60, exactly where the paper
-  puts it, at 0.928 utilisation against their 0.97. Salt is conserved to 3e-16
-  and the cell potential moves by 0.14 mV over a fourfold grid refinement.
+  puts it, at 0.928 utilisation against their 0.97.
+
+  Numerically: the cell potential moves 0.14 mV over a fourfold grid refinement
+  and 0.27 mV over the time-step refinement that was added on 2026-08-05 - the
+  step schedule is a function of current alone, so the grid study had been
+  holding the temporal error constant by construction. Both are far below the
+  25.5 mV model-vs-figure gap.
+
+  Salt is conserved to 3e-16, and that number is NOT evidence for the model. It
+  is a telescoping identity of the discretisation, forced for any interior flux
+  and any parameters; it used to be ranked first of six on the claim that it
+  catches a sign error in the migration term, the transference number or the
+  reaction coupling, and it catches none of the three. It is now ranked last and
+  labelled. What it does test is the two salt-flux boundary conditions.
 
 caveats: >
   Provenance tier 6. Figure 2 contains no experimental data at all - every curve

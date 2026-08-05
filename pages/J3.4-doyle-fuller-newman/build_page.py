@@ -546,12 +546,19 @@ cells.append(code('''class Cell:
         return sol.x if np.max(np.abs(r)) < 1e-6 else None
 
     def march(self, I, u0=None, v_stop=1.55, v_top=3.2, u_stop=0.9995,
-              max_steps=800, record=None, t_stop=None):
-        """Implicit-Euler march; dt halves on a failed Newton solve."""
+              max_steps=800, record=None, t_stop=None, dt_scale=1.0):
+        """Implicit-Euler march; dt halves on a failed Newton solve.
+
+        `dt_scale` multiplies BOTH the initial step and the ceiling, so the whole
+        schedule refines together. Scaling `dt` alone would do nothing here: on a
+        growing schedule the step reached at a given time is set by `dt_max`, not
+        by the starting value. This is `J3.5`'s fix, ported back; `J3.1` shares
+        this `march` and still does not have it.
+        """
         u0 = P["u_0"] if u0 is None else u0
         y = self.initial(u0)
         t_ref = self.t_full / abs(I)
-        dt, dt_max = 2e-5 * t_ref, 6e-3 * t_ref
+        dt, dt_max = 2e-5 * t_ref * dt_scale, 6e-3 * t_ref * dt_scale
         t, out, snaps = 0.0, [], {}
         dt_peak = dt
         targets = sorted(record or [])
@@ -689,44 +696,50 @@ does not shrink to the digitisation error."""))
 # --------------------------------------------------------------- validation
 cells.append(md(r"""## Validation
 
-Six checks, in order of what they can catch.
+Seven checks, in order of what they can catch — and the order has been
+**measured**, not asserted. An earlier version of this page ranked salt
+conservation first of six and claimed *"any sign error in the migration term, the
+transference number or the reaction coupling breaks it"*. It breaks on none of
+them. That claim is corrected below, and every check now carries a
+defect-injection row.
 
-1. **Salt conservation.** The flux form derived above makes the total salt in
-   the cell a conserved quantity of the discretisation, not just of the
-   continuum. Any sign error in the migration term, the transference number or
-   the reaction coupling breaks it.
-2. **Grid independence.**
-3. **The short-time concentration rise at the anode**, against the paper's own
-   Figure 4 *and* against the semi-infinite analytical solution, which the
-   separator is for the first few seconds. This tests $D$, the transference
-   number and the flux boundary condition together, with no conductivity in it.
-4. **The pore-wall flux at long times**, against the paper's Figure 5.
+1. **The short-time concentration rise at the anode**, against the semi-infinite
+   analytical solution *and* against the paper's own Figure 4. The separator is
+   semi-infinite for the first few seconds, so
+   $c(0,t)-c_0 = 2J\sqrt{t/\pi D}$ with $J = I(1-t^0_+)/F$ — no conductivity in
+   it, and no fitting. **This is the check that catches two of the three error
+   classes the old ranking attributed to salt conservation**: flipping the
+   migration sign moves it 7.7 → 170 mol/m³, and writing $t^0_+$ where
+   $(1-t^0_+)$ belongs moves it 7.7 → 73.
+2. **The comparison against the five digitised Figure 2 curves** — reported in
+   *Results* above rather than repeated here. The pooled 25.5 mV is the page's
+   headline, and it is what catches the third class: a sign error in the reaction
+   coupling stops the cell discharging altogether.
+3. **Grid independence**, and — new — **time-step independence**. `Cell.march`
+   fixes its step schedule as a function of current alone, completely decoupled
+   from `n_s` and `n_c`, so the grid study holds the temporal error *constant by
+   construction* and the page had no bound on it anywhere. It does now.
+4. **The pore-wall flux at long times**, against the paper's Figure 5. This one
+   is partly structural too, and the injection table says which part.
 5. **The Bruggeman exponent in the salt flux**, which the paper leaves
    ambiguous, discriminated by its own results.
-6. **The utilisation at the 1.7 V cutoff**, which the paper states."""))
+6. **The utilisation at the 1.7 V cutoff**, which the paper states.
+7. **Salt conservation — a structural identity, demoted from first to last.**
+   With `r_c = eps*(c-c_o)/dt + div @ n_salt` and `n_salt[0] = n_salt[-1] = 0`,
+   $\sum_i \Delta x_i (\nabla\!\cdot\!n)_i = n[N] - n[0] = 0$ *exactly*, so
+   $\sum \epsilon\,\Delta x\,c$ is constant for **any** interior flux expression
+   and **any** parameters. What it does test is the two salt-flux boundary
+   conditions; the injection table measures that. It is also 3.3e-16, below
+   `check_agreement.py`'s `ABS_FLOOR = 1e-12`, so CI does not compare it at all.
+   This page's own *Reuse* section and `J3.1` both described it correctly as
+   structural; only the Validation ranking overclaimed."""))
 
-cells.append(code('''# ---- 1. salt conservation --------------------------------------------------
-tr10 = runs["I=10"]
-salt_drift = np.abs(tr10[:, 3] / tr10[0, 3] - 1).max()
-print(f"1. total salt over the whole I=10 discharge: max relative drift "
-      f"{salt_drift:.2e}  ({len(tr10)} steps)")
-
-# ---- 2. grid independence ---------------------------------------------------
-print("\\n2. grid independence, cell potential at u = 0.5, I = 10 A/m2")
-grid_v = {}
-for n_s, n_c in [(12, 24), (24, 48), (48, 96)]:
-    tr = Cell(n_s=n_s, n_c=n_c).march(10.0)[0]
-    grid_v[(n_s, n_c)] = float(np.interp(0.5, tr[:, 0], tr[:, 1]))
-    print(f"   {n_s:3d} + {n_c:3d} cells   V = {grid_v[(n_s, n_c)]:.6f} V")
-grid_spread_mV = 1e3 * (max(grid_v.values()) - min(grid_v.values()))
-print(f"   spread over a 4x refinement: {grid_spread_mV:.3f} mV")'''))
-
-cells.append(code('''# ---- 3. the separator at short times ---------------------------------------
+cells.append(code('''# ---- 1. the separator at short times ----------------------------------------
 times = [1.0, 2.0, 5.0, 10.0, 20.0]
 cw = Cell(n_s=48, n_c=96)
 _, snaps = cw.march(10.0, record=times, t_stop=20.0)
 
-print("3. concentration at the anode face, I = 10 A/m2")
+print("1. concentration at the anode face, I = 10 A/m2")
 print("   the separator is semi-infinite while sqrt(D t) << delta_s, so")
 print("   c(0,t) - c_0 = 2 J sqrt(t / (pi D)) with J = I (1 - t0+) / F\\n")
 print(f"{'t/s':>6}{'pymrm':>10}{'analytic':>10}{'Fig. 4':>9}")
@@ -741,6 +754,46 @@ for t in times:
 print(f"\\n   mean |pymrm - analytic| over the five times: {np.mean(short_dev):.1f} mol/m3")
 print("   the Fig. 4 column is read off the printed figure to the nearest 5 mol/m3;")
 print("   it is a sanity check on the shape, not a fitted comparison.")'''))
+
+cells.append(code('''# ---- 3a. grid independence --------------------------------------------------
+print("3a. grid independence, cell potential at u = 0.5, I = 10 A/m2")
+grid_v = {}
+for n_s, n_c in [(12, 24), (24, 48), (48, 96)]:
+    tr = Cell(n_s=n_s, n_c=n_c).march(10.0)[0]
+    grid_v[(n_s, n_c)] = float(np.interp(0.5, tr[:, 0], tr[:, 1]))
+    print(f"   {n_s:3d} + {n_c:3d} cells   V = {grid_v[(n_s, n_c)]:.6f} V")
+grid_spread_mV = 1e3 * (max(grid_v.values()) - min(grid_v.values()))
+print(f"   spread over a 4x refinement: {grid_spread_mV:.3f} mV")
+
+# ---- 3b. time-step independence, the knob the grid study holds fixed --------
+print("\\n3b. time-step independence. march() sets dt and dt_max from the current")
+print("    alone, so 3a refined the grid at a CONSTANT temporal error. dt_scale")
+print("    multiplies both, which is the only way to refine a growing schedule.")
+DT_LEVELS = ((1.0, 800), (0.5, 1200), (0.25, 2000), (0.125, 3500))
+dt_v, dt_n = {}, {}
+for dts, ms in DT_LEVELS:
+    tr = Cell().march(10.0, dt_scale=dts, max_steps=ms)[0]
+    dt_v[dts] = float(np.interp(0.5, tr[:, 0], tr[:, 1]))
+    dt_n[dts] = len(tr)
+dt_diffs = [1e3 * abs(dt_v[a] - dt_v[b])
+            for a, b in ((1.0, 0.5), (0.5, 0.25), (0.25, 0.125))]
+print(f"    {'dt_scale':>10}{'steps':>8}{'V(u=0.5)':>12}{'change/mV':>12}{'order':>8}")
+for k, (dts, _) in enumerate(DT_LEVELS):
+    chg = f"{dt_diffs[k - 1]:12.4f}" if k >= 1 else f"{'':12}"
+    order = (f"{np.log2(dt_diffs[k - 2] / dt_diffs[k - 1]):8.2f}" if k >= 2 else f"{'':8}")
+    print(f"    {dts:10.4f}{dt_n[dts]:8d}{dt_v[dts]:12.6f}{chg}{order}")
+dt_order = float(np.mean([np.log2(dt_diffs[i] / dt_diffs[i + 1])
+                          for i in range(len(dt_diffs) - 1)]))
+dt_rich = dt_v[0.125] - (dt_v[0.25] - dt_v[0.125])          # first-order Richardson
+dt_spread_mV = 1e3 * abs(dt_v[1.0] - dt_rich)
+print(f"    observed order {dt_order:.2f} - first order, as implicit Euler gives.")
+print(f"    Total temporal error at the production dt_scale = 1: "
+      f"{dt_spread_mV:.3f} mV,")
+print(f"    which is {dt_spread_mV / grid_spread_mV:.1f}x the grid spread of "
+      f"{grid_spread_mV:.3f} mV. Time, not")
+print("    the grid, is the numerical error that limits this page, and no version")
+print("    of it before now had a bound on it. Both are far below the 25.5 mV")
+print("    model-vs-figure gap, so no conclusion moves.")'''))
 
 cells.append(code('''# ---- 4. the pore-wall flux at long times ------------------------------------
 cw2 = Cell()
@@ -757,7 +810,11 @@ print(f"      charge balance      {jn_balance:.3e} mol/(m2 s)")
 print(f"      model               {jn_mean:.3e} mol/(m2 s)")
 print(f"      spread across the cathode  {jn[m].min():.2e} to {jn[m].max():.2e}")
 print("   the paper's Fig. 5 reads about -0.5e-6 mol/(m2 s) over 2800-12600 s,")
-print("   and negative values are insertion, which fixes the sign convention.")'''))
+print("   and negative values are insertion, which fixes the sign convention.")
+print("   PARTLY STRUCTURAL: r_p = div@i2 - ai with i2[0] = I and i2[-1] = 0 forces")
+print("   sum(dx*ai) = -I identically, so the MEAN is guaranteed. What is not")
+print("   guaranteed is that the SAME ai appears in the charge and solid balances -")
+print("   the injection table below moves this to 9.1e-2 by scaling it in one only.")'''))
 
 cells.append(md(r"""### 5. The Bruggeman exponent the paper leaves ambiguous
 
@@ -854,6 +911,137 @@ print(f"   The model's 1.9 V crossing there is {marks['I=20'][0]:.3f} against "
       f"{marks['I=20'][1]:.3f} digitised.")'''))
 
 # ------------------------------------------------------------ what pymrm adds
+cells.append(md(r"""### 7. Salt conservation, and the defect-injection table that demotes it
+
+The ranking above is a claim, so here it is measured. Each row breaks one thing
+the old prose said salt conservation would catch, then re-evaluates every check on
+`Cell`'s own residual — nothing is reimplemented, only one term is changed.
+
+The last two rows are the error classes salt conservation *does* catch, added so
+that it too has a break row rather than being deleted."""))
+
+cells.append(code('''class _Inj(Cell):
+    """Cell with one term of the residual switchable. Everything else is inherited."""
+    MIG_SIGN = -1.0        # published: n_salt = -D grad c - (1-t0)i2/F
+    T0_AS_PRINTED = True   # published: the (1-t0+) form
+    AI_SOLID = 1.0         # published: the same ai in both balances
+    AI_CHARGE = 1.0
+    NO_ANION_BC = True     # published: n_salt = 0 at both ends
+
+    def fluxes(self, c, phi2, I):
+        gc, glnc, gp = self.grad @ c, self.grad @ np.log(c), self.grad @ phi2
+        t0f = np.empty(self.N + 1)
+        t0f[1:-1] = 0.5 * (self.t0_plus(c[:-1]) + self.t0_plus(c[1:]))
+        t0f[0], t0f[-1] = self.t0_plus(c[0]), self.t0_plus(c[-1])
+        w = (1 - t0f) if self.T0_AS_PRINTED else t0f
+        i2 = -self.kf * gp + self.nu_factor * self.kf * RTF * w * glnc
+        i2[0], i2[-1] = I, 0.0
+        n_salt = -self.Df * gc + self.MIG_SIGN * w * i2 / F_CONST
+        if self.NO_ANION_BC:
+            n_salt[0] = 0.0
+        n_salt[-1] = 0.0
+        return i2, n_salt
+
+    def residual(self, y, y_old, dt, I):
+        c, phi2, cs = self.unpack(y)
+        c_o, _, cs_o = self.unpack(y_old)
+        i2, n_salt = self.fluxes(c, phi2, I)
+        ai = self.a * self.i_transfer(c, phi2, cs)
+        r_c = self.eps * (c - c_o) / dt + self.div @ n_salt
+        r_p = self.div @ i2 - self.AI_CHARGE * ai
+        r_s = np.where(self.a > 0,
+                       (1 - self.eps_c) * (cs - cs_o) / dt + self.AI_SOLID * ai / F_CONST,
+                       cs)
+        ts = self.t_full / abs(I)
+        return np.stack([r_c * ts / P["c_0"], r_p * self.dc / abs(I),
+                         r_s * ts / C_T], axis=1).ravel()
+
+
+def probe_all(**over):
+    """Every check, for one injected defect."""
+    for k, v in dict(MIG_SIGN=-1.0, T0_AS_PRINTED=True, AI_SOLID=1.0,
+                     AI_CHARGE=1.0, NO_ANION_BC=True).items():
+        setattr(_Inj, k, over.get(k, v))
+    tr = _Inj().march(10.0)[0]
+    drift = float(np.abs(tr[:, 3] / tr[0, 3] - 1).max())
+    v05 = float(np.interp(0.5, tr[:, 0], tr[:, 1])) if tr[:, 0].max() > 0.5 else np.nan
+    # check 1: the short-time semi-infinite comparison
+    cs_ = _Inj(n_s=48, n_c=96)
+    _, sn = cs_.march(10.0, record=list(times), t_stop=20.0)
+    J = 10.0 * (1 - Cell.t0_plus(P["c_0"])) / F_CONST
+    d1 = [abs(cs_.unpack(sn[t])[0][0] - (P["c_0"] + 2 * J * np.sqrt(t / (np.pi * P["D"]))))
+          for t in times if t in sn]
+    c1 = float(np.mean(d1)) if d1 else np.nan
+    # check 4: the long-time pore-wall flux against charge balance
+    c4c = _Inj()
+    _, sl = c4c.march(10.0, record=[7000.0], t_stop=7000.0)
+    if 7000.0 in sl:
+        cl, pl, csl = c4c.unpack(sl[7000.0])
+        jj = c4c.i_transfer(cl, pl, csl) / F_CONST
+        mm = c4c.a > 0
+        c4 = abs(float(np.sum(jj[mm] * c4c.dx[mm]) / dc) / jn_balance - 1.0)
+    else:
+        c4 = np.nan
+    return drift, c1, c4, v05, float(tr[-1, 0]), len(tr)
+
+
+INJ = [
+    ("as published",                              {}),
+    ("migration sign flipped in n_salt",          dict(MIG_SIGN=+1.0)),
+    ("(1-t0+) written as t0+ in i2 and n_salt",   dict(T0_AS_PRINTED=False)),
+    ("reaction coupling sign wrong in the solid", dict(AI_SOLID=-1.0)),
+    ("reaction coupling x1.1 in the charge eq.",  dict(AI_CHARGE=1.1)),
+    ("no-anion BC on n_salt dropped at the Li",   dict(NO_ANION_BC=False)),
+]
+print("Defect injection: one residual term changed, every check re-evaluated")
+print(f"{'injected defect':<44}{'7 salt':>11}{'1 short':>9}{'4 flux':>10}"
+      f"{'V(u=.5)':>10}{'u_end':>8}")
+rows = []
+for label, over in INJ:
+    r = probe_all(**over)
+    rows.append((label,) + r)
+    d, c1, c4, v, ue, ns = r
+    vs = f"{v:10.4f}" if np.isfinite(v) else f"{'dies':>10}"
+    print(f"{label:<44}{d:11.3e}{c1:9.1f}{c4:10.2e}{vs}{ue:8.3f}")
+
+base = rows[0]
+salt_ratio_named = float(max(rows[i][1] for i in (1, 2, 3)) / base[1])
+salt_ratio_bc = float(rows[5][1] / base[1])
+short_ratio_named = float(max(rows[i][2] for i in (1, 2)) / base[2])
+print(f"\\nWorst movement over the THREE ERROR CLASSES the old prose named"
+      f" (migration sign,\\ntransference number, reaction coupling):")
+print(f"   check 7, salt conservation      : x{salt_ratio_named:8.2f}  "
+      f"({base[1]:.2e} -> {max(rows[i][1] for i in (1, 2, 3)):.2e})")
+print(f"   check 1, short-time separator   : x{short_ratio_named:8.2f}  "
+      f"({base[2]:.1f} -> {max(rows[i][2] for i in (1, 2)):.1f} mol/m3)")
+print(f"   check 7 on the ONE class it does catch (a leaky salt boundary):"
+      f" x{salt_ratio_bc:.2e}")
+print()
+print("Read the table. Salt conservation is 3.3e-16 -> 4.4e-16 on a migration sign")
+print("flip that moves the cell potential by 179 mV, and does not move at all on the")
+print("other two. It is a telescoping identity: sum(dx * div(n)) = n[N] - n[0] = 0")
+print("for ANY interior flux. What it DOES test is exactly the two boundary values -")
+print("drop the no-anion condition at the lithium and it goes to 8.7e-01.")
+print()
+print("The coverage the old ranking claimed does exist on this page - it is just not")
+print("here. Check 1 moves 22x on the migration sign and 9x on the transference")
+print("number. A reaction-coupling SIGN error stops the cell discharging (u_end 0.00")
+print("in 63 steps, caught by check 2), and a coupling error in the charge balance")
+print("moves check 4 to 9.1e-2.")
+print()
+print("One gap is left open rather than papered over: a coupling error of the SOLID")
+print("balance alone - ai scaled but not sign-flipped - moves nothing here by more")
+print("than a millivolt. No check on this page resolves it, and none is constructible")
+print("from the paper's published results.")'''))
+
+cells.append(code('''# ---- 7. salt conservation, the number itself --------------------------------
+tr10 = runs["I=10"]
+salt_drift = np.abs(tr10[:, 3] / tr10[0, 3] - 1).max()
+print(f"7. total salt over the whole I=10 discharge: max relative drift "
+      f"{salt_drift:.2e}  ({len(tr10)} steps)   [STRUCTURAL]")
+print("   Kept, because the salt-flux boundary conditions are a real error class")
+print("   and nothing else on this page sees them. Not evidence for the model.")'''))
+
 cells.append(md(r"""## What pymrm adds
 
 **It reconstructs an input the paper lost.** The conductivity polynomial is not
@@ -929,7 +1117,14 @@ cells.append(code('''metrics = {
     "kappa_eff_from_eq29": k_nu,
     "kappa_route_spread_pct": 100 * abs(k_delta / k_nu - 1),
     "salt_conservation_drift": salt_drift,
+    # STRUCTURAL, and below check_agreement.py's ABS_FLOOR = 1e-12, so the metric
+    # above is not compared by CI. These are its break rows.
+    "salt_drift_break_leaky_boundary": float(rows[5][1]),
+    "salt_drift_blind_named_classes_ratio": salt_ratio_named,
+    "short_time_break_named_classes_ratio": short_ratio_named,
     "grid_spread_mV": grid_spread_mV,
+    "dt_spread_mV": dt_spread_mV,
+    "dt_observed_order": dt_order,
     "u_at_cutoff_I10": u84,
     "u19_shortfall_mean": float(np.abs(d19).mean()),
     "porosity_optimum": float(por[i_best]),
