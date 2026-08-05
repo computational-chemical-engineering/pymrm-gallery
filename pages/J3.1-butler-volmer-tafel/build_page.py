@@ -377,11 +377,17 @@ electrode. It is used as an **operating envelope**, not as a result to
 reproduce: the quantity taken from it is the distribution of $\eta_s$, which
 `J3.4` never reports.
 
-The `Cell` class below is `J3.4`'s, ported with **one** change: the kinetic law
-is selectable. Everything else — the grid, the operators, the boundary
-conditions on the outward normal, the salt balance in flux form, the
-time-stepping — is unchanged, so `J3.4`'s validations carry over. The four
-settings are
+The `Cell` class below is `J3.4`'s, ported with **two** changes: the kinetic law
+is selectable, and the time step carries `J3.5`'s `dt_scale`, which multiplies
+both the initial step and the ceiling so that the temporal error can be refined
+at all. `dt_scale = 1` is the production schedule, so the second change moves no
+number on this page — what it moves is what the page can *say* about them, and
+Validation now measures the temporal error rather than holding it fixed.
+Everything else — the grid, the operators, the boundary conditions on the
+outward normal, the salt balance in flux form — is unchanged, so `J3.4`'s
+validations carry over. That inheritance is worth watching rather than trusting:
+Validation records what did *not* travel with the helper, and both of the defects
+found on this page since publication were in that class. The four settings are
 
 | `kinetics` | what is solved |
 |---|---|
@@ -1203,7 +1209,8 @@ print(f"kappa (bulk, reconstructed on J3.4) = {KAPPA:.4f} S/m")
 
 
 class Cell:
-    """The J3.4 DFN cell, ported with one change: `kinetics` selects the law."""
+    """The J3.4 DFN cell. Two changes: `kinetics` selects the law, and `march`
+    carries J3.5's `dt_scale` (default 1.0 = the production schedule)."""
 
     def __init__(self, n_s=24, n_c=48, nu_factor=2.0, p_D=0.5, kinetics="eq17"):
         self.kinetics = kinetics
@@ -1359,18 +1366,27 @@ class Cell:
         return sol.x if np.max(np.abs(r)) < 1e-6 else None
 
     def march(self, I, u0=None, v_stop=1.55, u_stop=0.9995, max_steps=2500,
-              dt_seq=None):
+              dt_seq=None, dt_scale=1.0):
         """Implicit-Euler march; dt halves on a failed Newton solve.
 
         `dt_seq` replays a step sequence recorded from another run, so two
         kinetic laws can be compared on an IDENTICAL time grid. Without it, the
         adaptive stepper takes slightly different steps and the difference
         between two runs is contaminated by time-discretisation error - which on
-        this cell is larger than the effect being measured."""
+        this cell is larger than the effect being measured.
+
+        `dt_scale` multiplies BOTH the initial step and the ceiling, so the whole
+        schedule refines together; it is the only knob on this class that
+        controls the temporal error at all. Scaling `dt` alone would do nothing:
+        on a schedule that grows x1.3 per step the step reached at a given time
+        is set by `dt_max`, not by the starting value. This is `J3.5`'s fix,
+        which `J3.4` inherited on 2026-08-05 and this page did not until now.
+        `dt_scale = 1` is the production schedule, so every number this page
+        published before the fix is unchanged by it."""
         u0 = P["u_0"] if u0 is None else u0
         y = self.initial(u0, I)
         t_ref = self.t_full / abs(I)
-        dt, dt_max = 2e-5 * t_ref, 6e-3 * t_ref
+        dt, dt_max = 2e-5 * t_ref * dt_scale, 6e-3 * t_ref * dt_scale
         t, out, dts, dt_peak = 0.0, [], [], dt
         n_max = max_steps if dt_seq is None else len(dt_seq)
         for k in range(n_max):
@@ -1475,9 +1491,11 @@ V_END_20 = float(runs[20.0][-1, 1])
 U19_20 = u_at_V(runs[20.0], 1.9)
 print()
 print("The cathode PEAK sits in the first cell next to the separator, where the "
-      "reaction crowds;\\nit is a boundary-layer value and is grid-sensitive "
-      "(quantified in Validation).\\nThe cell-averaged value is not, and both are "
-      "reported.")
+      "reaction crowds,\\nand in the first TIME STEP. It is a boundary layer in both, "
+      "it is converged in\\nneither, and Validation quantifies each - together with "
+      "the sustained value that\\nthe cathode runs at once the initial transient has "
+      "decayed, which is stable.\\nThe cell-averaged value is not grid-sensitive, and "
+      "all of them are reported.")
 
 # Reconcile against the stated results loaded from J3.4, rather than restating
 # the march endpoint: the CSV carries the paper's own number for this collapse.
@@ -1812,6 +1830,22 @@ its salt balance must close exactly, since the flux form makes conservation a
 property of the discretisation rather than of the solve. Both inherited from
 `J3.4`, both re-run here because the kinetic switch touches the residual.
 
+**And a third, which should have been here from the start.** `Cell.march` sets
+`dt` and `dt_max` from the current alone — they are functions of $I$ and the
+reference discharge time and of *neither* $n_s$ nor $n_c$. So the grid ladder
+below refines space at a **constant temporal error**, and the three `grid_*`
+numbers this page publishes measure one component of the discretisation error
+while reading as though they measured it. `J3.5` fixed exactly this in the same
+shared helper, by adding a `dt_scale` that multiplies `dt` *and* `dt_max`;
+`J3.4` took the fix on 2026-08-05; this page did not inherit it until now.
+`dt_scale = 1` is the production schedule, so nothing already published moves —
+and the measurement that was missing is below. It is the **larger** of the two
+errors.
+
+The salt balance gets the break row it never had at the same time: a conservation
+residual that is exact by construction is not evidence until something is shown
+to move it, and the only thing that can is a salt-flux boundary condition.
+
 **Three defects were found by these checks and none by reading the code.** They
 are recorded because each is a way this page could have looked right and been
 wrong:
@@ -1826,14 +1860,22 @@ wrong:
    0.44 mV, happened to be almost identical to the one in (2). Two different
    defects, the same plausible-looking answer.
 
-One number below is deliberately reported as **not converged at these grids**: the
-peak $|\eta_s|$ sits in the first cathode cell, where the reaction crowds against
+One number below is deliberately reported as **not converged**: the peak
+$|\eta_s|$. It sits in the first cathode cell, where the reaction crowds against
 the separator, and it still grows under refinement. Its successive increments do
-shrink (printed below), so the sequence is converging — it has simply not
-arrived, and nothing here claims it has. Nothing is
-concluded from it on its own. What carries the conclusion is the *margin* between
-it and the threshold, which is 15.7× against 1.9× of movement over an eightfold
-refinement."""))
+shrink, so the sequence is converging — it has simply not arrived, and nothing
+here claims it has.
+
+Two things about that number are new on this version of the page, and both follow
+from being able to refine time at all. **The peak sits in the very first time
+step** — the cell prints the step index and the time, and it is a few tenths of a
+second out of a discharge of hours. It is therefore a boundary layer in $t$ as
+much as in $x$, it grows under *both* refinements, and a grid ladder at fixed
+`dt` was never going to bound it. So the margin argument is re-made at the corner
+where **both** knobs are refined together, not at the grid-refined one. And the
+*sustained* peak — the largest $|\eta_s|$ once that initial transient has decayed
+— is printed beside it, because that one is stable across the whole refinement
+box and is the number a reader should carry away."""))
 
 cells.append(code('''def v_at(run, u):
     """Cell potential interpolated at a given utilisation."""
@@ -1864,13 +1906,211 @@ print()
 print("The peak is a boundary-layer value in the first cathode cell and is NOT "
       "converged at\\nthese grids. Its successive increments are "
       + ", ".join(f"{d:.3f}" for d in np.diff(ep)) + " mV, i.e. the sequence")
-print("is converging but has not arrived; nothing is concluded from it alone. What "
-      "the\\nclassification needs is a margin, and the margin is large:")
+print("is converging but has not arrived; nothing is concluded from it alone.")
+THR_1PCT = float(1e3 * eta_linear_threshold(0.01, 0.5, 0.5))
 print(f"  finest-grid peak |eta_s|          = {max(ep):.4f} mV")
-print(f"  1 % linear-limit threshold        = {1e3*eta_linear_threshold(0.01, 0.5, 0.5):.2f} mV")
-print(f"  margin                            = "
-      f"{1e3*eta_linear_threshold(0.01, 0.5, 0.5)/max(ep):.1f} x, against "
-      f"{GRID_ETA_PEAK:.2f} x of grid movement over 8x refinement")'''))
+print(f"  1 % linear-limit threshold        = {THR_1PCT:.2f} mV")
+print(f"  margin on THIS ladder alone       = {THR_1PCT/max(ep):.1f} x, against "
+      f"{GRID_ETA_PEAK:.2f} x of grid movement")
+print()
+print("ALL THREE of these spreads are SPATIAL ONLY. march() sets dt and dt_max from")
+print("the current alone, so every row above was computed at the same temporal")
+print("error, and none of the three says anything about it. The next cell measures")
+print("it, and the margin quoted here is re-made there under both knobs at once.")'''))
+
+cells.append(code('''# ---- the knob the ladder above holds fixed ----------------------------------
+# march() sets dt = 2e-5 t_ref and dt_max = 6e-3 t_ref, with t_ref = t_full/|I|.
+# Neither depends on n_s or n_c. dt_scale multiplies BOTH, which is the only way
+# to refine a schedule that grows x1.3 per step: scaling the initial step alone
+# leaves dt_max, and so the step actually taken over almost the whole discharge,
+# exactly where it was.
+DT_LEVELS = ((1.0, 2500), (0.5, 2500), (0.25, 3000), (0.125, 5000))
+dtr = {dts: Cell(kinetics="eq17").march(I_REF, dt_scale=dts, max_steps=ms)[0]
+       for dts, ms in DT_LEVELS}
+dv_ = [v_at(dtr[d], 0.5) for d, _ in DT_LEVELS]
+dm_ = [1e3 * dtr[d][dtr[d][:, 0] < 0.8, 7].max() for d, _ in DT_LEVELS]
+dp_ = [1e3 * dtr[d][dtr[d][:, 0] < 0.8, 4].max() for d, _ in DT_LEVELS]
+ddif = [1e3 * abs(dv_[i + 1] - dv_[i]) for i in range(len(dv_) - 1)]
+
+print("Time-step refinement at the production grid, I = 10 A/m2")
+print(f"{'dt_scale':>9}{'steps':>7}{'V(u=0.5)/V':>13}{'change/mV':>11}{'order':>7}"
+      f"{'mean|eta_s|/mV':>16}{'peak|eta_s|/mV':>16}")
+for k, (dts, _) in enumerate(DT_LEVELS):
+    chg = f"{ddif[k-1]:11.4f}" if k else " " * 11
+    order = f"{np.log2(ddif[k-2]/ddif[k-1]):7.2f}" if k >= 2 else " " * 7
+    print(f"{dts:9.4f}{len(dtr[dts]):7d}{dv_[k]:13.6f}{chg}{order}"
+          f"{dm_[k]:16.5f}{dp_[k]:16.5f}")
+
+DT_ORDER = float(np.mean([np.log2(ddif[i] / ddif[i + 1]) for i in range(len(ddif) - 1)]))
+DT_V = float(max(dv_) - min(dv_))
+DT_ETA_MEAN = float((max(dm_) - min(dm_)) / np.mean(dm_))
+DT_ETA_PEAK = float(max(dp_) / min(dp_))
+v_rich = dv_[-1] - (dv_[-2] - dv_[-1])              # first-order Richardson
+DT_V_ERR = float(abs(dv_[0] - v_rich))
+print(f"\\nobserved order {DT_ORDER:.2f} - first order, which is what implicit Euler")
+print("gives, so the extrapolation below is the right one to use.")
+print(f"Richardson-extrapolated temporal error at the production dt_scale = 1 : "
+      f"{1e3*DT_V_ERR:.3f} mV")
+print()
+print("The same three quantities under each knob, like for like:")
+print(f"{'':34}{'8x grid':>11}{'8x dt':>11}{'dt / grid':>12}")
+print(f"{'cell potential spread / mV':34}{1e3*GRID_V:11.4f}{1e3*DT_V:11.4f}"
+      f"{DT_V/GRID_V:12.2f}")
+print(f"{'cell-averaged |eta_s| spread / %':34}{100*GRID_ETA_MEAN:11.3f}"
+      f"{100*DT_ETA_MEAN:11.3f}{DT_ETA_MEAN/GRID_ETA_MEAN:12.2f}")
+print(f"{'peak |eta_s|, coarsest -> finest':34}{GRID_ETA_PEAK:11.3f}{DT_ETA_PEAK:11.3f}"
+      f"{'see below':>12}")
+print()
+print(f"So on the cell potential the temporal error is {DT_V_ERR/GRID_V:.1f}x the grid "
+      f"spread once it is\\nextrapolated, and {DT_V/GRID_V:.1f}x it measured the same "
+      "way; on the cell-averaged")
+print(f"overpotential it is {DT_ETA_MEAN/GRID_ETA_MEAN:.1f}x. On both quantities that "
+      "converge, the larger of")
+print("the two numerical errors is the one that had never been measured. The peak is")
+print("the exception and is not converged in either knob; it is taken apart below.")
+print("J3.4 - the same cell, the same schedule - reports 0.273 mV against a 0.138 mV")
+print("grid spread, which is consistent with this, as it must be: the two pages share")
+print("the helper, and both numbers were missing for the same reason.")
+print()
+print("Nothing published moves. Every number on this page is taken at dt_scale = 1,")
+print("and the argument they support - both electrodes deep inside the linear window,")
+print("2.9 decades apart - has room of two orders of magnitude, not two tenths of a")
+print("millivolt. What changes is that the three grid_* metrics are now labelled as")
+print("the spatial half of a two-part error, with the other half measured beside them.")'''))
+
+cells.append(md(r"""#### The peak overpotential is a *first-step* quantity
+
+The one number the two ladders disagree about is the peak. The cell below says
+where it actually sits, refines both knobs together, and separates the initial
+spike from the value the cathode runs at for the rest of the discharge."""))
+
+cells.append(code('''prod = gr[(24, 48)]                  # the production run: default grid, dt_scale = 1
+mprod = prod[:, 0] < 0.8
+kpk = int(np.argmax(prod[mprod, 4]))
+print("Where the peak |eta_s| sits in the I = 10 A/m2 discharge:")
+print(f"  step {kpk} of {int(mprod.sum())} inside the envelope, "
+      f"t = {prod[kpk, 2]:.4g} s of {prod[-1, 2]:.4g} s "
+      f"({prod[kpk, 2]/prod[-1, 2]:.1e} of the run), u = {prod[kpk, 0]:.5f}")
+print("  -> it is the FIRST time step. The peak is the initial transient at the")
+print("     separator face, and it is resolved by dt as much as by dx. That is why")
+print("     it moves under both knobs and is converged under neither.")
+print()
+
+# the two knobs together, at the corner of the refinement box
+CORNER = Cell(n_s=96, n_c=192, kinetics="eq17").march(I_REF, dt_scale=0.125,
+                                                      max_steps=5000)[0]
+mcor = CORNER[:, 0] < 0.8
+CORNER_PEAK = float(1e3 * CORNER[mcor, 4].max())
+PROD_PEAK = float(1e3 * prod[mprod, 4].max())
+print(f"{'peak |eta_s| / mV':38}{'value':>10}{'margin to the 1 % threshold':>30}")
+for lab, val in [("production grid, production dt", PROD_PEAK),
+                 ("8x grid, production dt", max(ep)),
+                 ("production grid, 8x dt", dp_[-1]),
+                 ("8x grid AND 8x dt together", CORNER_PEAK)]:
+    print(f"{lab:38}{val:10.4f}{THR_1PCT/val:30.1f}")
+CORNER_MARGIN = float(THR_1PCT / CORNER_PEAK)
+print(f"  (1 % linear-limit threshold = {THR_1PCT:.3f} mV)")
+print()
+print(f"Refining both knobs together moves the peak by a factor "
+      f"{CORNER_PEAK/PROD_PEAK:.2f} from the")
+print(f"published value and takes the margin from {THR_1PCT/PROD_PEAK:.1f}x to "
+      f"{CORNER_MARGIN:.1f}x. It is still an order of")
+print("magnitude, so the classification of the cathode as deep inside the linear")
+print("window survives - but the honest margin is the smaller one, and the number")
+print("quoted in the caveats is now this one.")
+print()
+
+# the sustained value: what the cathode runs at once the initial spike has gone
+SUS_CUT = 10.0                       # s
+def sustained(r):
+    """Largest |eta_s| inside the envelope after the first-step transient."""
+    m = (r[:, 0] < 0.8) & (r[:, 2] > SUS_CUT)
+    return float(1e3 * r[m, 4].max())
+
+
+sus = ([sustained(r) for r in gr.values()] + [sustained(dtr[d]) for d, _ in DT_LEVELS]
+       + [sustained(CORNER)])
+SUS_PEAK = sustained(prod)
+SUS_SPREAD = float((max(sus) - min(sus)) / np.mean(sus))
+print(f"Sustained peak |eta_s| (t > {SUS_CUT:.0f} s, i.e. past the first-step spike):")
+print(f"  at the production point                    : {SUS_PEAK:.4f} mV")
+print(f"  over all {len(sus)} runs in the refinement box    : "
+      f"{min(sus):.4f} to {max(sus):.4f} mV, spread {100*SUS_SPREAD:.1f} %")
+print(f"  margin to the 1 % threshold                : {THR_1PCT/max(sus):.0f} x")
+print(f"That is {100*SUS_SPREAD:.1f} % of movement over the whole refinement box, "
+      f"against a factor {CORNER_PEAK/PROD_PEAK:.2f}")
+print("for the spike, so it is the number to carry away. The first-step spike is")
+print(f"real, but it is a transient of the initial condition: {PROD_PEAK/SUS_PEAK:.1f}x "
+      f"the sustained\\nvalue at the production point and {CORNER_PEAK/max(sus):.1f}x it "
+      "at the corner, and resolved by neither knob.")'''))
+
+cells.append(md(r"""#### The break row salt conservation never had
+
+`salt_conservation` is a telescoping identity: with `n_salt[0] = n_salt[-1] = 0`
+the discrete divergence sums to `n[N] - n[0] = 0` for **any** interior flux
+expression and any parameters, so the residual is exact by construction. `J3.4`
+says the same about its own copy. The one error class it *can* see is a wrong
+salt-flux boundary condition, and until now nothing on this page measured that.
+One line of the flux routine is changed below and nothing else."""))
+
+cells.append(code('''class LeakyCell(Cell):
+    """The same cell with ONE thing broken: the collector no longer holds N = 0."""
+
+    LEAK = 0.0                       # published value: exactly zero (Eq. 12)
+
+    def fluxes(self, c, phi2, I):
+        i2, n_salt = super().fluxes(c, phi2, I)
+        n_salt[-1] = self.LEAK * abs(I) / F_CONST
+        return i2, n_salt
+
+
+print("Salt conservation against a leaking collector boundary condition:")
+print(f"{'n_salt[-1] as a fraction of I/F':34}{'steps':>7}{'salt drift':>13}"
+      f"{'V(u=0.5)/V':>13}")
+salt_break, leak_v = {}, {}
+for leak in (0.0, 1e-3, 1e-2):
+    LeakyCell.LEAK = leak
+    rl, _ = LeakyCell(kinetics="eq17").march(I_REF)
+    salt_break[leak] = float(abs(rl[:, 3].max() / rl[:, 3].min() - 1.0))
+    leak_v[leak] = v_at(rl, 0.5)
+    print(f"{leak:34.0e}{len(rl):7d}{salt_break[leak]:13.3e}{leak_v[leak]:13.6f}")
+LeakyCell.LEAK = 0.0
+SALT_BREAK = float(salt_break[1e-3])
+print(f"\\nSo it does have exactly one power: a 0.1 % leak at the collector takes it")
+print(f"from {salt_break[0.0]:.2e} to {SALT_BREAK:.2e}, a factor of "
+      f"{SALT_BREAK/max(salt_break[0.0], 1e-18):.1e}, and moves the")
+print(f"cell potential by {1e3*abs(leak_v[1e-3] - leak_v[0.0]):.2f} mV - which is more "
+      "than the whole numerical error budget")
+print("measured above, so this is an error class worth being able to see. Reported as")
+print("the identity it is, now with the row that says what the identity is worth.")
+print()
+print("Note also that the published residual sits below check_agreement.py's")
+print("ABS_FLOOR = 1e-12, so CI has never compared it at all. The break row does not,")
+print("so the evidence is CI-visible even where the residual it guards is not.")'''))
+
+cells.append(md(r"""#### What else did not travel with the helper
+
+The `dt_scale` omission is the second time something has been found in this
+ported `Cell` that arrived without the discipline that made it safe on `J3.4` —
+the first was `v_stop = 1.55` V being read as an operating point, corrected on
+2026-08-02. Three further differences are recorded here rather than left to be
+rediscovered. All are latent: nothing on this page depends on any of them.
+
+* **`march` here has no `record` / `t_stop` snapshot machinery.** On `J3.4` that
+  interface is what makes its two checks with real discriminating power runnable
+  at all — the short-time semi-infinite comparison and the long-time pore-wall
+  flux. What this page inherited instead was the salt-conservation identity,
+  which is structural. The strong checks needed an interface and the weak one did
+  not, so only the weak one travelled.
+* **The charge branch of the stopping rule is missing.** `J3.4` stops on
+  `(I < 0 and v > v_top)` with `v_top = 3.2` V; this version has neither the test
+  nor the argument. Every run on this page is a discharge, so nothing here is
+  affected, but a charge would run until `u > u_stop` rather than stopping at a
+  cell voltage limit. It is left as it is rather than patched, because an
+  untested branch is worse than a documented absence.
+* **`kappa`, `eps` and `delta_c` are constructor arguments on `J3.4` and fixed
+  constants here.** A deliberate narrowing, not a defect — noted because *Reuse*
+  below sends a reader to `J3.4` for the reactor, and this is part of why."""))
 
 cells.append(md(r"""### The `J3.4` open question does not touch any of this
 
@@ -1897,7 +2137,133 @@ print(f"\\nthe nu = 2 question moves the cell potential by {1e3*NU_V:.1f} mV "
 print("The regime classification of both electrodes is unchanged either way, so "
       "nothing on this page depends on how that question is settled.")'''))
 
-cells.append(code('''report_agreement("J3.1", {
+cells.append(md(r"""### One row per published number
+
+`AGENTS.md` now requires that **every** metric in `agreement.json` have a row in
+a break table — an injected defect that moves it — and that any metric with no
+such row be labelled *structural*, with what it cannot detect stated in the same
+sentence. The identity checks at the top of this page already had one; the rest
+did not. The two cells below close that gap: the first constructs the rows that
+were missing for the algebraic checks, and the second audits every published
+metric against the requirement and prints the result.
+
+The audit also flags a second thing the break table cannot fix on its own.
+`scripts/check_agreement.py` skips any metric below `ABS_FLOOR = 1e-12`, so a
+residual pinned at machine precision is **unprotected, not proven** — CI does not
+compare it at all. Every break row added here is far above that floor, which is
+what makes the evidence CI-visible even where the residual is not."""))
+
+cells.append(code('''# --- rows for the algebraic checks that had none ----------------------------
+# Each is the same check with one plausible transcription defect, and nothing else.
+
+# (i) Eq. 17's zero-current potential, against Eq. 16, with alpha_a + alpha_c != 1
+IDENT_EQ16_BROKEN = float(ident.loc[ident["sum"] != 1.0,
+                                    "max |E_eq - Eq.16| / V"].max())
+
+# (ii) the closed-form alpha offset with the (1/n - 1) factor dropped: the check
+#      would then be comparing the root against zero, i.e. reading the offset itself
+OFFSET_DROPPED = float(off["max |offset| / V"].max())
+
+# (iii) the zero-current check evaluated at the n = 1 equilibrium potential where
+#       alpha_a + alpha_c is not 1
+ZERO_BROKEN = 0.0
+for aa, ac in [(0.5, 0.4), (0.25, 0.25)]:
+    e_wrong = U_prime(cs_r) + RTF * np.log((C_T - cs_r) / cs_r)     # 1/n omitted
+    ZERO_BROKEN = max(ZERO_BROKEN, float(np.max(np.abs(
+        i_eq17(e_wrong, c_r, cs_r, aa, ac) / i0_general(c_r, cs_r, aa, ac)))))
+
+# (iv) R_ct with n forced to 1 where it should be alpha_a + alpha_c
+RCT_BROKEN = 0.0
+for aa, ac in [(0.5, 0.6), (1.0, 1.0)]:
+    e_eq = eta_equilibrium(cs_r, aa, ac)
+    di = (i_eq17(e_eq + h, c_r, cs_r, aa, ac)
+          - i_eq17(e_eq - h, c_r, cs_r, aa, ac)) / (2 * h)
+    RCT_BROKEN = max(RCT_BROKEN, float(np.max(np.abs(
+        di * RTF / i0_general(c_r, cs_r, aa, ac) - 1.0))))
+
+# (v) the arcsinh inversion used where its alpha_a = alpha_c condition fails
+ASINH_BROKEN = 0.0
+for aa in (0.3, 0.7):
+    ac = 1.0 - aa
+    for c_v, cs_v in [(1000.0, 290.0), (3000.0, 28000.0)]:
+        i0v = float(i0_eq30(c_v, cs_v, aa, ac))
+        U2v = float(U_ocp(cs_v / C_T))
+        eta_closed = RTF / alpha * np.arcsinh(i_targets / (2 * i0v))
+        back = i_eq17(U2v + eta_closed, c_v, cs_v, aa, ac)
+        ASINH_BROKEN = max(ASINH_BROKEN,
+                           float(np.max(np.abs(back / i_targets - 1.0))))
+
+# (vi) the Tafel threshold with ln(1/eps) written for ln(1 + 1/eps)
+TAFEL_FORM_BROKEN = float(np.max([abs(RTF * np.log(1.0 / e)
+                                      / eta_tafel_threshold(e) - 1.0) for e in levels]))
+TAFEL_SLIP = {e: 1e3 * RTF * np.log(1.0 / e) for e in levels}
+
+# (vii) the mirror identity with the alpha swap left out
+MIRROR_BROKEN = float(np.max([abs(eta_linear_threshold(e, aa, 1 - aa, +1)
+                                  / eta_linear_threshold(e, aa, 1 - aa, -1) - 1.0)
+                              for aa in (0.1, 0.2, 0.3, 0.42, 0.45)
+                              for e in levels]))
+
+# (viii) the general i_0 against Eq. 30 where alpha_a + alpha_c != 1
+I0_GEN_BROKEN = float(np.max(np.abs(i0_general(c_r, cs_r, 0.5, 0.4)
+                                    / i0_eq30(c_r, cs_r, 0.5, 0.4) - 1.0)))
+
+
+# (ix) the linear threshold taken as a bracketing solve over the whole interval
+#      instead of the first crossing - the defect this page found by hand once
+def eta_linear_threshold_naive(eps, aa, ac):
+    """brentq handed the whole interval: returns A root, not the boundary."""
+    f = 1.0 / RTF
+
+    def dev(e):
+        return abs((aa + ac) * f * e
+                   / (np.exp(aa * f * e) - np.exp(-ac * f * e)) - 1.0) - eps
+
+    return brentq(dev, 1e-9, 4.0, xtol=1e-16, rtol=8.9e-16)
+
+
+LIN_FIRST_MV = float(1e3 * eta_linear_threshold(0.05, 0.3, 0.7))
+LIN_NAIVE_MV = float(1e3 * eta_linear_threshold_naive(0.05, 0.3, 0.7))
+
+# (x) the anodic-prediction check applied to the run that should FAIL it
+TAFEL_PRED_NULL = float(abs(sub["bv"][0, 5] / pred_tafel - 1.0))
+
+# (xi) the temperature columns, which are the sensitivity of every threshold
+TAFEL_298 = {e: 1e3 * eta_tafel_threshold(e, 1.0, RTF_298) for e in levels}
+LIN_298 = {e: 1e3 * eta_linear_threshold(e, 0.5, 0.5, +1, RTF_298) for e in levels}
+NU2_ROUND = float(max(abs(lo / lhs - 1.0), abs(hi / lhs - 1.0)))
+
+print(f"{'check':52}{'as printed':>13}{'with the defect':>17}")
+for lab, a, b in [
+        ("Eq. 17 zero current vs Eq. 16 (alpha sum != 1)", IDENT_EQ16, IDENT_EQ16_BROKEN),
+        ("alpha offset closed form ((1/n - 1) dropped)", OFFSET_ERR, OFFSET_DROPPED),
+        ("i = 0 at eta_s = 0 (1/n dropped from eta_eq)", zero_max, ZERO_BROKEN),
+        ("R_ct identity (n forced to 1)", RCT_ID, RCT_BROKEN),
+        ("arcsinh inversion (used at alpha_a != alpha_c)", ASINH_ID, ASINH_BROKEN),
+        ("Tafel threshold (ln(1/eps) for ln(1+1/eps))", TAFEL_CLOSED, TAFEL_FORM_BROKEN),
+        ("sign-convention mirror (alpha swap omitted)", MIRROR, MIRROR_BROKEN),
+        ("i_0 general vs Eq. 30 (alpha sum != 1)", I0_GEN_VS_EQ30, I0_GEN_BROKEN),
+        ("Tafel first step vs prediction (exact-law run)", TAFEL_PRED_DEV, TAFEL_PRED_NULL)]:
+    print(f"{lab:52}{a:13.3e}{b:17.3e}")
+print()
+print(f"linear 5 % threshold at alpha_a = 0.3, first crossing : {LIN_FIRST_MV:8.2f} mV")
+print(f"   the same solve bracketing the whole interval       : {LIN_NAIVE_MV:8.2f} mV "
+      f"({LIN_NAIVE_MV/LIN_FIRST_MV:.1f}x)")
+print("   at alpha_a = alpha_c the deviation is monotonic, so this defect is a")
+print("   no-op at Doyle's own parameters - the same blind spot Check 1 has.")
+print()
+print("The reported thresholds move with the one input they contain, RT/F:")
+for e in levels:
+    print(f"   {100*e:4.0f} % : Tafel {1e3*eta_tafel_threshold(e):7.2f} -> "
+          f"{TAFEL_298[e]:7.2f} mV, linear {1e3*eta_linear_threshold(e, 0.5, 0.5):7.2f}"
+          f" -> {LIN_298[e]:7.2f} mV   (373.15 K -> 298.15 K)")
+print(f"   and the ln(1/eps) slip alone moves the Tafel 10 % threshold "
+      f"{1e3*eta_tafel_threshold(0.10):.2f} -> {TAFEL_SLIP[0.10]:.2f} mV,")
+print(f"   but the 1 % one only {1e3*eta_tafel_threshold(0.01):.2f} -> "
+      f"{TAFEL_SLIP[0.01]:.2f} mV: the check is sharp where the")
+print("   approximation is bad and nearly blind where it is good.")'''))
+
+cells.append(code('''METRICS = {
     "eq17_vs_eq30_max_rel": IDENT_SYM,
     "eq17_zero_current_vs_eq16_V": IDENT_EQ16,
     "alpha_offset_closed_form_V": OFFSET_ERR,
@@ -1936,10 +2302,27 @@ cells.append(code('''report_agreement("J3.1", {
     "tafel_cathode_dV_mV": 1e3 * TAF_CATH_DV,
     "tafel_first_step_vs_prediction_frac": TAFEL_PRED_DEV,
     "linear_anode_dV_I20_mV": 1e3 * abs(AN_SHIFT[(20.0, "linear")]),
+    # SPATIAL ONLY: march() sets dt and dt_max from the current alone, so all
+    # three hold the temporal error constant. Their temporal counterparts are the
+    # dt_* metrics below, and on this cell the temporal half is the larger one.
     "grid_V_spread_mV": 1e3 * GRID_V,
     "grid_mean_eta_spread_frac": GRID_ETA_MEAN,
     "grid_peak_eta_ratio": GRID_ETA_PEAK,
+    # the half that was missing until 2026-08-05, measured on the same three
+    # quantities with J3.5's dt_scale (dt_scale = 1 is the production schedule)
+    "dt_V_spread_mV": 1e3 * DT_V,
+    "dt_V_temporal_error_mV": 1e3 * DT_V_ERR,
+    "dt_observed_order": DT_ORDER,
+    "dt_mean_eta_spread_frac": DT_ETA_MEAN,
+    "dt_peak_eta_ratio": DT_ETA_PEAK,
+    # the peak is a first-step value; refine both knobs before quoting a margin
+    "corner_peak_eta_mV": CORNER_PEAK,
+    "corner_peak_margin_factor": CORNER_MARGIN,
+    "sustained_peak_eta_mV": SUS_PEAK,
+    "sustained_peak_box_spread_frac": SUS_SPREAD,
+    # structural, and now with the one row that moves it
     "salt_conservation": SALT,
+    "break_salt_collector_leak": SALT_BREAK,
     "nu_factor_eta_sensitivity_frac": NU_ETA,
     "nu2_over_delta_as_kappa_ratio": NU2_AS_KAPPA,
     "j34_kappa_route_spread": KAPPA_SPREAD,
@@ -1949,7 +2332,177 @@ cells.append(code('''report_agreement("J3.1", {
     "interfacial_reading_linear_err": INT_LIN_ERR,
     "superficial_tafel_headroom_factor": SUP_TAFEL_HEADROOM,
     "j35_C_r_scale_ratio": I0_SCALE_RATIO,
-})'''))
+    # the break rows built for the algebraic checks, every one of them above
+    # check_agreement.py's ABS_FLOOR so that CI can see the evidence
+    "break_eq16_alpha_sum_not_1": IDENT_EQ16_BROKEN,
+    "break_alpha_offset_factor_dropped": OFFSET_DROPPED,
+    "break_zero_current_wrong_equilibrium": ZERO_BROKEN,
+    "break_Rct_n_forced_to_1": RCT_BROKEN,
+    "break_arcsinh_at_asymmetric_alpha": ASINH_BROKEN,
+    "break_tafel_threshold_log_form": TAFEL_FORM_BROKEN,
+    "break_mirror_without_alpha_swap": MIRROR_BROKEN,
+    "break_i0_general_alpha_sum_not_1": I0_GEN_BROKEN,
+    "break_linear_threshold_last_crossing_mV": LIN_NAIVE_MV,
+    "break_tafel_prediction_on_exact_run": TAFEL_PRED_NULL,
+}'''))
+
+cells.append(code('''# --- the audit: one row per published metric ---------------------------------
+FLOOR = 1e-12                    # scripts/check_agreement.py's ABS_FLOOR
+ROW = "row"                      # a defect was injected and the metric moved
+SELF = "is itself a row"         # the metric IS a defect or sensitivity measurement
+STRUCT = "structural"            # nothing constructible moves it; say what it misses
+
+COVER = [
+    ("eq17_vs_eq30_max_rel", ROW, "Eq. 30 tail exponents swapped, asym. alpha",
+     DEF_E30_TAIL),
+    ("eq17_zero_current_vs_eq16_V", ROW, "alpha_a + alpha_c != 1", IDENT_EQ16_BROKEN),
+    ("alpha_offset_closed_form_V", ROW, "the (1/n - 1) factor dropped", OFFSET_DROPPED),
+    ("zero_current_at_zero_eta_rel", ROW, "eta_eq written without the 1/n", ZERO_BROKEN),
+    ("partial_currents_balance_rel_structural", STRUCT,
+     "exact for alpha_a+alpha_c=1, any state; blind to every exponent swap", None),
+    ("i0_from_partials_vs_eq30_rel", ROW, "Eq. 30 tail exponents swapped, asym.",
+     DEF_I0_ASYM),
+    ("defect_eq30_tail_swap_eq17_vs_eq30", SELF, "vs the undamaged residual", DEF_BASE),
+    ("defect_eq17_prefactor_swap_eq17_vs_eq30", SELF, "vs the undamaged residual",
+     DEF_BASE),
+    ("defect_both_prefactors_swap_eq17_vs_eq30", STRUCT,
+     "records a BLIND SPOT: the swap cancels, so it equals the undamaged residual",
+     None),
+    ("defect_eq30_tail_swap_i0_from_partials", SELF, "vs the undamaged residual",
+     i0_rel),
+    ("defect_worst_at_symmetric_alpha_eq17_vs_eq30", STRUCT,
+     "records a BLIND SPOT: zero by construction at alpha_a = alpha_c", None),
+    ("defect_worst_partial_currents_balance", STRUCT,
+     "records a BLIND SPOT: no injected defect moves the balance", None),
+    ("Rct_identity_max_rel", ROW, "n forced to 1 where n = alpha_a + alpha_c",
+     RCT_BROKEN),
+    ("arcsinh_inversion_max_rel", ROW, "the inversion used at alpha_a != alpha_c",
+     ASINH_BROKEN),
+    ("tafel_threshold_closed_vs_numeric", ROW, "ln(1/eps) for ln(1 + 1/eps)",
+     TAFEL_FORM_BROKEN),
+    ("nu2_over_delta_dev_frac", SELF, "rounding band on the printed nu and delta",
+     NU2_ROUND),
+    ("eta_tafel_10pct_mV", ROW, "T read as 298.15 K", TAFEL_298[0.10]),
+    ("eta_tafel_1pct_mV", ROW, "T read as 298.15 K", TAFEL_298[0.01]),
+    ("eta_linear_5pct_mV", ROW, "T read as 298.15 K", LIN_298[0.05]),
+    ("eta_linear_1pct_mV", ROW, "T read as 298.15 K", LIN_298[0.01]),
+    ("linear_sym_asymptote_rel", SELF, "sqrt(24 eps) series vs the root-find", None),
+    ("linear_asym_asymptote_rel", SELF, "2 eps/|da| series vs the root-find", None),
+    ("linear_sign_convention_rel", ROW, "the alpha swap omitted from the mirror",
+     MIRROR_BROKEN),
+    ("linear_window_narrowing_0p5_to_0p1", SELF,
+     "is the alpha sensitivity of the window", None),
+    ("i0_general_vs_eq30_rel", ROW, "alpha_a + alpha_c != 1", I0_GEN_BROKEN),
+    ("cell_cathode_mean_eta_s_mV", ROW, "the time step refined 8x", dm_[-1]),
+    ("cell_cathode_peak_eta_s_mV", ROW, "grid and time step refined 8x together",
+     CORNER_PEAK),
+    ("cell_anode_eta_s_I10_mV", ROW, "I = 20 A/m2 in the same explicit formula",
+     1e3 * ETA_AN_20),
+    ("cell_anode_eta_s_I20_mV", ROW, "I = 10 A/m2 in the same explicit formula",
+     1e3 * ETA_AN_10),
+    ("bv_vs_eq17_cell_potential_mV", ROW,
+     "the Tafel cathode law through the same comparison", 1e3 * TAF_CATH_DV),
+    ("linear_cathode_dV_mV", SELF, "is the linear substitution", None),
+    ("tafel_cathode_dV_mV", SELF, "is the Tafel substitution", None),
+    ("tafel_first_step_vs_prediction_frac", ROW,
+     "the same test applied to the exact-law run", TAFEL_PRED_NULL),
+    ("linear_anode_dV_I20_mV", SELF, "is the anode substitution", None),
+    ("grid_V_spread_mV", ROW, "the same ladder in dt instead of dx", 1e3 * DT_V),
+    ("grid_mean_eta_spread_frac", ROW, "the same ladder in dt instead of dx",
+     DT_ETA_MEAN),
+    ("grid_peak_eta_ratio", ROW, "the same ladder in dt instead of dx", DT_ETA_PEAK),
+    ("dt_V_spread_mV", SELF, "is the missing half of the grid study", 1e3 * GRID_V),
+    ("dt_V_temporal_error_mV", SELF, "Richardson on the dt ladder", 1e3 * GRID_V),
+    ("dt_observed_order", SELF, "is the order of the dt ladder itself", None),
+    ("dt_mean_eta_spread_frac", SELF, "is the missing half of the grid study",
+     GRID_ETA_MEAN),
+    ("dt_peak_eta_ratio", SELF, "is the missing half of the grid study",
+     GRID_ETA_PEAK),
+    ("corner_peak_eta_mV", ROW, "the production grid and production dt", PROD_PEAK),
+    ("corner_peak_margin_factor", ROW, "the same margin at the production point",
+     THR_1PCT / PROD_PEAK),
+    ("sustained_peak_eta_mV", ROW, "the first-step spike included instead", PROD_PEAK),
+    ("sustained_peak_box_spread_frac", SELF,
+     "is the spread over the whole refinement box", None),
+    ("salt_conservation", ROW, "the collector salt BC leaked by 1e-3 I/F", SALT_BREAK),
+    ("break_salt_collector_leak", SELF, "vs the undamaged drift", SALT),
+    ("nu_factor_eta_sensitivity_frac", SELF, "is the nu = 2 vs nu = 1 sensitivity",
+     None),
+    ("nu2_over_delta_as_kappa_ratio", STRUCT,
+     "an algebraic restatement of nu2_over_delta_dev_frac; nothing separates them",
+     None),
+    ("j34_kappa_route_spread", STRUCT,
+     "the same disagreement read as kappa; only the 1/sigma term separates the two",
+     None),
+    ("linear_jump_alpha_a_1pct", SELF, "the 5 % tolerance moves it", JUMP[0.05]),
+    ("linear_jump_alpha_a_5pct", SELF, "the 1 % tolerance moves it", JUMP[0.01]),
+    ("superficial_reading_linear_err", ROW, "the interfacial reading instead",
+     INT_LIN_ERR),
+    ("interfacial_reading_linear_err", ROW, "the superficial reading instead",
+     SUP_LIN_ERR),
+    ("superficial_tafel_headroom_factor", SELF,
+     "is the headroom between the two readings", None),
+    ("j35_C_r_scale_ratio", ROW, "u_0 read as 0.10 instead of 0.01",
+     float(np.sqrt(0.10 * 0.90))),
+    ("break_eq16_alpha_sum_not_1", SELF, "vs the undamaged residual", IDENT_EQ16),
+    ("break_alpha_offset_factor_dropped", SELF, "vs the undamaged residual",
+     OFFSET_ERR),
+    ("break_zero_current_wrong_equilibrium", SELF, "vs the undamaged residual",
+     zero_max),
+    ("break_Rct_n_forced_to_1", SELF, "vs the undamaged residual", RCT_ID),
+    ("break_arcsinh_at_asymmetric_alpha", SELF, "vs the undamaged residual", ASINH_ID),
+    ("break_tafel_threshold_log_form", SELF, "vs the undamaged residual", TAFEL_CLOSED),
+    ("break_mirror_without_alpha_swap", SELF, "vs the undamaged residual", MIRROR),
+    ("break_i0_general_alpha_sum_not_1", SELF, "vs the undamaged residual",
+     I0_GEN_VS_EQ30),
+    ("break_linear_threshold_last_crossing_mV", SELF, "vs the first crossing",
+     LIN_FIRST_MV),
+    ("break_tafel_prediction_on_exact_run", SELF, "vs the Tafel run it is meant for",
+     TAFEL_PRED_DEV),
+]
+
+missing = sorted(set(METRICS) - {c[0] for c in COVER})
+extra = sorted({c[0] for c in COVER} - set(METRICS))
+assert not missing and not extra, f"coverage table out of step: {missing} {extra}"
+
+# the audit counts are published too, so that a later edit which drops a metric
+# below the floor, or quietly relabels one structural, shows up as a regression.
+# They are counted over the rows above and then added as rows of their own.
+n_struct = sum(c[1] == STRUCT for c in COVER)
+n_floor = sum(abs(METRICS[c[0]]) < FLOOR for c in COVER)
+n_floor_struct = sum(abs(METRICS[c[0]]) < FLOOR and c[1] == STRUCT for c in COVER)
+METRICS["metrics_below_ci_floor"] = float(n_floor)
+METRICS["metrics_labelled_structural"] = float(n_struct)
+COVER += [("metrics_below_ci_floor", SELF, "is the audit of every row above", None),
+          ("metrics_labelled_structural", SELF, "is the audit of every row above",
+           None)]
+assert set(METRICS) == {c[0] for c in COVER}
+
+print(f"{'metric':44}{'value':>12}{'kind':>18}  {'what moves it -> to'}")
+for name, kind, how, moved in COVER:
+    v = METRICS[name]
+    low = abs(v) < FLOOR
+    tail = f"{how}" if moved is None else f"{how} -> {moved:.3e}"
+    print(f"{name:44}{v:12.3e}{kind:>18}{'  <CI  ' if low else '       '}{tail}")
+
+print()
+print(f"{len(COVER)} published metrics. {len(COVER)-n_struct} carry a row that moves "
+      f"them; {n_struct} are labelled")
+print("structural, and each says above what it cannot detect. Every one of those")
+print(f"{n_struct} is a deliberate record of a blind spot, not an unchecked claim.")
+print()
+print(f"{n_floor} of the {len(COVER)} sit below check_agreement.py's ABS_FLOOR = "
+      f"{FLOOR:.0e} and are")
+print("marked <CI above: those are NOT compared by CI at all, so they are unprotected")
+print("rather than proven. That is a second, independent reason not to lead with any")
+print(f"of them - and {n_floor_struct} of them are structural, which is the same set "
+      "seen from the other side.")
+print()
+print("The two counts are themselves published, so a later edit that drops a metric")
+print("below the floor or quietly relabels one structural fails CI rather than")
+print("passing unnoticed.")'''))
+
+cells.append(code('''report_agreement("J3.1", METRICS)'''))
 
 # --------------------------------------------------- what pymrm adds
 cells.append(md(r"""## What pymrm adds
@@ -1963,9 +2516,18 @@ What pymrm supplies is the **operating envelope** — the answer to *where does 
 real electrode actually sit*, which is the only reason the thresholds are
 actionable. Getting that needs a coupled two-phase porous-electrode solve with
 electroneutrality, and the reason it was cheap here is that the gallery already
-had one: `J3.4`'s `Cell` was ported with a single change, and the operators, the
+had one: `J3.4`'s `Cell` was ported almost unchanged, and the operators, the
 outward-normal boundary conditions and the flux-form salt balance came with it,
 along with its validations. The kinetic switch is 12 lines.
+
+**And the honest half of that sentence: what came with it was not only the
+validations.** A shared helper carries its blind spots too, and this page has now
+been corrected twice for something inherited rather than written here — a
+`v_stop` read as an operating point, and a time-step schedule decoupled from
+every refinement study built on it. The second was already fixed on `J3.5` and
+had simply never been inherited. Porting is still the right way to build a page;
+the thing that does not travel with the code is the *evidence*, and it has to be
+rebuilt for the physics that was substituted in.
 
 That is the reusable pattern, and it is more interesting than the page: **a
 constitutive law and a reactor model in the same gallery let each check the

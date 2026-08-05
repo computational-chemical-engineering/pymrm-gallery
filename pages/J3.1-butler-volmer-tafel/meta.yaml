@@ -15,7 +15,7 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 51
+runtime_seconds: 75
 datasets: []
 
 validation:
@@ -30,6 +30,10 @@ validation:
   - the J3.4 cell re-solved with the standard form in place of Eq. 17 as printed, giving the same cell potential to 2.2e-12 mV
   - the Tafel-substituted cell's first-step overpotential against the uniform-reaction prediction (0.46 %)
   - grid independence over an eightfold refinement, and exact conservation of total salt (8.9e-16)
+  - time-step independence over an eightfold refinement of dt AND dt_max together, observed order 0.95, which is the half of the discretisation error the grid ladder holds constant by construction - the temporal error is 0.273 mV against a 0.149 mV grid spread, i.e. the LARGER of the two was the one no version of this page measured
+  - the peak overpotential re-measured at the corner where both knobs are refined together (1.519 mV against the published 0.738), and separately the sustained peak past the initial transient (0.146 mV, stable to 10.6 % over the whole refinement box)
+  - salt conservation given the break row it never had - a 0.1 % leak in the collector boundary condition takes the drift from 4.4e-16 to 2.2e-02 - since the residual itself is a telescoping identity, exact for any interior flux
+  - an audit of all 69 published metrics against the break-table rule: 63 carry a row that moves them, 6 are labelled structural with what each cannot detect, and 11 sit below check_agreement.py's ABS_FLOOR = 1e-12 and are therefore not compared by CI at all
   - the cell run with and without the nu = 2 factor J3.4 leaves open, to show the kinetic conclusions do not depend on it
 
 adds: >
@@ -75,6 +79,12 @@ agreement: >
   Tafel-substituted cell's first-step overpotential, +446.2 mV, matches the
   uniform-reaction prediction of +444.2 mV to 0.46 %. The cell potential moves
   0.149 mV over an eightfold grid refinement and salt is conserved to 8.9e-16.
+  The temporal error, measurable for the first time since J3.5's dt_scale was
+  ported in on 2026-08-05, is 0.273 mV at the production schedule with an
+  observed order of 0.95 - 1.8 times the grid spread, and 2.4 times it on the
+  cell-averaged overpotential. Both are far below anything the page concludes
+  from, but the larger of the two was the one no version of this page had
+  measured.
 
 caveats: >
   Provenance tier 6. Nothing on this page is compared with a measurement. Doyle's
@@ -107,13 +117,44 @@ caveats: >
   by the 1/sigma term), so it must not be counted twice. What this reading adds is
   that the disagreement survives with kappa removed entirely.
 
-  The peak cathode overpotential is deliberately reported as NOT converged at
-  these grids: it is a boundary-layer value in the first cathode cell and rises by
-  1.9x over an eightfold refinement. Its increments do shrink (0.208, 0.166,
-  0.104 mV), so the sequence is converging - it has simply not arrived, and the
-  page says that rather than claiming divergence. Nothing is concluded from it
-  alone; the conclusion rests on the 15.7x margin to the 1 % threshold. The
-  cell-averaged value converges to 0.4 %.
+  The peak cathode overpotential is deliberately reported as NOT converged, in
+  EITHER knob. It is a boundary-layer value in the first cathode cell and rises by
+  1.9x over an eightfold grid refinement (increments 0.208, 0.166, 0.104 mV, so
+  the sequence is converging and has simply not arrived) - and it also sits in the
+  FIRST TIME STEP, 0.39 s into a discharge of 1.7e4 s, so it rises by a further
+  1.34x over an eightfold refinement of the time step. Refining both together
+  takes it from the published 0.738 mV to 1.519 mV and the margin to the 1 %
+  linear threshold from 21.4x to 10.4x. The conclusion - the cathode deep inside
+  the linear window - survives with an order of magnitude to spare, but 10.4x is
+  the honest margin and it replaces the 15.7x an earlier version of this page
+  quoted from the grid ladder alone. The SUSTAINED peak, once that initial
+  transient has decayed, is 0.146 mV and varies by only 10.6 % over the whole
+  refinement box; that is the converged number and the page says so. The
+  cell-averaged value moves 0.40 % under the grid and 0.95 % under the time step.
+
+  Corrected 2026-08-05: this page's Cell.march is J3.4's, and J3.5's dt_scale fix
+  - scaling dt AND dt_max, the only way to refine a schedule that grows x1.3 per
+  step - had never been inherited. Until now the three grid_* metrics refined
+  space at a constant temporal error and were read as if they bounded the whole
+  discretisation error. They are now labelled spatial-only and each has a
+  temporal counterpart printed beside it. dt_scale = 1 is the production
+  schedule, so all 47 previously published metrics are bit-identical; 22 were
+  added. Three further things that did not travel with the helper are recorded on
+  the page: march here has no record/t_stop snapshot interface, which is what
+  J3.4's two checks with real power are built on; the charge branch of the
+  stopping rule (v_top = 3.2 V) is absent, latent because every run here is a
+  discharge; and kappa, eps and delta_c are fixed constants rather than
+  constructor arguments.
+
+  Every published metric now carries a break-table row or is labelled structural.
+  Six are structural, and each is a deliberate record of a blind spot: the
+  partial-current balance (exact for alpha_a + alpha_c = 1), the both-prefactor
+  swap and the symmetric-alpha worst case (both record that a defect is
+  undetectable), the balance's own worst case, and the two readings of the kappa
+  disagreement, which are one number by construction. Eleven of the 69 sit below
+  check_agreement.py's ABS_FLOOR = 1e-12 and are therefore not compared by CI at
+  all - they are unprotected rather than proven, which is a second reason not to
+  lead with any of them. Every break row added is far above that floor.
 
   Two of the identity checks are reported as identities rather than as evidence,
   and an injected-defect table on the page measures which is which. At Doyle's own
