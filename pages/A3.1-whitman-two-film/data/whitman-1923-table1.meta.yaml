@@ -1,0 +1,140 @@
+dataset_id: whitman-1923-table1
+title: Table 1 of Whitman (1923) - three HCl absorption runs at 30 deg C
+status: complete
+
+source:
+  authors:
+    - "Whitman, W. G."
+  year: 1923
+  container: "Chemical and Metallurgical Engineering 29, 146-148"
+  doi: null
+  access: "NOT CONSULTED - the 1923 original is pre-DOI and unreachable"
+  licence: "numerical facts extracted; no page image or figure reproduced"
+
+read_from:
+  authors:
+    - "Whitman, W. G."
+  year: 1962
+  container: "International Journal of Heat and Mass Transfer 5(5) 429-433"
+  doi: 10.1016/0017-9310(62)90032-7
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  note: >
+    The 1923 article is reprinted VERBATIM as item 5 of the series "Pioneer
+    papers in convective mass transfer" in Int. J. Heat Mass Transfer 5 (1962).
+    The reprint's own header reads: "5. W. G. WHITMAN: The two-film theory of
+    gas absorption, Chemical and Metallurgical Engineering 29, 146-148 (1923).
+    Reprinted with permission from Chemical Engineering, Copyright 1923,
+    McGraw-Hill Publishing Co." Every number and every equation in this dataset
+    was read off a render of the 1962 printing at its NATIVE 300 ppi (pdfimages
+    -list reports CCITT-G4 bilevel at 300 ppi, so a larger render only
+    interpolates), with every numeric cropped and re-read at that resolution,
+    and was checked against that printing alone.
+
+    PAGE NUMBERS IN THIS FILE AND ON THE PAGE ARE THE 1962 REPRINT'S (429-433).
+    Table 1 sits on reprint page 431. The 1923 page range 146-148 appears only
+    in the reprint's header line; it is inherited, not verified, and no
+    individual 1923 page can be cited from this source.
+
+    The reprint is preceded by an Editor's Foreword signed "D.B.S.". That
+    Foreword is 1962 editorial commentary, NOT Whitman: nothing in it is
+    attributed to Whitman anywhere in this dataset or on the page.
+
+conditions:
+  runs: >
+    Reprint page 431, Table 1. Three absorption runs of hydrogen chloride into
+    aqueous hydrochloric acid, at "a constant temperature of gas and liquid of
+    30 deg. C" (reprint page 431). Whitman gives no apparatus dimensions, no
+    interfacial area, no gas or liquid flow rate and no run duration, so the
+    coefficients K_p, K_c, k_p and k_c are per-apparatus conductances, not
+    per-unit-area film coefficients, and no film thickness or diffusivity can
+    be recovered from them.
+  subscripts: >
+    Whitman's subscripts 1, 2, 3 label positions in his Fig. 1: (1) the outside
+    of the gas film, i.e. the main body of gas; (2) the gas-liquid interface,
+    where the two phases are in equilibrium; (3) the inside of the liquid film,
+    i.e. the main body of liquid. So p1 is the bulk gas partial pressure, p3 the
+    partial pressure exerted by the bulk liquid, c1 the liquid concentration
+    that would be in equilibrium with the bulk gas, and c3 the bulk liquid
+    concentration.
+  equilibrium_pairs: >
+    A consequence of those definitions, used by this page: (c1, p1) and (c3, p3)
+    are each an EQUILIBRIUM pair at 30 deg C. Table 1 therefore contains four
+    distinct equilibrium points - (425, 225), (378, 55), (368, 41) and
+    (204, 0.3) in (g/l, mmHg) - which is what lets the equilibrium relation of
+    Whitman's Figs 2 and 3 be reconstructed from printed numbers rather than
+    digitised. Run 3's (9, 0) is not usable: the printed p3 = 0 is a rounding.
+
+acquisition:
+  method: table
+  figure: "Table 1, reprint page 431"
+  tool: "poppler pdftoppm -r 300 (the scan's native ppi), cropped per numeric and read visually"
+  procedure: >
+    Straight transcription of the ten printed columns of Table 1.
+
+    The PDF is an Acrobat 3.0 Capture OCR of a 1962 scan of a 1923 article and
+    its text layer must not be used for numbers. The 1962 typesetting uses a
+    MID-DOT decimal separator ("41,0" for 41.0), which the OCR discards: the
+    text layer returns run 2's K_c as "0,146", run 3's as "om7" and run 2's c1
+    as "3:". Every value here was read from the page image instead. Renders
+    inspected 2026-08-05.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the printed precision. These are transcribed characters, not
+    digitised positions. Printed precision: dW/dtheta to 0.1 g/h (0.12-0.21 %
+    per run), p and c to whole units except p3 of run 2 (0.3), K_p to two
+    decimals, K_c to two or three significant figures.
+
+validation:
+  internal_arithmetic: >
+    The three difference columns close exactly on the printed values:
+    225-55=170, 41-0.3=40.7, 41-0=41.0, 425-378=47, 368-204=164, 368-9=359.
+    The two coefficient columns are the printed rate divided by the printed
+    difference to within the printed rounding: K_p 0.2412/0.5897/0.5878 against
+    0.24/0.59/0.59 and K_c 0.8723/0.1463/0.0671 against 0.87/0.146/0.067. This
+    is a transcription check only - K_p and K_c are DEFINED by those quotients,
+    so it cannot test the model.
+  equilibrium_consistency: >
+    The four equilibrium pairs above lie on a single straight line on a
+    log10(p) versus c plot to a worst residual of 0.38 % in p (0.13 g/l in c)
+    over 2.88 decades of pressure. Nothing forces this: they are eight
+    separately printed numbers taken from four different table cells across
+    three runs. It is the strongest available check that no digit was misread,
+    and it is what Whitman's own Fig. 3 - which plots a straight dashed line on
+    exactly those axes - asserts.
+  prose_ratios: >
+    Whitman's three stated ratios recomputed from the printed table:
+    K_p(run 2)/K_p(run 1) = 2.458 against "nearly two and one-half fold";
+    K_c(run 2)/K_c(run 3) = 2.179 against "differ more than twofold";
+    K_c(run 1)/K_c(run 3) = 12.99 against "twelvefold", which is the one loose
+    statement - the printed values give 13.0, not 12.
+
+columns:
+  - {name: run, unit: "-", description: "run number as printed, 1-3"}
+  - {name: dW_dtheta_g_per_h, unit: "g/h", description: "observed absorption rate, Whitman's dW/dtheta"}
+  - {name: p1_mmHg, unit: "mmHg", description: "partial pressure of HCl in the main body of gas"}
+  - {name: p3_mmHg, unit: "mmHg", description: "partial pressure of HCl exerted by the main body of liquid"}
+  - {name: delta_p_mmHg, unit: "mmHg", description: "p1 - p3, printed as a separate column"}
+  - {name: c1_g_per_l, unit: "g/l", description: "liquid HCl concentration in equilibrium with the main body of gas"}
+  - {name: c3_g_per_l, unit: "g/l", description: "HCl concentration of the main body of liquid"}
+  - {name: delta_c_g_per_l, unit: "g/l", description: "c1 - c3, printed as a separate column"}
+  - {name: K_p, unit: "g/(h mmHg)", description: "overall coefficient on the pressure potential, eq. (5)"}
+  - {name: K_c, unit: "g/(h (g/l))", description: "overall coefficient on the concentration potential, eq. (6)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research
+  by a research organisation with lawful access is covered by Art. 15n
+  Auteurswet (implementing DSM Directive (EU) 2019/790 Art. 3). No page image
+  and no figure is reproduced here or on the page.
+
+caveat: >
+  TIER 3 - a measurement, but a very small one. These are three runs, reported
+  without an apparatus description, without replicates and without an error
+  estimate, and the paper's own title calls them "A preliminary experimental
+  confirmation". Whitman writes that they "are insufficient to prove definitely
+  the truth of the two-film theory". Two of the three are near-duplicates
+  (runs 2 and 3 share p1 = 41 mmHg and c1 = 368 g/l), so the table carries three
+  observations against a two-parameter model: one degree of freedom. What the
+  liquid-film coefficient k_c can be tested against here is measured on the page
+  and is close to nothing.

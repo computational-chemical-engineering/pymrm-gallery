@@ -1,0 +1,160 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.1
+slug: whitman-two-film
+title: "Whitman's two-film theory, and what his three runs can actually test"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 7
+datasets:
+  - whitman-1923-table1.csv
+  - whitman-1923-printed-results.csv
+
+validation:
+  - an over-determined internal consistency check on the transcription itself, and the page's strongest can-fail number - Whitman's subscript convention makes (c1, p1) and (c3, p3) equilibrium pairs, so Table 1 prints FOUR equilibrium points; fitting the two-parameter straight line that his Fig. 3 plots leaves two degrees of freedom, and the worst residual is 0.383 % in p (0.128 g/l in c) over 2.88 decades of pressure. Nothing forces eight separately printed table cells onto one curve. Corrupting p3(run 1) from 55 to 5.5 - the mid-dot decimal separator this PDF's own OCR loses - moves it by a factor 322, and a 368 -> 386 transposition by 81
+  - the equilibrium-pair READING itself corroborated by Table 1 with no fit at all - runs 2 and 3 share p1 = 41 mmHg and the table prints c1 = 368 g/l for BOTH of them, while their bulk concentrations (204 and 9 g/l), their K_c (0.146 and 0.067) and their rates (24.0 and 24.1 g/h) all differ. A concentration "in equilibrium with the gas" is a function of p1 alone and has no choice; a bulk, inlet or mean liquid concentration would have no reason to coincide
+  - 'the reconstruction confirmed against printed characters only, and stated one-sidedly on purpose. Extrapolated to Fig. 3''s printed abscissa ticks it gives log10 p = +2.808 at c = 460 against the printed top tick +2.8, a deviation of 0.0081 log units - the drawn line does exit at the top-right corner. It gives -0.835 at c = 180 against the printed bottom tick -1.0, which is NOT a failure and is NOT counted as a second confirmation: a line of this slope spans 3.643 log units across the 280 g/l abscissa while the printed box is 3.800 tall, so it cannot touch both corners, and the 0.1651 measured at the bottom is exactly that 0.1570 shortfall plus the 0.0081 at the top. The bottom deviation is therefore an identity and is printed but not reported as a metric. The genuine second corroboration is Whitman''s prose - the back pressure at his "negligible up to approximately 250 g/l" comes out 1.19 mmHg, 2.9 % of run 2''s driving pressure. No pixel of either figure is measured'
+  - Whitman's worked example (reprint page 432) reproduced END TO END from Table 1 alone, with his five printed numbers held out - p2(run 1) 155.51 mmHg against his 156, c2(run 1) 412.63 g/l against his 412 read off Fig. 3, k_c 1.184 against his 1.2, the run-2 interface pair (0.549 mmHg, 224.16 g/l) against his (0.6, 224), and the held-out run-2 rate 23.87 g/h against the OBSERVED 24.0, i.e. -0.558 %. His run-2 interface pressure is the one loose reading (-8.5 %, but 0.039 log units on an ordinate spanning 3.8, and it costs 0.16 g/l in c2)
+  - a three-model comparison on the three published rates, each model fitted by least squares to all three - single gas film (eq. 5, one parameter) 41.7 % rms and 44.3 % worst; single liquid film (eq. 6, one parameter) 59.5 % rms and 90.3 % worst; two films (eq. 4 closed with the equilibrium curve, two parameters, so ONE degree of freedom left) 0.379 % rms and 0.470 % worst, against Table 1's own printed precision of +-0.21 % on a rate. The page states plainly which half of that was NOT free to fail rather than presenting all of it as a result - the two-film family NESTS the gas-film model (k_c -> infinity is eq. 5 with the back pressure taken from the equilibrium curve) and its second parameter absorbs run 1 to 0.005 %, so the rms is set by runs 2 and 3 alone, whose mutual consistency Table 1 already prints as K_p = 0.59 twice
+  - and on both quantities the data can genuinely test, the liquid film makes things WORSE. On runs 2 and 3 - the only two that constrain k_p - a ONE-parameter gas film fits to 0.159 % rms where the two-parameter two-film model manages 0.465 %, a factor 2.92 worse, because fitting run 1 pushes run 2's interface from 0.30 to 0.549 mmHg. On the one remaining degree of freedom, the run3/run2 rate ratio, Table 1 gives 1.00417 (+-0.29 % printed precision) against 1.00000 for no back pressure at all, 1.00737 for a gas film alone (+0.319 %) and 1.01354 for two films (+0.934 %). Three of those four predictions contain no fitted parameter at all, k_p cancelling out of a ratio at fixed p1. And the +0.319 % is the same number as the disagreement between Table 1's two printed K_p = 0.59 entries, necessarily so
+  - what the data can and cannot say about the liquid-film coefficient, measured rather than asserted. Whitman's only held-out prediction (run 2) is 99.4 % gas-film controlled, so DELETING the liquid film entirely moves it from -0.558 % to +0.054 % of the observed rate - closer, not further. That limit is taken ANALYTICALLY, as k_p (p1 - f(c3)), so no large-k_c constant is load-bearing anywhere; it is confirmed a second and independent way by Richardson extrapolation of the full root-solve at finite k_c, the two routes agreeing to 1.3e-12. Profiling the fit with k_c held fixed and k_p re-fitted - every subset containing run 1 admits k_c only in [1.14, 1.24] at 2 % rms, while runs 2 and 3 alone admit [0.40, 3000] and are still rising at the top of the sweep. So k_c is tightly IDENTIFIED by one run and CORROBORATED by none
+  - the failure of the linearised series formula quantified against the exact non-linear interface solve at the same k_p and k_c - 1/K_p = 1/k_p + 1/(m k_c) is off by 87.8 % with the tangent slope at c3 and 114.9 % with the secant across run 1's own concentration span; halving the equilibrium slope moves those to 29.1 % and 15.9 %, so the error IS the curvature. Runs 2 and 3 are gas-controlled and their tangent errors saturate at -100 %, which is why the two run-1 numbers are the ones reported
+  - the pymrm two-domain solve against Whitman's algebra, 5.3e-13 relative - STRUCTURAL and labelled as such. A film with constant D, Dirichlet ends and no source has a linear profile, which a conservative finite-volume scheme reproduces exactly on any grid, so this is a port check on the operator assembly, the shapes_d plumbing and the two interface rows, and nothing more. Its value sits BELOW check_agreement.py's ABS_FLOOR = 1e-12, so CI does not compare it at all. It is not vacuous - nu = 1 instead of 0 moves it by a factor 2.8e12 and removing the equilibrium jump by 4.7e12 - but it is blind to the grid (n = 3 gives the same twelve figures as n = 600), and the page says so
+  - 'a limit the algebra cannot express - a first-order reaction placed in the liquid film drives the rate towards the gas-film-only value k_p p_1 = 132.75 g/h from below, reached to 3.0e-6 relative with that limit appearing nowhere in the code; removing the interface equilibrium moves it by a factor 356. Reported as a GRID FLOOR and not as convergence: the residual is exactly p2/p1, the reaction layer at ka = 1e6 is about a thousandth of the film and is unresolved on every grid tried, and the value moves only from 3.111e-6 at n = 25 to 2.972e-6 at n = 400 rather than falling towards zero. The break table carries that n sweep as a row and the page says why it barely moves'
+  - 'a 50-row defect-injection table. Of the 32 metrics reported, 30 have at least one row that moves them; the two that do not are named on the page with the reason - table1_diff_columns_max_dev is exactly 0 by construction, and kc_band_width_without_run1 IS the defected value of the "run 1 removed from the fit" row, so it cannot also be that row''s baseline. Three further rows are kept precisely because they barely move: refining the grid does not move the pymrm check, a tenfold error in k_c does not move Whitman''s held-out prediction (the page''s result, not its defect), and coarsening the grid moves the fast-reaction residual by 4 %, which is what makes it a floor rather than convergence. Newton convergence is asserted on every solve (worst converged relative update 3.8e-14) and maxfev = 1 moves that by 2.1e11'
+  - 'AND THE PAGE STATES WHAT THAT TABLE CANNOT DO. Every row perturbs an input and watches a number move, which establishes sensitivity and not correctness - a baseline that is wrong rather than insensitive passes every row it has. This page carried exactly that defect: the deleted-liquid-film rate was first obtained by setting k_c = 1e12 and reading eq. (4) from the LIQUID side, where (c2 - c3) is 2.4e-11 against an ulp(204) of 2.8e-14, so the answer was quantised at twice the size of the quantity reported, sat above ABS_FLOOR where CI would have compared it, and reversed sign at k_c = 1e13 - and the break row that moves it by a factor 484 passed throughout. It is fixed by taking the limit analytically and is now the one metric on the page computed a SECOND, INDEPENDENT way rather than only perturbed. The notebook prints the two-sided evidence, including that the liquid-side value exceeds its own k_c -> infinity limit, which a rate monotone in k_c cannot do'
+  - 'three quantities are deliberately NOT reported as metrics, each with its reason printed: grid_spread_n3_to_n600 (1.8e-9 g/h of accumulated round-off in a solve with no discretisation error), the two-route agreement on the deleted-film rate (1.3e-12, round-off near ABS_FLOOR - the agreement is the evidence, its last digits are not), and fig3_axis_bottom_dev_log10 (an identity: the top deviation plus a fixed geometric shortfall). All three would produce false CI regressions'
+
+adds: >
+  Not the two-film answer. For Whitman's problem the pymrm solve reproduces the
+  algebra to twelve figures BY CONSTRUCTION, and the page says so rather than
+  presenting it as validation - a resistance-in-series identity does not need a
+  solver. What it adds is three things the 1923 paper could not do, and one
+  thing that needs no solver at all.
+  (1) THE INTERFACE STATE, SOLVED RATHER THAN READ OFF A CHART. Steps 3 and 5 of
+  Whitman's worked example are him finding a point on Fig. 3 by eye. Closing
+  eq. (4) with p2 = f(c2) makes that a Newton solve, so his three hand-worked
+  points sit inside a continuous sweep of the operating plane. The result is
+  that at FIXED k_p and k_c the "overall coefficients" range over a factor 3.80
+  for K_p (0.1553 to 0.5900) and 13.59 for K_c (0.06661 to 0.90501) across that
+  plane - neither is a property of the apparatus. Both factors are printed by
+  the cell that sweeps them. That is Whitman's thesis, which he demonstrates at
+  three points and could not map.
+  (2) A NUMBER ON HOW BADLY THE LINEARISED FORM FAILS. The formula every
+  textbook uses, 1/K_p = 1/k_p + 1/(m k_c), is not in Whitman's paper; what is in
+  the paper is the warning that it must not be used here ("the overall
+  coefficients K_c or K_p would have no significance"). Measured against the
+  exact non-linear interface at the same coefficients: 87.8 % with a tangent m
+  and 114.9 % with a secant m on run 1, and the error tracks the curvature -
+  halving the equilibrium slope cuts them to 29.1 % and 15.9 %.
+  (3) THE FILMS AS A DIFFERENTIAL OBJECT, so an assumption can be removed one at
+  a time. A first-order reaction in the liquid film recovers the gas-film-only
+  limit to 3.0e-6 with that limit nowhere in the code. This is a mechanism
+  demonstration and NOT a result about HCl - Whitman publishes no rate constant,
+  and the enhancement regimes belong to F3.1.
+  (4) AND ONE THING THAT IS NOT PYMRM AT ALL, and is the most useful output on
+  the page: the power analysis. Whitman's single held-out prediction is 99.4 %
+  gas-film controlled, so deleting the liquid film moves it by 0.6 % and moves
+  it CLOSER to the measurement (-0.558 % becomes +0.054 %); on the one remaining
+  degree of freedom the same deletion also wins, +0.319 % against +0.934 %; and
+  removing run 1 from the fit leaves k_c unbounded above. That needed a careful
+  reading of Table 1 and no solver whatsoever. It is on the page because a page about a resistance-in-series
+  identity that reported only identities would be worthless, and because it is
+  the quantitative answer to the remark the 1962 Editor's Foreword quotes from
+  Sherwood and Pigford - that after 28 years the theory "has never been
+  adequately checked experimentally".
+
+agreement: >
+  Against printed results: Whitman's five worked-example numbers reproduced from
+  Table 1 alone - 155.51 vs 156 mmHg, 412.63 vs 412 g/l, k_c 1.184 vs 1.2,
+  (0.549, 224.16) vs (0.6, 224), and the held-out run-2 rate 23.87 g/h vs the
+  observed 24.0 (-0.558 %); his three stated ratios recomputed as 2.458, 12.99
+  and 2.179 against "nearly two and one-half fold", "twelvefold" and "more than
+  twofold". Internal: four printed equilibrium pairs on one straight semi-log
+  line to 0.383 % in p over 2.88 decades; Fig. 3's printed TOP axis corner
+  recovered to 0.0081 log units (the bottom corner is not a target and the page
+  says why). Model comparison: two films 0.379 % rms over the three runs against
+  41.7 % and 59.5 % for a single gas or liquid film, with the one remaining
+  degree of freedom off by 0.934 % where a one-parameter gas film is off by
+  0.319 %. Headline computed twice: the deleted-liquid-film rate 24.012900 g/h
+  from the closed form and 24.012900 g/h from Richardson extrapolation of the
+  finite-k_c solve, agreeing to 1.3e-12. Structural: the pymrm two-domain solve
+  against the algebra 5.3e-13 (below ABS_FLOOR, not CI-compared), worst
+  converged Newton relative update 3.8e-14, fast-reaction floor 3.0e-6.
+
+caveats: >
+  TIER 3 for Table 1 and TIER 6 for everything derived from the worked example.
+  The measurement is three absorption runs at 30 deg C, with no apparatus
+  description, no interfacial area, no flow rates, no replicates and no error
+  estimate. The paper's own subtitle is "A Preliminary Experimental
+  Confirmation" and Whitman writes that the data "are insufficient to prove
+  definitely the truth of the two-film theory".
+
+  REPRINT ROUTE. The 1923 original in Chemical and Metallurgical Engineering is
+  pre-DOI and unreachable and was NOT consulted. Everything on this page was read
+  off renders of the verbatim reprint in Int. J. Heat Mass Transfer 5 (1962)
+  429-433 at that scan's NATIVE resolution - pdfimages -list reports CCITT-G4
+  bilevel images at 300 ppi, so rendering larger only interpolates - with every
+  numeric cropped and re-read at that resolution rather than read at page scale.
+  The reprint carries its own DOI and states its origin in its own header. ALL
+  PAGE REFERENCES ON THE PAGE ARE TO THE 1962 REPRINT. The 1923 page range
+  146-148 appears only in that header; it is inherited, not verified, and no
+  individual 1923 page is cited. NO ISSUE NUMBER IS GIVEN ANYWHERE: the header
+  prints volume, pages and year only. The PDF's text layer is an OCR of the scan
+  and is not used for any number - it renders eq. (7) as "2,$~=PL~~2Lz" and run
+  3's K_c as "om7", and the 1962 typesetting uses a mid-dot decimal separator
+  that the OCR discards.
+
+  THE EDITOR'S FOREWORD IS NOT WHITMAN. The 1962 reprint opens with a foreword
+  signed "D.B.S." quoting Sherwood and Pigford's 1951 preface. It is quoted on
+  the page as 1962 editorial commentary and is never attributed to Whitman.
+  Sherwood and Pigford's book is not on disk and is cited only through that
+  foreword, which gives it as "Absorption and Extraction (McGraw-Hill, 1951)"
+  and states NO EDITION - so none is asserted on the page.
+
+  EQS. (2) AND (3) ARE RE-SUBSCRIPTED, and the page says so where it does it.
+  Whitman prints them as p_g - p_l and c_g - c_l on reprint page 430 and
+  re-writes the same two potentials as (p1 - p3) and (c1 - c3) in his own eqs.
+  (5) and (6) on page 431. The page uses the numbered subscripts throughout,
+  quotes his definitions of p_l and c_g verbatim, and flags the substitution
+  because it is the one place a subscript convention carries an extraction
+  claim.
+
+  THE EQUILIBRIUM RELATION IS A RECONSTRUCTION, not a digitisation and not a
+  thermodynamic correlation. It is fitted to the four (c, p) equilibrium pairs
+  Whitman prints in Table 1's own columns and validated against four numbers he
+  read off Fig. 3 and against Fig. 3's printed axis ticks. No pixel of Figs 2 or
+  3 is measured and no figure is reproduced; the Dolezalek (1898) and Bates &
+  Kirschman (1919) points plotted on Fig. 3 are not transcribed. It should be
+  used inside this page's argument and nowhere else.
+
+  k_p, k_c, K_p and K_c ARE PER-APPARATUS CONDUCTANCES, not per-unit-area film
+  coefficients. No area, thickness or diffusivity can be recovered from them and
+  none is invented: the pymrm films are given unit thickness so that D/delta
+  equals the printed coefficient, which is a gauge choice that nothing depends
+  on. k_c = 1.2 should not be quoted as a measured liquid-film coefficient - the
+  page shows the three runs admit only a band, and that removing the single run
+  which sets it leaves it unbounded above.
+
+  WHAT THE PAGE DOES NOT SETTLE. It establishes that a single film of either
+  kind cannot describe these three runs and that two films can with one degree
+  of freedom to spare. It cannot choose between film, penetration and surface
+  renewal: the diffusivity exponent that separates those pictures is not
+  something Whitman's data can see. THAT COMPARISON IS OPEN AND THE PAGE SENDS
+  NOBODY TO IT - it needs all three sources at once; A3.2 (Higbie) has no source
+  yet and A3.3 (Danckwerts) declines it explicitly for the same reason, so a
+  reader must not be pointed there expecting to find it. The reaction cell is a
+  limit check, not an enhancement model; F3.1 owns Hatta. k_p and k_c are assumed equal across all three runs, which
+  Whitman explicitly says need not hold ("the values of k_p and k_c will, of
+  course, be dependent on experimental conditions") and which three runs cannot
+  check.

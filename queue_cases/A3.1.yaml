@@ -5,7 +5,8 @@ catalog_reference: Chem. Metall. Eng. 29 (1923)
 priority: P1
 tier: T0
 structures: S3
-status: ready
+status: published
+page: pages/A3.1-whitman-two-film/
 staged_at: queue_cases/A3.1/page/
 models_entry: queue_cases/A3.1/models_entry.yaml
 reference:
@@ -13,13 +14,16 @@ reference:
   - Whitman, W. G.
   year: 1923
   title: The two-film theory of gas absorption
-  container: Chemical and Metallurgical Engineering 29(4) 146-148
+  container: Chemical and Metallurgical Engineering 29, 146-148
   doi: null
   consulted: false
   note: >-
     THE ORIGIN, CITED AND NOT CONSULTED. Pre-DOI and unreachable. The page range
     146-148 is the one printed in the 1962 reprint's own header; it is inherited,
-    not verified, and no individual 1923 page is cited anywhere on the page.
+    not verified, and no individual 1923 page is cited anywhere on the page. The
+    header prints NO ISSUE NUMBER (volume, pages and year only), so none is given
+    here, on the page, or in models_entry.yaml. doi is null here and in
+    models_entry.yaml: the DOI below belongs to the 1962 reprint alone.
 reference_read_from:
   authors:
   - Whitman, W. G.
@@ -35,8 +39,10 @@ reference_read_from:
     Reprinted with permission from Chemical Engineering, Copyright 1923,
     McGraw-Hill Publishing Co."). Every equation (eqs. 1-8), all ten columns of
     Table 1, the whole worked example on reprint page 432 and the printed axis
-    tick labels of Figs 2 and 3 were verified on 600 dpi renders (pdftoppm -r
-    600) on 2026-08-05. ALL PAGE REFERENCES ON THE PAGE ARE TO THIS PRINTING
+    tick labels of Figs 2 and 3 were verified on 2026-08-05 at the scan's NATIVE
+    resolution (pdftoppm -r 300; pdfimages -list reports CCITT-G4 bilevel at
+    300 ppi, so a larger render only interpolates), with every numeric cropped
+    and re-read at that resolution rather than read at page scale. ALL PAGE REFERENCES ON THE PAGE ARE TO THIS PRINTING
     (429-433). The OCR text layer is unusable for numbers: it returns eq. (7) as
     "2,$~=PL~~2Lz", run 3's K_c as "om7" and run 2's c1 as "3:", because the 1962
     typesetting uses a mid-dot decimal separator that the OCR discards.
@@ -68,10 +74,23 @@ notes: >-
 
   The page's headline is a power analysis, not an agreement: Whitman's one
   held-out prediction is 99.4 % gas-film controlled, so deleting the liquid film
-  entirely moves it 0.6 % and moves it CLOSER to the measurement, and removing
-  run 1 from the fit leaves k_c unbounded above. The single degree of freedom
-  the three runs offer (the run3/run2 rate ratio) is off by 0.934 % against a
-  printed precision of 0.29 %, and the page reports that against itself.
+  entirely moves it from -0.558 % to +0.054 % of the observed rate - CLOSER to
+  the measurement - and removing run 1 from the fit leaves k_c unbounded above.
+  The single degree of freedom the three runs offer (the run3/run2 rate ratio)
+  is off by 0.934 % against a printed precision of 0.29 %, where a ONE-parameter
+  gas film is off by 0.319 %; the page reports that against itself.
+
+  THE k_c -> INFINITY LIMIT IS TAKEN ANALYTICALLY, as k_p (p1 - f(c3)). An
+  earlier draft set k_c = 1e12 and read the rate off the LIQUID side of eq. (4),
+  where (c2 - c3) is 2.4e-11 against an ulp(204) of 2.8e-14 - the headline was
+  floating-point round-off, it sat above check_agreement.py's ABS_FLOOR so CI
+  would have compared it, and one decade more in k_c reversed its sign. The
+  fixed value is confirmed by a second, independent route (Richardson
+  extrapolation of the finite-k_c root solve, agreeing to 1.3e-12), and the
+  notebook prints the conditioning evidence rather than just the answer. Lesson
+  for the next case: a break-table row establishes that a metric is SENSITIVE
+  and says nothing about whether its baseline is CORRECT - the row guarding this
+  one moved it by a factor 484 and passed throughout.
 updated: '2026-08-05'
 doi_source: >-
   DOI 10.1016/0017-9310(62)90032-7 belongs to the 1962 REPRINT and is confirmed

@@ -1,0 +1,125 @@
+dataset_id: whitman-1923-printed-results
+title: Whitman's worked example, stated ratios and printed axis labels (1923)
+status: complete
+
+source:
+  authors:
+    - "Whitman, W. G."
+  year: 1923
+  container: "Chemical and Metallurgical Engineering 29, 146-148"
+  doi: null
+  access: "NOT CONSULTED - the 1923 original is pre-DOI and unreachable"
+  licence: "numerical facts extracted; no page image or figure reproduced"
+
+read_from:
+  authors:
+    - "Whitman, W. G."
+  year: 1962
+  container: "International Journal of Heat and Mass Transfer 5(5) 429-433"
+  doi: 10.1016/0017-9310(62)90032-7
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  note: >
+    Verbatim reprint, as item 5 of "Pioneer papers in convective mass transfer".
+    All values read off renders of the 1962 printing at its native 300 ppi, each
+    numeric cropped and re-read at that resolution; page numbers in the
+    reprint_page column are the 1962 reprint's own (429-433). Every equation used
+    on the page - eqs. (1) to (8) - was likewise read from those renders and is
+    transcribed in full in the notebook.
+
+    The Editor's Foreword that precedes the reprint is 1962 commentary signed
+    "D.B.S." and is not Whitman. Nothing in this file comes from it.
+
+conditions:
+  worked_example: >
+    Reprint page 432. Whitman assumes k_p equals K_p of run 3, "where the liquid
+    is so dilute that the back pressure p2 is practically zero", then uses run 1
+    to obtain k_c. From eq. (4) this gives p2 = 156 mmHg for run 1; the
+    corresponding c2 "from Fig. 3, is 412 g/l"; and
+    k_c = 41.0/(412 - 378) = 1.2. He then applies eq. (7) to run 2 -
+    k_c/k_p = 1.2/0.59 = (41 - p2)/(c2 - 204) - and states that "the equation is
+    satisfied by p2 = 0.6 mm and c2 = 224 g/l", giving
+    dW/dtheta = k_c(c2 - c3) = 1.2 x 20 = 24 g/h, "checking with the observed
+    value in Table 1".
+  held_out: >
+    The four rows with role = read_from_fig3 and the one with role = prediction
+    are HELD OUT on this page: the equilibrium relation used in the notebook is
+    reconstructed from Table 1's own printed (c, p) pairs and never from these
+    values, so the notebook's reproduction of 156, 412, 0.6, 224 and 24 is a
+    prediction rather than a restatement.
+  figure_axes: >
+    Reprint page 432, Figs 2 and 3. Only the printed AXIS TICK LABELS are stored:
+    Fig. 3's abscissa runs 180 to 460 g HCl/l and its ordinate, labelled "log
+    pressure of HCl, mm Hg", runs -1.0 to 2.8. No curve, marker or pixel position
+    from either figure is extracted, digitised or reproduced. Fig. 3 plots a
+    single straight dashed line together with data of Dolezalek (1898, crosses)
+    and Bates & Kirschman (1919, circles); those authors' points are not
+    transcribed.
+  prose_claims: >
+    Reprint pages 431-432. Ratios and bounds Whitman states in words. They are
+    stored as the number the words name ("twelvefold" -> 12) and are compared on
+    the page against the ratio recomputed from Table 1.
+
+acquisition:
+  method: table
+  figure: "in-text worked example and prose, reprint pages 431-432; printed axis tick labels of Figs 2 and 3, reprint page 432"
+  tool: "poppler pdftoppm -r 300 (the scan's native ppi), cropped per numeric and read visually"
+  procedure: >
+    Transcription of printed characters. The text layer of this PDF is an
+    Acrobat 3.0 Capture OCR of a scan and is unusable for numbers: it returns
+    eq. (7) as "2,$~=PL~~2Lz", the run-2 interface pair as "pz = 0.6 mm and
+    c2 == 224 g/l" with the equation itself destroyed, and the reprint page
+    number 433 as "333". Renders inspected 2026-08-05.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the printed precision. The two Fig. 3 readings that Whitman
+    himself made (c2 = 412 g/l at p2 = 156 mmHg, and the pair 0.6 / 224) carry
+    HIS graphical error, not ours - the page treats them as printed statements
+    to be predicted, and quantifies the deviation.
+
+validation:
+  worked_example_reproduced: >
+    Reproduced end to end from Table 1 alone, with the equilibrium relation
+    reconstructed from Table 1's four printed (c, p) pairs and none of these
+    rows used as input: p2(run 1) = 155.5 mmHg against the printed 156,
+    c2(run 1) = 412.63 g/l against the printed 412, k_c = 1.184 against the
+    printed 1.2, the run-2 interface pair (0.549 mmHg, 224.16 g/l) against the
+    printed (0.6, 224), and the run-2 rate 23.87 g/h against the printed 24 and
+    the observed 24.0, i.e. -0.558 %. Whitman's 0.6 mmHg is the one loose
+    reading, -8.5 % in p, but that is 0.039 log units on a Fig. 3 ordinate
+    spanning 3.8 and it costs only 0.16 g/l in c2.
+  axis_span: >
+    The reconstructed log-linear relation, extrapolated to the printed abscissa
+    limits of Fig. 3, spans -0.83 to 2.81 in log10(p/mmHg) against the printed
+    ordinate limits of -1.0 and 2.8 - i.e. the reconstruction fills Whitman's
+    plot box, which is what a curve drawn to fill its axes must do. This uses
+    only printed tick labels; no pixel is measured.
+  negligible_backpressure: >
+    Whitman's "negligible up to concentrations of approximately 250 g/l" puts
+    the reconstructed back pressure at 250 g/l at 1.2 mmHg, i.e. 2.9 % of run 2's
+    driving pressure and 0.5 % of run 1's - consistent with the word.
+
+columns:
+  - {name: quantity, unit: "-", description: "identifier used in the notebook"}
+  - {name: value, unit: "see unit column", description: "the number as printed"}
+  - {name: unit, unit: "-", description: "unit of value, in Whitman's own units"}
+  - {name: reprint_page, unit: "-", description: "page of the 1962 reprint on which it appears (429-433)"}
+  - {name: role, unit: "-", description: "derived_in_paper | read_from_fig3 | prediction | prose_claim | figure_axis"}
+  - {name: note, unit: "-", description: "the surrounding statement, quoted where short"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research
+  by a research organisation with lawful access is covered by Art. 15n
+  Auteurswet (implementing DSM Directive (EU) 2019/790 Art. 3). No page image
+  and no figure is reproduced. The four figure_axis rows are printed tick
+  labels, not digitised positions.
+
+caveat: >
+  TIER 6 for every row except rate_run2_predicted, whose comparison target is
+  the measured 24.0 of Table 1. These are the author's own arithmetic and his
+  own graphical readings, so reproducing them tests the transcription, the
+  reconstructed equilibrium relation and the implementation of eqs. (4)-(8) -
+  not whether the two-film picture is true. The page says so, and separately
+  measures how much of Whitman's one held-out prediction the liquid-film
+  coefficient is actually responsible for.

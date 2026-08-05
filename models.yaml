@@ -829,6 +829,106 @@ models:
       and show where the 1D effective coefficient breaks down at short times.
     related: [A2.1, A2.5]
 
+  - id: A3.1
+    slug: whitman-two-film
+    title: "Whitman's two-film theory, and what his three runs can actually test"
+    description: >
+      The resistance-in-series picture every absorption calculation still uses,
+      rebuilt as the two-domain diffusion problem it claims to be and then measured
+      against the three runs Whitman published with it. His equilibrium curve is
+      reconstructed from four equilibrium pairs hidden in Table 1's own columns
+      rather than digitised from his figure; his worked example is reproduced end
+      to end with his five printed numbers held out; and the one prediction he
+      holds out is shown to be 99.4 % gas-film controlled, so deleting the liquid
+      film entirely moves it from -0.558 % to +0.054 % of the observed rate -
+      closer, not further, and the limit is taken analytically rather than with a
+      large-k_c constant.
+      A single film of either kind misses the three runs by 42-59 %; two films fit
+      them to 0.38 % with one degree of freedom to spare, and that degree of
+      freedom is off by 0.93 %.
+    section: A
+    status: published
+    page: pages/A3.1-whitman-two-film/
+    tier: T0
+    priority: P1
+    structures:
+    - S3
+    phases:
+    - gas-liquid
+    predicts:
+    - rate of gas absorption through a gas film and a liquid film in series
+    - the interface partial pressure and concentration at local equilibrium
+    - the overall coefficients K_p and K_c, and how far they move at fixed k_p and k_c
+    - where resistance additivity with a single Henry constant stops being usable
+    - which film controls, as a function of the operating point
+    pymrm_api:
+    - construct_grad
+    - construct_div
+    - newton
+    reference:
+      authors:
+      - Whitman, W. G.
+      year: 1923
+      container: "Chemical and Metallurgical Engineering 29, 146-148"
+      doi: null
+    reference_read_from:
+      authors:
+      - Whitman, W. G.
+      year: 1962
+      container: "International Journal of Heat and Mass Transfer 5(5) 429-433"
+      doi: 10.1016/0017-9310(62)90032-7
+      note: >
+        Reprints the 1923 article VERBATIM as item 5 of "Pioneer papers in
+        convective mass transfer", with the origin stated in its own header.
+        Eqs. (1)-(8), all ten columns of Table 1, the worked example on page 432
+        and the printed axis tick labels of Figs 2 and 3 were verified on renders
+        of this printing at its NATIVE 300 ppi (pdfimages -list reports CCITT-G4
+        bilevel at 300 ppi, so a larger render only interpolates), each numeric
+        cropped and re-read at that resolution; the OCR text layer is unusable
+        for numbers.
+        All page references on the page are to this reprint (429-433). The 1923
+        range 146-148 is inherited from the reprint's header, not verified, and no
+        individual 1923 page is cited. The header prints no issue number, so the
+        1923 citation carries none. The reprint's Editor's Foreword (signed
+        "D.B.S.", quoting Sherwood & Pigford 1951) is 1962 commentary and is never
+        attributed to Whitman.
+    origin_not_consulted: >
+      Chemical and Metallurgical Engineering 29, 146-148 (1923) is pre-DOI and
+      unreachable; it was not consulted. It has no DOI of its own and none is
+      recorded for it here.
+    data:
+      tier: 3
+      method: table
+      status: complete
+    related:
+    - A3.2
+    - A3.3
+    - F3.1
+    - F3.5
+    - A2.1
+    - A4.4
+    note: >
+      Experimentally grounded but read the tier carefully: Table 1 is three runs
+      with no apparatus description, no replicates and no error estimate, and the
+      paper's own subtitle is "A Preliminary Experimental Confirmation". The
+      two-film fit to those three rates (0.379 % rms against 41.7 % and 59.5 % for
+      a single gas or liquid film) is the one genuine model test, and it has
+      exactly one degree of freedom, which comes out 0.934 % adrift - reported on
+      the page rather than smoothed over - and it is worse than the +0.319 % a
+      ONE-parameter gas film achieves on the same quantity, which the page also
+      reports. The liquid-film coefficient k_c is
+      identified by run 1 alone: remove that run and the remaining data admit
+      every k_c up to the top of the sweep. The equilibrium relation is a
+      RECONSTRUCTION from Table 1's own printed (c, p) pairs, not a digitisation
+      of Fig. 3 and not a thermodynamic correlation for HCl. k_p and k_c are
+      per-apparatus conductances carrying no area and no film thickness. The page
+      deliberately does NOT compare film theory with penetration (A3.2) or surface
+      renewal (A3.3) - Whitman's data cannot see the diffusivity exponent that
+      separates them - and it does not hand that comparison to either: A3.2 has no
+      source and A3.3 declines it explicitly, so the three-way comparison is OPEN
+      and the page says so instead of pointing a reader at it. The reaction cell
+      is a limit check, not an enhancement model (F3.1 owns Hatta).
+
   - id: A3.4
     slug: wakao-funazkri
     title: "Wakao–Funazkri particle–fluid mass and heat transfer"
