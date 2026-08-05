@@ -210,12 +210,24 @@ slurry is two scalar unknowns. So the whole reactor reduces to a 2-D root find
 over the liquid concentrations, with a pymrm plug-flow solve inside — which is
 the same iteration the authors describe."""))
 
-cells.append(code('''def hydrodynamics(U, eps_s, d_t=DT, rho_g=RHO_G):
-    """Eqs. 7, 8, 9, 10, 11 -> (eps_df, U_df, eps_b, eps_total)."""
+cells.append(code('''def hydrodynamics(U, eps_s, d_t=DT, rho_g=RHO_G, C=0.3, dt_exp=-0.18):
+    """Eqs. 7, 8, 9, 10, 11 -> (eps_df, U_df, eps_b, eps_total).
+
+    Vectorised in U, and it is the ONLY implementation of Eq. 9 on this page --
+    the figure comparison calls it at d_t = 0.10 m and ambient gas density,
+    which is where the diameter term is live.
+
+    READ THE CAP BEFORE REUSING THIS. Eq. 9's diameter dependence is capped at
+    D_T = 1 m, so `min(d_t, 1) ** dt_exp` is exactly 1.0 for ANY exponent at any
+    column wider than a metre. At this paper's own reactor (D_T = 7 m) the
+    exponent is algebraically invisible: section 5 of the validation deletes it
+    and gets bit-identical conversions. It becomes live below 1 m, and at the
+    0.10 m column of Figure 2 it is worth a factor of 1.514.
+    """
     edf = EDF_REF * (rho_g / RHO_G_REF) ** 0.48 * (1.0 - 0.7 / EDF_REF * eps_s)
     vsm = VS_REF + 0.8 * eps_s
     udf = edf * vsm
-    eb = 0.3 * min(d_t, 1.0) ** -0.18 * max(U - udf, 1e-12) ** 0.58
+    eb = C * np.minimum(d_t, 1.0) ** dt_exp * np.maximum(U - udf, 1e-12) ** 0.58
     return edf, udf, eb, eb + edf * (1.0 - eb)
 
 
@@ -252,9 +264,10 @@ def large_bubbles(c_L, c_in, kla, U_i, n=400, alpha=ALPHA):
     return c_g
 
 
-def reactor(U, eps_s, n=400, kla_factor=1.0, a_pre=A_PRE, nu_co=NU_CO):
+def reactor(U, eps_s, n=400, kla_factor=1.0, a_pre=A_PRE, nu_co=NU_CO,
+            d_t=DT, dt_exp=-0.18):
     """Full model. Returns a dict with holdup, conversion and profiles."""
-    edf, udf, eb, eps = hydrodynamics(U, eps_s)
+    edf, udf, eb, eps = hydrodynamics(U, eps_s, d_t=d_t, dt_exp=dt_exp)
     eps_L, U_i = 1.0 - eps, U - udf
     kla_l = {s: kla_factor * 0.5 * np.sqrt(D_L[s] / D_L_REF) * eb for s in M_SOL}
     kla_s = {s: kla_factor * 1.0 * np.sqrt(D_L[s] / D_L_REF) * edf for s in M_SOL}
@@ -297,14 +310,18 @@ print("model assembled")'''))
 
 cells.append(md("""## Results
 
-The hydrodynamics first, against the digitised figure. Note this is a 0.10 m
-column at ambient conditions, so the pressure factor of Eq. 11 is unity here."""))
+The hydrodynamics first, against the digitised figure. This is a **0.10 m**
+column at ambient conditions, so the pressure factor of Eq. 11 is unity here and
+the $D_T^{-0.18}$ factor is 1.514 — the *only* place on this page where the
+diameter term does anything at all. `eps_model` is a thin wrapper on
+`hydrodynamics` at those conditions, so there is one implementation of Eq. 9 and
+the figure comparison exercises the same code the reactor uses."""))
 
-cells.append(code('''def eps_model(U, eps_s, C=0.3):
-    edf = EDF_REF * (1.0 - 0.7 / EDF_REF * eps_s)      # ambient: no pressure factor
-    udf = edf * (VS_REF + 0.8 * eps_s)
-    eb = C * 0.10 ** -0.18 * np.maximum(U - udf, 1e-12) ** 0.58
-    return eb + edf * (1 - eb), udf
+cells.append(code('''def eps_model(U, eps_s, C=0.3, dt_exp=-0.18):
+    """Eq. 9 at the Figure 2 conditions: 0.10 m column, ambient gas density."""
+    edf, udf, _, eps = hydrodynamics(U, eps_s, d_t=0.10, rho_g=RHO_G_REF,
+                                     C=C, dt_exp=dt_exp)
+    return eps, udf
 
 fig, ax = plt.subplots(1, 2, figsize=(12.6, 4.4))
 cols = {0.0: "tab:red", 0.16: "tab:green", 0.35: "tab:blue"}
@@ -384,8 +401,18 @@ fig.tight_layout(); plt.show()'''))
 
 cells.append(md("""## Validation
 
-Four checks: the transport operator on its own, the hydrodynamics against
-measurement, and two that the paper pays for."""))
+Five sections: the transport operator on its own, the hydrodynamics against
+measurement, two that the paper pays for, and a defect-injection table that says
+which published number each of them can actually move.
+
+**One constant on this page cannot be tested by the reactor at all, and section
+5 measures that rather than asserting it.** Eq. 9's diameter dependence is
+capped at $D_T = 1$ m. This reactor is 7 m across, so
+$\\min(D_T, 1)^{-0.18} \\equiv 1^{-0.18} \\equiv 1$ **exactly, for any exponent** —
+delete the $-0.18$ and every conversion on this page is bit-identical. The
+figure comparison is at 0.10 m, where the term *is* live, so the same function
+is exercised at both, and section 5 shows what each evaluation does and does not
+constrain."""))
 
 cells.append(code('''print("1. The convection operator, before trusting it inside the reactor")
 Hh, ci_t, Ut, kt = 30.0, 100.0, 0.1, 0.02
@@ -430,7 +457,105 @@ for a_p, nu, lab in ((8.8533e-3, 1.0, "CO"), (8.8533e-3, 1/3, "syngas")):
     c1 = reactor(0.12, 0.30, a_pre=a_p, nu_co=nu)["conversion"]
     c2 = reactor(0.40, 0.30, a_pre=a_p, nu_co=nu)["conversion"]
     print(f"   {a_p:14.4e}{lab:>10}{c1*100:12.1f}%{c2*100:12.1f}%")
-print(f"   {'paper':>14}{'':>10}{96.0:12.1f}%{63.0:12.1f}%")
+print(f"   {'paper':>14}{'':>10}{96.0:12.1f}%{63.0:12.1f}%")'''))
+
+cells.append(code('''print("5. Defect injection -- what each published number can move, and what it")
+print("   cannot. Every metric this page reports gets a row.\\n")
+
+print("5a. Eq. 9's diameter exponent on the REACTOR path (D_T = 7 m, so the cap")
+print("    min(D_T, 1) makes the base exactly 1).")
+print(f"    {'exponent':>10}{'eps_b':>10}{'eps_total':>11}{'conv U=0.40':>14}")
+print(f"    {-0.18:10.2f}{hydrodynamics(0.40, 0.30)[2]:10.6f}"
+      f"{hydrodynamics(0.40, 0.30)[3]:11.6f}{conv[3]*100:13.6f}%")
+for e in (0.0, -5.0):
+    h_ = hydrodynamics(0.40, 0.30, dt_exp=e)
+    c2 = reactor(0.40, 0.30, dt_exp=e)["conversion"]
+    print(f"    {e:10.2f}{h_[2]:10.6f}{h_[3]:11.6f}{c2*100:13.6f}%"
+          + ("   bit-identical" if c2 == conv[3] else "   MOVED"))
+print("    PROVABLY INERT: 1**x = 1 for every x, so no printed number on the")
+print("    reactor side of this page distinguishes -0.18 from any other value.")
+
+print("\\n5b. The same exponent where it IS live: the 0.10 m column of Figure 2.")
+print(f"    factor 0.10**-0.18 = {0.10**-0.18:.4f} against "
+      f"{np.minimum(DT,1.0)**-0.18:.4f} at D_T = 7 m")
+
+
+def holdup_mads(**kw):
+    out = []
+    for s, g in res.groupby("eps_s"):
+        _, udf_ = eps_model(0.1, s, **kw)
+        v = g.U_m_s.values > 2 * udf_
+        e = eps_model(g.U_m_s.values[v], s, **kw)[0]
+        out.append(float(np.abs(e / g.eps_total.values[v] - 1).mean()))
+    return out
+
+
+base_mad = holdup_mads()
+print(f"    {'injected defect':44s}{'MAD 0.00':>10}{'MAD 0.16':>10}{'MAD 0.35':>10}")
+print(f"    {'as published (C = 0.3, exponent -0.18)':44s}"
+      + "".join(f"{m*100:9.1f}%" for m in base_mad))
+for lab, kw in (
+        ("exponent -0.18 -> 0 (term deleted)", dict(dt_exp=0.0)),
+        ("exponent -0.18 -> -0.36", dict(dt_exp=-0.36)),
+        ("exponent -0.18 -> -0.09", dict(dt_exp=-0.09)),
+        ("exponent -0.36 with C rescaled to hold C*d^n",
+         dict(dt_exp=-0.36, C=0.3 * 0.10 ** -0.18 / 0.10 ** -0.36)),
+        ("C 0.300 -> 0.268 (F1.4's value)", dict(C=0.268))):
+    m = holdup_mads(**kw)
+    miss = all(mi == bi for mi, bi in zip(m, base_mad))
+    print(f"    {lab:44s}" + "".join(f"{x*100:9.1f}%" for x in m)
+          + ("   <- BIT-IDENTICAL" if miss else ""))
+print("    The fourth row is the point: 79 markers at ONE column diameter can only")
+print("    constrain the PRODUCT C * d^n = 0.454. Rescale C to hold that product")
+print("    and the exponent is unconstrained again, to the last bit. So -0.18 is")
+print("    INERT on the reactor path and UNSEPARABLE from C on the figure path.")
+print("    Nothing on this page pins it. It is carried because the paper prints it.")
+
+print("\\n5c. What a reader who follows the Reuse advice and changes D_T gets.")
+print(f"    {'D_T [m]':>9}{'eps_b':>9}{'conv U=0.40':>14}")
+print(f"    {7.0:9.2f}{hydrodynamics(0.40, 0.30)[2]:9.4f}{conv[3]*100:13.2f}%")
+for d in (1.0, 0.10):
+    eb_ = hydrodynamics(0.40, 0.30, d_t=d)[2]
+    print(f"    {d:9.2f}{eb_:9.4f}"
+          f"{reactor(0.40, 0.30, d_t=d)['conversion']*100:13.2f}%")
+print("    At 1 m and above nothing happens (the cap), so a 7 m and a 1.5 m column")
+print("    are indistinguishable here. Below it the term switches on: eps_b at")
+print("    0.10 m is 51 % larger and the high-throughput conversion moves several")
+print("    points -- governed by an exponent this page has never tested.")'''))
+
+cells.append(code('''print("5d. The two published conversions, under a transposed digit in the rate")
+print("    prefactor. (The decade error and the CO-vs-syngas reading are the two")
+print("    corrections themselves, and are in check 4; the kLa sweep is check 3.)")
+print(f"    {'injected defect':44s}{'conv U=0.12':>13}{'conv U=0.40':>13}")
+b1, b4 = conv[0], conv[3]
+print(f"    {'as published':44s}{b1*100:12.2f}%{b4*100:12.2f}%")
+for lab, kw in (
+        ("a 8.8533e-3 -> 8.5833e-3 (transposition)", dict(a_pre=8.5833e-3)),
+        ("a 8.8533e-3 -> 8.8353e-3 (transposition)", dict(a_pre=8.8353e-3))):
+    c1 = reactor(0.12, 0.30, **kw)["conversion"]
+    c2 = reactor(0.40, 0.30, **kw)["conversion"]
+    miss = abs(c1 / b1 - 1) < 0.05 and abs(c2 / b4 - 1) < 0.05
+    print(f"    {lab:44s}{c1*100:12.2f}%{c2*100:12.2f}%"
+          + ("   <- below CI's 5 % tolerance" if miss else ""))
+print("    Both transpositions are BELOW the 5 % relative tolerance that")
+print("    check_agreement.py applies, so neither conversion metric would flag")
+print("    them in CI. The U = 0.12 comparison is the weaker of the two by a")
+print("    factor of six, because 93 % conversion is near this reactor's ceiling.")
+print("    What does resolve a rate-prefactor error is check 4's decade table.")
+
+print("\\n5e. The convection operator (check 1's metric, upwind_order_ratio).")
+z_f = np.linspace(0, Hh, 201); z_c = 0.5 * (z_f[:-1] + z_f[1:])
+div_t = construct_div((200, 1), z_f, nu=0)
+for lab, out_bc in (("as published: outflow a=1, b=0", {"a": 1., "b": 0., "d": 0.}),
+                    ("outlet forced to c = 0 (wrong BC)", {"a": 0., "b": 1., "d": 0.})):
+    conv_op, cbc = construct_convflux_upwind(
+        (200, 1), z_f, z_c, ({"a": 0., "b": 1., "d": ci_t}, out_bc), v=Ut)
+    A = (div_t @ conv_op).tolil(); A.setdiag(A.diagonal() + kt)
+    c = spsolve(A.tocsc(), -np.asarray((div_t @ cbc).todense()).ravel())
+    err = np.abs(c - ci_t * np.exp(-kt * z_c / Ut)).max() / ci_t
+    print(f"    {lab:44s} max rel err vs analytic {err:.3e}")
+print("    The Reuse section warns that a missing outflow condition fails")
+print("    silently. This is the measurement behind that warning.")
 
 report_agreement("F2.3", {
     "holdup_mad_eps_s_0": float(rows[0][3]),
@@ -439,6 +564,16 @@ report_agreement("F2.3", {
     "conversion_U012": float(conv[0]),
     "conversion_U040": float(conv[3]),
     "upwind_order_ratio": float(np.mean([errs[i]/errs[i+1] for i in range(len(errs)-1)])),
+    # The diameter exponent, measured rather than asserted. The first is
+    # STRUCTURAL and exactly 0.0 -- deleting the exponent changes no reactor
+    # number at all -- which also means it sits below check_agreement.py's
+    # ABS_FLOOR = 1e-12 and CI never compares it. It is published as the record
+    # of the fact, not as a guard. The second one CI can see: it is how much the
+    # term is worth where it is live.
+    "dt_exponent_reactor_conversion_shift_structural_zero": float(
+        abs(reactor(0.40, 0.30, dt_exp=0.0)["conversion"] / conv[3] - 1)),
+    "eps_b_ratio_0p10m_to_7m": float(
+        hydrodynamics(0.30, 0.30, d_t=0.10)[2] / hydrodynamics(0.30, 0.30)[2]),
 })'''))
 
 cells.append(md(r"""## What pymrm adds
@@ -485,6 +620,29 @@ and returns the two-class split, and it is the slurry extension of what
 [`F1.4`](../F1.4-krishna-ellenberger-holdup/) validates for gas–liquid systems.
 Use `F1.4`'s Eq. 19 with 0.268 for solid-free systems and this one with 0.3 above
 $\varepsilon_s = 0.16$; the comparison above shows they are not interchangeable.
+
+**Before you change `d_t`, read section 5 of the validation.** Everything this
+page tests about $\varepsilon_b$ was measured at exactly two column diameters,
+and the $D_T^{-0.18}$ factor is unconstrained at both:
+
+- **At the reactor's 7 m**, Eq. 9's cap makes the base exactly 1, so
+  $1^{-0.18} = 1$ and the exponent is *algebraically invisible*. Deleting it
+  leaves every conversion on this page bit-identical. Any $D_T > 1$ m behaves
+  identically.
+- **At the 0.10 m column** of Figure 2, where the 79 markers are, the factor is
+  1.514 — but all 79 markers are at that one diameter, so what the data
+  constrain is the **product** $C\,D_T^{-0.18} = 0.454$, not either factor. The
+  $C = 0.300$ against $0.268$ study tests that product. Rescale $C$ to hold the
+  product fixed and any exponent reproduces the figure to the last bit
+  (section 5b, row 4).
+- **In between**, at $D_T < 1$ m, the exponent is both live and untested. A
+  0.10 m column gives $\varepsilon_b$ **51 % larger** than the 7 m reactor's at
+  the same $(U, \varepsilon_s)$, and moves the $U = 0.40$ m/s conversion by 4.8
+  points. That behaviour is Maretto and Krishna's, carried faithfully, and
+  nothing on this page is evidence for it.
+
+If your column is under a metre, the exponent is the first thing to check
+against a source that measured more than one diameter.
 
 **`large_bubbles` is the reusable pymrm piece.** A plug-flow phase with a
 composition-dependent velocity, exchanging with a lumped phase, is the skeleton

@@ -15,26 +15,40 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 48
+runtime_seconds: 110
 datasets:
   - taylor-1953-dispersion.csv
 
 validation:
+  # PRIMARY - external references
   - homogenisation closure against Taylor's Eq. 25, refined to show second-order convergence
   - the same closure across 2.5 decades of Peclet number
   - direct 2-D transient simulation against Eq. 25, refined to show the upwind error is first order in dz
-  - mass conservation in the transient solve
   - Taylor's own capillary run recomputed, and the diffusivity it implies checked against an independently measured range
+  # REFINEMENT OF THE PAGE'S OWN RESULT - added 2026-08-05
+  - "the settling study that produces this page's one original result now has its own refinement ladder, n_z = 800/1600/3200 at fixed dt and n_r. It did not before, and it was not converged: the tau(+-3 %) threshold moves from 0.1950 to 0.2125 (+9 %) and the +-2 % band goes from 'never settles' - which was the mesh's numerical-dispersion floor exceeding the band, not physics - to 0.2325. The floor halves exactly with dz (observed order 1.000, Richardson limit -0.001 %), and refining dt or n_r instead moves it by under 0.02 %, so the study refines the knob that controls the answer"
+  # STRUCTURAL
+  - mass conservation in the transient solve, 1e-13 - every boundary is no-flux and the scheme is conservative, so it is exact by construction and survives both injected defects unchanged; a regression guard on the assembly, not evidence
+  # DEFECT INJECTION - section 5 of the notebook
+  - a defect-injection table covering every published metric: nu = 1 -> 0 in the closure (3 orders), the mean not subtracted (2 orders), 192 vs 48 (factor 4), radial nu = 1 -> 0 in the transient solve, and a digit slip in Taylor's tube radius, which also flips the Furth-Ullmann acceptance test to False
 
 adds: >
   Taylor could only bound when his result applies - radial equilibration takes
   about a^2/(3.83^2 D), so wait "much longer than" that - because answering it
   needs the transient solution he had no way to compute. Running it turns the
-  inequality into a number: the growth rate settles permanently within 10 % of
-  Eq. 25 by 2.1 equilibration times, 5 % by 2.6 and 3 % by 2.9, i.e. tau ~ 0.2.
-  That is considerably less demanding than the phrase suggests, and it is useful
-  in that direction - a lumped axial dispersion coefficient becomes defensible
-  after a small multiple of the radial diffusion time, not an order of magnitude.
+  inequality into a number: on the finest mesh run (n_z = 3200) the growth rate
+  settles permanently within 10 % of Eq. 25 by 2.1 equilibration times, 5 % by
+  2.7, 3 % by 3.1 and 2 % by 3.4, i.e. tau ~ 0.2. That is considerably less
+  demanding than the phrase suggests, and it is useful in that direction - a
+  lumped axial dispersion coefficient becomes defensible after a small multiple
+  of the radial diffusion time, not an order of magnitude. Read the thresholds
+  as LOWER bounds: they rise monotonically under mesh refinement and were still
+  rising on the last doubling. The values published before 2026-08-05 came from
+  a single unrefined run at n_z = 1600 and were 5-9 % low, and that run reported
+  the +-2 % band as unattainable when it is attainable - a coarse mesh flatters
+  a settling criterion, because upwind numerical dispersion lifts the whole
+  curve above the target and a band is entered sooner, and a band narrower than
+  the bias can never be entered at all.
 
 agreement: >
   The closure reproduces Eq. 25 to 1.0e-4 relative at n_r = 200, converging as
@@ -50,7 +64,10 @@ caveats: >
   profiles are not transcribed, only his worked inference and the literature
   range it is checked against. His second inferred value (Eq. 42) is left out
   because the tube radius for those runs is not stated beside the calculation.
-  The direct simulation carries first-order upwind numerical dispersion - 1.8 %
-  at the resolution used for the timing sweep - so the tightest accuracy band
-  quoted above sits at the edge of what that run resolves; the closure, which
-  has no convective term, is the precise check.
+  The direct simulation carries first-order upwind numerical dispersion - 1.11 %
+  at the finest resolution used for the timing sweep, halving with every mesh
+  doubling - so the tightest accuracy band quoted above sits at the edge of what
+  that run resolves and the +-1 % band cannot be reported at all. The closure,
+  which has no convective term, is the precise check. The Reuse section said
+  "tau >~ 1" until 2026-08-05, contradicting the page's own result section by a
+  factor of five; the result section was right and the Reuse text is corrected.

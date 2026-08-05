@@ -1116,8 +1116,16 @@ weigh):
    the same `Film` class, so this is self-consistency: it checks that the
    reverse term is written so it vanishes as $K_{eq}\to\infty$.
 6. **Conservation and electroneutrality.** Carbon-flux uniformity and the
-   amine-flux closure are genuine (they mix the three different
-   diffusivities). **Electroneutrality and the charge flux are not**: every
+   amine-flux closure test the **stoichiometry matrix**, and nothing else.
+   *This page said "genuine — they mix the three different diffusivities"
+   until 2026-08-05; section 9 shows that is wrong.* Every reaction conserves
+   carbon, so $\nabla\!\cdot\!\sum_j \gamma_j J_j = 0$ identically for any set
+   of $D_j$: halving $D(\mathrm{HCO_3^-})$ and doubling $D(\mathrm{CO_2})$
+   leave both closures at $10^{-10}$ while $E$ moves 11 % and 16 %. What they
+   *do* catch is one wrong entry in the stoichiometry matrix — which moves
+   them by eight to ten orders of magnitude — so they are a good check, of a
+   different thing than was claimed. **Electroneutrality and the charge flux
+   are weaker still**: every
    charged species here carries the same $D_{ion}$, every reaction conserves
    charge, and both boundaries are Dirichlet at electroneutral states, so the
    charge-weighted combination satisfies a linear operator with zero source
@@ -1132,7 +1140,19 @@ weigh):
    *penetration* model (a transient S4 problem, with the same operators plus
    an accumulation term) shows how much of the comparison depends on the film
    idealisation. Its quadrature bias is calibrated on the physical-absorption
-   case and divided out; the size of that bias is printed."""))
+   case and divided out; the size of that bias is printed.
+
+   **This result is transient, and until 2026-08-05 it was the only one on the
+   page with no refinement study of its own.** The steady film is refined in
+   `n_x` (item 7); the penetration model was run once at `n_t = 160` on a
+   geometric time grid and the number published. It was not converged: the
+   backward-Euler time error is first order and was worth **1.4 % on the
+   quadrature bias and about 10 % on the headline**, all in the same direction.
+   Item 8 now refines `n_t` at the condition the maximum is attained, prints
+   the observed order and Richardson-extrapolates, and checks the other three
+   knobs (`n_x`, the domain factor `fac`, the first time level `t0_frac`) are
+   already converged so that `n_t` is demonstrably the knob that controls the
+   answer. The withdrawn `n_t = 160` value is kept as a separate metric."""))
 
 cells.append(code(r"""VAL = {}
 
@@ -1252,9 +1272,13 @@ VAL["amine_flux"] = float(np.max(np.abs(fl @ amine_v)) / abs(Jc[0]))
 # same must hold at every point of the film.
 rho = 2 * C_CARB + fh02.c @ charge
 VAL["electroneutrality"] = float(np.max(np.abs(rho)) / (2 * C_CARB))
-print(f"(6) GENUINE (mixed diffusivities): carbon-flux uniformity "
+print(f"(6) STOICHIOMETRY CHECKS: carbon-flux uniformity "
       f"{VAL['carbon_flux_closure']:.1e},\n    amine flux/J "
-      f"{VAL['amine_flux']:.1e}")
+      f"{VAL['amine_flux']:.1e}. Every reaction conserves carbon and amine\n"
+      "    count, so div(sum_j carbon_j J_j) = 0 for ANY set of diffusivities --\n"
+      "    section 9 halves one D and doubles another and neither moves. What "
+      "they\n    do test is the stoichiometry matrix, and one wrong entry moves "
+      "them by\n    8 to 10 orders (section 9 again).")
 print(f"    STRUCTURALLY GUARANTEED (all ions share D_ion, both boundaries "
       f"Dirichlet):\n    charge flux/J {VAL['charge_flux']:.1e}, "
       f"electroneutrality {VAL['electroneutrality']:.1e}. These two are")
@@ -1332,23 +1356,34 @@ class Penetration(Film):
         self.J_avg = Jint / THETA
         return self.J_avg
 
-# quadrature bias measured on physical absorption (E must be 1) and divided out
-pen0 = Penetration(bulk(0.2), 30e3 / (R_GAS * T), None,
-                   enable_r1=False, enable_r34=False)
-pen0.solve_transient()
-bias = pen0.J_avg / (KL * (M_DIST * pen0.c_gas - pen0.cb[0]))
+N_T = 640          # production time resolution; see the ladder below
+
+
+def pen_bias(n_t=N_T, **kw):
+    # the physical-absorption quadrature bias, at this time resolution
+    p0 = Penetration(bulk(0.2), 30e3 / (R_GAS * T), None,
+                     enable_r1=False, enable_r34=False, **kw)
+    p0.solve_transient(n_t=n_t)
+    return p0.J_avg / (KL * (M_DIST * p0.c_gas - p0.cb[0]))
+
+
+def pen_E(alpha, p, amine, bias, n_t=N_T, **kw):
+    cbp = bulk(alpha, amine, s_fit)
+    pen = Penetration(cbp, p * 1e3 / (R_GAS * T), amine, k3_scale=s_fit, **kw)
+    pen.solve_transient(n_t=n_t)
+    return pen.J_avg / (KL * (M_DIST * pen.c_gas - pen.cb[0])) / bias
+
+
+bias = pen_bias()
 print(f"(8) penetration model, contact time {THETA*1e3:.0f} ms; "
-      f"physical-absorption quadrature bias {bias - 1:+.2%} (divided out below)")
+      f"physical-absorption quadrature bias {bias - 1:+.2%} at n_t = {N_T} "
+      "(divided out below)")
 
 rows = []
 for (alpha, p) in CONDITIONS:
     row = {"alpha": alpha, "p_kpa": p}
     for amine, tag in ((None, "u"), ("DEA", "DEA"), ("HDA", "HDA")):
-        cbp = bulk(alpha, amine, s_fit)
-        pen = Penetration(cbp, p * 1e3 / (R_GAS * T), amine, k3_scale=s_fit)
-        pen.solve_transient()
-        E_pen = pen.J_avg / (KL * (M_DIST * pen.c_gas - pen.cb[0])) / bias
-        row[f"E_{tag}_pen"] = E_pen
+        row[f"E_{tag}_pen"] = pen_E(alpha, p, amine, bias)
         row[f"E_{tag}_film"] = films_rec[(alpha, p)][
             {"u": 0, "DEA": 1, "HDA": 2}[tag]].enhancement()
     rows.append(row)
@@ -1357,9 +1392,182 @@ print(pen_df.round(1).to_string(index=False))
 pen_ratio = np.array([[r[f"E_{t}_pen"] / r[f"E_{t}_film"]
                        for t in ("u", "DEA", "HDA")] for _, r in pen_df.iterrows()])
 VAL["pen_vs_film_max"] = float(np.max(np.abs(pen_ratio - 1)))
-print(f"penetration vs film: E differs by at most {VAL['pen_vs_film_max']:.1%} -- "
-      "the reproduction is not an artifact of the film idealisation, and the")
-print("film variant (which the paper's section 4.2 names) matches Table 2 best.")"""))
+i_row, i_col = np.unravel_index(np.abs(pen_ratio - 1).argmax(), pen_ratio.shape)
+WORST = (pen_df.alpha.iloc[i_row], pen_df.p_kpa.iloc[i_row],
+         (None, "DEA", "HDA")[i_col])
+print(f"penetration vs film: E differs by at most {VAL['pen_vs_film_max']:.1%}, "
+      f"at alpha = {WORST[0]}, p = {WORST[1]:.0f} kPa, {WORST[2] or 'unpromoted'}")"""))
+
+cells.append(code(r"""# (8b) THE REFINEMENT THIS RESULT LACKED. Backward Euler on a geometric time
+#      grid is first order, so n_t is the knob; refine it at the condition the
+#      maximum is attained and extrapolate.
+print("(8b) time refinement of the penetration model, at the condition that "
+      "attains the max")
+print(f"     (alpha = {WORST[0]}, p = {WORST[1]:.0f} kPa, "
+      f"{WORST[2] or 'unpromoted'})")
+pen_lad = {}
+E_film_worst = films_rec[(WORST[0], WORST[1])][
+    {None: 0, "DEA": 1, "HDA": 2}[WORST[2]]].enhancement()
+print(f"     {'n_t':>6}{'bias':>10}{'E_pen/E_film - 1':>20}")
+for n_t in (160, 320, N_T):
+    if n_t == N_T:
+        b_, d_ = bias, VAL["pen_vs_film_max"]
+    else:
+        b_ = pen_bias(n_t=n_t)
+        d_ = abs(pen_E(*WORST[:2], WORST[2], b_, n_t=n_t) / E_film_worst - 1)
+    pen_lad[n_t] = d_
+    print(f"     {n_t:6d}{b_-1:+9.2%}{d_:20.6f}"
+          + ("   <- published" if n_t == N_T else "")
+          + ("   <- WITHDRAWN (2026-08-05)" if n_t == 160 else ""))
+
+ns = sorted(pen_lad)
+diffs = [pen_lad[ns[i + 1]] - pen_lad[ns[i]] for i in range(len(ns) - 1)]
+PEN_ORDER = float(np.mean([np.log2(diffs[i] / diffs[i + 1])
+                           for i in range(len(diffs) - 1)]))
+PEN_RICH = float(pen_lad[ns[-1]] + diffs[-1] / (2.0 ** PEN_ORDER - 1.0))
+VAL["pen_vs_film_max_nt160_withdrawn"] = pen_lad[160]
+VAL["pen_order"] = PEN_ORDER
+VAL["pen_vs_film_max_richardson"] = PEN_RICH
+print(f"     successive differences {', '.join(f'{d:.2e}' for d in diffs)}"
+      f" -> observed order {PEN_ORDER:.2f}")
+print(f"     Richardson limit {PEN_RICH:.4f}; the published n_t = {N_T} value is "
+      f"{abs(VAL['pen_vs_film_max']/PEN_RICH - 1):.1%} below it, and the")
+print(f"     withdrawn n_t = 160 value was {abs(pen_lad[160]/PEN_RICH - 1):.0%} "
+      "below it -- outside the 5 % tolerance CI applies.")
+
+# The other knobs, to show n_t is the one that controls the answer. Run at
+# n_t = 320, where one n_t doubling is worth 2.4e-3 in this same quantity.
+print("\n     the knobs that are NOT n_t, at n_t = 320 (where one n_t doubling "
+      f"moves this\n     number by {diffs[-1]:.2e}):")
+ref320 = pen_lad[320]
+for lab, kw in (("n_x 400 -> 800", dict(n_x=800)),
+                ("fac 12 -> 16 (deeper domain)", dict(fac=16.0))):
+    b_ = pen_bias(n_t=320, **kw)
+    d_ = abs(pen_E(*WORST[:2], WORST[2], b_, n_t=320, **kw) / E_film_worst - 1)
+    print(f"       {lab:30s} {d_:.6f}   moves it by {abs(d_-ref320):.2e}"
+          f"  ({abs(d_-ref320)/diffs[-1]*100:.0f} % of one n_t step)")
+print("     Neither is close to the n_t step: the space grid and the domain depth")
+print("     were already converged, and n_t was the knob that mattered.")
+print(f"\n     CONCLUSION: the film-vs-penetration difference is "
+      f"{PEN_RICH:.1%} (extrapolated),")
+print(f"     not the {pen_lad[160]:.1%} published before 2026-08-05. The direction "
+      "is unchanged --")
+print("     the penetration model gives the LARGER E -- so the reproduction is "
+      "still not")
+print("     an artifact of the film idealisation, and the film variant, which the")
+print("     paper's section 4.2 names, still matches Table 2 better. The size of "
+      "the")
+print("     idealisation's effect is about one percentage point larger than "
+      "reported.")"""))
+
+cells.append(md(r"""### (9) Defect injection — what the validation numbers move for
+
+The refinement ladder above is `pen_vs_film_max`'s break row. This is the break
+row for the rest: one injected defect per check, re-solved, printed beside the
+undamaged value. It also settles a claim item 6 was making that turns out to be
+too strong."""))
+
+cells.append(code(r"""print("(9) defect injection\n")
+cb_i, cg_i = bulk(0.2, "HDA", s_fit), 30e3 / (R_GAS * T)
+
+
+def closures(f):
+    fl = f.face_fluxes()
+    carbon = np.array([CARBON_ALL[sp] for sp in f.species], float)
+    amine_v = np.array([AMINE_ALL[sp] for sp in f.species], float)
+    Jc = fl @ carbon
+    return (float(np.max(np.abs(Jc - Jc[0])) / abs(Jc[0])),
+            float(np.max(np.abs(fl @ amine_v)) / abs(Jc[0])), f.enhancement())
+
+
+f_ref = run_case(0.2, 30.0, "HDA", s_fit)
+c0, a0_, E0 = closures(f_ref)
+print(f"    {'injected defect':46s}{'carbon':>10}{'amine':>10}{'E':>9}")
+print(f"    {'as published':46s}{c0:10.1e}{a0_:10.1e}{E0:9.2f}")
+
+# (i) a wrong diffusivity -- item 6 called the two flux closures "GENUINE
+#     (mixed diffusivities)". Test that.
+saved = dict(DIFF_ALL)
+for lab, sp, fac in (("D(HCO3-) halved", "HCO3", 0.5),
+                     ("D(CO2) doubled", "CO2", 2.0)):
+    DIFF_ALL[sp] = saved[sp] * fac
+    try:
+        f_ = run_case(0.2, 30.0, "HDA", s_fit)
+        c_, a_, E_ = closures(f_)
+        print(f"    {lab:46s}{c_:10.1e}{a_:10.1e}{E_:9.2f}"
+              + ("   <- UNMOVED" if c_ < 1e-8 and a_ < 1e-8 else ""))
+    except RuntimeError:
+        print(f"    {lab:46s}{'Newton diverges':>29}")
+    finally:
+        DIFF_ALL.update(saved)
+
+# (ii) a stoichiometry error, which is what the closures DO test
+for lab, sp_, rxn in (("stoichiometry: R3 no longer makes HCO3-", "HCO3", 1),
+                      ("stoichiometry: R2 no longer makes AmCOO-", "AmCOO", 2)):
+    f_ = run_case(0.2, 30.0, "HDA", s_fit)
+    f_.NU = f_.NU.copy(); f_.NU[f_.idx[sp_], rxn] = 0.0
+    try:
+        f_.solve()
+        c_, a_, E_ = closures(f_)
+        print(f"    {lab:46s}{c_:10.1e}{a_:10.1e}{E_:9.2f}")
+    except RuntimeError:
+        print(f"    {lab:46s}{'Newton diverges -- also a detection':>29}")
+print("    CORRECTION to item 6: the two flux closures do NOT test the")
+print("    diffusivities. Carbon is conserved by every reaction, so div(sum_j")
+print("    carbon_j J_j) = 0 identically for ANY set of D_j; the same holds for")
+print("    the amine count. What they test is the STOICHIOMETRY MATRIX, and they")
+print("    test it well -- a single wrong entry moves them by 8 to 10 orders.")
+print("    They are relabelled accordingly.")"""))
+
+cells.append(code(r"""# (iii) the two PRIMARY checks
+print("\n    the primary checks:")
+err_coarse = []
+for ha in ha_sweep:
+    k1 = (ha * KL)**2 / DCO2 / cb02["OH"]
+    fp = Film(cb02, 30e3 / (R_GAS * T), None, enable_r34=False, n_x=50)
+    ohb = cb02["OH"]
+
+    def pfo_c(c, fp=fp, k1=k1, ohb=ohb):
+        r = np.zeros((c.shape[0], fp.NU.shape[1]))
+        r[:, 0] = k1 * c[:, 0] * ohb
+        return r
+    fp.rates = pfo_c
+    fp.NU = fp.NU.copy(); fp.NU[fp.idx["OH"], 0] = 0.0
+    # the default tol scales as n_x^2 and is unreachably tight on a coarse grid
+    fp.solve(k_ladder=(1.0,), tol=1e-8)
+    cb_ci = cb02["CO2"] / c_i
+    E_exact = ha * (np.cosh(ha) - cb_ci) / (np.sinh(ha) * (1 - cb_ci))
+    err_coarse.append(abs(fp.enhancement() / E_exact - 1))
+print(f"      pfo_max_rel_err  n_x = 400 (published) {VAL['pfo_max_rel_err']:.2e}"
+      f"   n_x = 50 {max(err_coarse):.2e}"
+      f"   ({max(err_coarse)/VAL['pfo_max_rel_err']:.0f}x)")
+print("      -> it does resolve the reaction layer; that is what makes it primary.")
+
+f_nu = Film(cb_syn, 30e3 / (R_GAS * T), "DEA",
+            enable_r1=False, enable_r34=False, irreversible2=True)
+f_nu.NU = f_nu.NU.copy(); f_nu.NU[f_nu.idx["Am"], 2] = -1.0   # 1 amine per CO2
+f_nu.solve(k_ladder=(1.0,))
+print(f"      vkh_dev          nu = 2 (published) {VAL['vkh_dev']:.2e}"
+      f"   nu = 1 {abs(f_nu.enhancement()/E_vkh - 1):.2e}")
+print("      -> Van Krevelen-Hoftijzer's E_inf carries the nu = 2 stoichiometry,")
+print("         so it is an external check on it, not just on the solver.")
+
+f_c = Film(bulk(0.2, "HDA", s_fit), 30e3 / (R_GAS * T), "HDA",
+           k3_scale=s_fit, n_x=200)
+f_c.solve(tol=1e-8)
+print(f"      grid_delta       800 vs 400 (published) {VAL['grid_delta']:.2e}"
+      f"   400 vs 200 {abs(fh02.enhancement()/f_c.enhancement() - 1):.2e}")
+print("      -> the published number is the tail of a converging sequence, not a")
+print("         single unrefined comparison.")
+print("\n    STRUCTURAL, with no break row and none constructible: physical_E1,")
+print("    second_order_cross, collapse_residual, charge_flux and")
+print("    electroneutrality. The first three share the Film class or the grid")
+print("    with what they are compared against; the last two are identically")
+print("    zero for any converged solution because every ion shares D_ion, every")
+print("    reaction conserves charge and both boundaries are Dirichlet. All five")
+print("    sit at or below 1e-5 and three of them below check_agreement.py's")
+print("    ABS_FLOOR = 1e-12, so CI does not compare them either. They are")
+print("    regression guards on the assembly and are not evidence.")"""))
 
 # ------------------------------------------------------------ what pymrm adds
 cells.append(md(r"""## What pymrm adds
@@ -1389,11 +1597,18 @@ claim of improvement is made. What the reimplementation adds:
   results) on demand.
 - **Model-form sensitivity the paper could not cheaply report.** The same
   network solved as a Higbie penetration model gives enhancement factors up
-  to ~10% above the film model's (largest for HDA, where product back-diffusion
-  matters most) — quantifying how much of any comparison at this precision
-  rests on the choice of transport idealisation, and confirming that the film
-  variant, which the paper's section 4.2 names, is the one that matches
-  Table 2.
+  to ~11.6% above the film model's (largest for HDA, where product
+  back-diffusion matters most) — quantifying how much of any comparison at this
+  precision rests on the choice of transport idealisation, and confirming that
+  the film variant, which the paper's section 4.2 names, is the one that
+  matches Table 2. **That figure was published as ~10.5% until 2026-08-05**,
+  from a single unrefined run at `n_t = 160`; the backward-Euler time error is
+  first order and was worth about a percentage point, all in one direction.
+  Item 8b now carries the ladder, the observed order and the extrapolation, and
+  the withdrawn number is published beside the corrected one. The conclusion it
+  supports is unchanged — the difference is *larger* than was claimed, so the
+  reproduction is still not an artefact of the film idealisation — but the
+  size of the effect was understated.
 
 What this page does **not** do: validate against experiment. The only
 measured numbers in the paper are "about 4" and "about 6", and both the
@@ -1413,6 +1628,16 @@ cells.append(md(r"""## Reuse
 - **Related pages:** `F3.1` (Hatta regimes — the enhancement-factor limits
   this page collapses to), `A4.9` (multicomponent diffusion), `J4.8`
   (stoichiometry-conservation checks as validation).
+
+**If you reuse the transient variant, refine `n_t`.** `Penetration.solve_transient`
+is backward Euler on a geometric time grid, and it is *first* order: at
+`n_t = 160` — the value this page published until 2026-08-05 — the
+physical-absorption quadrature bias is +1.4 % and the film-vs-penetration
+headline is 10 % below its extrapolated limit, with every doubling halving both.
+The three other knobs (`n_x`, `fac`, `t0_frac`) were already converged, so `n_t`
+was the only one that mattered and the only one nobody had swept. The general
+version of that lesson: **a page with both a steady and a transient result needs
+a refinement study for each**, at the condition each is reported at.
 
 **Numerical caveats worth carrying away:** assemble the reaction source with
 the sign matched to `div(-grad)` (a wrong sign makes the coupled system
@@ -1455,7 +1680,14 @@ cells.append(code(r"""metrics = {
     "vkh_dev": VAL["vkh_dev"],
     "grid_delta": VAL["grid_delta"],
     "kinst_delta": VAL["kinst_delta"],
+    # the penetration comparison, refined 2026-08-05. pen_vs_film_max is now at
+    # n_t = 640; the converged answer is the Richardson value, which is what the
+    # prose quotes. The n_t = 160 number this page published until 2026-08-05 is
+    # kept beside them rather than deleted.
     "pen_vs_film_max": VAL["pen_vs_film_max"],
+    "pen_vs_film_max_richardson": VAL["pen_vs_film_max_richardson"],
+    "pen_time_order": VAL["pen_order"],
+    "pen_vs_film_max_nt160_withdrawn": VAL["pen_vs_film_max_nt160_withdrawn"],
     # consistency checks (bookkeeping / structurally guaranteed)
     "physical_E1": VAL["physical_E1"],
     "second_order_cross": VAL["second_order_cross"],

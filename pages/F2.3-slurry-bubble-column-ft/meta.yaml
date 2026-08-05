@@ -15,7 +15,7 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 150
+runtime_seconds: 85
 datasets:
   - maretto-krishna-1999-fig2.csv
 
@@ -25,6 +25,9 @@ validation:
   - eq. 9's coefficient 0.3 compared with F1.4's 0.268 on the same points
   - the paper's own kLa sensitivity test reproduced, establishing that the reactor is chemically controlled and so that the conversion check isolates the kinetics
   - reactor conversions against the two values the paper reports for eps_s = 0.30
+  # DEFECT INJECTION - section 5 of the notebook, and it found one dead constant
+  - "NOTHING ON THIS PAGE PINS EQ. 9's -0.18 DIAMETER EXPONENT, and section 5 measures that rather than asserting it. Eq. 9's diameter dependence is capped at D_T = 1 m, so at this reactor's 7 m the base of the power is exactly 1 and 1**x = 1 for every x: deleting the exponent leaves every conversion bit-identical (dt_exponent_reactor_conversion_shift_structural_zero = 0.0, which also puts it below check_agreement.py's ABS_FLOOR, so CI never compares it). On the figure path the term is live - the 0.10 m column gives a factor 1.5136 - but all 79 markers are at that one diameter, so the data constrain only the product C*D_T^n = 0.454: rescaling C to hold the product fixed reproduces the figure to the last bit at any exponent"
+  - a defect-injection table covering every other published metric: the exponent on both code paths, C = 0.300 vs 0.268, two transposed digits in the rate prefactor (both BELOW CI's 5 % tolerance, stated as such), and the missing-outflow-condition failure the Reuse section warns about
 
 adds: >
   Two constants in the printed model are wrong, and the page localises both
@@ -55,7 +58,13 @@ caveats: >
   is a check against the authors' own simulation, not against reality. The
   digitised holdup is from a 0.10 m column at ambient pressure while the reactor
   runs at 7 m and 30 bar, so eq. 11's pressure factor and the D_T cap at 1 m are
-  used well outside anything validated here. 20 of the 99 digitised markers lie
+  used well outside anything validated here. The -0.18 diameter exponent in
+  particular is untestable from this page in both directions and section 5 says
+  so with numbers: inert at 7 m because the cap makes the base exactly 1, and
+  inseparable from the coefficient C at 0.10 m because every marker is at that
+  one diameter. A reader who follows the Reuse advice down to a sub-metre column
+  moves into a branch where the exponent is worth 51 % of eps_b and nothing on
+  this page has ever exercised it. 20 of the 99 digitised markers lie
   in an unresolvable cluster at the origin and are carried in the CSV flagged
   `resolved = no`, excluded from every metric. Points below U_df are excluded
   because the churn-turbulent model does not apply there. The liquid outflow term

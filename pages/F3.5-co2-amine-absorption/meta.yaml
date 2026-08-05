@@ -15,7 +15,7 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 40
+runtime_seconds: 105
 datasets:
   - bosch1989-table1-parameters.csv
   - bosch1989-table2-results.csv
@@ -24,13 +24,15 @@ validation:
   # PRIMARY - these test the discretisation and use an external reference
   - pseudo-first-order film against the closed form E = Ha(cosh Ha - cb/ci)/(sinh Ha (1 - cb/ci)), 3.5e-5 max over 0.1 <= Ha <= 300; the one check that resolves the reaction layer, backed by grid doubling (1.3e-5) and a tenfold k_inst (2.2e-5)
   - Van Krevelen-Hoftijzer, an external published approximation, within 0.1% at Ha = 119 with nothing tuned to it
-  - the same network solved as a Higbie penetration model (transient S4) differs by at most 10.5%, so the reproduction does not hinge on the film idealisation (its +1.42% quadrature bias is calibrated on the physical-absorption case and divided out)
+  - "the same network solved as a Higbie penetration model (transient S4) differs by at most 11.3% at n_t = 640, extrapolating to 11.6%, so the reproduction does not hinge on the film idealisation. REFINED 2026-08-05: this result was published as 10.5% from a single unrefined run at n_t = 160. Backward Euler on the geometric time grid is first order (observed order 1.02 over n_t = 160/320/640) and the old value was 9% below the Richardson limit - outside the 5% tolerance CI applies. The other three knobs (n_x, the domain factor, the first time level) move it by 1-2% of one n_t step, so n_t was the knob that mattered and the only one nobody had swept. The withdrawn value is published as pen_vs_film_max_nt160_withdrawn"
   # CONSISTENCY CHECKS - true by construction; they catch coding slips only
   - physical-absorption limit E = 1 to 5.4e-11: exact for any conservative scheme on a linear profile, so this is dimensional bookkeeping, not accuracy
   - the dimensional 7-species code against an independently written dimensionless two-species assembly, 1.0e-8 - shared grid, operators and discretisation, so it tests the non-dimensionalisation only
   - reversible reaction collapses onto its irreversible limit as Keq is scaled up 1e6, residual 9.7e-6 - same Film class both sides, so self-consistency
-  - carbon-flux uniformity 6.5e-10 and amine-flux closure 1.2e-10 are genuine (mixed diffusivities); charge flux 1.1e-9 and electroneutrality 2.8e-11 are STRUCTURALLY GUARANTEED (all ions share D_ion, all reactions conserve charge, both boundaries Dirichlet) and are kept as regression guards, not evidence
+  - "carbon-flux uniformity 6.5e-10 and amine-flux closure 1.2e-10 test the STOICHIOMETRY MATRIX and nothing else. This file said 'genuine (mixed diffusivities)' until 2026-08-05 and that was wrong: every reaction conserves carbon and amine count, so the closure is identically zero for any set of diffusivities. Halving D(HCO3-) and doubling D(CO2) leave both at 1e-10 while E moves 11% and 16%; one wrong stoichiometry entry moves them by 8 to 10 orders. Charge flux 1.1e-9 and electroneutrality 2.8e-11 are weaker still and STRUCTURALLY GUARANTEED (all ions share D_ion, all reactions conserve charge, both boundaries Dirichlet); they are regression guards, not evidence"
   - all twelve enhancement factors below the instantaneous total-base-capacity ceiling; gas-side share of the total resistance 2.3e-5, which is what licenses the Dirichlet interface
+  # DEFECT INJECTION - section 9 of the notebook
+  - "a defect-injection table for the checks that are offered as evidence: the pseudo-first-order comparison moves 63x when n_x drops 400 -> 50 (it does resolve the reaction layer), the Van Krevelen-Hoftijzer deviation moves 5.0e-4 -> 1.5e-1 when the nu = 2 amine stoichiometry is written as nu = 1 (so VKH is an external check on the stoichiometry too), and grid_delta is the tail of a converging sequence. physical_E1, second_order_cross, collapse_residual, charge_flux and electroneutrality have no break row and none is constructible; three of the five also sit below check_agreement.py's ABS_FLOOR = 1e-12 and are not compared by CI at all"
 
 adds: >
   A reproduction of the model, not an improvement of it. What the
@@ -44,8 +46,10 @@ adds: >
   the printed constants. Also: the 1989 special-purpose research code reduced
   to ~100 lines on pymrm operators that run absorption and desorption, any
   amine, any loading, and collapse to every classical limit on demand; and the
-  film-vs-penetration sensitivity (up to ~10%) the paper could not cheaply
-  report.
+  film-vs-penetration sensitivity (up to ~11.6%, extrapolated; 11.3% at the
+  n_t = 640 the table is printed at) the paper could not cheaply report. That
+  last figure read ~10.5% until 2026-08-05, when the transient model was given
+  the refinement study it had never had.
 
 agreement: >
   Deviation is (model - paper)/paper throughout. With Table 1 exactly as
@@ -108,4 +112,7 @@ caveats: >
   shown). The paper's numerical engine is described only as the Versteeg et
   al. method; its section 4.2 calls the profiles "film model" results, and
   the film variant indeed matches Table 2 better than the penetration variant
-  does.
+  does. The penetration variant is reported at n_t = 640, which is still 2.3%
+  below its own Richardson limit; the extrapolated 11.6% is the number the
+  prose quotes and the printed table is the n_t = 640 one, so the two differ
+  by that much on the largest entry.

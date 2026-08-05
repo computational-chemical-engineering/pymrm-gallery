@@ -391,20 +391,77 @@ cells.append(md("""## Validation
 
 Five checks. The first two test the *parameters* — the part of this page that a
 bad page render would silently corrupt — and the last three test the *solver*
-and the model against the measurements."""))
+and the model against the measurements. A sixth section injects defects and
+prints what each published metric does with them, because the first check turned
+out to have a blind spot that only an injection table can expose.
+
+**The blind spot, stated first.** Check 1's headline used to be
+`rt.rel_pct.max()` — the worst per-row round-trip deviation, 1.44 %. That is a
+`max()` over seven rows, and its baseline scatter is set by the *printed
+precision of the activation energies*: E is given to 0.1 kJ/mol, and at
+T_ref = 648 K that alone is worth 0.93 % on `A`. So `k1` and `k3` sit near 1.3
+and 1.4 % with nothing wrong at all, and **any single-digit slip that lands
+below that ceiling leaves the headline at exactly 1.4432 %.** A `max()` is only
+as sharp as its own baseline scatter. The fix is to normalise each row by *its
+own* printed precision and to summarise with a statistic that every row reaches:
+the sum of the seven ratios."""))
 
 cells.append(code('''# 1. Table 5 -> Table 6 round trip.
 #    A = value(T_ref) * exp(E/(R T_ref)) for the rate coefficients, and the same
 #    with dH for the adsorption constants. This tests both readings at once, and
 #    it tests the split reference temperature: T_ref is part of the formula.
-rt = par.assign(A_computed=lambda d: d.value_at_Tref
-                * np.exp(d.E_or_dH_kJ_per_mol / (R_KJ * d.T_ref_K)))
-rt["rel_pct"] = (rt.A_computed - rt.A).abs() / rt.A * 100
-print("1. Table 5 -> Table 6 round trip")
-print(rt[["symbol", "T_ref_K", "A", "A_computed", "rel_pct"]]
+#
+#    Each row is scored against the deviation its OWN printed digits already
+#    allow. Half a unit in the last printed place of A, of value(T_ref) and of
+#    E propagates to
+#        u(A)/A + u(value)/value + u(E)/(R T_ref)
+#    and the last term dominates for k1 and k3 (E to 0.1 kJ/mol at 648 K is
+#    0.93 % on A by itself). Dividing by that bound removes the scatter that
+#    makes the raw max() blind.
+DIGITS = {"k1":    dict(A="4.225e15", E="240.1", val="1.842e-4"),
+          "k2":    dict(A="1.955e6",  E="67.13", val="7.558"),
+          "k3":    dict(A="1.020e15", E="243.9", val="2.193e-5"),
+          "K_CO":  dict(A="8.23e-5",  E="-70.65", val="40.91"),
+          "K_H2":  dict(A="6.12e-9",  E="-82.90", val="0.02960"),
+          "K_CH4": dict(A="6.65e-4",  E="-38.28", val="0.1791"),
+          "K_H2O": dict(A="1.77e5",   E="88.68",  val="0.4152")}
+
+
+def half_ulp(s):
+    """Half a unit in the last printed place of a number written as a string."""
+    m, _, e = s.strip().lower().partition("e")
+    dec = len(m.split(".")[1]) if "." in m else 0
+    return 0.5 * 10.0 ** (-dec) * 10.0 ** (int(e) if e else 0)
+
+
+def round_trip(par, digits=DIGITS):
+    """Table 5 -> Table 6, each row scored against its own printed precision."""
+    rt = par.assign(A_computed=lambda d: d.value_at_Tref
+                    * np.exp(d.E_or_dH_kJ_per_mol / (R_KJ * d.T_ref_K)))
+    rt["rel_pct"] = (rt.A_computed - rt.A).abs() / rt.A * 100
+    rt["bound_pct"] = [(half_ulp(digits[r.symbol]["A"]) / abs(r.A)
+                        + half_ulp(digits[r.symbol]["val"]) / abs(r.value_at_Tref)
+                        + half_ulp(digits[r.symbol]["E"]) / (R_KJ * r.T_ref_K)) * 100
+                       for _, r in rt.iterrows()]
+    rt["ratio"] = rt.rel_pct / rt.bound_pct
+    return rt
+
+
+rt = round_trip(par)
+print("1. Table 5 -> Table 6 round trip, each row against its own printed precision")
+print(rt[["symbol", "T_ref_K", "A", "A_computed", "rel_pct", "bound_pct", "ratio"]]
       .to_string(index=False, float_format=lambda v: f"{v:.4g}"))
-print(f"   worst deviation {rt.rel_pct.max():.2f} % — consistent with the "
-      "3-4 significant figures printed.")
+RT_WORST_PCT = float(rt.rel_pct.max())
+RT_WORST_RATIO = float(rt.ratio.max())
+RT_RATIO_SUM = float(rt.ratio.sum())
+print(f"   worst deviation {RT_WORST_PCT:.4f} % (the old headline) — but its "
+      "ceiling is set by\\n   the 0.1 kJ/mol precision of E, not by the "
+      "transcription.")
+print(f"   worst ratio to printed precision {RT_WORST_RATIO:.2f}, "
+      f"sum over the seven rows {RT_RATIO_SUM:.3f}.")
+print("   Every row lands within about 2.3x its own rounding bound, so nothing is")
+print("   mis-transcribed at a level this round trip can resolve. Section 6 shows")
+print("   what it can and cannot resolve.")
 
 # The same round trip with 648 K forced on every parameter, to show that the
 # split reference temperature is not a detail one can round off.
@@ -431,7 +488,12 @@ for k in ("I", "II", "III"):
           f"   kJ/mol   {rel:5.2f} %")
 print(f"   worst {worst_eq:.2f} % — the equilibrium constants are consistent with "
       "the paper's own reaction enthalpies,")
-print("   and K3 = K1*K2 closes the triangle exactly by construction.")'''))
+print("   and K3 = K1*K2 closes the triangle exactly by construction.")
+print("   WHAT THIS CHECK CANNOT SEE: only the SLOPES are compared. The two")
+print("   intercepts (30.114 and -4.036) drop out of d ln K / d(1/T) entirely, so")
+print("   a +1 slip in either multiplies that K by e = 2.718 at every temperature")
+print("   and check 2 does not move at all. Section 6 injects exactly that and")
+print("   shows which check does catch it.")'''))
 
 cells.append(code('''# 3. Atom balances along the reactor. The conversions are defined so that C, H
 #    and O balance identically; this checks the mole bookkeeping, not the solver.
@@ -502,7 +564,175 @@ ax.set(xlim=lim, ylim=lim, xlabel="measured conversion",
        title="Parity — open: $x_{CH_4}$, filled: $x_{CO_2}$; dashed $\\\\pm$0.005")
 ax.legend(fontsize=8)
 fig.tight_layout()
-plt.show()
+plt.show()'''))
+
+cells.append(md(r"""### 6. Defect injection — what each published number can and cannot catch
+
+Every metric this page reports needs a row here: one defect it is supposed to
+catch, injected, re-run, and printed beside the undamaged value. The error that
+actually happens when a table is read off a page render is a **transposed
+digit**, not a factor, so that is what is injected — `8.23e-5` read as
+`8.32e-5`, `1.020e15` read as `1.002e15`.
+
+Two results are worth reading before the table. The old headline
+`param_round_trip_worst_pct` **does not move for any single-digit slip**: three
+of them leave it at exactly 1.4432 %, and a transposition in `k3` — the row that
+*sets* the maximum — moves it the wrong way, down to 1.2844 %. The sum of
+per-row ratios moves for every injection except one, and that one is a change of
+0.024 % in a number printed to four significant figures, which no round trip
+built from these digits can see."""))
+
+cells.append(code('''print("6a. Table 5 -> Table 6 round trip, under injected transcription defects")
+print(f"    {'injected defect':44s}{'worst %':>9}{'worst ratio':>13}{'sum ratios':>12}")
+
+
+def injected_round_trip(sym, col, new, new_str):
+    p2 = par.copy()
+    d2 = {k: dict(v) for k, v in DIGITS.items()}
+    p2.loc[p2.symbol == sym, col] = new
+    d2[sym]["A" if col == "A" else "E" if col.startswith("E_") else "val"] = new_str
+    return round_trip(p2, d2)
+
+
+BREAKS = [
+    ("K_CO A 8.23e-5 -> 8.32e-5 (transposition)", "K_CO", "A", 8.32e-5, "8.32e-5"),
+    ("k3  A 1.020e15 -> 1.002e15 (transposition)", "k3", "A", 1.002e15, "1.002e15"),
+    ("K_H2O A 1.77e5 -> 1.71e5 (transposition)", "K_H2O", "A", 1.71e5, "1.71e5"),
+    ("k2  A 1.955e6 -> 1.965e6 (+0.51 %)", "k2", "A", 1.965e6, "1.965e6"),
+    ("k1  A 4.225e15 -> 4.226e15 (+0.024 %)", "k1", "A", 4.226e15, "4.226e15"),
+    ("k1  E 240.1 -> 240.2 kJ/mol (last digit)", "k1", "E_or_dH_kJ_per_mol", 240.2, "240.2"),
+    ("K_CH4 value 0.1791 -> 0.1719 (transposition)", "K_CH4", "value_at_Tref", 0.1719, "0.1719"),
+    ("k1  E 240.1 -> 241.1 kJ/mol", "k1", "E_or_dH_kJ_per_mol", 241.1, "241.1"),
+    ("k1  A lost decade", "k1", "A", 4.225e14, "4.225e14"),
+]
+print(f"    {'as published':44s}{RT_WORST_PCT:9.4f}{RT_WORST_RATIO:13.2f}"
+      f"{RT_RATIO_SUM:12.3f}")
+for lab, sym, col, new, s in BREAKS:
+    b = injected_round_trip(sym, col, new, s)
+    flag = "" if abs(b.ratio.sum() / RT_RATIO_SUM - 1) > 0.05 else "   <- MISSED"
+    print(f"    {lab:44s}{b.rel_pct.max():9.4f}{b.ratio.max():13.2f}"
+          f"{b.ratio.sum():12.3f}{flag}")
+# a T_ref slip is a different class and the raw max does see it
+tr = par.copy(); tr.loc[tr.symbol == "K_CH4", "T_ref_K"] = 648.0
+b = round_trip(tr)
+print(f"    {'K_CH4 T_ref 823 -> 648 K':44s}{b.rel_pct.max():9.4f}"
+      f"{b.ratio.max():13.2f}{b.ratio.sum():12.3f}")
+print("    Read the first column: three single-digit slips leave it at 1.4432, and")
+print("    the k3 transposition moves it DOWN. The max cannot see a defect smaller")
+print("    than its own baseline scatter; the sum of per-row ratios can, because")
+print("    every row reaches it. The one miss is a 0.024 % change in a 4-figure")
+print("    number -- below the printed precision, so undetectable in principle.")'''))
+
+cells.append(code('''print("\\n6b. The equilibrium correlation. Check 2 compares SLOPES only.")
+
+
+def eq_slopes(a1=26830.0, a2=4400.0):
+    s = {"I": a1 * R_KJ, "II": -a2 * R_KJ}
+    s["III"] = s["I"] + s["II"]
+    return max(abs(s[k] - table7[k]) / abs(table7[k]) * 100 for k in table7)
+
+
+print(f"    {'injected defect':44s}{'check 2 worst %':>17}")
+print(f"    {'as published':44s}{eq_slopes():17.2f}")
+print(f"    {'K1 intercept 30.114 -> 31.114 (K1 x e)':44s}{eq_slopes():17.2f}"
+      "   <- MISSED")
+print(f"    {'K2 intercept -4.036 -> -3.036 (K2 x e)':44s}{eq_slopes():17.2f}"
+      "   <- MISSED")
+print(f"    {'K1 slope 26830 -> 26380 (transposition)':44s}{eq_slopes(a1=26380.0):17.2f}")
+print(f"    {'K2 slope 4400 -> 4040 (transposition)':44s}{eq_slopes(a2=4040.0):17.2f}")
+print("    The intercepts are invisible to check 2 by construction. What sees them")
+print("    is check 5 -- the comparison against the 61 measurements -- below.")'''))
+
+cells.append(code('''print("\\n6c. The model against the data, under injected defects.")
+print("    Re-solves all four reactors; the deviation metrics are recomputed on the")
+print("    same 61 points.")
+
+
+def metrics_under(param_edits=(), eq=None):
+    """(mad, worst, bias, mad_ch4, mad_co2) with parameters/equilibrium perturbed.
+
+    rate_constants closes over the DataFrame P as a default argument, so the
+    injection has to mutate that object in place and put it back afterwards.
+    """
+    saved = [(s, c, P.loc[s, c]) for s, c, _ in param_edits]
+    eq_saved = globals()["equilibrium"]
+    try:
+        for s, c, v in param_edits:
+            P.loc[s, c] = v
+        if eq is not None:
+            globals()["equilibrium"] = eq
+        ms = {}
+        for T in TEMPS:
+            m = SteamReformer(T, n_tau=1000)
+            if not m.solve().success:
+                return None
+            ms[T] = m
+        d = obs.copy()
+        d["model"] = [ms[float(r.temperature_K)].at(r.W_F, 0 if r.quantity == "x_CH4" else 1)
+                      for _, r in d.iterrows()]
+        d["dev"] = d.model - d.value
+        return (d.dev.abs().mean(), d.dev.abs().max(), d.dev.mean(),
+                d[d.quantity == "x_CH4"].dev.abs().mean(),
+                d[d.quantity == "x_CO2"].dev.abs().mean())
+    finally:
+        for s, c, v in saved:
+            P.loc[s, c] = v
+        globals()["equilibrium"] = eq_saved
+
+
+base_eq_fn = globals()["equilibrium"]
+CASES = [
+    ("as published", (), None),
+    ("K1 intercept 30.114 -> 31.114 (K1 x e)", (),
+     lambda T: (np.exp(-26830.0 / T + 31.114), np.exp(4400.0 / T - 4.036),
+                np.exp(-26830.0 / T + 31.114) * np.exp(4400.0 / T - 4.036))),
+    ("K2 intercept -4.036 -> -3.036 (K2 x e)", (),
+     lambda T: (np.exp(-26830.0 / T + 30.114), np.exp(4400.0 / T - 3.036),
+                np.exp(-26830.0 / T + 30.114) * np.exp(4400.0 / T - 3.036))),
+    ("K_CO A 8.23e-5 -> 8.32e-5 (transposition)", (("K_CO", "A", 8.32e-5),), None),
+    ("k1 A 4.225e15 -> 4.255e15 (transposition)", (("k1", "A", 4.255e15),), None),
+    ("k3 A 1.020e15 -> 1.002e15 (transposition)", (("k3", "A", 1.002e15),), None),
+    ("K_H2 A 6.12e-9 -> 6.21e-9 (transposition)", (("K_H2", "A", 6.21e-9),), None),
+]
+print(f"    {'injected defect':44s}{'MAD':>9}{'worst':>9}{'bias':>10}"
+      f"{'MAD x_CH4':>11}{'MAD x_CO2':>11}")
+ref, eq_factors = None, []
+for lab, edits, eq in CASES:
+    r = metrics_under(edits, eq)
+    if r is None:
+        print(f"    {lab:44s}{'did not converge':>50}")
+        continue
+    if ref is None:
+        ref, flag = r, ""
+    else:
+        flag = "" if max(abs(a / b - 1) for a, b in zip(r, ref)) > 0.05 else "  <- MISSED"
+    print(f"    {lab:44s}{r[0]:9.5f}{r[1]:9.5f}{r[2]:+10.5f}{r[3]:11.5f}"
+          f"{r[4]:11.5f}{flag}")
+    if "intercept" in lab:
+        eq_factors.append(r[0] / ref[0])
+print(f"    Both equilibrium intercepts, invisible to check 2, are caught here:")
+print(f"    the mean deviation grows by {min(eq_factors):.1f}x and "
+      f"{max(eq_factors):.1f}x. A transposed digit in an")
+print("    adsorption preexponential is NOT caught here -- it is caught by 6a,")
+print("    which is why the round trip has to be sharp enough to see it.")'''))
+
+cells.append(code('''# The three activity levels quoted in Reuse. They are transcribed from the
+# paper's text; NOTHING on this page validates them, because the runs they
+# belong to (Figures 4 and 5, and fresh catalyst) are different chemistry that
+# this page does not model. Print what they do so the number is at least
+# exercised, and say plainly that it is unchecked.
+print("\\n6d. The activity factors quoted in Reuse, exercised but NOT validated")
+for f, what in ((1.0, "steam-reforming reference (this page)"),
+                (1.225, "paper's Figures 4 and 5"),
+                (2.246, "fresh catalyst")):
+    r = metrics_under((("k1", "A", 4.225e15 * f), ("k2", "A", 1.955e6 * f),
+                       ("k3", "A", 1.020e15 * f)))
+    print(f"    k1,k2,k3 x {f:5.3f}  ({what:36s})  MAD vs this page's data "
+          f"{r[0]:.5f}")
+print("    Only the first row is a validation. The other two are transcriptions")
+print("    from the paper's text, printed here so they are at least executed, and")
+print("    they are NOT checked against anything -- the data on this page are the")
+print("    reference-level runs.")
 
 report_agreement("C2.1", {
     "mad_conversion": mad,
@@ -510,7 +740,11 @@ report_agreement("C2.1", {
     "bias_conversion": res.dev.mean(),
     "mad_x_ch4": res[res.quantity == "x_CH4"].dev.abs().mean(),
     "mad_x_co2": res[res.quantity == "x_CO2"].dev.abs().mean(),
-    "param_round_trip_worst_pct": rt.rel_pct.max(),
+    # the old headline, kept so the baseline is comparable -- but it is the
+    # blind one, and 6a shows three single-digit slips that leave it unmoved.
+    "param_round_trip_worst_pct": RT_WORST_PCT,
+    "param_round_trip_worst_ratio_to_precision": RT_WORST_RATIO,
+    "param_round_trip_ratio_sum": RT_RATIO_SUM,
     "equilibrium_vs_table7_worst_pct": worst_eq,
 })'''))
 
@@ -625,13 +859,29 @@ the reactor model. `partial_pressures` is the only piece tied to the
 single-feed parameterisation; swap it for a general mole-fraction vector and
 the rate equations carry over unchanged.
 
-**Three activity levels.** Multiply $k_1, k_2, k_3$ by
+**Three activity levels — and only one of them is tested here.** Multiply
+$k_1, k_2, k_3$ by
 
-- **1** for the steam-reforming reference level — what this page uses, and what
-  Tables 5 and 6 are;
+- **1** for the steam-reforming reference level — what this page uses, what
+  Tables 5 and 6 are, and the only level the 61 measurements on this page
+  belong to;
 - **1.225** to reproduce the paper's Figures 4 and 5 (reverse water-gas shift
   and methanation);
 - **2.246** for fresh catalyst.
+
+The last two are **transcriptions from the paper's text that nothing on this
+page validates.** Section 6d executes them so they are at least run, and shows
+what they do to the fit against *these* data — which is to make it worse, as it
+must, because these data are the reference-level runs. Reproducing Figures 4
+and 5 would need the reverse water-gas shift and methanation feeds, which this
+page does not model. Treat both factors as unchecked.
+
+**The round trip is the check on the parameter reading, and it has a floor.**
+Section 6a measures it: a slip smaller than a row's own printed precision is
+invisible, and a `max()` over the seven rows is invisible to anything smaller
+than the 1.4 % baseline scatter that the 0.1 kJ/mol precision of $E$ already
+produces. If you re-read these tables from your own render, compare
+`param_round_trip_ratio_sum`, not the worst percentage.
 
 **Going further with the same residual.** `SteamReformer.residual` is the whole
 model. To make the tube non-isothermal, add an enthalpy field to the state and

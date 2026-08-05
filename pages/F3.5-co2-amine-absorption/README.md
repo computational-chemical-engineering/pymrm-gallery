@@ -10,7 +10,7 @@ that ended the shuttle-versus-homogeneous-catalysis argument.
   2735-2743, doi:10.1016/0009-2509(89)85216-9. (The catalogue's original
   citation, "Versteeg & van Swaaij (1988)", is the group's kinetics paper —
   the source of this paper's correlation (11) — not the model paper.)
-- **Runtime:** ~40 s
+- **Runtime:** ~105 s
 
 ## Results
 
@@ -61,12 +61,50 @@ Figure 4 supports the reconstruction at the same condition.
 Validation, ranked by what it can actually catch. Primary: the
 pseudo-first-order closed form to 3.5e-5 over 0.1 ≤ Ha ≤ 300 (with grid
 doubling 1.3e-5 and k_inst 2.2e-5), Van Krevelen–Hoftijzer within 0.1%, and a
-Higbie penetration variant within 10.5%. Consistency checks, true by
-construction: physical-absorption limit 5e-11, a dimensionless cross-assembly
-sharing grid and operators 1e-8, reversible→irreversible collapse 1e-5,
-carbon- and amine-flux closure 6e-10 and 1e-10. Electroneutrality (2.8e-11) and charge
-flux (1.1e-9) are algebraically guaranteed by the equal ion diffusivities and
-are kept as regression guards only.
+Higbie penetration variant within **11.3 %** at `n_t = 640`, extrapolating to
+11.6 %. Consistency checks, true by construction: physical-absorption limit
+5e-11, a dimensionless cross-assembly sharing grid and operators 1e-8,
+reversible→irreversible collapse 1e-5, carbon- and amine-flux closure 6e-10 and
+1e-10. Electroneutrality (2.8e-11) and charge flux (1.1e-9) are algebraically
+guaranteed by the equal ion diffusivities and are kept as regression guards only.
+
+## The transient result was never time-refined, and the headline was 9 % low
+
+Every steady result on this page is grid-refined. The Higbie penetration
+variant — a transient solve, backward Euler on a geometric time grid — was run
+once at `n_t = 160` and its result published. It was not converged:
+
+| `n_t` | quadrature bias | film-vs-penetration max |
+|---|---|---|
+| **160** (published until 2026-08-05) | +1.42 % | **0.10488** |
+| 320 | +0.72 % | 0.11032 |
+| **640** (published now) | +0.37 % | **0.11301** |
+
+Successive differences 5.44e-3 and 2.69e-3 give an **observed order of 1.02** —
+clean first-order backward-Euler time error, not a quadrature property — and
+Richardson extrapolates to **0.1156**. The withdrawn value was 9 % below that,
+outside the 5 % tolerance `check_agreement.py` applies; the value now published
+is 2.3 % below it. All three of the other knobs were already converged: `n_x`
+400 → 800 and the domain factor 12 → 16 each move the number by 1–2 % of a
+single `n_t` step, so `n_t` was both the knob that mattered and the only one
+nobody had swept.
+
+**The conclusion is unchanged and the number is not.** The penetration model
+gives the *larger* enhancement, so the reproduction is still not an artefact of
+the film idealisation and the film variant — which the paper's section 4.2
+names — still matches Table 2 better. The size of the idealisation's effect was
+understated by about one percentage point. The withdrawn value is published
+beside the corrected one as `pen_vs_film_max_nt160_withdrawn`.
+
+## A check that was labelled for the wrong reason
+
+The carbon- and amine-flux closures were described as "genuine — they mix the
+three different diffusivities". Section 9 of the notebook injects that and it is
+not true: every reaction conserves carbon, so ∇·Σγⱼ**J**ⱼ = 0 identically for
+*any* set of Dⱼ. Halving `D(HCO3⁻)` and doubling `D(CO2)` leave both closures at
+1e-10 while E moves 11 % and 16 %. What they do catch is a wrong entry in the
+**stoichiometry matrix**, which moves them by eight to ten orders. They are a
+good check of a different thing than was claimed, and are relabelled.
 
 ## Data
 

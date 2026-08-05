@@ -15,17 +15,21 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 20
+runtime_seconds: 10
 datasets:
   - xu-froment-1989-parameters.csv
   - xu-froment-1989-conversion.csv
 
 validation:
-  - Table 5 to Table 6 parameter round trip (checks the exponent readings and the split reference temperature)
-  - van 't Hoff slopes of the equilibrium correlation against the paper's own Table 7 reaction enthalpies
-  - carbon and hydrogen atom balance along the reactor
-  - grid independence of the plug-flow integration
-  - mean/max deviation against 61 digitised measurements at four temperatures
+  # PRIMARY - external references, and the checks the injection table shows have power
+  - mean/max deviation against 61 digitised measurements at four temperatures (0.0017 MAD); the only check that sees the equilibrium correlation's intercepts, each of which multiplies it by about nine
+  - Table 5 to Table 6 parameter round trip, each row scored against its OWN printed precision. The published headline used to be the worst per-row percentage (1.4432 %) and that number is BLIND to a single-digit transposition - its baseline scatter is set by the 0.1 kJ/mol precision of E, worth 0.93 % on A by itself. The sum of the seven precision ratios (10.438) moves for every injected slip except a 0.024 % change in a four-figure number, which is undetectable in principle
+  - van 't Hoff slopes of the equilibrium correlation against the paper's own Table 7 reaction enthalpies, worst 1.93 %; SLOPES ONLY, so both intercepts are invisible to it by construction
+  - grid independence of the plug-flow integration, first order, Richardson-extrapolated
+  # STRUCTURAL - true by construction
+  - carbon, hydrogen and oxygen atom balance along the reactor: the conversions are defined so these balance identically, so this checks the mole bookkeeping and nothing else
+  # DEFECT INJECTION - section 6 of the notebook
+  - a defect-injection table covering every published metric: 10 transcription slips against the round trip, 4 against the equilibrium correlation, and 6 re-solved against the data, each printed beside the undamaged value and each miss labelled
 
 adds: >
   Two things the paper does not give. First, the residual is decomposed: the
@@ -54,5 +58,12 @@ caveats: >
   The parameters are for the partially deactivated catalyst at the
   steam-reforming reference activity level; using them for fresh catalyst needs
   the paper's factor of 2.246, and reproducing the paper's Figures 4 and 5
-  needs its factor of 1.225. One marker in Figure 2 is a merged pair and is
-  recorded once rather than guessed.
+  needs its factor of 1.225. NEITHER FACTOR IS VALIDATED HERE - both are
+  transcriptions from the paper's text, and the runs they belong to are
+  chemistry this page does not model. Section 6d executes them and says so.
+  The parameter round trip has a resolution floor and the page now measures it
+  rather than assuming it: its old headline, the worst per-row percentage,
+  cannot see a transposed digit in any preexponential, and one injected slip
+  (0.024 % in a four-figure number) is below the printed precision and cannot
+  be seen by any round trip built from these digits. One marker in Figure 2 is
+  a merged pair and is recorded once rather than guessed.

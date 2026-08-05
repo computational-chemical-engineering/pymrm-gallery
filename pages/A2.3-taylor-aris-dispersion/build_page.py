@@ -196,20 +196,25 @@ cells.append(code('''def poiseuille(r_c, Pe):
     return u, u - 0.5 * Pe          # the mean of Poiseuille is half the centreline
 
 
-def dispersion_closure(Pe, n_r=200):
-    """k/D from the homogenisation closure. Returns (k_over_D, B, r_c, weights)."""
+def dispersion_closure(Pe, n_r=200, nu=1, subtract_mean=True):
+    """k/D from the homogenisation closure. Returns (k_over_D, B, r_c, weights).
+
+    `nu` and `subtract_mean` exist so the validation section can break them:
+    nu=0 is the plane-channel geometry, and dropping the mean subtraction is the
+    classic slip that makes the pure-Neumann system inconsistent.
+    """
     r_f = np.linspace(0.0, 1.0, n_r + 1)
     r_c = 0.5 * (r_f[:-1] + r_f[1:])
     shape = (n_r,)
     # no flux at the axis (symmetry) and at the wall: a dB/dn + b B = d with a=1
     bc = ({"a": 1.0, "b": 0.0, "d": 0.0}, {"a": 1.0, "b": 0.0, "d": 0.0})
     grad, grad_bc = construct_grad(shape, r_f, r_c, bc)
-    div = construct_div(shape, r_f, nu=1)           # nu=1: cylindrical radial
+    div = construct_div(shape, r_f, nu=nu)          # nu=1: cylindrical radial
     lap = div @ grad
     rhs = -(div @ grad_bc).toarray().ravel()
 
-    _, uprime = poiseuille(r_c, Pe)
-    rhs = rhs + uprime
+    u_full, uprime = poiseuille(r_c, Pe)
+    rhs = rhs + (uprime if subtract_mean else u_full)
 
     # Pure Neumann, so the matrix is singular by exactly one constant. Pin one
     # cell: <u'> = 0 means adding a constant to B cannot change -<u' B>.
@@ -239,7 +244,7 @@ cells.append(code('''class Slug:
     a^2/D, so the axial velocity seen in this frame is Pe*(1/2 - r^2).
     """
 
-    def __init__(self, Pe, half_len=40.0, n_z=1600, n_r=24, width=1.0):
+    def __init__(self, Pe, half_len=40.0, n_z=1600, n_r=24, width=1.0, nu_r=1):
         self.Pe, self.shape = Pe, (n_z, n_r)
         self.z_f = np.linspace(-half_len, half_len, n_z + 1)
         self.z_c = 0.5 * (self.z_f[:-1] + self.z_f[1:])
@@ -258,7 +263,7 @@ cells.append(code('''class Slug:
         gz, gz_bc = construct_grad(self.shape, self.z_f, self.z_c, bc, axis=0)
         dz = construct_div(self.shape, self.z_f, nu=0, axis=0)   # nu=0: Cartesian
         gr, gr_bc = construct_grad(self.shape, self.r_f, self.r_c, bc, axis=1)
-        dr = construct_div(self.shape, self.r_f, nu=1, axis=1)   # nu=1: radial
+        dr = construct_div(self.shape, self.r_f, nu=nu_r, axis=1)  # nu=1: radial
 
         self.jac = dz @ (conv - gz) - dr @ gr
         g = dz @ (conv_bc - gz_bc) - dr @ gr_bc
@@ -366,8 +371,10 @@ print(f"  mass conserved to {abs(mass - 1):.2e}")'''))
 
 cells.append(md("""## Validation
 
-Four checks: two on the closure, one on the direct simulation, and one against
-the paper's own measurement."""))
+Five sections: two on the closure, one on the direct simulation, one against
+the paper's own measurement, and a defect-injection table that measures what
+each published number can move for. The settling study that produces this page's
+one original result has its own refinement ladder, under *What pymrm adds*."""))
 
 cells.append(code('''# 1. The closure against Taylor's closed form, refined.
 #    No convection in this calculation, so the only error is discretisation and
@@ -427,17 +434,55 @@ print(f"     {lo:.3e} to {hi:.3e} cm2/s")
 print(f"   inferred value lies inside it: {inside}")
 print(f"   Pe of that experiment = {u0 * a_cm / D_inferred:.0f}, so k/D = "
       f"{(u0*a_cm/D_inferred)**2/192:.0f} — dispersion beats molecular "
-      "diffusion by four orders of magnitude")
+      "diffusion by four orders of magnitude")'''))
 
-report_agreement("A2.3", {
-    "closure_rel_err_n200": abs(dispersion_closure(PE_REF, n_r=200)[0] - exact) / exact,
-    "closure_worst_rel_err_pe_sweep": float(np.max(np.abs(ks_sweep := np.array(
-        [dispersion_closure(p, n_r=160)[0] for p in pes]) / (pes**2/192) - 1))),
-    "direct_rel_err_n3200": abs(rows[-1][2] / expect - 1),
-    "direct_richardson_rel_err": abs(rich / expect - 1),
-    "taylor_D_rel_err": abs(D_inferred / D_paper - 1),
-    "mass_conservation_err": abs(rows[-1][4] - 1),
-})'''))
+cells.append(md(r"""### 5. Defect injection — what each published number moves for
+
+Every metric this page reports needs one row here: a defect that metric is
+supposed to catch, injected, re-run, printed beside the undamaged value. The
+transient rows are run at `n_z` = 800 rather than 3200 to keep the page under a
+minute; the point is which numbers *move*, and by how many orders."""))
+
+cells.append(code('''print("5a. The closure (closure_rel_err_n200, closure_worst_rel_err_pe_sweep)")
+k_ref = dispersion_closure(PE_REF, n_r=200)[0]
+print(f"    {'injected defect':46s}{'k/D':>11}{'rel err vs Eq. 25':>19}")
+for lab, kw in ((f"as published (nu = 1, u - <u>)", {}),
+                ("nu = 0: plane channel, not a tube", dict(nu=0)),
+                ("mean not subtracted: rhs = u, not u'", dict(subtract_mean=False)),
+                ("n_r = 25 (under-resolved)", dict(n_r=25))):
+    k_ = dispersion_closure(PE_REF, **kw)[0]
+    print(f"    {lab:46s}{k_:11.5f}{abs(k_/exact - 1):19.2e}")
+print(f"    {'Eq. 25 read with the MEAN velocity (192 -> 48)':46s}"
+      f"{PE_REF**2/48:11.5f}{abs((PE_REF**2/48)/exact - 1):19.2e}")
+print("    The closure is sharp: a wrong geometry is 3 orders out, a dropped mean")
+print("    subtraction 2, and the 192-vs-48 confusion the page warns about is a")
+print("    factor of 4. The Pe sweep behaves the same way -- it is the same call.")
+
+print("\\n5b. The direct 2-D simulation (direct_rel_err_*, mass_conservation_err)")
+print(f"    {'injected defect':46s}{'D_eff/D':>11}{'mass err':>12}")
+for lab, kw in (("as published (n_z = 800, nu_r = 1)", {}),
+                ("radial nu = 1 -> 0 (slab, not cylinder)", dict(nu_r=0)),
+                ("n_r 24 -> 3 (radial profile unresolved)", dict(n_r=3))):
+    D_, m_, _ = measure_dispersion(PE_REF, dt=0.002, n_z=800, **kw)
+    print(f"    {lab:46s}{D_:11.4f}{abs(m_-1):12.2e}")
+print("    Mass conservation is STRUCTURAL -- every boundary is no-flux and the")
+print("    scheme is conservative, so it stays at 1e-13 through both injections.")
+print("    It is a regression guard on the assembly, not evidence about physics.")
+
+print("\\n5c. Taylor's capillary run (taylor_D_rel_err)")
+print(f"    {'injected defect':46s}{'D inferred':>13}{'rel err':>10}")
+for lab, a_, div_ in (("as published", a_cm, 192.0),
+                      ("tube radius 0.0252 -> 0.0522 cm", 0.0522, 192.0),
+                      ("Eq. 25 divisor 192 -> 48", a_cm, 48.0)):
+    D_ = a_ ** 2 * u0 ** 2 / (div_ * k_from_fit)
+    print(f"    {lab:46s}{D_:13.3e}{abs(D_/D_paper - 1):10.2%}")
+print(f"    and the acceptance test -- does it land inside Furth & Ullmann's")
+print(f"    {lo:.2e} to {hi:.2e} cm2/s? --")
+for lab, a_, div_ in (("as published", a_cm, 192.0),
+                      ("tube radius 0.0252 -> 0.0522 cm", 0.0522, 192.0),
+                      ("Eq. 25 divisor 192 -> 48", a_cm, 48.0)):
+    D_ = a_ ** 2 * u0 ** 2 / (div_ * k_from_fit)
+    print(f"      {lab:44s}{str(bool(lo <= D_ <= hi)):>8}")'''))
 
 cells.append(md(r"""## What pymrm adds
 
@@ -448,65 +493,156 @@ solution he had no way to compute.
 
 Running it turns the inequality into a number. Before equilibration the slug
 is still being stretched ballistically and the variance grows like $\tau^2$;
-after it, the growth is linear and Taylor's constant takes over."""))
+after it, the growth is linear and Taylor's constant takes over.
 
-cells.append(code('''s3 = Slug(PE_REF, n_z=1600, n_r=24)
-taus, var = [], []
-dt = 0.0005
-for _ in range(240):
-    s3.step(dt, 10)
-    _, _, v = s3.moments()
-    taus.append(s3.t); var.append(v)
-taus, var = np.array(taus), np.array(var)
+**This is the only original result on the page, so it gets its own refinement
+study.** Everything else here is refined — the closure over `n_r` = 25…800, the
+direct simulation over `n_z` = 400…3200 — and until 2026-08-05 this study was
+not: it ran once, at `n_z` = 1600. That matters more than it sounds, because the
+threshold is read off a curve that first-order upwind lifts by a *constant*
++2.2 % at that resolution. A settling band is satisfied *earlier* when the curve
+sits above the target, so a coarse mesh biases every threshold **low**, and a
+band narrower than the numerical-dispersion floor is reported as unattainable
+when it is merely unresolved. Both happened. The ladder below is the repair."""))
 
-# instantaneous growth rate, which is what has to settle onto 1 + Pe^2/192
-rate = np.gradient(var, taus) / 2.0
+cells.append(code('''TAU_END = 1.2                       # simulated window, the same for every run
+BANDS = (0.10, 0.05, 0.03, 0.02, 0.01)
 target = 1 + PE_REF ** 2 / 192
 
-fig, axes = plt.subplots(1, 2, figsize=(11.6, 4.0))
-axes[0].loglog(taus, var, color="tab:blue", lw=1.9, label="simulated variance")
-axes[0].loglog(taus, var[5] * (taus / taus[5]) ** 2, "k--", lw=1.0,
+
+def rate_history(n_z, dt=5e-4, n_r=24, n_out=480, half_len=40.0):
+    """Instantaneous variance growth rate over a FIXED window [0, TAU_END].
+
+    The stride is derived from dt so that halving dt does not also halve the
+    simulated time -- otherwise a "refinement" changes the question being asked.
+    """
+    stride = int(round(TAU_END / (n_out * dt)))
+    s = Slug(PE_REF, n_z=n_z, n_r=n_r, half_len=half_len)
+    taus, var = [], []
+    for _ in range(n_out):
+        s.step(dt, stride)
+        taus.append(s.t); var.append(s.moments()[2])
+    taus, var = np.array(taus), np.array(var)
+    return taus, var, np.gradient(var, taus) / 2.0
+
+
+def settle(taus, rate):
+    """First tau after which |rate/target - 1| STAYS below each band."""
+    out = {}
+    for band in BANDS:
+        bad = np.nonzero(np.abs(rate / target - 1) >= band)[0]
+        out[band] = (float(taus[0]) if len(bad) == 0 else
+                     float(taus[bad[-1] + 1]) if bad[-1] + 1 < len(taus) else np.nan)
+    return out
+
+
+ladder, floors, hist = {}, {}, {}
+print("Refinement of the settling study. dz = 80/n_z; dt and n_r held fixed, and")
+print("checked separately below.")
+hdr = "".join(f"  tau(+/-{b*100:.0f}%)" for b in BANDS)
+print(f"   {'n_z':>5}{'dz':>8}{'floor':>9}{hdr}")
+for n_z in (800, 1600, 3200):
+    hist[n_z] = taus, var, rate = rate_history(n_z)
+    ladder[n_z] = settle(taus, rate)
+    floors[n_z] = float(rate[-1] / target - 1)
+    row = "".join(("      never" if np.isnan(ladder[n_z][b]) else f"{ladder[n_z][b]:11.4f}")
+                  for b in BANDS)
+    print(f"   {n_z:5d}{80.0/n_z:8.4f}{floors[n_z]*100:8.2f}%{row}")
+taus_f, var_f, rate_f = hist[3200]
+
+ns = sorted(floors)
+ORDER = float(np.mean([np.log2(floors[ns[i]] / floors[ns[i + 1]])
+                       for i in range(len(ns) - 1)]))
+RICH_FLOOR = floors[ns[-1]] + (floors[ns[-1]] - floors[ns[-2]])   # first order in dz
+print(f"\\n   numerical-dispersion floor halves with dz: observed order "
+      f"{ORDER:.3f},")
+print(f"   Richardson limit {RICH_FLOOR*100:+.3f} % -- i.e. the scheme converges "
+      "onto Taylor's")
+print("   constant exactly, and the whole floor is discretisation.")
+print("   Every threshold rises monotonically under refinement, and the +/-2 % band")
+print("   goes from UNATTAINABLE at n_z = 1600 to attainable at 3200: at 1600 the")
+print(f"   {floors[1600]*100:.2f} % floor is larger than the 2 % band, so the "
+      "criterion could never")
+print("   be met however long the run. That was a property of the mesh, not of the")
+print("   physics, and the previous version of this page published it as a result.")'''))
+
+cells.append(code('''# Refine the OTHER knobs too, to show dz is the one that controls this.
+print("The knobs that are NOT dz, at n_z = 800 (where dz already dominates):")
+base_floor = floors[800]
+print(f"   {'dt = 5e-4, n_r = 24 (reference)':38s} floor {base_floor*100:+7.3f} %")
+for lab, kw in (("dt 5e-4 -> 2.5e-4", dict(dt=2.5e-4)),
+                ("n_r 24 -> 48", dict(n_r=48))):
+    _, _, r_ = rate_history(800, **kw)
+    f_ = r_[-1] / target - 1
+    print(f"   {lab:38s} floor {f_*100:+7.3f} %   "
+          f"({abs(f_/base_floor - 1)*100:.2f} % of the reference)")
+print("   Neither moves it: the time step and the radial grid are converged, and")
+print("   the study refines the knob that actually controls the answer.")'''))
+
+cells.append(code('''fig, axes = plt.subplots(1, 2, figsize=(11.6, 4.0))
+axes[0].loglog(taus_f, var_f, color="tab:blue", lw=1.9, label="simulated variance")
+axes[0].loglog(taus_f, var_f[5] * (taus_f / taus_f[5]) ** 2, "k--", lw=1.0,
                label=r"ballistic $\\propto\\tau^2$")
-axes[0].loglog(taus, 2 * target * taus, "k:", lw=1.4, label=r"Taylor $2(D+k)t$")
+axes[0].loglog(taus_f, 2 * target * taus_f, "k:", lw=1.4, label=r"Taylor $2(D+k)t$")
 axes[0].axvline(1 / 3.83 ** 2, color="tab:red", lw=1.2)
-axes[0].text(1 / 3.83 ** 2 * 1.1, var[2], "Taylor's Eq. 16\\nequilibration time",
+axes[0].text(1 / 3.83 ** 2 * 1.1, var_f[2], "Taylor's Eq. 16\\nequilibration time",
              fontsize=8, color="tab:red")
 axes[0].set(xlabel=r"$\\tau = tD/a^2$", ylabel=r"axial variance $/a^2$",
             title="two regimes")
 axes[0].legend(fontsize=8, loc="upper left")
 
-axes[1].semilogx(taus, rate / target, color="tab:blue", lw=1.9)
+for n_z, col in zip((800, 1600, 3200), ("0.75", "0.45", "tab:blue")):
+    t_, _, r_ = hist[n_z]
+    axes[1].semilogx(t_, r_ / target, color=col, lw=1.9 if n_z == 3200 else 1.1,
+                     label=f"$n_z$ = {n_z}")
 axes[1].axhline(1.0, color="k", lw=1.0)
-for band, st in ((0.05, ":"), (0.01, "--")):
+for band, st in ((0.05, ":"), (0.02, "--")):
     axes[1].axhline(1 + band, color="tab:green", lw=0.9, ls=st)
     axes[1].axhline(1 - band, color="tab:green", lw=0.9, ls=st)
 axes[1].axvline(1 / 3.83 ** 2, color="tab:red", lw=1.2)
 axes[1].set(xlabel=r"$\\tau = tD/a^2$", ylabel=r"growth rate / Taylor's value",
             ylim=(0, 2), title=r"when does $k=a^2u_0^2/192D$ actually hold?")
+axes[1].legend(fontsize=8, loc="lower right")
 fig.tight_layout()
 plt.show()
 
-print("first tau after which the growth rate STAYS inside a band of Taylor's value:")
-for band in (0.10, 0.05, 0.03):
-    bad = np.nonzero(np.abs(rate / target - 1) >= band)[0]
-    if len(bad) and bad[-1] + 1 < len(taus):
-        tau_ok = taus[bad[-1] + 1]
-        print(f"  +/-{band*100:3.0f} %  from tau = {tau_ok:.3f}"
-              f"   ({tau_ok * 3.83**2:4.1f} equilibration times)")
-    elif not len(bad):
-        print(f"  +/-{band*100:3.0f} %  from the first sample, tau = {taus[0]:.3f}")
+FINE = ladder[3200]
+print("first tau after which the growth rate STAYS inside a band of Taylor's value,")
+print("on the finest grid run (n_z = 3200):")
+for band in BANDS:
+    t_ = FINE[band]
+    coarse = ladder[1600][band]
+    drift = ("" if np.isnan(coarse) or np.isnan(t_)
+             else f"   (n_z = 1600 gave {coarse:.4f}, {(t_/coarse-1)*100:+.0f} %)")
+    if np.isnan(t_):
+        print(f"  +/-{band*100:3.0f} %  not attainable at this resolution "
+              f"(floor {floors[3200]*100:.2f} %)")
     else:
-        print(f"  +/-{band*100:3.0f} %  never settles within the window simulated")
+        print(f"  +/-{band*100:3.0f} %  from tau = {t_:.4f}"
+              f"   ({t_ * 3.83**2:4.1f} equilibration times){drift}")
 print(f"\\n  Taylor's bound was tau >> {1/3.83**2:.3f}. The simulation puts a number on")
 print("  'much greater than': a few equilibration times, not the decades the")
 print("  phrase might suggest.")
-print(f"  Caveat: this run carries about {(rows[2][3])*100:+.1f} % numerical dispersion")
-print("  at n_z = 1600, so the tightest band is at the edge of what it can resolve.")'''))
+_moves = [FINE[b] - ladder[1600][b] for b in BANDS if not np.isnan(ladder[1600][b])]
+print(f"  The thresholds are STILL RISING with refinement -- by {min(_moves):.4f} to "
+      f"{max(_moves):.4f}\\n  on the last doubling, against a sampling interval of "
+      f"{taus_f[1]-taus_f[0]:.4f} -- so read them as\\n  lower bounds on the "
+      "converged values, not as converged values.")'''))
 
 cells.append(md(r"""So the honest reading of Eq. 16 is **$\tau \gtrsim 0.2$**,
-about three equilibration times, for a few percent accuracy. That is a good deal
-less demanding than "much greater than" might have suggested, and it is worth
-knowing in that direction: the Taylor limit is reached quickly.
+three equilibration times, for a few percent accuracy — and the refinement study
+above is what that statement now rests on. Two things changed when it was run:
+
+- the $\pm 3\,\%$ threshold moved **up by 9 %**, from 0.1950 on the mesh this
+  page used to publish to 0.2125 at `n_z` = 3200, and it is still rising;
+- the $\pm 2\,\%$ band, previously reported as *never settling*, settles at
+  $\tau = 0.2325$. It was unattainable only because the coarse mesh's
+  numerical-dispersion floor (+2.23 %) was larger than the band.
+
+Both errors ran the same way — a coarse mesh flatters a settling criterion,
+because it lifts the whole curve above the target and a band is entered sooner.
+So $\tau \gtrsim 0.2$ survives, but as a *lower* bound: the converged thresholds
+are above the printed ones, not below.
 
 In a reactor context this is the statement that a lumped axial dispersion
 coefficient becomes safe once the residence time is a small multiple of the
@@ -516,6 +652,23 @@ otherwise leave.
 
 Nothing here corrects Taylor. It puts a number on the one place he left a
 qualitative gap, using the transient solution that was out of reach in 1953."""))
+
+cells.append(code('''report_agreement("A2.3", {
+    "closure_rel_err_n200": abs(dispersion_closure(PE_REF, n_r=200)[0] - exact) / exact,
+    "closure_worst_rel_err_pe_sweep": float(np.max(np.abs(ks_sweep := np.array(
+        [dispersion_closure(p, n_r=160)[0] for p in pes]) / (pes**2/192) - 1))),
+    "direct_rel_err_n3200": abs(rows[-1][2] / expect - 1),
+    "direct_richardson_rel_err": abs(rich / expect - 1),
+    "taylor_D_rel_err": abs(D_inferred / D_paper - 1),
+    "mass_conservation_err": abs(rows[-1][4] - 1),
+    # the settling study -- the page's only original result, and until
+    # 2026-08-05 the only unrefined one. Reported at the finest grid run.
+    "tau_settle_3pct_n3200": FINE[0.03],
+    "tau_settle_2pct_n3200": FINE[0.02],
+    "tau_settle_3pct_n1600_withdrawn": ladder[1600][0.03],
+    "numerical_dispersion_floor_n3200": floors[3200],
+    "numerical_dispersion_order": ORDER,
+})'''))
 
 cells.append(md(r"""## Reuse
 
@@ -529,8 +682,21 @@ $k = 2\bar u^2 h^2/105D$ — a good exercise.
 **Where this feeds the rest of the gallery.** Every axial-dispersion coefficient
 in an `S4` model — breakthrough curves, tracer RTDs, `J1.5` adsorption — is a
 lumped stand-in for exactly this calculation. This page is what justifies the
-lumping, and the $\tau \gtrsim 1$ result is the condition under which it is
-allowed.
+lumping, and the condition under which it is allowed is the settling result
+above: **$\tau \gtrsim 0.2$** for a few percent, about three radial
+equilibration times. (Earlier versions of this section said $\tau \gtrsim 1$,
+which contradicted the page's own result section by a factor of five. The
+result section was right.) Read it as a *lower* bound — the refinement study
+shows the thresholds still rising as the mesh is refined.
+
+**And do not read a settling threshold off one mesh.** The criterion "the growth
+rate stays within a band" is satisfied *sooner* on a coarse grid, because
+first-order upwind lifts the whole curve above the target by a constant that
+scales with $\Delta z$. On this page that bias was +4.5 % at `n_z` = 800 and
++1.1 % at 3200, and a band narrower than the bias can never be entered at all —
+which is exactly how the $\pm2\,\%$ result came to be published as "never
+settles". Refine the mesh before you believe a settling time, and check the
+band you are asking for is wider than your own numerical dispersion.
 
 **Careful with the velocity convention.** $u_0$ here is the centreline value, as
 in Taylor's paper. Using the mean velocity in Eq. 25 without changing 192 to 48
