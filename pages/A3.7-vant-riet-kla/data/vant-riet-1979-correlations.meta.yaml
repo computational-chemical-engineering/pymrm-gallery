@@ -1,0 +1,84 @@
+dataset_id: vant-riet-1979-correlations
+title: "van 't Riet's two-branch k_L*A correlation, eqs. 8 and 9, as printed"
+status: complete
+
+source:
+  authors:
+    - "van 't Riet, K."
+  year: 1979
+  container: "Industrial & Engineering Chemistry Process Design and Development 18(3) 357-364"
+  doi: 10.1021/i260071a001
+  access: >
+    Publisher PDF held outside the repository at ~/papers/pymrm-gallery/i260071a001.pdf,
+    downloaded through an institutional subscription (TU Eindhoven). No PDF and
+    no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: page-image transcription
+  tier: 2
+  resolution: >
+    NATIVE. `pdfimages -list` reports every one of the 24 embedded images as
+    CCITT-G4 bilevel at 300 x 300 ppi, so the page was rendered with
+    `pdftoppm -r 300 -png`. Rendering at 600 dpi would have been interpolation.
+  crops: >
+    Every numeral in this file was re-read from a tight crop at native scale,
+    not from a whole-page view. Eq. 8 from page 4 (journal p. 360) right column;
+    eq. 9 from page 5 (journal p. 361) right column, cropped twice because the
+    0.7 exponent sits above the first crop's top edge. The validity windows were
+    read from the sentences immediately following each equation.
+  text_layer: >
+    The scan carries an ACS OCR text layer of unusually good quality for a 1979
+    ACS scan, but it mangles BOTH equations - eq. 8 comes back as
+    `khA = 2.6 X 10-^)°>` and eq. 9 as `/eLA = 2.0X10-3^-j vs°·2` with the 0.7
+    exponent detached onto its own line. Neither is usable. The text layer WAS
+    used for prose, section structure and the reference list.
+
+conditions: >
+  Both equations are van 't Riet's OWN fits to the literature data he compiles.
+  Eq. 8 is introduced with "The data can be correlated according to" and eq. 9
+  with "When the v_s^0.2 is taken into account, one obtains from Figure 4".
+  THE CORRELATIONS ARE FITTED TO THE DATA THE REVIEW TABULATES IN ITS FIGURES,
+  so any agreement between them and those data is a goodness of fit, not a
+  validation, and this page does not compute one - the underlying points live
+  only in Figures 1-5 and are not digitised.
+
+  Eq. 8's validity statement prints no lower volume bound ("volume measured up
+  to 2600 L"), so the `V_min_L` cell is empty rather than guessed. The RUNNING
+  TEXT one sentence above eq. 8 does print a range for the compiled results -
+  "the volume may range between 2 and 2600 L" - so the paper is not silent; the
+  empty cell records that the equation's OWN validity statement gives no lower
+  bound, and this file transcribes validity statements, not surrounding prose.
+  (Figure 2's legend also shows a 5 L pure-water vessel, consistent with that
+  sentence.)
+
+printed_defects:
+  - >
+    The text under eq. 7 reads "where N = stirrer diameter". The Nomenclature on
+    journal p. 363 gives "N = stirrer speed, 1/s" and "D = stirrer diameter, m".
+    Recorded, not repaired; the page does not use eq. 7 quantitatively.
+  - >
+    FOUR OF THE FIVE figure legends cite the drawn correlation line by an
+    equation number one lower than the text does; the fifth cites none.
+    Figures 1-3 (pure water) print "CORRELATION EQUATION (7)" where the text
+    says the broken lines are eq. 8's correlation; Figure 4 (ionic) prints
+    "CORRELATION EQUATION (8)" for both of its lines where the text derives
+    eq. 9 from that very figure. Figure 5's legend names the liquids and cites
+    no equation number at all. Eq. 7 carries no numerical constants, so it
+    cannot be drawn. Recorded, not repaired. The `label_says_equation` column
+    of the figure-legend dataset carries the printed numbers - empty for
+    Figure 5 - so the offset can be checked from the data.
+
+columns:
+  equation: "the review's own equation number"
+  branch: "pure_water (eq. 8) or ionic (eq. 9)"
+  K: "prefactor, SI: k_L*A in 1/s with P/V in W/m3 and v_s in m/s"
+  alpha: "exponent on P/V"
+  beta: "exponent on v_s"
+  pv_min_W_m3: "lower P/V bound of the printed validity window, W/m3"
+  pv_max_W_m3: "upper P/V bound of the printed validity window, W/m3"
+  V_min_L: "lower vessel-volume bound, litres; EMPTY for eq. 8, which prints none"
+  V_max_L: "upper vessel-volume bound, litres"
+  accuracy_pct_lo: "lower end of the accuracy the review claims for the formula, %"
+  accuracy_pct_hi: "upper end, %"
+  figures: "semicolon-separated list of the figures in which the review draws this correlation"

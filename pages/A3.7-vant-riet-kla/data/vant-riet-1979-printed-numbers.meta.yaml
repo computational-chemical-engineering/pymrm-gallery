@@ -1,0 +1,64 @@
+dataset_id: vant-riet-1979-printed-numbers
+title: "Numbers van 't Riet (1979) prints as text, with whose result each one is"
+status: complete
+
+source:
+  authors:
+    - "van 't Riet, K."
+  year: 1979
+  container: "Industrial & Engineering Chemistry Process Design and Development 18(3) 357-364"
+  doi: 10.1021/i260071a001
+  access: >
+    Publisher PDF held outside the repository at ~/papers/pymrm-gallery/i260071a001.pdf,
+    downloaded through an institutional subscription (TU Eindhoven). No PDF and
+    no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: page-image transcription
+  tier: 2
+  resolution: >
+    NATIVE 300 ppi (`pdfimages -list` reports CCITT-G4 bilevel at 300 ppi for
+    all 24 embedded images), rendered with `pdftoppm -r 300 -png`, and every
+    numeric re-read from a tight crop rather than from a whole-page view.
+
+conditions: >
+  THIS IS A REVIEW, and the `origin` column is the point of the file. Where it
+  reads `vant_riet_1979` the review states the number in its own voice - its
+  choice of k_L, its accuracy claim, its electrode ceiling, its expectation for
+  the ion enhancement. Everywhere else the number belongs to the author named,
+  and the review is only the document it was read from. Nothing in this file was
+  taken from any source other than the review; the originals are not on disk and
+  were not consulted.
+
+  Two rows deserve reading before use.
+
+  `kla_electrode_ceiling` (0.1 1/s) is the review's statement of how high k_L*A
+  can be measured with a 2-3 s electrode WITHOUT a response model. It is not a
+  hard limit - the review says "using these response models one can measure up
+  to values several times higher". The page uses it as the boundary of the
+  regime the review itself calls straightforward, and says so.
+
+  `ion_enhancement_lo/hi` (2-10) is built by the review from mechanism - A up to
+  10x (Lee & Meyrick), holdup up to 2x (Machon et al.), k_L lower by at most
+  1-4x - and corroborated against Zlokarnik (1975). It is NOT derived from
+  eqs. 8 and 9, which is what makes comparing the eq. 9 / eq. 8 ratio against it
+  a check rather than a tautology.
+
+  `zlokarnik_vs_exponent` (0.2) is where eq. 9's beta comes from, and the review
+  says so explicitly: "When the v_s^0.2 is taken into account, one obtains from
+  Figure 4 [eq. 9]". So beta was IMPOSED from Zlokarnik's finding rather than
+  fitted on Figure 4; the prefactor and alpha were then fitted with it held.
+
+columns:
+  key: "identifier used in the notebook"
+  value: "the printed value"
+  unit: "SI unit, or '-' for dimensionless, or '%'"
+  origin: >
+    whose result it is. `vant_riet_1979` means the review states it in its own
+    voice; `literature_compiled` means the review gives it as a range across
+    several cited works; anything else is the single author the review
+    attributes it to, in `Author_year` form.
+  section: "the review's section heading where the statement appears"
+  used_on_page: "yes/no - whether this page reads the row"
+  statement: "the review's own wording, quoted, with the attribution it gives"

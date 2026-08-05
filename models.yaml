@@ -1598,6 +1598,164 @@ models:
         10^-6.
     related: [A3.1, A3.2, A3.3, A3.4, F3.1, F1.4]
 
+  - id: A3.7
+    slug: vant-riet-kla
+    title: "van 't Riet's k_L a correlation for stirred gas-liquid vessels"
+    description: >
+      Two numbers predict volumetric oxygen transfer in a stirred vessel: power
+      per unit volume and superficial gas velocity. van 't Riet's 1979 review
+      correlates the whole published body of data with them, and insists the
+      constants be BRANCHED - one set for water, one for strong ionic solutions,
+      because ions suppress coalescence. This page implements both branches and
+      asks what the review's own printed numbers can and cannot decide about the
+      four exponents in them.
+
+      Everything here is reproduction, not validation: eqs. 8 and 9 were FITTED
+      to the literature data the review compiles in Figures 1-5, those figures
+      are deliberately not digitised (no maintainer review available), and no
+      measurement is compared against anywhere on the page. The figure LEGENDS
+      are used, and the sidecar is explicit that they are typeset tables inside
+      plot frames rather than extracted curve data.
+
+      Four results. (1) Figure 5's topology reproduces from the printed
+      constants: of nine candidate pure-vs-ionic crossings exactly one falls
+      inside the plotted window, pure-water 4 cm/s meeting ionic 0.5 cm/s at
+      P/V = 826.5 W/m3, which is what the printed figure shows - a check that
+      reads all six constants at once without measuring a figure coordinate.
+      (2) The review asks how far alpha and beta can be varied "without
+      affecting the outcome significantly" and never answers; with the prefactor
+      re-fitted at the window centre, the whole pure-water literature spread it
+      quotes costs at most 16.2 % and 24.7 %, and the IONIC v_s exponent 0.2 can
+      be deleted outright for 26.4 % over the span of Figure 4's two drawn
+      correlation lines and 35.2 % over the wider span its data occupy - both
+      inside the review's own 20-40 % accuracy.
+      The review says in the very sentence introducing eq. 9 that the 0.2 was
+      imported from Zlokarnik rather than fitted, so this quantifies the
+      review's own position rather than contradicting it. The other three
+      exponents cost 82.1 %, 185.3 % and 73.6 % and are load-bearing; dropping
+      the branching altogether under-predicts by up to 83.3 %.
+      (3) The review expects ions to raise k_L*A by 2-10x, argued
+      mechanistically and independently of eqs. 8 and 9; the ratio of the two
+      fitted correlations spans 1.30x to 5.98x and lands inside 2-10x on 83.6 %
+      of the printed box, falling BELOW the 2x floor at high v_s and low P/V. An
+      internal inconsistency, reported unresolved because the evidence that would
+      settle it is in the undigitised figures.
+      (4) The pymrm part. Eq. 2 - the dynamic gassing-out method most of the
+      data come from - assumes a uniform gas composition; the review warns about
+      this four times and never computes anything. A plug-flow gas column
+      exchanging with a well-mixed liquid gives the correct governing group,
+      N_G = (1-eps) k H_t/(v_s H), which is NOT the review's tau_G vs 1/k_L*A -
+      it carries an extra factor (1-eps)/(eps H), 0.300 for the worked case, so
+      the review's rule of thumb is conservative by roughly threefold and by a
+      factor depending on a quantity (H) it never prints. The resulting bias in
+      a measured k_L*A, in the page's own full transient, is 19.1 % on eq. 8's
+      branch (16.0 % in the quasi-steady closed form, the optimistic one since
+      it assumes tau_G << 1/k_L*A - exactly the condition being violated) and
+      45.4 % on eq. 9's at the reported fit window (45.6 % quasi-steady;
+      34.1-56.5 % across eq. 2 fit windows, the ionic response being genuinely
+      non-exponential, which the page reports as a finding rather than hiding
+      in a default window), at the centre of the printed window in a 2600 L
+      vessel - the same size as the whole accuracy the review claims. The
+      quasi-steady bias runs 6.5 % to 52.2 % across the vessel volumes its own
+      legends print, which is its sentence about larger vessel diameters with
+      numbers on it, and 59.3 % to 38.0 % across the printed aspect-ratio
+      window 0.5 < T/H < 1.5 at constant volume, the tall vessel worst - its
+      H_t/T >> 1 warning with numbers on it. Validated against a closed form
+      (5.0e-8 after Richardson, observed order 1.00) and against an independent
+      Lagrangian route along the gas characteristics that forms no spatial
+      operator (1.6e-4), with the route's claimed sensitivities measured rather
+      than asserted. Seventeen break rows, the table's eight metrics recomputed
+      under every one (the page counts which reported metrics sit outside the
+      table); the single row that moves nothing - feeding the gas at the top -
+      is proved structural on the page, the profile being exactly mirrored to
+      1.8e-15 so the column mean cannot see it, an invariance confirmed in the
+      transient and Lagrangian routes too. One row injects the geometry defect
+      found in adversarial review (the tank diameter written where the height
+      belongs), which the original T/H row shared and could not see. Two
+      printed defects recorded and not repaired, including an off-by-one
+      equation number in the four figure legends that cite one (Figure 5's
+      cites none).
+    section: A
+    status: published
+    page: pages/A3.7-vant-riet-kla/
+    tier: T1
+    priority: P1
+    structures: [S3, S4]
+    phases: [gas-liquid]
+    predicts:
+      - volumetric liquid-side mass transfer coefficient k_L*A from power per unit volume and superficial gas velocity, eq. 6
+      - the coalescing (pure water) branch, eq. 8
+      - the non-coalescing (strong ionic) branch, eq. 9
+      - gas-phase residence time in a sparged stirred vessel, eq. 3
+      - the dynamic gassing-out liquid response and what eq. 2 returns from it
+      - the bias a plug-flow gas phase puts into a k_L*A measured with eq. 2
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+    reference:
+      authors: ["van 't Riet, K."]
+      year: 1979
+      container: "Industrial & Engineering Chemistry Process Design and Development 18(3) 357-364"
+      doi: 10.1021/i260071a001
+    reference_read_from:
+      authors: ["van 't Riet, K."]
+      year: 1979
+      note: >
+        Same document. Eqs. 1-9 are printed in it in full, and eqs. 8 and 9 are
+        van 't Riet's OWN fits, introduced with "The data can be correlated
+        according to" and "When the v_s^0.2 is taken into account, one obtains
+        from Figure 4". So the AGENTS.md reprint test is passed on its strongest
+        form: the result ORIGINATES here rather than merely appearing here. Read
+        from the publisher PDF at ~/papers/pymrm-gallery/i260071a001.pdf,
+        rendered at the scan's NATIVE 300 ppi (pdfimages -list reports CCITT-G4
+        bilevel at 300 ppi for all 24 embedded images) with every numeral
+        re-read from a tight crop. The OCR text layer mangles both equations and
+        is unusable for them.
+    origin_not_consulted:
+      - authors: ["Zlokarnik, M."]
+        year: 1970
+        container: "cited by the review as the source of the v_s^0.2 dependence"
+        note: >
+          Eq. 9's beta = 0.2 is Zlokarnik's, not a fit: the review says "When the
+          v_s^0.2 is taken into account, one obtains from Figure 4 [eq. 9]", so
+          the exponent was imposed and K and alpha fitted with it held. The page
+          shows that the review's own data window cannot resolve it. The original
+          is not on disk and was not consulted.
+      - authors: ["Van de Sande, E."]
+        year: 1974
+        container: "cited by the review, via Van 't Riet (1975), for the probe-response error bound"
+        note: >
+          "the ultimate error in k_L*A < 6% for tau_p <= 1/(k_L*A)". Used on the
+          page only to show that the review's printed electrode ceiling is the
+          OTHER criterion. Not consulted.
+      - authors: ["Linek, V."]
+        year: 1972
+        container: "cited by the review for the tighter probe-response bound"
+        note: >
+          "an error <3% for tau_p <= 1/(5 k_L*A)". The review's printed ceiling
+          of 0.1 s^-1 is exactly this at tau_p = 2 s, which the page recovers.
+          Not consulted.
+      - authors: ["Calderbank, P. H.", "Valentin, F. H. H.", "Kawecki, W.",
+                  "Reith, T.", "Smith, J. M.", "Robinson, C. W.",
+                  "Hassan, I. T. M.", "Topiwala, H. H.", "Lee, J. C.",
+                  "Machon, V.", "Westerterp, K. R."]
+        year: 1958
+        container: "the data sets compiled in Figures 1-5 of the review, 1958-1977"
+        note: >
+          Every measurement in the review belongs to one of these. NONE of the
+          originals is on disk and none was consulted. Their vessel volumes,
+          superficial gas velocities, salt contents and measuring methods are
+          read from the printed figure legends and shipped in
+          vant-riet-1979-figure-legends.csv; their DATA POINTS are not extracted
+          and nothing on the page rests on them. Calderbank's 1958 and 1959
+          papers supply three of the pure-water sets, and the page states that
+          case A3.6 should own any comparison against his own k_L correlation.
+    data:
+      tier: 6
+      method: table
+      status: complete
+    related: [A3.1, A3.3, A3.6, A3.8, F1.3, F1.4, F3.1]
+
   - id: A3.8
     slug: onda-correlations
     title: "The Onda correlations, and which of their fourteen constants the paper can see"

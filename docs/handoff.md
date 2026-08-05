@@ -414,6 +414,19 @@ group — but each changes what the page may *claim*. Record the origin under
 `origin_not_consulted:` (the `J3.1` form) when the source cites rather than
 reprints it, and `reference_read_from:` when it genuinely reprints the result.
 
+### The Neumann outflow extrapolates to the face — a hand-written outlet flux misses
+
+Found on `A3.7` (2026-08-05), confirmed by its verifier and reproduced again by
+its fixer. pymrm's zero-gradient outflow boundary **extrapolates the value to
+the face** rather than taking the upwind cell, so a hand-written outlet flux of
+the form `v·C_N` (last cell centre) disagrees with what the operator actually
+transports: at n = 8 the mismatch is **8.9e-3**, falling first-order to 7.8e-5
+at n = 800. A mass balance written with `v·C_N` therefore fails to close by
+~1e-4 on a modest grid **and looks exactly like a physics error**. Read outlet
+values through `compute_boundary_values` (or the face itself), never off the
+last cell centre — the same lesson as `A2.6`'s outlet metric, which was
+published 11.4 % low for reading h/2 short of the boundary.
+
 ### `NumJac(shape)` on a one-field 1-D problem builds a dense Jacobian
 
 Found while building `B1.4`, confirmed independently, and it was live on three

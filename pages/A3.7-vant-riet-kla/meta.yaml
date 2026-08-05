@@ -1,0 +1,261 @@
+# Page metadata. Staged in queue_cases/, not yet in pages/.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.7
+slug: vant-riet-kla
+title: "van 't Riet's k_L a correlation for stirred gas-liquid vessels"
+section: A
+status: published
+tier: T1
+priority: P1
+structures: [S3, S4]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 8
+datasets:
+  - vant-riet-1979-correlations.csv
+  - vant-riet-1979-printed-numbers.csv
+  - vant-riet-1979-figure-legends.csv
+
+validation:
+  - >-
+    Figure 5's TOPOLOGY reproduced from the printed constants alone. Nine
+    pure-vs-ionic curve pairs can cross; exactly ONE does so inside the plotted
+    window, the pure-water 4 cm/s curve meeting the ionic 0.5 cm/s curve at
+    P/V = 826.5 W/m3, which is what the printed figure shows. The check reads
+    all six transcribed constants at once and no figure coordinate is measured -
+    only the crossing COUNT and the identity of the pair, both legible without
+    extracting a position. The window's left edge, 400 W/m3, is Figure 5's
+    printed axis label 4.10^2 - transcribed axis TEXT, declared as such on the
+    page and in the legend sidecar - and its sensitivity is printed: the count
+    is 1 for any left edge in (328.0, 826.5] W/m3, also 1 at the printed
+    validity bound 500, and 2 at 300.
+  - >-
+    The review's printed electrode ceiling recovered from its two printed probe
+    criteria: 1/(5 x 2 s) = 0.1000 1/s against the printed 0.1 s^-1. Three
+    independently transcribed numbers close on a fourth. NOT structural.
+  - >-
+    Eq. 3's two printed forms, eps*V/(v_s*pi*T^2/4) and eps*H_t/v_s, agree to
+    2.2e-16 - labelled STRUCTURAL on the page, an identity of the cylinder that
+    confirms the geometry convention and nothing else.
+  - >-
+    The pymrm gas column against a closed form derived independently of any
+    discretisation, phi = (1 - exp(-N_G))/N_G. Clean first order (observed
+    0.998 and 0.998 over four grid doublings, upwind convection) and 5.0e-8 /
+    1.7e-7 relative after one Richardson step, on both branches.
+  - >-
+    The transient gassing-out solve against an INDEPENDENT Lagrangian route that
+    integrates along the gas characteristics and forms no spatial operator and
+    no pymrm matrix: 1.6e-4 and 1.2e-4 relative after Richardson extrapolation
+    in dt (observed temporal order 0.99, uniform steps refined uniformly). What
+    it can and cannot detect is stated on the page AND MEASURED, not asserted:
+    a flipped transfer sign moves the cross-route gap from ~8e-4 to 0.55 (pure)
+    and 1.57 (ionic), eps written where (1-eps) belongs to 0.21 and 0.74,
+    nu = 1 destroys the solve outright (NaN), and a top feed leaves the gap
+    unchanged - the same mirror invariance as the break table's one non-mover,
+    confirmed in a second, operator-free route. It shares the physical model by
+    construction and cannot test that.
+  - >-
+    EQ. 2'S FIT WINDOW IS A CHOICE AND ITS SENSITIVITY IS PRINTED. The window
+    (0.2, 0.8) of saturation is chosen, not prescribed by the review, and on
+    the ionic branch it matters: k_app/k spans 0.4346 to 0.6586 over the
+    windows (0.1,0.9)/(0.2,0.8)/(0.3,0.7), because tau_G = 29.8 s exceeds the
+    ionic liquid time constant 1/(k*phi) = 12.0 s and the response is
+    two-timescale, NOT a single exponential - which is itself the finding. The
+    0.3 % adjacency of the reported 0.5459 to the quasi-steady phi = 0.5443 is
+    therefore WINDOW-DEPENDENT, not corroboration, and the page says so where
+    the two numbers are printed side by side. The inert-start number is robust
+    to the window (0.280-0.291).
+  - >-
+    A two-phase oxygen balance from the OPERATOR'S OWN face fluxes: 1.4e-10, and
+    measured against three injected defects rather than left to imply generality.
+    It rises to 8.0 when eps is written where (1-eps) belongs, 2.0 under a
+    flipped transfer sign and 1.5 under nu = 1.
+  - >-
+    A 17-row deliberate-break table, rebuilt for this page's physics rather
+    than inherited, whose EIGHT metrics are recomputed under every break - the
+    page counts explicitly which reported metrics sit outside the table rather
+    than claiming every metric is covered. Seven rows perturb the transcribed
+    constants (both prefactors swapped, both alphas swapped, both betas
+    swapped, a decimal slip, two single-exponent misreads, and the branching
+    deleted); ten perturb the model or its unprinted inputs, including the
+    geometry defect found in adversarial review (the tank diameter written
+    where the height belongs). Sixteen move something.
+  - >-
+    ONE break row moves nothing and is reported as structural WITH ITS PROOF ON
+    THE PAGE: feeding the gas at the top instead of at the sparger leaves phi
+    bit-identical, because with a spatially uniform sink the column profile is
+    exactly mirrored (max |p - reverse(p)| = 1.8e-15, printed) and the column
+    MEAN is invariant under that reflection. phi is therefore blind to which end
+    the gas enters, and to nothing else that was tried. The same invariance is
+    confirmed in the transient and in the operator-free Lagrangian route.
+  - >-
+    A NULL BASELINE for every term, with the prefactor re-fitted at the window
+    centre in each case: dropping P/V costs 82.1 % (pure) and 185.3 % (ionic),
+    dropping the pure-water v_s term costs 73.6 %, and dropping the IONIC v_s
+    term costs only 26.4 % over the span of Figure 4's two drawn correlation
+    lines and 35.2 % over the wider span its data occupy (Hassan 0.0023 to
+    Reith 0.047 m/s) - both inside the review's own stated 20-40 % accuracy,
+    the second at the top of it, and both printed. Dropping the branching
+    altogether under-predicts by up to 83.3 %.
+  - >-
+    A pymrm note the balance turned up and the page records: pymrm's Neumann
+    outflow boundary EXTRAPOLATES to the face rather than taking the upwind
+    cell, so a hand-written outlet flux v_s*C_N misses the operator's by 8.9e-3
+    at n = 8 and 7.8e-5 at n = 800. A balance written that way fails to close by
+    ~1e-4 and looks like a physics error.
+
+adds: >
+  To the correlation, nothing: eqs. 8 and 9 are five lines of arithmetic and the
+  page says so rather than manufacturing an improvement. Four things are not in
+  the review.
+
+  (1) THE QUESTION THE REVIEW ASKS ABOUT ITSELF AND DOES NOT ANSWER. "Relatively
+  much store is set by the values of alpha and beta. To what extent these can be
+  varied without affecting the outcome significantly will be discussed in more
+  detail in the section on kLA" - it never is. With the prefactor re-fitted at
+  the window centre, the whole pure-water literature spread the review quotes
+  (alpha 0.35-0.5, beta 0.3-0.6) costs at most 16.2 % and 24.7 % across the
+  printed window, i.e. at or inside the accuracy the review claims. The spread
+  in the literature exponents is not a disagreement about physics; it is what a
+  20-40 % correlation looks like.
+
+  (2) WHICH CONSTANTS THE DATA EXERCISE, ANSWERED PER BRANCH. Three of the four
+  exponents are load-bearing (82.1 %, 185.3 %, 73.6 % if deleted). The ionic
+  beta = 0.2 is not: deleting it outright costs at most 26.4 % over the span of
+  Figure 4's two drawn correlation lines and 35.2 % over the wider span its
+  data occupy - both inside the review's own 20-40 % band. That is not
+  a criticism the review would resist - it reports Westerterp, Reith & Beek and
+  Zlokarnik as finding exactly that, and it says in the sentence introducing
+  eq. 9 that the 0.2 was IMPORTED FROM ZLOKARNIK rather than fitted on Figure 4.
+  What is new is the number. The page also separates two claims that are easy to
+  conflate: a mis-TRANSCRIBED 0.2 would be caught here (it moves eight metrics
+  including the Figure 5 topology); an unresolvable 0.2 is a statement about the
+  review's data, not about this page's checks.
+
+  (3) AN INTERNAL INCONSISTENCY IN THE REVIEW, LOCATED. The review expects ions
+  to raise kLA by 2-10x, and argues that mechanistically - area up to 10x,
+  holdup up to 2x, k_L lower by at most 1-4x - then corroborates it against
+  Zlokarnik (1975). None of that comes from eqs. 8 and 9, so the ratio of the
+  two fitted correlations is a genuine check. It spans 1.30x to 5.98x over the
+  printed box and lands inside 2-10x on 83.6 % of it: at high v_s and low P/V
+  the corner falls to 1.30x, BELOW the 2x floor the review argues for. The two
+  statements are printed four pages apart and neither is derived from the other.
+  Reported unresolved - the evidence that would settle it is in Figures 3 and 4,
+  which are deliberately not digitised.
+
+  (4) THE ASSUMPTION THE REVIEW WARNS ABOUT FOUR TIMES AND NEVER QUANTIFIES.
+  Eq. 2 assumes a uniform gas composition. Discretising the gas column gives the
+  CORRECT governing group, N_G = (1-eps) k H_t/(v_s H), which is NOT the review's
+  own criterion tau_G vs 1/kLA - it carries an extra factor (1-eps)/(eps H),
+  exactly 0.300 for the worked case, so the review's rule of thumb is
+  conservative by roughly threefold and by a factor that depends on a quantity
+  (H) it never prints. The bias itself, in the page's own full transient, is
+  19.1 % on eq. 8's branch (the quasi-steady closed form gives 16.0 % and is
+  the optimistic one, since it assumes tau_G << 1/kLA - exactly the condition
+  being violated, tau_G = 29.8 s against 1/(k*phi) = 29.6 s pure and 12.0 s
+  ionic) and 45.4 % on eq. 9's at the reported fit window (45.6 % quasi-steady;
+  34.1-56.5 % across fit windows, the ionic response being genuinely
+  non-exponential), at the centre of the printed P/V window in the largest
+  vessel eq. 8 claims - the same size as the entire accuracy the review claims
+  for its formulas, and branch-dependent because eq. 9 predicts 3.8x the
+  transfer coefficient there. Over the vessel volumes the review's own legends
+  print the quasi-steady effect runs 6.5 % at 2.5 L to 52.2 % at 5100 L, which
+  is its sentence "Problems become more serious at larger vessel diameter
+  especially at low superficial gas velocity values" with numbers on it; and
+  over the review's own printed aspect-ratio window the tall vessel is the
+  worst case, 59.3 % at T/H = 0.5 (H_t/T = 2) against 38.0 % at 1.5, which is
+  its H_t/T >> 1 warning with numbers on it. And the neglect the review
+  mentions but does not price - nitrogen still in the vessel when the air is
+  switched on - moves the recovered kLA from 0.546 to 0.284 of the true value
+  on the ionic branch (the inert-start 0.284 is robust to the fit window,
+  0.280-0.291; the 0.546 it is compared against is not, 0.435-0.659, and the
+  page prints both sweeps).
+
+agreement: >
+  NOTHING IS COMPARED AGAINST A MEASUREMENT, and no fit quality is computed for
+  eqs. 8 and 9, because the data they were fitted to live only in Figures 1-5
+  and those are deliberately not digitised. What is reproduced: Figure 5's
+  crossing topology (one crossing, pair c x d, at P/V = 826.5 W/m3) and the
+  review's printed electrode ceiling (0.1000 1/s recovered from 1/(5 x 2 s)).
+  Internal: eq. 3's two forms to 2.2e-16 (structural); the pymrm column against
+  its closed form to 5.0e-8 and 1.7e-7 after Richardson, at observed order 1.00;
+  the transient against an independent Lagrangian route to 1.6e-4 and 1.2e-4;
+  a two-phase oxygen balance at 1.4e-10 that goes to 8.0, 2.0 and 1.5 under
+  three injected defects. Nothing on the page is fitted.
+
+caveats: >
+  TIER 6, AND REPRODUCTION RATHER THAN VALIDATION. Eqs. 8 and 9 were FITTED by
+  van 't Riet to the literature data he compiles; any agreement with those data
+  would be a goodness of fit, not a test, and this page cannot compute even that.
+
+  FIGURES 1-5 ARE SCOPED OUT AND NOT DIGITISED. They hold the only measurements
+  in the review. Extracting them needs a maintainer overlay review and no
+  maintainer is available, so nothing on the page rests on one. The figure
+  LEGENDS are used - they are typeset tables that happen to sit inside plot
+  frames, transcribed exactly as the running text was - and the sidecar says so
+  explicitly. Nothing is traced, no axis is calibrated, no marker position is
+  extracted. The Figure 5 crossing check is deliberately qualitative for the same
+  reason: the count and the identity of the crossing pair are compared, never an
+  abscissa.
+
+  THREE INPUTS ARE NOT PRINTED IN THE REVIEW and the page marks all three. The
+  Henry constant H is the load-bearing one - N_G is inversely proportional to it,
+  no source for it is on disk, and the page reports the H-free group N_G*H beside
+  every dimensional number and sweeps H over 20-40 (phi_ionic 0.424 to 0.625).
+  The gas holdup eps cancels except through (1-eps) and is swept 0.05-0.20. The
+  aspect ratio H_t/T is taken at the centre of the review's OWN printed window
+  0.5 < T/H < 1.5 and both extremes are swept AT CONSTANT VESSEL VOLUME, with
+  the implied volume printed as an identity check: an earlier version of the
+  sweep computed the tank diameter where the height belongs, swept 0.325-8.775
+  m3 vessels instead of 2.6, and INVERTED the trend. Corrected (phi_ionic 0.407
+  at T/H = 0.5, 0.620 at 1.5), the sweep supports the review's H_t/T >> 1
+  warning instead of contradicting it, and the buggy formula is kept as a
+  break-table row because the original T/H row shared it and could not see it.
+
+  V DOES DOUBLE DUTY as the correlation's basis volume and the dispersion
+  volume: the Nomenclature defines V as the fluid volume, the page sets H_t
+  from V = pi T^2 H_t/4 at 2.6 m3 and uses that H_t as the dispersion height in
+  N_G. At eps = 0.1 the dispersion height is larger by (1-eps)^(-1/3), i.e.
+  +3.6 % on N_G - inside the eps-sweep envelope, stated on the page.
+
+  THE GAS-DEPLETION RESULT IS A SELF-CONSISTENCY STATEMENT, NOT A CORRECTION. If
+  the underlying measurements were biased low by phi, eq. 9 as fitted already
+  contains that bias and dividing by phi would double-count. What is established
+  is that eq. 9 taken at face value predicts conditions under which the method
+  that produced most of its data does not measure what it is assumed to measure.
+  The page says this in those words.
+
+  TWO PRINTED DEFECTS ARE RECORDED AND NEITHER IS REPAIRED. The sentence under
+  eq. 7 says "where N = stirrer diameter" against a Nomenclature that gives N =
+  stirrer speed and D = stirrer diameter. And FOUR OF THE FIVE figure legends
+  cite the drawn correlation by an equation number ONE LOWER than the text does
+  - Figures 1-3 print "CORRELATION EQUATION (7)" for eq. 8's line and Figure 4
+  prints "CORRELATION EQUATION (8)" twice for eq. 9's, on the figure eq. 9 is
+  derived from - while Figure 5's legend names the liquids and cites no
+  equation number at all. Eq. 7 has no numerical constants and cannot be drawn
+  at all. The offset is a column of the legend dataset, empty for Figure 5, so
+  it can be checked from the data.
+
+  EQ. 8'S VALIDITY STATEMENT PRINTS NO LOWER VOLUME BOUND ("volume measured up
+  to 2600 L"), so the CSV cell is empty rather than guessed. The running text
+  one sentence above eq. 8 DOES print a range for the compiled results - "the
+  volume may range between 2 and 2600 L" - so the paper is not silent; the
+  empty cell records that the validity statement itself gives none, and the
+  sidecar states both facts.
+
+  WHAT THE BREAK TABLE CANNOT DETECT is stated on the page: a transcription error
+  made consistently, a wrong physical model shared by both computational routes,
+  the unprinted inputs, and anything depending on the underlying measurements -
+  which is most of what one would want to know about a correlation.
+
+  A3.6 (Calderbank & Moo-Young) IS PUBLISHED and A3.8 (Onda) is staged in the
+  same queue. Calderbank 1958/1959 supplies three of the data sets in Figures
+  1-3 here; the page states that A3.6 SHOULD OWN any comparison between his k_L
+  correlation and van 't Riet's k_L*A, because A3.6 carries Calderbank's own
+  definitions and this page does not. No other page's dataset is loaded, so the
+  cross-page rule does not bite here.

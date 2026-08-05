@@ -1,0 +1,88 @@
+dataset_id: vant-riet-1979-figure-legends
+title: "The legend tables printed inside Figures 1-5 of van 't Riet (1979)"
+status: complete
+
+source:
+  authors:
+    - "van 't Riet, K."
+  year: 1979
+  container: "Industrial & Engineering Chemistry Process Design and Development 18(3) 357-364"
+  doi: 10.1021/i260071a001
+  access: >
+    Publisher PDF held outside the repository at ~/papers/pymrm-gallery/i260071a001.pdf,
+    downloaded through an institutional subscription (TU Eindhoven). No PDF and
+    no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: page-image transcription
+  tier: 2
+  resolution: >
+    NATIVE 300 ppi. Each legend was cropped separately and enlarged 2.4-3.4x for
+    reading: Figure 1 and Figure 2 from page 4 left column, Figure 3 from page 4
+    right column, Figure 4 from page 5 left column (two legends, one above the
+    plot and one inside it), Figure 5 from page 6 left column.
+  NOT_digitised: >
+    THIS FILE CONTAINS NO EXTRACTED CURVE OR MARKER DATA. Nothing was traced, no
+    axis was calibrated, no pixel position was converted to a coordinate. The
+    legends are typeset tables that happen to sit inside the plot frames, and
+    they were read exactly as the running text was. The scatter points and the
+    drawn correlation lines of Figures 1-5 are NOT extracted and are explicitly
+    out of scope for this page - see `conditions`.
+
+conditions: >
+  WHY THE FIGURES THEMSELVES ARE OUT OF SCOPE. Figures 1-5 hold the only
+  measurements in the review. Extracting them would need a maintainer overlay
+  review, and no maintainer is available, so the page does not digitise them and
+  claims nothing that would need them. That is a scope decision, stated on the
+  page, and it is the reason the page is a REPRODUCTION rather than a
+  validation.
+
+  WHAT THE LEGENDS ARE USED FOR. Three things, all of them uses of printed text:
+  (1) the v_s values at which the review itself chooses to exhibit its
+  correlations, which fix the evaluation points for both branches without any
+  arbitrary choice by this page; (2) the vessel volumes, which fix the vessel
+  size for the pymrm gas-depletion calculation from printed numbers rather than
+  a guess; (3) the `label_says_equation` column, which carries a printed defect.
+
+  THE PRINTED DEFECT. Four of the five legends cite the drawn correlation by an
+  equation number one lower than the text does. Figures 1-3 print "CORRELATION
+  EQUATION (7)" where the text says "The correlation is shown in Figures 1-3 as
+  broken lines" immediately after eq. 8. Figure 4 prints "CORRELATION EQUATION
+  (8)" for both of its lines (C1, C2), where the text derives eq. 9 from that
+  same figure. Figure 5's legend cites NO equation number at all - it names the
+  liquids instead - so the offset appears in exactly the four figures whose
+  legend cites one, and Figure 5's cells in `label_says_equation` are empty.
+  Eq. 7 has no numerical constants in it and cannot be drawn at all. The
+  offset is recorded here, not repaired, and the page prints it.
+
+  FIGURE 5'S PRINTED AXIS RANGE, recorded because the page's crossing-count
+  window takes its left edge from it. The abscissa carries the printed labels
+  `4.10^2`, `10^3`, `10^4` (P/V, W/m3) and the ordinate `2.10^-2`, `10^-1`,
+  `10^0` (k_L*A, 1/s), so the plotted window is 4e2-1e4 W/m3 by 2e-2-1e0 1/s.
+  These are transcriptions of typeset axis TEXT - no coordinate was measured -
+  and the page prints the sensitivity of its crossing count to that left edge
+  (the count is 1 for any left edge in (328.0, 826.5] W/m3, and also 1 at the
+  correlations' printed validity bound of 500 W/m3).
+
+  UNIT HEADERS, AS PRINTED. `VOLUME (m^3 . 10^-3)` - litres. `v_S (ms^-1 .
+  10^-2)` - so a printed 0.5 is 0.005 m/s. `SALT CONTENTS (mol.m^-3 . 10^3)` -
+  mol/L, Figure 4 only. The volume and v_s conversions are applied in this file;
+  the printed figures are recoverable by multiplying back.
+
+  MULTI-VALUED CELLS. Two rows carry semicolon-separated lists because the
+  legend does: Reith (1968) is printed as three vessel volumes `5,70,1360` on
+  one row, and three of the ionic entries carry two salt contents. They are kept
+  as printed rather than split or averaged.
+
+columns:
+  figure: "figure number, 1-5"
+  liquid: "pure_water (Figures 1-3 and rows a-c of Figure 5) or ionic (Figure 4 and rows d-f of Figure 5)"
+  entry: "the legend's own symbol name or letter; `C`, `C1`, `C2`, `a`-`f` are drawn correlation lines, not data"
+  author: "first author as the legend prints it"
+  year: "year as the legend prints it"
+  method: "the measuring method the legend names"
+  volume_L: "vessel volume in litres (legend prints m^3 x 10^-3); semicolon-separated where the legend gives several; EMPTY for a drawn correlation line"
+  vs_m_s: "superficial gas velocity in m/s (legend prints ms^-1 x 10^-2)"
+  salt_mol_L: "salt content in mol/L (legend prints mol.m^-3 x 10^3); Figure 4 only; semicolon-separated where the legend gives two"
+  label_says_equation: "the equation number the legend prints for a drawn correlation line - one LOWER than the text's, in every figure. EMPTY for data rows and for Figure 5, whose legend names the liquid instead"
