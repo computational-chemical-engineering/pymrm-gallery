@@ -1,0 +1,170 @@
+dataset_id: fuller-1966-table3-diffusion-data
+title: >
+  Table III of Fuller, Schettler & Giddings (1966) - 340 measured binary
+  gas-phase diffusion coefficients with the correlation's own printed error
+status: complete
+
+source:
+  authors:
+    - "Fuller, E. N."
+    - "Schettler, P. D."
+    - "Giddings, J. C."
+  year: 1966
+  container: "Industrial & Engineering Chemistry 58(5) 18-27"
+  doi: 10.1021/ie50677a007
+  access: "institutional subscription, TU Eindhoven (lawful access); PDF on disk as ie50677a007.pdf"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced or redistributed)"
+
+conditions: >
+  Journal pages 23-26 (PDF pages 6-9), "TABLE III. PERCENTAGE ERROR INTRODUCED
+  BY VARIOUS EQUATIONS USED TO PREDICT EXPERIMENTAL DIFFUSION COEFFICIENTS".
+  The measurements are NOT the authors' own: they were collected from 153
+  binary systems in the literature, each row citing its source by the paper's
+  own bibliography number (column REF., reproduced here as `ref_number`; the
+  bibliography itself is on journal pages 27-... and is not transcribed).
+  The authors state that only determinations from 1930 onwards were admitted,
+  "since, as pointed out by Scott (52), much of the early work requires
+  critical evaluation".
+
+  The paper's own footnotes to the table, verbatim:
+    a  Temperature (deg K)
+    b  OBS = Experimentally observed diffusion coefficient reduced to 1 atm.
+       pressure (cm.2/sec.)
+    c  FSG = Value obtained in this work
+    *  Indicates that, in the HBS and MOD-HBS calculations, force constants for
+       the starred components were estimated from critical properties.
+
+  The paper's own caveat on the data, which any user of this CSV must carry:
+  "accurate experimental diffusion measurements are difficult to make and ...
+  most observations are subject to a fair amount of experimental uncertainty;
+  this difficulty is greatest for high molecular weight compounds. The typical
+  amount of error is probably of the order of 5%, as can be seen from the fact
+  that observations reported in the literature for identical systems often
+  differ by this amount or more."
+
+  CIRCULARITY WARNING, and it is the reason this dataset exists on this page.
+  All 340 of these points were used to FIT the diffusion volumes of the FSG
+  correlation. The `err_fsg_pct` column is therefore a residual of a fit, not a
+  prediction error, and the paper says so: "Despite the large sample, this is
+  not a totally objective test since the parameters were obtained from these
+  particular data." For any correlation OTHER than FSG the same table is a
+  genuine out-of-sample test.
+
+acquisition:
+  method: table
+  figure: "Table III, journal pages 23-26 (PDF pages 6-9)"
+  tool: "poppler pdftotext -bbox for row/column geometry; poppler pdftoppm -r 300 for every numeric read"
+  procedure: >
+    NATIVE RESOLUTION FIRST. `pdfimages -list` reports the page images of this
+    PDF as JPEG RGB, 8 bpc, 300 x 300 ppi (pages 1-2) and CCITT-G4 bilevel at
+    300 ppi (pages 3-10). 300 dpi is therefore the ceiling and every render
+    used here is `pdftoppm -r 300`.
+
+    Rows were located by word bounding boxes (`pdftotext -bbox`) rather than by
+    the layout text, and assigned to columns by x-range, per page. The row set
+    was then checked structurally: 340 rows, matching the paper's own stated
+    "340 actual data points", and the per-category counts of Table II
+    (59 H2, 108 He, 71 N2, 23 O2, 58 Ar, 41 NH3/H2O) reproduce exactly.
+
+    THE TEXT LAYER WAS NOT TRUSTED FOR ANY DIGIT. Every row was then checked
+    against physics: eq. (4) recomputed from the transcribed temperature, the
+    two species and the printed Table I volumes must reproduce the printed FSG
+    error to within the table's own rounding. Three transcribed numbers per row
+    are constrained by one exact equation, so an OCR digit error larger than the
+    clean-row scatter (~0.04 pp) cannot pass. Sub-rounding slips in the error
+    column's last digit are BENEATH that net by construction: verification
+    found a 24th such alteration (row 59, -3.06 for the printed -3.08),
+    physics-consistent and invisible to every aggregate, corrected here.
+
+    This found 24 rows in which the text layer had silently altered a digit -
+    among them 298.2 -> 296.2, -8.17 -> -0.17, 287.9 -> 207.9, 288.5 -> 268.5,
+    0.0860 -> 0.0060, 1.2890 -> 1.2690. Each was re-read on a 300 dpi crop of
+    that row alone and corrected; the `image_corrected` column names the field
+    that was corrected. A further 14 rows chosen at random (seed 20260805) were
+    cropped and read the same way as an audit, and all 14 matched the parse
+    exactly.
+
+    Two rows survive the check as printed and cannot be reproduced by eq. (4):
+    He-H2O at 352.5 K (ref 50, printed FSG error -5.33, recomputed +0.21) and
+    CO2-ethylene oxide at 298.0 K (ref 62, printed 15.09, recomputed 14.27).
+    Both were re-read at 3x magnification on the page image and are as printed.
+    The first is independently flagged by a second route that uses no volumes
+    and no molar masses at all - within one system from one reference, eq. (4)
+    forces D_calc to scale exactly as T^1.75, and that identity holds for 141
+    of the 142 consecutive-temperature ratios in the table and fails only there.
+    Both rows are kept, flagged, and excluded from the reproduction statistic
+    where that is stated.
+
+    ONLY FOUR COLUMNS OF TABLE III ARE TRANSCRIBED: system, reference, temperature,
+    observed D, and the FSG error. The other eight method columns are NOT here,
+    and there is a reason to be careful with them: the two summary rows printed
+    at the foot of Table III (AVE. ERROR and STANDARD DEVIATION) are in TABLE
+    II's method order, not in the order of Table III's own column headings.
+    One of the two orderings is wrong and this extraction does not resolve which.
+
+    Nothing in this file is inferred, interpolated or reconstructed. Every value
+    is a number printed in Table III.
+
+columns:
+  row:
+    description: "sequential row number in Table III as printed, 1-340"
+    units: "-"
+  pdf_page:
+    description: "PDF page the row was read from (6-9 = journal pages 23-26)"
+    units: "-"
+  component_a:
+    description: >
+      first component, normalised to upper case with the paper's tracer and
+      starred markers stripped into their own columns. WATER = H2O,
+      FREON12 = CCl2F2.
+    units: "-"
+  component_b:
+    description: "second component, same normalisation"
+    units: "-"
+  ref_number:
+    description: >
+      the paper's own bibliography number for the source of the measurement
+      (Table III column REF.). Note this is the ONE transcribed field that the
+      physics check cannot verify.
+    units: "-"
+  temperature_K:
+    description: "temperature, Table III column TEMP."
+    units: "K"
+  D_obs_cm2_s:
+    description: >
+      experimentally observed binary diffusion coefficient reduced to 1 atm,
+      Table III column OBS. This is a MEASUREMENT, not a model output.
+    units: "cm^2/s"
+  err_fsg_pct:
+    description: >
+      the percentage error of the FSG correlation printed beside the
+      measurement, Table III column FSG, defined by the paper's eq. (5) as
+      100 (D_calcd - D_obsd)/D_obsd. IN-SAMPLE: this point was in the fitting
+      set.
+    units: "%"
+  tracer:
+    description: "1 where the paper marks the row (TR), i.e. a tracer measurement"
+    units: "-"
+  starred:
+    description: >
+      1 where the paper stars the system, meaning force constants for the
+      starred component were estimated from critical properties IN THE HBS AND
+      MOD-HBS COLUMNS ONLY. Irrelevant to the FSG column; kept for completeness.
+    units: "-"
+  image_corrected:
+    description: >
+      empty where the bounding-box parse of the text layer was already correct;
+      otherwise names the field(s) re-read on a 300 dpi crop of the page image
+      and corrected (T, Dobs, e_printed, ref)
+    units: "-"
+
+tier: 5
+notes: >
+  TIER 5: measurements, but collected by the authors from the literature rather
+  than made by them, and every one of them inside the fitting set of the
+  correlation whose error is printed beside it. A page reporting FSG's agreement
+  with this table is reporting a goodness of fit.
+
+# Two printed-distinct rows are byte-identical here: rows 184 and 185 differ in
+# the paper only by which component carries the (TR) trace-marker, a distinction
+# this CSV does not encode. Nothing on the page reads the marker.

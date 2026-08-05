@@ -1,0 +1,179 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.5
+slug: fuller-schettler-giddings
+title: "Fuller-Schettler-Giddings binary gas diffusivities"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 4
+datasets:
+  - fuller-1966-table1-diffusion-volumes.csv
+  - fuller-1966-table3-diffusion-data.csv
+
+validation:
+  - the printed FSG error column of Table III reproduced row by row from eq. (4)
+    and the Table I volumes - 338 of 340 rows to within 0.043 percentage points
+    (median 0.0038 pp), which is inside the table's own rounding. This is a check
+    on the TRANSCRIPTION and on the implementation of eq. (4); it is NOT a check
+    on the correlation, because the printed errors are the authors' own arithmetic
+    on the same equation. It is what caught 23 rows (a 24th, beneath its net, was found in verification) in which the PDF text layer
+    had silently altered a digit
+  - a second route to the same conclusion that shares no code with the first -
+    within one binary system from one literature reference, eq. (4) forces the
+    calculated D to scale exactly as T^b, an identity involving only the printed
+    temperature, the printed observed D and the printed error, and no volume, no
+    molar mass and no evaluation of eq. (4). Over 142 consecutive-temperature
+    ratios in 51 series the identity holds to a median 3.1e-5 and a worst 1.0e-4
+    - except on one row, which is the same He-H2O row the first route flags. The
+    same identity recovers b = 1.7492 from the printed table alone, against the
+    paper's stated 1.75
+  - twelve printed aggregates reproduced from the transcription without any of
+    them being fitted to - Table II's eight FSG category means (5.76/3.94/3.85/
+    2.28/3.29/5.74/4.39/5.04 against printed 5.8/3.9/3.8/2.3/3.3/5.7/4.4/5.0),
+    the AVE. ERROR of 4.3211 against a printed 4.32, the 7.35 % tail against a
+    printed 7.4, and the paper's stated count of 153 binary systems
+  - the STANDARD DEVIATION of 6.71 printed at the foot of Table III, whose
+    definition the paper never states, reproduced EXACTLY as the residual
+    standard deviation sqrt(sum e^2 / (N - p)) = 6.7101 with p = 28. The
+    degrees-of-freedom form is an inference; the parameter count it needs is not
+    - 28 is the 27 rows of Table I plus b, all printed
+  - TWO PRINTED ROWS THAT CANNOT BE REPRODUCED, reported rather than dropped -
+    He-H2O at 352.5 K (printed -5.33, recomputed +0.21) and CO2-ethylene oxide at
+    298.0 K (printed 15.09, recomputed 14.27). Both re-read at 3x magnification
+    on the 300 dpi page image and confirmed as printed; the first is flagged
+    independently by the T^b identity above
+  - THE HELD-OUT TEST, which is the page's own contribution and is NOT a
+    reproduction - leave-one-organic-compound-out over all 42 organic vapours,
+    refitting all 27 diffusion volumes on the remaining data each time and
+    predicting the deleted compound from the atomic increments the others fix.
+    5.04 % in sample against 6.61 % held out on the same 153 points, i.e. +31 %.
+    The 187 simple-molecule points admit NO held-out test of any kind, because
+    each simple molecule carries its own fitted parameter, and the page says so
+  - the paper's printed claim that observed temperature exponents "usually lie in
+    the range 1.6 to 1.8" tested against its own data - 20 of the 26 series with
+    four or more temperatures fall in the band, median 1.704, mean 1.726 against
+    the fitted 1.749, full spread 1.58 to 1.95
+  - a free refit of all 27 volumes recovers the twenty printed simple-molecule
+    volumes to within 1.8 % (median 0.5 %), which is the strongest single
+    confirmation that the data, the model and the objective on this page are the
+    paper's
+  - the pymrm transport solve against an adaptive quadrature of 1/Gamma that never
+    forms a grid and never calls pymrm - 3.6e-7 relative at n = 400, grid
+    convergence order 2.002, with the quadrature's own reported error 1.1e-14,
+    two orders below the finest grid
+  - a break table of 14 injected defects, each moving the metric it targets -
+    Table I's C 16.5 -> 16.0 moves the reproduction from 0.043 to 1.65 pp, the
+    widely-circulated alternative increment set (C 15.9, H 2.31, O 6.11, N 4.54,
+    which is NOT in any document on disk and is used only as a defect) to 1.99 pp,
+    swapping Sigma v(N2) and Sigma v(O2) to
+    3.48 pp, b 1.75 -> 1.749 to 0.82 pp, M(D2) 4.00 -> 4.028 moves the fourteen D2
+    rows from 0.005 to 0.335 pp, and the raw text-layer parse before the image
+    corrections gives 1520 pp. On the transport side n = 5 moves the flux
+    deviation by 6.7e3, nu = 1 by 2.8e6 and a wrong outlet boundary condition by
+    2.8e6. TWO ROWS ARE LABELLED STRUCTURAL AND DO NOT MOVE, namely a wrong exponent
+    applied to BOTH routes (the check reads the same Gamma twice, so it is blind
+    to a wrong b, a wrong D and a wrong molar mass), and the cell-to-cell flux
+    spread, which is conservative by construction at ~1e-20
+
+adds: >
+  The paper's own comparison is in-sample by construction and the authors say so.
+  This page supplies what is missing.
+  (1) A GENUINELY HELD-OUT NUMBER. The additive-increment half of the method can
+  be cross-validated because an organic vapour deleted from the fit is still
+  predictable from the increments the other organics fix. Leave-one-compound-out
+  over 42 compounds gives 6.61 % against 5.04 % in sample on the same points -
+  so for an organic vapour that was not in the 1966 set, the honest expectation
+  is nearer 6.6 % than the quoted 4.3 %. The degradation is concentrated where a
+  compound is the sole carrier of a structural feature: thiophene 3.4 -> 13.7 %,
+  methane 5.0 -> 11.8 %, benzene 5.8 -> 11.4 %.
+  (2) THE LIMIT OF THAT TEST, stated rather than glossed. The twenty simple
+  molecules each have their own fitted Sigma v, so the 187 points involving them
+  admit no held-out test whatever and the 6.6 % must not be transferred to them.
+  (3) THE OBJECTIVE FUNCTION DOES NOT MATCH THE PUBLISHED TABLE. phi' computed
+  from Table III's own error column is 1.4048, from eq. (4) with the printed
+  volumes 1.3996, and a free refit reaches 1.3701 - all below the paper's stated
+  constrained minimum of 1.4762, which is impossible if that minimum belongs to
+  the published parameters, since eq. (4) is a special case of eq. (2). Reported,
+  not resolved.
+  (4) THE MEANING OF THE +-0.013 ON b. It is the precision of a single global
+  exponent, not the uncertainty of any one gas pair: the per-system exponents
+  measured from the paper's own multi-temperature series scatter over 0.37, a
+  factor of 14 wider.
+  (5) WHAT THE EXPONENT COSTS IN A TRANSPORT CALCULATION, which needs pymrm.
+  For benzene through air across 300-600 K the flux changes by -5.9 % to +7.3 %
+  when b is moved across the measured range if D is anchored at 300 K, and by
+  -0.2 % to +0.1 % if it is anchored mid-range. A scale error in D, by contrast,
+  is structural - the problem is linear in Gamma, so 4.3 % in D is exactly 4.3 %
+  in the flux and nothing is learned by computing it.
+  (6) TWO PRINTED DEFECTS located: two irreproducible FSG entries, and the fact
+  that the summary rows at the foot of Table III are in Table II's method order
+  rather than Table III's own column order.
+
+agreement: >
+  Against the paper's printed tables: 338 of 340 FSG errors to within 0.043
+  percentage points (median 0.0038); Table II's eight FSG category means all to
+  the printed precision; AVE. ERROR 4.3211 against 4.32; the >10 % tail 7.35
+  against 7.4; the residual standard deviation 6.7101 against 6.71; the system
+  count 153 against 153; the temperature exponent recovered from the printed
+  table alone as 1.7492 against 1.75. Two printed rows are irreproducible and are
+  reported as such. Internal: the T^b identity to a median 3.1e-5 over 142 ratios
+  in 51 series; a free refit recovering the twenty printed simple-molecule
+  volumes to within 1.8 %; the pymrm flux against an independent quadrature to
+  3.6e-7 at grid order 2.002. Out of sample, and this is the page's own number
+  rather than the paper's: 6.61 % held out against 5.04 % in sample over 42
+  leave-one-compound-out refits.
+
+caveats: >
+  THE 4.3 % IS A GOODNESS OF FIT, NOT A VALIDATION, and the page says so in every
+  section. The 27 diffusion volumes were obtained by nonlinear least squares on
+  the same 340 measurements the 4.3 % is reported against; the authors' own
+  sentence is "Despite the large sample, this is not a totally objective test
+  since the parameters were obtained from these particular data." Everything this
+  page reproduces from Tables I, II and III is therefore a check on the
+  TRANSCRIPTION and on the implementation of eq. (4), not evidence that the
+  correlation predicts anything. The one genuinely out-of-sample number on the
+  page is the 6.61 % leave-one-compound-out figure, it applies only to organic
+  vapours, and it is the page's own computation rather than the paper's.
+  THE 1966 ERRATUM, doi:10.1021/ie50680a601, HAS NOT BEEN CONSULTED. It is not on
+  disk; the article's ten pages contain no correction notice and the strings
+  "errata"/"erratum" do not occur in them. An erratum to this paper would most
+  plausibly correct the atomic diffusion volumes, which are the entire content of
+  the correlation. The 1966 table is used exactly as printed and no "corrected"
+  table from memory has been applied - the widely-reproduced later increments
+  (C 15.9, H 2.31, O 6.11, N 4.54) appear on the page only as an injected defect,
+  where they are shown to destroy the reproduction.
+  TWO CHOICES ARE INFERENCES FROM THE PRINTED ERROR COLUMN, not readings: that
+  the -20.2 ring term is applied to aromatic rings only despite its printed
+  caption reading "Aromatic or Heterocyclic rings", and that M(D2) = 4.00 rather
+  than 4.028. The 22 rows they were inferred from are excluded from the count of
+  independent tests, leaving 318 free tests of which one fails (the CO2-ethylene oxide row is among the excluded).
+  ONLY THE FSG COLUMN OF TABLE III IS TRANSCRIBED. The other eight method columns
+  are not in the dataset, and there is a printed inconsistency in the table that
+  anyone using them must resolve first: the AVE. ERROR and STANDARD DEVIATION
+  rows at its foot are in Table II's method order, not in the order of Table
+  III's own column headings. The page does not resolve which is wrong because it
+  does not depend on it.
+  A4.6 (Chapman-Enskog, from Chapman & Cowling) is being built separately and
+  prints ~45 measured D12 pairs in its Table 22. The first-principles result set
+  against this empirical one on one measured-D12 axis is the natural comparison
+  and A4.6 SHOULD OWN IT. It is not attempted here and no number on this page
+  comes from Chapman & Cowling.
+  The pymrm section is deliberately modest: eq. (4) is four arithmetic operations
+  and pymrm adds nothing to it. What pymrm supplies is the transport solve that
+  turns an error in D into an error in an answer, and its validation against the
+  quadrature IS BLIND to a wrong exponent, a wrong diffusivity and a wrong molar
+  mass, because both routes read the same Gamma(T). That blindness is measured in
+  the break table, not asserted. The cell-to-cell flux spread is structural at
+  ~1e-20 and sits below check_agreement.py's ABS_FLOOR = 1e-12, so CI does not
+  compare it; it is the only metric on the page in that position.
+  Molar masses are modern IUPAC values; the paper does not print the ones it used.

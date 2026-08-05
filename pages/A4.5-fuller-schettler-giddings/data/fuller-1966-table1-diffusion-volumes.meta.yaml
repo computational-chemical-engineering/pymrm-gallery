@@ -1,0 +1,106 @@
+dataset_id: fuller-1966-table1-diffusion-volumes
+title: >
+  Table I of Fuller, Schettler & Giddings (1966) - the special atomic and
+  molecular diffusion volumes, as printed in 1966
+status: complete
+
+source:
+  authors:
+    - "Fuller, E. N."
+    - "Schettler, P. D."
+    - "Giddings, J. C."
+  year: 1966
+  container: "Industrial & Engineering Chemistry 58(5) 18-27"
+  doi: 10.1021/ie50677a007
+  access: "institutional subscription, TU Eindhoven (lawful access); PDF on disk as ie50677a007.pdf"
+  licence: "all rights reserved (facts extracted; no page image reproduced or redistributed)"
+
+conditions: >
+  Journal page 21 (PDF page 4), "TABLE I. SPECIAL ATOMIC DIFFUSION VOLUMES",
+  in two parts: "Atomic and Structural Diffusion Volume Increments" (upper) and
+  "Diffusion Volumes of Simple Molecules" (lower). The paper's own footnotes:
+    a  b = 1.75.
+    b  ( ) indicates that listed value is based on only a few data points.
+  The parentheses are recorded here as `few_points_flag`, not as part of the
+  entry name.
+
+  THESE ARE FITTED PARAMETERS, NOT MEASURED VOLUMES. They are the outcome of a
+  nonlinear least-squares fit (Marquardt's program, IBM 7040) to the 340
+  measurements of Table III. The arbitrary constant C = 1.00e-3 in eq. (4) was
+  chosen "so that the atomic diffusion volumes would roughly correspond to Le
+  Bas volumes"; the paper adds they come out 10-15% smaller.
+
+  The paper is explicit that no increments were determined for -F, -Br and -I
+  "because data for compounds containing these constituents do not appear to be
+  available", and that the upper part is for organic vapours while the lower
+  part supplies a single parameter per simple gas because "typical organic
+  substances tend to obey additivity relations much better".
+
+  ERRATUM NOT CONSULTED. A published erratum to this paper exists -
+  10.1021/ie50680a601, "Errata: A New Method for Predicting Gas Diffusivities",
+  Ind. Eng. Chem. 58 (1966) - and is NOT on disk. The ten pages of the article
+  contain no correction notice and the strings "errata"/"erratum" do not occur
+  in them. An erratum to this paper would most plausibly correct exactly these
+  numbers. They are recorded here as the 1966 article prints them and nothing
+  has been "corrected" from memory.
+
+  NOT THE HANDBOOK TABLE. The widely-reproduced later revision of these
+  increments (C 15.9, H 2.31, O 6.11, N 4.54) is a different set of numbers and
+  is NOT what this paper prints. Substituting it into the reproduction of
+  Table III destroys the agreement; the page's break table measures by how much.
+
+acquisition:
+  method: table
+  figure: "Table I, journal page 21 (PDF page 4)"
+  tool: "poppler pdftoppm -r 300, cropped to the table and read visually"
+  procedure: >
+    `pdfimages -list` gives 300 x 300 ppi native for this page, so the render is
+    `pdftoppm -r 300` and NOT 600, which would interpolate. The full page was
+    rendered, then the table region cropped at native resolution and every one of
+    the 27 values read off the crop. The text layer of this scan happens to carry
+    the table with its decimal points intact, which was used only as a
+    cross-check after the visual read, never as the source.
+
+    Independent confirmation that the transcription is right: eq. (4) built from
+    these 27 numbers reproduces the printed FSG error column of Table III for
+    338 of its 340 rows to within 0.05 percentage points, and reproduces all
+    eight of Table II's printed category averages, its overall 4.32%, its 7.4%
+    tail and the 6.71 residual standard deviation printed at the foot of
+    Table III. A single mis-read digit anywhere in this file breaks that.
+
+columns:
+  entry:
+    description: >
+      atom symbol, structural feature, or simple-molecule formula. `Air` and
+      `CCl2F2` are as the paper writes them.
+    units: "-"
+  diffusion_volume:
+    description: >
+      the fitted parameter Sigma v (for a simple molecule) or v_i (for an atomic
+      or structural increment) entering eq. (4). Dimensionally a volume only by
+      the choice of C; the paper calls them "diffusion volumes" in scare quotes.
+    units: "cm^3/mol (nominal; see notes)"
+  kind:
+    description: >
+      one of `atomic increment` (summed over the formula of an organic vapour),
+      `structural increment` (the aromatic/heterocyclic ring term, subtracted),
+      or `simple molecule` (used directly, never summed)
+    units: "-"
+  few_points_flag:
+    description: >
+      1 where the printed table wraps the entry in parentheses, which its own
+      footnote b defines as "listed value is based on only a few data points"
+    units: "-"
+
+tier: 6
+notes: >
+  TIER 6: fitted constants printed by the authors, not measurements.
+
+  One thing the paper does NOT state and the page had to infer from the printed
+  error column of Table III: the ring term's caption reads "Aromatic or
+  Heterocyclic rings", but applying it to the non-aromatic heterocycles in the
+  data (piperidine, tetrahydrothiophene, ethylene oxide) puts those rows 9-11
+  percentage points away from their printed errors, while withholding it
+  reproduces them. As applied by the authors the term covers AROMATIC rings
+  only. That is an inference, it is labelled as one on the page, and the 8 rows
+  it was inferred from are excluded from the count of independent tests.

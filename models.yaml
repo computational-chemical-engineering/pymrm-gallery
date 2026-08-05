@@ -15,6 +15,77 @@ schema_version: 1
 models:
 
   # ---------------------------------------------------------------- section A
+  - id: A4.5
+    slug: fuller-schettler-giddings
+    title: Fuller-Schettler-Giddings binary gas diffusivities
+    description: >
+      The most-used empirical estimate of binary gas diffusivity, rebuilt from its
+      own printed tables. Its famous 4.3 % is a GOODNESS OF FIT: the 27 atomic and
+      molecular diffusion volumes were fitted by least squares to the same 340
+      measurements the 4.3 % is reported against, and the authors say so. The paper
+      prints no held-out data, but its additive-increment scheme can be
+      cross-validated - leave one organic compound out, refit, predict it - and that
+      gives 6.61 % against 5.04 % in sample on the same points. The twenty simple
+      molecules admit no held-out test at all, because each carries its own fitted
+      parameter, and the page says so. 338 of the 340 printed FSG errors reproduce
+      to 0.043 percentage points; two do not, and twelve printed aggregates fall out
+      of the transcription, including the undocumented 6.71 "standard deviation",
+      which is the residual standard deviation with 28 fitted parameters.
+    section: A
+    status: published
+    page: pages/A4.5-fuller-schettler-giddings/
+    tier: T0
+    priority: P1
+    structures:
+      - S3
+    phases:
+      - gas
+    predicts:
+      - binary gas-phase diffusion coefficient
+      - diffusion volume of a molecule from atomic increments
+      - temperature dependence of D_AB
+      - out-of-sample error of an additive-increment correlation
+      - diffusive flux across a temperature gradient
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_coefficient_matrix
+    reference:
+      authors:
+        - Fuller, E. N.
+        - Schettler, P. D.
+        - Giddings, J. C.
+      year: 1966
+      container: "Industrial & Engineering Chemistry 58(5) 18-27"
+      doi: 10.1021/ie50677a007
+      note: >
+        The origin paper itself, on disk and read in full at its native 300 ppi;
+        there is no reprint route and none is needed. Identity verified from the
+        printed title block, the ACS download stamp and the PDF's own DOI metadata.
+        Equations 1-5 and all 27 diffusion volumes were read off cropped page
+        images, not off the text layer, which silently altered a digit in 24 of the
+        340 data rows.
+    erratum_not_consulted: >
+        doi:10.1021/ie50680a601, "Errata: A New Method for Predicting Gas
+        Diffusivities", Ind. Eng. Chem. 58 (1966). NOT on disk and NOT consulted.
+        The article's ten pages contain no correction notice and the strings
+        "errata"/"erratum" do not occur in them. An erratum to this paper would most
+        plausibly correct the atomic diffusion volumes, which are the whole content
+        of the correlation. The 1966 table is used exactly as printed; the
+        widely-reproduced later increments (C 15.9, H 2.31, O 6.11, N 4.54) appear
+        on the page only as an injected defect. Anyone with access should check the
+        volumes against the erratum before relying on the transcription.
+    data:
+      tier: 5
+      method: table
+      status: complete
+    related:
+      - A4.6
+      - A4.2
+      - A4.3
+      - A4.4
+      - A4.9
+
   - id: A4.9
     slug: duncan-toor
     title: "Duncan–Toor ternary gas diffusion"
