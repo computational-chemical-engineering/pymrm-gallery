@@ -1,0 +1,53 @@
+dataset_id: froment-bischoff-1961-printed-claims
+title: "Quantitative prose claims of Froment & Bischoff (1961) - the page's reproduction targets"
+status: complete
+
+source:
+  authors:
+    - "Froment, G. F."
+    - "Bischoff, K. B."
+  year: 1961
+  title: "Non-steady state behaviour of fixed bed catalytic reactors due to catalyst fouling"
+  container: "Chemical Engineering Science 16(3-4) 189-201"
+  doi: 10.1016/0009-2509(61)80030-4
+  access: "publisher scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Sections 5(a), 6 and 7(a), journal pp. 193-198 (PDF pages 5, 8-10)"
+  tool: "poppler pdftoppm at 300 dpi (native CCITT-G4 resolution), cropped per numeral"
+  procedure: >
+    Each claim read from a cropped native-resolution render of the sentence that
+    states it. The Voorhies exponent range needed a per-digit crop: at page scale
+    the OCR reads "0.88 to 058"; the enlarged crop reads 0.38 to 0.53
+    unambiguously. The four n values quoted for refs [2]-[5] are Froment &
+    Bischoff's quotations of those papers, transcribed from THIS paper only -
+    the original papers were not consulted (B2.1, unclaimed, owns the Voorhies
+    side of that story).
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-06
+  estimated_error: "none beyond the paper's own printing"
+
+validation:
+  internal_consistency: >
+    None available - these are prose statements, not tables. Each is instead
+    tested by the page: the slope claims against exact c-bar(eta) curves, the
+    gamma claim against the exact full-gamma solution, the series and asymptotic
+    windows against the exact reduction of the consecutive system. Three of them
+    fail quantitatively (the two slope-onset values and the claim that the
+    large-eta approximation improves with eta); the page reports the measured
+    values next to the printed ones.
+  what_it_tests: >
+    FIT/TEST LABEL - nothing here is a measurement and nothing on the page is
+    fitted to it. The five exponents (rows 1-5) are experimental values the
+    paper QUOTES from other papers; they enter the page only in the comparison
+    the paper itself makes (Sec. 7a). The remaining rows are the authors' own
+    numerical/graphical claims about their model, which the page recomputes
+    exactly.
+
+columns:
+  - {name: claim_id, unit: "-", description: "stable key used by the page code"}
+  - {name: printed_value, unit: "-", description: "the number as printed (dimensionless throughout)"}
+  - {name: statement, unit: "-", description: "paraphrase of the printed sentence carrying the value"}
+  - {name: where, unit: "-", description: "section and journal page"}

@@ -1,0 +1,70 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B2.2
+slug: froment-bischoff-coking
+title: "Froment-Bischoff coke deactivation: the coke profile names the fouling mechanism"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S4, S5]
+phases: [gas, gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 90
+datasets:
+  - froment-bischoff-1961-appendix2-conditions.csv
+  - froment-bischoff-1961-printed-claims.csv
+
+fit_or_test: >
+  NOTHING IS FITTED, and nothing can be validated. The paper contains no
+  measurements - its figures are the authors' own computed curves - so every
+  agreement on this page is a REPRODUCTION of the paper's mathematics or an
+  internal-consistency check between its printed statements, never a
+  validation, and the page says so where each number appears. The model has no
+  free parameter: every computation is fixed by the printed dimensionless
+  groups (aL = 2, alpha*b*eta <= 5, K*b*eta <= 10, gamma = 1e-3), which come
+  from Appendix 2's printed conditions and the authors' own order-of-magnitude
+  estimates of k2_0, alpha and K. Those three estimates are the AUTHORS' fit
+  to their unpublished ethylbenzene data; this page uses them only to set
+  ranges, exactly as the paper does, and fits nothing to them. The five
+  Voorhies exponents quoted in the comparison are experimental values the
+  paper quotes from four other papers (not consulted; transcribed from this
+  paper only) and enter only the comparison the paper itself makes.
+
+validation:
+  # analytic references cross-validated against each other before judging pymrm
+  - "the printed closed forms (32)-(33) and (36)-(37) verified symbolically against the PDE systems (structural: tests the transcription), and (32)-(33) additionally met by the paper's own eq.-29 ODE route - a second, algebra-free computation of the same baseline - to 3.0e-13"
+  - "the consecutive case given an exact scalar-ODE reduction derived on the page (not in the paper), whose Picard series reproduces the printed series (44) coefficient-by-coefficient through eta^2"
+  # the pymrm bed against the three references
+  - "one pymrm finite-volume bed meets all three references at joint observed order 2.00/2.00/1.81 (PE/PH/CE), max error 1.6e-6/6.6e-7/1.7e-5 in y at (n,m)=(400,480), through the passage of the activity ridge; both refinement axes swept independently (orders 1.93 and 1.99)"
+  # the paper's four approximations, measured
+  - "gamma=0 closure: 0.29 % at the paper's own gamma = 1e-3, 5.9 % at its printed 0.02 bound (printed claim: 'within 5 per cent'); pymrm at full gamma vs the eq.-29 route agree to 1.1e-6, so the deviation belongs to the approximation, not a solver"
+  - "the four-term series (44): 0.9 % of exact along the bed at ab_eta = 1 but 22 % at the claimed (az, ab_eta) = (2,2) corner - the printed window is optimistic at its far corner"
+  - "the large-eta patch (46)+(49): the printed claim that it 'improves as eta increases' is FALSE in carbon - the deficit grows like ln(eta) to 1.16 in alpha*c (29 % relative) by ab_eta = 10 - and the paper states Fig. 3(b) was computed from these equations, so the printed figure inherits the bias (the recomputed exact Fig. 3(b) tops at 4.0 where the paper's drawing tops near 2.9)"
+  - "eta ~= t: costs 2.2e-5 in y for the paper's own reactor (eps_s = 4.5e-5, computed from printed conditions); the full-transient pymrm solve with the eps_s term retained lands on the exact characteristic solution to 2.7e-4"
+  # printed arithmetic and printed claims
+  - "Appendix 2's printed intermediates recomputed: prefactor 0.1993 vs printed 0.2, aL = 1.993 vs 2.0, alpha*b*t = 5.00, K*b*t = 10.00"
+  - "Fig. 4's slope claims: the 1.0 low-T limits and 'PE always ~1.0' reproduce (PE never drops below 1); the two printed onset values do NOT - CE is 0.710 at ab_eta=4 (0.5 first reached near 13, no plateau), PH is 0.726 at 10 (0.5 is its true asymptote, reached only far beyond the window)"
+  - "eq. (49) misprints alpha*z for az: adjudicated numerically (az reading 12 % from exact - the patch's own error - alpha*z reading 99 %) and provable from eq. (48) one line above"
+  - "the 11-row break table moves every non-structural metric; the notebook's coverage note is the precise accounting (the cbar/slope estimator family is confirmed by an independent estimator rather than a break row); structural checks that cannot fail are named as such and sit below check_agreement.py's ABS_FLOOR, i.e. outside CI while both sides stay under it"
+
+figures_digitised: none - all six solution figures are recomputed from the
+  printed equations; the paper contains no data figure
+
+reference:
+  authors: ["Froment, G. F.", "Bischoff, K. B."]
+  year: 1961
+  title: "Non-steady state behaviour of fixed bed catalytic reactors due to catalyst fouling"
+  container: "Chemical Engineering Science 16(3-4) 189-201"
+  doi: 10.1016/0009-2509(61)80030-4
+
+part_ii_not_read: >
+  The catalogue's citation also names Part II (Kinetic data in reactors with
+  catalyst decay, CES 17 (1962) 105). NO page image of Part II exists on disk -
+  only Elsevier api-text, whose OCR class drops decimal points - so Part II was
+  not read and contributes nothing to this page. Everything here is Part I.

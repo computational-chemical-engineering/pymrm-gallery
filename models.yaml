@@ -2260,6 +2260,133 @@ models:
       demonstration of S13.
     related: [B1.1, B1.2]
 
+  - id: B2.2
+    slug: froment-bischoff-coking
+    title: "Froment-Bischoff coke deactivation: the coke profile names the fouling mechanism"
+    description: >
+      Froment & Bischoff (1961) replaced time-on-stream deactivation bookkeeping
+      with activity as a function of the carbon actually deposited, coupled the
+      coke's formation kinetics to the reactor continuity equation, and showed the
+      deposit forms a profile whose direction names the mechanism - descending for
+      coke from the reactant, ascending for coke from the product - with the locus
+      of maximum rate travelling down the bed as the catalyst ages. The page
+      re-derives all three printed solutions independently (including an exact
+      scalar-ODE reduction of the consecutive case the paper does not contain),
+      meets them with one pymrm finite-volume bed at second order in both
+      refinement axes (worst 1.7e-5 in y, 5.0e-5 in C), and measures the paper's four hand-era
+      approximations one by one: gamma = 0 costs 0.29 % at the paper's own gamma
+      and 5.9 % at its printed 0.02 bound; the four-term series is 22 % off at its
+      claimed corner; the large-eta patch under-counts carbon by an amount that
+      GROWS with time (1.16 in alpha*c by ab_eta = 10, so the printed Fig. 3(b) is
+      biased and the claim that the approximation improves with eta is false in
+      c); and eta ~= t costs 2.2e-5 for the paper's own reactor. A one-character
+      typo in eq. (49) (alpha*z for az, a factor ~200 here) is adjudicated from
+      the line above it. The Fig.-4 slope claims are recomputed exactly: the 1.0
+      limits reproduce, the printed 0.5-onset values do not (CE crosses 0.5 near
+      ab_eta = 13, not 4, with no plateau; 0.5 is PH's asymptote but unreached at
+      10), and the Voorhies comparison sharpens - every quoted experimental
+      exponent is reachable by the consecutive mechanism and none by
+      parallel-exponential. The profile diagnostic is then given an amplitude: the
+      ascending signature's half-bed contrast decays only logarithmically (below a
+      20 % assay floor by t' ~ 20, though the inlet anchor is exact at every t), the descending
+      one is already invisible to 10 % assays at the paper's own operating point,
+      and equal-weight mixed mechanisms cancel the profile identically while
+      producing a perfectly smooth Voorhies curve.
+    section: B
+    status: published
+    page: pages/B2.2-froment-bischoff-coking/
+    tier: T0
+    priority: P1
+    structures:
+      - S4
+      - S5
+    phases:
+      - gas
+      - gas-solid
+    predicts:
+      - reactant mole fraction y(z, eta) as the bed ages, for parallel and consecutive coking with exponential or hyperbolic activity
+      - the coke profile c(z, eta) - descending (parallel) vs ascending (consecutive) - and its distance average c_zav(eta)
+      - the instantaneous Voorhies exponent d ln c_zav / d ln eta for each mechanism/activity pair
+      - the travelling locus of maximum rate x* = ln(e^T - 1) and the rate on the ridge
+      - the detectability of the profile diagnostic as a function of assay precision, bed length group aL and time group ab_eta
+      - the cost of each of the paper's four approximations (gamma = 0, series window, large-eta patch, eta ~= t)
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - interp_cntr_to_stagg_tvd
+      - vanleer
+      - compute_boundary_values
+    reference:
+      authors:
+        - Froment, G. F.
+        - Bischoff, K. B.
+      year: 1961
+      title: "Non-steady state behaviour of fixed bed catalytic reactors due to catalyst fouling"
+      container: "Chemical Engineering Science 16(3-4) 189-201"
+      doi: 10.1016/0009-2509(61)80030-4
+      note: >
+        PART I ONLY. The catalogue row also cites Part II (Kinetic data in
+        reactors with catalyst decay, CES 17 (1962) 105); no page image of Part II
+        exists on disk - only Elsevier api-text of the decimal-dropping class - so
+        it was not read and contributes nothing to the page. Identity of Part I
+        verified from the scan's own running head, by-line, abstract and
+        received-date (the OCR renders the year as 1901).
+    data:
+      tier: 6
+      method: "transcribed from cropped 300 dpi (native) renders of Appendix 2 and Secs. 5-7; no figure digitised - the paper contains no data figure, and all six solution figures are recomputed from the printed equations"
+      status: complete
+    related:
+      - B2.1
+      - B2.3
+      - B2.4
+      - B1.3
+      - C2.10
+      - D3.4
+      - J1.5
+      - A2.1
+    note: >
+      FIT/TEST: nothing is fitted and nothing can be validated - the paper
+      contains no measurements, so every agreement is reproduction or internal
+      consistency, and the page, meta.yaml, README and both data sidecars all say
+      so. The model is parameter-free given the printed dimensionless groups; the
+      authors' own order-of-magnitude constants fix only the computed ranges.
+
+      HEADLINE SECOND ROUTE: the closed-form baselines are themselves computed a
+      second, independent way (the paper's eq.-29 ODE route, 3.0e-13; the CE
+      reduction cross-checked symbolically against the printed series (44)), so a
+      wrong baseline cannot hide behind a matching solver.
+
+      THREE QUANTIFIED FINDINGS against printed claims, all stated on the page:
+      (1) eq. (49) prints alpha*z where eq. (48) requires az - a one-character
+      typo worth a factor alpha/a; (2) the large-eta patch does NOT improve as eta
+      increases in carbon - its deficit grows like ln(eta), and the printed
+      Fig. 3(b), which the text says was computed from it, tops near 2.9 where the
+      exact solution tops at 4.0; (3) the two printed slope-onset readings (CE 0.5
+      at ~4, PH 0.5 at ~10) are graphical-chord values that exact computation puts
+      at 0.710 and 0.726, with the CE slope crossing 0.5 only near 13 and
+      possessing no plateau.
+
+      PYMRM TRAP RECORDED (measured in the fresh-bed table and break table):
+      pymrm's zero-gradient outflow bc reconstructs the outlet face with zero
+      slope; where the physical outlet gradient is nonzero this leaves the outlet
+      cell first-order even under TVD deferred correction. IN THAT CONFIGURATION
+      every outlet reading - including compute_boundary_values, which faithfully
+      evaluates the bc it is given - inherits an O(h) bias (5.1e-4 at n=200 vs
+      2.3e-6 for a linear upwind face extrapolation), and correcting the single
+      outflow face flux restores clean second order. The scope matters: with
+      pymrm's outflow left AS-IS, compute_boundary_values is second order
+      (1.56e-6) and the upwind extrapolation is the O(h) reading (7.05e-4, 450x
+      worse) - so this refines the A3.7 handoff lesson for corrected-flux beds
+      and does NOT overturn it for uncorrected ones.
+
+      STRUCTURAL CHECKS NAMED: the sympy PDE residuals, the series-coefficient
+      matches, the w=0.5 flat-profile zero and the (A.2a)/(A.2b) products are
+      identities that cannot fail once transcription is right; all sit at or below
+      ABS_FLOOR and are labelled as documentation, not protection. The
+      perturbation-blind spot is also named: a systematic mis-reading of the
+      dimensionless groups would move all routes together and is guarded only by
+      the Appendix-2 printed arithmetic (which pins a and b but not alpha and K).
+
   - id: B3.2
     slug: grain-model
     title: "Szekely–Evans grain model for gas–solid reactions with a moving boundary"

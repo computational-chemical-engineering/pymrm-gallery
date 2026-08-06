@@ -1,0 +1,56 @@
+dataset_id: froment-bischoff-1961-appendix2-conditions
+title: "Appendix 2 experimental conditions and estimated constants (ethylbenzene dehydrogenation)"
+status: complete
+
+source:
+  authors:
+    - "Froment, G. F."
+    - "Bischoff, K. B."
+  year: 1961
+  title: "Non-steady state behaviour of fixed bed catalytic reactors due to catalyst fouling"
+  container: "Chemical Engineering Science 16(3-4) 189-201"
+  doi: 10.1016/0009-2509(61)80030-4
+  access: "publisher scan held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Appendix 2, journal pp. 200-201 (PDF pages 12-13)"
+  tool: "poppler pdftoppm at 300 dpi (native CCITT-G4 resolution), cropped per numeral"
+  procedure: >
+    Every value read from cropped native-resolution renders. The text layer is
+    unusable for digits: it renders T = 600 C as 800 C, F = 0.30 as 030, and
+    Omega = 6.3e-4 m2 as "6.3 x lo-* ma". The 1961 typesetting uses a mid-dot
+    decimal separator throughout. Two printed quirks recorded rather than
+    repaired: the conditions block prints the gas density as rho_F where the
+    notation table defines rho_A (same quantity), and the notation table prints
+    the unit of rho_B as kg/m^2 where the conditions block prints kg/m^3.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-06
+  estimated_error: "none beyond the paper's own printing"
+
+validation:
+  internal_consistency: >
+    The paper prints its own arithmetic on these rows and the page recomputes
+    all of it: Omega*rho_B*P*L'/F = 0.1993 against the printed prefactor 0.2;
+    aL = 1.993 against the printed 2.0 (eq. A.1); alpha*k2_0*P*t = 5.00 against
+    eq. (A.2a)'s 5; K*k2_0*P*t = 10.00 against eq. (A.2b)'s 10. A transcription
+    error in most rows moves at least one of these - T_op, eps_void and rho_F
+    feed no metric on this page and a slip there would be invisible; the rest
+    are covered (the break table injects
+    Omega x10 and gets aL = 19.9).
+  what_it_tests: >
+    FIT/TEST LABEL - these are the paper's own inputs and order-of-magnitude
+    estimates, not measurements. k1_0 is the authors' preliminary fit to their
+    (unpublished) ethylbenzene data; k2_0, alpha and K are order-of-magnitude
+    values the authors chose by comparing Figs. 1-4 with those data. Nothing on
+    the page fits anything to them; they only fix the ranges az <= 2,
+    alpha*b*eta <= 5, K*b*eta <= 10 in which the computations are run, exactly
+    as they do in the paper.
+
+columns:
+  - {name: name, unit: "-", description: "symbol as used on the page (canonical ASCII form of the paper's symbol)"}
+  - {name: value, unit: "see unit column", description: "numerical value as printed"}
+  - {name: unit, unit: "-", description: "unit as printed; '-' for dimensionless"}
+  - {name: printed_as, unit: "-", description: "verbatim printed statement the value was read from"}
+  - {name: where, unit: "-", description: "location in the paper (journal page)"}
