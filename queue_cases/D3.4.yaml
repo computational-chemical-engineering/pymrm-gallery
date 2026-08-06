@@ -4,7 +4,8 @@ title: o-Xylene → phthalic anhydride multitubular
 catalog_reference: Froment (1967)
 priority: P1
 tier: T0
-status: unclaimed
+status: covered
+covered_by: C2.10
 reference:
   authors: ["Froment, G. F."]
   year: 1967
@@ -23,24 +24,59 @@ what_it_carries: >
   paper's stated purpose is to test the reliability of the ONE-DIMENSIONAL
   plug-flow model against a TWO-DIMENSIONAL model with radial gradients, on a
   complex hydrocarbon-oxidation scheme, and to review the basic data each needs.
-  It writes out the 1D equations explicitly and argues that the 1D model gives
-  only averages and "provides no information concerning excessive temperatures
-  along the axis, which may be markedly different from the mean and unacceptable
-  for reasons of reactor stability, process selectivity, and catalyst
-  deactivation".
-  That argument, made in 1967 with the computing of 1967, is a pymrm S2-vs-S6
-  diff. It is the best "the original could only sketch this; pymrm can sweep it"
-  candidate in this drop.
-validation_route: >
-  PRINTED constants plus the paper's own 1D/2D comparison for the worked case.
-  Whether the comparison profiles are tabulated or only plotted has NOT been
-  established off the renders - check before promising a quantitative overlay.
-  The kinetic constants and the operating conditions are printed and suffice.
-notes: >
-  SHARED FILE with C2.10 (the kinetics). Build C2.10 first, import here.
-  Sibling to the published D2.2 (Van Welsenaere-Froment runaway) - same author,
-  same hot-spot problem, machinery already in the repo. Also imports A3.11/A3.12
-  (radial heat transfer parameters) once those land.
+notes: |
+  Absorbed into C2.10 on 2026-08-05, after the paper was read in full and the
+  C2.10 page built. The complete argument, with the steelman for keeping this
+  case separate and why it fails now:
+
+  Why one page (the A2.1/A2.2 standard - the decisive quantitative check for
+  either page is the same object):
+
+  - The paper prints NO kinetic data. The three Arrhenius expressions (p. 23)
+    are asserted as "fairly representative of the gas phase air oxidation of
+    o-xylene ... on V2O5 catalysts"; nothing in the document fits them to, or
+    compares them with, any measurement. So a C2.10 kinetics page would have
+    no validation route of its own: every checkable number in the paper about
+    this chemistry (hot spot ~30 degC at 357; 2-D runaway at 360; 1-D rises
+    40/48 at 362/363; 1-D runaway 365; the Figs. 13/14 variants ~35 degC) is a
+    REACTOR solve - i.e. exactly this case's content.
+  - Conversely, a D3.4 reactor page must transcribe the entire kinetics to run
+    at all. The rate laws and their use are one result, the way Wehner &
+    Wilhelm's boundary conditions and their derivation were one result.
+  - The 1D-vs-2D comparison that is this case's raison d'etre IS built on the
+    C2.10 page: both models, the same lambda_R/alpha_w data feeding both (U
+    built from them via the paper's moment-matching formula, reproduced), both
+    runaway limits bisected continuously, gap 3.9 degC against the paper's
+    "within five degrees".
+
+  The steelman for a separate D3.4, and why it fails today:
+
+  - "D3.4 is the best 'pymrm adds something' candidate: sweep the operating
+    plane, do the catalyst-dilution profile the paper proposes, import
+    A3.11/A3.12 radial heat-transfer parameters." But everything QUANTITATIVE
+    Froment 1967 prints about the reactor is already reproduced on C2.10, so a
+    separate page would re-solve the same equations with the same constants
+    against the same eleven stated numbers - and the extensions (dilution
+    profiles, full operating-plane maps) have no printed numbers to validate
+    against in this paper. They are pymrm extensions a C2.10 revisit can add,
+    not a second source-backed page.
+  - The concentration sweep (Fig. 11) and the heat-transfer sensitivity
+    (Figs. 13/14) are already on the C2.10 page, including their stated
+    numbers.
+
+  What would genuinely reopen a separate D3.4, stated precisely:
+
+  - Calderbank's o-xylene kinetics WITH DATA (the C2.10 catalogue row's second
+    name, not on disk) - then a kinetics page proper (C2.10) validated against
+    measurement and a reactor page (D3.4) become distinct;
+  - or Froment & Bischoff's textbook multitubular treatment (monograph not on
+    disk), which carries a fuller design case (pressure drop, dilution
+    profiles, deactivation) than the 1967 paper sketches.
+
+  Also noted: the paper's closing sections (pp. 26-27) on parameter
+  reliability are reproduced on the C2.10 page (the lambda_e = 0.75 and
+  alpha_w = 150 variants with their printed U values 86/88 and stated ~35 degC
+  hot spots); nothing quantitative in the reactor half is left unused.
 updated: '2026-08-05'
 doi_source: >
   crossref-verified 2026-08-02, upgraded 2026-08-05 to

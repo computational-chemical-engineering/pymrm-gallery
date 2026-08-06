@@ -1,0 +1,41 @@
+# Froment (1967), Ind. Eng. Chem. 59(2) 18-27, doi:10.1021/ie50686a006.
+# Every value read from a native-resolution (300 ppi) render of the printed
+# page; the scan's text layer breaks every equation and drops layout, so no
+# number here comes from the text layer.
+# TWO PRINTED VALUES USE A PERIOD AS A THOUSANDS SEPARATOR, EUROPEAN STYLE:
+# p. 24 prints "G = 4.684 kg./sq. meter hr." and "dH3 = -1.090 kcal./gram
+# mole". Both are resolved by the paper itself: p. 19 prints G = 4684 for the
+# same reactor with no separator, and the printed Pe_hR = 5.25 on p. 24 equals
+# G*cp*dp/lambda_R only with G = 4684 (with 4.684 it would be 0.00524). The
+# notebook prints both checks. dH3 = -1090 kcal/gmol is the heat of complete
+# combustion of o-xylene; -1.090 kcal/gmol would make the C-forming reactions
+# 282x LESS exothermic than the partial oxidation, which contradicts the
+# paper's own selectivity argument (side reactions dominate the heat effect).
+# k1, k2, k3 are in kmol/(kg cat hr) per (mole fraction)^2 as used in the rate
+# expressions r = N_A0*N_0*[...]; ln k_i = -E_i/(1.98*(t+T0)) + lnA_i as
+# printed on p. 23, with 1.98 cal/(mol K) the gas constant and t + T0 the
+# absolute temperature.
+symbol,value,unit,description,printed_where
+N_A0,0.00924,-,inlet mole fraction of o-xylene,"p. 24; stated to correspond to 44 'gram moles/cu. meter', which is a slip for 44 g per normal cubic meter - Figure 11's own axis is labelled g/Nm3, and 44 g/Nm3 of C8H10 at 0 degC and 1 atm gives mole fraction 0.00929"
+N_0,0.208,-,inlet mole fraction of oxygen,p. 24
+E1,27000,cal/mol,activation energy of k1 (A -> B),"p. 23; 27000/1.98 = 13636, and p. 19 prints ln k = -13636/T + 19.837 for the same rate constant"
+lnA1,19.837,-,frequency factor of k1 (natural log),p. 23; also p. 19
+E2,31400,cal/mol,activation energy of k2 (B -> C),p. 23
+lnA2,20.86,-,frequency factor of k2 (natural log),p. 23
+E3,28600,cal/mol,activation energy of k3 (A -> C),p. 23
+lnA3,18.97,-,frequency factor of k3 (natural log),p. 23
+R_gas,1.98,cal/(mol K),gas constant as printed in the Arrhenius expressions,p. 23
+minus_dH1,307000,kcal/kmol,heat of partial oxidation A -> B,"p. 24 prints -307 kcal./gram mole; also p. 19"
+minus_dH3,1090000,kcal/kmol,single heat of complete combustion to CO and CO2,"p. 24 prints -1.090 kcal./gram mole - thousands separator, see header"
+d_t,0.025,m,tube diameter,p. 24; also pp. 19 and 23
+d_p,0.003,m,catalyst particle diameter,p. 24
+rho_b,1300,kg/m3,catalyst bulk density,p. 24; also p. 19
+G,4684,kg/(m2 hr),superficial mass flow velocity,"p. 24 prints 4.684 with a thousands separator; p. 19 prints 4684 outright"
+c_p,0.25,kcal/(kg degC),specific heat of the gas (mass basis),"p. 19; not restated on p. 24 but pinned there by the printed Pe_hR = 5.25 = G*cp*dp/lambda_R"
+M_m,29.48,kg/kmol,mean molecular weight of the feed,"p. 19; not restated on p. 24"
+lambda_R,0.67,kcal/(m hr degC),effective radial thermal conductivity (Kunii-Smith),p. 24
+alpha_w,134,kcal/(m2 hr degC),wall heat transfer coefficient (Yagi-Wakao),p. 24
+Pe_mR,10,-,radial mass Peclet number used in the calculations,p. 24
+Pe_hR,5.25,-,radial heat Peclet number as printed,p. 24
+Re,121,-,Reynolds number as printed,p. 24
+L_bed,3.0,m,bed length,"p. 23: tubes '2.5 to 3 meters long'; p. 25: 'a length of 3 meters is sufficient to reach the maximum in phthalic anhydride concentration' at 357 degC"

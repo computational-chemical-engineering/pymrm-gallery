@@ -2509,6 +2509,39 @@ models:
       - B1.6
       - D2.2
 
+  - id: C2.10
+    slug: o-xylene-phthalic-anhydride
+    title: "o-Xylene to phthalic anhydride: the classic hot spot"
+    description: >
+      Froment's 1967 demonstration that effective kinetics plus a 2-D
+      pseudo-homogeneous model reproduces fixed-bed hot spots: the triangular
+      o-xylene oxidation scheme in both the 1-D and 2-D models, every stated
+      number reproduced, and the 1-D/2-D runaway-limit gap measured continuously.
+    section: C
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S2, S6]
+    phases: [gas-solid]
+    predicts: [temperature profile, hot spot, runaway limit, conversion, selectivity]
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac, newton]
+    reference:
+      authors: ["Froment, G. F."]
+      year: 1967
+      container: "Industrial & Engineering Chemistry 59(2) 18-27"
+      doi: 10.1021/ie50686a006
+    data: {tier: 6, method: table, status: complete}
+    note: >
+      Covers D3.4 (the multitubular-reactor half of the same paper): the paper
+      prints no kinetic data, so the only checkable numbers for the kinetics are
+      the reactor solves, which are D3.4's content - one page, the A2.1/A2.2
+      argument. Calderbank, the catalogue row's second name, is not on disk; a
+      future kinetics-with-data page would need it. Two printed values are
+      European thousands separators (G = "4.684", dH3 = "-1.090"), resolved from
+      the paper's own numbers on the page.
+    page: pages/C2.10-o-xylene-phthalic-anhydride/
+    related: [D2.2, D2.1, C2.1, A2.3, A3.15, A3.12, B1.1]
+
   - id: C2.1
     slug: xu-froment-smr
     title: "Steam methane reforming kinetics (Xu & Froment)"
@@ -2541,21 +2574,6 @@ models:
     page: pages/C2.1-xu-froment-smr/
     related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
-  - id: C2.10
-    slug: o-xylene-phthalic-anhydride
-    title: "o-Xylene to phthalic anhydride: the classic hot spot"
-    section: C
-    status: planned
-    tier: T0
-    priority: P1
-    structures: [S2, S6]
-    phases: [gas-solid]
-    reference:
-      authors: ["Froment, G. F."]
-      year: 1967
-    related: [D2.2, D3.4]
-
-  # ---------------------------------------------------------------- section D
   - id: D1.4
     slug: fixed-bed-particle-coupling
     title: "Heterogeneous fixed bed with resolved intraparticle profiles"

@@ -1,0 +1,91 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.10
+slug: o-xylene-phthalic-anhydride
+title: "o-Xylene to phthalic anhydride: the classic hot spot"
+section: C
+status: published
+tier: T0
+priority: P1
+structures: [S2, S6]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 120
+datasets:
+  - froment-1967-parameters.csv
+  - froment-1967-stated-results.csv
+
+validation:
+  - >-
+    Transcription identities: four printed derived values recomputed from the
+    printed primaries — Pe_hR = 5.25 (0.13 %), U = 82.7 (0.29 %), U = 86
+    (0.01 %), U = 88 (0.29 %) — plus N_A0 from the stated 44 g/Nm3 (0.52 %).
+    These also settle the two European thousands separators (G = "4.684",
+    dH3 = "-1.090") from the paper's own numbers.
+  - >-
+    The pymrm radial operator (nu=1, Robin wall on the outward normal) marched
+    with the reaction off against the paper's printed Bessel-series
+    heat-exchanger solution: 4.9e-5 relative at n_r = 80, observed order 2.0;
+    the same check fails by 1.1e0 with nu=0 and 7.8e2 with the wall-film sign
+    flipped, so it can fail.
+  - >-
+    All eleven numerical statements the text makes about the case, in one
+    table: five stated model results reproduce to 4.0 % mean, worst 8.6 % (the
+    363 degC rise, which doubles every ~2 degC there); both runaway limits
+    land inside the paper's integer-probing brackets (360.01 in (357, 360];
+    363.93 in (363, 365]).
+  - >-
+    Second independent routes: hand-built FD + Radau on a different grid
+    against pymrm operators + BDF for the 2-D hot spot (4.8e-4 rel) and
+    runaway limit (indistinguishable at the 0.02 degC bisection tolerance);
+    pymrm upwind BVP + Newton (convergence asserted) against the adaptive
+    march for the 1-D hot spots (<= 4.4e-3, first-order upwind bias).
+  - >-
+    Grid refinement (order ~2.0, n_r = 80 within 0.0022 degC of n_r = 160),
+    integrator-tolerance sweep, and insensitivity of the bisected runaway
+    limit to the arbitrary 150 degC cap over 100-250 degC.
+  - >-
+    Defect-injection table: wrong nu, flipped wall-film sign, k2<->k3 swap,
+    heat-Pe/mass-Pe confusion, Kelvin offset 273, and both thousands
+    separators taken literally - every metric moves; the k2/k3 row is labelled
+    as those constants' only guard since no independent witness prints them.
+
+adds: >
+  The 1967 landmark rebuilt in ~100 lines: both models from printed constants,
+  the 1-D/2-D comparison a two-line operator swap. Beyond reproduction: the
+  runaway limits located continuously by bisection (the paper probed whole
+  degrees), showing the true 1-D/2-D gap is 3.9 degC - the paper's "within
+  five degrees" conclusion survives being computed properly; the Pe_mR = 8
+  "completely negligible" claim confirmed at the runaway limit itself, which
+  the 1967 profile-level sampling could not have established; and the
+  heat-transfer sensitivity drawn as a curve (0.30 degC of runaway limit per
+  percent of heat-transfer capacity) where the paper had two points.
+
+agreement: >
+  Five stated model results reproduce to 4.0 % mean absolute deviation, worst
+  8.6 % on the 363 degC hot-spot rise (a quantity that doubles every ~2 degC
+  of inlet temperature); the 2-D hot spot at 357 degC is 29.53 against "about
+  30"; the 1-D runaway limit sits inside the paper's bracket and the 2-D limit
+  sits 0.008 degC OUTSIDE it (360.0 bisects as controlled, so the model
+  strictly fails "runs away at 360" by a hair - reported, not padded), gap
+  3.9 degC
+  against "within five degrees". Four printed transcription identities close
+  to 0.29 % or better. Nothing is fitted anywhere.
+
+caveats: >
+  Provenance tier 6, and reproduction rather than validation: the paper
+  contains no experimental data, the kinetics are asserted by Froment as
+  "fairly representative" (never fitted to data in this document), and every
+  comparison target is his own 1967 computed result. Calderbank, the second
+  name on the catalogue row, is not on disk. The absolute-temperature offset
+  is unprinted (273.15 used; 273 shifts the 363 degC rise by 1.9 degC and the
+  1-D runaway limit by 0.2 degC - shown in the break table). k2 and k3 have no
+  independent witness anywhere on disk; the k2<->k3 break row is their only
+  guard. Page 24's "G = 4.684" and "dH3 = -1.090 kcal/gram mole" are European
+  thousands separators, and "44 gram moles/cu. meter" means 44 g/Nm3 - all
+  three resolved from the paper's own numbers, not by inference.

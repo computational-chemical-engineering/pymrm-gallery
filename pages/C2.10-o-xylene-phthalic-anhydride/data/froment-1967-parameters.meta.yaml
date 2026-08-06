@@ -1,0 +1,56 @@
+dataset_id: froment-1967-parameters
+title: Model constants for the o-xylene oxidation case (pp. 19, 23, 24)
+status: complete
+
+source:
+  authors:
+    - "Froment, G. F."
+  year: 1967
+  title: "Fixed Bed Catalytic Reactors — Current Design Status"
+  container: "Industrial & Engineering Chemistry 59(2) 18-27"
+  doi: 10.1021/ie50686a006
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: >
+    Running text of journal pages 19, 23 and 24 (the paper has no numbered
+    tables). Kinetics: p. 23. Operating and transport data: p. 24. M_m and c_p:
+    p. 19, where the same reactor carries the companion single-reaction
+    example.
+  tool: "poppler pdftoppm at the scan's native 300 ppi; values read from cropped renders"
+  procedure: >
+    The scan is CCITT-G4 bilevel at 300 x 300 ppi native, so 300 dpi is the
+    correct render resolution; every numeric was re-read from a cropped
+    native-resolution render rather than from a whole-page view. The text
+    layer was used for prose structure only - it breaks every displayed
+    equation. Two printed values carry a European thousands separator
+    ("G = 4.684", "dH3 = -1.090 kcal./gram mole"); both are resolved by the
+    paper's own internal evidence (p. 19 prints G = 4684 outright; the printed
+    Pe_hR = 5.25 equals G*cp*dp/lambda_R only with G = 4684) and the notebook
+    prints those checks. Nothing was reconstructed by inference.
+  operator: "Claude Fable 5 (assisted), staged for maintainer review"
+  date: 2026-08-05
+  estimated_error: >
+    None beyond the paper's own rounding; values are transcribed exactly as
+    printed, with the two separator cases documented in the CSV header.
+
+validation:
+  independent_check: >
+    Four of the paper's own printed derived quantities close over this set and
+    none was used to obtain it: Pe_hR = G*cp*dp/lambda_R gives 5.243 against
+    the printed 5.25; 1/U = 1/alpha_w + R'/(4*lambda_R) gives 82.46 against
+    the printed 82.7; the same formula with the paper's varied lambda_e = 0.75
+    and alpha_w = 150 gives 85.99 and 88.25 against the printed 86 and 88.
+    Separately, k1's constants (27000/1.98 = 13636, lnA = 19.837) agree with
+    the independently transcribed parameter table of the published D2.2 page
+    (Van Welsenaere & Froment 1970, same reactor), which also carries the same
+    M_m, rho_b, dH1, U, tube radius and N_0 = p_B0.
+
+columns:
+  symbol: "the paper's own symbol for the constant, as printed"
+  value: "the printed value, transcribed from a native 300 ppi render (two are separator inferences, flagged in `acquisition`)"
+  unit: "the printed unit; where continental notation was resolved the resolved unit"
+  description: "what the constant is, in the paper's own terms"
+  printed_where: "journal page the value was read from (p. 25 material corrected from an earlier p. 26 miscitation, 2026-08-06)"
