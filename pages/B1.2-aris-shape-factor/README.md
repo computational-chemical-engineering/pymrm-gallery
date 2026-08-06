@@ -47,7 +47,7 @@ mis-transcription survives that. **Two entries are flagged rather than
 corrected** — see `meta.yaml`'s `blocker` block.
 
 **Retried 2026-08-02, still not obtainable.** A 1957 PDF is now in
-`~/papers/pymrm-gallery/` (`1-s2.0-0009250957850283-main.pdf`), but it is that
+`~/papers/pymrm-gallery/` (`Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf`), but it is that
 same one-page preview — one page, journal page 262, the same byte size the
 Elsevier API returns for `application/pdf` on the PII. The 1995 reprint's PDF is
 a one-page preview too. `content/object/pii` holds no page images for either

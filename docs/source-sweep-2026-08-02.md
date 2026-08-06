@@ -222,7 +222,7 @@ route.
 | Voltz, Morgan, Liederman & Jacob, *Kinetic study of carbon monoxide and propylene oxidation on platinum catalysts*, IEC Prod. Res. Dev. **12**(4) 294–301 (1973) | `10.1021/i360048a006` | `C2.13` — **but try the reprint route first**: Oh & Cavendish (1982) is already on disk as the `I1.2` file. Ask the `E1.1` question of it — does it *name and test* the Voltz expression, or merely use it? |
 
 ACS scans have historically had the best text layers of anything in this
-repository (`i260028a001.pdf` at 12.4 k chars/page, `i300005a006.pdf` at 9.0 k),
+repository (`Kunii1968-bubbling-bed-model-IECFund7-481.pdf` at 12.4 k chars/page, `Oh1982-monolith-converter-transients-IECPDD21-29.pdf` at 9.0 k),
 so this batch is also the cheapest to extract once it arrives.
 
 ### Rank 2 — the Wiley / AIChE Journal batch. 7 papers, 7 T0/P1 cases.

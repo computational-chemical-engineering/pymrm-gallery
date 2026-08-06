@@ -1,0 +1,3000 @@
+# THE CATALOGUE OF THE LIBRARY - one entry per file in ~/papers/pymrm-gallery/.
+#
+# Written 2026-08-06 by the library-curation pass, when every PDF was renamed to
+# a scheme that carries its identity:
+#
+#   papers  <FirstAuthor><Year>-<short-slug>-<JournalAbbrev><Vol>-<FirstPage>.pdf
+#   books   BOOK-<Authors>-<Year>-<short-title>-<edition>.pdf
+#   kept for the record, maps to no case   MISC-<...>.pdf
+#   multi-part papers get -pt1 / -pt2
+#
+# `old_names` is load-bearing, not decoration: `pages/**`, `models.yaml` and
+# `docs/handoff.md` still cite the OLD names in their provenance prose, and this
+# file is what connects the two. `scripts/update_paper_references_2026-08-06.py`
+# reads the old->new map straight out of this file.
+#
+# THE STANDING RULE, restated because it has cost this repository seven separate
+# incidents: A FILENAME IS NOT A PAPER. Every identity below was established by
+# reading the document's own title page, running head or publisher download
+# stamp - never from the filename, never from a DOI, never from publisher
+# metadata (which once named a DIFFERENT FILE IN THE SAME DROP).
+#
+# Three traps recur often enough to check for by default:
+#   * FIRST-PAGE TRAP - the file opens with the PREVIOUS article's text. Eleven
+#     files here do it. Always scroll past the first screen.
+#   * NATIVE RESOLUTION - run `pdfimages -list` and believe it. The library
+#     spans 150 to 600 ppi. Rendering above native upsamples a 1-bit image and
+#     invents grey that is not in the file.
+#   * TEXT LAYER LIES QUIETLY - it substitutes plausible wrong digits (24 in one
+#     table on A4.5), reads Greek tau as the digit 7, drops decimal points, and
+#     reports the wrong volume number. Crop and read the image for every
+#     numeric.
+#
+# Fields:
+#   file          current filename
+#   old_names     every name it has had in this repository
+#   kind          paper | book | misc
+#   identity      full citation as the DOCUMENT gives it
+#   doi           null where none is known or none exists
+#   verified_by   how and when the identity was established
+#   native_ppi    from `pdfimages -list`; null for born-digital / no images
+#   text_layer    what the extracted text can and cannot be trusted for
+#   supports      catalogue cases, each with the relationship
+#   notes         traps, page-numbering quirks, anything a reuser needs
+#
+# `role` values used in `supports`:
+#   origin              the document the case's result comes from
+#   canonical-source    a monograph used under the textbook-canonical class,
+#                       always with the E1.1 test result recorded
+#   reprint             reprints the origin's result with attribution
+#   secondary           companion, comparison or context; not the source
+#   near-miss           looks like the case's paper and is not
+#   commentary-about    a commentary or review ABOUT the case's paper
+#   comparison-source   used to check another document's numbers
+
+- file: Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf
+  old_names: ["ef070025k.pdf"]
+  kind: paper
+  identity: >-
+    Abad, A., Garcia-Labiano, F., de Diego, L. F., Gayan, P. & Adanez, J., "Reduction Kinetics of
+    Cu-, Ni-, and Fe-Based Oxygen Carriers Using Syngas (CO + H2) for Chemical-Looping Combustion",
+    Energy & Fuels 21(4) 1843-1853 (2007)
+  doi: "10.1021/ef070025k"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 600
+  pages: 11
+  text_layer: >-
+    ccitt scan at 600 ppi; 7678 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B3.10, role: "origin", status: unclaimed}
+  notes: >-
+    CATALOGUE ERROR: B3.10 gives "Abad & Adanez, Chem. Eng. Sci. (2007)". Right authors, right year,
+    WRONG JOURNAL. A separate Abad et al. CES 62 (2007) paper exists (the operating-window mapping
+    one); it is not on disk and is not the kinetics paper the case needs. Its PDF Title metadata is
+    "No Job Name" - the ACS download stamp settled the identity. Native 600 ppi.
+
+- file: Andrews1968-substrate-inhibition-continuous-culture-BiotechnolBioeng10-707.pdf
+  old_names: ["Biotech   Bioengineering - November 1968 - Andrews - A mathematical model for the continuous culture of microorganisms.pdf"]
+  kind: paper
+  identity: >-
+    Andrews, J. F., "A Mathematical Model for the Continuous Culture of Microorganisms Utilizing
+    Inhibitory Substrates", Biotechnology and Bioengineering 10(6) 707-723 (1968), Clemson
+    University
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed masthead "BIOTECHNOLOGY
+    AND BIOENGINEERING VOL. X, PAGES 707-723 (1968)", the title and the by-line read on page 1
+  native_ppi: 300
+  pages: 17
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~2.6 k chars on page 3 - thin. Constants off crops.
+  supports:
+    - {case: J4.2, role: "origin", status: needs-paper}
+  notes: >-
+    DEDUPED: TWO byte-identical copies arrived (md5 1cd0f791c388e168ab2304134187a5a3, 487616 bytes
+    each). The other, "Biotech Bioengineering - November 1968 - Andrews.pdf", is parked in
+    duplicates/. Its summary states the model and the two claims a page can test: inhibition
+    increases the LAG TIME in batch culture, and can make CONTINUOUS culture unstable.
+
+- file: Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf
+  old_names: ["1-s2.0-0009250957850283-main.pdf"]
+  kind: paper
+  identity: >-
+    Aris, R., "On shape factors for irregular particles - I. The steady state problem. Diffusion and
+    reaction", Chemical Engineering Science 6(6) 262-268 (1957)
+  doi: "10.1016/0009-2509(57)85028-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 1
+  text_layer: >-
+    ccitt scan at 300 ppi; 0 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B1.2, role: "origin", status: published}
+  notes: >-
+    *** ONE PAGE ONLY - journal page 262, the Elsevier entitlement preview, NOT a scan of the paper.
+    *** The suffix -PREVIEW1P in the filename says so. B1.2's open question is two cells of Table 1
+    on journal page 265, which this file does not reach; the 1995 Golden Jubilee verbatim reprint
+    (PII 0009250996818197) returns a one-page preview too. There is no API route to the table. Only
+    a full PDF from the maintainer closes it. B1.2 is nevertheless PUBLISHED - the page was built
+    without that table.
+
+- file: BOOK-BirdStewartLightfoot-2002-transport-phenomena-2ed.pdf
+  old_names: ["Bird R B, Stewart W E, Lightfoot E N (2nd Ed,Wiley,2002) - Transport Phenomena.pdf"]
+  kind: book
+  identity: >-
+    Bird, R. B., Stewart, W. E. & Lightfoot, E. N., "Transport Phenomena", 2nd edition, John Wiley &
+    Sons (2002)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; imprint page read ("Copyright 2002
+    John Wiley & Sons"), PDF p. 5 title page, PDF p. 6 imprint
+  native_ppi: 300
+  pages: 914
+  text_layer: >-
+    ABBYY-style layer over bilevel scan; prose greppable, equations and vector notation destroyed
+    (e.g. "[V x v]" for the curl). Numbers must come off crops.
+  supports:
+    - {case: A3.2, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: A4.1, role: "canonical-source (E1.1: failed)", status: needs-paper}
+    - {case: A4.8, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: C1.5, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J1.2, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+  e1_1_evidence:
+    A4.8: >-
+      PASSED. Two independent treatments. Steady: sec. 18.2 "Diffusion through a Stagnant Gas Film"
+      (book p. 545), with Example 18.2-2 "Determination of Diffusivity" - the Stefan tube used as a
+      measuring instrument, which is the case's own subject. Unsteady: sec. 20.1, Example 20.1-1
+      "Unsteady-State Evaporation of a Liquid (the 'Arnold Problem')" (book p. 613), ATTRIBUTED to
+      J. H. Arnold, Trans. AIChE 40, 361-378 (1944) with a biographical footnote, carrying Table
+      20.1-1 of the phi functions, plus problems 20B.1 (interphase transfer of both species) and
+      20B.2 (nonisothermal). States + attributes + carries a printed table. NOTE this covers the
+      ARNOLD half of A4.8; the ternary MEASUREMENT half is Taylor & Krishna's Example 2.1.1 (Carty &
+      Schrodt 1975).
+    A3.2: >-
+      PASSED. sec. 18.5 (book p. ~560): "This approach for studying gas absorption was apparently
+      first proposed by Higbie. The problem discussed in this section illustrates the 'penetration
+      model' of mass transfer", with the full citation R. Higbie, Trans. AIChE 31, 365-389 (1935)
+      and a biographical footnote on Higbie, and the model developed further in Chapters 20 and 22
+      (sec. 20.4 gives the boundary-layer form at a deforming interface). States + attributes +
+      derives.
+    A4.1: >-
+      FAILED, and it is the Chapman & Cowling trap repeating - read this before assuming BSL covers
+      A4.1. Every Wilke in BSL is a DIFFERENT Wilke result: the VISCOSITY mixture rule (J. W.
+      Buddenberg and C. R. Wilke, Ind. Eng. Chem. 41, 1345 (1949); C. R. Wilke, J. Chem. Phys. 18,
+      517-519 (1950) - note the journal, it is not Chem. Eng. Prog. 46); the Wilke-Chang LIQUID
+      diffusivity correlation; Wilke & Hougen packed-bed j-factors; Wilke, Tobias & Eisenberg on
+      free convection; and Wilke & Lee cited as a source for someone else's data. The 1950 Chem.
+      Eng. Prog. gas-mixture DIFFUSION rule is not stated. A4.1 is closed by the ORIGINAL, which
+      arrived in this drop, and independently by Taylor & Krishna Eq. 6.1.14.
+    C1.5: >-
+      UNCHECKED.
+    J1.2: >-
+      UNCHECKED.
+  notes: >-
+    COMPLETE BOOK, 914 PDF pages. PDF page = book page + 22 in the body (PDF p.5 = title, PDF p.7 =
+    Preface). PDF pp. 1-4 are the endpaper tables of vector/tensor operations, not the front matter
+    - do not read PDF p.1 as the title page. One of the four textbook-canonical monographs the class
+    was waiting on; see the supports list for the per-case E1.1 results.
+
+- file: BOOK-ChapmanCowling-1970-non-uniform-gases-3ed.pdf
+  old_names: ["cambridge-mathematical-library-sydney-chapman-t.-g.-cowling-c.-cercignani-the-mathematical-theory-of-non-uniform-gases_-an-account-of-the-kinetic-theory-of-viscosity-thermal-conduction-a.pdf"]
+  kind: book
+  identity: >-
+    Chapman, S. & Cowling, T. G., "The Mathematical Theory of Non-Uniform Gases", 3rd edition
+    (1970), Cambridge University Press; reissued 1990 in the Cambridge Mathematical Library with a
+    Foreword by C. Cercignani, reprinted 1993
+  doi: null
+  verified_by: >-
+    title page, imprint page, contents and chapter/section pages read on native 300 dpi crops,
+    2026-08-05
+  native_ppi: 300
+  pages: 448
+  text_layer: >-
+    ABBYY FineReader 8 over CCITT-G4 bilevel; prose good, numbers NOT trustworthy - the mid-dot
+    decimal separator vanishes at whole-page render (Table 6 last row read as "1000" for "100.0")
+    and leading zeros read as the letter "o".
+  supports:
+    - {case: A4.6, role: "origin", status: published}
+  notes: >-
+    COMPLETE BOOK, 448 PDF pages. PDF page = book page + 24 in the body (checked at pp. 176, 181,
+    186, 256-262). An ORIGIN monograph, not a textbook restating the canon - it unlocked exactly one
+    case. Crop before reading any numeric.
+
+- file: BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf
+  old_names: ["Froment_Bischoff_Chemical_Reactor_Analysis_and_Design.pdf"]
+  kind: book
+  identity: >-
+    Froment, G. F., De Wilde, J. & Bischoff, K. B., "Chemical Reactor Analysis and Design", 3rd
+    edition, John Wiley & Sons (2011), ISBN 978-0-470-56541-4
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page, imprint page and Library
+    of Congress CIP record read from the born-digital text layer
+  native_ppi: 200
+  pages: 902
+  text_layer: >-
+    BORN-DIGITAL with embedded TrueType subsets. Text layer is clean including equation numbers;
+    Greek and sub/superscripts survive in most places. No rendering needed.
+  supports:
+    - {case: A3.2, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: B1.8, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: C1.5, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: D1.1, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.2, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.3, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.4, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.5, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D2.4, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: D3.6, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: E1.1, role: "canonical-source (E1.1: failed)", status: needs-paper}
+    - {case: J4.1, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: J4.6, role: "canonical-source (E1.1: passed)", status: needs-paper}
+  e1_1_evidence:
+    D1.1: >-
+      PASSED. Ch.11 Part Two, sec. 11.5 "The Basic One-Dimensional Model" (book p. 505): 11.5.1
+      model equations, Example 11.5.1.A pressure drop in packed beds, 11.5.2 design of a fixed bed
+      reactor according to the one-dimensional pseudohomogeneous model, 11.5.3 runaway criteria
+      (with Example 11.5.3.A applying Van Welsenaere & Froment's FIRST criterion - the same
+      criterion the published D2.2 page reproduces), 11.5.4 the multibed adiabatic reactor. States,
+      derives and works the model on printed data.
+    D1.2: >-
+      PASSED. sec. 11.6 "One-Dimensional Model with Axial Mixing" (book p. 548), the S4 structure
+      exactly. Danckwerts boundary conditions are treated in the book and Danckwerts is cited
+      throughout Ch.6 and Ch.12.
+    D1.3: >-
+      PASSED. Ch.11 Part Three, sec. 11.8 "One-Dimensional Model Accounting for Interfacial
+      Gradients" (book p. 585): 11.8.1 model equations, 11.8.2 transient simulation, Example
+      11.8.2.A "A Gas-Solid Reaction in a Fixed Bed Reactor" (book p. 591).
+    D1.4: >-
+      PASSED. sec. 11.9 "One-Dimensional Model Accounting for Interfacial and Intraparticle
+      Gradients" (book p. 597), with three worked industrial examples: 11.9.1.A simulation of a
+      primary steam reformer (p. 604), 11.9.1.B an industrial 1-butene dehydrogenation reactor (p.
+      614), 11.9.1.C internal diffusion limitations in catalytic reforming (p. 621).
+    D1.5: >-
+      PASSED. sec. 11.7 "Two-Dimensional Pseudohomogeneous Models" (book p. 565): 11.7.1 the
+      effective transport concept, 11.7.2 continuity and energy equations, 11.7.3 design/simulation
+      of a fixed bed reactor for catalytic hydrocarbon oxidation, 11.7.4 an equivalent one-
+      dimensional model, 11.7.5 radial variations in bed structure, 11.7.6 two-dimensional cell
+      models. This is the case papers-requested.yaml called the genuine gap in the gallery.
+    A3.2: >-
+      PASSED. Ch.6 sec. 6.4 "Surface Renewal Theory" (book pp. ~350-355): "we shall also
+      occasionally mention results of Higbie's [1935] so-called penetration theory, which can be
+      considered as a special case in which ..." - named, attributed to Higbie [1935], the average
+      absorption rate derived for Higbie's uniform age t, and the enhancement factor derived from
+      Higbie's approach printed in closed form. States + attributes + carries.
+    J4.1: >-
+      PASSED. Ch.1 sec. 1.5.2, eq. (1.5.2-1) r = r_m C_A/(K_S + C_A), named "Monod- or saturation
+      constant", with the note that in the original Monod equation r is mu, r_m is mu_max and C_A is
+      S; reference list carries Monod, J., Annu. Rev. Microbiol., 3, 371 (1949) - the exact citation
+      on queue_cases/J4.1.yaml.
+    J4.6: >-
+      PASSED. Ch.1 sec. 1.5.1: the equilibrium derivation giving eq. (1.5.1-8) with K_M = k_-1/k_1,
+      and then the Briggs-Haldane steady-state derivation giving eq. (1.5.1-13) with K_M = (k_-1 +
+      k_2)/k_1, both named. Covers both halves of the case's "(1913); (1925)".
+    B1.8: >-
+      UNCHECKED. The reference list carries Wheeler, A., Adv. Catal., 3, 313 (1951) - the case's own
+      citation - and Ch.3 derives the Wheeler Type I/II/III selectivity framework with attribution.
+      But B1.8 is the Wheeler PORE MODEL, and Froment cites Wheeler [1955] only glancingly for a
+      tortuosity of 2. Check the pore-model treatment before claiming this one.
+    C1.5: >-
+      UNCHECKED. Ch.1 is the rate-equation chapter and the Arrhenius form is used throughout, but
+      C1.5 has no citation at all ("-") so what "the result" is has not been pinned down.
+    D2.4: >-
+      UNCHECKED, and moot: Ch.10 sec. 10.4.1 "Stability of Operation" and 10.4.2 "Transient
+      Behavior" cover CSTR multiplicity, but D2.4's own origin paper (Uppal, Ray & Poore 1974)
+      arrived in this drop, so the book is a secondary here at best.
+    D3.6: >-
+      UNCHECKED. sec. 11.5.4 "The Multibed Adiabatic Reactor" is the right structure for SO2
+      oxidation, but whether the book works the SO2 case specifically has not been checked.
+    E1.1: >-
+      FAILED, and this is the negative worth recording. Searching the book for "Toomey" returns
+      nothing. Its fluidised-bed treatment expresses the bubble-emulsion interaction through
+      Davidson and Harrison's cross-flow and diffusion contributions, not through the Toomey-
+      Johnstone two-phase postulate, and it neither names nor attributes that postulate. Exactly the
+      E1.1 failure mode. E1.1 is closed by the ORIGINAL, which arrived in this drop.
+  notes: >-
+    COMPLETE BOOK, 902 PDF pages. NOT WHAT THE FILENAME SAYS in one respect that matters for
+    citation: the filename is "Froment_Bischoff" but this is the THIRD edition (2011) and its
+    authors are Froment, DE WILDE and Bischoff - Bischoff is marked deceased on the title page. The
+    catalogue and papers-requested.yaml ask for "Froment & Bischoff", which is the 1st (1979) or 2nd
+    (1990) edition; cite what is on disk. Only image is the 200 ppi cover JPEG, so native_ppi is not
+    meaningful for the body.
+
+- file: BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf
+  old_names: ["2015.205681.Industrial-Chemical.pdf"]
+  kind: book
+  identity: >-
+    Hougen, O. A. & Watson, K. M., "Industrial Chemical Calculations: The Application of Physico-
+    Chemical Principles and Data to Problems of Industry", 2nd edition, John Wiley & Sons / Chapman
+    & Hall; "COPYRIGHT, 1931, 1936"
+  doi: null
+  verified_by: >-
+    title page, imprint page and printed Contents rendered at native 600 dpi and read, 2026-08-05
+  native_ppi: 600
+  pages: 504
+  text_layer: >-
+    NO TEXT LAYER AT ALL - pdftotext returns nothing and pdffonts lists no font. Everything on
+    renders.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    COMPLETE BOOK, 504 PDF pages. CCITT-G4 bilevel at 600 ppi native, the joint-highest in the
+    library. IT UNLOCKS NOTHING: its printed Contents end at chemical equilibria on book p. 438;
+    there is no kinetics chapter and no catalysis chapter, and everything it does carry is
+    superseded by Parts One and Two of the 1947 combined volume, which is also on disk AND has a
+    text layer. Kept for the record only.
+
+- file: BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf
+  old_names: ["process-calculation-by-watson.pdf"]
+  kind: book
+  identity: >-
+    Hougen, O. A. & Watson, K. M., "Chemical Process Principles", combined volume: Part One Material
+    and Energy Balances (c. 1943), Part Two Thermodynamics and Part Three Kinetics and Catalysis
+    (both c. 1947), John Wiley & Sons / Chapman and Hall
+  doi: null
+  verified_by: >-
+    title page and imprint page rendered and read, 2026-08-05
+  native_ppi: 150
+  pages: 1157
+  text_layer: >-
+    Prose excellent and fully searchable; EQUATIONS DESTROYED (eq. 69, the Thiele modulus, extracts
+    as "s^=/(mr)=/hr\-7r"). Prose by grep, numbers by crop.
+  supports:
+    - {case: C1.1, role: "origin", status: published}
+  notes: >-
+    COMPLETE BOOK, 1157 PDF pages. PDF page = book page + 16 (checked at book pp. 913 and 941). ***
+    NATIVE 150 ppi, the LOWEST in the library. *** Render at 150 and CROP - a cropped 150 dpi read
+    is legible to five significant figures; a whole-page 150 dpi render is not adequate for
+    subscripts. Never render at 300 or 600; that is interpolation. A byte-identical duplicate,
+    "process-calculation-by-watson (1).pdf", existed on 2026-08-05 and is no longer in the
+    directory.
+
+- file: BOOK-Levenspiel-1999-chemical-reaction-engineering-3ed.pdf
+  old_names: ["Chemical_reaction_engineering-levenspiel.pdf"]
+  kind: book
+  identity: >-
+    Levenspiel, O., "Chemical Reaction Engineering", 3rd edition, John Wiley & Sons (1999), ISBN
+    0-471-25424-X
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page and Library of Congress
+    page read ("Chemical reaction engineering / Octave Levenspiel. - 3rd ed.", "Copyright 1999")
+  native_ppi: 600
+  pages: 684
+  text_layer: >-
+    OCR over bilevel scan; prose good and fully searchable, equations and subscripts destroyed
+    (Ch.14 Eq. 3 extracts as fragments). Chapter and section headings survive, which is what the
+    E1.1 checks below used.
+  supports:
+    - {case: A2.4, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: A3.2, role: "canonical-source (E1.1: failed)", status: needs-paper}
+    - {case: C1.5, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.2, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: E1.5, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J4.1, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: J4.5, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J4.6, role: "canonical-source (E1.1: passed)", status: needs-paper}
+  e1_1_evidence:
+    A2.4: >-
+      PASSED, completely, and this is the case papers-requested.yaml said Levenspiel "unblocks
+      directly". Chapter 14 "The Tanks-In-Series Model" (book p. 321): 14.1 pulse-response
+      experiments and the RTD (p. 321) with E(t) for N tanks as its eq. 3 and the RTD properties in
+      Fig. 14.3; the F curve in Fig. 14.7 ATTRIBUTED to MacMullin and Weber (1935); the
+      independence/additivity property (M tanks plus N tanks); 14.2 chemical conversion (p. 328)
+      with first-order conversion for N tanks compared against plug flow in Figs. 6.5-6.6, the
+      graphical construction of Fig. 14.8, and macrofluid conversion via eq. 11.3. Three worked
+      examples E14.1-E14.3 fit N to real RTD data. States + attributes + carries + tests.
+    C1.5: >-
+      PASSED. Chapter 2 "Kinetics of Homogeneous Reactions" splits exactly the way the case does:
+      2.1 "Concentration-Dependent Term of a Rate Equation" (book p. 14) and 2.2 "Temperature-
+      Dependent Term of a Rate Equation" (book p. 27), and it states the consequence a page can test
+      - that the rate is far more temperature-sensitive at low temperature, and that the frequency
+      factor does not affect the temperature SENSITIVITY.
+    J4.6: >-
+      PASSED. Chapter 27 "Enzyme Fermentation", 27.1 "Michaelis-Menten Kinetics (M-M kinetics)"
+      (book p. 612), 27.2 competitive and non-competitive inhibition; and Ch.2 attributes the
+      special analysis to "Michaelis and Menten (1913)" by name and year.
+    J4.1: >-
+      PASSED with a citation caveat. Chapters 28-30 build on the Monod expression (book pp. 624 ff),
+      the book says plainly that competing expressions "have all been forgotten since Monod came out
+      with his expression", and one worked example uses Monod's OWN reported data ("see Monod, 1958,
+      p. 74"). The attribution is to Monod (1958), NOT the Annu. Rev. Microbiol. 3, 371 (1949) paper
+      recorded on the case - so use reference_read_from and name both.
+    A3.2: >-
+      FAILED. Higbie appears only as a passing alternative to the film theory - "Alternatives to the
+      film theory are also in use. These models [Higbie (1935); Danckwerts (1950, 1955)] view that
+      the liquid at the interface is continually washed ..." - with the reference given in the
+      chapter list. Named and attributed, but NOT derived and NOT tested. That is the E1.1 failure
+      mode precisely. Use Bird/Stewart/Lightfoot or Froment for A3.2 instead.
+    D1.2: >-
+      UNCHECKED. Chapter 13 is the dispersion model, but A2.1/A2.2 are already published from
+      Danckwerts and Wehner & Wilhelm themselves.
+    E1.5: >-
+      UNCHECKED. Chapter 20 covers fluidized reactors and the K-L model; whether it carries May
+      (1959) / van Deemter (1961) solids mixing with attribution has not been checked.
+    J4.5: >-
+      UNCHECKED. Chapters 28-30 discuss maintenance and endogenous respiration, but the Herbert-Pirt
+      attribution has not been checked.
+  notes: >-
+    COMPLETE BOOK, 684 PDF pages. PDF page = book page + 16 (PDF p.337 = book p.321, checked against
+    the printed Contents). THIRD edition, 1999 - not the 2nd (1972). 600 ppi JBIG2 bilevel, the
+    joint-highest native resolution in the library; render at 600, never above. This is Levenspiel
+    the MONOGRAPH; do not confuse it with Levenspiel1972-...-JCatal25-265.pdf, which is Levenspiel
+    the author and closes a different case (B2.3).
+
+- file: BOOK-LiKwauk-1994-particle-fluid-two-phase-flow-EMMS-1ed.pdf
+  old_names: ["7981631866938162.pdf"]
+  kind: book
+  identity: >-
+    Li, Jinghai & Kwauk, Mooson, "Particle-Fluid Two-Phase Flow: The Energy-Minimization Multi-Scale
+    Method", Metallurgical Industry Press, Beijing (1994)
+  doi: null
+  verified_by: >-
+    cover, preface and printed contents rendered and read, 2026-08-05 (the bare numeric filename
+    gave nothing away)
+  native_ppi: 300
+  pages: 214
+  text_layer: >-
+    NO TEXT LAYER AT ALL - pdftotext returns one byte (a form feed) per page for all 214 pages.
+    Renders only, for everything.
+  supports:
+    - {case: A1.9, role: "origin", status: unclaimed}
+  notes: >-
+    COMPLETE BOOK, 214 PDF pages. PDF page = book page + 9 to + 11 (checked at pp. 39, 40, 158,
+    165). JBIG2 bilevel at ~285 ppi.
+
+- file: BOOK-RawlingsEkerdt-2025-chemical-reactor-analysis-design-fundamentals-2ed-5pr.pdf
+  old_names: ["CHEMREACFUN-book-2nd-edition-5th-printing.pdf"]
+  kind: book
+  identity: >-
+    Rawlings, J. B. & Ekerdt, J. G., "Chemical Reactor Analysis and Design Fundamentals", 2nd
+    edition, 5th printing (March 2025), Nob Hill Publishing, Santa Barbara
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page, imprint page and the
+    printing history read from the born-digital text layer
+  native_ppi: null
+  pages: 668
+  text_layer: >-
+    BORN-DIGITAL (LaTeX/Lucida, Type 1 + Type 3 fonts). Clean text layer throughout including
+    equations. No page images at all.
+  supports:
+    - {case: A2.4, role: "canonical-source (E1.1: failed)", status: needs-paper}
+    - {case: C1.5, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: D1.1, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J2.2, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J4.1, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: J4.2, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J4.5, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: J4.6, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+  e1_1_evidence:
+    J4.1: >-
+      PASSED. Ch. "Particulate Reactors" (book p. 596) prints the Monod equation mu = mu_m S/(K_s +
+      S) with reference [12], beside the Blackman, Tessier, Moser and Contois alternatives, notes
+      that Monod is "the simplest form of the Langmuir adsorption isotherm", and then closes the
+      chemostat balances with it. States + attributes + carries.
+    C1.5: >-
+      PASSED. Ch.5, eq. 5.32/5.33: the Arrhenius rate expression k = k0 exp(-Ea/(kB T)) with the
+      weak prefactor temperature dependence k0 = A T^B, -2 <= B <= 1, and the stated validity
+      condition Ea >> B kB T - which is itself a testable claim.
+    J4.2: >-
+      UNCHECKED, but the substrate-inhibition form mu = mu_m S/(K_s + S + K_1 S^2) IS printed on
+      book p. 596 among the inhibition models. Whether it is attributed to Andrews (1968) has not
+      been checked - and it does not matter much, because Andrews' own paper arrived in this drop.
+    J4.5: >-
+      UNCHECKED. The chemostat balances are there; the Herbert-Pirt maintenance term has not been
+      looked for.
+    J4.6: >-
+      UNCHECKED. Michaelis-Menten appears as Exercise 9.15 (parameter estimation from printed c_S-
+      vs-time data) rather than as a derivation, so it may fail the "carries the result" limb. The
+      printed exercise data are nevertheless a ready validation set.
+    D1.1: >-
+      UNCHECKED. The book is fundamentals-first and computational; Froment is the stronger canonical
+      source for the D1 ladder.
+    J2.2: >-
+      UNCHECKED. The second edition added particulate systems and population balances (the preface
+      says so explicitly), which is J2 territory.
+    A2.4: >-
+      FAILED. The string "tanks-in-series" does not occur anywhere in the book. It does something
+      better for a NEARBY case: book p. ~461 gives the Danckwerts boundary conditions and then
+      records that "they were derived at least 45 years prior to Danckwerts in a classic paper by
+      Langmuir [22]" - a genuine attribution finding for the already-published A2.1/A2.2, and one
+      the Langmuir 1918 file now on disk could be checked against.
+  notes: >-
+    COMPLETE BOOK, 668 PDF pages. The filename "CHEMREACFUN" gave nothing away; identified from the
+    title page. Printing history printed on the imprint page: 1st edn Mar 2002 / Dec 2004; 2nd edn
+    Aug 2012, Nov 2013; paperback 3rd Jul 2020, 4th May 2024, 5th Mar 2025. This is a FIFTH
+    monograph, over and above the four the canonical class named.
+
+- file: BOOK-TaylorKrishna-1993-multicomponent-mass-transfer-1ed.pdf
+  old_names: ["RossTaylorR.Krishna-MulticomponentMassTransferWileySeriesinChemicalEngineering1993.pdf"]
+  kind: book
+  identity: >-
+    Taylor, R. & Krishna, R., "Multicomponent Mass Transfer", Wiley Series in Chemical Engineering,
+    John Wiley & Sons (1993), ISBN 0-471-57417-1
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page (PDF p.3) and copyright
+    page (PDF p.4) read, plus the printed Contents and Preface
+  native_ppi: 600
+  pages: 609
+  text_layer: >-
+    ABBYY FineReader over 600 ppi JBIG2 bilevel. Prose excellent; equation numbers survive but
+    symbols degrade (D-with-bar renders as "£>", "D12" as "£>12"). Every constant off a crop.
+  supports:
+    - {case: A4.1, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: A4.2, role: "secondary", status: published}
+    - {case: A4.3, role: "secondary", status: published}
+    - {case: A4.4, role: "secondary", status: published}
+    - {case: A4.8, role: "canonical-source (E1.1: passed)", status: needs-paper}
+    - {case: F3.6, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+    - {case: F3.7, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
+  e1_1_evidence:
+    A4.1: >-
+      PASSED, and it is a full pass on all three limbs. STATES: sec. 6.1.3 "Limiting Cases", eq.
+      (6.1.14) - "When species i diffuses through n-1 stagnant gases and we have N_j = 0, i != j",
+      D_i,eff = (1 - x_i)/sum(x_j/D_ij). ATTRIBUTES: the equation carries "(Wilke, 1950)" inline,
+      and sec. 8.7 records that "the oldest, simplest, and still widely used methods, pioneered by
+      Hougen and Watson (1947) and by Wilke (1950), employ the concept of an effective diffusion
+      coefficient". TESTS: Ch. 8 works a problem "based on experiments conducted by Fairbanks and
+      Wilke (1950) with a view to assessing the validity of Wilke's effective diffusivity formula",
+      and sec. 8.6.1 compares the effective-diffusivity result against the exact and linearized
+      matrix solutions. So this book both sources A4.1 and gives it a ready-made failure test -
+      which the origin paper alone does not.
+    A4.8: >-
+      PASSED for the ternary MEASUREMENT half, with one caveat. sec. 2.1, Example 2.1.1
+      "Multicomponent Diffusion in a Stefan Tube: An Experimental Test of the Maxwell-Stefan
+      Equations" reproduces Carty and Schrodt (1975) - the acetone(1)/methanol(2)/air(3) experiment
+      A4.8's blocker asks for by name - and PRINTS the conditions (x1 = 0.319, x2 = 0.528 at the
+      liquid surface; 99.4 kPa; 328.5 K; diffusion path 0.238 m; D12 = 8.48, D13 = 13.72, D23 =
+      19.91 mm2/s) and the computed fluxes (N1 = 1.783e-3, N2 = 3.127e-3 mol/m2 s, N3 = 0). Example
+      8.6.1 revisits the same experiment with effective-diffusivity methods, which is the comparison
+      the case wants. CAVEAT: the measured composition profiles are Figure 2.5, a FIGURE - the
+      fluxes and conditions are printed, the scatter is not, so a page that wants the raw profiles
+      needs digitisation and therefore the review gate. A page built on the printed fluxes alone
+      needs no gate.
+    A4.2: >-
+      secondary. A4.2 is published from Krishna & Wesselingh (1997); this book is the fuller
+      treatment behind it.
+    A4.3: >-
+      secondary.
+    A4.4: >-
+      secondary.
+    F3.6: >-
+      UNCHECKED. Part III (Chapters 12-15) covers rate-based separation design and Krishnamurthy &
+      Taylor is the case's own citation, so this is the most promising unchecked entry in the whole
+      table.
+    F3.7: >-
+      UNCHECKED. Same Part III; the case cites Taylor & Krishna (2000), a later paper by the same
+      authors.
+  notes: >-
+    COMPLETE BOOK, 609 PDF pages. PDF page = book page + 12 in the body (PDF p.52 = book p.21). 600
+    ppi JBIG2 bilevel native. One of the four textbook-canonical monographs.
+
+- file: Baldyga1989-micromixing-simplification-pt1-ChemEngJ42-83.pdf
+  old_names: ["1-s2.0-0300946789850026-main.pdf"]
+  kind: paper
+  identity: >-
+    Baldyga, J. & Bourne, J. R., "Simplification of micromixing calculations. I. Derivation and
+    application of new model", The Chemical Engineering Journal 42(2) 83-92 (1989)
+  doi: "10.1016/0300-9467(89)85002-6"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ccitt scan at 300 ppi; 4007 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.9, role: "origin", status: unclaimed}
+  notes: >-
+    CATALOGUE ERROR: docs/catalog-A-foundations.md gives A2.9 as "Chem. Eng. Sci. (1989)". Wrong
+    journal - the PII prefix 0300-9467 is The Chemical Engineering Journal. Part II is a separate
+    file.
+
+- file: Baldyga1989-micromixing-simplification-pt2-ChemEngJ42-93.pdf
+  old_names: ["1-s2.0-0300946789850038-main.pdf"]
+  kind: paper
+  identity: >-
+    Baldyga, J. & Bourne, J. R., "Simplification of micromixing calculations. II. New applications",
+    The Chemical Engineering Journal 42(2) 93-101 (1989)
+  doi: "10.1016/0300-9467(89)85003-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 3291 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    Part II of the A2.9 pair. Only one filename can be the papers-on-disk value (find_papers.py does
+    an is_file() on it), so both parts are listed on queue_cases/A2.9.yaml instead.
+
+- file: Beeckman1979-site-coverage-pore-blockage-IECFund18-245.pdf
+  old_names: ["i160071a009.pdf"]
+  kind: paper
+  identity: >-
+    Beeckman, J. W. & Froment, G. F., "Catalyst Deactivation by Active Site Coverage and Pore
+    Blockage", Ind. Eng. Chem. Fundamentals 18(3) 245-256 (1979)
+  doi: "10.1021/i160071a009"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 12
+  text_layer: >-
+    ccitt scan at 300 ppi; 3557 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B2.4, role: "origin", status: unclaimed}
+  notes: >-
+    FIRST-PAGE TRAP: page 1 opens with the NOMENCLATURE of the preceding article (a dissolved-oxygen
+    probe paper). Table-vs-figure split UNCONFIRMED.
+
+- file: Bezzo2004-hybrid-multizonal-cfd-pt2-CACE28-513.pdf
+  old_names: ["1-s2.0-S0098135403002072-main.pdf"]
+  kind: paper
+  identity: >-
+    Bezzo, F. & Macchietto, S., "A general methodology for hybrid multizonal/CFD models. Part II.
+    Automatic zoning", Computers and Chemical Engineering 28(4) 513-525 (2004)
+  doi: "10.1016/j.compchemeng.2003.08.010"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 600
+  pages: 13
+  text_layer: >-
+    ccitt scan at 600 ppi; 4298 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.10, role: "origin", status: unclaimed}
+  notes: >-
+    Two authors, which is what the catalogue's "Bezzo & Macchietto (2004)" names. PART I is a
+    DIFFERENT, THREE-AUTHOR paper (Bezzo, Macchietto & Pantelides) and is NOT on disk; Part II
+    defines the zone model it uses but derives the framework in Part I.
+
+- file: Bhatia1980-random-pore-model-pt1-AIChEJ26-379.pdf
+  old_names: ["AIChE Journal - May 1980.pdf"]
+  kind: paper
+  identity: >-
+    Bhatia, S. K. & Perlmutter, D. D., "A Random Pore Model for Fluid-Solid Reactions: I.
+    Isothermal, Kinetic Control", AIChE Journal 26(3) 379-386 (1980)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title, by-line and affiliation
+    (University of Pennsylvania) read on page 1; Wiley Subject metadata "AIChE Journal
+    1980.26:379-386"
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~4.4 k chars on page 3.
+  supports:
+    - {case: B3.3, role: "origin", status: needs-paper}
+  notes: >-
+    The filename gave NOTHING away - it was literally "AIChE Journal - May 1980.pdf". Identified
+    from the title page. Its own abstract names the validation: "The char gasification data of
+    Hashimoto et al. (1979) are shown to produce correlations consistent with the expectations of
+    the new model", and it states the reduction to the grain model ("a relationship is derived
+    between the effective grain shape factor and a pore structure parameter") and to Petersen (1957)
+    at zero variance - both of which are checkable against the already-published B3.1/B3.2 pages.
+    Part II is NOT on disk.
+
+- file: Billet1999-mass-transfer-columns-packings-TransIChemE77A-498.pdf
+  old_names: ["Literature-PredictionofMassTransferColumns.pdf"]
+  kind: paper
+  identity: >-
+    Billet, R. & Schultes, M., "Prediction of Mass Transfer Columns with Dumped and Arranged
+    Packings - Updated Summary of the Calculation Method of Billet and Schultes", Trans. IChemE 77
+    Part A, 498-504 (September 1999)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 7
+  text_layer: >-
+    ccitt scan at 300 ppi; 1 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.9, role: "origin", status: unclaimed}
+  notes: >-
+    Trans IChemE Part A IS Chemical Engineering Research and Design, so the catalogue's "Chem. Eng.
+    Res. Des. (1993, 1999)" is right for the 1999 half; the 1993 half (ChERD 71) is NOT on disk. A
+    "Literature-" filename is exactly the shape that has fooled people before - this one is the
+    paper itself. NO TEXT LAYER (copy-protected RC4) and CCITT-G4 bilevel at 300 ppi; read on
+    renders only, and they are very legible.
+
+- file: Bischoff1965-generalised-effectiveness-factor-AIChEJ11-351.pdf
+  old_names: ["AIChE Journal - March 1965 - Bischoff - Effectiveness factors for general reaction rate forms.pdf"]
+  kind: paper
+  identity: >-
+    Bischoff, K. B., "Effectiveness Factors for General Reaction Rate Forms", AIChE Journal 11(2)
+    351-355 (1965)
+  doi: "10.1002/aic.690110229"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 2210 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B1.3, role: "origin", status: unclaimed}
+  notes: >-
+    Poor text layer (1.8 k chars on page 3). Validation is ANALYTICAL - the collapse is computable
+    and the band width measurable - so no figure gate.
+
+- file: Bosch1989-CO2-absorption-promoted-carbonate-CES44-2735.pdf
+  old_names: ["F3_5.pdf"]
+  kind: paper
+  identity: >-
+    Bosch, H., Versteeg, G. F. & van Swaaij, W. P. M., "Gas-liquid mass transfer with parallel
+    reversible reactions - III. Absorption of CO2 into solutions of blends of amines and potash",
+    Chemical Engineering Science 44(11) 2735-2743 (1989)
+  doi: "10.1016/0009-2509(89)85216-9"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 5839 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: F3.5, role: "origin", status: published}
+  notes: >-
+    F3.5's catalogue citation ("Versteeg & van Swaaij (1988); Danckwerts & Sharma") points at the
+    group's KINETICS paper; the auto-resolved DOI landed on this one, which IS the model paper the
+    case wants and which cites the 1988 kinetics paper as its correlation (11). The old filename
+    F3_5.pdf was an auto-download named after the case id - the one naming convention this rename
+    retires.
+
+- file: Brunauer1938-BET-multimolecular-adsorption-JACS60-309.pdf
+  old_names: ["ja01269a023.pdf"]
+  kind: paper
+  identity: >-
+    Brunauer, S., Emmett, P. H. & Teller, E., "Adsorption of Gases in Multimolecular Layers", J. Am.
+    Chem. Soc. 60(2) 309-319 (1938)
+  doi: "10.1021/ja01269a023"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; running head "Feb., 1938 ... 309",
+    the Contribution line (Bureau of Chemistry and Soils and George Washington University) and the
+    by-line read on page 1
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ACS scan, CCITT-G4 300 ppi, ~4.9 k chars on page 3 - one of the better ACS layers. Verify the
+    isotherm constants on crops anyway.
+  supports:
+    - {case: J1.3, role: "origin", status: needs-paper}
+  notes: >-
+    Clean title page, no first-page trap. 11 pages.
+
+- file: Calderbank1961-mass-transfer-agitated-vessels-CES16-39.pdf
+  old_names: ["1-s2.0-000925096187005X-main.pdf"]
+  kind: paper
+  identity: >-
+    Calderbank, P. H. & Moo-Young, M. B., "The continuous phase heat and mass-transfer properties of
+    dispersions", Chemical Engineering Science 16(1-2) 39-54 (1961)
+  doi: "10.1016/0009-2509(61)87005-X"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 16
+  text_layer: >-
+    ccitt scan at 300 ppi; 4471 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.6, role: "origin", status: published}
+  notes: >-
+    The PII decodes to 1961 and the volume/pages are right, but the scan's own header text layer
+    prints "1981" and "vol 19". The api-text for this article returned 81 kB of text with FIVE
+    readable numbers.
+
+- file: Charlesworth1960-evaporation-drops-dissolved-solids-AIChEJ6-9.pdf
+  old_names: ["AIChE Journal - March 1960 - Charlesworth - Evaporation from drops containing dissolved solids.pdf"]
+  kind: paper
+  identity: >-
+    Charlesworth, D. H. & Marshall, W. R., Jr., "Evaporation from Drops Containing Dissolved
+    Solids", AIChE Journal 6(1) 9-23 (1960)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    ccitt scan at 300 ppi; 4437 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    NOT A3.5. A companion study by the same group about a DIFFERENT problem (crust formation in
+    drops containing dissolved solids), and one of the two files that made A3.5 look sourced when it
+    was not. The open question "does Charlesworth reprint enough of the Ranz-Marshall correlation to
+    source A3.5 by the reprint route?" is now MOOT - the originals arrived. Kept as a
+    companion/secondary for A3.5.
+
+- file: Chiu1983-gel-effect-free-radical-polymerization-Macromolecules16-348.pdf
+  old_names: ["ma00237a002.pdf"]
+  kind: paper
+  identity: >-
+    Chiu, W. Y., Carratt, G. M. & Soong, D. S., "A Computer Model for the Gel Effect in Free-Radical
+    Polymerization", Macromolecules 16(3) 348-357 (1983)
+  doi: "10.1021/ma00237a002"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the running head "Macromolecules
+    1983, 16, 348-357" and the PDF Title/Author metadata agree, and the by-line was read on the page
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ACS scan, CCITT-G4 300 ppi, ~4.8 k chars on page 3. Good for prose; constants on crops.
+  supports:
+    - {case: J5.3, role: "origin", status: needs-paper}
+  notes: >-
+    FIRST-PAGE TRAP: page 1 opens with the References and Notes of the preceding article (a Zambelli
+    stereochemistry paper); Chiu et al. start below.
+
+- file: Criado2018-CaO-carbonation-temperature-IECR57-12595.pdf
+  old_names: ["ie8b02111.pdf"]
+  kind: paper
+  identity: >-
+    Criado, Y. A., Arias, B. & Abanades, J. C., "Effect of the Carbonation Temperature on the CO2
+    Carrying Capacity of CaO", Ind. Eng. Chem. Research 57(37) 12595-12599 (2018)
+  doi: "10.1021/acs.iecr.8b02111"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 600
+  pages: 5
+  text_layer: >-
+    image scan at 600 ppi; 6576 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B3.5, role: "origin", status: unclaimed}
+  notes: >-
+    A 5-page RESEARCH NOTE and NOT the catalogued paper: B3.5 names Grasa & Abanades, IECR 45
+    (2006), which is not on disk. This is the same group re-fitting "the CaO deactivation curve that
+    is widely employed" to cover 450-725 C. REPRINT ROUTE; the origin fit is not derived here. Born-
+    digital body, 600 ppi JPEG figures.
+
+- file: Danckwerts1951-liquid-film-coefficients-gas-absorption-IEC43-1460.pdf
+  old_names: ["ie50498a055.pdf"]
+  kind: paper
+  identity: >-
+    Danckwerts, P. V., "Significance of Liquid-Film Coefficients in Gas Absorption", Industrial and
+    Engineering Chemistry 43(6) 1460-1467 (1951)
+  doi: "10.1021/ie50498a055"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 7534 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A3.3, role: "origin", status: published}
+  notes: >-
+    A3.3 established that the sqrt(D) exponent is NOT testable from this paper: both fits have zero
+    residual BY CONSTRUCTION, and a real test needs a factor 1.53 in D.
+
+- file: Danckwerts1953-continuous-flow-systems-CES2-1.pdf
+  old_names: ["1-s2.0-0009250953800011-main.pdf"]
+  kind: paper
+  identity: >-
+    Danckwerts, P. V., "Continuous flow systems: Distribution of residence times", Chemical
+    Engineering Science 2(1) 1-13 (1953)
+  doi: "10.1016/0009-2509(53)80001-1"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 13
+  text_layer: >-
+    ccitt scan at 300 ppi; 2038 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.1, role: "origin", status: published}
+
+- file: DiBlasi2008-wood-biomass-pyrolysis-review-PECS34-47.pdf
+  old_names: ["1-s2.0-S0360128507000214-main.pdf"]
+  kind: paper
+  identity: >-
+    Di Blasi, C., "Modeling chemical and physical processes of wood and biomass pyrolysis", Progress
+    in Energy and Combustion Science 34(1) 47-90 (2008)
+  doi: "10.1016/j.pecs.2006.12.001"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 800
+  pages: 44
+  text_layer: >-
+    ccitt scan at 800 ppi; 6257 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B3.9, role: "origin", status: unclaimed}
+  notes: >-
+    A REVIEW, and the catalogue names it as such, so it is the reprint route by construction for
+    Broido-Shafizadeh. 44 pp, born-digital, clean, NO page images at all.
+
+- file: Dixon1979-effective-heat-transfer-parameters-AIChEJ25-663.pdf
+  old_names: ["AIChE Journal - July 1979 - Dixon - Theoretical prediction of effective heat transfer parameters in packed beds.pdf"]
+  kind: paper
+  identity: >-
+    Dixon, A. G. & Cresswell, D. L., "Theoretical Prediction of Effective Heat Transfer Parameters
+    in Packed Beds", AIChE Journal 25(4) 663-676 (1979)
+  doi: "10.1002/aic.690250413"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 14
+  text_layer: >-
+    ccitt scan at 300 ppi; 4965 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.11, role: "origin", status: unclaimed}
+  notes: >-
+    WARNING: PDF page 1 opens with the REFERENCE LIST OF THE PRECEDING ARTICLE (an LNG-density
+    paper); Dixon & Cresswell starts halfway down that same page. Prose ok, digits destroyed. The
+    Wiley download stamp on every page confirms the DOI.
+
+- file: Doyle1993-lithium-cell-galvanostatic-model-JES140-1526.pdf
+  old_names: ["Doyle_1993_J._Electrochem._Soc._140_1526.pdf"]
+  kind: paper
+  identity: >-
+    Doyle, M., Fuller, T. F. & Newman, J., "Modeling of Galvanostatic Charge and Discharge of the
+    Lithium/Polymer/Insertion Cell", Journal of the Electrochemical Society 140(6) 1526-1533 (1993)
+  doi: "10.1149/1.2221597"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 5843 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: J3.1, role: "origin", status: published}
+    - {case: J3.4, role: "origin", status: published}
+  notes: >-
+    Parameters are in running text, not tables. Serves J3.1 and J3.4.
+
+- file: Duncan1962-three-component-gas-diffusion-AIChEJ8-38.pdf
+  old_names: ["AIChE Journal - March 1962 - Duncan - An experimental study of three component gas diffusion.pdf"]
+  kind: paper
+  identity: >-
+    Duncan, J. B. & Toor, H. L., "An Experimental Study of Three Component Gas Diffusion", AIChE
+    Journal 8(1) 38-41 (1962)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 4
+  text_layer: >-
+    ccitt scan at 300 ppi; 4969 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A4.9, role: "origin", status: published}
+  notes: >-
+    The strongest early experimental page in the gallery - the ternary diffusion-barrier / reverse-
+    diffusion measurement Fick cannot reproduce. Its Figure 2 was digitised.
+
+- file: Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf
+  old_names: ["i160028a013.pdf"]
+  kind: paper
+  identity: >-
+    Dyson, D. C. & Simon, J. M., "A Kinetic Expression with Diffusion Correction for Ammonia
+    Synthesis on Industrial Catalyst", Ind. Eng. Chem. Fundamentals 7(4) 605-610 (1968)
+  doi: "10.1021/i160028a013"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 6
+  text_layer: >-
+    ccitt scan at 300 ppi; 4066 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C2.3, role: "origin", status: unclaimed}
+    - {case: D3.2, role: "origin", status: unclaimed}
+  notes: >-
+    CARRIED WRONG PUBLISHER METADATA: its Title field read "Kinetic study of the dehydrogenation of
+    ethanol", which is the title of a DIFFERENT file in the same drop (Franckaerts & Froment 1964).
+    Settled by the ACS download stamp printed on every page (article-pdf/7/4/605/) - the cheapest
+    reliable identity check for ACS files here. FIRST-PAGE TRAP: page 1 opens with the Literature
+    Cited of the preceding article (a Japanese catalyst-poisoning study). Temkin & Pyzhev (1940),
+    the other half of C2.3's citation, is NOT on disk; Dyson & Simon print the Temkin-Pyzhev form
+    they correct. Serves C2.3 and D3.2.
+
+- file: Edwards1968-gas-dispersion-packed-beds-CES23-109.pdf
+  old_names: ["1-s2.0-0009250968870563-main.pdf"]
+  kind: paper
+  identity: >-
+    Edwards, M. F. & Richardson, J. F., "Gas dispersion in packed beds", Chemical Engineering
+    Science 23(2) 109-123 (1968)
+  doi: "10.1016/0009-2509(68)87056-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    ccitt scan at 300 ppi; 2969 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.5, role: "origin", status: published}
+
+- file: Ergun1952-fluid-flow-through-packed-columns-ChemEngProg48-89.pdf
+  old_names: ["211103107pdfcreator.pdf"]
+  kind: paper
+  identity: >-
+    Ergun, S., "Fluid Flow through Packed Columns", Chemical Engineering Progress 48(2) 89-94
+    (1952), Carnegie Institute of Technology
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 283
+  pages: 4
+  text_layer: >-
+    image scan at 283 ppi; 1 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A1.1, role: "origin", status: published}
+  notes: >-
+    Title and by-line confirmed on a render 2026-08-06 ("FLUID FLOW THROUGH PACKED COLUMNS / SABRI
+    ERGUN / Carnegie Institute of Technology, Pittsburgh, Pennsylvania"). The VOLUME AND PAGE RANGE
+    in this filename come from the catalogue citation, NOT from the scan - the folio is outside the
+    photographed area. The scan is a two-page spread and the left half of the first image is the END
+    of the preceding article (multiple-cyclone tests) - a first-page trap in a new form. PURE SCAN,
+    no text layer.
+
+- file: Feng1973-isothermal-diffusion-porous-solids-IECFund12-143.pdf
+  old_names: ["i160046a001.pdf"]
+  kind: paper
+  identity: >-
+    Feng, C. & Stewart, W. E., "Practical Models for Isothermal Diffusion and Flow of Gases in
+    Porous Solids", Ind. Eng. Chem. Fundamentals 12(2) 143-147 (1973)
+  doi: "10.1021/i160046a001"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 4792 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B1.10, role: "origin", status: unclaimed}
+  notes: >-
+    Downstream of the published A4.3; validation is structural - test the two-radius claim.
+
+- file: Fletcher1992-CPD-model-pt3-13C-NMR-EnergyFuels6-414.pdf
+  old_names: ["ef00034a011.pdf"]
+  kind: paper
+  identity: >-
+    Fletcher, T. H., Kerstein, A. R., Pugmire, R. J., Solum, M. S. & Grant, D. M., "Chemical
+    Percolation Model for Devolatilization. 3. Direct Use of 13C NMR Data to Predict Effects of Coal
+    Type", Energy & Fuels 6(4) 414-431 (1992)
+  doi: "10.1021/ef00034a011"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 18
+  text_layer: >-
+    ccitt scan at 300 ppi; 7062 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    The CPD model as used today. One of three files on queue_cases/B3.8.yaml.
+
+- file: Franckaerts1964-ethanol-dehydrogenation-kinetics-CES19-807.pdf
+  old_names: ["1-s2.0-0009250964850922-main.pdf"]
+  kind: paper
+  identity: >-
+    Franckaerts, J. & Froment, G. F., "Kinetic study of the dehydrogenation of ethanol", Chemical
+    Engineering Science 19(10) 807-818 (1964)
+  doi: "10.1016/0009-2509(64)85092-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 12
+  text_layer: >-
+    ccitt scan at 300 ppi; 2109 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C2.19, role: "origin", status: unclaimed}
+  notes: >-
+    Fills C2.19, whose catalog_reference was "(in this suite's teacher exercises)" - no citation at
+    all. Also the natural source for B1.11 (multicomponent pellet, ethanol dehydrogenation), though
+    whether it reports pellet-scale information has NOT been checked.
+
+- file: Froment1961-fixed-bed-fouling-pt1-CES16-189.pdf
+  old_names: ["1-s2.0-0009250961800304-main.pdf"]
+  kind: paper
+  identity: >-
+    Froment, G. F. & Bischoff, K. B., "Non-steady state behaviour of fixed bed catalytic reactors
+    due to catalyst fouling", Chemical Engineering Science 16(3-4) 189-201 (1961)
+  doi: "10.1016/0009-2509(61)80030-4"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 13
+  text_layer: >-
+    ccitt scan at 300 ppi; 3347 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B2.2, role: "origin", status: published}
+  notes: >-
+    The header year OCRs as "1901". PART II (CES 17 (1962) 105) IS STILL api-text ONLY; no PDF of it
+    has arrived.
+
+- file: Froment1967-fixed-bed-reactors-design-status-IEC59-18.pdf
+  old_names: ["ie50686a006.pdf"]
+  kind: paper
+  identity: >-
+    Froment, G. F., "Fixed Bed Catalytic Reactors - Current Design Status", Industrial and
+    Engineering Chemistry 59(2) 18-27 (1967)
+  doi: "10.1021/ie50686a006"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ccitt scan at 300 ppi; 3903 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C2.10, role: "origin", status: published}
+    - {case: D3.4, role: "origin", status: covered}
+  notes: >-
+    The catalogue's "Froment (1967)" for BOTH C2.10 (o-xylene kinetics) and D3.4 (the multitubular
+    reactor); it compares the 1D and 2D models on a complex hydrocarbon-oxidation scheme.
+    CALDERBANK, the other name on C2.10's row, is NOT on disk. C2.10's published page prints
+    European THOUSANDS separators from the text layer - a trap recorded in handoff.md.
+
+- file: Fuller1966-diffusion-volumes-IEC58-18.pdf
+  old_names: ["ie50677a007.pdf"]
+  kind: paper
+  identity: >-
+    Fuller, E. N., Schettler, P. D. & Giddings, J. C., "A New Method for Prediction of Binary Gas-
+    Phase Diffusion Coefficients", Industrial and Engineering Chemistry 58(5) 18-27 (1966)
+  doi: "10.1021/ie50677a007"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ccitt scan at 300 ppi; 5355 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A4.5, role: "origin", status: published}
+  notes: >-
+    The only non-bilevel scan of its drop (JPEG RGB, 300 ppi) and the atomic diffusion-volume table
+    survives OCR with its decimal points intact - which is exactly the Robeson 1991 failure mode, a
+    table that LOOKS right. It was verified against the image and the text layer had SILENTLY
+    ALTERED DIGITS in Table III, 24 of them. Verify anyway. A published erratum to this paper is not
+    on disk.
+
+- file: Geldart1973-types-of-gas-fluidization-PowderTechnol7-285.pdf
+  old_names: ["1-s2.0-0032591073800373-main.pdf"]
+  kind: paper
+  identity: >-
+    Geldart, D., "Types of gas fluidization", Powder Technology 7(5) 285-292 (1973)
+  doi: "10.1016/0032-5910(73)80037-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 4605 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A1.7, role: "origin", status: published}
+  notes: >-
+    A1.7 already computed a voidage of 0.444 from Geldart's own columns and flagged the two rows
+    that give it; A1.6 built an argument on an inverted 0.399 and was +58% biased. Anyone reloading
+    A1.7's CSV must read A1.7 first.
+
+- file: Gheorghiu2004-optimal-bimodal-pore-networks-AIChEJ50-812.pdf
+  old_names: ["AIChE Journal - 2004 - Gheorghiu - Optimal bimodal pore networks for heterogeneous catalysis.pdf"]
+  kind: paper
+  identity: >-
+    Gheorghiu, S. & Coppens, M.-O., "Optimal Bimodal Pore Networks for Heterogeneous Catalysis",
+    AIChE Journal 50(4) 812-820 (2004)
+  doi: "10.1002/aic.10076"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 6230 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B1.13, role: "origin", status: unclaimed}
+  notes: >-
+    A PROPOSAL, not a confirmed match: B1.13's catalog_reference was "-" (empty). The paper
+    optimises a bimodal network for the yield of diffusion-limited first-order reactions rather than
+    merely resolving the two-scale resistance the case names. Read the scope note on
+    queue_cases/B1.13.yaml before dispatching.
+
+- file: Glueckauf1955-linear-driving-force-TransFaradaySoc51-1540.pdf
+  old_names: ["tf9555101540.pdf"]
+  kind: paper
+  identity: >-
+    Glueckauf, E., "Theory of chromatography. Part 10. Formulae for diffusion into spheres and their
+    application to chromatography", Transactions of the Faraday Society 51, 1540-1551 (1955)
+  doi: "10.1039/tf9555101540"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 400
+  pages: 12
+  text_layer: >-
+    ccitt scan at 400 ppi; 899 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: J1.5, role: "origin", status: published}
+  notes: >-
+    Thin text layer; read numbers off renders. Validation is purely analytic - the 15 D/r^2 LDF
+    coefficient against the exact spherical-diffusion series - so no figure gate.
+
+- file: Graaf1988-methanol-synthesis-kinetics-CES43-3185.pdf
+  old_names: ["1-s2.0-0009250988851273-main.pdf"]
+  kind: paper
+  identity: >-
+    Graaf, G. H., Stamhuis, E. J. & Beenackers, A. A. C. M., "Kinetics of low-pressure methanol
+    synthesis", Chemical Engineering Science 43(12) 3185-3195 (1988)
+  doi: "10.1016/0009-2509(88)85127-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ccitt scan at 300 ppi; 3211 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C2.4, role: "origin", status: unclaimed}
+    - {case: D3.3, role: "origin", status: unclaimed}
+  notes: >-
+    Serves C2.4 and D3.3.
+
+- file: Graetz1882-waermeleitungsfaehigkeit-fluessigkeiten-AnnPhys254-79.pdf
+  old_names: ["Annalen der Physik - 1882 - Graetz - Ueber die W rmeleitungsf higkeit von Fl ssigkeiten.pdf"]
+  kind: paper
+  identity: >-
+    Graetz, L., "Ueber die Warmeleitungsfahigkeit von Flussigkeiten", Annalen der Physik 254(1)
+    79-94 (1882)
+  doi: "10.1002/andp.18822540106"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 17
+  text_layer: >-
+    ccitt scan at 300 ppi; 2170 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.15, role: "origin", status: published}
+  notes: >-
+    IN GERMAN. Same care as Martin & Nilles 1993: expect stripped umlauts and the German comma
+    decimal separator.
+
+- file: Grant1989-chemical-percolation-devolatilization-CPD-EnergyFuels3-175.pdf
+  old_names: ["ef00014a011.pdf"]
+  kind: paper
+  identity: >-
+    Grant, D. M., Pugmire, R. J., Fletcher, T. H. & Kerstein, A. R., "Chemical Model of Coal
+    Devolatilization Using Percolation Lattice Statistics", Energy & Fuels 3(2) 175-186 (1989)
+  doi: "10.1021/ef00014a011"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 12
+  text_layer: >-
+    ccitt scan at 300 ppi; 7886 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B3.8, role: "origin", status: unclaimed}
+  notes: >-
+    The CPD model, part 1. Best text layer of its drop. CPD part 2 is NOT on disk.
+
+- file: Gunn1987-axial-radial-dispersion-fixed-beds-CES42-363.pdf
+  old_names: ["1-s2.0-0009250987850662-main.pdf"]
+  kind: paper
+  identity: >-
+    Gunn, D. J., "Axial and radial dispersion in fixed beds", Chemical Engineering Science 42(2)
+    363-373 (1987)
+  doi: "10.1016/0009-2509(87)85066-2"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ccitt scan at 300 ppi; 3520 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.6, role: "origin", status: published}
+  notes: >-
+    THE catalogued paper - the one A2.5's builder named as the blocker.
+
+- file: Gunn1993-axial-dispersion-note-ChemEngProcess32-333.pdf
+  old_names: ["1-s2.0-025527019380020H-main.pdf"]
+  kind: paper
+  identity: >-
+    Gunn, D. J., "On axial dispersion in fixed beds", Chemical Engineering and Processing 32(5)
+    333-338 (1993)
+  doi: "10.1016/0255-2701(93)80020-H"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 6
+  text_layer: >-
+    ccitt scan at 300 ppi; 5479 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A2.6, role: "secondary", status: published}
+  notes: >-
+    A2.6's SECONDARY source and NOT the catalogued paper. It is not evaluable on its own: its eq. 42
+    defers p(Re) to the 1987 paper. Deliberately not keyed as A2.6 in papers-on-disk.yaml, because a
+    duplicate key loads silently while reading as authoritative to a human.
+
+- file: Heck1976-monolithic-catalyst-modeling-AIChEJ22-477.pdf
+  old_names: ["AIChE Journal - May 1976 - Heck.pdf"]
+  kind: paper
+  identity: >-
+    Heck, R. H., Wei, J. & Katzer, J. R., "Mathematical Modeling of Monolithic Catalysts", AIChE
+    Journal 22(3) 477-484 (1976)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title, by-line and affiliation
+    (University of Delaware) read on page 1; Wiley Subject metadata "AIChE Journal 1976.22:477-484"
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~3.4 k chars on page 3 - thin; read constants off crops.
+  supports:
+    - {case: I1.3, role: "origin", status: needs-paper}
+  notes: >-
+    Matches the catalogue exactly (AIChE J 22 (1976)). Its own SCOPE section states the physics: CO
+    oxidation over Pt monoliths, negative reaction order in CO, 1-D vs 2-D comparison, and the 2-D
+    model's "unusual behavior of the Nusselt number in the presence of rapid reaction" - which is
+    the natural "what pymrm adds" target.
+
+- file: Henze1987-activated-sludge-model-1-WaterRes21-505.pdf
+  old_names: ["1-s2.0-0043135487900583-main.pdf"]
+  kind: paper
+  identity: >-
+    Henze, M., Grady, C. P. L. Jr., Gujer, W., Marais, G. v. R. & Matsuo, T., "A general model for
+    single-sludge wastewater treatment systems" (Activated Sludge Model No. 1), Water Research 21(5)
+    505-515 (1987)
+  doi: "10.1016/0043-1354(87)90058-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ccitt scan at 300 ppi; 2396 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: J4.8, role: "origin", status: published}
+  notes: >-
+    Printed as an ABBREVIATED REPORT. The model IS a stoichiometric matrix, and the validation is
+    the continuity relations that matrix must satisfy - no figure gate.
+
+- file: Herskowitz1983-trickle-bed-partial-wetting-AIChEJ29-1.pdf
+  old_names: ["AIChE Journal - 1983 - Herskowitz.pdf"]
+  kind: paper
+  identity: >-
+    Herskowitz, M. & Smith, J. M., "Trickle-Bed Reactors: A Review", AIChE Journal 29(1) 1-18 (1983)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 18
+  text_layer: >-
+    ccitt scan at 300 ppi; 7308 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: G1.8, role: "origin", status: published}
+  notes: >-
+    Tables 1-6 transcribe directly (9.5 k chars/page); nine figures.
+
+- file: Hulburt1964-population-balance-CES19-555.pdf
+  old_names: ["1-s2.0-0009250964850478-main.pdf"]
+  kind: paper
+  identity: >-
+    Hulburt, H. M. & Katz, S., "Some problems in particle technology: A statistical mechanical
+    formulation", Chemical Engineering Science 19(8) 555-574 (1964), American Cyanamid Co.
+  doi: "10.1016/0009-2509(64)85047-8"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed header "Chemical
+    Engineering Science, 1964, Vol. 19, pp. 555-574. Pergamon Press Ltd., Oxford", title and by-line
+    read on page 1
+  native_ppi: 300
+  pages: 20
+  text_layer: >-
+    Elsevier scan, CCITT-G4 300 ppi, ~4.1 k chars on page 3. It is a theory paper with no tables;
+    the api-text measurement recorded 335 well-formed decimals, so prose is good either way.
+  supports:
+    - {case: J2.1, role: "origin", status: needs-paper}
+  notes: >-
+    Retires the api-text route for J2.1. The catalogue also names Ramkrishna (2000), which is a
+    monograph and is NOT on disk.
+
+- file: Itoh1987-palladium-membrane-reactor-AIChEJ33-1576.pdf
+  old_names: ["AIChE Journal - September 1987 - Itoh - A membrane reactor using palladium.pdf"]
+  kind: paper
+  identity: >-
+    Itoh, N., "A Membrane Reactor Using Palladium", AIChE Journal 33(9) 1576-1578 (1987)
+  doi: "10.1002/aic.690330921"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 3
+  text_layer: >-
+    ccitt scan at 300 ppi; 3998 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: H1.1, role: "origin", status: published}
+    - {case: H1.4, role: "origin", status: published}
+  notes: >-
+    Was wrongly listed as H1.9 (the MS zeolite membrane case) until 2026-07-31. 300 dpi BILEVEL
+    CCITT: rendering at 600 is a 2x upsample carrying no information the 300 dpi bitmap does not
+    already have. A verifier had to read the native bitmap as an ASCII map to settle a marginal
+    exponent, and that read OVERTURNED a claimed misprint.
+
+- file: Kandula2010-effective-thermal-conductivity-packed-beds-NASA-KSC-2010-007.pdf
+  old_names: ["20100036467.pdf"]
+  kind: paper
+  identity: >-
+    Kandula, M., "On the Effective Thermal Conductivity of Porous Packed Beds with Uniform Spherical
+    Particles", ASRC Aerospace / NASA John F. Kennedy Space Center, document KSC-2010-007, NTRS
+    accession 20100036467, 15 pp (2010)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    ccitt scan at 300 ppi; 2893 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.13, role: "secondary", status: unclaimed}
+  notes: >-
+    A NASA-style accession number for a filename - checked, and it is a real technical report with
+    its own title page and reference list, not an abstract record or a preview. Reprint route only:
+    it cites Zehner & Schlunder (1970) and tests the model, but ALL FIVE of its comparisons are
+    FIGURES - it contains no data table. Envision OCR, the worst in its drop at 1.7 k chars/page
+    ("Zhner-Schlunder", "eefcient"); everything on renders.
+
+- file: Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf
+  old_names: ["90131.pdf"]
+  kind: paper
+  identity: >-
+    Kiani, D. & Wachs, I. E., "The Conundrum of 'Pair Sites' in Langmuir-Hinshelwood Reaction
+    Kinetics in Heterogeneous Catalysis", ACS Catalysis 14, 10260-10270 (2024)
+  doi: "10.1021/acscatal.4c02813"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 894
+  pages: 11
+  text_layer: >-
+    image scan at 894 ppi; 6293 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    A bare numeric filename and 6 MB made it a candidate monograph; IT IS AN 11-PAGE JOURNAL PAPER
+    (a Perspective), born-digital. It maps to no case on its own but is the natural modern companion
+    to C1.1 - a critical analysis of exactly the adjacent-pair assumption Hougen & Watson derive on
+    book p. 913. Recorded on queue_cases/C1.1.yaml as a secondary. It must not be presented as the
+    source of the rate law.
+
+- file: Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf
+  old_names: ["ac60131a045.pdf"]
+  kind: paper
+  identity: >-
+    Kissinger, H. E., "Reaction Kinetics in Differential Thermal Analysis", Analytical Chemistry
+    29(11) 1702-1706 (1957), National Bureau of Standards
+  doi: "10.1021/ac60131a045"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 4385 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    A real, correctly-named paper that fits NOTHING in the 266-case catalogue. It is NOT C1.5: C1.5
+    is a rate-law formalism, this is a data-reduction method for a thermal analyser, and no case in
+    A, B, C or J is about thermal analysis. Do not force it onto C1.5 and do not let its presence
+    close anything. FIRST-PAGE TRAP: page 1 opens with the reference list of the preceding article
+    (a carotenoid paper); Kissinger's by-line is at the foot of it.
+
+- file: Kobayashi1977-coal-devolatilization-high-T-SympCombust16-411.pdf
+  old_names: ["1-s2.0-S008207847780341X-main.pdf"]
+  kind: paper
+  identity: >-
+    Kobayashi, H., Howard, J. B. & Sarofim, A. F., "Coal devolatilization at high temperatures",
+    Sixteenth Symposium (International) on Combustion, 411-425 (1977)
+  doi: "10.1016/S0082-0784(77)80341-X"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    ccitt scan at 300 ppi; 1453 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B3.7, role: "origin", status: unclaimed}
+  notes: >-
+    Extracts intermittently with a space between every letter, AND renders exponents as concatenated
+    digits: "104 - 2 . 105 K/s" and "6.6 . 104 s -1". The exponents of a two-competing-rate model
+    are exactly what a page needs. Treat every implausible magnitude as a lost separator and go to
+    the image.
+
+- file: Krishna1996-bubble-column-gas-holdup-AIChEJ42-2627.pdf
+  old_names: ["AIChE_Journal-1996-Krishna.pdf"]
+  kind: paper
+  identity: >-
+    Krishna, R. & Ellenberger, J., "Gas Holdup in Bubble Column Reactors Operating in the Churn-
+    Turbulent Flow Regime", AIChE Journal 42(9) 2627-2634 (1996)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 3249 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: F1.4, role: "origin", status: published}
+  notes: >-
+    2,787 experiments, 1,735 of them churn-turbulent. Table 1 has a free integrity check that
+    passes: the nineteen per-row counts sum to exactly 2,787. Watch three OCR slips the page image
+    corrects: "air-paraffin oil (3)" is (B), "SF, -tetradecane" is SF6, "0.00 1-0.249" is
+    0.001-0.249. Table 3 cannot be reproduced without digitising Figures 7/9/11 - the measurements
+    exist only as scatter. It also reprints Wilkinson's correlation in full, which is how F1.3 was
+    built.
+
+- file: Krishna1997-maxwell-stefan-review-CES52-861.pdf
+  old_names: ["1-s2.0-S0009250996004587-main.pdf"]
+  kind: paper
+  identity: >-
+    Krishna, R. & Wesselingh, J. A., "The Maxwell-Stefan approach to mass transfer", Chemical
+    Engineering Science 52(6) 861-911 (1997)
+  doi: "10.1016/S0009-2509(96)00458-7"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 51
+  text_layer: >-
+    ccitt scan at 300 ppi; 4208 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A4.2, role: "origin", status: published}
+    - {case: A4.3, role: "origin", status: published}
+    - {case: A4.4, role: "origin", status: published}
+  notes: >-
+    A 51-page review with 71 figures. It is a reference for the S9 pages, not a page of its own - do
+    not queue it as one. Serves A4.2, A4.3 and A4.4.
+
+- file: Kunii1968-bubbling-bed-model-IECFund7-481.pdf
+  old_names: ["i260028a001.pdf"]
+  kind: paper
+  identity: >-
+    Kunii, D. & Levenspiel, O., "Bubbling Bed Model: Model for Flow of Gas through a Fluidized Bed",
+    Ind. Eng. Chem. Fundamentals 7(4) 446-452 (1968) and "Bubbling Bed Model for Kinetic Processes
+    in Fluidized Beds. Gas-Solid Mass and Heat Transfer and Catalytic Reactions", Ind. Eng. Chem.
+    Process Des. Dev. 7(4) 481-492 (1968)
+  doi: "10.1021/i260028a001"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 12
+  text_layer: >-
+    ccitt scan at 300 ppi; 4604 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: E1.2, role: "origin", status: published}
+    - {case: E2.1, role: "origin", status: published}
+  notes: >-
+    THE ACS DOWNLOAD STAMP READS article-pdf/7/4/481/ - i.e. this file is the volume 7, issue 4,
+    FIRST PAGE 481 paper (the kinetic-processes one), not the companion at p. 446. The filename
+    records 481 for that reason. Best text layer of the early set (12.4 k chars/page). Serves E1.2
+    and E2.1. E1.1 was PARKED against this file: Kunii & Levenspiel state the two-phase relation but
+    never name, attribute or test it, so the reprint route failed - the canonical E1.1 test in
+    AGENTS.md.
+
+- file: Langmuir1918-adsorption-plane-surfaces-JACS40-1361.pdf
+  old_names: ["ja02242a004.pdf"]
+  kind: paper
+  identity: >-
+    Langmuir, I., "The Adsorption of Gases on Plane Surfaces of Glass, Mica and Platinum", J. Am.
+    Chem. Soc. 40(9) 1361-1403 (1918)
+  doi: "10.1021/ja02242a004"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; running head, by-line ("By Irving
+    Langmuir"), "Received June 25, 1918" and the ACS download stamp "jacsat/article-pdf/40/9/1361/"
+    all read on page 1
+  native_ppi: 300
+  pages: 43
+  text_layer: >-
+    ACS scan, CCITT-G4 300 ppi. Prose readable; equations and the isotherm constants need crops. 43
+    pages.
+  supports:
+    - {case: J1.1, role: "origin", status: needs-paper}
+  notes: >-
+    FIRST-PAGE TRAP: page 1 opens with the numbered summary of the PRECEDING article (a sodium-in-
+    liquid-ammonia absorption study); Langmuir's Contribution line and title are below it on the
+    same page. A 43-page paper - the isotherm itself is a small part of it. Rawlings & Ekerdt cite
+    Langmuir for the Danckwerts boundary conditions too (their ref. [22]), a separate matter.
+
+- file: Larkins1961-two-phase-concurrent-flow-packed-beds-AIChEJ7-231.pdf
+  old_names: ["AIChE Journal - June 1961 - Larkins.pdf"]
+  kind: paper
+  identity: >-
+    Larkins, R. P., White, R. R. & Jeffrey, D. W., "Two-Phase Concurrent Flow in Packed Beds", AIChE
+    Journal 7(2) 231-239 (1961)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title and the three-author by-line
+    (Larkins and White, University of Michigan; Jeffrey, Humble Oil and Refining) read on page 1;
+    Wiley Subject metadata "AIChE Journal 1961.7:231-239"
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~7.7 k chars on page 3 - the best text layer among the new Wiley
+    scans.
+  supports:
+    - {case: G1.1, role: "origin", status: needs-paper}
+  notes: >-
+    FIRST-PAGE TRAP: page 1 opens with the nomenclature and "Manuscript received April 18, 1960" of
+    the PRECEDING article (a film/penetration-theory paper); Larkins starts below on the same page.
+    Its abstract states what the page must reproduce: "Correlations of pressure-drop and liquid-
+    saturation data were obtained in terms of the single-phase friction losses for the liquid and
+    the gas when each flows alone in the bed", plus a separately discussed foaming-system deviation.
+
+- file: Lehrer1984-turbulent-axial-dispersion-bubble-column-AIChEJ30-654.pdf
+  old_names: ["AIChE Journal - July 1984 - Lehrer.pdf"]
+  kind: paper
+  identity: >-
+    Lehrer, I. H., "Turbulent Axial Dispersion Coefficients in the Liquid in a Two-Phase Bubble
+    Column", AIChE Journal 30(4) 654-657 (1984), Monash University
+  doi: "10.1002/aic.690300421"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title and by-line read on page 1, and
+    the Wiley download stamp printed on page 4 reads doi/10.1002/aic.690300421
+  native_ppi: 300
+  pages: 4
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~4.7 k chars on page 3. Four pages.
+  supports:
+    - {case: F2.1, role: "near-miss", status: needs-paper}
+  notes: >-
+    *** NOT WHAT THE CASE ORDERED, AND IT EXPOSES A WRONG DOI - the C2.5 failure repeating. ***
+    queue_cases/F2.1.yaml records authors "Deckwer, Burckhart & Zoll", year 1984, container "AIChE
+    Journal 30(4) 675-678", title "Turbulent axial dispersion coefficients in the liquid in a two-
+    phase bubble column", doi 10.1002/aic.690300421, marked crossref-verified. THE TITLE AND THE DOI
+    BELONG TO LEHRER, at pages 654-657. The Deckwer, Burckhart & Zoll paper is a DIFFERENT paper in
+    a DIFFERENT journal and year: "Mixing and Mass Transfer in Tall Bubble Columns", Chem. Eng. Sci.
+    29, 2177 (1974) - read out of Lehrer's own reference list, where it is entry 7. So the recorded
+    citation on F2.1 was a chimera and buying from the DOI bought Lehrer. Does Lehrer source F2.1 by
+    the reprint route? NO on present evidence: he derives HIS OWN E_L model and uses Deckwer et al.
+    (1974) only as DATA to test it against (his Table 2). He does not print Deckwer's correlation.
+    F2.1 therefore stays needs-paper, and the open question is written on the case: is Lehrer's own
+    correlation an acceptable substitute, which would make the page "Lehrer" and not "Deckwer"?
+    Answer that before requesting CES 29, 2177.
+
+- file: Levenspiel1972-deactivating-catalyst-rate-equation-JCatal25-265.pdf
+  old_names: ["1-s2.0-0021951772902278-main.pdf"]
+  kind: paper
+  identity: >-
+    Levenspiel, O., "Experimental search for a simple rate equation to describe deactivating porous
+    catalyst particles", Journal of Catalysis 25(2) 265-272 (1972)
+  doi: "10.1016/0021-9517(72)90227-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 4095 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B2.3, role: "origin", status: unclaimed}
+  notes: >-
+    This is Levenspiel the AUTHOR. Levenspiel the MONOGRAPH is BOOK-Levenspiel-1999-chemical-
+    reaction-engineering-3ed.pdf and closes a different case (A2.4). B2.3's catalog_reference was
+    the bare "(1972)" with no journal; this document resolves it.
+
+- file: Luedeking1959-lactic-acid-fermentation-kinetics-JBMTE1-393.pdf
+  old_names: ["Journal of Biochem and Microbiol Techn and Engin - Luedeking.pdf"]
+  kind: paper
+  identity: >-
+    Luedeking, R. & Piret, E. L., "A Kinetic Study of the Lactic Acid Fermentation. Batch Process at
+    Controlled pH", Journal of Biochemical and Microbiological Technology and Engineering 1(4)
+    393-412 (1959), University of Minnesota
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed masthead "VOL. 1, NO. 4.
+    PAGES 393-412 (1959)", the title and the by-line read on page 1
+  native_ppi: 300
+  pages: 20
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi (with two 150 ppi JPEG plates), ~1.5 k chars on page 3 - poor.
+    Everything on crops.
+  supports:
+    - {case: J4.4, role: "origin", status: needs-paper}
+  notes: >-
+    DEDUPED: THREE byte-identical copies arrived (md5 601827724b39cac54e549e8aebb1227e, 885270 bytes
+    each). The other two are parked in duplicates/. The Luedeking-Piret relation is printed in the
+    Summary itself: dP/dt = a dN/dt + b N, "where the constants a and b are determined by the pH of
+    the fermentation", measured at six constant pH levels between 4.5 and 6.0 - i.e. the page has a
+    built-in six-point test of the pH dependence.
+
+- file: MISC-ChemEngProgress-2012-08-shale-gas-issue-CEP108-8.pdf
+  old_names: ["2012083364.pdf"]
+  kind: misc
+  identity: >-
+    Chemical Engineering Progress 108(8), August 2012 - the whole magazine issue, 34 pages, special
+    section on shale gas (Liss; Holditch; Goellner; Smith; Ternes)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; cover and the special-section
+    editorial read from the born-digital text layer
+  native_ppi: 100
+  pages: 34
+  text_layer: >-
+    BORN-DIGITAL magazine, clean text, ~4.6 k chars on page 3. 100 ppi JPX/JPEG images (magazine
+    artwork).
+  supports: []      # maps to no catalogue case
+  notes: >-
+    MAPS TO NO CASE, and nothing in it is chemical-reaction-engineering content of the kind the
+    catalogue covers - the articles are shale-gas supply chain, hydraulic fracturing, infrastructure
+    and environmental regulation. The most likely explanation is a mis-fetch while hunting Chemical
+    Engineering Progress for the three 1950-52 CEP papers that DID arrive in the same drop (Ranz &
+    Marshall, Toomey & Johnstone, Wilke). Kept for the record; do not let its presence suggest CEP
+    is covered.
+
+- file: MISC-Ranz1993-citation-classic-commentary-CurrContents22.pdf
+  old_names: ["A1993LB49000001.pdf"]
+  kind: misc
+  identity: >-
+    Ranz, W. E., "This Week's Citation Classic: Ranz W E & Marshall W R, Jr. Evaporation from drops.
+    Parts I & II.", Current Contents CC/NUMBER 22, May 31 1993 - a ONE-PAGE reminiscence
+  doi: null
+  verified_by: >-
+    read in full, 2026-08-05 and re-read 2026-08-06
+  native_ppi: null
+  pages: 1
+  text_layer: >-
+    Born-digital-quality OCR; the whole page extracts cleanly.
+  supports:
+    - {case: A3.5, role: "commentary-about", status: needs-paper}
+  notes: >-
+    NOT THE PAPER. It is a 1993 personal reminiscence by Ranz and carries none of the correlations
+    or data. It was one of the two files that made A3.5 look sourced when it was not. It has one
+    genuine use now: it prints the citation as the author and ISI give it - "Chem. Eng. Progr.
+    48:141-6; 173-80, 1952" - which is the OTHER side of the Part I page-range discrepancy recorded
+    on the Part I file. It also states the citation counts (525 and 415 as of 1993) and the honest
+    caveat Ranz adds: the crude accounting for radial convection at the drop surface (the D_f
+    factor) was "unfortunately not emphasized in the original papers".
+
+- file: MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf
+  old_names: ["ie50546a056.pdf"]
+  kind: misc
+  identity: >-
+    Wilke, C. R. & Lee, C. Y., "Estimation of Diffusion Coefficients for Gases and Vapors", Ind.
+    Eng. Chem. 47(6) 1253-1257 (1955)
+  doi: "10.1021/ie50546a056"
+  verified_by: >-
+    title page read 2026-08-05
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ACS scan, CCITT-G4 300 ppi, ~5.1 k chars/page; formulae case-mangled.
+  supports:
+    - {case: A4.5, role: "comparison-source", status: published}
+    - {case: A4.6, role: "comparison-source", status: published}
+  notes: >-
+    THE WRONG WILKE, kept for the record and now prefixed MISC- so it can never be mistaken again.
+    A4.1 needs Wilke, Chem. Eng. Prog. 46 (1950) - a different paper, in a different journal, five
+    years earlier, about a different equation - and that paper is NOW ON DISK as
+    Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf. This file remains useful
+    because it prints the Hirschfelder-Bird-Spotz engineering form of the Chapman-Enskog equation
+    WITH attribution, and Fuller et al. 1966 benchmarks against it explicitly. FIRST-PAGE TRAP: page
+    1 opens with the tail of the preceding article (a soil-stabilisation / electro-osmosis paper).
+
+- file: Maretto1999-slurry-bubble-column-FT-CatalToday52-279.pdf
+  old_names: ["1-s2.0-S0920586199000826-main.pdf"]
+  kind: paper
+  identity: >-
+    Maretto, C. & Krishna, R., "Modelling of a bubble column slurry reactor for Fischer-Tropsch
+    synthesis", Catalysis Today 52(2-3) 279-289 (1999)
+  doi: "10.1016/S0920-5861(99)00082-6"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 1000
+  pages: 11
+  text_layer: >-
+    ccitt scan at 1000 ppi; 2591 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: F2.3, role: "origin", status: published}
+  notes: >-
+    Thin text layer (4.4 k chars/page); read numbers off renders. Two printed constants had to be
+    corrected before F2.3 would run, established from the paper's own results.
+
+- file: Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf
+  old_names: ["413a375.pdf"]
+  kind: paper
+  identity: >-
+    Markos, J., Brunovska, A. & Ilavsky, J., "Modelling of catalytic reactors with catalyst
+    deactivation IV. Parameter estimation of the rate equations of heterogeneous catalyst
+    deactivation", Chemical Papers 41(3) 375-393 (1987), Slovak Technical University, Bratislava
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 19
+  text_layer: >-
+    jpeg scan at 300 ppi; 1782 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B2.6, role: "origin", status: unclaimed}
+  notes: >-
+    A bare numeric filename that turned out to be an ordinary journal article, not a report. REPRINT
+    ROUTE ONLY: B2.6's catalog_reference is "Wheeler" and Wheeler is not on disk; this paper opens
+    by citing "The paper of Wheeler [1]" for the uniform and shell-progressive limits and then
+    estimates parameters for three mechanisms on benzene hydrogenation over Ni poisoned by
+    thiophene. Trilingual (English body, Russian abstract). 300 ppi JPEG.
+
+- file: Marquis2019-single-particle-model-electrolyte-JES166-A3693.pdf
+  old_names: ["Marquis_2019_J._Electrochem._Soc._166_A3693.pdf"]
+  kind: paper
+  identity: >-
+    Marquis, S. G., Sulzer, V., Timms, R., Please, C. P. & Chapman, S. J., "An Asymptotic Derivation
+    of a Single Particle Model with Electrolyte", Journal of the Electrochemical Society 166(15)
+    A3693-A3706 (2019)
+  doi: "10.1149/2.0341915jes"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    image scan at 300 ppi; 5624 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: J3.5, role: "origin", status: published}
+  notes: >-
+    Open access (IOP). Born-digital.
+
+- file: Mars1954-vanadium-oxide-oxidation-CESSuppl3-41.pdf
+  old_names: ["1-s2.0-S0009250954800054-main.pdf"]
+  kind: paper
+  identity: >-
+    Mars, P. & van Krevelen, D. W., "Oxidations carried out by means of vanadium oxide catalysts",
+    Special Supplement to Chemical Engineering Science, vol. 3, 41-59 (1954)
+  doi: "10.1016/S0009-2509(54)80005-4"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 19
+  text_layer: >-
+    ccitt scan at 300 ppi; 1903 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C1.3, role: "origin", status: published}
+  notes: >-
+    THE single biggest extraction upgrade of the 2026-08-05 drops. C1.3 had been keyed to the api-
+    text, which is the worst case in the whole set: four different glyphs used for one decimal point
+    inside a single table row ("825 150 82.5 0.095 0.107 300 73'0 0-120 500 59.0 0'107"). A rule of
+    the form "replace mid-dot with point" silently corrupts two-thirds of that table. There is now a
+    300 ppi page image. Trilingual summary, English body.
+
+- file: Martin1993-radiale-waermeleitung-schuettungsrohren-CIT65-1468.pdf
+  old_names: ["Chemie Ingenieur Technik - December 1993 - Martin - Radiale W rmeleitung in durchstr mten Sch ttungsrohren.pdf"]
+  kind: paper
+  identity: >-
+    Martin, H. & Nilles, M., "Radiale Warmeleitung in durchstromten Schuttungsrohren", Chemie
+    Ingenieur Technik 65(12) 1468-1477 (1993)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 150
+  pages: 10
+  text_layer: >-
+    image scan at 150 ppi; 4110 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.14, role: "origin", status: unclaimed}
+  notes: >-
+    IN GERMAN, with four specific failure modes: umlauts and eszett stripped; GERMAN COMMA decimal
+    separator (0,43 bis 2,5 is 0.43 to 2.5); superscript powers of ten become the letters "lo" (10^3
+    -> lo3) on a paper where every axis is logarithmic; and figures are "Abb.", not "Fig." - a grep
+    for "Fig" returns nothing and will make you conclude there are none. There are eleven, and NO
+    TABLES AT ALL, which makes A3.14 a figure-only case and therefore gated on figure review.
+
+- file: Mears1971-tests-for-transport-limitations-IECPDD10-541.pdf
+  old_names: ["i260040a020.pdf"]
+  kind: paper
+  identity: >-
+    Mears, D. E., "Tests for Transport Limitations in Experimental Catalytic Reactors", Ind. Eng.
+    Chem. Process Des. Dev. 10(4) 541-547 (1971)
+  doi: "10.1021/i260040a020"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 7
+  text_layer: >-
+    ccitt scan at 300 ppi; 5449 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B1.7, role: "origin", status: published}
+  notes: >-
+    FIRST-PAGE TRAP, and the nastiest one in the library: page 1 opens with a catalytic-cracking
+    paper's Summary and Literature Cited, AND that preceding article discusses "the Voorhies (1945)
+    relationship", which makes the file look like B2.1. Mears starts partway down. B1.7 was found
+    twice by adversarial verification to contain a check that could not fail, and its extrema were
+    grid maxima - root-find extrema, never sample them.
+
+- file: Mills2013-two-dimensional-stefan-tube-CES90-130.pdf
+  old_names: ["1-s2.0-S0009250912007099-main.pdf"]
+  kind: paper
+  identity: >-
+    Mills, A. F. & Chang, B. H., "Two-dimensional diffusion in a Stefan tube: The classical
+    approach", Chemical Engineering Science 90, 130-136 (2013)
+  doi: "10.1016/j.ces.2012.12.018"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 200
+  pages: 7
+  text_layer: >-
+    jpeg scan at 200 ppi; 2097 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A4.8, role: "secondary", status: needs-paper}
+  notes: >-
+    DOES NOT CLOSE A4.8. A4.8 is catalogued as the classic Maxwell-Stefan validation EXPERIMENT -
+    the ternary Stefan-tube measurement. This is a BINARY (water vapour into air) 2-D Navier-Stokes
+    + Maxwell-Stefan computation whose purpose is to rebut Salcedo-Diaz et al. (2008) and the
+    Kerkhof-Geboers equations. It contains NO experimental data and NO tables of any kind. The
+    experiment A4.8 wants is Carty & Schrodt (1975), and Taylor & Krishna reproduce it - see the
+    book's supports list.
+
+- file: Mou2025-simplified-ZBS-conductivity-PowderTechnol453-120604.pdf
+  old_names: ["1-s2.0-S0032591024012488-main.pdf"]
+  kind: paper
+  identity: >-
+    Mou, X., Zhou, W., Bao, Z. & Huang, W., "Modification and experimental validation of simplified
+    Zehner-Bauer-Schlunder model for estimating effective thermal conductivity of gas-solid metal
+    powder beds", Powder Technology 453, 120604 (2025)
+  doi: "10.1016/j.powtec.2024.120604"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 17
+  text_layer: >-
+    jpeg scan at 300 ppi; 3504 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.13, role: "origin", status: unclaimed}
+  notes: >-
+    PUBLISHED, not a preprint: volume 453, article number 120604, issue-assigned 2025 (the PII
+    decodes to 2024 because that is the article-in-press year). Born-digital, clean. REPRINT ROUTE
+    ONLY - it names the origin as Zehner & Schlunder, Chem. Ing. Tech. 42 (1970) 933-941 and Bauer &
+    Schlunder (1978). It does NOT deliver the RADIATION term A3.13's own title names: its section 1
+    says Syamlal & Gidaspow simplified ZBS "by ignoring the Smoluchowski AND RADIATION effects", and
+    the full ZBS with radiation is in the SUPPLEMENTARY MATERIALS (Eq. S2 / Table S2), which are not
+    on disk.
+
+- file: Myers1965-thermodynamics-mixed-gas-adsorption-IAST-AIChEJ11-121.pdf
+  old_names: ["AIChE Journal - January 1965 - Myers.pdf"]
+  kind: paper
+  identity: >-
+    Myers, A. L. & Prausnitz, J. M., "Thermodynamics of Mixed-Gas Adsorption", AIChE Journal 11(1)
+    121-127 (1965)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the title, by-line and affiliation
+    (University of California, Berkeley) read on page 1; the Wiley Subject metadata independently
+    gives "AIChE Journal 1965.11:121-127"
+  native_ppi: 300
+  pages: 7
+  text_layer: >-
+    Wiley scan, CCITT-G4 300 ppi, ~5.1 k chars/page - good for this vintage.
+  supports:
+    - {case: J1.4, role: "origin", status: needs-paper}
+  notes: >-
+    The IAST origin. Its own abstract names the validation data: methane-ethane and ethylene-carbon
+    dioxide on activated carbon, carbon monoxide-oxygen and propane-propylene on silica gel. Whether
+    those are printed tables or figures has NOT been checked - do that before dispatching.
+
+- file: Nyvlt1968-nucleation-kinetics-solutions-JCrystGrowth3-377.pdf
+  old_names: ["1-s2.0-0022024868901796-main.pdf"]
+  kind: paper
+  identity: >-
+    Nyvlt, J., "Kinetics of nucleation in solutions", Journal of Crystal Growth 3-4, 377-383 (1968),
+    Research Institute of Inorganic Chemistry, Usti nad Labem
+  doi: "10.1016/0022-0248(68)90179-6"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed header "Journal of
+    Crystal Growth 3, 4 (1968) 377-383, North-Holland Publishing Co." and the by-line read on page 1
+  native_ppi: 300
+  pages: 7
+  text_layer: >-
+    TextBridge OCR over a 300 ppi CCITT-G4 stencil, ~3.2 k chars on page 3. The author name comes
+    back as "JAROSLAV N~VLT" - the y-acute is lost. Numbers on crops.
+  supports:
+    - {case: J2.3, role: "origin", status: needs-paper}
+  notes: >-
+    Retires the api-text route for J2.3 (25 kB, 7 well-formed decimals, prose only). J2.3's
+    catalogue row names Mullin, Mersmann AND Nyvlt; only Nyvlt is on disk. The paper's own method is
+    the metastable-zone-width route to the nucleation order m and constant k.
+
+- file: Oh1982-monolith-converter-transients-IECPDD21-29.pdf
+  old_names: ["i300005a006.pdf"]
+  kind: paper
+  identity: >-
+    Oh, S. H. & Cavendish, J. C., "Transients of Monolithic Catalytic Converters: Response to Step
+    Changes in Feedstream Temperature as Related to Controlling Automobile Emissions", Ind. Eng.
+    Chem. Prod. Res. Dev. 21(1) 29-37 (1982), General Motors Research Laboratories
+  doi: "10.1021/i300005a006"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 5532 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: I1.2, role: "origin", status: published}
+  notes: >-
+    One of the two best text layers among the early ACS scans (9.0 k chars/page).
+
+- file: Onda1968-gas-liquid-mass-transfer-packed-columns-JCEJ1-56.pdf
+  old_names: ["1_56.pdf"]
+  kind: paper
+  identity: >-
+    Onda, K., Takeuchi, H. & Okumoto, Y., "Mass Transfer Coefficients between Gas and Liquid Phases
+    in Packed Columns", Journal of Chemical Engineering of Japan 1(1) 56-62 (1968), University of
+    Nagoya
+  doi: "10.1252/jcej.1.56"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 7
+  text_layer: >-
+    ccitt scan at 300 ppi; 943 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.8, role: "origin", status: published}
+  notes: >-
+    FIRST-PAGE TRAP AT BOTH ENDS, confirmed on renders 2026-08-06: PDF page 1 (journal p. 56) opens
+    with the Summary, Acknowledgment, Nomenclature and Literature Cited of the PRECEDING article (on
+    bubble generation from porous plates), and Onda et al. start halfway down it. PDF page 7
+    (journal p. 62) ENDS with the start of the NEXT article, "Gas Absorption with Chemical Reaction
+    in Packed Columns" by Onda, Sada & Takeuchi - same first author, different paper. Read the whole
+    7-page spread before quoting a page.
+
+- file: Pan1998-cylindrical-pellet-effectiveness-CES53-933.pdf
+  old_names: ["1-s2.0-S0009250997003850-main.pdf"]
+  kind: paper
+  identity: >-
+    Pan, T. & Zhu, B., "Study on diffusion-reaction process inside a cylindrical catalyst pellet",
+    Chemical Engineering Science 53(5) 933-946 (1998)
+  doi: "10.1016/S0009-2509(97)00385-0"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 600
+  pages: 14
+  text_layer: >-
+    ccitt scan at 600 ppi; 2655 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    Maps to no case on its own. An approximate analytical effectiveness factor for arbitrary
+    kinetics in a CYLINDER (claimed max deviation 1.5%) plus Weisz-Hicks multiplicity for a
+    cylinder, so it is a secondary comparison source for B1.2, B1.3 and B1.5. Recorded on
+    queue_cases/B1.3.yaml. B1.2 is published and this does not reopen it. Native 600 ppi.
+
+- file: Prins2018-eley-rideal-other-mechanism-TopCatal61-714.pdf
+  old_names: ["s11244-018-0948-8.pdf"]
+  kind: paper
+  identity: >-
+    Prins, R., "Eley-Rideal, the Other Mechanism", Topics in Catalysis 61(9-11) 714-721 (2018)
+  doi: "10.1007/s11244-018-0948-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 306
+  pages: 8
+  text_layer: >-
+    image scan at 306 ppi; 5824 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: C1.2, role: "origin", status: unclaimed}
+  notes: >-
+    Fills a case (C1.2) whose catalog_reference was "-" (empty). READ THE SCOPE NOTE FIRST: this is
+    a HISTORICAL AND TERMINOLOGICAL paper whose thesis is that what everyone calls Eley-Rideal
+    should be called LANGMUIR-Rideal, and that the mechanism Eley and Rideal actually studied is a
+    different one. It prints the Langmuir-Hinshelwood rate law in full and names and distinguishes
+    all three mechanisms, but it contains NO data and NO tables. A page built from it is a page
+    about the ATTRIBUTION as much as about the rate law, and it must say so.
+
+- file: Ranz1952-evaporation-from-drops-pt1-ChemEngProg48-139.pdf
+  old_names: ["Ranz_Marshall_1952_1.pdf"]
+  kind: paper
+  identity: >-
+    Ranz, W. E. & Marshall, W. R., Jr., "Evaporation from Drops, Part I", Chemical Engineering
+    Progress 48(3), March 1952
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page rendered at native 400 dpi
+    ("EVAPORATION FROM DROPS / Part I / W. E. RANZ and W. R. MARSHALL, JR. / University of
+    Wisconsin, Madison, Wisconsin"), running heads read on every page
+  native_ppi: 400
+  pages: 6
+  text_layer: >-
+    NO TEXT LAYER (Microsoft Print-To-PDF over a microfilm scan; pdftotext returns 1 byte/page).
+    Everything on renders. Native 400 ppi JPEG RGB, so 400 dpi is the ceiling.
+  supports:
+    - {case: A3.5, role: "origin", status: needs-paper}
+  notes: >-
+    *** PAGE-RANGE DISCREPANCY, UNRESOLVED - record it, do not silently pick one. *** The document's
+    own running heads read Page 139 (title page), 140, 141, ... 144, i.e. Chem. Eng. Progr. 48(3)
+    139-144. The universal citation - including ISI's own 1993 "This Week's Citation Classic",
+    written by Ranz and also on disk - is 48, 141-146. Part II's folios (173-180, read the same way)
+    DO agree with the standard citation, so the disagreement is confined to Part I and is two pages.
+    Six pages either way. The filename carries the folio the document prints. Part II is a separate
+    file and Part I's own abstract is on this file, per Part II's footnote "Part I of this paper
+    (including Abstract) appeared in the March issue."
+
+- file: Ranz1952-evaporation-from-drops-pt2-ChemEngProg48-173.pdf
+  old_names: ["Ranz_Marshall_1952_2.pdf"]
+  kind: paper
+  identity: >-
+    Ranz, W. E. & Marshall, W. R., Jr., "Evaporation from Drops, Part II", Chemical Engineering
+    Progress 48(4) 173-180, April 1952
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page rendered at native 400
+    dpi, and the page footers read: "Vol. 48, No. 4 | Chemical Engineering Progress | Page 173"
+    through "Page 180 | Chemical Engineering Progress | April, 1952"
+  native_ppi: 400
+  pages: 8
+  text_layer: >-
+    NO TEXT LAYER (as Part I). Renders only; native 400 ppi JPEG RGB.
+  supports:
+    - {case: A3.5, role: "origin", status: needs-paper}
+  notes: >-
+    Carries the Nu = 2.0 + 0.6 Re^0.5 Pr^0.33 result: page 1 prints the fitted "N_Nu = 2.23" and
+    "N_Nu' = 1.79" intercepts and the pure-liquid-drop experimental results (Table 1 / Figure 6).
+    The running head is at the BOTTOM of the page in this issue, not the top - the top of every page
+    is blank margin, which is why a top-of-page folio search finds nothing. Together with Part I
+    this is the whole of A3.5's origin, and it closes a case that had TWO false alarms before it
+    (the 1993 Citation Classic commentary and Charlesworth & Marshall's companion study, both still
+    on disk under MISC-/Charlesworth names).
+
+- file: Richardson1954-sedimentation-fluidisation-pt1-ChERD75-S82-REPRINT1997.pdf
+  old_names: ["1-s2.0-S0263876297800068-main.pdf"]
+  kind: paper
+  identity: >-
+    Richardson, J. F. & Zaki, W. N., "Sedimentation and Fluidisation: Part I", originally Trans.
+    Instn Chem. Engrs 32, 35-53 (1954); this is the 1997 Golden Jubilee verbatim reprint, Chemical
+    Engineering Research and Design 75 Supplement, S82-S100
+  doi: "10.1016/S0263-8762(97)80006-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 200
+  pages: 19
+  text_layer: >-
+    image scan at 200 ppi; 3482 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A1.5, role: "origin", status: published}
+  notes: >-
+    The reprint prints the original header "TRANS. INSTN CHEM. ENGRS, Vol. 32, 1954" alongside its
+    own S-folios - read on page 1. Each page carries a bilevel 300 ppi stencil over a 200 ppi grey
+    background; 300 ppi is the ceiling. Its Table VI is what A1.8 ships.
+
+- file: Robeson2008-upper-bound-revisited-JMembrSci320-390.pdf
+  old_names: ["1-s2.0-S0376738808003347-main.pdf"]
+  kind: paper
+  identity: >-
+    Robeson, L. M., "The upper bound revisited", Journal of Membrane Science 320(1-2) 390-400
+    (2008), Lehigh University
+  doi: "10.1016/j.memsci.2008.04.030"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the born-digital header "Journal of
+    Membrane Science 320 (2008) 390-400", title, author and the doi in the PDF Title metadata all
+    agree
+  native_ppi: 200
+  pages: 11
+  text_layer: >-
+    BORN-DIGITAL, clean. Numbers, Greek and the P = k*alpha^n relation all survive extraction. No
+    rendering needed.
+  supports:
+    - {case: H1.8, role: "origin", status: needs-paper}
+  notes: >-
+    THE RIGHT ROBESON. papers-requested.yaml asked specifically for the 2008 paper and NOT the 1991
+    one, because the 1991 scan is only reachable through the Elsevier api-text route, whose Table 2
+    comes back as "2 6 2 89 3 3 3 46 3 64 3 8" for 2.6, 2.89, 3.3, 3.46, 3.64, 3.8. That request was
+    met exactly. H1.8 was keyed to api-text/Robeson-1991-JMembrSci-62-165-upper-bound...txt; this
+    file retires that route. The 1991 paper is still not on disk as a PDF, and the 2008 paper
+    restates the 1991 upper bounds throughout, so it is also the reprint route for them.
+
+- file: Rocha1993-structured-packing-hydraulics-pt1-IECR32-641.pdf
+  old_names: ["ie00016a010.pdf"]
+  kind: paper
+  identity: >-
+    Rocha, J. A., Bravo, J. L. & Fair, J. R., "Distillation Columns Containing Structured Packings:
+    A Comprehensive Model for Their Performance. 1. Hydraulic Models", Ind. Eng. Chem. Research
+    32(4) 641-651 (1993)
+  doi: "10.1021/ie00016a010"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ccitt scan at 300 ppi; 5420 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A3.10, role: "origin", status: unclaimed}
+  notes: >-
+    PART 2 (the MASS-TRANSFER model, IECR 35 (1996) 1660-1667) IS NOT ON DISK, and A3.10's catalogue
+    row names both. What is here delivers holdup, pressure drop and flooding only. Figure captions
+    are the worst-OCR'd part.
+
+- file: Smith1982-combustion-rates-coal-chars-review-SympCombust19-1045.pdf
+  old_names: ["1-s2.0-S0082078482802816-main.pdf"]
+  kind: paper
+  identity: >-
+    Smith, I. W., "The combustion rates of coal chars: A review", Nineteenth Symposium
+    (International) on Combustion, 1045-1065 (1982), CSIRO Division of Fossil Fuels
+  doi: "10.1016/S0082-0784(82)80281-6"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 21
+  text_layer: >-
+    ccitt scan at 300 ppi; 47 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    THE B3.6 NEAR-MISS, deliberately parked. B3.6 names Field (1967) and Baum & Street (1971) and
+    NEITHER is on disk. This review reports intrinsic reactivities corrected for pore diffusion,
+    which is the content B3.6 wants, but whether it prints the Field or Baum-Street correlations
+    well enough to pass the AGENTS.md reprint test HAS NOT BEEN CHECKED. ANSWER THAT BEFORE
+    REQUESTING ANYTHING. Worst text layer in the library - page 3 extracts 37 characters - so the
+    check needs renders. Mixed 200 ppi image and 300 ppi CCITT-G4.
+
+- file: Sohn1978-law-of-additive-reaction-times-MetallTransB9B-89.pdf
+  old_names: ["BF02822675.pdf"]
+  kind: paper
+  identity: >-
+    Sohn, H. Y., "The Law of Additive Reaction Times in Fluid-Solid Reactions", Metallurgical
+    Transactions B, volume 9B, 89-96 (March 1978)
+  doi: "10.1007/bf02822675"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 6138 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B3.4, role: "origin", status: unclaimed}
+  notes: >-
+    WORD-SPLITTING: the entire body extracts with a space between every letter ("A law g o v e r n i
+    n g the r a t e"), while reference lists extract normally, so the file LOOKS fine at a glance. A
+    keyword grep returns nothing and you will conclude the content is absent. Strip spaces before
+    searching, or go to the image. The catalogue gives "Metall. Trans. (1978)"; the B is worth
+    adding.
+
+- file: Solomon1988-general-model-coal-devolatilization-FGDVC-EnergyFuels2-405.pdf
+  old_names: ["ef00010a006.pdf"]
+  kind: paper
+  identity: >-
+    Solomon, P. R., Hamblen, D. G., Carangelo, R. M., Serio, M. A. & Deshpande, G. V., "General
+    Model of Coal Devolatilization", Energy & Fuels 2(4) 405-422 (1988)
+  doi: "10.1021/ef00010a006"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 18
+  text_layer: >-
+    ccitt scan at 300 ppi; 7851 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    This is FG-DVC, the OTHER model B3.8's catalogue row names. FIRST-PAGE TRAP: it opens with the
+    tail of the preceding article's acknowledgements, thanking Dr. Clint Williford.
+
+- file: Syamlal1993-MFIX-theory-guide-DOE-METC-94-1004.pdf
+  old_names: ["Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf"]
+  kind: paper
+  identity: >-
+    Syamlal, M., Rogers, W. & O'Brien, T. J., "MFIX Documentation: Theory Guide", DOE/METC-94/1004,
+    US Department of Energy, December 1993, 54 pp
+  doi: "10.2172/10145548"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 400
+  pages: 54
+  text_layer: >-
+    ccitt scan at 400 ppi; 808 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A1.8, role: "origin", status: published}
+  notes: >-
+    Freely downloadable from OSTI, a US DOE public repository. Section 2.2.1 carries the
+    Syamlal-O'Brien drag law complete; it does NOT contain Wen-Yu and prints NO Gidaspow drag
+    closure and no blend rule, so it sources one of the three drag laws A1.8 names. DO NOT shorten
+    that to "cites Gidaspow only in passing" - four files said so and it is false: the name occurs
+    28 times and the report ADOPTS a Ding & Gidaspow (1990) expression as its own eq. (88). BILEVEL
+    CCITT at 400 ppi on all 54 pages - 400 dpi is the ceiling; 600 dpi upsamples a 1-bit image and
+    invents grey. Text layer is one of the worst here ("Ergun (f952)", "_g-2'6s" for eps^-2.65).
+
+- file: Szekely1970-grain-model-pt1-CES25-1091.pdf
+  old_names: ["1-s2.0-0009250970850539-main.pdf"]
+  kind: paper
+  identity: >-
+    Szekely, J. & Evans, J. W., "A structural model for gas-solid reactions with a moving boundary",
+    Chemical Engineering Science 25(6) 1091-1107 (1970)
+  doi: "10.1016/0009-2509(70)85053-9"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 17
+  text_layer: >-
+    ccitt scan at 300 ppi; 2222 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B3.2, role: "origin", status: published}
+  notes: >-
+    PART II (CES 26 (1971) 1901) IS STILL api-text ONLY. The authors' own claim is that the model
+    reproduces the general TRENDS using reasonable parameter values - a trend claim, not a fit.
+
+- file: Taylor1953-dispersion-solute-in-solvent-ProcRSocA219-186.pdf
+  old_names: ["rspa.1953.0139.pdf"]
+  kind: paper
+  identity: >-
+    Taylor, G. I., "Dispersion of soluble matter in solvent flowing slowly through a tube",
+    Proceedings of the Royal Society A 219(1137) 186-203 (1953)
+  doi: "10.1098/rspa.1953.0139"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 150
+  pages: 18
+  text_layer: >-
+    jpx scan at 150 ppi; 1675 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.3, role: "origin", status: published}
+  notes: >-
+    THE DECIMAL-POINT TRAP IS NOT CONFINED TO ELSEVIER: this Royal Society scan renders 48.0 as
+    "48-0" and 59.8 as "59-8". Assume it for any pre-1980 scan. Validation is Taylor's own closed
+    form K = a^2 U^2/(48 D) plus his measured table - table, not figure, so no gate.
+
+- file: Tayrabekova2018-ethanol-dehydrogenation-copper-CRChimie21-194.pdf
+  old_names: ["1-s2.0-S1631074817301091-main.pdf"]
+  kind: paper
+  identity: >-
+    Tayrabekova, S., Maki-Arvela, P., Peurla, M., Paturi, P., Eranen, K., Ergazieva, G. E., Aho, A.,
+    Murzin, D. Yu. & Dossumov, K., "Catalytic dehydrogenation of ethanol into acetaldehyde and
+    isobutanol using mono- and multicomponent copper catalysts", Comptes Rendus Chimie 21(3-4)
+    194-209 (2018)
+  doi: "10.1016/j.crci.2017.05.005"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 16
+  text_layer: >-
+    jpeg scan at 300 ppi; 5879 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    The MODERN half of C2.19 - a Cu/ZnO/Cr2O3 study to set against Franckaerts & Froment (1964).
+    Both are listed on queue_cases/C2.19.yaml; only one can be the papers-on-disk key. 300 ppi JPEG
+    (softer than bilevel).
+
+- file: Toomey1952-gaseous-fluidization-solid-particles-ChemEngProg48-220.pdf
+  old_names: ["Toomey_Johnstone_1952.pdf"]
+  kind: paper
+  identity: >-
+    Toomey, R. D. & Johnstone, H. F., "Gaseous Fluidization of Solid Particles", Chemical
+    Engineering Progress 48(5) 220-226, May 1952 (University of Illinois, Urbana)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page rendered at native 400 dpi
+    ("GASEOUS FLUIDIZATION OF SOLID PARTICLES / ROBERT D. TOOMEY and H. F. JOHNSTONE / University of
+    Illinois, Urbana, Illinois") and the footers read: "Page 220 | Chemical Engineering Progress |
+    May, 1952" through "Page 226"
+  native_ppi: 400
+  pages: 7
+  text_layer: >-
+    NO TEXT LAYER (Microsoft Print-To-PDF over microfilm; 1 byte/page). Renders only; native 400 ppi
+    JPEG RGB.
+  supports:
+    - {case: E1.1, role: "origin", status: needs-paper}
+  notes: >-
+    THE paper E1.1 was parked for. The reprint route had already been checked and FAILED: Kunii &
+    Levenspiel state the two-phase relation but never name, attribute or test it, so only the
+    original would do (AGENTS.md records this as the canonical E1.1 test). Printed abstract states
+    the content precisely: "the particles are shown to be at their terminal velocities ... the
+    average Reynolds number in the dense or continuous phase is essentially independent of the
+    superficial gas velocity ... The gas flow through the interstices of the bed, both at incipient
+    fluidization and at higher velocities, can be estimated." Data are in Tables 2 and 3
+    (controllable variables and pressure drops; particle velocities from 16-mm Fastax motion-picture
+    film). Ends with a printed discussion (Max Leva). Presented at the AIChE Forty-third Annual
+    Meeting, Columbus, Ohio.
+
+- file: Uppal1974-cstr-dynamic-behaviour-CES29-967.pdf
+  old_names: ["1-s2.0-0009250974800898-main.pdf"]
+  kind: paper
+  identity: >-
+    Uppal, A., Ray, W. H. & Poore, A. B., "On the dynamic behavior of continuous stirred tank
+    reactors", Chemical Engineering Science 29(4) 967-985 (1974)
+  doi: "10.1016/0009-2509(74)80089-8"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed header "Chemical
+    Engineering Science. 1974, Vol. 29. pp. 967-985", title, by-line and affiliations (SUNY Buffalo)
+    read on page 1
+  native_ppi: 300
+  pages: 19
+  text_layer: >-
+    Elsevier scan, CCITT-G4 300 ppi, ~2.2 k chars on page 3 - poor, and pre-1995, so the decimal
+    points are unreliable. Everything on crops.
+  supports:
+    - {case: D2.4, role: "origin", status: needs-paper}
+  notes: >-
+    Retires the api-text route for D2.4 (api-text/Uppal-Ray-Poore-1974-CES-29-967...txt, which had
+    80 well-formed decimals in 67 kB). NOTE the page range: the header prints 967-985, not the
+    967-... the request list recorded. The 1976 sequel (CES 31, 205) did NOT arrive and remains api-
+    text only. papers-requested.yaml called this the best of the Elsevier batch because the
+    validation is the paper's own analytic multiplicity criteria re-derived - a check that can fail.
+
+- file: VandenBussche1996-STAR-reversed-flow-methanol-CJChE74-729.pdf
+  old_names: ["Can J Chem Eng - October 1996 - Vanden Bussche - The STAR configuration for methanol synthesis in reversed flow reactors.pdf"]
+  kind: paper
+  identity: >-
+    Vanden Bussche, K. M. & Froment, G. F., "The STAR configuration for methanol synthesis in
+    reversed flow reactors", Canadian Journal of Chemical Engineering 74(5) 729-734 (October 1996)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 6
+  text_layer: >-
+    ccitt scan at 300 ppi; 4052 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports: []      # maps to no catalogue case
+  notes: >-
+    *** THE VANDEN BUSSCHE TRAP - A3.5 repeating. *** C2.5 is catalogued as "Vanden Bussche &
+    Froment, J. Catal. 161:1 (1996)". SAME TWO AUTHORS, SAME YEAR, DIFFERENT JOURNAL, DIFFERENT
+    PAPER. The recorded DOI on C2.5 was a Can. J. Chem. Eng. DOI on a row naming J. Catal., and the
+    wrong paper was bought on it. AND IT IS NOT A REPRINT ROUTE EITHER: its own text says the
+    reactor model "was combined with a set of kinetic equations ... proposed by Graaf et al.
+    (1988)", and its reference list carries Graaf, not J. Catal. 161 - so it prints the COMPETING
+    model. C2.5 STAYS needs-paper and must be requested BY TITLE. The file is genuinely useful as a
+    methanol-synthesis REACTOR paper applying Graaf's kinetics; recorded on queue_cases/D3.3.yaml,
+    and noted as a possible secondary for I1.7.
+
+- file: Voorhies1945-carbon-formation-catalytic-cracking-IEC37-318.pdf
+  old_names: ["ie50424a010.pdf"]
+  kind: paper
+  identity: >-
+    Voorhies, A., Jr., "Carbon Formation in Catalytic Cracking", Industrial and Engineering
+    Chemistry 37(4) 318-322 (1945)
+  doi: "10.1021/ie50424a010"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 5922 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: B2.1, role: "origin", status: unclaimed}
+  notes: >-
+    The paper prints "Alexis Voorhies, Jr."; the catalogue has "Voorhies, A." The origin of the C =
+    A t^n coking law that Mears and Froment & Bischoff both build on. Table-vs-figure split
+    UNCONFIRMED - one render settles it, do that before dispatch.
+
+- file: Wakao1962-random-pore-diffusion-pellets-CES17-825.pdf
+  old_names: ["1-s2.0-0009250962870158-main.pdf"]
+  kind: paper
+  identity: >-
+    Wakao, N. & Smith, J. M., "Diffusion in catalyst pellets", Chemical Engineering Science 17(11)
+    825-834 (1962)
+  doi: "10.1016/0009-2509(62)87015-8"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ccitt scan at 300 ppi; 2623 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B1.9, role: "origin", status: unclaimed}
+  notes: >-
+    Poor layer (~2.1 k chars on page 3). Possibly EXPERIMENTAL - five pellets, 1-12 atm - but the
+    table-vs-figure split is UNCONFIRMED; check with one render before dispatching.
+
+- file: Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf
+  old_names: ["1-s2.0-0009250978851203-main.pdf"]
+  kind: paper
+  identity: >-
+    Wakao, N., Kaguei, S. & Funazkri, T., "Effect of fluid dispersion coefficients on particle-to-
+    fluid heat transfer coefficients in packed beds", Chemical Engineering Science 33(10) 1375-1384
+    (1978)
+  doi: "10.1016/0009-2509(78)85120-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 10
+  text_layer: >-
+    ccitt scan at 300 ppi; 1659 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.4, role: "origin", status: published}
+  notes: >-
+    The volume and page range are taken from the catalogue citation, not read off the scan - page 1
+    carries the title only, with no running head.
+
+- file: Wammes1991-high-pressure-trickle-bed-hydrodynamics-CET14-406.pdf
+  old_names: ["G1_7.pdf"]
+  kind: paper
+  identity: >-
+    Wammes, W. J. A. & Westerterp, K. R., "The Influence of the Reactor Pressure on Hydrodynamics in
+    a Cocurrent Gas-Liquid Trickle-Bed Reactor", Chemical Engineering & Technology 14(6) 406-413
+    (1991)
+  doi: "10.1002/ceat.270140608"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 2246 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: G1.7, role: "origin", status: published}
+  notes: >-
+    G1.7's catalogue citation "Chem. Eng. Sci. (1991)" points at the Wammes, Mechielsen & Westerterp
+    CES 46 (1991) 409-417 ATMOSPHERIC companion. This is the group's Chem. Eng. Technol. synthesis
+    paper, verified against its own header on 600 dpi renders; it derives the high-pressure hold-up
+    (Eq. 9) and pressure-gradient (Eq. 8) correlations itself and carries the validation figures, so
+    the CES companion is NOT needed. The old filename G1_7.pdf was an auto-download named after the
+    case id.
+
+- file: Wehner1956-boundary-conditions-flow-reactor-CES6-89.pdf
+  old_names: ["1-s2.0-0009250956800146-main.pdf"]
+  kind: paper
+  identity: >-
+    Wehner, J. F. & Wilhelm, R. H., "Boundary conditions of flow reactor", Chemical Engineering
+    Science 6(2) 89-93 (1956)
+  doi: "10.1016/0009-2509(56)80014-6"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 2766 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.1, role: "secondary", status: published}
+    - {case: A2.2, role: "origin", status: covered}
+  notes: >-
+    The printed header reads "vol. 6, pp. 89 to 9x"; the OCR gives "98" where the standard citation
+    says 93. Read the last page before quoting a range.
+
+- file: Weisz1962-nonisothermal-effectiveness-CES17-265.pdf
+  old_names: ["1-s2.0-0009250962850052-main.pdf"]
+  kind: paper
+  identity: >-
+    Weisz, P. B. & Hicks, J. S., "The behaviour of porous catalyst particles in view of internal
+    mass and heat diffusion effects", Chemical Engineering Science 17(4) 265-275 (1962)
+  doi: "10.1016/0009-2509(62)85005-2"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 11
+  text_layer: >-
+    ccitt scan at 300 ppi; 1858 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B1.1, role: "origin", status: published}
+    - {case: B1.4, role: "origin", status: published}
+    - {case: B1.5, role: "origin", status: published}
+    - {case: B1.6, role: "origin", status: published}
+  notes: >-
+    NO TABLES - the eta(phi) results are figures only, as expected of a 1962 computational paper. It
+    also reprints Prater's relation with attribution, which is how B1.6 was built.
+
+- file: Wen1966-minimum-fluidization-velocity-AIChEJ12-610.pdf
+  old_names: ["AIChE Journal - May 1966 - Wen - A generalized method for predicting the minimum fluidization velocity.pdf"]
+  kind: paper
+  identity: >-
+    Wen, C. Y. & Yu, Y. H., "A generalized method for predicting the minimum fluidization velocity",
+    AIChE Journal 12(3) 610-612 (1966)
+  doi: "10.1002/aic.690120343"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 3
+  text_layer: >-
+    ccitt scan at 300 ppi; 4296 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A1.6, role: "origin", status: published}
+  notes: >-
+    Three pages. CATALOGUE ERROR of the same class as A1.8 and A2.9 was found here previously; see
+    queue_cases/A1.6.yaml. A1.6 built its central argument on an inverted voidage of 0.399 while
+    A1.7 had already computed 0.444 from Geldart's own columns - see the Geldart entry.
+
+- file: Westerterp1995-wave-model-longitudinal-dispersion-pt1-AIChEJ41-2013.pdf
+  old_names: ["AIChE Journal - September 1995 - Westerterp - Wave model for longitudinal dispersion  Development of the model (1).pdf"]
+  kind: paper
+  identity: >-
+    Westerterp, K. R., Dil'man, V. V. & Kronberg, A. E., "Wave Model for Longitudinal Dispersion:
+    Development of the Model", AIChE Journal 41(9) 2013-2028 (1995)
+  doi: "10.1002/aic.690410902"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 16
+  text_layer: >-
+    ccitt scan at 300 ppi; 7443 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A2.7, role: "origin", status: unclaimed}
+  notes: >-
+    The "(1)" in the old filename was a browser duplicate-download suffix, not a part number: this
+    IS part 1 of the series. The companion "Wave model ... Analysis of the model" is NOT on disk.
+    Prose excellent, EQUATIONS ABSENT from the text layer.
+
+- file: Whitman1923-two-film-theory-IJHMT5-429-REPRINT1962.pdf
+  old_names: ["1-s2.0-0017931062900327-main.pdf"]
+  kind: paper
+  identity: >-
+    Whitman, W. G., "The two-film theory of gas absorption", reprinted VERBATIM in International
+    Journal of Heat and Mass Transfer 5, 429-433 (1962), "Pioneer papers in convective mass transfer
+    5"; original Chem. Metall. Eng. 29, 146-148 (1923)
+  doi: "10.1016/0017-9310(62)90032-7"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 5
+  text_layer: >-
+    ccitt scan at 300 ppi; 3407 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.1, role: "origin", status: published}
+  notes: >-
+    REPRINT ROUTE by construction - use reference_read_from. Prose good; the data are in figures.
+
+- file: Wijmans1995-solution-diffusion-model-JMembrSci107-1.pdf
+  old_names: ["1-s2.0-037673889500102I-main.pdf"]
+  kind: paper
+  identity: >-
+    Wijmans, J. G. & Baker, R. W., "The solution-diffusion model: a review", Journal of Membrane
+    Science 107(1-2) 1-21 (1995)
+  doi: "10.1016/0376-7388(95)00102-I"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 21
+  text_layer: >-
+    ccitt scan at 300 ppi; 1957 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: H1.7, role: "origin", status: published}
+
+- file: Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf
+  old_names: ["Wilke_1952.pdf"]
+  kind: paper
+  identity: >-
+    Wilke, C. R., "Diffusional Properties of Multicomponent Gases", Chemical Engineering Progress
+    46(2) 95-104, February 1950 (University of California, Berkeley)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; title page rendered at native 400 dpi
+    and read - the title, the by-line "C. R. WILKE", the affiliation and the printed abstract
+    equation are all legible; the PDF Title metadata independently reads "Chemical Engineering
+    Progress 1950-02: Vol 46 Iss 2"
+  native_ppi: 400
+  pages: 10
+  text_layer: >-
+    Acrobat Paper Capture OCR, and it is one of the worst layers in the library (182 characters on
+    page 3; the by-line comes back as "C.R. WI E"). Everything on renders. Native 400 ppi JPEG
+    grayscale.
+  supports:
+    - {case: A4.1, role: "origin", status: needs-paper}
+  notes: >-
+    *** THE FILENAME IS WRONG BY TWO YEARS AND IT MATTERS. *** The file is called Wilke_1952.pdf;
+    the document is the 1950 paper. This IS the paper A4.1 needs - Chem. Eng. Prog. 46 (1950) - and
+    its printed abstract carries the mixture rule in full: D'_A = (1 - y_A) / (y_B/D_AB + y_C/D_AC +
+    y_D/D_AD + ...), derived from the Stefan-Maxwell equations for diffusion of A through stagnant
+    B, C, D. This is the THIRD Wilke file to arrive and the FIRST correct one. The other two are
+    MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf (Wilke & Lee 1955, a
+    different paper about binary-diffusivity ESTIMATION) and the Buddenberg-Wilke VISCOSITY rule
+    that Chapman & Cowling cites. Do not let those two be mistaken for this one again. Ten pages,
+    ending in a Literature Cited with 30 entries, consistent with the cited range 95-104. Article-
+    level running heads are not in the scanned area.
+
+- file: Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf
+  old_names: ["AIChE Journal - January 1989 - Xu.pdf"]
+  kind: paper
+  identity: >-
+    Xu, J. & Froment, G. F., "Methane Steam Reforming, Methanation and Water-Gas Shift: I. Intrinsic
+    Kinetics", AIChE Journal 35(1) 88-96 (1989)
+  doi: null
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 4158 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: C2.1, role: "origin", status: published}
+  notes: >-
+    Table 6 is the one a page needs, and pdftotext renders exponents as literal text ("8.664 lo-'"),
+    so it does not resolve at all in the text layer. Journal page 94 (PDF page 7) at 600 dpi read
+    directly. Three traps that survived contact with the model: the runs used a PARTIALLY
+    DEACTIVATED catalyst; Figures 4 and 5 were drawn after multiplying the Table 6 parameters by
+    1.225; and the reference temperature is 648 K for the rate coefficients and K_CO/K_H2 but 823 K
+    for K_CH4/K_H2O. Table 5 <-> Table 6 is a free check on the page-image reading.
+
+- file: Yagi1955-combustion-carbon-particles-fluidized-beds-SympCombust5-231.pdf
+  old_names: ["1-s2.0-S0082078455800331-main.pdf"]
+  kind: paper
+  identity: >-
+    Yagi, S. & Kunii, D., "Studies on combustion of carbon particles in flames and fluidized beds",
+    Fifth Symposium (International) on Combustion, 231-244 (1955)
+  doi: "10.1016/S0082-0784(55)80033-1"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 14
+  text_layer: >-
+    ccitt scan at 300 ppi; 2522 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: B3.1, role: "origin", status: published}
+  notes: >-
+    The container is the Symposium (International) on Combustion (PII prefix 0082-0784), NOT AIChE
+    Journal - do not confuse it with Yagi & Kunii 1957 in AIChE J 3(3) 373, which is a different
+    paper on a different subject and is also on disk. Tables 1-4 transcribe directly.
+
+- file: Yagi1957-effective-thermal-conductivities-packed-beds-AIChEJ3-373.pdf
+  old_names: ["AIChE Journal - September 1957 - Yagi - Studies on effective thermal conductivities in packed beds.pdf"]
+  kind: paper
+  identity: >-
+    Yagi, S. & Kunii, D., "Studies on effective thermal conductivities in packed beds", AIChE
+    Journal 3(3) 373-381 (1957)
+  doi: "10.1002/aic.690030317"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 9
+  text_layer: >-
+    ccitt scan at 300 ppi; 2783 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A3.12, role: "origin", status: published}
+  notes: >-
+    Distinct from Yagi & Kunii 1955 (Fifth Symposium on Combustion), which is also on disk. A3.12
+    has an owed figure review - two digitisations of the authors' own computed curves, load-bearing.
+
+- file: Zwietering1959-degree-of-mixing-CES11-1.pdf
+  old_names: ["1-s2.0-0009250959800683-main.pdf"]
+  kind: paper
+  identity: >-
+    Zwietering, Th. N., "The degree of mixing in continuous flow systems", Chemical Engineering
+    Science 11(1) 1-15 (1959)
+  doi: "10.1016/0009-2509(59)80068-3"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 15
+  text_layer: >-
+    ccitt scan at 300 ppi; 3260 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: A2.8, role: "origin", status: published}
+  notes: >-
+    THE TAU TRAP: Acrobat 3.0 Capture reads the Greek tau as the digit 7 consistently, so "27" in
+    the text layer is 2*tau and "(P/37)" is (t-bar^2/3 tau). Nothing looks malformed - every string
+    is a plausible number. Read the whole paper on renders. Also: the printed folio runs to 15, so
+    the ubiquitous "1-11" citation is short by four pages. Trilingual abstract, English body.
+
+- file: vanDeemter1956-plate-height-chromatography-CES5-271.pdf
+  old_names: ["1-s2.0-0009250956800031-main.pdf"]
+  kind: paper
+  identity: >-
+    van Deemter, J. J., Zuiderweg, F. J. & Klinkenberg, A., "Longitudinal diffusion and resistance
+    to mass transfer as causes of nonideality in chromatography", Chemical Engineering Science 5(6)
+    271-289 (1956)
+  doi: "10.1016/0009-2509(56)80003-1"
+  verified_by: >-
+    title page read on a native-resolution render, 2026-08-06; the printed header rendered at 300
+    dpi reads "Chemical Engineering Science, 1956, Vol. 5, pp. 271 to 289. Pergamon Press Ltd."
+  native_ppi: 300
+  pages: 19
+  text_layer: >-
+    Elsevier scan, CCITT-G4 300 ppi, ~3.8 k chars on page 3. The OCR of the header itself reads "Vol
+    6" where the page prints "Vol. 5" - a one-character volume error in the text layer, caught only
+    by rendering. Assume the same for every number.
+  supports:
+    - {case: J1.10, role: "origin", status: needs-paper}
+  notes: >-
+    Retires the api-text route, which was the worst-affected of the whole set for this paper: Table
+    1 comes back as "0 163 1100 0 2? 0 30", with "?" for digits the OCR could not resolve, and both
+    of its tables ARE the experimental data a page would validate against. There is now a 300 ppi
+    page image to read them off.
+
+- file: vanWelsenaere1970-parametric-sensitivity-runaway-CES25-1503.pdf
+  old_names: ["1-s2.0-0009250970850734-main.pdf"]
+  kind: paper
+  identity: >-
+    Van Welsenaere, R. J. & Froment, G. F., "Parametric sensitivity and runaway in fixed bed
+    catalytic reactors", Chemical Engineering Science 25(10) 1503-1516 (1970)
+  doi: "10.1016/0009-2509(70)85073-4"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 14
+  text_layer: >-
+    ccitt scan at 300 ppi; 400 characters extracted from page 3 - below the ~5000 threshold, so
+    sub/superscripts are unreliable and every number must come off a crop.
+  supports:
+    - {case: D2.1, role: "origin", status: published}
+    - {case: D2.2, role: "origin", status: published}
+  notes: >-
+    NO TABLES, ten figures, and the api-text drops the 1970 mid-dot decimal separator ("R = 00125 m"
+    for 0.0125 m). Section 6's four worked examples are the validation and need no digitising; every
+    one of them was reproduced when D2.2 was built.
+
+- file: vantRiet1979-kLa-stirred-vessels-review-IECPDD18-357.pdf
+  old_names: ["i260071a001.pdf"]
+  kind: paper
+  identity: >-
+    van 't Riet, K., "Review of Measuring Methods and Results in Nonviscous Gas-Liquid Mass Transfer
+    in Stirred Vessels", Ind. Eng. Chem. Process Des. Dev. 18(3) 357-364 (1979)
+  doi: "10.1021/i260071a001"
+  verified_by: >-
+    title page read on a native-resolution render, recorded in docs/papers-on-disk.yaml (2026-07/08
+    drops)
+  native_ppi: 300
+  pages: 8
+  text_layer: >-
+    ccitt scan at 300 ppi; 7069 characters extracted from page 3 - above the ~5000 threshold, but a
+    high count does not guarantee correct exponents.
+  supports:
+    - {case: A3.7, role: "origin", status: published}
+
+# --- BYTE-IDENTICAL DUPLICATES, parked in duplicates/ ------------------------
+# Not deleted: moved out of the top level so `find_papers.py`'s glob cannot see
+# them and so nothing is destroyed. Each is md5-identical to the file named.
+- file: duplicates/Biotech   Bioengineering - November 1968 - Andrews.pdf
+  old_names: ["Biotech   Bioengineering - November 1968 - Andrews.pdf"]
+  kind: misc
+  identity: >-
+    Byte-identical duplicate of Andrews1968-substrate-inhibition-continuous-culture-
+    BiotechnolBioeng10-707.pdf (md5 1cd0f791c388e168ab2304134187a5a3, 487616 bytes).
+  doi: null
+  verified_by: "md5sum over the whole directory, 2026-08-06"
+  native_ppi: null
+  text_layer: "identical to the file it duplicates"
+  supports: []      # duplicates map to nothing; the survivor carries the case
+  notes: >-
+    Browser duplicate-download. Three Luedeking copies and two Andrews copies arrived in the
+    2026-08-05 evening drop; one of each survives at the top level under its new name. The same
+    thing happened on 2026-08-05 with "process-calculation-by-watson (1).pdf" and with the "(1)"
+    suffix on the Westerterp file, where the "(1)" was mistaken for a part number.
+
+- file: duplicates/Journal of Biochemical and Microbiological Technology and Engineering - December 1959 - Luedeking - A kinetic study of the.pdf
+  old_names: ["Journal of Biochemical and Microbiological Technology and Engineering - December 1959 - Luedeking - A kinetic study of the.pdf"]
+  kind: misc
+  identity: >-
+    Byte-identical duplicate of Luedeking1959-lactic-acid-fermentation-kinetics-JBMTE1-393.pdf (md5
+    601827724b39cac54e549e8aebb1227e, 885270 bytes).
+  doi: null
+  verified_by: "md5sum over the whole directory, 2026-08-06"
+  native_ppi: null
+  text_layer: "identical to the file it duplicates"
+  supports: []      # duplicates map to nothing; the survivor carries the case
+  notes: >-
+    Browser duplicate-download. Three Luedeking copies and two Andrews copies arrived in the
+    2026-08-05 evening drop; one of each survives at the top level under its new name. The same
+    thing happened on 2026-08-05 with "process-calculation-by-watson (1).pdf" and with the "(1)"
+    suffix on the Westerterp file, where the "(1)" was mistaken for a part number.
+
+- file: duplicates/Journal of Biochemical and Microbiological Technology and Engineering - Luedeking.pdf
+  old_names: ["Journal of Biochemical and Microbiological Technology and Engineering - Luedeking.pdf"]
+  kind: misc
+  identity: >-
+    Byte-identical duplicate of Luedeking1959-lactic-acid-fermentation-kinetics-JBMTE1-393.pdf (md5
+    601827724b39cac54e549e8aebb1227e, 885270 bytes).
+  doi: null
+  verified_by: "md5sum over the whole directory, 2026-08-06"
+  native_ppi: null
+  text_layer: "identical to the file it duplicates"
+  supports: []      # duplicates map to nothing; the survivor carries the case
+  notes: >-
+    Browser duplicate-download. Three Luedeking copies and two Andrews copies arrived in the
+    2026-08-05 evening drop; one of each survives at the top level under its new name. The same
+    thing happened on 2026-08-05 with "process-calculation-by-watson (1).pdf" and with the "(1)"
+    suffix on the Westerterp file, where the "(1)" was mistaken for a part number.

@@ -9,7 +9,7 @@ No page image is committed. Run `extract_figure9.py` against your own copy of th
 paper to regenerate `fig9_overlay.png` and `fig9_contact.png` locally:
 
 ```bash
-python extract_figure9.py ~/papers/pymrm-gallery/i260028a001.pdf /tmp/e21
+python extract_figure9.py ~/papers/pymrm-gallery/Kunii1968-bubbling-bed-model-IECFund7-481.pdf /tmp/e21
 ```
 
 ## What Figure 9 is

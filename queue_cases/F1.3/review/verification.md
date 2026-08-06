@@ -1,7 +1,7 @@
 # F1.3 — adversarial verification
 
 Verifier pass, 2026-07-31. Everything below was established from the 600 dpi
-renders of `~/papers/pymrm-gallery/AIChE_Journal-1996-Krishna.pdf` and from
+renders of `~/papers/pymrm-gallery/Krishna1996-bubble-column-gas-holdup-AIChEJ42-2627.pdf` and from
 independent re-computation. `docs/pdf-findings.md`, the F1.4 code and the
 builder's account were not used as evidence for any equation or constant.
 

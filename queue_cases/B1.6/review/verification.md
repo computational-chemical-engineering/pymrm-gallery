@@ -1,7 +1,7 @@
 # B1.6 — verification report
 
 Verifier pass on `queue_cases/B1.6/page/`, 2026-07-31. Source consulted directly:
-`~/papers/pymrm-gallery/1-s2.0-0009250962850052-main.pdf` (Weisz & Hicks 1962),
+`~/papers/pymrm-gallery/Weisz1962-nonisothermal-effectiveness-CES17-265.pdf` (Weisz & Hicks 1962),
 journal page 266 rendered at 600 dpi. Attack scripts in the session scratchpad
 (`VB16/attack_a.py`, `attack_b.py`, `attack_f.py`, `attack_t.py`).
 

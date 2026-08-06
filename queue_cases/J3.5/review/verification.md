@@ -3,8 +3,8 @@
 Verifier pass on `queue_cases/J3.5/page/`, 2026-07-31. Everything below was
 re-derived here; nothing is taken from the builder's account. Paper values read
 off 600 dpi `pdftoppm` renders of
-`~/papers/pymrm-gallery/Marquis_2019_J._Electrochem._Soc._166_A3693.pdf` and
-`~/papers/pymrm-gallery/Doyle_1993_J._Electrochem._Soc._140_1526.pdf`.
+`~/papers/pymrm-gallery/Marquis2019-single-particle-model-electrolyte-JES166-A3693.pdf` and
+`~/papers/pymrm-gallery/Doyle1993-lithium-cell-galvanostatic-model-JES140-1526.pdf`.
 
 **Verdict: safe to publish after the fixes in §1–§5.** No finding shows a wrong
 physical conclusion. The defects are (a) one demonstrably overstated claim about

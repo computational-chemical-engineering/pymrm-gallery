@@ -103,7 +103,7 @@ To regenerate the digitised dataset you need your own lawfully obtained copy of
 the PDF (it is not in the repository, and must not be):
 
 ```bash
-python extract_figures.py ~/papers/pymrm-gallery/"AIChE Journal - January 1989 - Xu.pdf"
+python extract_figures.py ~/papers/pymrm-gallery/"Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf"
 ```
 
 That script is deterministic — the candidate indices that survived the visual

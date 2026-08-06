@@ -1,6 +1,6 @@
 # B1.4 — adversarial verification
 
-Verifier pass, 2026-08-01. Source re-read: `~/papers/pymrm-gallery/1-s2.0-0009250962850052-main.pdf`
+Verifier pass, 2026-08-01. Source re-read: `~/papers/pymrm-gallery/Weisz1962-nonisothermal-effectiveness-CES17-265.pdf`
 at 600 dpi (journal pp. 265, 267, 268, 269, 272, 274). Weisz & Prater (1954) not
 on disk, not consulted — same position as the builder.
 

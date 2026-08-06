@@ -5,21 +5,24 @@ catalog_reference: Levenspiel
 priority: P1
 tier: T0
 structures: S1
-status: needs-paper
-reference: {}
+status: unclaimed
+reference:
+  authors:
+  - Levenspiel, O.
+  year: 1999
+  title: Chemical Reaction Engineering, 3rd edition
+  container: John Wiley & Sons, ISBN 0-471-25424-X
 paper:
-  on_disk: null
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/BOOK-Levenspiel-1999-chemical-reaction-engineering-3ed.pdf
   open_access: null
-  checked: '2026-07-30'
-blocker:
-  kind: paper
-  question: ''
-  detail: Not in ~/papers/pymrm-gallery/ and no open-access copy found via Unpaywall.
-    CrossRef could not resolve a DOI confidently from the catalogue citation either,
-    so the citation below is as the catalogue records it.
-  artifacts: []
+  checked: '2026-08-06'
+  identified_by: 'Book identified from its own title page and Library of Congress page: "Chemical
+    Reaction Engineering / Third Edition / Octave Levenspiel / Department of Chemical Engineering
+    / Oregon State University / John Wiley & Sons", "Copyright 1999", ISBN 0-471-25424-X. PDF page
+    = book page + 16, checked against the printed Contents.'
+blocker: null
 notes: null
-updated: '2026-07-30'
+updated: '2026-08-06'
 resume:
   blocking: true
   trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
@@ -27,7 +30,29 @@ resume:
   - add the filename to docs/papers-on-disk.yaml under this catalogue ID
   - set status back to unclaimed and clear paper.checked so find_papers re-runs
   - dispatch a build agent with the standard brief in docs/agent-brief.md
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access
-    route via Unpaywall. See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route
-    appears (an Elsevier key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route via Unpaywall.
+    See blocker.detail.'
+  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears (an Elsevier
+    key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+canonical_class: 'FLIPPED UNDER THE TEXTBOOK-CANONICAL CLASS approved by the maintainer 2026-08-02
+  (docs/standing-decisions.yaml records the decision; AGENTS.md "Published work only" records the
+  standard that still applies). The class had been INERT since approval because no qualifying monograph
+  was on disk. Four arrived 2026-08-05/06. AGENTS.md still forbids writing from memory: name what
+  the model was read from, cite the chapter and section, and use reference_read_from with the origin
+  in reference.'
+e1_1_test: 'PASSED, on all three limbs, and this is the case the request list said Levenspiel "unblocks
+  directly". STATES: Chapter 14 "The Tanks-In-Series Model", book p. 321. Section 14.1 gives the RTD
+  for N tanks as its eq. 3 with the properties in Fig. 14.3; section 14.2 gives first-order conversion
+  for N tanks and the graphical construction for arbitrary kinetics (Fig. 14.8), plus the macrofluid
+  form via eq. 11.3. ATTRIBUTES: the F curve, Fig. 14.7, is labelled "from MacMullin and Weber (1935)".
+  CARRIES AND TESTS: three worked examples E14.1-E14.3 fit N to real RTD data, and the chapter states
+  the model''s own limits ("use it for small deviations from plug flow", equivalence to the dispersion
+  model).'
+chapter_and_section: Ch. 14, book pp. 321-338 (PDF pp. 337-354). Sections 14.1 and 14.2.
+text_layer:
+  quality: Prose excellent and fully searchable - which is how the E1.1 test above was run - but EQUATIONS
+    AND SUBSCRIPTS ARE DESTROYED. Every formula and every table cell must come off a cropped image.
+  render_at: 600 dpi. JBIG2 bilevel at 600 x 600 ppi native - joint highest in the library. Do not
+    render above it.
+do_not_confuse: 'Levenspiel the AUTHOR is also on disk and is a different case: Levenspiel1972-deactivating-catalyst-rate-equation-JCatal25-265.pdf
+  closes B2.3 and does not touch this one.'

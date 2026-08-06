@@ -21,7 +21,7 @@ Weisz & Hicks' own reference list, and **was not consulted**.
 
 Everything transcribed is from **Weisz & Hicks (1962)**, *Chem. Eng. Sci.*
 **17**(4), 265–275, `doi:10.1016/0009-2509(62)85005-2`, which is on disk at
-`~/papers/pymrm-gallery/1-s2.0-0009250962850052-main.pdf` and is already the
+`~/papers/pymrm-gallery/Weisz1962-nonisothermal-effectiveness-CES17-265.pdf` and is already the
 source of `B1.1`/`B1.5` and `B1.6`. It carries the case comfortably: it prints
 the criterion as **eq. (1)**, states its purpose, gives the observable group as
 **eq. (11)**, extends it to the exothermic case as **eq. (10a)**, devotes its

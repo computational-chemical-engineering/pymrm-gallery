@@ -5,49 +5,35 @@ catalog_reference: van Deemter, Zuiderweg & Klinkenberg, Chem. Eng. Sci. 5 (1956
 priority: P1
 tier: T0
 structures: S4
-status: needs-paper
+status: unclaimed
 reference:
   authors:
   - van Deemter, J. J.
   - Zuiderweg, F. J.
   - Klinkenberg, A.
   year: 1956
-  title: Longitudinal diffusion and resistance to mass transfer as causes of nonideality in
-    chromatography
-  container: Chemical Engineering Science 5(6) 271-289
+  title: Longitudinal diffusion and resistance to mass transfer as causes of nonideality in chromatography
+  container: Chemical Engineering Science 5(6) 271-289 (1956)
   doi: 10.1016/0009-2509(56)80003-1
 paper:
-  on_disk: api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/vanDeemter1956-plate-height-chromatography-CES5-271.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
-
-
-    Text layer: prose only. Tables 1 and 2 are present but numerically destroyed — every decimal
-    point is a space and some digits are ''?'': Table 1 reads "0 163 1100 0 2? 0 30" and Table
-    2 "0 091 42 1 00". Both tables are the experimental data a page would validate against,
-    so the API route does not unblock this case at all.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/0009250956800031
-notes: There is a 1995 CES reprint of this paper (doi 10.1016/0009-2509(96)81813-6) if the
-  original PII is ever unavailable; it is the same scan.
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  0009250956800031). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
+  checked: '2026-08-06'
+  identified_by: 'Identified from a 300 dpi render of the printed header, which reads "Chemical Engineering
+    Science, 1956, Vol. 5, pp. 271 to 289. Pergamon Press Ltd.", above the title "Longitudinal diffusion
+    and resistance to mass transfer as causes of nonideality in chromatography" and the by-line J.
+    J. van Deemter, F. J. Zuiderweg and A. Klinkenberg. THE RENDER WAS NECESSARY: the file''s own
+    text layer prints the volume as 6, not 5.'
+blocker: null
+notes: There is a 1995 CES reprint of this paper (doi 10.1016/0009-2509(96)81813-6) if the original
+  PII is ever unavailable; it is the same scan.
+updated: '2026-08-06'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII 0009250956800031).
+  Identity confirmed from the article's own header — title, journal, volume, issue and page range
+  — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/vanDeemter-Zuiderweg-Klinkenberg-1956-CES-5-271.ELSEVIER-API-TEXT.txt
+upgrade: 'Retires the api-text route, and this case was the worst-affected of the whole api-text set:
+  Table 1 came back as "0 163 1100 0 2? 0 30", with "?" standing in for digits the OCR could not resolve,
+  and BOTH of the paper''s tables ARE the experimental data a page would validate against. So the
+  api route bought this case nothing at all. There is now a 300 ppi page image.'
+text_layer_warning: The scan's own text layer misreads its VOLUME NUMBER (6 for 5) in the very first
+  line. If it gets the header wrong it will get the tables wrong. Read every number on a crop.

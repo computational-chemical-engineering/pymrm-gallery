@@ -5,7 +5,7 @@ Run locally, against a lawfully obtained copy of the paper. Nothing this script
 reads or writes may enter the repository: `pdftoppm` output and the overlay are
 page images, and the gallery does not commit those.
 
-    python extract_figure9.py ~/papers/pymrm-gallery/i260028a001.pdf /tmp/e21
+    python extract_figure9.py ~/papers/pymrm-gallery/Kunii1968-bubbling-bed-model-IECFund7-481.pdf /tmp/e21
 
 Writes to the output directory:
     fig9_candidates.csv   detected centres in data coordinates, with shape scores

@@ -8,7 +8,7 @@ and the number it earns.
 for Prediction of Binary Gas-Phase Diffusion Coefficients"*, **Ind. Eng. Chem.
 58(5) 18–27 (1966)**,
 [doi:10.1021/ie50677a007](https://doi.org/10.1021/ie50677a007). On disk as
-`ie50677a007.pdf`, read in full. `pdfimages -list` gives **300 × 300 ppi
+`Fuller1966-diffusion-volumes-IEC58-18.pdf`, read in full. `pdfimages -list` gives **300 × 300 ppi
 native**, so every render is `pdftoppm -r 300`; 600 dpi would interpolate.
 Equations 1–5 and all 27 diffusion volumes were read off cropped page images,
 and every one of the 340 data rows was verified against the physics and, where

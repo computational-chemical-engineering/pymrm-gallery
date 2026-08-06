@@ -2,7 +2,7 @@
 
 Verifier pass, 2026-08-01. Staged page `queue_cases/D2.1/page/`.
 Source re-read independently on 600 dpi renders of
-`~/papers/pymrm-gallery/1-s2.0-0009250970850734-main.pdf`, PDF pages 2, 3, 9, 10,
+`~/papers/pymrm-gallery/vanWelsenaere1970-parametric-sensitivity-runaway-CES25-1503.pdf`, PDF pages 2, 3, 9, 10,
 11, 12 (journal pages 1504, 1505, 1511, 1512, 1513, 1514). Barkelew's own paper
 was not available to me either.
 

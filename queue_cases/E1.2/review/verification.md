@@ -2,7 +2,7 @@
 
 Verifier pass, 2026-08-01. Staged page: `queue_cases/E1.2/page/`.
 Source re-read independently on 600 dpi `pdftoppm` renders of
-`~/papers/pymrm-gallery/i260028a001.pdf`, journal pages 481, 482, 490, 491, 492.
+`~/papers/pymrm-gallery/Kunii1968-bubbling-bed-model-IECFund7-481.pdf`, journal pages 481, 482, 490, 491, 492.
 Notebook re-executed from the staged file (8.4 s); **every stream output is
 byte-identical to the staged outputs**, so there is no execution drift.
 

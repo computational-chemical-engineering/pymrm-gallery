@@ -114,7 +114,7 @@ route. Zero cases beyond it. The textbook-canonical class remains inert.**
 
 ## 2. The second monograph — Li & Kwauk, `A1.9`
 
-`7981631866938162.pdf` — a bare sixteen-digit filename with **no text layer at
+`BOOK-LiKwauk-1994-particle-fluid-two-phase-flow-EMMS-1ed.pdf` — a bare sixteen-digit filename with **no text layer at
 all** (`pdftotext` returns one byte, a form feed, for each of the 214 pages).
 Rasterised to identify: it is Li, Jinghai & Kwauk, Mooson, *Particle-Fluid
 Two-Phase Flow: The Energy-Minimization Multi-Scale Method*, Metallurgical
@@ -260,27 +260,27 @@ a monograph*.
 
 The four Priority-3 checks, applied to every file.
 
-- **`Literature-PredictionofMassTransferColumns.pdf` is the paper**, not a
+- **`Billet1999-mass-transfer-columns-packings-TransIChemE77A-498.pdf` is the paper**, not a
   literature review of it. The `Literature-` prefix is the same shape as the
   `A3.5` block (a one-page Citation Classic reminiscence and a companion study on
   a different problem), so it was rendered and read: the by-line is Billet and
   Schultes themselves, and the subtitle "Updated Summary of the Calculation
   Method of Billet and Schultes" is the authors describing their own method.
-- **`20100036467.pdf` is a real report.** A NASA-style accession number was
+- **`Kandula2010-effective-thermal-conductivity-packed-beds-NASA-KSC-2010-007.pdf` is a real report.** A NASA-style accession number was
   checked deliberately. It is a genuine 15-page technical report (its own Title
   metadata is `KSC-2010-007.pdf`) with an abstract, nomenclature, five figures
   and a reference list — not an NTRS abstract record and not an entitlement
   preview of the kind that fooled an agent on `B1.2`.
-- **`7981631866938162.pdf`, a bare numeric filename, is a 214-page book.** With
+- **`BOOK-LiKwauk-1994-particle-fluid-two-phase-flow-EMMS-1ed.pdf`, a bare numeric filename, is a 214-page book.** With
   no text layer, nothing whatever could be inferred without rasterising.
-- **`ie50546a056.pdf` is a Wilke paper, and it is the WRONG Wilke paper.** It is
+- **`MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf` is a Wilke paper, and it is the WRONG Wilke paper.** It is
   Wilke & **Lee**, *Ind. Eng. Chem.* 47(6) 1253–1257 (1955) — five years after,
   different journal, different co-author, different equation. `A4.1` is Wilke,
   *Chem. Eng. Prog.* 46 (1950), the multicomponent mixture rule. **This file maps
   to no catalogue case.** Its value is as a secondary source for `A4.5`/`A4.6`
   (Fuller et al. benchmark against it by name). It has not been allowed to close
   `A4.1`.
-- **`1-s2.0-S0009250912007099-main.pdf` is a Stefan-tube paper that does not
+- **`Mills2013-two-dimensional-stefan-tube-CES90-130.pdf` is a Stefan-tube paper that does not
   serve `A4.8`.** Mills & Chang (2013) is a *binary* 2-D Navier–Stokes +
   Maxwell–Stefan computation written to rebut the Kerkhof–Geboers equations. It
   contains no experimental data and no tables of any kind. `A4.8` is catalogued

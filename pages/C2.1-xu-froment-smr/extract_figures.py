@@ -4,7 +4,7 @@
 The PDF is not in the repository and must not be (AGENTS.md). Point this at your
 own lawfully obtained copy:
 
-    python extract_figures.py ~/papers/pymrm-gallery/"AIChE Journal - January 1989 - Xu.pdf"
+    python extract_figures.py ~/papers/pymrm-gallery/"Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf"
 
 Requires poppler's ``pdftoppm`` on PATH, plus numpy, scipy and pillow.
 

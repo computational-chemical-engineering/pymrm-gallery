@@ -2,7 +2,7 @@
 
 Verifier pass on `queue_cases/A4.2/page/`, 2026-07-31.
 Source re-read directly off 600 dpi renders (`pdftoppm -r 600`) of
-`1-s2.0-S0009250996004587-main.pdf`, journal pages 863, 870, 871, 872
+`Krishna1997-maxwell-stefan-review-CES52-861.pdf`, journal pages 863, 870, 871, 872
 (PDF pages 3, 9, 11, 12).
 
 **Verdict: safe to publish after the fixes in F1–F3. Not a send-back.**

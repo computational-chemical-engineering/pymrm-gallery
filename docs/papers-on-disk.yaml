@@ -1,56 +1,74 @@
 # Catalog ID -> filename in ~/papers/pymrm-gallery/
 #
-# Needed because many of these files are named by publisher PII or an opaque
-# export id (`i260028a001.pdf`, `211103107pdfcreator.pdf`) with no author or year
-# in the name, so automatic matching cannot find them. A case wrongly reported as
-# needs-paper asks the maintainer to supply something they already supplied, so
-# this map is worth maintaining by hand.
+# *** ALL 115 PDFs WERE RENAMED ON 2026-08-06. ***
 #
-# Add a line whenever a new PDF is dropped in.
+# They used to be named by publisher PII or an opaque export id
+# (`Kunii1968-bubbling-bed-model-IECFund7-481.pdf`, `Ergun1952-fluid-flow-through-packed-columns-ChemEngProg48-89.pdf`, `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf`, `Onda1968-gas-liquid-mass-transfer-packed-columns-JCEJ1-56.pdf`) with
+# no author, year or journal in the name, so nothing could be inferred from a
+# filename and automatic matching could not find them. They now follow
+#
+#   papers  <FirstAuthor><Year>-<short-slug>-<JournalAbbrev><Vol>-<FirstPage>.pdf
+#   books   BOOK-<Authors>-<Year>-<short-title>-<edition>.pdf
+#   MISC-   kept for the record, maps to no catalogue case
+#   -pt1 / -pt2  multi-part papers
+#
+# THE AUTHORITATIVE CATALOGUE IS NOW `docs/papers-inventory.yaml`: one entry per
+# file, with `old_names`, the identity, how it was verified, the native ppi, what
+# the text layer can be trusted for, and every case it supports. THIS file stays
+# because `scripts/find_papers.py` reads it and reads nothing else - it is the
+# ID -> filename lookup, not the catalogue. Keep the two in step: add a line
+# here AND an entry there whenever a PDF arrives.
+#
+# The rename also means the fallback matcher in find_papers.py (surname + year
+# in the filename) now works for most of the library, where before it worked for
+# almost none of it. The hand map still wins and still matters.
+#
+# `pages/**`, `models.yaml` and `docs/handoff.md` still cite the OLD names in
+# their provenance prose; `old_names` in the inventory is what connects them.
 
-A1.1: 211103107pdfcreator.pdf                  # Ergun 1952, pure scan, no text layer
-A2.3: rspa.1953.0139.pdf                       # Taylor 1953
-A3.4: 1-s2.0-0009250978851203-main.pdf         # Wakao & Funazkri 1978
-A4.2: 1-s2.0-S0009250996004587-main.pdf        # Krishna & Wesselingh 1997 (review, not a page)
-A4.9: "AIChE Journal - March 1962 - Duncan - An experimental study of three component gas diffusion.pdf"
-B1.1: 1-s2.0-0009250962850052-main.pdf         # Weisz & Hicks 1962
-B1.5: 1-s2.0-0009250962850052-main.pdf
-B3.1: 1-s2.0-S0082078455800331-main.pdf        # Yagi & Kunii 1955
-C2.1: "AIChE Journal - January 1989 - Xu.pdf"  # Xu & Froment 1989
-D2.2: 1-s2.0-0009250970850734-main.pdf         # Van Welsenaere & Froment 1970
-E2.1: i260028a001.pdf                          # Kunii & Levenspiel 1968
-F1.4: AIChE_Journal-1996-Krishna.pdf           # Krishna & Ellenberger 1996
-F2.3: 1-s2.0-S0920586199000826-main.pdf        # Maretto & Krishna 1999
-G1.8: "AIChE Journal - 1983 - Herskowitz.pdf"  # Herskowitz & Smith 1983
-H1.7: 1-s2.0-037673889500102I-main.pdf         # Wijmans & Baker 1995
-I1.2: i300005a006.pdf                          # Oh & Cavendish 1982
-J1.5: tf9555101540.pdf                         # Glueckauf 1955
-J3.4: Doyle_1993_J._Electrochem._Soc._140_1526.pdf
-J4.8: 1-s2.0-0043135487900583-main.pdf         # Henze et al. 1987, ASM1
-H1.4: "AIChE Journal - September 1987 - Itoh - A membrane reactor using palladium.pdf"  # Itoh 1987, AIChE J 33(9) 1576 — was wrongly listed as H1.9 (the MS zeolite membrane case) until 2026-07-31
-B1.2: 1-s2.0-0009250957850283-main.pdf         # Aris 1957 - BUT ONE PAGE ONLY (journal p. 262). See note below.
-J3.5: Marquis_2019_J._Electrochem._Soc._166_A3693.pdf  # Marquis et al. 2019, SPMe, open access (IOP)
+A1.1: Ergun1952-fluid-flow-through-packed-columns-ChemEngProg48-89.pdf                  # Ergun 1952, pure scan, no text layer
+A2.3: Taylor1953-dispersion-solute-in-solvent-ProcRSocA219-186.pdf                       # Taylor 1953
+A3.4: Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf         # Wakao & Funazkri 1978
+A4.2: Krishna1997-maxwell-stefan-review-CES52-861.pdf        # Krishna & Wesselingh 1997 (review, not a page)
+A4.9: "Duncan1962-three-component-gas-diffusion-AIChEJ8-38.pdf"
+B1.1: Weisz1962-nonisothermal-effectiveness-CES17-265.pdf         # Weisz & Hicks 1962
+B1.5: Weisz1962-nonisothermal-effectiveness-CES17-265.pdf
+B3.1: Yagi1955-combustion-carbon-particles-fluidized-beds-SympCombust5-231.pdf        # Yagi & Kunii 1955
+C2.1: "Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf"  # Xu & Froment 1989
+D2.2: vanWelsenaere1970-parametric-sensitivity-runaway-CES25-1503.pdf         # Van Welsenaere & Froment 1970
+E2.1: Kunii1968-bubbling-bed-model-IECFund7-481.pdf                          # Kunii & Levenspiel 1968
+F1.4: Krishna1996-bubble-column-gas-holdup-AIChEJ42-2627.pdf           # Krishna & Ellenberger 1996
+F2.3: Maretto1999-slurry-bubble-column-FT-CatalToday52-279.pdf        # Maretto & Krishna 1999
+G1.8: "Herskowitz1983-trickle-bed-partial-wetting-AIChEJ29-1.pdf"  # Herskowitz & Smith 1983
+H1.7: Wijmans1995-solution-diffusion-model-JMembrSci107-1.pdf         # Wijmans & Baker 1995
+I1.2: Oh1982-monolith-converter-transients-IECPDD21-29.pdf                          # Oh & Cavendish 1982
+J1.5: Glueckauf1955-linear-driving-force-TransFaradaySoc51-1540.pdf                         # Glueckauf 1955
+J3.4: Doyle1993-lithium-cell-galvanostatic-model-JES140-1526.pdf
+J4.8: Henze1987-activated-sludge-model-1-WaterRes21-505.pdf         # Henze et al. 1987, ASM1
+H1.4: "Itoh1987-palladium-membrane-reactor-AIChEJ33-1576.pdf"  # Itoh 1987, AIChE J 33(9) 1576 — was wrongly listed as H1.9 (the MS zeolite membrane case) until 2026-07-31
+B1.2: Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf         # Aris 1957 - BUT ONE PAGE ONLY (journal p. 262). See note below.
+J3.5: Marquis2019-single-particle-model-electrolyte-JES166-A3693.pdf  # Marquis et al. 2019, SPMe, open access (IOP)
 
 # Supplied 2026-08-02. Seven papers, all section A - the section find_papers had
 # shown to be irreducible by automation (most of it predates DOIs). Each was
 # identified by reading its own first pages, not by filename.
-A1.5: 1-s2.0-S0263876297800068-main.pdf        # Richardson & Zaki, Sedimentation and fluidisation: Part I
-A1.6: "AIChE Journal - May 1966 - Wen - A generalized method for predicting the minimum fluidization velocity.pdf"  # Wen & Yu 1966, 3 pp
-A1.7: 1-s2.0-0032591073800373-main.pdf         # Geldart, Types of gas fluidization, Powder Technol. 7 (1973) 285-292
-A2.1: 1-s2.0-0009250953800011-main.pdf         # Danckwerts, Continuous flow systems, Chem. Eng. Sci. 2(1) (1953)
-A2.2: 1-s2.0-0009250956800146-main.pdf         # Wehner & Wilhelm, Boundary conditions of flow reactor, CES 6(2) 89-93 (1956)
-A2.5: 1-s2.0-0009250968870563-main.pdf         # Edwards & Richardson, Gas dispersion in packed beds, CES 23 (1968) 109-123
+A1.5: Richardson1954-sedimentation-fluidisation-pt1-ChERD75-S82-REPRINT1997.pdf        # Richardson & Zaki, Sedimentation and fluidisation: Part I
+A1.6: "Wen1966-minimum-fluidization-velocity-AIChEJ12-610.pdf"  # Wen & Yu 1966, 3 pp
+A1.7: Geldart1973-types-of-gas-fluidization-PowderTechnol7-285.pdf         # Geldart, Types of gas fluidization, Powder Technol. 7 (1973) 285-292
+A2.1: Danckwerts1953-continuous-flow-systems-CES2-1.pdf         # Danckwerts, Continuous flow systems, Chem. Eng. Sci. 2(1) (1953)
+A2.2: Wehner1956-boundary-conditions-flow-reactor-CES6-89.pdf         # Wehner & Wilhelm, Boundary conditions of flow reactor, CES 6(2) 89-93 (1956)
+A2.5: Edwards1968-gas-dispersion-packed-beds-CES23-109.pdf         # Edwards & Richardson, Gas dispersion in packed beds, CES 23 (1968) 109-123
 # A2.6's SECONDARY source, kept for reference - the 1993 note. It is not the
 # catalogued paper and it is not evaluable on its own (its eq. 42 defers p(Re)
 # to the 1987 paper). Mapped below as A2.6. Left un-keyed here because a
 # duplicate A2.6: key loads silently - YAML keeps the last - while reading as
 # authoritative to a human.
-#   1-s2.0-025527019380020H-main.pdf   Gunn, On axial dispersion in fixed beds,
+#   Gunn1993-axial-dispersion-note-ChemEngProcess32-333.pdf   Gunn, On axial dispersion in fixed beds,
 #                                      Chem. Eng. Process. 32 (1993) 333-338
 
 # B1.2 is on disk but is NOT a full paper - checked 2026-08-02, do not re-check.
 #
-# `1-s2.0-0009250957850283-main.pdf` is Aris 1957, and it is ONE PAGE: journal
+# `Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf` is Aris 1957, and it is ONE PAGE: journal
 # page 262, the first page. It is byte-size identical to what the Elsevier API
 # returns for `application/pdf` on that PII, i.e. it is the entitlement preview,
 # not a scan someone obtained separately. The 1995 verbatim reprint (PII
@@ -69,7 +87,7 @@ A2.5: 1-s2.0-0009250968870563-main.pdf         # Edwards & Richardson, Gas dispe
 #
 # ONE new PDF. Freely downloadable from OSTI, a US DOE public repository;
 # identity verified by opening it and reading its own title page.
-A1.8: Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf   # MFIX Theory Guide, DOE/METC-94/1004, Dec 1993, 54 pp. Carries Syamlal-O'Brien drag in full (§2.2.1); does NOT contain Wen-Yu (on disk as the A1.6 file) or Gidaspow's blend rule.
+A1.8: Syamlal1993-MFIX-theory-guide-DOE-METC-94-1004.pdf   # MFIX Theory Guide, DOE/METC-94/1004, Dec 1993, 54 pp. Carries Syamlal-O'Brien drag in full (§2.2.1); does NOT contain Wen-Yu (on disk as the A1.6 file) or Gidaspow's blend rule.
 
 # ---------------------------------------------------------------------------
 # Everything below is `api-text/<name>.ELSEVIER-API-TEXT.txt` — the *text* the
@@ -108,19 +126,19 @@ J2.3:  api-text/Nyvlt-1968-JCrystGrowth-3-377.ELSEVIER-API-TEXT.txt
 # Supplied 2026-08-05. Ten papers, almost all section A3 (interphase mass and
 # heat transfer) plus the Gunn paper A2.5's builder asked for by name. Every one
 # identified by reading its own first pages, not from the filename.
-A2.6: 1-s2.0-0009250987850662-main.pdf   # Gunn, Axial and radial dispersion in fixed beds, CES 42(2) 363-373 (1987) - THE CATALOGUED PAPER, the one A2.5's builder named as the blocker
-A3.1: 1-s2.0-0017931062900327-main.pdf   # Whitman 1923 REPRINTED VERBATIM in Int. J. Heat Mass Transfer 5, 429-433 (1962), "Pioneer papers in convective mass transfer 5" - reprint route, use reference_read_from
-A3.3: ie50498a055.pdf                    # Danckwerts, Significance of Liquid-Film Coefficients in Gas Absorption, Ind. Eng. Chem. 43, 1460 (1951)
-A3.6: 1-s2.0-000925096187005X-main.pdf   # Calderbank & Moo-Young, CES 16, 39-54 (1961) - note the PII decodes to 1961 but the scan's header text layer prints "1981" and "vol 19"; the volume/pages are right
-A3.7: i260071a001.pdf                    # van 't Riet, Review of Measuring Methods and Results in Nonviscous Gas-Liquid Mass Transfer in Stirred Vessels, IECPDD 18(3) 357 (1979)
-A3.8: 1_56.pdf                           # Onda et al., Mass transfer coefficients between gas and liquid phases in packed columns, 7 pp
-A3.12: "AIChE Journal - September 1957 - Yagi - Studies on effective thermal conductivities in packed beds.pdf"  # Yagi & Kunii, AIChE J 3(3) (1957)
-A3.15: "Annalen der Physik - 1882 - Graetz - Ueber die W rmeleitungsf higkeit von Fl ssigkeiten.pdf"  # Graetz 1882, in German
+A2.6: Gunn1987-axial-radial-dispersion-fixed-beds-CES42-363.pdf   # Gunn, Axial and radial dispersion in fixed beds, CES 42(2) 363-373 (1987) - THE CATALOGUED PAPER, the one A2.5's builder named as the blocker
+A3.1: Whitman1923-two-film-theory-IJHMT5-429-REPRINT1962.pdf   # Whitman 1923 REPRINTED VERBATIM in Int. J. Heat Mass Transfer 5, 429-433 (1962), "Pioneer papers in convective mass transfer 5" - reprint route, use reference_read_from
+A3.3: Danckwerts1951-liquid-film-coefficients-gas-absorption-IEC43-1460.pdf                    # Danckwerts, Significance of Liquid-Film Coefficients in Gas Absorption, Ind. Eng. Chem. 43, 1460 (1951)
+A3.6: Calderbank1961-mass-transfer-agitated-vessels-CES16-39.pdf   # Calderbank & Moo-Young, CES 16, 39-54 (1961) - note the PII decodes to 1961 but the scan's header text layer prints "1981" and "vol 19"; the volume/pages are right
+A3.7: vantRiet1979-kLa-stirred-vessels-review-IECPDD18-357.pdf                    # van 't Riet, Review of Measuring Methods and Results in Nonviscous Gas-Liquid Mass Transfer in Stirred Vessels, IECPDD 18(3) 357 (1979)
+A3.8: Onda1968-gas-liquid-mass-transfer-packed-columns-JCEJ1-56.pdf                           # Onda et al., Mass transfer coefficients between gas and liquid phases in packed columns, 7 pp
+A3.12: "Yagi1957-effective-thermal-conductivities-packed-beds-AIChEJ3-373.pdf"  # Yagi & Kunii, AIChE J 3(3) (1957)
+A3.15: "Graetz1882-waermeleitungsfaehigkeit-fluessigkeiten-AnnPhys254-79.pdf"  # Graetz 1882, in German
 
 # A3.5 (Ranz-Marshall / Froessling) is NOT unblocked by this batch - read this
 # before adding it to a request list or dispatching a builder.
 #
-#   A1993LB49000001.pdf is a ONE-PAGE "This Week's Citation Classic" commentary
+#   MISC-Ranz1993-citation-classic-commentary-CurrContents22.pdf is a ONE-PAGE "This Week's Citation Classic" commentary
 #   ON Ranz & Marshall (1952), written by Ranz in 1993. It is a reminiscence, not
 #   the paper, and carries none of its correlations or data.
 #
@@ -141,7 +159,7 @@ A3.15: "Annalen der Physik - 1882 - Graetz - Ueber die W rmeleitungsf higkeit vo
 # ever to arrive here; see the block after the map.
 #
 # --- MONOGRAPHS ---
-A4.6: "cambridge-mathematical-library-sydney-chapman-t.-g.-cowling-c.-cercignani-the-mathematical-theory-of-non-uniform-gases_-an-account-of-the-kinetic-theory-of-viscosity-thermal-conduction-a.pdf"
+A4.6: "BOOK-ChapmanCowling-1970-non-uniform-gases-3ed.pdf"
 # ^ Chapman, S. & Cowling, T. G., "The Mathematical Theory of Non-Uniform Gases",
 #   3rd edn (1970), Cambridge University Press; reissued 1990 in the Cambridge
 #   Mathematical Library with a Foreword by C. Cercignani, reprinted 1993.
@@ -152,7 +170,7 @@ A4.6: "cambridge-mathematical-library-sydney-chapman-t.-g.-cowling-c.-cercignani
 #   contents and chapter-and-section-title pages. This is the BOOK, not a review
 #   of it - the trap that produced F1.6 and F3.4.
 #   PDF page = book page + 24 in the body (checked at pp. 176, 181, 186, 256-262).
-A1.9: 7981631866938162.pdf
+A1.9: BOOK-LiKwauk-1994-particle-fluid-two-phase-flow-EMMS-1ed.pdf
 # ^ Li, Jinghai & Kwauk, Mooson, "Particle-Fluid Two-Phase Flow: The
 #   Energy-Minimization Multi-Scale Method", Metallurgical Industry Press,
 #   Beijing, 1994. COMPLETE BOOK, 214 PDF pages. The bare numeric filename gives
@@ -163,24 +181,24 @@ A1.9: 7981631866938162.pdf
 #   158, 165).
 #
 # --- JOURNAL PAPERS ---
-A2.7: "AIChE Journal - September 1995 - Westerterp - Wave model for longitudinal dispersion  Development of the model (1).pdf"
+A2.7: "Westerterp1995-wave-model-longitudinal-dispersion-pt1-AIChEJ41-2013.pdf"
 # ^ Westerterp, Dil'man & Kronberg, "Wave Model for Longitudinal Dispersion:
 #   Development of the Model", AIChE J. 41(9) 2013-2028 (1995). Confirms the
 #   DOI already recorded on the case (10.1002/aic.690410902) against the
 #   document. The "(1)" in the filename is a browser duplicate-download suffix,
 #   not a part number: this IS part 1 of the series; the companion "Wave model
 #   ... Analysis of the model" is NOT on disk.
-A2.8: 1-s2.0-0009250959800683-main.pdf
+A2.8: Zwietering1959-degree-of-mixing-CES11-1.pdf
 # ^ Zwietering, Th. N., "The degree of mixing in continuous flow systems",
 #   Chem. Eng. Sci. 11(1) 1-15 (1959). Note the page range: the running head
 #   continues to a printed folio 15, so the widely quoted "1-11" is short by
 #   four pages. Trilingual abstract (English/French/German) - the body is
 #   English.
-A2.9: 1-s2.0-0300946789850026-main.pdf
+A2.9: Baldyga1989-micromixing-simplification-pt1-ChemEngJ42-83.pdf
 # ^ Baldyga, J. & Bourne, J. R., "Simplification of Micromixing Calculations.
 #   I. Derivation and Application of New Model", THE CHEMICAL ENGINEERING
 #   JOURNAL 42 (1989) 83-92. This is the derivation, so it is the key here.
-#   PART II IS ALSO ON DISK: `1-s2.0-0300946789850038-main.pdf` = "...
+#   PART II IS ALSO ON DISK: `Baldyga1989-micromixing-simplification-pt2-ChemEngJ42-93.pdf` = "...
 #   II. New Applications", same journal and volume, 93-101. Only one filename
 #   can be the value (find_papers.py does `(PAPERS / name).is_file()` on it),
 #   so both are listed on queue_cases/A2.9.yaml instead. Do not request either.
@@ -188,7 +206,7 @@ A2.9: 1-s2.0-0300946789850026-main.pdf
 #   Sci. (1989)". Wrong journal. Both parts are in The Chemical Engineering
 #   Journal (Elsevier), vol. 42 - the PII prefix 0300-9467 is that journal, not
 #   0009-2509. Same class of error as A1.6 and A1.8.
-A2.10: 1-s2.0-S0098135403002072-main.pdf
+A2.10: Bezzo2004-hybrid-multizonal-cfd-pt2-CACE28-513.pdf
 # ^ Bezzo, F. & Macchietto, S., "A general methodology for hybrid
 #   multizonal/CFD models. Part II. Automatic zoning", Comput. Chem. Eng. 28
 #   (2004) 513-525, doi:10.1016/j.compchemeng.2003.08.010. Two authors, which is
@@ -196,7 +214,7 @@ A2.10: 1-s2.0-S0098135403002072-main.pdf
 #   DIFFERENT, THREE-AUTHOR paper (Bezzo, Macchietto & Pantelides) and is NOT on
 #   disk; Part II defines the zone model it uses but derives the framework in
 #   Part I.
-A3.9: Literature-PredictionofMassTransferColumns.pdf
+A3.9: Billet1999-mass-transfer-columns-packings-TransIChemE77A-498.pdf
 # ^ Billet, R. & Schultes, M., "Prediction of Mass Transfer Columns with Dumped
 #   and Arranged Packings - Updated Summary of the Calculation Method of Billet
 #   and Schultes", Trans. IChemE 77 Part A (September 1999) 498-504.
@@ -207,21 +225,21 @@ A3.9: Literature-PredictionofMassTransferColumns.pdf
 #   this one is the paper itself, not a literature review of it, verified by
 #   rendering page 1. NO TEXT LAYER (copy-protected RC4, and the pages are
 #   CCITT-G4 bilevel images at 300 ppi native); read on renders only.
-A3.10: ie00016a010.pdf
+A3.10: Rocha1993-structured-packing-hydraulics-pt1-IECR32-641.pdf
 # ^ Rocha, J. A., Bravo, J. L. & Fair, J. R., "Distillation Columns Containing
 #   Structured Packings: A Comprehensive Model for Their Performance.
 #   1. Hydraulic Models", Ind. Eng. Chem. Res. 32 (1993) 641-651.
 #   PART 2 (the MASS-TRANSFER model, IECR 35 (1996) 1660-1667) IS NOT ON DISK,
 #   and the catalogue names both. What is here delivers holdup, pressure drop
 #   and flooding only.
-A3.11: "AIChE Journal - July 1979 - Dixon - Theoretical prediction of effective heat transfer parameters in packed beds.pdf"
+A3.11: "Dixon1979-effective-heat-transfer-parameters-AIChEJ25-663.pdf"
 # ^ Dixon, A. G. & Cresswell, D. L., "Theoretical Prediction of Effective Heat
 #   Transfer Parameters in Packed Beds", AIChE J. 25(4) 663-676 (1979),
 #   doi:10.1002/aic.690250413 (the Wiley download stamp on every page confirms
 #   it). WARNING: PDF page 1 opens with the REFERENCE LIST OF THE PRECEDING
 #   ARTICLE (an LNG-density paper); Dixon & Cresswell starts halfway down that
 #   same page. Do not conclude from the first screen that this is the wrong file.
-A3.13: 1-s2.0-S0032591024012488-main.pdf
+A3.13: Mou2025-simplified-ZBS-conductivity-PowderTechnol453-120604.pdf
 # ^ Mou, X., Zhou, W., Bao, Z. & Huang, W., "Modification and experimental
 #   validation of simplified Zehner-Bauer-Schlünder model for estimating
 #   effective thermal conductivity of gas-solid metal powder beds", Powder
@@ -233,7 +251,7 @@ A3.13: 1-s2.0-S0032591024012488-main.pdf
 #   [26] Zehner & Schlünder, Chem. Ing. Tech. 42 (1970) 933-941 (in German) and
 #   [27] Bauer & Schlünder (1978). See the A3.13 caveat block below.
 #   A SECOND FILE ALSO BELONGS TO A3.13 and cannot be a second key here:
-#   `20100036467.pdf`. Both are listed on queue_cases/A3.13.yaml. It is:
+#   `Kandula2010-effective-thermal-conductivity-packed-beds-NASA-KSC-2010-007.pdf`. Both are listed on queue_cases/A3.13.yaml. It is:
 #   Kandula, M., "On
 #   the Effective Thermal Conductivity of Porous Packed Beds with Uniform
 #   Spherical Particles", ASRC Aerospace / NASA John F. Kennedy Space Center,
@@ -244,7 +262,7 @@ A3.13: 1-s2.0-S0032591024012488-main.pdf
 #   reprint route only: it cites the origin as Zehner & Schlünder (1970) and
 #   tests the model, but ALL FIVE of its comparisons are FIGURES - it contains
 #   no data table.
-A3.14: "Chemie Ingenieur Technik - December 1993 - Martin - Radiale W rmeleitung in durchstr mten Sch ttungsrohren.pdf"
+A3.14: "Martin1993-radiale-waermeleitung-schuettungsrohren-CIT65-1468.pdf"
 # ^ Martin, H. & Nilles, M., "Radiale Wärmeleitung in durchströmten
 #   Schüttungsrohren", Chem. Ing. Tech. 65(12) 1468-1477 (1993). IN GERMAN -
 #   same care as A3.15's 1882 Graetz paper. Two extra traps: the OCR strips
@@ -252,7 +270,7 @@ A3.14: "Chemie Ingenieur Technik - December 1993 - Martin - Radiale W rmeleitung
 #   letters "lo" (10^3 -> lo3), and the paper uses the GERMAN COMMA DECIMAL
 #   SEPARATOR (0,43 bis 2,5). CONTAINS NO TABLES AT ALL - every result is in
 #   Abb. 1-11, so its validation route is figure digitisation.
-A4.5: ie50677a007.pdf
+A4.5: Fuller1966-diffusion-volumes-IEC58-18.pdf
 # ^ Fuller, E. N., Schettler, P. D. & Giddings, J. C., "A New Method for
 #   Prediction of Binary Gas-Phase Diffusion Coefficients", Ind. Eng. Chem.
 #   58(5) 18-27 (1966), doi:10.1021/ie50677a007. Matches the catalogue exactly.
@@ -261,7 +279,7 @@ A4.5: ie50677a007.pdf
 
 # --- ON DISK, IDENTIFIED, BUT MAPPED TO NO CATALOGUE CASE ---
 #
-# `ie50546a056.pdf` is Wilke, C. R. & Lee, C. Y., "Estimation of Diffusion
+# `MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf` is Wilke, C. R. & Lee, C. Y., "Estimation of Diffusion
 # Coefficients for Gases and Vapors", Ind. Eng. Chem. 47(6) 1253-1257 (1955).
 #
 # IT IS NOT A4.1. A4.1 is the Wilke MIXTURE rule for the effective diffusivity
@@ -279,7 +297,7 @@ A4.5: ie50677a007.pdf
 # article (a soil-stabilisation / electro-osmosis paper); Wilke & Lee starts
 # halfway down journal page 1253.
 #
-# `1-s2.0-S0009250912007099-main.pdf` is Mills, A. F. & Chang, B. H.,
+# `Mills2013-two-dimensional-stefan-tube-CES90-130.pdf` is Mills, A. F. & Chang, B. H.,
 # "Two-dimensional diffusion in a Stefan tube: The classical approach", Chem.
 # Eng. Sci. 90 (2013) 130-136, doi:10.1016/j.ces.2012.12.018. Born-digital,
 # clean.
@@ -328,7 +346,7 @@ A4.5: ie50677a007.pdf
 # ONE OF THE 34 IS A BYTE-FOR-BYTE DUPLICATE. See the DUPLICATE note below.
 
 # --- MONOGRAPHS ---
-C1.1: process-calculation-by-watson.pdf
+C1.1: BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf
 # ^ Hougen, O. A. & Watson, K. M., "Chemical Process Principles", COMBINED
 #   VOLUME: Part One "Material and Energy Balances" (copyright 1943), Part Two
 #   "Thermodynamics" and Part Three "KINETICS AND CATALYSIS" (both copyright
@@ -361,25 +379,25 @@ C1.1: process-calculation-by-watson.pdf
 # different edition. Do not map it, do not request anything for it.
 
 # --- JOURNAL PAPERS ---
-B1.3: "AIChE Journal - March 1965 - Bischoff - Effectiveness factors for general reaction rate forms.pdf"
+B1.3: "Bischoff1965-generalised-effectiveness-factor-AIChEJ11-351.pdf"
 # ^ Bischoff, K. B., "Effectiveness Factors for General Reaction Rate Forms",
 #   AIChE J. 11(2) 351-355 (1965). Matches the catalogue exactly and confirms
 #   the crossref-verified DOI 10.1002/aic.690110229 against the document.
-B1.7: i260040a020.pdf
+B1.7: Mears1971-tests-for-transport-limitations-IECPDD10-541.pdf
 # ^ Mears, D. E., "Tests for Transport Limitations in Experimental Catalytic
 #   Reactors", Ind. Eng. Chem. Process Des. Dev. 10(4) 541-547 (1971).
 #   WARNING: PDF page 1 opens with the TAIL OF THE PRECEDING ARTICLE (a
 #   catalytic-cracking / Voorhies-coking paper); Mears starts partway down.
 #   Third file in this repo with that shape - see A3.11 and the Wilke & Lee
 #   note above. Do not reject it from the first screen.
-B1.9: 1-s2.0-0009250962870158-main.pdf
+B1.9: Wakao1962-random-pore-diffusion-pellets-CES17-825.pdf
 # ^ Wakao, N. & Smith, J. M., "Diffusion in catalyst pellets", Chem. Eng. Sci.
 #   17 (1962) 825-834. Matches the catalogue exactly.
-B1.10: i160046a001.pdf
+B1.10: Feng1973-isothermal-diffusion-porous-solids-IECFund12-143.pdf
 # ^ Feng, C. & Stewart, W. E., "Practical Models for Isothermal Diffusion and
 #   Flow of Gases in Porous Solids", Ind. Eng. Chem. Fundam. 12(2) 143-147
 #   (1973). Matches the catalogue exactly.
-B1.13: "AIChE Journal - 2004 - Gheorghiu - Optimal bimodal pore networks for heterogeneous catalysis.pdf"
+B1.13: "Gheorghiu2004-optimal-bimodal-pore-networks-AIChEJ50-812.pdf"
 # ^ Gheorghiu, S. & Coppens, M.-O., "Optimal Bimodal Pore Networks for
 #   Heterogeneous Catalysis", AIChE J. 50(4) 812-820 (2004),
 #   doi:10.1002/aic.10076. B1.13's catalog_reference was "-" (empty), so this
@@ -387,19 +405,19 @@ B1.13: "AIChE Journal - 2004 - Gheorghiu - Optimal bimodal pore networks for het
 #   the yield of diffusion-limited first-order reactions rather than merely
 #   resolving the two-scale resistance the case names. Read the scope note on
 #   queue_cases/B1.13.yaml before dispatching.
-B2.1: ie50424a010.pdf
+B2.1: Voorhies1945-carbon-formation-catalytic-cracking-IEC37-318.pdf
 # ^ Voorhies, A. Jr., "Carbon Formation in Catalytic Cracking", Ind. Eng. Chem.
 #   37(4) 318-322 (1945). Matches the catalogue exactly. This is the origin of
 #   the C = A t^n coking law that B1.7's file (Mears) and B2.2's file (Froment &
 #   Bischoff) both build on.
-B2.2: 1-s2.0-0009250961800304-main.pdf
+B2.2: Froment1961-fixed-bed-fouling-pt1-CES16-189.pdf
 # ^ Froment, G. F. & Bischoff, K. B., "Non-steady state behaviour of fixed bed
 #   catalytic reactors due to catalyst fouling", Chem. Eng. Sci. 16 (1961)
 #   189-201. THE PDF OF PART I - upgrades B2.2 off the api-text route (see the
 #   api-text block above, which keyed B2.2 to
 #   api-text/Froment-Bischoff-1961-CES-16-189-fouling-I...txt). PART II
 #   (CES 17 (1962) 105) IS STILL API-TEXT ONLY; no PDF of it arrived.
-B2.3: 1-s2.0-0021951772902278-main.pdf
+B2.3: Levenspiel1972-deactivating-catalyst-rate-equation-JCatal25-265.pdf
 # ^ Levenspiel, O., "Experimental Search for a Simple Rate Equation to Describe
 #   Deactivating Porous Catalyst Particles", J. Catalysis 25 (1972) 265-272.
 #   B2.3's catalog_reference was the bare "(1972)" with no journal at all;
@@ -407,13 +425,13 @@ B2.3: 1-s2.0-0021951772902278-main.pdf
 #   Levenspiel the MONOGRAPH - "Chemical Reaction Engineering" is still one of
 #   the four textbook-canonical books on the outstanding request list, and this
 #   paper does not substitute for it (it does not close A2.4).
-B2.4: i160071a009.pdf
+B2.4: Beeckman1979-site-coverage-pore-blockage-IECFund18-245.pdf
 # ^ Beeckman, J. W. & Froment, G. F., "Catalyst Deactivation by Active Site
 #   Coverage and Pore Blockage", Ind. Eng. Chem. Fundam. 18(3) 245-256 (1979).
 #   Matches the catalogue exactly. SAME FIRST-PAGE TRAP AS B1.7: PDF page 1
 #   opens with the NOMENCLATURE of the preceding article (a dissolved-oxygen
 #   probe paper); Beeckman & Froment starts after it.
-B2.6: 413a375.pdf
+B2.6: Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf
 # ^ Markos, J., Brunovska, A. & Ilavsky, J., "Modelling of catalytic reactors
 #   with catalyst deactivation IV. Parameter estimation of the rate equations
 #   of heterogeneous catalyst deactivation", Chemical Papers 41(3) 375-393
@@ -424,17 +442,17 @@ B2.6: 413a375.pdf
 #   mechanisms (one-site homogeneous, two-site homogeneous, shell progressive)
 #   on benzene hydrogenation over Ni poisoned by thiophene. Trilingual
 #   (English body, Russian abstract). Use reference_read_from.
-B3.2: 1-s2.0-0009250970850539-main.pdf
+B3.2: Szekely1970-grain-model-pt1-CES25-1091.pdf
 # ^ Szekely, J. & Evans, J. W., "A structural model for gas-solid reactions with
 #   a moving boundary", Chem. Eng. Sci. 25 (1970) 1091-1107. THE PDF - upgrades
 #   B3.2 off the api-text route. PART II (CES 26 (1971) 1901) IS STILL API-TEXT
 #   ONLY.
-B3.4: BF02822675.pdf
+B3.4: Sohn1978-law-of-additive-reaction-times-MetallTransB9B-89.pdf
 # ^ Sohn, H. Y., "The Law of Additive Reaction Times in Fluid-Solid Reactions",
 #   Metallurgical Transactions B, VOLUME 9B, MARCH 1978, pp. 89-96 (read off
 #   the running head of every page). Matches the catalogue's "Metall. Trans.
 #   (1978)"; the B is worth adding to the catalogue row.
-B3.5: ie8b02111.pdf
+B3.5: Criado2018-CaO-carbonation-temperature-IECR57-12595.pdf
 # ^ Criado, Y. A., Arias, B. & Abanades, J. C., "Effect of the Carbonation
 #   Temperature on the CO2 Carrying Capacity of CaO", Ind. Eng. Chem. Res.
 #   57(37) 12595-12599 (2018). A 5-page RESEARCH NOTE.
@@ -443,35 +461,35 @@ B3.5: ie8b02111.pdf
 #   parameters of "the CaO deactivation curve that is widely employed" - i.e.
 #   the Grasa-Abanades curve - to cover 450-725 C. REPRINT ROUTE; the origin
 #   fit is not derived here.
-B3.7: 1-s2.0-S008207847780341X-main.pdf
+B3.7: Kobayashi1977-coal-devolatilization-high-T-SympCombust16-411.pdf
 # ^ Kobayashi, H., Howard, J. B. & Sarofim, A. F., "Coal Devolatilization at
 #   High Temperatures", Sixteenth Symposium (International) on Combustion,
 #   The Combustion Institute (1977), p. 411 ff. Matches the catalogue's bare
 #   "(1977)" and carries the two-competing-reaction model by name.
-B3.8: ef00014a011.pdf
+B3.8: Grant1989-chemical-percolation-devolatilization-CPD-EnergyFuels3-175.pdf
 # ^ Grant, D. M., Pugmire, R. J., Fletcher, T. H. & Kerstein, A. R., "Chemical
 #   Model of Coal Devolatilization Using Percolation Lattice Statistics",
 #   Energy & Fuels 3 (1989) 175-186 - the CPD model, part 1.
 #   TWO MORE FILES BELONG TO B3.8 and cannot be second keys here; all three are
 #   listed on queue_cases/B3.8.yaml:
-#     ef00034a011.pdf  Fletcher, Kerstein, Pugmire, Solum & Grant, "Chemical
+#     Fletcher1992-CPD-model-pt3-13C-NMR-EnergyFuels6-414.pdf  Fletcher, Kerstein, Pugmire, Solum & Grant, "Chemical
 #                      Percolation Model for Devolatilization. 3. Direct Use of
 #                      13C NMR Data to Predict Effects of Coal Type", Energy &
 #                      Fuels 6 (1992) 414-431 - the CPD model as used today.
-#     ef00010a006.pdf  Solomon, Hamblen, Carangelo, Serio & Deshpande, "General
+#     Solomon1988-general-model-coal-devolatilization-FGDVC-EnergyFuels2-405.pdf  Solomon, Hamblen, Carangelo, Serio & Deshpande, "General
 #                      Model of Coal Devolatilization", Energy & Fuels 2 (1988)
 #                      405-422 - this is FG-DVC, the OTHER model the catalogue
 #                      row names. First-page trap again: it opens with the tail
 #                      of the preceding article's acknowledgements.
 #   CPD part 2 is NOT on disk.
-B3.9: 1-s2.0-S0360128507000214-main.pdf
+B3.9: DiBlasi2008-wood-biomass-pyrolysis-review-PECS34-47.pdf
 # ^ Di Blasi, C., "Modeling chemical and physical processes of wood and biomass
 #   pyrolysis", Prog. Energy Combust. Sci. 34 (2008) 47-90,
 #   doi:10.1016/j.pecs.2006.12.001. Matches the catalogue exactly. 44 pp,
 #   born-digital, clean text layer, NO page images at all.
 #   It is a REVIEW - the catalogue knows this and names it as such ("Di Blasi
 #   review"), so it is the reprint route by construction for Broido-Shafizadeh.
-B3.10: ef070025k.pdf
+B3.10: Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf
 # ^ Abad, A., Garcia-Labiano, F., de Diego, L. F., Gayan, P. & Adanez, J.,
 #   "Reduction Kinetics of Cu-, Ni-, and Fe-Based Oxygen Carriers Using Syngas
 #   (CO + H2) for Chemical-Looping Combustion", Energy & Fuels 21(4) 1843-1853
@@ -481,7 +499,7 @@ B3.10: ef070025k.pdf
 #   separate Abad et al. CES 62 (2007) paper (the operating-window mapping
 #   one); it is NOT on disk and it is not the kinetics paper the case needs.
 #   Same class of error as A1.6, A2.9 and A1.8.
-C1.2: s11244-018-0948-8.pdf
+C1.2: Prins2018-eley-rideal-other-mechanism-TopCatal61-714.pdf
 # ^ Prins, R., "Eley-Rideal, the Other Mechanism", Topics in Catalysis 61
 #   (2018) 714-721, doi:10.1007/s11244-018-0948-8. Born-digital, clean.
 #   C1.2's catalog_reference was "-" (empty), so this FILLS a case that had no
@@ -492,7 +510,7 @@ C1.2: s11244-018-0948-8.pdf
 #   Langmuir-Hinshelwood rate law in full and it names and distinguishes all
 #   three mechanisms - but a page built from it is a page about the ATTRIBUTION
 #   as much as about the rate law, and it must say so.
-C1.3: 1-s2.0-S0009250954800054-main.pdf
+C1.3: Mars1954-vanadium-oxide-oxidation-CESSuppl3-41.pdf
 # ^ Mars, P. & van Krevelen, D. W., "Oxidations carried out by means of vanadium
 #   oxide catalysts", Special Supplement to Chemical Engineering Science, vol. 3
 #   (1954) 41-59, doi:10.1016/S0009-2509(54)80005-4. THE PDF.
@@ -502,7 +520,7 @@ C1.3: 1-s2.0-S0009250954800054-main.pdf
 #   glyphs used for one decimal point inside a single table row. There is now a
 #   300 ppi CCITT-G4 page image to read the numbers off instead.
 #   Trilingual summary (English / French / German); the body is English.
-C2.3: i160028a013.pdf
+C2.3: Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf
 # ^ Dyson, D. C. & Simon, J. M., "A Kinetic Expression with Diffusion Correction
 #   for Ammonia Synthesis on Industrial Catalyst", Ind. Eng. Chem. Fundam. 7(4)
 #   605-610 (1968). Matches the catalogue's "Dyson & Simon (1968)" exactly.
@@ -511,11 +529,11 @@ C2.3: i160028a013.pdf
 #   it. Also serves D3.2 - listed there too.
 #   Temkin & Pyzhev (1940), the other half of C2.3's citation, is NOT on disk;
 #   Dyson & Simon print the Temkin-Pyzhev form they correct.
-C2.4: 1-s2.0-0009250988851273-main.pdf
+C2.4: Graaf1988-methanol-synthesis-kinetics-CES43-3185.pdf
 # ^ Graaf, G. H., Stamhuis, E. J. & Beenackers, A. A. C. M., "Kinetics of
 #   low-pressure methanol synthesis", Chem. Eng. Sci. 43(12) 3185-3195 (1988).
 #   Matches the catalogue exactly. Also serves D3.3 - listed there too.
-C2.10: ie50686a006.pdf
+C2.10: Froment1967-fixed-bed-reactors-design-status-IEC59-18.pdf
 # ^ Froment, G. F., "Fixed Bed Catalytic Reactors - Current Design Status",
 #   Industrial & Engineering Chemistry 59(2) 18-27 (1967),
 #   doi:10.1021/ie50686a006. This IS the catalogue's "Froment (1967)" for BOTH
@@ -524,31 +542,31 @@ C2.10: ie50686a006.pdf
 #   relatively complex nature and representative of commercial hydrocarbon
 #   oxidation", and it compares the 1D and 2D models on it.
 #   CALDERBANK, the other name on C2.10's row, is NOT on disk.
-C2.19: 1-s2.0-0009250964850922-main.pdf
+C2.19: Franckaerts1964-ethanol-dehydrogenation-kinetics-CES19-807.pdf
 # ^ Franckaerts, J. & Froment, G. F., "Kinetic study of the dehydrogenation of
 #   ethanol", Chem. Eng. Sci. 19 (1964) 807-818. C2.19's catalog_reference was
 #   "(in this suite's teacher exercises)" - no citation at all - so this fills
 #   it with the classical LHHW study the exercise descends from.
 #   A SECOND FILE ALSO BELONGS TO C2.19 and cannot be a second key here:
-#   `1-s2.0-S1631074817301091-main.pdf` = Tayrabekova, S. et al., "Catalytic
+#   `Tayrabekova2018-ethanol-dehydrogenation-copper-CRChimie21-194.pdf` = Tayrabekova, S. et al., "Catalytic
 #   dehydrogenation of ethanol into acetaldehyde and isobutanol using mono- and
 #   multicomponent copper catalysts", C. R. Chimie 21 (2018) 194-209 - a modern
 #   Cu/ZnO/Cr2O3 study. Both are listed on queue_cases/C2.19.yaml.
 #   Franckaerts & Froment is also the natural source for B1.11 (multicomponent
 #   pellet, ethanol dehydrogenation) - recorded there, not keyed.
-D3.2: i160028a013.pdf                    # SAME FILE as C2.3 above - Dyson & Simon 1968
-D3.3: 1-s2.0-0009250988851273-main.pdf   # SAME FILE as C2.4 above - Graaf et al. 1988
+D3.2: Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf                    # SAME FILE as C2.3 above - Dyson & Simon 1968
+D3.3: Graaf1988-methanol-synthesis-kinetics-CES43-3185.pdf   # SAME FILE as C2.4 above - Graaf et al. 1988
 # ^ D3.3's row also names "Vanden Bussche & Froment". A Vanden Bussche &
 #   Froment paper IS on disk - `Can J Chem Eng - October 1996 - Vanden Bussche
 #   - The STAR configuration for methanol synthesis in reversed flow
 #   reactors.pdf`, Can. J. Chem. Eng. 74 (1996) 729-734 - and it is a reactor
 #   paper, so it serves D3.3. It is listed on queue_cases/D3.3.yaml.
 #   *** IT IS NOT C2.5. READ THE "NOT WHAT IT LOOKS LIKE" NOTE BELOW. ***
-D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 1967
+D3.4: Froment1967-fixed-bed-reactors-design-status-IEC59-18.pdf                    # SAME FILE as C2.10 above - Froment 1967
 
 # --- ON DISK, IDENTIFIED, BUT MAPPED TO NO CATALOGUE CASE ---
 #
-# `2015.205681.Industrial-Chemical.pdf` (53 MB, the largest file in the repo)
+# `BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf` (53 MB, the largest file in the repo)
 # is Hougen, O. A. & Watson, K. M., "INDUSTRIAL CHEMICAL CALCULATIONS: The
 # Application of Physico-Chemical Principles and Data to Problems of Industry",
 # SECOND EDITION, John Wiley & Sons, New York / Chapman & Hall, London;
@@ -582,7 +600,7 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 # recorded in this repo, and together with the 150 ppi Watson scan it retires
 # the "every scan here is 300 or 400 ppi" rule. Render at 600, not above.
 #
-# `ac60131a045.pdf` is Kissinger, H. E., "Reaction Kinetics in Differential
+# `Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf` is Kissinger, H. E., "Reaction Kinetics in Differential
 # Thermal Analysis", Analytical Chemistry 29(11) 1702-1706 (1957), National
 # Bureau of Standards. The Kissinger method - activation energy from the shift
 # of a DTA/DSC peak with heating rate.
@@ -593,7 +611,7 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 # FIRST-PAGE TRAP: page 1 opens with the reference list of the preceding
 # article (a carotenoid paper); Kissinger's by-line is at the foot of it.
 #
-# `90131.pdf` is Kiani, D. & Wachs, I. E., "The Conundrum of 'Pair Sites' in
+# `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf` is Kiani, D. & Wachs, I. E., "The Conundrum of 'Pair Sites' in
 # Langmuir-Hinshelwood Reaction Kinetics in Heterogeneous Catalysis",
 # ACS Catalysis (2024), doi:10.1021/acscatal.4c02813, 11 pp, born-digital.
 # The bare numeric filename and the 6 MB size made it a candidate monograph in
@@ -603,7 +621,7 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 # assumption that Hougen & Watson derive on book p. 913. Recorded on
 # queue_cases/C1.1.yaml as a secondary.
 #
-# `1-s2.0-S0009250997003850-main.pdf` is Pan, T. & Zhu, B., "Study on
+# `Pan1998-cylindrical-pellet-effectiveness-CES53-933.pdf` is Pan, T. & Zhu, B., "Study on
 # diffusion-reaction process inside a cylindrical catalyst pellet", Chem. Eng.
 # Sci. 53(5) 933-946 (1998).
 # It maps to no case on its own. It proposes an approximate analytical
@@ -614,7 +632,7 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 # queue_cases/B1.3.yaml. Note B1.2 is PUBLISHED already - this does not reopen
 # it.
 #
-# `1-s2.0-S0082078482802816-main.pdf` is Smith, I. W., "The Combustion Rates of
+# `Smith1982-combustion-rates-coal-chars-review-SympCombust19-1045.pdf` is Smith, I. W., "The Combustion Rates of
 # Coal Chars: A Review", Nineteenth Symposium (International) on Combustion,
 # The Combustion Institute (1982) 1045-1065, CSIRO Division of Fossil Fuels.
 # B3.6 (char combustion) names Field (1967) and Baum & Street (1971) and
@@ -656,10 +674,10 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 # disk - so I1.7 stays needs-paper too, with this file noted as a possible
 # secondary.
 #
-# `i160028a013.pdf` CARRIED WRONG PUBLISHER METADATA during this pass. Its
+# `Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf` CARRIED WRONG PUBLISHER METADATA during this pass. Its
 # `Title` field read "Kinetic study of the dehydrogenation of ethanol" - which
 # is the title of a DIFFERENT file in the same drop
-# (`1-s2.0-0009250964850922-main.pdf`, Franckaerts & Froment 1964). The
+# (`Franckaerts1964-ethanol-dehydrogenation-kinetics-CES19-807.pdf`, Franckaerts & Froment 1964). The
 # document itself is Dyson & Simon 1968 on ammonia synthesis, established by
 # reading its running head and its own by-line, and confirmed by the ACS
 # download stamp on every page (article-pdf/7/4/605/). Publisher metadata is
@@ -672,6 +690,216 @@ D3.4: ie50686a006.pdf                    # SAME FILE as C2.10 above - Froment 19
 #
 # `Literature-`-style prefixes, NASA accession numbers and bare numeric names
 # have all been checked before (see the 2026-08-05 second-drop block). Two more
-# joined the list this time and BOTH turned out to be ordinary: `90131.pdf` is
-# a 2024 ACS Catalysis paper, not a monograph, and `413a375.pdf` is a 1987
+# joined the list this time and BOTH turned out to be ordinary: `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf` is
+# a 2024 ACS Catalysis paper, not a monograph, and `Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf` is a 1987
 # Slovak journal article with a Russian abstract, not a report.
+
+# ---------------------------------------------------------------------------
+# Supplied 2026-08-05 evening and 2026-08-06. THIRTY-TWO new files, bringing the
+# directory to 118 (115 after three byte-identical duplicates were parked in
+# duplicates/). This is the drop the queue had been waiting on: it contains
+# ALL FOUR textbook-canonical monographs, a fifth monograph nobody asked for,
+# and the three Chemical Engineering Progress papers that no reprint route could
+# reach. See docs/papers-inventory.yaml for the per-file catalogue.
+#
+# Every one identified by reading its OWN title page, running head, page footer
+# or publisher download stamp. That mattered five times in this batch; the traps
+# are at the end of this block.
+#
+# NOTE ON DUPLICATE KEYS BELOW: where a case already appears earlier in this file
+# against an `api-text/` value, the entry here is a LATER key for the same case
+# and YAML keeps the last, so the PDF wins. That is the same pattern already used
+# for A3.1, A3.6, B2.2, B3.2 and C1.3. Do not delete the earlier line - it records
+# that the api-text exists.
+
+# --- THE FOUR MONOGRAPHS THE CANONICAL CLASS WAS WAITING ON -----------------
+# The class was approved 2026-08-02 and had been INERT ever since because no
+# qualifying book was on disk. It is now live. The per-case E1.1 test results,
+# with the chapter and section that each verdict rests on, are in the
+# `e1_1_evidence:` block of each book's entry in docs/papers-inventory.yaml.
+# Only checked cases claim a verdict; the rest are marked unchecked on purpose.
+A2.4:  BOOK-Levenspiel-1999-chemical-reaction-engineering-3ed.pdf     # Ch.14 "The Tanks-In-Series Model", book p.321. E1.1 PASSED - states, attributes (MacMullin & Weber 1935 for the F curve) and works three examples.
+C1.5:  BOOK-Levenspiel-1999-chemical-reaction-engineering-3ed.pdf     # Ch.2 secs 2.1/2.2, book pp.14/27. E1.1 passed.
+A3.2:  BOOK-BirdStewartLightfoot-2002-transport-phenomena-2ed.pdf     # sec.18.5, book p.~560: "apparently first proposed by Higbie", full citation Trans. AIChE 31, 365-389 (1935). E1.1 PASSED. (Froment 3rd edn sec.6.4 passes too; Levenspiel FAILS - mention only.)
+A4.8:  BOOK-TaylorKrishna-1993-multicomponent-mass-transfer-1ed.pdf   # Example 2.1.1 reproduces Carty & Schrodt (1975) acetone/methanol/air - the very experiment A4.8's blocker names - with conditions and computed fluxes PRINTED. Profiles are Fig. 2.5 (a figure). BSL secs 18.2/20.1 carry the Arnold half. E1.1 PASSED.
+D1.1:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.11.5, book p.505. E1.1 passed.
+D1.2:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.11.6, book p.548. E1.1 passed.
+D1.3:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.11.8, book p.585. E1.1 passed.
+D1.4:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.11.9, book p.597, three worked industrial examples. E1.1 passed.
+D1.5:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.11.7, book p.565 - the case papers-requested.yaml called the genuine gap in the gallery. E1.1 passed.
+J4.1:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.1.5.2, eq.(1.5.2-1), with Monod, J., Annu. Rev. Microbiol., 3, 371 (1949) in the reference list - the exact citation on the case. E1.1 passed.
+J4.6:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # sec.1.5.1: both the equilibrium and the Briggs-Haldane derivations, named. E1.1 passed.
+#
+# THE FIFTH MONOGRAPH, which nobody asked for and which is a real textbook:
+#   BOOK-RawlingsEkerdt-2025-chemical-reactor-analysis-design-fundamentals-2ed-5pr.pdf
+#   Rawlings & Ekerdt, 2nd edn, 5th printing (March 2025), Nob Hill Publishing.
+#   Born-digital, clean text layer throughout - the ONLY monograph here whose
+#   equations survive extraction. It passes E1.1 for J4.1 and C1.5 (both already
+#   covered by Froment/Levenspiel above), FAILS for A2.4 (the string
+#   "tanks-in-series" does not occur), and has seven unchecked entries.
+#   Its one unique find: it gives the Danckwerts boundary conditions and then
+#   records that "they were derived at least 45 years prior to Danckwerts in a
+#   classic paper by Langmuir" - an attribution finding for the published
+#   A2.1/A2.2, checkable now that Langmuir 1918 is also on disk.
+#
+# THE FROMENT BOOK IS NOT THE EDITION THE ASK NAMED. The filename says
+# "Froment_Bischoff" and the request list says "Froment & Bischoff", but the
+# document is the THIRD edition, 2011, by Froment, DE WILDE and Bischoff
+# (Bischoff marked deceased on the title page). Cite what is on disk.
+
+# --- THE THREE CHEM. ENG. PROGRESS PAPERS -----------------------------------
+A3.5: Ranz1952-evaporation-from-drops-pt1-ChemEngProg48-139.pdf
+# ^ Ranz, W. E. & Marshall, W. R., Jr., "Evaporation from Drops", Chem. Eng.
+#   Progr. 48, March and April 1952. PART II IS A SECOND FILE and cannot be a
+#   second key here: `Ranz1952-evaporation-from-drops-pt2-ChemEngProg48-173.pdf`.
+#   Both are listed on queue_cases/A3.5.yaml.
+#   A3.5 had TWO false alarms before this. Both files are still on disk and both
+#   are now clearly named: MISC-Ranz1993-citation-classic-commentary-CurrContents22.pdf
+#   (a one-page 1993 reminiscence) and
+#   Charlesworth1960-evaporation-drops-dissolved-solids-AIChEJ6-9.pdf (a
+#   companion study about crust formation). The open question "does Charlesworth
+#   reprint enough to source A3.5 by the reprint route?" is now MOOT.
+#   *** PAGE-RANGE DISCREPANCY, UNRESOLVED. *** Part I's own running heads read
+#   Page 139 ... Page 144. The universal citation - including ISI's Citation
+#   Classic written by Ranz himself - is 141-146. Part II's footers read
+#   Page 173 ... Page 180 and DO agree with the standard citation. Six pages
+#   either way; the disagreement is confined to Part I and is exactly two pages.
+#   Record both; do not silently pick one.
+#   NO TEXT LAYER on either file (Microsoft Print-To-PDF over microfilm, 1 byte
+#   per page). Native 400 ppi JPEG RGB - render at 400, not 600.
+E1.1: Toomey1952-gaseous-fluidization-solid-particles-ChemEngProg48-220.pdf
+# ^ Toomey, R. D. & Johnstone, H. F., "Gaseous Fluidization of Solid Particles",
+#   Chem. Eng. Progr. 48(5) 220-226, May 1952, University of Illinois, Urbana.
+#   Footers read Page 220 ... Page 226.
+#   THE REPRINT ROUTE FOR THIS CASE WAS ALREADY CHECKED AND FAILED - Kunii &
+#   Levenspiel state the two-phase relation but never name, attribute or test it
+#   (AGENTS.md's canonical E1.1 example). Only the original would do, and this is
+#   it. Froment 3rd edn fails the same way: "Toomey" does not occur in it, and its
+#   fluidised-bed treatment uses Davidson & Harrison's cross-flow and diffusion
+#   contributions instead.
+#   Data are in Tables 2 and 3; particle velocities came off 16-mm Fastax film.
+#   Ends with a printed discussion (Max Leva). NO TEXT LAYER; 400 ppi JPEG.
+A4.1: Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf
+# ^ Wilke, C. R., "Diffusional Properties of Multicomponent Gases", Chem. Eng.
+#   Progress 46(2) 95-104, February 1950, University of California, Berkeley.
+#   *** THE FILE ARRIVED CALLED Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf AND IT IS THE 1950 PAPER. *** The
+#   PDF's own Title metadata reads "Chemical Engineering Progress 1950-02: Vol 46
+#   Iss 2" and the rendered title page confirms it. This is A4.1's origin.
+#   Its printed abstract carries the rule in full:
+#     D'_A = (1 - y_A) / (y_B/D_AB + y_C/D_AC + y_D/D_AD + ...)
+#   derived from the Stefan-Maxwell equations for A diffusing through stagnant
+#   B, C, D.
+#   THIS IS THE THIRD WILKE TO ARRIVE AND THE FIRST CORRECT ONE. The other two:
+#     MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf
+#       (Wilke & Lee 1955 - binary-diffusivity ESTIMATION, a different paper)
+#     the Buddenberg-Wilke VISCOSITY rule cited by Chapman & Cowling and by
+#       Bird/Stewart/Lightfoot - a different quantity entirely.
+#   INDEPENDENT SECOND WITNESS: Taylor & Krishna sec. 6.1.3 prints the rule as
+#   their eq. (6.1.14) with "(Wilke, 1950)" inline, and TESTS it in Ch.8 against
+#   Fairbanks & Wilke (1950) experiments and against the exact matrix solution.
+#   That gives A4.1 a ready-made failure test the origin paper alone does not.
+#   Worst text layer in the library after I. W. Smith (182 chars on page 3 - the
+#   by-line comes back as "C.R. WI E"). Everything on renders; native 400 ppi.
+
+# --- THE ACS / WILEY / ELSEVIER ASK, DELIVERED -------------------------------
+J1.1:  Langmuir1918-adsorption-plane-surfaces-JACS40-1361.pdf          # 43 pp. FIRST-PAGE TRAP: opens with the preceding article's numbered summary.
+J1.3:  Brunauer1938-BET-multimolecular-adsorption-JACS60-309.pdf       # BET. Clean title page, no trap.
+J1.4:  Myers1965-thermodynamics-mixed-gas-adsorption-IAST-AIChEJ11-121.pdf   # IAST. Its abstract names four binary systems as validation; table-vs-figure UNCHECKED.
+J5.3:  Chiu1983-gel-effect-free-radical-polymerization-Macromolecules16-348.pdf   # FIRST-PAGE TRAP: opens with the preceding article's References and Notes.
+B3.3:  Bhatia1980-random-pore-model-pt1-AIChEJ26-379.pdf               # The filename was literally "Bhatia1980-random-pore-model-pt1-AIChEJ26-379.pdf". Reduces to the grain model and to Petersen (1957) - both checkable against published B3.1/B3.2. Part II NOT on disk.
+G1.1:  Larkins1961-two-phase-concurrent-flow-packed-beds-AIChEJ7-231.pdf     # FIRST-PAGE TRAP: opens with the preceding article's nomenclature.
+I1.3:  Heck1976-monolithic-catalyst-modeling-AIChEJ22-477.pdf          # 1-D vs 2-D monolith; the 2-D Nusselt anomaly under rapid reaction is the natural "what pymrm adds".
+J4.2:  Andrews1968-substrate-inhibition-continuous-culture-BiotechnolBioeng10-707.pdf   # TWO byte-identical copies arrived; one parked in duplicates/.
+J4.4:  Luedeking1959-lactic-acid-fermentation-kinetics-JBMTE1-393.pdf  # THREE byte-identical copies arrived; two parked in duplicates/. dP/dt = a dN/dt + b N is printed in the Summary, at six pH levels between 4.5 and 6.0.
+H1.8:  Robeson2008-upper-bound-revisited-JMembrSci320-390.pdf          # THE 2008 PAPER, which is what was asked for - born-digital and clean. Retires the 1991 api-text whose Table 2 came back as "2 6 2 89 3 3 3 46 3 64 3 8".
+D2.4:  Uppal1974-cstr-dynamic-behaviour-CES29-967.pdf                  # Retires api-text. Printed header gives 967-985. The 1976 sequel is STILL api-text only.
+J1.10: vanDeemter1956-plate-height-chromatography-CES5-271.pdf         # Retires the worst-hit api-text (Table 1 came back as "0 163 1100 0 2? 0 30"). The scan's OWN text layer misreads its volume as 6; the rendered header reads "Vol. 5".
+J2.1:  Hulburt1964-population-balance-CES19-555.pdf                    # Retires api-text. Theory paper, no tables. Ramkrishna (2000) is a monograph and is NOT on disk.
+J2.3:  Nyvlt1968-nucleation-kinetics-solutions-JCrystGrowth3-377.pdf   # Retires api-text. J2.3's row also names Mullin and Mersmann; neither is on disk.
+
+# --- ON DISK, IDENTIFIED, MAPPED TO NO CATALOGUE CASE (this drop) -----------
+#
+# `MISC-ChemEngProgress-2012-08-shale-gas-issue-CEP108-8.pdf` is the WHOLE
+# August 2012 issue of Chemical Engineering Progress, vol. 108 no. 8, 34 pages,
+# a special section on shale gas (Liss; Holditch; Goellner; Smith; Ternes).
+# It is not a paper and it maps to no case. Nothing in it is CRE content. The
+# likeliest explanation is a mis-fetch while hunting CEP for the three 1950-52
+# CEP papers that DID arrive in the same drop. Kept for the record.
+#
+# `Lehrer1984-turbulent-axial-dispersion-bubble-column-AIChEJ30-654.pdf` is
+# Lehrer, I. H., AIChE J. 30(4) 654-657 (1984), Monash University.
+#
+# *** IT IS NOT F2.1, AND IT EXPOSES A WRONG DOI - the C2.5 failure repeating,
+# for the third time. *** queue_cases/F2.1.yaml recorded authors "Deckwer,
+# Burckhart & Zoll", container "AIChE Journal 30(4) 675-678", title "Turbulent
+# axial dispersion coefficients in the liquid in a two-phase bubble column" and
+# doi 10.1002/aic.690300421, marked crossref-verified. THE TITLE AND THE DOI
+# BELONG TO LEHRER, at pages 654-657 - the Wiley download stamp printed on the
+# file says so. Deckwer, Burckhart & Zoll's real paper is "Mixing and Mass
+# Transfer in Tall Bubble Columns", CHEM. ENG. SCI. 29, 2177 (1974) - a
+# different journal and a different decade - read out of Lehrer's own reference
+# list. So the citation on F2.1 was a chimera and buying from the DOI bought
+# Lehrer.
+#
+# Does Lehrer source F2.1 by the reprint route? NO on present evidence: he
+# derives HIS OWN E_L model and uses Deckwer et al. (1974) only as DATA to test
+# it against (his Table 2). He does not print Deckwer's correlation. F2.1
+# THEREFORE STAYS needs-paper, with the open question written on the case:
+# is Lehrer's own correlation an acceptable substitute, which would make the
+# page "Lehrer" and not "Deckwer"? ANSWER THAT BEFORE REQUESTING CES 29, 2177.
+# This is the A3.5 / B3.6 discipline.
+
+# --- THINGS THAT WERE NOT WHAT THEIR FILENAME SAID, THIS DROP ----------------
+#
+#   Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf              -> the 1950 paper (two years out, and it is the
+#                                  paper A4.1 has been blocked on since July)
+#   Bhatia1980-random-pore-model-pt1-AIChEJ26-379.pdf -> Bhatia & Perlmutter, random pore model I
+#   CHEMREACFUN-book-...pdf     -> Rawlings & Ekerdt, 2nd edn 5th printing
+#   Froment_Bischoff_...pdf     -> Froment, DE WILDE & Bischoff, THIRD edition
+#   MISC-ChemEngProgress-2012-08-shale-gas-issue-CEP108-8.pdf              -> a whole 2012 CEP magazine issue, not a paper
+#   Lehrer1984-turbulent-axial-dispersion-bubble-column-AIChEJ30-654.pdf -> not Deckwer; see above
+#
+# ELEVEN files in the library now open with the PREVIOUS article's text. Four
+# more joined this drop: Langmuir, Chiu, Larkins and Onda (which does it at BOTH
+# ends - its last page starts the NEXT article, by the same first author).
+# ALWAYS SCROLL PAST THE FIRST SCREEN.
+F3.2:  BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf   # Ch.6 secs 6.3.2/6.3.4: the Van Krevelen-Hoftijzer [1948] enhancement factor, named, attributed and derived, with its weak-depletion assumption stated. Levenspiel Ch.23/24 carries the same chart with the full Rec. Trav. Chim. 67, 563 (1948) citation. E1.1 PASSED on both. Reprint route - the 1948 original is NOT on disk.
+
+# ---------------------------------------------------------------------------
+# CENTRAL FOLLOW-UP OWED AFTER THE 2026-08-06 RENAME
+#
+# Twenty-three files still cite OLD filenames in provenance prose. They were
+# deliberately NOT touched by this pass, because `models.yaml`, `pages/**` and
+# `docs/handoff.md` are updated centrally. Nothing breaks - none of these is a
+# resolvable path that code follows, and `docs/papers-inventory.yaml`'s
+# `old_names` connects every one of them to its current file - but a reader who
+# takes a `source:` field in a data sidecar at face value will not find the PDF.
+#
+# The fix is mechanical and already written:
+#     python scripts/update_paper_references_2026-08-06.py --include-pages
+# It reads the old->new map out of docs/papers-inventory.yaml, so there is one
+# place where a name is decided. Run it with --dry-run first.
+#
+#   docs/handoff.md                    4 old names (Aris preview, F3_5, G1_7, Kunii)
+#   models.yaml                        2 (Onda 1_56, van 't Riet i260071a001)
+#   pages/A3.3-danckwerts-surface-renewal/data/danckwerts-1951-printed-numbers.meta.yaml
+#   pages/A3.6-calderbank-moo-young/data/calderbank-mooyoung-1961-printed-numbers.meta.yaml
+#   pages/A3.7-vant-riet-kla/data/vant-riet-1979-correlations.meta.yaml
+#   pages/A3.7-vant-riet-kla/data/vant-riet-1979-figure-legends.meta.yaml
+#   pages/A3.7-vant-riet-kla/data/vant-riet-1979-printed-numbers.meta.yaml
+#   pages/A3.8-onda-correlations/{README.md,build_page.py,index.ipynb,meta.yaml}
+#   pages/A3.8-onda-correlations/data/{onda-1968-correlation-constants,onda-1968-stated-results,onda-1968-table1}.meta.yaml
+#   pages/A4.5-fuller-schettler-giddings/README.md
+#   pages/A4.5-fuller-schettler-giddings/data/{fuller-1966-table1-diffusion-volumes,fuller-1966-table3-diffusion-data}.meta.yaml
+#   pages/B1.2-aris-shape-factor/{README.md,meta.yaml}
+#   pages/B1.4-weisz-prater-criterion/README.md
+#   pages/B1.7-mears-criteria/README.md
+#   pages/C2.1-xu-froment-smr/{README.md,extract_figures.py}
+#
+# ALSO OWED CENTRALLY: docs/dashboards/*.html is now stale - twenty-nine cases
+# left needs-paper on 2026-08-06 and the curated ask was rewritten. The
+# dashboards were NOT regenerated here on purpose: scripts/dashboards.py inlines
+# review PNGs as base64 (see its own header), and those payloads are the ones
+# git-filter-repo had to strip from five commits on 2026-08-02. Regenerate
+# deliberately, check the diff for `data:image/png;base64`, and republish to the
+# maintainer's two EXISTING artifact URLs - minting new ones loses the bookmarks.

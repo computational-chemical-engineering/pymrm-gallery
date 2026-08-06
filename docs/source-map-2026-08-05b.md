@@ -22,7 +22,7 @@ Live builders on `A4.6`, `A3.6`, `A4.5`, `A2.8`, `A3.7`, `A3.8` were not touched
 
 ## 1. The three candidate textbooks, answered precisely
 
-### 1.1 `process-calculation-by-watson.pdf` — Hougen & Watson, *Chemical Process Principles*
+### 1.1 `BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf` — Hougen & Watson, *Chemical Process Principles*
 
 **What it is.** Hougen, O. A. & Watson, K. M., *Chemical Process Principles*, the
 **combined volume**: Part One *Material and Energy Balances* (copyright 1943),
@@ -109,7 +109,7 @@ lead worth an hour of checking.**
 exactly like the `(1)` on the `A2.7` Westerterp file. **Not** a second part, not
 a second volume, not a different edition. Mapped nowhere; nothing to request.
 
-### 1.3 `2015.205681.Industrial-Chemical.pdf` — a book, and it unlocks nothing
+### 1.3 `BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf` — a book, and it unlocks nothing
 
 **What it is.** Hougen, O. A. & Watson, K. M., ***Industrial Chemical
 Calculations: The Application of Physico-Chemical Principles and Data to Problems
@@ -143,7 +143,7 @@ also on disk *and* has a text layer.
 
 **Explicitly: it is not one of the four the class is waiting on either.**
 
-### 1.4 `90131.pdf` — not a monograph at all
+### 1.4 `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf` — not a monograph at all
 
 6 MB and a bare numeric filename, so the brief listed it as a possible book. It
 is **Kiani, D. & Wachs, I. E., "The Conundrum of 'Pair Sites' in
@@ -321,50 +321,50 @@ paper was supplied and a `T1/P1` case is still blocked.
   set of kinetic equations … proposed by **Graaf** et al. (1988)", and its
   reference list carries Graaf, not *J. Catal.* 161. **It prints the competing
   model.** `C2.5` stays `needs-paper`; the file is mapped to `D3.3`.
-- **`i160028a013.pdf` carried the wrong `Title` metadata** — the title of a
+- **`Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf` carried the wrong `Title` metadata** — the title of a
   *different file in the same drop*. The document is Dyson & Simon 1968. Settled
   by the **ACS download stamp printed on every page**
   (`article-pdf/7/4/605/…`), which is the cheapest reliable identity check
-  available for ACS files in this repo. `ef070025k.pdf` needed it too — its
+  available for ACS files in this repo. `Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf` needed it too — its
   `Title` is `No Job Name`.
 - **Five files open with the previous article's text**: `B1.7` Mears, `B2.4`
   Beeckman–Froment, `C2.3` Dyson & Simon, `B3.8`'s Solomon, and the unmapped
   Kissinger. `B1.7` is the nastiest — the preceding article discusses "the
   Voorhies (1945) relationship", which makes it look like `B2.1`. **Always scroll
   past the first screen.**
-- **`413a375.pdf`, a bare numeric filename, is an ordinary journal article** —
+- **`Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf`, a bare numeric filename, is an ordinary journal article** —
   Chem. Papers 41(3) 375–393 (1987) — with a Cyrillic abstract, not a report.
-  **`90131.pdf`, also bare and numeric and 6 MB, is a 2024 ACS Catalysis paper**,
+  **`Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf`, also bare and numeric and 6 MB, is a 2024 ACS Catalysis paper**,
   not a monograph.
-- **`BF02822675.pdf` extracts with a space between every letter**, so a keyword
+- **`Sohn1978-law-of-additive-reaction-times-MetallTransB9B-89.pdf` extracts with a space between every letter**, so a keyword
   `grep` on it returns nothing and you will conclude the content is absent. It is
   not.
-- **`ac60131a045.pdf` is a real, correctly-named paper that fits nothing.** See
+- **`Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf` is a real, correctly-named paper that fits nothing.** See
   §6.
 
 ---
 
 ## 6. On disk, identified, mapped to no catalogue case
 
-- **`ac60131a045.pdf`** — Kissinger, H. E., "Reaction Kinetics in Differential
+- **`Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf`** — Kissinger, H. E., "Reaction Kinetics in Differential
   Thermal Analysis", *Anal. Chem.* **29(11) 1702–1706 (1957)**, National Bureau
   of Standards. The Kissinger method: activation energy from the shift of a
   DTA/DSC peak with heating rate. **No catalogue case corresponds to it.** It is
   *not* `C1.5` — `C1.5` is a rate-law formalism, this is a data-reduction method
   for a thermal analyser, and no case in A, B, C or J is about thermal analysis.
   **Do not force it onto `C1.5` and do not let its arrival close anything.**
-  Reported, not mapped — the `ie50546a056.pdf` precedent.
-- **`2015.205681.Industrial-Chemical.pdf`** — Hougen & Watson, *Industrial
+  Reported, not mapped — the `MISC-Wilke1955-binary-diffusion-coefficient-estimation-IEC47-1253.pdf` precedent.
+- **`BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf`** — Hougen & Watson, *Industrial
   Chemical Calculations*, 2nd edn (1936). §1.3.
 - **`process-calculation-by-watson (1).pdf`** — byte-identical duplicate. §1.2.
-- **`90131.pdf`** — Kiani & Wachs (2024). Secondary for `C1.1`. §1.4.
-- **`1-s2.0-S0009250997003850-main.pdf`** — Pan & Zhu, "Study on
+- **`Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf`** — Kiani & Wachs (2024). Secondary for `C1.1`. §1.4.
+- **`Pan1998-cylindrical-pellet-effectiveness-CES53-933.pdf`** — Pan & Zhu, "Study on
   diffusion–reaction process inside a cylindrical catalyst pellet", *CES*
   **53(5) 933–946 (1998)**. A competing approximate effectiveness factor for
   arbitrary kinetics in a **cylinder**, plus Weisz–Hicks multiplicity for a
   cylinder. Secondary for `B1.3`; recorded there. `B1.2` is published and this
   does not reopen it.
-- **`1-s2.0-S0082078482802816-main.pdf`** — I. W. Smith, *The Combustion Rates of
+- **`Smith1982-combustion-rates-coal-chars-review-SympCombust19-1045.pdf`** — I. W. Smith, *The Combustion Rates of
   Coal Chars: A Review* (1982). The `B3.6` near-miss; see §7.
 
 ---

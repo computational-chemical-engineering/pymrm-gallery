@@ -104,7 +104,7 @@ def on_disk(entry, files, doi=None):
     """Match a catalog entry to a downloaded PDF by surname + year, or by PII.
 
     `doi` may be one just resolved from CrossRef: many of these files are named
-    after the publisher's PII (i260028a001.pdf, 1-s2.0-0009250978851203-main.pdf)
+    after the publisher's PII (Kunii1968-bubbling-bed-model-IECFund7-481.pdf, Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf)
     and carry neither author nor year, so without it the check misses papers that
     are already on disk and sends you to fetch them again.
     """

@@ -174,7 +174,7 @@ four separate errors. Two auto-resolved DOIs point at *book reviews* of the
 monograph the catalogue names (`F1.6` → a one-page review of Deckwer, `F3.4` →
 one of Danckwerts); `H1.9`'s recorded 1995 PII is a packed-bed carbon paper with
 no membrane in it; and on 2026-08-02 an agent read
-`1-s2.0-0009250957850283-main.pdf` as a scan of Aris 1957 and dispatched work on
+`Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf` as a scan of Aris 1957 and dispatched work on
 that basis. **It is one page** — the Elsevier entitlement preview, journal page
 262 — and `B1.2`'s open question is on page 265. `papers-on-disk.yaml` now
 carries a loud comment saying so. New rule worth keeping: when
@@ -193,7 +193,7 @@ sources `A4.7`. The ranked, publisher-batched request list is in
 [`source-sweep-2026-08-02.md`](source-sweep-2026-08-02.md).
 
 Three arrived during the 2026-07-31 sweep: `Marquis_2019…` (`J3.5`, gold OA from
-IOP), `F3_5.pdf` and `G1_7.pdf` (both from the University of Twente repository).
+IOP), `Bosch1989-CO2-absorption-promoted-carbonate-CES44-2735.pdf` and `Wammes1991-high-pressure-trickle-bed-hydrodynamics-CET14-406.pdf` (both from the University of Twente repository).
 Note both of the latter were **auto-resolved to the wrong citation** and the
 builders' identity checks caught it — `F3.5` is Bosch et al. 1989, not the
 catalogue's Versteeg & van Swaaij 1988; `G1.7` is the Chem. Eng. Technol. paper,
@@ -258,8 +258,24 @@ bulk-download tool.
 
 ## Recommended next moves
 
-**Session halted 2026-08-06 with 29 cases dispatchable — papers in hand, no
-maintainer input needed.** The loop that works: dispatch a builder per case →
+**Update 2026-08-07: the big upload landed and was fully curated. 58 cases
+are now dispatchable — including the canonical class, live at last: all four
+textbooks are on disk with per-case E1.1 verdicts recorded in
+[`papers-inventory.yaml`](papers-inventory.yaml), which is now the
+authoritative per-file catalogue (identity, native ppi, text-layer quality,
+supported cases; every file systematically renamed, old names mapped inside
+it). T0/P1 blocked went 53 → 18. Newly buildable highlights: `A3.5` (Ranz &
+Marshall, both parts, genuine at last), `E1.1` (Toomey & Johnstone), `A4.1`
+(Wilke 1950, correct at the third attempt), `A2.4`, `A3.2`, `C1.5`, `A4.8`,
+`F3.2`, `J4.1`, `J4.6`, `D1.1`–`D1.5` (source question answered by
+Froment/De Wilde/Bischoff §11.5–11.9; the maintainer's scope decision on
+D1.x is still open), the ACS/Wiley singles (`J1.1` Langmuir, `J1.3` BET,
+`J1.4` IAST, `B3.3`, `G1.1`, `I1.3`, `J4.2`, `J4.4`, `J5.3`, `H1.8` Robeson
+2008) and the Elsevier set (`D2.4`, `J1.10`, `J2.1`, `J2.3`).
+Dispatch the next wave per [`playbooks/coordinator.md`](playbooks/coordinator.md)
+— playbook prompts, model tiers, one wave per session.**
+
+Prior halt note (2026-08-06, superseded counts): The loop that works: dispatch a builder per case →
 adversarial verifier on every ready page → fix (inline for wording, a fixer
 agent for anything touching numbers) → integrate with
 `scripts/splice_entry.py` (read its docstring first) → check_metadata →
@@ -702,7 +718,7 @@ Kozeny–Carman. Year agreement is required, and auto-resolved DOIs are marked
 unverified on the dashboard.
 
 *Filenames carry no metadata.* Half the PDFs on disk are named by publisher PII
-(`i260028a001.pdf`). `docs/papers-on-disk.yaml` maps catalogue ID to filename by
+(`Kunii1968-bubbling-bed-model-IECFund7-481.pdf`). `docs/papers-on-disk.yaml` maps catalogue ID to filename by
 hand and is consulted first; add a line whenever a PDF arrives.
 
 *Do not ask for papers a case does not need.* `A1.2`/`A1.3`/`A1.4` sat on the
@@ -736,7 +752,7 @@ auto-resolved as unverified so a wrong DOI never sends the maintainer after the
 wrong paper.
 
 **Filenames carry no metadata.** Half the PDFs on disk are named by publisher PII
-(`i260028a001.pdf`) or an export id, so automatic matching missed them and one
+(`Kunii1968-bubbling-bed-model-IECFund7-481.pdf`) or an export id, so automatic matching missed them and one
 case was reported as needing a paper the maintainer had already supplied.
 `docs/papers-on-disk.yaml` maps catalogue ID to filename by hand and is consulted
 first; add a line whenever a PDF arrives.

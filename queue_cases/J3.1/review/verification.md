@@ -1,7 +1,7 @@
 # J3.1 — adversarial verification
 
 Verifier pass on the staged page at `queue_cases/J3.1/page/`, against
-`~/papers/pymrm-gallery/Doyle_1993_J._Electrochem._Soc._140_1526.pdf` read at
+`~/papers/pymrm-gallery/Doyle1993-lithium-cell-galvanostatic-model-JES140-1526.pdf` read at
 600 dpi, and against the published `pages/J3.4-doyle-fuller-newman/` and
 `pages/J3.5-single-particle-model/`.
 

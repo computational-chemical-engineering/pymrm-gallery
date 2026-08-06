@@ -16,7 +16,7 @@ actually admits.
 **Mears, D. E. (1971), "Tests for Transport Limitations in Experimental
 Catalytic Reactors", *Ind. Eng. Chem. Process Des. Develop.* 10(4), 541–547,
 `doi:10.1021/i260040a020`**, on disk at
-`~/papers/pymrm-gallery/i260040a020.pdf`, is the only document consulted.
+`~/papers/pymrm-gallery/Mears1971-tests-for-transport-limitations-IECPDD10-541.pdf`, is the only document consulted.
 
 Two traps the next reader should know:
 

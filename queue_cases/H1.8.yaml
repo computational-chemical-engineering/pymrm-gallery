@@ -5,49 +5,40 @@ catalog_reference: J. Membr. Sci. 62 (1991), 320 (2008)
 priority: P1
 tier: T0
 structures: ''
-status: needs-paper
+status: unclaimed
 reference:
   authors:
   - Robeson, L. M.
-  year: 1991
-  title: Correlation of separation factor versus permeability for polymeric membranes
-  container: Journal of Membrane Science 62(2) 165-185
-  doi: 10.1016/0376-7388(91)80060-J
+  year: 2008
+  title: The upper bound revisited
+  container: Journal of Membrane Science 320(1-2) 390-400 (2008)
+  doi: 10.1016/j.memsci.2008.04.030
+  affiliation: Lehigh University
 paper:
-  on_disk: api-text/Robeson-1991-JMembrSci-62-165-upper-bound.ELSEVIER-API-TEXT.txt
+  on_disk: /home/eajfpeters/papers/pymrm-gallery/Robeson2008-upper-bound-revisited-JMembrSci320-390.pdf
   open_access: null
-  checked: '2026-08-02'
-blocker:
-  kind: paper
-  question: The published PDF, please. The Elsevier full-text API reaches this paper's text
-    but not its page images, and the text layer is the publisher's OCR of the original scan.
-  detail: 'ACQUISITION ROUTE FOUND, NUMBERS STILL BLOCKED.
-
-
-    Text layer: prose only, and note that 1991 is NOT late enough to be safe: this text still
-    drops decimal points wholesale. Table 2''s Lennard-Jones kinetic diameters come back as
-    "2 6 2 89 3 3 3 46 3 64 3 8" for 2.6, 2.89, 3.3, 3.46, 3.64, 3.8, and permeability symbols
-    are corrupted (P, for P_x, at, for alpha). The upper-bound slope n and front factor k
-    cannot be read from it.
-
-
-    The Elsevier /content/article/pii endpoint returns text only; /content/object/pii returns
-    {"choices":null} for this article, and the PDF endpoint returns a one-page preview with
-    an AUTHENTICATION_ERROR entitlement. So there is no page image to render at 600 dpi, which
-    is what docs/pdf-findings.md requires for every constant on a scanned original. The case
-    therefore stays needs-paper.
-
-
-    What the API text DID buy: a verified citation and DOI (previously absent or unchecked),
-    and a reliable account of what is in the paper and where — enough to rank the request.'
-  artifacts:
-  - ~/papers/pymrm-gallery/api-text/Robeson-1991-JMembrSci-62-165-upper-bound.ELSEVIER-API-TEXT.txt
-  - https://api.elsevier.com/content/article/pii/037673889180060J
-notes: 'The catalogue also names the 2008 revisit, ''The upper bound revisited'', J. Membr.
-  Sci. 320(1-2) 390-400, doi 10.1016/j.memsci.2008.04.030. That one is NOT reachable: the
-  API returned 404 for the PII derived from its DOI. It is born-digital, so if the maintainer
-  can supply either paper the 2008 one will extract far better than the 1991 one.'
-updated: '2026-08-02'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII
-  037673889180060J). Identity confirmed from the article's own header — title, journal, volume,
-  issue and page range — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Robeson-1991-JMembrSci-62-165-upper-bound.ELSEVIER-API-TEXT.txt
+  checked: '2026-08-06'
+  identified_by: 'Born-digital and self-identifying: the header reads "Journal of Membrane Science
+    320 (2008) 390-400", the title "The upper bound revisited", the by-line "Lloyd M. Robeson, Lehigh
+    University, 1801 Mill Creek Road, Macungie, PA 18062, United States", and the PDF Title metadata
+    carries the DOI. Text extracted directly; no rendering needed.'
+blocker: null
+notes: 'The catalogue also names the 2008 revisit, ''The upper bound revisited'', J. Membr. Sci. 320(1-2)
+  390-400, doi 10.1016/j.memsci.2008.04.030. That one is NOT reachable: the API returned 404 for the
+  PII derived from its DOI. It is born-digital, so if the maintainer can supply either paper the 2008
+  one will extract far better than the 1991 one.'
+updated: '2026-08-06'
+doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII 037673889180060J).
+  Identity confirmed from the article's own header — title, journal, volume, issue and page range
+  — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Robeson-1991-JMembrSci-62-165-upper-bound.ELSEVIER-API-TEXT.txt
+why_the_2008_paper_and_not_the_1991_one: This is exactly what papers-requested.yaml asked for and
+  why. The 1991 paper was only ever reachable through the Elsevier api-text route, whose Table 2 of
+  Lennard-Jones kinetic diameters comes back as "2 6 2 89 3 3 3 46 3 64 3 8" for 2.6, 2.89, 3.3, 3.46,
+  3.64, 3.8 - the decimal point rendered as a space, so a six-value row becomes an eleven-value row
+  and nothing looks wrong until you count. This file retires that route. The 1991 PDF is still not
+  on disk, and this paper restates the 1991 upper bounds throughout, so it is also the reprint route
+  for them - use reference_read_from if the page quotes a 1991 bound.
+what_it_carries: P_i = k alpha_ij^n over the full modern dataset, with the finding that the 1991 bounds
+  moved only slightly except where perfluorinated polymers are involved, and that the shift is almost
+  entirely in the FRONT FACTOR k rather than the slope n - a testable decomposition. Two new gas pairs
+  (CO2/N2 and N2/CH4) are added.

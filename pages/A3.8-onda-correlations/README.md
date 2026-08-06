@@ -14,7 +14,7 @@ the default packed-column correlation set in process simulators.
 
 ## How the paper was identified
 
-The file on disk is `~/papers/pymrm-gallery/1_56.pdf`. A bare numeric filename
+The file on disk is `~/papers/pymrm-gallery/Onda1968-gas-liquid-mass-transfer-packed-columns-JCEJ1-56.pdf`. A bare numeric filename
 carries no metadata, so **the article was identified by reading it**: journal
 page 56 carries the title, the byline *"KAKUSABURO ONDA, HIROSHI TAKEUCHI\*\* AND
 YOSHIO OKUMOTO / Dept. of Chem. Eng., University of Nagoya, Nagoya"* and the

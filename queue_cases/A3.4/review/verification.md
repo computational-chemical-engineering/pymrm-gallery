@@ -1,7 +1,7 @@
 # A3.4 — adversarial verification, 2026-08-02
 
 Verifier notes on the staged page at `queue_cases/A3.4/page/`. Source read
-independently: `~/papers/pymrm-gallery/1-s2.0-0009250978851203-main.pdf`, pages
+independently: `~/papers/pymrm-gallery/Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf`, pages
 rendered fresh at 600 dpi, plus the Elsevier PII full text for prose.
 
 **Verdict: send back.** The page's headline claim — that a free fit to Figure 3

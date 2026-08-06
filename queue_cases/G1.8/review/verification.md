@@ -1,7 +1,7 @@
 # G1.8 — adversarial verification
 
 Verifier pass, 2026-08-02. Target: `queue_cases/G1.8/page/`.
-Source re-read independently from `~/papers/pymrm-gallery/AIChE Journal - 1983 - Herskowitz.pdf`
+Source re-read independently from `~/papers/pymrm-gallery/Herskowitz1983-trickle-bed-partial-wetting-AIChEJ29-1.pdf`
 at 600 dpi (journal pages 4 and 8 = PDF pages 4 and 8).
 
 **Verdict: safe to publish after the five fixes listed under "Required fixes".**

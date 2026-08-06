@@ -20,7 +20,7 @@ Render the two figure crops first — the PDF is not in the repository and never
 will be:
 
 ```bash
-pdftoppm -r 600 -f 8 -l 9 -png ~/papers/pymrm-gallery/1-s2.0-0009250978851203-main.pdf p
+pdftoppm -r 600 -f 8 -l 9 -png ~/papers/pymrm-gallery/Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf p
 python - <<'EOF'
 from PIL import Image
 Image.open("p-08.png").convert("L").crop((2296, 4200, 4592, 5800)).save("renders/fig2-full.png")

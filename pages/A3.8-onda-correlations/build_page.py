@@ -69,7 +69,7 @@ the exponent window, which no prefactor can move."""))
 cells.append(md(r"""## Background
 
 **Which paper this is, and how that was established.** The file on disk is
-`1_56.pdf`. A bare numeric filename carries no metadata, and this repository has
+`Onda1968-gas-liquid-mass-transfer-packed-columns-JCEJ1-56.pdf`. A bare numeric filename carries no metadata, and this repository has
 been burned four times by trusting one, so the article was identified by reading
 it. Journal page 56 carries the title *"MASS TRANSFER COEFFICIENTS BETWEEN GAS
 AND LIQUID PHASES IN PACKED COLUMNS"*, the byline *"KAKUSABURO ONDA, HIROSHI

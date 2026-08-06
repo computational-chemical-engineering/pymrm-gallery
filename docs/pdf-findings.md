@@ -15,15 +15,15 @@ page image: below roughly 5,000 expect trouble with sub/superscripts.
 
 | chars/page | File | Paper | Page |
 |---|---|---|---|
-| 12,403 | `i260028a001.pdf` | Kunii & Levenspiel (1968) | `E2.1` |
-| 8,987 | `i300005a006.pdf` | Oh & Cavendish (1982) | `I1.2` |
+| 12,403 | `Kunii1968-bubbling-bed-model-IECFund7-481.pdf` | Kunii & Levenspiel (1968) | `E2.1` |
+| 8,987 | `Oh1982-monolith-converter-transients-IECPDD21-29.pdf` | Oh & Cavendish (1982) | `I1.2` |
 | 8,578 | `AIChE…1962…Duncan…pdf` | Duncan & Toor (1962) | `A4.9` ✔ done |
-| 7,422 | `AIChE Journal - January 1989 - Xu.pdf` | Xu & Froment (1989) | `C2.1` |
+| 7,422 | `Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf` | Xu & Froment (1989) | `C2.1` |
 | 6,773 | `AIChE…1987…Itoh…pdf` | Itoh (1987) | `H1.4` |
-| 6,408 | `AIChE_Journal-1996-Krishna.pdf` | Krishna & Ellenberger (1996) | `F1.4` |
-| 5,635 | `1-s2.0-0009250978851203-main.pdf` | Wakao & Funazkri (1978) | `A3.4` |
-| 4,595 | `1-s2.0-0009250970850734-main.pdf` | Van Welsenaere & Froment (1970) | `D2.2` |
-| 4,432 | `1-s2.0-0009250962850052-main.pdf` | Weisz & Hicks (1962) | `B1.1` ✔ published |
+| 6,408 | `Krishna1996-bubble-column-gas-holdup-AIChEJ42-2627.pdf` | Krishna & Ellenberger (1996) | `F1.4` |
+| 5,635 | `Wakao1978-particle-to-fluid-transfer-CES33-1375.pdf` | Wakao & Funazkri (1978) | `A3.4` |
+| 4,595 | `vanWelsenaere1970-parametric-sensitivity-runaway-CES25-1503.pdf` | Van Welsenaere & Froment (1970) | `D2.2` |
+| 4,432 | `Weisz1962-nonisothermal-effectiveness-CES17-265.pdf` | Weisz & Hicks (1962) | `B1.1` ✔ published |
 
 The two ACS scans have the best text layers by a wide margin, so **Kunii &
 Levenspiel and Oh & Cavendish are the cheapest of the remaining pages to start**
@@ -35,7 +35,7 @@ exponents; the Xu & Froment file scores 7,422 and still mangles them.
 
 ## 1. Xu & Froment (1989) — page `C2.1` ✔ built 2026-07-26
 
-`AIChE Journal - January 1989 - Xu.pdf`
+`Xu1989-methane-steam-reforming-kinetics-AIChEJ35-88.pdf`
 
 **Structure of the paper.** Table 1 experimental conditions · Table 2 the eleven
 candidate reactions · Table 3 the retained mechanism · **Table 4 parameter
@@ -113,7 +113,7 @@ to finding 4, not to the kinetics.
 
 ## 2. Krishna & Ellenberger (1996) — page `F1.4` — reviewed, approach revised
 
-`AIChE_Journal-1996-Krishna.pdf`
+`Krishna1996-bubble-column-gas-holdup-AIChEJ42-2627.pdf`
 
 **Table 1** experimental setup, operating conditions and system properties —
 this is the column-geometry table the page needs. **Table 2** physical
@@ -178,7 +178,7 @@ overlapping scatter plots on log axes with several series per panel.
 
 ## 3. Weisz & Hicks (1962) — page `B1.1` (already published)
 
-`1-s2.0-0009250962850052-main.pdf`
+`Weisz1962-nonisothermal-effectiveness-CES17-265.pdf`
 
 **No tables found in the text layer** — the η(φ) results are presented as
 figures only, as expected for a 1962 computational paper.
@@ -191,7 +191,7 @@ theirs — worth doing but low priority.
 
 ## 4. Van Welsenaere & Froment (1970) — page `D2.2` ✔ built 2026-07-27
 
-`1-s2.0-0009250970850734-main.pdf`, and full text via the Elsevier PII endpoint.
+`vanWelsenaere1970-parametric-sensitivity-runaway-CES25-1503.pdf`, and full text via the Elsevier PII endpoint.
 
 **Structure.** Seven sections and an appendix, **no tables at all**, ten
 figures. §1 model and base parameters · §2 the *p*–*T* phase plane · §3 critical
@@ -555,7 +555,7 @@ on has a *caption* in the text, not merely a cross-reference to it.
 
 ## The MFIX Theory Guide (`A1.8`) — good scan, bad text layer
 
-`Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf`, 54 pp, from
+`Syamlal1993-MFIX-theory-guide-DOE-METC-94-1004.pdf`, 54 pp, from
 OSTI. The document is legible on screen but its text layer is one of the worst
 here: words are run together (`Fluid-SolidsMomentumTransfer`,
 `ConservationofMass`), digits are substituted (`0.O6Re` with a capital O,
@@ -569,7 +569,7 @@ of the 54 pages is a *single* CCITT-G4 image with `bpc = 1` (bilevel) at
 4472–4572 tall:
 
 ```bash
-pdfimages -list Syamlal-Rogers-OBrien-1993-MFIX-theory-guide-DOE-METC-94-1004.pdf
+pdfimages -list Syamlal1993-MFIX-theory-guide-DOE-METC-94-1004.pdf
 ```
 
 There is no higher native resolution to reach. `pdftoppm -r 600` upsamples a
@@ -581,7 +581,7 @@ pdfimages -png -f 13 -l 14 <file.pdf> out    # eqs. (11)-(16), journal pages 10-
 ```
 
 **The same check on the Richardson & Zaki Golden Jubilee reprint**
-(`1-s2.0-S0263876297800068-main.pdf`, `A1.5`'s source, whose Table VI `A1.8`
+(`Richardson1954-sedimentation-fluidisation-pt1-ChERD75-S82-REPRINT1997.pdf`, `A1.5`'s source, whose Table VI `A1.8`
 ships): each page carries a **`stencil` at 300 × 300 dpi, `bpc = 1`** over a
 200 dpi grey background image. So 300 dpi is that file's native resolution too,
 and `A1.8`'s "300 dpi renders" is right for the same reason.
@@ -693,7 +693,7 @@ this file has four specific failure modes:
 
 ### Kandula 2010 — a NASA report number is not a guarantee
 
-`20100036467.pdf` is a genuine 15-page technical report (its own Title metadata
+`Kandula2010-effective-thermal-conductivity-packed-beds-NASA-KSC-2010-007.pdf` is a genuine 15-page technical report (its own Title metadata
 is `KSC-2010-007.pdf`), checked page by page — not an NTRS abstract record and
 not a preview. But its Envision OCR is the worst in the batch at 1.7 k
 chars/page: `eefcient` for *efficient*, `Zhner-Schlunder` for
@@ -741,17 +741,17 @@ never once been right* — held for 24 of the 34 files and **failed for six**.
 
 | File | Native | Encoding | Render at |
 |---|---|---|---|
-| `process-calculation-by-watson.pdf` (Hougen & Watson, C1.1) | **150 ppi** | CCITT-G4 | **150, cropped** |
-| `2015.205681.Industrial-Chemical.pdf` (Hougen & Watson 1936, unmapped) | **600 ppi** | CCITT-G4 | 600 |
-| `ef070025k.pdf` (Abad, B3.10) | **600 ppi** | CCITT-G4 | 600 |
-| `1-s2.0-S0009250997003850-main.pdf` (Pan & Zhu, unmapped) | **600 ppi** | CCITT-G4 | 600 |
-| `ie8b02111.pdf` (Criado, B3.5) | 600 ppi (figures only) | JPEG | 600 for figures |
-| `90131.pdf` (Kiani & Wachs, unmapped) | 600 ppi (figures only) | JPEG | 600 for figures |
+| `BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf` (Hougen & Watson, C1.1) | **150 ppi** | CCITT-G4 | **150, cropped** |
+| `BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf` (Hougen & Watson 1936, unmapped) | **600 ppi** | CCITT-G4 | 600 |
+| `Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf` (Abad, B3.10) | **600 ppi** | CCITT-G4 | 600 |
+| `Pan1998-cylindrical-pellet-effectiveness-CES53-933.pdf` (Pan & Zhu, unmapped) | **600 ppi** | CCITT-G4 | 600 |
+| `Criado2018-CaO-carbonation-temperature-IECR57-12595.pdf` (Criado, B3.5) | 600 ppi (figures only) | JPEG | 600 for figures |
+| `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf` (Kiani & Wachs, unmapped) | 600 ppi (figures only) | JPEG | 600 for figures |
 
 Two files have **no page images at all** — born-digital, nothing to render:
-`s11244-018-0948-8.pdf` (Prins, C1.2) and `1-s2.0-S0360128507000214-main.pdf`
+`Prins2018-eley-rideal-other-mechanism-TopCatal61-714.pdf` (Prins, C1.2) and `DiBlasi2008-wood-biomass-pyrolysis-review-PECS34-47.pdf`
 (Di Blasi, B3.9). Two are **JPEG at 300 ppi** rather than bilevel and will
-render softer: `413a375.pdf` (B2.6) and `1-s2.0-S1631074817301091-main.pdf`
+render softer: `Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf` (B2.6) and `Tayrabekova2018-ethanol-dehydrogenation-copper-CRChimie21-194.pdf`
 (C2.19 companion).
 
 **Restated rule: run `pdfimages -list` per file and believe it.** Never assume
@@ -760,7 +760,7 @@ of 150, 300, 400 or 600.
 
 ### The 150 ppi book — read on crops, and it works
 
-`process-calculation-by-watson.pdf` is Hougen & Watson, *Chemical Process
+`BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf` is Hougen & Watson, *Chemical Process
 Principles* (combined volume, 1157 pages), and at **150 ppi native it is the
 lowest-resolution scan in this repository — half the previous floor.** That
 sounds fatal and is not, because the 1943/47 Wiley typography is large and
@@ -786,7 +786,7 @@ crop.
 
 ### The 504-page book with no text layer at all
 
-`2015.205681.Industrial-Chemical.pdf` (Hougen & Watson, *Industrial Chemical
+`BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf` (Hougen & Watson, *Industrial Chemical
 Calculations*, 2nd edn, 1936) returns **nothing** from `pdftotext` and
 `pdffonts` lists **no font at all** — not even a bad OCR layer. Nothing whatever
 could be inferred without rasterising, exactly like Li & Kwauk (`A1.9`) in the
@@ -797,7 +797,7 @@ It maps to **no catalogue case** — see `papers-on-disk.yaml` for why.
 
 ### Word-splitting: the failure mode that makes `grep` lie
 
-`BF02822675.pdf` (Sohn 1978, `B3.4`) extracts its entire body **with a space
+`Sohn1978-law-of-additive-reaction-times-MetallTransB9B-89.pdf` (Sohn 1978, `B3.4`) extracts its entire body **with a space
 between every letter**:
 
 > `A law g o v e r n i n g the r a t e of r e a c t i o n of a solid p a r t i c l e`
@@ -806,7 +806,7 @@ Reference lists extract normally, so the file looks fine at a glance. **A
 keyword grep on this file returns nothing and you will conclude the content is
 absent.** Strip spaces before searching, or go to the image.
 
-`1-s2.0-S008207847780341X-main.pdf` (Kobayashi, `B3.7`) does the same
+`Kobayashi1977-coal-devolatilization-high-T-SympCombust16-411.pdf` (Kobayashi, `B3.7`) does the same
 intermittently, and additionally renders exponents as `104 - 2 • 105 K/s` and
 `6.6 • 104 s -1` — i.e. **the exponents of a two-competing-rate model come back
 as concatenated digits.** Treat every implausible magnitude as a lost separator
@@ -814,7 +814,7 @@ and go to the image; never repair it by inference (the `D2.2` rule).
 
 ### The worst text layer in the drop
 
-`1-s2.0-S0082078482802816-main.pdf` (I. W. Smith, *The Combustion Rates of Coal
+`Smith1982-combustion-rates-coal-chars-review-SympCombust19-1045.pdf` (I. W. Smith, *The Combustion Rates of Coal
 Chars: A Review*, 1982 — the `B3.6` near-miss) extracts **37 characters from
 page 3**. It mixes a 200 ppi image with 300 ppi CCITT-G4 pages. Any check on
 this file must be done on renders; a grep proves nothing. That is precisely why
@@ -829,27 +829,27 @@ drop**:
 
 | File | Case | Page 1 actually begins with |
 |---|---|---|
-| `i260040a020.pdf` | `B1.7` Mears | a catalytic-cracking paper's Summary and Literature Cited — *and it discusses "the Voorhies (1945) relationship"*, which makes it look like `B2.1` |
-| `i160071a009.pdf` | `B2.4` Beeckman–Froment | a dissolved-oxygen-probe paper's nomenclature list |
-| `i160028a013.pdf` | `C2.3` Dyson & Simon | a Japanese catalyst study's Literature Cited, ending "supported by … the Ministry of Education, Japan" |
-| `ef00010a006.pdf` | `B3.8` Solomon (FG-DVC) | the preceding article's acknowledgements, thanking Dr. Clint Williford |
-| `ac60131a045.pdf` | *unmapped* (Kissinger) | a carotenoid paper's reference list |
+| `Mears1971-tests-for-transport-limitations-IECPDD10-541.pdf` | `B1.7` Mears | a catalytic-cracking paper's Summary and Literature Cited — *and it discusses "the Voorhies (1945) relationship"*, which makes it look like `B2.1` |
+| `Beeckman1979-site-coverage-pore-blockage-IECFund18-245.pdf` | `B2.4` Beeckman–Froment | a dissolved-oxygen-probe paper's nomenclature list |
+| `Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf` | `C2.3` Dyson & Simon | a Japanese catalyst study's Literature Cited, ending "supported by … the Ministry of Education, Japan" |
+| `Solomon1988-general-model-coal-devolatilization-FGDVC-EnergyFuels2-405.pdf` | `B3.8` Solomon (FG-DVC) | the preceding article's acknowledgements, thanking Dr. Clint Williford |
+| `Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf` | *unmapped* (Kissinger) | a carotenoid paper's reference list |
 
 **Always scroll past the first screen.** In four of the five the real by-line is
 lower down the *same* page.
 
 ### Publisher metadata named the wrong paper
 
-`i160028a013.pdf` carried `Title: Kinetic study of the dehydrogenation of
+`Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf` carried `Title: Kinetic study of the dehydrogenation of
 ethanol` during acquisition — the title of a **different file in the same drop**
-(`1-s2.0-0009250964850922-main.pdf`, Franckaerts & Froment 1964). The document
+(`Franckaerts1964-ethanol-dehydrogenation-kinetics-CES19-807.pdf`, Franckaerts & Froment 1964). The document
 is Dyson & Simon 1968 on ammonia synthesis.
 
 What settled it was not the metadata but the **ACS download stamp printed on
-every page**: `pubs.acs.org/iecfa7/article-pdf/7/4/605/19276144/i160028a013.pdf`
+every page**: `pubs.acs.org/iecfa7/article-pdf/7/4/605/19276144/Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf`
 — volume 7, issue 4, first page 605. That stamp is present on every ACS file in
 this repository and is the cheapest reliable identity check available for them;
-use it. (`ef070025k.pdf` needed it too: its `Title` metadata is `No Job Name`.)
+use it. (`Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf` needed it too: its `Title` metadata is `No Job Name`.)
 
 ### Per-file summary, third drop
 
@@ -858,40 +858,40 @@ native resolution beside it.
 
 | File | Case | txt/p3 | Native | Note |
 |---|---|---|---|---|
-| `s11244-018-0948-8.pdf` | `C1.2` | 4944 | *(no images)* | born-digital, perfect |
-| `1-s2.0-S0360128507000214-main.pdf` | `B3.9` | 5350 | *(no images)* | born-digital, perfect |
-| `90131.pdf` | — | 5345 | 600 JPEG | born-digital |
-| `ie8b02111.pdf` | `B3.5` | 5548 | 600 JPEG | born-digital |
-| `ef070025k.pdf` | `B3.10` | 6355 | 600 G4 | good |
-| `ef00014a011.pdf` | `B3.8` | 6674 | 300 G4 | best of the scans |
-| `ef00010a006.pdf` | `B3.8` | 6662 | 300 G4 | good; first-page trap |
-| `ef00034a011.pdf` | `B3.8` | 5914 | 300 G4 | good |
+| `Prins2018-eley-rideal-other-mechanism-TopCatal61-714.pdf` | `C1.2` | 4944 | *(no images)* | born-digital, perfect |
+| `DiBlasi2008-wood-biomass-pyrolysis-review-PECS34-47.pdf` | `B3.9` | 5350 | *(no images)* | born-digital, perfect |
+| `Kiani2024-pair-sites-langmuir-hinshelwood-ACSCatal14-10260.pdf` | — | 5345 | 600 JPEG | born-digital |
+| `Criado2018-CaO-carbonation-temperature-IECR57-12595.pdf` | `B3.5` | 5548 | 600 JPEG | born-digital |
+| `Abad2007-oxygen-carrier-reduction-kinetics-EnergyFuels21-1843.pdf` | `B3.10` | 6355 | 600 G4 | good |
+| `Grant1989-chemical-percolation-devolatilization-CPD-EnergyFuels3-175.pdf` | `B3.8` | 6674 | 300 G4 | best of the scans |
+| `Solomon1988-general-model-coal-devolatilization-FGDVC-EnergyFuels2-405.pdf` | `B3.8` | 6662 | 300 G4 | good; first-page trap |
+| `Fletcher1992-CPD-model-pt3-13C-NMR-EnergyFuels6-414.pdf` | `B3.8` | 5914 | 300 G4 | good |
 | `AIChE…Gheorghiu…pdf` | `B1.13` | 5398 | 300 G4 | good |
-| `1-s2.0-S1631074817301091-main.pdf` | `C2.19` | 4981 | 300 JPEG | good |
-| `ie50424a010.pdf` | `B2.1` | 4814 | 300 G4 | fair |
-| `i260040a020.pdf` | `B1.7` | 4549 | 300 G4 | fair; first-page trap |
-| `BF02822675.pdf` | `B3.4` | 4056 | 300 G4 | **letter-spaced — grep fails** |
-| `i160046a001.pdf` | `B1.10` | 3858 | 300 G4 | fair |
-| `ac60131a045.pdf` | — | 3574 | 300 G4 | first-page trap |
-| `i160028a013.pdf` | `C2.3` | 3370 | 300 G4 | first-page trap; wrong metadata |
-| `1-s2.0-0021951772902278-main.pdf` | `B2.3` | 3456 | 300 G4 | poor abstract OCR |
+| `Tayrabekova2018-ethanol-dehydrogenation-copper-CRChimie21-194.pdf` | `C2.19` | 4981 | 300 JPEG | good |
+| `Voorhies1945-carbon-formation-catalytic-cracking-IEC37-318.pdf` | `B2.1` | 4814 | 300 G4 | fair |
+| `Mears1971-tests-for-transport-limitations-IECPDD10-541.pdf` | `B1.7` | 4549 | 300 G4 | fair; first-page trap |
+| `Sohn1978-law-of-additive-reaction-times-MetallTransB9B-89.pdf` | `B3.4` | 4056 | 300 G4 | **letter-spaced — grep fails** |
+| `Feng1973-isothermal-diffusion-porous-solids-IECFund12-143.pdf` | `B1.10` | 3858 | 300 G4 | fair |
+| `Kissinger1957-reaction-kinetics-in-DTA-AnalChem29-1702.pdf` | — | 3574 | 300 G4 | first-page trap |
+| `Dyson1968-ammonia-synthesis-kinetics-diffusion-IECFund7-605.pdf` | `C2.3` | 3370 | 300 G4 | first-page trap; wrong metadata |
+| `Levenspiel1972-deactivating-catalyst-rate-equation-JCatal25-265.pdf` | `B2.3` | 3456 | 300 G4 | poor abstract OCR |
 | `Can J Chem Eng…Vanden Bussche.pdf` | `D3.3` | 3331 | 300 G4 | fair |
-| `ie50686a006.pdf` | `C2.10`/`D3.4` | 3295 | 300 G4 | fair |
-| `i160071a009.pdf` | `B2.4` | 2834 | 300 G4 | first-page trap |
-| `1-s2.0-0009250988851273-main.pdf` | `C2.4`/`D3.3` | 2639 | 300 G4 | poor |
-| `1-s2.0-0009250961800304-main.pdf` | `B2.2` | 2635 | 300 G4 | poor; year OCR'd "1901" |
-| `1-s2.0-S0009250997003850-main.pdf` | — | 2185 | **600** G4 | fair |
-| `1-s2.0-0009250962870158-main.pdf` | `B1.9` | 2105 | 300 G4 | poor |
-| `1-s2.0-0009250970850539-main.pdf` | `B3.2` | 1834 | 300 G4 | poor |
+| `Froment1967-fixed-bed-reactors-design-status-IEC59-18.pdf` | `C2.10`/`D3.4` | 3295 | 300 G4 | fair |
+| `Beeckman1979-site-coverage-pore-blockage-IECFund18-245.pdf` | `B2.4` | 2834 | 300 G4 | first-page trap |
+| `Graaf1988-methanol-synthesis-kinetics-CES43-3185.pdf` | `C2.4`/`D3.3` | 2639 | 300 G4 | poor |
+| `Froment1961-fixed-bed-fouling-pt1-CES16-189.pdf` | `B2.2` | 2635 | 300 G4 | poor; year OCR'd "1901" |
+| `Pan1998-cylindrical-pellet-effectiveness-CES53-933.pdf` | — | 2185 | **600** G4 | fair |
+| `Wakao1962-random-pore-diffusion-pellets-CES17-825.pdf` | `B1.9` | 2105 | 300 G4 | poor |
+| `Szekely1970-grain-model-pt1-CES25-1091.pdf` | `B3.2` | 1834 | 300 G4 | poor |
 | `AIChE…Bischoff…pdf` | `B1.3` | 1787 | 300 G4 | poor |
-| `1-s2.0-0009250964850922-main.pdf` | `C2.19` | 1748 | 300 G4 | poor |
-| `1-s2.0-S0009250954800054-main.pdf` | `C1.3` | 1595 | 300 G4 | poor — **but replaces the worst api-text in the repo** |
-| `413a375.pdf` | `B2.6` | 1474 | 300 JPEG | poor; Cyrillic abstract survives |
-| `1-s2.0-S008207847780341X-main.pdf` | `B3.7` | 1179 | 300 G4 | poor; **exponents concatenated** |
-| `1-s2.0-S0082078482802816-main.pdf` | *(B3.6 near-miss)* | **37** | 200+300 | **worst in drop** |
-| `process-calculation-by-watson.pdf` | `C1.1` | 279 | **150** | book; prose good, equations gone |
+| `Franckaerts1964-ethanol-dehydrogenation-kinetics-CES19-807.pdf` | `C2.19` | 1748 | 300 G4 | poor |
+| `Mars1954-vanadium-oxide-oxidation-CESSuppl3-41.pdf` | `C1.3` | 1595 | 300 G4 | poor — **but replaces the worst api-text in the repo** |
+| `Markos1987-catalyst-deactivation-parameter-estimation-pt4-ChemPap41-375.pdf` | `B2.6` | 1474 | 300 JPEG | poor; Cyrillic abstract survives |
+| `Kobayashi1977-coal-devolatilization-high-T-SympCombust16-411.pdf` | `B3.7` | 1179 | 300 G4 | poor; **exponents concatenated** |
+| `Smith1982-combustion-rates-coal-chars-review-SympCombust19-1045.pdf` | *(B3.6 near-miss)* | **37** | 200+300 | **worst in drop** |
+| `BOOK-HougenWatson-1947-chemical-process-principles-combined.pdf` | `C1.1` | 279 | **150** | book; prose good, equations gone |
 | `process-calculation-by-watson (1).pdf` | *(duplicate)* | 279 | **150** | byte-identical duplicate |
-| `2015.205681.Industrial-Chemical.pdf` | — | **0** | **600** | book; **no text layer, no fonts** |
+| `BOOK-HougenWatson-1936-industrial-chemical-calculations-2ed.pdf` | — | **0** | **600** | book; **no text layer, no fonts** |
 
 ### Two extraction routes retired by this drop
 
@@ -903,3 +903,187 @@ scan — with Mars & van Krevelen named as **the worst case in the whole set**
 three now have real 300 ppi page images. **Do not quote a constant from those
 api-text files again.** Their part-II companions (`CES 17 (1962) 105` and
 `CES 26 (1971) 1901`) remain api-text only.
+
+---
+
+## The 2026-08-05 evening / 2026-08-06 drop — 32 files, and the whole library renamed
+
+Thirty-two new PDFs arrived, bringing `~/papers/pymrm-gallery/` to **118 files —
+115 after three byte-identical duplicates were parked in `duplicates/`**. This is
+the drop the queue had been waiting on: **all four textbook-canonical monographs**,
+a fifth monograph nobody asked for, and the three *Chemical Engineering Progress*
+papers no reprint route could reach.
+
+**Every PDF in the directory was renamed on 2026-08-06.** The scheme is
+`<FirstAuthor><Year>-<short-slug>-<JournalAbbrev><Vol>-<FirstPage>.pdf` for
+papers, `BOOK-<Authors>-<Year>-<short-title>-<edition>.pdf` for monographs, and a
+`MISC-` prefix for files kept for the record that map to no case. The
+authoritative catalogue is now
+[`papers-inventory.yaml`](papers-inventory.yaml) — one entry per file, with
+`old_names`, the identity, how it was verified, the native ppi, the text-layer
+verdict and every case it supports. `pages/**`, `models.yaml` and
+[`handoff.md`](handoff.md) still cite the OLD names in their provenance prose;
+`old_names` is what connects them, and updating them is a central follow-up.
+
+### Native resolution: three new entries at the extremes
+
+`pdfimages -list` was run on all 32. The rule that matters has not changed —
+**run it per file and believe it; never render above native** — but the spread
+widened again:
+
+| File | Case | Pages | Native | Encoding | Render at |
+|---|---|---|---|---|---|
+| `Ranz1952-…-pt1-ChemEngProg48-139.pdf` | `A3.5` | 6 | **400 ppi** | JPEG RGB | 400 |
+| `Ranz1952-…-pt2-ChemEngProg48-173.pdf` | `A3.5` | 8 | **400 ppi** | JPEG RGB | 400 |
+| `Toomey1952-…-ChemEngProg48-220.pdf` | `E1.1` | 7 | **400 ppi** | JPEG RGB | 400 |
+| `Wilke1950-…-ChemEngProg46-95.pdf` | `A4.1` | 10 | **400 ppi** | JPEG gray | 400 |
+| `BOOK-Levenspiel-1999-…-3ed.pdf` | `A2.4`, `C1.5` | 684 | **600 ppi** | JBIG2 bilevel | 600 |
+| `BOOK-TaylorKrishna-1993-…-1ed.pdf` | `A4.8`, `A4.1` | 609 | **600 ppi** | JBIG2 bilevel | 600 |
+| `BOOK-BirdStewartLightfoot-2002-…-2ed.pdf` | `A3.2` | 914 | 300 ppi | JBIG2 bilevel | 300 |
+| `BOOK-FromentDeWildeBischoff-2011-…-3ed.pdf` | `D1.1`–`D1.5`, `J4.1`, `J4.6` | 902 | *(cover only)* | born-digital | — |
+| `BOOK-RawlingsEkerdt-2025-…-2ed-5pr.pdf` | — | 668 | *(no images)* | born-digital | — |
+| `Robeson2008-…-JMembrSci320-390.pdf` | `H1.8` | 11 | *(logos only)* | born-digital | — |
+| `Langmuir1918-…-JACS40-1361.pdf` | `J1.1` | 43 | 300 ppi | CCITT-G4 | 300 |
+| `Brunauer1938-…-JACS60-309.pdf` | `J1.3` | 11 | 300 ppi | CCITT-G4 | 300 |
+| `Chiu1983-…-Macromolecules16-348.pdf` | `J5.3` | 10 | 300 ppi | CCITT-G4 | 300 |
+| `Myers1965-…-AIChEJ11-121.pdf` | `J1.4` | 7 | 300 ppi | CCITT-G4 | 300 |
+| `Larkins1961-…-AIChEJ7-231.pdf` | `G1.1` | 9 | 300 ppi | CCITT-G4 | 300 |
+| `Heck1976-…-AIChEJ22-477.pdf` | `I1.3` | 8 | 300 ppi | CCITT-G4 | 300 |
+| `Bhatia1980-…-AIChEJ26-379.pdf` | `B3.3` | 8 | 300 ppi | CCITT-G4 | 300 |
+| `Lehrer1984-…-AIChEJ30-654.pdf` | *(F2.1 near-miss)* | 4 | 300 ppi | CCITT-G4 | 300 |
+| `Andrews1968-…-BiotechnolBioeng10-707.pdf` | `J4.2` | 17 | 300 ppi | CCITT-G4 | 300 |
+| `Luedeking1959-…-JBMTE1-393.pdf` | `J4.4` | 20 | 300 ppi | CCITT-G4 | 300 |
+| `Uppal1974-…-CES29-967.pdf` | `D2.4` | 19 | 300 ppi | CCITT-G4 | 300 |
+| `vanDeemter1956-…-CES5-271.pdf` | `J1.10` | 19 | 300 ppi | CCITT-G4 | 300 |
+| `Hulburt1964-…-CES19-555.pdf` | `J2.1` | 20 | 300 ppi | CCITT-G4 | 300 |
+| `Nyvlt1968-…-JCrystGrowth3-377.pdf` | `J2.3` | 7 | 300 ppi | CCITT-G4 | 300 |
+| `MISC-ChemEngProgress-2012-08-…-CEP108-8.pdf` | *(none)* | 34 | 100 ppi | JPX/JPEG | — |
+
+### The four *Chemical Engineering Progress* papers have NO text layer at all
+
+`Ranz1952` pt1 and pt2, `Toomey1952` and `Wilke1950` are microfilm scans printed
+to PDF with **Microsoft Print To PDF**. `pdftotext` returns **one byte per page**
+for the first three; `Wilke1950` has an Acrobat Paper Capture layer that returns
+**182 characters from page 3** and renders the by-line "C. R. WILKE" as
+`C.R. WI E`. **Everything on these four comes off renders.** They are the second
+and third worst text layers in the library, after I. W. Smith's 37 characters.
+
+They are nevertheless very legible at 400 dpi — the 1950s CEP typography is large
+and clean, and the microfilm was photographed in colour, so unlike the bilevel
+scans there *is* greyscale to help a marginal glyph.
+
+### Where the running head lives changes between issues of the same journal
+
+A practical trap that cost several renders. In *Chem. Eng. Progress* **48(3)**
+(Ranz & Marshall Part I) the running head is at the **top** of every page:
+`Vol. 48, No. 3 | Chemical Engineering Progress | Page 139`. In **48(4)** and
+**48(5)** (Part II, Toomey & Johnstone) the top of every page is blank margin and
+the head is at the **bottom**: `Page 180 | Chemical Engineering Progress | April,
+1952`. A top-of-page folio search on those two files finds nothing and invites the
+conclusion that the scan has no folios. It has; look at the other end.
+
+### `Ranz1952` Part I — the folio does not agree with the citation everybody uses
+
+Read at 400 dpi, magnified, unambiguous: Part I's title page carries
+**`Page 139`**, and pages 2–6 carry 140, 141, 142, 143, **144**. Odd pages use the
+`Vol./No. … Page N` form and even pages the `Page N … March, 1952` form, so the
+sequence is internally consistent.
+
+The universal citation is **48, 141–146** — including ISI's own *This Week's
+Citation Classic*, written by Ranz in 1993, which is on disk as
+`MISC-Ranz1993-citation-classic-commentary-CurrContents22.pdf` and prints
+"Chem. Eng. Progr. 48:141-6; 173-80, 1952".
+
+**Part II's folios (173 → 180) DO agree with the standard citation.** So the
+disagreement is confined to Part I and is exactly two pages; the article is six
+pages either way. Recorded, not resolved. Same class as the Zwietering "1–11
+versus 1–15" finding: when the document and the citation disagree, say which one
+you read.
+
+### `vanDeemter1956` — the text layer gets the VOLUME NUMBER wrong
+
+Worth its own line because it is the cheapest possible demonstration of the
+standing rule. The first line of the extracted text reads
+
+> `Chem~calE~neenngSc1ence,1956,Vol 6,pp 271to289`
+
+and the page, rendered at 300 dpi, reads
+
+> `Chemical Engineering Science, 1956, Vol. 5, pp. 271 to 289. Pergamon Press Ltd.`
+
+**If the OCR gets the header wrong it will get the tables wrong**, and both of
+this paper's tables *are* the experimental data `J1.10` validates against. This is
+the file whose api-text returned Table 1 as `0 163 1100 0 2? 0 30`.
+
+### Four more first-page traps — eleven in the library now
+
+| File | Case | Page 1 actually begins with |
+|---|---|---|
+| `Langmuir1918-…-JACS40-1361.pdf` | `J1.1` | the numbered summary (points 6–8) of a sodium-in-liquid-ammonia absorption paper |
+| `Chiu1983-…-Macromolecules16-348.pdf` | `J5.3` | the References and Notes of a Zambelli stereochemistry paper |
+| `Larkins1961-…-AIChEJ7-231.pdf` | `G1.1` | the nomenclature and "Manuscript received April 18, 1960" of a film/penetration-theory paper |
+| `Onda1968-…-JCEJ1-56.pdf` | `A3.8` | the Summary, Acknowledgment, Nomenclature and Literature Cited of a bubble-generation paper |
+
+**`Onda1968` does it at BOTH ends**, which is new: its last page (journal p. 62)
+*starts the next article* — "Gas Absorption with Chemical Reaction in Packed
+Columns" by Onda, Sada & Takeuchi, **same first author, different paper**. A
+reader who scrolls to the end to find the conclusions will find someone else's
+introduction under a familiar name. `A3.8` is already published; this was found
+while re-verifying the file for the rename and does not overturn anything.
+
+Also confirmed on a render this pass: **`Ergun1952` is a two-page-spread scan
+whose left half is the end of the preceding article** (multiple-cyclone tests) —
+the first-page trap in a form that had not been seen before, on a file with no
+text layer at all, where nothing but a render could have revealed it.
+
+### The five monographs, ranked by how usable their text layers are
+
+1. **Rawlings & Ekerdt 2025** — born-digital LaTeX/Lucida. Clean throughout,
+   *including equations*. No page images at all. The only monograph here whose
+   formulae can be extracted rather than read.
+2. **Froment, De Wilde & Bischoff 2011** — born-digital, embedded TrueType
+   subsets. Clean including equation numbers and most Greek. Only image is the
+   200 ppi cover.
+3. **Taylor & Krishna 1993** — ABBYY over 600 ppi JBIG2. Prose excellent; symbols
+   degrade badly. The Maxwell–Stefan Ð renders as `£>`, so `D12 = 8.48 mm²/s`
+   extracts as `£>12 = 8.48mm2/s`. Constants off crops.
+4. **Levenspiel 1999** — OCR over 600 ppi JBIG2. Prose excellent and fully
+   searchable — which is how the E1.1 tests were run — equations and subscripts
+   destroyed. PDF page = book page + 16.
+5. **Bird, Stewart & Lightfoot 2002** — 300 ppi JBIG2. Prose greppable; vector
+   and tensor notation destroyed (`[V x v]` for the curl). **PDF pp. 1–4 are the
+   endpaper operator tables, not the front matter** — the title page is PDF p. 5
+   and the imprint page p. 6. Do not read PDF p. 1 as the title page.
+
+**Two of the five are not the edition the request list named.** The file called
+`Froment_Bischoff_…` is the **third** edition (2011) and **De Wilde is a full
+author** — Bischoff is marked deceased on the title page. The file called
+`BOOK-RawlingsEkerdt-2025-chemical-reactor-analysis-design-fundamentals-2ed-5pr.pdf` is Rawlings & Ekerdt, *Chemical
+Reactor Analysis and Design Fundamentals*, 2nd edition **5th printing (March
+2025)**, Nob Hill Publishing — a fifth monograph nobody asked for, and a real
+textbook. Cite what is on disk.
+
+### Deduplication
+
+`md5sum` over the whole directory found **two** duplicate groups, both from the
+same evening drop:
+
+- `1cd0f791c388e168ab2304134187a5a3`, 487 616 bytes — **two** Andrews copies.
+- `601827724b39cac54e549e8aebb1227e`, 885 270 bytes — **three** Luedeking copies.
+
+One of each survives at the top level under its new name; the rest are in
+`~/papers/pymrm-gallery/duplicates/`, **moved rather than deleted**, and out of
+`find_papers.py`'s glob. This is the third instance of the pattern — the `(1)`
+suffix on the Westerterp file was once mistaken for a *part number*, and
+`process-calculation-by-watson (1).pdf` was byte-identical to its twin. Run
+`md5sum *.pdf | sort | uniq -w32 -d` on every new drop.
+
+### The library, measured
+
+118 files. **150 ppi** (Hougen & Watson 1947) to **600 ppi** (Levenspiel, Taylor &
+Krishna, Hougen & Watson 1936, and four ACS/Elsevier scans). Encodings: CCITT-G4
+bilevel dominates, then JBIG2 bilevel for the books, then JPEG for the microfilm
+scans and modern figures, and a handful with no page images at all. **Five files
+have no usable text layer whatever** (Li & Kwauk, Hougen & Watson 1936, Billet &
+Schultes, and the three Print-To-PDF microfilm scans), and two more are
+effectively unusable (I. W. Smith at 37 chars/page, Wilke 1950 at 182).
