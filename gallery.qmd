@@ -8,6 +8,7 @@ listing:
   sort: "categories"
   categories: cloud
   fields: [title, description, categories]
+  page-size: 1000
   feed: true
 page-layout: full
 toc: false
@@ -21,28 +22,16 @@ panel groups them by axis — click a tag to filter, click *Categories* to clear
 
 | Axis | Meaning | Example |
 |---|---|---|
-| **Section** | Catalog section — the physical domain, listed below | `A` transport closures, `D` fixed bed |
+| **Section** | Catalog section — the physical domain | `A` transport closures, `D` fixed bed |
 | **Structure** | Mathematical structure — *the axis to filter on if you want to reuse code* | `S8` nested reactor–particle coupling |
 | **Tier** | Standing in the literature | `T0` canonical |
 | **Data** | Provenance tier of the dataset | `tier1` open repository, `tier6` reference solution |
 | **Phase** | Phase system | `gas`, `gas-solid` |
 
-### The section letters
-
-The catalog is divided into ten sections by physical domain. Only the sections
-that already have a page appear in the filter panel.
-
-| | | | |
-|---|---|---|---|
-| **A** Transport & closure relations | **B** Catalyst particle & intraparticle transport | **C** Reaction kinetics | **D** Fixed / packed bed reactors |
-| **E** Fluidised beds | **F** Gas–liquid & slurry reactors | **G** Three-phase packed beds | **H** Membrane reactors & separations |
-| **I** Structured & intensified reactors | **J** Adjacent unit operations | | |
-
-Section and structure codes are both defined in full in
-[`docs/taxonomy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/taxonomy.md);
-hovering a tag in the panel shows what it means. Two pages sharing a structure
-code are solved by nearly the same pymrm code even when their physics is
-unrelated — that is the intended route to reuse.
+Every code above is defined in full on the [Taxonomy](taxonomy.qmd) page;
+hovering a tag in the panel also shows what it means. Two pages sharing a
+structure code are solved by nearly the same pymrm code even when their physics
+is unrelated — that is the intended route to reuse.
 
 ::: {#model-listing}
 :::
@@ -107,7 +96,17 @@ unrelated — that is the intended route to reuse.
     "data:tier4": "Digitised from a figure",
     "data:tier5": "Obtained from the authors",
     "data:tier6": "Reference or exact solution, not experiment",
+    "phase:gas": "Single gas phase",
+    "phase:liquid": "Single liquid phase",
+    "phase:gas-liquid": "Two fluid phases",
+    "phase:gas-solid": "Gas with a solid (catalyst, bed, membrane)",
+    "phase:liquid-solid": "Liquid with a solid (electrode, catalyst)",
+    "phase:gas-liquid-solid": "Three-phase (trickle bed, slurry)",
   };
+
+  // Map each axis prefix to the word shown at the head of the case list.
+  var AXIS_LABEL = {};
+  AXES.forEach(function (a) { AXIS_LABEL[a.prefix] = a.label; });
 
   // "S10" must sort after "S2", so compare any trailing digits numerically.
   function naturalKey(s) {
@@ -119,6 +118,48 @@ unrelated — that is the intended route to reuse.
     return (
       ka[0].localeCompare(kb[0]) || ka[1] - kb[1] || ka[2].localeCompare(kb[2])
     );
+  }
+
+  // When a tag is active, print a heading above the cases naming the code and
+  // what it stands for, e.g. "Section A — Transport & closure relations". The
+  // active category carries the class Quarto toggles and a data-category holding
+  // the full prefixed tag.
+  function renderTitle() {
+    var listing = document.getElementById("model-listing");
+    if (!listing) return;
+
+    var actives = Array.prototype.slice.call(
+      document.querySelectorAll(
+        ".quarto-listing-category .category.active"
+      )
+    );
+
+    var heading = document.getElementById("gallery-active-title");
+    if (!actives.length) {
+      if (heading) heading.remove();
+      return;
+    }
+
+    var text = actives
+      .map(function (el) {
+        var full = (el.getAttribute("data-category") || el.textContent || "").trim();
+        var i = full.indexOf(":");
+        var prefix = i > 0 ? full.slice(0, i) : "";
+        var rest = i > 0 ? full.slice(i + 1) : full;
+        var label = AXIS_LABEL[prefix];
+        var meaning = MEANING[full];
+        var head = (label ? label + " " : "") + rest;
+        return meaning ? head + " — " + meaning : head;
+      })
+      .join(" · ");
+
+    if (!heading) {
+      heading = document.createElement("h2");
+      heading.id = "gallery-active-title";
+      heading.className = "gallery-active-title";
+      listing.parentNode.insertBefore(heading, listing);
+    }
+    heading.textContent = text;
   }
 
   function group() {
@@ -190,6 +231,16 @@ unrelated — that is the intended route to reuse.
     cloud.appendChild(frag);
     cloud.dataset.grouped = "1";
 
+    // Re-render the heading whenever Quarto toggles a tag's active state, and
+    // once now for a filter that was active on load (via the URL hash).
+    var observer = new MutationObserver(function () { renderTitle(); });
+    observer.observe(cloud, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    renderTitle();
+
     var title = document.querySelector(".quarto-listing-category-title");
     if (title && !document.querySelector(".gallery-category-hint")) {
       var hint = document.createElement("span");
@@ -205,6 +256,7 @@ unrelated — that is the intended route to reuse.
     group();
   }
   window.addEventListener("load", group); // in case the listing renders late
+  window.addEventListener("hashchange", renderTitle);
 })();
 </script>
 ```
