@@ -1,0 +1,85 @@
+dataset_id: mars-vankrevelen-1954-table2-neumann
+title: SO2 oxidation on silver vanadate, experiments of B. Neumann, as reprinted in Table 2
+status: complete
+
+source:
+  authors:
+    - "Mars, P."
+    - "van Krevelen, D. W."
+  year: 1954
+  container: "Special Supplement to Chemical Engineering Science 3, 41-59"
+  doi: 10.1016/S0009-2509(54)80005-4
+  access: "PDF supplied by the gallery maintainer (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+data_origin:
+  note: >
+    The measurements are NOT the authors' own. They are B. Neumann's
+    (Z. Elektrochem. 34 (1928) 696, the paper's ref [13]), reprinted by Mars &
+    van Krevelen as their Table 2 together with the k' and k'-average columns
+    the authors themselves computed from their eq. (14). Neumann's original was
+    not consulted; every value here is as Mars & van Krevelen print it. In
+    particular the paper states NEITHER the units of the gas-velocity column
+    NOR the gas composition of Neumann's runs - both limitations are carried
+    explicitly on the page.
+  origin_not_consulted:
+    citation: "Neumann, B., Z. Elektrochem. 34 (1928) 696"
+
+acquisition:
+  method: table
+  figure: "Table 2, journal page 51 (PDF page 11)"
+  tool: "poppler pdftoppm at 300 dpi (the scan's native resolution, CCITT-G4 bilevel at 300 ppi per pdfimages -list); values read from cropped renders of the upper and lower halves of the table"
+  procedure: >
+    No number was taken from any text layer (this case previously carried the
+    worst api-text in the repository). Journal page 51 was rendered at the
+    native 300 dpi, the table cropped in two overlapping halves, and each of
+    the 33 rows read from the image. The one parenthesised k' value, (0.444)
+    at 550 C / velocity 300, is flagged in the `bracketed` column exactly as
+    the paper prints it.
+  operator: "Claude (Fable 5) builder agent, C1.3"
+  date: 2026-08-05
+  estimated_error: "none beyond the paper's own rounding (3 significant figures)"
+
+validation:
+  checksum: >
+    The paper's own "k' average" column functions as a checksum on the
+    transcription: the mean of the unbracketed k' rows reproduces the printed
+    average to the last printed digit in 4 of the 9 temperature blocks under the
+    half-ulp criterion the notebook prints; four more differ only by rounding-chain residues from the
+    paper averaging pre-rounded rows, though 475 C's 0.00125 gap exceeds what
+    pre-rounding can explain - a second small unreported slip. The clear
+    exception is the 425 C block, where the four printed rows average 0.31125
+    against a printed 0.315; the mean of the first three rows alone is 0.315
+    exactly, so the paper either mis-averaged or silently excluded its 750 row.
+    These are defects in the PAPER's arithmetic (or unstated exclusions), not
+    in the transcription - a wrong transcribed digit would move a block mean by
+    far more than these residues - and both are reported on the page.
+  round_trip: >
+    The k' column is recomputed on the page from temperature, velocity and
+    conversion via the paper's own eq. (14) and its eq. (8) equilibrium
+    correlation, with one fitted scale and one fitted SO2 inlet fraction:
+    mean deviation 2.7 % on the fit blocks and 3.8 % on the held-out blocks.
+
+fit_or_test: >
+  SPLIT. The blocks at 325-465 C (19 rows) are FIT rows: the global scale C
+  (absorbing the unstated velocity units) and the SO2 inlet fraction of the
+  assumed SO2+air mixture are fitted there, where the equilibrium correction
+  is small. The blocks at 475-550 C (13 unbracketed rows) are TEST rows:
+  nothing further is fitted, and they probe the eq. (8) equilibrium machinery
+  out of sample, including the near-equilibrium behaviour of the parenthesised
+  550 C row.
+
+columns:
+  - {name: temperature_C,        unit: degC, description: "temperature, as printed"}
+  - {name: gas_velocity,         unit: "not stated", description: "gas velocity; the paper does not state units. Treated as proportional to space velocity V_s"}
+  - {name: conversion_pct,       unit: "%",  description: "degree of conversion, as printed"}
+  - {name: k_prime,              unit: "not stated", description: "the authors' k' computed by THEM via their eq. (14); see Table 1 footnote (1)"}
+  - {name: bracketed,            unit: "-",  description: "1 where the paper prints the k' in parentheses (excluded from the paper's own average), else 0"}
+  - {name: k_prime_avg_printed,  unit: "not stated", description: "the paper's per-block 'k' average' column, repeated on each row of its block"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is
+  reproduced.

@@ -2260,6 +2260,55 @@ models:
       demonstration of S13.
     related: [B1.1, B1.2]
 
+  - id: B3.2
+    slug: grain-model
+    title: "Szekely–Evans grain model for gas–solid reactions with a moving boundary"
+    description: >
+      The porous solid as a packing of shrinking-core grains fed by intergrain
+      diffusion — the model that took the structure out of the shrinking core's
+      empirical rate constant. The page rebuilds Part I's semi-infinite grain
+      model with pymrm (coupled gas BVP + grain complementarity ODEs, newton +
+      NumJac), derives the exact closed-form penetration law the quasi-steady
+      equations imply, shows the model collapsing onto the published B3.1
+      shrinking core at the exposed face, and quantifies the diffuse reaction
+      zone the paper could only plot — 0.295 cm wide for the paper's own printed
+      base case, from printed constants alone.
+    section: B
+    status: published
+    page: pages/B3.2-grain-model/
+    tier: T0
+    priority: P1
+    structures: [S3, S12]
+    phases: [gas-solid]
+    predicts:
+      - equivalent penetration (extent of reaction) vs time for a porous solid of shrinking-core grains
+      - gas and local-conversion profiles through the diffuse reaction zone, exactly and numerically
+      - the width of the diffuse reaction zone and the lag Delta = 1/4 + g/30 against the specimen-scale shrinking core
+      - where the kinetic and diffusion-controlled textbook limits each fail, as a function of g = k*Rg/D
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - NumJac
+      - newton
+    reference:
+      authors: ["Szekely, J.", "Evans, J. W."]
+      year: 1970
+      container: "Chemical Engineering Science 25(6) 1091–1107"
+      doi: "10.1016/0009-2509(70)85053-9"
+    data:
+      tier: 6
+      method: none
+      status: final
+      note: >
+        Fitted: nothing (the page's only fit is a labelled diagnostic line on its
+        own computed asymptote). The paper prints parameter sets, ranges and
+        closed forms but no measurements; every E.P.-time result exists only as
+        figures, none digitised. C0 is not printed, so the figures' absolute time
+        axes are unreconstructable; validation is the exact closed form derived
+        from the paper's own equations, the reduction to the published B3.1, and
+        structural/order checks.
+    related: [B3.1, B3.4, B1.1, B2.2]
+
   - id: B3.1
     slug: shrinking-core
     title: "Shrinking-core model for non-catalytic gas–solid reaction"
@@ -2401,6 +2450,64 @@ models:
       bed illustration, whose intermediates are all charts. Neither is needed by
       this page. Runtime ~5 s. One metric sits at or below check_agreement.py's
       ABS_FLOOR and are named on the page as outside CI.
+
+  - id: C1.3
+    slug: mars-van-krevelen-redox
+    title: "Mars-van Krevelen: the redox rate law, read from the paper that derived it"
+    description: >
+      The 1954 origin of redox (Mars-van Krevelen) kinetics prints no rate
+      constant for any aromatic oxidation - the famous constants live in
+      figures only, and the authors disclaim mechanistic proof in the printed
+      discussion. What the paper does print, this page reproduces end to end:
+      the two k' tables (Kuster's and Neumann's SO2 data with the authors'
+      computed intermediates; held-out blocks at 3.80 % mean), the apparent
+      activation energy (8.58 kcal/mol vs "about 9"), the eq. (8) van 't Hoff
+      closure (22.6 vs the printed 23 kcal/mol), and the paper's one complete
+      worked design - the two-stage SO2 converter catalyst split along the
+      optimum temperature curve, 23.6 : 76.4 from printed inputs alone against
+      the printed 23 : 77, by quadrature and a pymrm plug-flow solve agreeing
+      to 0.10 split-points. Equal-parameter discrimination on the reprinted
+      Neumann data puts the MvK integrated form at 1.0 conversion-points rms
+      against 2.85 (first order) and 3.80 (Boreskov 0.8-power): the
+      retardation term measurably earns its place. Four printed defects found
+      and proved from the paper's own neighbours: eq. (16)'s sign-inverted
+      RHS, the alpha_eq-power mismatch between (13a) and (14), the 425 C
+      k'-average slip, and Table 4's unstated stoichiometry settled as
+      pyrite-roaster gas.
+    section: C
+    tier: T0
+    priority: P1
+    structures: [S1]
+    phases: [gas, gas-solid]
+    predicts:
+      - reaction rate
+      - conversion
+      - optimum temperature profile
+      - catalyst distribution
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - "Mars, P."
+        - "van Krevelen, D. W."
+      year: 1954
+      container: "Special Supplement to Chemical Engineering Science 3, 41-59"
+      doi: 10.1016/S0009-2509(54)80005-4
+    data:
+      tier: 2
+      method: table
+      status: complete
+    page: pages/C1.3-mars-van-krevelen-redox/
+    status: published
+    related:
+      - C1.1
+      - C2.1
+      - B1.4
+      - B1.6
+      - D2.2
 
   - id: C2.1
     slug: xu-froment-smr

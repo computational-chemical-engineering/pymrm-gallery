@@ -5,7 +5,8 @@ catalog_reference: Szekely & Evans, Chem. Eng. Sci. 25 (1970)
 priority: P1
 tier: T0
 structures: S3+S12
-status: unclaimed
+status: published
+page: pages/B3.2-grain-model/
 reference:
   authors: ["Szekely, J.", "Evans, J. W."]
   year: 1970
@@ -72,6 +73,40 @@ notes: >
   paper cites Szekely & Evans. Build B3.2 and B3.4 in that order and have B3.4
   import both.
 updated: '2026-08-05'
+build:
+  staged_at: queue_cases/B3.2/page/
+  built: '2026-08-05'
+  runtime_seconds: 37
+  fitted: nothing - every check is a test; the page's only fit is a labelled
+    diagnostic line on its own computed asymptote
+  validation_summary: >
+    Two independent routes to the model: the paper's formulation marched with
+    pymrm (construct_grad/div nu=0, NumJac((n,2)) + newton, complementarity
+    clamp for Eq. 21's 0 <= R'), and an exact closed form E.P./ell =
+    sqrt(6 X(theta)) derived on the page from Eqs. 21+27 via an exposure
+    transformation. Agreement 3.4e-5 / 4.3e-5 (g = 0.5 / 5) over the whole
+    history; both axes refined at observed orders 2.00 / 2.02 INCLUDING
+    grain-exhaustion events; the simulated surface-grain history converges
+    (order ~1.9) onto B3.1's independently published eq. 6 with omega = g/6,
+    which is the reduction the case YAML asked to be built first. Temporal
+    mass balance 1.0e-6 at order 2.00 (catches Eq.21-vs-Eq.27 transcription
+    inconsistency, demonstrated); dimensional closure on the printed Fig. 7
+    constants 2.3e-4 (this check fired during the build: a 6-ell domain
+    returned 48%). Break table recomputes the four transient-route metrics under every one of six
+    defects; no-move cells labelled as blindness findings. Structural items
+    labelled: spatial flux telescoping (4.6e-15) and the G-vs-eq.6 algebraic
+    identity (4.4e-13, below ABS_FLOOR).
+  results_added: >
+    Diffuse-zone width is a travelling constant w(g)*ell = 0.295 cm for the
+    printed Fig. 7 base case, from printed constants only (no C0 exists in the
+    paper); lag Delta = 1/4 + g/30; 5% limit-departure window spans 3x in
+    theta at g = 0.125 and >4 orders of magnitude at g = 500.
+  scope_notes: >
+    Semi-infinite Part I geometry only (nu=0); Part II (finite pellet) remains
+    api-text-only and untouched. No figure digitised; no maintainer gate
+    needed. The trend-claim honesty caveat is carried on the page verbatim.
+    All numerics read off cropped native 300 ppi renders; Fig. 7 caption,
+    Table 1, F_T = 2.75 and Fig. 5's rho = 0.07 verified from crops.
 doi_source: >
   Elsevier full text fetched and read 2026-08-02; upgraded 2026-08-05 to
   verified-against-the-document - title, authors, container, volume, page range

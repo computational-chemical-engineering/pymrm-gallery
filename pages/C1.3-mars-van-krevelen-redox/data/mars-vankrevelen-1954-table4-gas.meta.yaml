@@ -1,0 +1,58 @@
+dataset_id: mars-vankrevelen-1954-table4-gas
+title: Influence of the O2 and SO2 concentrations on the reaction rate (Table 4)
+status: complete
+
+source:
+  authors:
+    - "Mars, P."
+    - "van Krevelen, D. W."
+  year: 1954
+  container: "Special Supplement to Chemical Engineering Science 3, 41-59"
+  doi: 10.1016/S0009-2509(54)80005-4
+  access: "PDF supplied by the gallery maintainer (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+data_origin:
+  note: >
+    The (%O2, %SO2) pairs are stated by the authors as the compositions
+    obtainable "depending on the amount of air used in the combustion of the
+    sulphur or the roasting of the pyrite"; which stoichiometry generated the
+    printed pairs is NOT stated. The page shows by a one-parameter fit that the
+    pairs follow pyrite-roasting stoichiometry (11 O2 per 8 SO2, best-fit
+    1.386, rms 0.13 %-abs) and are inconsistent with sulphur burning
+    (rms 2.8 %-abs). That attribution is an inference and is labelled so.
+
+acquisition:
+  method: table
+  figure: "Table 4, journal page 55 (PDF page 15)"
+  tool: "poppler pdftoppm at 300 dpi (native resolution); values read from a cropped render"
+  procedure: "Read from the cropped native render."
+  operator: "Claude (Fable 5) builder agent, C1.3"
+  date: 2026-08-05
+  estimated_error: "none beyond the paper's own rounding"
+
+validation:
+  round_trip: >
+    The last two columns are pure arithmetic on the first two and are
+    recomputed on the page: all 14 printed values agree with recomputation to
+    within 0.05, i.e. to the paper's own rounding. This is a structural
+    transcription check only - it cannot fail unless a digit was mis-read.
+
+fit_or_test: >
+  The arithmetic recomputation is structural (transcription check). The
+  pyrite-vs-sulphur stoichiometry question fits ONE parameter (moles O2
+  consumed per mole SO2 formed) to the seven composition pairs; both candidate
+  stoichiometries are then scored with nothing further adjusted.
+
+columns:
+  - {name: pct_O2,  unit: "%", description: "O2 content of the converter feed gas, as printed"}
+  - {name: pct_SO2, unit: "%", description: "SO2 content of the converter feed gas, as printed"}
+  - {name: sqrt_O2_SO2_printed,       unit: "-", description: "the paper's printed sqrt(%O2 * %SO2), the n = 1 optimum-space-velocity group"}
+  - {name: sqrt_sqrtO2_SO2_printed,   unit: "-", description: "the paper's printed sqrt(sqrt(%O2) * %SO2), the n = 1/2 group"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is
+  reproduced.

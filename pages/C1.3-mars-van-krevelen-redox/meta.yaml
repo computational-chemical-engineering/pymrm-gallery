@@ -1,0 +1,88 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C1.3
+slug: mars-van-krevelen-redox
+title: "Mars-van Krevelen: the redox rate law, read from the paper that derived it"
+section: C
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [gas, gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 7
+datasets:
+  - mars-vankrevelen-1954-table1-kuster
+  - mars-vankrevelen-1954-table2-neumann
+  - mars-vankrevelen-1954-table3-converter
+  - mars-vankrevelen-1954-table4-gas
+
+validation:
+  - every number transcribed from cropped renders at the scan's NATIVE 300 ppi (pdfimages -list, CCITT-G4 bilevel 300x300); the OCR text layer used for nothing numeric - this case previously carried the worst api-text in the repository (four glyphs for one decimal point)
+  - "fit vs test declared: the Neumann recomputation fits its scale C and SO2 fraction s on the 325-465 C blocks (19 rows) only; the 475-550 C blocks (13 rows) are held out and probe the eq. (8) equilibrium machinery out of sample at 3.80 % mean deviation. The Kuster recomputation (6 rows) is FIT ONLY, its conditions being unprinted. The catalyst-split reproduction fits NOTHING anywhere in its chain"
+  - "printed intermediates recomputed and reconciled: E_app = 8.58 kcal/mol from Table 3's two rate groups against the paper's 'about 9 kcal/mol'; van 't Hoff slope of eq. (8) = 22.60 kcal/mol SO3 against the printed reaction heat 23; both k' tables reproduced to a few per cent; the paper's own 23:77 catalyst split reproduced as 23.6:76.4"
+  - "the k'-average column used as the paper's own checksum on the transcription: 4 of 9 blocks agree to the last printed digit (half-ulp criterion), four more differ only by rounding-chain residues, 475 C carries a second small unreported slip (0.00125, beyond pre-rounding), and the 425 C block prints 0.315 where its four rows average 0.31125 - exactly the first-three-row mean, a defect in the paper's arithmetic, reported not repaired"
+  - "the single bracketed k' (0.444 at 550 C) explained quantitatively: its measured 87.0 % conversion sits at alpha' = 0.968, where a half-point conversion error moves k' by ~14 % against ~5 % at 325 C"
+  - "two printed equations proved wrong from the paper's own neighbouring equations: eq. (16)'s RHS is sign-inverted (the numeric integral of eq. (15) matches the corrected form to 4.8e-12 and misses the printed form by up to 4.8), and eqs. (13a)/(14) disagree by one factor of alpha_eq (the k' recomputation is run both ways: as-printed 3.80 % test mean, exact-integral 2.00 %)"
+  - "defect-injection table on every reported metric: Table 3 '400'->300 moves E_app 8.58->5.81 and the split 23.6->28.3; doubling E moves the split to 12.5; the (13a) rate form moves it to 20.9; dropping the retardation term moves the Neumann test deviation 3.80 %->62.6 %; sulphur-burning stoichiometry moves the Table 4 rms 0.130->2.816"
+  - "structural checks named as such: the Table 4 arithmetic recomputation (max dev 0.049, transcription only), the k'-average checksum, and the pymrm-vs-quadrature split agreement (0.10 split-points at n=2000, first-order convergence 0.35->0.19->0.10) - the two routes share r(alpha), so their agreement tests integration only"
+  - "what no perturbation here can detect, stated on the page: the absolute scale of Neumann's velocity column (absorbed by the fitted C), anything multiplying all rates equally (the split is exactly scale-invariant - demonstrated as a break row that must NOT move), the value of n (inside Table 3's printed group), and the accuracy of eq. (8) against modern equilibrium data (every check is internal to the paper)"
+
+adds: >
+  Nothing to the rate law; eqs. (1)-(16) are transcribed as printed and two of
+  them are corrected from the paper's own neighbours. What is added is the
+  audit and the reproduction. The paper's one complete worked calculation -
+  the two-stage SO2 converter catalyst split along the optimum temperature
+  curve - is reproduced end to end from printed inputs alone (Table 3's two
+  rate groups, eq. 8, the 81/97 % targets, a printed Table 4 feed pair):
+  23.6 : 76.4 against the paper's 23 : 77, by adaptive quadrature and by a
+  pymrm plug-flow solve agreeing to 0.10 split-points, with nothing fitted in
+  the chain and the result shown to move by at most 0.4 points across the
+  whole printed feed-composition range - which is why the unstated plant feed
+  does not undermine it. An equal-parameter discrimination on the reprinted
+  Neumann data puts the MvK integrated form at 1.0 conversion-points rms
+  against 2.85 for first-order-to-equilibrium and 3.80 for Boreskov's
+  0.8-power law: the retardation term measurably earns its place. Four
+  printed defects found: eq. (16)'s transposed RHS, the alpha_eq-power
+  mismatch between (13a) and (14), the 425 C k'-average slip, and Table 4's
+  unstated stoichiometry settled as pyrite-roaster gas (fitted nu = 1.386 vs
+  11/8 = 1.375; sulphur burning excluded at 22x the rms). And an attribution
+  result: the paper prints NO rate constant for any aromatic oxidation - the
+  famous constants live in figures only - and its authors explicitly disclaim
+  mechanistic proof in the printed discussion.
+
+agreement: >
+  Tier 2 in provenance (printed tables), but the measurements are Kuster's
+  (1904) and Neumann's (1928) as REPRINTED by Mars & van Krevelen, with the
+  authors' own computed k' columns. The quantitative results: catalyst split
+  23.6 : 76.4 vs the printed 23 : 77 (two routes, 0.10 points apart);
+  E_app = 8.58 kcal/mol vs "about 9"; van 't Hoff 22.60 vs 23 kcal/mol;
+  Neumann k' held-out blocks 3.80 % mean deviation (2.00 % under the
+  exact-integral reading); Kuster k' within 2.2 % (fit only); discrimination
+  rms 1.01 / 2.85 / 3.80 conversion points for MvK / first-order / Boreskov.
+
+caveats: >
+  The aromatic oxidations - the reactions the mechanism is named for - are
+  untested here because the paper prints no table to test them against:
+  Figs. 2-10 are figure-only and no maintainer is available for figure
+  review, so nothing on this page is read from a figure (Fig. 16's optimum
+  curve is recomputed, not digitised, and is compared to nothing). Neumann's
+  gas composition and velocity units are not printed; both are fitted, which
+  is why the 475-550 C blocks are the held-out test and why the fitted
+  6.4 % SO2 (or 8.0 % under the alpha_eq^2 reading) is a reconstruction, not
+  a fact about 1928. The converter feed composition is likewise assumed (a
+  printed Table 4 pair) with its sensitivity measured at <= 0.4 split-points.
+  The two-point Arrhenius line through Table 3 is extrapolated above 570 C
+  along the optimum curve exactly as the paper's own calculation must have
+  done; capping at 600 C moves the split by 0.1 points. The discrimination
+  compares equal-parameter forms only - a two-parameter LH form cannot be
+  ranked fairly on 2-4 points per block and is not. Kuster's and Neumann's
+  originals were not consulted (origin_not_consulted in the sidecars); every
+  data value is as this paper prints it, which is the correct basis for a
+  page about this paper's calculation but is NOT an endorsement of the 1904
+  and 1928 measurements themselves.

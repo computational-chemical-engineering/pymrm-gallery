@@ -1,0 +1,58 @@
+dataset_id: mars-vankrevelen-1954-table3-converter
+title: Rate constants from technical converter data (Table 3)
+status: complete
+
+source:
+  authors:
+    - "Mars, P."
+    - "van Krevelen, D. W."
+  year: 1954
+  container: "Special Supplement to Chemical Engineering Science 3, 41-59"
+  doi: 10.1016/S0009-2509(54)80005-4
+  access: "PDF supplied by the gallery maintainer (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+data_origin:
+  note: >
+    These are the authors' own derived constants, obtained by them "from
+    technical data on a catalyst which had been in use for some years" in a
+    two-converter plant (journal page 54): the apparent first-order constant
+    k**, the effectiveness ("effectivity of catalyst"), and the
+    diffusion-limited group k* sqrt((mean pO2)^n (pSO2)_0) of their eqs.
+    (15)-(16). The underlying plant measurements are not printed.
+
+acquisition:
+  method: table
+  figure: "Table 3, journal page 54 (PDF page 14)"
+  tool: "poppler pdftoppm at 300 dpi (native resolution); values read from a cropped render"
+  procedure: "Read from the cropped native render; the mid-dot decimals of the 1954 typesetting checked digit by digit."
+  operator: "Claude (Fable 5) builder agent, C1.3"
+  date: 2026-08-05
+  estimated_error: "none beyond the paper's own rounding"
+
+validation:
+  round_trip: >
+    The two kstar_group values give an apparent activation energy of
+    8.58 kcal/mol by the two-point Arrhenius formula; the paper states on the
+    same journal page that "the apparent activation energy proved to be about
+    9 kcal/mol". A transcription error in either value or temperature breaks
+    this closure (400 -> 300 would give 5.8 kcal/mol).
+
+fit_or_test: >
+  TEST inputs. Nothing in this table is fitted on the page; the two
+  kstar_group values are used as printed to calibrate the two-point Arrhenius
+  line behind the catalyst-split reproduction, whose result (23.6 : 76.4) is
+  compared against the paper's separately printed 23 : 77.
+
+columns:
+  - {name: temperature_C,           unit: degC,   description: "temperature of the converter layer examined"}
+  - {name: k_doublestar_per_hr,     unit: 1/hr,   description: "apparent first-order constant k** of the unnumbered equation on journal page 54"}
+  - {name: effectivity_pct,         unit: "%",    description: "effectiveness factor of the catalyst grains, as printed"}
+  - {name: kstar_group_atm_per_hr,  unit: atm/hr, description: "k* sqrt((mean pO2)^n (pSO2)_0), the diffusion-limited rate group of eqs. (15)-(16)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is
+  reproduced.

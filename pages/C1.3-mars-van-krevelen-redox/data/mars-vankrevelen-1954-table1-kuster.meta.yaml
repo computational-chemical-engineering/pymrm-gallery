@@ -1,0 +1,63 @@
+dataset_id: mars-vankrevelen-1954-table1-kuster
+title: SO2 oxidation, experiments of F. W. Kuster, as reprinted in Table 1
+status: complete
+
+source:
+  authors:
+    - "Mars, P."
+    - "van Krevelen, D. W."
+  year: 1954
+  container: "Special Supplement to Chemical Engineering Science 3, 41-59"
+  doi: 10.1016/S0009-2509(54)80005-4
+  access: "PDF supplied by the gallery maintainer (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+data_origin:
+  note: >
+    The measurements are NOT the authors' own. They are F. W. Kuster's
+    (Z. Anorg. Chem. 42 (1904) 453, the paper's ref [12]), reprinted by Mars &
+    van Krevelen as their Table 1 together with a k' column the authors
+    themselves computed from their eq. (14). Kuster's original was not
+    consulted; every value here is as Mars & van Krevelen print it.
+  origin_not_consulted:
+    citation: "Kuster, F. W., Z. Anorg. Chem. 42 (1904) 453"
+
+acquisition:
+  method: table
+  figure: "Table 1, journal page 50 (PDF page 10)"
+  tool: "poppler pdftoppm at 300 dpi (the scan's native resolution, CCITT-G4 bilevel at 300 ppi per pdfimages -list); values read from a cropped render of the table region"
+  procedure: >
+    The scan's OCR text layer is unreliable for numbers (this case previously
+    carried the worst api-text in the repository: four different glyphs for one
+    decimal point in a single table row), so no number was taken from any text
+    layer. Journal page 50 was rendered at the native 300 dpi, cropped to the
+    table, and each entry read from the image. The 1954 typesetting uses a
+    mid-dot decimal separator.
+  operator: "Claude (Fable 5) builder agent, C1.3"
+  date: 2026-08-05
+  estimated_error: "none beyond the paper's own rounding (3 significant figures)"
+
+validation:
+  round_trip: >
+    The k' column is recomputed on the page from the time and conversion
+    columns via the paper's own eq. (14) with one fitted scale and one fitted
+    equilibrium conversion: all six rows are reproduced within 2.3 %. A
+    transcribed digit error in any column would break this closure.
+
+fit_or_test: >
+  FIT only. Both free parameters of the recomputation (scale C and alpha_eq)
+  are fitted on these six rows, because Kuster's temperature and gas
+  composition are not printed anywhere in the source. No held-out claim is
+  made from this table.
+
+columns:
+  - {name: time_s,         unit: s,   description: "time of reaction (contact time), as printed"}
+  - {name: conversion_pct, unit: "%", description: "degree of conversion of SO2, as printed"}
+  - {name: k_prime,        unit: "not stated", description: "the authors' k' = k (mean pO2)^n/(pSO2)_0, computed by THEM via their eq. (14); footnote (1) of the table"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No page image is
+  reproduced.
