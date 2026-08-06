@@ -1,0 +1,109 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B1.7
+slug: mears-criteria
+title: "The Mears criteria: what each transport-limit test actually guarantees"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S3, S4]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 235
+datasets: []
+
+validation:
+  - every criterion and every numeric threshold transcribed from 300 dpi renders (the scan's native resolution - CCITT-G4 bilevel at 300 ppi, so higher renders only interpolate) of journal pages 541-547, because the text layer eats exactly the load-bearing symbols - the effectiveness factor extracts as a bare comma, eq. 23's 0.4 as a degree sign followed by an apostrophe-4, eq. 25's 5.3 as a degree sign and a dash
+  - the transcription checked against four paper-internal identities with real resolving power, each relating printed constants that were read independently - 0.22 vs 1/sqrt(20), "four and a half times" vs sqrt(20), Carberry's 0.1 vs 2x Mears' 0.15 (under the bulk-referenced reading of Carberry's eta; the surface-referenced reading gives factor 1.8 and the page prints the deviation both ways, 9.1 and 10.0 %), and eq. 15's Biot threshold of 10 recovered as 2 x 0.75/0.15 from the unrounded constant, which pins 0.75, 0.15 and 10 at once
+  - the perturbation slope behind the whole intraparticle family measured from the exact branch at its kinetic end, d(1-eta)/dPhi -> n/15, confirming 0.75 as the constant the paper says it rounded to 1
+  - the headline number (the deviation eq. 1 admits at its bound, 6.47 %) computed three independent ways - closed form, pymrm finite volume, deterministic shooting - agreeing to 1.0e-07; a tenth defect row breaks ONE route only and watches the spread explode to 0.19
+  - pymrm against the shooting reference at the audited threshold states, Dirichlet and film boundary conditions, isothermal and Weisz-Hicks kinetics, at measured order 1.95-2.00; the axial reactor against the classical closed-vessel closed form at order 1.95
+  - "the film criteria audited by exact algebra (the lumped balances make the deviation a closed function of the observables) and cross-checked by dimensional solves that never touch the closed forms: mass to 0 in double precision, heat to 1.8e-15"
+  - "defect-injection table with thirteen rows: one deliberate null (solver tolerance, moves the threshold 1.5e-05), and two defect classes injected after adversarial verification caught live instances on the first staged version - crossing-selection convention and scan-grid density, the classes behind the corrected fold bound (5.7 -> 7.2 %) and joint-pass worst (9.0 -> 11.1 %); a final cell maps every one of the 53 agreement metrics to the break row that moves it or labels it structural; three metrics below check_agreement's ABS_FLOOR of 1e-12 are named as outside the CI regression suite"
+  - "cross-page reconciliations against published B1.4 numbers computed here independently: eta at Phi = 1 for the inhibited Langmuir-Hinshelwood rate, 1.0483 against B1.4's printed 1.0483, and the slab eta at Phi = 1, 0.6948, reproduced inside the break table"
+
+adds: >
+  Nothing to the criteria themselves - each is one line of algebra, reproduced
+  exactly as printed. What is added is the audit 1971 could not afford: the
+  pellet, film and dispersion problems solved exactly at every criterion's own
+  boundary, so each stated "less than 5 %" becomes a measured number. Eq. 17,
+  the most-quoted "Mears criterion", is EXACT at first order - the film
+  balance makes the deviation identically omega/3 - and zero order is exactly
+  unaffected, as the paper says. The intraparticle family (eqs. 1-3, 9) is
+  uniformly liberal by its own admitted rounding of 0.75 to 1: at the printed
+  bounds the exact deviation is 6.3-6.8 %, at the unrounded 0.75/n it is
+  4.8-5.1 %, and the measured perturbation slope n/15 makes 0.75 the honest
+  constant. Eq. 9's compensation exclusion zone is given a width: even with
+  the unrounded constant restored, the bound over-certifies for gamma*beta in
+  (0.22, 1.16) around n = 1 at gamma = 30 - markedly asymmetric - and
+  Petersen's 13 there admits ~38 %, a transition-region marker, not a 5 %
+  test. Past gamma*beta ~ 1.95, where the +-5 % band has three crossings and
+  the bound overtakes the kinetic-side one, the unrounded bound re-admits a
+  mild 5.0-5.2 % up to the paper's own beta range edge. And eq. 9 is immune
+  to the observable fold B1.4 measured for eq. 1: on the same folded branch
+  (beta*gamma = 24) eq. 1's band certifies eta ~ 3.1e3 while eq. 9's band
+  edge admits 7.2 % - a root-found supremum; a grid max under-reads it, which
+  the break table now injects - because its bound has shrunk below the
+  ignited branch's reach. Eq. 14 is liberal by construction but only just
+  (5.10-5.12 %); film-lumped observables determine the deviation, so the
+  multiplicity blind spot the pellet observable has does not exist at the
+  film. Eq. 21 fails structurally at low Biot number - its left side vanishes
+  with the pellet gradient while the deviation moves into the film - and
+  passing eqs. 1, 17 and 21 at once still admits 11.1 % at an interior
+  optimum Bi_m ~ 6.3 where two criteria bind at once, because 5 % tolerances
+  stack and no criterion in the paper says so. Mears' own axial criterion
+  (eqs. 30/32) is the one that holds: 3.9-4.95 % over all conversions and
+  orders tested (3.8-4.7 % under the co-varying-length reading, also
+  computed), asymptotically sharp, where Petersen's alpha < 1 admits
+  23-51 %.
+
+agreement: >
+  Not applicable in the experimental sense - tier 6. The checks with resolving
+  power are the solver comparisons: the headline deviation computed three ways
+  agreeing to 1.0e-07 (a route-local defect moves this to 0.19); pymrm against
+  shooting at the threshold states to 8.5e-08 (isothermal, order 1.95),
+  8.2e-08 (Weisz-Hicks, order 2.00), 3.0e-08 (film boundary condition, order
+  2.00); the pymrm axial reactor against the closed-vessel closed form to
+  7.1e-08 at n_z = 1600 (order 1.95); and the dimensional film cross-checks
+  at 0 and 1.8e-15. The paper's own printed constants are reproduced from
+  other printed constants (0.22, "four and a half", the Biot threshold 10)
+  and its prose statements are given numbers (Petersen's 13 -> ~38 %; the
+  80 % compensation statement -> 0.45, conservative; eq. 12's endothermic
+  failure -> 28 % at gamma*beta = -1). Everything else on the page is an
+  audit finding rather than an agreement, and is labelled that way.
+
+caveats: >
+  Provenance tier 6 and emphatically NOT experimental validation - the source
+  contains no measurement, no figure and no table beyond its nomenclature.
+  This paper is a review; the three criteria "derived by the author" are
+  derived in two companion papers (Mears 1971a Chem. Eng. Sci. "in press" for
+  the axial criterion; Mears 1971b J. Catal. 20, 127 for the interphase and
+  interparticle heat criteria), and NEITHER COMPANION WAS CONSULTED - the
+  page audits the criteria exactly as the review states them, which is how
+  the literature cites them. The remaining criteria are attributed by the
+  review to Weisz & Prater, Weisz, Hudgins, Anderson, Kubota & Yamanaka,
+  Weisz & Hicks, Carberry, Satterfield et al., van den Bleek et al. and
+  Petersen; none of those originals was consulted either. Three groups of
+  printed criteria are stated but not audited, each with the reason on the
+  page: eqs. 4-5 (volume-change modulus; the paper's own position is that the
+  dilute case makes it negligible - note the paper itself prints theta with
+  opposite signs in eq. 4 and its nomenclature), eqs. 23-27 (interparticle;
+  they test reactor-scale fields against correlations living in other
+  papers), and the thermal part of eqs. 21-22 (needs the two-field film
+  pellet, out of scope and said so). The eq. 9 window is measured at
+  gamma = 30, n = 1 and depends mildly on both; eq. 9 threshold numbers
+  outside the fold cell are DEEP-side band crossings (the largest-Phi
+  boundary state - above gamma*beta ~ 1.45 the band has three crossings and
+  the page prints all of them; the fold cell's suprema are root-found
+  band-edge states). The joint worst-case 11.1 % is a root-found supremum at
+  the interior Bi_m optimum, tight for the three criteria as stated; the
+  earlier 9.0 % was a sweep artifact, kept as break row (xi). All pellet
+  results assume the sphere, steady state, constant properties and the
+  Prater relation, carried without test here (the film and Le != 1
+  breakdowns are on B1.6).

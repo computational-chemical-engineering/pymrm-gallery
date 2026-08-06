@@ -2137,6 +2137,58 @@ models:
       as verified on the print; it is not.
     related: [B1.1, B1.3, B1.4, B1.6, J4.7]
 
+  - id: B1.7
+    slug: mears-criteria
+    title: "The Mears criteria: what each transport-limit test actually guarantees"
+    description: >
+      Mears' 1971 review collects the diagnostic inequalities in observables -
+      intraparticle, interphase, interparticle - that decide whether a measured
+      rate is chemistry or transport, almost all claiming a 5 % tolerance. This
+      page solves the pellet, film and dispersion problems exactly at every
+      criterion's own boundary and reports what each actually admits: eq. 17 is
+      exact at first order, the intraparticle family is liberal by exactly its
+      admitted 0.75-to-1 rounding, eq. 9 has a measured window of no power
+      around the compensation point, the combined criterion fails structurally
+      at low Biot number and tolerances stack to 11 %, and Mears' own axial
+      criterion is the one that holds its claim everywhere.
+    section: B
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S3, S4]
+    phases: [gas-solid]
+    predicts:
+      - deviation admitted at each criterion's boundary
+      - exact 5 % thresholds across kinetics
+      - eq. 9 compensation window of no power
+      - stacked-tolerance worst case for combined criteria
+      - axial-dispersion length penalty at the eq. 30 boundary
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_convflux_upwind
+      - interp_cntr_to_stagg_tvd
+      - compute_boundary_values
+      - NumJac
+      - newton
+      - clip_approach
+    reference:
+      authors: ["Mears, D. E."]
+      year: 1971
+      container: "Industrial & Engineering Chemistry Process Design and Development 10(4) 541-547"
+      doi: 10.1021/i260040a020
+    data: {tier: 6, method: analytical, status: complete}
+    note: >
+      The paper is a review; its three "derived by the author" criteria come
+      from two companion papers (Mears 1971a Chem. Eng. Sci. in press; Mears
+      1971b J. Catal. 20, 127), neither consulted - the page audits the criteria
+      as the review states them, which is how the literature cites them. The
+      scan's text layer destroys the criteria's symbols; everything was read
+      from 300 dpi native renders, and the PDF opens with the tail of the
+      preceding article.
+    page: pages/B1.7-mears-criteria/
+    related: [B1.4, B1.1, B1.5, B1.6, B1.2, B1.3, A2.1, D2.2, F3.1]
+
   - id: B1.4
     slug: weisz-prater-criterion
     title: "The Weisz-Prater criterion: what an observed rate can tell you"

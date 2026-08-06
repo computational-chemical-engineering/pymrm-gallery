@@ -4,7 +4,8 @@ title: Mears criteria
 catalog_reference: IEC Proc. Des. Dev. 10 (1971)
 priority: P1
 tier: T0
-status: unclaimed
+status: published
+page: pages/B1.7-mears-criteria/
 reference:
   authors: ["Mears, D. E."]
   year: 1971
@@ -62,7 +63,41 @@ notes: >
   agree on conventions.
   Cross-link: the criteria consume B1.1/B1.3 (effectiveness factor) and A3.4/A3.5
   (film coefficients).
-updated: '2026-08-05'
+  BUILT 2026-08-06, staged at queue_cases/B1.7/page/, status ready for
+  verification. A previous session's partial build_page.py was inherited but
+  NOT trusted: the paper was re-read page by page from fresh 300 dpi native
+  renders (all criteria and constants verified), and execution exposed and
+  fixed four defects in the inherited script - a dead-bracket dimensional heat
+  check (rewritten to parametrise the film's low branch by T_s), a
+  perturbation-slope check sampling the WRONG END of the branch (deep
+  diffusion instead of Phi -> 0; it claimed "confirmed" at 99 % error), a
+  "void window" definition with no sign change (the printed bound is liberal
+  everywhere - redefined against the unrounded 0.75, giving the asymmetric
+  window (0.222, 1.159) at gamma = 30), and a fold-immunity claim resting on a
+  zero count that a denser grid refutes (recast as worst-certified-deviation).
+  FIXED 2026-08-06 after adversarial verification (review/verification.md,
+  verdict safe-after-fixes): the fold-band worst and the joint-pass worst were
+  BOTH grid-limited extrema - the shipped 5.7 % is 7.2 % at the root-found
+  band edge (the verifier's own 6.8 % was still their grid), and the shipped
+  9.0 % is 11.1 % at the interior Bi_m optimum ~6.3 with the pass-set edge
+  root-found (the verifier's 9.96 % at Bi_m = 7 was still t-grid-limited);
+  cross()'s docstring said the OPPOSITE of what the code returns (it returns
+  the deep-side, largest-Phi crossing) - docstring fixed, the three-crossing
+  structure above gamma*beta ~ 1.45 printed, and the second mild
+  over-certification regime past gamma*beta ~ 1.95 (5.03-5.22 % to gb = 3)
+  measured and scoped into the window claim; Carberry's 10.0 % now printed
+  under both readings (9.1 % under Mears' surface-referenced eta); the axial
+  definition aligned to the fixed-Pe_L implementation with the co-varying
+  reading computed beside it (3.80-4.73 %); the theta sign wrinkle put in the
+  page prose. Two break rows added for the verifier's uncovered defect
+  classes (crossing selection, scan-grid density), both live instances.
+  Headline numbers: eq. 17 exact 5 % at n = 1; intraparticle family 6.3-6.8 %
+  at printed bounds (the 0.75 rounding IS the 5 % claim); joint pass of
+  eqs. 1+17+21 still admits 11.1 %; eq. 1's band certifies eta ~ 3.1e3 on the
+  folded branch vs eq. 9's 7.2 %; axial criterion holds, 3.9-4.95 %. Runtime
+  ~230 s. 53 agreement metrics, all mapped to break rows or labelled
+  structural; three named as below ABS_FLOOR.
+updated: '2026-08-06'
 doi_source: >
   crossref-verified 2026-08-02, upgraded 2026-08-05 to
   verified-against-the-document via the ACS download stamp
