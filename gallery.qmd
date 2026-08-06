@@ -8,6 +8,7 @@ listing:
   sort: "categories"
   categories: cloud
   fields: [title, description, categories]
+  page-size: 1000
   feed: true
 page-layout: full
 toc: false
@@ -18,31 +19,24 @@ against, and a `pymrm` reproduction with a quantitative agreement metric.
 
 **Filtering.** Every page carries tags on five axes at once. The **Categories**
 panel groups them by axis — click a tag to filter, click *Categories* to clear.
+Selecting a tag prints its code and meaning above the list. The
+[Taxonomy](taxonomy.qmd) page defines every axis and code in full.
 
 | Axis | Meaning | Example |
 |---|---|---|
-| **Section** | Catalog section — the physical domain, listed below | `A` transport closures, `D` fixed bed |
+| **Section** | Catalog section — the physical domain | `A` transport closures, `D` fixed bed |
 | **Structure** | Mathematical structure — *the axis to filter on if you want to reuse code* | `S8` nested reactor–particle coupling |
 | **Tier** | Standing in the literature | `T0` canonical |
 | **Data** | Provenance tier of the dataset | `tier1` open repository, `tier6` reference solution |
 | **Phase** | Phase system | `gas`, `gas-solid` |
 
-### The section letters
+Two pages sharing a structure code are solved by nearly the same pymrm code even
+when their physics is unrelated — that is the intended route to reuse. Hovering a
+tag in the panel shows what it means; the [Taxonomy](taxonomy.qmd) page lists them
+all.
 
-The catalog is divided into ten sections by physical domain. Only the sections
-that already have a page appear in the filter panel.
-
-| | | | |
-|---|---|---|---|
-| **A** Transport & closure relations | **B** Catalyst particle & intraparticle transport | **C** Reaction kinetics | **D** Fixed / packed bed reactors |
-| **E** Fluidised beds | **F** Gas–liquid & slurry reactors | **G** Three-phase packed beds | **H** Membrane reactors & separations |
-| **I** Structured & intensified reactors | **J** Adjacent unit operations | | |
-
-Section and structure codes are both defined in full in
-[`docs/taxonomy.md`](https://github.com/computational-chemical-engineering/pymrm-gallery/blob/main/docs/taxonomy.md);
-hovering a tag in the panel shows what it means. Two pages sharing a structure
-code are solved by nearly the same pymrm code even when their physics is
-unrelated — that is the intended route to reuse.
+::: {#gallery-category-title}
+:::
 
 ::: {#model-listing}
 :::
@@ -199,12 +193,88 @@ unrelated — that is the intended route to reuse.
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", group);
-  } else {
-    group();
+  // When a tag is active, print a heading above the list that spells out the
+  // code and what it stands for -- e.g. "Section A -- Transport & closure
+  // relations" -- so the short chip label is not the only clue to what is being
+  // shown. The active category is read from Quarto's own `.category.active`
+  // element, so this stays in step with whatever the click handlers and the URL
+  // agree on.
+  //
+  // Quarto stores the category in `data-category`, base64-encoded from its
+  // URL-encoded form (e.g. "sec:A" -> "c2VjJTNBQQ=="). Decode it, but only trust
+  // the decoded value if it looks like one of our prefixed tags, so a future
+  // Quarto that stored the value verbatim still works.
+  function decodeCat(raw) {
+    if (!raw) return null;
+    try {
+      var d = decodeURIComponent(atob(raw));
+      if (d.indexOf(":") >= 0 || MEANING[d]) return d;
+    } catch (e) {}
+    return raw;
   }
-  window.addEventListener("load", group); // in case the listing renders late
+
+  function describe(full) {
+    var i = full.indexOf(":");
+    var prefix = i > 0 ? full.slice(0, i) : "";
+    var rest = i > 0 ? full.slice(i + 1) : full;
+    var axis = AXES.filter(function (a) { return a.prefix === prefix; })[0];
+    var axisLabel = axis ? axis.label : prefix;
+    var meaning = MEANING[full];
+    return (
+      (axisLabel ? axisLabel + " " : "") +
+      rest +
+      (meaning ? " — " + meaning : "")
+    );
+  }
+
+  function updateTitle() {
+    var host = document.getElementById("gallery-category-title");
+    if (!host) return;
+    var active = document.querySelector(
+      ".quarto-listing-category .category.active"
+    );
+    var full = active ? decodeCat(active.getAttribute("data-category")) : null;
+    if (!full) {
+      host.textContent = "";
+      host.style.display = "none";
+      return;
+    }
+    host.textContent = describe(full);
+    host.style.display = "block";
+  }
+
+  function wireTitle() {
+    if (document.body.dataset.catTitleWired !== "1") {
+      // Any click in the category sidebar can change the active filter (a chip,
+      // or the "Categories" title that clears it); read the settled state a tick
+      // later. Delegated on document so the clear-title click is covered too.
+      document.addEventListener("click", function (e) {
+        if (
+          e.target.closest &&
+          e.target.closest(
+            ".quarto-listing-category, .quarto-listing-category-title"
+          )
+        ) {
+          setTimeout(updateTitle, 0);
+        }
+      });
+      document.body.dataset.catTitleWired = "1";
+    }
+    updateTitle();
+  }
+
+  function init() {
+    group();
+    wireTitle();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+  window.addEventListener("load", init); // in case the listing renders late
+  window.addEventListener("hashchange", updateTitle); // filter set from the URL
 })();
 </script>
 ```
