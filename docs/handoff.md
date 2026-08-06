@@ -1,32 +1,77 @@
-# Handoff — state as of 2026-08-03
+# Handoff — state as of 2026-08-06
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
 
 **Read [“The check that cannot fail”](#the-check-that-cannot-fail--the-defect-the-verifier-exists-to-catch)
-before writing any validation cell.** Across 2026-07-31 to 08-03, twenty-four
-pages went through adversarial verification and **eighteen** carried some form of
+before writing any validation cell.** Across 2026-07-31 to 08-06, roughly forty
+pages went through adversarial verification and **most** carried some form of
 it — a check that could not fail, a claimed sensitivity the check did not have,
-or an independence claim that did not survive checking. It is by a wide margin
-the most common finding in this repository, and it has now been found **five
-times inside the break table or diagnostic built to guard against it**: `A3.4`,
-`D2.1`, `A1.5` (14 of 36 rows in the headline wall-law fit were an identity),
-`A1.8` (every check sat on the dense branch, so two constants could be deleted
-outright), and `A4.7` (the sole diagnostic differentiated the same object it
-tested, so it was guaranteed for any parameter values).
+or an independence claim that did not survive checking. It has been found
+repeatedly **inside the break table or diagnostic built to guard against it**
+(`A3.4`, `D2.1`, `A1.5`, `A1.8`, `A4.7`, `A3.12`, `C2.10`'s padded bracket,
+`B1.7` twice). Two rules now stand in `AGENTS.md` because of it:
 
-**A second class was found and swept on 2026-08-02**: a page that loads another
-page's CSV and does not read that page. See the rule in
-[`AGENTS.md`](../AGENTS.md) under Data rules, and
-[`cross-page-audit-2026-08-02.md`](cross-page-audit-2026-08-02.md). It reached a
-reported number on `J3.1` and the Reuse advice on `A1.6`.
+1. **Every metric in `agreement.json` needs a break row that moves it** —
+   measured on the 2026-08-05 sweep, the strongest single predictor of page
+   quality. Where impossible, label the metric structural and say what it
+   cannot detect.
+2. **At least one headline must be computed a second, independent way.** A
+   break row perturbs an input and watches a number move: it establishes
+   sensitivity, never correctness, and cannot catch a baseline that is wrong
+   (or right) by accident. Caught this way: a floating-point headline
+   (`A3.1`), a discretisation-limited one (`A3.3`), a cancellation (`A3.15`),
+   a metric read h/2 short of the outlet (`A2.6`, published 11.4 % low while
+   perfectly stable), and grid-limited extrema (`B1.7`, where even the
+   verifier's corrected number was still a grid max — root-find extrema,
+   never sample them).
+
+**A second class — a page that loads another page's CSV and does not read that
+page** — was found and swept on 2026-08-02; see the rule in
+[`AGENTS.md`](../AGENTS.md) under Data rules and
+[`cross-page-audit-2026-08-02.md`](cross-page-audit-2026-08-02.md).
+
+**Reading scans**: check native ppi first (`pdfimages -list`; disk holds
+150–600 ppi, mostly 300 bilevel), render at native, and **crop every numeric**
+— whole-page legibility says nothing about digit legibility. The text layer
+lies quietly: it silently altered digits into plausible wrong numbers 24 times
+in one table (`A4.5`), prints European thousands separators (`C2.10`), and
+opens some files with the *previous* article. **A filename is not a paper** —
+five distinct mis-identification incidents are documented in
+[`papers-on-disk.yaml`](papers-on-disk.yaml)'s comments; `C2.5`'s wrong DOI
+bought the wrong paper (container was not checked), so request that one by
+title.
 
 ## Built and live
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-40 page directories, 41 published catalog entries, both CI workflows green.
-(The two counts differ because `B1.1` covers `B1.5` and `A2.1` covers `A2.2`.)
+58 page directories, 59 published catalog entries, 68 models.yaml entries.
+(Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
+covers `D3.4`.) `check_agreement.py`: 57 pages, 0 regressions at handoff.
+
+### Added 2026-08-05 to 08-06 — eighteen pages
+
+| Page | What it shows | Headline |
+|---|---|---|
+| `A2.6` Gunn dispersion | Pe → 2 is a property of the sphere *fit*, not the model | cylinders give 1.70 and 1.17; the published outlet metric was 11.4 % low, caught by a second route |
+| `A2.8` Zwietering | Tables 1 and 2 have their conversion bodies **interchanged** | proved from the paper's own closed forms + its own p. 12 prose; 52 held-out numbers, zero fitted |
+| `A3.1` Whitman two-film | His own "confirmation" does not test the two-film structure | deleting the liquid film moves the prediction *closer* (+0.054 %); headline was floating-point round-off, now analytic |
+| `A3.3` Danckwerts renewal | The √D exponent is not testable from this paper | both fits have zero residual **by construction**; a real test needs a factor 1.53 in D |
+| `A3.6` Calderbank–Moo-Young | Three misprints proved in the F2.3 order | eq. (6) cannot produce eq. (7); citation read past a text layer claiming "1981, vol 19" |
+| `A3.7` van 't Riet | Eqs. 8/9 **originate** in this review; one exponent of four is unsupported | the fixer's diameter-for-height bug became the page's best break row |
+| `A3.8` Onda | A structural ceiling (2/3, 0.800) that two of his own six exponents violate | fourteen constants verified across two separate typesettings in the same PDF |
+| `A3.12` Yagi–Kunii | "Two independent tabulations" were one reading — 0.000000 % thrice | γ is identifiable after all; figure review still owed (see decisions page) |
+| `A3.15` Graetz 1882 | His 3-constant calibration cannot fail; computing the constants breaks it | 15.6 % spread, 20σ→8σ range stated; holds out of sample on 48 unfitted runs |
+| `A4.5` Fuller–Schettler–Giddings | The held-out test the authors said was impossible: LOO +31 % | text layer silently altered 24 of 340 digits; φ′ impossible as printed |
+| `A4.6` Chapman–Enskog | 3.65 % is a joint statement about theory *and* parameter provenance | same theory: 4.13 % (viscosity-fit constants) vs 10.23 % (virial) |
+| `B1.7` Mears criteria | Passing three criteria at once still admits **11.15 %** | every extremum root-found after two rounds of grid-limited numbers |
+| `B2.2` Froment–Bischoff coking | The profile diagnostic gets an amplitude; 3 printed claims corrected | Voorhies exponents 0.38–0.7 provably unreachable by parallel-exponential (≥ 1) |
+| `B3.2` Grain model | The quasi-steady model is **exactly integrable** (not in the paper) | E.P./ℓ = √(6X(θ)), lag Δ = 1/4 + g/30; diffuse zone 0.295 cm from printed constants |
+| `C1.1` LHHW (Hougen & Watson) | A 1946 worksheet error diagnosed: one corrupted Σ(R·p_S) behind 8 rows | ±8.44 % is 16.9 % in rate space; d vs h structurally inseparable at this design |
+| `C1.3` Mars–van Krevelen | **Every number is SO₂**; the aromatic side the mechanism is named for has none | the authors' own discussion disclaims mechanistic proof; converter split 23.6:76.4 vs 23:77 |
+| `C2.10` Froment o-xylene | Hot spots reproduced; the padded bracket unpadded | 2-D runaway 0.008 °C *outside* the paper's bracket — reported, not padded; covers `D3.4` |
+| `H1.9` M–S membrane mixture | Data discriminate decisively between models and agree with neither | Funke +4.3 %, Bakker 3.38×; without exchange terms 31× low |
 
 ### Added 2026-08-02 to 08-03 — six pages
 
@@ -213,39 +258,40 @@ bulk-download tool.
 
 ## Recommended next moves
 
-**The section-A batch is finished and the queue is now genuinely paper-bound.**
-216 of 266 cases need a PDF, 41 are published, 5 are covered, 3 deferred, and at
-the time of writing exactly **one** case (`H1.9`) is buildable from material in
-hand. Every PDF on disk has been consumed.
+**Session halted 2026-08-06 with 29 cases dispatchable — papers in hand, no
+maintainer input needed.** The loop that works: dispatch a builder per case →
+adversarial verifier on every ready page → fix (inline for wording, a fixer
+agent for anything touching numbers) → integrate with
+`scripts/splice_entry.py` (read its docstring first) → check_metadata →
+run_pages --changed → check_agreement → pull --rebase → push. Keep ~5 agents
+live; park blocked cases with a `resume:` block, never wait.
 
-1. **Ask for papers in publisher batches, not one at a time.** The marginal cost
-   of a second paper inside one login is near zero, and
-   [`source-sweep-2026-08-02.md`](source-sweep-2026-08-02.md) ranks them that
-   way. The ACS batch is the best single ask: **9 papers unblocking 11 T0/P1
-   cases**, and ACS scans have the best text layers in the repo. One item is
-   free — Luedeking & Piret's 2000 Biotechnol. Bioeng. reprint is open access and
-   downloads from a browser (curl gets a Cloudflare 403), unblocking `J4.4`.
-2. **The textbook-canonical approval is banked but inert.** The ~20 T0 cases are
-   approved to build without the original paper, but `AGENTS.md` still forbids
-   writing from memory, and **none of the monographs is on disk**
-   (Bird/Stewart/Lightfoot, Taylor & Krishna, Levenspiel, Froment & Bischoff).
-   One book unlocks more than any paper on the dashboard. Until then the class
-   cannot move.
-3. **Five cases do not belong in `needs-paper` at all.** `D1.1`–`D1.5` are T0/P1
-   with a *structure code* rather than a citation as their `catalog_reference`.
-   No paper unblocks them; they need a scope decision.
-4. **Work the reprint route.** Nine pages came from it. The test, from
-   `AGENTS.md`: a paper on disk that prints the result *and* names or tests it.
-   Two verdicts bound it — `E1.1` failed because Kunii & Levenspiel print the
-   two-phase relation but never name, attribute or test it; `J3.3` *passed* the
-   test and was still `covered`, because the theory is J3.4's structure. Ask both
-   questions, in that order. One new route is already located and unused:
-   **`A3.1` Whitman 1923 is reprinted verbatim in IJHMT 5 (1962) 429–433** under
-   its own DOI.
-5. **Some cases need no paper ever.** `A1.8`'s origin is an *unpublished* 1987
-   report, so the DOE Theory Guide on disk is the citable published source and
-   the case is closed rather than parked. Check the reference list of what you
-   have before adding to the request pile.
+1. **The dispatchable queue, by tier** (status `unclaimed` in `queue_cases/`):
+   T0/P1 `B1.3`, `B2.1` (Voorhies — `B2.2` deliberately left it the empirical
+   rival's own page), `B2.3`, `C1.2`, `C2.3` (ammonia; the on-disk file carries
+   another file's title — identity is settled by the ACS download stamp, see
+   pdf-findings), `D3.2`; T1/P1 `B3.4`, `B3.5`, `B3.9`, `C2.4`, `D3.3`; then
+   the A3 packing/heat-transfer cluster (`A3.9`–`A3.14`, note `A3.14` is
+   figure-only and will stall at the review gate; `A3.13`'s documents lack the
+   radiation term the case name promises — build the core, name the gap),
+   `A2.9` (both parts on disk), `A2.7`, and the T2/T3 tail (`A1.9` has zero
+   text layer — rasterise everything).
+2. **Open maintainer items** (also on the decisions dashboard): `A3.12`'s owed
+   figure review (two digitisations of the authors' own computed curves,
+   load-bearing, unreviewed); the `D1.1`–`D1.5` scope decision
+   (structure codes, not citations — decision page linked from the dashboard);
+   the curated paper ask in [`papers-requested.yaml`](papers-requested.yaml)
+   (textbooks first — the canonical class is STILL inert, no qualifying book on
+   disk; then the ACS/Wiley/Elsevier batches; `C2.5` by title, not DOI).
+3. **Dashboards**: regenerate with `python scripts/dashboards.py` (never
+   commit base64 payloads) and republish to the maintainer's two existing
+   artifact URLs — they are pinned in the session-start prompt and in
+   [`papers-requested.yaml`](papers-requested.yaml)'s history; minting new URLs
+   loses the maintainer's bookmarks.
+4. **Reprint route and no-paper-needed closures still pay**: `A3.1`-style
+   verbatim reprints, and `A1.8`-style discoveries that the origin was never
+   published. Check the reference list of what is on disk before adding to the
+   request pile.
 
 ### When a printed constant is wrong, prove it from the paper's own results
 
