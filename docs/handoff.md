@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-08-06
+# Handoff — state as of 2026-08-07
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -48,7 +48,9 @@ title.
 
 58 page directories, 59 published catalog entries, 68 models.yaml entries.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 57 pages, 0 regressions at handoff.
+covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
+`check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
+published nothing — see the wave note under Recommended next moves.
 
 ### Added 2026-08-05 to 08-06 — eighteen pages
 
@@ -274,6 +276,44 @@ D1.x is still open), the ACS/Wiley singles (`J1.1` Langmuir, `J1.3` BET,
 2008) and the Elsevier set (`D2.4`, `J1.10`, `J2.1`, `J2.3`).
 Dispatch the next wave per [`playbooks/coordinator.md`](playbooks/coordinator.md)
 — playbook prompts, model tiers, one wave per session.**
+
+**Wave of 2026-08-07 — ALL FIVE BUILDERS DIED ON AN API SESSION LIMIT. NOTHING
+PUBLISHED, AND FIVE CASES NOW CARRY UNVERIFIED PARTIAL WORK ON DISK. Read this
+before dispatching `A3.5`, `E1.1`, `A4.1`, `A2.4` or `J1.3`.** The wave was
+dispatched normally (playbook prompts, one case each, sources all on disk and
+identified). Every one of the five was killed mid-task by the same account-level
+session limit — not by anything about the cases, and not at any checkpoint. What
+they left in `queue_cases/<ID>/page/`:
+
+| Case | On disk | State |
+|---|---|---|
+| `A2.4` | build_page.py, **executed** index.ipynb, agreement.json, 1 CSV + sidecar | furthest — but the notebook is **older than the script**, and the agent's last line was *"Now fix the eq. (4) scaling bug"*: it had found a defect in its own eq. (4) machinery and was editing when it died |
+| `J1.3` | build_page.py, index.ipynb, 6 CSVs **each with a sidecar** | notebook also older than the script; no agreement.json ever written |
+| `A3.5` | build_page.py, 7 CSVs, **no sidecars** | never executed |
+| `E1.1` | build_page.py, 3 CSVs + sidecars, models_entry.yaml | never executed; supersedes the "nothing built, deliberately" line on that case |
+| `A4.1` | build_page.py only | never executed |
+
+None has `meta.yaml`, `README.md`, or a verifier's `review/`. **No page is
+`ready`; no digit anywhere in those files has been checked by a second pair of
+eyes.** All five stay `status: unclaimed` on purpose — `in-progress` would hide
+them from the next wave, since the coordinator picks from `unclaimed` — each with
+a `resume:` block recording exactly what sits on disk and how far to trust it
+(answer: not at all, as numbers; usefully, as structure). Two rules for whoever
+picks these up:
+
+1. **Do not re-execute the half-edited scripts and publish the result.** Both
+   notebooks are stale against their own `build_page.py`, and `A2.4`'s
+   `agreement.json` predates a bug its own builder had already found. Re-running
+   would yield a plausible-looking page that no builder finished and no verifier
+   saw — the exact failure the gate exists to stop.
+2. **Session-limit deaths cannot be resumed** via `SendMessage`; they need fresh
+   dispatches. Connection-error deaths still can — keep the distinction.
+
+The staged partials are deliberately **not committed**, following the standing
+convention: staging under `queue_cases/*/page/` is untracked for all but seven
+early cases (`A1.1`, `A3.4`, `B1.2`, `E2.1`, `I1.2`, `J3.4`, `J4.8`), with
+published content living in `pages/`. That is the reason `git add -A` is banned
+here — 52 untracked staging entries would come with it.
 
 Prior halt note (2026-08-06, superseded counts): The loop that works: dispatch a builder per case →
 adversarial verifier on every ready page → fix (inline for wording, a fixer

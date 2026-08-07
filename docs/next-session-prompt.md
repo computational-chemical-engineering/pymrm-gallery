@@ -5,82 +5,84 @@ Copy everything in the block below as the first message of a fresh session.
 ---
 
 ```
-Continue the pymrm-gallery: work the 266-case catalogue with parallel agents.
+Continue the pymrm-gallery. Repo ~/Code/pymrm_suite/pymrm-gallery, venv ~/Code/pymrm_suite/.venv.
 
-Repo: ~/Code/pymrm_suite/pymrm-gallery   Python: ~/Code/pymrm_suite/.venv
-Read first: docs/handoff.md (operating procedure), AGENTS.md,
-docs/agent-brief.md, docs/pdf-findings.md.
+Operate per docs/playbooks/coordinator.md: read docs/handoff.md header + git log -5,
+then run ONE wave (4–6 cases) and wind down. Dispatch agents with the 10-line template
+in docs/playbooks/README.md (playbooks carry the rules — do not restate them) and set
+model: per its tier table (verifiers never downgraded). Per-source traps are in
+docs/papers-inventory.yaml; integrate with scripts/integrate_case.py; pull --rebase
+before every push.
 
-State: 16 published, 3 need my judgement, 10 need papers, 232 unclaimed.
-Every parked case carries a resume: block — use it, don't re-derive.
+Suggested wave: A3.5, E1.1, A4.1, A2.4, J1.3 — all five have UNVERIFIED PARTIAL
+BUILDS on disk from the 2026-08-07 wave, whose builders were all killed by an API
+session limit. Read each case's resume: block first. Do NOT re-execute the staged
+build_page.py scripts and publish the result: A2.4's and J1.3's notebooks are older
+than their own scripts, and A2.4's builder had found an eq. (4) scaling bug it never
+finished fixing. Treat every staged digit as unread. Verifier on every ready page.
+Park blocked cases with a resume: block — never wait for me.
 
-THE RULE: never block on me. A case needing input is parked with its
-resume: block and you immediately start the next. Keep ~5 builders live
-continuously. I read the dashboards when I choose — don't ping me per
-case, don't idle waiting. I may be away from a screen for long stretches;
-assume no answers are coming and keep working.
+Republish dashboards at wind-down to the SAME URLs (never mint new ones):
+  papers    https://claude.ai/code/artifact/99b52225-ce54-4487-99ec-3a420f2ac4ad  (favicon 📄)
+  decisions https://claude.ai/code/artifact/237909a0-3432-4b82-8cfe-15b05019d036  (favicon ❓)
 
-The loop, per docs/handoff.md: dispatch builder → on ready, dispatch an
-adversarial verifier → integrate (splice models_entry.yaml, check_metadata,
-run_pages --changed, check_agreement) → commit and push → refill to 5.
-Blocked cases get parked and the dashboards regenerated and republished.
-
-Dispatch policy: prefer cases whose paper is on disk AND whose validation
-looks like a table, appendix or stated result rather than a figure — only
-the figure route needs me, so only it stalls a case.
-
-Keep the adversarial verifier on every ready page. Quality over throughput:
-a missing page costs nothing, a page with a fabricated number costs the
-credibility of all the others.
-
-Publish everything that's finished.
-
-Two decisions from me you're waiting on — carry them forward, ask once,
-and don't block on either:
-(1) purging three copyrighted overlays from git history (needs a
-    force-push to a public repo);
-(2) the Elsevier API key at ~/.config/elsevier/apikey is blocked by the
-    Bash permission classifier — it's the highest-leverage unblock for
-    section A.
-
-Dashboards (republish these same URLs, don't mint new ones):
-  papers    https://claude.ai/code/artifact/99b52225-ce54-4487-99ec-3a420f2ac4ad
-  decisions https://claude.ai/code/artifact/237909a0-3432-4b82-8cfe-15b05019d036
+Halt = coordinator.md's checklist: integrate what's ready, update handoff,
+republish dashboards, gates green, push, end.
 ```
 
 ---
 
 ## Why each part is there
 
-**"Never block on me"** is the correction that prompted this file. Earlier
-sessions stopped and reported after each blocked case. Throughput is set by how
-rarely a case needs the maintainer, so a blocked case is parked — with a
-`resume:` block recording what is already established, what each plausible
-answer changes, and which files to touch — and the next case starts at once.
+**One wave per session** is the token-discipline rule from
+[`playbooks/coordinator.md`](playbooks/coordinator.md). All state lives in the repo,
+so ending a session costs nothing and a second wave in the same context costs a lot.
 
-**The dispatch policy** is the main throughput lever, and it is about avoiding
-the review gate rather than servicing it faster. Ranked: a worked example with
-printed intermediates beats an internal identity beats a stated numerical result
-beats a digitised figure. Only the last needs a human.
+**"Never block on me"** is the maintainer's standing correction. A case needing input
+is parked — with a `resume:` block recording what is established, what each plausible
+answer changes, and which files to touch — and the next case starts at once. Assume no
+answers are coming; the maintainer reads the dashboards when they choose.
 
-**The verifier** stays on the maintainer's explicit instruction. It roughly
-doubles the cost per page and is aimed at the one failure this repository has
-actually suffered: plausible, confident agreement that turned out to be circular.
+**Dispatch policy** is the main throughput lever, and it is about avoiding the figure
+review gate rather than servicing it faster. Ranked: a worked example with printed
+intermediates beats an internal identity beats a stated numerical result beats a
+digitised figure. Only the last needs a human.
 
-**The two carried decisions** are genuinely blocked on the maintainer, but
-neither blocks work — ask once, record the answer when it comes, continue.
+**The verifier** stays on the maintainer's explicit instruction. It roughly doubles the
+cost per page and is aimed at the one failure this repository has actually suffered:
+plausible, confident agreement that turned out to be circular.
 
-## State at the time of writing (2026-07-31, commit `cdcfd4b`)
+**The favicons are recorded** because a changed favicon reads as a different page — the
+maintainer finds these tabs by their icon. They were unrecorded until 2026-08-07 and had
+to be chosen; keep them stable from here.
+
+## State at the time of writing (2026-08-07, after the failed wave)
 
 | | |
 |---|---|
-| Published pages | 15 (16 catalogue entries) |
-| Awaiting judgement | `B1.2` (~2 min, no images), `A3.4` (3 overlays), `A1.1` (5 overlays) |
-| Optional follow-ups on live pages | `E2.1`, `J3.4`, `J4.8` |
-| Covered by another page | `A1.2`, `A1.3`, `A1.4` — all by `A1.1` |
-| Needing a paper | 10, all section A, mostly pre-DOI classics |
-| Not yet reached | 232 |
+| Published pages | 58 directories, 59 catalogue entries, 68 models.yaml entries |
+| Gates | `check_agreement` 58 pages / 0 regressions; `check_metadata` OK, 0 warnings |
+| Unclaimed (dispatchable) | 58 |
+| Needing a paper | 140 |
+| Covered / deferred | 6 / 3 |
+| Carrying unverified partial builds | `A3.5`, `E1.1`, `A4.1`, `A2.4`, `J1.3` |
 
-`B1.2` Aris is the cheapest win available: a two-minute yes publishes a finished
-page unchanged. `A1.1` Ergun costs about fifteen minutes and unblocks four
-catalogue entries at once.
+Counts differ between page directories and catalogue entries because `B1.1` covers
+`B1.5`, `A2.1` covers `A2.2`, and `C2.10` covers `D3.4`.
+
+**The 2026-08-07 wave published nothing.** All five builders were killed mid-task by the
+same account-level API session limit, not by anything about the cases. The full
+post-mortem — what each left on disk, why neither staged notebook can be trusted, and
+why the five stay `unclaimed` rather than `in-progress` — is in
+[`handoff.md`](handoff.md) under Recommended next moves. The lesson worth carrying:
+session-limit deaths cannot be resumed via `SendMessage` and need fresh dispatches,
+whereas connection-error deaths can be resumed with context intact.
+
+## Two decisions still carried
+
+Neither blocks work — ask once, record the answer when it comes, continue.
+
+1. Purging three copyrighted overlays from git history (needs a force-push to a public
+   repo).
+2. The Elsevier API key at `~/.config/elsevier/apikey` is blocked by the Bash permission
+   classifier — the highest-leverage unblock for section A.

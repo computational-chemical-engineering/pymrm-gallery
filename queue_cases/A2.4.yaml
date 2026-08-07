@@ -24,12 +24,39 @@ blocker: null
 notes: null
 updated: '2026-08-06'
 resume:
-  blocking: true
-  trigger: a PDF for this case appears in ~/papers/pymrm-gallery/
-  on_arrival:
-  - add the filename to docs/papers-on-disk.yaml under this catalogue ID
-  - set status back to unclaimed and clear paper.checked so find_papers re-runs
-  - dispatch a build agent with the standard brief in docs/agent-brief.md
+  blocking: false
+  staged_at: '2026-08-07'
+  trigger_has_fired: The old trigger on this block was "a PDF for this case appears in
+    ~/papers/pymrm-gallery/". It fired on 2026-08-06 - the Levenspiel 3rd edition is on disk and
+    named under paper.on_disk above - so the trigger and its on_arrival steps are spent and have been
+    removed. The acquisition history is kept below because it records what was tried.
+  partial_build_on_disk: 'A builder ran this case on 2026-08-07 and DIED MID-FLIGHT on an API session
+    limit, not on anything about the case. It got FURTHEST of the five in that wave: build_page.py
+    (90 kB), an executed index.ipynb (497 kB), an agreement.json, and one CSV with its .meta.yaml
+    sidecar (levenspiel-1999-ch14-printed-values). Missing: meta.yaml, README.md, models_entry.yaml.
+    Never verified by anyone.
+
+    '
+  the_notebook_is_stale_and_there_is_a_known_bug: 'TWO REASONS NOT TO PUBLISH FROM WHAT IS ON DISK.
+    (1) index.ipynb and agreement.json are OLDER THAN build_page.py (01:30:18 and 01:30:17 vs 01:33:34
+    on 2026-08-07), so the notebook is NOT the output of the script beside it. (2) The last line of
+    the dead agent transcript reads "Now fix the eq. (4) scaling bug" - the builder had FOUND a defect
+    in its own eq. (4) machinery and was editing when it died. build_page.py carries eq. (4) work at
+    lines ~868, ~1270-1298 and ~1484-1521, including a break row named "E14.1 scaling sigma instead
+    of sigma^2", which is the shape of bug the fragment names. Whether the fix landed is unknown.
+    Assume the numbers currently in agreement.json are wrong, and re-derive rather than re-running.
+
+    '
+  how_far_to_trust_it: 'TREAT EVERY DIGIT AS UNVERIFIED. Levenspiel Ch. 14 has a searchable prose
+    layer but DESTROYED equations and subscripts, so every formula and table cell had to come off a
+    600 dpi crop and none of those reads has been checked by anyone. Re-read them.
+
+    '
+  next_step: 'Fresh builder dispatch (session-limit deaths cannot be resumed via SendMessage). The
+    dispatch notes stand, including the canonical-class requirements: cite Ch. 14 sections 14.1/14.2,
+    use reference_read_from for the book, and mark MacMullin & Weber (1935) origin_not_consulted.
+
+    '
   established: 'Acquisition attempted and exhausted: not on disk, and no open-access route via Unpaywall.
     See blocker.detail.'
   do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears (an Elsevier
