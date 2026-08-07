@@ -46,18 +46,27 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-60 page directories, 61 published catalog entries, 70 models.yaml entries.
+61 page directories, 62 published catalog entries, 70 models.yaml entries
+(6 still `planned`, down from 7 — `E1.1` was the first upgraded in place).
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
 covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
 `check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
 published nothing — see the wave note under Recommended next moves.
 
-### Added 2026-08-07 — two pages (the serial regime)
+### Added 2026-08-07 — three pages (the serial regime)
 
 | Page | What it shows | Headline |
 |---|---|---|
 | `J1.3` BET | The 1938 paper's own refutation of the polarization theory, reproduced chain by chain | inflection ≤ 2/√3 · v_m for any c — so the authors' best corroboration (v_m vs point B) is largely guaranteed by their equation's own shape; "840 ± 70 for all twelve adsorbents" is the eleven-row number |
 | `A3.5` Ranz–Marshall | The four constants have four different statuses; only the intercept is testable | +2.91 / +2.61 / −13.39 % against a 0.68 % replicate scatter; page range resolved to 141–146 and the filename is now known to be wrong |
+| `E1.1` Toomey–Johnstone | The postulate has two limbs and their data separate them | dense phase runs ~23 % above `u_mf`, so Y = 0.766 at 2 `u_mf`; `E2.1` inherits exactly the limb that fails. Tier 2 against `E2.1`'s tier 6 — that contrast is the case's reason to exist |
+
+`E1.1` also carries the standing warning about borrowed data: its four headline
+ratios are **Lewis, Gilliland and Bauer's** particles, not the authors' own, and
+that caveat now leads every file because it is load-bearing — refitting on
+Toomey & Johnstone's own beads gives 2.048 / 0.928 / 0.465, a 4.4× spread
+straddling 1, which cannot fix even the sign. Verification found the caveat
+buried in two files and absent from `README.md` entirely.
 
 `A3.5` also recovered a convention neither part states (properties at the film
 temperature) — and then found Part II states it after all, which turns Table 3
