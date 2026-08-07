@@ -14,7 +14,17 @@ these). Skim `docs/handoff.md`'s header for anything newer than this file.
    alters digits into plausible wrong numbers, prints European thousands
    separators, drops mid-dot decimals, and sometimes opens with the *previous*
    article. Verify the file's identity from its own title page even though the
-   inventory names it.
+   inventory names it. **An ambiguous glyph is settled by arithmetic, not by
+   pixel shape.** Look for a constraint the table imposes on itself — two
+   columns computed from one measurement, a ratio fixed by conditions printed
+   beside it, neighbouring rows that bracket the value — and let it decide.
+   On `A3.5` a builder argued a damaged digit was `10.6` from the position of
+   the white counter; the verifier noted that Table 4's two Nusselt columns come
+   from the same measured rate, so their ratio depends only on printed
+   temperatures and pressure, and the neighbouring rows bracket the cell in
+   [9.73, 10.06] — `10.0`, 6 % outside what the shape argument needed. Say which
+   constraint decided it, and if none exists, leave the cell empty rather than
+   guessing (blotted cells on that same page were correctly left empty).
 2. **Fit vs test, labelled everywhere.** If the correlation was fitted to the
    data you compare against, the agreement is a goodness of fit — say so in the
    notebook AND meta.yaml AND models_entry.yaml AND README.md AND the case

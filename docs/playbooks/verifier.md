@@ -36,6 +36,15 @@ staged `queue_cases/<ID>/page/`, the case yaml, and the source's entry in
   models_entry.yaml, README.md, case yaml): a claim right in the notebook and
   wrong in metadata is a standard find. Verify quotations verbatim and page
   citations on your crops. Fit-vs-test labelling everywhere.
+- **Check every claim about what the AUTHORS did or did not do.** "The paper
+  never notices", "neither part explains this", "untested anywhere" — these are
+  claims about a document, they are checkable, and they are the ones that
+  wrong a real person. Grep and crop-read the passages before accepting one.
+  On `A3.5` the page said seven times that the authors tested their own
+  intercept "without noticing"; folio 173 prints "Data for mass transfer show a
+  steeper slope and a lower intercept" and names the same cause the page did.
+  The page's real contribution was quantifying what they stated qualitatively —
+  which survives; the framing did not.
 - **Determinism**: two fresh executions; compare content, figures,
   agreement.json (never raw ipynb bytes). Verify runtime declared truthfully,
   `columns:` sidecars, no Quarto syntax, nothing figure-derived leaked,
