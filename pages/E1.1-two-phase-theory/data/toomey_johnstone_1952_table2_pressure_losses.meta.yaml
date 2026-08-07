@@ -1,0 +1,111 @@
+dataset_id: toomey-johnstone-1952-table2-pressure-losses
+title: Pressure losses in fluidised beds, 41 runs (Table 2)
+status: complete-with-empty-cells
+
+source:
+  authors: ["Toomey, R. D.", "Johnstone, H. F."]
+  year: 1952
+  container: "Chemical Engineering Progress 48(5) 220-226, May 1952"
+  doi: null
+  doi_note: >
+    NO DOI EXISTS; see the Table 1 sidecar for the verification. None is invented.
+  access: "print scan (microfilm) held locally; lawful access"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+conditions: >
+  Filtered air, delivered to the system at about 200 F and one per cent relative
+  humidity, metered through critical-flow orifices. Column of seven cemented
+  sections, each 4.7 in. inside diameter and 6 in. high, on a porous plate, with
+  a half-inch Calrod heater down the centre which remained in place during all
+  the measurements. The bed heights Toomey quotes in the printed Discussion are
+  "12 in. to about 26 in."; the tabulated L_mf actually runs from 9.4 to 25.0 in.
+
+  dP_mf is the pressure drop at incipient fluidisation and dP_ke the pressure
+  drop IN EXCESS of it, which the authors attribute to kinetic energy lost in
+  particle collisions. Only the ratio dP_ke/dP_mf is printed.
+
+acquisition:
+  method: table
+  figure: "Table 2, journal page 221"
+  tool: "poppler pdftoppm at the native 400 dpi, read visually on cropped, contrast-stretched tiles"
+  procedure: >
+    THE PDF HAS NO TEXT LAYER AT ALL (one byte per page), so every digit came
+    off a render. The table is typewritten and reproduced through microfilm and
+    JPEG; the last column is set tighter than the rest and is the least legible
+    thing in the paper.
+
+    HOW THE AMBIGUOUS DIGITS WERE DECIDED - by arithmetic, not by glyph shape.
+    dP_mf/L_mf must be the same for every run on one bead size, because it is the
+    weight of the solids per unit bed volume and the inventory was not changed
+    within a size. Across the 41 runs that ratio is constant to 0.5 %, and it
+    decides four cells that the render leaves open:
+
+      bead 3, G = 988   : L_mf is 13.0, not 13.8 (13.8 would put the ratio 5.4 %
+                          off the fifteen other bead-3 runs)
+      bead 3, G = 747   : dP_mf is 38.1, not 36.1
+      bead 3, G = 745   : dP_mf is 21.8, not 21.6
+      bead 3, G = 743   : dP_mf is 19.8, not 19.6
+
+    Each flag in the file names the identity that decided it. This is the same
+    constraint the notebook then reports as a result, so the notebook is careful
+    about what it claims: the identity TESTS Table 1's printed voidages for beads
+    1, 2, 4 and 5, and it SUPPLIES bead 3's illegible voidage and these four
+    digits. It cannot do both jobs on the same number and the page says so.
+
+    WHAT WAS LEFT EMPTY, DELIBERATELY. The dP_ke/dP_mf column has seventeen
+    empty cells. Some are empty because the paper prints nothing there; the rest are
+    over-struck or blotted beyond reading and NO arithmetic constraint in the
+    paper pins an individual cell of that column. Guessing them would have been
+    the worst kind of error, because the cells at the ends of each bead's series
+    are exactly the ones a straight-line fit is most sensitive to. The per-cell
+    state is in the flags column:
+
+      no_value_printed                     the paper prints nothing
+      ratio_cell_overstruck_illegible      a printed value that cannot be read
+      ratio_last_digit_blotted_0.09x       the leading digits are readable, the
+                                           last is not; the cell is still empty
+      ratio_..._smudged                    read, but with reduced confidence
+
+    A PARTIAL RECOVERY EXISTS AND IS NOT WRITTEN INTO THIS FILE. Table 3 prints
+    dP_ke/L for thirteen runs, and dividing by dP_mf/L_mf gives an independent
+    estimate of the same ratio. The notebook computes it in section 5b and prints
+    both columns side by side. Ten of the thirteen Table-3 runs have a legible
+    Table-2 ratio AND an unambiguous row match (bead 2 at G = 737 matches two
+    different Table-2 rows; bead 2 at G = 141 and bead 4 at G = 346 have no
+    legible ratio). Over those ten the two agree to a median of 5.25 %, a worst
+    of 24.5 % and an RMS of 9.41 % - good enough to quote as an inference and to
+    use as the page's only guard on the dP_ke/L column itself, and NOT good
+    enough to store as data. Their deviations scatter about zero rather than
+    about +18.5 %, which is what decides that the L of Table 3 is L_mf and not
+    the expanded L_f.
+
+    IDENTITY OF THE FILE was verified from its own title page and footers, not
+    from its filename; see the Table 1 sidecar.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    dP_mf and L_mf: printed precision (three figures), with the four cells above
+    pinned by the bed-weight identity. dP_ke/dP_mf: printed precision where a
+    value is given, but several of the given values carry a smudged digit and are
+    flagged; treat that column as +/- one unit in the last place unless the flag
+    is empty.
+
+columns:
+  - {name: bead_no, unit: "-", description: "bead size number, keyed to Table 1"}
+  - {name: dp_in, unit: in, description: "particle diameter as repeated in Table 2; identical to Table 1"}
+  - {name: G_lb_hr_ft2, unit: "lb/(hr)(ft^2)", description: "superficial MASS velocity of the air"}
+  - {name: dPmf_inH2O, unit: "in H2O", description: "pressure drop at incipient fluidisation"}
+  - {name: Lmf_in, unit: in, description: "bed height at incipient fluidisation"}
+  - {name: dPke_over_dPmf, unit: "-", description: "fractional pressure drop in excess of the bed weight; EMPTY where illegible or not printed"}
+  - {name: flags, unit: "-", description: "semicolon-separated legibility tokens; empty means a clean read"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced anywhere in this repository.
+
+caveat: >
+  TIER 2 (tables printed in a paper), and the limit here is legibility rather than the measurement.
+  The dP_ke/dP_mf column is too incomplete at the ends of each series to refit
+  the paper's own equation (11) intercepts, which is why this page takes the
+  four u_mf/u_e ratios the authors print instead of recomputing them.

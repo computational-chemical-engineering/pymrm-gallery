@@ -1,0 +1,73 @@
+dataset_id: toomey-johnstone-1952-printed-results
+title: Scalars printed in the running text and equations
+status: complete
+
+source:
+  authors: ["Toomey, R. D.", "Johnstone, H. F."]
+  year: 1952
+  container: "Chemical Engineering Progress 48(5) 220-226, May 1952"
+  doi: null
+  doi_note: >
+    NO DOI EXISTS; see the Table 1 sidecar for the verification. None is invented.
+  access: "print scan (microfilm) held locally; lawful access"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+conditions: >
+  These are not measurements of one experiment. They are the individual numbers
+  the paper states in prose or in a displayed equation, collected in one file so
+  that no number on the gallery page is retyped into prose.
+
+  The four u_mf/u_e ratios are the most important entries and they need a
+  caveat carried everywhere they are used: they are the intercepts of the
+  Figure 3 straight lines for the FOUR PARTICLE DIAMETERS OF LEWIS, GILLILAND
+  AND BAUER, not for Toomey and Johnstone's own five bead sizes. The paper says
+  why: "Only the data of Lewis, Gilliland and Bauer (12) extend to low enough
+  velocities to obtain an accurate indication of the point of intersection."
+
+acquisition:
+  method: table
+  figure: "running text of journal pages 221, 223, 224 and 226, plus eq. (1)"
+  tool: "poppler pdftoppm at the native 400 dpi, read visually on cropped, contrast-stretched tiles"
+  procedure: >
+    THE PDF HAS NO TEXT LAYER AT ALL (one byte per page). The body text is set in
+    a normal serif face and is markedly more legible than the typewritten tables;
+    all fourteen entries were read cleanly. The two sentences that matter are
+    quoted verbatim in the notebook.
+
+    ONE INFERENCE, FLAGGED. The five Reynolds numbers are printed as a bare
+    ascending list with no bead labels: "For the velocity at incipient
+    fluidization, the Reynolds number for the fixed beds of the glass beads used
+    in this work were 0.014, 0.095, 0.55, 2.88, and 12.2." Assigning them to bead
+    sizes 5, 4, 3, 2, 1 - smallest particle first - is the only reading
+    consistent with Re increasing steeply with particle size, but the paper does
+    not say it, so every row carries the flag. The notebook's break table injects
+    the reversed assignment and shows what it does (the fitted exponent flips
+    sign), so the inference is visible rather than buried.
+
+    The 0.065 of equation (1) carries units: with D_p in feet and velocities in
+    ft/s it is s/ft^0.5. It originates with Lewis, Gilliland and Bauer, not with
+    Toomey and Johnstone, who quote it.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    Printed precision, two or three significant figures. The Re values are
+    themselves derived quantities of the authors', not raw readings, and the
+    velocity they were computed at is not separately printed.
+
+columns:
+  - {name: symbol, unit: "-", description: "identifier used in the notebook"}
+  - {name: value, unit: "see units column", description: "the value as printed"}
+  - {name: units, unit: "-", description: "units as printed"}
+  - {name: where_printed, unit: "-", description: "journal page and column"}
+  - {name: description, unit: "-", description: "what the quantity is"}
+  - {name: flags, unit: "-", description: "semicolon-separated tokens; empty means printed unambiguously and with no inference"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced anywhere in this repository.
+
+caveat: >
+  TIER 2 (tables printed in a paper). The four u_mf/u_e ratios describe Lewis, Gilliland and Bauer's
+  particles, not the beads of Tables 1-3, and any conclusion drawn from them is a
+  statement about the two-phase postulate rather than about this apparatus.

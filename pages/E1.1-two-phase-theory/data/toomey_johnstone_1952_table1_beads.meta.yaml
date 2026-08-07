@@ -1,0 +1,88 @@
+dataset_id: toomey-johnstone-1952-table1-beads
+title: Properties of the five Scotchlite glass bead sizes (Table 1)
+status: complete
+
+source:
+  authors: ["Toomey, R. D.", "Johnstone, H. F."]
+  year: 1952
+  container: "Chemical Engineering Progress 48(5) 220-226, May 1952"
+  doi: null
+  doi_note: >
+    NO DOI EXISTS. Chemical Engineering Progress volume 48 (1952) predates DOI
+    registration and AIChE has not retro-registered it; CrossRef resolves
+    nothing for this title, author pair or page range. This was verified for the
+    case file rather than merely "not found", and no DOI is invented here.
+  access: "print scan (microfilm) held locally; lawful access"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+conditions: >
+  Commercial grades of Scotchlite glass beads from the Minnesota Mining and
+  Manufacturing Co. Average diameter of each size determined by measurement
+  under a microscope; absolute particle density by measuring the water
+  displacement of a known weight of beads. The last column is the maximum void
+  fraction in a FIXED bed, not the voidage at incipient fluidisation.
+
+acquisition:
+  method: table
+  figure: "Table 1, journal page 220"
+  tool: "poppler pdftoppm at the native 400 dpi, read visually on cropped, contrast-stretched tiles"
+  procedure: >
+    THE PDF HAS NO TEXT LAYER AT ALL - pdftotext returns one byte per page - so
+    every digit in this file was read off a picture of the printed page. The
+    source is a Microsoft Print-To-PDF wrapper around a microfilm scan, stored
+    as JPEG RGB tiles at 400 x 400 ppi with compression ratios of 1-5 %, which
+    is why individual glyphs are soft even at native resolution. The table is set
+    in a typewriter face in which 4 prints much like b and 2 like a filled loop.
+
+    The file's identity was verified from its own title page and running footers
+    rather than from its filename: "GASEOUS FLUIDIZATION OF SOLID PARTICLES /
+    ROBERT D. TOOMEY and H. F. JOHNSTONE / University of Illinois, Urbana,
+    Illinois", footers "Page 220 | Chemical Engineering Progress | May, 1952"
+    through "Page 226".
+
+    TWO INTERNAL CONSTRAINTS were used, and neither is a pixel argument:
+
+    (1) The inch and micron diameter columns are the same measurement in two
+    units. All five rows agree to better than the rounding of the micron column
+    (0.0334 in = 848.4 um vs 848 printed; 0.00215 in = 54.6 um vs 55 printed).
+    This licenses the diameter column outright.
+
+    (2) BEAD 3'S VOID FRACTION IS ILLEGIBLE in its middle digit - the printed
+    cell reads 0.4x0 with the middle character struck through. It is NOT guessed
+    from the glyph. It is recovered from Table 2 by the bed-weight identity
+    dP_mf / L_mf = (1 - eps)(rho_s - rho_g) g, which the sixteen bead-3 runs of
+    Table 2 satisfy to 0.8 % and which returns eps = 0.41929. The value stored
+    here is therefore 0.420, and the notebook EXCLUDES bead 3 from the test of
+    that same identity, because using it there would be circular.
+
+    ONE CELL IS FLAGGED AND NOT PINNED: the mean-deviation-from-average-diameter
+    entry for bead 4 has a blotted leading digit and is read as 8.6 %. Nothing
+    in the paper constrains it and nothing on the page uses it; it is stored as
+    read with the flag set.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision (three significant figures) for the
+    diameter, density and voidage columns, except bead 3's voidage, whose value
+    is an inference from Table 2 rather than a reading, and bead 4's mean
+    deviation, whose leading digit is uncertain.
+
+columns:
+  - {name: bead_no, unit: "-", description: "bead size number as used throughout the paper; 1 is the coarsest, 5 the finest"}
+  - {name: manufacturer_bead_size_no, unit: "-", description: "the manufacturer's own bead size number"}
+  - {name: dp_in, unit: in, description: "average particle diameter, measured under a microscope"}
+  - {name: dp_micron, unit: um, description: "the same diameter in microns, as printed; a redundancy this page uses as a check"}
+  - {name: mean_dev_from_avg_diameter_pct, unit: "%", description: "mean deviation from the average diameter"}
+  - {name: rho_s_lb_ft3, unit: lb/ft3, description: "absolute particle density from water displacement"}
+  - {name: eps_max_fixed_bed, unit: "-", description: "maximum void fraction in a FIXED bed"}
+  - {name: flags, unit: "-", description: "semicolon-separated legibility tokens; empty means a clean read"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced anywhere in this repository.
+
+caveat: >
+  TIER 2 (tables printed in a paper). These are the authors' own measurements, read from a microfilm scan
+  with no text layer. The void fraction column is a fixed-bed voidage and must
+  not be used as eps_mf.

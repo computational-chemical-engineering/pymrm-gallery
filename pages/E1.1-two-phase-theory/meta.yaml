@@ -1,0 +1,203 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: E1.1
+slug: two-phase-theory
+title: "Two-phase theory of fluidisation"
+section: E
+status: published
+tier: T0
+priority: P1
+structures: [S7]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 6
+datasets:
+  - toomey_johnstone_1952_table1_beads.csv
+  - toomey_johnstone_1952_table2_pressure_losses.csv
+  - toomey_johnstone_1952_table3_wall_velocities.csv
+  - toomey_johnstone_1952_printed_results.csv
+
+# READ FIRST, because every headline below depends on it: the four u_mf/u_e
+# intercept ratios this page turns on are printed by Toomey and Johnstone but are
+# read off LEWIS, GILLILAND AND BAUER's four particle sizes, not off the five bead
+# sizes of Tables 1 to 3. The paper says so ("Only the data of Lewis, Gilliland
+# and Bauer extend to low enough velocities to obtain an accurate indication of
+# the point of intersection") and Figure 3 separates the two sets in its own
+# legend: three filled curves "AUTHORS' DATA" at D_p = 0.0148, 0.00861, 0.00418
+# in., four open curves "DATA OF LEWIS, GILLILAND AND BAUER" at 0.0224, 0.0178,
+# 0.0112, 0.00881 in. So this page tests THE POSTULATE on numbers this paper
+# printed; it does not measure u_e for this apparatus. The notebook says the same
+# thing in its title cell, in Results section 4 and in the Reuse section, and
+# README.md says it too.
+#
+# Ranked by measured power, not by how small the residual looks. Every entry has
+# a row in the notebook's defect-injection table, or is labelled STRUCTURAL with
+# what it cannot detect stated beside it.
+validation:
+  # --- PRIMARY: the checks that can see a wrong NUMBER ------------------------
+  - PRIMARY - the bed-weight identity, dP_mf/L_mf against (1-eps)(rho_s-rho_g)g, over 25 runs of Table 2 and four independently printed voidages of Table 1. Worst single run 0.49 %, worst bead mean 0.28 %. Two independent measurements (a manometer over a ruler, against a pycnometer and a tapped-bed voidage), and the check Toomey claims in the printed Discussion ("both calculated and measured and the results checked very closely") without ever saying how closely. The residual is NOT dominated by the printed voidages - the rounding budget printed on the page gives eps 0.079-0.086 %, rho_s 0.279-0.299 %, and Table 2's own last digits 0.31-0.85 % - and the worst single run (0.4884 %, bead 2 at G = 737) sits essentially on its own Table-2 rounding floor of 0.3782 %, so the identity holds to the resolution the printed data allow. Measured power - eps of bead 2 moved 0.404 -> 0.380 takes it to 4.34 %, rho_s of bead 4 to 8.34 %, a 4 % wrong in.H2O conversion to 4.36 %. Bead 3 is EXCLUDED because its printed void fraction is illegible and was recovered from this same identity (0.41929, whose 0.123 % agreement against the rounded printed 0.420 is nothing but that rounding); including it would be circular
+  - PRIMARY - Table 3's own derived column u_p/D_p^0.5 recomputed from u_p and Table 1's diameters. Beads 3 and 4 reproduce to 0.79 % over nine rows. Bead size 2's four rows are all off by the same +3.96 % - which is to say the PRINTED column is LOW by 3.81 %, the direction a too-large D_p in the divisor requires - with a peak-to-peak spread of 0.089 % about that offset, 45x smaller than the offset. A single wrong constant, not reading noise: the column was evaluated with D_p about 0.0160 in. where Table 1 prints 0.0148 in. AND where Figure 3 labels the authors' own curve 0.0148 in., a third independent printing that closes the one soft joint in the argument. Reported, not repaired. Bead 4 carries the same signature six times weaker (+0.690 % offset, 0.180 % spread, ratio 3.8, implied D_p 0.00424 in. against a printed 0.00418 in.) and the page reports it as a second, weaker instance rather than leaving it silent. Measured power - substituting the implied 0.0160 in. takes the bead-2 offset to -0.01 %; a -2 % bead-4 diameter takes the beads-3/4 worst deviation from 0.794 % to 1.817 %. The +2 % injection is shown as well and LOWERS it to 0.424 %, because bead 4's own rows imply a diameter above the printed one, so that sign proves nothing
+  - PRIMARY - the exponent contradiction. The five printed incipient-fluidisation Reynolds numbers give u_mf ~ D_p^1.5065 +/- 0.127 by least squares over five bead sizes, and D_p^1.4749 from the two end points with no fit at all. The paper's p. 225 sentence ("the velocity associated with the continuous phase is proportional to the square root of the particle diameter") together with its own statement that u_mf/u_e is independent of particle diameter requires D_p^0.5. The gap is 1.0065, 7.9 standard errors. NOTE ON THE SYMBOL - equation (13) itself is printed for u_t, not u_e; eq. (12) on p. 224 introduces u_t as the terminal velocity and the p. 226 Notation separates the two subscripts. The identification is the paper's own postulate and is made in the prose, so the page quotes the prose and says so rather than citing the equation with a substituted symbol. Measured power - reversing the (inferred) bead assignment of the Re list moves the exponent to -3.51, dropping the smallest bead moves it to 1.376
+  - PRIMARY - the visible bubble flow factor Y = (u_f-u_e)/(u_f-u_mf) evaluated from the four printed intercept ratios 0.85, 0.69, 0.83, 0.87 (Lewis, Gilliland and Bauer's particles - see the header of this block). Y = 0.765 at u_f = 2 u_mf, and 0.646 at 200 F / 0.756 at 70 F at the lowest run of Toomey and Johnstone's own that clears the bubbling threshold at both assumed air temperatures. The postulate is Y = 1 identically. Measured power - forcing u_mf/u_e to 1.0 restores Y = 1 exactly and moves L_f/L_mf from 1.185 to 1.352
+  - PRIMARY - Table 3's dPke/L column against Table 2's legible dPke/dPmf column, via dPke/dPmf = (dPke/L)/(dPmf/L_mf). Two independently typeset columns of two different tables; ten runs where both are legible and the row match is unambiguous. Median deviation 5.25 %, worst 24.5 %, RMS 9.41 %. This is the ONLY check on this page that can see a transcription error in dPke/L - fig5_null_gain cannot (a +30 % single-cell error drifts it 0.07-12 %, and 8 of 13 cells sit inside CI's 5 % REL_TOL). It is also the "partial recovery" the dataset sidecar refers to, computed rather than asserted, and its deviations scatter about zero rather than about +18.5 %, which is what decides that Table 3's L is L_mf and not the expanded L_f. Measured power - raising one dPke/L cell 30 % moves the RMS from 9.41 % to 16.11 % (bead 4, G = 103) or 15.53 % (bead 3, G = 272)
+  - PRIMARY - three routes to the compressible bed height, sharing no assembly. The pymrm finite-volume Newton solve, an exact closed form (the ODE separates), and an adaptive Runge-Kutta with a terminal event. Closed form vs Runge-Kutta 6.6e-13; the finite-volume solve converges to them at observed order 0.9998 with n = 1600 at 2.5e-5 and the Richardson extrapolation at 8.1e-9. THE REPORTED METRICS ARE THE n = 1600 VALUES, not the Richardson limit; only LF_RICH_DEV uses the extrapolation, and it is evidence that the ladder is clean rather than a reported result. Both branches (bubbling and non-bubbling) and both switches are solved. Measured power - n = 50 moves the finite-volume deviation 32x
+  # --- STRUCTURAL: identities, labelled ---------------------------------------
+  - STRUCTURAL - the inch and micron diameter columns of Table 1 agree to 0.71 %. They are one measurement in two units, so this measures the printed rounding of the micron column (0.91 % at the smallest bead) and nothing else. It licenses the diameter column against a transcription slip; it cannot detect a wrong diameter, only an inconsistent pair
+  - STRUCTURAL - the partial-bubbling window in u_f/u_mf is exactly the bed's own pressure ratio, 10.01 %. That is an identity of the model, not a result. The quantity with content is the non-bubbling bottom fraction at a FIXED u_f/u_mf = 1.30, which is 0.467 as published and goes to 0 both when u_mf/u_e is forced to 1 and when the atmospheric datum is raised tenfold. An earlier draft evaluated the fraction at the middle of the window instead, where it is about 0.5 whatever the physics does and every injection moved it by a tenth of a percent - a check that could not fail, replaced rather than kept
+  - STRUCTURAL - the closed-form-vs-Runge-Kutta agreement (6.6e-13) sits BELOW check_agreement.py's ABS_FLOOR = 1e-12. The script skips a metric only while BOTH the committed baseline and the new value stay under the floor, so this one is unprotected while it stays there rather than proven, and would be compared against a 1e-12 denominator the moment anything lifted it above. Its above-floor companion is the finite-volume deviation, 2.5e-5, which the grid ladder moves
+  # --- what the metric set cannot do -------------------------------------------
+  - BLIND SPOT - fig5_null_gain cannot detect a wrong particle diameter common to a whole bead size (a per-bead constant is absorbed by the fitted power of D_p), and cannot detect a transcription error in Table 3's dPke/L column either - a +30 % single-cell error drifts it between 0.07 % and 12.3 %, median 3.5 %, with 8 of 13 cells inside CI's 5 % REL_TOL. dPke_cross_check_rms was added for exactly that column
+  - BLIND SPOT - Lf_over_Lmf IS moved by the atmospheric datum (1.18450 -> 1.22907, +3.8 % under a tenfold datum), contrary to what an earlier draft of the notebook claimed; excess_velocity_spread is moved by the same injection in the other direction and by an order (0.25814 -> 0.02516, -90 %). Neither metric alone covers the pymrm section; both are reported and the datum row moves both
+  - BLIND SPOT - seventeen metrics carry the PRIMARY label, but only five (bedweight_worst_row, bedweight_worst_bead_mean, table3_worst_dev_beads34, table3_bead2_offset, dPke_cross_check_rms) compare two independently printed quantities that could actually disagree. The rest are derived quantities whose break rows show sensitivity to an input, which is worth having and is not the same thing. up_over_ub_eq4 is the extreme case: it is exactly linear in eq. (1)'s coefficient, so its only break row returns the published value times 1.2 to every digit
+  - BLIND SPOT - excess_velocity_spread has no break row for the air-temperature assumption. It is instead reported at both assumed temperatures (25.83 % at 200 F, 20.50 % at 70 F), which is the stronger statement
+
+adds: >
+  On two of the three results, nothing, and the page says so. The bed-weight
+  identity and the Table-3 recomputation are arithmetic on printed tables; there
+  is no operator, no grid and no Newton solve in them, and manufacturing one
+  would have been dishonest. They are also the strongest results here, because
+  they are the ones a measurement can fail.
+
+  What the reimplementation adds is three things the paper does not contain.
+
+  A number for the curvature the authors predict and drop. They write that the
+  gas must expand as the pressure changes through the bed and that this "would
+  cause the data in Figure 3 to show a slight curvature near the abscissa", and
+  then never compute it. The pymrm solve sizes it: in a deep bed near the
+  threshold the excess velocity u_f - u_mf, the quantity equation (3) is about,
+  varies by 25.8 % between distributor and surface at the paper's stated 200 F
+  and by 20.5 % at 70 F. Both exceed the shortfall the intercepts report on the
+  additive reading, 1 - u_mf/u_e = 19.0 %; on the multiplicative reading
+  u_e/u_mf - 1 = 23.5 % only the 200 F figure does, and the page states which it
+  means. Applying equation (1) with a single u_f
+  over-predicts the expansion by 4.2 % at the reference run. And there is a band
+  of superficial velocities exactly as wide as the bed's pressure ratio - 1.235
+  to 1.358 times u_mf - in which the top of the bed bubbles and the bottom does
+  not. That band straddles the bubbling threshold, which is where the Figure-3
+  intercepts are extrapolated to.
+
+  A separation of the postulate into a half that survives and a half that does
+  not. The paper, and every restatement of it since, treats "the dense-phase flow
+  is constant" and "that constant is u_mf" as one statement. The first is what
+  equation (11)'s straight lines demonstrate. The second is an identification the
+  printed intercepts - Lewis, Gilliland and Bauer's four particle sizes,
+  replotted and extrapolated by Toomey and Johnstone - contradict by 15 to 45 %,
+  and it is the one that propagates: the delta = (u_0-u_mf)/u_b of the E2.1 page,
+  and every conversion computed from it, inherits the half that fails.
+
+  A measurement of why those borrowed intercepts are the only usable ones. The
+  page runs the refit it declines to rely on: fitting equation (11) on Toomey and
+  Johnstone's own beads, restricted to runs sharing a bed height and to legible
+  cells, gives u_mf/u_e = 2.05, 0.93, 0.47 for beads 2, 3 and 4 - a factor 4.4
+  spread STRADDLING 1, so their own apparatus cannot fix even the sign of the
+  effect. That is a result, not an excuse, and it is what makes the borrowed
+  ratios load-bearing rather than incidental.
+
+  A range of validity for equation (4). The bubble velocity D_p^0.5/0.065 is the
+  paper's cleanest-looking result. It is an expansion correlation divided by the
+  postulate; the correlation is linear in (u_f-u_mf) and reaches delta = 1 at
+  exactly that velocity. Table 2's own runs go 11.8x past it, and the paper's own
+  Fastax films have particles at the wall moving 4.6x faster than the bubbles
+  equation (4) gives.
+
+agreement: >
+  Tier 2 - tables printed in a paper, and they are measurements. That is the
+  distinction from E2.1, which is tier 6 and states that nothing on it is
+  compared with a measurement.
+
+  The strongest number on the page is the bed-weight identity: 0.49 % worst
+  single run over 25 runs and four independently printed voidages, against a
+  claim Toomey makes in the printed Discussion and never quantifies. Next is
+  Table 3's derived column, reproduced to 0.79 % on nine rows while four rows of
+  one bead size are uniformly 3.96 % out with 0.089 % scatter - a printed defect,
+  reported and not repaired. Third is the exponent contradiction: u_mf ~
+  D_p^1.51 from the five printed Reynolds numbers against the D_p^0.5 that the
+  paper's p. 225 sentence plus its own claim of D_p-independence requires, a gap
+  of one full unit at 7.9 standard errors.
+
+  The headline about the postulate itself is not a fit and not a residual. It is
+  the four intercept ratios the paper prints, 0.85, 0.69, 0.83, 0.87 - read off
+  LEWIS, GILLILAND AND BAUER's particles, see the header of the validation block
+  - taken for what they say: the dense phase carries 1.23 times u_mf on average,
+  so the visible bubble flow is Y = 0.765 of the postulate's at u_f = 2 u_mf and
+  0.646 (200 F) / 0.756 (70 F) at the lowest of Toomey and Johnstone's own runs
+  that robustly bubbles. Nothing is fitted to those ratios; they are used as
+  data, and the page states whose data they are everywhere it uses them.
+
+  The compressibility result is a computation with no measurement to check it
+  against, and it is labelled as such: three independent routes agree, both
+  branches and both switches are exercised, the grid ladder gives order 0.9998,
+  but the only external anchor is the authors' qualitative statement that the
+  curvature exists.
+
+caveats: >
+  THE LOAD-BEARING ONE. The four u_mf/u_e ratios are Lewis, Gilliland and Bauer's
+  four particle sizes, not the five bead sizes of Tables 1 to 3. The paper says
+  why: only their data "extend to low enough velocities to obtain an accurate
+  indication of the point of intersection", and Figure 3 separates the two sets
+  in its own legend (three filled curves "AUTHORS' DATA", four open curves "DATA
+  OF LEWIS, GILLILAND AND BAUER"). This page therefore makes a statement about
+  the two-phase postulate, NOT about this apparatus, and it cannot locate u_e for
+  these beads. It is stated in the notebook title cell, the front-matter
+  description, Results section 4, the Reuse section, README.md and
+  models_entry.yaml, because a reader who takes away "their own beads refute
+  their own postulate" has been misled.
+
+  Refitting equation (11) to Table 2 was considered and rejected as a basis for
+  the headline - and then run anyway, so the decision is measured rather than
+  asserted. The scan has no text layer at all and the dP_ke/dP_mf column is set
+  tighter than the rest; seventeen of its 41 cells are empty, several of them at
+  the ends of the series where a straight-line intercept is most sensitive.
+  Those cells are empty in the CSV rather than guessed. Fitting what remains, on
+  runs sharing a bed height, gives u_mf/u_e = 2.05, 0.93, 0.47 for beads 2, 3 and
+  4: a factor 4.4 spread straddling 1, which cannot fix even the sign. The loss
+  from the illegible cells is real.
+
+  A partial recovery of the illegible dP_ke/dP_mf cells through Table 3's dP_ke/L
+  IS computed in the notebook (section 5b) and reported as an inference, never
+  stored as data. Ten runs have both columns legible and an unambiguous row
+  match; median deviation 5.25 %, worst 24.5 %, RMS 9.41 %. It doubles as the
+  only check on this page that can see a transcription error in the dP_ke/L
+  column, and its deviations scatter about zero rather than about +18.5 %, which
+  is what decides that Table 3's L means L_mf and not the expanded L_f.
+
+  Bead 3's void fraction is an inference. Its printed middle digit is illegible;
+  it is recovered from the bed-weight identity as 0.41929 and stored as 0.420,
+  and bead 3 is excluded from the test of that identity.
+
+  The assignment of the five printed Reynolds numbers to bead sizes 5, 4, 3, 2, 1
+  is an inference from their ascending order; the paper prints them unlabelled.
+  The break table injects the reversed assignment so the reader can see what it
+  is worth.
+
+  Air temperature is assumed to be the 200 F the paper states for the delivered
+  air. Every velocity ratio depends on gas viscosity alone and is given with its
+  70 F counterpart, including the two the compressibility and postulate sections
+  rest on: the excess-velocity spread is 25.83 % at 200 F and 20.50 % at 70 F,
+  and Y at the lowest robustly bubbling run is 0.646 at 200 F and 0.756 at 70 F
+  (the same run, bead 3, at both temperatures). L_f/L_mf is 1.1845 and 1.2378.
+  One further consequence is visible on the page: bead 2's lowest run sits below
+  the bubbling threshold at 200 F and above it at 70 F, so its Y is either
+  negative (meaning no bubbles at all) or 0.371 - while Table 3 records a
+  measured wall particle velocity of 0.28 ft/s there.
+
+  Figure 5's claim that "the square root of the particle diameter correlates the
+  data" survives weakly and fails strongly. Normalising by D_p^0.5 cuts the log
+  scatter by a third against not normalising, but the one-sigma interval on the
+  free exponent is [0.47, 0.77] and with three bead sizes and thirteen points a
+  per-bead offset and a power of D_p are nearly the same degree of freedom.
+
+  Why the intercept sits ABOVE u_mf is not answered here. Bubbles reduce the
+  bed-average pressure gradient, so a naive Darcy argument predicts a dense-phase
+  flow below u_mf, which is the opposite sign. Resolving that needs the flow
+  field around a single bubble, which is E1.2's subject and is deliberately not
+  touched.
+
+  No DOI exists for this article and none was invented. It predates DOI
+  registration and CrossRef resolves nothing for it; the citation was verified
+  against the printed title page and running footers of the scan itself.

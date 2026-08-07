@@ -1,0 +1,94 @@
+dataset_id: toomey-johnstone-1952-table3-wall-velocities
+title: Average velocities of particles at the wall and the corresponding pressure losses (Table 3)
+status: complete
+
+source:
+  authors: ["Toomey, R. D.", "Johnstone, H. F."]
+  year: 1952
+  container: "Chemical Engineering Progress 48(5) 220-226, May 1952"
+  doi: null
+  doi_note: >
+    NO DOI EXISTS; see the Table 1 sidecar for the verification. None is invented.
+  access: "print scan (microfilm) held locally; lawful access"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+conditions: >
+  Glass prisms were set between metal sections of the column with their inside
+  face flush with the wall, so that particle velocity could be measured
+  simultaneously with pressure drop and heat transfer. A 16-mm Western Electric
+  Fastax high-speed motion-picture camera photographed the moving bed through one
+  prism face, with a light through the other; the film was examined later and a
+  plot of particle velocity against time made. The authors note the film was
+  "rather short", so an unknown error could be introduced by using these as
+  average velocities. Duplicate pressure-drop measurements checked on the average
+  within 2 %; velocities are accurate over the time interval during which they
+  were photographed. Only bead sizes 2, 3 and 4 appear.
+
+acquisition:
+  method: table
+  figure: "Table 3, journal page 223"
+  tool: "poppler pdftoppm at the native 400 dpi, read visually on cropped, contrast-stretched tiles"
+  procedure: >
+    THE PDF HAS NO TEXT LAYER AT ALL (one byte per page); every digit came off a
+    render. The third column, u_p/D_p^0.5, is the AUTHORS' OWN derived column and
+    is stored exactly as printed so that the notebook can recompute it from u_p
+    and Table 1's diameter and compare. It must not be used as an input.
+
+    That recomputation is also what pins the one uncertain cell: bead 4 at
+    G = 103 has a smudged last digit on u_p, 0.36 or 0.38. The printed derived
+    value 20.2 requires 0.380 (0.38/sqrt(0.00418/12) = 20.36, within the 0.7 %
+    the other bead-4 rows show; 0.36 would give 19.29, 4.5 % off in the wrong
+    direction and inconsistent with every other row of that bead). The flag
+    records that the digit was decided by arithmetic, not by pixel shape.
+
+    A PRINTED DEFECT IS RECORDED HERE AND NOT REPAIRED. Recomputing the derived
+    column from Table 1's diameters reproduces bead sizes 3 and 4 to better than
+    0.8 % over nine rows, but all four bead-size-2 rows are off by the same
+    +3.963 % - which is to say the PRINTED column is LOW by 3.812 %, the direction
+    a too-large D_p in the divisor requires - with a peak-to-peak spread about
+    that offset of 0.089 %, 45x smaller than the offset. That is a single wrong
+    constant, not reading noise: the column was evaluated with D_p about 0.0160
+    in. where THREE independent printings say 0.0148 in. - Table 1's inch column,
+    Table 1's micron column, and the label on the authors' own curve in Figure 3.
+    So the error is in Table 3's arithmetic, not in the particle size. The file
+    stores what is printed.
+
+    BEAD 4 CARRIES THE SAME SIGNATURE, WEAKER. Its five rows are offset +0.690 %
+    with a spread of 0.180 % (ratio 3.8) and imply D_p = 0.00424 in. against the
+    printed 0.00418 in. Bead 3, by contrast, has an offset well under its own
+    spread and is pure scatter. The notebook reports bead 4 as a second, weaker
+    instance rather than presenting a clean two-way split; nothing is repaired
+    here either.
+
+    A CROSS-CHECK ON THE dPke/L COLUMN. That column is used in exactly one place
+    on the page (Figure 5's ordinate) and the collapse metric is a poor guard on
+    it. Dividing it by Table 2's dPmf/Lmf gives an independent estimate of Table
+    2's dPke/dPmf column; see that sidecar for the measured agreement.
+
+    Figure 5 of the paper plots the last column against the third, so BOTH of its
+    axes are in this file and the figure needs no digitising at all. Nothing on
+    this page is traced from a curve.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    Printed precision (two or three figures). u_p is a film measurement over a
+    short record and the authors say so; the derived column is the authors'
+    arithmetic and carries the bead-2 defect described above.
+
+columns:
+  - {name: bead_no, unit: "-", description: "bead size number, keyed to Table 1"}
+  - {name: G_lb_hr_ft2, unit: "lb/(hr)(ft^2)", description: "superficial MASS velocity of the air"}
+  - {name: up_ft_s, unit: ft/s, description: "average particle velocity at the wall, from 16-mm Fastax film"}
+  - {name: up_over_sqrt_dp_printed_ft05_s, unit: "ft^0.5/s", description: "the AUTHORS' derived column, stored as printed; an output to compare against, never an input"}
+  - {name: dPke_over_L_lb_ft3, unit: "lb/(ft^2)(ft)", description: "pressure loss in excess of the bed weight, per unit bed height"}
+  - {name: flags, unit: "-", description: "semicolon-separated legibility tokens; empty means a clean read"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image or figure is reproduced anywhere in this repository.
+
+caveat: >
+  TIER 2 (tables printed in a paper). Thirteen rows over three bead sizes is too little to identify a power
+  of D_p; the notebook reports the confidence interval rather than the point
+  estimate, and it contains 0, 1 and 2.
