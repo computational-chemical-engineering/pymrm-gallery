@@ -1,0 +1,57 @@
+dataset_id: bet-1938-table4-so2-silica-gel
+title: "Brunauer, Emmett & Teller (1938) Table IV - eq. (B) constants for sulfur dioxide on silica gel at six temperatures"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 317. Six SO2-on-silica-gel isotherms measured by McGavack &
+  Patrick, THIS JOURNAL 42, 946 (1920) - a paper NOT on disk and NOT consulted.
+  The constants in this table are Brunauer, Emmett & Teller's own analysis of
+  those isotherms with their eq. (B) at n = 3.5.
+
+  The table exists in the paper to show a case where the d_L^(2/3) rule for the
+  temperature dependence of v_m FAILS: v_m rises by a factor 1.43 between 40 and
+  -80 degC where the rule predicts 1.15. Both numbers are checkable against these
+  columns and the page checks them.
+
+  E_L and E1 are printed on the first three rows only; the last three are blank
+  in the printing and are blank here.
+
+acquisition:
+  method: table
+  figure: "TABLE IV, journal page 317"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to the table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so the page was rendered at 300 ppi and the table cropped out of it;
+    a larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. v_m carries four significant figures, d_L
+    four, and the three energy columns are bare integers in cal./mole. The E1
+    column closes against E1 - EL plus E_L to +1, 0 and -5 cal.; the -5 is a
+    round-half ambiguity on 7545 and the page reports it rather than repairing it.
+
+columns:
+  - {name: row, unit: "-", description: "row index in the printed table, top to bottom"}
+  - {name: temperature_C, unit: "degC", description: "printed temperature"}
+  - {name: v_m_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed in a complete unimolecular layer, per gram of silica gel"}
+  - {name: d_L_g_per_cc, unit: "g/cm3", description: "density of liquid sulfur dioxide at that temperature"}
+  - {name: E1_minus_EL_cal_per_mol, unit: "cal/mol", description: "heat of adsorption in the first layer minus the heat of liquefaction"}
+  - {name: EL_cal_per_mol, unit: "cal/mol", description: "heat of liquefaction; printed on the first three rows only"}
+  - {name: E1_cal_per_mol, unit: "cal/mol", description: "heat of adsorption in the first layer; printed on the first three rows only"}
+
+caveat: >
+  TIER 6 twice over - the authors' constants, fitted to somebody else's
+  isotherms. Nothing here is a measurement made in this paper, and the
+  McGavack & Patrick isotherms were not consulted. The two printed ratios (1.43
+  and 1.15) and the closure of the E1 column are what can be, and are, checked.

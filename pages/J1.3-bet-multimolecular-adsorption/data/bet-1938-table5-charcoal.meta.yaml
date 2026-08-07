@@ -1,0 +1,68 @@
+dataset_id: bet-1938-table5-charcoal
+title: "Brunauer, Emmett & Teller (1938) Table V - v_m and specific surfaces for eight isotherms on charcoal"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 319. Eight isotherms on one charcoal sample. On charcoal alone,
+  of every adsorbent in the paper, NO S-shaped isotherms were obtained: eq. (B)
+  fits with n = 1, which reduces to the Langmuir form the authors label eq. (E),
+  and v_m is taken from the slope of a p/v against p plot rather than from the
+  eq. (A) plot used everywhere else.
+
+  As in Table III the two surface columns are v_m converted through the Emmett &
+  Brunauer (1937) molecular cross-sections - an external, non-adsorption input.
+  This table and Table III were computed with the same set, which the page
+  verifies by recovering the cross-sections independently from each.
+
+  The paper's own claims about this table exclude the butane row explicitly ("if
+  we disregard the butane run for the moment ... the mean surface ... for the
+  seven isotherms"), so the page computes them on the seven and says so.
+
+acquisition:
+  method: table
+  figure: "TABLE V, journal page 319"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to the table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so the page was rendered at 300 ppi and the table cropped out of it;
+    a larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+    ONE ODDITY IS PRINTED AS READ. The two argon rows carry the SAME v_m (215.5)
+    and the SAME solid-packing surface (746) at two different temperatures, while
+    nitrogen - the only other gas measured at both temperatures - has two different
+    v_m. Re-read at crop scale twice; it is what the table prints. Not repaired,
+    and REPORTED ON THE PAGE in section 9e, which prints the repeated-column table
+    for both gases and states that nothing on the page reads the -195.8 C argon
+    row (section 5 merges Tables III and V on gas AND temperature, and Table III
+    has no argon at -195.8 C). Nitrogen's liquid-packing surface also repeats at
+    795, but from two different v_m, so that one is a temperature-dependent
+    cross-section rather than an oddity; the page prints both so the distinction
+    is visible.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. v_m carries four significant figures and
+    the two surface columns are bare integers in square metres per gram.
+
+columns:
+  - {name: row, unit: "-", description: "row index in the printed table, top to bottom"}
+  - {name: gas, unit: "-", description: "the adsorbate"}
+  - {name: temperature_C, unit: "degC", description: "printed temperature"}
+  - {name: curve_fig5, unit: "-", description: "curve number in the paper's Fig. 5; blank for the two rows not drawn"}
+  - {name: v_m_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed in a complete unimolecular layer, per gram of charcoal"}
+  - {name: surface_solid_m2_per_g, unit: "m2/g", description: "specific surface from v_m and the cross-section computed from the SOLIDIFIED gas"}
+  - {name: surface_liquid_m2_per_g, unit: "m2/g", description: "specific surface from v_m and the cross-section computed from the LIQUEFIED gas"}
+
+caveat: >
+  TIER 6 - derived constants, not measurement. Checkable content: the printed
+  means (708 and 829 m2/g) and maximum deviations (9 % and 8 %) over the seven
+  non-butane rows, the butane deficit (about 25 %), and the cross-sections
+  recovered here against those recovered from Table III.

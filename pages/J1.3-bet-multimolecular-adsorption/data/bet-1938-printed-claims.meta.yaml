@@ -1,0 +1,102 @@
+dataset_id: bet-1938-printed-claims
+title: "Brunauer, Emmett & Teller (1938) - every number stated in prose, in a footnote or in a figure's typeset constant block that this page checks"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  The scalars the page holds itself against. Four kinds, kept apart by the
+  `where` column.
+
+  (1) THE POLARIZATION-THEORY CHAIN, journal pages 309-311 and their footnotes 3
+  and 10 - the refractive index of argon, alpha/r^3, the three lattice sums, the
+  constant d, C, K1, and Bradley's two k values with the upper limit eq. (1b)
+  admits. This chain is the paper's quantitative case AGAINST the rival theory
+  and it is the page's spine.
+
+  (2) STATEMENTS ABOUT THE TABLES, journal pages 315-319 - the E1-EL bands, the
+  v_m-against-point-B tolerance, the four silica-gel and charcoal surface
+  averages with their maximum deviations, the butane anomalies, and the two SO2
+  ratios. Each is checked against the corresponding table CSV.
+
+  (3) STATEMENTS ABOUT THE EQUATIONS, journal pages 313-318 - the 0.05 to 0.35
+  linear window, the 5 % single-point rule and the p/p0 = 1/3 it is quoted at,
+  and the +5 % / -7 % errors of the n = 6 branch of eq. (B) at x = 0.58 and 0.72.
+
+  (4) TYPESET CONSTANT BLOCKS INSIDE FIGURE FRAMES, Figs. 3, 4 and 6. NO CURVE
+  IS DIGITISED ANYWHERE ON THIS PAGE AND NO FIGURE IS REPRODUCED. These entries
+  are hand-lettered lines of text sitting inside the plot frame ("Constants.
+  v_m = 133.0 cc, c = 156.7, n = 5, 6, 7 (solid curves), n = infinity (dotted
+  curve)"), read as characters off a crop of the block. They are used because
+  Fig. 3 is the ONLY place in the paper where v_m and c are printed for the same
+  isotherm, and Fig. 4 is the only place a v_m is printed as CALCULATED rather
+  than fitted.
+
+  A WARNING THAT THE PAGE ACTS ON. Footnote 16 gives c = (a1 b2 / b1 a2)
+  exp((E1-EL)/RT) and asserts the prefactor "will not differ much from unity".
+  The paper offers exactly one isotherm where both c and E1 - EL are printed
+  (Fig. 3's c = 156.7 at 77.3 K against Fig. 4's E1 - EL = 900 cal. for the same
+  gas, sample and temperature), and there the implied prefactor is 0.447, not 1.
+  Every c reconstructed from an E1 - EL on this page therefore carries a measured
+  factor-two uncertainty, which is stated wherever such a c is used.
+
+acquisition:
+  method: text
+  figure: "prose, footnotes 3, 10 and 16, and the constant blocks of Figs. 3, 4 and 6"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to each statement, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so pages were rendered at 300 ppi and each statement cropped out of
+    it; a larger render would only interpolate. EVERY value in this file was read
+    off such a crop, including the ones that look unmissable at page scale.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+
+    That discipline changed one reading: at page scale the Fig. 1 legend appears
+    to name catalyst "358" where Table I has 958; the 300 ppi crop reads 958.
+
+    ONE PRINTED GROUPING IS RECORDED AS PRINTED AND NOT REPAIRED. Footnote 10 on
+    journal page 310 sets the adjacent-layer sum as "(8.357 - 8.823/r^3)", which
+    is dimensionally inconsistent and does not produce the coefficient used two
+    lines later. The intended grouping is (8.357 - 8.823)/r^3 = -0.466/r^3, which
+    is exactly the coefficient of the next display. Both the two lattice sums and
+    the 0.466 are stored here as separate keys so that the page can prove the
+    misprint from the paper's own arithmetic rather than assert it.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision, which varies enormously here: 0.6075 and
+    156.7 carry four figures, while "about 20 %", "about 25 %", "a factor of 20
+    or so" and "more than 30 layers" are one-figure rhetorical numbers and the
+    page treats them as such. Several bands are printed as "X +- Y" with no
+    definition of the +-; the page decodes that notation from Table II rather
+    than assuming one.
+
+columns:
+  - {name: key, unit: "-", description: "stable identifier used by the notebook"}
+  - {name: printed, unit: "-", description: "the value exactly as printed, written as a number"}
+  - {name: units, unit: "-", description: "physical units, or - for dimensionless"}
+  - {name: where, unit: "-", description: "journal page and locus (prose, footnote, table footer, or a figure's typeset constant block)"}
+  - {name: what_it_is, unit: "-", description: "one line saying what the number is"}
+
+licence_note: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). No page image, figure or curve is reproduced, and no curve is
+  digitised.
+
+caveat: >
+  TIER 6 throughout. Every value here is something the authors state, not
+  something they measured; several are their arithmetic on other people's data
+  (McGavack & Patrick, Palmer & Clark, Goldman & Polanyi, Bradley) and none of
+  those originals is on disk or was consulted.
+
+  IN PARTICULAR the whole polarization-theory block is de Boer & Zwicker's and
+  Bradley's theory AS BRUNAUER, EMMETT AND TELLER RESTATE IT. Neither original
+  was consulted. The page discriminates against the rival theory in the form its
+  opponent gives it, and says so wherever it does.

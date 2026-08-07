@@ -1,0 +1,202 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J1.3
+slug: bet-multimolecular-adsorption
+title: "BET 1938: the theory that yields the surface, against the theory that has to be given it"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1, S10]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 6
+datasets:
+  - bet-1938-table1-nitrogen-90K.csv
+  - bet-1938-table2-e1el-gases.csv
+  - bet-1938-table3-silica-gel.csv
+  - bet-1938-table4-so2-silica-gel.csv
+  - bet-1938-table5-charcoal.csv
+  - bet-1938-printed-claims.csv
+
+validation:
+  - "THE PAGE'S SPINE IS A DISCRIMINATION, NOT A FIT, because the paper supplies the rival. Section I of Brunauer, Emmett & Teller is a quantitative refutation of de Boer and Zwicker's polarization theory, carried out before any BET algebra appears, and every input to it is printed. Reproduced chain by chain: 8.357 - 8.823 = -0.466 exactly, d = -0.466/(1 + 11.1 x 0.029) = -0.352523 against the printed -0.35, C = d (alpha/r^3) = -0.010223 against the printed -0.01, K1 = C^2 = 1.045e-4 against the printed 1e-4. Against that, Bradley's fitted k = 0.615 gives C = 0.989104 through eq. (1c) - the paper's own 0.99 - so the polarization theory needs an inter-layer dipole ratio 96.75 times larger than the polarizability of argon admits, and a per-layer binding-energy ratio 9361 times larger. Eq. (7) is confirmed symbolically to follow from eqs. (5) and (6), which the paper does not state"
+  - "AND THE SAME CONCLUSION WITHOUT THE RIVAL'S CLOSED FORM. Eq. (1b) is quoted by BET from a paper not on disk, so nothing load-bearing is allowed to rest on it: the recursion (1a) itself is assembled as a tridiagonal system with mu_0 = 1 and mu_{N+1} = 0 and the decay ratio MEASURED off the solution. At the computed k it returns eq. (1b) to 8.5e-14 and the ladder is exactly geometric (mu_2/mu_1 equals mu_1/mu_0 to twelve figures), and it is independent of the truncation - the N = 100 to 600 sweep has relative spread 0.000e+00. At Bradley's k = 0.615 there is no decaying solution to find and the sweep has relative spread 4.4824, the moments changing sign along the ladder (+ - - - - - + +). That is the strongest statement on the page against Bradley's k and it uses neither (1b) nor (1c); the paper's own footnote 3 records the same thing algebraically (1 - 4k^2 = -0.5129, so eq. (1b) is complex, and Bradley's two k exceed the admitted limit 0.5 by 21.5 % and 23.0 %)"
+  - "THE HEADLINE COMPUTED A SECOND, INDEPENDENT WAY, and it is the page's own result rather than the paper's. Maximising the BET inflection value over c on the inflection locus gives a CEILING that depends on nothing: v(x_infl)/v_m <= 2/sqrt(3) = 1.154700538379 for every c > 1, attained at c = 27 + 15 sqrt(3) = 52.9807621135 and x = 3 sqrt(3) - 5 = 0.196152422707. Route 1 is a Lagrange condition solved symbolically in sympy; route 2 is a bracketing root-find on a numerically differentiated root-find, sharing no algebra with it. The two agree bit-identically on the ceiling and to 1.2e-8 on c*, the latter set by the finite-difference step and reported as such. SAMPLING the maximum on a 40-point log grid instead - the defect the repository has twice published - moves the ceiling only in the SIXTH significant figure (1.1546960 against 1.1547005, 3.905e-6 relative) but moves c* by 1.4307 PER CENT (52.233451 against 52.980761; the grid has a node at 52.2335 and the argmax lands on it). The maximum is quadratic, so its location degrades far faster than its value, and it is the location a reader would quote; that is a break row, and both numbers are in the cell-50 prose audit"
+  - "WHAT THE CEILING DOES TO THE PAPER'S BEST-LOOKING CORROBORATION, AND THE HALF OF IT THE CEILING CANNOT TOUCH. Brunauer, Emmett & Teller offer v_m against point B as evidence, 'the two seldom differing by as much as 10 %' - a claim journal page 315 makes about the TWELVE isotherms of Table I, which this page extends to the eighteen non-butane pairs of Tables I and III. The claim is true: on Table I the worst is 16.667 % (Fe-K2O catalyst 930, where both entries carry two significant figures) and only one row of twelve exceeds 10 %. But point B is an eye-read landmark at or below the inflection, and the inflection is capped at 1.1547 v_m for EVERY c - so such a landmark cannot exceed v_m by more than 15.5 %, whatever the adsorbent, the gas or the fit. THE BOUND IS ONE-SIDED and the page states it that way: nothing stops a landmark sitting arbitrarily far BELOW v_m, and this paper's own Table III butane row is point B / v_m = 0.4828, i.e. 51.72 % below, which the page prints as its own counterexample. Measured over the eighteen non-butane pairs: observed point B/v_m 1.002871 +- 0.072025, predicted inflection 1.146238, mean(inflection / point B) = 1.148812 - i.e. the inflection sits 14.881 % ABOVE point B, equivalently point B sits 12.954 % below the inflection (12.493 % elementwise). The direction is stated once in the cell and used identically everywhere. The corroboration is real but its upper half was promised by the shape of the equation"
+  - "THE EVIDENCE THAT IS GENUINELY NOT A FIT, WITH ITS NULL BASELINE PRINTED BESIDE IT. Seven gases on one silica gel, each with its own fitted v_m, must give the same surface once converted through cross-sections computed from the densities of the solidified and liquefied gas - a conversion containing no adsorption, and nothing adjusted to make the seven agree. The seven fitted v_m span 46.877 % about their mean; the seven derived areas span 10.609 %, a collapse factor 4.4184. On charcoal 18.562 % -> 7.897 %, factor 2.3506. The polarization theory cannot be asked this question at all: it has no v_m, and the paper records that de Boer and Zwicker could not evaluate K1 because the surface was unknown. Both printed averages and both printed maximum deviations are reproduced (437.857 vs 440 and 15.106 % vs 15 %; 506.286 vs 500 and 10.609 % vs 10 %; 707.714 vs 708 and 8.720 % vs 9 %; 828.571 vs 829 and 7.897 % vs 8 %), on the seven-row basis the authors themselves use for charcoal"
+  - "THE CROSS-SECTIONS THEMSELVES RECOVERED, AND CHECKED ACROSS TWO INDEPENDENT TABLES. Emmett & Brunauer (1937), where they are tabulated, is not on disk and was not consulted, so they are obtained by inverting the v_m and surface columns - and Tables III and V share seven isotherms, giving fourteen independent recovery pairs. Worst disagreement 0.6631 %. THAT MAXIMUM IS NOT THE PRINTED ROUNDING and the page no longer says it is: V_STP and N_A cancel exactly in a ratio of two sigma, so the envelope follows from the printed quantisation alone (surfaces integer, v_m to one decimal) and for the pair that sets the maximum - CO at -183 C, liquid packing - it is 0.2210 % against 0.6631 % observed, a factor 3.0005. Thirteen of the fourteen pairs sit inside their own envelopes; that one does not, all four of its inputs were re-read at digit scale, and the CAUSE IS UNKNOWN. Reported, not repaired, and sigma_cross_table_max_over_envelope is now a reported metric with its own break rows. What the check still establishes: ONE set of cross-sections was used for both tables, and the page has that set without the 1937 paper"
+  - "EQ. (B) EXERCISED ON EVERY BRANCH, BY A ROUTE THAT SHARES NO ALGEBRA WITH IT. Eq. (B) is two geometric series summed by hand in 1938; here the layer equilibria (10)-(12) are solved for the occupancies {s_i} with pymrm's newton and a NumJac((n,1), axes_diagonals=[0]) Jacobian, and eq. (15)'s two sums are formed TERM BY TERM. 28 (n, x) pairs - n = 1, 2, 5, 6, 7, 20, 60 and x = 0.05, 0.30, 0.58, 0.72, i.e. every branch the paper uses including the Langmuir limit and the n -> infinity limit, inside and outside the fitting window - worst relative deviation 6.66e-16, every Newton solve converged. It CAN fail: mistyping the (n+1) in eq. (B)'s numerator as n moves it to percent level, and that is a break row"
+  - "and the printed percentages that go with it. Journal page 316 states that the n = 6 curve is in error by +5 % at x = 0.58 and -7 % at x = 0.72 against the branches that fit there; with Fig. 3's own printed constants (v_m = 133.0 cc, c = 156.7) those come out +5.6206 % and -6.8464 %. Root-finding the CONTINUOUS n behind each - with pymrm's newton, non-integer n being the paper's own device since Table IV's footer reads n = 3.5 - gives 5.8706 and 5.9795, so the two statements are mutually consistent with a single n and the authors' 'average value of n = 6' is right to 2.16 %. The related claim that eq. (A) approximates eq. (B) well 'when x has a small value and n is as large as 4 or 5' is quantified rather than repeated: -0.0024 % at x = 0.05 and n = 4, but -21.5 % at x = 0.58 and -41.2 % at x = 0.72"
+  - "A PRINTED STATEMENT THAT DOES NOT SURVIVE, PROVED IN THE F2.3 ORDER - pin what is NOT free first. The paper never defines its '+-'. Table II's four gases pin it exactly, and the two halves are NOT rounded alike: the printed 840 +- 50, 650 +- 55, 1460 +- 120 and 1900 +- 30 are the MIDRANGE of its eight numbers rounded to the nearest 10 cal (4 of 4 exact, worst residual 4 cal) and the HALF-RANGE rounded to the nearest 5 (4 of 4, worst residual 2.5 cal). Argon is what pins the second rule: its half-range is 55.0 and is printed as 55, which no multiple of 10 can produce, so 'rounded to 10 cal' is wrong for the half-width; CO2's 122.5 is an exact tie printed as 120. Applied to Table I, 'E1 - EL is uniformly 840 +- 70 cal. [...] for nitrogen on all twelve adsorbents' fails: the twelve give 824.5 +- 86.5 (820 +- 85, or 820 +- 90 on a nearest-10 half-width) and TWO rows fall outside the printed band (Cr2O3 gel at 738 and catalyst 931 at 911). Omitting the single row Cr2O3 gel gives 841.5 +- 69.5 = 840 +- 70 under BOTH half-width rules, to 1.5 and 0.5 cal, and of the twelve possible single-row omissions that is the ONLY one that reproduces the printed band UNDER BOTH RULES - which the cell asserts rather than assumes. So the number belongs to eleven rows and the sentence says twelve. The quotation is shown at full length because the ellipsis spans a sentence boundary ('For nitrogen E1 - EL is uniformly 840 +- 70 cal. Since EL is about 1330 cal., E1 is therefore 2170 +- 70 cal. for nitrogen on all twelve adsorbents'); the first sentence is about the last column of Table I, which has twelve rows, so the substance is unchanged. E1 = 2170 +- 70 inherits the same basis. REPORTED, NOT REPAIRED, and the page does not claim to know which the authors intended"
+  - "four further printed defects, all reported and none repaired. (a) Footnote 10 sets the adjacent-layer lattice sum as '(8.357 - 8.823/r^3)', which is dimensionally inhomogeneous and does not give the coefficient used two lines below; (8.357 - 8.823)/r^3 = -0.466/r^3 gives it exactly, and the CSV stores the two sums and the 0.466 separately so the misprint is proved from the paper's arithmetic rather than asserted. (b) Table IV's E1 column closes against (E1 - EL) + EL to +1, 0 and -5 cal; the -5 is 1705 + 5840 = 7545 printed as 7540, a round-half ambiguity. (c) catalyst 954's nitrogen v_m appears twice and disagrees: Table I's 2.86 cc/g on Fig. 4's stated 50.4 g sample is 144.144 cc against Fig. 4's 124.7 cc, +15.593 %. NO MASS IS PRINTED for Table I's row, so the page prints both readings and adopts neither. (d) Table V's two argon rows repeat ONE v_m (215.5) and one solid-packing surface (746) across a 13 K interval, where nitrogen - the only other gas measured at both temperatures - has two different v_m. The CSV sidecar had recorded this and the notebook had not; it is now printed on the page, together with the fact that nothing reads the -195.8 C argon row (section 5 merges Tables III and V on gas AND temperature, and Table III has no argon at -195.8 C)"
+  - "THE SINGLE-POINT RULE GIVEN ITS EXACT CONDITION, root-found and in closed form. The paper's shortcut - join the 760 mm nitrogen point to the origin, the slope is 1/v_m 'with an error of no more than 5 %' - amounts to v_m = v(1 - x), and on the BET isotherm v(1-x)/v_m = cx/(1 + (c-1)x), which is ALWAYS below 1: the shortcut can only underestimate v_m, a one-sidedness the paper does not mention. The tolerance condition is c >= (1-eps)(1-x)/(eps x), i.e. exactly c >= 38 at eps = 0.05 and x = 1/3; closed form and bracketing root-find agree to 2.8e-15. All twelve Table I rows clear it (smallest reconstructed c = 61.672) and the worst underestimate is 3.141 % against the promised 5 %. FOUR of the seven Table III isotherms (argon, oxygen, CO2, butane) do NOT clear it and would be off by 5.4 to 7.1 %, which is why the authors scoped the sentence to nitrogen. THE TABLE I MARGIN IS NOT ROBUST AND THE PAGE SAYS SO: scaling every reconstructed c by 0.447249, the factor the paper's own two routes to one c disagree over (validation bullet below), drops the smallest c to 27.583 - a ratio 0.7259 of the threshold, BELOW it - and puts SEVEN of the twelve rows past the promised 5 %, the worst at 6.761 %. That is a break row on single_point_worst_underestimate_pct and t1_min_reconstructed_c, and the page claims only the unscaled result"
+  - "FOOTNOTE 16's PREFACTOR IS NOT MEASURABLE IN THIS PAPER, AND THE PAGE SAYS SO INSTEAD OF PRETENDING OTHERWISE. No table prints c, so c is inverted from E1 - EL through footnote 16 with a1b2/b1a2 set to 1 - which is the authors' own operation run backwards, because journal page 313 states the direction: 'From c one can obtain an approximate value for E1 - EL.' Every printed E1 - EL is therefore 2.303 RT log c with the prefactor ALREADY set to 1, so there is no independently determined energy anywhere against which the prefactor could be measured, and the inversion returns the authors' fitted c to the 0.2793 % the integer E column costs (Table I's 954 row, 894 cal at 90.1 K, gives c = 147.394). WHAT THE PAPER DOES EXHIBIT IS AN INTERNAL INCONSISTENCY, and it is the fifth. Nitrogen on catalyst 954 at 77.3 K appears twice: FITTED directly in Fig. 3 as c = 156.7, and CALCULATED in Fig. 4 from the -183 C isotherm with E1 - EL = 900 cal, which at 77.3 K is c = 350.364 - a factor 2.2359 apart. The 900 is not a 77.3 K fit: it is Table I's 894 rounded (as Fig. 4's argon 700 is Table II's 704), and journal page 316 states that the -195.8 C curves 'have been calculated from the -183 isotherms' on the assumption that E1 - EL 'changes only slightly with temperature'. Read as energies, the fitted c implies 776.399 cal at 77.3 K against Table I's 894 at 90.1 K (-13.154 %). THAT FACTOR IS THEN APPLIED AS A SENSITIVITY and the page reports which side of it each conclusion falls: section 6 is untouched because the inflection ceiling is a maximum over ALL c (a structural insensitivity, NOT evidence, and labelled that way in the break table), while SECTION 7 DOES NOT SURVIVE IT - seven of twelve rows breach 5 % and the smallest c falls below the threshold. No reconstructed c is reported as a measured quantity anywhere"
+  - "two further out-of-sample tests, both cheap and both the paper's own. v_m for nitrogen on catalyst 954 at 77.3 K is CALCULATED in Fig. 4 from the 90.1 K isotherm through v_m ~ d_L^(2/3) (130 cc) and FITTED independently in Fig. 3 (133.0 cc): the prediction is -2.2556 %, a comparison the paper never makes. And Palmer & Clark's specific surface, measured by rate of solution in hydrofluoric acid with no adsorption in it at all, brackets the BET value: 1.2026 with the liquid-acetone cross-section and 0.9147 with Adam's, against the printed 'about 20 % larger' and 'about 8 % smaller'; the two printed areas are recovered from the printed micromoles and sample mass to -0.93 % and -0.74 % with a modern Avogadro number"
+  - "a 79-row defect-injection table covering ALL FIFTY-FOUR reported metrics (76 rows move their metric; coverage asserted key-for-key against agreement.json, set difference empty in both directions), in three families - transcription defects (a lost zero in alpha/r^3, swapped lattice sums, a misplaced decimal in Bradley's k, digit transpositions in four tables), model defects (a sign flipped in eq. (26)'s denominator, the wrong branch of eq. (B), eq. (1c) used where (1b) belongs, the mu_{i+1} coupling dropped from the ladder, R in joules) and basis defects (the wrong rows averaged, the butane row put back into claims the authors exclude it from, the ceiling sampled instead of root-found, the tuned-sigma bound taken on the butane-inclusive basis). THREE ROWS MOVE NOTHING AND ARE SPLIT HONESTLY: two are blind spots - adding layers to the BET ladder (it is exact at every n, not converging) and rescaling V_STP (a common factor that cancels out of the cross-table sigma ratio) - and the third is labelled STRUCTURAL and is cited as evidence for nothing: rescaling every reconstructed c cannot move the inflection ceiling, because the ceiling is a maximum over ALL c. The rows that DO test a wrong c are aimed at single_point_worst_underestimate_pct, t1_min_reconstructed_c and inflection_over_pointB_mean, and the first two fail"
+  - "SIX METRICS SIT BELOW check_agreement.py's ABS_FLOOR = 1e-12 and CI therefore does not compare them; each is named on the page with an above-floor companion. They are the five symbolic identities (exactly 0), the ladder against eq. (B) (6.7e-16), the ladder against eq. (1b) (8.5e-14), the ladder truncation spread at the physical k (exactly 0 - which IS the result), the ceiling's two-route agreement (bit-identical), and the five repeated table cells (exactly 0, integers agreeing). Three further quantities are printed and deliberately NOT reported as metrics because CI comparing them would manufacture regressions: the single-point threshold's two-route agreement (2.8e-15), c*'s two-route agreement (1.2e-8, set by a finite-difference step) and the Newton iteration counts"
+  - "every number in the page's prose is re-derived in a final audit cell and compared against what the cells printed; the cell RAISES on any mismatch, so the markdown cannot drift from the output. 53 numbers checked - the audit was extended to cover the sentences a verification pass found wrong, since the audit's earlier gaps (the sampled-c* ratio, the direction of the point-B percentage, the sigma envelope) were exactly where the drift had occurred. Two consecutive executions give identical cell content, identical figures and an identical agreement.json"
+
+adds: >
+  Nothing to the BET equation, and the page says so in the section where a
+  reader would expect a solver. Equations (26), (28), (A), (B) and (E) are
+  closed forms; there is no grid, no time step and no transport anywhere, and
+  most of the page would run with pymrm uninstalled, exactly as on A1.6 and
+  A1.1. What newton and NumJac do here is narrow and real, and it is four
+  things.
+
+  (1) A ROUTE TO THE ISOTHERM THAT SHARES NO ALGEBRA WITH THE ISOTHERM. Eq. (B)
+  is two geometric series summed by hand in 1938. Solving the layer equilibria
+  (10)-(12) for the occupancies and forming eq. (15)'s sums term by term is a
+  different computation with the same answer, and it CATCHES a wrong closed
+  form: mistyping the (n+1) in eq. (B)'s numerator moves the agreement from
+  6.7e-16 to percent level. Exercised on every branch the paper uses, n = 1, 2,
+  5, 6, 7, 20 and the infinite limit, at four relative pressures.
+
+  (2) THE SAME TREATMENT APPLIED TO THE RIVAL THEORY, which is the point of the
+  page. The polarization theory's closed form (1b) is quoted by BET from a paper
+  nobody here has read, so the recursion (1a) is assembled and the decay ratio
+  measured off the solution instead. That removes the dependence entirely, and
+  it does something the closed form cannot: at k > 1/2 it SHOWS what goes wrong,
+  the moments oscillating and the answer depending on where the ladder is cut,
+  where eq. (1b) merely returns a complex number.
+
+  (3) ROOT-FINDS WHERE A SWEEP WOULD HAVE BEEN WRONG - the inflection point, the
+  c that maximises it, the c at which the single-point rule reaches exactly 5 %,
+  and the continuous n behind each printed percentage. The break table carries
+  the row that shows this matters, at its honest size: sampling the ceiling on a
+  40-point log grid moves the ceiling only in the sixth significant figure
+  (1.1546960 against 1.1547005) but moves c* by 1.4307 PER CENT (52.233451
+  against 52.980761). The maximum is quadratic, so the location degrades far
+  faster than the value, and it is the location a reader would quote.
+
+  (4) AND ONE THING THAT IS NOT PYMRM AT ALL, and is the most useful output on
+  the page: the ceiling v(x_infl) <= (2/sqrt(3)) v_m. It is not in the 1938
+  paper and it converts the authors' strongest-looking corroboration - v_m
+  agreeing with point B, a claim journal page 315 makes about the TWELVE
+  isotherms of Table I and which the page extends to the eighteen non-butane
+  pairs of Tables I and III - into a statement about the shape of their own
+  equation. One-sidedly: it caps how far the knee can sit ABOVE v_m, not below.
+  It needed a Lagrange condition and a root-find, not a solver.
+
+agreement: >
+  Against printed results, all reproduced from the paper's own inputs: the
+  polarization chain (-0.466, -0.352523 vs -0.35, -0.010223 vs -0.01, 1.045e-4
+  vs 1e-4, and 0.989104 vs the printed 0.99 from Bradley's k); the four surface
+  statistics of Tables III and V (437.857 vs 440, 15.106 % vs 15 %, 506.286 vs
+  500, 10.609 % vs 10 %, 707.714 vs 708, 8.720 % vs 9 %, 828.571 vs 829, 7.897 %
+  vs 8 %); eq. (B)'s two printed percentages (+5.6206 % vs +5 %, -6.8464 % vs
+  -7 %); Table IV's two ratios (1.430131 vs 1.43, 1.152572 vs 1.15) and its E1
+  column to 5 cal; Palmer & Clark's two comparisons (+20.26 % and -8.53 % vs
+  "about 20 % larger" and "about 8 % smaller"); the butane anomaly (v_m/B =
+  2.0712 vs "twice"); and the v_m-against-point-B tolerance (worst 16.667 %,
+  one row of twelve above 10 %, against "seldom ... as much as 10 %").
+
+  Discrimination rather than fit: C from the polarizability is 96.75 times
+  smaller than Bradley's fit needs, 9361 times in energy; the polarization
+  ladder has no fixed decay ratio at his k (truncation spread 4.4824 against
+  0.000e+00 at the computed k). Not-a-fit test with null baseline printed
+  beside it: a 46.877 % spread in fitted v_m collapses to 10.609 % in derived
+  area on silica gel (factor 4.4184) and 18.562 % to 7.897 % on charcoal
+  (factor 2.3506).
+
+  Headline computed twice: the ceiling 2/sqrt(3) = 1.154700538379 from a
+  symbolic Lagrange condition and from a bracketing root-find on a
+  numerically differentiated root-find, bit-identical; c* = 27 + 15 sqrt(3) =
+  52.9807621135 to 1.2e-8. Structural, below ABS_FLOOR and named as such: five
+  symbolic identities at 0, the layer ladder against eq. (B) at 6.7e-16 over 28
+  (n, x) pairs, the dipole ladder against eq. (1b) at 8.5e-14.
+
+  Circularity bound, measured rather than argued: a sigma set tuned to flatten
+  the silica-gel areas EXACTLY leaves the charcoal areas spread by 14.379 %
+  against 7.366 % for the printed set on the six non-butane isotherms the two
+  tables share - a factor 1.9521, real but modest. On the butane-inclusive seven
+  pairs the test has no power at all (31.283 % tuned against 31.036 % printed);
+  both bases are printed and the bound is quoted only on the six-row one.
+
+  Printed defects: "840 +- 70 cal. [...] for nitrogen on all twelve adsorbents"
+  is the ELEVEN-row number (twelve give 824.5 +- 86.5, i.e. 820 +- 85 or 820 +- 90
+  depending on the half-width rule; two rows outside the printed band; the
+  omission is unique among the twelve under both rules); footnote 10's lattice
+  sum is mis-grouped; Table IV's E1 column is 5 cal out on one row; catalyst
+  954's v_m disagrees by 15.593 % between Table I and Fig. 4; Table V's two argon
+  rows repeat one v_m across 13 K; and the worst cross-table sigma disagreement
+  (0.6631 %, CO liquid packing) is 3.0005 times what the printed rounding can
+  produce, cause unknown. Nitrogen on catalyst 954 at 77.3 K carries two c a
+  factor 2.2359 apart (Fig. 3 fitted 156.7 against Fig. 4's calculated curve,
+  which implies 350.364).
+
+caveats: >
+  TIER 6 THROUGHOUT, AND THIS MATTERS MORE HERE THAN USUAL. Not one number in
+  any of the five tables is a measurement. Every entry is a constant the authors
+  DERIVED from an isotherm - v_m and c from their own eq. (A) plot over
+  0.05 < p/p0 < 0.35, point B read by eye, E1 - EL from c through footnote 16,
+  the surface columns from v_m and an external cross-section. Reproducing one of
+  them is reproduction, never validation, and the page says so at each such
+  comparison. The underlying isotherms exist in this paper only as drawn curves.
+
+  NO CURVE IS DIGITISED AND NO FIGURE IS REPRODUCED. Where a figure is used it
+  is a block of hand-lettered CONSTANTS typeset inside the plot frame (Figs. 3,
+  4 and 6), read as characters off a crop, and the page says so at every such
+  use. Fig. 3's constants are used because it is the only place in the paper
+  where v_m and c are printed for the same isotherm; Fig. 4's because it is the
+  only place a v_m is printed as calculated rather than fitted.
+
+  THE RIVAL THEORY IS JUDGED IN ITS OPPONENT'S WORDS. De Boer & Zwicker (1929),
+  de Boer (1931, 1931, 1932) and Bradley (1936) are all read THROUGH Brunauer,
+  Emmett & Teller's restatement (eqs. 1-4a and footnotes 3 and 10). None is on
+  disk and none was consulted. What the page establishes is that the
+  polarization theory AS BET STATE IT cannot carry the binding energy Bradley's
+  fitted k assigns it. That is a real limitation and it is stated in the
+  Results, in Reuse and here. What makes the judgement worth something anyway is
+  that its inputs - a refractive index, a solid density, three lattice sums -
+  are checkable physics rather than assertions.
+
+  ORIGIN NOT CONSULTED, and nothing on the page derives from any of them:
+  Emmett & Brunauer, THIS JOURNAL 59, 1553 (1937), the table of molecular
+  cross-sections behind Tables III and V - recovered here by inverting those
+  tables' own columns instead; McGavack & Patrick (1920), the SO2 isotherms of
+  Table IV; Palmer & Clark (1935), the HF-dissolution areas; Goldman & Polanyi
+  (1928), the ethyl-chloride isotherms of Fig. 6; McBain (1932); International
+  Critical Tables Vol. I p. 103 and Vol. VII p. 11, the density of solid argon
+  and the refractive index of argon gas - the density is likewise recovered by
+  inverting eq. (7) against the printed 0.029, giving 1.652 g/cm3 and a
+  nearest-neighbour distance of 3.844 Angstrom, both stated as recoveries.
+
+  TWO SCOPE DECISIONS, BOTH DECLINED RATHER THAN CLOSED WITH OUTSIDE DATA.
+  Fig. 6 (ethyl chloride on charcoal at three temperatures) is a fully specified
+  eq. (E) prediction but needs vapour pressures the paper does not print. The
+  Darco statement (n = 2.2 from x = 0.02 to 0.93, no point off by 4 %) refers to
+  an isotherm that appears nowhere in the paper. Footnote 18's eqs. (C) and (D)
+  are transcribed and NOT exercised, because the paper never evaluates them
+  either; the page says so rather than leaving them looking supported.
+
+  c IS A RECONSTRUCTION WHEREVER IT APPEARS, inverted from E1 - EL through
+  footnote 16 - which is the authors' own operation run backwards, since journal
+  page 313 says the energies were obtained FROM c with the prefactor already set
+  to 1. So footnote 16's prefactor is not measurable anywhere in this paper, the
+  inversion returns the authors' fitted c to 0.2793 %, and the page does not
+  claim to have measured a prefactor. The honest size of the doubt is the
+  paper's own: nitrogen on catalyst 954 at 77.3 K carries two c a factor 2.2359
+  apart (Fig. 3's direct fit against Fig. 4's calculated curve). Applied as a
+  sensitivity: the inflection ceiling cannot move under ANY rescaling of c
+  because it is a maximum over all c - a structural insensitivity, not evidence -
+  while the single-point margin of section 7 DOES NOT SURVIVE it (seven of twelve
+  rows past 5 %, smallest c 27.583 against the threshold 38). Section 7's
+  conclusion is claimed on the paper's own numbers and its fragility is stated
+  beside it.
+
+  WHAT THE PAGE DOES NOT SETTLE. It does not show that the BET model is right -
+  its isotherm agreement is a two-parameter fit over a fifth of the range and is
+  labelled one everywhere, and the page never reports it as a metric. It shows
+  that the surface areas the model yields are mutually consistent across seven
+  gases and consistent with one non-adsorption measurement, and that the rival
+  theory cannot be asked either question. It says nothing about capillary
+  condensation, the other explanation of the S-shape named in the paper's own
+  first paragraph, because the paper offers no number that separates them. And
+  it is not a rate: adsorption dynamics is J1.5.

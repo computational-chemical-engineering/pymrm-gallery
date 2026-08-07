@@ -1,0 +1,73 @@
+dataset_id: bet-1938-table1-nitrogen-90K
+title: "Brunauer, Emmett & Teller (1938) Table I - v_m, point B and E1-EL for nitrogen at 90.1 K on twelve adsorbents"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 314. Nitrogen at 90.1 K on twelve adsorbents: unpromoted, singly
+  and doubly promoted iron synthetic-ammonia catalysts, two copper catalysts,
+  two chromium oxides and a silica gel.
+
+  THESE ARE NOT RAW MEASUREMENTS. Every entry is a CONSTANT the authors derived
+  from an isotherm: v_m and c from the slope and intercept of their own eq. (A)
+  plot over 0.05 < p/p0 < 0.35, point B read by eye off the isotherm, and
+  E1 - EL obtained from c through footnote 16's 2.303 R T log c. The underlying
+  isotherms exist in this paper only as curves in Figs. 1-4 and were deliberately
+  NOT digitised - see the page's Validation section for the routes taken instead.
+  c itself is NOT printed for any row of this table; where the page needs it, it
+  is reconstructed from E1 - EL and labelled as a reconstruction with a measured
+  factor-2 uncertainty (see the sidecar of bet-1938-printed-claims.csv).
+
+  The paper gives no sample mass for the eight substances without a curve in
+  Fig. 1, which matters for row 3: Figs. 3 and 4 print constants for catalyst 954
+  on a 50.4 g sample that do not reconcile with this row's per-gram value. The
+  page reports that and does not repair it.
+
+acquisition:
+  method: table
+  figure: "TABLE I, journal page 314"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to the table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so the page was rendered at 300 ppi and the table cropped out of it;
+    a larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+
+    Two traps in this table, both handled at crop scale and neither repaired.
+    (1) Seven cells are printed with a bare leading decimal point (".56", ".14",
+    ".05", ".09", ".12", ".10", ".55") in a column whose other entries carry a
+    leading zero; they are written as 0.56 etc. here. (2) Read at page scale the
+    Fig. 1 legend appears to name "catalyst 358" where the table has 958; at
+    300 ppi crop scale the legend reads 958 and the two agree.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. v_m and point B carry two or three
+    significant figures - eight of the twelve rows carry only two, so a ratio
+    formed from them (e.g. 0.14/0.12) is quantised at several per cent, which the
+    page states where it uses those ratios. E1 - EL is printed as a bare integer
+    in cal./mole.
+
+columns:
+  - {name: row, unit: "-", description: "row index in the printed table, top to bottom"}
+  - {name: substance, unit: "-", description: "the printed row label"}
+  - {name: curve_fig1, unit: "-", description: "curve number in the paper's Fig. 1; blank where the substance is not drawn"}
+  - {name: v_m_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed in a complete unimolecular layer, from the slope and intercept of the eq. (A) plot; PER GRAM of adsorbent"}
+  - {name: point_B_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed at point B, the beginning of the approximately linear portion of the isotherm, read by eye; PER GRAM"}
+  - {name: E1_minus_EL_cal_per_mol, unit: "cal/mol", description: "heat of adsorption in the first layer minus the heat of liquefaction, obtained from c through footnote 16"}
+
+caveat: >
+  TIER 6 - the authors' own derived constants, not measurement. Reproducing a
+  number in this table is reproduction, never validation. What IS checkable here
+  is internal, and the page checks exactly those things: whether the printed
+  statement "840 +- 70 cal. for nitrogen on all twelve adsorbents" is the number
+  these twelve rows give (it is not - it is the number ELEVEN of them give), and
+  whether the v_m column and the point B column agree as closely as the text
+  claims.

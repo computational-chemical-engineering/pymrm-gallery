@@ -1,0 +1,64 @@
+dataset_id: bet-1938-table3-silica-gel
+title: "Brunauer, Emmett & Teller (1938) Table III - constants and specific surfaces for seven gases on one silica gel"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 316. Seven adsorption isotherms - nitrogen twice, argon, oxygen,
+  carbon monoxide, carbon dioxide and butane - on a single silica gel sample,
+  each at the temperature listed.
+
+  THESE ARE NOT RAW MEASUREMENTS. v_m comes from the authors' eq. (A) plot over
+  0.05 < p/p0 < 0.35, point B is read by eye off the isotherm, E1 - EL comes from
+  the fitted c through footnote 16, and the two surface columns are v_m converted
+  through molecular cross-sections taken from Emmett & Brunauer, THIS JOURNAL 59,
+  1553 (1937) - a paper NOT on disk and NOT consulted. The cross-sections are
+  therefore an EXTERNAL, non-adsorption input to this table: they are computed
+  from the density of the solidified and of the liquefied gas. That is what makes
+  the agreement between the seven surface values a test rather than a fit, and it
+  is the central point the page makes with this table.
+
+  The page recovers those cross-sections by inverting the v_m and surface columns,
+  and cross-checks them against the charcoal table (bet-1938-table5-charcoal.csv),
+  which was computed with the same set.
+
+acquisition:
+  method: table
+  figure: "TABLE III, journal page 316"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to the table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so the page was rendered at 300 ppi and the table cropped out of it;
+    a larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. v_m and point B carry four significant
+    figures; the two surface columns are bare integers in square metres per gram,
+    so a cross-section recovered by inverting them is good to about 0.2 %.
+
+columns:
+  - {name: row, unit: "-", description: "row index in the printed table, top to bottom"}
+  - {name: gas, unit: "-", description: "the adsorbate"}
+  - {name: temperature_C, unit: "degC", description: "printed temperature"}
+  - {name: curve_fig2, unit: "-", description: "curve number in the paper's Fig. 2"}
+  - {name: v_m_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed in a complete unimolecular layer, per gram of silica gel"}
+  - {name: surface_solid_m2_per_g, unit: "m2/g", description: "specific surface from v_m and the cross-section computed from the SOLIDIFIED gas"}
+  - {name: surface_liquid_m2_per_g, unit: "m2/g", description: "specific surface from v_m and the cross-section computed from the LIQUEFIED gas"}
+  - {name: point_B_cc_per_g, unit: "cm3 (STP) per g", description: "volume adsorbed at point B, read by eye"}
+  - {name: E1_minus_EL_cal_per_mol, unit: "cal/mol", description: "heat of adsorption in the first layer minus the heat of liquefaction"}
+
+caveat: >
+  TIER 6 - derived constants, not measurement. The checkable content is internal
+  and the page checks all of it: the printed averages (440 and 500 m2/g) and the
+  printed maximum deviations (15 % and 10 %) against these seven rows; the
+  butane anomaly the authors flag (v_m twice point B); and the cross-sections
+  recovered here against those recovered independently from Table V.

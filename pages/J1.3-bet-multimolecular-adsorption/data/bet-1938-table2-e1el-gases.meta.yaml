@@ -1,0 +1,57 @@
+dataset_id: bet-1938-table2-e1el-gases
+title: "Brunauer, Emmett & Teller (1938) Table II - E1-EL for four gases on two adsorbents"
+status: complete
+
+source:
+  authors: ["Brunauer, S.", "Emmett, P. H.", "Teller, E."]
+  year: 1938
+  container: "Journal of the American Chemical Society 60(2) 309-319 (February 1938)"
+  doi: "10.1021/ja01269a023"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 315. Four gases on two very different adsorbents - a singly
+  promoted iron synthetic-ammonia catalyst and a silica gel - each at the
+  temperature at which that gas was measured.
+
+  THESE ARE NOT RAW MEASUREMENTS: each entry is E1 - EL obtained from a fitted c
+  through footnote 16. The table's purpose in the paper is the claim that
+  E1 - EL is a property of the GAS and not of the adsorbent, and the prose beside
+  it quotes four bands (840 +- 50, 650 +- 55, 1460 +- 120, 1900 +- 30 cal.).
+  Those four bands are what pins the paper's own +- convention, which the page
+  then applies to Table I.
+
+  All four silica-gel entries also appear in Table III and all four values agree
+  cell for cell; the catalyst-954 nitrogen entry also appears in Table I and
+  agrees. Those five coincidences are transcription checks and the page uses them
+  as such.
+
+acquisition:
+  method: table
+  figure: "TABLE II, journal page 315"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to the table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so the page was rendered at 300 ppi and the table cropped out of it;
+    a larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision: bare integers in cal./mole. The table is
+    printed as two rows by four columns and is stored here in long format, one
+    row per (substance, gas) pair.
+
+columns:
+  - {name: substance, unit: "-", description: "the printed row label"}
+  - {name: gas, unit: "-", description: "the adsorbate, as the column heading names it"}
+  - {name: temperature_C, unit: "degC", description: "the temperature in the column heading"}
+  - {name: E1_minus_EL_cal_per_mol, unit: "cal/mol", description: "heat of adsorption in the first layer minus the heat of liquefaction"}
+
+caveat: >
+  TIER 6 - derived constants, not measurement. The one thing in this table that
+  can fail is the paper's own +- notation: the page shows that all four printed
+  bands are the midrange and half-range of these eight numbers, rounded to the
+  nearest 10 cal., four times out of four. That decoding is then used as a fixed
+  yardstick against Table I, in the F2.3 order - pin what is not free first.

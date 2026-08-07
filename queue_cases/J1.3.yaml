@@ -5,7 +5,8 @@ catalog_reference: Brunauer, Emmett & Teller (1938)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J1.3-bet-multimolecular-adsorption/
 reference:
   authors:
   - Brunauer, S.
@@ -18,49 +19,136 @@ reference:
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/Brunauer1938-BET-multimolecular-adsorption-JACS60-309.pdf
   open_access: null
-  checked: '2026-08-06'
-  identified_by: 'Identified from the page: running head "Feb., 1938 ... 309", the Contribution line
-    "[Contribution from the Bureau of Chemistry and Soils and George Washington University]", the
-    title "Adsorption of Gases in Multimolecular Layers" and the by-line "By Stephen Brunauer, P.
-    H. Emmett and Edward Teller". Clean title page - no first-page trap on this one.'
+  checked: '2026-08-07'
+  identified_by: 'CONFIRMED BY THE BUILDER on a 300 ppi native render, 2026-08-07: running head
+    "Feb., 1938 ... 309", the Contribution line "[Contribution from the Bureau of Chemistry and Soils
+    and George Washington University]", the title "Adsorption of Gases in Multimolecular Layers", the
+    by-line "By Stephen Brunauer, P. H. Emmett and Edward Teller", and "Received November 19, 1937"
+    on the last page. Clean title page, no first-page trap.'
 blocker: null
-notes: null
-updated: '2026-08-06'
-doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
-  field by field against the Crossref record: title, container, volume, issue, page range and year
-  all agree with the catalogue''s own citation string. NOT verified against the document itself, because
-  no copy could be obtained; the builder must still confirm the title page when the PDF arrives, as
-  on F3.5 and G1.7.'
+notes: 'BUILT 2026-08-07 and staged at queue_cases/J1.3/page/. VERIFIED 2026-08-07 ("safe after fixes")
+  and the fixes applied the same day; review/verification.md holds the verifier''s report.
+
+  THE ONE FINDING THAT CHANGED A CONCLUSION: the page had claimed to measure footnote 16''s prefactor
+  as 0.447 and asserted that sections 6 and 7 "were built to survive" the resulting factor-2
+  uncertainty. Settled against the paper''s own text on fresh 300 ppi crops: journal p. 313 says the
+  energies were obtained FROM c through footnote 16 with the prefactor already set to 1, Fig. 4''s
+  900 and 700 cal are Table I''s 894 and Table II''s 704 rounded, and p. 316 says the -195.8 C curves
+  were CALCULATED from the -183 C ones holding E1 - EL fixed. So the prefactor is not measurable in
+  this paper at all; the 0.447 is an internal inconsistency between Fig. 3''s direct fit and Fig. 4''s
+  calculated curve for the same isotherm. Applied as a sensitivity it leaves section 6 untouched
+  (a maximum over all c) and BREAKS section 7 (7 of 12 rows past the paper''s 5 %, smallest c 27.583
+  against the threshold 38). The "built to survive" sentence and the "factor 1.6 of margin" are gone
+  from all five files and the page now reports the failure.
+
+  The fixer overruled one non-blocking recommendation: the verifier''s tuned-sigma bound (31.28 %
+  charcoal against 7.90 % printed) compares two different row bases. Like for like it is 14.379 %
+  against 7.366 % on the six shared non-butane rows (factor 1.95), and on the butane-inclusive seven
+  pairs the tuned set gives 31.283 % against the PRINTED set''s 31.036 % - no power at all. The
+  measurement was added with the correct numbers and both bases printed.
+
+  models.yaml has NO J1.3 entry of any status and J1.3 appears in no other entry''s related list, so
+  queue_cases/J1.3/models_entry.yaml is an APPEND, not an upgrade in place. It declares one departure
+  from this file: structures [S1, S10] rather than S1 alone, because the two objects the page solves
+  (the BET layer-occupancy ladder and the polarization dipole ladder) are constrained algebraic
+  systems. J3.1 is the precedent.
+
+  '
+fixed:
+  fixer_ran: '2026-08-07'
+  findings_applied: 'All eight of review/verification.md, plus its non-blocking recommendation with
+    corrected numbers. Metric changes: footnote16_prefactor renamed c_two_routes_ratio_77K (same value
+    0.447249, different meaning); four metrics added - single_point_worst_underestimate_scaled_pct
+    6.760699, t1_min_reconstructed_c_scaled 27.582739, sigma_cross_table_max_over_envelope 3.000465,
+    sigma_tuned_charcoal_spread_pct 14.378620. 50 -> 54 metrics, 68 -> 79 break rows, 76 of which move
+    their metric; coverage still complete key-for-key. Prose audit 31 -> 53 numbers, extended to cover
+    every sentence the findings touched.
+
+    '
+updated: '2026-08-07'
+doi_source: 'crossref-verified 2026-08-02, and now ALSO verified against the document itself: the
+  builder read the title page, by-line, running head, volume, issue, page range and year off a
+  300 ppi native render on 2026-08-07. Nothing is inherited any more.'
 what_it_carries: The BET derivation itself, set against the competing polarization theory of de Boer
   & Zwicker and Bradley which the introduction states and rejects - so the page has a built-in alternative
   model to discriminate against rather than a single curve to fit.
-resume:
-  blocking: false
-  staged_at: '2026-08-07'
-  partial_build_on_disk: 'A builder ran this case on 2026-08-07 and DIED MID-FLIGHT on an API session
-    limit, not on anything about the case. It left queue_cases/J1.3/page/build_page.py (91 kB), an
-    index.ipynb (110 kB), and six CSVs each WITH a .meta.yaml sidecar under page/data/ (bet-1938-table1-nitrogen-constants,
-    -table2-e1-el-gases, -table3-silica-gel, -table4-so2-silica-gel, -table5-charcoal, -printed-claims).
-    This is the second-furthest of the five. Still missing: meta.yaml, README.md, models_entry.yaml.
-    Never verified by anyone.
+built:
+  builder_ran: '2026-08-07'
+  deliverables: 'queue_cases/J1.3/page/{build_page.py, index.ipynb (executed clean, 6 s), meta.yaml,
+    README.md, agreement.json} plus six CSVs with sidecars under page/data/, and
+    queue_cases/J1.3/models_entry.yaml.
 
     '
-  the_notebook_is_stale_and_this_matters: 'index.ipynb is OLDER THAN build_page.py (01:33:13 vs 01:33:32
-    on 2026-08-07). The script was still being edited when the run died, so the committed notebook is
-    NOT the output of the script sitting beside it, and agreement.json was never written at all. Do
-    not read the notebook as evidence of anything and do not publish from it. Re-executing the
-    half-edited script would produce a plausible-looking page that no builder finished and no verifier
-    saw - which is the exact failure mode the verification gate exists to stop.
+  the_earlier_partial_build: 'The abandoned 2026-08-07 attempt (91 kB build_page.py, a stale
+    index.ipynb, six CSVs) was DELETED, not resumed. Every digit was re-transcribed from the builder''s
+    own 300 ppi crops. The only thing inherited was the observation that five tables and one
+    printed-claims set are the right decomposition, which this build independently reached. Nothing
+    from the old script survives.
 
     '
-  how_far_to_trust_it: 'TREAT EVERY DIGIT AS UNVERIFIED and re-read it against your own crops. The
-    sidecars exist, which is more than the other four managed, but a sidecar records provenance - it
-    does not check a digit. What the files legitimately save you is the structure: which five tables
-    matter and how the printed-claims set was framed.
+  spine: 'Discrimination, not fit. Section I of the paper is a quantitative refutation of the
+    polarization theory and every input to it is printed, so it is reproduced chain by chain: C =
+    -0.010223 from the polarizability against the 0.989 Bradley''s fitted k = 0.615 needs, a factor
+    96.75 in the dipole ratio and 9361 in the energy. Confirmed a second way by assembling the
+    recursion (1a) itself rather than quoting its closed form (1b): at the computed k the measured
+    decay ratio is eq. (1b) to 8.5e-14 and is independent of truncation; at Bradley''s k the ladder
+    oscillates, changes sign and has truncation spread 4.48.
 
     '
-  next_step: 'Fresh builder dispatch (session-limit deaths cannot be resumed via SendMessage). The
-    dispatch notes stand, and the spine is unchanged: discriminate BET against the polarization theory
-    the introduction rejects, rather than fitting BET to data and reporting the fit as agreement.
+  headline_computed_twice: 'The BET inflection point cannot exceed 2/sqrt(3) = 1.154700538379 v_m for
+    any c, attained at c = 27 + 15 sqrt(3) and x = 3 sqrt(3) - 5. Route 1 a symbolic Lagrange
+    condition, route 2 a bracketing root-find on a numerically differentiated root-find; bit-identical
+    on the ceiling, 1.2e-8 on c*. Not in the 1938 paper. It deflates the authors'' best-looking
+    corroboration (v_m vs point B, "seldom differing by as much as 10 %" - a claim journal page 315
+    makes about the TWELVE isotherms of Table I) into a near-guarantee of their own equation''s shape.
+    THE BOUND IS ONE-SIDED: it caps how far a landmark can sit ABOVE v_m, not below, and the paper''s
+    own Table III butane row is point B / v_m = 0.4828, i.e. 51.72 % BELOW. Over the eighteen
+    non-butane pairs mean(inflection / point B) = 1.148812, so the inflection sits 14.881 % ABOVE
+    point B, equivalently point B sits 12.954 % below the inflection.
+
+    '
+  printed_defect_found: 'Journal page 315, "For nitrogen E1 - EL is uniformly 840 +- 70 cal. Since EL
+    is about 1330 cal., E1 is therefore 2170 +- 70 cal. for nitrogen on all twelve adsorbents", is the
+    ELEVEN-row number. The paper''s +- convention is pinned exactly by Table II, and the two halves are
+    NOT rounded alike: centre to the nearest 10 cal (4 of 4, worst residual 4 cal), half-width to the
+    nearest 5 (4 of 4, worst residual 2.5 cal - argon''s printed 55 is not a multiple of 10, which is
+    what pins it). On that convention the twelve rows give 824.5 +- 86.5 -> 820 +- 85 (820 +- 90 on a
+    nearest-10 half-width) and two fall outside the printed band, while omitting Cr2O3 gel (738) gives
+    841.5 +- 69.5 -> 840 +- 70 under BOTH rules - and that is the ONLY one of the twelve possible
+    single-row omissions that reproduces it, under both rules, asserted in the cell.
+    E1 = 2170 +- 70 inherits the basis. Five smaller defects also reported and not repaired:
+    footnote 10''s "(8.357 - 8.823/r^3)" is mis-grouped; Table IV''s E1 column is 5 cal out on one row
+    at a rounding half-way point; catalyst 954''s v_m disagrees by 15.59 % between Table I and Fig. 4
+    with no sample mass printed for Table I''s row; Table V''s two argon rows repeat one v_m (215.5)
+    and one solid surface (746) across a 13 K interval; and the worst cross-table sigma disagreement
+    (0.6631 %, CO at -183 C liquid packing) is 3.0005 times what the printed rounding can produce -
+    NOT "the rounding of the integer surface columns", which is what the first build called it -
+    cause unknown. Plus the c inconsistency in the next block.
+
+    '
+  scope_declined: 'Fig. 6 (ethyl chloride on charcoal, three temperatures) is a fully specified
+    eq. (E) prediction but needs vapour pressures the paper does not print - declined rather than
+    closed with an outside correlation. The Darco statement (n = 2.2, x = 0.02 to 0.93, 4 %) refers to
+    an isotherm that appears nowhere in the paper. Footnote 18''s eqs. (C) and (D) are transcribed and
+    deliberately NOT exercised, because the paper never evaluates them either. No curve is digitised
+    anywhere and no review/ directory exists, so this case needs no figure review and cannot stall on
+    one.
+
+    '
+  for_the_verifier: 'Attack these first. (1) The seven-gas surface-area consistency is the page''s
+    "not a fit" claim, and it rests on Emmett & Brunauer (1937) - NOT on disk - for the assertion that
+    the molecular cross-sections come from bulk densities rather than from a fit. The page now bounds
+    that risk with a MEASUREMENT (a silica-tuned sigma set leaves charcoal spread 14.379 % against the
+    printed set''s 7.366 % on the six shared non-butane rows, a factor 1.95) and states that on the
+    butane-inclusive basis the test has no power at all; it cannot remove the risk. (2) Every c is
+    RECONSTRUCTED from E1 - EL through footnote 16, which is the AUTHORS'' OWN operation run backwards
+    (journal p. 313: "From c one can obtain an approximate value for E1 - EL"), so the prefactor is not
+    measurable in this paper and the inversion returns their fitted c to 0.28 %. The real doubt is the
+    paper''s own Fig. 3 / Fig. 4 clash, a factor 2.2359 on one isotherm; applied as a sensitivity it
+    BREAKS section 7 (7 of 12 rows past 5 %) and cannot touch section 6 (a maximum over all c).
+    (3) The whole polarization block is the rival theory as its OPPONENT restates it; de Boer, Zwicker
+    and Bradley are not on disk. (4) 54 metrics, 79 break rows, full coverage, TWO declared blind spots
+    plus one row labelled STRUCTURAL and cited as evidence for nothing - the c-rescaling row aimed at
+    the ceiling, which no change to c could ever move.
 
     '
