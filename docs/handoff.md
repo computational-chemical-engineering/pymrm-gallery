@@ -46,15 +46,15 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-62 page directories, 63 published catalog entries, 71 models.yaml entries
+63 page directories, 64 published catalog entries, 72 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`).
+`splice_entry.py --replace`). Queue: 64 published, 53 unclaimed, 140
+needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
-`check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
-published nothing — see the wave note under Recommended next moves.
+covers `D3.4`.) `check_agreement.py`: 63 pages, 0 regressions at handoff (2026-08-07 evening);
+`check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
 
-### Added 2026-08-07 — four pages (the serial regime)
+### Added 2026-08-07 — five pages (the serial regime)
 
 | Page | What it shows | Headline |
 |---|---|---|
@@ -62,6 +62,7 @@ published nothing — see the wave note under Recommended next moves.
 | `A3.5` Ranz–Marshall | The four constants have four different statuses; only the intercept is testable | +2.91 / +2.61 / −13.39 % against a 0.68 % replicate scatter; page range resolved to 141–146 and the filename is now known to be wrong |
 | `E1.1` Toomey–Johnstone | The postulate has two limbs and their data separate them | dense phase runs ~23 % above `u_mf`, so Y = 0.766 at 2 `u_mf`; `E2.1` inherits exactly the limb that fails. Tier 2 against `E2.1`'s tier 6 — that contrast is the case's reason to exist |
 | `A4.1` Wilke mixture rule | Broken against the exact solution of the author's **own** eight problems | 86.6 % worst / 21.6 % median — and the cause is the frozen *composition*, not the harmonic average: his own Method 2 keeps the mean, moves the composition, and drops the worst case to 12.1 % |
+| `A2.4` Tanks-in-series | What a two-moment fit is worth, and an inverted rule in the book's own figure | chains matching mean *and* variance exactly differ by up to 83.1 % in conversion (closed-form supremum, one-sided); Fig. 14.7's `N = ½(D/uL)` must be `½(uL/D)` |
 
 **`A4.1` is the case to read if you are about to trust
 [`papers-inventory.yaml`](papers-inventory.yaml).** That file claimed Taylor &
@@ -343,46 +344,58 @@ Froment/De Wilde/Bischoff §11.5–11.9; the maintainer's scope decision on
 D1.x is still open), the ACS/Wiley singles (`J1.1` Langmuir, `J1.3` BET,
 `J1.4` IAST, `B3.3`, `G1.1`, `I1.3`, `J4.2`, `J4.4`, `J5.3`, `H1.8` Robeson
 2008) and the Elsevier set (`D2.4`, `J1.10`, `J2.1`, `J2.3`).
-Dispatch the next wave per [`playbooks/coordinator.md`](playbooks/coordinator.md)
-— playbook prompts, model tiers, one wave per session.**
+Dispatch per [`playbooks/coordinator.md`](playbooks/coordinator.md) — playbook
+prompts, model tiers, and ONE CASE AT A TIME (see the 2026-08-07 note below;
+the "one wave of 4–6" rule this paragraph used to end with was retired that
+day). `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` are now published.**
 
-**Wave of 2026-08-07 — ALL FIVE BUILDERS DIED ON AN API SESSION LIMIT. NOTHING
-PUBLISHED, AND FIVE CASES NOW CARRY UNVERIFIED PARTIAL WORK ON DISK. Read this
-before dispatching `A3.5`, `E1.1`, `A4.1`, `A2.4` or `J1.3`.** The wave was
-dispatched normally (playbook prompts, one case each, sources all on disk and
-identified). Every one of the five was killed mid-task by the same account-level
-session limit — not by anything about the cases, and not at any checkpoint. What
-they left in `queue_cases/<ID>/page/`:
+**2026-08-07, THE SERIAL REGIME — read this before dispatching anything.** The
+day began with five builders in parallel and ended with five pages published,
+and the two halves are the argument for the rule now at the top of
+[`playbooks/coordinator.md`](playbooks/coordinator.md).
 
-| Case | On disk | State |
-|---|---|---|
-| `A2.4` | build_page.py, **executed** index.ipynb, agreement.json, 1 CSV + sidecar | furthest — but the notebook is **older than the script**, and the agent's last line was *"Now fix the eq. (4) scaling bug"*: it had found a defect in its own eq. (4) machinery and was editing when it died |
-| `J1.3` | build_page.py, index.ipynb, 6 CSVs **each with a sidecar** | notebook also older than the script; no agreement.json ever written |
-| `A3.5` | build_page.py, 7 CSVs, **no sidecars** | never executed |
-| `E1.1` | build_page.py, 3 CSVs + sidecars, models_entry.yaml | never executed; supersedes the "nothing built, deliberately" line on that case |
-| `A4.1` | build_page.py only | never executed |
+*Morning.* `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` were dispatched
+concurrently. All five were killed mid-task by the same account-level API
+session limit — not by anything about the cases. Nothing published; five cases
+left holding unverified half-built scripts, two with notebooks staler than their
+own build scripts. **The lean playbooks had cut cost per dispatch, but the limit
+is on usage RATE**, so N parallel builders burn N× as fast and one limit hit
+destroys N cases instead of one.
 
-None has `meta.yaml`, `README.md`, or a verifier's `review/`. **No page is
-`ready`; no digit anywhere in those files has been checked by a second pair of
-eyes.** All five stay `status: unclaimed` on purpose — `in-progress` would hide
-them from the next wave, since the coordinator picks from `unclaimed` — each with
-a `resume:` block recording exactly what sits on disk and how far to trust it
-(answer: not at all, as numbers; usefully, as structure). Two rules for whoever
-picks these up:
+*Afternoon, at the maintainer's instruction: one case at a time, start to
+finish.* All five rebuilt, verified, fixed, integrated and pushed
+individually — `J1.3`, `A3.5`, `E1.1`, `A4.1`, `A2.4`, in that order. Serial
+work is not cheaper per page (~1M subagent tokens each, builder + verifier +
+fixer); it caps the blast radius at one case, and a case committed can never be
+lost to a limit.
 
-1. **Do not re-execute the half-edited scripts and publish the result.** Both
-   notebooks are stale against their own `build_page.py`, and `A2.4`'s
-   `agreement.json` predates a bug its own builder had already found. Re-running
-   would yield a plausible-looking page that no builder finished and no verifier
-   saw — the exact failure the gate exists to stop.
-2. **Session-limit deaths cannot be resumed** via `SendMessage`; they need fresh
-   dispatches. Connection-error deaths still can — keep the distinction.
+**Rebuilding from source beat inheriting the abandoned scripts, every time.**
+Each of the five builders deleted the dead wave's work and re-read every digit.
+The independent re-reads then disagreed with the abandoned transcriptions on
+`A3.5` (a digit that moved a headline), `E1.1` (filled-in cells that are
+actually over-struck) and `A2.4` (two defects the stale `agreement.json` could
+not have known about). Give any future inherited partial the same treatment.
 
-The staged partials are deliberately **not committed**, following the standing
-convention: staging under `queue_cases/*/page/` is untracked for all but seven
-early cases (`A1.1`, `A3.4`, `B1.2`, `E2.1`, `I1.2`, `J3.4`, `J4.8`), with
-published content living in `pages/`. That is the reason `git add -A` is banned
-here — 52 untracked staging entries would come with it.
+**Every one of the five needed fixes after verification, and on three the
+verification changed the page's conclusion rather than polishing it** — `J1.3`'s
+factor-2 safety margin rested on a measurement that does not exist, `A3.5` said
+seven times that authors "did not notice" something they print, and `A2.4` said
+six times that a chapter prints no rule it does in fact print. Two defect classes
+went into the playbooks as a result (glyphs settled by arithmetic; negative
+claims about a source need a search you can describe), and `A4.1` produced a
+third improvement — a **coverage map that builds itself** from each break
+table's measured movers, so a metric can no longer name a row that cannot move
+it. `A2.4` adopted the same mechanism.
+
+**Fixers overruled verifiers with measurements five times across the day**, and
+in `A2.4`'s case proved a bound the verifier had only sampled. That is working
+as intended: the playbook tells fixers to argue with numbers.
+
+Staged partials remain **uncommitted** by standing convention: staging under
+`queue_cases/*/page/` is untracked for all but seven early cases (`A1.1`,
+`A3.4`, `B1.2`, `E2.1`, `I1.2`, `J3.4`, `J4.8`), with published content living
+in `pages/`. That is why `git add -A` is banned here.
+
 
 Prior halt note (2026-08-06, superseded counts): The loop that works: dispatch a builder per case →
 adversarial verifier on every ready page → fix (inline for wording, a fixer
@@ -406,8 +419,22 @@ live; park blocked cases with a `resume:` block, never wait.
    load-bearing, unreviewed); the `D1.1`–`D1.5` scope decision
    (structure codes, not citations — decision page linked from the dashboard);
    the curated paper ask in [`papers-requested.yaml`](papers-requested.yaml)
-   (textbooks first — the canonical class is STILL inert, no qualifying book on
-   disk; then the ACS/Wiley/Elsevier batches; `C2.5` by title, not DOI).
+   (the canonical class is LIVE as of 2026-08-05/06 — four monographs on disk,
+   per-case verdicts in `papers-inventory.yaml`; then the ACS/Wiley/Elsevier
+   batches; `C2.5` by title, not DOI).
+   **New, and it is about pymrm rather than the gallery: there is no
+   pure-outflow boundary condition in the library.** Found while building
+   `A2.4`, where the tank count is a physical parameter rather than a mesh
+   parameter. The nearest available bc, zero-gradient, makes
+   `construct_convflux_upwind` reconstruct the exit face to second order as
+   `(9 C_N − C_{N−1})/8` — correct for a discretised PDE, a *modelling* error
+   here. It costs 5.9 % at N = 2 and 3.8 % at N = 4, decaying as N^−0.87, which
+   makes it indistinguishable from ordinary discretisation error unless you know
+   to look. `A2.4` derives an exact workaround (suppress the boundary flux with
+   `b=1, d=0`, then add the outflow as a `construct_coefficient_matrix` sink on
+   the last cell), but it had to be derived. Worth a bc kind, or at minimum a
+   documented recipe, in pymrm itself — not actioned here, since that is a
+   different repository.
 3. **Dashboards**: regenerate with `python scripts/dashboards.py` (never
    commit base64 payloads) and republish to the maintainer's two existing
    artifact URLs — they are pinned in the session-start prompt and in
