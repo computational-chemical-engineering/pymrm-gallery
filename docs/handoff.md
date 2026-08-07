@@ -46,20 +46,41 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-61 page directories, 62 published catalog entries, 70 models.yaml entries
-(6 still `planned`, down from 7 — `E1.1` was the first upgraded in place).
+62 page directories, 63 published catalog entries, 71 models.yaml entries
+(6 still `planned` — `E1.1` was the first upgraded in place, via the new
+`splice_entry.py --replace`).
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
 covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
 `check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
 published nothing — see the wave note under Recommended next moves.
 
-### Added 2026-08-07 — three pages (the serial regime)
+### Added 2026-08-07 — four pages (the serial regime)
 
 | Page | What it shows | Headline |
 |---|---|---|
 | `J1.3` BET | The 1938 paper's own refutation of the polarization theory, reproduced chain by chain | inflection ≤ 2/√3 · v_m for any c — so the authors' best corroboration (v_m vs point B) is largely guaranteed by their equation's own shape; "840 ± 70 for all twelve adsorbents" is the eleven-row number |
 | `A3.5` Ranz–Marshall | The four constants have four different statuses; only the intercept is testable | +2.91 / +2.61 / −13.39 % against a 0.68 % replicate scatter; page range resolved to 141–146 and the filename is now known to be wrong |
 | `E1.1` Toomey–Johnstone | The postulate has two limbs and their data separate them | dense phase runs ~23 % above `u_mf`, so Y = 0.766 at 2 `u_mf`; `E2.1` inherits exactly the limb that fails. Tier 2 against `E2.1`'s tier 6 — that contrast is the case's reason to exist |
+| `A4.1` Wilke mixture rule | Broken against the exact solution of the author's **own** eight problems | 86.6 % worst / 21.6 % median — and the cause is the frozen *composition*, not the harmonic average: his own Method 2 keeps the mean, moves the composition, and drops the worst case to 12.1 % |
+
+**`A4.1` is the case to read if you are about to trust
+[`papers-inventory.yaml`](papers-inventory.yaml).** That file claimed Taylor &
+Krishna hand this case "a ready-made failure test — which the origin paper alone
+does not", and the claim went straight into a dispatch. It is backwards: their
+Example 8.5.1 is the *stagnant* case, precisely where Wilke's rule is exact by
+construction, so a page built on it would have reported fine agreement and
+concluded nothing. The failure test was in Wilke's own Table 1 the whole time.
+The inventory entry is corrected and now records that it misled a dispatch.
+
+Two further `A4.1` lessons. Verification found a **silent fourth exclusion** in
+the build script dropping a cell that every prose statement said was included,
+inflating a reproduction metric 4.5× — invisible to the page's own consistency
+test, which is structurally blind to that cell (0.6 % of the relevant sum). The
+fix made the **coverage map build itself** from each break table's measured
+movers, so a metric can no longer claim a row that cannot move it. And a page
+whose stated identity is "printed defects reported, never repaired" had
+**silently repaired two printed typos** it was quoting inside quotation marks
+("derivation" → "deviation"); both now carry `[sic]`.
 
 `E1.1` also carries the standing warning about borrowed data: its four headline
 ratios are **Lewis, Gilliland and Bauer's** particles, not the authors' own, and
