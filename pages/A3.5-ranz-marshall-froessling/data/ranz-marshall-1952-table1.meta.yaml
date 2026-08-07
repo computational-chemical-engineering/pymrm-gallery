@@ -1,0 +1,109 @@
+dataset_id: ranz-marshall-1952-table1
+title: "Table 1 - experimental data for evaporation of water drops in dry air, 18 forced-convection runs and one still-air run"
+status: complete
+
+source:
+  authors:
+    - "Ranz, W. E."
+    - "Marshall, W. R., Jr."
+  year: 1952
+  container: "Chemical Engineering Progress 48(4) 173-180 (April 1952), 'Evaporation from Drops, Part II'"
+  doi: null
+  access: "print original held on disk as a Microsoft Print-To-PDF wrapper over a microfilm scan; no DOI exists for this pre-DOI journal"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: null
+  tool: "poppler pdftoppm -r 400 (the file's NATIVE resolution: pdfimages -list reports JPEG RGB tiles at 400 x 400 ppi, so rendering above 400 dpi only interpolates)"
+  procedure: >
+    THERE IS NO TEXT LAYER AT ALL on either part - pdftotext returns one byte per
+    page - so every digit here was read off a 400 dpi render. Whole-page legibility
+    was not trusted: each numeric column was re-cropped on its own and magnified
+    2-8x, and any glyph that could be read two ways was compared against
+    unambiguous instances of both candidate digits in the SAME column and the same
+    typeface (the 0/6/9 triple in this microfilm font is the recurring ambiguity -
+    they are nominally distinguished by where the white counter sits inside the
+    glyph, high for 9, central for 0, low for 6). THAT RULE IS NOT RELIABLE ON AN
+    OVER-INKED GLYPH and is not treated as decisive anywhere in this page: where a
+    counter has been reduced to a few pixels, the digit is settled by arithmetic the
+    table itself forces (see the Table 4 sidecar) or the cell is left empty.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+
+folio_note: >
+  PART I'S PAGE RANGE IS RECORDED BOTH WAYS AND THIS PAGE SAYS WHICH IT READ. Part
+  I's scan frames carry TWO folio lines: one at the very top of the frame, above the
+  black edge of the leaf, and one at the bottom inside the leaf. They differ by
+  exactly two. BOTH ARE LEGIBLE ON ONLY FOUR OF THE SIX FRAMES (139/141, 140/142,
+  141/143, 144/146); on frame 4 the upper line is cut off at the leaf edge and on
+  frame 5 there is no upper line at all, so those two pairs are inferred from the
+  sequence rather than read. Part II settles which is the page's own: its first page has a BLANK top
+  margin and prints "Vol. 48, No. 4 | Chemical Engineering Progress | Page 173" at
+  the FOOT of the text block, so in this issue the folio line is a footer, not a
+  running head. The line at the top of a Part I frame is therefore the footer of the
+  preceding leaf, caught in the same frame. Read that way Part I is folios 141-146,
+  which is the universal citation and the one Ranz himself gives in his 1993 ISI
+  "Citation Classic" ("Chem. Eng. Progr. 48:141-6; 173-80, 1952"). The 139-144
+  reading recorded against this file comes from taking the upper line as a running
+  head. Every folio cited in these sidecars is the one printed at the FOOT of the
+  page the value appears on.
+
+validation:
+  internal_consistency: >
+    THE REYNOLDS COLUMN IS OVER-DETERMINED BY THE OTHER COLUMNS AND IS USED AS THE
+    TRANSCRIPTION CHECK. The table's own header defines it as N_Re = D_p v_o rho / mu,
+    and D_p is the same 0.0954 cm on every row, so Re / v depends only on rho/mu,
+    i.e. only on the air temperature and pressure columns. Rows 6-14 all sit at
+    738 mm Hg and 24.3-25.0 C, so their nine Re/v values must be one number: they
+    give 0.62789 with a peak-to-peak spread of 0.492 %, against the +-0.4 % that the
+    printed precision of Re and v allows on its own. Across the full table, and
+    across Tables 2 and 4 as well, a single two-parameter law rho/mu = C P T^n
+    reproduces all 40 printed Reynolds numbers; the notebook prints the fitted
+    exponent and every residual. A transposed or misread digit in v, T, P or Re
+    shows up there immediately.
+  what_it_tests: >
+    This is the dataset the correlation's coefficient was fitted to (Figures 6 and
+    7), so agreement between eqs. (21)/(22) and these rows is a goodness of fit and
+    is labelled as one everywhere it appears. What the rows CAN test is the
+    intercept: the correlation's 2.0 is theoretical (Part I eq. 7), not fitted, so
+    extrapolating these forced-convection runs to N_Re = 0 is a genuine test of it.
+
+printed_defects: []
+
+caveats: >
+  THREE Nu' CELLS ARE UNREADABLE AND ARE LEFT EMPTY RATHER THAN GUESSED. An ink
+  blot on the microfilm covers the N_Nu' entries of runs 12, 13 and 14 (the three
+  lowest-velocity forced-convection runs). Run 12 is most probably 3.32 and run 14
+  most probably 2.96, but the blot overlaps both, so all three are recorded as
+  missing and the mass-transfer fits use the 15 runs that remain. The N_Nu columns
+  of those rows are clean and are used.
+
+  THE STILL-AIR ROW IS NOT A FORCED-CONVECTION RUN. Run 19 has v = 0 and Re = 0; its
+  N_Nu = 2.23 and N_Nu' = 1.79 come from substituting Figure 8's D_p^2-vs-time slope
+  into eqs. (19) and (20), not from a feed rate. It carries no "corrected" N_Nu -
+  the table prints dots there - and no evaporation rate. It is excluded from every
+  regression on this page and used only as the paper's own measurement at N_Re = 0.
+
+  DROP TEMPERATURES WERE MEASURED with 0.5-mil thermocouples (the table's own note).
+
+columns:
+  - {name: run,                  unit: "-",       description: "row order as printed; 19 is the 'Still Air' row"}
+  - {name: evap_rate_ml_s_x1e5,  unit: "mL/s",    description: "evaporation rate as printed, x 1e5; blank on the still-air row"}
+  - {name: D_p_cm,               unit: cm,        description: "drop diameter"}
+  - {name: air_vel_cm_s,         unit: cm/s,      description: "air velocity"}
+  - {name: air_temp_C,           unit: degC,      description: "air temperature"}
+  - {name: drop_temp_C,          unit: degC,      description: "drop temperature"}
+  - {name: press_mmHg,           unit: mmHg,      description: "atmospheric pressure"}
+  - {name: Nu_apparent,          unit: "-",       description: "h D_p / k = N_Nu, apparent (uncorrected)"}
+  - {name: Nu_corrected,         unit: "-",       description: "h D_p / k = N_Nu, corrected per eq. (18); blank on the still-air row"}
+  - {name: Nu_prime,             unit: "-",       description: "k_g M_m D_p p_f / (D_v rho) = N_Nu', the mass-transfer analogue; blank where the microfilm is blotted"}
+  - {name: Re,                   unit: "-",       description: "D_p v_o rho / mu = N_Re"}
+  - {name: flag,                 unit: "-",       description: "transcription or interpretation flag"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research
+  organisation with lawful access is covered by Art. 15n Auteurswet (implementing
+  DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced anywhere in this
+  page or its repository directory.

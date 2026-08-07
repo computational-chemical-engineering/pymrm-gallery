@@ -1405,6 +1405,69 @@ models:
         dataset is loaded.
     related: [A3.1, A3.2, F3.1, F3.5, A2.3, J1.5, A2.1]
 
+  - id: A3.5
+    slug: ranz-marshall-froessling
+    title: "Ranz-Marshall: the only constant this paper tests is the 2.0, and the authors' own water data miss it"
+    description: >
+      Nu = 2 + 0.6 Re^(1/2) Pr^(1/3) taken apart constant by constant. The 0.60 is
+      FITTED to the very tables any comparison would use, the 1/2 and 1/3 are
+      Froessling's assumptions and cannot be identified from the transcribed tables, and
+      the 2.0 is the one piece of theory - so it is the only constant these rows can
+      decide. Extrapolated to Re = 0, the paper's heat-transfer runs give 2.058 and its
+      benzene mass-transfer runs 2.052 - the same answer within the noise - while its
+      water mass-transfer runs give 1.732, thirteen per cent low and about twenty times
+      the run-to-run scatter. The authors saw that gap and named its likeliest cause
+      ("inaccurate values of diffusivity"); what this page adds is the size, per species,
+      and the tension with the two conclusions they drew from it - the abstract's claim
+      to have verified the zero-Reynolds Nusselt number, and the claim that their water
+      vapour diffusivity may be the most accurate in the literature. pymrm recomputes the
+      2.0 from the spherical BVP it comes from and measures the solve against the exact
+      answer, then puts a number on the radial-convection factor Ranz said in 1993 the
+      papers had underplayed. Along the way the Reynolds column, over-determined by the
+      columns printed beside it, gives up a convention neither part states for the
+      tables - the air properties were evaluated at the film temperature - confirmed
+      against the one reference temperature Part II does print and tested out of sample
+      on Table 3.
+    section: A
+    status: published
+    page: pages/A3.5-ranz-marshall-froessling/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-liquid]
+    reference:
+      authors: ["Ranz, W. E.", "Marshall, W. R., Jr."]
+      year: 1952
+      container: "Chemical Engineering Progress 48(3) 141-146 and 48(4) 173-180"
+      doi: null
+      note: >
+        PRE-DOI, NO DOI EXISTS. Part I's page range is disputed on file and the page
+        records both readings: the scan frames carry two folio lines two apart (both
+        legible on four of the six frames), and
+        Part II establishes that in this issue the folio is a FOOTER, so Part I's own
+        folios are 141-146 - which is also the universal citation and the one Ranz
+        gives in his 1993 ISI "Citation Classic". The alternative reading, 139-144,
+        comes from taking the line at the top of a frame as a running head.
+    also:
+      authors: ["Ranz, W. E."]
+      year: 1993
+      container: "Current Contents CC/NUMBER 22, 31 May 1993, 'This Week's Citation Classic'"
+      doi: null
+      note: >
+        A one-page reminiscence carrying none of the correlations. It is cited on the
+        page for exactly one thing: Ranz's own caveat that the crude accounting for
+        radial convection at the drop surface was "unfortunately not emphasized in the
+        original papers". The page turns that remark into a number.
+    predicts:
+      - heat-transfer coefficient for a single sphere or drop in a moving fluid, 0 < Re < 200
+      - mass-transfer coefficient for the same, through the analogous Sherwood form
+      - the stagnant-medium limit Nu = 2, computed from the spherical BVP rather than quoted
+      - the radial-convection (Stefan) enhancement of Sh at a spherical boundary, and the
+        log-mean film factor that removes it
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind]
+    data: {tier: 3, method: table, status: complete}
+    related: [A3.4, A3.1, A3.8, A2.3, B1.1, B3.1]
+
   - id: A3.6
     slug: calderbank-moo-young
     title: "Calderbank-Moo-Young continuous-phase transfer"

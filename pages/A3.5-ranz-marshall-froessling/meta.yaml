@@ -1,0 +1,433 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.5
+slug: ranz-marshall-froessling
+title: "Ranz-Marshall: the only constant this paper tests is the 2.0, and the authors' own water data miss it"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 3
+datasets:
+  - ranz-marshall-1952-table1.csv
+  - ranz-marshall-1952-table2.csv
+  - ranz-marshall-1952-table3.csv
+  - ranz-marshall-1952-table4.csv
+  - ranz-marshall-1952-printed-constants.csv
+
+validation:
+  - 'FIT VERSUS TEST IS THE WHOLE PAGE AND IS LABELLED EVERYWHERE. The correlation
+     contains four numbers with four different statuses and the page never mixes
+     them: 2.0 is THEORETICAL (Part I eq. 7, derived from the stagnant spherical
+     field, fitted to nothing); 0.60 is FITTED, to Figures 6, 7 and 9, which are
+     exactly Tables 1-4, so any comparison against those tables is a goodness of
+     fit; and the exponents 1/2 and 1/3 are ASSUMED, taken from Froessling and
+     never tested in either part. There is NO held-out set anywhere in the two
+     papers and the page claims none. Every rms quoted against Tables 1-4 is
+     marked IN-SAMPLE at the point it is printed, and the null baselines are
+     computed beside it (best null 39.81 % against 1.72 % for eq. 24).'
+  - 'THE INTERCEPT IS THE ONE TESTABLE CONSTANT, AND THE PAGE PRICES A GAP THE
+     AUTHORS STATED IN WORDS. The same free two-parameter fit, extrapolated to
+     N_Re = 0: Table 1 heat (18 runs) gives 2.0582, +2.91 %; Table 4 benzene mass
+     transfer (13 runs) gives 2.0523, +2.61 %; Table 1 water mass transfer (15 usable
+     runs) gives 1.7322, -13.39 %. The two non-water sets land on the same answer to
+     within the noise; only water misses. Against the run-to-run repeatability
+     measured from the paper''s own three replicate pairs (0.68 % mean, 1.87 % worst)
+     that last one is about 20 sigma.
+     THE AUTHORS SAW THIS AND NAMED THE CAUSE. Part II folio 173 prints "Data for
+     mass transfer show a steeper slope and a lower intercept, but the disagreement
+     is always less than 10 per cent at a given N_Re", and lists "(1) inaccurate
+     values of diffusivity" FIRST among the factors behind "anomalies in the heat-
+     and mass-transfer analogy". So the page does NOT claim the gap went unnoticed or
+     unexplained. What it adds is the arithmetic: the authors'' 10 per cent bound is
+     about the CURVES at a given N_Re, where the fitted 0.60 absorbs most of the
+     offset, not about the intercept, where nothing was fitted; the intercept deficit
+     is 13.4 %; it is species-specific; and N_Nu'' is inversely proportional to D_v,
+     so closing it needs D_v smaller by 1.1173, which is exactly the back-out Part II
+     prints (0.204 sq.cm/sec at 290 K, 741 mm Hg) while calling it "a low value
+     compared with other methods of determination".
+     WHERE THE PAGE DOES CONTRADICT THE PAPERS is on the conclusions drawn from the
+     gap, and it quotes both: Part I''s abstract claims the study "confirmed the
+     analogy between heat and mass transfer at low Reynolds numbers, and verified the
+     simple expression for the Nusselt number at zero Reynolds number" (the paper''s
+     own still-air analogy ratio is 1.2458), and folio 174 concludes that the
+     correlation''s success carries "an implication that the calculated value of the
+     diffusivity of water vapor in air may be more accurate than any reported in the
+     literature" (the intercept says that same D_v is 1.1173 too large).'
+  - 'THE STILL-AIR PAIR BREAKS THE ANALOGY THE CORRELATION ASSERTS. At N_Re = 0
+     eqs. (21) and (22) are the same equation, so the paper''s own still-air row
+     must have N_Nu/N_Nu'' = 1. It prints 2.23 and 1.79, a ratio of 1.2458. The heat
+     excess is explained by the authors (free convection) and this page corroborates
+     that explanation - the forced-convection runs extrapolate to 2.0582, so the
+     excess really is a still-air effect - while the mass deficit is NOT a still-air
+     effect, because the forced-convection runs carry it too.'
+  - 'AN OVER-DETERMINATION USED AS THE TRANSCRIPTION CHECK, WHICH THEN ANSWERS A
+     QUESTION THE PAPERS LEAVE OPEN. The tables define N_Re = D_p v rho / mu and print
+     D_p, v, the air and drop temperatures and the pressure beside it, so the 36
+     printed Reynolds numbers of Tables 1, 2 and 4 that carry a measured drop
+     temperature must lie on one rho/mu = C P T_ref^n law. NEITHER PART SAYS AT WHAT
+     TEMPERATURE THE AIR PROPERTIES WERE EVALUATED, so T_ref is written
+     T_a + w (T_d - T_a) with w free and minimised by bounded Brent, not swept: the
+     minimum is at w = 0.4996, the arithmetic mean of the air and drop temperatures to
+     0.08 %. There the fitted exponent is -1.765 +- 0.027, which is what kinetic theory
+     gives for air (mu ~ T^0.7 and rho ~ P/T give rho/mu ~ P T^-1.7), and the residual
+     over all 36 rows is 0.695 %; at the free stream the exponent is -1.323 +- 0.033,
+     eleven standard errors from -1.7, and the residual is 1.141 %. TABLE 1 ALONE COMES
+     BACK TO 0.126 % rms AND 0.288 % WORST at the film temperature - eighteen
+     four-figure Reynolds numbers reproduced from four other printed columns by a
+     two-parameter law. The identification has a stated width: the band of w within
+     5 % of the best residual is 0.178 wide, so a 0.45 or a 0.55 rule would not be
+     distinguishable from 1/2, while the free stream and the drop surface both are.
+     THE PAPERS STATE THE CONVENTION ONCE THEMSELVES, AND IT AGREES. Part II gives
+     D_v = 0.204 sq.cm/sec "at an average temperature of 290 deg K. and a pressure of
+     741 mm. Hg."; Table 1''s still-air row prints air 24.9 C and drop 9.1 C at
+     741 mm Hg, whose mean is 290.15 K - the film temperature, to 0.15 K, with the
+     pressure matching exactly. So the recovered w is corroborated by the one printed
+     statement of a reference temperature in either part, and the page says so rather
+     than claiming the convention is nowhere stated.
+     A NEARLY fit-free companion, corrected: nine rows of Table 1 share a pressure
+     and sit inside 0.7 C of each other in AIR temperature, and their Re/v spread is
+     0.492 %. An earlier draft called this reference-temperature-free and compared it
+     with a +-0.4 % per-row half-width. Both were wrong and the page now says so on
+     the page: the DROP temperatures spread the film temperature over about a kelvin,
+     which at the fitted exponent is a 0.578 % effect on rho/mu on its own - larger
+     than the whole observed spread - and the peak-to-peak rounding bound for nine
+     rows is 0.612 %, not 0.4 %. Read correctly the check passes comfortably and is
+     what it always was: a gross-transcription detector.'
+  - 'TWO IDENTITIES INSIDE TABLE 3, NEEDING NO PROPERTY DATA AT ALL. Its nine rows
+     are FOUR motion-picture runs read at two drop diameters each (pairs A-D) plus
+     ONE single row (E, which the pairing loop skips), so within a pair
+     everything but D_p is fixed. The printed abscissa must then scale as D_p^(1/2)
+     (holds to 1.78 %) and the printed N_Nu as the printed -d(D_p^2)/dtau (holds to
+     1.82 %), both inside what two-figure printing allows. So the table is
+     self-consistent and what disagrees is the correlation: the measured N_Nu ratio
+     inside a run differs from the predicted one by up to 21.9 %, with the
+     measurement the steeper of the two in 3 of 4 pairs.'
+  - 'TABLE 3 IS ALSO THE OUT-OF-RANGE SET. It is the only high-temperature transfer
+     data in either part (85-221 C air) and the only table that prints the
+     correlation''s own abscissa, so eq. (21) can be evaluated on it with no property
+     values whatsoever: 11.05 % rms, 19.11 % worst, +6.44 % bias, while inside its
+     own fit set - a factor 6.4 on Table 1''s 1.72 %. Refitting the coefficient on
+     Table 1''s room-temperature runs alone and predicting Table 3 gives 11.19 %,
+     i.e. the disagreement is not about the constant.'
+  - 'AND TABLE 3 IS A GENUINE HELD-OUT TEST OF THE RECOVERED REFERENCE TEMPERATURE.
+     It prints no Reynolds column at all, so not one of its rows can enter the 36-row
+     rho/mu fit; it does print D_p, v, both temperatures and (in its footnote) the
+     pressure, so the recovered law can PREDICT the abscissa it does print. At the
+     recovered w the nine rows come back to 0.823 % rms and 1.53 % worst, against
+     1.769 % at the free stream and 7.201 % at the drop surface, and the w that best
+     reproduces Table 3 ON ITS OWN is 0.514 against the 0.4996 the other three tables
+     give - at reference temperatures 330-410 K against the 281-329 K the law was
+     fitted on, ranges that do not overlap. The scope is stated on the page: this is
+     out of sample for the CONVENTION only, not for the correlation, since the 0.60
+     was fitted to Table 3 through Figure 9, and it inherits the same constant
+     Prandtl number for air that the printed abscissa itself carries.'
+  - 'THE THEORETICAL 2.0, MEASURED AGAINST THE EXACT ANSWER - AND THE PAGE SAYS THAT
+     IS WHAT IT IS. pymrm solves the spherical BVP eq. (7) comes from -
+     construct_grad, construct_div(nu=2), both ends Dirichlet, geometric radial grid,
+     surface flux read from the pymrm face gradient (second order) - with observed
+     grid order 2.01, Richardson in h at each domain size and then a linear
+     extrapolation in a/b, giving N_Nu = 2.000000904. Adaptive quadrature of the
+     series-resistance integral over the semi-infinite interval gives
+     2.000000000000, and the two differ by 4.52e-07 relative. The page states
+     plainly that 2/(4 pi INT_1^inf dr/4 pi r^2) is IDENTICALLY 2 for any working
+     quadrature, so this is a finite-volume solve checked against the analytic limit,
+     NOT two independent estimates that happen to agree - which is the stronger thing
+     to have, and the honest description of it. The domain refinement is load-bearing
+     and not decorative: stopping at b/a = 10 and calling the answer 2.0 is 11.1 %
+     wrong and no grid study would reveal it.'
+  - 'RANZ''S OWN 1993 CAVEAT, TURNED INTO A NUMBER. He wrote that the crude
+     accounting for "the radial convection at a spherical boundary caused by
+     diffusion at the same boundary" was "unfortunately not emphasized in the
+     original papers". There is no D_f in the notation of either part; the object
+     that does that accounting is p_f, and Part II defines it only as the "average
+     value of (pi - p_A) across the transfer path" without saying which average.
+     That is settled here by solving the spherical Stefan problem with
+     construct_convflux_upwind added to the same operators and the total molar flow
+     closed by a scalar brentq root-find: the LOGARITHMIC mean returns Ranz''s N_Nu''
+     to 2.0 (to 9.6e-04, which the page states plainly is the pymrm-vs-closed-form
+     disagreement over again rather than a second independent number, because the
+     log mean cancels the closed form identically), while the ARITHMETIC mean is
+     0.41 % out by y = 0.20. Read as the log mean the paper''s mass-transfer
+     accounting is EXACT for the isothermal spherical stagnant film, not crude; what
+     it never does is appear in the heat balance, and the page offers that asymmetry
+     as a reading of the 1993 remark, explicitly as a reading and not a result.'
+  - 'EVERY THRESHOLD AND EVERY LIMIT IS ROOT-FOUND OR EXTRAPOLATED, NEVER SAMPLED.
+     The three radial-convection thresholds (1 %, 5 %, 10 % excess at surface mole
+     fractions 1.97 %, 9.37 %, 17.61 %) come from brentq; the conduction limit from
+     Richardson in h and then in a/b; the Stefan molar flow from brentq. The Stefan
+     solve''s own grid study gives observed order 0.92 at n = 300/600/1200, approaching
+     the first order upwind convection has, and the page names the closed form as the
+     authority there and the solve as the check on it.'
+  - 'IDENTITIES ARE PRINTED AND DELIBERATELY NOT REPORTED AS METRICS, IN THREE
+     PLACES. (i) Sh_closed x p_f,log/pi x (1 - a/b) is exactly 2.0 for every y by
+     construction, so it cannot fail; the notebook prints it, says so, and reports
+     instead the same product formed from the pymrm solution, which can.
+     (ii) pf_logmean_returns_2_rel was numerically identical to
+     stefan_pymrm_vs_closed_rel and only one is reported. (iii) eq24_vs_table1_pct
+     was DROPPED in this revision for the same reason: K_recovered = b_fixed x K/K_AQ
+     identically, so b_fixed/K_AQ - 1 IS K_recovered/K - 1, and the +0.34 % that
+     the heat section and the printed-arithmetic section both quote is ONE result,
+     not two. It is still printed in both places, labelled as the same statement.
+     And pr_air_implied_by_eq24 = 0.729 is reported but explicitly labelled a
+     DEFINITION rather than a check: it is (0.54/0.60)^3 and nothing independent is
+     compared with it, because the page''s own rule forbids importing a property
+     value. The page no longer calls it "the first check on this page".'
+  - 'THE PAPER''S OWN ARITHMETIC, CHECKED AND FOUND CORRECT. Part I''s worked
+     correction for test No. 80, N_Nu = 5.83(1 - 0.028 - 0.006 - 0.011) = 5.57,
+     recomputes to 5.567650, i.e. 4.2e-04 relative - rounding only. And eq. (24)''s
+     0.54 is within 0.34 % of what Table 1''s own 18 rows give with the intercept
+     held at 2.0 - the SAME number as the heat section''s recovered K, and reported
+     once. Both are printed although both came out clean, because a check that is
+     only mentioned when it fails is not a check. NO PRINTED DEFECT WAS FOUND in
+     either part.'
+  - 'AN 84-ROW DEFECT-INJECTION TABLE, AND A STRICTER COVERAGE RULE THAN USUAL. All 62
+     reported metrics have a break row, AND all 62 have at least one row that moves
+     them past check_agreement.py''s own 5 % tolerance - a row that moves a number by
+     less than CI would notice is not coverage, and an assertion in the notebook
+     enforces the distinction (78 of 84 rows clear it). No metric on this page falls
+     below ABS_FLOOR = 1e-12, so all 62 are inside the regression suite; the notebook
+     asserts that too. SIX rows do not clear the tolerance; exactly ONE of them is a
+     deliberate "barely moves" exhibit and carries that label - reading Table 4 run
+     11''s degraded digit the discarded way (intercept 2.0523 -> 2.0222). The other
+     five are ordinary rows whose metric happens to be insensitive to that particular
+     perturbation and are covered elsewhere; the page says so rather than presenting
+     all six as intentional.'
+  - 'AND THE PAGE STATES WHAT THAT TABLE CANNOT DO, WITH A WORKED EXAMPLE FROM ITS
+     OWN HISTORY. Every row perturbs an input and watches a number move, which
+     establishes sensitivity and never correctness; a baseline that is wrong by
+     accident passes every row it has. Table 4 run 11''s digit is exactly that case:
+     read 10.6 instead of 10.0 it moves every reported metric by less than 1.5 %,
+     i.e. under CI''s 5 % tolerance, so the break table, the coverage assertion and
+     check_agreement.py all passed on a wrong number. What catches it is a CONSTRAINT,
+     not a perturbation - the row''s N_Nu''/N_Nu ratio must match its neighbours'',
+     and it did not, 6.93 % against 1.03 %. That ratio is now a reported metric with
+     its own break row. The four defences named on the page are: the finite-volume
+     2.0 measured against the exact answer, the root-finding of every threshold and
+     limit, the over-determination checks on the transcriptions themselves (the
+     Reynolds column, and Table 4''s ratio), and the out-of-sample test of the
+     recovered reference temperature on Table 3.'
+
+adds: >
+  NOT THE CORRELATION. Eqs. (21) and (22) are algebra and need no solver, and the
+  page says so rather than dressing an evaluation up as a simulation. Four things
+  are added, and the two most important of them need no solver at all.
+
+  (1) THE 2.0 BECOMES A COMPUTATION INSTEAD OF A CITATION. Part I asserts eq. (7);
+  pymrm solves the spherical BVP it comes from, refined in grid and extrapolated in
+  domain, and gets 2.000000904, which sits 4.52e-07 relative from the exact answer
+  that adaptive quadrature of the resistance integral supplies. That is not
+  decorative: the same solve says a finite far field of ten drop radii shifts the "2"
+  by 11.1 %, which is the correction anyone applying Ranz-Marshall inside a dense
+  spray needs and which the correlation cannot express. (Packed beds are A3.4,
+  Wakao-Funazkri; this page does not go there.)
+
+  (2) A NUMBER ON THE RADIAL-CONVECTION FACTOR RANZ SAID THE PAPERS UNDERPLAYED.
+  Adding construct_convflux_upwind to the same spherical solve turns "which average
+  is p_f?" - a real ambiguity in Part II's own notation - into a settled question:
+  the logarithmic mean, and the arithmetic mean is 0.41 % out at y = 0.20. The
+  correction itself is quantified where the papers only gesture at it: +1 % on Sh at
+  a surface mole fraction of 1.97 %, +10 % at 17.61 %, both root-found.
+
+  (3) A CONVENTION THE PAPERS DO NOT STATE FOR THE TABLES, RECOVERED FROM THOSE
+  TABLES AND THEN CORROBORATED TWICE. The Reynolds column is over-determined by the
+  columns printed beside it, and asking it at what temperature the air properties
+  were evaluated returns w = 0.4996 - the film temperature - with the fitted
+  temperature exponent landing on kinetic theory's -1.7 and Table 1's residual
+  collapsing to 0.126 %. Two independent corroborations follow. Part II states a
+  reference temperature once, for the still-air run ("an average temperature of
+  290 deg K."), and that row's printed air and drop temperatures average to 290.15 K.
+  And Table 3, which prints no Reynolds column and so cannot enter the fit,
+  reproduces its printed abscissa to 0.823 % at the recovered w against 1.769 % at
+  the free stream, at 330-410 K against the 281-329 K the law was fitted on. That is
+  also a reuse instruction: evaluating N_Re at the free stream instead moves it by up
+  to 15.5 % on the paper's own rows and the predicted N_Nu by up to 5.4 %, worst
+  exactly where drying calculations live.
+
+  (4) THE FIT/TEST SPLIT, AND THE ARITHMETIC THE AUTHORS DID NOT DO. Separating the
+  theoretical 2.0 from the fitted 0.60 and the assumed exponents, and extrapolating
+  three sets of runs to N_Re = 0, turns "the correlation fits the data to a few per
+  cent" into "the heat and the benzene sets land together at about +3 % and the water
+  mass-transfer set misses by 13.4 %". The authors state the direction - "Data for
+  mass transfer show a steeper slope and a lower intercept" - and name the cause -
+  "(1) inaccurate values of diffusivity". The page does not claim otherwise. What is
+  new is the SIZE, per species, against the authors' own replicate scatter, and the
+  tension it creates with the two conclusions they did draw: the abstract's
+  "verified the simple expression for the Nusselt number at zero Reynolds number",
+  and folio 174's implication that their D_v "may be more accurate than any reported
+  in the literature".
+
+agreement: >
+  IN-SAMPLE (the 0.60 was fitted to these tables, and every one of these numbers is
+  labelled a goodness of fit on the page): eq. (24) against Table 1's 18 corrected
+  Nusselt numbers, 1.72 % rms and 3.65 % worst, against a best null of 39.81 %;
+  Table 1's own coefficient taken back through the paper's Prandtl number, 0.6020
+  against the printed 0.60 (+0.34 %, which is the SAME statement as eq. (24)'s 0.54
+  against the same 18 rows and is reported once); the released Reynolds exponent
+  0.4933 against Froessling's assumed 0.5.
+
+  THE TESTABLE CONSTANT: free two-parameter extrapolations to N_Re = 0 give 2.0582
+  (heat, water, +2.91 %), 2.0523 (mass, benzene, +2.61 %) and 1.7322 (mass, water,
+  -13.39 %) against the theoretical 2.0, with a measured run-to-run repeatability of
+  0.68 % mean and 1.87 % worst. The paper's own still-air pair, 2.23 and 1.79, has a
+  ratio of 1.2458 where eqs. (21) and (22) demand exactly 1.
+
+  OUT OF RANGE: Table 3 (85-221 C) sits 11.05 % rms and 19.11 % worst from eq. (21)
+  on the paper's own printed abscissa, a factor 6.4 on Table 1; predicted from a
+  Table-1-only refit it is 11.19 %. Inside a single motion-picture run the measured
+  N_Nu ratio differs from the predicted one by up to 21.9 %.
+
+  OUT OF SAMPLE (the one thing on this page that is): Table 3 prints no Reynolds
+  column, so its nine rows cannot enter the reference-temperature fit; predicted from
+  the recovered law they reproduce their printed abscissa to 0.823 % rms against
+  1.769 % at the free stream and 7.201 % at the drop surface, and Table 3 alone
+  prefers w = 0.514 against the 0.4996 the other 36 rows give - at 330-410 K against
+  the 281-329 K of the fit.
+
+  INTERNAL: 36 printed Reynolds numbers on one rho/mu = C P T_ref^n law to 0.695 %
+  rms and 2.46 % worst once the reference temperature is recovered (Table 1 alone
+  0.126 % rms, 0.288 % worst), against 1.141 % at the free stream; nine isothermal,
+  isobaric rows of Table 1 give Re/v to a 0.492 % spread against 0.578 % from their
+  film-temperature variation alone and a 0.612 % peak-to-peak rounding bound;
+  Table 4's rate-independent N_Nu'/N_Nu ratio agrees across runs 10-12 to 1.03 %;
+  Table 3's two within-pair identities hold to 1.78 % and 1.82 %; Part I's test
+  No. 80 recomputes to 4.2e-04 relative; the still-air row's film temperature is
+  290.15 K against the 290 K Part II prints.
+
+  CHECKED AGAINST THE EXACT ANSWER: the theoretical intercept, 2.000000904 from the
+  refined and extrapolated pymrm finite-volume solve against the analytic 2 obtained
+  by adaptive quadrature of the resistance integral, 4.52e-07 relative. The page
+  states that the quadrature route is identically 2 and is therefore the exact
+  answer, not a second independent estimate. The spherical Stefan solve agrees with
+  its closed form to 9.6e-04 with observed grid order 0.92.
+
+caveats: >
+  TIER 3 THROUGHOUT, AND NO FIGURE IS TOUCHED. Every number on this page comes from
+  a printed table or a displayed equation. Figures 5 (transport properties), 12 (the
+  five-decade master correlation), 13 (free convection) and 14 (vapour pressure)
+  carry content that exists only as curves; no maintainer figure review is available
+  for this case, so nothing is digitised and no page image is reproduced anywhere.
+
+  THERE IS NO HELD-OUT SET FOR THE CORRELATION IN EITHER PART AND THE PAGE CLAIMS
+  NONE. Figures 6, 7 and 9 - the fit set for the 0.60 - are exactly Tables 1, 2, 3
+  and 4. Where the page needs an out-of-range test it refits the coefficient on
+  Table 1's room-temperature runs alone and applies it to Table 3, and says so. There
+  IS a held-out set for the reference-temperature convention - Table 3 again, which
+  prints no Reynolds column and so cannot enter that fit - and its scope is stated
+  where it is used.
+
+  THE PRANDTL EXPONENT CANNOT BE IDENTIFIED FROM THE TRANSCRIBED TABLES, BUT PART II
+  DOES TEST IT. Every heat-transfer run in Tables 1, 2 and 3 is in air, so
+  N_Pr^(1/3) is a constant absorbed into the 0.60 and cannot be identified here. It
+  is NOT untested in the papers: Figure 12's legend lists, under HEAT TRANSFER DATA,
+  "STEEL TO OIL (17)" and "STEEL TO WATER (17)" alongside "AIR TO WATER (PRESENT
+  WORK)" - Kramers's spheres in oil and in water, plotted on the
+  N_Pr^(1/3) N_Re^(1/2) abscissa - and folio 174 concludes that "the over-all success
+  of this correlation gives credence to the values of the exponents on N_Pr, N_Sc,
+  and N_Re". That test is graphical and lives in a figure this page deliberately does
+  not digitise, so the page neither reproduces nor contradicts it, and the Reuse
+  section says exactly that instead of calling the exponent unverified. The SCHMIDT
+  exponent is touched only by benzene, the single second species, and one species
+  pair cannot separate a coefficient from an exponent: the Schmidt-number ratio of
+  2.818 that the two fitted slopes imply is a CONSEQUENCE of assuming the 1/3, not a
+  test of it, and closing it would need the two diffusivities, which appear only in
+  Figure 5.
+
+  THE FREE-CONVECTION EXPONENT 1/4 (eqs. 10 and 11, Fig. 13) IS NEVER EXERCISED. The
+  only zero-Reynolds datum in any table is the single still-air row, and the
+  free-convection data live in Figure 13. Anyone citing that form from this page is
+  citing something this page did not test.
+
+  THREE N_Nu' CELLS ARE MISSING, NOT GUESSED. An ink blot on the microfilm covers the
+  mass-transfer entries of Table 1 runs 12, 13 and 14; they are left empty and the
+  mass fits use the 15 rows that remain. None can be read to the three significant
+  figures the column prints: run 12 retains a leading "3." with both remaining digits
+  drowned, run 13 a leading "2", and run 14 nothing clean. The break table shows that
+  filling all three in by eye moves the water intercept from 1.7322 to 1.8576, which
+  would weaken but not remove the finding; every physically consistent set of fills
+  stays well below 2.0. No specific value is asserted for any of the three - an
+  earlier draft named 3.32 and 2.96, and 2.96 is impossible because it would put
+  N_Nu' above the corrected N_Nu, which happens on no legible row of this table.
+
+  ONE DIGIT IS SETTLED BY THE TABLE'S OWN ARITHMETIC, NOT BY THE GLYPH. Table 4 run
+  11's N_Nu' final glyph is degraded and does not decide the question: its surviving
+  counter is 3 px across at 0.55 of the glyph height, between this font's 6 and 0
+  clusters, and the adjacent unambiguous 0 of the same "10." is over-inked almost as
+  badly. An earlier draft of this page read it 10.6 on that counter alone and was
+  wrong. What decides it is that both of Table 4's transfer numbers come from the
+  SAME measured evaporation rate, so their ratio depends only on the printed air
+  temperature, drop temperature and pressure - and runs 10, 11 and 12 are printed
+  within 0.2 K at one pressure. Runs 10 and 12 give 1.2535 and 1.2529; propagating
+  the printed rounding their brackets intersect in [1.2400, 1.2659], putting run 11's
+  N_Nu' in [9.73, 10.06]. A printed 10.6 needs 1.3418, 6.0 % outside a 1 % rounding
+  budget. The first two glyphs read "10." and the last is 17 px wide, the width of
+  this column's round digits (16-18) and not of its 1s (10-12). The value is 10.0.
+  The drift the wrong reading caused was 1.5 % - UNDER CI's 5 % tolerance - which is
+  why the three-row ratio spread is now a reported metric (1.03 % as read, 6.93 % if
+  10.6 is used) with its own break row.
+
+  APPARENT AND CORRECTED NUSSELT NUMBERS ARE NEVER MIXED. Table 4 has no corrected
+  column at all - for benzene the sensible-heat term is about 20 % of the heat flow
+  and the authors did not attempt one - so the benzene intercept is an APPARENT-N_Nu'
+  extrapolation while Table 1's heat intercept is a corrected one. The comparison
+  between them is between two mass-transfer numbers, which are on the same footing.
+
+  THE p_f IDENTIFICATION IS AN INFERENCE AND IS LABELLED ONE. Ranz's 1993 commentary
+  names a "D_f factor"; no D_f appears in the notation of either part. The page takes
+  p_f - "average value of (pi - p_A) across the transfer path" - as the object meant,
+  because it is the only one in the papers that accounts for radial convection at
+  the boundary. Everything that follows from that identification is presented as
+  following from it.
+
+  PART I'S PAGE RANGE IS RECORDED BOTH WAYS AND THE PAGE SAYS WHICH IT READ. Part I's
+  scan frames carry two folio lines differing by exactly two, legibly on FOUR of the
+  six frames (139/141, 140/142, 141/143, 144/146); on the fourth frame the upper line
+  is cut off at the leaf edge and on the fifth there is none, so those two pairs are
+  inferred from the sequence rather than read, and the page says so. Part II's first page has a blank top margin and prints its folio at
+  the FOOT of the text block, so in this issue the folio is a footer and the upper
+  line on a Part I frame is the preceding leaf's footer caught in the same frame.
+  Read that way Part I is 141-146, which is the universal citation and Ranz's own in
+  1993. All folios cited on this page are the ones printed at the foot of the page
+  the value appears on. Part II is 173-180 either way.
+
+  THE STATED REYNOLDS RANGE IS 0 TO 200 AND TABLE 4 REACHES 220. Part I's abstract
+  claims "a Reynolds number range of 0 to 200" and the Reuse section quotes it as the
+  range of validity, but Table 4's last benzene run is printed at N_Re = 220. The
+  page notes the overshoot rather than smoothing it over.
+
+  NEITHER FILE HAS A TEXT LAYER (pdftotext returns one byte per page), so nothing
+  was read from one; the files are JPEG RGB at 400 x 400 ppi native and every numeric
+  column was cropped and magnified at that resolution, with ambiguous glyphs compared
+  against unambiguous instances of both candidate digits in the same column.
+
+  THE REFERENCE TEMPERATURE IS AN INFERENCE, WITH A WIDTH - BUT NO LONGER AN
+  UNCORROBORATED ONE. Neither part states at what temperature the air properties in
+  the Reynolds COLUMNS were evaluated; w = 0.4996 is what minimises the residual of
+  the Reynolds over-determination, and the band of w within 5 % of that minimum is
+  0.178 wide, which is a width and not a confidence interval. So the finding is "the
+  film temperature, not the free stream and not the drop surface", and it is NOT
+  "exactly the arithmetic mean". The four rows of Table 2 with no measured drop
+  temperature are excluded from it. Two independent corroborations are on the page:
+  Part II's printed "average temperature of 290 deg K." for the still-air run against
+  that row's film temperature of 290.15 K, and Table 3 held out. They matter, because
+  leave-one-TABLE-out is not stable - dropping Table 1 or Table 4 sends w to about
+  0.92 - so the identification rests on the Table 1 / Table 4 contrast rather than on
+  36 rows equally.
+
+  WHAT THE PAGE DOES NOT SETTLE. It cannot say whether the water mass-transfer
+  deficit is entirely a diffusivity error: that would need an independent D_v for
+  water vapour in air, and the only one in the papers is Figure 5. It cannot test the
+  extrapolation "five times beyond the experimental range of Reynolds numbers" that
+  PART I'S ABSTRACT claims (Part II folio 174 puts it as "remarkably accurate even
+  when extrapolated five times beyond the experimental range in which they were
+  determined"), because that claim rests on Figure 12. It says nothing about packed beds (A3.4) or
+  about drops containing dissolved or suspended solids, which is the second half of
+  Part II and needs Figure 14.

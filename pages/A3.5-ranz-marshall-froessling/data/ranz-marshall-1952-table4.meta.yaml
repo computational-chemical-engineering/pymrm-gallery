@@ -1,0 +1,121 @@
+dataset_id: ranz-marshall-1952-table4
+title: "Table 4 - evaporation of benzene drops, the only second species in either part"
+status: complete
+
+source:
+  authors:
+    - "Ranz, W. E."
+    - "Marshall, W. R., Jr."
+  year: 1952
+  container: "Chemical Engineering Progress 48(4) 173-180 (April 1952), 'Evaporation from Drops, Part II'"
+  doi: null
+  access: "print original held on disk as a Microsoft Print-To-PDF wrapper over a microfilm scan; no DOI exists for this pre-DOI journal"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: null
+  tool: "poppler pdftoppm -r 400 (the file's NATIVE resolution: pdfimages -list reports JPEG RGB tiles at 400 x 400 ppi, so rendering above 400 dpi only interpolates)"
+  procedure: >
+    THERE IS NO TEXT LAYER AT ALL on either part - pdftotext returns one byte per
+    page - so every digit here was read off a 400 dpi render. Whole-page legibility
+    was not trusted: each numeric column was re-cropped on its own and magnified
+    2-8x, and any glyph that could be read two ways was compared against
+    unambiguous instances of both candidate digits in the SAME column and the same
+    typeface (the 0/6/9 triple in this microfilm font is the recurring ambiguity -
+    they are nominally distinguished by where the white counter sits inside the
+    glyph, high for 9, central for 0, low for 6). THAT RULE IS NOT RELIABLE ON AN
+    OVER-INKED GLYPH and is not treated as decisive anywhere in this page: where a
+    counter has been reduced to a few pixels, the digit is settled by arithmetic the
+    table itself forces (see the Table 4 sidecar) or the cell is left empty.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+
+folio_note: >
+  PART I'S PAGE RANGE IS RECORDED BOTH WAYS AND THIS PAGE SAYS WHICH IT READ. Part
+  I's scan frames carry TWO folio lines: one at the very top of the frame, above the
+  black edge of the leaf, and one at the bottom inside the leaf. They differ by
+  exactly two. BOTH ARE LEGIBLE ON ONLY FOUR OF THE SIX FRAMES (139/141, 140/142,
+  141/143, 144/146); on frame 4 the upper line is cut off at the leaf edge and on
+  frame 5 there is no upper line at all, so those two pairs are inferred from the
+  sequence rather than read. Part II settles which is the page's own: its first page has a BLANK top
+  margin and prints "Vol. 48, No. 4 | Chemical Engineering Progress | Page 173" at
+  the FOOT of the text block, so in this issue the folio line is a footer, not a
+  running head. The line at the top of a Part I frame is therefore the footer of the
+  preceding leaf, caught in the same frame. Read that way Part I is folios 141-146,
+  which is the universal citation and the one Ranz himself gives in his 1993 ISI
+  "Citation Classic" ("Chem. Eng. Progr. 48:141-6; 173-80, 1952"). The 139-144
+  reading recorded against this file comes from taking the upper line as a running
+  head. Every folio cited in these sidecars is the one printed at the FOOT of the
+  page the value appears on.
+
+validation:
+  internal_consistency: >
+    Same Re = D_p v rho / mu identity as Table 1, at a single drop diameter of
+    0.110 cm; the notebook fits it together with Tables 1 and 2 and prints every
+    residual. Run 13 is the largest single residual in the whole 40-row set and is
+    reported rather than adjusted.
+  what_it_tests: >
+    THE ONLY THING IN EITHER PART THAT EXERCISES THE SCHMIDT EXPONENT. Every other
+    transfer measurement in both parts is water vapour in air at one Schmidt number,
+    so the 1/3 is a constant absorbed into the 0.60. Benzene gives a second Schmidt
+    number, and it also gives a second and independent test of the theoretical
+    intercept 2.0 - one whose diffusivity came from Hirschfelder, Bird and Spotz
+    rather than from the authors' own Figure 5.
+
+printed_defects: []
+
+caveats: >
+  ONE DIGIT IS SETTLED BY THE TABLE'S OWN ARITHMETIC, NOT BY THE GLYPH. Run 11's
+  N_Nu' is 10.0 here. The final glyph is genuinely degraded and does NOT decide the
+  question: its surviving white counter is three pixels across and sits at 0.55 of
+  the glyph height, between the 6 cluster and the 0 cluster of this font, while the
+  adjacent unambiguous 0 of the same "10." has its own counter driven almost as low
+  by over-inking. Two things about the glyph ARE measurable and are used. Its ink
+  width is 17 px, matching the 16-18 px of the round digits (0, 6, 8, 9) in this
+  column and excluding the 10-12 px of a "1"; and the two glyphs before it read
+  "10." unambiguously.
+  What decides it is the table itself. Both printed transfer numbers of Table 4 come
+  from the SAME measured evaporation rate - N_Nu from the heat balance, N_Nu' from
+  eq. (16) - so their ratio is rate-independent and is a function of the printed air
+  temperature, drop temperature and pressure alone. Runs 10, 11 and 12 are printed at
+  (20.0, -1.1), (20.2, -1.1) and (20.2, -1.0) C and 733 mm Hg, i.e. within 0.2 K, so
+  the three ratios must agree. Runs 10 and 12 give 8.9/7.1 = 1.2535 and
+  10.9/8.7 = 1.2529; propagating the printed rounding, their brackets intersect in
+  [1.2400, 1.2659], which puts run 11's N_Nu' in [9.73, 10.06]. A printed 10.6 needs
+  1.3418 and is 6.0 % outside a bracket built from a 1 % rounding budget. Inside the
+  bracket, the only value beginning "10." and ending in a round glyph is 10.0.
+  The notebook computes that bracket, reports the three-row ratio spread as a metric
+  (1.03 % as read; 6.93 % if the digit is read 10.6) and carries a break row for the
+  10.6 reading, which moves the benzene intercept 2.0523 -> 2.0222 - a 1.5 % drift,
+  i.e. UNDER check_agreement.py's 5 % tolerance, which is exactly why the ratio
+  spread is reported as a metric of its own.
+
+  THIS TABLE HAS NO "CORRECTED" N_Nu COLUMN. Only the apparent N_Nu is printed. Part
+  II explains why: for benzene the sensible-heat term is about 20 % of the total heat
+  flow to the drop, roughly half the apparent sensible heat was realised, and no
+  attempt was made to obtain a corrected N_Nu. The apparent N_Nu is therefore NOT
+  comparable with Table 1's corrected column and this page never mixes them.
+
+  EVERY DROP IN THIS TABLE IS SUPERCOOLED. The table's own note gives the melting
+  point of benzene as 42 F (5.6 C), and every drop temperature printed is below it,
+  from +3.5 C down to -2.3 C.
+
+columns:
+  - {name: run,                  unit: "-",    description: "row order as printed"}
+  - {name: evap_rate_ml_s_x1e5,  unit: "mL/s", description: "evaporation rate as printed, x 1e5"}
+  - {name: D_p_cm,               unit: cm,     description: "drop diameter, 0.110 cm throughout"}
+  - {name: air_vel_cm_s,         unit: cm/s,   description: "air velocity"}
+  - {name: air_temp_C,           unit: degC,   description: "air temperature"}
+  - {name: drop_temp_C,          unit: degC,   description: "drop temperature; every value is below benzene's melting point"}
+  - {name: press_mmHg,           unit: mmHg,   description: "atmospheric pressure"}
+  - {name: Nu_apparent,          unit: "-",    description: "N_Nu, apparent; no corrected column is printed for benzene"}
+  - {name: Nu_prime,             unit: "-",    description: "N_Nu', mass transfer"}
+  - {name: Re,                   unit: "-",    description: "N_Re"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research
+  organisation with lawful access is covered by Art. 15n Auteurswet (implementing
+  DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced anywhere in this
+  page or its repository directory.

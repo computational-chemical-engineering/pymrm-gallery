@@ -1,0 +1,96 @@
+dataset_id: ranz-marshall-1952-table2
+title: "Table 2 - water drops evaporating into air at 70 to 90 C"
+status: complete
+
+source:
+  authors:
+    - "Ranz, W. E."
+    - "Marshall, W. R., Jr."
+  year: 1952
+  container: "Chemical Engineering Progress 48(4) 173-180 (April 1952), 'Evaporation from Drops, Part II'"
+  doi: null
+  access: "print original held on disk as a Microsoft Print-To-PDF wrapper over a microfilm scan; no DOI exists for this pre-DOI journal"
+  licence: "all rights reserved (numerical facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: null
+  tool: "poppler pdftoppm -r 400 (the file's NATIVE resolution: pdfimages -list reports JPEG RGB tiles at 400 x 400 ppi, so rendering above 400 dpi only interpolates)"
+  procedure: >
+    THERE IS NO TEXT LAYER AT ALL on either part - pdftotext returns one byte per
+    page - so every digit here was read off a 400 dpi render. Whole-page legibility
+    was not trusted: each numeric column was re-cropped on its own and magnified
+    2-8x, and any glyph that could be read two ways was compared against
+    unambiguous instances of both candidate digits in the SAME column and the same
+    typeface (the 0/6/9 triple in this microfilm font is the recurring ambiguity -
+    they are nominally distinguished by where the white counter sits inside the
+    glyph, high for 9, central for 0, low for 6). THAT RULE IS NOT RELIABLE ON AN
+    OVER-INKED GLYPH and is not treated as decisive anywhere in this page: where a
+    counter has been reduced to a few pixels, the digit is settled by arithmetic the
+    table itself forces (see the Table 4 sidecar) or the cell is left empty.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+
+folio_note: >
+  PART I'S PAGE RANGE IS RECORDED BOTH WAYS AND THIS PAGE SAYS WHICH IT READ. Part
+  I's scan frames carry TWO folio lines: one at the very top of the frame, above the
+  black edge of the leaf, and one at the bottom inside the leaf. They differ by
+  exactly two. BOTH ARE LEGIBLE ON ONLY FOUR OF THE SIX FRAMES (139/141, 140/142,
+  141/143, 144/146); on frame 4 the upper line is cut off at the leaf edge and on
+  frame 5 there is no upper line at all, so those two pairs are inferred from the
+  sequence rather than read. Part II settles which is the page's own: its first page has a BLANK top
+  margin and prints "Vol. 48, No. 4 | Chemical Engineering Progress | Page 173" at
+  the FOOT of the text block, so in this issue the folio line is a footer, not a
+  running head. The line at the top of a Part I frame is therefore the footer of the
+  preceding leaf, caught in the same frame. Read that way Part I is folios 141-146,
+  which is the universal citation and the one Ranz himself gives in his 1993 ISI
+  "Citation Classic" ("Chem. Eng. Progr. 48:141-6; 173-80, 1952"). The 139-144
+  reading recorded against this file comes from taking the upper line as a running
+  head. Every folio cited in these sidecars is the one printed at the FOOT of the
+  page the value appears on.
+
+validation:
+  internal_consistency: >
+    Same Re = D_p v rho / mu identity as Table 1, and the notebook fits all three
+    tables' Reynolds columns to one rho/mu(T,P) law together. Table 2 is the weakest
+    contributor and the page says so: its Re column is printed to one or two
+    significant figures (50, 58, 29, 9), so a single row carries up to +-5 %
+    quantisation and the residuals there are quantisation, not disagreement.
+  what_it_tests: >
+    Part of the fit set of Figure 9. Its value on this page is the two replicate
+    pairs it contains (runs 3/4 and runs 6/7), which are the only repeatability
+    estimate either part of the paper offers apart from Table 1's runs 8/9.
+
+printed_defects: []
+
+caveats: >
+  PRECISION. Every transfer number in this table is printed to two significant
+  figures, so a single N_Nu carries +-0.05, i.e. +-0.7 % at N_Nu = 7 and +-1.4 % at
+  N_Nu = 3.5. Nothing on this page is concluded from Table 2 alone.
+
+  FOUR DROP TEMPERATURES ARE NOT MEASUREMENTS. Runs 1-4 print dots in the drop
+  temperature column; the table's own note says that where the drop temperature was
+  not determined experimentally the temperature of adiabatic saturation was assumed.
+  Those four rows therefore carry an assumed, not a measured, driving temperature
+  difference, and the N_Nu values derived from them inherit it.
+
+columns:
+  - {name: run,                  unit: "-",    description: "row order as printed"}
+  - {name: evap_rate_ml_s_x1e5,  unit: "mL/s", description: "evaporation rate as printed, x 1e5"}
+  - {name: D_p_cm,               unit: cm,     description: "drop diameter"}
+  - {name: air_vel_cm_s,         unit: cm/s,   description: "air velocity"}
+  - {name: air_temp_C,           unit: degC,   description: "air temperature"}
+  - {name: drop_temp_C,          unit: degC,   description: "drop temperature; blank where the table prints dots"}
+  - {name: press_mmHg,           unit: mmHg,   description: "atmospheric pressure"}
+  - {name: Nu_apparent,          unit: "-",    description: "N_Nu, apparent"}
+  - {name: Nu_corrected,         unit: "-",    description: "N_Nu, corrected"}
+  - {name: Nu_prime,             unit: "-",    description: "N_Nu', mass transfer"}
+  - {name: Re,                   unit: "-",    description: "N_Re, printed to 1-2 significant figures"}
+  - {name: flag,                 unit: "-",    description: "transcription or interpretation flag"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research
+  organisation with lawful access is covered by Art. 15n Auteurswet (implementing
+  DSM Directive (EU) 2019/790 Art. 3). No page image is reproduced anywhere in this
+  page or its repository directory.
