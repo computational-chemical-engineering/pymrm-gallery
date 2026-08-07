@@ -1,0 +1,72 @@
+dataset_id: wilke-1950-printed-intermediates
+title: "Wilke's printed intermediates: the Example-VI sample calculation and the Example-IV diffusivity averages (1950)"
+status: complete
+tier: 6
+
+source:
+  authors:
+    - "Wilke, C. R."
+  year: 1950
+  container: "Chemical Engineering Progress 46(2) 95-104, February 1950"
+  doi: null
+  access: "same file and same identity check as wilke-1950-table1.meta.yaml"
+  licence: "numerical facts extracted; no page image reproduced"
+
+acquisition:
+  method: table
+  note: >
+    TIER 6 - printed intermediates of the author's own hand calculations.
+    Read off native-400-ppi renders of journal pages 99 and 101, each numeric
+    cropped and re-read at digit scale. This file exists because these numbers
+    are the page's highest-ranked validation: a worked example with printed
+    intermediates beats every other route (docs/agent-brief.md).
+
+columns:
+  - {name: quantity, unit: "-", description: "symbol, matching the notation the paper defines on journal p. 103."}
+  - {name: value,    unit: "see the unit column", description: "as printed."}
+  - {name: unit,     unit: "-", description: "the value's unit as printed; '-' for a dimensionless quantity."}
+  - {name: sig_figs, unit: "-", description: "significant figures printed, which sets the rounding bound used on the page."}
+  - {name: page,     unit: "-", description: "journal page (95-104), not PDF page."}
+  - {name: example,  unit: "-", description: "Roman numeral of the Table-1 example the number belongs to, or '-'."}
+  - {name: method,   unit: "-", description: "1, 2 or '-' for a quantity that belongs to no single method."}
+  - {name: context,  unit: "-", description: "the phrase or equation number the paper attaches to the value."}
+
+conditions:
+  sample_calculation: >
+    Journal p. 101, "Sample Calculation": "To illustrate the use of Method 2 the
+    essential numerical procedures in the calculation of Example VI by this
+    method will be summarized." It defines N'_A = N_A R T x_A / P, states that a
+    first approximation assuming N'_B = 1.748 and N'_A = -0.0136 gave
+    N'_B = 1.719, then works N'_A through eqs. (16), (30), (31), (27), (28),
+    (26) and (15) with every intermediate printed, and closes with "Further
+    trials give essentially no change in the calculated rates for A or B."
+  method1_film_pressure_factor: >
+    Journal p. 99: "In Example VI the film pressure factor for the diffusion of
+    A as calculated under Method 1 is 288 mm., whereas the actual arithmetic
+    average partial pressures of B and C are 75 and 72.5 mm. respectively giving
+    a total of only 147.5 mm." The 215.5 mm that follows is the paper's own
+    inference (288 - 72.5), not an independent measurement, and is labelled as
+    such on the page.
+  figure_3: >
+    Journal p. 99 and Fig. 3. For Example IV the paper obtains the carbon
+    dioxide profile by integrating eq. (2), plots D'_H2O from eq. (6) along it,
+    and evaluates D''_H2O = (x2 - x1) / integral(dx / D'_H2O) graphically,
+    "found to be 2.15 sq.cm./sec. compared with 2.22 sq.cm./sec. calculated by
+    Equation (25)". Only these two scalars are taken; NO point, curve or pixel
+    from Figure 3 is digitised. Both curves in that figure are recomputed from
+    the paper's own equations on the page, which is why no digitisation gate
+    applies.
+  method2_claim: >
+    Journal p. 100, verbatim: "Comparison with results of Method 3 indicates
+    satisfactory agreement in all examples with a maximum derivation of less
+    than 10%." The paper prints DERIVATION, not "deviation"; the word is crisp
+    on the native-400-ppi crop and is an author's or compositor's slip. It is
+    quoted as printed with [sic] everywhere the page repeats it, because this
+    page reports printed defects and never repairs them.
+    Stored as a claim to be tested, not as a datum.
+
+redistribution_basis: >
+  Numerical values are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image, table image or figure from the source is
+  reproduced anywhere in this repository.

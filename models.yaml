@@ -191,6 +191,67 @@ models:
            tier_from: A4.9}
     related: [A4.9, A4.3]
 
+  - id: A4.1
+    slug: wilke-mixture-rule
+    title: "Fick's law with Wilke's mixture rule for the effective diffusivity"
+    description: >
+      Wilke's harmonic mixture rule is exact when a species diffuses through
+      genuinely stagnant gases, so agreement there is arithmetic, not evidence.
+      His own paper supplies the test that can fail: eight ternary film problems
+      with the exact Stefan-Maxwell solution printed beside the rule. Recomputed
+      against that solution the rule is 86.6 % wrong at worst and 21.6 % at the
+      median - and the harmonic average is not what limits it. Replacing it with
+      the weighted arithmetic mean moves the median by 0.6 points while making
+      the worst case two and a half times worse; keeping it and moving the
+      composition, as Wilke's own Method 2 does, takes the worst case to 12.1 %.
+    section: A
+    status: published
+    page: pages/A4.1-wilke-mixture-rule/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas]
+    reference:
+      authors: ["Wilke, C. R."]
+      year: 1950
+      container: "Chemical Engineering Progress 46(2) 95-104"
+      doi: null
+      note: >
+        The origin, read in full on renders at the scan's native 400 ppi; no DOI
+        exists. Identity confirmed from the document itself (title page,
+        by-line, affiliation, running feet, 30-item Literature Cited, signed
+        Discussion). The text layer is among the two worst in the library
+        (182 characters on journal p. 97) and no character on the page comes
+        from it. THIS IS NOT the Buddenberg-Wilke viscosity rule that BSL and
+        Chapman & Cowling carry, and not Wilke & Lee 1955.
+    reference_read_from:
+      authors: ["Taylor, R.", "Krishna, R."]
+      year: 1993
+      container: "Multicomponent Mass Transfer, Wiley, ISBN 0-471-57417-1"
+      doi: null
+      note: >
+        Second witness only - the origin itself was read. Prints the rule as
+        eq. (6.1.14) with "(Wilke, 1950)" inline and states its condition
+        (printed p. 126, sec. 6.1.3); records the pedigree in sec. 8.6
+        (p. 204); Example 8.5.1 (pp. 201-203), "based on experiments conducted
+        by Fairbanks and Wilke (1950)", is reproduced on the page and supplies
+        the stagnant-regime limit. Read at its native 600 ppi.
+    origin_not_consulted: >
+      Gilliland & Sherwood (1934); Sherwood, "Absorption and Extraction" (1937);
+      Hougen & Watson, "Chemical Process Principles III" (1947); Fairbanks,
+      M.S. thesis, University of California (1948); Stefan (1871, 1872, 1874);
+      Maxwell (1866, 1890). None is on disk and none was consulted. Eqs.
+      (21)-(24) reach the page THROUGH Wilke's transcription, and (21)-(23) are
+      independently re-derived on the page from the Maxwell-Stefan balance
+      rather than trusted. Hougen and Watson's arithmetic-mean rule - the page's
+      null baseline - reaches the page through J. H. Arnold's one-sentence
+      description of it in the paper's own printed Discussion, and no form of it
+      beyond that sentence is used or cited.
+    predicts: [effective diffusion coefficient in a multicomponent gas, film pressure factor, ternary Stefan-Maxwell film fluxes, error of a scalar effective diffusivity vs flux share, composition profiles across a diffusion film]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton]
+    data: {tier: 6, method: table, status: complete}
+    related: [A4.2, A4.3, A4.4, A4.8, A4.9, H1.9]
+
   - id: A4.4
     slug: knudsen-bosanquet
     title: "Knudsen diffusion and the Bosanquet relation"

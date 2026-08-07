@@ -1,0 +1,139 @@
+dataset_id: wilke-1950-table1
+title: "Wilke's Table 1 — eight test examples and three calculation methods (1950)"
+status: complete
+tier: 6
+
+source:
+  authors:
+    - "Wilke, C. R."
+  year: 1950
+  container: "Chemical Engineering Progress 46(2) 95-104, February 1950"
+  doi: null
+  access: >
+    On disk as Wilke1950-multicomponent-diffusion-mixture-rule-ChemEngProg46-95.pdf,
+    a microfilm scan (Internet Archive) re-OCRed by Acrobat Paper Capture. Identity
+    confirmed from the document itself: the title page (journal p. 95) prints
+    "DIFFUSIONAL PROPERTIES OF MULTICOMPONENT GASES / C. R. WILKE / University of
+    California, Berkeley, California", the running feet print "Vol. 46, No. 2",
+    "CHEMICAL ENGINEERING PROGRESS", "February, 1950" and pages 95-104, and the
+    article ends with a 30-item Literature Cited and a signed Discussion.
+  licence: "numerical facts extracted; no page image reproduced anywhere"
+
+acquisition:
+  method: table
+  note: >
+    TIER 6 - these are the author's own COMPUTED rates, not measurements. Wilke's
+    only experimental evidence in this paper is Figure 1 (toluene into
+    hydrogen-argon, from Fairbanks's 1948 M.S. thesis, ref. 10), which is a figure
+    and is deliberately not digitised: nothing on the page rests on it.
+    Table 1 is rotated 90 degrees on journal page 99. It was rendered at the
+    scan's native 400 ppi (pdfimages -list: JPEG grayscale, 400 x 400 ppi;
+    rendering higher only interpolates), rotated losslessly, and every cell
+    cropped and re-read at digit scale. The text layer was not used for any
+    number - it is one of the two worst in this library (182 characters on
+    journal p. 97; the by-line extracts as "C.R. WI E").
+
+columns:
+  - {name: example,      unit: "-",     description: "Roman numeral as printed (I-VIII)."}
+  - {name: gas_A,        unit: "-",     description: "species labelled A in that row."}
+  - {name: gas_B,        unit: "-",     description: "species labelled B."}
+  - {name: gas_C,        unit: "-",     description: "species labelled C; stagnant (N_C = 0) in every example."}
+  - {name: p1_A,         unit: "mm Hg", description: "partial pressure of A at point 1."}
+  - {name: p1_B,         unit: "mm Hg", description: "partial pressure of B at point 1."}
+  - {name: p1_C,         unit: "mm Hg", description: "partial pressure of C at point 1."}
+  - {name: p2_A,         unit: "mm Hg", description: "partial pressure of A at point 2."}
+  - {name: p2_B,         unit: "mm Hg", description: "partial pressure of B at point 2."}
+  - {name: p2_C,         unit: "mm Hg", description: "partial pressure of C at point 2."}
+  - {name: D_AB,         unit: "sq.cm./sec.", description: "binary diffusion coefficient A-B. The table's own footnote says 'Diffusion coefficients are estimated and do not correspond to true values'."}
+  - {name: D_AC,         unit: "sq.cm./sec.", description: "binary diffusion coefficient A-C, same footnote."}
+  - {name: D_BC,         unit: "sq.cm./sec.", description: "binary diffusion coefficient B-C, same footnote."}
+  - {name: m3_set,       unit: "-",     description: "1, 2 or 3 - Example I is the only row with more than one Method-3 set."}
+  - {name: m3_preferred, unit: "-",     description: "1 on the set carrying the table's double-dagger 'Preferred Solution' footnote."}
+  - {name: m1_NA,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 1 rate of A."}
+  - {name: m1_NB,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 1 rate of B."}
+  - {name: m2_NA,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 2 rate of A."}
+  - {name: m2_NB,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 2 rate of B."}
+  - {name: m3_NA,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 3 (exact) rate of A."}
+  - {name: m3_NB,        unit: "g.moles/(sec.)(sq.cm.) x 1e5", description: "Method 3 (exact) rate of B."}
+  - {name: read_note,    unit: "-",     description: "per-cell reading caveats; empty where the cell is unambiguous."}
+
+conditions:
+  common: >
+    Stated in the table's own asterisk footnote and repeated in the text of
+    journal p. 98: diffusion distance x = x2 - x1 = 0.1 cm, total pressure
+    150 mm Hg, temperature 40 deg C, for all examples.
+  gas_constant: >
+    The Notation (journal p. 103) defines R as "(cu.cm.)(atm.)/(g.mole)(deg K)".
+    The page uses R = 82.06 and T = 313.15 K; the notebook shows every reported
+    deviation is insensitive to that choice at the 1e-4 level.
+
+self_consistency:
+  pressure_sum: >
+    All six partial pressures in every row sum to exactly 150 mm Hg at both
+    points - sixteen independent checks, all exact, which is what fixes the
+    four-figure entries (49.055, 49.945, 49.528, 49.972, 50.945, 50.055,
+    50.472, 50.028).
+  diffusivity_pairing: >
+    Only three distinct binary values appear (0.9220, 2.7064, 3.4576) and every
+    row assigns them consistently with its own A/B/C labelling - in particular
+    rows VI and VII, where A and C are permuted, permute the three values
+    correctly. Eight rows x three columns is 24 cells fixed by three numbers.
+  eq23: >
+    Every Method-3 pair must satisfy the paper's own eq. (23),
+    N_A/D_AC + N_B/D_BC = (P/RTx) ln(p_C2/p_C1), which is an exact integral of
+    the equations Method 3 solves. EIGHT of the ten printed pairs satisfy it
+    inside 1 %, the worst of those being 0.41 %; four of those eight sit inside
+    their own print-rounding bound, and the rest of the spread is Wilke's own
+    hand-solution error on a transcendental pair, not a reading error. TWO miss
+    grossly: Example I's third set by -13.2 % against a 0.73 % rounding bound
+    and Example III by +9.4 % against 0.38 %. Both are flagged in read_note and
+    analysed on the page; neither affects any headline number, because the
+    headline compares against the page's own exact solution and not against
+    Wilke's Method-3 column.
+
+known_issues:
+  minus_signs: >
+    m1_NB for Examples I and II is printed with NO minus sign while the
+    structurally identical Example III prints one. Recomputing Method 1 gives
+    -5.80 and -0.141: the magnitudes are right and the signs are missing.
+  example_VI_method1: >
+    m1_NA for Example VI (-0.104) is contradicted by the paper's own text on
+    journal p. 99, which states that the Method-1 film pressure factor for A in
+    Example VI is 288 mm. That value requires N_A = -0.192; -0.104 requires
+    380 mm. Stored as printed and reported, never repaired.
+  example_VI_method3: >
+    m3_NA for Example VI (-0.105) is 10.42 % from the exact solution of that
+    example, -0.115941, which is by far the largest miss in the Method-3
+    column - the next is 2.31 %. This is NOT a reading defect and the cell is
+    stored and reported as printed: eq. (23) cannot see it (N_A/D_AC is 0.6 %
+    of that row's left-hand side), and the same -0.105 is printed in the
+    Method-2 column of the same row, where it is right to 0.32 %. The most
+    likely explanation is Wilke's own hand solution of the transcendental pair
+    on the minority-flux species, possibly carried across from Method 2. It is
+    included at full weight in the page's Method-3 reproduction metric, which
+    it therefore sets.
+  example_III: >
+    (0.0668, -0.0528) misses eq. (23) by +9.4 % against a 0.38 % print-rounding
+    bound, and no single-digit repair reconciles it: holding N_A the equation
+    wants N_B = -0.0556 and holding N_B it wants N_A = 0.0646, with the page's
+    exact solution (0.0655, -0.0539) sitting between the two. Example III is the
+    most ill-conditioned row in the table - its p_C moves by 0.056 mm out of 150
+    - so this is most likely Wilke's own hand-solution error rather than a
+    misprint, but it is stored as printed and reported either way.
+  example_I_set_3: >
+    (4.14, -3.93) as printed misses eq. (23) by 13.2 %. One digit is wrong: with
+    N_A = 4.14 eq. (23) gives N_B = -3.723, and with N_B = -3.93 it gives
+    N_A = 4.301. The constraint does not choose between the two repairs, so
+    neither is adopted. Stored as printed.
+  exponent_glyph: >
+    The Table 1 header's multiplier and the exponent in the p. 101 line
+    "N_A = -0.105 x 10^?" are both illegible at native resolution. Both are
+    fixed to 1e-5 by arithmetic, not by pixel shape: recomputing Method 1 for
+    Example I from the printed inputs gives 5.799e-5 against the printed 5.80,
+    and the p. 101 sample calculation's own chain gives -1.049e-6 = -0.105e-5.
+
+redistribution_basis: >
+  Numerical values are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image, table image or figure from the source is
+  reproduced anywhere in this repository.

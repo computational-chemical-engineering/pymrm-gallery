@@ -1,0 +1,74 @@
+dataset_id: taylor-krishna-1993-example-8-5-1
+title: "Taylor & Krishna, Example 8.5.1 — evaporation into two inert gases (1993)"
+status: complete
+tier: 6
+
+source:
+  authors:
+    - "Taylor, R."
+    - "Krishna, R."
+  year: 1993
+  container: "Multicomponent Mass Transfer, Wiley Series in Chemical Engineering, ISBN 0-471-57417-1"
+  doi: null
+  access: >
+    Complete book on disk (609 PDF pages, 600 ppi JBIG2 native). PDF page =
+    printed page + 32 in this part of the body (printed p. 201 = PDF p. 233).
+    Identity verified from the title and copyright pages.
+  licence: "numerical facts extracted; no page image reproduced"
+
+acquisition:
+  method: table
+  note: >
+    TIER 6 - the authors' own computation, not measurement. The problem is
+    described as "based on experiments conducted by Fairbanks and Wilke (1950)"
+    but no measured number is printed with it, so nothing here is data.
+    Read off native-600-ppi renders of printed pages 201-203.
+
+columns:
+  - {name: quantity, unit: "-", description: "symbol as printed."}
+  - {name: value,    unit: "see the unit column", description: "as printed."}
+  - {name: unit,     unit: "-", description: "the value's unit as printed."}
+  - {name: role,     unit: "-", description: "given = problem statement; intermediate = printed by the solution; result = the answer."}
+  - {name: page,     unit: "-", description: "printed book page."}
+
+why_this_page_uses_it:
+  attribution: >
+    This book is the independent second witness for the case. Printed p. 126,
+    sec. 6.1.3 "Limiting Cases", item 3: "When species i diffuses through a
+    n - 1 stagnant gases and we have N_j = 0, i != j (Wilke, 1950)", followed by
+    eq. (6.1.14), D_i,eff = (1 - x_i) / sum_{j != i} x_j / D_ij. Printed p. 204,
+    sec. 8.6: "The oldest, simplest, and still widely used methods, pioneered by
+    Hougen and Watson (1947) and by Wilke (1950), employ the concept of an
+    effective diffusion coefficient." The book's reference list gives
+    "Wilke, C. R., 'Diffusional Properties of Multicomponent Gases',
+    Chem. Eng. Prog., 46, 95-104 (1950)" - the same article, independently
+    confirming the identity of the file on disk.
+    NOTE: the pedigree sentence is in section 8.6, not 8.7 as
+    docs/papers-inventory.yaml records; the exact/linearized comparison is
+    sub-section 8.6.1 (printed p. 208) and sec. 8.5.5 (printed p. 203).
+  the_regime: >
+    This example is the ONE regime in which Wilke's rule is the exact pointwise
+    effective diffusivity - a single species evaporating through two genuinely
+    stagnant gases. The page uses it to show what "exact" does and does not buy:
+    the flux still needs an integration, and freezing the rule at an average
+    composition is a second approximation that costs 0.08 % here and 31 % when
+    the driving force is widened.
+
+known_issues:
+  printed_slip: >
+    Printed p. 203 reads "Ethyl propionate is not present in the bulk gas phase
+    (at least initially), so y_1delta = 0.0". The problem statement on p. 201
+    gives y_10 = 0.0 (bulk) and p. 202 gives y_1delta = 0.0634 (interface), so
+    the subscript in that sentence is a slip for y_10. Reported, not repaired;
+    the stored values are the problem statement's.
+  D_in_notation: >
+    Eq. (8.5.35) is printed as N_1 l / (c_t D_in) = ln(y_i,delta / y_i0), i != 1.
+    Substituting the printed interface compositions recovers D_12 = 8.50 mm2/s
+    and 37.3 mm2/s against the printed D_13 = 37.4, so "D_in" there is the
+    diffusivity of species i against species 1, the transferring species.
+
+redistribution_basis: >
+  Numerical values are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No page image, table image or figure from the source is
+  reproduced anywhere in this repository.

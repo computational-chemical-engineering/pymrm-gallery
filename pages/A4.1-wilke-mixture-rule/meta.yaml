@@ -1,0 +1,142 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A4.1
+slug: wilke-mixture-rule
+title: "Fick's law with Wilke's mixture rule for the effective diffusivity"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 22
+datasets:
+  - wilke-1950-table1.csv
+  - wilke-1950-printed-intermediates.csv
+  - taylor-krishna-1993-example-8-5-1.csv
+
+validation:
+  - the Example-VI sample calculation (journal p. 101, Method 2) reproduced step by step - all NINE printed intermediates inside the paper's own print-rounding bound, max relative deviation 0.29 %. This is the page's rank-1 validation and it is what fixes the illegible exponent glyph to 1e5
+  - Table 1 recomputed cell by cell from the printed inputs. Method 2 reproduces to 5.80 % and Method 3 (against the page's own exact solution) to 10.42 %, both with NO cells excluded. Method 1 reproduces to 1.92 % with the two lost-minus-sign cells dropped and the third defective cell (Example VI) carried as its own reported metric rather than hidden
+  - the Method-3 reproduction metric is set by ONE cell, Example VI's N_A - printed -0.105 against the exact -0.115941, i.e. 10.42 %, four and a half times the next largest Method-3 miss. It is reported at full weight and attributed: it is Wilke's own hand solution of the transcendental pair going soft on the MINORITY flux, which is exactly the failure mode the page's headline measures. The page's own eq.-(23) test cannot see that cell (N_A/D_AC is 0.6 % of eq. 23's left-hand side there), so the row's -0.03 % residual is no defence of it
+  - three printed defects proved from the paper's own numbers - Method 1 N_B of Examples I and II printed without their minus signs (magnitudes agree to 0.06 %); Method 1 N_A of Example VI, whose printed -0.104 implies a film pressure factor of 380 mm against the 288 mm the paper's own p. 99 text states for that quantity, while the recomputation gives 287.4 mm (0.21 %); and the first bracket of eq. (22), whose printed 1/D_AC must be 1/D_BC or eqs. (21)+(22) do not integrate to the paper's own eq. (23) - shown symbolically
+  - the paper's Example-IV diffusivity averages reproduced from its own equations rather than digitised from Fig. 3: 2.2222 against a printed 2.22 (eq. 25) and 2.1571 against a printed 2.15 (graphical path integral)
+  - Wilke's eq. (23) used as an independent constraint on the printed Method-3 pairs. Eight of ten sit inside 1 % (worst 0.41 %, consistent with hand solution of a transcendental pair); two miss grossly - Example I's third set by -13.2 % against a 0.73 % rounding bound and Example III by +9.4 % against 0.38 %
+  - the exact problem solved THREE independent ways - a closed form derived on the page, a matrix-exponential propagator, and a pymrm finite-volume solve with construct_grad/construct_div/NumJac/Newton. The pymrm route converges onto the closed form at a mean observed order of 1.985 over 24 refinements, reaching 5.5e-6 at n_z = 320
+  - the exact boundary-value problem shown to have exactly ONE root per example by a bracketed scan over |N_A| < 2e-2, which is why Wilke's three printed sets for Example I can be sorted: the preferred one misses the terminal composition by 7.0e-4 in mole fraction, the equimolal set by -0.071 and the third by +0.061
+  - Taylor & Krishna Example 8.5.1 reproduced to 9.8e-5 on all five printed intermediates - but labelled: their flux formula and Wilke's eq. (14) at phi = 1 are ALGEBRAICALLY IDENTICAL, proved on the page, so that agreement is structural. The live number beside it is the frozen-composition error against the exact stagnant solution, 0.083 % there and 31.0 % when the driving force is widened to y_1 = 0.8
+  - four break tables (headline errors, reproduction of the printed cells, auxiliary metrics, and the two printed-intermediate chains), asserted key-for-key against agreement.json. The coverage map is BUILT from the measured mover list of each break-table column rather than asserted in prose, so a row that stops moving its metric cannot go unnoticed. 17 of the 22 reported metrics carry a measured mover list with at least two rows in it, three more are moved by the grid refinement or the stagnant sweep, and the remaining two are declared structural with named live companions
+
+adds: >
+  The page does not need pymrm to get the answer and says so: the exact problem
+  is a 2x2 linear system with a closed-form solution, derived here. What the
+  finite-volume route adds is (a) an independent check on that derivation - it
+  knows only N = -c [B]^-1 grad(y) and div N = 0, and converges onto the closed
+  form at order 1.985 - and (b) the formulation that survives when the linearity
+  does not.
+
+  What the page adds beyond the paper is separable from the solver. (1) Wilke
+  prints the Method-1-versus-exact comparison but never reduces it to a number;
+  his own summary is qualitative. Quantified: 86.6 % worst case, 21.6 % median,
+  split by flux share - 7.7 % median on the species carrying the majority flux
+  against 66.2 % on the minority. (2) The failure is attributed. Replacing the
+  weighted harmonic mean by the weighted arithmetic mean that J. H. Arnold
+  attributes to Hougen and Watson in the paper's own printed Discussion moves
+  the median by 0.6 points (21.6 -> 22.2 %) while making the worst case two and
+  a half times worse (86.6 -> 212.7 %); keeping the harmonic mean and moving the COMPOSITION -
+  Wilke's own Method 2 - takes the worst case from 86.6 % to 12.1 %. The
+  mixture rule's functional form is not what limits it. (3) A null baseline
+  taken from the paper's own printed Discussion rather than invented.
+  (4) The paper's accuracy claim for Method 2 (quoted as printed: "a maximum
+  derivation [sic] of less than 10%") tested both ways: it holds on Wilke's own
+  two printed columns (9.07 %) and fails against the true solution (12.15 %).
+  (5) Three printed defects proved from the paper's own numbers, and one
+  ambiguity left unrepaired because the constraint does not decide it.
+  (6) A quantitative
+  statement of what "exact for stagnant gases" is worth: it is a statement
+  about the pointwise coefficient, and freezing it at one composition costs
+  0.08 % on Taylor and Krishna's example and 31.0 % at a wider driving force
+  with every N_j still exactly zero.
+
+agreement: >
+  Reproduction of what the paper prints: the nine-step sample calculation to
+  0.29 % (all nine inside the print-rounding bound); Table 1 to 5.80 %
+  (Method 2) and 10.42 % (Method 3), both over ALL sixteen printed cells with
+  nothing excluded, and to 1.92 % for Method 1 over the thirteen cells that are
+  not one of the three printed defects; the two Example-IV diffusivity averages to 0.10 % and 0.33 %;
+  the Example-VI Method-1 film pressure factor to 0.21 %; Taylor and Krishna's
+  five intermediates to 9.8e-5. Internal: the pymrm solve reaches the closed
+  form to 5.5e-6 at n_z = 320 at a measured order of 1.985, and the two
+  analytic routes agree to 1.2e-13.
+
+  The headline is NOT an agreement: it is a disagreement, measured. Wilke's
+  rule against the exact solution of his own eight problems is 86.6 % wrong at
+  worst and 21.6 % at the median.
+
+caveats: >
+  NOTHING ON THIS PAGE IS TESTED AGAINST A MEASUREMENT. Every dataset is tier 6
+  - the authors' own computations. The paper's only experimental content is
+  Figure 1 (Fairbanks's 1948 M.S. thesis), which is a figure, is scoped out and
+  is not digitised; the paper's own Comment section states that validity of the
+  Stefan-Maxwell equations "has not been established experimentally in
+  multicomponent systems for other than the stagnant gas case cited here". The
+  exact solution is used as the REFERENCE, so if the Stefan-Maxwell equations
+  are wrong for these mixtures then so is every error bar here. This is a
+  model-versus-model reproduction, not a validation, and the page says so in
+  its Parameters section and again in Reuse.
+
+  Table 1's own footnote says the diffusion coefficients "are estimated and do
+  not correspond to true values", so no number here is a statement about carbon
+  dioxide, water or hydrogen.
+
+  Every example is ternary with exactly one stagnant species; Wilke's own
+  extrapolation of Method 2 to more components is quoted and explicitly not
+  tested.
+
+  Two metrics are structural and labelled: method2_max_dev_on_printed_columns
+  (a comparison of two printed columns, no computation enters it - but it is
+  NOT insensitive to the READING, see below) and exact_two_routes_reldiff (two
+  integrations of one linear system; 1.2e-13, BELOW check_agreement.py's
+  ABS_FLOOR = 1e-12 and therefore outside CI). Both name
+  pymrm_vs_closed_form_reldiff_n320 as their live companion. The
+  Taylor-Krishna reproduction is additionally labelled as an algebraic
+  identity in that limit, proved on the page.
+
+  A third quantity, the flux uniformity max|N/mean(N) - 1| = 5.3e-11, is
+  printed on the page as a solver diagnostic but is deliberately NOT in
+  agreement.json. It is the converged Newton residual re-expressed, no physical
+  defect moves it, and it lands just ABOVE ABS_FLOOR, so CI would compare a
+  round-off residual at REL_TOL = 5 % and fail on a different BLAS or SciPy for
+  no physical reason.
+
+  Example I's third printed Method-3 set is left as printed: eq. (23) proves
+  one of its two digits is wrong and does not say which. Example III's printed
+  Method-3 pair misses eq. (23) by 9.4 % against a 0.38 % rounding bound and no
+  single-digit repair reconciles it; it is stored as printed and reported.
+  The Method-3 N_B of Examples VII and VIII have alternative readings (-0.221,
+  0.484) that eq. (23) does not discriminate; neither affects any headline,
+  because the headline compares against the page's own exact solution and not
+  against Wilke's Method-3 column. They DO move one reported metric:
+  method2_max_dev_on_printed_columns is computed entirely from the printed
+  Method-2 and Method-3 columns, and Example VII's alternative reading takes it
+  from 9.07 % (at IV-B) to 9.95 % (at VII-B). The paper's own "< 10 %" claim
+  still holds either way, but by 0.05 points rather than 0.93. The page prints
+  that sensitivity beside the metric; the transcribed readings are what is
+  reported.
+
+  Two printed typos are quoted as printed with [sic] rather than corrected,
+  because this page reports printed defects and never repairs them: journal
+  p. 100 prints "a maximum derivation of less than 10%", and Taylor & Krishna's
+  printed p. 126 reads "When species i diffuses through a n - 1 stagnant
+  gases".
+
+  R = 82.06 and T = 313.15 K are chosen, not printed. The break table shows a
+  1 % change in either moves the reproduction of the printed table by about
+  1 % and leaves every method-versus-method error unchanged to 1e-13, because
+  c = P/RT cancels in a ratio.
