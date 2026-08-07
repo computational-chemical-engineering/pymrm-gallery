@@ -1,16 +1,35 @@
-# Catalogue block for E1.1, to splice into models.yaml. APPEND — E1.1 is not in
-# models.yaml at all today, although E2.1's `related:` list already names it.
+# Catalogue block for E1.1.
 #
-# status: planned, and there is NO `page:` key, because no page was built. See
-# queue_cases/E1.1.yaml `scope_decision:` for why: Kunii & Levenspiel (1968) is
-# on disk and prints the two-phase relation (eqs. 2 + 3) but neither attributes
-# it, names it, nor tests it, and those equations are already reproduced on the
-# published E2.1 page. Splicing this block is optional and independent of the
-# paper question — it makes the case visible in the canonical index and records
-# the verified citation so nobody re-resolves it.
+# *** UPGRADE IN PLACE, NOT AN APPEND. ***
 #
-# `slug` and `title` are provisional: no meta.yaml exists yet to match them
-# against. Whoever builds the page must keep the three in sync.
+# models.yaml ALREADY CONTAINS an E1.1 record (at the time of writing it sits
+# between E1.2 and E2.7, immediately after the E1.2 block whose `related:` list
+# ends "... B1.6, A2.3"). That record has `status: planned`, no `page:` key and a
+# long `note:` explaining that the case was blocked on the source. The block
+# below REPLACES it in full. Do not paste it in as a second entry -
+# scripts/check_metadata.py fails on duplicate ids, and integrate_case.py cannot
+# do an in-place upgrade automatically.
+#
+# An earlier version of this file said "APPEND - E1.1 is not in models.yaml at
+# all". That was true when it was written and is not true any more; the planned
+# block was spliced in afterwards. The header is corrected rather than deleted so
+# that nobody re-derives the same wrong conclusion.
+#
+# What changes against the planned record:
+#   status   : planned -> published
+#   page     : added
+#   data     : {tier: 6, method: table, status: placeholder}
+#              -> {tier: 2, method: table, status: complete}
+#              Tier 2 is "tables printed in papers" (docs/data-strategy.md) and
+#              these are measurements, which is the whole point of the page and
+#              the difference from E2.1's tier 6.
+#   predicts : "first-order conversion" and "bypass fraction" REMOVED. The page
+#              deliberately builds no reactor model - that is E2.1's territory -
+#              and nothing on it computes a conversion.
+#   pymrm_api: construct_coefficient_matrix removed (not used); brentq/root-find
+#              is scipy, not pymrm, so it is not listed.
+#   note     : replaced. The old note described the block; the new one records
+#              what the page found.
 
 - id: E1.1
   slug: two-phase-theory
@@ -18,29 +37,79 @@
   description: >
     The postulate the whole bubbling-bed literature is built on — gas beyond
     what minimum fluidisation needs passes through as bubbles, so the dense
-    phase sees the same flow however hard the bed is blown — and the measured
-    bubble flow that falls well short of it.
+    phase sees the same flow however hard the bed is blown — tested against the
+    intercepts printed four columns after it in the paper that states it. Those
+    intercepts are read off Lewis, Gilliland and Bauer's particles rather than
+    the authors' own, and the paper says so; the page tests the postulate, not
+    this apparatus, and measures why the authors' own beads cannot settle it.
   section: E
-  status: planned
+  status: published
   tier: T0
   priority: P1
   structures: [S7]
   phases: [gas-solid]
-  predicts: [bubble fraction, bed expansion, dense-phase gas flow, bypass fraction, first-order conversion]
-  pymrm_api: [construct_div, construct_convflux_upwind, construct_coefficient_matrix, newton]
+  page: pages/E1.1-two-phase-theory/
+  predicts: [bubble fraction, bed expansion, dense-phase gas flow, visible bubble flow factor]
+  pymrm_api: [construct_convflux_upwind, construct_div, newton, NumJac]
   reference:
     authors: ["Toomey, R. D.", "Johnstone, H. F."]
     year: 1952
+    title: "Gaseous Fluidization of Solid Particles"
     container: "Chemical Engineering Progress 48(5) 220–226"
-  data: {tier: 6, method: table, status: placeholder}
+    doi: null
+  data: {tier: 2, method: table, status: complete}
   note: >
-    Blocked on the source, not on the physics. Chem. Eng. Progr. 48 (1952)
-    predates DOIs and has no open-access route; Kunii & Levenspiel (1968), the
-    only fluidisation paper on disk, does not cite Toomey & Johnstone and states
-    the split only as its own eqs. 2 and 3, which the E2.1 page already
-    reproduces. Fluidization Engineering (2nd ed., 1991) ch. 6 would unblock the
-    case equally well — it states the postulate as such and prints the
-    visible-bubble-flow factor Y that measures its failure. Build it as the page
-    that tests the split against data rather than assuming it; that is what E2.1,
-    which is tier 6 with no measurement on it, structurally cannot be.
+    Built from the original, not from a reprint. The reprint route was checked
+    and failed and AGENTS.md records it as the canonical example: Kunii and
+    Levenspiel (1968) state the relation as their eqs. 2 and 3 but never name it,
+    never attribute it and never test it, and Froment, De Wilde and Bischoff's
+    third edition does not contain the string "Toomey" at all. No DOI exists for
+    Chem. Eng. Progr. 48 (1952) and none was invented; the citation was verified
+    from the scan's own title page and footers. The PDF has NO text layer
+    whatsoever (one byte per page), so every digit came off 400 dpi renders.
+
+    WHOSE PARTICLES THE HEADLINE IS ABOUT. The four intercept ratios
+    u_mf/u_e = 0.85, 0.69, 0.83, 0.87 are printed by Toomey and Johnstone but are
+    read off LEWIS, GILLILAND AND BAUER's four particle sizes, not the five bead
+    sizes of Tables 1-3. The paper says so ("Only the data of Lewis, Gilliland
+    and Bauer extend to low enough velocities to obtain an accurate indication of
+    the point of intersection") and Figure 3 separates the two sets in its legend:
+    three filled "AUTHORS' DATA" curves, four open "DATA OF LEWIS, GILLILAND AND
+    BAUER" curves. The page tests THE POSTULATE on numbers this paper printed; it
+    does not measure u_e for this apparatus, and it says so in the title cell, the
+    front matter, Results section 4, Reuse, meta.yaml and README.md.
+
+    What the page finds. The postulate has two testable halves and those printed
+    intercepts separate them: they support "the dense-phase flow is constant,
+    independent of u_f" and refute "that constant is u_mf" — the ratios put the
+    dense phase at 1.23 u_mf, so the visible bubble flow factor is Y = 0.765 at
+    u_f = 2 u_mf and 0.646 (200 F) / 0.756 (70 F) at the lowest of Toomey and
+    Johnstone's own robustly bubbling runs. E2.1's delta = (u_0-u_mf)/u_b
+    inherits the half that fails. The page also RUNS the refit on the authors'
+    own beads, which it declines to rely on: u_mf/u_e = 2.05, 0.93, 0.47 for
+    beads 2, 3, 4 — a factor 4.4 spread straddling 1, so their own apparatus
+    cannot fix even the sign. That is why the borrowed ratios are load-bearing.
+
+    Four further results. The bed-weight identity Toomey claims in the printed
+    Discussion but never quantifies holds to 0.49 % over 25 runs, which is
+    essentially the rounding floor of Table 2's own printed digits. Table 3's own
+    derived column u_p/D_p^0.5 was evaluated with a wrong particle diameter for
+    bead size 2 — the printed column is LOW by 3.81 %, uniform across all four
+    rows to 0.089 %, against a diameter that Table 1's two columns AND Figure 3's
+    own curve label all print as 0.0148 in.; bead 4 carries the same signature six
+    times weaker and is reported as such. Reported, not repaired. The paper's
+    p. 225 claim that the continuous-phase velocity goes as D_p^0.5, its claim
+    that u_mf/u_e is independent of particle size, and its five printed
+    incipient-fluidisation Reynolds numbers (which give u_mf ~ D_p^1.51) cannot
+    all be true; the gap is a full unit at 7.9 standard errors. And Table 3's
+    dPke/L column, which nothing else on the page can check, is cross-checked
+    against Table 2's legible dPke/dPmf column to a median 5.25 % over ten runs.
+
+    The pymrm content is the one transport problem in the paper: the authors say
+    the gas expands as the pressure changes through the bed and that this would
+    curve Figure 3 near the abscissa, and never compute it. It does — the excess
+    velocity u_f - u_mf varies by 25.8 % (200 F) or 20.5 % (70 F) across a deep
+    bed near the threshold, and there is a band of superficial velocities exactly
+    as wide as the bed's pressure ratio in which the top bubbles and the bottom
+    does not.
   related: [E2.1, E1.2, E1.4, E1.3, E1.5]
