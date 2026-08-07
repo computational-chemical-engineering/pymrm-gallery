@@ -8,14 +8,16 @@ Copy everything in the block below as the first message of a fresh session.
 Continue the pymrm-gallery. Repo ~/Code/pymrm_suite/pymrm-gallery, venv ~/Code/pymrm_suite/.venv.
 
 Operate per docs/playbooks/coordinator.md: read docs/handoff.md header + git log -5,
-then run ONE wave (4–6 cases) and wind down. Dispatch agents with the 10-line template
-in docs/playbooks/README.md (playbooks carry the rules — do not restate them) and set
-model: per its tier table (verifiers never downgraded). Per-source traps are in
-docs/papers-inventory.yaml; integrate with scripts/integrate_case.py; pull --rebase
-before every push.
+then work ONE CASE AT A TIME — builder → verifier → fix → integrate → commit — and
+only start the next once that one is pushed. Do NOT run builders in parallel; that
+is what lost a whole wave to a usage limit on 2026-08-07. Dispatch agents with the
+10-line template in docs/playbooks/README.md (playbooks carry the rules — do not
+restate them) and set model: per its tier table (verifiers never downgraded).
+Per-source traps are in docs/papers-inventory.yaml; integrate with
+scripts/integrate_case.py; pull --rebase before every push.
 
-Suggested wave: A3.5, E1.1, A4.1, A2.4, J1.3 — all five have UNVERIFIED PARTIAL
-BUILDS on disk from the 2026-08-07 wave, whose builders were all killed by an API
+Next cases, in order: A3.5, E1.1, A4.1, A2.4, J1.3 — each has an UNVERIFIED PARTIAL
+BUILD on disk from the 2026-08-07 wave, whose builders were all killed by an API
 session limit. Read each case's resume: block first. Do NOT re-execute the staged
 build_page.py scripts and publish the result: A2.4's and J1.3's notebooks are older
 than their own scripts, and A2.4's builder had found an eq. (4) scaling bug it never

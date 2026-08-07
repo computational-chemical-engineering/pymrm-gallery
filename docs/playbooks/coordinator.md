@@ -1,4 +1,4 @@
-# Coordinator playbook — the wave loop, and how to halt/resume cheaply
+# Coordinator playbook — the one-case loop, and how to halt/resume cheaply
 
 The session-level protocol. Everything an agent needs is in the repo; the
 coordinator's job is dispatch, integration, and honest relay — not re-teaching.
@@ -11,16 +11,30 @@ now replaced by the playbooks + the 10-line template in `README.md` — and
 (b) coordinator context growing monotonically across multi-day sessions. The
 fixes:
 
-- **One session = one wave.** A wave: pick 4–6 unclaimed cases → dispatch
-  builders (playbook prompts) → verifier per ready page → fix (sonnet for
-  wording-only; strong model when numbers change; NEVER downgrade verifiers)
-  → integrate → wind down → END THE SESSION. Do not carry a second wave in the
-  same context; starting fresh costs nothing because all state is on disk.
+- **ONE CASE AT A TIME, START TO FINISH.** Maintainer's instruction, 2026-08-07,
+  and it overrides the older "~5 concurrent agents" rule everywhere it appears.
+  Take one case all the way — builder → verifier → fix → integrate → commit —
+  and only then start the next. Do not dispatch a second builder while the
+  first case is unfinished.
+  **Why, precisely:** the lean playbooks cut cost *per dispatch*, but the API
+  limit is on usage *rate*, so N parallel builders burn N× as fast and a limit
+  hit destroys N cases instead of one. On 2026-08-07 five concurrent builders
+  were killed mid-task simultaneously; the wave published nothing and left five
+  cases holding unverified half-built scripts, two with notebooks staler than
+  their own build scripts. Serial work does not make a page cheaper — it caps
+  the blast radius at one case, and a case finished and committed can never be
+  lost to a limit.
+- **Integrate and commit each case before starting the next.** Committed work
+  survives a limit; staged work on disk survives only if its `resume:` block
+  says honestly how far to trust it.
+- **One session = as many complete cases as the budget allows.** End the
+  session when a case is finished and the next would start; starting fresh
+  costs nothing because all state is on disk. Never leave a case half-built to
+  begin another.
 - **Dispatch via the template** in `playbooks/README.md` + per-case notes from
   `papers-inventory.yaml` and the case yaml. Do not restate the playbooks.
 - **Set `model:` per the tier table** in `playbooks/README.md`.
-- **Cap concurrent agents at ~5**, one case each. Park blocked cases with a
-  `resume:` block; never wait on the maintainer.
+- Park blocked cases with a `resume:` block; never wait on the maintainer.
 - **Relay reports compactly**; do not re-quote whole reports back to agents.
 
 ## Integration (per ready+verified+fixed case)
@@ -54,7 +68,7 @@ the staged diff for deletions — a pure splice deletes nothing) → push.
 2. `python -c "..."` over `queue_cases/*.yaml` for status counts; anything
    `ready` gets a verifier first (quality over throughput — verifier on every
    ready page, no exceptions).
-3. Pick the next wave from `unclaimed` by tier/priority; consult
+3. Pick the NEXT SINGLE CASE from `unclaimed` by tier/priority; consult
    `papers-inventory.yaml` for per-source traps; dispatch via the template.
 4. Auto-memory carries the cross-session lessons; the playbooks carry the
    agent-facing ones. If a lesson is new, add it to the playbook (one place),

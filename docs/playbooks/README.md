@@ -40,5 +40,6 @@ Never downgrade the verifier. If in doubt about a fixer, look at whether any
 - `scripts/splice_entry.py` — shape-aware models.yaml splice (read its docstring).
 - Builders copy the closest published page (AGENTS.md rule) — that IS the code
   template; the playbook names current best exemplars per structure.
-- Session hygiene: one session = one wave (see coordinator.md). All state lives
+- Session hygiene: ONE CASE AT A TIME, finished and committed before the next
+  (see coordinator.md — maintainer's instruction, 2026-08-07). All state lives
   in the repo + auto-memory, so ending a session costs nothing.
