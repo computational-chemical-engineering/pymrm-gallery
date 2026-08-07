@@ -46,11 +46,33 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-58 page directories, 59 published catalog entries, 68 models.yaml entries.
+59 page directories, 60 published catalog entries, 69 models.yaml entries.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
 covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
 `check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
 published nothing — see the wave note under Recommended next moves.
+
+### Added 2026-08-07 — one page (first of the serial regime)
+
+| Page | What it shows | Headline |
+|---|---|---|
+| `J1.3` BET | The 1938 paper's own refutation of the polarization theory, reproduced chain by chain | inflection ≤ 2/√3 · v_m for any c — so the authors' best corroboration (v_m vs point B) is largely guaranteed by their equation's own shape; "840 ± 70 for all twelve adsorbents" is the eleven-row number |
+
+Built one case start to finish under the maintainer's 2026-08-07 serial rule
+(builder → verifier → fixer → integrate → push, no parallel agents). Two things
+worth carrying forward. **Rebuilding from source beat inheriting the abandoned
+script**: the builder deleted the dead wave's partial work and re-transcribed
+every digit, and the verifier then found *zero* transcription errors across 41
+table rows — so give the next four cases the same instruction. And
+**verification changed the page's conclusion rather than polishing it**: the
+claimed factor-2 safety margin turned out to rest on a measurement that does not
+exist (p. 313 derives the energies *from* c, so footnote 16 cannot be inverted to
+measure its own prefactor), and applying the paper's own real inconsistency
+instead — catalyst 954's N₂ appearing twice, fitted c = 156.7 vs calculated
+c = 350.4, factor 2.2359 — breaks section 7 outright at 7 of 12 rows. The page
+now reports that failure. A declared blind spot that was a **powerless check**
+(aimed at a maximum over all c, which no change to c can move) was relabelled
+structural and now supports nothing.
 
 ### Added 2026-08-05 to 08-06 — eighteen pages
 
