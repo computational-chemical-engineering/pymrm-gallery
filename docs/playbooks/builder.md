@@ -63,12 +63,30 @@ these). Skim `docs/handoff.md`'s header for anything newer than this file.
     trace a curve you can compute. No page images committed anywhere.
 11. **Printed defects in the source are reported, never repaired** — prove
     them from the paper's own numbers (the F2.3 order: pin what is NOT free
-    first). Repairs-by-inference must be labelled as inferences.
-12. **Nothing fabricated, nothing from memory.** Origins you did not read go
+    first). Repairs-by-inference must be labelled as inferences. Quote the
+    defect **verbatim**, `[sic]` and all: `A4.1` shipped as a
+    defects-are-never-repaired page while silently correcting two printed
+    typos it had inside quotation marks.
+12. **A NEGATIVE CLAIM ABOUT THE SOURCE IS A CLAIM, AND IT NEEDS A SEARCH YOU
+    CAN DESCRIBE.** "The paper never notices", "this is untested anywhere",
+    "the chapter prints no rule for X" — each is checkable, each is the kind
+    that wrongs a real author, and writing "checked" beside it is not
+    evidence. Say where you looked and how. Two pages in one day: `A3.5` said
+    seven times that the authors tested their intercept "without noticing"
+    when folio 173 prints the observation and names the same cause; `A2.4`
+    said six times across five files that Ch. 14 prints no tanks-to-dispersion
+    conversion rule in pp. 321–338, when Fig. 14.7 on p. 327 — inside that
+    range — prints one in its axes box. **Look hardest where you most want the
+    gap to exist**, because that claim is usually load-bearing: in both cases
+    it was the page's headline contribution. And when you find the thing you
+    said was missing, check it before adopting it — `A2.4`'s printed rule
+    turned out to be inverted, which made a better finding than the absence
+    would have.
+13. **Nothing fabricated, nothing from memory.** Origins you did not read go
     under `origin_not_consulted`/`reference_read_from` per AGENTS.md. For
     monograph-sourced (canonical-class) cases, the E1.1 test: the book must
     state, attribute and carry the result, not merely mention the topic.
-13. Seed anything stochastic. Two consecutive executions must give identical
+14. Seed anything stochastic. Two consecutive executions must give identical
     content, figures and `agreement.json` (raw .ipynb bytes never match —
     nbformat mints cell IDs; compare content).
 
