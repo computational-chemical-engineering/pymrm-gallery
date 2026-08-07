@@ -46,15 +46,15 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-63 page directories, 64 published catalog entries, 72 models.yaml entries
+64 page directories, 65 published catalog entries, 73 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 64 published, 53 unclaimed, 140
+`splice_entry.py --replace`). Queue: 65 published, 52 unclaimed, 140
 needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 63 pages, 0 regressions at handoff (2026-08-07 evening);
+covers `D3.4`.) `check_agreement.py`: 64 pages, 0 regressions at handoff (2026-08-07/08);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
 
-### Added 2026-08-07 — five pages (the serial regime)
+### Added 2026-08-07/08 — six pages (the serial regime)
 
 | Page | What it shows | Headline |
 |---|---|---|
@@ -63,6 +63,17 @@ covers `D3.4`.) `check_agreement.py`: 63 pages, 0 regressions at handoff (2026-0
 | `E1.1` Toomey–Johnstone | The postulate has two limbs and their data separate them | dense phase runs ~23 % above `u_mf`, so Y = 0.766 at 2 `u_mf`; `E2.1` inherits exactly the limb that fails. Tier 2 against `E2.1`'s tier 6 — that contrast is the case's reason to exist |
 | `A4.1` Wilke mixture rule | Broken against the exact solution of the author's **own** eight problems | 86.6 % worst / 21.6 % median — and the cause is the frozen *composition*, not the harmonic average: his own Method 2 keeps the mean, moves the composition, and drops the worst case to 12.1 % |
 | `A2.4` Tanks-in-series | What a two-moment fit is worth, and an inverted rule in the book's own figure | chains matching mean *and* variance exactly differ by up to 83.1 % in conversion (closed-form supremum, one-sided); Fig. 14.7's `N = ½(D/uL)` must be `½(uL/D)` |
+| `J1.1` Langmuir | Langmuir's **own** Case VI is the BET isotherm, twenty years early — under the σ-collapse he states himself on p. 1375 | so his isotherm data cannot discriminate mono- from multilayer at all (≤ 0.160 % apart below p/p₀ = 1.5e-3, scatter 12–1104× larger); the monolayer conclusion rests on a separate bound with 17 % headroom |
+
+`J1.1` also carries the day's sharpest **text-layer trap**: eq. (37) extracts as
+25.2e16 and prints 25.2e15, and the wrong exponent puts 17 of 20 coverage
+figures above unity — i.e. it reverses the paper's conclusion. And an incidental
+attribution question is settled: Rawlings & Ekerdt's "Danckwerts boundary
+conditions were derived 45 years earlier by Langmuir" cites their ref. [22] =
+JACS **30**(11) 1742 (**1908**), not the 1918 paper, which was checked and
+cannot bear on it. That 1908 paper is now top of
+[`papers-requested.yaml`](papers-requested.yaml)'s buy-outright list because it
+would settle an attribution on the already-published `A2.1`/`A2.2`.
 
 **`A4.1` is the case to read if you are about to trust
 [`papers-inventory.yaml`](papers-inventory.yaml).** That file claimed Taylor &
