@@ -46,17 +46,34 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-59 page directories, 60 published catalog entries, 69 models.yaml entries.
+60 page directories, 61 published catalog entries, 70 models.yaml entries.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
 covers `D3.4`.) `check_agreement.py`: 58 pages, 0 regressions at handoff (2026-08-07);
 `check_metadata.py` OK, 0 warnings. Unchanged by the 2026-08-07 wave, which
 published nothing — see the wave note under Recommended next moves.
 
-### Added 2026-08-07 — one page (first of the serial regime)
+### Added 2026-08-07 — two pages (the serial regime)
 
 | Page | What it shows | Headline |
 |---|---|---|
 | `J1.3` BET | The 1938 paper's own refutation of the polarization theory, reproduced chain by chain | inflection ≤ 2/√3 · v_m for any c — so the authors' best corroboration (v_m vs point B) is largely guaranteed by their equation's own shape; "840 ± 70 for all twelve adsorbents" is the eleven-row number |
+| `A3.5` Ranz–Marshall | The four constants have four different statuses; only the intercept is testable | +2.91 / +2.61 / −13.39 % against a 0.68 % replicate scatter; page range resolved to 141–146 and the filename is now known to be wrong |
+
+`A3.5` also recovered a convention neither part states (properties at the film
+temperature) — and then found Part II states it after all, which turns Table 3
+into an unused held-out test 81 K beyond the fit range.
+
+**Two defect classes went into the playbooks from these two cases** (see the
+commits): *settle an ambiguous glyph by arithmetic, never by pixel shape* —
+A3.5's damaged digit was argued to `10.6` from the shape of its white counter
+and is `10.0`, forced by the fact that Table 4's two Nusselt columns share one
+measured rate so neighbouring rows bracket it, and confirmed by ink width; and
+*check every claim about what the authors did or did not do* — the same page
+said seven times that they tested their intercept "without noticing", when
+folio 173 prints "Data for mass transfer show a steeper slope and a lower
+intercept" and names the same cause. Both corrections came out of adversarial
+verification, and the glyph error moved every affected metric by under the
+agreement checker's 5 % tolerance, so nothing automated would have caught it.
 
 Built one case start to finish under the maintainer's 2026-08-07 serial rule
 (builder → verifier → fixer → integrate → push, no parallel agents). Two things
