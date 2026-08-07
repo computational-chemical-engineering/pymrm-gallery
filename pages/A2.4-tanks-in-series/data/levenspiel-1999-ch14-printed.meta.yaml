@@ -1,0 +1,138 @@
+dataset_id: levenspiel-1999-ch14-printed
+title: "Every number Chapter 14 prints: worked examples E14.1, E14.2, E14.4, the Fig. 14.3 and Fig. 14.7 annotations, and the two Chapter 13 values Fig. 14.7 points at"
+status: complete
+
+source:
+  authors:
+    - "Levenspiel, O."
+  year: 1999
+  title: "Chemical Reaction Engineering, 3rd edition, Chapter 14 'The Tanks-In-Series Model', sections 14.1 and 14.2"
+  container: "John Wiley & Sons, ISBN 0-471-25424-X"
+  doi: null
+  access: "monograph on local disk (lawful access); identified from its own title page and Library of Congress page"
+  licence: "all rights reserved (facts extracted; no page image reproduced anywhere in this repository)"
+  origin_note: >
+    The RTD of N equal tanks and the F curve of Fig. 14.7 are attributed BY THIS
+    BOOK to MacMullin, R. B. and Weber, M., Jr., Trans. AIChE 31, 409 (1935).
+    That paper is not on disk and was not consulted. It is recorded as
+    `origin_not_consulted` on the page and in models_entry.yaml; everything in
+    this file was read from the 1999 monograph and from nowhere else.
+
+acquisition:
+  method: table
+  figure: "text and worked examples on book pp. 321-334, plus the printed annotations of Figs. 14.3, 14.7 and E14.4a/b, and - because Fig. 14.7's annotation sends the reader there by name - two printed values from Chapter 13 on book p. 303 (Fig. 13.12's small-deviation variance and the validity limit of Fig. 13.11)"
+  tool: "poppler pdftoppm at 600 dpi (native), then cropped and re-read at digit scale"
+  procedure: >
+    Read off page images, never from the text layer. The scan is JBIG2 bilevel at
+    600 x 600 ppi native (`pdfimages -list`), so 600 dpi is the correct render
+    resolution and anything above it is interpolation. The text layer of this book
+    is a trap of a specific kind: the PROSE is excellent and fully searchable -
+    it is what located the chapter and its sections - but EVERY equation and
+    EVERY subscript is destroyed. Eq. 3 comes back out of `pdftotext` as
+    "7. = (-&) NN e-tNli" and Eq. 4 as "%+, = tM+ t,". Nothing numeric in this
+    file touched the text layer; every cell was cropped from the 600 dpi render
+    and read at 1.6x to 2.6x magnification.
+
+    PDF page = book page + 16, checked against the printed Contents, so book
+    pp. 321-338 are PDF pp. 337-354 and book p. 303 is PDF p. 319.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the book's own rounding. E14.4's prefactor is printed to five
+    significant figures (3.2922e-6) and its exponent to three (0.0667); every
+    other value is an exact small integer or a one-decimal number.
+
+validation:
+  internal_consistency: >
+    Every printed intermediate is reproducible from the printed inputs by the
+    book's own stated rule, to the printed precision:
+
+    E14.1: sigma^2 proportional to L gives (50/32)(64) = 100 and sqrt(100) = 10,
+    both printed.
+
+    E14.2: 14 = k L^(1/2) and 10.5 = k (L-119)^(1/2) give
+    L = 119/(1 - (10.5/14)^2) = 272.000 exactly, printed as 272.
+
+    E14.4: (280-220)^2/(1000-100) = 3600/900 = 4 tanks, printed; and
+    4^4/(3 x 2 x 60^4) = 3.292181e-6, printed as 3.2922e-6.
+
+    Fig. 14.3: theta_max = (N-1)/N and Delta-theta/theta_max = 2/sqrt(N-1) are
+    reproduced to 1.2e-14 by root-finding dE/dtheta = 0 and d2E/dtheta2 = 0 on
+    Eq. 3, and N/sqrt(2 pi (N-1)) is Stirling's approximation to the printed
+    closed form for E_theta,max, whose relative error crosses 2 per cent at
+    N = 5.2004 - so "error < 2% for N > 5" is exactly right for integer N
+    (2.10 per cent at N = 5, 1.68 per cent at N = 6).
+
+  known_defects: >
+    FIVE PRINTED DEFECTS, reported and not repaired. Each is proved from the
+    book's own numbers, never from an outside source.
+
+    (0) Fig. 14.7 (book p. 327) carries, inside its own axes box, "When N > 50
+    the curve becomes symmetrical in which case use fig. 13-11 with
+    N = 1/2 (D/uL)". The ratio is INVERTED: the book's own Fig. 13.12
+    (p. 303) prints sigma_theta^2 = 2(D/uL) and its own Eq. 3 (p. 323) prints
+    sigma_theta^2 = 1/N, and the two together give N = 1/2 (uL/D), i.e.
+    D/uL = 1/(2N). Two further internal checks agree: under the correct form the
+    annotation's own threshold N > 50 maps exactly onto D/uL < 0.01, which is the
+    printed validity limit of the very figure it points at; and Fig. 13.11 is
+    parameterised by D/uL between 0.00005 and 0.0128, whereas the printed form
+    would send a reader at N > 50 to D/uL > 100. This is the most consequential
+    of the five, because it is a modelling rule and not a unit or a tick label.
+
+    (1) E14.2 (book p. 331) prints "from which L = 272 moles". The quantity is a
+    distance along the Ohio River; the Comment immediately below reads "any
+    location where L <= 272 miles is suspect" and the data are all in miles. The
+    unit is a typographic slip. The VALUE 272 is correct.
+
+    (2) Fig. E14.4b (book p. 334) labels its top axis tick 0.105 s^-1. The tick
+    sequence below it is 0, 0.005, 0.010 at equal spacing, so the fourth tick is
+    0.015; and the book's own printed E(t) = 3.2922e-6 t^3 e^(-0.0667 t) attains
+    its maximum at t = 3/0.0667 = 44.9775 s with E = 0.0149138 s^-1, so the tick
+    is 7.04x the whole curve. A transposed 0 and 1. (With the UNROUNDED
+    coefficients 4^4/(3! 60^4) and 4/60 the peak is at t = 45 s with
+    E = 0.0149361 and the ratio 7.03; the tick belongs to the curve the book
+    PRINTS, so the printed coefficients are the ones used.)
+
+    (3) Section 14.2 (book p. 328) prints, for equal final conversion,
+    V_Ntanks/V_p = 1 + k tbar_i = 1 + k tbar/(2N). With the book's own
+    tbar = N tbar_i (Eq. 3) the two right-hand sides differ by a factor of exactly
+    two in the correction term. Expanding the book's own Eq. 9 against plug flow
+    gives V_N/V_p = x/ln(1+x) = 1 + x/2 + O(x^2) with x = k tbar_i, so the FAR-RIGHT
+    form is the correct one and the middle form is missing the 1/2. This is
+    checked on the page against the printed companion formula for equal volume,
+    C_A,Ntanks/C_Ap = 1 + (k tbar)^2/(2N), which is correct as printed.
+
+    (4) E14.4 (book p. 333) prints "Delta(sigma^2) = 1000 - 100 = 900 s". The
+    quantity is a variance, so the unit is s^2; the inputs two lines above are
+    read off Fig. E14.4a as 100 s^2 and 1000 s^2. The same class of slip as
+    "272 moles", and the VALUE 900 is correct. Recorded in the `note` column of
+    the E14.4/delta_var row.
+
+    A SIXTH item is a typesetting ambiguity rather than a defect: Eq. 11
+    (book p. 329) sets the macrofluid prefactor denominator as
+    (N-1)! * tbar_N, with N lowered as a subscript, where dimensional
+    consistency and unit normalisation require (N-1)! * tbar^N. The book itself
+    prints the superscript form two pages later in E14.4, E = t^(N-1)/tbar^N *
+    N^N/(N-1)! * e^(-tN/tbar), which settles it.
+
+  cross_checks: >
+    No other gallery page's dataset is loaded by this page, so no cross-page
+    reconciliation applies. A2.8 (Zwietering) uses Erlang RTDs of N equal tanks
+    and states in its own caveats that "A2.4 is not built, so the RTDs used here
+    have no page of their own"; A2.8 publishes no RTD dataset and none is
+    borrowed here. The relation between this model and the axial-dispersion model
+    of A2.1/A2.3/A2.5/A2.6 is derived on this page independently, from the upwind
+    scheme's numerical diffusion. Chapter 14 does print such a rule - on
+    Fig. 14.7, book p. 327 - and it is inverted; the page's derived rule and the
+    de-inverted printed one are the same rule, which is what settles it. See
+    known_defects (0).
+
+columns:
+  item: "worked example or figure the value belongs to (E14.1, E14.2, E14.4, Fig14.3)"
+  quantity: "machine-readable name of the quantity"
+  value: "the number as printed, parsed as a float"
+  units: "units as the book uses them, corrected where the book's printed unit is a slip (see known_defects)"
+  book_page: "printed book folio; PDF page = book page + 16"
+  located_in: "where on that page the value sits: text, solution, or the named figure"
+  printed_as: "the glyphs exactly as printed, including defects"
+  note: "what the value is, and any defect attached to it"

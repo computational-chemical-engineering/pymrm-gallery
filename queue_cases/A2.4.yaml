@@ -5,68 +5,146 @@ catalog_reference: Levenspiel
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/A2.4-tanks-in-series/
 reference:
+  authors:
+  - MacMullin, R. B.
+  - Weber, M., Jr.
+  year: 1935
+  title: The theory of short-circuiting in continuous-flow mixing vessels in series
+  container: Transactions of the AIChE 31, 409
+  note: 'ORIGIN, CITED BUT NOT CONSULTED. Chapter 14 attributes the RTD, its means and variances,
+    and the F curve of Fig. 14.7 to "MacMullin and Weber (1935)". That paper is not on disk and
+    was not read. The reference block above was CHANGED on 2026-08-07 from Levenspiel 1999 to
+    MacMullin & Weber 1935, with Levenspiel moved to reference_read_from, because AGENTS.md
+    requires the origin in `reference` and the text actually read in `reference_read_from`.'
+reference_read_from:
   authors:
   - Levenspiel, O.
   year: 1999
-  title: Chemical Reaction Engineering, 3rd edition
+  title: Chemical Reaction Engineering, 3rd edition, Ch. 14 "The Tanks-In-Series Model", sections
+    14.1 and 14.2
   container: John Wiley & Sons, ISBN 0-471-25424-X
+  note: Every equation and every number on the page came off 600 dpi renders of book pp. 324-334.
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/BOOK-Levenspiel-1999-chemical-reaction-engineering-3ed.pdf
   open_access: null
-  checked: '2026-08-06'
+  checked: '2026-08-07'
   identified_by: 'Book identified from its own title page and Library of Congress page: "Chemical
     Reaction Engineering / Third Edition / Octave Levenspiel / Department of Chemical Engineering
     / Oregon State University / John Wiley & Sons", "Copyright 1999", ISBN 0-471-25424-X. PDF page
-    = book page + 16, checked against the printed Contents.'
+    = book page + 16, checked against the printed Contents. Native resolution confirmed with
+    `pdfimages -list`: JBIG2 bilevel, 600 x 600 ppi, on every page of Ch. 14.'
 blocker: null
 notes: null
-updated: '2026-08-06'
-resume:
-  blocking: false
-  staged_at: '2026-08-07'
-  trigger_has_fired: The old trigger on this block was "a PDF for this case appears in
-    ~/papers/pymrm-gallery/". It fired on 2026-08-06 - the Levenspiel 3rd edition is on disk and
-    named under paper.on_disk above - so the trigger and its on_arrival steps are spent and have been
-    removed. The acquisition history is kept below because it records what was tried.
-  partial_build_on_disk: 'A builder ran this case on 2026-08-07 and DIED MID-FLIGHT on an API session
-    limit, not on anything about the case. It got FURTHEST of the five in that wave: build_page.py
-    (90 kB), an executed index.ipynb (497 kB), an agreement.json, and one CSV with its .meta.yaml
-    sidecar (levenspiel-1999-ch14-printed-values). Missing: meta.yaml, README.md, models_entry.yaml.
-    Never verified by anyone.
-
-    '
-  the_notebook_is_stale_and_there_is_a_known_bug: 'TWO REASONS NOT TO PUBLISH FROM WHAT IS ON DISK.
-    (1) index.ipynb and agreement.json are OLDER THAN build_page.py (01:30:18 and 01:30:17 vs 01:33:34
-    on 2026-08-07), so the notebook is NOT the output of the script beside it. (2) The last line of
-    the dead agent transcript reads "Now fix the eq. (4) scaling bug" - the builder had FOUND a defect
-    in its own eq. (4) machinery and was editing when it died. build_page.py carries eq. (4) work at
-    lines ~868, ~1270-1298 and ~1484-1521, including a break row named "E14.1 scaling sigma instead
-    of sigma^2", which is the shape of bug the fragment names. Whether the fix landed is unknown.
-    Assume the numbers currently in agreement.json are wrong, and re-derive rather than re-running.
-
-    '
-  how_far_to_trust_it: 'TREAT EVERY DIGIT AS UNVERIFIED. Levenspiel Ch. 14 has a searchable prose
-    layer but DESTROYED equations and subscripts, so every formula and table cell had to come off a
-    600 dpi crop and none of those reads has been checked by anyone. Re-read them.
-
-    '
-  next_step: 'Fresh builder dispatch (session-limit deaths cannot be resumed via SendMessage). The
-    dispatch notes stand, including the canonical-class requirements: cite Ch. 14 sections 14.1/14.2,
-    use reference_read_from for the book, and mark MacMullin & Weber (1935) origin_not_consulted.
-
-    '
-  established: 'Acquisition attempted and exhausted: not on disk, and no open-access route via Unpaywall.
-    See blocker.detail.'
-  do_not_redo: The acquisition search. It is recorded; repeat it only if a new route appears (an Elsevier
-    key, or a Golden Jubilee reprint for a pre-1970 CES paper).
+updated: '2026-08-07'
+built:
+  date: '2026-08-07'
+  staged_at: queue_cases/A2.4/page/
+  deliverables: build_page.py, index.ipynb (executed clean), meta.yaml, README.md,
+    data/levenspiel-1999-ch14-printed.csv + .meta.yaml sidecar, and
+    queue_cases/A2.4/models_entry.yaml
+  runtime: about 8 s wall clock including kernel start; two consecutive executions in separate
+    directories give an identical content hash, identical figure bytes and a byte-identical
+    agreement.json (re-confirmed after the 2026-08-07 fixer pass)
+  metrics: 81, of which 26 are below check_agreement.py's ABS_FLOOR of 1e-12 and are named
+    individually with an above-floor companion that the companion string must NAME, asserted in
+    code
+  break_table: 35 rows, rebuilt for this physics; EVERY row recomputes the one metric named in its
+    `metric` column and that row's baseline is asserted to equal the reported value of that metric.
+    Minimum shift 1.1e-06 apart from one row that is itself a finding (a 1001-point sweep of
+    E14.4's curve lands within 0.0011 % of the root-found maximum, i.e. a swept extremum here
+    would look converged)
+  headline: 'THE HEADLINE IS A LIMIT, NOT AN AGREEMENT. A five-stage chain with residence times
+    9, 9, 9, 9 and 24 s matches E14.4''s measured mean (60 s) and variance (900 s^2) EXACTLY - both
+    deviations 0, asserted in code - and differs by 23.2 % in OUTLET CONCENTRATION at k tbar = 10
+    (6.1 % second order), with an exit curve 6.9 % of the peak away. Stated with its three
+    qualifications everywhere it appears: it is a concentration gap and NOT a conversion gap (the
+    chains convert 99.334 % and 99.488 %, and the relative conversion gap never exceeds 0.38 %
+    anywhere); it is monotone in k tbar, so it is the right-hand edge of the sweep and not a
+    maximum over it (1.53 % at 2, 69.7 % at 50); and it is ONE chain, hence a lower bound. The
+    supremum over the whole family matching both moments is closed form - every extremal chain has
+    at most two distinct tank sizes, by Lagrange - and is 83.1 % at k tbar = 10, a factor of 5.9.'
+  second_routes: 'four headlines computed twice with no shared assembly: E14.2''s L by brentq on
+    the printed ratio AND by the closed form 119/(1-(10.5/14)^2); E14.4''s prefactor from
+    N^N/((N-1)! tbar^N) AND by numerically normalising t^3 e^(-4t/60); first-order conversion by
+    Eq. 11''s macrofluid quadrature of int e^(-kt) E dt AND by Eq. 9''s algebra; the RTD by a pymrm
+    Crank-Nicolson march AND by Eq. 3''s closed form. The Simpson convolution E_M * E_N is NOT one
+    of them and is not cited as one: for equal tank sizes the integrand is a cubic and Simpson is
+    exact on cubics, so it is a structural identity that returns the same 1e-18 on 20 panels.'
+  printed_defects: 'FIVE, each proved from the book''s own numbers and none repaired. (0) THE
+    CONSEQUENTIAL ONE, and the one the first draft got backwards by asserting the chapter printed
+    no conversion rule at all. Fig. 14.7, p. 327, inside its own axes box: "When N > 50 the curve
+    becomes symmetrical in which case use fig. 13-11 with N = 1/2 (D/uL)" - the ratio is INVERTED.
+    Ch. 13''s printed sigma^2_theta = 2(D/uL) (Fig. 13.12, p. 303) with Ch. 14''s
+    sigma^2_theta = 1/N gives N = 1/2 (uL/D); and under the corrected form the annotation''s own
+    threshold N > 50 is exactly D/uL < 0.01, the printed validity limit of the figure it points at.
+    As printed it is 138 % wrong in conversion at N = 64, k tbar = 2, against 0.053 % de-inverted.
+    (1) p. 328, V_Ntanks/V_p = 1 + k tbar_i = 1 + k tbar/(2N): the two right-hand sides differ by a
+    factor of EXACTLY 2 (extrapolated to x = 0, not fitted) and the book''s own Eq. 9 shows the
+    MIDDLE form is the wrong one. (2) Fig. E14.4b, p. 334: the top axis tick reads 0.105 s^-1 where
+    the tick sequence and the book''s own PRINTED E(t) (peak 0.0149138 at t = 44.9775 s, ratio
+    7.04) both require 0.015. (3) E14.2, p. 331: "L = 272 moles" where the Comment below says
+    "L <= 272 miles". (4) E14.4, p. 333: "Delta(sigma^2) = 1000 - 100 = 900 s", a variance in
+    seconds. In (3) and (4) the value is right and only the unit is a slip. A SIXTH item is
+    typesetting: Eq. 11''s denominator is set as (N-1)! tbar_N with a LOWERED N where tbar^N is
+    required, and E14.4 prints the raised form two pages later.'
+  pymrm_finding: 'There is no pure-outflow boundary condition in pymrm. The nearest, zero-gradient,
+    makes construct_convflux_upwind reconstruct the exit face to second order as (9 C_N - C_N-1)/8 -
+    correct for a discretised PDE, a MODELLING error when the cell count is a physical parameter.
+    It costs 5.9 % at N=2 and 3.8 % at N=4 and decays as N^-0.87, i.e. it is indistinguishable from
+    ordinary first-order discretisation error. The page suppresses the boundary flux (b=1, d=0) and
+    adds the outflow as a construct_coefficient_matrix sink on the last tank, which is exact. Worth
+    a bc kind or a documented recipe in pymrm.'
+  scope_decisions: 'E14.3 SCOPED OUT: its data live only in the curve of Fig. E14.3a and no curve is
+    traced anywhere on this page. Fig. 14.3''s E_theta,inf annotation REPORTED BUT NOT SCORED: the
+    two inflection points sit at 0.4267 and 0.6943 of the maximum at N = 4 while the figure draws a
+    single level, and which convention it intends is not recoverable. Eq. 5 (the one-shot tracer
+    relation Delta sigma^2 = (Delta tbar)^2/N, p. 324) is IN scope and is the most exercised
+    relation on the page - run backwards it is E14.4''s fit. The CLOSED-RECIRCULATION material
+    (Eqs. 6a-c and 7a-c, p. 325, Figs. 14.5-14.6) and Fig. 14.8''s graphical construction are out
+    of scope; both are named in the "published model" section and neither is claimed as tested.'
+  integrator_note: 'models.yaml has NO entry with id A2.4 (the A2.x ids present are A2.1, A2.3,
+    A2.5, A2.6, A2.8). This is an APPEND - run scripts/splice_entry.py WITHOUT --replace. Two
+    published places carry the now-stale sentence "A2.4 (tanks in series) is not built, so the RTDs
+    used here have no page of their own": A2.8''s note in models.yaml and
+    pages/A2.8-zwietering-segregation/meta.yaml''s caveats. A2.4 loads none of A2.8''s data and
+    contradicts none of its findings, so that is a wording fix for the maintainer and was NOT made
+    from this case.'
+  abandoned_work: 'The 2026-08-07 partial build (build_page.py, a stale executed index.ipynb, an
+    agreement.json predating a known eq.-(4) bug, and one CSV) was DELETED from the repo and moved
+    out to the session scratchpad without being read as a baseline. Nothing in the current page
+    derives from it: every equation, every table cell and every worked-example intermediate was
+    re-read off fresh 600 dpi crops. Two things the independent re-read caught that the abandoned
+    agreement.json could not have known about: the Eq. 11 subscript/superscript ambiguity, and
+    Fig. E14.4b''s 0.105 axis tick.'
+fixed:
+  date: '2026-08-07'
+  against: queue_cases/A2.4/review/verification.md
+  summary: 'F1/F2 (blocking): the page asserted six times across five files that Ch. 14 prints no
+    N-to-dispersion rule. It does - on Fig. 14.7, book p. 327 - and it is inverted. Every instance
+    of the false claim removed and the inversion reported as printed defect (0), the most
+    consequential of the set; the de-inversion is proved from Ch. 13''s own printed
+    sigma^2_theta = 2(D/uL) and from the exact match of the annotation''s N > 50 threshold to
+    Fig. 13.11''s printed D/uL < 0.01 limit. Two Ch. 13 rows added to the CSV. F3 (blocking): the
+    23.2 % headline restated as a gap in OUTLET CONCENTRATION at the right-hand edge of a monotone
+    sweep and as a LOWER bound, with the conversion gap (0.16 %, max 0.38 %) and the closed-form
+    family supremum (83.1 %) printed beside it. F4: the four vacuous companion strings given real
+    metrics (new e14_1/e14_2_wrong_power_gap) and the assert now fails when a companion names
+    nothing. F5: rtd_convolution_dev relabelled structural, the "protects the quadrature" sentence
+    deleted, and the independent-computations table corrected. F6: the break table rebuilt so every
+    row recomputes and pins one metric, with the coverage map BUILT from the declared mover lists;
+    the no-defect Eq. 4 row replaced by a real injection and the two collapse rows labelled. F7:
+    the moment window extended to 800 s and what those two metrics measure said plainly. F8: the
+    printed-coefficient peak 0.0149138 used for the tick defect. F9: Eq. 5 correctly identified.
+    F10-F12 also taken: the volume-ratio factor extrapolated to exactly 2, the 900 s unit slip
+    counted as a printed defect, and the three Pe matching rules reconciled.'
 canonical_class: 'FLIPPED UNDER THE TEXTBOOK-CANONICAL CLASS approved by the maintainer 2026-08-02
   (docs/standing-decisions.yaml records the decision; AGENTS.md "Published work only" records the
-  standard that still applies). The class had been INERT since approval because no qualifying monograph
-  was on disk. Four arrived 2026-08-05/06. AGENTS.md still forbids writing from memory: name what
-  the model was read from, cite the chapter and section, and use reference_read_from with the origin
-  in reference.'
+  standard that still applies). Citation requirements met: chapter and section named on the page and
+  in every metadata file, reference_read_from used for the monograph, and MacMullin & Weber (1935)
+  recorded as the origin that was cited but not consulted.'
 e1_1_test: 'PASSED, on all three limbs, and this is the case the request list said Levenspiel "unblocks
   directly". STATES: Chapter 14 "The Tanks-In-Series Model", book p. 321. Section 14.1 gives the RTD
   for N tanks as its eq. 3 with the properties in Fig. 14.3; section 14.2 gives first-order conversion
@@ -75,10 +153,15 @@ e1_1_test: 'PASSED, on all three limbs, and this is the case the request list sa
   CARRIES AND TESTS: three worked examples E14.1-E14.3 fit N to real RTD data, and the chapter states
   the model''s own limits ("use it for small deviations from plug flow", equivalence to the dispersion
   model).'
-chapter_and_section: Ch. 14, book pp. 321-338 (PDF pp. 337-354). Sections 14.1 and 14.2.
+chapter_and_section: Ch. 14, book pp. 321-338 (PDF pp. 337-354), sections 14.1 and 14.2, PLUS book
+  p. 303 (PDF p. 319) in Ch. 13 - Fig. 14.7's own annotation names fig. 13-11 by number, and
+  Fig. 13.12's sigma^2_theta = 2(D/uL) with the "Small Deviation from Plug Flow, D/uL < 0.01"
+  heading are the two printed values that settle its inversion.
 text_layer:
   quality: Prose excellent and fully searchable - which is how the E1.1 test above was run - but EQUATIONS
     AND SUBSCRIPTS ARE DESTROYED. Every formula and every table cell must come off a cropped image.
+    Confirmed again on 2026-08-07 - `pdftotext` returns Eq. 3 as "7. = (-&) NN e-tNli" and Eq. 4 as
+    "%+, = tM+ t,".
   render_at: 600 dpi. JBIG2 bilevel at 600 x 600 ppi native - joint highest in the library. Do not
     render above it.
 do_not_confuse: 'Levenspiel the AUTHOR is also on disk and is a different case: Levenspiel1972-deactivating-catalyst-rate-equation-JCatal25-265.pdf

@@ -1,0 +1,198 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A2.4
+slug: tanks-in-series
+title: "Tanks in series: what two moments of an RTD do and do not buy you"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S1, S3, S5]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 8
+datasets:
+  - levenspiel-1999-ch14-printed.csv
+
+fit_or_test: >
+  ONE FITTED NUMBER, and the page is built around what it is worth. Levenspiel's
+  worked example E14.4 fits N to a pair of tracer curves using exactly two
+  numbers - the difference of their means and the difference of their variances -
+  and gets 4 tanks. Everything this page compares against is HELD OUT of that
+  fit: the shape of the exit curve, the F curve, the first- and second-order
+  conversions, the macrofluid conversion, and the additivity property. E14.1 and
+  E14.2 fit nothing at all; they are arithmetic on printed inputs. The Fig. 14.3
+  annotations are fitted to nothing anywhere.
+
+  Reproducing the RTD from a fitted N would be a goodness of fit, so the page
+  does not report one. It reports the ambiguity instead: a five-stage chain with
+  residence times 9, 9, 9, 9 and 24 s matches E14.4's measured mean (60 s) and
+  variance (900 s^2) EXACTLY - both deviations are 0 - and differs by 23.2 % in
+  OUTLET CONCENTRATION at k tbar = 10, the right-hand edge of the sweep (6.1 %
+  second order). Three qualifications are carried everywhere that number is,
+  because each is a way of overstating it. (a) It is a concentration gap, NOT a
+  conversion gap: the two chains convert 99.334 % and 99.488 %, and the relative
+  gap in conversion never exceeds 0.38 % anywhere on the sweep. (b) It is
+  monotone in k tbar - 1.53 % at 2, 69.7 % at 50 - so it is where the sweep
+  stops, not a maximum over it. (c) It is ONE chain, hence a LOWER BOUND. The
+  supremum over every chain matching both moments is closed form (the extremal
+  chain has at most two distinct tank sizes, by Lagrange; the bound is
+  ln(1+k sqrt(S)) + k(T - sqrt(S))) and equals 83.1 % at k tbar = 10, approached
+  by one 30 s tank followed by 30 s of plug flow. That is the practical worth of
+  a two-moment fit, measured rather than asserted.
+
+  There is NO EXPERIMENT anywhere in Chapter 14. Nothing here is experimental
+  validation; every comparison is against the book's own arithmetic or against an
+  analytical limit, and the page is tier 6.
+
+validation:
+  - "all three worked examples reproduced from their printed inputs with ZERO deviation: E14.1's sigma_2^2 = (50/32)(64) = 100 and sigma_2 = 10 bottles; E14.2's L = 272 (root-found from the printed ratio 14/10.5 AND from the closed form 119/(1-(10.5/14)^2), the two routes agreeing to 0); E14.4's N = 60^2/900 = 4 tanks and its prefactor 3.292181e-06 s^-4 against the printed 3.2922e-06 (5.7e-06 relative, the book's rounding)"
+  - "all seven Fig. 14.3 annotations reproduced by ROOT-FINDING on Eq. 3 rather than by sampling: theta_max against (N-1)/N to 2.2e-16 and Delta-theta/theta_max against 2/sqrt(N-1) to 2.7e-15 over N = 2 to 400, E_theta,max at the root against the printed closed form to 0, area and mean to 2.6e-14, sigma^2_theta - 1/N to 5.3e-16"
+  - "the printed THRESHOLD 'error < 2% for N > 5' on Fig. 14.3's Stirling approximation, root-found rather than spot-checked: the relative error of N/sqrt(2 pi (N-1)) crosses 2 % at N = 5.2004, so it is 2.10 % at N = 5 and 1.68 % at N = 6. The printed claim is correct and correct at the tightest integer - one lower and it would be false"
+  - "the N-tank RTD computed by the pymrm cascade marched with Crank-Nicolson against Eq. 3's closed form: 3.7e-08 at the production step, and THAT is the page's second independent route. The Simpson convolution E_M * E_N closes to 6.9e-18 but is NOT a second route and is not cited as one: for equal tank sizes the integrand is a cubic and Simpson is exact on cubics, so the same number comes back on 20 panels as on 2000 - it is labelled structural. The area under the pymrm curve is 1 to 8.7e-11 after the analytic tail beyond the 300 s window (3.2e-06) is accounted for, with no normalisation applied anywhere"
+  - "first-order conversion by three routes - the pymrm sparse solve, Eq. 9's algebra, and Eq. 11's macrofluid quadrature of int e^(-kt) E dt. Only ONE of the three pairings is independent and the page says so: the cascade IS Eq. 9 algebraically, so their 2.4e-15 over 48 cases is an identity that tests the assembly and not the answer, whereas Eq. 11's quadrature is the Laplace transform of Eq. 3 computed numerically and has no way of knowing the answer must be (1+k tbar/N)^-N - it agrees to 1.5e-10, and perturbing Eq. 3 breaks it by 2e-04 to 3e-01. Second order: pymrm's Newton solve against Eq. 10's nest of N radicals to 3.2e-14"
+  - "BOTH branches of Eq. 11 exercised: first order, where Levenspiel says micro- and macrofluid must agree and they do to 1.5e-10, and second order, where they must not and the gap reaches 25.4 %. Eq. 8's brace exercised at its own 'for one tank use the first term' branch as well as the general case"
+  - "THE HEADLINE, which is a limit and not an agreement: a five-stage chain of 9, 9, 9, 9, 24 s matches E14.4's fitted mean and variance to 0 and 0 - exactly, asserted in code - yet its exit curve differs by 6.9 % of the peak and its OUTLET CONCENTRATION by 23.2 % at k tbar = 10 (6.1 % second order), while its CONVERSION differs by 0.16 % there and by at most 0.38 % anywhere. The pymrm unequal chain reproduces the staged product prod(1+k t_i)^-1 to 8.3e-17, so the difference is physics and not a solver artefact"
+  - "THE HEADLINE'S UPPER BOUND, in closed form and not by search: extremising prod(1+k t_i) under the two moment constraints gives a Lagrange condition with at most two roots, so every extremal chain has at most TWO distinct tank sizes and the family is an enumeration. The supremum is proved analytically (h(t)/t^2 increasing, with t_i <= sqrt(S) forced by the constraint) and equals 83.1 % at k tbar = 10 and 6.88 % at k tbar = 2; enumerating two-value chains to 400 stages reaches 82.7 % and 6.82 %, i.e. converges to it from below. The ambiguity is one-sided: no admissible chain converts LESS than Levenspiel's four equal tanks"
+  - "Eq. 4's additivity separated into the part that cannot fail and the part that can: for equal tanks Gamma * Gamma is Gamma AND Simpson is exact on the resulting cubic, so the 6.9e-18 is doubly structural and is labelled so; for UNEQUAL blocks the moment integrals close to 6.7e-08 and 2.9e-07 on an 800 s window - those two metrics measure THE QUADRATURE WINDOW, not additivity, which is exact for any independent stages, and the page prints the 340 s values (7.6e-05, 1.2e-03) beside them to make that visible - while the moment-matched tanks-in-series curve misses the true composite by 1.8483 % of its peak, bracketed and refined with Brent rather than read off the plotting grid"
+  - "Chapter 14's own opening claim - that the tanks-in-series and dispersion models 'give identical results, for all practical purposes' - quantified, and its own conversion rule corrected. At Pe = 2N the two models' first-order conversions differ by at most 0.71 % for N >= 16 and k tbar <= 2, but by 44.4 % at N = 2, k tbar = 5, the gap falling as N^-1.79. Root-finding the Peclet number that actually reproduces N tanks gives 0.9895 of 2N at N = 64, k tbar = 0.5 and 0.6213 of it at N = 4, k tbar = 5; matching the closed-vessel variance instead leaves an O(1) offset of 1.008 at N = 64, so the three matching rules agree to O(1/N) and not exactly"
+  - "thirty-five-row defect-injection table, rebuilt for this physics and nothing inherited. EVERY row recomputes the one metric it is pinned to, and each row's baseline is asserted to equal that metric's reported value - which is what stops a row reporting a metric against an unrelated number and still being named as its mover. Every row moves its target by at least 1.1e-06 except one, and that one is the finding: a 1001-point sweep of E14.4's own curve lands within 0.0011 % of the root-found maximum, close enough to pass for converged while still being a grid value"
+  - "refinement on every axis that carries error, and an explicit statement that the cascade has NO grid axis because the cell count is Levenspiel's N: time step at observed order 2.000 (Crank-Nicolson) and 0.988 (implicit Euler), Simpson panels at 3.98, the printed small-deviation asymptote at 0.99 in 1/N, and - in the dispersion comparison, where there really is a discretisation - grid order 2.07 with the van Leer deferred correction and 1.29 without"
+  - "THE INVERTED RULE ON FIG. 14.7, which is the page's most consequential finding and the one an earlier draft got backwards by asserting the chapter printed no rule at all. Book p. 327, inside the axes box: 'When N > 50 the curve becomes symmetrical in which case use fig. 13-11 with N = 1/2 (D/uL)'. The book refutes itself twice: Ch. 13's printed sigma^2_theta = 2(D/uL) (Fig. 13.12, p. 303) with Ch. 14's sigma^2_theta = 1/N gives N = 1/2 (uL/D), matching the printed coefficient 0.5 on the RECIPROCAL ratio to 0; and under the corrected form the annotation's own threshold N > 50 is exactly D/uL < 0.01, the printed validity limit of the figure it points at, to 0. As printed the rule sends a reader at N = 64 to Pe = 0.0078 instead of 128, which is 138 % wrong in conversion at k tbar = 2 against 0.053 % de-inverted"
+  - "STRUCTURAL and labelled as such: pymrm's agreement with Eq. 9 (the N-cell upwind cascade IS Eq. 9 algebraically) - but two of its four break rows genuinely resolve it, moving it by 7.6e-03 and 1.1e-02, while the other two (nu=1, reversed velocity) drive the exit to exactly 0 and are labelled COLLAPSE rather than counted as resolving power; Gamma * Gamma additivity for equal tanks at BOTH stage counts, which are the same identity and are both labelled; Eq. 3's two printed variance columns; and the exact moment match of the alternative chain, which is asserted in code. 26 of the 81 metrics sit below check_agreement.py's ABS_FLOOR of 1e-12 and are outside CI entirely; each is named and each is given an above-floor companion that the companion string must NAME, asserted in code to be itself above the floor - an earlier draft had four companion strings naming no metric at all, so their assert iterated over an empty set"
+
+adds: >
+  To the physics, nothing. Chapter 14 is right: three worked examples reproduce
+  with zero deviation, the Fig. 14.3 annotations to 3e-15, and the chapter's
+  assertion about the dispersion model is confirmed and quantified.
+
+  Four things are new. FIRST, the identity AND the correction of the chapter's
+  own conversion rule: N equal tanks in series IS construct_convflux_upwind plus
+  construct_div on N cells, exactly, so the model's numerical diffusion is
+  u*L/(2N) and the equivalent Peclet number is 2N. The chapter does print a rule
+  - on Fig. 14.7, book p. 327 - and it is INVERTED; the derivation here is that
+  rule the right way up, the book's own Ch. 13 settles it two independent ways,
+  and the page then measures both what the printed form costs (138 % in
+  conversion at N = 64, k tbar = 2, against 0.053 % de-inverted) and where the
+  corrected rule stops holding.
+
+  SECOND, the measurement of what a two-moment fit is worth: the 9,9,9,9,24
+  chain, which is not in the chapter, and the closed-form supremum over the whole
+  family of chains matching the same two moments, which is 83.1 % in outlet
+  concentration at k tbar = 10 - a factor of 5.9.
+
+  THIRD, five printed defects, each proved from the book's own arithmetic.
+
+  FOURTH, a caution about pymrm itself: there is no pure-outflow boundary
+  condition in the library. The nearest, zero-gradient, reconstructs the exit
+  face to second order, which is right for a discretised PDE and wrong for a
+  model whose cell count is a physical parameter. It costs 5.9 % at N = 2 and
+  3.8 % at N = 4 and decays as N^-0.87, i.e. it looks exactly like ordinary
+  discretisation error and is not one. The workaround (suppress the boundary flux
+  with b=1,d=0 and add the outflow as a construct_coefficient_matrix sink on the
+  last cell) is exact and cheap but had to be worked out rather than looked up.
+
+agreement: >
+  Not applicable in the experimental sense; this is a tier 6 analytical page and
+  Chapter 14 contains no measurement of any kind.
+
+  The strongest reproduction is the three worked examples, all exact. The check
+  with the most resolution is first-order conversion by three routes sharing no
+  assembly: 2.4e-15 (pymrm against Eq. 9) and 1.5e-10 (Eq. 11's quadrature
+  against Eq. 9) over 48 cases. The sharpest printed claim tested is Fig. 14.3's
+  "error < 2 % for N > 5", whose threshold root-finds to N = 5.2004.
+
+  The headline result is not an agreement at all but a limit: two chains that
+  match E14.4's fitted mean and variance EXACTLY differ by 23.2 % in OUTLET
+  CONCENTRATION at k tbar = 10 (0.16 % in conversion), and the supremum over
+  every chain matching those two moments is 83.1 % there.
+
+caveats: >
+  Tier 6, and emphatically NOT experimental validation. Chapter 14 measures
+  nothing.
+
+  ORIGIN NOT CONSULTED. The RTD, its means and variances, and the F curve of
+  Fig. 14.7 are attributed BY THIS BOOK to MacMullin, R. B. and Weber, M., Jr.,
+  Trans. AIChE 31, 409 (1935). That paper is not on disk and was not read.
+  Everything here was read from the 1999 monograph and from nowhere else, on
+  600 dpi renders (the scan's native resolution) - the text layer of this book
+  destroys every equation and every subscript, returning Eq. 3 as
+  "7. = (-&) NN e-tNli". Two values come from Chapter 13 (book p. 303) rather
+  than Chapter 14, because Fig. 14.7's annotation names that figure by number.
+
+  FIVE PRINTED DEFECTS, reported and not repaired. (0) Fig. 14.7, p. 327: the
+  annotation inside its axes box, "When N > 50 the curve becomes symmetrical in
+  which case use fig. 13-11 with N = 1/2 (D/uL)", has the ratio INVERTED - the
+  book's own Ch. 13 gives N = 1/2 (uL/D) two independent ways. The most
+  consequential of the five, because it is a modelling rule rather than a unit or
+  a tick, and 138 % wrong in conversion at N = 64, k tbar = 2. (1) Section 14.2,
+  p. 328: V_Ntanks/V_p = 1 + k tbar_i = 1 + k tbar/(2N); with the book's own
+  tbar = N tbar_i these differ by a factor of EXACTLY 2, and expanding the book's
+  own Eq. 9 shows the MIDDLE form is the wrong one. (The factor is a limit and is
+  extrapolated to x = 0, not fitted over a window: a 400-point polyfit returns
+  2.0003 and a wider one 2.03, and those trailing digits mean nothing.)
+  (2) Fig. E14.4b, p. 334: the top axis tick reads 0.105 s^-1 on an axis ticked
+  0, 0.005, 0.010, and the book's own PRINTED E(t) = 3.2922e-6 t^3 e^(-0.0667 t)
+  peaks at 0.0149138 at t = 44.9775 s - the tick is 7.04x the whole curve and
+  should read 0.015. (With the unrounded coefficients the peak is 0.0149361 and
+  the ratio 7.03; the tick belongs to the printed curve.) (3) E14.2, p. 331:
+  "L = 272 moles", where the Comment two lines below says "L <= 272 miles".
+  (4) E14.4, p. 333: "Delta(sigma^2) = 1000 - 100 = 900 s", a variance carrying
+  the unit of a time. A SIXTH item is a typesetting ambiguity rather than a
+  defect: Eq. 11's denominator is set as (N-1)! tbar_N with a lowered N where
+  tbar^N is required, and the book prints the raised form itself two pages later
+  in E14.4.
+
+  ONE ANNOTATION THE PAGE CANNOT SETTLE. Fig. 14.3 draws a single level
+  E_theta,inf and labels it 0.55 E_theta,max for N = 4 and 0.61 for N >= 10. The
+  two inflection points do not sit at the same height: at N = 4 they are at
+  0.4267 and 0.6943 of the maximum, at N = 10 at 0.5225 and 0.6631. The printed
+  value lies between them in both cases and the N >= 10 figure is the Gaussian
+  limit e^(-1/2) = 0.6065. Both heights are reported and NEITHER IS SCORED.
+
+  INDEPENDENCE IS ASSUMED, NOT TESTED. Levenspiel's own footnote flags laminar
+  flow as a case where the fluid carries memory from vessel to vessel. Nothing
+  here can detect that, and the additivity check would pass anyway.
+
+  THE EQUAL-TANK ASSUMPTION CUTS BOTH WAYS. The page cannot say Levenspiel's
+  vessel is four equal tanks either; it says only that four equal tanks and the
+  five-stage chain are indistinguishable by his method.
+
+  THE DISPERSION COMPARISON DEPENDS ON A MATCHING RULE. Pe = 2N is what the
+  upwind scheme's numerical diffusion gives AND what Levenspiel's own
+  small-deviation sigma^2_theta = 2(D/uL) gives, exactly - the two agree, which is
+  what de-inverts Fig. 14.7's annotation. Matching the CLOSED-vessel variance, or
+  the conversion, gives Peclet numbers a little below 2N: the offsets 2N - Pe are
+  1.008 and 1.341 at N = 64, i.e. O(1) in Pe and O(1/N) relatively, and both are
+  reported. Nothing in that section establishes that either model describes a
+  real vessel.
+
+  E14.3 IS SCOPED OUT. Its data live only in the curve of Fig. E14.3a, and no
+  curve is traced anywhere on this page.
+
+  26 OF 81 METRICS ARE BELOW check_agreement.py's ABS_FLOOR of 1e-12 and are
+  therefore outside the regression suite entirely. That is high, and it is what
+  an exact-arithmetic page looks like: several are exact reproductions of printed
+  integers. Each is named on the page and each carries an above-floor companion
+  that the companion string must NAME, asserted in code - an earlier draft had
+  four whose companion strings named no metric, so their assert iterated over an
+  empty set and proved nothing.
+
+  THE BREAK TABLE'S ASSOCIATIONS ARE DECLARED, NOT MEASURED. Every row recomputes
+  the one metric it is pinned to, and that row's baseline is asserted to equal the
+  reported value of that metric; the wider mover list is a judgement, with every
+  name checked to be a real key of agreement.json, and the coverage map is built
+  from those lists rather than written by hand. An earlier draft had a row that
+  reported a metric against zero, injected no defect, and was named as the mover
+  of seven metrics.
+
+  NO OTHER PAGE'S DATASET IS LOADED. A2.8 uses Erlang RTDs of N equal tanks and
+  says in its own caveats that A2.4 was not built; it publishes no RTD dataset,
+  so there is nothing to borrow. A2.8's finding that the RTD alone does not fix
+  the conversion for a reaction order other than one is re-established here
+  independently (the 25.4 % micro/macro gap) and is consistent.
