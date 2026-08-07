@@ -5,7 +5,8 @@ catalog_reference: Langmuir, JACS 40 (1918)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J1.1-langmuir-isotherm/
 reference:
   authors:
   - Langmuir, I.
@@ -26,7 +27,7 @@ paper:
     here rather than the PDF metadata.'
 blocker: null
 notes: null
-updated: '2026-08-06'
+updated: '2026-08-07'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because
@@ -41,3 +42,156 @@ scope: FORTY-THREE PAGES. The isotherm is a small part of a very long experiment
 incidental_finding: Rawlings & Ekerdt (2nd edn, also on disk) record that the Danckwerts boundary
   conditions "were derived at least 45 years prior to Danckwerts in a classic paper by Langmuir".
   That claim is now checkable against this very file, and it bears on the published A2.1/A2.2.
+built_at: queue_cases/J1.1/page/
+built_on: '2026-08-07'
+scope_decision: >
+  DECIDED BEFORE TRANSCRIPTION, and recorded here as the case yaml asks. The page is
+  about THE ISOTHERM AND THE CONSTANTS DERIVED FROM IT - the theory of journal pages
+  1368-1376 (Cases I-VI, eqs. 1-33) and Tables II-XI, XIII-XXII, which are the mica
+  and glass isotherms and everything Langmuir computes from them. Table XXV is
+  carried for one reason only: it exercises eq. (37) on a THIRD adsorbent (312 sq.
+  cm. of platinum foil against 5750 of mica and 1966 of glass). TABLES I, XII, XXIII
+  AND XXIV ARE SCOPED OUT AND NOT TRANSCRIBED - outgassing inventories and the
+  platinum oxygen/carbon-monoxide bookkeeping, which are about the apparatus and
+  about irreversible chemisorption, not about the isotherm. Journal pages 1393-1401
+  contain no isotherm at all.
+
+  The decision followed the brief's rule - prefer whatever lets you TEST rather than
+  restate. Restating q_cal would be restating a fit.
+fit_vs_test: >
+  LANGMUIR FITTED HIS ISOTHERM TO THE VERY DATA THE PAGE WOULD OTHERWISE COMPARE
+  AGAINST, so the q_cal columns of Tables II-XVII are a GOODNESS OF FIT and are
+  labelled one in the notebook, in meta.yaml, in models_entry.yaml, in README.md and
+  here. He obtained a and b by DRAWING a straight line through p/q against p (eq. 32)
+  - not by least squares - and the calculated columns follow from those constants.
+  The page reproduces all 101 printed q_cal cells to 0.434 cu.mm at worst and reports
+  that as a TRANSCRIPTION CHECK, never as evidence for the model. It is not in
+  agreement.json as an agreement.
+
+  NULL BASELINES ARE PRINTED BESIDE EVERY AGREEMENT THE PAGE DOES QUOTE: a
+  zero-parameter constant model is 3.7 to 87 times worse in RMS than Langmuir and a
+  one-parameter proportional law 1.8 to 27 times, per table, and both are tabulated.
+
+  WHAT IS NOT A FIT, and is where the page's evidence lives: (1) the DISCRIMINATION
+  against Freundlich, which Langmuir himself stages in Table VII with the same data
+  and the same parameter count and which can fail - with both forms refitted
+  optimally the best two-parameter Freundlich is 3.8235 times worse on Table VII and
+  worse on 13 of 14 tables, the one exception being the table Langmuir himself
+  excludes; (2) the OUT-OF-SAMPLE BOUND beta < 1, whose denominator comes from liquid
+  densities and contains no adsorption, holding on all twenty entries with only 16.7
+  % of headroom on the tightest row; and (3) the page's own result, that Langmuir's
+  Case VI IS the BET isotherm and that his data lie where it cannot be told apart
+  from Case I.
+incidental_finding_result: >
+  CHECKED AND SETTLED, in the direction that matters. Rawlings & Ekerdt, book page
+  443, state that the Danckwerts boundary conditions "were derived at least 45 years
+  prior to Danckwerts in a classic paper by Langmuir [22]". THEIR REFERENCE [22] IS
+  NOT THIS PAPER. Read from their own bibliography (2nd edn, born-digital, clean text
+  layer): "[22] I. Langmuir. The velocity of reactions in gases moving through heated
+  vessels and the effect of convection and diffusion. J. Am. Chem. Soc., 30(11):1742-
+  1754, 1908." Danckwerts 1953 minus 1908 is 45 exactly, which is the arithmetic
+  their sentence asserts. Their [32] is Weller, "Langmuir as chemical engineer... or,
+  from Danckwerts to Bodenstein and Damkoehler", Chem. Eng. Ed. 28:262-264 (1994),
+  which is presumably where the priority claim comes from; it is not on disk either.
+
+  THE 1918 PAPER ON DISK CANNOT SUPPORT OR REFUTE THE ATTRIBUTION. It contains no
+  flow, no convection and no boundary condition of any kind. The search: the full
+  43-page text was grepped for "convection" (0 hits), "flow" (0), "boundary" (1, in
+  van der Waals's liquid-vapour transition layer on journal page 1361), "diffusion"
+  (3, all about a mercury-vapour diffusion-pump artefact and gas diffusion between
+  bulbs), "velocity" (5, all reaction velocity on platinum), "stream" (0) and
+  "mixing" (0); the theory section was read page by page on 300 ppi renders and every
+  table was cropped and read. Every apparatus in the paper is a sealed static bulb.
+
+  ACTION FOR THE INTEGRATOR, NOT FOR THIS BUILDER: A2.1 and A2.2 were NOT touched.
+  Settling the priority claim needs J. Am. Chem. Soc. 30(11) 1742-1754 (1908), which
+  is NOT in ~/papers/pymrm-gallery/. That is an acquisition target and would be a
+  genuine attribution finding for the two published Danckwerts pages if obtained.
+models_yaml_action: >
+  APPEND, not upgrade-in-place. J1.1 is NOT present in models.yaml (verified by
+  parsing the file: the J-section entries are J1.3 and J1.5 only). Use
+  `python scripts/splice_entry.py J1.1 J1.3`, which inserts the block immediately
+  before `  - id: J1.3` at models.yaml line 3958 and keeps the section in catalogue
+  order (I1.7 precedes, J1.3 follows). Do NOT use --replace: splice_entry refuses an
+  append over an existing id and there is none to replace here.
+printed_defects: >
+  FOUR, ALL REPORTED AND NONE REPAIRED, each proved from the paper's own numbers in
+  the F2.3 order, PLUS one reporting convention filed separately. (1) EQ. (15)'s logarithm is printed as ln[theta'/(theta1 - theta')]
+  and gives t_half = 0 at theta' = theta1/2, contradicting eq. (16) two lines below,
+  which Langmuir derives BY making that substitution; it also gives t = -infinity at
+  theta' = 0. Proved by MARCHING eq. (14) with a newton-solved implicit step rather
+  than by asserting it; the one-character correction (theta_1 in the numerator) is
+  labelled an inference. (2) TABLE IV's b = 58.3: the table's two observations
+  determine b exactly at 57.4937 and the paper's own b' = 100.0 requires 57.5000, two
+  independent routes agreeing to 0.011 %, while 58.3 is 1.40 % from both; Tables V
+  and XVII pass the same test and Table IV is the only mica table with no q_cal
+  column. (3) TABLE XX's beta = 0.36 for methane on glass, where the paper's own N0 =
+  0.288e15 and its own methane monolayer count 0.63e15 give 0.4571 - proved twice,
+  because the printed value also uniquely breaks journal page 1391's own claim that
+  the adsorption order is the same under b', N0 and beta in all three sets. (4) The
+  pair "(100 bars) ... 0.20" on journal page 1384: with Table VII's own a = 0.156 the
+  companion claim 0.684 at 3 bars is reproduced (0.6812) but 0.20 corresponds to
+  25.641 bars, and at the printed 100 bars the same curve gives 0.0602. Two readings
+  are printed and neither adopted. AND, FILED SEPARATELY FROM THOSE FOUR BECAUSE IT IS
+  A REPORTING CONVENTION AND NOT AN ERROR: the sigma column of Tables XVIII-XX runs
+  low, 18 of 21 printed values below the computed one, worst 3.77 %. The three worst
+  rows are exactly the rows Langmuir prints to one or two significant figures
+  (10,000; 10,000; 26,000), and truncating at each cell's own printed granularity
+  reproduces 15 of 21 cells against 11 for rounding.
+text_layer_warning: >
+  THE TEXT LAYER RENDERS EQ. (37) AS N0 = 25.2 x 10^16 b/s WHERE THE PAGE PRINTS
+  10^15. That is a factor ten in every N0 and every beta in the paper and would put
+  17 of 20 entries above the monolayer bound, reversing Langmuir's central
+  conclusion (the three that would survive are the mica 155 K oxygen, argon and
+  nitrogen entries, each an order of magnitude clear of the threshold; the count is
+  computed by the notebook, not typed). Confirmed on a 300 ppi crop AND by arithmetic: the coefficient must be
+  N x 4.16e-8 = 2.521e16 = 25.2e15. The text layer also mangled half the b column of
+  Table X and destroyed the column alignment of Table XXII entirely.
+status_note: >
+  READY. Page staged at queue_cases/J1.1/page/ (build_page.py, index.ipynb executed
+  clean, meta.yaml, README.md, five CSVs each with a sidecar carrying a columns
+  block) plus queue_cases/J1.1/models_entry.yaml. Runtime ~13 s. Two consecutive
+  executions give identical cell content, identical figures and an identical
+  agreement.json (verified by hashing both runs' outputs). 58 metrics reported, a
+  64-row break table, coverage asserted key-for-key in both directions (62 of 64 rows
+  move their metric; the two that do not are labelled STRUCTURAL and both metrics
+  they name are separately covered by rows that do move them). Nothing was
+  written to pages/, models.yaml, docs/, scripts/ or any existing page; no git
+  command was run.
+fixer_pass: >
+  2026-08-08. Applied queue_cases/J1.1/review/verification.md after re-measuring every
+  finding. THREE REQUIRED FIXES, all confirmed and all applied. (1) The flagship
+  text-layer count was wrong: it is 17 of 20 above unity under 25.2e16, not 19. The
+  page now COUNTS it from langmuir-1918-constants.csv in section 6.5 instead of
+  typing it into an f-string, prints the three entries that would survive and their
+  margin, and the same 17 appears in the break table, README.md, meta.yaml,
+  models_entry.yaml, the printed-claims sidecar and this file. (2) A line labelled
+  "root-found on the marched solution" was root-found on the CLOSED FORM and its
+  2.2e-16 was an algebraic identity presented as a fourth independent route. It is
+  now labelled an identity that could not have failed, and a GENUINE root-find on the
+  marched trajectory was added beside it: 0.110160 against eq. (16)'s 0.109954,
+  1.875e-3 relative, halving with dt over 200-1600 steps at observed order 1.00, with
+  its own reported metric and break row. (3) "shares no algebra" was false of the
+  newton/Brent pair - they share amp, S and dS and differ only in iteration - and is
+  now called a root-finder cross-check wherever it appears; the other independence
+  claim (fitting on q versus Langmuir's p/q linearisation) is true and kept.
+  UPGRADES TAKEN, each re-measured first: Langmuir's own journal-page-1375 sentence
+  ("...then all the coefficients in (29) after b are zero") quoted verbatim off a
+  fresh 300 ppi crop as the licence for the collapse; the occupancy ladder summed to
+  INFINITY in closed form, giving BET exactly with no truncation anywhere; BET refit
+  to Table VII with BOTH parameters free, reaching RMS 0.3501824 against Langmuir's
+  0.3501868 and returning Case I's own constants, with a power-check break row; and
+  the p/p0 claim widened to every printed pressure in both bulbs and both isotherm
+  forms (30 entries, 124 pressures) with the narrower 18-entry separation table's
+  scope stated explicitly. MINORS: "far below saturation" corrected to journal page
+  1384 (read on my own crop; journal 1385 has no occurrence of the stem at all); the
+  "46 hits" for "saturat" replaced by the measured 38 (37 with -layout, the
+  difference one hyphenation) with the tool named; the sigma-column truncation
+  separated from the four genuine defects and identified positively as a truncation
+  convention. UPGRADE DECLINED: the external vapour-pressure corroboration - the page
+  has no offline source for modern vapour pressures and typing them from memory is
+  what non-negotiable 13 forbids, so a self-contained substitute was added instead
+  (root-found: the recovered p0 would have to be a factor 12.145 too high for scatter
+  and separation to reach parity). Nothing on the "held under attack" list was
+  weakened. 58 metrics, 64 break rows, 62 moving; two consecutive executions give
+  identical cell content, identical figure hashes and an identical agreement.json.

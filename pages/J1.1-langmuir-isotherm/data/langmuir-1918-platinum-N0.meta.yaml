@@ -1,0 +1,48 @@
+dataset_id: langmuir-1918-platinum-N0
+title: "Langmuir (1918) Table XXV - oxygen and carbon monoxide adsorbed by platinum foil"
+status: complete
+
+source:
+  authors: ["Langmuir, I."]
+  year: 1918
+  container: "Journal of the American Chemical Society 40(9) 1361-1403 (September 1918)"
+  doi: "10.1021/ja02242a004"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal page 1398. 312 sq. cm. of pure platinum foil, 15.3 x 10.2 cm and 0.0010 cm
+  thick (both faces: 2 x 15.3 x 10.2 = 312.12 sq. cm., which the page checks), after
+  activation by heating in a hydrogen-oxygen mixture.
+
+  THE PLATINUM SECTION OF THE PAPER IS CHEMISORPTION, NOT AN ISOTHERM. No pressure is
+  tabulated and eq. (31) is never applied to it; the amounts are what could not be
+  removed by exhausting. This table is carried for ONE reason - it applies eq. (37)
+  on a THIRD adsorbent, 312 sq. cm. against 5750 of mica and 1966 of glass, which is
+  an out-of-sample exercise of that equation - and nothing else from journal pages
+  1393-1401 is used. TABLES XXIII AND XXIV ARE DELIBERATELY NOT TRANSCRIBED.
+
+acquisition:
+  method: table
+  figure: "TABLE XXV, journal page 1398"
+  tool: "poppler pdftoppm -r 300 (native), cropped and read at digit scale"
+  procedure: >
+    Rendered at the scan's native 300 ppi and cropped. THE TEXT LAYER WAS NOT USED
+    FOR ANY DIGIT. The N0 column is printed "x 10^15" once, on the first row of each
+    gas, and carried down.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: "None beyond the printed precision: amounts to two significant figures, N0 to two decimals of 1e15."
+
+columns:
+  - {name: temp_C, unit: degC, description: "temperature of the platinum"}
+  - {name: gas, unit: "-", description: "O2 or CO"}
+  - {name: q_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "amount adsorbed and not removable by exhausting"}
+  - {name: N0_e15, unit: "1e15 molecules per cm2", description: "the paper's own N0 column, eq. (37) on 312 sq. cm."}
+
+caveat: >
+  NOT AN ISOTHERM. Do not fit eq. (31) to these rows: no pressure is recorded, the
+  adsorption of oxygen is irreversible (journal page 1399: "The oxygen could not be
+  driven off either by heat or by pumping"), and the amounts depend on the previous
+  history of the metal. The only thing the page takes from them is that eq. (37)
+  reproduces the printed N0 column exactly on a third adsorbent.

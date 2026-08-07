@@ -1,0 +1,85 @@
+dataset_id: langmuir-1918-isotherms
+title: "Langmuir (1918) Tables II-XI and XIII-XVII - every adsorption isotherm point printed for mica and glass"
+status: complete
+
+source:
+  authors: ["Langmuir, I."]
+  year: 1918
+  container: "Journal of the American Chemical Society 40(9) 1361-1403 (September 1918)"
+  doi: "10.1021/ja02242a004"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal pages 1382-1388. Mica (total surface 5750 sq. cm.) at 90 K and at 155 K,
+  and 1966 sq. cm. of microscope cover glass at 90 K, with nitrogen, methane, carbon
+  monoxide, argon, oxygen and carbon dioxide, at pressures of 0.4 to 172 bars where a
+  bar is a DYNE PER SQUARE CENTIMETRE, not 1e5 Pa. Langmuir's own conversion, journal
+  page 1402: 100 bars is "approximately 0.1 mm of mercury".
+
+  q_obs IS A MEASUREMENT - a McLeod-gauge pressure and a gas volume obtained by
+  difference - which is why this page is tier 5 and not tier 6. q_cal, q_F and q_cal2
+  are NOT: they are the paper's own calculated columns, evaluated at constants FITTED
+  to these same points by drawing a straight line through the p/q-versus-p plot
+  (eq. 32). Reproducing them is a goodness of fit and the page says so everywhere.
+
+  THREE THINGS THE PAPER SAYS ABOUT THESE ROWS, ALL OF WHICH THE PAGE CARRIES:
+  (1) journal page 1385, "The results therefore obtained from bulb A are to be
+  considered as being 10 to 30% too high" - the blank bulb A' adsorbed measurably and
+  no subtraction was made, so every mica beta derived from these rows is an
+  over-estimate; (2) journal page 1384, the q at p = 12.8 in Table IX "is undoubtedly
+  in error, as it cannot be made to fit into a smooth curve" - the row is kept, is
+  flagged here, and the page reports its discrimination with and without it;
+  (3) journal page 1389, the largest negative blank reading in the glass series is
+  -0.7 cu. mm., which is the paper's own scale for its measurement error. Over ALL
+  blanks including mica the largest negative is -1.2 cu. mm. (Table V, argon).
+
+acquisition:
+  method: table
+  figure: "TABLES II-XI and XIII-XVII, journal pages 1382-1388"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to each table, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at 300 ppi
+    native, so pages were rendered at 300 ppi and each table cropped out of it; a
+    larger render would only interpolate. Every digit was read off that crop.
+    THE TEXT LAYER WAS NOT USED FOR ANY DIGIT - it mangled half the b column of
+    Table X and it renders eq. (37)'s exponent as 16 where the page prints 15.
+
+    ONE AMBIGUOUS GLYPH WAS SETTLED BY ARITHMETIC, NOT BY PIXEL SHAPE, as AGENTS.md
+    requires: Table VI's third pressure could be read 4.63 or 4.65. Eq. (31) at that
+    table's own a = 0.0805 and b = 20.0 gives q_cal = 5.430 for 4.63 and 5.447 for
+    4.65, and the printed q_cal is 5.45; the constraint holds under the full rounding
+    envelope of a and b, so 4.65 it is, and the shape argument agrees.
+
+    COMPLETENESS IS CHECKED, NOT ASSUMED: Tables XVIII-XX print a "Number of obs."
+    column for every isotherm, and the page asserts it against the number of Bulb A
+    rows transcribed here. Twenty independent integers; a dropped or duplicated row
+    would fail it.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. Pressures carry two or three significant
+    figures, amounts two or three. The paper's own error scale is the blank bulb:
+    +-0.7 cu. mm. in the glass series.
+
+columns:
+  - {name: table, unit: "-", description: "Roman table number in the paper"}
+  - {name: gas, unit: "-", description: "adsorbate"}
+  - {name: adsorbent, unit: "-", description: "mica or glass"}
+  - {name: T_K, unit: K, description: "temperature of the bulb (90 = liquid air, 155 = frozen ether)"}
+  - {name: method, unit: "-", description: "I or II, the two measurement procedures of journal pages 1377-1378"}
+  - {name: bulb, unit: "-", description: "A = the bulb containing the adsorbent; Aprime = the blank, uncorrected"}
+  - {name: p_bars, unit: "dyn/cm2", description: "pressure in Langmuir's bars (dynes per sq. cm.), NOT 1e5 Pa"}
+  - {name: q_obs_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "amount adsorbed, MEASURED"}
+  - {name: q_cal_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "the paper's calculated column from eq. (31) or (33) at its own fitted constants; blank where none is printed"}
+  - {name: q_F_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "Table VII only: Freundlich's formula as the paper tabulates it, q_F = 8.4 p^0.417"}
+  - {name: q_cal2_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "Table IX only: the two-term Case II fit the paper adds beside its single-term one"}
+
+caveat: >
+  THE CALCULATED COLUMNS ARE A FIT. Do not quote agreement between q_cal and q_obs
+  as evidence for the Langmuir model: the constants were obtained from these very
+  points. The page reproduces them only as a transcription check and prints a
+  zero-parameter and a one-parameter null baseline beside every agreement it does
+  quote. The printed q_F column departs from an exact 8.4 p^0.417 by up to 1.32 %,
+  because it was read off the drawn log-log line rather than computed; both are
+  carried and the page's discrimination uses neither, refitting both models.

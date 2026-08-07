@@ -3955,6 +3955,121 @@ models:
     related: [D2.6, I1.9]
 
   # ---------------------------------------------------------------- section J
+  - id: J1.1
+    slug: langmuir-isotherm
+    title: "Langmuir 1918: the isotherm that could not have proved its own conclusion"
+    description: >
+      Langmuir fitted his isotherm by drawing a straight line through the p/q-versus-p
+      plot, so the q_cal columns of Tables II-XVII are a two-parameter fit judged
+      against its own training data; the page labels that a goodness of fit everywhere
+      and never reports it as a metric. What CAN fail is elsewhere. Langmuir's own
+      contest against Freundlich is a fair one - two parameters each, the same eleven
+      points - and with both forms refitted optimally Freundlich loses by 3.82 in RMS
+      on Table VII and on 13 of the 14 tables that can host the comparison, the single
+      exception being the table Langmuir himself excludes. The monomolecular
+      conclusion rests not on the isotherm but on beta, the saturation amount against
+      a monolayer count from the liquid density, whose worst row leaves only 17 % of
+      headroom. The page's own result explains why it had to: Langmuir's Case VI,
+      eqs. (29) and (30) of the same paper, is shown symbolically to be EXACTLY the
+      BET isotherm twenty years early, and every pressure he reached lies below
+      p/p0 = 1.5e-3 - recovered by inverting his own Table XXI - where his monolayer
+      and multilayer equations differ by at most 0.16 %, against observational scatter
+      12 to 1100 times larger; and refitting BET to Table VII with BOTH parameters free
+      improves the fit by 1.26 parts in 100000, the multilayer model returning Case I
+      exactly. Four printed defects are reported and none repaired, including eq. (15)'s
+      logarithm, which gives t_half = 0 where eq. (16) two lines below it does not; a
+      fifth pattern, the sigma column running low, is reported separately because it is
+      a truncation convention rather than an error.
+    section: J
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S1]
+    phases: [gas-solid]
+    predicts:
+      - the Langmuir adsorption isotherm, eqs. (9) and (31), and its linearisation (32)
+      - a two-site isotherm, eq. (19), and the already-saturated-site form, eq. (33)
+      - dissociative adsorption with a square-root pressure dependence, eq. (28)
+      - the multilayer isotherm of Case VI, eqs. (26), (29) and (30) - which IS the BET equation
+      - the rate of approach to adsorption equilibrium, eqs. (14)-(16)
+      - elementary spaces per sq. cm. and the fraction of a monolayer covered, eqs. (37) and beta
+      - the "relative life" of an adsorbed molecule from the isotherm constant a, eq. (38)
+      - the saturation pressure of the liquefied gas, recovered from eq. (39) and Table XXI
+    pymrm_api:
+      - newton
+      - NumJac
+    reference:
+      authors: ["Langmuir, I."]
+      year: 1918
+      container: "Journal of the American Chemical Society 40(9) 1361-1403"
+      doi: 10.1021/ja02242a004
+    origin_not_consulted: >
+      Freundlich, H., Kapillarchemie, Leipzig (1909) - the rival isotherm this page
+      discriminates against, read ONLY through Langmuir's own restatement of it on
+      journal page 1375 and through the q_F column he fits in Table VII. Also not
+      consulted: Eucken, Verh. deut. physik. Ges. 16, 345 (1914); Bakker, Z. physik.
+      Chem. 89 (1915); Haber, J. Soc. Chem. Ind. 33, 50 (1914); Knudsen, Ann. Physik
+      31, 205 (1910), the thermal-effusion correction; Meyer's Kinetic Theory of Gases,
+      German edition 1899, p. 82, the source of eq. (1); and Langmuir's own "Part I"
+      (This Journal 38, 2221 (1916)) and "Part II" (39, 1848 (1917)), which carry the
+      monomolecular-film evidence this paper leans on. Nothing on the page derives from
+      any of them. Brunauer, Emmett & Teller (1938) IS on disk and is the subject of
+      J1.3, whose README, meta.yaml and findings were read before this page was built;
+      no dataset of J1.3 is loaded and no number of J1.3 is retyped, and the Case VI =
+      BET identity is verified against Langmuir's own eq. (30) rather than against
+      anything BET print. The one thing taken from the 1938 paper is its Section II
+      heading, "Generalization of Langmuir's Theory to Multimolecular Adsorption",
+      read on a 300 ppi crop of journal page 311.
+    data: {tier: 5, method: table, status: complete}
+    note: >
+      TIER 5, AND ONLY ONE COLUMN OF IT IS MEASUREMENT. q_obs is measured - a McLeod
+      gauge pressure and a gas volume by difference. a, b, b', sigma, N0, beta and
+      Tables XXI, XXII and XXV are all constants Langmuir DERIVED from those
+      measurements, so reproducing one is reproduction and never validation, and the
+      page says so at every such comparison.
+
+      THE FIT IS A FIT. Eqs. (31)/(33)/(19) at the printed constants reproduce all 101
+      printed q_cal cells to 0.434 cu.mm, and that number is reported on the page as a
+      transcription check and NEVER as evidence for the model. Null baselines are
+      printed beside every agreement that is quoted: a zero-parameter constant is 3.7
+      to 87 times worse in RMS and a one-parameter proportional law 1.8 to 27 times.
+
+      THE MICA NUMBERS ARE UNCORRECTED - journal page 1385 says the bulb-A results are
+      "10 to 30% too high" because the blank was never subtracted - and no correction
+      is applied anywhere. One Table IX point is disowned by the paper and is kept,
+      flagged, and reported with and without.
+
+      SCOPE, DECIDED BEFORE TRANSCRIPTION: the theory of journal pages 1368-1376 and
+      Tables II-XI, XIII-XXII, plus Table XXV solely to exercise eq. (37) on a third
+      adsorbent. Tables I, XII, XXIII and XXIV - outgassing inventories and the
+      platinum oxygen/carbon-monoxide bookkeeping - are scoped out and not transcribed.
+
+      FOUR PRINTED DEFECTS, REPORTED AND NONE REPAIRED: eq. (15)'s logarithm, which
+      gives t_half = 0 where eq. (16) two lines below gives tau ln2/(alpha(1+sigma1
+      mu)) - established by MARCHING eq. (14) rather than by asserting it, and the
+      one-character correction is labelled an inference; Table IV's b = 58.3, where the
+      two observations (57.4937) and the paper's own b' = 100.0 (57.5000) agree to
+      0.011 % and the printed value is 1.40 % from both; Table XX's beta = 0.36 for
+      methane on glass, where the paper's own N0 and monolayer count give 0.4571 and
+      where the printed value uniquely breaks the paper's own ordering claim; the pair
+      "(100 bars) ... 0.20" on journal page 1384, where 0.20 corresponds to 25.641 bars
+      under the paper's own a. AND, FILED SEPARATELY BECAUSE IT IS NOT AN ERROR AGAINST
+      LANGMUIR: the sigma column of Tables XVIII-XX runs low, 18 of 21 printed values
+      below the computed one, worst 3.77 %. The three worst rows are exactly the rows he
+      prints to one or two significant figures (10,000; 10,000; 26,000), and truncating
+      at each cell's own printed granularity reproduces 15 of 21 cells against 11 for
+      rounding - he discarded figures, he did not miscompute them.
+
+      THE PDF'S TEXT LAYER RENDERS EQ. (37) AS 25.2e16 WHERE THE PAGE PRINTS 25.2e15.
+      That is a factor ten in every surface coverage and would put 17 of 20 entries
+      above the monolayer bound, reversing the paper's conclusion. THAT COUNT IS NOT
+      TYPED ANYWHERE ON THE PAGE: it is counted from the data in section 6.5 and the
+      break row prints the same 17 (the three that would survive are the mica 155 K
+      oxygen, argon and nitrogen entries, each an order of magnitude clear of the
+      threshold). It is carried as a break row.
+    page: pages/J1.1-langmuir-isotherm/
+    related: [J1.3, J1.5, C1.1, A2.1]
+
   - id: J1.3
     slug: bet-multimolecular-adsorption
     title: "BET 1938: the theory that yields the surface, against the theory that has to be given it"

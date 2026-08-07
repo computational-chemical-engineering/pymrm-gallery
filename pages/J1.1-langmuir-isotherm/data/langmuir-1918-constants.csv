@@ -1,0 +1,54 @@
+# Langmuir, I. (1918), J. Am. Chem. Soc. 40(9) 1361-1403.
+# The isotherm constants Langmuir prints in each table's HEADER (a, b, or the
+# two-term a1,b1,a2,b2), joined to the derived columns of TABLES XVIII, XIX and XX.
+# Transcribed 2026-08-07 off a 300 ppi NATIVE render, cropped and read at digit scale.
+#
+# a, b       eq. (31) q = abp/(1+ap): b is the saturation amount in cu. mm., a is 1/(bar).
+#            Obtained by Langmuir by DRAWING a straight line through p/q vs p (eq. 32),
+#            not by least squares. Tables XIII and XVI instead use eq. (33),
+#            q = b1 + a2 b2 p/(1 + a2 p): term 1 is already saturated below the
+#            lowest pressure reached, so a1 is not determinable and is printed as "...".
+# n_obs      the "Number of obs." column of Tables XVIII-XX, verifiable against the
+#            number of Bulb A rows this table has in langmuir-1918-isotherms.csv.
+# b_prime    the same b converted to cu. mm. per SQUARE METRE of adsorbent (b/s).
+# sigma_s    the "relative life" in seconds, eq. (38) sigma = 22860 a sqrt(MT).
+# N0         elementary spaces per sq. cm., eq. (37) N0 = 25.2e15 b/s, in units of 1e15.
+# beta       N0 divided by the number of molecules in a close-packed monomolecular
+#            layer computed from the LIQUID density (0.66, 0.63, 0.66, 0.77, 0.77,
+#            0.61 x 1e15 for N2, CH4, CO, Ar, O2, CO2). External, non-adsorption input.
+# model      eq31  = q = abp/(1+ap), the single-site Langmuir isotherm;
+#            eq33  = q = b1 + a2 b2 p/(1+a2 p), Tables XIII and XVI (a1 not determinable);
+#            eq19  = two-term Case II sum, Table IX only, printed BESIDE its own eq31 fit.
+# term       for the two-term rows, which term of eq. (19)/(33) this row is.
+#
+# a_header    a as printed in the isotherm table's OWN header (Tables II-XVII).
+# a_summary   a as restated in the summary tables XVIII-XX. Three rows disagree in
+#             the last figure (O2/mica 0.0805 vs 0.080; Ar/glass 0.0511 vs 0.051;
+#             CH4/glass 0.0638 vs 0.064). Both are carried; neither is repaired.
+#
+# blank cells are printed as "...." in the source (not determinable), NOT as zero.
+table,gas,adsorbent,T_K,model,term,n_obs,a_header,a_summary,b_cu_mm,b_prime_cu_mm_per_m2,sigma_s,N0_e15,beta
+II,N2,mica,90,eq31,,4,0.085,0.085,32.5,56.5,97000,0.142,0.22
+VII,N2,mica,90,eq31,,11,0.156,0.156,38.9,67.6,178000,0.170,0.26
+III,CH4,mica,90,eq31,,5,0.107,0.107,97,169.0,92000,0.426,0.68
+VIII,CH4,mica,90,eq31,,7,0.168,0.168,123,214.0,145000,0.54,0.86
+IX,CH4,mica,90,eq31,,10,0.123,0.123,108.0,,,,
+IX,CH4,mica,90,eq19,1,10,0.19,0.19,83.2,145.0,164000,0.365,0.58
+IX,CH4,mica,90,eq19,2,10,0.0181,0.018,35.4,61.5,15600,0.155,0.25
+IV,CO,mica,90,eq31,,2,0.65,0.65,58.3,100.0,740000,0.252,0.38
+V,Ar,mica,90,eq31,,2,0.065,0.065,30.0,52.2,88000,0.131,0.17
+VI,O2,mica,90,eq31,,4,0.0805,0.080,20.0,34.8,97000,0.088,0.11
+X,N2,mica,155,eq31,,4,0.0176,0.0176,11.8,20.5,26000,0.052,0.08
+X,CH4,mica,155,eq31,,4,0.009,0.009,25.0,43.5,10000,0.109,0.17
+X,CO,mica,155,eq31,,2,0.0069,0.0069,20.0,34.8,10000,0.088,0.13
+X,Ar,mica,155,eq31,,2,0.024,0.024,11.2,19.5,43000,0.049,0.06
+X,O2,mica,155,eq31,,2,0.043,0.043,4.7,8.2,69000,0.021,0.03
+X,CO2,mica,155,eq31,,4,0.071,0.071,65.0,113.0,134000,0.284,0.47
+XI,CO2,mica,155,eq31,,10,0.085,0.085,57.3,99.0,160000,0.250,0.41
+XIII,CO,glass,90,eq33,1,7,,,6.6,33.6,,0.085,0.13
+XIII,CO,glass,90,eq33,2,7,0.083,0.083,16.2,82.4,95000,0.208,0.32
+XIV,Ar,glass,90,eq31,,7,0.0511,0.051,11.8,60.0,70000,0.151,0.20
+XV,O2,glass,90,eq31,,7,0.079,0.079,8.46,43.0,97000,0.108,0.14
+XVI,CH4,glass,90,eq33,1,7,,,2.0,10.2,,0.026,0.04
+XVI,CH4,glass,90,eq33,2,7,0.0638,0.064,22.4,114.0,55000,0.288,0.36
+XVII,N2,glass,90,eq31,,2,0.088,0.088,13.5,69.0,101000,0.174,0.26

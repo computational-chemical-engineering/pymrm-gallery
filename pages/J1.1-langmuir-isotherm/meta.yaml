@@ -1,0 +1,213 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J1.1
+slug: langmuir-isotherm
+title: "Langmuir 1918: the isotherm that could not have proved its own conclusion"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 13
+datasets:
+  - langmuir-1918-isotherms.csv
+  - langmuir-1918-constants.csv
+  - langmuir-1918-lives.csv
+  - langmuir-1918-platinum-N0.csv
+  - langmuir-1918-printed-claims.csv
+
+validation:
+  - "THE FIT IS A FIT AND IS LABELLED ONE EVERYWHERE. Langmuir obtained a and b by DRAWING a straight line through p/q against p (eq. 32), so the q_cal columns of Tables II-XVII are a two-parameter fit compared against its own training data. Eqs. (31), (33) and the two-term (19) at the printed constants reproduce all 101 printed q_cal cells to 0.434 cu.mm at worst and 0.086 at the median table, and THAT NUMBER IS REPORTED AS A TRANSCRIPTION CHECK AND NEVER AS EVIDENCE FOR THE MODEL. Null baselines are printed beside every agreement quoted anywhere on the page: a zero-parameter constant is 3.7 to 87 times worse than Langmuir in RMS and a one-parameter proportional law 1.8 to 27 times worse. The graphical method's own cost is also measured: on Table VII the drawn line gives RMS 0.37229 cu.mm against the least-squares optimum's 0.350187, i.e. 6.31 % worse"
+  - "THE DISCRIMINATION, AND IT IS THE PAPER'S OWN. Table VII carries two extra columns in which Langmuir fits FREUNDLICH'S q_F = 8.4 p^0.417 to the same eleven points with the same number of parameters, and prints the residuals beside his own. That contest can fail, so it is reproduced with BOTH forms refitted optimally - neither of Langmuir's two fits is the least-squares optimum, and a rival should be beaten at its best. The best two-parameter Freundlich is 3.8235 times worse in RMS than the best two-parameter Langmuir on Table VII, and worse on 13 of the 14 tables with four or more observations (median ratio 2.1211). THE ONE EXCEPTION IS TABLE XIII, where Freundlich is 1.99 times BETTER - and that is precisely the table journal page 1388 says 'do not give a straight line when p/q_obs is plotted against p and therefore do not satisfy Equation 31'. Langmuir replaces it with his eq. (33), which does fit (RMS 0.1159 against Freundlich's 0.5626) but has three parameters to Freundlich's two, and the page does not count it as a win. Every fit is root-found TWICE, with pymrm's newton and with a bracketing Brent solve; over 29 fits the worst disagreement is 3.4e-11. THAT NUMBER IS READ NARROWLY ON THE PAGE: both solvers are handed the SAME objective, the SAME profiled amplitude and the SAME central-difference derivative and differ only in how they iterate, so it is a ROOT-FINDER CROSS-CHECK and not an independent computation. The independence that matters here is in the OBJECTIVE - these fits are on q, Langmuir's were on the p/q linearisation - and the break row that refits his way moves the discrimination metric from 2.1211 to 1.9137"
+  - "THE OUT-OF-SAMPLE BOUND, WHICH IS WHERE THE PAPER'S CONCLUSION ACTUALLY RESTS. Nothing in the chain b -> b' -> N0 -> beta is adjustable: b comes from the isotherm, s from a ruler, eq. (37) from Avogadro's number, and the denominator from LIQUID DENSITIES, which contain no adsorption at all. Journal page 1391 claims 'the observed values of N0 are all less than these calculated results' and it holds on all twenty entries. THE HONEST MARGIN IS THIN AND THE PAGE SAYS SO: the tightest row (methane on mica, Table VIII) is beta = 0.857143, leaving 16.7 % of headroom. The correction goes the right way - the paper itself says the mica figures are 10 to 30 % too high because the blank bulb was never subtracted, which puts that worst beta between 0.600 and 0.771 - and no correction is applied anywhere on the page"
+  - "THE PAGE'S OWN RESULT, PROVED SYMBOLICALLY AND CHECKED NUMERICALLY: LANGMUIR'S CASE VI IS THE BET ISOTHERM, TWENTY YEARS EARLY. Eqs. (26), (29) and (30) of this 1918 paper, with Langmuir's own stated assumption that sigma_3 = sigma_4 = ... = sigma_2, become c x / ((1-x)(1+(c-1)x)) under the change of variables the paper itself supplies - x = sigma_2 mu, which is p/p0 by eq. (39), and c = sigma_1/sigma_2. The sympy residual is identically zero. FIVE separate symbolic checks, each of which can fail and each with a break row that moves it: eq. (26) really follows from eqs. (22)-(25); eq. (30)'s a, b AND c really are the coefficients of eq. (29), three printed expressions the paper never derives; both of the paper's collapse claims about eq. (30) hold exactly; and the SAME occupancy ladder summed TO INFINITY IN CLOSED FORM, with no truncation anywhere, gives c x/((1-x)(1+(c-1)x)) exactly, so the identity does not depend on stopping eq. (29) at b. THE COLLAPSE AND ITS CONSEQUENCE ARE BOTH LANGMUIR'S OWN WORDS, printed immediately under eq. (30) on journal page 1375 and read on a 300 ppi crop: 'If sigma_1 and sigma_2 are different, but all subsequent values of sigma (i. e., sigma_3, sigma_4, etc.) are equal to sigma_2, then all the coefficients in (29) after b are zero' - he states the assumption AND states that the series terminates under it, which is what licenses the truncation. Journal page 1374 carries the weaker physical motivation for the same collapse and the page quotes both, resting on the stronger. A numerical ladder summed term by term, sharing no algebra with either closed form, returns the same answer to 5.6e-16 at 4000 layers and 2.93e-04 at 20. BET's own Section II is headed 'Generalization of Langmuir's Theory to Multimolecular Adsorption' (read on a 300 ppi crop of journal page 311 of the 1938 paper), so the relation is not this page's discovery; what is new is that Langmuir's OWN closed form already IS that generalisation"
+  - "AND THEREFORE THE ISOTHERM COULD NOT HAVE DECIDED THE QUESTION IT IS FAMOUS FOR DECIDING. Eq. (39) says sigma mu = 1 at saturation, so Table XXI's liquefied-gas lives invert through eq. (3) to saturation pressures the paper never prints (p0 for nitrogen at 90 K comes out 3.8247e6 bars = 3.7747 atm). EVERY PRESSURE IN THE ENTIRE PAPER LIES BELOW p/p0 = 1.5035e-3, and at that point Case VI and Case I differ by 0.16022 %. TWO SCOPES ARE KEPT APART AND BOTH ARE COMPUTED. The separation column needs a fitted isotherm and therefore exists only for the 18 eq.(31) entries of Bulb A - Tables XIII and XVI use eq. (33) and the blank bulb A' ran higher than A on six tables - while p/p0 needs neither a fit nor a bulb and is computed over EVERY pressure printed in the paper: 30 table/gas/bulb entries, 124 pressures, both isotherm forms and both bulbs. Widening the scope does not move the maximum (the eq.-33 tables reach 5.07e-4 and the blank bulb the same, against the headline 1.5035e-3 from Table XI). The ratio of the two isotherms is (1+cx)/((1-x)(1+(c-1)x)), whose derivative has numerator c(c-1)x^2 + 2(c-1)x + 2 > 0 for c > 1, so it is STRICTLY INCREASING and the maximum over a table is at that table's highest pressure - an argument, not a sampled maximum, and the break row that reads it at the mean pressure instead moves it by a factor 4. Measured against the observational scatter: over the 18 entries that can host the comparison the smallest ratio of scatter to theory separation is 12.197 (Table X, carbon dioxide) and on Table VII, the best nitrogen set, it is 1104.4. The monolayer and multilayer isotherms are not distinguishable by these data by one to three orders of magnitude"
+  - "AND THE INPUT A SCEPTIC SHOULD ATTACK FIRST IS ATTACKED ON THE PAGE. The recovered p0 come from Table XXI, and Langmuir does not print the vapour pressures behind it; the 155 K entries in particular invert to tens of atmospheres for the permanent gases. The conclusion does not depend on them and the page measures that rather than asserting it. The headline maximum p/p0 = 1.5035e-3 comes from Table XI, carbon dioxide at 155 K, whose recovered p0 is the SMALLEST in the whole set (0.1129 atm) and whose Table XXI life (16.5 s) is the largest. DISCARDING EVERY 155 K ROW OUTRIGHT moves the maximum p/p0 DOWN to 7.736e-4, the largest departure down to 0.08226 % and the smallest scatter-to-separation ratio UP to 31.1 - the conclusion is unchanged and in fact strengthened. And the four 155 K permanent-gas rows, precisely the ones with the largest recovered p0, carry the SMALLEST relative pressures in the paper (max 1.17e-6), so discarding them can only lower the maximum. All four sensitivity quantities are reported metrics with their own break rows"
+  - "THE SHARPER VERSION OF THE SAME TEST, WHICH THE PAGE ALSO RUNS: GIVE CASE VI BOTH PARAMETERS AND LET IT TRY. Everything above compares the two isotherms at Langmuir's own constants, and a sceptic can answer that Case VI was never allowed to fit. Both models are therefore refitted to Table VII from scratch, two free parameters each, linear amplitude profiled out exactly, located on a 4000-point log grid and then Brent-refined so neither is a sampled optimum. The best Case VI (BET, free c and v_m) reaches RMS 0.3501824101 against the best Case I's 0.3501868166 - GIVEN COMPLETE FREEDOM THE MULTILAYER MODEL IMPROVES THE FIT BY 1.26 PARTS IN 100000 - and it does it by BECOMING Case I: the fitted c = 605823 against a p0 = 605812, and the fitted v_m = 38.89318 against b = 38.89362. This confirms the conclusion by a route that never mentions p/p0 separations. THE BREAK ROW SHOWS THE TEST HAS POWER: fed the same eleven pressures a curve Case VI generated at p/p0 up to 0.3, the ratio collapses from 0.999987 to 9.2e-12. The Case I side of it is also a SECOND, INDEPENDENT ROUTE to the fit of section 6.6 - a different objective assembly and a different search, no derivative at all - and the two optima agree to 2.2e-15"
+  - "AND THE DIRECTION THAT WOULD WEAKEN THE RESULT, WHICH A SENSITIVITY THAT ONLY DROPS ROWS NEVER PROBES. At 155 K the 'liquefied gas' of eq. (39) is a SUPERCOOLED liquid for carbon dioxide; eq. (39) and BET's p0 both mean the liquid, so the page's reading is the self-consistent one, but the honest question is how wrong it would have to be. ROOT-FOUND on the exact expression rather than swept: parity (scatter = separation) on the tightest entry needs the recovered p0 to be a factor 12.145 TOO HIGH, and a two-significant-figure life in Table XXI cannot be wrong by a factor 12. The page also says what that number is NOT: at these x the separation is very nearly proportional to 1/p0, so the factor lands within 0.4 % of the scatter/separation ratio itself and is that same ratio restated in the units a sceptic of Table XXI would use, not independent information"
+  - "THE SEPARATION POINT ROOT-FOUND TWO INDEPENDENT WAYS. One per cent separation is reached at p/p0 = 0.00989933 by a bracketing root-find on the exact finite-c ratio, against the closed form 1/101 = 0.00990099 valid as c -> infinity where the ratio collapses to 1/(1-x); the difference 1.68e-4 is the finite-c correction and is reported as such rather than as an error. That pressure is 1114 times the highest Langmuir reached on Table VII. READING IT OFF A 40-POINT LOG GRID INSTEAD gives 0.010519, wrong by 6.26 % - the defect this repository has twice published - and both numbers are printed in the same sentence"
+  - "A PRINTED EQUATION THAT DOES NOT SURVIVE, PROVED IN THE F2.3 ORDER BY INTEGRATING THE ONE ABOVE IT. Eq. (15) as printed is t = N0/(N nu1 (1 + sigma1 mu)) ln[theta'/(theta1 - theta')]. Put theta' = theta1/2 into it, which is exactly what Langmuir says he does two lines below, and the logarithm is ln 1 = 0, so eq. (15) gives t_half = 0 and not eq. (16). It also gives t = -infinity at theta' = 0, where the integration starts. PIN WHAT IS NOT FREE FIRST: eq. (14) is an ODE, eq. (16) is printed, eq. (10) and eq. (7) are printed, and the only free thing left is the numerator inside the logarithm. Putting theta_1 there - the loss of a subscript, a one-character change - makes t(0) = 0 and returns eq. (16) exactly. The page does not argue this: it MARCHES eq. (14) with a newton-solved implicit step and compares against both branches, agreeing with the corrected one to 1.78e-3 at 1600 steps with an observed order 0.995 in the time step (the one axis that carries error here) and being unable to reach the printed one at all. The half-coverage time is then ROOT-FOUND ON THE MARCHED TRAJECTORY, giving 0.110160 against eq. (16)'s 0.109954 - a DISCRETISATION gap of 1.875e-3 that halves as dt halves (1.51e-2, 7.52e-3, 3.75e-3, 1.88e-3 over 200 to 1600 steps, observed order 1.00), and that is the independent numerical confirmation of eq. (16). The cell ALSO inverts the closed form at half coverage and gets 2.2e-16, and LABELS THAT AN ALGEBRAIC IDENTITY THAT COULD NOT HAVE FAILED, evidence for nothing, kept only because it closes the algebra of eqs. (7), (10), (14) and (16). REPORTED, NOT REPAIRED; eq. (15) is quoted verbatim on the page and the correction is labelled an inference. Nothing the paper concludes is affected, because the paper never measures a rate and no number in it depends on eq. (15)"
+  - "FOUR FURTHER PRINTED DEFECTS, ALL REPORTED AND NONE REPAIRED. (a) TABLE IV's b = 58.3. Tables IV, V and XVII have exactly TWO observations each, so a straight line through the p/q plot is not fitted but DETERMINED. Table IV's two points solve to b = 57.4937, and the paper's own b' = 100.0 requires b = 57.5000 - two independent routes agreeing to 0.011 % - while the printed 58.3 is 1.40 % away from both. Tables V and XVII pass the same test (printed b within 1.63 %). Table IV is also the only mica table with no q_cal column printed. (b) TABLE XX's beta = 0.36 for methane on glass, where the paper's own N0 = 0.288e15 and its own methane monolayer count 0.63e15 give 0.4571. Proved twice: the beta identity is exact on 22 of the 23 rows, and journal page 1391's claim that the adsorption order 'is the same in all three sets of experiments ... as indicated by b\", N0 or beta' HOLDS under b' and N0 in all three sets and under the recomputed beta in all three, but BREAKS in one set under the printed beta. (c) The pair '(100 bars) ... 0.20' on journal page 1384. For eq. (31), d ln q/d ln p = 1/(1+ap) exactly; with Table VII's own a = 0.156 the printed 0.684 at 3 bars is reproduced (0.681199, -0.41 %), but 0.20 corresponds to 25.641 bars, not to the printed 100, where the same curve gives 0.060241 - the printed value is 3.32 times larger. Two readings are printed and neither adopted. AND, FILED SEPARATELY FROM THOSE FOUR BECAUSE IT IS NOT AN ERROR AGAINST LANGMUIR: the sigma column of Tables XVIII-XX runs systematically low. Eq. (38) reproduces all 21 cells to 3.77 % and EIGHTEEN of the 21 printed values lie below the computed one, mean -0.77 %. The pattern is real, but the three worst rows (-3.77, -2.40, -1.91 %) are exactly the rows Langmuir prints to ONE OR TWO significant figures (10,000; 10,000; 26,000), and truncating the computed value at each cell's own printed granularity reproduces 15 of the 21 cells against 11 for rounding. He discarded figures; he did not miscompute them, and the page says so rather than counting it as a fifth defect"
+  - "THE IDENTITY WEB, WHICH IS WHAT LOCATES THOSE DEFECTS. Tables XVIII-XX are five columns deep and every column after the second is computed from the one before it by a printed equation, so a defect breaks the chain at exactly one link. b' = b/s recovers the printed adsorbent area independently from every row: 21 of 23 rows give it to 0.48 % (median mica 5747.4 against the printed 5750, median glass 1964.9 against 1966), and the two that do not are the Table IV row (+1.39 %) and the Table XI row (+0.66 %). eq. (37) reproduces N0 on all 23 rows to 1.63 %, and on a THIRD adsorbent - the 312 sq.cm. of platinum foil in Table XXV, against 5750 of mica and 1966 of glass - all eight cells reproduce exactly. Table XXII is the ratio of the adsorbed and liquefied lives: eleven unambiguous cells reproduce to 2.27 %, and on the three cells where a gas has more than one adsorbed sigma THE PAPER DOES NOT SAY HOW THEY WERE COMBINED, so the page measures it (geometric mean 1.68 %, arithmetic 4.00 %) and states the geometric mean as a reconstruction of an unprinted basis"
+  - "THE FOUR CONSTANTS THAT ARE NOT FREE, AND THE TEXT-LAYER TRAP THEY CAUGHT. 43.75e-6 must be 1/sqrt(2 pi R), 22860 must be its reciprocal, 4.16e-8 must be pV/RT at 20 C and 760 mm, and eq. (37)'s 25.2e15 must be N times that; the worst residual in the chain is 0.136 %. THE PDF'S TEXT LAYER RENDERS EQ. (37) AS 25.2e16, which is a factor ten in every N0 and every beta on the page and would put 17 of 20 entries above unity, reversing the paper's conclusion - and that count is NOT typed anywhere, the notebook counts it from the data in section 6.5 and the break table prints the same 17. The page prints eq. (37) as 10^15, read off a 300 ppi crop, and carries the factor ten as a break row. The bar unit is checked the same way: 100 bars comes out 0.0750 mm Hg against Langmuir's own parenthetical 'approximately 0.1 mm of mercury'"
+  - "a 64-row defect-injection table covering ALL FIFTY-EIGHT reported metrics, asserted key-for-key against agreement.json in both directions (reported-but-never-broken: none; broken-but-not-reported: none), in four families - transcription defects (a digit transposition in a q_cal cell and in a q_obs cell, a mica area transposed, Avogadro transposed, monolayer counts swapped between gases, a dropped isotherm row), model defects (each coefficient of eq. (30) mistyped in turn, sqrt(MT) -> MT in eq. (38), theta_0 dropped from eq. (22), the ladder's bare fraction dropped, eq. (15) taken as printed, Table XXI inverted), method defects (fitting on the linearisation instead of on q, Freundlich not refitted, the 1 % point sampled instead of root-found, the grid refined, the separation read at the mean pressure instead of the maximum, a midpoint march instead of implicit Euler, newton's tolerance loosened) and repair defects (each of the two printed values this page reports rather than repairs, applied as a repair, to show what the repair would have hidden). TWO ROWS DO NOT MOVE THEIR METRIC and only those two are labelled STRUCTURAL: rescaling every b' cannot move a scale-free ratio, and renaming the sigma symbols cannot move a symbolic identity. Both metrics they name are separately covered by rows that DO move them"
+  - "FOURTEEN OF THE FIFTY-EIGHT REPORTED METRICS SIT BELOW check_agreement.py's ABS_FLOOR = 1e-12 and CI therefore does not compare them; the page names every one and names their above-floor companions. They are the nine symbolic residuals (all exactly 0, including the infinite-ladder identity), the 4000-layer ladder (5.6e-16), and four integer counts that are zero because nothing failed (n_obs_mismatches, pt_N0_max_abs_dev, beta_n_above_one, order_breaks_recomputed_beta). The companions are the break rows that move each symbolic residual to a finite value and caseVI_ladder_20layer_rel = 2.93e-04, the SAME ladder truncated, above the floor, testing the same algebra. Eighty further quantities are computed and printed on the page but deliberately NOT reported as metrics, because CI comparing counts, cardinalities, intermediates and alternative readings would manufacture regressions rather than catch them"
+  - "every number quoted in the page's prose is re-derived in a final audit cell and compared against what the cells printed; that cell RAISES on any mismatch, so the markdown cannot drift from the output. 49 numbers checked. Two consecutive executions give identical cell content, identical figures and an identical agreement.json (verified by hashing the outputs of both runs)"
+
+adds: >
+  Nothing to the Langmuir isotherm, and the page says so in the section where a
+  reader would expect a solver. Eqs. (9), (26), (29), (31) and (33) are closed
+  forms in one variable; there is no grid, no time step in space, no boundary
+  condition and no transport anywhere, and most of the notebook would run with
+  pymrm uninstalled, exactly as on A1.6, A1.1 and J1.3. newton and NumJac do
+  three specific jobs and each was chosen because the cheap alternative is WRONG,
+  not slow.
+
+  (1) A FIT THAT SHARES NO ALGEBRA WITH THE PAPER'S FIT. Langmuir drew a line
+  through p/q against p, which is linear least squares on a TRANSFORMED variable,
+  and the transform is not innocent - it reweights the residuals towards the
+  low-pressure points, where q is small and p/q is most sensitive. In both eq.
+  (31) and Freundlich's law the amplitude enters linearly, so it is eliminated
+  exactly and the stationarity condition in the one remaining parameter is
+  root-found with newton on a NumJac((1, 1)) Jacobian, and again with a
+  bracketing Brent solve; the two agree to 3.4e-11 over 29 fits. READ THAT
+  NARROWLY, AND THE PAGE DOES: both solvers are handed the same objective, the
+  same profiled amplitude and the same central-difference derivative and differ
+  only in how they iterate, so it is a ROOT-FINDER CROSS-CHECK, not an
+  independent computation of the fit. The independence in this item is the one in
+  its heading - fitting on q rather than on Langmuir's p/q linearisation.
+  Fitting by Langmuir's linearisation instead MOVES the page's
+  discrimination metric (median 2.1211 -> 1.9137), which is the break row that
+  shows this matters. It also lets Freundlich be beaten at ITS best rather than
+  at Langmuir's rendering of it, which is the only version of that contest worth
+  reporting - his own 8.4 p^0.417 is so far from optimal that using it would make
+  the median ratio 29.4 instead of 2.12.
+
+  (2) THE RATE EQUATION INTEGRATED INSTEAD OF QUOTED. Eq. (15) is printed
+  wrongly. The way to establish that without asserting it is to integrate eq.
+  (14), which march_eq14 does with a newton-solved implicit step. The march
+  reaches the corrected branch to 1.78e-3 at 1600 steps, converging at first
+  order in dt (observed 0.995, and dt is the one axis that carries error here),
+  and cannot reach the printed branch at all, because the printed branch puts
+  t = -infinity at the start of the integration. That is a proof rather than a
+  reading of the glyph. The half-coverage time is then root-found ON THE MARCHED
+  TRAJECTORY (0.110160 against eq. (16)'s 0.109954, gap 1.875e-3, halving with
+  dt, observed order 1.00); the inversion of the CLOSED FORM is shown beside it
+  and is labelled an algebraic identity that could not have failed, not a fourth
+  route.
+
+  (3) ROOT-FINDS WHERE A SWEEP WOULD HAVE BEEN WRONG. The relative pressure at
+  which Case VI departs from Case I by 1 % is root-found; reading it off a
+  40-point log grid gives a value 6.26 % out, and both numbers are printed in the
+  same sentence. The pressures corresponding to the printed log-log exponents are
+  root-found for the same reason, the p0 error that would bring scatter and
+  separation to parity is root-found rather than swept, and the maximum of the
+  departure over each table is licensed by a proof of monotonicity rather than by
+  sampling.
+
+  (4) AND THE THING THAT IS NOT PYMRM AT ALL, AND IS THE MOST USEFUL OUTPUT ON
+  THE PAGE. Langmuir's Case VI, eqs. (29) and (30), IS the BET isotherm. That
+  needed sympy and a change of variables the paper itself supplies through eq.
+  (39). It converts the paper's central conclusion from "the isotherm shows the
+  film is one molecule thick" into "the isotherm could not have shown anything of
+  the kind, and the film being one molecule thick is what beta shows". The
+  separation between Langmuir's two theories, over his entire data set, is at
+  most 0.16 %, against observational scatter 12 to 1100 times larger.
+
+  WHAT THE PAGE DELIBERATELY DOES NOT DO: it does not fit eq. (29) to Langmuir's
+  data. That would be meaningless - at p/p0 < 1.5e-3 the parameter c is not
+  identifiable and any fit would return the Case I answer with an arbitrary c.
+  Saying so is the finding.
+
+agreement: >
+  Against printed results, all reproduced from the paper's own inputs. GOODNESS
+  OF FIT, labelled as such and never reported as evidence: eqs. (31)/(33)/(19) at
+  the printed constants reproduce all 101 printed q_cal cells to 0.434 cu.mm.
+  INTERNAL IDENTITIES, which can and do fail: the four-constant chain to 0.136 %;
+  b' = b/s recovering the printed adsorbent area on 21 of 23 rows to 0.48 %;
+  eq. (37) on 23 rows to 1.63 % and on all eight platinum cells exactly; the beta
+  column exact on 22 of 23; eq. (38) on 21 cells to 3.77 %; Table XXII on
+  fourteen cells to 2.27 %; the monolayer chain 35.5 -> 3.88e-8 cm -> 0.66e15 to
+  0.45 %; the "Number of obs." column against the transcription on all twenty
+  tables.
+
+  DISCRIMINATION RATHER THAN FIT, with null baselines printed beside it: the best
+  two-parameter Freundlich is 3.8235 times worse in RMS than the best
+  two-parameter Langmuir on Table VII and worse on 13 of 14 tables (median
+  2.1211), the one exception being the table the paper itself excludes; the
+  zero-parameter and one-parameter nulls are 19.4 and 26.8 times worse on the
+  same data, and never better than 3.7 and 1.8 anywhere.
+
+  OUT-OF-SAMPLE BOUND: beta < 1 on all twenty entries, worst 0.857143, i.e. only
+  16.7 % of headroom, and the paper's own uncorrected-blank caveat moves that
+  worst value to 0.600-0.771.
+
+  HEADLINE COMPUTED SYMBOLICALLY AND CONFIRMED NUMERICALLY: Langmuir's Case VI
+  (eqs. 29+30 with sigma_3.. = sigma_2) minus the BET isotherm is identically
+  zero in sympy, and a term-by-term ladder sharing no algebra with either closed
+  form agrees to 5.6e-16 at 4000 layers. The 1 % separation point is root-found
+  at p/p0 = 0.00989933 against the c -> infinity closed form 1/101, differing by
+  1.68e-4 (the finite-c correction). Highest relative pressure anywhere in the
+  paper 1.5035e-3; largest Case VI vs Case I departure 0.16022 %; smallest ratio
+  of observational scatter to that separation 12.197, and 1104.4 on Table VII.
+
+  PRINTED DEFECTS, reported and none repaired: eq. (15)'s logarithm, which gives
+  t_half = 0 where eq. (16) two lines below gives tau ln2 / (alpha(1+sigma1 mu));
+  Table IV's b = 58.3, where the two observations and the paper's own b' both
+  give 57.49-57.50; Table XX's beta = 0.36 for methane on glass, where the
+  paper's own N0 and monolayer count give 0.4571 and where the printed value
+  breaks the paper's own ordering claim; the pair "(100 bars) ... 0.20", where
+  0.20 corresponds to 25.641 bars under the paper's own a; and the systematic
+  truncation of the sigma column (18 of 21 printed values below the computed one).
+
+caveats: >
+  TIER 5, AND ONLY ONE COLUMN OF IT IS MEASUREMENT. q_obs is measured - pressures
+  read on a McLeod gauge, gas volumes obtained by difference. Everything else in
+  the paper (a, b, b', sigma, N0, beta, and Tables XXI, XXII, XXV) is a constant
+  Langmuir DERIVED from those measurements, so reproducing one of them is
+  reproduction and never validation, and the page says so at every such
+  comparison.
+
+  THE FIT IS A FIT. The q_cal agreement of Tables II-XVII is a two-parameter fit
+  compared against its own training data. It is stated as a goodness of fit in
+  the notebook, in this file, in models_entry.yaml, in README.md and on the case
+  yaml; it is never reported as an agreement metric; and a null baseline is
+  printed beside every agreement quoted anywhere on the page.
+
+  THE MICA NUMBERS ARE UNCORRECTED. Journal page 1385: "The results therefore
+  obtained from bulb A are to be considered as being 10 to 30% too high", because
+  the blank bulb A' adsorbed measurably and no subtraction was made. Every mica
+  beta on this page is therefore an over-estimate - the direction that helps
+  Langmuir's conclusion - and no correction is applied anywhere. One point is
+  disowned by the paper (q at p = 12.8 in Table IX, "undoubtedly in error"); it
+  is kept, flagged, and the discrimination is reported with and without it
+  (2.2453 -> 3.1191).
+
+  SCOPE, DECIDED BEFORE TRANSCRIPTION. Forty-three journal pages, twenty-five
+  tables. This page is about the isotherm and the constants derived from it: the
+  theory of journal pages 1368-1376 and Tables II-XI, XIII-XXII. Table XXV is
+  carried for one reason only - it exercises eq. (37) on a third adsorbent - and
+  Tables I, XII, XXIII and XXIV (outgassing inventories and the platinum
+  oxygen/carbon-monoxide bookkeeping) are SCOPED OUT AND NOT TRANSCRIBED. Journal
+  pages 1393-1401 are irreversible chemisorption with no isotherm in them.
+
+  ONE EXTERNAL INPUT, AND IT IS WHAT MAKES BETA A TEST. The monolayer counts of
+  journal page 1391 come from LIQUID DENSITIES, and only nitrogen's molecular
+  volume (35.5 cu. cm.) is printed. The other four are RECOVERED by inverting the
+  printed counts and are labelled recoveries wherever they appear; nothing on the
+  page depends on them, because beta uses the printed counts. Table XXII's
+  combining rule for the three multi-sigma cells is likewise not printed and the
+  geometric mean is stated as a reconstruction, not as the paper's rule.
+
+  NO CURVE IS DIGITISED AND NO FIGURE IS USED FOR ANYTHING. The paper's only
+  figure with content is Fig. 1, a schematic checkerboard of surface atoms with
+  no numbers on it. No page image is committed anywhere.
+
+  ORIGINS CITED BUT NOT CONSULTED, and nothing on the page derives from any of
+  them: Freundlich, Kapillarchemie (1909), the rival isotherm, read only through
+  Langmuir's own restatement on journal page 1375 and through Table VII's q_F
+  column; Eucken (1914); Bakker (1915); Haber (1914); Knudsen, Ann. Physik 31,
+  205 (1910); Meyer's Kinetic Theory of Gases (1899), the source of eq. (1); and
+  Langmuir's own Part I (This Journal 38, 2221 (1916)) and Part II (39, 1848
+  (1917)), which carry the monomolecular-film evidence this paper leans on.
+
+  THE CROSS-PAGE RELATION TO J1.3, HANDLED WITHOUT LOADING ANYTHING. Brunauer,
+  Emmett & Teller (1938) is on disk and is the subject of J1.3, whose README,
+  meta.yaml and findings were read before this page was built. NO DATASET OF J1.3
+  IS LOADED AND NO NUMBER OF J1.3 IS RETYPED: the identity of section 6.8 is
+  verified against Langmuir's own eq. (30), symbolically, and the only thing
+  taken from the 1938 paper is one section heading read on a 300 ppi crop.
+
+  WHAT THE PAGE DOES NOT SETTLE. It does not show that adsorbed films on glass
+  and mica are one molecule thick; it shows that Langmuir's isotherm data cannot
+  discriminate that from his own multilayer alternative, and that the evidence
+  which does discriminate is beta, whose margin is thin. It says nothing about
+  porous adsorbents, for which Langmuir's own eq. (21) is written and never
+  evaluated. And it is not a rate: adsorption dynamics is J1.5.

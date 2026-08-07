@@ -1,0 +1,60 @@
+dataset_id: langmuir-1918-lives
+title: "Langmuir (1918) Tables XXI and XXII - the relative lives of molecules in liquefied gases, and the increase caused by adsorption"
+status: complete
+
+source:
+  authors: ["Langmuir, I."]
+  year: 1918
+  container: "Journal of the American Chemical Society 40(9) 1361-1403 (September 1918)"
+  doi: "10.1021/ja02242a004"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal pages 1392-1393. TABLE XXI gives sigma for a molecule in the surface of the
+  LIQUEFIED gas at the same temperature, which Langmuir computes from eq. (3) and the
+  saturation vapour pressure: for a liquid in equilibrium with its own vapour eq. (4)
+  becomes alpha mu = nu, i.e. sigma mu = 1 (his eq. 39).
+
+  THOSE VAPOUR PRESSURES ARE NOT PRINTED ANYWHERE IN THE PAPER, and this table is the
+  only route to them. Inverting it - p0 = sqrt(M T) / (43.75e-6 sigma_liq) - is what
+  lets the page compute the relative pressures Langmuir reached, which is the page's
+  central result. The inversion uses only the paper's own eq. (3), its own R and its
+  own Table XXI; no external vapour-pressure data are imported.
+
+  TABLE XXII is stated to be the ratio of the two lives, adsorbed over liquefied.
+  For eleven of its fourteen cells that is one division and it reproduces to 2.27 %.
+  For three of them - nitrogen and methane on mica at 90 K, carbon dioxide on mica at
+  155 K - the gas has two or three adsorbed sigma and THE PAPER DOES NOT SAY HOW THEY
+  WERE COMBINED. The page measures which mean reproduces the printed cell (geometric
+  1.68 %, arithmetic 4.00 %) and states the geometric mean as a RECONSTRUCTION of an
+  unprinted basis, not as the paper's rule.
+
+acquisition:
+  method: table
+  figure: "TABLE XXI (journal page 1392) and TABLE XXII (journal page 1393)"
+  tool: "poppler pdftoppm -r 300 (native), cropped and read at digit scale"
+  procedure: >
+    Rendered at the scan's native 300 ppi and cropped. THE TEXT LAYER WAS NOT USED
+    FOR ANY DIGIT; on Table XXII in particular it destroyed the column alignment
+    entirely, putting the mica-90 K, mica-155 K and glass-90 K values in the wrong
+    columns, and the crop was necessary to recover which is which.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision. Table XXI carries two significant figures,
+    Table XXII two.
+
+columns:
+  - {name: gas, unit: "-", description: "adsorbate"}
+  - {name: sigma_liq_90K_s, unit: s, description: "Table XXI, relative life in the surface of the liquefied gas at 90 K; blank for CO2, which was not measured there"}
+  - {name: sigma_liq_155K_s, unit: s, description: "Table XXI, the same at 155 K"}
+  - {name: ratio_mica_90K, unit: "-", description: "Table XXII, adsorbed sigma over liquefied sigma, mica at 90 K"}
+  - {name: ratio_mica_155K, unit: "-", description: "Table XXII, mica at 155 K"}
+  - {name: ratio_glass_90K, unit: "-", description: "Table XXII, glass at 90 K"}
+
+caveat: >
+  DERIVED, NOT MEASURED, on both tables. Blank cells are printed as "...." in the
+  source, meaning no entry, and must not be read as zero. The saturation pressures
+  the page recovers from Table XXI are RECOVERIES and are labelled as such wherever
+  they appear.

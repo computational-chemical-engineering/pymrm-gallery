@@ -1,0 +1,72 @@
+dataset_id: langmuir-1918-constants
+title: "Langmuir (1918) - the fitted isotherm constants joined to the derived columns of Tables XVIII, XIX and XX"
+status: complete
+
+source:
+  authors: ["Langmuir, I."]
+  year: 1918
+  container: "Journal of the American Chemical Society 40(9) 1361-1403 (September 1918)"
+  doi: "10.1021/ja02242a004"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Journal pages 1382-1391. a and b are read from each isotherm table's own header;
+  b', sigma, N0 and beta from the summary Tables XVIII (mica 90 K), XIX (mica 155 K)
+  and XX (glass 90 K).
+
+  NOT ONE NUMBER HERE IS A MEASUREMENT. a and b were obtained by DRAWING a straight
+  line through p/q against p (eq. 32) - not by least squares - and everything to
+  their right is computed from them by a printed equation: b' = b/s, N0 = 25.2e15 b/s
+  (eq. 37), sigma = 22860 a sqrt(MT) (eq. 38), and beta = N0 divided by a
+  close-packed monolayer count taken from the LIQUID density. Reproducing any of
+  these columns is reproduction, never validation.
+
+  THAT CHAIN IS ALSO WHAT MAKES THE TABLE SELF-CHECKING, and the page uses it that
+  way: every row implies the adsorbent area independently through b' = b/s, so a
+  defect breaks the chain at exactly one link. Two rows do not reduce with the
+  printed areas (Table IV at +1.39 %, Table XI at +0.66 %) and one beta cell does not
+  follow from its own N0 (Table XX, methane, printed 0.36 against 0.4571). Both are
+  REPORTED AND NOT REPAIRED; the CSV carries the printed values.
+
+acquisition:
+  method: table
+  figure: "table headers of TABLES II-XVII, and TABLES XVIII, XIX, XX (journal pages 1390-1391)"
+  tool: "poppler pdftoppm -r 300 (native), cropped and read at digit scale"
+  procedure: >
+    Rendered at the scan's native 300 ppi and cropped table by table. THE TEXT LAYER
+    WAS NOT USED FOR ANY DIGIT. Two cells were zoomed further and confirmed
+    individually because the page's arithmetic depends on them: Table XVIII's
+    b' = 100.0 for carbon monoxide and Table XIX's b' = 99.0 for carbon dioxide, both
+    of which are the rows that fail the b' = b/s identity.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: >
+    None beyond the printed precision: a to two or three significant figures, b to
+    three, b' to three or four, sigma rounded (in fact truncated) to two or three,
+    N0 to two or three decimals of 1e15, beta to two decimals.
+
+columns:
+  - {name: table, unit: "-", description: "Roman number of the isotherm table these constants belong to"}
+  - {name: gas, unit: "-", description: "adsorbate"}
+  - {name: adsorbent, unit: "-", description: "mica (s = 5750 sq. cm.) or glass (s = 1966 sq. cm.)"}
+  - {name: T_K, unit: K, description: "temperature"}
+  - {name: model, unit: "-", description: "eq31 = abp/(1+ap); eq33 = b1 + a2 b2 p/(1+a2 p); eq19 = two-term Case II sum (Table IX only, printed beside its own eq31 fit)"}
+  - {name: term, unit: "-", description: "which term of the two-term forms this row is; blank for single-term rows"}
+  - {name: n_obs, unit: "-", description: "the printed 'Number of obs.' column, checkable against the isotherm CSV"}
+  - {name: a_header, unit: "1/bar", description: "a as printed in the isotherm table's OWN header"}
+  - {name: a_summary, unit: "1/bar", description: "a as restated in Tables XVIII-XX; three rows differ in the last figure and both are carried"}
+  - {name: b_cu_mm, unit: "mm3 at 20 degC and 760 mm", description: "saturation amount for the bulb"}
+  - {name: b_prime_cu_mm_per_m2, unit: "mm3 per m2", description: "b converted to unit adsorbent area, i.e. b/s"}
+  - {name: sigma_s, unit: s, description: "the 'relative life' of an adsorbed molecule, eq. (38)"}
+  - {name: N0_e15, unit: "1e15 molecules per cm2", description: "elementary spaces per sq. cm., eq. (37)"}
+  - {name: beta, unit: "-", description: "N0 divided by a close-packed monolayer count computed from the liquid density"}
+
+caveat: >
+  ALL DERIVED, NONE MEASURED, and the a column in particular is unstable: journal
+  page 1392 says so itself - "the values of a or sigma are much more erratic than
+  those of b or N0 ... even in experiments with the same gas, variable results for a
+  were obtained". The three tables with exactly TWO observations (IV, V, XVII) have
+  a and b fully determined by their data, and the page uses that: Table IV's printed
+  b = 58.3 is 1.40 % from both the two-point solution (57.4937) and from what its own
+  b' = 100.0 requires (57.5000). Reported, not repaired.

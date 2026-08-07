@@ -1,0 +1,52 @@
+dataset_id: langmuir-1918-printed-claims
+title: "Langmuir (1918) - the scalars this page checks that live in prose, in an equation or in a table header"
+status: complete
+
+source:
+  authors: ["Langmuir, I."]
+  year: 1918
+  container: "Journal of the American Chemical Society 40(9) 1361-1403 (September 1918)"
+  doi: "10.1021/ja02242a004"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  Every entry carries its journal page and a verbatim quotation of the sentence or
+  equation it came from, so that a reader can find it without the paper open. The
+  file exists so that no scalar the page checks is typed into a notebook cell: the
+  cells read them from here.
+
+  THE MOST IMPORTANT ROW IS eq37_coefficient. The page prints
+  N0 = 25.2 x 10^15 b/s. THE PDF'S TEXT LAYER RENDERS IT AS 10^16. That is a factor
+  ten in every N0 and every beta in the paper, and it would put 17 of 20 entries
+  above the monolayer bound, reversing Langmuir's central conclusion. (That count is
+  not typed on the page either: the notebook counts it from
+  langmuir-1918-constants.csv in section 6.5 and the break table prints the same 17.) The value here
+  was read on a 300 ppi crop and is independently confirmed by arithmetic: it must
+  equal N x 4.16e-8 = 2.521e16 = 25.2e15, and the page checks that.
+
+acquisition:
+  method: table
+  figure: "prose, equations and table headers on journal pages 1365, 1368-1370, 1376, 1384-1393, 1398-1402"
+  tool: "poppler pdftoppm -r 300 (native), cropped and read at digit scale"
+  procedure: >
+    Each scalar was located in the text layer for navigation only, then cropped out
+    of a 300 ppi render and read at digit scale. THE TEXT LAYER WAS NOT USED FOR ANY
+    DIGIT.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-07
+  estimated_error: "None beyond the printed precision."
+
+columns:
+  - {name: key, unit: "-", description: "identifier used by the notebook"}
+  - {name: value, unit: "-", description: "the printed value"}
+  - {name: unit, unit: "-", description: "its unit as the paper gives it"}
+  - {name: journal_page, unit: "-", description: "printed page number 1361-1403, NOT the PDF page"}
+  - {name: kind, unit: "-", description: "equation | prose | table_header | apparatus"}
+  - {name: verbatim, unit: "-", description: "the sentence or equation as printed, quoted for traceability"}
+
+caveat: >
+  Four of these constants are NOT independent and the page checks them against each
+  other rather than trusting the transcription: 43.75e-6 must be 1/sqrt(2 pi R),
+  22860 must be its reciprocal, 4.16e-8 must be pV/RT at 20 degC and 760 mm, and
+  25.2e15 must be N times that. The worst residual in the chain is 0.136 %.
