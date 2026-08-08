@@ -388,11 +388,26 @@ prompts, model tiers, and ONE CASE AT A TIME (see the 2026-08-07 note below;
 the "one wave of 4–6" rule this paragraph used to end with was retired that
 day). `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` are now published, and the
 2026-08-08 session added `J1.1`, `J1.4`, `B1.3`, `C1.2` and `B2.1` — the
-adsorption trio and the modulus quartet are both complete. Strong next
-candidates from the remaining T0/P1 pool: `B2.3` (continues the coking story
-B2.1→B2.2 started), `C1.5`, `A3.2`, `A4.8`, `H1.8` (Robeson 2008), and the
-Elsevier set (`D2.4`, `J1.10`, `J2.1`, `J2.3`). Still avoid `D1.1`–`D1.5`:
-the maintainer's scope decision is open.**
+adsorption trio and the modulus quartet are both complete. Still avoid
+`D1.1`–`D1.5`: the maintainer's scope decision is open.
+
+The remaining T0/P1 pool is split by model demand (maintainer, 2026-08-08,
+to protect the Fable budget): an **Opus-suitable list** — `H1.8` (Robeson
+2008: born-digital, clean layer, empirical-bound arithmetic), `B2.3`
+(route pre-designed in its own yaml, `B2.1`/`B2.2` published; pre-dispatch
+render still owed: are the measured orders tabulated?), `J1.10` (van
+Deemter: the two printed tables ARE the validation data, on a 300 ppi scan
+whose text layer misreads its own volume number — crops for everything),
+`A3.2` (Higbie: standard penetration theory, E1.1 evidence recorded in the
+inventory via BSL Ch. 6), `J2.3` (Nyvlt: small S1, metastable-zone-width
+method; pre-dispatch table-vs-figure render owed) — and a **reserve for a
+Fable session**: `D2.4` (Uppal–Ray–Poore bifurcation/continuation work,
+squarely in the deterministic-metrics trap), `J2.1` (Hulburt & Katz,
+theory-only PBE origin — a J1.4-style prove-the-printed-structure page,
+heavy symbolic adjudication), `C1.5` (the E1.1 target is unpinned across
+five books — scope adjudication is the case), and `A4.8` (its `on_disk`
+points at Taylor & Krishna, but the Carty & Schrodt experiment the case is
+FOR is not on disk — likely a needs-paper flip, decide before building).**
 
 **2026-08-07, THE SERIAL REGIME — read this before dispatching anything.** The
 day began with five builders in parallel and ended with five pages published,
