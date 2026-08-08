@@ -37,6 +37,32 @@ fixes:
 - Park blocked cases with a `resume:` block; never wait on the maintainer.
 - **Relay reports compactly**; do not re-quote whole reports back to agents.
 
+## Re-verify a fix that adds load-bearing material (2026-08-08)
+
+The loop is builder → verifier → fixer → integrate, and a fixer that merely
+applies a list needs no second pass. But when the fix **replaces or adds
+something the page's conclusions rest on**, dispatch a SECOND verifier scoped
+to the new material only — tell it the first pass is settled and name what
+changed. Found on `H1.8`: the verifier killed the page's second route as a
+tautology (Robeson's Table 13 permeability column *is* `k·α^n`, so its ratio
+at fixed α is identically `10^(Δlog k + Δn·log α)` — the "independent" residual
+was the difference of two identity residuals). The fixer built a genuine
+replacement route, and that new route arrived carrying **the same defect class
+the first pass had just caught elsewhere on the page**: its headline residuals
+were themselves reference-dependent and quoted bare on three of five surfaces,
+and its ranking claim failed at two of seven evaluation points. A defect class
+does not stay fixed where it was found — a fix written against one instance
+reproduces it in the new material. Scope the second pass tightly (it cost
+~40 % of a full pass) and have it re-derive only what moved.
+
+Two corollaries from the same case. **The fixer is allowed to overrule the
+verifier and did, upward** — independently re-measuring 26 metrics with false
+coverage attributions where the verifier said 22, and the second pass settled
+it in the fixer's favour to the digit. And **the page's own printed output can
+contradict its coverage map**: `H1.8`'s map claimed a break row that the page's
+own break table two cells above showed to be a non-mover. Generate the map from
+measured movers (the `A4.1` mechanism) — an assert over key *sets* cannot see it.
+
 ## Integration (per ready+verified+fixed case)
 
 `python scripts/integrate_case.py <ID> <BEFORE_ID>` does: existing-entry

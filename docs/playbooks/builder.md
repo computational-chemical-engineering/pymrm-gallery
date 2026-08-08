@@ -102,7 +102,13 @@ these). Skim `docs/handoff.md`'s header for anything newer than this file.
   `.meta.yaml` sidecar carrying a `columns:` block. Nine sections in order
   (AGENTS.md). Plus `queue_cases/<ID>/models_entry.yaml` — check whether
   models.yaml already has the case (planned entry → say "upgrade in place";
-  else "append"; state which, correctly).
+  else "append"; state which, correctly). **That entry must carry `status:` and
+  `page: pages/<ID>-<slug>/`** alongside `section:`, matching the shape of the
+  neighbouring published entries. `splice_entry`'s post-check asserts the
+  spliced entry is `published`, so an entry with no `status:` key aborts the
+  coordinator's integration on a bare `KeyError` *after* models.yaml has already
+  been written (`H1.8`, 2026-08-08). Copy a recently published neighbour's entry
+  and keep its keys.
 - Leave the case `ready`. Nothing into `pages/`. No git writes.
 - Keep runtime modest and declare it truthfully in meta.yaml.
 - Blocked? Park with a complete `resume:` block; never wait for the maintainer.
