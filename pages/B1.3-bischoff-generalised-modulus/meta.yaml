@@ -1,0 +1,128 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B1.3
+slug: bischoff-generalised-modulus
+title: "Bischoff's generalised modulus: measuring how narrow the narrow band is"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 60
+datasets:
+  - bischoff-table1.csv
+  - pan-zhu-table5.csv
+  - pan-zhu-table6.csv
+  - eta-generalised-modulus.csv
+
+validation:
+  - every equation, exponent and table cell read from digit-scale crops of
+    native-resolution renders (Bischoff 300 ppi, Pan & Zhu 600 ppi, both
+    CCITT-G4 bilevel; the Bischoff text layer is unreliable and was never
+    used for a digit)
+  - three independent routes to eta(m) sharing no assembly - quadrature of the
+    paper's parametric eqs. (14)-(15) with closed-form inner integrals, the
+    printed closed forms eqs. (21)-(28) via scipy elliptic integrals, and
+    pymrm finite volume - agreeing to 2e-12 (routes B/C), 3e-13 (eq. 20)
+    and 2e-6 (pymrm at n_cell = 400, observed order 2.01)
+  - both headline band numbers recomputed on the second route with extrema
+    re-root-found (gap 5e-7); extrema root-found, never sampled, with a break
+    row showing what a 15-point sweep would have under-read
+  - the dead zone solved with a convergence-restoring sqrt(c+eps)
+    regularisation refined over four decades of eps (limit deviation 4e-6
+    against the exact eta = 1/m)
+  - Bischoff Table 1 recomputed from eqs. (33)-(34) - seven cells inside
+    printed rounding, one printed defect isolated by the paper's own arithmetic
+  - the n = 1/2 elliptic reduction as printed proven inconsistent with its own
+    source eq. (20) (29-41% in m) and amended with a labelled two-place fix
+    that agrees to 2e-13; the paper's printed 15% figure shows Figure 1 used
+    the correct reduction
+  - eq. (14) as printed (denominator bracket exponent -1/2, read at digit
+    scale; the numerator's inner bracket correctly prints -1/2) proven
+    inconsistent with its own parents eqs. (8)+(13) and with the printed
+    eq. (21) - m low by exactly the factor 1/(n+1), dimensionally
+    inconsistent in dimensional form; the forced +1/2 reading is used and
+    labelled, the fifth printed defect reported
+  - Pan & Zhu Tables 5 and 6 reproduced from their printed definitions
+    (mu1 series to 5e-5; both Table 6 columns to <= 6e-4), exposing a copied
+    mu2 cell and a sign misprint in their eq. (36), both proven from their own
+    numbers
+  - pymrm 2-D finite cylinder against the exact first-order double series
+    (the same series B1.2 validated) to 6e-5
+  - defect-injection table with twelve rows including a deliberate null;
+    a final cell maps every agreement metric to the break row that moves it
+    or labels it structural
+  - cross-page reconciliation against B1.1's published slab table at equal
+    modulus (identical closed form - labelled structural, tests loading and
+    conventions only)
+
+adds: >
+  Nothing to the modulus itself - eq. (13) is one line and is used exactly as
+  printed. What is added is the measurement the 1965 claims never got: both
+  headline spreads root-found on exact curves (14.61% at m = 1.270 for orders
+  one-half to three, matching "about 15%" as eta_max/eta_min - 1; 40.55%
+  max/min = 28.85% of the upper curve at the zero-order kink m = 1 exactly,
+  matching "about 30%" only in the fraction-of-upper reading - the page pins
+  which reading makes each printed claim true), against 68.2% / 120.6% peak
+  and 63.3% / 41.4% permanent spread on the standard modulus. The LHHW family
+  Bischoff only redrew from Chu & Hougen is computed: its collapse band is
+  30.16%, so his "again about the same" is right against the ~30% figure, not
+  the headline 15%; on Chu & Hougen's modulus the family never coincides (a
+  factor ~23 asymptotically). The volume-change family collapses to within
+  3.18% of the first-order curve and never leaves the Figure-1 envelope,
+  and Table 1's correction factors are recomputed exactly. Two things the
+  paper does not contain: a dead-zone onset formula, m* = (n+1)/(1-n),
+  derived here from its eq. (14); and the out-of-sample audit - on a finite
+  cylinder with second-order kinetics, the shape's own first-order curve read
+  at the generalised modulus (the Aris + Bischoff combination) predicts the
+  exact 2-D pymrm solution to 0.030 absolute (4.4% relative, inside the
+  advertised band), while reading Figure 1's slab curve costs 0.099 (the
+  B1.2 shape band) and Pan & Zhu's 1998 "arbitrary kinetics, < 1.5%"
+  polynomial misses by 0.090 - six times its claimed bound.
+
+agreement: >
+  Not applicable in the experimental sense - tier 6. The checks with
+  resolving power: three routes to eta(m) sharing no assembly agree to
+  2.2e-12 (parametric quadrature vs the printed closed forms), 2.7e-13
+  (vs eq. 20) and 2.0e-6 (pymrm finite volume at n_cell = 400, observed
+  order 2.01); both headline bands recomputed on the independent route agree
+  to 4.8e-7 with extrema re-root-found; the dead-zone onset m* = 3 is
+  recovered from the quadrature to 4.6e-14 by u^(1/4) extrapolation and the
+  regularised dead-zone solve reaches the exact eta = 1/m to 4.3e-6; the 2-D
+  cylinder solve matches the exact first-order series to 6.3e-5; Bischoff's
+  Table 1 is reproduced to 0.0027 worst (three eq.-33 cells) and 0.0019
+  (all four eq.-34 cells); Pan & Zhu's Table 5 mu1 row to 5.1e-5 and both
+  Table 6 columns to 3.1e-4 / 5.9e-4 - against which the printed defects
+  stand out at 0.0057 absolute (Table 1 cell, 11x its half-ULP rounding
+  radius), 29-41% (eq. 27 as printed), a constant factor 1/(n+1) in m
+  (eq. 14 as printed - 75% low at n = 3), 0.10 (their mu2 cell) and a sign
+  that sends their own eta_a negative (their eq. 36). Pan & Zhu's own
+  printed Table 6 caps their "< 1.5%" claim: the worst absolute gap is a
+  tie at 0.013 (Z = 2, phi = 4 and 6), and the phi = 6 member is 3.7%
+  relative, so the claim holds only in the absolute reading. B1.1's slab
+  table is reconciled to 3.4e-6, the stored precision of that CSV.
+
+caveats: >
+  Provenance tier 6 and NOT experimental validation - neither source reports a
+  measurement, so every agreement is between independent computations of the
+  same isothermal model. The band numbers cover Bischoff's stated family
+  (power laws n = 0 to 3, LHHW, first-order volume change) on a slab; rate
+  forms outside it (negative order, inhibition maxima, multiple reactions) can
+  leave the band. The n = 1/2 amendment, the +1/2 exponent reading of
+  eq. (14) and the +405 sign in Pan & Zhu's eq. (36) are labelled inferences
+  forced by each paper's own stated construction; the claim that Bischoff's
+  Figure 1 used the correct reduction is an inference from the printed 15%
+  figure, not a reading of the figure.
+  The Pan & Zhu out-of-sample failure is established for n = 2 at Z = 1 only.
+  Chu & Hougen (1962) and Hawthorn's correction are known here only as
+  Bischoff reprints them; Thiele (1939), Zeldovich (1939), Wheeler (1951) and
+  Aris (1957) are cited as the paper cites them, with Thiele's and Aris's
+  results independently reproduced on B1.1/B1.2 (origin_not_consulted applies
+  to Zeldovich, Wheeler, Chu & Hougen and Hawthorn).
