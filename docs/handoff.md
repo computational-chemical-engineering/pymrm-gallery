@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-08-07
+# Handoff — state as of 2026-08-08
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -46,13 +46,41 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-64 page directories, 65 published catalog entries, 73 models.yaml entries
+68 page directories, 69 published catalog entries, 77 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 65 published, 52 unclaimed, 140
+`splice_entry.py --replace`). Queue: 69 published, 48 unclaimed, 140
 needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 64 pages, 0 regressions at handoff (2026-08-07/08);
+covers `D3.4`.) `check_agreement.py`: 67 pages, 0 regressions at handoff (2026-08-08);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
+
+### Added 2026-08-08 — four pages (second serial session)
+
+All four T0/P1, one at a time, each committed before the next began; every
+page verified, every verifier verdict was "safe after fixes", and every fix
+list was applied by a fixer whose tier followed the will-a-metric-move rule.
+
+| Page | What it shows | Headline |
+|---|---|---|
+| `J1.4` IAST | The origin paper prints no numerical result of its own theory — so the page proves the printed structure and says plainly it cannot establish empirical adequacy | eleven sympy identities close the derivation chain; IAST ≡ extended Langmuir at equal capacity (7.6e-16); the p. 125 consistency charge quantified (11.9 % loop deficit vs 8e-16); eq. (11) misses its `+`, and p. 123 introduces eq. (21) by its own number |
+| `B1.3` Bischoff | How narrow "narrow" is — measured, with each printed claim true under exactly one spread convention | 14.61 % max/min at m = 1.27 vs "about 15%"; the n = 0 kink gives 28.85 % of the upper curve vs "about 30%"; five printed defects incl. eqs. (27)–(28) wrong as printed by 29–41 % in m; Pan & Zhu's "< 1.5 %" cylinder polynomial misses 6× out of sample |
+| `C1.2` Eley–Rideal | The source itself argues the case's name is wrong (Langmuir–Rideal) — the page is about the attribution, built on the L-H law imported from C1.1 | all eleven printed limiting-order claims verified symbolically; "maximum for c_A = K_A" is dimensionally inconsistent (condition: K_A c_A = 1 + K_B c_B); on H&W's founding dataset the impact law misses by 27.4 % vs a 16.8 % floor, and ONLY hydrogen's decade-wide span carries that discrimination — the two-factor claim on three metadata surfaces was the verifier's main catch |
+| `B2.1` Voorhies | The origin of C = A tⁿ, tested on what it prints: feed-rate independence survives its own tables | feed-rate exponent −0.116…+0.034 across ten groups vs −0.95…−1.18 for carbon-on-feed, at the rounding floor; but the two columns are tied by a constant implied W/U, so each table is ONE test; eq. (5) re-derived exactly; "K = constant (= A²)" off by exactly 2; n itself transcribed, never tested (both tables sit at θ = 120 min) |
+
+Carry-forward lessons from the four: (1) both pre-dispatch table-vs-figure
+renders (J1.4, B2.1) changed the dispatch — J1.4's settled it is figures-only
+*and* that even the figures' inputs are unrecoverable (route: prove the
+printed structure; Szepesy & Illés's tables are the recorded acquisition that
+would enable an empirical companion), B2.1's found the tables that made the
+no-gate route possible. (2) A "certifies all inputs against any misreading"
+claim died under a ±1 sweep — six last-digit alternatives survive rounding
+(B2.1); state what a consistency chain actually excludes. (3) C1.2's
+metadata surfaces escalated a one-factor result into a false two-factor
+claim the notebook never made — meta/README/models_entry drift from the
+notebook is a defect class to check explicitly. (4) The Prins2018 inventory
+entry claimed a 306 ppi scan; the file is born-digital (the ppi belonged to
+page-1 logos) — corrected, and one more reason a filename or inventory line
+is not a paper.
 
 ### Added 2026-08-07/08 — six pages (the serial regime)
 
@@ -358,7 +386,13 @@ D1.x is still open), the ACS/Wiley singles (`J1.1` Langmuir, `J1.3` BET,
 Dispatch per [`playbooks/coordinator.md`](playbooks/coordinator.md) — playbook
 prompts, model tiers, and ONE CASE AT A TIME (see the 2026-08-07 note below;
 the "one wave of 4–6" rule this paragraph used to end with was retired that
-day). `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` are now published.**
+day). `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` are now published, and the
+2026-08-08 session added `J1.1`, `J1.4`, `B1.3`, `C1.2` and `B2.1` — the
+adsorption trio and the modulus quartet are both complete. Strong next
+candidates from the remaining T0/P1 pool: `B2.3` (continues the coking story
+B2.1→B2.2 started), `C1.5`, `A3.2`, `A4.8`, `H1.8` (Robeson 2008), and the
+Elsevier set (`D2.4`, `J1.10`, `J2.1`, `J2.3`). Still avoid `D1.1`–`D1.5`:
+the maintainer's scope decision is open.**
 
 **2026-08-07, THE SERIAL REGIME — read this before dispatching anything.** The
 day began with five builders in parallel and ended with five pages published,
