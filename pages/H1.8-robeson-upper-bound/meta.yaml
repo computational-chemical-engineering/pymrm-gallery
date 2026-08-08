@@ -1,0 +1,221 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.8
+slug: robeson-upper-bound
+title: "The Robeson upper bound, revisited: where the 2008 line moved, and what \"primarily the front factor\" can mean"
+section: H
+status: published
+tier: T0
+priority: P1
+structures: []
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 9
+datasets:
+  - robeson-2008-table12-upper-bounds
+  - robeson-2008-near-bound-points
+  - robeson-2008-table13-knudsen-transition
+  - robeson-2008-printed-claims
+
+structures_note: >
+  DELIBERATELY EMPTY, and the page says so in its "PyMRM implementation" section. The Robeson
+  upper bound is a two-parameter algebraic relation between two scalars: no spatial or time
+  coordinate, no conservation law, no boundary condition, no unknown field. None of S1-S13 in
+  docs/taxonomy.md describes it, and no pymrm operator acts on it. `pymrm_api` is empty for the
+  same reason. The page uses numpy for the algebra, scipy.optimize.brentq for thresholds (which
+  are root-found, never swept), and an exact active-set enumeration for one envelope estimator.
+
+reference:
+  authors: ["Robeson, L. M."]
+  year: 2008
+  container: "Journal of Membrane Science 320(1-2) 390-400 (2008)"
+  doi: 10.1016/j.memsci.2008.04.030
+  title_as_printed: "The upper bound revisited"
+  affiliation_as_printed: "Lehigh University, 1801 Mill Creek Road, Macungie, PA 18062, United States"
+  note: >
+    Identified from the article's own running header ("Journal of Membrane Science 320 (2008)
+    390-400"), display title, by-line and affiliation on p. 390, read on a 300 dpi render; the PDF
+    Title metadata carries the DOI. Born-digital (Elsevier / Acrobat Distiller 7.0), so the text
+    layer is extraction rather than OCR - but every numeric cell used on the page was read a second
+    time from cropped 300 dpi renders at digit scale and the two readings compared. They agree on
+    all 382 NUMERIC CELLS (44 in Table 12 excluding its four NA rows, 234 in Tables 1-11, 104 in
+    Tables 13a/13b; the count is printed by the notebook, not asserted). Cells, not numerals - the
+    digit count is several times larger. The specific hazard in this paper is comma thousands
+    separators inside table cells (1,073,700; 30,967,000; 5,369,140).
+
+reference_read_from:
+  authors: ["Robeson, L. M."]
+  year: 2008
+  container: "Journal of Membrane Science 320(1-2) 390-400"
+  doi: 10.1016/j.memsci.2008.04.030
+  note: >
+    THE PRIOR BOUNDS ARE READ FROM THIS PAPER'S RESTATEMENT, NOT FROM THEIR ORIGIN. Robeson (1991),
+    J. Membr. Sci. 62, 165 and Robeson, Burgoyne, Langsam, Savoca & Tien (1994), Polymer 35, 4970
+    are the origin of every value in Table 12's "Prior upper bound data (1,2)" block. Neither is on
+    disk and neither was consulted. Nothing on this page can establish that the 2008 restatement is
+    faithful to the 1991/1994 papers, and the page says so wherever a prior value carries a result.
+
+origin_not_consulted:
+  - authors: ["Robeson, L. M."]
+    year: 1991
+    container: "Journal of Membrane Science 62, 165"
+    role: "origin of the prior upper bounds for O2/N2, CO2/CH4, H2/N2, H2/CH4, He/N2, He/CH4, He/H2, H2/O2, He/O2"
+  - authors: ["Robeson, L. M.", "Burgoyne, W. F.", "Langsam, M.", "Savoca, A. C.", "Tien, C. F."]
+    year: 1994
+    container: "Polymer 35, 4970"
+    role: "origin of the prior upper bounds for H2/CO2 and He/CO2"
+  - authors: ["Breck, D. W."]
+    year: 1974
+    container: "Zeolite Molecular Sieves"
+    role: >
+      source of the Lennard-Jones kinetic diameters behind Fig. 12. NOT consulted and NOT needed:
+      the 2008 paper prints no diameters, so Fig. 12's slope-diameter correlation is out of scope.
+      Searched for: the full text layer, string "diameter", 17 OCCURRENCES (8 singular, 9 plural,
+      counted as occurrences in the pdftotext -layout extraction of all eleven pages, not as
+      matching lines), every one prose, a caption or eq. (1); the only numeric diameters printed
+      anywhere are PTMSP's pore size, 0.9-1.2 nm.
+  - authors: ["Freeman, B. D."]
+    year: 1999
+    container: "Macromolecules 32, 375"
+    role: >
+      origin of eq. (2) (theoretical prediction of k) and of the ks correlations eqs. (4)/(5). NOT
+      consulted. Eq. (2) is out of scope because the solubility constants it needs are not printed
+      here; ks is taken as an input to Tables 13a/13b and is explicitly unchecked on this page.
+
+data:
+  tier: 2
+  method: >
+    four datasets, all transcription of printed tables and printed sentences from digit-scale crops
+    of 300 dpi renders, cross-checked against the born-digital text layer: Table 12 (26 rows, NA
+    structure preserved), Tables 1-11 (117 near-bound points), Tables 13a/13b (26 rows), and the
+    prose claims tested, quoted verbatim. NO FIGURE WAS DIGITISED and none needed to be - the
+    twelve figures carry data clouds the tables already print the relevant part of.
+  status: complete
+
+fit_or_test: >
+  NEITHER, and the distinction matters more than usual here. Robeson's (k, n) are not a fit at all:
+  p. 391 states the line is "determined empirically ('by eye')". So (i) nothing on this page is a
+  goodness-of-fit statement about a regression, and (ii) the 19 tabulated points that lie above the
+  line are not a fit residual - they are what "by eye" amounts to. Three labels used throughout:
+  (a) TRANSCRIPTION - Table 12, Tables 1-11, Tables 13a/13b as printed; (b) INTERNAL CONSISTENCY -
+  V1 reproduces all 26 rows of Tables 13a/13b from Table 12, and V2 reproduces the shift at four
+  printed selectivities from the decomposition, both of which test THIS PAGE's arithmetic and
+  transcription and cannot test Robeson's; (c) INDEPENDENT ESTIMATE - V3's covering-line envelope,
+  a different objective on a subset of the data, offered as a diagnostic and explicitly not as a
+  correction. NOTHING on this page is validation against measurement: every number is Robeson's.
+  V2 IS A CONSISTENCY IDENTITY, NOT A SECOND ROUTE, and the `agreement:` block below says the same
+  thing: Robeson's transition permeability is k*alpha^n on the same two lines V1 tests, so V2's
+  residual is the difference of the two corresponding V1 residuals (measured on the page: they
+  agree to 4e-16 decades). Given Table 12, Result 1's decomposition is a REARRANGEMENT and no
+  arithmetic on Table 12 can corroborate it - the page demonstrates that on a second candidate too,
+  the data-side shift, which equals the decomposition to 5e-16 decades on all nine pairs. The only
+  genuine second route on the page is (c): V3's envelope replaces the PRESENT bound with a line
+  estimated from the 117 points, and the residual between the two routes is exactly V3's offset at
+  alpha_0. Its scope is the present line only; both routes read the prior block from the same
+  restatement and both use the same alpha_0 from Tables 1-11, so nothing here can give either a
+  second route. The residual itself carries log(alpha_0) and is swept across in-data references
+  rather than quoted at one - see the agreement block.
+
+caveats:
+  - "ONLY NINE of Table 12's thirteen gas pairs support a prior-versus-present comparison. H2/O2 and He/O2 have no present bound; CO2/N2 and N2/CH4 have no prior one. The paper's own Conclusions classify exactly those nine, which the page asserts against the dataset rather than assuming"
+  - "the front-factor share of a shift is REFERENCE-DEPENDENT and has no meaning without a stated selectivity: dlog k IS the shift at alpha = 1, which is outside every dataset in the paper. THE TWO RANGES MUST BE KEPT APART. On the four references ROBESON'S OWN TABLE 13 supplies the share runs 0.5647 to 1.0334 (He/H2 1.017 and 1.033; H2/CO2 0.565 and 0.699). Across the nine pairs at THIS PAGE's reference - the geometric-mean alpha of each pair's own tabulated points, which the paper does not supply - it runs 0.587 to 1.394, the 1.394 being H2/CO2. It is undefined at alpha = 37.5 where the H2/CO2 lines cross. The page states its reference in three places, and prints both ranges"
+  - "the reference-free form of Robeson's claim is that the two lines are near-PARALLEL, and that holds for 6 of the 9 pairs (spread/shift < 0.20). Six of nine means THREE fail: H2/N2 (0.34), H2/CH4 (0.93) and H2/CO2 (2.05). Only ONE of the three is mitigated by the paper: for H2/CO2 it says the shift is 'primarily a slight slope change'. For H2/CH4 (sec. 6) and H2/N2 (sec. 5) the paper says only that the shift is modest/very minor and attributes no slope change - so the parenthetical an earlier version of this page carried, '(where the paper itself attributes the shift to a slope change)', covered one of the three, not two and not three. Searched: every occurrence of 'slope' in the full text"
+  - "PRINTED DEFECT, REPORTED NOT REPAIRED: the Conclusions (p. 399) name the significantly shifted pairs as 'He/CH4, He/CO2 and He/H2' and then, in the next sentence, as 'He/CO2, He/CO2 and He/H2' [sic] - He/CO2 twice, He/CH4 dropped. Table 12 confirms He/CH4 belongs (front factor 5,002 -> 19,800). Quoted verbatim; the arithmetic identifying the displaced pair is shown"
+  - "PRINTED DEFECT, REPORTED NOT REPAIRED: Table 2 prints 'Polypyrrole 6FDA/PMDA (25/75)-TAB' where Tables 1, 5 and 6 print 'Polypyrrolone' for the same material from the same reference [21]; Table 9 prints 'Poly(pyrrolone)(6FDA-TAB)'. Table 12's prior block prints 'He/CO2' without a subscript on the final 2 where every other cell uses subscripts"
+  - "PRINTED INCONSISTENCY, REPORTED NOT REPAIRED: p. 392 speaks of 'the one data point above the present upper bound' for O2/N2; Table 1 in fact has two above the line Table 12 prints - the questioned P = 18.0/alpha = 9.0 point (r = 3.29) and BPDA-ODA at P = 0.079/alpha = 19.8 (r = 1.26)"
+  - "ONE ROW OF TABLE 13a IS INTERNALLY INCONSISTENT, REPORTED NOT REPAIRED: O2/N2's transition permeability 156,500 barrers misses k*alpha^n by -0.612 %, against a worst-case propagated printing band of +-0.279 % even on the most generous reading of trailing zeros. Backing the printed permeability out needs alpha = 1.4714 where the table prints 1.473. The other 25 rows are inside the generous band (24 inside the literal one). Changes no conclusion: Table 12's O2/N2 (k, n) are confirmed to -0.027 % by Table 13b"
+  - "the author repairs a compiled value in prose and NOT in his table: p. 395 says the N2/CH4 point's CH4 permeability 'was listed as 80.2 barrers where it would be more realistic to be 180.2 barrers', but Table 9 still carries alpha = 1.9, consistent with 153/80.2 = 1.908 and not with 153/180.2 = 0.849. This page uses the tabulated value. That point is also the largest excursion in Table 9"
+  - "the 117 points are a COMPILATION from roughly 65 primary papers, none of which was consulted. The page can show a point sits above the line Robeson drew; it cannot show the point is right"
+  - "ks in Tables 13a/13b is an INPUT, not a checked quantity - eqs. (4) and (5) need critical and Lennard-Jones temperatures the paper does not print. Had Robeson mis-evaluated eq. (4), V1 and V2 would both still pass"
+  - "V3's envelope re-fit is NOT a corrected bound and must not be quoted as one. It optimises a different objective on a subset of Robeson's data and is pinned by extreme points including, for O2/N2, the very point the paper says it distrusts. Its slope disagreement is a lever-arm effect: the FOUR pairs whose points span the fewest decades of selectivity (He/H2 0.62, CO2/N2 0.77, O2/N2 0.82, N2/CH4 1.06) are exactly the four carrying the largest |dn| - as SETS and not rank by rank, since O2/N2 has the 3rd shortest span and the 2nd largest |dn| (0.802 against CO2/N2's 0.587); the page states it that way and computes it, because an earlier version asserted the rank-by-rank form, which is false. The seven pairs spanning more than 1.5 decades all agree to |dn| <= 0.278"
+  - "Fig. 12's -1/n versus gas-diameter correlation and Freeman's eq. (2) are OUT OF SCOPE, for a searched reason: the inputs are not printed in this paper. No verdict is offered on either"
+  - "H2/O2 and He/O2 appear in the paper ONLY as four cells of Table 12 (searched: the full text layer of all 11 pages, both the 'H2/O2' and extractor-inserted 'H2 /O2' spellings). No section, no table, no figure, no sentence, and no stated reason for dropping them"
+
+agreement: >
+  Two kinds, kept apart, plus one estimate.
+  INTERNAL IDENTITY (V1): Tables 13a/13b reproduce from Table 12's (k, n) with a median absolute
+  deviation of 0.017 % over 26 rows; 24 rows sit inside the literal half-ulp printing band and 25
+  inside a generous four-significant-figure band, the exception being 13a O2/N2 at -0.612 %. The
+  (Mj/Mi)^(1/2) column reproduces to 1.5e-4 from INTEGER molecular weights and only to 3.9e-3 from
+  IUPAC standard weights, which identifies the convention rather than assuming it, and the product
+  column to 1.6e-3. This certifies the transcription of every present (k, n) and of the prior
+  (k, n) for He/H2 and H2/CO2; it certifies nothing about Table 12 itself, which is an input on
+  both sides, nor about the prior (k, n) of the other seven pairs.
+  CONSISTENCY IDENTITY, NOT A SECOND ROUTE (V2): Tables 13a and 13b each evaluate He/H2 and
+  H2/CO2 at one selectivity on BOTH bounds, and the ratio of the two printed permeabilities agrees
+  with the decomposition dlog k + dn log alpha to 4.9e-4 decades worst case over four comparisons.
+  That agreement is NOT independent corroboration and the page says so: Robeson's transition
+  permeability IS k*alpha^n on the same two lines V1 tests, so V2's residual is the DIFFERENCE OF
+  THE TWO CORRESPONDING V1 RESIDUALS - measured on the page, agreeing to 4e-16 decades - and V2
+  cannot fail unless V1 fails on those four rows. Its genuine power is over THIS PAGE's
+  decomposition code (the natural-log break row moves it and moves nothing else). The page also
+  measures the obvious second candidate, the shift read off the data as a ratio of geometric-mean
+  excursions, and finds it equal to the decomposition to 5e-16 decades on all nine pairs. Given
+  Table 12, Result 1's decomposition is a REARRANGEMENT and no arithmetic on Table 12 can
+  corroborate it. What V2's four rows ARE good for is the reference-dependence, on numbers Robeson
+  printed: the front-factor share runs 0.5647 to 1.0334 across four selectivities spanning a
+  factor 7.
+  THE SECOND ROUTE (V3): the only computation on the page that does not read the present bound out
+  of Table 12. A covering line is re-estimated from the paper's own 117 near-bound points by exact
+  active-set enumeration and substituted for the printed present line; the residual between the
+  two routes is exactly V3's offset at alpha_0. EVERY NUMBER IN THIS PARAGRAPH CARRIES ITS
+  REFERENCE, because the residual carries log(alpha_0) explicitly and is therefore
+  reference-dependent for exactly the reason the front-factor share is - the page's own thesis
+  applied to the page's own newest headline. AT EACH PAIR'S GEOMETRIC-MEAN SELECTIVITY the two
+  routes agree on the SIGN of the shift for 9 of 9 pairs and on the MAGNITUDE to 0.0857 decades on
+  the seven pairs whose points span more than 1.5 decades of selectivity (median 0.038 over all
+  nine; 0.466 on O2/N2, whose points span 0.82 decades, and 0.202 on He/H2, which span 0.62).
+  SWEPT over each pair's own minimum, geometric-mean, median and maximum tabulated selectivity -
+  all four inside the pair's own data - the wide-span worst case runs 0.0857 to 0.5431 decades, a
+  factor 6.3, and the median over all nine runs 0.0379 to 0.3151. The geometric mean, the reference
+  used, is the KINDEST of the four. The sign count is 8 of 9, not 9 of 9, at each pair's own
+  alpha_min, where He/N2's envelope-implied shift is -0.0117 decades against a decomposed +0.2016.
+  Neither the residual nor the sign count means anything unattached to a reference.
+  Result 3's ranking also gets a second route out of the same substitution, and it corroborates
+  LESS STRONGLY THAN THE PRIMARY ROUTE, which the page states rather than glossing: 3 of 3 at the
+  same reference and at five of the seven references the primary route is swept over, but 2 of 3
+  at each pair's own P_median and at each pair's own P_max, where He/H2 falls out of the top three
+  - against 3 of 3 at all seven for the primary route. The asymmetry is the honest result and it is
+  the reported one.
+  The front-factor SHARE does not survive the substitution at all - median 0.434 against 0.982,
+  range -0.0306 (He/N2) to 1.5494 (H2/CO2), all three now reported metrics so CI tracks them -
+  which is this page's own caveat about reference-dependence arriving from the
+  other side, since dlog k is an intercept extrapolated one to four decades outside the data. The
+  NEGATIVE share is explained in words on the page rather than left inside a range: He/N2's
+  envelope front factor is 12,239 barrers against the prior 12,500, i.e. dlog k = -0.0092, while
+  the envelope-implied shift is +0.2988 decades - so the entire shift, and a little more, is
+  carried by the slope term, and the two lines cross at alpha = 1.11, below the reference.
+  The route's scope is the PRESENT line only: both routes read the prior block from the same
+  restatement AND both use the same alpha_0 taken from Tables 1-11, so nothing on this page can
+  give either a second route. What the point selection does NOT limit is the route's detecting
+  power: k_env never touches Table 12, so the residual responds 1:1 to a vertical error in the
+  printed present line - break row (DD) divides k(He/CH4) by ten and moves that pair's residual
+  0.07341 -> 1.07341, measured on the page.
+  HEADLINE RESULTS: on the nine comparable pairs the front-factor share at each pair's own
+  geometric-mean selectivity has median 0.98 (range 0.59 to 1.39) and the two lines are
+  near-parallel for six of nine; the paper's three "significant" pairs are reproduced exactly by
+  the SELECTIVITY gain at fixed permeability (3 of 3) and by neither dlog k nor the permeability
+  gain at fixed selectivity (2 of 3 each) - 3 of 3 at every evaluation point inside the
+  permeability range all nine pairs share, though the third-to-fourth GAP is itself
+  reference-dependent and runs 0.011 to 0.111 decades across those points; H2/CO2's two bounds
+  cross at alpha = 37.47, inside its own tabulated range, where the 2008 bound sits 30.4 % below
+  the 1994 one - and that "inside its own range" verdict rests on a SINGLE tabulated point
+  (alpha = 100.9; the next one down is 23.1), which a break row removes; and 19 of the 117
+  tabulated "close to the upper bound" points lie above the bound they are tabulated against,
+  r up to 3.49, geometric mean 0.478.
+  Fourteen break rows, three of them perturbing a single cell of Tables 1-11 rather than Table 12,
+  and the coverage map is BUILT FROM THE MEASURED MOVER LIST of each of the 58 reported metrics
+  rather than written by hand; the break table's clean row recomputes all 58 by a separate code
+  path and is asserted equal to the reported values, bit-identically on every key. That is a second
+  implementation of the page's ASSEMBLY and the page says so in that word: rerun_all reads no
+  narrative result frame, but it calls the same shared primitives (P_bound, alpha_bound, excursion,
+  ulp, sqrtM and envelope_fit, the most intricate code on the page), which are written ONCE. Seven
+  metrics are labelled STRUCT with what they cannot detect stated; three sit below CI's ABS_FLOOR
+  and each names its above-floor companion.
+
+related: [H1.7, H1.1, H1.9, H1.4, B2.1]

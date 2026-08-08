@@ -1,0 +1,59 @@
+dataset_id: robeson-2008-table12-upper-bounds
+title: >
+  Front factor k and slope n of the Robeson upper bound, prior (1991/1994) and present (2008),
+  for thirteen gas pairs
+source:
+  authors: ["Robeson, L. M."]
+  year: 2008
+  container: "Journal of Membrane Science 320(1-2) 390-400"
+  doi: "10.1016/j.memsci.2008.04.030"
+  title_as_printed: "The upper bound revisited"
+  affiliation_as_printed: "Lehigh University, 1801 Mill Creek Road, Macungie, PA 18062, United States"
+  location: "Table 12, p. 397"
+  caption_as_printed: "Tabulation of the values of the front factor k and the upper bound slope n"
+acquisition:
+  method: >
+    transcribed from the printed table. The PDF is born-digital (Acrobat Distiller 7.0, Elsevier);
+    the text layer was extracted with `pdftotext -layout` AND the whole table was independently read
+    from a 300 dpi `pdftoppm` render cropped to digit scale (two crops, prior block and present
+    block). The two readings agree glyph for glyph, including every thousands comma. Nothing on
+    this page was taken from the text layer alone.
+  native_ppi_note: >
+    docs/papers-inventory.yaml records native_ppi 200 for this file - that is the resolution of the
+    EMBEDDED RASTER IMAGES (the twelve figures). The body text and the tables are vector, so a
+    300 dpi render is a true rasterisation of the glyph outlines, not interpolation of a 200 ppi scan.
+  date: "2026-08-08"
+  digitised: false
+reference_read_from:
+  note: >
+    The `prior` rows are the 1991 and 1994 upper bounds. Robeson (1991), J. Membr. Sci. 62, 165 and
+    Robeson, Burgoyne, Langsam, Savoca & Tien (1994), Polymer 35, 4970 are the ORIGINS of those
+    numbers and are NOT on disk and were NOT consulted. Every prior-block value here was read from
+    the 2008 paper, which restates them in its Table 12 under the heading "Prior upper bound data
+    (1,2)". A reader wanting the 1991 values as the 1991 paper printed them must go to that paper;
+    this dataset cannot settle whether the 2008 restatement is faithful.
+columns:
+  dataset: >
+    "prior" for the block Table 12 heads "Prior upper bound data (1,2)"; "present" for the block it
+    heads "Present upper bound data".
+  gas_pair: >
+    fast gas / slow gas, in the paper's own order and notation. The paper prints "He/CO2" without a
+    subscript on the final 2 in the PRIOR block only, a typographic inconsistency recorded in the
+    page prose and normalised here.
+  k_barrer: >
+    front factor k of P_i = k * alpha_ij^n, in barrers (1 barrer = 1e-10 cm3(STP) cm cm-2 s-1 cmHg-1).
+    Empty where the table prints "NA".
+  n: >
+    slope of the log-log upper bound, dimensionless and negative. Empty where the table prints "NA".
+  k_as_printed: >
+    the k cell exactly as printed, thousands commas and all, as a string. Kept because the number of
+    printed digits sets the rounding band the page propagates through the Table 13 identity.
+  n_as_printed: >
+    the n cell exactly as printed, as a string, so trailing zeros survive (-5.800 is three decimals,
+    -2.6264 is four). Load with dtype=str or the trailing zeros are lost.
+notes: >
+  THE NA STRUCTURE IS LOAD-BEARING. H2/O2 and He/O2 have a prior bound and NO present bound;
+  CO2/N2 and N2/CH4 have a present bound and NO prior one. Only NINE of the thirteen pairs support
+  a prior-versus-present comparison, and any statement about "the shift" must be made on those nine.
+  The paper's own Conclusions name exactly those nine and no others.
+status: complete

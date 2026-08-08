@@ -1,11 +1,12 @@
 id: H1.8
 section: H
-title: Robeson upper bound
+title: The Robeson upper bound, revisited
 catalog_reference: J. Membr. Sci. 62 (1991), 320 (2008)
 priority: P1
 tier: T0
 structures: ''
-status: unclaimed
+status: published
+page: pages/H1.8-robeson-upper-bound/
 reference:
   authors:
   - Robeson, L. M.
@@ -14,31 +15,186 @@ reference:
   container: Journal of Membrane Science 320(1-2) 390-400 (2008)
   doi: 10.1016/j.memsci.2008.04.030
   affiliation: Lehigh University
+reference_read_from:
+  authors:
+  - Robeson, L. M.
+  year: 2008
+  container: Journal of Membrane Science 320(1-2) 390-400
+  doi: 10.1016/j.memsci.2008.04.030
+  note: >-
+    The PRIOR upper bounds originate in Robeson (1991), J. Membr. Sci. 62, 165 and Robeson,
+    Burgoyne, Langsam, Savoca & Tien (1994), Polymer 35, 4970. Neither is on disk; neither was
+    consulted. Every prior value on the page is read from the 2008 paper's restatement of them
+    in its Table 12 block headed "Prior upper bound data (1,2)".
 paper:
   on_disk: /home/eajfpeters/papers/pymrm-gallery/Robeson2008-upper-bound-revisited-JMembrSci320-390.pdf
   open_access: null
-  checked: '2026-08-06'
-  identified_by: 'Born-digital and self-identifying: the header reads "Journal of Membrane Science
-    320 (2008) 390-400", the title "The upper bound revisited", the by-line "Lloyd M. Robeson, Lehigh
-    University, 1801 Mill Creek Road, Macungie, PA 18062, United States", and the PDF Title metadata
-    carries the DOI. Text extracted directly; no rendering needed.'
+  checked: '2026-08-08'
+  identified_by: 'Born-digital and self-identifying: the running header reads "Journal of Membrane
+    Science 320 (2008) 390-400", the title "The upper bound revisited", the by-line "Lloyd M.
+    Robeson, Lehigh University, 1801 Mill Creek Road, Macungie, PA 18062, United States", and the
+    PDF Title metadata carries the DOI. Title page read on a 300 dpi render, 2026-08-08.'
 blocker: null
-notes: 'The catalogue also names the 2008 revisit, ''The upper bound revisited'', J. Membr. Sci. 320(1-2)
-  390-400, doi 10.1016/j.memsci.2008.04.030. That one is NOT reachable: the API returned 404 for the
-  PII derived from its DOI. It is born-digital, so if the maintainer can supply either paper the 2008
-  one will extract far better than the 1991 one.'
-updated: '2026-08-06'
-doi_source: Elsevier full text fetched and read 2026-08-02 with the authorised API key (PII 037673889180060J).
-  Identity confirmed from the article's own header — title, journal, volume, issue and page range
-  — and from the author list in the body. Text saved to ~/papers/pymrm-gallery/api-text/Robeson-1991-JMembrSci-62-165-upper-bound.ELSEVIER-API-TEXT.txt
-why_the_2008_paper_and_not_the_1991_one: This is exactly what papers-requested.yaml asked for and
-  why. The 1991 paper was only ever reachable through the Elsevier api-text route, whose Table 2 of
-  Lennard-Jones kinetic diameters comes back as "2 6 2 89 3 3 3 46 3 64 3 8" for 2.6, 2.89, 3.3, 3.46,
-  3.64, 3.8 - the decimal point rendered as a space, so a six-value row becomes an eleven-value row
-  and nothing looks wrong until you count. This file retires that route. The 1991 PDF is still not
-  on disk, and this paper restates the 1991 upper bounds throughout, so it is also the reprint route
-  for them - use reference_read_from if the page quotes a 1991 bound.
-what_it_carries: P_i = k alpha_ij^n over the full modern dataset, with the finding that the 1991 bounds
-  moved only slightly except where perfluorinated polymers are involved, and that the shift is almost
-  entirely in the FRONT FACTOR k rather than the slope n - a testable decomposition. Two new gas pairs
-  (CO2/N2 and N2/CH4) are added.
+built: '2026-08-08'
+staged_at: queue_cases/H1.8/page/
+notes: >-
+  NOTE, 2026-08-08: the previous `notes:` block on this case said the 2008 paper was "NOT reachable"
+  because the Elsevier API returned 404 for the PII derived from its DOI. That was written when only
+  the 1991 api-text route existed. IT IS OBSOLETE. The 2008 PDF has been on disk since 2026-08-05
+  (docs/papers-inventory.yaml, file Robeson2008-upper-bound-revisited-JMembrSci320-390.pdf) and IS
+  the source for this page. The 1991 PDF is still not on disk and the page does not need it.
+why_the_2008_paper_and_not_the_1991_one: >-
+  This is exactly what papers-requested.yaml asked for and why. The 1991 paper was only ever
+  reachable through the Elsevier api-text route, whose Table 2 of Lennard-Jones kinetic diameters
+  comes back as "2 6 2 89 3 3 3 46 3 64 3 8" for 2.6, 2.89, 3.3, 3.46, 3.64, 3.8 - the decimal point
+  rendered as a space, so a six-value row becomes an eleven-value row and nothing looks wrong until
+  you count. This file retires that route. The 2008 paper restates the 1991 upper bounds throughout,
+  so it is also the reprint route for them; the page uses `reference_read_from` accordingly. The
+  hazard in the 2008 PDF is different and was handled: comma thousands separators inside table cells
+  (1,073,700; 30,967,000; 5,369,140), read at digit scale on 300 dpi crops.
+what_it_carries: >-
+  P_i = k*alpha^n over the modern dataset. Table 12 tabulates k and n for THIRTEEN gas pairs, prior
+  and present - but only NINE support a comparison (H2/O2 and He/O2 have present = NA; CO2/N2 and
+  N2/CH4 have prior = NA), and the paper's own Conclusions classify exactly those nine. Tables 1-11
+  tabulate 117 near-bound experimental points; Tables 13a/13b a Knudsen-transition analysis computed
+  from Table 12 and therefore usable as an internal identity. Figures carry data clouds only and were
+  not digitised. Fig. 12 (-1/n vs gas diameter) and Freeman's eq. (2) are out of scope: the paper
+  prints neither kinetic diameters nor solubility constants.
+built_summary: >-
+  Nine comparable pairs. Front-factor share of the shift, at each pair's own geometric-mean
+  selectivity: median 0.98, range 0.59-1.39 - and 0.5647 to 1.0334 on the four references Robeson's
+  OWN Table 13 supplies; the two ranges are kept apart everywhere. The two lines are near-parallel
+  (spread/shift < 0.20) for 6 of 9, i.e. THREE fail: H2/N2 0.34, H2/CH4 0.93, H2/CO2 2.05, and only
+  H2/CO2 is one the paper itself attributes to a slope change. The paper's three "significant" pairs
+  are reproduced 3 of 3 by the SELECTIVITY gain at fixed permeability and only 2 of 3 by dlog k or
+  by the permeability gain at fixed selectivity; 3 of 3 holds at every evaluation point inside the
+  permeability range all nine pairs share, but the third-to-fourth gap is itself reference-dependent
+  and runs 0.011 to 0.111 decades across them. H2/CO2's two bounds cross at alpha = 37.47, inside its
+  own tabulated range, where the 2008 bound sits 30.4 % below the 1994 one - and that "inside its own
+  range" verdict rests on a SINGLE tabulated point (alpha = 100.9, next one down 23.1), which break
+  row (T1) removes. 19 of 117 tabulated points lie above the bound they are tabulated against (r up
+  to 3.49, geometric mean 0.478). V1: Tables 13a/13b reproduce from Table 12, median 0.017 %, 25 of
+  26 inside a generous printing band, the exception 13a O2/N2 at -0.612 %. V2 IS A CONSISTENCY
+  IDENTITY, NOT A SECOND ROUTE: its residual is the difference of the two corresponding V1 residuals
+  (measured, agreeing to 4e-16 decades), so it cannot fail unless V1 fails; its real power is over
+  this page's decomposition code. Given Table 12 the decomposition is a rearrangement and no
+  arithmetic on Table 12 can corroborate it - the data-side shift is shown to be the same identity to
+  5e-16 decades. THE SECOND ROUTE IS V3: a covering line re-estimated from the 117 points replaces
+  the present bound. AT EACH PAIR'S GEOMETRIC-MEAN SELECTIVITY the two routes agree on the sign for
+  9 of 9 pairs and to 0.0857 decades on the seven pairs spanning more than 1.5 decades of
+  selectivity - and BOTH of those numbers are themselves reference-dependent, so both are swept:
+  across each pair's own alpha_min, alpha_gm, alpha_median and alpha_max the wide-span worst case
+  runs 0.0857 to 0.5431 decades (factor 6.3), the median over nine 0.0379 to 0.3151, and the sign
+  count is 8 of 9 at alpha_min (He/N2 envelope -0.0117 vs decomposed +0.2016). The substituted route
+  reproduces Result 3's ranking 3 of 3 at the same reference and at five of the seven references the
+  PRIMARY route is swept over, 2 of 3 at each pair's own P_median and P_max where He/H2 falls to
+  fourth - against 3 of 3 at all seven for the primary route; that asymmetry is stated, not glossed.
+  It does NOT agree on the front-factor share (median 0.434 vs 0.982, range -0.0306 to 1.5494, all
+  three now metrics) - the page's own caveat from the other side; the NEGATIVE share is explained in
+  words (He/N2's envelope k is 12,239 against the prior 12,500 while the bound moved up 0.2988
+  decades, so the whole shift is slope). Scope: the present line only; both routes read the prior
+  block from the same restatement AND both use the same alpha_0 from Tables 1-11. Point selection
+  limits the route's baseline agreement, not its detecting power: the residual responds 1:1 to a
+  vertical error in the printed line, measured under break row (DD) at 0.07341 -> 1.07341.
+  58 metrics, 14 break rows (three of them perturbing a single cell of Tables 1-11, not Table 12),
+  coverage map BUILT FROM MEASURED MOVERS with the clean row recomputing all 58 by a separate code
+  path and asserted equal to the reported values, bit-identically on every key - a second
+  implementation of the page's ASSEMBLY, with the shared primitives (including envelope_fit) written
+  once and the page saying so. Runtime ~8.7 s wall (measured, two consecutive in-place runs: 8.66 and
+  8.66 s including kernel startup; four further runs in an isolated copy fall between 8.92 and
+  9.26 s). Deterministic: two consecutive executions in an isolated tree give identical cell content,
+  an identical figure (sha256 f95d1727bb70...) and a byte-identical agreement.json, all three also
+  matching the staged files; build_page.py regenerates all 37 cell sources identically.
+printed_defects_found: >-
+  (1) Conclusions p. 399 name the significantly shifted pairs as "He/CH4, He/CO2 and He/H2" and then
+  as "He/CO2, He/CO2 and He/H2" [sic] - He/CO2 twice, He/CH4 dropped. (2) p. 392 says "the one data
+  point above the present upper bound" for O2/N2; Table 1 has two above the printed line. (3) Table
+  13a's O2/N2 row misses k*alpha^n by -0.612 % against a worst-case propagated printing band of
+  +-0.279 %. (4) Table 2 prints "Polypyrrole" where Tables 1/5/6 print "Polypyrrolone" for the same
+  material from the same reference [21]; Table 12's prior block prints "He/CO2" without the final
+  subscript. (5) The author repairs a compiled CH4 permeability in prose (80.2 -> 180.2) but not in
+  Table 9, which still carries alpha = 1.9. All reported verbatim, none repaired.
+integrator_notes: >-
+  models.yaml has NO H1.8 entry (only a `related:` mention inside H1.7), so queue_cases/H1.8/models_entry.yaml
+  is an APPEND, not an upgrade-in-place. `structures` is deliberately EMPTY and `pymrm_api` is
+  deliberately empty - this is a correlation audit with no discretised model, and the page's "PyMRM
+  implementation" section says so rather than manufacturing one. scripts/check_metadata.py does not
+  constrain the contents of `structures`, and nothing in the site build reads it, so an empty list is
+  safe; the page's front-matter `categories` deliberately carries no `struct:` tag. Nothing was
+  written outside queue_cases/H1.8/; no git commands were run. review/ holds the verification report
+  only - no figure was digitised anywhere on this page, so there is no overlay image to gate and
+  nothing in review/ is copyrighted page imagery.
+fixer_pass: >-
+  2026-08-08, after review/verification.md ("safe after fixes"). No NUMBER on the page needed
+  correcting - all 48 metrics, all 26 Table-12 rows, all 117 near-bound points and all 26 Table-13
+  rows were re-derived independently and matched. Every fix was to what the page SAID about its own
+  checks: (1) V2 relabelled from "second independent route" to a consistency identity, with the
+  identity V2 residual == difference of the two V1 residuals now MEASURED on the page (4e-16
+  decades), and the second-route role reassigned to V3's envelope, which is the only computation
+  here that does not read the present bound out of Table 12; (2) the coverage map is now built from
+  measured movers instead of hand-written prose - 26 of the old 48 metrics carried at least one false
+  row-code, 38 false row-codes out of 109 claimed [COUNT CORRECTED 2026-08-08 by fixer pass 2: this
+  field previously read "22 of the old 48 attributions were false, plus one more the verification
+  missed", i.e. 23, contradicting the page, which has printed 26/38 since this pass. Verifier pass 2
+  recovered the pre-fix map from the first verification's own notebook dump, measured the movers
+  independently, and reproduced 26 and 38 exactly - and confirmed both of this pass's named
+  corrections to the first verification, h2co2_crossing_alpha and t13a_o2n2_alpha_backout_rel]. One
+  of them the verification missed entirely (dlogA_top3_hits claimed (G8), which the page's own
+  printed output two cells earlier says does NOT move it); (3) three break rows now perturb Tables 1-11, one of which
+  takes pairs_crossing_inside_range 1 -> 0; (4) the 0.56-1.39 attribution to Robeson's Table 13
+  corrected to 0.56-1.03; (5) "fails for H2/CH4 and H2/CO2" corrected to three pairs, and the
+  mitigation corrected to ONE (the paper attributes a slope change only to H2/CO2 - the verification
+  said two); (6) this built_summary's runtime; (7) Result 3's evaluation-point dependence swept and
+  reported; (8) trivia: 16 -> 17 "diameter" occurrences, "numerals" -> "numeric cells", the retyped
+  37.379 removed by construction, and two off-by-one page citations in the printed-claims CSV.
+  Metric count 48 -> 53, break rows 10 -> 14, runtime ~5 s -> ~7.5 s.
+fixer_pass_2: >-
+  2026-08-08, after review/verification-pass2.md ("safe after fixes"). AGAIN no number on the page
+  needed correcting: the pass-2 verifier re-implemented all 53 metrics from scratch (own structure,
+  own envelope solver written twice - exact active-set enumeration with strict feasibility, and
+  SLSQP) and matched agreement.json to 4.88e-16 worst relative. Both blocking findings were the SAME
+  defect class the first pass caught for Result 3's gap - a reference-dependent number stated without
+  its reference - recurring in the NEW second-route material, so the fix was applied as a class and
+  not locally. (1) BLOCKING: the second route's residual carries log(alpha_0) explicitly, and three
+  of five surfaces quoted it bare. It is now swept over each pair's own alpha_min / alpha_gm /
+  alpha_median / alpha_max on the page, exactly as EVAL sweeps P for Result 3: wide-span worst case
+  0.0857 (alpha_gm, the reference used and the KINDEST of the four) -> 0.1574 (median) -> 0.3322
+  (min) -> 0.5431 (max), factor 6.3; median over nine 0.0379 -> 0.3151; and the "sign 9 of 9" is
+  8 of 9 at alpha_min, where He/N2's envelope shift is -0.0117 against a decomposed +0.2016. Two new
+  metrics carry it (envelope_offset_max_abs_wide_span_max_over_alpha0 = 0.5431,
+  envelope_sign_agree_min_over_alpha0 = 8) and the reference is now attached on all five surfaces.
+  (2) BLOCKING: "Result 3 survives the envelope substitution, 3 of 3" was computed at one reference
+  while the primary route is held to seven. The substituted route now gets the identical seven-point
+  EVAL sweep and reports 3 of 3 at five of them and 2 of 3 at each pair's own P_median and P_max
+  (He/H2 falls to fourth), against 3 of 3 at all seven for the primary route - new metric
+  envelope_implied_dlogA_top3_hits_min_over_eval_points = 2. The contrast is stated as the result.
+  (3) BLOCKING: envelope_offset_max_abs_wide_span was REPORTED as max|SR.resid| (9 comparable pairs,
+  narrative) and MEASURED as max|V3.offset_gm| (11 point-carrying pairs, hardcoded log10) - equal at
+  the clean point and under 13 of 14 rows, but 0.9591 vs 0.0857 under (L), which the clean-point
+  assert cannot see. rerun_all now computes the reported object, sh_env - shift_gm over the
+  comparable pairs, and (L) duly appears in that metric's measured coverage row. (4) the scope clause
+  ("present line only; both routes read the prior block from the same restatement") added to
+  README.md and models_entry.yaml, and alpha_0 named alongside the prior block as the second shared
+  input, on every surface. (5) the negative front-factor share explained in words and computed on the
+  page (He/N2: envelope k 12,239 vs prior 12,500, dlog k = -0.0092, shift +0.2988, lines crossing at
+  alpha = 1.11); -0.0306 and 1.5494 promoted from quoted numbers to metrics
+  (envelope_implied_share_min / _max) so CI tracks them. (6) this file's fixer_pass count corrected
+  from 23 to the page's own 26 metrics / 38 row-codes, which pass 2 re-measured independently and
+  settled in the first fixer's favour. (7) printed-claims sidecar location: now includes section 14,
+  p. 397 (the corrected discussion_ptmsp row) and the acquisition note lists its crop; the
+  t13_mw_column_max_abs_rel_iupac STRUCT entry now states what it cannot detect instead of leaning on
+  its neighbour. (8) "a second implementation of the whole page" softened to "of the whole page's
+  ASSEMBLY", naming the shared primitives (P_bound, alpha_bound, excursion, ulp, sqrtM, envelope_fit)
+  as written once, plus the latent V2-column fragility. Also taken, an offered upgrade the pass-2
+  verifier measured and this pass reproduced: the route's 1:1 sensitivity to a vertical error in the
+  printed present line is now demonstrated on the page under break row (DD) (0.07341 -> 1.07341,
+  exactly +1.000 decade), which answers the "the points were selected close to the 2008 line, so the
+  small baseline residual is optimistic" objection - true of the baseline, false of the detecting
+  power. Metric count 53 -> 58, break rows unchanged at 14, runtime ~7.5 s -> ~8.7 s. Nothing was
+  written outside queue_cases/H1.8*; no git commands were run; nothing went into pages/.
+updated: '2026-08-08'
+doi_source: >-
+  DOI read from the PDF's own Title metadata and from the article footer "doi:10.1016/j.memsci.2008.04.030"
+  on p. 390, both confirmed on a 300 dpi render. The older entry recorded an Elsevier full-text fetch
+  of the 1991 paper (PII 037673889180060J) saved to ~/papers/pymrm-gallery/api-text/; that route is
+  retired for this case and was NOT used for the page.
