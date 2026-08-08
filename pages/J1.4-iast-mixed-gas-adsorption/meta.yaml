@@ -1,0 +1,123 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J1.4
+slug: iast-mixed-gas-adsorption
+title: "IAST 1965: mixture adsorption from pure-component isotherms alone — and a paper that prints no numbers"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1, S10]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 6
+datasets:
+  - myers-1965-printed-claims.csv
+  - iast-illustrative-reference.csv
+
+validation:
+  - "THE SCOPE DECISION IS THE PAGE'S FIRST RESULT, and it is stated with the search behind it: the paper contains NO tables (the only tabular matter in its seven pages is NOTATION and LITERATURE CITED), prints NO numerical result of the theory anywhere in its text, carries ALL FOUR experimental validations as figures (Figs. 3-10) whose points belong to four external papers none of which is on disk, and never tabulates even its own pure-component inputs - Fig. 2's legend box says its curves are 'CALCULATED FROM EXPERIMENTAL ADSORPTION ISOTHERMS OF SZEPESY & ILLES (1963)'. Reproducing Fig. 3 would mean differentiating a digitised integral of data from an absent paper. The experimental case is therefore scoped out, no curve is digitised, and the page says plainly that it establishes the theory's printed structure, NOT its empirical adequacy"
+  - "THE DERIVATION CHAIN VERIFIED SYMBOLICALLY: eleven sympy identities all exactly zero - (11)+(12) -> (13); (22)+(41)+(42) -> (29); (20) -> (21) at constant P; eq. (19) on a Langmuir isotherm giving z = m ln(1+bP); (30) into (19) -> (32); the Henry-limit chain (32)-(35) recovering the statistical-mechanical n_i = K_i P y_i (31) exactly; both lever rules (45) and (46); the equal-capacity closed form (below); and the extended-Langmuir curl in closed form plus its vanishing at m1 = m2. Labelled structural: they verify algebra, not numerics, and are cited as evidence for nothing numerical"
+  - "TWO PRINTED EQUATION DEFECTS FOUND BY THAT CHAIN, reported and not repaired. Eq. (11) as printed reads 'g_i(T) + RT ln P_i(pi) RT ln gamma_i x_i' [sic] - no operator between the two RT ln terms; the product form is dimensionally incoherent (energy squared) and demonstrably does not yield eq. (13) on equating with (12), while the sum form yields it exactly; since (11) is by construction (10) substituted into (9), both printed correctly, the defect is proved from the paper's own equations and the lost '+' is labelled an inference. And p. 123 verbatim: 'With the pressure P of the mixture held constant, Equation (21) becomes' - introducing eq. (21) by its own number where the derivation needs (20); d ln(P y_i) = d ln y_i at constant P is verified symbolically"
+  - "THE SOLVER PROVED AGAINST A CLOSED FORM IT NEVER TOUCHES: the page derives symbolically that for equal-capacity Langmuir pairs the IAST solution IS extended Langmuir, and the Newton solver (which iterates on the spreading-pressure match and knows nothing of that form) reproduces it to 7.6e-16 over 900 states spanning three decades of pressure. Below the CI floor and named as such, with three break rows as companions: capacities made unequal -> 0.42; b1 wrong by 1 % -> 9.1e-3; Newton tolerance loosened to 1e-3 -> 2.4e-10"
+  - "THE HENRY-LAW LIMIT - THE ONE CASE THE PAPER ITSELF PROVES RIGOROUS (eqs. 30-35): on pure Henry isotherms the solver reproduces n_i = K_i P y_i to 2.2e-16 at arbitrary pressure (break: matching skipped entirely, x_i = y_i, -> 0.76); on the unequal-capacity Langmuir pair the selectivity converges to K1/K2 at observed order 1.0000 in P over six decades, deviation 2.75e-8 at P = 1e-8 (breaks: read at P = 0.1 instead -> 0.27; capacity forgotten in K -> 0.50, and the order against that wrong limit collapses to 0.0)"
+  - "THE GIBBS ADSORPTION ISOTHERM AS A SOLVER TEST THAT CAN FAIL: along a constant-P composition path, the pure-component route to Delta(pi A/RT) agrees with the path integral of the mixture amounts (eq. 21) to 4.1e-16 on Gauss-64 (below floor, named) and 8.8e-5 on the CI-active trapezoid-65, observed order 2.0. The break rows are the two plausible wrong readings: eq. (26) taken as an ARITHMETIC mean -> residual 1.5e-2 with the observed order collapsing to 0.006 (refinement cannot fix a wrong identity - stated on the page), and the two components' spreading pressures mismatched by 1 % (a broken eq. 40) -> 1.6e-3"
+  - "THE PAPER'S CONSISTENCY CHARGE MADE QUANTITATIVE, COMPUTED TWO INDEPENDENT WAYS. P. 125 reports that Bering and Serpenskii noted the Langmuir mixture model 'was not thermodynamically consistent'. Around a closed loop in (P, y1), IAST closes the Gibbs one-form to 7.8e-16 while extended Langmuir with unequal capacities leaves a deficit of -0.1548 = 11.9 % of the loop's own spreading-pressure scale - by boundary line integral AND by area integral of the sympy-derived curl (m2-m1) b1 b2 P^2/D^2, routes sharing no assembly, agreeing to 2.7e-15. The curl's denominator contains no m, so the deficit is EXACTLY linear in m2-m1: doubling m1-m2 multiplies the measured deficit by 2.000000000000002. Breaks: a 1 % spreading-pressure mismatch injected into IAST -> loop fails at 2e-3; m2 -> m1 -> deficit collapses to 5e-16; the line-integral route on 2-point Gauss -> route agreement degrades to 6.1e-3; loop edge dropped -> linearity off by 1.29"
+  - "ONE STRUCTURAL RESULT THE PAPER STOPS SHORT OF, verified and broken: under IAST, two pure isotherms that are the same curve shifted in log P give EXACTLY constant selectivity 1/kappa - the Henry-limit constancy of eqs. (30)-(35) is the linear special case, and equal-capacity Langmuir pairs are another. Verified on a dual-site pair (numerical isotherm inversion, nothing shared with the closed forms) to a 4.7e-14 spread over 144 states spanning 100x in pressure; perturbing ONE site's affinity by 5 % moves the spread to 1.1e-2. Searched for in the paper and not found: the Fig. 10 discussion (pp. 125-126) treats composition dependence as a prediction, and the conclusions never connect selectivity constancy to isotherm shape. Consequence stated on the page: composition-dependent selectivity under IAST is a SHAPE signal"
+  - "EXTREMA ROOT-FOUND OR CLOSED-FORM, NEVER SAMPLED: the extended-Langmuir total-amount deviation from IAST is a window supremum (monotone growth in P asserted across the window, so the sup sits on the P = 10 edge by definition) with the interior maximum over y1 root-found - 0.2151 at y1* = 0.0996, and the 30 x 30 grid read of the same quantity (0.2136, 0.67 % low) is printed beside it as the reason; the dilute-component deviation is a closed-form y1 -> 0 limit (0.6417 at P = 10); and both infinite-dilution selectivities have closed forms (5(1+sqrt(3)) = 13.660254 and exactly 60 at P = 1, composition-dependence factor 4.3923), the first also recovered by the solver at y1 = 1e-8 to 2.7e-8 (break: read at y1 = 0.1 instead -> 0.29)"
+  - "THE PAPER'S OWN COUNTING CROSS-CHECKED FROM TRANSCRIBED SCALARS: eq. (18) gives a binary 2 - 2 + 3 = 3 degrees of freedom as printed, and the p. 124 scheme's 9 unknowns - 7 equations = 2 specified = 3 DOF with T fixed - internally consistent, all numbers read from the claims CSV, none retyped"
+  - "TWO BIBLIOGRAPHIC DEFECTS PROVED FROM THE REFERENCE LIST'S OWN NUMBERS: the Fig. 6 legend credits 'MARKHAM & BENTON (1950)' [sic] where the paper's only Markham & Benton reference (ref. 8) is J. Am. Chem. Soc. 53, 497 (1931) and the p. 125 text credits the 0 C data to '(8)' - 1950 is ref. 7, Lewis et al.; and ref. 5's 'Ibid, 63, 456 (1959)' attributes to J. Chem. Phys. a volume-year pair requiring 4.6 volumes/year against ref. 4's own (17, 1949), impossible for a journal that was at vol. 37 in 1962 - that J. Phys. Chem. 63 (1959) was intended is labelled an inference. Ref. 5 is also cited nowhere in the running text (every '(5)' is equation (5); text layer used as a search index only, each hit verified on a crop). Also recorded: 'The absorbent is not counted as a component' [sic, p. 122], and the Serpenskii/SERPINSKII transliteration split between text and figure legends"
+  - "a 27-row defect-injection table covering ALL 22 reported metrics, with the coverage map ASSEMBLED FROM THE TABLE ITSELF and asserted against agreement.json key-for-key in both directions (a metric cannot claim a row that is not in the table, and every non-structural metric must have a row that moves it - both asserts fail the notebook). Eight metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 while healthy; each is named on the page with an above-floor companion, and the companion strings are built from the measured break values, not typed. One metric (the sympy identity count) is labelled structural with its reason"
+  - "every number quoted in the page's markdown is re-derived in a final audit cell (31 entries, each with its own tolerance) and the cell RAISES on any mismatch, so the prose cannot drift from the output. Two consecutive executions produce identical cell content, identical figures, an identical agreement.json and a byte-identical computed CSV"
+
+adds: >
+  Nothing to the theory, and the page says so plainly: IAST is algebra plus
+  one scalar root-find per state, and most of the notebook would run with
+  pymrm uninstalled, exactly as on J1.1, J1.3 and A1.6. What newton and
+  NumJac do here is narrow and real. (1) The whole (P, y1) grid solved as one
+  Newton problem with NumJac((K,1)) - independent scalars, a diagonal
+  Jacobian by construction, and the shape is (K,1) never (K,) per the house
+  rule; the iteration runs in ln z, which keeps Newton off the P(0) = 0
+  singularity. (2) The general-isotherm inverse: for the dual-site pair the
+  pure P(z) is itself a nested vectorised newton solve - the machinery a
+  user with tabulated isotherms (eq. 43) actually needs. (3) Root-finds and
+  closed forms where a sweep would have been wrong: the window supremum is
+  root-found with the 0.67 %-low grid read printed beside it, the dilution
+  limits are closed forms rather than end-of-grid reads, and every
+  quadrature carries an observed order. The one output useful beyond
+  reproduction is not pymrm at all: the closed-loop Gibbs consistency
+  diagnostic with its symbolically derived curl, applicable to ANY proposed
+  mixture-adsorption model n_i(P, y) with no IAST solve required, and the
+  identification of exactly when the extended-Langmuir shortcut is safe
+  (equal capacities, where it IS an ideal adsorbed solution).
+
+agreement: >
+  Everything on this page is structural or solver-versus-closed-form;
+  nothing is experimental and nothing is a fit, and the page states in its
+  title cell and Reuse that it establishes what the theory is, not that it
+  is empirically right. Solver vs closed forms: equal-capacity extended
+  Langmuir to 7.6e-16 over 900 states; pure-Henry eq. (31) to 2.2e-16;
+  Henry-limit selectivity at observed order 1.0000 in P, 2.75e-8 at
+  P = 1e-8; dilute-in-1 selectivity closed form recovered to 2.7e-8.
+  Thermodynamic identities: Gibbs path integral to 4.1e-16 (Gauss-64) /
+  8.8e-5 (trapezoid-65, order 2.0); IAST loop closure 7.8e-16. The
+  discriminating number: extended Langmuir with unequal capacities leaves a
+  loop deficit of 11.9 % of scale, computed by two assembly-free routes
+  agreeing to 2.7e-15, exactly linear in m2 - m1 (factor 2.000000000000002
+  measured), and collapsing to 5e-16 at equal capacities. Deviations of the
+  shortcut model from IAST on the illustrative pair: 21.5 % in total amount
+  (window supremum, root-found) and 64.2 % on the dilute component (closed
+  form). Symbolic: eleven identities exactly zero. Printed defects: eq. (11)
+  missing its '+'; the eq.-(21) self-citation; Fig. 6's 'MARKHAM & BENTON
+  (1950)' vs ref. 8's 1931; ref. 5's impossible Ibid volume-year pair
+  (4.6 volumes/year); 'absorbent' [sic]; Serpenskii vs SERPINSKII.
+
+caveats: >
+  NO EXPERIMENTAL CONTENT ANYWHERE, BY SCOPE DECISION STATED UP FRONT. The
+  paper's four validation systems (methane-ethane and ethylene-CO2 on
+  activated carbon, CO-O2 and propane-propylene on silica gel) live entirely
+  in Figs. 3-10 as points from four external papers, none on disk; even the
+  pure-component inputs exist only as citations and as Fig. 2's
+  already-integrated curves. This page must not be cited as evidence that
+  IAST describes any real system. If the Szepesy & Illes tables (Acta Chim.
+  Hung. 35, 37/53/245) are acquired, the four comparisons become a natural
+  companion page.
+
+  TIER 6 BY CONSTRUCTION: pairs L, U and S are illustrative parameter sets
+  in arbitrary units, chosen for no physical system, and the page says so at
+  every use. The magnitudes of the loop deficit (11.9 % of scale), the
+  21.5 % and 64.2 % shortcut errors and the selectivity factor 4.39 are
+  properties of those illustrative parameters; the SIGNS and the structural
+  statements (deficit nonzero iff capacities differ, exactly linear in
+  m2 - m1; selectivity constant iff shapes match) are the claims.
+
+  EQ. (14) - the fugacity form for high pressure - is transcribed and NOT
+  exercised: the paper prints no real-gas model to put in it, and the page
+  says so rather than leaving it looking supported. Everything else the
+  paper prints as an equation, (1)-(13) and (15)-(46), is exercised
+  symbolically, numerically, or both; eqs. (1), (2), (4)-(8), (15)-(17) are
+  exercised only through their printed consequences ((9), (17), (19)-(21),
+  (23)-(26)), which is where the paper itself takes them.
+
+  ORIGIN NOT CONSULTED, and nothing here derives from them: Szepesy & Illes
+  (1963), Markham & Benton (1931), Lewis et al. (1950), Bering & Serpenskii
+  (1952) - the four data sources; Arnold (1949), the rival model, judged
+  here only in the paper's own words; Hill (1949, 1959, 1960), Young &
+  Crowell (1962), de Boer (1953). The claim that Arnold's model is
+  inconsistent is the PAPER's, quoted as such; the inconsistency this page
+  proves is extended Langmuir's, from its own closed form.
+
+  THE EQUAL-CAPACITY CLOSED FORM AND THE SHAPE-TRANSLATION RESULT are this
+  page's derivations (standard results, stated without attribution because
+  no source was consulted for them); both are proved symbolically on the
+  page rather than cited.
+
+  WHAT THE PAGE DOES NOT SETTLE: whether ideality (gamma = 1) holds for any
+  real mixture - the paper's own empirical claim - and anything dynamic;
+  breakthrough is J1.5, and this page's solver drops into that page's
+  mixture-equilibrium slot.

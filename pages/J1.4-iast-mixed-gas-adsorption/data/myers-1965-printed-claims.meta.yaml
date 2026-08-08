@@ -1,0 +1,68 @@
+dataset_id: myers-1965-printed-claims
+title: "Myers & Prausnitz (1965) - every number the paper prints outside its equations that this page uses"
+status: complete
+
+source:
+  authors: ["Myers, A. L.", "Prausnitz, J. M."]
+  year: 1965
+  container: "AIChE Journal 11(1) 121-127 (January 1965)"
+  doi: "10.1002/aic.690110125"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (numerical facts extracted; no figure or page image reproduced)"
+
+conditions: >
+  THE PAPER CONTAINS NO TABLES AND PRINTS NO NUMERICAL RESULTS. Its only
+  tabular matter is the NOTATION list and LITERATURE CITED; every experimental
+  comparison (Figs. 3-10) is a figure whose points come from four external
+  sources, and even the pure-component inputs exist only as literature citations
+  (refs. 7-11) and as the already-integrated curves of Fig. 2, whose own legend
+  says they are "CALCULATED FROM EXPERIMENTAL ADSORPTION ISOTHERMS OF SZEPESY &
+  ILLES (1963)". What remains printable as numbers - and what this file holds -
+  is four kinds of scalar, kept apart by the `where` column:
+
+  (1) EXPERIMENTAL CONDITIONS of the four comparisons: temperatures, total
+  pressures, and the 19.6 g silica mass, from captions, figure-frame legend
+  boxes and the p. 125 text.
+
+  (2) COUNTS THE TEXT STATES: the 3 degrees of freedom of eq. (18) for a binary,
+  and the nine-unknowns / seven-equations / two-specified bookkeeping of the
+  p. 124 calculation scheme. The page checks these against each other and
+  against the phase rule.
+
+  (3) BIBLIOGRAPHIC NUMBERS from LITERATURE CITED, stored because the page
+  proves two defects from them: the Fig. 6 legend year (1950) against ref. 8's
+  own 1931, and ref. 5's "Ibid, 63, 456 (1959)" against ref. 4's (17, 1949) for
+  the same journal.
+
+  (4) ONE FIGURE-LEGEND YEAR (fig6_legend_year) that is itself the defect being
+  recorded; it is typeset text inside the plot frame, not a data point.
+
+  NO CURVE IS DIGITISED ANYWHERE ON THIS PAGE. The figure entries above are
+  typeset text lines read as characters off crops; no point coordinate was
+  taken from any figure.
+
+acquisition:
+  method: text
+  figure: "captions, figure-frame legend boxes, p. 122/124/125 text, and LITERATURE CITED"
+  tool: "poppler pdftoppm -r 300 (the scan's NATIVE resolution), cropped to each statement, read visually at digit scale"
+  procedure: >
+    pdfimages -list reports every page of this file as CCITT-G4 bilevel at
+    300 ppi native (2325 x 3299 px), so pages were rendered at 300 ppi and each
+    statement cropped out of it; a larger render would only interpolate. Every
+    value in this file was read off such a crop. THE TEXT LAYER WAS NOT USED FOR
+    ANY DIGIT; it served only as a search index for negative claims (e.g. that
+    ref. 5 is cited nowhere in the running text).
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-08
+  estimated_error: >
+    None beyond the printed precision. All entries are exact integers or the
+    exact decimals printed (25.4, 19.6). fig6_legend_year is recorded AS
+    PRINTED although the page shows it contradicts the paper's own reference
+    list; it is a recorded defect, not a datum.
+
+columns:
+  key: "identifier used by the notebook"
+  printed: "the number exactly as printed"
+  units: "units as printed (C, atm, mmHg, g, year, or dimensionless)"
+  where: "journal page and locus (caption, legend box, text, reference list)"
+  what_it_is: "one-line description, quoting the source where the wording matters"

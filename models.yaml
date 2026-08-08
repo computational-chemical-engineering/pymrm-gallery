@@ -4145,6 +4145,104 @@ models:
     page: pages/J1.3-bet-multimolecular-adsorption/
     related: [J1.5, J1.6, J1.8, B1.1, A1.7, C1.1, J3.1]
 
+  - id: J1.4
+    slug: iast-mixed-gas-adsorption
+    title: "IAST 1965: mixture adsorption from pure-component isotherms alone — and a paper that prints no numbers"
+    description: >
+      Myers and Prausnitz derive the ideal adsorbed solution theory - Raoult's law
+      with the pure-component reference taken at matched SPREADING PRESSURE,
+      P y_i = P_i(pi) x_i - and with it predict mixture adsorption from
+      pure-component isotherms alone, no mixture data and no mixture parameters.
+      Every one of the paper's four experimental validations is a figure of
+      external data, and even the pure inputs are never tabulated (there is not
+      one table in the paper), so this page validates what the paper actually
+      prints: the derivation chain, verified with sympy (eleven identities exactly
+      zero), which surfaces two printed equation defects - eq. (11) is missing the
+      '+' between its two RT ln terms, and the sentence introducing eq. (21) cites
+      eq. (21) itself; the graphical lever-rule construction of Fig. 1, proved and
+      drawn; and the solver, tested against closed forms it never touches - the
+      equal-capacity case (where the page derives symbolically that IAST IS
+      extended Langmuir, reproduced to 7.6e-16) and the Henry-law limit the paper
+      itself proves rigorous. The paper's consistency charge against the Langmuir
+      mixture rule is then made quantitative: around a closed loop in (P, y) the
+      Gibbs one-form leaves an 11.9 %-of-scale spreading-pressure deficit for
+      unequal-capacity extended Langmuir - computed by line integral and by a
+      symbolically derived curl, agreeing to 2.7e-15, exactly linear in m2 - m1 -
+      where IAST closes the same loop to 8e-16. One structural result the paper
+      stops short of: IAST selectivity is exactly constant whenever the two pure
+      isotherms are the same curve shifted in log P, so composition-dependent
+      selectivity is a shape signal.
+    section: J
+    status: published
+    tier: T0
+    priority: P1
+    structures:
+    - S1
+    - S10
+    phases:
+    - gas-solid
+    predicts:
+    - mixture adsorption equilibria (x_i, n_t, selectivity) from pure-component isotherms alone, eqs. (22), (26), (36)-(42)
+    - reduced spreading pressure z = pi A/RT from any pure isotherm, eq. (19), analytic or by anchored quadrature
+    - the Henry-limit closure n_i = K_i P y_i with constant selectivity K1/K2, eqs. (30)-(35)
+    - the lever-rule graphical solution of Fig. 1, eqs. (45)-(46)
+    - the exact condition under which extended Langmuir is thermodynamically consistent (equal capacities, where it IS an IAST)
+    - a closed-loop Gibbs-consistency diagnostic applicable to any mixture-adsorption model n_i(P, y)
+    pymrm_api:
+    - newton
+    - NumJac
+    reference:
+      authors:
+      - Myers, A. L.
+      - Prausnitz, J. M.
+      year: 1965
+      container: AIChE Journal 11(1) 121-127
+      doi: 10.1002/aic.690110125
+    origin_not_consulted: >
+      Szepesy, L. and Illes, V. (1963) Acta Chim. Hung. 35, 37, 53 and 245 - the
+      methane/ethane isotherms and mixture data behind Figs. 2-4; Markham, E. C.
+      and Benton, A. F. (1931) J. Am. Chem. Soc. 53, 497 - the CO-O2/silica data
+      of Figs. 5-6 (the Fig. 6 legend's '(1950)' contradicts this, the paper's
+      only Markham & Benton reference); Lewis, W. K., Gilliland, E. R., Chertow,
+      B. and Hoffman, W. H. (1950) J. Am. Chem. Soc. 72, 1153 - the
+      propane-propylene data of Fig. 7; Bering, B. P. and Serpenskii, V. V. (1952)
+      Zhur. Fiz. Khim. 26, 253 - the ethylene-CO2 surface behind Figs. 8-10.
+      These four are the sources of every experimental point in the paper, which
+      is exactly why the experimental case is out of the page's scope. Also not
+      consulted: Arnold (1949) J. Am. Chem. Soc. 71, 104 - the liquid entropy
+      model, judged only in the paper's own words; Hill (1949, 1959, 1960); Young
+      & Crowell (1962); de Boer (1953). Nothing on the page derives from any of
+      them.
+    data:
+      tier: 6
+      method: analytical
+      status: complete
+    note: >
+      THE PAPER PRINTS NO NUMBERS: no tables, no numerical results - all four
+      experimental validations are figures of external data and even the
+      pure-component inputs exist only as Fig. 2's already-integrated curves
+      ("CALCULATED FROM EXPERIMENTAL ADSORPTION ISOTHERMS OF SZEPESY & ILLES
+      (1963)"). The experimental case is scoped out rather than digitised
+      (figure-derived inputs would feed figure-derived targets), no curve is
+      digitised, and the page states plainly that it establishes the theory's
+      printed structure, not its empirical adequacy. All numerics run on
+      illustrative parameter sets in arbitrary units, labelled as such at every
+      use; the transcribed CSV holds the paper's 34 printed scalars (conditions,
+      counts, reference-list numbers), each read off a digit-scale crop of the
+      300 ppi native render. A computed reference CSV (the page's own IAST
+      solutions on the illustrative pairs, byte-identical across runs) is shipped
+      for regression-testing independent IAST implementations. Ref. 5's
+      'Ibid, 63, 456 (1959)' cannot belong to J. Chem. Phys. (4.6 volumes/year
+      against ref. 4's own pair) and is cited nowhere in the running text; that
+      J. Phys. Chem. was intended is recorded as an inference.
+    page: pages/J1.4-iast-mixed-gas-adsorption/
+    related:
+    - J1.1
+    - J1.3
+    - J1.5
+    - J1.2
+    - A4.2
+
   - id: J1.5
     slug: ldf-breakthrough
     title: "Linear driving force and adsorption breakthrough"

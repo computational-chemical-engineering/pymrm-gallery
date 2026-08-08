@@ -4,8 +4,9 @@ title: IAST
 catalog_reference: Myers & Prausnitz, AIChE J 11 (1965)
 priority: P1
 tier: T0
-structures: S10
-status: unclaimed
+structures: [S1, S10]
+status: published
+page: pages/J1.4-iast-mixed-gas-adsorption/
 reference:
   authors:
   - Myers, A. L.
@@ -22,18 +23,34 @@ paper:
     "A. L. MYERS and J. M. PRAUSNITZ / University of California, Berkeley, California", plus the full
     abstract. Wiley Subject metadata agrees: "AIChE Journal 1965.11:121-127".'
 blocker: null
-notes: null
-updated: '2026-08-06'
-doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
-  field by field against the Crossref record: title, container, volume, issue, page range and year
-  all agree with the catalogue''s own citation string. NOT verified against the document itself, because
-  no copy could be obtained; the builder must still confirm the title page when the PDF arrives, as
-  on F3.5 and G1.7.'
+notes: >-
+  BUILT 2026-08-08, staged at queue_cases/J1.4/page/. The check_before_dispatch question is settled:
+  all four validation comparisons ARE figures only (Figs. 3-10), the paper contains no tables at all,
+  prints no numerical results, and even the pure-component inputs exist only as Fig. 2's
+  already-integrated curves ("CALCULATED FROM EXPERIMENTAL ADSORPTION ISOTHERMS OF SZEPESY & ILLES
+  (1963)") - so the experimental case was scoped out rather than digitised (figure-derived inputs
+  would feed figure-derived targets), NO review-overlay route was needed, and the page carries no
+  figure-derived numbers. The page validates the printed structure instead: eleven sympy identities
+  (finding eq. (11) missing its '+' and the eq.-(21) self-citation), the solver against two closed
+  forms it never touches (equal-capacity extended Langmuir, derived symbolically on the page, 7.6e-16;
+  the Henry limit the paper itself proves rigorous), and the p. 125 consistency charge against the
+  Langmuir mixture rule made quantitative (11.9 %-of-scale closed-loop Gibbs deficit, two routes to
+  2.7e-15, exactly linear in m2-m1). Bibliographic defects proved from the reference list: Fig. 6's
+  "MARKHAM & BENTON (1950)" vs ref. 8's 1931; ref. 5's impossible Ibid volume-year pair, cited nowhere
+  in the text. DOI 10.1002/aic.690110125 now confirmed from the document itself (Wiley margin on every
+  page names it), closing the doi_source caveat below. models_entry.yaml is an APPEND (no J1.4 in
+  models.yaml). Acquisition target recorded: Szepesy & Illes 1963, Acta Chim. Hung. 35, pp. 37, 53,
+  245 - printed tables there would enable a companion page reproducing Figs. 2-4 without any
+  digitisation.
+updated: '2026-08-08'
+doi_source: 'crossref-verified 2026-08-02 and CONFIRMED FROM THE DOCUMENT 2026-08-08: the Wiley
+  download margin printed on every page of the scan names doi 10.1002/aic.690110125, and the title
+  page was read on a native-resolution render as F3.5/G1.7 practice requires.'
 what_it_carries: 'IAST as originally stated: the ideal adsorbed solution, the Raoult''s-law analogue
   in which the partial pressure of an adsorbed component is its adsorbed-phase mole fraction times
   the pressure it would exert as a pure adsorbed component at the same temperature and SPREADING PRESSURE,
   and the claim that mixture isotherms follow from pure-component data alone. The abstract names four
   validation systems: methane-ethane and ethylene-carbon dioxide on activated carbon, carbon monoxide-oxygen
   and propane-propylene on silica gel.'
-check_before_dispatch: Whether those four comparisons are printed tables or figures has NOT been checked.
-  One render settles it, and it decides whether this page needs the maintainer review gate.
+check_before_dispatch: 'SETTLED 2026-08-08: figures only, no printed tables anywhere in the paper.
+  See notes.'

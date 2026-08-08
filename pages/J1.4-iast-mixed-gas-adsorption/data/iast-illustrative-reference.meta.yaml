@@ -1,0 +1,50 @@
+dataset_id: iast-illustrative-reference
+title: "IAST reference solutions on two illustrative Langmuir pairs - COMPUTED BY THIS PAGE, not from any paper"
+status: complete
+
+source:
+  authors: ["PyMRM Gallery page J1.4"]
+  year: 2026
+  container: "computed output of pages/J1.4 (index.ipynb regenerates this file deterministically on every run)"
+  doi: null
+  access: "generated locally"
+  licence: "CC0 (computed numbers; no external data of any kind)"
+
+conditions: >
+  NOT DATA FROM THE PAPER AND NOT EXPERIMENTAL DATA OF ANY KIND. This file is
+  the page's own IAST solutions - the model of Myers & Prausnitz (1965),
+  eqs. (22), (26), (36)-(42) - evaluated on two ILLUSTRATIVE pure-component
+  Langmuir pairs whose parameters are stated in the file header and chosen for
+  no physical system:
+
+  pair L (equal capacities):   n_i(P) = m b_i P / (1 + b_i P), m = 1, b1 = 10, b2 = 1
+  pair U (unequal capacities): m1 = 1, b1 = 10; m2 = 0.5, b2 = 2
+
+  in arbitrary pressure and amount units. Its purpose is regression: an
+  independent IAST implementation solving the same two pairs must reproduce
+  every row to solver tolerance (the equal-capacity pair also has the closed
+  form derived on the page, extended Langmuir). Two consecutive executions of
+  the notebook write byte-identical files.
+
+acquisition:
+  method: computed
+  tool: "the page's own IAST solver (pymrm newton + NumJac on the spreading-pressure match), tol 1e-13"
+  procedure: >
+    For each (P, y1) node the reduced spreading pressure z = pi*A/RT solves
+    P y1 / P1(z) + P y2 / P2(z) = 1 with P_i(z) the analytic Langmuir inverses;
+    x1, n_t, n_1, n_2 and the selectivity follow from eqs. (22), (26) and (28).
+    Grid: P in {0.2, 1, 5} x y1 in {0.1 ... 0.9 step 0.1}, both pairs.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-08
+  estimated_error: "solver tolerance 1e-13 on the spreading-pressure match; quantities printed to 12 significant figures"
+
+columns:
+  pair: "L (equal capacities) or U (unequal capacities)"
+  P: "total pressure, arbitrary units"
+  y1: "gas-phase mole fraction of component 1"
+  z: "reduced spreading pressure pi*A/RT at equilibrium, amount units"
+  x1: "adsorbed-phase mole fraction of component 1, eq. (22)"
+  n_t: "total amount adsorbed, eq. (26), amount units"
+  n_1: "amount of component 1 adsorbed, x1 * n_t"
+  n_2: "amount of component 2 adsorbed"
+  s12: "selectivity coefficient of component 1, eq. (28)"
