@@ -1,0 +1,128 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C1.2
+slug: eley-rideal
+title: "Eley-Rideal kinetics: the impact rate law, and the case that the name is wrong"
+section: C
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [gas, gas-solid, liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 15
+datasets:
+  - prins-2018-printed-statements.csv
+
+fit_or_test: >
+  NO EXPERIMENTAL DATA EXIST IN THE SOURCE, AND THE PAGE CLAIMS NO
+  EXPERIMENTAL VALIDATION. Prins (2018) is a historical and terminological
+  review: it prints no measurement, no table and no figure (checked three
+  ways - full text read, all 8 pages rendered and inspected, pdfimages
+  inventory shows only decorative logos). Everything quantitative on the page
+  is either (a) analytical - the printed limits of Eqs. (3a)-(3c) derived
+  symbolically and measured numerically - or (b) a labelled NUMERICAL
+  EXPERIMENT on constants imported from page C1.1, which are themselves FIT
+  constants (fitted by Hougen & Watson 1947 to their own 40 runs; no held-out
+  measurement exists there either, as C1.1's own metadata states). The
+  impact-law power study generates noiseless rates from the fitted mechanism
+  (d) and refits the impact forms - it is labelled synthetic in the cell that
+  runs it and everywhere its numbers appear. The one comparison against
+  measured rates (d vs o on the 12 printed 200 C runs) is a reproduction-side
+  fit-quality comparison on fit data, never validation.
+
+validation:
+  # PRIMARY - analytical, each able to fail
+  - "all eleven printed limiting-order claims of p. 719 derived symbolically from the paper's own Eqs. (3a)-(3c) (all agree - the 'order in B = 1' claim is exact for Eq. (3b) and the reduced form of (3a); on the full (3a) it is off by a measured term that vanishes as K_B c_B -> 0) and measured numerically on independently coded laws (finite-x tails at the predicted size)"
+  - "the L-H maximum computed by two routes sharing no algebra - sympy closed form K_A c_A = 1 + K_B c_B vs pymrm newton root on the numpy-coded law - agreeing to 4.8e-11"
+  - "the identifiability window w* root-found (never sampled) by two optimizer routes agreeing to 1.8e-11, with a 401->1601 grid-refinement guard (4.6e-3) and a measured small-window law dev ~ 0.0157 (ln w)^2"
+  - "every C1.1 import reconciled against the book's own printed Table C: worst R_calc gap 0.006 over 11 of 12 runs, and 0.503 on run 25a - independently reproducing C1.1's documented digit-slip finding (printed 5.40, row-consistent 5.90)"
+  - "the impact-law misfit computed by two optimizer families (log-reparam LM from three fixed starts vs bounded TRF on direct parameters), agreeing to 1.0e-06"
+  - "the paper's two internally checkable numbers quantified: flux parity at 1000-10000 atm ('very high pressures'), HD energy budget 176 vs 196 kJ/mol, ratio 0.898 ('close to')"
+  # PRINTED DEFECT (reported, never repaired)
+  - "p. 719 prints 'The rate of the L-H reaction should even reach a maximum for c_A = K_A.' [sic] - dimensionally inconsistent, quoted verbatim; the derived condition K_A c_A = 1 + K_B c_B is unit-invariant where the printed one moves by lambda^2 under a unit rescale; the reduced-form reading K_A c_A = 1 is labelled an inference"
+  # DEFECT INJECTION
+  - "a 14-row break table: printed exponents flipped both ways, numerator power, beta -> 0, the printed maximum condition adopted, unit rescale, off-maximum window centring, minimax norm, inverted K_U conversion, run 25a included, K_H term allowed, p_H span collapsed, K_S dropped, transcription slip 82 -> 28, K off by 10 %; coverage map asserted key-for-key against all 46 agreement metrics; the two exact identities (thermo consistency, the (3c)-(3b) proportionality) are named structural, below CI's ABS_FLOOR, each with an above-floor companion"
+
+adds: >
+  Three things the source does not give. First, the paper's p. 719
+  discrimination paragraph turned into a number: the chemisorbing species
+  must span a factor w* = 11.8 (root-found; 6.4 at 5 %, 40 at rate-space
+  scatter) centred on the L-H maximum before the impact law can be rejected
+  at classic-fit precision, with the placement mattering as much as the width
+  (centred where both laws are first order, the misfit collapses by three
+  orders). Second, the attribution question answered on the formalism's
+  founding dataset by a numerical experiment: Hougen & Watson's own mechanism
+  (o) is exactly Prins's Eq. (3b) (with the product's adsorption term
+  retained), and fit quality alone (27.4 % mean |Delta| at the
+  least-squares-optimal fit - the declared protocol; directly minimising
+  mean |Delta| instead gives a smaller number, conclusion unchanged - vs a
+  16.8 % noise floor) could have rejected it - but only because the 1947
+  design spans a decade in hydrogen pressure (the design also straddles the
+  L-H turnover at p_U* = 2.50 atm, an observation, not a second necessary
+  condition: collapsing the hydrogen span alone already drops the misfit
+  below the noise floor), making the founding gas-phase design blind in
+  exactly the way Prins says liquid-phase studies are. The denominator
+  exponent itself (1 vs 2) is indistinguishable there at the design's noise
+  floor even when the rates carry no noise.
+  Third, the printed-defect report: the maximum condition "c_A = K_A" [sic]
+  fails its own equation's unit test. The naming finding (E-R should be L-R;
+  what Eley and Rideal studied is a different mechanism) is the paper's own
+  thesis, reported plainly as the same finding class as B1.4 and H1.1.
+
+agreement: >
+  All eleven printed limiting orders derived exactly; L-H maximum two-route
+  gap 4.8e-11; w* = 11.75 with routes agreeing to 1.8e-11; C1.1 imports
+  reconciled to 0.006 worst against the book's printed Table C (0.503 on the
+  known 25a slip, reproducing C1.1's finding); tableC mean deviation
+  recomputed 8.44 % against the book's printed +-8.44 and rate-space scatter
+  16.85 % against C1.1's published 16.86; impact-law misfit on noiseless
+  mechanism-d rates 27.4 % mean / 48.1 % max with two optimizer families
+  agreeing to 1.0e-06; energy budget 176/196 = 0.898.
+
+reference:
+  authors:
+    - "Prins, R."
+  year: 2018
+  title: "Eley-Rideal, the Other Mechanism"
+  container: "Topics in Catalysis 61 (9-11), 714-721"
+  doi: "10.1007/s11244-018-0948-8"
+
+origin_not_consulted:
+  - citation: "Langmuir, I., J. Am. Chem. Soc. 40, 1361 (1918); Trans. Faraday Soc. 17, 607 and 621 (1922)"
+    note: >
+      The origin of the isotherm, of the three surface-reaction mechanisms
+      (the third being this page's), and of its application to CO oxidation
+      on Pt. Read only as quoted by Prins (2018). J1.1 reproduces the 1918
+      paper from its own text.
+  - citation: "Rideal, E. K., Proc. Camb. Philos. Soc. 35, 130 (1939)"
+    note: "The chemisorbed + physisorbed (van der Waals layer) proposal. Not consulted."
+  - citation: "Eley, D. D. & Rideal, E. K., Nature 146, 401 (1940); Proc. R. Soc. Lond. A 178, 429 and 452 (1941)"
+    note: >
+      What Eley and Rideal actually studied (para-ortho H2 and H2/D2 exchange
+      on tungsten). Not consulted; the case's naming finding rests on Prins's
+      reading of them, and the page says so.
+  - citation: "Eley, D. D., Q. Rev. Chem. Soc. 209 (1948); Adv. Catal. 1, 157 (1948)"
+    note: "Eley's own attribution of the collision mechanism to Langmuir, quoted by Prins."
+  - citation: "McNaught, A. D. & Wilkinson, A., IUPAC Compendium of Chemical Terminology, 2nd ed. (1997), p. 149"
+    note: "The Gold Book's Langmuir-Rideal definition, quoted by Prins (p. 720)."
+  - citation: "Mullins, C. B. & Weinberg, W. H., in Handbook of Heterogeneous Catalysis, vol. 3, p. 972 (1997)"
+    note: "The 10^12-10^13 vs 10^9 flux comparison, printed by Prins (p. 716)."
+  - citation: "Hougen, O. A. & Watson, K. M., Chemical Process Principles, Part Three (1947)"
+    note: >
+      NOT re-read for this page: the L-H law's derivation, the codimer data
+      and the mechanism-(d) constants are imported from the published page
+      C1.1, which read the book at native resolution and whose findings on
+      the imported rows are listed in this page's data section.
+
+related:
+  - C1.1
+  - C1.3
+  - J1.1
+  - B1.4
+  - H1.1

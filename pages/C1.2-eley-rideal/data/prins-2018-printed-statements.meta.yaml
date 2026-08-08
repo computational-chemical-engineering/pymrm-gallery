@@ -1,0 +1,59 @@
+dataset_id: prins-2018-printed-statements
+title: "Every quantitative statement printed in Prins (2018), Eley-Rideal, the Other Mechanism"
+status: complete
+
+source:
+  authors:
+    - "Prins, R."
+  year: 2018
+  title: "Eley-Rideal, the Other Mechanism"
+  container: "Topics in Catalysis 61, 714-721 (Springer)"
+  doi: "10.1007/s11244-018-0948-8"
+  access: "paper held by the maintainers (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: >
+    None - the paper prints no tables and no figures. These rows are the
+    quantitative statements of its prose: pp. 716-719 numerics and the
+    limiting-order claims of Section 4 (p. 719).
+  tool: >
+    poppler pdftoppm at 300 dpi (the file is born-digital; pdfimages -list
+    shows no page scans, only decorative logos, so 300 dpi is a clean vector
+    rasterisation, not an upsampled scan), cropped to each numeric
+  procedure: >
+    The full text was read from the extracted text layer (born-digital, clean),
+    and EVERY numeric and every equation transcribed here or onto the page was
+    then verified on a cropped 300 dpi render of its own page region: the full
+    L-H law with its K^-1 reverse term (p. 715), Eqs. (3a), the K_B*c_B << 1
+    reduced form, (3b) and (3c) (pp. 718-719), the fluxes 10^12-10^13 and 10^9
+    per site per s at 1 atm (p. 716), 150 vs 70 kJ/mol (p. 716), 82/36/58 and
+    436 and "about 240" kJ/mol (p. 717), 198 K (p. 718), and the sentence "The
+    rate of the L-H reaction should even reach a maximum for c_A = K_A."
+    (p. 719), which is transcribed exactly as printed.
+  operator: "Claude Fable 5 (assisted)"
+  date: 2026-08-08
+  estimated_error: "none beyond the paper's own printing"
+
+validation:
+  internal_consistency: >
+    The energy-budget rows are connected by the paper's own sentence: the sum
+    82 + 36 + 58 = 176 kJ/mol is stated to be "close to" 436 - about 240 =
+    about 196 kJ/mol; the page computes both sides and quantifies "close"
+    (about 10 % apart). The order-claim rows are each derived symbolically
+    from the paper's own Eqs. (3a)-(3c) on the page; all check out. The
+    printed maximum condition "c_A = K_A" [sic] does NOT check out against
+    Eq. (3a) (it is dimensionally inconsistent; the derived condition is
+    K_A*c_A = 1 + K_B*c_B); it is reported as a printed defect, not repaired.
+  what_it_tests: >
+    Reference values for the page's analytical checks. NOT measurements - the
+    paper is a historical and terminological review containing no data of its
+    own, and the page says so.
+
+columns:
+  - {name: name,          unit: "-", description: "identifier used by the notebook"}
+  - {name: value,         unit: "see unit column", description: "the printed value, or the printed limiting order"}
+  - {name: unit,          unit: "-", description: "unit as printed; '-' for dimensionless order claims"}
+  - {name: where_printed, unit: "-", description: "page of Topics in Catalysis 61 (2018) where the statement is printed, with the reference the paper itself cites where applicable"}
+  - {name: role,          unit: "-", description: "computation = used numerically by the page; claim_checked = a printed limit the page derives symbolically; context = transcribed for completeness, not used in computations"}

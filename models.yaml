@@ -3033,6 +3033,111 @@ models:
       this page. Runtime ~5 s. One metric sits at or below check_agreement.py's
       ABS_FLOOR and are named on the page as outside CI.
 
+  - id: C1.2
+    slug: eley-rideal
+    title: "Eley-Rideal kinetics: the impact rate law, and the case that the name is wrong"
+    description: >
+      The gas-collision (impact) rate law r = k K_A c_A c_B/(1 + K_A c_A + ...)
+      contrasted with Langmuir-Hinshelwood kinetics imported from C1.1 - built
+      from Prins (2018), a historical and terminological review whose thesis is
+      that the mechanism universally called Eley-Rideal was proposed by Langmuir
+      in 1922 and should be called Langmuir-Rideal, while Eley and Rideal
+      actually studied a chemisorbed + physisorbed pair. The page reports that
+      naming finding plainly, derives all eleven printed limiting-order claims
+      symbolically (all hold), and reports one printed defect: the maximum
+      condition "c_A = K_A" [sic] is dimensionally inconsistent with the paper's
+      own Eq. (3a) - the derived, unit-invariant condition is K_A c_A = 1 +
+      K_B c_B, root-found by two routes sharing no algebra. The paper's
+      discrimination paragraph is turned into a number: the chemisorbing species
+      must span a root-found factor w* = 11.8 centred on the L-H maximum before
+      the impact law can be rejected at the 1947 fit's own +-8.44 % precision,
+      and placement matters as much as width (off the maximum the misfit
+      collapses by three orders). A numerical experiment on C1.1's fitted
+      constants then answers the question on the formalism's founding dataset:
+      Hougen & Watson's own mechanism (o) is exactly Prins's Eq. (3b) (with the
+      product's adsorption term retained), and fit quality alone (27.4 % mean
+      |Delta| at the least-squares-optimal fit - the declared protocol;
+      directly minimising mean |Delta| instead gives a smaller number,
+      conclusion unchanged - vs a 16.8 % noise floor) could have rejected it -
+      but only because the 1947 design spans a decade in hydrogen pressure (the
+      design also straddles the L-H turnover at p_U* = 2.50 atm, an
+      observation, not a second necessary condition: collapsing the hydrogen
+      span alone already drops the misfit below the noise floor), while the
+      denominator exponent (1 vs 2) is indistinguishable there at the design's
+      noise floor even when the rates carry no noise. The source prints no
+      measurement, no table and no figure, and the page claims no experimental
+      validation.
+    section: C
+    status: published
+    page: pages/C1.2-eley-rideal/
+    tier: T0
+    priority: P1
+    structures:
+      - S1
+    phases:
+      - gas
+      - gas-solid
+      - liquid-solid
+    predicts:
+      - the impact (E-R/L-R) rate law and its limiting orders in both reactants
+      - the L-H rate maximum location K_A c_A = 1 + K_B c_B (against the printed "c_A = K_A" [sic])
+      - the concentration span w* needed to discriminate the impact law from L-H at a given fit precision
+      - the exact (3c)-(3b) degeneracy along a c_A sweep and its K_B c_B-sized signal in the c_B direction
+      - which feature of the 1947 codimer design rejects the impact mechanism (the decade-wide p_H span), via a labelled numerical experiment
+    pymrm_api:
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - "Prins, R."
+      year: 2018
+      title: "Eley-Rideal, the Other Mechanism"
+      container: "Topics in Catalysis 61 (9-11), 714-721"
+      doi: "10.1007/s11244-018-0948-8"
+      note: >
+        A 2018 historical/terminological review, NOT the origin of the rate law
+        - the case yaml's scope caveat is followed: the paper names,
+        distinguishes and attributes the mechanism (to Langmuir), and the page
+        never presents it as the law's origin. Langmuir 1918/1922, Rideal 1939,
+        Eley & Rideal 1940-41, Eley 1948, the IUPAC Gold Book and Mullins &
+        Weinberg are recorded as origin_not_consulted in meta.yaml. The L-H
+        derivation and the codimer constants are imported from page C1.1, not
+        re-derived.
+    data:
+      tier: 6
+      method: >
+        analytical: the paper prints no measurement, no table and no figure
+        (verified by full-text read, page renders and pdfimages). One CSV
+        transcribes its printed quantitative statements (numerics verified on
+        300 dpi crops); three C1.1 datasets are loaded cross-page for the
+        numerical experiment, with C1.1's findings on those rows honoured
+        (mechanism d's clean row used; the corrupted-family printed rows of the
+        impact mechanisms never used; run 25a's digit slip reproduced
+        independently by this page's reconciliation).
+      status: complete
+    related:
+      - C1.1
+      - C1.3
+      - J1.1
+      - B1.4
+      - H1.1
+    note: >
+      NO EXPERIMENTAL VALIDATION IS POSSIBLE FROM THIS SOURCE and none is
+      claimed; everything quantitative is analytical or a labelled numerical
+      experiment on C1.1's fit constants. THE NAMING FINDING IS THE PAPER'S OWN
+      THESIS: the reaction of a gas molecule with a chemisorbed one should be
+      called Langmuir-Rideal (Langmuir 1922; IUPAC Gold Book agrees), and what
+      Eley and Rideal studied in 1940-41 - a chemisorbed atom with a PHYSISORBED
+      molecule - is a different mechanism, "the real E-R mechanism". Same
+      finding class as B1.4 and H1.1. THE PRINTED DEFECT, reported and not
+      repaired: p. 719's "The rate of the L-H reaction should even reach a
+      maximum for c_A = K_A." [sic] equates a concentration to an inverse
+      concentration; the derived condition is K_A c_A = 1 + K_B c_B (the
+      reduced-form reading K_A c_A = 1 is labelled an inference). Two metrics
+      (the thermodynamic-consistency identity and the (3c)-(3b) proportionality)
+      are exact identities below check_agreement.py's ABS_FLOOR - named
+      structural on the page, each with an above-floor companion. Runtime ~15 s.
+
   - id: C1.3
     slug: mars-van-krevelen-redox
     title: "Mars-van Krevelen: the redox rate law, read from the paper that derived it"
