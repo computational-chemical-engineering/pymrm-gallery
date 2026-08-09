@@ -4765,6 +4765,126 @@ models:
     note: "Build as a triptych with J1.6 (analytical) and J1.8 (general rate model)."
     related: [J1.6, J1.8, J1.10]
 
+  - id: J1.10
+    slug: van-deemter-plate-height
+    title: "The van Deemter equation: the three terms, the constants they were read off, and what the Gaussian costs"
+    description: >
+      Every chromatography textbook prints H = A + B/u + Cu and attributes it to van Deemter,
+      Zuiderweg and Klinkenberg (1956). The 1956 paper does not start there: it starts from a
+      two-phase material balance, reduces it to a Gaussian, and only on p. 286 - from twelve
+      measured points - writes down three numbers. This page rebuilds that chain and reports what
+      each step supports. The algebra is sound: (34) -> (38), (38)+(45,46,48) -> (49) and its C,
+      and (38)+(41,50,51) -> (52) all have exactly zero residual, and for each the paper names
+      the route - which equations go into which - but never prints the manipulation or checks it;
+      a fourth route the paper never takes - the Laplace transform of eqs. (29)/(30), whose
+      residence-time cumulants give H = kappa_2/kappa_1^2 - reproduces eq. (38) symbolically as
+      well. Eq. (38) is then computed WITHOUT eq. (38), by integrating eqs. (29)/(30) in time with
+      pymrm and reading H from the difference of the first two time moments at two interior
+      stations: 4.1e-5, with the two-station difference cancelling the boundary condition to 1.5e-6.
+      The grid study has a known answer rather than only an order - first-order upwind adds u h / 2
+      of numerical dispersion, so switching the limiter off must shift H by exactly h, and the
+      measured coefficient is 0.99999 (observed order 3.00 with van Leer, 1.00 bare). Refitting
+      Table 3 through eq. (49) returns lambda = 2.99 against the printed 3 and D_II = 1.34e-10 m2/s
+      against the printed 1.3e-10 - and the extraction is almost free of D_I, which the paper never
+      prints for that system, moving 1.8 % as D_I is swept 2x and then removed. The effective film
+      thickness comes back three times, from three different printed constant sets: 10.06, 10.57
+      and 8.66 um against the paper's approx 10, approx 10 and 9 um; eq. (56)'s coefficient
+      reproduces to 1 %, and the Sterchamol ratio is SHARPER with this page's d_f than with the
+      paper's own rounded 9 um. Table 1's eleven printed calc values are all reproduced, and they
+      pin Delta S_0 to 166.0-167.4 ml against the paper's tilde-marked "~ 165". Table 3 is rebuilt
+      from Table 2 by the paper's own two independent routes to a median 2.1 % over eighteen
+      endpoints, and split by route the height determination beats the width one, 1.6 % against
+      2.2 %. ONE PRINTED EQUATION CANNOT BE RIGHT, PROVED FROM THE PAPER'S OWN NUMBERS AND
+      REPORTED, NOT REPAIRED. Eq. (21) as printed carries (a+delta)/delta where its own eqs. (24)
+      and (25) require (a+delta)/a: as printed it gives 2 in the limit eq. (24) fixes at 4 and
+      DIVERGES where eq. (25) fixes it at a + sqrt(2 pi), and the width route to the plate number
+      then admits no root at all for seven of Table 2's nine conditions - while eq. (22), the only
+      other free thing, is verified symbolically to be exactly the inflection condition of
+      eq. (19). One further arithmetic item is recorded but is NOT an error: eq. (56) set to unity
+      gives d_f/d_p = 1.83e-4 where the text says "about 0 0001" - an order-of-magnitude sentence
+      quoted to one significant figure, so 1.83e-4 is the same order of magnitude and the
+      conclusion it carries is unaffected. A third finding is an ambiguity that CANNOT be closed:
+      the List of Symbols defines u as interstitial
+      while Tables 2-4 and Figs. 11-14 are headed superficial; Fig. 9 converts and the gas-liquid
+      section does not appear to, since the quoted 2 gamma D_I = 8e-6 m2/s is numerically identical
+      to eq. (54)'s iso-butane coefficient read in mm2/s (F_I = 1) and implies gamma = 0.444, just
+      below the paper's own stated 0.5-1.0. F_I is not printed for those columns, so the page
+      reports the band each reading requires rather than choosing. FIT, NOT TEST, AND LABELLED
+      EVERYWHERE: eqs. (54)/(55) were fitted by the authors to the twelve Table 4 points they are
+      compared against, so those residuals are a goodness of fit reported beside a null baseline
+      (the best constant H, beaten by a factor 3.3 to 6.2), and lambda and D_II were extracted from
+      Table 3, so refitting it reproduces the paper's extraction and not a measurement. What the
+      page adds is a number for the paper's own unquantified condition: eqs. (33)/(34) hold "for
+      locations z much larger than both 2D/u and F_I u/alpha", and because the cumulants are
+      exactly additive in z, the Laplace expansion's kappa_3 and kappa_4 give the skewness and
+      excess kurtosis of a column of any length in closed form - pymrm's two-station run is the
+      independent check on them (0.21 % and 1.5 %, both labelled cancellation-limited rather than
+      converged), not the source of either. Both of the paper's groups fall as 1/z; the skewness
+      falls only as z^(-1/2), so
+      at the column that produced Table 3 the groups are 2.4e-3 and 3.4e-3 - comfortably "<< 1" -
+      and the elution curve is still skewed by 0.14. Reaching a skewness of 0.05 needs a column 8.2
+      times longer, root-found rather than swept.
+    section: J
+    status: published
+    page: pages/J1.10-van-deemter-plate-height/
+    tier: T0
+    priority: P1
+    structures: [S4]
+    phases: [gas-liquid, liquid-solid]
+    predicts:
+      - the plate height of a chromatographic column as A + B/u + Cu, with each constant a product
+        of printed physical quantities rather than a fitted number
+      - the optimum carrier velocity and the minimum plate height, root-found and cross-checked
+        against sqrt(B/C) and A + 2 sqrt(BC)
+      - the effective liquid film thickness d_f from a measured C term, for three column/solute
+        combinations
+      - the intraparticle diffusivity D_II and the packing factor lambda from a plate-height
+        versus velocity series, almost independently of the mobile-phase diffusivity
+      - whether the gas-phase transfer resistance may be neglected, via the paper's eq. (56)
+      - the elution curve itself, from the two-phase balance, including how far it is from the
+        Gaussian the plate height assumes
+    pymrm_api:
+      - construct_grad
+      - construct_div
+      - construct_convflux_upwind
+      - interp_cntr_to_stagg_tvd
+    reference:
+      authors: ["van Deemter, J. J.", "Zuiderweg, F. J.", "Klinkenberg, A."]
+      year: 1956
+      container: "Chemical Engineering Science 5(6) 271-289 (1956)"
+      doi: 10.1016/0009-2509(56)80003-1
+    origin_not_consulted:
+      - authors: ["Simpson, D. W.", "Wheaton, R. M."]
+        container: "Chemical Engineering Progress (ref. [14] of the 1956 paper)"
+        note: >
+          NOT ON DISK, NOT READ. Table 2's measurements originate with them; every value on this
+          page is van Deemter et al.'s restatement of them, and the page claims nothing about the
+          original. The 1956 reference list prints this entry with a damaged year field and no
+          repair was attempted.
+      - authors: ["Lapidus, L.", "Amundson, N. R."]
+        container: "Journal of Physical Chemistry 56 984 (1952)"
+        note: >
+          Not on disk, not read. Eqs. (31)/(32) are quoted from it; this page never evaluates them,
+          integrating eqs. (29)/(30) directly instead.
+    data:
+      tier: 6
+      method: >
+        All four printed tables (71 data rows) and 56 printed scalars transcribed from 2x
+        digit-scale crops of 300 ppi native-resolution renders. NO POINT TAKEN OFF ANY FIGURE. The
+        scan's text layer misreads the journal volume in the document's first line ("Vol 6" for
+        "Vol. 5") and was used for nothing numeric. FIVE ambiguous readings were settled by
+        arithmetic constraints the tables impose on themselves (two in Table 2 - the doubling
+        velocity series and the 23 ml width; three in Table 3 - a decimal placement and two integer
+        pairs, from n H being one column length and H/(H/d_p) the stated mesh). THREE more, across
+        five cells of Table 4, were settled with Figs. 11 and 13, which carry no point between
+        u = 5 and 15 mm/s; the page shows all three also follow from inside Table 4 alone, from its
+        ascending velocity column and from eq. (55). TWO printed curve labels on Fig. 8 (n = 240,
+        n = 277) are read as text and used only to say which of Table 3's printed endpoints came
+        from which route. Note for the papers inventory: this paper prints FOUR tables, not the two
+        recorded there.
+      status: complete
+    related: [J1.5, J1.6, J1.8, A2.3, A2.4, A2.6]
+
   - id: J2.2
     slug: msmpr-crystalliser
     title: "MSMPR crystalliser and the population balance"

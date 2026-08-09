@@ -1,0 +1,67 @@
+dataset_id: vandeemter-1956-table3-hetp
+title: "van Deemter et al. (1956) Table 3: plate height derived from Simpson & Wheaton's ion-exclusion data"
+source:
+  authors: ["van Deemter, J. J.", "Zuiderweg, F. J.", "Klinkenberg, A."]
+  year: 1956
+  container: "Chemical Engineering Science 5(6) 271-289"
+  doi: 10.1016/0009-2509(56)80003-1
+  access: institutional subscription (lawful access; Elsevier PII 0009250956800031)
+  licence: all rights reserved (tabulated facts extracted; no page image reproduced)
+acquisition:
+  method: table
+  figure: "Table 3, journal p. 281, read from 2x digit-scale crops of a 300 ppi render"
+  operator: builder agent (J1.10)
+  date: 2026-08-09
+  estimated_error: >
+    Transcription only, and every ambiguous glyph in it was settled by an
+    arithmetic constraint the table imposes on itself, never by pixel shape:
+    (a) H x n is the column length and must be the same in every row - over the
+    ten printed rows (the 50-100 / 0.091 row appears in both blocks) the twenty
+    products run 539-578 mm with mean 558.5 mm, which fixes "0 56- 0 93" as
+    0.56-0.93 and not 0.56-0.93 with a different point placement;
+    (b) H divided by H/dp is the particle diameter and must be the same for a
+    given mesh - it fixes "11 -18" as 11-18 (integers) rather than 1.1-1.8,
+    because 0.56/11 = 0.051 mm is the 200-400 mesh diameter while 0.56/1.1 =
+    0.51 mm is the 30-40 mesh one;
+    (c) the same test fixes "13 -14" as 13-14 and "16 -20" as 16-20.
+    Both ranges in a row run in OPPOSITE senses (the larger n pairs with the
+    smaller H), which is what makes test (a) sharp.
+columns:
+  - {name: particle_mesh, unit: "-", description: "particle size, US mesh range"}
+  - {name: superficial_velocity_mm_s, unit: mm/s, description: "superficial velocity (the printed column head)"}
+  - {name: n_plates_lo, unit: "-", description: "number of theoretical plates, low end of the printed range"}
+  - {name: n_plates_hi, unit: "-", description: "number of theoretical plates, high end of the printed range"}
+  - {name: hetp_lo_mm, unit: mm, description: "H.E.T.P. = H, low end of the printed range"}
+  - {name: hetp_hi_mm, unit: mm, description: "H.E.T.P. = H, high end of the printed range"}
+  - {name: h_over_dp_lo, unit: "-", description: "H/d_p, low end of the printed range"}
+  - {name: h_over_dp_hi, unit: "-", description: "H/d_p, high end of the printed range"}
+  - {name: block, unit: "-", description: "printed table block: 'particle' (varying particle size) or 'flow' (varying flow rate)"}
+notes:
+  ranges_are_two_determinations: >
+    The paper states that "the H.E.T.P. can be determined for every condition in
+    two independent ways" (p. 280) - from the HEIGHT of the elution curve via its
+    eq (20) and Fig. 3, and from its WIDTH via eqs (21)/(22) and Fig. 4. The
+    printed range in each cell is those two determinations, not an error bar.
+    WHICH endpoint is which determination is not printed: the pair is written in
+    ascending order. Fig. 8's own printed curve labels (n = 240 on the height
+    curve, n = 277 on the width curve) match this table's 240-277 for 50-100 mesh
+    at 0.091 mm/s, so the low endpoint is the height route there; the page
+    assumes the same convention for the other rows and says so, and it matters in
+    one row only (16-20 mesh, where its two recomputed routes invert).
+  no_column_length_is_printed: >
+    The ion-exclusion column's LENGTH appears nowhere in the paper. Searched:
+    all nineteen pages read on 300 ppi renders, plus a document-wide text-layer
+    search for "length", which returns only pp. 272, 278, 279, 283 and 288 - the
+    p. 283 hit is the gas-liquid columns (1.80 m) and the p. 288 hit is the
+    symbol list. Only nv = 70 ml is given. The 558.5 mm used on this page is
+    RECOVERED from Table 3's own H and n columns (the mean of the twenty
+    products, printed on the page) and is labelled an inference everywhere it
+    appears.
+  fit_test_label: >
+    Derived by the authors from Table 2 (measurements) via their own plate
+    theory. Fitting eq (49) to these rows recovers lambda and D_II - which is
+    exactly how the paper obtained them, so the recovered values are a
+    REPRODUCTION of the paper's extraction, not an independent measurement of
+    either constant.
+redistribution_basis: >
+  Facts are not protected by copyright (Feist, 1991). No page image is reproduced.

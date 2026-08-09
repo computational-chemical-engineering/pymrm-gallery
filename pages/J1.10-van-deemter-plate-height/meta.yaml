@@ -1,0 +1,289 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J1.10
+slug: van-deemter-plate-height
+title: "The van Deemter equation: the three terms, the constants they were read off, and what the Gaussian costs"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S4]
+phases: [gas-liquid, liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 90
+datasets:
+  - vandeemter-1956-table1-feed-volume
+  - vandeemter-1956-table2-simpson-wheaton
+  - vandeemter-1956-table3-hetp
+  - vandeemter-1956-table4-glc-hetp
+  - vandeemter-1956-printed-scalars
+
+reference:
+  authors: ["van Deemter, J. J.", "Zuiderweg, F. J.", "Klinkenberg, A."]
+  year: 1956
+  container: "Chemical Engineering Science 5(6) 271-289 (1956)"
+  doi: 10.1016/0009-2509(56)80003-1
+  title_as_printed: "Longitudinal diffusion and resistance to mass transfer as causes of nonideality in chromatography"
+  affiliation_as_printed: "Koninklijke/Shell-Laboratorium, Amsterdam (N V De Bataafsche Petroleum Maatschappij); N V De Bataafsche Petroleum Maatschappij, The Hague"
+  note: >
+    Identified from the document's own first page, read on a 300 ppi render (the
+    scan's native resolution, confirmed with `pdfimages -list`): the printed
+    header "Chemical Engineering Science, 1956, Vol 5, pp 271 to 289. Pergamon
+    Press Ltd", the display title, the by-line, "(Received 1 February, 1956)"
+    and the two footnoted affiliations. 19 pp, complete, CCITT-G4 bilevel at
+    300 ppi. THE RENDER WAS NECESSARY: this file's OCR text layer misreads the
+    journal VOLUME in the very first line, extracting "Vol 6" where the page
+    prints "Vol. 5". It was therefore used for nothing numeric anywhere on this
+    page; every table cell, equation constant and quoted glyph was read on a 2x
+    digit-scale crop of a 300 ppi render.
+
+four_tables_not_two: >
+  The paper prints FOUR tables, not two - a correction to this repository's own
+  papers inventory, which records "both of the paper's tables". Table 1 (p. 277)
+  is the feed-volume experiment, Table 2 (p. 280) is Simpson & Wheaton's ion
+  exclusion data restated, Table 3 (p. 281) is the plate heights the authors
+  derive from Table 2, and Table 4 (p. 286) is the gas-liquid plate-height
+  measurement that produces the van Deemter equation itself. All four are
+  transcribed here. The two that carry the plate height are 3 and 4.
+
+data:
+  tier: 6
+  method: >
+    Four printed tables (71 data rows) and 56 printed scalars transcribed from
+    2x digit-scale crops of 300 ppi native-resolution renders. NO POINT WAS TAKEN
+    OFF ANY FIGURE and none needed to be: the paper's own tables carry every
+    number this page uses. The exact accounting, which is what a "no figure
+    digitised" claim has to get right:
+    (a) FIVE ambiguous readings were settled by arithmetic constraints the tables
+    impose on themselves and not by pixel shape - in Table 2, the velocity
+    column's doubling series (which fixes "0 365" against "0 865") and the 23 ml
+    base width on that row (the only reading consistent with Table 3's printed
+    125-156 plates); in Table 3, the decimal placement of "0 56- 0 93" (n H must
+    be the same column length in every row) and the integer readings of "11 -18"
+    and of "13 -14"/"16 -20" (H divided by H/d_p must reproduce the stated mesh).
+    (b) THREE readings spanning FIVE cells of Table 4 were settled with Figs. 11
+    and 13, which was needed because the 1956 face sets 3 with a nearly flat top:
+    the Celite "3 4"/"3 5" pair, the Sterchamol "3 2"/"3 3" pair, and "31"
+    against "81". Neither figure carries a point between u = 5 and 15 mm/s and
+    Fig. 13's rightmost point sits at u ~ 31 on an axis stopping just past it.
+    All three are ALSO forced from inside Table 4 alone, which the page computes
+    and prints: the velocity column is printed in ascending order in both blocks
+    (excluding 8.4/8.5 and 8.2/8.3 by position), and eq. (55) - the authors' own
+    fit to these rows - gives 4.14 mm at u = 81 against the printed 1.7 mm while
+    landing within 5 % at u = 31.
+    (c) TWO of the 56 scalars, n = 240 and n = 277, are numbers printed as curve
+    labels on Fig. 8; they are read as printed text, not as point coordinates,
+    and are used in one place only, to identify which of Table 3's two printed
+    endpoints came from which of the paper's two routes.
+  status: complete
+
+fit_or_test: >
+  MIXED, AND LABELLED THROUGHOUT. Eqs. (54) and (55) - the three-term formulae
+  this case is named for - were FITTED BY THE AUTHORS to the twelve Table 4
+  points they are compared against, and the paper says so ("the values of the
+  constants in (54) are highly uncertain, owing to the relatively small number of
+  experimental data that were available"). Every residual against Table 4 on
+  this page is therefore a goodness of fit, is called one, and is reported beside
+  a null baseline (the best constant H). The same applies to lambda and D_II:
+  they were extracted FROM Table 3 by the authors, so refitting Table 3 through
+  eq. (49) reproduces the paper's own extraction, not an independent measurement.
+  What IS a test: the symbolic chain (34) -> (38) -> (49) -> (52), the Laplace
+  cumulants of eqs. (29)/(30), the pymrm PDE against eq. (38), the film thickness
+  d_f recomputed from three independent printed constant sets, eq. (56)'s two
+  ratios, the slope ratio of section 4, and Table 1's calc column.
+
+printed_defects_found:
+  - id: eq21
+    severity: substantive
+    as_printed: >
+      "Ds = a + 2d + sqrt(2 pi) ((a+d)/d) e^(1/2 d^2) (erf((a+d)/sqrt 2) - erf(d/sqrt 2))"
+      (eq. 21, p. 275; d is the paper's delta, given by its eq. 22)
+    finding: >
+      The denominator of the third term cannot be delta. As printed, the
+      expression tends to 2 as a -> 0, where the paper's own eq. (24) fixes it at
+      4 ("For the Gaussian curve this value of Delta S is just equal to 4 times
+      the standard deviation", p. 275); and it DIVERGES as a grows, where the
+      paper's own eq. (25) fixes it at a + sqrt(2 pi) for a > 3. With the
+      denominator a - which is what deriving Delta s from eq. (19) gives - both
+      limits are met (4.0000 and, at a = 5, 7.5066 against the required
+      7.5066). Eq. (22) is not free either: it is exactly the inflection
+      condition of eq. (19), verified symbolically. And the correction is not
+      inferred from the limits - it is DERIVED: writing Delta s = a + 2 delta +
+      2 f/|f''| at the inflection point of eq. (19) and applying eq. (22) gives
+      the printed third term with a underneath, residual exactly 0, while the
+      same derivation minus the printed form leaves
+      -sqrt(2 pi) Q e (a - delta)(a + delta)/(a delta). The limits merely
+      confirm it.
+    consequence: >
+      As printed, the width route to the plate number admits no root at all for
+      seven of the nine conditions in Table 2, so Table 3's second determination
+      cannot be reproduced from it. REPORTED, NOT REPAIRED: the printed form is
+      quoted verbatim, shown to fail its own two limits, and the corrected form
+      is used with every number that depends on it labelled as resting on a
+      correction.
+  - id: eq49_subscript
+    severity: typographic
+    as_printed: '"75 (1 - F_1)^2" in the numerator of C, eq. (49), p. 282'
+    finding: >
+      The subscript is an arabic 1 where every other occurrence in the same
+      expression - and the derivation from eqs. (45) and (46) - requires the
+      roman F_I. Reported, not repaired.
+  - id: table4_caption
+    severity: typographic
+    as_printed: '"Experimental data on H.E.T.P. in gas-liquid chromatographic colums." (Table 4 caption, p. 286)'
+    finding: 'Printed "colums" [sic] for "columns". Quoted verbatim in the dataset sidecar.'
+  - id: eq56_threshold
+    severity: minor numerical
+    as_printed: '"the two resistances become of equal order of magnitude in the case of a film thickness smaller than about 0 0001 of the particle diameter" (p. 287)'
+    finding: >
+      Eq. (56) set to unity gives d_f/d_p = sqrt(D_II/(100 D_I)) = 1.83e-4 from
+      the paper's own D_II = 0.3e-10 and D_I = 9e-6, i.e. 1.8 times the quoted
+      1e-4. THIS IS A ROUNDING, NOT AN ERROR, and the page says so on every
+      surface: the sentence is an order-of-magnitude claim quoted to one
+      significant figure with "about", and 1.83e-4 is the same order of
+      magnitude, which is all it claims. The conclusion it carries (both columns
+      are far from that regime, at 3e-7 and 2.5e-5) holds on either number. It is
+      recorded here because the quantity is exactly recomputable from printed
+      inputs, not because the paper got it wrong; the one substantive printed
+      defect on this page is eq. (21) above.
+
+velocity_convention: >
+  The paper's List of Symbols (p. 288) defines u as the INTERSTITIAL velocity and
+  its eqs. (29)/(30) use it that way, but Tables 2, 3 and 4 and Figs. 11-14 are
+  all headed SUPERFICIAL velocity. Fig. 9 converts (its abscissa is u F_I d_p);
+  the gas-liquid section does not appear to - the quoted 2 gamma D_I = 8e-6
+  m2/s is numerically identical to eq. (54)'s iso-butane B coefficient read in
+  mm2/s, i.e. obtained with F_I = 1. F_I is not printed for those columns, so the
+  ambiguity CANNOT BE CLOSED; the page states the band of F_I each reading
+  requires (0.50 to 1.00, from the paper's own bound 0.5 <= gamma <= 1) and
+  carries both readings wherever the difference changes a number. The two
+  affected constants move in OPPOSITE directions, and the page prints both: the
+  interstitial reading makes gamma larger by 1/F_I (up to 2.0x, since gamma =
+  B/(2 D_I F_I)) and d_f^2 smaller by F_I (up to 2.0x in d_f^2, 1.41x in d_f,
+  because the fitted C multiplies u_sup = F_I u_int so eq. (53)'s C is F_I times
+  the fitted one). 2 lambda d_p is unaffected, because the eddy term contains no
+  u at all; and x = K F_I/F_II is printed as a single number, so it carries no
+  ambiguity either.
+
+reference_origin_not_consulted:
+  - authors: ["Simpson, D. W.", "Wheaton, R. M."]
+    container: "Chemical Engineering Progress (ref. [14] of the 1956 paper)"
+    role: "origin of Table 2's measurements"
+    note: >
+      NOT ON DISK, NOT READ. Table 2 is van Deemter et al.'s restatement of it and
+      the page claims nothing about the original. The 1956 reference list prints
+      this entry with a damaged year field; no repair was attempted.
+  - authors: ["Lapidus, L.", "Amundson, N. R."]
+    container: "J. Phys. Chem. 56 984 (1952)"
+    role: "origin of the general solution eqs. (31)/(32) are quoted from"
+    note: "Not on disk, not read. This page never evaluates (31)/(32); it integrates (29)/(30) directly."
+
+validation:
+  primary: >
+    Eq. (38) computed a second, independent way: eqs. (29)/(30) integrated in
+    time with pymrm, with H read from the difference of the first two time
+    moments at two interior stations. Agreement 4.1e-5. The route shares no
+    algebra with eq. (38) - no Gaussian, no plate theory - and the two-station
+    difference cancels every boundary effect (measured: changing the inlet from
+    Danckwerts to Dirichlet moves H by 1.5e-6).
+  secondary: >
+    A third route, also independent: the Laplace transform of eqs. (29)/(30)
+    gives the residence-time cumulants in closed form - kappa_1 to kappa_4, the
+    expansion taken to s^4 - and kappa_2/kappa_1^2 equals eq. (38) symbolically
+    (residual exactly 0). The PDE reproduces kappa_3 to 0.21 % and kappa_4 to
+    1.5 %. NEITHER OF THOSE TWO IS A CONVERGED DEVIATION and the page says so
+    where it prints them: on the higher cumulants the grid error is positive and
+    the time error negative, so at fixed grid the deviation passes through zero
+    as dt is varied (printed: +7.6e-3, +2.1e-3, -1.0e-2 at n_z = 1400 for
+    dt = 0.5, 1, 2). They are honest at the stated settings and are regression
+    guards, but they are cancellation-limited, and the page names the converging
+    companion (pymrm_H_vs_eq38_rel). Every shape number quoted on the page - the
+    skewness and the excess kurtosis - uses the ANALYTIC cumulants, and the PDE's
+    kappa_3 and kappa_4 are used for nothing but this check. The one place a PDE
+    moment reaches a printed number is the pair of peak-normalised
+    max|curve - Gaussian| values under the elution figure (0.0563 and 0.0323),
+    which overlay each computed curve with a Gaussian built from that curve's own
+    mean and variance; they are labelled configuration-dependent where they are
+    printed, are not agreement metrics, and carry no conclusion.
+  grid_and_time: >
+    Grid refined over 4x: observed order 3.00 with the van Leer deferred
+    correction, 1.00 with bare upwind. The bare-upwind run is a PREDICTION with a
+    known answer - first-order upwind adds u h / 2 of numerical dispersion, which
+    adds exactly h to H - and the measured coefficient is 0.99999. Time step
+    refined over 8x: the two-station H moves 1.2e-6 (it is not the error-carrying
+    axis, and the page says so), while mu_1 at the downstream station moves
+    2.3e-5 at observed order 1.79. THAT 1.79 IS NOT A DEGRADED SECOND ORDER, and
+    the page measures what it is: Crank-Nicolson is second order, but the van Leer
+    correction is deferred and LAGGED ONE STEP at sweeps = 1, so the configuration
+    run here is first order in time. Reference-free successive-difference orders
+    over dt = 8 -> 0.125 s at n_z = 700 are printed for both settings:
+    +1.65 +1.41 +1.01 +0.83 +0.99 with the limiter on, against
+    +1.85 +1.96 +1.99 +2.00 +2.00 with limiter = None. The 1.79 is a
+    pre-asymptotic three-point fit on the coarse end of the first sequence, and
+    nothing on the page needs it to be 2. The order is also broken deliberately:
+    rerunning the same sweep with backward Euler (theta = 1) in place of
+    Crank-Nicolson moves the observed order to 0.91 and blows H's own dt swing up
+    from 1.2e-6 to 4.1e-1.
+  break_tables: >
+    Two, both executed, and the coverage map is GENERATED from the measured
+    movers rather than asserted. Break table 1 perturbs the PDE (9 genuine
+    movers, smallest 1.7e-4 against a baseline error of 4.1e-5, plus one
+    deliberate non-mover and one row that produces NaN rather than a bias).
+    Break table 2 perturbs the algebra and the extractions (22 rows). The one
+    metric neither table reaches directly, pymrm_dt_order_mu1, is covered by the
+    backward-Euler run in the refinement study.
+  structural_metrics: >
+    Two metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 and are outside
+    the regression suite: sym_chain_residual (exactly 0 when the algebra is
+    right; a break row moves it off zero) and rootfind_vs_closed_form_optimum
+    (2.2e-16; the same three constants evaluated two ways). Both are named on the
+    page and each is given an above-floor companion. Two further metrics are
+    flagged on the page for a different reason: pymrm_kappa3_vs_laplace_rel and
+    pymrm_kappa4_vs_laplace_rel are above the floor and inside CI, but they are
+    CANCELLATION-LIMITED rather than converged (see validation.secondary), and
+    the page names pymrm_H_vs_eq38_rel as the converging companion.
+
+what_pymrm_adds: >
+  Not the plate height - eq. (38) is exact for this model and the page proves it
+  twice. What this page adds is a number for the paper's own unquantified
+  condition. Eqs. (33)/(34) are stated to hold "for locations z much larger than
+  both 2D/u and F_I u/alpha", and how much larger is never said. Because the
+  cumulants are exactly additive along the column, kappa_3 and kappa_4 per unit
+  length give the skewness and excess kurtosis of a column of any length in
+  closed form; all four cumulants come from the Laplace expansion, and pymrm's
+  role here is the independent CHECK on them (0.21 % and 1.5 %, both with the
+  cancellation caveat above), not the source of any quoted number. The result:
+  the paper's two groups fall as 1/z
+  while the skewness falls only as z^(-1/2), so at the ion-exclusion column that
+  produced Table 3 the groups are 2.4e-3 and 3.4e-3 - comfortably "<< 1" - and
+  the elution curve is still skewed by 0.14. Reaching a skewness of 0.05 needs a
+  column 8.2 times longer (root-found, not swept).
+
+inferences:
+  - what: "column length of the ion-exclusion column, 558 mm"
+    why: >
+      Printed nowhere in the paper. Searched: all nineteen pages read on 300 ppi
+      renders, plus a document-wide text-layer search for "length", whose only
+      hits are pp. 272, 278, 279, 283 and 288 - p. 283 is the gas-liquid columns
+      (1.80 m) and p. 288 is the symbol list. Recovered from Table 3's own n and
+      H columns, whose product must be constant and comes out 539-578 mm.
+    used_for: "reporting the skewness at the column actually used; nothing else"
+  - what: "d_p = 0.2201 mm for 50-100 mesh"
+    why: "Recovered from Table 3's H and H/d_p columns, five distinct flow rates."
+    used_for: "the abscissa of the eq. (49) regression, and the PDE conditions"
+    sensitivity: "a break row replaces it with the mesh geometric mean; D_II moves 4.5 %"
+  - what: "gamma = 0.75 and D_I = 10 x D_II for the PDE run"
+    why: >
+      gamma is the midpoint of the paper's own printed range 0.5-1.0; D_I follows
+      from its own statement that D_II is "about 10 times smaller than the
+      diffusion coefficient in the free liquid".
+    used_for: "the longitudinal diffusivity and eq. (45)'s first term"
+    sensitivity: >
+      Measured on the page: gamma D_I carries 0.42 % of H directly, and the D_I
+      term of 1/alpha is 1.33 % OF 1/ALPHA - which, since the transfer term is
+      34.92 % of H, is 0.465 % of H. Both shares are printed beside the run.
