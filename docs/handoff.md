@@ -46,13 +46,82 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-68 page directories, 69 published catalog entries, 77 models.yaml entries
+70 page directories, 71 published catalog entries, 79 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 69 published, 48 unclaimed, 140
+`splice_entry.py --replace`). Queue: 71 published, 46 unclaimed, 140
 needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 67 pages, 0 regressions at handoff (2026-08-08);
+covers `D3.4`.) `check_agreement.py`: 70 pages, 0 regressions at handoff (2026-08-09);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
+
+### Added 2026-08-08/09 — two pages, and a new rule: re-verify a fix that adds load-bearing material
+
+Both T0/P1, one at a time, each committed before the next began. **Both needed
+TWO verification passes**, and in both the second pass was the one that earned
+its keep — which is now a rule in [`playbooks/coordinator.md`](playbooks/coordinator.md).
+
+| Page | What it shows | Headline |
+|---|---|---|
+| `H1.8` Robeson | The 2008 revisit's own claim, decomposed — and the empirical cost of a line drawn "by eye" | "primarily the front factor" is REFERENCE-DEPENDENT (Δlog k *is* the shift at α = 1, outside every dataset in the paper); nine comparable pairs, not thirteen; 19 of the 117 points tabled as "close to the upper bound" lie above it, to 3.5×; H2/CO2's bounds cross at α = 37.5 where the 2008 "upper bound" sits 30 % BELOW the 1994 one; five printed defects |
+| `B2.3` Levenspiel | Which reactor can tell the four deactivation classes apart — measured, and the answer is mostly none | FIVE exact degeneracies reaching every device (series(n′,d) ≡ parallel(n·n′, d+n′) for any n in a well-mixed fluid); 1 of 12 class pairs separable in 1 of 4 devices at 0.2 conversion points; the discriminating measurement is the PROFILE, not the effluent; eq. (24) prints 1/k_d where its own eq. (21) requires 1/k |
+
+**The rule, and why.** A fixer that merely applies a list needs no second pass.
+But when a fix **replaces or adds something the conclusions rest on**, dispatch
+a second verifier scoped to the new material only — it cost ~40 % of a full
+pass and both times found real defects.
+
+*`H1.8`:* the first pass killed the page's "second independent route" as a
+tautology — Robeson's Table 13 permeability column *is* `k·α^n`, so its ratio
+at fixed α re-derives the definition of the two lines it started from, and the
+residual was provably the difference of two identity residuals. The fixer built
+a genuine replacement (refit from the 117 points; He/H2's slope is −4.864
+printed but −2.178 fitted, so no rearrangement of Table 12 can produce it; it
+responds 1:1 to an injected vertical error). **That replacement arrived carrying
+the same defect class the pass had just caught elsewhere on the page** —
+reference-dependent numbers quoted bare on three of five surfaces, and a
+ranking claim failing at two of seven evaluation points.
+
+*`B2.3`:* the first pass found a degeneracy **the page had already computed and
+never explained** (its own fit matrix recorded 9.9e-16) while asserting on six
+surfaces that the bed "is the only device that is not exactly degenerate"; it
+also found the 20× separability floor did no work at all — every threshold
+equalled the instrument resolution. The second pass then hand-derived all 44
+analytic twins the fix introduced, got an identical list and identical parameter
+maps, and established that the feared failure mode was structurally impossible
+(the twin is *evaluated* and the matrix takes the min, so a wrong twin can only
+mislabel an entry, never manufacture the negative result).
+
+Three further carry-forwards.
+
+1. **The wrong-baseline class appeared THREE TIMES in one section of `B2.3`** —
+   a sampled inlet (exact answer 1), then a space-limited outlet, then a
+   *time*-limited one (0.190176 → 0.190166, last two decimals wrong). The
+   certificate that should have caught the third could not: it compared
+   `.6f`-formatted **strings** on one class only, quantising it at 5e-7 where
+   the other class moves 7.3e-6. Outlets are now doubly extrapolated with the
+   temporal order *measured*, and printed to five decimals because the series
+   limit sits on the 6-decimal rounding boundary. The page states the rule: no
+   reported value may be a function of a resolution the page chose, and none
+   printed to more digits than its own refinement resolves.
+2. **Fixers overruled verifiers with measurements repeatedly, and were right
+   every time it was settled** — `H1.8`'s false-attribution count *upward* (26
+   metrics, 38 false row-codes of 109, not 22; pass 2 confirmed to the digit),
+   and `B2.3`'s narrowing of a degeneracy's domain (it needs n′ = 1, not just
+   n = d = 1 — the first pass had swept σ at n′ = 1 throughout, so its numbers
+   were right and only its stated domain was over-broad). Working as intended.
+3. **A page's own printed output can contradict its coverage map.** `H1.8`'s map
+   claimed a break row that the page's own break table two cells above showed to
+   be a non-mover; `B2.3` carried a hardcoded "~1e12" for a ratio its executed
+   row moves by 7e6. Generate the map from measured movers (the `A4.1`
+   mechanism) — an assert over key *sets* cannot see either.
+
+**Integration friction, now fixed in [`playbooks/builder.md`](playbooks/builder.md):**
+`H1.8`'s `models_entry.yaml` omitted `status:`, which aborts `splice_entry`'s
+post-check on a bare `KeyError` *after* models.yaml has already been written.
+Also note `models.yaml` carries a misplaced `# --- section I` banner directly
+above `H1.9` (a section-H entry; section I actually starts at `I1.2`). `H1.8`
+was placed above the banner so the pre-existing oddity was left exactly as
+found — it is the maintainer's layout to fix, not an agent's.
 
 ### Added 2026-08-08 — four pages (second serial session)
 
@@ -392,22 +461,45 @@ adsorption trio and the modulus quartet are both complete. Still avoid
 `D1.1`–`D1.5`: the maintainer's scope decision is open.
 
 The remaining T0/P1 pool is split by model demand (maintainer, 2026-08-08,
-to protect the Fable budget): an **Opus-suitable list** — `H1.8` (Robeson
-2008: born-digital, clean layer, empirical-bound arithmetic), `B2.3`
-(route pre-designed in its own yaml, `B2.1`/`B2.2` published; pre-dispatch
-render still owed: are the measured orders tabulated?), `J1.10` (van
-Deemter: the two printed tables ARE the validation data, on a 300 ppi scan
-whose text layer misreads its own volume number — crops for everything),
-`A3.2` (Higbie: standard penetration theory, E1.1 evidence recorded in the
-inventory via BSL Ch. 6), `J2.3` (Nyvlt: small S1, metastable-zone-width
-method; pre-dispatch table-vs-figure render owed) — and a **reserve for a
+to protect the Fable budget). **Updated 2026-08-09: `H1.8` and `B2.3` are
+published, and the two owed pre-dispatch renders were done — both changed
+what is known.** The **Opus-suitable list** is now, in order:
+
+1. **`J1.10`** van Deemter — the two printed tables ARE the validation data,
+   on a 300 ppi scan whose text layer misreads its own volume number; crops
+   for everything. No pre-dispatch owed. **Best next case.**
+2. **`A3.2`** Higbie — penetration theory; E1.1 evidence already recorded in
+   `papers-inventory.yaml` (BSL Ch. 6). 1935 scan: crops for numbers.
+3. **`J2.3`** Nyvlt — **DEMOTED, and do not dispatch it as a data-comparison
+   page.** The owed render is done and settled the question the wrong way:
+   the paper is **figure-only**. No table anywhere in its seven text pages;
+   the metastable-zone-width data are plotted points on log-log Figs. 2–5 and
+   the fitted k and m per substance appear only as scatter (Figs. 6–10) — the
+   paper says its own 25-substance dataset "were treated by the method of
+   least squares", results shown, never printed. So the catalogued route needs
+   load-bearing digitisation and stalls at the review gate (the `A3.14`
+   precedent; `A3.12`'s owed figure review is already open). An honest
+   alternative is recorded in the case yaml — prove the printed eq. (12)–(16)
+   chain whose slope IS the nucleation order m, then measure what the paper's
+   own three-cooling-rate design can resolve — but it is no longer the small
+   S1 this note originally assumed. **Scope decision needed before building.**
+
+`B2.3`'s render is worth recording for anyone re-reading its yaml: the paper
+prints **no experimental data at all** (no table; digit density 70–112 per
+page, entirely equation numbers; Figs. 2–6 schematic). Its `what_it_carries`
+had over-read an OCR-damaged abstract — "experimental detrrmination of the
+ordrrs" means *how to determine*, and the title's own word is "Experimental
+SEARCH". The discriminability route its yaml pre-designed was therefore the
+only route, which is exactly how the page was built. Corrected in place.
+
+Then a **reserve for a
 Fable session**: `D2.4` (Uppal–Ray–Poore bifurcation/continuation work,
 squarely in the deterministic-metrics trap), `J2.1` (Hulburt & Katz,
 theory-only PBE origin — a J1.4-style prove-the-printed-structure page,
 heavy symbolic adjudication), `C1.5` (the E1.1 target is unpinned across
 five books — scope adjudication is the case), and `A4.8` (its `on_disk`
 points at Taylor & Krishna, but the Carty & Schrodt experiment the case is
-FOR is not on disk — likely a needs-paper flip, decide before building).**
+FOR is not on disk — likely a needs-paper flip, decide before building).
 
 **2026-08-07, THE SERIAL REGIME — read this before dispatching anything.** The
 day began with five builders in parallel and ended with five pages published,
@@ -478,6 +570,22 @@ live; park blocked cases with a `resume:` block, never wait.
    figure review (two digitisations of the authors' own computed curves,
    load-bearing, unreviewed); the `D1.1`–`D1.5` scope decision
    (structure codes, not citations — decision page linked from the dashboard);
+   **NEW 2026-08-09 — the `structures: []` precedent.** `H1.8` is the first
+   published page with an empty `structures` list and an empty `pymrm_api`:
+   it is a correlation audit with no PDE, no grid and no pymrm operator, and
+   its *PyMRM implementation* section says exactly that rather than
+   manufacturing a model. Both verifiers judged this honest rather than
+   evasive, and `check_metadata.py` does not constrain `structures` contents
+   (nothing in the site build reads it), so it is safe — but it is a
+   precedent about what the gallery is *for*, and the pass-1 verifier's view,
+   which the coordinator shares, is that it should be set deliberately rather
+   than by default. Several queued cases (the empirical-correlation ones) will
+   land in the same shape. **Decision wanted: are operator-free audit pages in
+   scope, and if so should they be marked as such?**
+   **NEW 2026-08-09 — `J2.3` scope**, see the demotion in Recommended next
+   moves above: figure-only, so the catalogued route needs load-bearing
+   digitisation. Build the structure-only version, digitise and send the
+   overlays for review, or defer?
    the curated paper ask in [`papers-requested.yaml`](papers-requested.yaml)
    (the canonical class is LIVE as of 2026-08-05/06 — four monographs on disk,
    per-case verdicts in `papers-inventory.yaml`; then the ACS/Wiley/Elsevier

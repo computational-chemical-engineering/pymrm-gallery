@@ -36,4 +36,60 @@
 #     it. Standing caveat from docs/handoff.md is unchanged: the API text is
 #     good for prose and unusable for numbers on pre-1980 scans.
 
-[]
+- id: operator-free-audit-pages
+  title: "Are operator-free audit pages in scope? The structures-empty precedent"
+  raised: '2026-08-09'
+  blocking: false
+  question: >
+    H1.8 (Robeson upper bound) is the first published page with an empty
+    `structures` list AND an empty `pymrm_api`. It is a correlation audit:
+    there is no PDE, no grid and no pymrm operator anywhere in it, and its
+    "PyMRM implementation" section says exactly that rather than manufacturing
+    a model to justify its presence. Is that in scope for the gallery, and if
+    so should such pages be marked as a distinct kind?
+  detail: >
+    Both of H1.8's verifiers judged the empty lists HONEST rather than evasive -
+    the alternative was to invent a discretised model the source does not
+    motivate, which is the worse failure. It is also safe mechanically:
+    scripts/check_metadata.py does not constrain the contents of `structures`,
+    nothing in the site build reads it, and the page's front matter carries no
+    `struct:` tag.
+    So nothing is stalled - this is a question about what the gallery is FOR,
+    not about H1.8's correctness. It is raised now because it will recur: the
+    remaining empirical-correlation cases in the queue land in the same shape,
+    and it is better decided deliberately once than by default several times.
+    Three ways to go: (a) in scope, leave as is; (b) in scope but tag them, so
+    a reader can tell an audit page from a model page at a glance and the
+    catalogue can count them separately; (c) out of scope, in which case H1.8
+    should carry a note saying why it is an exception.
+    The page: pages/H1.8-robeson-upper-bound/ (live on the site under section H).
+
+- id: j2.3-nyvlt-scope
+  title: "J2.3 (Nyvlt 1968) is figure-only — which route, or defer?"
+  raised: '2026-08-09'
+  blocking: false
+  question: >
+    A pre-dispatch render on 2026-08-09 settled J2.3's table-vs-figure question
+    the wrong way: the paper prints NO table. Its catalogued route - extract the
+    nucleation order m and constant k from measured metastable-zone widths -
+    therefore needs load-bearing digitisation of the authors' own plots. Build
+    the structure-only version, digitise and send overlays for review, or defer?
+  detail: >
+    What is actually printed: the primary data are plotted points on the log-log
+    Figs. 2-5 (four salts), and the fitted k and m per substance appear only as
+    scatter in Figs. 6-10. The paper states its own dataset "of more than 25
+    substances were treated by the method of least squares" - results shown,
+    numbers never printed.
+    Digitising them would be load-bearing, so the page would stall at the review
+    gate (the A3.14 precedent), and A3.12's owed figure review is already open on
+    this dashboard - which is the reason to ask rather than just build it.
+    The honest alternative needs no digitisation and no maintainer: prove the
+    printed eq. (12)-(16) chain, which closes to
+    log b = (m-1)log(...) - log a + log k + m log(dt_max) so that the SLOPE IS m,
+    then measure what the paper's own three-cooling-rate design can and cannot
+    resolve about m. That is a J1.4-shaped page and is recorded in
+    queue_cases/J2.3.yaml.
+    Either way it is no longer the "small S1" the 2026-08-08 model-split note
+    assumed, so it should not be picked up on that basis. Nothing is stalled:
+    the case is parked `unclaimed` with both routes written down.
+    The paper: ~/papers/pymrm-gallery/Nyvlt1968-nucleation-kinetics-solutions-JCrystGrowth3-377.pdf

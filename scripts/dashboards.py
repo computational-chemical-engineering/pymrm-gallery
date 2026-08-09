@@ -380,7 +380,10 @@ def input_page(es):
         P.append('<div class="card"><div class="card-h">'
                  f'<span class="cid">{esc(d.get("id",""))}</span>'
                  f'<span class="ctitle">{esc(d.get("title",""))}</span>'
-                 f'<span class="pill p1">{"blocking" if d.get("blocking") else "not blocking"}</span>'
+                 # only a BLOCKING item earns the accent pill; a non-blocking one
+                 # styled `p1` reads as urgent and buries the ones that are.
+                 f'<span class="pill{" p1" if d.get("blocking") else ""}">'
+                 f'{"blocking" if d.get("blocking") else "not blocking"}</span>'
                  '<span class="pill">standing decision</span></div><div class="card-b">')
         if d.get("raised"):
             P.append(f'<span class="ref">raised {esc(str(d["raised"]))}</span>')
