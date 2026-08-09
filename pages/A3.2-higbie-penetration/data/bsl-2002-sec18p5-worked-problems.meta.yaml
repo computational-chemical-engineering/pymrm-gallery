@@ -1,0 +1,130 @@
+dataset_id: bsl-2002-sec18p5-worked-problems
+title: The inputs and printed answers of the two Bird-Stewart-Lightfoot problems that use the penetration result of section 18.5
+status: complete
+
+source:
+  authors:
+    - "Bird, R. B."
+    - "Stewart, W. E."
+    - "Lightfoot, E. N."
+  year: 2002
+  container: "Transport Phenomena, 2nd edition, John Wiley & Sons"
+  doi: null
+  access: >
+    A scanned copy is held outside this repository at
+    ~/papers/pymrm-gallery/BOOK-BirdStewartLightfoot-2002-transport-phenomena-2ed.pdf
+    and is not committed. No page image is reproduced anywhere in this
+    repository. Identity verified from the book's own title page (PDF p. 5) and
+    imprint page (PDF p. 6, "Copyright 2002 John Wiley & Sons"); PDF pp. 1-4 are
+    the endpaper vector/tensor tables, not the front matter.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    pdftoppm -r 300 renders of PDF pp. 574-578 (book pp. 558-562; section 18.5 is
+    book pp. 558-561, and book p. 562 is Fig. 18.6-1 and the start of section
+    18.6), 585-586 (book pp. 569-570, the problems - Problem 18A.4's statement,
+    all of its printed inputs, its printed Answer and Fig. 18A.4 are all on book
+    p. 569, and Problem 18A.7 is entirely on book p. 570) and 880 (book p. 864,
+    Table E.1),
+    each numeric cropped and read at digit scale. 300 ppi is the scan's NATIVE
+    resolution: pdfimages -list reports JBIG2 bilevel at 300 x 300 ppi, so a
+    600 dpi render would be pure interpolation. The ABBYY text layer of this
+    scan destroys every equation and all vector/tensor notation (it returns
+    "[V x v]" for the curl) and was used only to locate pages, never to read a
+    digit.
+  figure: >
+    Fig. 18A.4 (book p. 569) is a schematic of the wetted-wall column. It carries
+    no data curve. The two dimensions it prints as text labels, R = 1.4 cm and
+    L = 13 cm, are transcribed here as labels; nothing is traced, digitised or
+    reproduced. The film thickness delta is drawn on the same figure but is NOT
+    given a value anywhere in the problem, and no value is invented for it.
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-09
+  estimated_error: >
+    None on the transcription: every value was read at 300 ppi at digit scale.
+    BSL's own printed answers carry three significant figures, which is what
+    limits the comparisons on the page - see conditions.what_three_figures_hide.
+
+conditions:
+  what_this_book_contains_for_this_case: >
+    Section 18.5 (book pp. 558-561) derives the penetration result and attributes
+    it to Higbie in the same paragraph, with the full citation R. Higbie,
+    Trans. AIChE 31, 365-389 (1935) in footnote 5, which is that citation plus a
+    biographical note crediting him with having "provided the basis for the
+    'penetration model' of mass transfer".
+    That one sentence and that footnote are ALL the book prints about the
+    1935 paper: it does not say what Higbie's own argument was, which geometries
+    he treated, or what he compared his result against. The falling film is BSL's
+    section 18.5 and the rising bubble is BSL's Example 18.5-1; neither is
+    attributed to Higbie here. The section itself contains NO numbers. Every
+    number in this CSV comes from the two problems that apply it, 18A.4 and
+    18A.7, plus one molecular weight from Table E.1.
+  the_only_measurement: >
+    `bub_kc_measured` is the only MEASURED quantity anywhere in this file: the
+    surface-averaged k_c of 117 cm/hr that D. Hammerton and F. H. Garner,
+    Trans. Inst. Chem. Engrs. (London), 32, S18-S24 (1954), obtained for CO2
+    bubbles rising through purified water. THAT PAPER IS NOT ON DISK AND WAS NOT
+    CONSULTED; the value is recorded exactly as BSL quotes it, with no error bar,
+    no bubble-size distribution and no statement of how many bubbles it averages
+    over, because BSL prints none of those. Section 18.5 says of Eq. 18.5-19
+    that it "has been approximately confirmed for gas bubbles 0.3 to 0.5 cm in
+    diameter rising through carefully purified water" and cites the same paper.
+    Problem 18A.7's bubble, at 0.5 cm, is at the top of that range.
+  what_three_figures_hide: >
+    Every printed answer here carries three significant figures. That sets the
+    resolution of every comparison on the page: a reproduction agreeing to
+    +/-0.2 % is at the rounding limit and cannot distinguish, for example,
+    whether BSL took the density of water as 1.000 or 0.999 g/cm3 (a 0.1 %
+    effect), nor which value of the molecular weight of Cl2 was used. On 1.000
+    and Table E.1's 70.905 the closed form gives 0.273513 g-mol/hr, which rounds
+    to 0.274 rather than the printed 0.273 - the +0.188 % is just OUTSIDE the
+    +/-0.183 % that three printed decimals allow. Either unprinted choice closes
+    it (0.999 gives 0.273239; M = 71.0 gives 0.273147, both rounding to 0.273).
+    The excess is not theirs alone, and the page does not claim it is: only
+    1.28e-5 g-mol/hr (0.0047 % of the value) lies outside the window; the inputs
+    the problem DOES print are three-figure too, and half a unit in the last
+    printed place of D = 1.26e-5 cm2/s alone moves W_A by +/-0.199 %, the whole
+    window; and truncation rather than rounding to three decimals would put
+    0.273513 inside it. The page carries the two unprinted inputs as break-table
+    rows that DO move the metric, by about the size of the residual, and states
+    that the printed answer cannot decide between any of them - rather than
+    adopting either, or pretending the agreement resolves them.
+  what_is_not_printed: >
+    Problem 18A.4 does not print the film thickness delta, the water viscosity,
+    or the liquid flow rate from which delta would follow. The penetration
+    answer does not need delta - that is the point of Eq. 18.5-18 - but the FULL
+    equation 18.5-7 does, so the page reports the finite-thickness correction as
+    a threshold in the dimensionless group Lambda = D L / (v_max delta^2) and as
+    the delta at which the correction reaches 1 %, rather than inventing a
+    thickness. Nothing on this page uses an unprinted transport property.
+  the_v_max_step: >
+    Problem 18A.4 prints the AVERAGE velocity, 17.7 cm/s, while Eq. 18.5-18 is
+    written in v_max. The page does not take the 3/2 from memory: it integrates
+    Eq. 18.5-1, v_z = v_max[1 - (x/delta)^2], across the film, which gives
+    <v_z> = (2/3) v_max from a printed equation of the same section.
+  printing_defect_found: >
+    Problem 18A.7(a) instructs the reader to "Use Eq. 18.5-20", the CREEPING-FLOW
+    result with 3*pi*D in the denominator, but the printed answer 1.17e-6
+    g-mol/(cm2 s) is what Eq. 18.5-19, the potential-flow / Higbie result with
+    pi*D, gives. Eq. 18.5-20 gives 6.77e-7, lower by exactly sqrt(3). The page
+    proves this from the problem's own printed inputs and reports it; it does not
+    repair it, and it does not assume which of the two BSL meant.
+
+columns:
+  - {name: id,        unit: "-", description: stable key used by the notebook to look the row up}
+  - {name: problem,   unit: "-", description: "BSL problem number, 18A.4 or 18A.7 (Table E.1 rows carry the problem that uses them)"}
+  - {name: quantity,  unit: "-", description: what the number is}
+  - {name: value,     unit: "see unit column", description: the value exactly as printed}
+  - {name: unit,      unit: "-", description: unit as printed (CGS except the g-mol/liter and cm/hr BSL prints)}
+  - {name: book_page, unit: "-", description: printed book page on which it appears (PDF page = book page + 16)}
+  - {name: role,      unit: "-", description: "input | printed_answer | measurement | constant"}
+  - {name: note,      unit: "-", description: the surrounding statement, quoted where short}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). Short quotations of the sentences carrying each number are included
+  so that a reader can audit the transcription without the book; no figure, no
+  page image and no substantial portion of the text is reproduced.

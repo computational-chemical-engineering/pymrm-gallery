@@ -1,0 +1,80 @@
+dataset_id: froment-2011-table6p4p2-1-three-models
+title: Froment, De Wilde & Bischoff Table 6.4.2.1 - film, surface renewal and penetration enhancement factors side by side
+status: complete
+
+source:
+  authors:
+    - "Froment, G. F."
+    - "De Wilde, J."
+    - "Bischoff, K. B."
+  year: 2011
+  container: "Chemical Reactor Analysis and Design, 3rd edition, John Wiley & Sons, ISBN 978-0-470-56541-4"
+  doi: null
+  access: >
+    A copy is held outside this repository at
+    ~/papers/pymrm-gallery/BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf
+    and is not committed. No page image is reproduced anywhere in this repository.
+    NOTE THE AUTHORSHIP: the file name says "Froment_Bischoff" but this is the
+    THIRD edition (2011) and its authors are Froment, DE WILDE and Bischoff.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    The file is born-digital with embedded TrueType subsets and a clean text
+    layer, but the equation heads of the three columns do not survive text
+    extraction, so book p. 354 was rendered with pdftoppm -r 300 and the whole
+    table - heads and all eighteen cells - read off the render.
+  figure: "none - a printed table"
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-09
+  estimated_error: >
+    None on the transcription: eighteen cells read at digit scale on a 300 dpi
+    render. The disagreements the page reports are between the printed cells and
+    the closed forms printed at the head of the same columns, not between two
+    readings of the page.
+
+conditions:
+  why_this_table_matters_here: >
+    It is the ONLY place in either book on disk where all three pictures - film,
+    penetration and surface renewal - are tabulated against one another. The
+    gallery's A3.1 (Whitman) and A3.3 (Danckwerts) both state that the three-way
+    comparison is open and decline it; this table is what makes it available.
+  attribution_chain: >
+    Froment prints the table with the footnote "After Beek [1968]". BEEK 1968 IS
+    NOT ON DISK AND WAS NOT CONSULTED. The values are recorded exactly as Froment
+    prints them and every statement about them on the page is a statement about
+    Froment's printing, not about Beek's original.
+  what_gamma_is: >
+    gamma^2 = D_A k / k_L^2, with k the pseudo-first-order rate coefficient and
+    k_L the physical mass-transfer coefficient of whichever model is in the
+    column. F_A is the enhancement factor at zero bulk reagent concentration,
+    C_Ab = 0. F_A >= 1 by construction in all three models: a reaction consuming
+    A in the liquid cannot reduce the absorption rate below the physical one.
+  printing_defect_found: >
+    THE PENETRATION COLUMN DISAGREES WITH THE CLOSED FORM PRINTED AT ITS OWN
+    HEAD AT EVERY ONE OF THE SIX gamma, and two of the six cells are impossible
+    on the table's own evidence. At gamma = 0.01 the printed value is 0.94,
+    which is below 1 - it would mean a reaction that SUPPRESSES absorption - and
+    the other two columns of the same row both read 1.00. At gamma = 10 the
+    printed value is 10.39, above the surface-renewal column's 10.05 in the same
+    row, while Froment's own text says the three "differ only by a few percent"
+    and the penetration value lies between the film and surface-renewal values
+    at both limits. Neither conclusion needs any computation: they follow from
+    the printed digits of the other two columns. The page also computes all
+    eighteen cells and reports the deviations, and it repairs nothing.
+    The FILM column is separately high by one unit in the last printed place at
+    gamma = 0.3 (1.04 for gamma/tanh gamma = 1.0298) and at gamma = 3 (3.02 for
+    3.0149). The SURFACE RENEWAL column reproduces sqrt(1+gamma^2) at all six.
+
+columns:
+  - {name: gamma,                       unit: "-", description: "sqrt(D_A k)/k_L, the Hatta-type modulus of the table's independent variable"}
+  - {name: FA_film_printed,             unit: "-", description: "enhancement factor printed in the Film column, headed gamma/tanh gamma"}
+  - {name: FA_surface_renewal_printed,  unit: "-", description: "enhancement factor printed in the Surface renewal column, headed sqrt(1+gamma^2)"}
+  - {name: FA_penetration_printed,      unit: "-", description: "enhancement factor printed in the Penetration column, headed by Eq. 6.4.2-8"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). No figure, no page image and no substantial portion of the text is
+  reproduced.

@@ -1,0 +1,70 @@
+dataset_id: bsl-2002-penetration-vs-film-tables
+title: Bird-Stewart-Lightfoot Table 20.1-1 and Table 22.8-2, the book's own quantitative film-versus-penetration comparison
+status: complete
+
+source:
+  authors:
+    - "Bird, R. B."
+    - "Stewart, W. E."
+    - "Lightfoot, E. N."
+  year: 2002
+  container: "Transport Phenomena, 2nd edition, John Wiley & Sons"
+  doi: null
+  access: >
+    A scanned copy is held outside this repository at
+    ~/papers/pymrm-gallery/BOOK-BirdStewartLightfoot-2002-transport-phenomena-2ed.pdf
+    and is not committed. No page image is reproduced anywhere in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  tool: >
+    pdftoppm -r 300 renders of PDF p. 631 (book p. 615, Table 20.1-1 and Eqs.
+    20.1-17/18) and PDF pp. 728-729 (book pp. 712-713, Eqs. 22.8-41/42 and Table
+    22.8-2), each cell cropped and read at digit scale. 300 ppi is native
+    (pdfimages -list: JBIG2 bilevel, 300 x 300 ppi).
+  figure: "none - both are printed tables; Fig. 22.8-7 plots the same two functions and is not used"
+  operator: "pymrm-gallery builder agent"
+  date: 2026-08-09
+  estimated_error: >
+    None on the transcription. Both tables print three or four significant
+    figures and the page compares against them at that precision.
+
+conditions:
+  what_this_table_compares: >
+    Table 22.8-2 is headed "Comparison of Film and Penetration Models" and is
+    BSL's own quantitative comparison of the two pictures. IT IS NOT ABOUT THE
+    EXPONENT ON DIFFUSIVITY. theta_x is the correction to a mass-transfer
+    coefficient for a finite NET mass-transfer rate across the interface, and
+    the comparison is made at zero net rate through x_A0. The page says so
+    explicitly rather than letting the table look like a test of k_L ~ D^n.
+  scope_of_the_arnold_functions: >
+    phi and psi solve the Arnold (1944) unsteady-evaporation problem of BSL
+    section 20.1, which is case A4.8, not this one. They appear here only
+    because Eq. 22.8-41 needs psi, and the page uses them for nothing else. The
+    x_A0 = 1.00 row prints an infinity sign for both phi and psi; those two
+    cells are left EMPTY here rather than being given a number.
+  the_row_that_is_a_limit_not_a_measurement: >
+    The x_A0 = 0.00 and x_A0 = 1.00 rows of the theta columns are the two
+    analytic limits of both models (theta -> 1 and theta -> 0). They agree by
+    construction and the page labels them as limits, so the four interior cells
+    are the only ones carrying information.
+  what_is_reproduced_and_how: >
+    phi is obtained by root-finding Eq. 20.1-18 (brentq on
+    x_A0(phi) - x_A0 = 0), never by reading the printed phi back in; psi then
+    follows from the definition printed in the table head, and theta from Eqs.
+    22.8-41 and 22.8-42. The printed phi and psi columns are therefore
+    independent targets, not inputs.
+
+columns:
+  - {name: x_A0,                     unit: "-", description: interfacial mole fraction of the evaporating species, the table's independent variable}
+  - {name: phi_20p1_1,               unit: "-", description: "Arnold's phi(x_A0), Table 20.1-1 column 2; empty at x_A0 = 1.00 where the book prints infinity"}
+  - {name: psi_20p1_1,               unit: "-", description: "psi = phi sqrt(pi)/x_A0, Table 20.1-1 column 3; empty at x_A0 = 1.00 where the book prints infinity"}
+  - {name: theta_penetration_22p8_2, unit: "-", description: "theta_x from the penetration model, Table 22.8-2 column 2 (Eq. 22.8-41)"}
+  - {name: theta_film_22p8_2,        unit: "-", description: "theta_x from the film model, Table 22.8-2 column 3 (Eq. 22.8-42)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet (DSM
+  Art. 3). No figure, no page image and no substantial portion of the text is
+  reproduced.

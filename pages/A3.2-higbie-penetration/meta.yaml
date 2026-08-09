@@ -1,0 +1,263 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: A3.2
+slug: higbie-penetration
+title: "Higbie penetration theory"
+section: A
+status: published
+tier: T0
+priority: P1
+structures: [S4]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 40
+datasets:
+  - bsl-2002-sec18p5-worked-problems.csv
+  - bsl-2002-penetration-vs-film-tables.csv
+  - froment-2011-table6p4p2-1-three-models.csv
+
+validation:
+  - >-
+    BSL PROBLEM 18A.4 REPRODUCED TWO WAYS, AND EACH NUMBER SCOPED TO WHAT IT
+    TESTS. Eq. 18.5-18 in closed form gives 0.27351 g-mol/hr against the printed
+    0.273 (+0.188 %); a pymrm finite-volume march of Eq. 18.5-11, read as the
+    outlet mixing cup (BSL's own Problem 18C.3 route) and touching no error
+    function anywhere, gives 0.27351 (+0.187 %). The two agree to 4.6e-4 %. THE
+    TWO ROUTES ARE NOT INDEPENDENT END TO END, AND THE PAGE SAYS SO: W = 2 pi R,
+    the 3/2, the solubility conversion and the 3600 enter both, and delta_ref =
+    sqrt(D L / (v_max Lambda)) carries that whole dimensional prefactor back out
+    of the marching route, so pymrm_vs_eq18518_rel is EXACTLY INVARIANT to
+    v_max, rho, M(Cl2), R, L and D - break rows inject all three of the first and
+    it does not move. The cross-route 4.6e-4 % tests the DIMENSIONLESS solve,
+    Phi(Lambda) against sqrt(4 Lambda / pi) (drop the 4 and it moves to +1); the
+    PREFACTOR is tested only by the +0.188 % against BSL's printed 0.273.
+  - >-
+    A PRINTED DEFECT IN THE PINNED SOURCE, PROVED FROM ITS OWN INPUTS. Problem
+    18A.7(a) instructs "Use Eq. 18.5-20" - the creeping-flow form with 3 pi D -
+    but its printed answer 1.17e-6 g-mol/(cm2 s) is what Eq. 18.5-19, the
+    potential-flow/Higbie form with pi D, gives (+0.220 %). Eq. 18.5-20 gives
+    6.77e-7, low by exactly sqrt(3) = 1.7320508. Reported, not repaired; the page
+    does not decide which of the instruction and the answer is the error.
+  - >-
+    THE ONE EMPIRICAL TEST AVAILABLE. Part (b) reproduces from Hammerton &
+    Garner's measured surface-averaged k_c = 117 cm/hr (+0.188 % on the printed
+    1.33e-6), which pins the units of the measurement; the penetration
+    prediction for the same bubble, with NO adjustable constant (t_exp = D/v_t),
+    is 102.96 cm/hr, i.e. 12.0 % low. Creeping flow would be 49.2 % low.
+  - >-
+    A PRINTED DEFECT IN THE CROSS-CHECK SOURCE, PROVED FROM THE PRINTED DIGITS
+    ALONE. Froment's Table 6.4.2.1 penetration column disagrees with the closed
+    form printed at the head of that same column at all six gamma (worst 6.4 %),
+    and two of the six cells are impossible against the other two columns of
+    their own rows: 0.94 at gamma = 0.01 (below 1, where film and renewal both
+    read 1.00) and 10.39 at gamma = 10 (above renewal's 10.05). The bracket test
+    uses no closed form at all. The film column is separately high by one unit in
+    the last printed place at two of six; the surface-renewal column reproduces
+    everywhere. Beek [1968], whom Froment credits, is not on disk.
+  - >-
+    FROMENT'S EQ. 6.4.2-8 RE-DERIVED FROM HIS EQ. 6.4.2-4 by quadrature over a
+    uniform surface age, worst 1.3e-12 over eight gamma - which is what makes
+    the disagreement above a defect in the table rather than in the reading.
+  - >-
+    BSL TABLES 20.1-1 AND 22.8-2 REPRODUCED, phi by root-finding Eq. 20.1-18
+    rather than by reading the printed phi back in: worst 0.010 % on phi,
+    0.042 % on psi, 0.042 % on the penetration theta_x and 0.021 % on the film
+    theta_x. The page also points out that Table 22.8-2's penetration column is
+    NOT an independent check - it is (1-x_A0) times Table 20.1-1's psi column,
+    the two deviation sets differing by 1.1e-16.
+  - >-
+    AN EXACT EIGENFUNCTION SERIES, NOT IN EITHER BOOK, for the plug-flow case
+    with a no-flux wall: Phi = 1 - sum 2/lam_n^2 exp(-Lam lam_n^2),
+    lam_n = (n+1/2) pi. The pymrm march reproduces it to 7.2e-6 over three
+    decades of Lambda - a route sharing no code with the solver and built from
+    sines rather than error functions.
+  - >-
+    BOTH AXES REFINED SEPARATELY AND EACH ISOLATED FROM THE OTHER. Observed
+    orders 0.999 in the marching step and 2.07 in the grid; the marching step is
+    the larger error (1.04e-4 against 1.05e-5), so every Phi carrying a physics
+    statement is Richardson-extrapolated in n_t with the raw value printed beside
+    it. Measuring either axis without isolating it collapses both orders, and
+    that is a break-table row.
+  - >-
+    72-ROW BREAK TABLE, 57 rows move. Every one of the 43 reported metrics has at
+    least one row THAT ACTUALLY MOVES IT; the notebook generates that coverage map
+    from the measured "moved?" column rather than from the row labels - a metric
+    whose only row leaves it bit-identical is coverage on paper only - and prints
+    both maps ("metrics with NO break row" and "metrics with a row but NO MOVING
+    row"), both empty. The fifteen rows that do not move are kept and classified
+    into five named classes on the page, the first of which is new: the three rows that
+    inject v_max, rho and M(Cl2) into pymrm_vs_eq18518_rel are there precisely to
+    demonstrate that the cross-route metric is blind to the dimensional prefactor.
+
+adds: >
+  Three things, and one refusal.
+  (1) THE EQUATION BSL SETS UP AND THEN DECLINES TO SOLVE. Section 18.5 writes
+  Eq. 18.5-7 in full - parabolic velocity profile, finite film, no-flux wall -
+  says its analytic solution is "in the form of an infinite series" in Pigford's
+  1941 thesis, does not print it, and replaces it by Eq. 18.5-11. Solving
+  Eq. 18.5-7 directly turns that replacement into a number: the penetration
+  formula is within 1 % of the full equation for Lambda = D L/(v_max delta^2)
+  below 0.05643, i.e. whenever the penetration depth stays below 0.475 delta -
+  for Problem 18A.4's column, any water film thicker than 105 um. The threshold
+  is root-found, not read off the sweep, and the sweep-read values are in the
+  break table.
+  (2) AND IT SEPARATES THE TWO HALVES OF BSL'S JUSTIFICATION, WHICH ARE NOT
+  EQUAL. BSL gives two reasons for Eq. 18.5-11 - the solute does not sense the
+  wall, and it thinks the film moves at v_max - as one argument. Switching them
+  independently at Lambda = 0.1, where the front has crossed 0.63 of the film,
+  the velocity profile costs 1.92 % and the finite film 4.0e-6, a factor 4810
+  apart. The wall effect is in fact SMALLER THAN THE SOLVER'S OWN DISCRETISATION
+  ERROR, so it had to be measured with the exact series instead - which is the
+  strongest available way to say it is negligible, and the page says that rather
+  than quoting the solver's 1.0e-5. The reason is visible in the series: a
+  reflecting wall only returns solute a semi-infinite film would have kept
+  anyway. This decomposition is in neither book.
+  (3) THE THREE-WAY COMPARISON A3.1 AND A3.3 BOTH DECLINED, TAKEN. Two things on
+  disk make it possible: Froment's Table 6.4.2.1, the only place in either book
+  putting film, surface renewal and penetration side by side (and whose
+  penetration column turns out to be wrong); and Hammerton & Garner's single
+  measured k_c, on which penetration is the ONLY one of the three that predicts
+  anything - the film needs delta and surface renewal needs s, one free constant
+  and one datum each, zero residual each, which is A3.3's argument inherited
+  rather than re-derived. Inverting the measurement through the other two gives
+  the constants they would need: a 4.49 um film, or s = 72.3 s^-1.
+  THE REFUSAL: the sqrt(D) exponent is still not tested, and the page says so at
+  length with the search that backs the claim. One (k_L, D) pair cannot resolve
+  an exponent. What has moved is the magnitude question, which neither sibling
+  could touch.
+
+agreement: >
+  Every printed target reproduced. Problem 18A.4: 0.27351 g-mol/hr against the
+  printed 0.273 (+0.188 %) by closed form and +0.187 % by an independent
+  finite-volume march, the two agreeing to 4.6e-4 %. Problem 18A.7: +0.220 % on
+  part (a) FROM EQ. 18.5-19, not the Eq. 18.5-20 the problem names (which is
+  42.1 % low, a factor sqrt(3)); +0.188 % on part (b). BSL Tables 20.1-1 and
+  22.8-2 reproduced to 0.042 % worst. Froment's Table 6.4.2.1: surface renewal
+  reproduced everywhere (0.50 % worst, rounding), film high by one unit in the
+  last place at two of six (0.98 % worst), penetration wrong at all six (6.4 %
+  worst) with two cells impossible on the printed digits alone. Froment's
+  Eq. 6.4.2-8 re-derived from his Eq. 6.4.2-4 to 1.3e-12. pymrm against the
+  exact eigenfunction series, 7.2e-6 over three decades. The one number that is
+  a comparison with a MEASUREMENT rather than a reproduction: the penetration
+  prediction is 12.0 % below Hammerton & Garner's k_c, with no fitted constant.
+
+caveats: >
+  TIER 6, AND THE ORIGIN WAS NOT CONSULTED. R. Higbie, Trans. AIChE 31, 365-389
+  (1935) is pre-DOI, is not on disk, and was NOT read. The model is read from
+  Bird, Stewart & Lightfoot, "Transport Phenomena", 2nd edn (Wiley, 2002),
+  section 18.5 (book pp. 558-561), which states the result, names the
+  penetration model, attributes it to Higbie in the same paragraph and prints the
+  full citation in a footnote that also credits him with having "provided the
+  basis for the 'penetration model' of mass transfer". Every equation number on
+  the page is BSL's. NOTHING ON THE PAGE IS ATTRIBUTED TO THE 1935 PAPER BEYOND
+  WHAT BSL PRINTS - ONE SENTENCE AND THAT FOOTNOTE - AND, WHERE THE FROMENT
+  CROSS-CHECK IS BEING DESCRIBED, WHAT FROMENT PRINTS ABOUT IT: his "Higbie's
+  uniform age tbar" above Eq. 6.4.1-10, and his opening of section 6.4 treating
+  "Higbie's [1935] so-called 'penetration theory'" as the uniform-age special
+  case of surface renewal. In particular the two geometries
+  the contact time is read off - the falling film with t_exp = L/v_max, and the
+  rising bubble with t_exp = D/v_t - are BSL's section 18.5 and BSL's Example
+  18.5-1 respectively; BSL does not say which geometries Higbie treated, and the
+  page does not say so either. The Background section states this limit
+  explicitly.
+
+  THE E1.1 TARGET IS BSL SECTION 18.5, AND ONLY THAT. Froment, De Wilde &
+  Bischoff, "Chemical Reactor Analysis and Design", 3rd edn (Wiley, 2011),
+  section 6.4 is a CROSS-CHECK: it supplies an independent statement of the same
+  constant (their Eq. 6.4.1-10's "N_A = 2 C_Ai sqrt(D_A/pi tbar)"), the
+  closed-form enhancement factor for Higbie's uniform age (Eq. 6.4.2-8) and
+  Table 6.4.2.1. The page does not adjudicate between the two books' scopes.
+  Levenspiel (3rd edn, 1999) is on disk, mentions Higbie and cites him, but
+  neither derives nor tests the model - the E1.1 failure mode - and is not used.
+
+  TRANSCRIPTION PROVENANCE. The BSL file is a JBIG2 bilevel scan at 300 x 300
+  ppi native whose ABBYY text layer destroys every equation and all vector
+  notation ("[V x v]" for the curl); it was used only to locate pages, and every
+  digit and every equation was read on 300 dpi renders, cropped to digit scale.
+  PDF page = book page + 16 in this part of the body. The Froment file is
+  born-digital with a clean text layer, but the column heads of Table 6.4.2.1
+  are equations that do not survive extraction, so that page was rendered and
+  read as an image too.
+
+  ONE ASSUMED CONSTANT, FLAGGED, AND SHOWN TO SIT AT THE RESOLUTION OF THE
+  PRINTED ANSWER. Converting Problem
+  18A.4's "0.823 g Cl2 per 100 g water" needs the density of water, which the
+  problem does not print; it is taken as exactly 1.000 g/cm3 with the solution
+  treated as dilute. The break table contains a row at 0.999 and a row with
+  M(Cl2) = 71.0 instead of BSL Table E.1's 70.905, and BOTH MOVE the reproduction
+  by about a tenth of a percent - which is the whole size of the residual, and is
+  the point. On 1.000 and 70.905 the closed form gives 0.273513, which rounds to
+  0.274 rather than to BSL's printed 0.273: the +0.188 % is a hair OUTSIDE the
+  +/-0.183 % that three printed decimals allow, not inside it. Either unprinted
+  choice closes it - 0.999 gives 0.273239 and M = 71.0 gives 0.273147, each
+  rounding to 0.273 - but THE EXCESS IS NOT THEIRS ALONE AND THE PAGE DOES NOT
+  CLAIM IT IS: only 1.28e-5 g-mol/hr (0.0047 % of the value) lies outside the
+  window; the inputs 18A.4 DOES print are three-figure as well, and half a unit
+  in the last printed place of D alone moves W_A by +/-0.199 %, the whole window;
+  and truncation rather than rounding to three decimals would put 0.273513
+  inside. The page prints that arithmetic while concluding only that a
+  three-figure answer cannot decide between any of them. NEITHER UNPRINTED VALUE
+  IS ADOPTED. The
+  factor 3/2 relating v_max to the printed average velocity is DERIVED by
+  averaging BSL's own printed Eq. 18.5-1, not taken from memory.
+
+  DELTA IS NEVER INVENTED. Problem 18A.4 prints no film thickness, no viscosity
+  and no flow rate. The finite-thickness correction is therefore reported as a
+  threshold in Lambda and as the delta at which it reaches 1 %; the page states
+  no correction for that column, because the printed data do not support one.
+
+  THE MEASUREMENT IS QUOTED, NOT CONSULTED. D. Hammerton and F. H. Garner,
+  Trans. Inst. Chem. Engrs. (London) 32, S18-S24 (1954) is NOT on disk. Its
+  surface-averaged k_c = 117 cm/hr is recorded exactly as BSL quotes it, with no
+  error bar, no bubble-size distribution and no statement of how many bubbles it
+  averages, because BSL prints none of those. BSL's own words for the agreement
+  are "approximately confirmed", and the page does not upgrade that to a
+  validation. THE 12 % THEREFORE HAS NO UNCERTAINTY ATTACHED TO IT AND NONE IS
+  INVENTED.
+
+  THE sqrt(D) EXPONENT IS STILL NOT TESTED, AND THE CLAIM IS BACKED BY A SEARCH
+  THAT IS DESCRIBED. Section 18.5 contains no numbers; its problems 18A.3, 18A.4
+  and 18A.7 were each read in full on renders, as was every problem statement
+  from 18A.1 to 18D.2 (book pp. 568-581), and 18A.7(b) is the only measured
+  coefficient among them,
+  at a single diffusivity. BSL's Table 22.8-2 compares film and penetration on
+  the HIGH-NET-FLUX correction theta_x, not on D^n, and carries no measurement.
+  Froment section 6.4 is theory throughout and section 6.5 describes how k_L, s
+  and A_v are measured without printing measured values. One (k_L, D) pair
+  cannot resolve an exponent, so the question stands exactly where A3.3 left it.
+
+  BEEK [1968] IS NOT ON DISK. Froment credits Table 6.4.2.1 to him; every
+  statement the page makes about those eighteen cells is a statement about
+  FROMENT'S PRINTING, and nothing is attributed to Beek.
+
+  A4.8 OWNS THE ARNOLD PROBLEM. Table 20.1-1's phi and psi solve BSL section
+  20.1 (J. H. Arnold, Trans. AIChE 40, 361-378 (1944)) and appear here only
+  because Eq. 22.8-41 needs psi. Nothing else on this page uses them and no
+  claim is made about that problem.
+
+  TWO METRICS SIT BELOW ABS_FLOOR = 1e-12 and are outside the regression suite
+  entirely: mixing_cup_vs_flux_integral_rel, which is structural (backward Euler
+  on a conservative discretisation makes the two equal to round-off whatever the
+  physics), and bsl_t2282_theta_pen_minus_psi_dev, which measures the redundancy
+  of two of the reproduced columns. Both are named on the page with above-floor
+  companions, and the notebook prints the list rather than asserting it. A THIRD
+  METRIC IS CI-BRITTLE RATHER THAN BELOW THE FLOOR:
+  froment_eq6428_closed_vs_quadrature_worst sits at 1.27 x ABS_FLOOR, so
+  check_agreement.py DOES compare it, at REL_TOL = 5 % - but the quantity is pure
+  round-off from scipy.integrate.quad plus libm erf, so any scipy or libm change
+  moves it by orders of magnitude and CI reports a regression that is not one (or,
+  if a future build puts both sides under 1e-12, stops comparing it silently).
+  The page names that risk and gives it two above-floor companions,
+  froment_penetration_vs_renewal_at_gamma_1 and
+  froment_penetration_vs_film_at_gamma_1, which are what will actually protect the
+  finding.
+
+  A3.1 AND A3.3 SAY "A3.2 HAS NO SOURCE". Both published pages state, in prose
+  and in metadata, that the three-way comparison is open partly because this
+  case had no source. That is now out of date and the two pages should be
+  amended by whoever integrates this one; this page does not edit them.
