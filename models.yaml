@@ -2914,6 +2914,200 @@ models:
       dimensionless groups would move all routes together and is guarded only by
       the Appendix-2 printed arithmetic (which pins a and b but not alpha and K).
 
+  - id: B2.3
+    slug: levenspiel-deactivation-classes
+    title: "Levenspiel's four deactivation classes: which reactor can tell them apart"
+    description: >
+      Levenspiel (1972) sets out the four broad classes of catalyst deactivation -
+      parallel, series, side-by-side, independent - as nth-order kinetics with
+      n'-order, d-order decay (its eqs. 4-7), and asks whether experiments can be
+      devised that return those orders. The paper prints no data at all: no table
+      in its eight pages, and Figs. 2-6 are schematic test plots with unlabelled
+      axes. So the page proves its printed structure - 26 symbolic identities
+      re-derive eqs. (12)-(32) and Fig. 6's slope and intercept from the
+      predecessors the paper derives them from, and the four reactors meet the
+      paper's own closed forms (15), (19), (22) and (28)-(31), the last on all
+      four printed branches d = 0, 1, 2, 3 - and then measures the question the
+      paper poses, by solving all four classes in all four of its batch-solids
+      contactings and fitting every class to every other class's response (64
+      fits, all parameters free). The answer is harder than the taxonomy suggests.
+      ALL FOUR DEVICES ARE EXACTLY DEGENERATE SOMEWHERE, by five identity families
+      the paper does not state: in any well-mixed fluid at constant flow the
+      performance relation makes C_R = kappa C_A^n a at every instant, so series
+      deactivation of order (n', d) IS parallel deactivation of order
+      (n n', d + n') for any n (the printed 1.3e-9 over nine order combinations is
+      the integrator tolerance - at rtol 1e-13 it is 1.1e-13); in the held-C_A
+      device Levenspiel recommends, parallel, series and independent are literally
+      the same equation (8.9e-16) and at d = 1 side-by-side joins them -
+      decoupling concentration from activity is exactly what destroys the class
+      distinction inside one run; wherever the poison profile equals the reactant
+      profile (d = 1, n' = n, sigma = kappa/lambda) side-by-side IS parallel with
+      the same constants, in the batch, the mixed reactor AND the plug-flow bed;
+      and with sigma free, at n = n' = d = 1 the poison profile is a POWER of the
+      reactant profile, so side-by-side with ANY sigma is parallel with
+      n' -> lambda sigma / kappa - 2.5e-9 in the batch and 1.9e-11 in the bed,
+      against 1.2e-1 and 3.5e-1 in the two well-mixed devices where it correctly
+      fails. So the bed is NOT the only device free of exact degeneracy; what it
+      and the batch keep is a distinction between parallel, series and
+      independent, and what the bed alone has is a spatial coordinate. Then the
+      negative half: at a 0.2-percentage-point conversion
+      resolution, ONE of the twelve class pairs is separable in ONE of the four
+      devices (plug flow, parallel vs independent, 2.20e-3); parallel vs series in
+      a bed is 8.07e-4. Each of the 64 entries is min(multistart fit, identity
+      twin) - 44 have a twin, and on nine of those the fit alone stopped more than
+      1e-6 short of a minimum that is exactly zero, by up to 1.31e-3, all in the
+      safe direction and none changing a verdict. What does discriminate is not
+      the effluent but the activity PROFILE, and both bed inlet values are EXACT:
+      at the feed face C_R = 0, so the series inlet never decays at all (a = 1
+      identically) while the parallel inlet is exp(-lambda theta) = 0.049787; the
+      finite-volume first cell centre approaches each at first order, so the
+      m = 200 reading 0.9889 is not what is reported. Outlets are extrapolated
+      TWICE - in space and then in time, the space extrapolation at a fixed step
+      count still being time-limited by 9.8e-6 against its own spatial residual of
+      1.8e-7 - giving 0.19017 and 0.17711, quoted to the five decimals the two
+      refinements resolve, with gradients of opposite sign
+      (+0.1404 vs -0.8229) that one spent-catalyst assay reads off, which is B2.2's
+      "the coke profile names the mechanism" reached from the other direction. The
+      recommended device is then priced: it gives d cleanly whatever n' is, but
+      naming the class needs a SET of runs spanning 0.204 in C_A/C_A0 at 5 %
+      precision on k'_d (0.111 at 2 %), root-found - and that 0.204 is an ORDER,
+      not a design constant: swept over the two unprinted choices it hides (where
+      the level set starts, how many levels) it ranges 0.073 to 0.382. Its
+      one-knob/two-constraint
+      problem with a consumed poison has an exact blind spot at d = 1 (consumption
+      ~ a^(d-1), so the recovered order is unbiased to 5.5e-7 for any sigma) while
+      at d = 2 it biases the order by -30.8 % - though holding C_A rather than
+      C_P is the inverse of the paper's own instruction for eq. (6), and under
+      that instruction (sigma = 0) the order comes back unbiased to 5.4e-9. The
+      pymrm bed meets an independent
+      quadrature at observed order 2.01 in space and 1.97 in time against Euler's
+      1.01 on the same pair (2.8e-6 in
+      conversion at production settings), and with the fluid accumulation term
+      retained it prices the pseudo-steady assumption the paper states on p. 269:
+      first order in eps, crossing the stated resolution at eps* = 4.3e-3, i.e.
+      about four minutes of run for a 1 s fluid residence time - which is where
+      the paper draws the line in words. One printed defect, reported not
+      repaired: eq. (24) prints 1/k_d where the paper's own eq. (21) requires 1/k,
+      the residual being exactly ln(k_d/k) and the printed argument dimensionally
+      impossible.
+    section: B
+    status: published
+    page: pages/B2.3-levenspiel-deactivation-classes/
+    tier: T0
+    priority: P1
+    structures:
+      - S1
+      - S5
+    phases:
+      - gas-solid
+    predicts:
+      - conversion history X_A(t) of a deactivating batch of solids under each of
+        the four printed rate forms (parallel, series, side-by-side, independent)
+        in four batch-solids contactings
+      - the activity profile a(s, t) down a plug-flow bed - descending for
+        parallel decay, ascending for series decay - and its gradient contrast
+      - the weight-time history tau'(t) of the mixed-flow reactor whose flow rate
+        is lowered to hold C_A constant, and the straight lines of eqs. (28)-(32)
+        it produces at d = 0, 1, 2, 3 and for general d
+      - the conversion resolution an experiment needs to distinguish any pair of
+        the four classes, per contacting
+      - the span of held concentration a set of constant-C_A runs needs before the
+        class can be assigned at a stated precision on k'_d
+      - the bias in the recovered deactivation order when the poison of eq. (6) is
+        consumed, and the cost of the paper's pseudo-steady-state assumption
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - interp_cntr_to_stagg_tvd
+      - vanleer
+      - compute_boundary_values
+    reference:
+      authors:
+        - Levenspiel, O.
+      year: 1972
+      title: Experimental Search for a Simple Rate Equation to Describe Deactivating
+        Porous Catalyst Particles
+      container: Journal of Catalysis 25(2) 265-272
+      doi: 10.1016/0021-9517(72)90227-8
+      note: >
+        LEVENSPIEL THE AUTHOR, NOT LEVENSPIEL THE BOOK. "Chemical Reaction
+        Engineering" is a different work, cited by this paper as its own ref. 3
+        (2nd Ed., Chap. 15); it remains outstanding as a textbook-canonical source
+        and is what A2.4 is catalogued to. This page does not close that.
+        Identity read from the document's own first page (running head "JOURNAL OF
+        CATALYSIS 25, 265-272 (1972)", display title, by-line "OCTAVE LEVENSPIEL",
+        Oregon State affiliation, "Received September 28, 1971", abstract).
+        300 ppi CCITT-G4 bilevel; the OCR text layer is badly damaged
+        ("detrrmination", "ordrrs", "particlrs", "parallrl", "rractor") and was
+        used for nothing.
+    data:
+      tier: 6
+      method: >
+        the 29 printed equations used and the 17 printed prose claims tested,
+        transcribed from digit-scale crops of native 300 ppi renders. THE SOURCE
+        PUBLISHES NO EXPERIMENTAL DATA - no table anywhere in its eight pages, and
+        Figs. 2-6 are schematic test plots with unlabelled axes and no tick values.
+        No figure digitised; no measured order compared against, because none is
+        reported.
+      status: complete
+    related:
+      - B2.1
+      - B2.2
+      - B2.4
+      - B1.7
+      - C2.10
+      - A2.4
+    note: >
+      FIT/TEST: nothing is fitted to measurement and nothing is validated against
+      one - the source reports none. Every number is exact reproduction of printed
+      algebra, an exact algebraic identity between the printed rate forms, or a
+      computed property of those forms in a reactor, and the page, meta.yaml,
+      README and both data sidecars all say so.
+
+      DIRECTION OF THE SEPARABILITY CLAIM, stated on the page: D(T->C) is the
+      MINIMUM misfit of class C to a response generated by class T, and an
+      optimiser returns an UPPER BOUND on a minimum. So the "not separable"
+      results are the safe ones and every one of them is additionally proved
+      algebraically; the "separable" results mean "no better fit was found", with
+      three robustness rows that must NOT move and do not: one widens the
+      multistart, and one per bed class re-reads the outlet's time extrapolation
+      off the other step-count pair.
+      Where the two disagree the identity wins, and it wins IN THE MATRIX: every
+      entry is min(multistart fit, identity twin), 44 of 64 have a twin, and the
+      nine entries where the fit alone stopped short are printed beside what the
+      algebra gives (worst shortfall 1.31e-3, all in the safe direction, no
+      verdict changed).
+
+      THE DIAGONAL IS AN OPTIMISER STALL, NOT A NULL. A class fitted to its own
+      response with every parameter free has exact minimum zero, so the 8.55e-6
+      (batch) and 2.38e-5 (mixed) the multistart stops at are solver stalls; the
+      twin sets them to zero exactly. Where it stalls IS informative and is now
+      computed rather than asserted: the recovered parameters sit 3.6 % and 10.5 %
+      from the truth in their worst coordinate while a 1 % move along any single
+      parameter costs 17x to 311x the stall - eq. (6)'s five constants trade along
+      a valley and are not separately identifiable. THE 20x FLOOR HAS BEEN REMOVED
+      because it never bound: 20x the stall is below the instrument resolution on
+      every device (worst case 0.24 of it), so every threshold equalled the
+      resolution exactly and removing it changes no count. 0 of 64 fits hit their
+      evaluation budget - and sep_matrix now passes a tag to fit_class, so a
+      capped fit would actually be recorded.
+
+      RECONSTRUCTION DECLARED: sigma, the poison-consumption group implied by
+      eq. (6)'s "P -> P(down)", is not printed anywhere in the paper. It is swept,
+      and its sigma -> 0 limit (exactly degenerate with independent deactivation)
+      is reported separately.
+
+      SCOPE: the recycle contacting of Fig. 1d is out, as the paper itself says it
+      "offers no particular advantage"; so are the flowing-solids devices of
+      Fig. 1's lower row.
+
+      NUMERICS WORTH COPYING: the activity is marched in w = (a^(1-d) - 1)/(1-d),
+      the paper's own linearising substitution behind eqs. (28)-(32). It removes
+      a^d from every right-hand side and makes the finite-time extinction of d < 1
+      (the printed d = 0 case) ordinary rather than stiff; with a terminal event
+      at extinction it cut this page's separability sweep from tens of minutes to
+      a few. Whole page: 310 s.
+
   - id: B3.2
     slug: grain-model
     title: "Szekely–Evans grain model for gas–solid reactions with a moving boundary"

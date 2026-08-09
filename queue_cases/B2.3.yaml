@@ -8,7 +8,8 @@ catalog_reference_was_bare: >
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/B2.3-levenspiel-deactivation-classes/
 reference:
   authors: ["Levenspiel, O."]
   year: 1972
@@ -80,9 +81,290 @@ notes: >
   Note the risk of a check that cannot fail (handoff.md): a discriminability
   claim must be measured, not asserted. If the four classes are claimed
   separable, inject the wrong class and confirm the metric moves.
-updated: '2026-08-05'
+built: >
+  STAGED 2026-08-08 at queue_cases/B2.3/page/ (index.ipynb executed clean,
+  agreement.json with 217 metrics after the second fixer pass (204 after the
+  first, 167 as first staged), two CSVs + sidecars, README.md, meta.yaml)
+  plus queue_cases/B2.3/models_entry.yaml (APPEND - models.yaml carries no B2.3
+  entry; the entry has status: published and page: pages/B2.3-levenspiel-
+  deactivation-classes/). Slug: levenspiel-deactivation-classes. Runtime 310 s
+  after the second fixer pass (270 s after the first, 235 s as first staged;
+  the identity twins, the grid refinement of the bed profile and the Euler
+  time-order study added ~39 s, and the bed outlet's time refinement ~40 s).
+  The validation_route block above was followed exactly: no data exist in the
+  source, none was used, and no measured order is compared against.
+  WHAT CAME OUT, in case a verifier wants the short version. The discriminability
+  question was measured with 64 fits (every class fitted to every other class's
+  response, all parameters free) and the answer is largely NEGATIVE: ALL FOUR
+  batch-solids devices carry an EXACT degeneracy, by five algebraic identity
+  families the paper does not state - most sharply, in any well-mixed fluid at
+  constant flow series deactivation of order (n', d) IS parallel of order
+  (n n', d + n') for any n; and at the base orders n = n' = d = 1, in a batch of
+  fluid or a plug-flow bed, side-by-side deactivation with poison group sigma IS
+  parallel deactivation with n' -> lambda sigma / kappa, for EVERY sigma (the
+  poison profile is a power of the reactant profile there; it is not in the two
+  well-mixed devices, where the same identity fails by 1e-1). Only the batch and the bed
+  keep parallel, series and independent apart, and at a 0.2-percentage-point
+  conversion resolution only one of the twelve class pairs is separable in one
+  device. The discriminating measurement turns out to be the activity PROFILE,
+  not the effluent - and both bed inlet values are EXACT rather than sampled
+  (a(0, theta) = exp(-lambda theta) under parallel decay, identically 1 under
+  series because C_R = 0 at the feed face), gradients of opposite sign - which
+  lands on B2.2's finding from the other direction. Levenspiel's recommended
+  held-C_A device is confirmed to decouple d from n' and shown to destroy the
+  class distinction within one run as the price; the span of held levels needed
+  to recover the class is root-found AND swept over the two unprinted design
+  choices it hides. One printed defect: eq. (24) prints 1/k_d where the
+  paper's own eq. (21) requires 1/k, residual exactly ln(k_d/k), dimensionally
+  impossible as printed; reported, not repaired.
+  STRUCTURES: [S1, S5], not S1 alone as this file said - the plug-flow
+  contacting is a real 1-D convection problem built on
+  construct_convflux_upwind / construct_div / interp_cntr_to_stagg_tvd, and it
+  is the only contacting with a spatial coordinate: it carries the activity
+  profile, eq. (22) solved on the bed, both convergence studies, the
+  pseudo-steady eps study and four break rows. (It is NOT "the only device that
+  is not exactly degenerate" - an earlier version of this block, of the page and
+  of both yaml files said so, and it is false: the bed collapses side-by-side
+  onto parallel exactly, just as the batch does. Fixed 2026-08-09.) meta.yaml
+  and models_entry.yaml both carry [S1, S5].
+updated: '2026-08-09'
 doi_source: >
   No DOI resolved. The container above is read from the document's own running
   head; the Elsevier PII is 0021951772902278. The case previously had no
   reference block at all. Treat any auto-resolved DOI as unverified until a
   builder checks it against the document.
+fixer_pass: >
+  2026-08-09. Applied queue_cases/B2.3/review/verification.md after re-measuring
+  every finding with my own code. The verification's verdict stands and NOTHING
+  IT SAID HELD UNDER ATTACK WAS WEAKENED: the one positive separability claim
+  (plug flow, parallel vs independent, 2.20e-3) is unchanged, so are the 26
+  symbolic identities, the 17 verbatim quotes, the closed forms, the eq. (24)
+  defect and both correctly-rejected defect candidates. Metrics 167 -> 204,
+  break rows 16 -> 22 movers + 1 robustness, sub-floor metrics 42 -> 63,
+  runtime 235 s -> 270 s (two fresh executions, byte-identical agreement.json
+  and MD5-identical figures).
+
+  F1 (CONFIRMED, and the identity's DOMAIN IS NARROWER THAN THE VERIFICATION
+  STATES). Side-by-side is exactly parallel with n' -> lambda sigma / kappa in
+  the batch and the bed, for every sigma - but it needs n' = 1 as well as
+  n = d = 1, which the verification's statement omits. In the bed the poison
+  solves dp/ds = -sigma lambda a^d p^n', so p = exp(-sigma lambda INT a) only at
+  n' = 1; in the batch d ln c = (kappa/lambda sigma) p^-n' dp is a power law
+  only at n' = 1. Measured at sigma = 0.8, n = d = 1: n' = 0.5 gives 8.0e-3
+  (batch) / 5.8e-2 (bed) and n' = 2 gives 3.2e-2 / 1.1e-1, against 8.2e-10 /
+  1.9e-11 at n' = 1. The verification's own sigma sweep was run at n' = 1, so
+  its numbers are right and only the stated domain was over-broad; the page now
+  states n = n' = d = 1 everywhere the family appears, and carries off-condition
+  controls in n', in d and in n. SECOND CORRECTION, an extension the
+  verification did not make: the OTHER side-by-side identity (d = 1, n' = n,
+  sigma = kappa/lambda, where the poison solves the reactant's own equation so
+  p == c) is not batch-only either - it holds in the bed AND in the constant-flow
+  mixed reactor, measured 0.0 / 0.0 / 7.3e-15 for batch / bed / mixed at
+  n = n' in {1, 1.5, 2}. Section 4 is now "Five exact degeneracies - and they
+  reach every device"; "the only device that is not exactly degenerate" is
+  struck from the front matter, Background, section 6, "What pymrm adds",
+  README, meta.yaml, models_entry.yaml and this file. STRUCTURES [S1, S5] KEPT,
+  on the verifier's other ground, which is true: the bed is a real 1-D
+  convection problem on the pymrm operators, and it is the only contacting with
+  a spatial coordinate - so it is the only one whose activity is a field. That
+  is now the reason given.
+
+  F2 (CONFIRMED, and it is NINE entries, not eight). The ninth is
+  sep_mixed_par_vs_s-b-s = 3.19e-5, which the p == c identity above makes
+  exactly zero in the mixed reactor - a consequence of the F1 extension. Fixed
+  structurally rather than by re-seeding: twin_params() returns, for each of the
+  64 (device, truth, candidate) triples, the parameter vector at which the
+  identity of section 4 makes the candidate reproduce the truth exactly; the
+  twin is checked against the fitter's own bounds and evaluated, and the matrix
+  reports min(fit, twin) with identity-backed entries flagged. 44 of 64 have a
+  twin; worst twin residual 1.5e-9 (the ODE tolerance). The nine shortfalls are
+  printed in their own table beside what the algebra gives, largest 1.31e-3,
+  all in the safe direction, none crossing a threshold (asserted). Break row (i)
+  now reads 5, not 6. The same twin is applied to section 7's boundary rows, so
+  mixed_boundary_worst_inside falls 3.49e-5 -> 1.47e-9 - which STRENGTHENS the
+  page's own claim that inside d >= n'/n the impersonation is perfect.
+
+  F3 (CONFIRMED on the substance, PARTLY OVERRULED on the diagnosis, and the
+  dispatch's question answered in print). The diagonal's exact minimum is zero
+  by construction, so a non-zero diagonal is an optimiser stall: "The gap is a
+  result, not a solver failure" is struck and the twin sets the diagonal to
+  zero exactly. The stalls are reported separately as sep_stall_* (8.55e-6
+  batch, 2.38e-5 mixed; 8.7e-10 plug, 2.6e-14 constC). BUT the verification says
+  "several per cent away from the truth" is "supported by no output" and that a
+  1 % single-parameter move costing 20-300x the stall shows a stall rather than
+  non-identifiability. I computed the recovered parameters - which needed a
+  latent bug fixed: fit_class returned bx = the best SEED, never the argmin,
+  because `if v <= state["best"]` could not fire once state["best"] had already
+  been updated inside the residual. With the argmin tracked, the stalled points
+  sit 3.6 % (batch) and 10.5 % (mixed) from the truth in their worst
+  coordinate, at stalls of 8.55e-6 and 2.38e-5, while a 1 % move along any
+  single coordinate costs 17x to 311x that (I reproduce the verifier's
+  displacement table exactly: 2.658e-3, 1.164e-3, 5.346e-4, 3.927e-4, 5.154e-4
+  for batch). So both are true and they are the same fact: the response is far
+  less sensitive along a compensating direction than along any axis - eq. (6)'s
+  five constants really do trade - and that is why the trust region stops. The
+  page now prints the recovered parameters, the displacement table and that
+  reading. THE 20x FLOOR: confirmed inert and REMOVED. 20x the stall is 1.7e-4 /
+  1.7e-8 / 4.8e-4 / 5.2e-13 against resolutions 2e-3 / 2e-3 / 2e-3 / 1e-2, worst
+  case 0.24 of its device's resolution; the notebook prints that table, asserts
+  it, and every threshold and every count is unchanged by dropping the floor
+  (checked: 0 / 1 / 0 / 0 separable pairs before and after).
+
+  F4 (CONFIRMED, and BOTH inlet values are exact, not just the series one). At
+  s = 0 the feed is imposed, so C_R = 0: series gives da/dtheta = 0 and
+  a(0, theta) = 1 identically, and parallel gives da/dtheta = -lambda a and
+  a(0, theta) = exp(-lambda theta) = 0.049787 - so the reported 0.049965 was
+  grid-limited too, by 1.8e-4. Both are now reported exactly, with the
+  cell-centre convergence measured at m = 100/200/400/800: series errors
+  2.19e-2 / 1.11e-2 / 5.59e-3 / 2.80e-3 and parallel 3.56e-4 / 1.78e-4 /
+  8.88e-5 / 4.44e-5, observed order 1.00 both, and the study shown to be
+  spatial (doubling nt moves both readings by 5.2e-7). The outlets have no
+  closed form and are Richardson-extrapolated instead of sampled: 0.190176 and
+  0.177113, giving contrasts +0.1404 and -0.8229 (was +0.140 / -0.812).
+  [SUPERSEDED BY fixer_pass_2, which is the current state: both of those outlet
+  numbers were still TIME-limited and the 5.2e-7 certificate was a string
+  rounding measured on one class. The page now reports 0.19017 and 0.17711.
+  The contrasts are unchanged.]
+
+  Smaller ones, all done. Break row (c) now sets Heun's observed order 1.97
+  against Euler's 1.01 on the same 50->100 pair (order against order; the old
+  row compared an order with an error and could not fail), and the page
+  explains the nt = 200 Heun anomaly - apparent order 3.16 because its time
+  error has fallen onto the m = 400 spatial floor. fits_capped is falsifiable:
+  sep_matrix passes tag=(config, truth, candidate) to fit_class, so a capped
+  sweep fit would be recorded and the assertion beside it could fire; re-run
+  value still 0 of 64. The sub-floor bookkeeping is rebuilt: every one of the 63
+  sub-floor metrics is classified into one of 12 KINDS (not all identities - 3
+  are the separable counts that carry the negative headline, 1 is a budget
+  counter, 1 a boolean, 5 are numerical ODE-vs-closed-form deviations), states
+  what it cannot detect, and names an above-floor companion that is ASSERTED to
+  be above the floor. The three misdirected coverage strings are fixed and each
+  of the batch/mixed/constC counts now has a mover of its own - EXCEPT that no
+  resolution can move the constC count (after the twins every constC entry is
+  <= 1.1e-16), so that row uses a physical injection instead: d = 2, where the
+  a^(d-1) cancellation that pins C_P fails, moves it 0 -> 3 at 1e-4, and the
+  row is labelled compound. "asserted < 1e-9" is gone with the sep_null_*
+  metrics. The required span is swept over the two unprinted choices it hides:
+  0.073 to 0.382 over C_LO in 0.05-0.40 and 3-9 levels, printed as a table with
+  the base cell marked, and README/meta/models_entry now call 0.204 an order
+  rather than the design answer. Section 8 quotes BOTH p. 271 sentences from
+  the CSV in full, says the paper's instruction for eq. (6) is to hold C_P, and
+  reports that its own sigma = 0 row - which IS that instruction - recovers d
+  to 5.4e-9. Degeneracy 2's 1.3e-9 is shown to be the integrator tolerance
+  (1.1e-13 at rtol 1e-13) with its own break row. Section 6 carries B2.2's own
+  caveat: B2.2 measured its within-bed contrast below a 10 %-assay floor, a
+  different quantity from the inlet activity used here. Break rows (a) and (d)
+  are noted as returning the same number and not being independent evidence.
+  Counts fixed: the two wrong ones in the notebook are now printed by code
+  rather than typed, and meta.yaml's "22 symbolic identities" reads 26.
+  Runtime reconciled at 270 s in meta.yaml, README and this file.
+
+  NOT DONE, deliberately: the eq. (24) defect is left exactly as printed
+  (reported, never repaired), per the dispatch.
+fixer_pass_2: >
+  2026-08-09. Applied queue_cases/B2.3/review/verification-pass2.md. Both
+  required fixes done, the moderate one done, and every finding re-measured
+  with my own code before anything was changed. Metrics 204 -> 217, break rows
+  22 movers + 1 robustness -> 24 movers + 3 robustness, sub-floor metrics
+  unchanged at 63 in 12 kinds, runtime 270 s -> 310 s (309.8 s and 307.2 s on
+  two fresh executions, agreement.json md5 a604c5e6a73821147c291dbccd4ee80c on
+  both, notebook content byte-identical). NOTHING THE VERIFICATION LISTED AS
+  HOLDING UNDER ATTACK WAS WEAKENED: sep_plug_par_vs_ind is still
+  2.201628626736685e-3 and sep_plug_par_vs_ser 8.065873833966777e-4, the twins,
+  the degeneracies, the quotes and the closed forms are untouched.
+
+  P1 (CONFIRMED, INDEPENDENTLY, AND THE FIX GOES FURTHER THAN THE VERIFIER
+  ASKED). I re-derived the converged bed outlets on my own Chebyshev-Lobatto
+  spectral bed - cumulative integration matrix exact to 2e-16 on both test
+  integrands, theta marched under Radau at rtol 1e-12 - and got
+  a(1, theta=1) = 0.190166168541 (parallel) and 0.177112507749 (series),
+  N-independent to 1e-12 over N = 24, 32, 48, 64, 96. The page's own bed,
+  space-Richardson from (m = 400, 800), reproduces the verifier's table
+  exactly: parallel 0.190205152 / 0.190175998 / 0.190168676 / 0.190166841 at
+  nt = 50 / 100 / 200 / 400, errors +3.90e-5 / +9.83e-6 / +2.51e-6 / +6.72e-7 -
+  clean second order in Delta-theta. So the printed 0.190176 carried a +9.8e-6
+  TEMPORAL error while its own SPACE extrapolation residual was only 1.8e-7
+  (the disagreement between the (200,400) and (400,800) pairs).
+  THE FIX. The outlet is now extrapolated TWICE. The space-Richardson of the
+  two finest grids is repeated at nt = 50, 100 and 200; the observed order of
+  that sequence is printed (1.99 parallel, 2.00 series - Heun's own order,
+  measured on the outlet rather than assumed from the conversion history) and
+  the second Richardson is taken from the finest pair. Reported outlets
+  0.19017 and 0.17711, against my spectral values to +6.6e-8 and -1.1e-7.
+  AND THE DIGITS. Six decimals were being printed on a quantity whose own
+  refinement resolves about 2.4e-6, so a residual bound is now computed
+  (max of the time correction and the two-grid-pair spread) and the outlets are
+  quoted to the five decimals it supports. This matters: the series limit
+  0.1771125 sits ON the 6-decimal rounding boundary, so no method the bed can
+  afford prints its sixth digit reliably - the doubly-extrapolated value rounds
+  to 0.177112 and the truth to 0.177113, differing by 1.1e-7 of actual error.
+  Five decimals is right for both classes with 6x margin.
+  THE CERTIFICATE. bed_profile_time_sensitivity no longer parses f"{...:.6f}"
+  strings (which quantised it at 5e-7 and made 5.165e-7 the ROUNDING, not the
+  change) and no longer tests the series class alone: it is now the max over
+  BOTH classes of the outlet change under nt doubling, on floats, at the finest
+  grid - 7.32e-6. Its control, bed_inlet_time_sensitivity, is the same doubling
+  on the INLET cell centres: 2.49e-9, which is 17786x below the parallel
+  cell-centre error and 1.1e6 below the series one, so the spatial study and
+  its observed orders are demonstrably uncontaminated. "The study is purely
+  spatial" now says which reading it is true of, and says out loud that the
+  other one is not.
+  NT_CONV IS NOW CONSTRAINED, in both directions. Four new break rows: halving
+  NT_CONV to 50 moves the space-only reading 0.190176 -> 0.190205 (parallel)
+  and 0.177113 -> 0.177116 (series), and reading the time extrapolation off the
+  50/100 pair instead of 100/200 does NOT move the reported outlet (4.5e-8 and
+  1.4e-9, both under the table's own 1e-6 relative test). NO HEADLINE MOVED:
+  the contrasts still print +0.1404 and -0.8229, confirmed after the fix.
+  THE SWEEP THE DISPATCH ASKED FOR. Every other reported bed quantity was
+  checked for the same wrong-baseline class and none carries it.
+  bed_spatial_* are measured at FROZEN a, so no time integration exists in
+  them; bed_time_order* are convergence orders whose whole subject is the
+  temporal error, with the nt = 200 Heun anomaly already disclosed as the m =
+  400 spatial floor; bed_vs_quadrature_* and eq22_maxdev_pymrm are deviations
+  of the PRODUCTION configuration (m = 200, nt = 200), labelled as such, not
+  limits; pseudo_steady_* is a difference between two solutions of one
+  discretisation and its fitted slope is 1.01 over eps = 1e-4 to 3e-3, so no
+  numerical floor is contaminating it; both bed inlet values are closed forms.
+  The notebook now prints the general lesson in its own words: this was one
+  defect three times in one section (sampled inlet, single-grid outlet,
+  single-step-count outlet), and the rule is that no reported value may be a
+  function of a resolution the page chose - each such knob is extrapolated away
+  or shown by halving to be irrelevant - and no value may be printed to more
+  digits than its own refinement resolves.
+
+  P2 (CONFIRMED, and three more of the same class found and fixed). The two
+  named coverage strings claimed a resolution re-read that the break table's
+  own note says cannot exist; both now state that break (i-constC) is COMPOUND
+  and that what moves the count is the d = 2 half, not the resolution half.
+  Re-checking every coverage string key by key turned up three more:
+  (i) sep_stall_* named break (h) as their "Mover" when the table declares (h)
+  a ROBUSTNESS row that must not move - reworded to say that (h)'s knob can
+  only lower a stall, so the stalls are upper bounds; (ii) mixed_boundary_*
+  said the boundary "switches it by ~1e12" where the executed row switches it
+  by 7e6 - the ratio is now computed from the two metrics instead of typed;
+  (iii) the two _ser outlet metrics would have pointed at rows built for the
+  parallel class only, so the new bed rows are generated for BOTH classes.
+
+  P3 (CONFIRMED and taken). wrong_class_misfit is numpy least-squares on
+  analytic power laws in c and 1-c and never calls run_const_c, so
+  constC_span_needed_prec5pct could not have detected a defect in the held-C_A
+  device. All 19 constC sub-floor metrics now name span_constC_par = 1.20, an
+  output of run_const_c itself; the generic constC rule names
+  constC_sbs_recovered_d_base = 1.383; and, on the same principle,
+  degen_mixed_series_is_parallel_rtol1e-13 stops naming its own
+  looser-tolerance self and names mixed_boundary_np1_d0.5 = 3.05e-3, the same
+  identity evaluated where it does not hold. The sub-floor table now states the
+  companion rule and names the defect it just repaired.
+
+  DECLINED, with the measurement. (a) The verifier's offered upgrade of adding
+  degeneracy 4 to the held-C_A device: I verified it holds - with d = 1 and
+  sigma = kappa/lambda the poison driver becomes the constant
+  r_set/c_set^n, whose mixed-flow poison solves p + (r_set/c_set^n) p^n' = 1,
+  which p = c_set satisfies identically for every n = n' - but it is already
+  covered. That device's separability matrix reports every off-diagonal entry
+  at <= 1.1e-16 by twin, side-by-side included, so the collapse is claimed
+  already; adding a fourth famA row would restate it while disturbing section
+  4's text, which the verification passed. (b) Optional item 4 (the clause that
+  sigma = 0 collapses side-by-side onto independent) is outside the dispatch's
+  scope and is left for the maintainer; it is true, and the page's caveats
+  already say it elsewhere.
