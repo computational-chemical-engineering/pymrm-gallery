@@ -468,8 +468,23 @@ what is known.** The **Opus-suitable list** is now, in order:
 1. **`J1.10`** van Deemter — the two printed tables ARE the validation data,
    on a 300 ppi scan whose text layer misreads its own volume number; crops
    for everything. No pre-dispatch owed. **Best next case.**
-2. **`A3.2`** Higbie — penetration theory; E1.1 evidence already recorded in
-   `papers-inventory.yaml` (BSL Ch. 6). 1935 scan: crops for numbers.
+2. **`A3.2`** Higbie penetration — **CORRECTED 2026-08-09: there is no Higbie
+   1935 scan on disk.** Earlier notes here said "1935 scan: crops for numbers",
+   which is wrong and would have misled a dispatch the way the `A4.1` inventory
+   line did. `queue_cases/A3.2.yaml`'s `paper.on_disk` points at
+   `BOOK-BirdStewartLightfoot-2002-transport-phenomena-2ed.pdf`, and `ls
+   ~/papers/pymrm-gallery/ | grep -i higbie` returns nothing. This is therefore
+   a **canonical-source case** under the standing decision answered YES on
+   2026-08-02 (`textbook-canonical-sources`): buildable without the original
+   paper, provided the page names what the model was read from. Two files pass
+   E1.1 for it in `papers-inventory.yaml` — BSL Ch. 6 and
+   Froment/De Wilde/Bischoff — so use `reference_read_from` for Trans. AIChE
+   31, 365 (1935) and say plainly that the 1935 original was not consulted.
+   The `text_layer` note in the case yaml (vector/tensor notation destroyed,
+   "[V x v]" for the curl; numbers off 300 dpi crops) applies to BSL, not to a
+   1935 scan. Decide the E1.1 target deliberately — `C1.5` is in the Fable
+   reserve precisely because an unpinned target across several books IS the
+   case, and A3.2 should not repeat it by accident.
 3. **`J2.3`** Nyvlt — **DEMOTED, and do not dispatch it as a data-comparison
    page.** The owed render is done and settled the question the wrong way:
    the paper is **figure-only**. No table anywhere in its seven text pages;
