@@ -1617,9 +1617,14 @@ and [`J1.5`](../J1.5-ldf-breakthrough/) are the other two pages built on a
 transient-response-averaged-over-a-distribution structure.
 [`A2.1`](../A2.1-danckwerts-boundary-conditions/) is the other Danckwerts page and
 is unrelated to this one. `A3.1` (Whitman) and `A3.2` (Higbie) are the two
-competitors named in the opening; neither is built, and this page deliberately
-does not speak for either — the three-way comparison belongs on whichever of them
-is built last, with all three sources in hand.
+competitors named in the opening; `A3.1` is not built here, and this page
+deliberately does not speak for it. `A3.2` **is** built, and it is the page that
+takes the three-way comparison: on the one measured coefficient available there,
+film and surface renewal each fit it by construction while penetration alone
+predicts it with no free constant. That does not touch this page's own negative
+result — the `sqrt(D)` exponent is still not testable from anything Danckwerts
+prints, one measured `(k_L, D)` pair being unable to resolve an exponent
+regardless of which paper it comes from.
 
 **Cite the source, not this page:** Danckwerts, P. V., *Significance of
 liquid-film coefficients in gas absorption*, Industrial and Engineering Chemistry

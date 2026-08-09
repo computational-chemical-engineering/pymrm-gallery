@@ -149,9 +149,12 @@ way** rather than only perturbed.
 
 It cannot choose between film, penetration and surface renewal. The diffusivity
 exponent that separates those pictures is not something three runs at one
-temperature can see. That comparison needs all three sources at once and is
-**still open** — `A3.2` (Higbie) has no source and `A3.3` (Danckwerts) declines
-it explicitly, so this page does not send anyone there for it. The reaction cell is a limit check,
+temperature can see. That comparison needs all three sources at once, and it
+is made on [`A3.2`](../A3.2-higbie-penetration/), the page that holds all
+three: film and surface renewal each fit the one measured coefficient there by
+construction, and penetration alone predicts it with no free constant. The
+underlying `sqrt(D)` exponent is not settled by that either — one measured
+coefficient at one diffusivity cannot resolve an exponent. The reaction cell is a limit check,
 not an enhancement model — `F3.1` owns Hatta. And `k_p` and `k_c` are assumed
 equal across all three runs, which Whitman explicitly says need not hold and
 which three runs cannot check.

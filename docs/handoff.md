@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-08-08
+# Handoff — state as of 2026-08-09
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -46,13 +46,96 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-70 page directories, 71 published catalog entries, 79 models.yaml entries
+72 page directories, 73 published catalog entries, 81 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 71 published, 46 unclaimed, 140
+`splice_entry.py --replace`). Queue: 73 published, 44 unclaimed, 140
 needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 70 pages, 0 regressions at handoff (2026-08-09);
+covers `D3.4`.) `check_agreement.py`: 71 pages, 0 regressions at handoff (2026-08-09);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
+
+### Added 2026-08-09 (second session) — two pages, and the re-verify rule earned its keep twice more
+
+Both T0/P1, one at a time, each committed and pushed before the next began.
+**Both needed TWO verification passes**, and in both the second pass found real
+defects — that is now four pages in a row (`H1.8`, `B2.3`, `J1.10`, `A3.2`), so
+the 2026-08-08 rule should be treated as the default expectation, not a
+judgement call. Both second passes cost well under a full pass.
+
+| Page | What it shows | Headline |
+|---|---|---|
+| `J1.10` van Deemter | The paper's own tables, and what its Gaussian assumption costs at the column that produced them | PDE vs eq. (38) to 4.12e-5, upwind numerical-dispersion coefficient 0.99999 against an analytically known 1; D_II 1.348e-10 vs printed 1.3e-10; λ 2.9927 vs printed 3; **eq. (21) cannot be right as printed** — (a+δ)/δ where (a+δ)/a is required, derived not inferred, and as printed it admits no root for 7 of Table 2's 9 conditions; both of the paper's own "≪1" groups fall as 1/z while the skewness falls as z^−1/2, so the curve is still skewed by 0.14 where the groups are 2.4e-3 |
+| `A3.2` Higbie | The trio `A3.1` and `A3.3` both declined — and penetration is the only member that can be wrong | parameter-free penetration is **12.0 % below** Hammerton & Garner's measured k_c while film and renewal fit that same single datum with zero residual by construction (needing δ = 4.49 µm or s = 72.3 s⁻¹); BSL 18A.4 reproduced to +0.188 %; two printed defects (18A.7(a) follows eq. 18.5-19 not the 18.5-20 it instructs, low by exactly √3; Froment's Table 6.4.2.1 penetration column wrong at all six γ); BSL's two justifications for eq. 18.5-11 are not one argument — parabolic profile 1.92 %, finite film 4.0e-6, factor 4810 |
+
+**Four carry-forwards.**
+
+1. **The inventory misled a dispatch again — the `A4.1` mechanism, second
+   instance.** `papers-inventory.yaml` and the `J1.10` case yaml both said "both
+   of the paper's tables ARE the experimental data", and that went verbatim into
+   the builder's prompt. The paper prints **four** tables, and the two carrying
+   the plate height are **3 and 4**, not 1 and 2 — Table 1 is feed volume
+   (it validates the plate *theory*), Table 2 is Simpson & Wheaton restated and
+   is not the authors' measurement at all. A build scoped to the dispatch would
+   have missed where D_II and λ come from, and Table 3 is the only table with an
+   internal self-check sharp enough to catch a transcription error (n·H must be
+   one column length in every row: 539–578 mm). Corrected in the inventory, with
+   the note that it misled its own dispatch. **Builders: check the inventory line
+   against the paper before you scope to it.**
+2. **A dispatch prompt can carry a wrong claim out of a case yaml.** `A3.2`'s
+   `why_this_case_matters` said the three-way comparison is "where the √D
+   exponent question actually gets answered". It is not — the trio answers the
+   *magnitude / free-parameter* question, and the exponent needs two
+   diffusivities at the same hydrodynamics, which nothing on disk has. The
+   builder refused the framing and said so; the yaml is corrected in place. Both
+   this and (1) are the same failure: **the coordinator restating repo prose it
+   has not checked.**
+3. **The canonical class has its own defect: attribution drift.** `A3.2`'s first
+   pass found two examples attributed to Higbie's 1935 paper that are BSL's own
+   (book p. 560 prints one sentence about the paper, plus a citation and a
+   biography) — a breach of the page's *own* printed rule. The fixer then found
+   **five more**, including a "Higbie's objection" framing where BSL states a
+   restriction and never says what Higbie argued. For any canonical-class page,
+   sweep every sentence of the form "X did/argued/showed" and check it against
+   what the *book* prints, not what is known about X.
+4. **Fixers found defects both verification passes had missed, twice.**
+   `A3.2`'s fixer measured that the page's "inside the rounding of a
+   three-figure number" defence was false — 0.273513 rounds to **0.274**, not to
+   BSL's printed 0.273 — and that two rows called non-movers do move the metric.
+   The page now concludes only that a three-figure answer cannot decide and
+   adopts neither unprinted input. `J1.10`'s fixer overturned its verifier's
+   "floor-limited" diagnosis with a measurement (`t_end` 7000→16000 moves κ₃ in
+   no printed digit; it is a cancellation crossing zero at fixed grid). **Fixers
+   arguing with numbers keep being right — that is the playbook working.**
+
+**A3.1/A3.3 were amended after `A3.2` published**, since both said in prose,
+`meta.yaml` and (for `A3.1`) `models.yaml` that A3.2 has no source and the
+three-way comparison had nobody to send a reader to. Both now point at the
+built page, in terms `A3.2` itself supports, and `A3.3`'s own finding that the
+√D exponent is untestable from Danckwerts' paper is explicitly preserved.
+`agreement.json` byte-identical on both; `check_agreement.py` 72 pages, 0
+regressions. **This is a recurring cost worth anticipating: publishing a page
+can falsify a sentence on a page published weeks earlier.** Before closing any
+case that completes a set, grep the siblings for claims about it.
+
+**A small determinism defect found in passing, NOT fixed — deliberately left
+for a future session rather than expanding a wind-down's scope.** Three
+published pages print a **wall-clock duration** into a committed notebook:
+`A3.3` (three prints, `build_page.py` lines ~1144, ~1171, ~1248), `A4.6` and
+`I1.2`. Re-executing any of them dirties the tree with a meaningless diff
+(`A3.3` moved 18.5 s → 18.4 s during this session's amendment) and it violates
+the standing rule that two consecutive executions give identical content. It is
+cosmetic — no metric or figure is affected — but it makes `run_pages` output
+untrustworthy as a change signal on exactly those three pages. `J1.10`'s
+builder hit the same thing on its first attempt and removed the print; that is
+the fix.
+
+Two smaller things worth keeping. `J1.10`'s κ₄ was made **analytic** (Laplace
+expansion to s⁴) so no quoted shape number rests on a PDE cumulant; and
+`A3.2` demonstrates its cross-route independence limit *in the break table*
+rather than asserting it — the v_max/ρ/M rows are labelled non-movers of
+`pymrm_vs_eq18518_rel` because δ_ref cancels the whole dimensional prefactor,
+so that route tests Φ(Λ) and the +0.188 % against the printed answer is what
+tests the prefactor.
 
 ### Added 2026-08-08/09 — two pages, and a new rule: re-verify a fix that adds load-bearing material
 
@@ -461,14 +544,29 @@ adsorption trio and the modulus quartet are both complete. Still avoid
 `D1.1`–`D1.5`: the maintainer's scope decision is open.
 
 The remaining T0/P1 pool is split by model demand (maintainer, 2026-08-08,
-to protect the Fable budget). **Updated 2026-08-09: `H1.8` and `B2.3` are
-published, and the two owed pre-dispatch renders were done — both changed
-what is known.** The **Opus-suitable list** is now, in order:
+to protect the Fable budget). **Updated 2026-08-09 (second session): the
+Opus-suitable list is now EXHAUSTED except for `J2.3`, which is blocked on the
+maintainer.** `J1.10` and `A3.2` are published; `J2.3` is demoted and needs a
+scope decision that is live on the decisions dashboard. So **the next session
+has no unblocked Opus T0/P1 case in this pool** and must either (a) take the
+`J2.3` decision if it has been answered, (b) draw from the Fable reserve below
+if the session is on Fable, or (c) pick from the 44 `unclaimed` cases by
+tier/priority outside this pool — check each candidate's own yaml against the
+disk before dispatching, per the two dispatch-misleading incidents recorded
+above. The historical list, with outcomes:
 
-1. **`J1.10`** van Deemter — the two printed tables ARE the validation data,
-   on a 300 ppi scan whose text layer misreads its own volume number; crops
-   for everything. No pre-dispatch owed. **Best next case.**
-2. **`A3.2`** Higbie penetration — **CORRECTED 2026-08-09: there is no Higbie
+1. ~~**`J1.10`** van Deemter~~ — **PUBLISHED 2026-08-09.** Its inventory line
+   was wrong (four tables, not two; the plate height is in 3 and 4) and the
+   error reached the dispatch — see carry-forward 1 above.
+2. ~~**`A3.2`** Higbie penetration~~ — **PUBLISHED 2026-08-09**, and the first
+   canonical-source page built under the textbook decision. The E1.1 target was
+   **pinned on disk before dispatch** (`e1_1_target_pinned` in
+   `queue_cases/A3.2.yaml`): BSL §18.5 is the target, Froment §6.4 is a
+   cross-check for constants only, and the page does not adjudicate between the
+   two books' scopes. **Do that for every future canonical-class case** — it
+   costs one edit and it is what `C1.5` is parked for the absence of. The
+   original note is kept below because its reasoning is the template.
+   **CORRECTED 2026-08-09: there is no Higbie
    1935 scan on disk.** Earlier notes here said "1935 scan: crops for numbers",
    which is wrong and would have misled a dispatch the way the `A4.1` inventory
    line did. `queue_cases/A3.2.yaml`'s `paper.on_disk` points at

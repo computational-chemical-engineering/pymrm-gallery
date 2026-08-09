@@ -125,12 +125,13 @@ Whitman knew the film was a fiction: *"the gas and liquid films at the boundary
 can be indicated as having a definite thickness, although actually no such sharp
 demarcation exists"* is Whitman's own sentence, on reprint page 430.
 
-**The competing pictures are other pages, and the comparison is nobody's yet.**
-Higbie's penetration theory (`A3.2`) and Danckwerts' surface renewal (`A3.3`)
-replace the steady film with an unsteady one and predict a different exponent on
-the diffusivity. That comparison needs all three sources in hand and is not made
-here — nor on `A3.3`, which declines it for the same reason, nor on `A3.2`,
-which has no source yet. It is open."""))
+**The competing pictures are other pages, and the three-way comparison lives on
+one of them.** Higbie's penetration theory (`A3.2`) and Danckwerts' surface
+renewal (`A3.3`) replace the steady film with an unsteady one and predict a
+different exponent on the diffusivity. Whitman's three runs cannot see that
+exponent, so the comparison is not made here; it is made on
+[`A3.2`](../A3.2-higbie-penetration/), the only one of the three pages holding
+all three sources in hand."""))
 
 # ------------------------------------------------------------ published model
 cells.append(md(r"""## The published model
@@ -1708,11 +1709,14 @@ isotherm.
 this page cannot help: it establishes only that a *single* film fails on these
 data and that two films fit them with one degree of freedom to spare. The
 diffusivity exponent that distinguishes the three pictures is not something
-Whitman's data can see. **That comparison is still open, and this page does not
-send you anywhere for it.** It belongs to a page holding all three sources at
-once; `A3.2` (Higbie) and `A3.3` (Danckwerts) are the other two, and `A3.3`
-declines it explicitly for the same reason, so do not go there expecting to find
-it.
+Whitman's data can see. **Go to [`A3.2`](../A3.2-higbie-penetration/)
+instead** — it is the page holding all three sources at once, and it takes the
+three-way comparison on the one measured coefficient available there, with
+film and surface renewal each fitting that datum by construction and
+penetration alone predicting it with no free constant. It does *not* settle
+the underlying $\sqrt{D}$ exponent — one measured coefficient at one
+diffusivity cannot resolve an exponent — so that question still stands exactly
+where it stood before.
 
 **If you need enhancement by reaction**, go to [`F3.1`](../F3.1-hatta-regimes/);
 the reaction cell here is a limit check, not a model.

@@ -49,8 +49,13 @@ The paper has no data. `s` comes from inverting the very relation one would want
 to test — an inference, flagged as one, since the paper says only "calculated
 from published values of `k_L`" — so film theory and surface renewal fit its one
 physical number equally well, with zero residual each. Nothing here is validated
-against a measurement. Whitman (`A3.1`) and Higbie (`A3.2`) are separate cases
-and are not built or spoken for here.
+against a measurement. Whitman (`A3.1`) is a separate case and is not built or
+spoken for here. Higbie (`A3.2`) is also a separate case, built elsewhere, and it
+is the page that takes the three-way comparison this one declines: on the one
+measured coefficient available there, film and surface renewal each fit it by
+construction while penetration alone predicts it with no free constant. That
+does not touch this paper's own finding — the `sqrt(D)` exponent is still not
+testable from anything Danckwerts prints.
 
 ## Run it
 
