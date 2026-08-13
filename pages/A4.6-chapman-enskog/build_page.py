@@ -181,7 +181,7 @@ enters $[D_{12}]_1$, and A is printed as its own column. It is recorded because
 the next reader of this table will meet the same blob."""))
 
 # --------------------------------------------------------------------------- 4
-cells.append(code(r'''import math, sys, time, urllib.request
+cells.append(code(r'''import math, sys, urllib.request
 from pathlib import Path
 
 # Make shared/gallery_utils.py importable locally and on Colab
@@ -541,7 +541,6 @@ def split_of(x_c, c, L):
 L_CELL, T_CELL = 50.0, 300.0        # cm, s - a laboratory Loschmidt tube
 D_REF = 0.6                         # cm^2/s, a representative value for the convergence study
 
-t0 = time.time()
 a_ref = analytic_split(D_REF, L_CELL, T_CELL)
 print(f"closed form, constant D: split = {a_ref:.10f}\n")
 grid = []
@@ -566,8 +565,7 @@ newton_worst = max([w for _, _, w in grid] + [w for _, _, w in step])
 grid_order = float(np.log2(abs(grid[-4][1]-grid[-1][1]) / abs(grid[-3][1]-grid[-1][1])))
 step_order = float(np.log2(abs(step[-3][1]-a_ref) / abs(step[-2][1]-a_ref)))
 print(f"\nobserved orders: space {grid_order:.2f} (expected 2), time {step_order:.2f} "
-      f"(expected 1, backward Euler); worst Newton residual anywhere {newton_worst:.1e}")
-print(f"cell convergence study: {time.time()-t0:.1f} s")'''))
+      f"(expected 1, backward Euler); worst Newton residual anywhere {newton_worst:.1e}")'''))
 
 # --------------------------------------------------------------------------- 9
 cells.append(md(r"""## Results
@@ -822,7 +820,6 @@ def omega_11_22(Tstar, n_E=72, x_max=40.0, **kw):
             float(np.sum(w * e * x ** 3 * q[:, 1]) / math.factorial(3)))
 
 
-t0 = time.time()
 quad6 = np.array([omega_11_22(T) for T in t6.kT_over_eps12])
 print(f"{'kT/eps':>8}{'O11 quad':>10}{'Table 6':>10}{'dev':>9}   "
       f"{'O22 quad':>10}{'col.3':>9}{'dev vs 1/2':>12}{'dev vs 1/3':>12}")
@@ -832,8 +829,7 @@ for T, (o1, o2), w1, w2 in zip(t6.kT_over_eps12, quad6, t6.W11, t6.W22_half):
 chk["omega11_quad_vs_t6_max_pct"] = float(100 * np.abs(quad6[:, 0] / t6.W11.values - 1).max())
 chk["omega22_quad_vs_t6_half_max_pct"] = float(100 * np.abs(quad6[:, 1] / t6.W22_half.values - 1).max())
 chk["omega22_quad_vs_t6_third_max_pct"] = float(100 * np.abs(quad6[:, 1] / (1.5 * t6.W22_half.values) - 1).max())
-worst_row = int(np.abs(quad6[:, 0] / t6.W11.values - 1).argmax())
-print(f"\nquadrature time {time.time()-t0:.1f} s")'''))
+worst_row = int(np.abs(quad6[:, 0] / t6.W11.values - 1).argmax())'''))
 
 cells.append(code(r'''# where the quadrature and the table disagree most, is it mine or theirs?  refine and see.
 conv = {}
@@ -868,7 +864,6 @@ page is affected**: every one of the {len(USABLE)} has $kT/\\varepsilon_{{12}} \
 """))'''))
 
 cells.append(code(r'''# ---- the second, table-free route to every D12 -------------------------------
-t0 = time.time()
 uniq = sorted({round(float(T), 10) for T in Tstar})
 omega_direct = {T: omega_11_22(T)[0] for T in uniq}
 D_tab = np.array([D12_first(a, b) for a, b, _ in USABLE])
@@ -876,7 +871,7 @@ D_qua = np.array([D12_first(a, b, W=omega_direct[round(float(T), 10)])
                   for (a, b, _), T in zip(USABLE, Tstar)])
 res_qua = deviations(D_qua)
 chk["d12_two_routes_max_pct"] = float(100 * np.abs(D_qua / D_tab - 1).max())
-print(f"{len(uniq)} distinct kT/eps values, quadrature {time.time()-t0:.1f} s")
+print(f"{len(uniq)} distinct kT/eps values")
 display(Markdown(f"""
 **The headline computed a second, independent way.** Replacing Table 6 entirely by the quadrature
 above changes each predicted $D_{{12}}$ by at most **{chk['d12_two_routes_max_pct']:.3f} %**
@@ -990,7 +985,6 @@ nothing**."""))
 cells.append(code(r'''N_Z, N_T = 400, 1600
 cases = [("He", "Xe"), ("H2", "N2"), ("N2", "CO")]
 apparent = []
-t0 = time.time()
 for g1, g2 in cases:
     D1 = D12_first(g1, g2)
     D_eq = D12_second(g1, g2, 0.5)
@@ -1008,7 +1002,6 @@ for g1, g2 in cases:
 ap = pd.DataFrame(apparent)
 ap["shortfall_pp"] = ap.eq_pct - ap.app_pct
 print(ap.to_string(index=False, float_format=lambda v: f"{v:.4f}"))
-print(f"\ncell solves: {time.time()-t0:.1f} s")
 chk["cell_apparent_excess_pct_HeXe"] = float(ap.app_pct[0])
 chk["cell_equimolar_excess_pct_HeXe"] = float(ap.eq_pct[0])
 chk["cell_shortfall_pp_HeXe"] = float(ap.shortfall_pp[0])

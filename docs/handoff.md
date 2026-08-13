@@ -117,17 +117,34 @@ regressions. **This is a recurring cost worth anticipating: publishing a page
 can falsify a sentence on a page published weeks earlier.** Before closing any
 case that completes a set, grep the siblings for claims about it.
 
-**A small determinism defect found in passing, NOT fixed — deliberately left
-for a future session rather than expanding a wind-down's scope.** Three
-published pages print a **wall-clock duration** into a committed notebook:
-`A3.3` (three prints, `build_page.py` lines ~1144, ~1171, ~1248), `A4.6` and
-`I1.2`. Re-executing any of them dirties the tree with a meaningless diff
-(`A3.3` moved 18.5 s → 18.4 s during this session's amendment) and it violates
-the standing rule that two consecutive executions give identical content. It is
-cosmetic — no metric or figure is affected — but it makes `run_pages` output
-untrustworthy as a change signal on exactly those three pages. `J1.10`'s
-builder hit the same thing on its first attempt and removed the print; that is
-the fix.
+**A determinism defect found in passing and FIXED at the maintainer's request
+(2026-08-13).** Three published pages printed a **wall-clock duration** into a
+committed notebook — `A3.3` (three prints), `A4.6` (four) and `I1.2` (four) —
+so re-executing any of them dirtied the tree with a meaningless diff (`A3.3`
+moved 18.5 s → 18.4 s during the A3.2 amendment) in violation of the standing
+rule that two consecutive executions give identical content. All ten prints are
+gone, along with the now-unused `time` imports. Where a print carried real
+content beside the clock it was kept: `A3.3` still prints its Newton-iteration
+range, `I1.2` its failed-Newton-solve count, `A4.6` its count of distinct
+kT/eps values. **`agreement.json` is byte-identical on all three**;
+`check_agreement` 72 pages, 0 regressions; `check_metadata` clean. The runtime
+information is not lost — it lives in `meta.yaml: runtime_seconds`, which is
+where it belongs, and all three declarations are still truthful (measured
+57/198/137 s against declared 60/205/140).
+
+**That fix exposed a second, wider determinism defect — NOT fixed, and it is
+the one that actually matters.** `A4.6` and `I1.2` are now byte-identical
+across two consecutive executions. **`A3.3` is not**, in twelve cells, and the
+clock was never the cause: `display(styler)` on a pandas `Styler` emits a
+**memory address** into `text/plain` (`<pandas.io.formats.style.Styler at
+0x7f959ef223c0>`) and a **randomly generated CSS id prefix** into `text/html`,
+both of which change every run. **Five published pages are affected** —
+`A2.8`, `A3.3`, `A4.5`, `C1.1`, `C2.10` — and on those five `run_pages` output
+remains useless as a change signal. No metric, figure or number is affected.
+The fix is mechanical but touches five published pages, so it wants its own
+pass: either `display(HTML(styler.to_html()))` (kills the address; combine with
+`styler.set_uuid(...)` to pin the CSS ids) or drop the styling. Detect it with:
+`grep -l "Styler at 0x" pages/*/index.ipynb`.
 
 Two smaller things worth keeping. `J1.10`'s κ₄ was made **analytic** (Laplace
 expansion to s⁴) so no quoted shape number rests on a PDE cumulant; and

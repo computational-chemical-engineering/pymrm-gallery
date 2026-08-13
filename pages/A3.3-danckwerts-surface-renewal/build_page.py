@@ -1120,9 +1120,7 @@ def R_second_order(c0p, ratio, s_=1.0, Dp=1.0, n_x=250, n_t=400, cstar=1.0,
     R2, nits2 = one(2 * n_t)
     return 2 * R2 - R1, R1, nits1 + nits2'''))
 
-cells.append(code(r'''import time
-t0 = time.time()
-sweep, allnits = [], []
+cells.append(code(r'''sweep, allnits = [], []
 R1_pfo = np.sqrt(1.0 * (1.0 + 1.0))          # eq. 12 with r = r'c_o' = s, c_o = 0
 for c0p in (1.0, 2.0, 5.0, 10.0, 25.0, 50.0, 100.0):
     R2v, R2raw, nits = R_second_order(c0p, 1.0)      # extrapolated in the age step
@@ -1141,8 +1139,7 @@ M["so_err_at_printed_50_pct"] = float(sw["error of eq. 12 (%)"].iloc[5])
 M["so_err_at_ratio_1_pct"]    = float(sw["error of eq. 12 (%)"].iloc[0])
 M["so_err_at_printed_50_raw_pct"] = float(sw["same, raw at $n_t$ = 400 (%)"].iloc[5])
 M["so_newton_iters_max"]      = float(np.nanmax(allnits))
-print(f"second-order sweep: {time.time()-t0:.1f} s, "
-      f"Newton iterations {np.nanmin(allnits):.0f}-{np.nanmax(allnits):.0f} per step")'''))
+print(f"Newton iterations {np.nanmin(allnits):.0f}-{np.nanmax(allnits):.0f} per step")'''))
 
 cells.append(md(r"""**Before reading those numbers, the control that says how much of them is
 physics.** Every row of the break table below perturbs an *input* and watches a
@@ -1157,7 +1154,6 @@ answer is exactly $\sqrt{D(r+s)} = \sqrt2$. Whatever the solver reports there is
 pure discretisation."""))
 
 cells.append(code(r'''# Pure-discretisation control: c_o'/c* = 1e6, where the exact answer is sqrt(2).
-t0 = time.time()
 ctrl_rows = []
 for n_t in (400, 800, 1600):
     _, Rraw, _ = R_second_order(1e6, 1.0, n_t=n_t, richardson=False)
@@ -1168,7 +1164,6 @@ ct2 = pd.DataFrame(ctrl_rows, columns=["$n_t$", "pymrm", "apparent error (%)"])
 display(ct2.style.format({"pymrm": "{:.7f}", "apparent error (%)": "{:+.4f}"}).hide(axis="index"))
 M["so_control_raw_n400_pct"] = float(ct2["apparent error (%)"].iloc[0])
 M["so_control_extrap_pct"]   = float(ct2["apparent error (%)"].iloc[3])
-print(f"discretisation control: {time.time()-t0:.1f} s")
 display(Markdown(f"""
 At the page's own production setting the solver invents
 **{M['so_control_raw_n400_pct']:+.4f} %** of error out of the age step alone, and
@@ -1216,8 +1211,7 @@ break table records for its own erf/erfc row. The $D'/D = 1$ row is therefore
 run at $c_o'/c^* = 3$ instead, and all three rows below now move under the
 swap (the break table prints by how much)."""))
 
-cells.append(code(r'''t0 = time.time()
-inst, inst_R = [], {}
+cells.append(code(r'''inst, inst_R = [], {}
 for Dp, c0p in ((0.5, 1.0), (1.0, 3.0), (2.0, 1.0)):
     tgt, lam = eq15(1.0, c0p, 1.0, Dp, 1.0)
     R2v, R2raw, _ = R_second_order(c0p, 3000.0, Dp=Dp, n_x=350, n_t=600)
@@ -1245,7 +1239,6 @@ rt = pd.DataFrame(ratio_rows, columns=["$r'c_o'/s$", "pymrm", "dev. from eq. 15 
 display(rt.style.format({"pymrm": "{:.6f}", "dev. from eq. 15 (%)": "{:+.3f}"}).hide(axis="index"))
 M["inst_dev_at_ratio_300_pct"]   = float(rt["dev. from eq. 15 (%)"].iloc[0])
 M["inst_dev_at_ratio_10000_pct"] = float(rt["dev. from eq. 15 (%)"].iloc[2])
-print(f"{time.time()-t0:.1f} s")
 display(Markdown(
     f"Worst deviation **{M['inst_vs_eq15_worst_pct']:.2f} %** across the three rows, "
     f"every value extrapolated in the age step (raw at $n_t$ = 600 the worst row reads "

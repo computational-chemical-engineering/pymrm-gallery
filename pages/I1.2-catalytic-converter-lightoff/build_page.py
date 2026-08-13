@@ -134,7 +134,7 @@ cells.append(code("""try:
 except ImportError:
     %pip install -q pymrm pyyaml"""))
 
-cells.append(code('''import sys, time, urllib.request
+cells.append(code('''import sys, urllib.request
 from pathlib import Path
 
 if not any("shared" in p for p in sys.path):
@@ -597,11 +597,10 @@ def light_off_time(ts, X, level=0.5, species=0):
     i = idx[0]
     return float(np.interp(level, [x[i-1], x[i]], [ts[i-1], ts[i]]))
 
-t0 = time.time()
 m1 = Monolith(y_in=y1, y_no=P("y_NO_in", "case 1"), T_g_in=P("T_g_in", "case 1"),
               T_s0=P("T_s0", "case 1"), n_x=80)
 ts1, snap1 = m1.run(300.0, 0.1, record=snapshot)
-print(f"case 1 reference run: {time.time()-t0:.0f} s, {m1.n_fail} failed Newton solves")
+print(f"case 1 reference run: {m1.n_fail} failed Newton solves")
 t_lo = {nm: light_off_time(ts1, snap1, species=i)
         for i, nm in enumerate(SPECIES[:4])}
 for nm, v in t_lo.items():
@@ -690,9 +689,7 @@ tab3_ref = (res[res.condition.str.startswith("lambda_s")]
             .pivot(index="lam", columns="quantity", values="value")
             .sort_index())
 lam_vals = list(tab3_ref.index)
-t0 = time.time()
 c2 = {lam: case2(lam_s=lam) for lam in lam_vals}
-print(f"three case-2 runs: {time.time()-t0:.0f} s")
 
 rows = []
 for lam in lam_vals:
@@ -891,8 +888,7 @@ location is quantised to one cell and cannot be compared more finely than that.
 
 Case 1 is refined on the light-off time, case 2 on the peak temperature."""))
 
-cells.append(code('''t0 = time.time()
-conv1 = []
+cells.append(code('''conv1 = []
 for n_x, dt in [(40, 0.1), (80, 0.2), (80, 0.1), (80, 0.05), (160, 0.1)]:
     mm = Monolith(y_in=y1, y_no=P("y_NO_in", "case 1"),
                   T_g_in=P("T_g_in", "case 1"), T_s0=P("T_s0", "case 1"), n_x=n_x)
@@ -905,11 +901,9 @@ print(conv1.round(3).to_string(index=False))
 lo_spread = float(conv1.t_lightoff.max() - conv1.t_lightoff.min())
 lo_ref = float(conv1.t_lightoff[(conv1.n_x == 80) & (conv1.dt == 0.1)].iloc[0])
 print(f"spread over a 4x grid change and a 4x time-step change: {lo_spread:.2f} s "
-      f"({100*lo_spread/lo_ref:.1f} % of {lo_ref:.1f} s)")
-print(f"[{time.time()-t0:.0f} s]")'''))
+      f"({100*lo_spread/lo_ref:.1f} % of {lo_ref:.1f} s)")'''))
 
-cells.append(code('''t0 = time.time()
-conv2 = []
+cells.append(code('''conv2 = []
 for n_x, dt in [(40, 0.05), (80, 0.05), (160, 0.1), (160, 0.05), (160, 0.025), (320, 0.05)]:
     (Tm, xm, tm), _, _ = case2(n_x=n_x, dt=dt)
     conv2.append(dict(n_x=n_x, dt=dt, T_max=Tm, x_max=xm, t_peak=tm))
@@ -921,8 +915,7 @@ dt_only = conv2[conv2.n_x == 160]
 print(f"\\nspread over n_x = 40 -> 320 at dt = 0.05 : "
       f"{grid_only.T_max.max()-grid_only.T_max.min():.2f} K")
 print(f"spread over dt = 0.1 -> 0.025 at n_x = 160: "
-      f"{dt_only.T_max.max()-dt_only.T_max.min():.2f} K")
-print(f"[{time.time()-t0:.0f} s]")'''))
+      f"{dt_only.T_max.max()-dt_only.T_max.min():.2f} K")'''))
 
 cells.append(code('''grid_spread = float(grid_only.T_max.max() - grid_only.T_max.min())
 dt_spread = float(dt_only.T_max.max() - dt_only.T_max.min())
