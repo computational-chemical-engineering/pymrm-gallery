@@ -219,8 +219,20 @@
   native_ppi: 200
   pages: 902
   text_layer: >-
-    BORN-DIGITAL with embedded TrueType subsets. Text layer is clean including equation numbers;
-    Greek and sub/superscripts survive in most places. No rendering needed.
+    BORN-DIGITAL with embedded TrueType subsets. The PROSE text layer is clean, including equation
+    numbers, and Greek and sub/superscripts survive in most places.
+    BUT ITS EQUATIONS DO NOT SURVIVE EXTRACTION, AND THE FAILURE IS SILENT - CORRECTED 2026-08-14,
+    measured while fixing J4.1. Every Symbol-font operator extracts as an unmappable Private-Use-Area
+    glyph: U+F02D for minus, U+F03D for equals, U+F02B for plus. All three pdftotext modes emit them,
+    and they render as nothing or as tofu, so AN EXTRACTED EQUATION LOOKS COMPLETE AND HAS NO
+    OPERATORS AT ALL. Page 69 alone carries one U+F02D, six U+F03D and four U+F02B. Confirmed on
+    eqs. (1.5.1-17), (1.5.2-1) and (1.5.2-3) by hexdump.
+    This entry previously ended "No rendering needed", which is what the wording above replaces:
+    RENDER EVERY EQUATION AND EVERY NUMBER FROM THIS BOOK at 300 ppi. The old line backed the eleven
+    other cases listed below, so treat any equation transcribed from this file without a render as
+    unverified. The published J4.6 page met the same phenomenon and described it as the extractor
+    "dropping the leading term" of eq. (1.5.1-17) - the term is present, carried by a PUA operator;
+    its transcription and its lesson are right and only that diagnosis is imprecise.
   supports:
     - {case: A3.2, role: "canonical-source (E1.1: passed)", status: needs-paper}
     - {case: B1.8, role: "canonical-source (E1.1: unchecked)", status: needs-paper}
