@@ -1,0 +1,75 @@
+dataset_id: bhatia-1980-printed-scalars
+title: "Bhatia & Perlmutter (1980) - every number the paper prints outside its equations that page B3.3 uses"
+status: complete
+
+source:
+  authors: ["Bhatia, S. K.", "Perlmutter, D. D."]
+  year: 1980
+  container: "AIChE Journal 26(3) 379-386 (May 1980)"
+  doi: "10.1002/aic.690260308"
+  access: "institutional subscription, TU Eindhoven (lawful access); PDF not redistributed"
+  licence: "not redistributable; only these transcribed scalars are stored, under fair quotation"
+
+conditions: >
+  NOT EXPERIMENTAL DATA. Every row is a value the paper prints as typeset text:
+  a parameter set stated in the running text or in a figure-frame caption, a
+  numeric bound or window stated in prose, a literature value the paper quotes,
+  or a count of the paper's own contents. There are no measurements in this
+  file because the paper prints none in numeric form.
+
+  THE PAPER CONTAINS NO TABLE. All eight pages were rendered at their native
+  300 ppi and read column-block by column-block; the paper carries eight
+  FIGURES (Fig. 1 overlapping cylinders, Fig. 2 tau_1/2 vs sigma, Fig. 3 X vs
+  tau, Fig. 4 S/S_o vs X, Fig. 5 optimal eps_o vs the structural group, Fig. 6
+  best-fit m vs psi, Fig. 7 X vs k_s C^n t for the Petersen comparison, Fig. 8
+  the Hashimoto correlation), a NOTATION list (pp. 385-386) and a LITERATURE
+  CITED list (pp. 385-386), and no other tabular matter. As a second,
+  independent search the extracted text layer was grepped case-insensitively
+  for "table": it occurs on two lines only, inside the words "suitable"
+  (p. 385) and a scan-garbled "surfaces" (p. 380) - never as a caption or a
+  cross-reference.
+
+  CONSEQUENCE, STATED PLAINLY: the paper's only comparison with experiment is
+  FIGURE 8 (p. 384), a scatter of [S/(1-X)]^2 against ln[1/(1-X)] for the CS
+  and VC chars of Hashimoto et al. (1979). It is NOT digitised here, and no
+  point, curve or axis coordinate is taken from it or from any other figure.
+  The three numbers page B3.3 uses from that comparison - S_o = 520 m2/cm3 and
+  psi = 6.9, 13.7 - are printed in PROSE on p. 385 and are transcribed from the
+  prose. Page B3.3 therefore does NOT establish the empirical adequacy of the
+  random pore model and says so repeatedly.
+
+acquisition:
+  method: transcription
+  tool: "pdftoppm -r 300 (native resolution per pdfimages -list), then per-column crops read at digit scale"
+  procedure: >
+    All eight pages rendered at 300 ppi and cropped into six blocks each (two
+    columns x three vertical bands); every block read. Each numeric was then
+    re-cropped at 2-2.5x and read at digit scale. Values that appear twice in
+    the paper (the Fig. 4 parameter set, printed in both the caption and the
+    p. 384 running text; the curve-C set, printed in both the Fig. 7 caption
+    and the p. 384 right column; the 75 % agreement claim, printed both on
+    p. 384 and in the CONCLUSIONS on p. 379) were read in both places and
+    agree. Fractions printed as fractions (2/3, 1/2) are stored as their
+    decimal values and flagged in the `where` column.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-13
+  estimated_error: "transcription only; no digitisation, no inference. Values printed to the digits shown."
+
+columns:
+  key: "identifier used in the notebook; nothing is retyped in prose, every value is interpolated from this file"
+  printed: "the value exactly as printed (fractions converted to decimal, flagged in `where`)"
+  units: "units as printed, or '-' for dimensionless"
+  where: "page and column, and whether the value is running text or a figure-frame caption"
+  what_it_is: "the sentence or caption the value comes from, quoted"
+
+notes: >
+  Figure-frame captions are used for parameter SETS only (Fig. 4's and Fig. 7's
+  three sets), which are typeset text stating the inputs of a calculation, not
+  extracted curve data - the same treatment `A3.7` and `J1.4` give figure
+  legends. Two different printed label sets are used, only to choose which psi
+  values page B3.3 displays, and no coordinate is read from any of the figures:
+  Fig. 2's and Fig. 3's curves carry psi = 0, 1, 2, 10, 100, which is the set
+  section 7.4 uses for the particle-size claims, and FIG. 4's curves carry
+  psi = 0, 1, 2, 5, 10, which is the set section 6.1 displays. Both were read on
+  the 300 ppi crops; the two sets differ (5 appears only on Fig. 4, 100 only on
+  Figs. 2 and 3) and the page attributes each to the figure it came from.

@@ -3377,6 +3377,101 @@ models:
     related: [B3.2, B3.3, I1.8, B1.1]
 
   # ---------------------------------------------------------------- section C
+  - id: B3.3
+    slug: random-pore-model
+    title: "The random pore model, 1980: eight figures, no table — and what the printed numbers still decide"
+    description: >
+      Bhatia and Perlmutter stop describing the solid and describe its PORES: a set
+      of cylindrical surfaces of arbitrary size distribution that grow at the
+      chemical rate and overlap each other as they grow, with Avrami's
+      dV = (1-V)dV_E doing the book-keeping. Growth adds surface, overlap destroys
+      it, and one group decides which wins - psi = 4 pi L_o (1-eps_o)/S_o^2. A
+      reaction-rate maximum exists if and only if psi >= 2, which is the first
+      model in the family that can represent both the gasification data that show
+      one and the data that do not.
+
+      THE PAPER CONTAINS NO TABLE - eight figures, a NOTATION list and a reference
+      list - and its only comparison with experiment is Figure 8. That figure is
+      NOT digitised here and the page states repeatedly that it therefore does not
+      establish empirical adequacy. What it does instead is hold the paper to what
+      it prints, which turns out to be a great deal. Fifteen symbolic identities
+      close the derivation chain from eqs. (17)-(30) to (31)-(34) and (37),
+      including the observation that eq. (37)'s radical is a perfect square (so
+      S/S_o IS dX/dtau) and that Petersen's surface maximum sits at eps = 1/2 for
+      every structure (which is all eq. 34 says). The printed structural claims
+      become numbers: the best-fit grain shape factor from the paper's own
+      squared-deviation integral is 1.0000000 at psi = 0 and 0.4905224 at psi = 2
+      against the printed 0.49 <= m <= 1, and 0.6638850 at psi = 1 against the
+      printed "very close to two-thirds". And both special-case reductions the
+      abstract claims are checked against already-published pages: Bhatia's
+      eq. (40) IS B3.1's Yagi-Kunii shrinking core in its reaction-control limit
+      to 1.1e-16, and the approach to Petersen (1957) is measured at 2.2
+      conversion points up to X = 0.75, the printed "about 75 %" landing at
+      X = 0.7423 under the convention p. 384 prints for curve B and the page
+      quotes ("If eps_o = 0.3 and L_o = 3.14 x 10^6 are chosen, the results are
+      the same as the prior curve B"), with the over-determined triple's other two
+      pairings printed beside it (0.7599 and 0.7687 against the sourced 0.7423, so
+      the dependence is second-digit) - with the structural reason for
+      the eventual divergence
+      computed: the two models use different overlap laws, 1-exp(-V_E) against
+      3u^2-2u^3, which differ at order V_E^(3/2) and can never coincide.
+
+      Three printed defects, none repaired: "This match at m = 1" [sic] where the
+      paper's own Figure 6, its own preceding sentence and this page's least
+      squares all give m = 0.664 at psi = 1 (m = 1 misfits 5.34x worse, and IS the
+      optimum - at psi = 0); the optimal-porosity worked example whose printed
+      answer 0.1 is not a root of the paper's own eq. (35), the root being 0.08529
+      (a defect of precision only - it costs 0.0028 % of the surface); and Park &
+      Levenspiel dated 1976 in the text against 1975 in the reference list. And one
+      thing the paper's own numbers say that it does not: Figure 7's curve C is
+      called "no longer consistent" with Petersen's model when it is INFEASIBLE -
+      no Petersen structure of length 3.14e6 cm/cm3 can have a surface above
+      2720 cm2/cm3 and curve C asks for 12 500, a factor 4.60 beyond it, which is
+      why a parameter had to be freed; the same arithmetic reconstructs the curve-D
+      length the paper says it computed internally and never prints, 7.747e7
+      cm/cm3.
+    section: B
+    status: published
+    page: pages/B3.3-random-pore-model/
+    tier: T0
+    priority: P1
+    structures: [S1, S3]
+    phases: [gas-solid]
+    predicts:
+      - conversion-time history of a porous solid under kinetic control, eq. (32), for any pore structure and particle size
+      - reaction surface area against conversion, eq. (31), including whether a maximum exists (psi >= 2) and where it sits (eq. 33)
+      - the grain shape factor / order of reaction equivalent to a given pore structure, and how badly that equivalence misfits
+      - the initial porosity that maximises the surface at a specified final porosity, eq. (35), and when no such porosity exists, ineq. (36)
+      - time to a given conversion against particle size, and where the external surface stops mattering
+    pymrm_api:
+      - newton
+      - NumJac
+    reference:
+      authors: ["Bhatia, S. K.", "Perlmutter, D. D."]
+      year: 1980
+      container: "AIChE Journal 26(3) 379–386"
+      doi: "10.1002/aic.690260308"
+    data:
+      tier: 6
+      method: none
+      status: final
+      note: >
+        Fitted: NOTHING to data. The page's only least-squares operation is the
+        paper's own integral I, which fits one MODEL to another. The paper contains
+        no table; its single comparison with experiment is Figure 8 (the char data
+        of Hashimoto et al. 1979, not on disk here) and that figure is not
+        digitised - no point, curve or axis coordinate is taken from it or from any
+        of the paper's other seven figures. The three numbers used from that
+        comparison (S_o = 520 m2/cm3, psi = 6.9, psi = 13.7) are printed in PROSE
+        on p. 385 and transcribed from the prose. The page must not be cited as
+        evidence that the model describes any real solid. Validation is the printed
+        equations against each other (fifteen symbolic identities; a Crank-Nicolson
+        march of the rate law eq. 37 reproducing the closed form eq. 32 at observed
+        order 2.000), the printed claims against computation, and the reduction to
+        the published B3.1 - whose own published metric is reproduced and
+        reconciled rather than retyped.
+    related: [B3.1, B3.2, B3.4, B1.1]
+
   - id: C1.1
     slug: lhhw-hougen-watson
     title: "Langmuir-Hinshelwood-Hougen-Watson kinetics: the 1947 codimer estimation, re-run"

@@ -1,0 +1,145 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: B3.3
+slug: random-pore-model
+title: "The random pore model, 1980: eight figures, no table — and what the printed numbers still decide"
+section: B
+status: published
+tier: T0
+priority: P1
+structures: [S1, S3]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 9
+datasets:
+  - bhatia-1980-printed-scalars.csv
+  - random-pore-reference.csv
+
+validation:
+  - "THE SCOPE DECISION IS THE PAGE'S FIRST RESULT, and it is stated with the search behind it: the paper contains NO TABLE AT ALL. All eight pages were rendered at their native 300 ppi (pdfimages -list: CCITT-G4 bilevel, 300 x 300 ppi on every page) and read column-block by column-block; the paper carries eight FIGURES (Figs. 1-8), a NOTATION list and a LITERATURE CITED list and no other tabular matter, and a second independent search - the text layer grepped case-insensitively for 'table' - returns two lines only, inside the words 'suitable' (p. 385) and a scan-garbled 'surfaces' (p. 380), never a caption or a cross-reference. The paper's ONLY comparison with experiment is FIGURE 8, the char data of Hashimoto et al. (1979), a paper not on disk here. It is NOT digitised: no point, curve or axis coordinate is taken from it or from any other figure, and the page says repeatedly - in its title cell, in section 4 and in Reuse - that it therefore does NOT establish that the random pore model describes any real system. What separates this case from the figure-only ones is that the paper prints its Figure 8 fit results IN PROSE on p. 385 (S_o = 520 m2/cm3 for both chars; psi = 6.9 and 13.7), and those three numbers are transcribed from the prose sentence"
+  - "THE DERIVATION CHAIN VERIFIED SYMBOLICALLY: fifteen sympy identities, all exactly zero - eqs. (17),(20),(23),(26) collapsing to (27); (28)+(30) giving (32); (27)'s coefficient being psi; (31) differentiated giving (33); d(32)/dtau = (1-X)(1+psi tau/2) AND the observation that eq. (37)'s radical is the PERFECT SQUARE (1+psi tau/2)^2, so the paper's S/S_o IS dX/dtau exactly; eq. (39)'s general-m closed form, its m = 2/3 case (40) and its m -> 1 branch limit 1-exp(-tau); Petersen's eqs. (3),(4) making the surface maximum sit at eps = 1/2 for EVERY L and r_p, which is the whole content of (34); eq. (7) being exactly the statement G = 3/(2 u_o); eq. (35)'s two endpoints being precisely the two sides of inequality (36); and (31) giving the Figure-8 linearisation [S/(1-X)]^2 = S_o^2 (1 + psi ln[1/(1-X)]). Labelled structural: they verify the paper's algebra, not this page's numerics"
+  - "THE PRINTED STRUCTURAL CLAIMS TURNED INTO NUMBERS, every extremum ROOT-FOUND and never sampled. The paper's own squared-deviation integral I gives best-fit grain shape factors of 1.0000000000 at psi = 0 (exactly the volume-reaction model) and 0.4905224 at psi = 2, against the printed '0.49 <= m <= 1 for 0 <= psi <= 2', with m*(psi) asserted monotone across that window; 0.6638850 at psi = 1, 0.417 % below two-thirds, against the printed 'very close to two-thirds'. X_M -> 1 - exp(-1/2) = 0.3934693 against the printed '< 0.393', and X_M = 0 exactly at the printed threshold psi = 2. Two independent routes to m* (root-find of the analytic dI/dm; Brent minimisation of the closed-form I) agree to 1.4e-08, and I itself has a closed form in the incomplete gamma function that a Gauss-Legendre quadrature reproduces to 7.6e-12 at observed second order in the node count"
+  - "THE FIRST SPECIAL-CASE REDUCTION THE ABSTRACT CLAIMS, AGAINST A PUBLISHED PAGE: Bhatia's eq. (40), X = 1-(1-tau/3)^3, IS the published B3.1's Yagi-Kunii eq. (6) in its omega -> 0 reaction-control limit, to 1.1e-16 over gamma from 1e-6 to 1e12 - two transcriptions of two different papers (a 1955 Combustion Symposium scan and a 1980 AIChE J scan) made three months apart. B3.1 was READ before being used, and its published metric reconciled rather than retyped: B3.1 reports eq6_to_reaction_limit = 3.848988e-10, which this page reproduces to 3.5e-06 relative at B3.1's own omega = 1e-9, establishing that the 3.85e-10 is entirely that page's regularisation and not a transcription difference. THE BLINDNESS IS STATED IN FULL, because a partial list is worse than none: at omega = 0 every omega term drops out of eq. (6), so the identity cannot see any of its three omega coefficients; the numerator is then gamma*x and the denominator gamma, so GAMMA CANCELS IDENTICALLY and its value is invisible too - the gamma range printed beside the identity is not a robustness sweep, cannot fail, and is labelled on the page as printed only to make that cancellation visible; and because the shrinking-core geometry and eq. (40)'s inversion are written as the same expression, a consistent slip in that exponent would cancel as well. What the identity does establish is that eq. (40) and eq. (6) at omega -> 0 are the same normalised law, and the two axes it CAN see each get a break row: the exponent on x (moves it to 0.25) and the ratio of the two gamma coefficients (moves it to 1.0)"
+  - "THE SECOND SPECIAL-CASE REDUCTION, QUANTIFIED RATHER THAN ASSERTED: the printed claim 'Curves A and B are in good agreement up to about 75 % conversion and diverge thereafter' (p. 384, and again in the CONCLUSIONS on p. 379) becomes a number. The two closed forms stay within 0.0218 in conversion for X <= 0.75 and first part by two conversion points at X = 0.742325 (root-found); they cross TWICE - Petersen's initial rate is 0.66 % the faster (3595.10 against 3571.43), so curve A trails curve B up to X = 0.023180 by at most 3.7e-05 in X before overtaking, and the second crossing is at X = 0.6258, with the random pore model leading by at most +0.0114 before and trailing by at most -0.0627 after, at X = 0.9164. THE THREE-DIGIT STATEMENT RESTS ON THE PAPER'S OWN CONVENTION, WHICH THE PAGE QUOTES: the Fig. 7 caption prints three numbers for a two-parameter Petersen structure, and p. 384 right column settles the choice verbatim - 'The corresponding Petersen choices are not, in this case, uniquely defined. If eps_o = 0.3 and L_o = 3.14 x 10^6 are chosen, the results are the same as the prior curve B. If, on the other hand, eps_o = 0.3 and S_o = 12,500 cm2/cm3 are fixed, curve D is obtained.' Curve B is therefore fixed by (eps_o, L_o) and curve D by (eps_o, S_o), both by the paper's own words. There is no single alternative reading - an over-determined triple has THREE pairings - so the whole band is printed beside the sourced one and the reader can see which digits belong to the paper: fixing curve B by (eps_o, S_o) implies L = 3.098789e6 cm/cm3 and gives 0.017652 and a parting conversion of 0.759878, and fixing it by (S_o, L_o) keeps both printed measurements and the 2.5173 %-adrift porosity eps = 0.292448 and gives 0.016507 and 0.768736 (an interior maximum, refined off the 4001-point scan rather than sampled); the band 0.7423 / 0.7599 / 0.7687 puts the dependence at the SECOND digit and all three round to 'about 75 %'. The surfaces part far earlier than the conversions - -21.66 % at X = 0.75 against +4.54 % at X = 0.25 on the Fig. 4 / p. 384 Petersen set, and -21.00 % against +4.70 % on curves A and B's own set, both printed so neither is read as the other - and the structural reason is computed: the two models use DIFFERENT overlap laws, Avrami's 1-exp(-V_E) against Petersen's 3u^2-2u^3, which differ already at order V_E^(3/2) (the leading term 2(V_E/3)^(3/2) - V_E^2/2 accounts for the gap to 5e-04 relative at V_E = 0.01), cross once at u = 0.6508058 and reach a maximum porosity gap of 0.030118. No parameter choice makes the two models identical, which is why the abstract says 'approach' and not 'coincide'"
+  - "ONE THING THE PAPER'S OWN NUMBERS SAY THAT IT DOES NOT. Figure 7's curve C is described only as 'no longer consistent with the requirements of Petersen's model', whose 'corresponding Petersen choices are not, in this case, uniquely defined'. Eq. (3) is not monotone in r_p - it has a maximum at r_p sqrt(pi L/3) = 1/2, the same stationary point that makes eq. (34) work - so no Petersen structure of length 3.14e6 cm/cm3 can have a surface above S_max = 2720.0 cm2/cm3, and curve C asks for 12 500: a factor 4.5956 beyond the maximum, with eq. (3) having NO REAL ROOT at all. The triple is infeasible, not merely over-determined, which is why a parameter had to be freed. The same arithmetic reconstructs the curve-D length the paper says it computed internally and never prints: L = 7.746973e7 cm/cm3, 24.672 times curves A and B's, round-trip residual 2.9e-16"
+  - "THE ROOT OF EQ. (7) SELECTED BY CONSTRUCTION, NOT BY LUCK: the paper writes 'G is the solution to the cubic equation', singular, and the cubic has three real roots (at eps_o = 0.3: -5.181, 1.0517, 4.1293). Section 2.1 shows eq. (7) is exactly G = 3/(2 u_o) with eps_o = 3u^2-2u^3, which selects 4.1293; eq. (6) then reaches X = 1.000000000000 exactly at s = 2G/3 - 1, while the middle root would put complete gasification at a NEGATIVE time. Injecting the wrong root moves the section 6.3 conversion comparison from 0.021759 to 36.3754, a factor 1671.8 = 3.223 orders - the 5th largest ABSOLUTE shift of the 53 break rows but only the 22nd largest RELATIVE one, and the page prints the factor and both ranks rather than a superlative only one reading supports - but it does NOT move petersen_X_endpoint_dev, because that endpoint is an identity for every root; see the break-table bullet"
+  - "THE PRINTED PARAMETER SETS AUDITED AGAINST PETERSEN'S OWN EQUATIONS, BOTH DIRECTIONS. The Fig. 4 / p. 384 set (S_o = 2425, L_o = 3.14e6, eps_o = 0.26) satisfies eqs. (3) and (4) to 0.74 % in porosity going one way and 0.21 % in surface going the other, and gives psi = 4.965326 against the printed 'psi = 5' (0.69 %) - BOTH printed claims hold. The Fig. 7 A/B set closes to 2.52 % in porosity"
+  - "THE CLAIMS ABOUT PARTICLE SIZE, MEASURED: 'no further significant change occurs for sigma >= 100' - tau_1/2 at sigma = 100 differs from its sigma -> infinity value by at most 2.922 % over the psi values Fig. 2's own curve labels give (worst at psi = 0, only 0.357 % at psi = 100); 'for sigma < 0.25 the reaction time is independent of internal structure for psi <= 100' - at sigma = 0.25 tau_1/2 spreads only 7.158 % across that whole psi range, against 57.7 % at sigma = 1, so the printed threshold is doing real work. Monotonicity of tau_1/2 in psi is ASSERTED, not assumed, so the endpoint read is the spread"
+  - "THREE PRINTED DEFECTS, PROVED FROM THE PAPER'S OWN CONTENT AND NONE REPAIRED. (1) 'This match at m = 1' [sic, p. 383] in a sentence whose predecessor says the grain model matches the psi = 1 results, whose dashed line is labelled 'GRAIN MODEL, m = 2/3', and whose 'above-mentioned correspondence as psi -> 0' is ALREADY the m = 1 case - so reading it literally makes the sentence say the same thing twice. The least squares settles it: at psi = 1 the best m is 0.6638850 and m = 1 misfits by 17.166 % against 3.217 % at the optimum, a factor 5.34; m = 1 IS the exact optimum, but at psi = 0. Which of 'psi = 1' or 'm = 2/3' was intended cannot be decided from the document, so neither repair is asserted. (2) The optimal-porosity worked example: the printed eps_o = 0.1 is NOT a root of the paper's own eq. (35), whose root is 0.0852877 (two routes agreeing to 2.5e-08); the stationarity residual at 0.1 is -4.241e-03. This is a defect of precision, not substance - the optimum is so flat that 0.1 costs 2.8e-05 of the maximum surface (0.0028 %), which is presumably where a one-figure answer came from - and it is reported anyway because eq. (35) is an equation. The printed companion threshold checks out: 1 + ln(1 - 0.3) = 0.6433251 against the printed 'if <= 0.64, inequality (36) is violated'. (3) 'Park and Levenspiel (1976)' in the p. 380 text against 'Chem. Eng. Sci., 30, 1207 (1975)' in the LITERATURE CITED, the paper's only Park reference. Also recorded without further comment: 'not clearly indentified' [sic, p. 382], 'This research was support by the U.S. Department of Energy' [sic, p. 385], and 'stoichimetric' [sic] for p,q in the NOTATION list two lines below 'stoichiometric' for a,b"
+  - "THE RATE LAW MARCHED AGAINST THE CLOSED FORM IT NEVER SEES: eq. (37) is the paper's rate law and eq. (32) its integral, and Crank-Nicolson (pymrm newton on each implicit step, vectorised over psi with NumJac((K,1))) reproduces eq. (32) to 9.8e-08 at 800 steps with observed order 2.000 - machinery sharing nothing with either closed form. Implicit Euler at the same step count is 3198x worse and is kept as the break row"
+  - "a 53-row defect-injection table covering ALL 45 non-structural metrics, with the coverage map ASSEMBLED FROM THE TABLE ITSELF and asserted against agreement.json key-for-key in both directions. THE ASSERT DEMANDS A MOVE THAT CLEARS A STATED NOISE FLOOR (1e-9), not merely a non-zero difference: a row that shifts a 2e-16 metric to 2e-15 has replaced float noise with float noise and proves nothing, and exactly that row was live here before verification - 'the wrong root of eq. (7)' against petersen_X_endpoint_dev, which CANNOT fail because X(s = 2G/3-1) = 1 is an exact identity for EVERY root of eq. (7) ((4/27) eps G^3 = G-1 is precisely what makes the bracket collapse to 1/eps - 1). The metric is kept, its real content is named on the page - it establishes that eqs. (6) and (7) are mutually consistent AS TRANSCRIBED and says nothing about which root was taken - and its row now mis-transcribes eq. (7) itself, 4/27 as 2/27, which moves it to 1.4286 = 1/(1-eps_o) for any root of the misread cubic. The failed row is printed on the page rather than quietly replaced. The smallest move in the table (5.4e-05) and the weakest row in RELATIVE terms are both printed too: nrms_at_psi_m_star_zero moves only 3.4 % under its injected defect, below check_agreement.py's REL_TOL = 5 %, so that one defect would pass the regression suite - stated on the page. Six metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 while healthy; WHICH SIX is computed from the measured values in the agreement cell rather than typed, the assert fails if any of them lacks a named above-floor companion, and every number a companion note quotes is interpolated from the row it refers to (one of them contradicted the table before the fix). One metric (the sympy identity count) is labelled structural with its reason. THREE candidate break rows were found NOT to work and are reported on the page with a measured witness for each instead of quietly dropped: flipping the sign inside eq. (31)'s radical gives a function real only for w > exp(-1/psi) and strictly increasing there (dS/dw of one sign at both ends), so it has no maximum to root-find; inverting eq. (35)'s log argument gives residuals of the same sign at both ends of (0, eps), so no root; and halving eq. (20)'s exponent puts Avrami below Petersen for every u > 0 (gap maximum -9e-24 at the origin, -0.223 at u = 1), so there is no crossing"
+  - "every number quoted in the page's markdown is re-derived in a final audit cell (39 entries, each with its own tolerance) and the cell RAISES on any mismatch - it caught the identity count during the build. Two consecutive executions produce identical cell text, an identical agreement.json and a byte-identical computed CSV; the eight figures are matplotlib-deterministic. Whole page: 8 s"
+
+adds: >
+  Nothing to the model, and the page says so plainly: the random pore model is
+  two closed forms and most of the notebook would run with pymrm uninstalled,
+  exactly as on J1.4, A1.6 and B1.7. What newton and NumJac do here is narrow
+  and real. (1) Whole families of inversions as one Newton problem - eq. (32)
+  inverted for tau across a (psi, sigma) block, eq. (35) inverted for the
+  optimal initial porosity - with NumJac((K,1)), independent scalars and a
+  diagonal Jacobian by construction; the shape is (K,1) and never (K,) per the
+  house rule. (2) A residual written so it can be solved at all: eq. (32)'s
+  direct residual UNDERFLOWS at psi = 100 and hands newton an exactly singular
+  Jacobian (measured during this build), so the residual is written in log form
+  with no exponential in it, and tau is carried through a sigmoid that cannot
+  leave (0, sigma). (3) The rate law marched as an initial-value problem, so
+  eqs. (32) and (37) check each other instead of being asserted equal -
+  Crank-Nicolson, observed order 2.000. (4) Root-finds and closed forms
+  everywhere a sweep would have been wrong: X_M, m*, the optimal eps_o, the
+  divergence conversion, the overlap-law crossing, the psi at which m* reaches
+  zero. The one output useful beyond reproduction is not pymrm at all: the
+  NORMALISED MISFIT of the paper's own integral I, which turns "which grain
+  shape factor fits this pore structure" into a curve with an error bar and
+  says what Figure 6 cannot - that past psi = 2 the best available m already
+  misfits by more than 8 %, rising through 20 % at psi = 5 and 32 % at
+  psi = 10, because no order-of-reaction model can produce a rate maximum.
+
+agreement: >
+  Everything on this page is structural, printed-claim-versus-computed, or
+  solver-versus-closed-form; nothing is experimental and nothing is fitted to
+  data. Printed claims recovered: best-fit m = 1.0000000000 at psi = 0 and
+  0.4905224 at psi = 2 (printed 0.49 <= m <= 1), 0.6638850 at psi = 1 (printed
+  "very close to two-thirds", 0.417 % below); X_M -> 0.3934693 (printed
+  < 0.393); psi = 4.965326 for the Fig. 4 set (printed 5, 0.69 %); the Petersen
+  triple closing to 0.74 % in porosity and 0.21 % in surface; the 75 %
+  agreement claim landing at X = 0.742325 with a worst deviation of 0.0218 up
+  to X = 0.75, under the convention p. 384 prints for curve B (fixed by
+  eps_o and L_o), with the other two pairings printed beside it (0.759878 under
+  eps_o and S_o, 0.768736 under S_o and L_o, so the band is second-digit);
+  tau_1/2 within 2.922 % of its plateau at sigma = 100 and
+  spreading 7.158 % at sigma = 0.25. Cross-page: Bhatia's eq. (40) equals
+  B3.1's Yagi-Kunii eq. (6) at omega = 0 to 1.1e-16, with B3.1's published
+  3.848988e-10 reproduced to 3.5e-06 at that page's own omega = 1e-9.
+  Solver-versus-closed-form: Crank-Nicolson march of eq. (37) against eq. (32),
+  9.8e-08 at 800 steps, observed order 2.000; the pymrm block inversion of
+  eq. (32) against scipy brentq, 6.6e-16 over 20 (psi, sigma) states; two
+  routes to Petersen's surface, 4.4e-16; two routes to Petersen's conversion,
+  1.0e-15 (both of these are round-off on an identity once G = 3/(2 u_o) is
+  substituted, so what they test is the ROOT of eq. (7) and the transcription of
+  eq. (4), not eq. (6) itself - said on the page); eq. (6) hitting X = 1 exactly
+  at s = 2G/3 - 1 to 2.2e-16, which is an identity for EVERY root of eq. (7) and
+  therefore tests the joint transcription of (6) and (7) rather than the root
+  selection - also said on the page, with the row that does move it; the
+  closed-form I against Gauss-Legendre, 7.6e-12. Printed defects: "This match
+  at m = 1" [sic] where the least squares gives 0.6639 and m = 1 misfits 5.34x
+  worse; the worked example's printed eps_o = 0.1 against eq. (35)'s root
+  0.0852877 (residual -4.2e-03, surface cost 0.0028 %); Park & Levenspiel
+  1976/1975. Found and reported, not printed by the paper: curve C's (S_o, L_o)
+  pair exceeds the maximum Petersen surface at that length by 4.5956x, so
+  eq. (3) has no root; the curve-D length is 7.746973e7 cm/cm3; and eq. (7)'s
+  cubic has three real roots of which eqs. (3),(4),(6) select exactly one.
+
+caveats: >
+  NO EXPERIMENTAL CONTENT ANYWHERE, BY A SCOPE DECISION STATED UP FRONT. The
+  paper's single comparison with experiment is Figure 8 - the CS and VC char
+  data of Hashimoto et al. (1979), a paper not on disk here - and it is not
+  digitised: no point, curve or axis coordinate is taken from it or from any of
+  the paper's other seven figures. THIS PAGE MUST NOT BE CITED AS EVIDENCE THAT
+  THE RANDOM PORE MODEL DESCRIBES ANY REAL SOLID. The three char numbers it
+  uses (S_o = 520 m2/cm3, psi = 6.9, psi = 13.7) are transcribed from the
+  PROSE of p. 385, and everything derived from them - the surface maxima at
+  X = 0.2989 and 0.3475, the Figure-8 intercept and slopes, the length-averaged
+  pore radii of 0.557(1-eps_o) and 0.281(1-eps_o) nm - is a PREDICTION of the
+  model at those parameters, never a validation of it. Anyone with the
+  Hashimoto tables can build the comparison this page leaves open.
+
+  THE EFFECTIVENESS-FACTOR CLAIM CANNOT BE CHECKED HERE. "Thiele moduli based
+  on the initial surface areas are small enough to assure effectiveness factors
+  over 0.98 in all cases" (p. 385) is what justifies the kinetic-control
+  assumption, and the paper prints no particle size, no diffusivity and no rate
+  constant, so the moduli behind it cannot be reconstructed. What the page
+  computes is only what the claim DEMANDS of the modulus - phi < 0.555707 for a
+  sphere - and it says so.
+
+  KINETIC CONTROL THROUGHOUT, which is the paper's own title. Part II
+  (non-isothermal operation and diffusion control) is NOT on disk, was not
+  consulted, and nothing here depends on it; B3.2 is the neighbouring page
+  where intergrain diffusion is present and matters.
+
+  PETERSEN (1957) IS READ ONLY AS THIS PAPER REPRINTS IT. Eqs. (3)-(5) are
+  Bhatia and Perlmutter's transcription on p. 380 and eqs. (6)-(7) are theirs
+  via Szekely, Evans and Sohn (1976); neither original was consulted, and every
+  statement about "Petersen's model" on the page is a statement about that
+  reprint. The same applies to Avrami (1940), whose eq. (19) is used as
+  reprinted.
+
+  ORIGIN NOT CONSULTED, and nothing here derives from them: Hashimoto et al.
+  (1979); Petersen (1957); Szekely, Evans & Sohn (1976); Avrami (1940); Walker
+  & Raats (1956); Kawahata & Walker (1962); Dutta et al. (1977); Dutta & Wen
+  (1977); and the rest of the modelling literature the paper surveys.
+
+  ONE NUANCE THE PAPER DOES NOT PRINT, stated as this page's own: the abstract
+  says the model "is not consistent with the assumption of flat plate grains
+  (m = 0) for any pore structure" and p. 384 that m = 0 "would be a grossly
+  inadequate fit for any psi". Both hold as claims about fit QUALITY (at
+  psi = 2, m = 0 misfits by 56.4 % against 8.0 % for the best m). But the
+  unconstrained least-squares optimum does pass through m = 0, at exactly one
+  value, psi = 16.804606 - well outside the printed window 0 <= psi <= 2 - and
+  even there the misfit is 42.1 %, because past psi = 2 no order-of-reaction
+  model fits at all. The page states this rather than letting the stronger
+  reading stand.

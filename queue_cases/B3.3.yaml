@@ -5,7 +5,8 @@ catalog_reference: Bhatia & Perlmutter, AIChE J 26 (1980)
 priority: P1
 tier: T0
 structures: S3
-status: unclaimed
+status: published
+page: pages/B3.3-random-pore-model/
 reference:
   authors:
   - Bhatia, S. K.
@@ -26,7 +27,57 @@ paper:
 blocker: null
 notes: DOI was already in the file as crossref-auto; confirmed against the OpenAlex record title on
   2026-08-02. Wiley, no API route, no OA copy.
-updated: '2026-08-06'
+updated: '2026-08-13'
+built: >-
+  BUILT 2026-08-13, staged at queue_cases/B3.3/page/ (index.ipynb executed clean,
+  8 s, deterministic across two runs). SCOPE HONOURED: Figure 8 is NOT digitised
+  and no coordinate is read from any of the paper's eight figures; the page says
+  in its title cell, in section 4 and in Reuse that it does not establish
+  empirical adequacy. The three Hashimoto numbers it uses (S_o = 520 m2/cm3,
+  psi = 6.9, 13.7) are the ones printed IN PROSE on p. 385. Substance is the two
+  abstract reductions: eq. (40) == published B3.1's Yagi-Kunii eq. (6) at
+  omega -> 0 to 1.1e-16, and the Petersen approach quantified (2.2 conversion
+  points up to X = 0.75; the printed 'about 75 %' lands at X = 0.7423). Fifteen
+  symbolic identities; 46 metrics, 53 break rows; three printed defects reported
+  and not repaired. models.yaml has NO existing B3.3 entry, so the entry is an
+  APPEND (splice before C1.1).
+  VERIFIED 2026-08-13 (verdict "safe after fixes"; no reported value could be
+  moved) and FIXED the same day. The fixes were prose, labelling and one break
+  row: "the wrong root of eq. (7)" could not break petersen_X_endpoint_dev
+  (X(s = 2G/3-1) = 1 is an identity for EVERY root of eq. (7)), so the coverage
+  assert was passing on float noise - the row now mis-transcribes eq. (7) itself
+  (4/27 as 2/27, moving it to 1.4286) and the assert now requires the move to
+  clear a 1e-9 noise floor, which no longer lets that class through anywhere on
+  the page. Also: the B3.1 identity's declared blindness completed (gamma cancels
+  identically at omega = 0, so the gamma sweep beside it cannot fail) with a
+  second break row for the axis it CAN see; sections 7.2 (c),(d) scoped to what
+  they test (the root of eq. 7, not eq. 6); PSI_SHOW re-attributed to FIGURE 4's
+  label set (Figs. 2 and 3 carry 0,1,2,10,100 - checked on my own 300 ppi crops);
+  p. 384's own convention for curve B quoted verbatim, with the over-determined
+  triple's other two pairings printed beside it (0.759878 and 0.768736 against
+  the sourced 0.742325, so the band is second-digit); the early
+  crossing at X = 0.0232 reported; the -21.7 % surface figure attributed to the
+  Fig. 4 set with curve A/B's own -21.0 % printed beside it; the third
+  non-working candidate break row given the same visibility as the other two,
+  each with a measured witness. agreement.json is byte-identical to the staged
+  file - no metric value moved.
+  RE-VERIFIED 2026-08-13 (second pass, scoped to the fix; verdict "safe after
+  fixes", four prose/labelling findings, no number corrected - the 2/27 row, the
+  1e-9 floor and the section 6.3 overrule all reproduced independently at 50
+  digits) and FIXED again the same day, all four: (1) section 7.7's typed list of
+  injected defects named "Avrami's overlap law swapped for Petersen's" when no
+  row injects it, so the list is DELETED FROM THE PROSE and printed under the
+  table generated from the rows (34 distinct defects over 53 rows) - a prose list
+  of a table's contents cannot drift if there is no prose list; (2) the
+  wrong-root superlative replaced by the measured factor 1671.8 (0.021759 ->
+  36.3754) with BOTH ranks, 5th by absolute shift and 22nd by ratio, since the
+  superlative was true only on the absolute reading; (3) the third pairing of the
+  over-determined triple computed, so the sensitivity is a band (0.7423 sourced /
+  0.7599 / 0.7687) rather than a single alternative; (4) the coverage assert
+  hardened from set-valued to per-row, `assert (shift > MOVE_FLOOR).all()`,
+  closing the dead-row hole on the 8 metrics that carry two rows structurally
+  rather than by luck. agreement.json md5 c1246d3222a07a988e505ad2c09ecbbd,
+  unchanged through both fixes. Ready for integration.
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because
@@ -41,6 +92,28 @@ what_it_carries: 'From the abstract: a random pore model allowing arbitrary pore
   Petersen (1957) over a large conversion range. Validation data: the char gasification data of Hashimoto
   et al. (1979).'
 not_on_disk: Part II (non-isothermal / diffusion control) did not arrive.
-check_before_dispatch: Whether the Hashimoto comparison is a printed table or a figure has NOT been
-  checked. One render settles it; do that before dispatching, because the figure route is gated on
-  maintainer review.
+check_before_dispatch: 'ANSWERED 2026-08-13 by the coordinator, all eight pages rendered at 110 ppi
+  and read. THE PAPER CONTAINS NO TABLE AT ALL - eight figures, and the string "table" occurs nowhere
+  in the document outside words like "suitable" and "inevitable". The Hashimoto et al. (1979)
+  comparison is FIGURE 8 (p. 384), a scatter of S/(1-X) against ln[1/(1-X)] for CS and VC char.
+  BUT THIS DOES NOT FORCE DIGITISATION, and that is what separates this case from J2.3 (Nyvlt),
+  which was demoted for exactly this shape. Nyvlt prints NO number from his fits; Bhatia & Perlmutter
+  print theirs IN PROSE on p. 385: "Estimates of initial BET surface areas obtained from the
+  intercept of Figure 8 give 520 m2/cm3 for both VC and CS chars. The two slopes give psi = 6.9 and
+  psi = 13.7 for the VC and CS chars, respectively." They also print, in prose or in captions: the
+  best-fit m range (0.49 <= m <= 1 for 0 <= psi <= 2, with m very close to two-thirds at psi = 1,
+  from the explicitly printed squared-deviation integral I); the structural claim that a rate maximum
+  must develop when psi > 2; the Petersen agreement window ("good agreement up to about 75%
+  conversion"); the three Fig. 7 parameter sets (S_o = 2500 and 12500 cm2/cm3, L_o = 3.14e6 cm/cm3,
+  eps_o = 0.3); the Petersen-consistent set (S_o = 2425, eps_o = 0.26, psi = 5) - CORRECTED BY THE
+  BUILD 2026-08-13: that set is the FIG. 4 CAPTION and the p. 384 body text, not Fig. 7 as this note
+  first said, and the page uses the correct attribution; and the claim that
+  Thiele moduli give effectiveness factors over 0.98, which is what justifies the kinetic-control
+  assumption.
+  SCOPE PINNED FOR THE DISPATCH: build the printed structure and the printed derived scalars; do
+  NOT digitise Figure 8 or any other figure, and say plainly that the empirical comparison with
+  Hashimoto is figure-only and therefore out of scope, so the page does not establish empirical
+  adequacy. The two special-case reductions the abstract claims (the effective grain shape factor
+  against the published B3.2, and Petersen 1957 at zero pore-size variance) are free structural
+  checks and are the substance of the page. This is a J1.4-shaped prove-the-printed-structure page
+  with more testable content than J1.4 had.'

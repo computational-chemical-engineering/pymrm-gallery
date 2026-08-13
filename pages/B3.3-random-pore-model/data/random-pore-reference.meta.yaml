@@ -1,0 +1,60 @@
+dataset_id: random-pore-reference
+title: "Random pore model reference solutions - COMPUTED BY PAGE B3.3, not from any paper and not from any figure"
+status: complete
+
+source:
+  authors: ["PyMRM Gallery page B3.3"]
+  year: 2026
+  container: "computed output of pages/B3.3 (index.ipynb regenerates this file deterministically on every run)"
+  doi: null
+  access: "generated locally"
+  licence: "CC0 (computed numbers; no external data of any kind)"
+
+conditions: >
+  NOT DATA FROM THE PAPER AND NOT EXPERIMENTAL DATA OF ANY KIND, and in
+  particular NOT digitised from Figure 8 or any other figure. This file is the
+  page's own evaluation of the PRINTED equations of Bhatia & Perlmutter (1980)
+  - eq. (32) for the conversion, eq. (31) for the reaction surface, eq. (33)
+  for the conversion at maximum surface, and the best-fit grain shape factor
+  from the paper's own printed squared-deviation integral I - on a grid of the
+  pore structure parameter psi and the dimensionless time tau.
+
+  sigma -> infinity throughout (negligible external particle surface), which is
+  the regime the paper itself works in for its Figures 3, 4, 6, 7 and 8.
+  psi = 4 pi L_o (1 - eps_o)/S_o^2 and tau = k_s C^n S_o t/(1 - eps_o) are the
+  paper's own NOTATION-list definitions (p. 386); both are dimensionless, so
+  the whole file is dimensionless and applies to any solid.
+
+  Its purpose is regression: an independent implementation of the same printed
+  equations must reproduce every row. Two consecutive executions of the
+  notebook write a byte-identical file.
+
+acquisition:
+  method: computed
+  tool: "direct evaluation of the printed closed forms; m_star by root-finding dI/dm = 0 on the closed-form I (600-node Gauss-Legendre derivative), tol 1e-15"
+  procedure: >
+    For each (psi, tau) node: X from eq. (32) with sigma -> infinity; S/S_o
+    from eq. (31) at that X; X_M from eq. (33) where psi >= 2 and NaN below,
+    since the maximum does not exist there; m_star(psi) by root-finding
+    dI/dm = 0, reported once per psi; tau_half_sigma_inf from the closed form
+    psi tau^2/4 + tau = ln 2. Grid: psi in {0, 1, 2, 5, 10} x tau in
+    {0.1, 0.25, 0.5, 1.0, 1.5}.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-13
+  estimated_error: "root-find tolerance 1e-15; closed forms otherwise exact to double precision. Values printed to 12 significant figures."
+
+columns:
+  psi: "pore structure parameter, 4 pi L_o (1 - eps_o)/S_o^2, dimensionless"
+  tau: "dimensionless time, k_s C^n S_o t/(1 - eps_o)"
+  X: "conversion of solid B from eq. (32), sigma -> infinity"
+  S_over_So: "reaction surface area relative to its initial value, eq. (31); equals dX/dtau exactly (proved symbolically on the page)"
+  X_M: "conversion at maximum surface, eq. (33); NaN where psi < 2 and no maximum exists"
+  m_star: "grain shape factor / reaction order of eq. (39) that best fits eq. (37) in the paper's printed integral I; a function of psi alone, repeated down the tau block"
+  tau_half_sigma_inf: "dimensionless time to 50 % conversion at sigma -> infinity, closed form; a function of psi alone"
+
+notes: >
+  m_star is NEGATIVE for psi large enough (it crosses zero at psi = 16.80), and
+  is reported unconstrained. Do not read m_star as a good fit: past psi = 2 no
+  order-of-reaction model can represent the rate maximum the random pore model
+  produces, and the page reports a normalised misfit alongside for exactly this
+  reason - 8.0 % at psi = 2, 19.9 % at psi = 5, 32.3 % at psi = 10.
