@@ -1,0 +1,67 @@
+dataset_id: rawlings-ekerdt-ex9.15-batch
+title: "Rawlings & Ekerdt Exercise 9.15: substrate concentration versus time in a batch enzymatic run"
+source:
+  authors: ["Rawlings, J. B.", "Ekerdt, J. G."]
+  year: 2025
+  container: "Chemical Reactor Analysis and Design Fundamentals, 2nd edition, Nob Hill Publishing (5th printing), Exercise 9.15"
+  doi: null
+  access: "copy on the reading machine, BOOK-RawlingsEkerdt-2025-chemical-reactor-analysis-design-fundamentals-2ed-5pr.pdf; born-digital, clean text layer"
+  licence: "all rights reserved (seven numeric pairs extracted as facts; no page image reproduced)"
+acquisition:
+  method: table
+  figure: >
+    the printed table in Exercise 9.15, transcribed from the born-digital text
+    layer and checked against a render of the same page. The exercise also
+    prints the same seven points as a scatter plot beside the table; the table
+    is the source used here, and the plot was not digitised.
+  operator: builder agent (J4.6)
+  date: 2026-08-13
+  estimated_error: >
+    Values are printed to three decimals, so the transcription carries a
+    half-ulp of 5e-4 cmol/L and nothing else. Times are exact multiples of 3
+    minutes.
+columns:
+  - {name: t_min, unit: min, description: "time, as printed (t = 0, 3, ..., 18)"}
+  - {name: c_S_cmol_per_L, unit: cmol/L, description: "substrate concentration c_S, as printed to three decimals"}
+notes:
+  PROVENANCE_IS_NOT_STATED: >
+    THIS IS THE ONE THING A USER OF THIS FILE MUST KNOW. The exercise introduces
+    the table with a single sentence - "The following measurements of cS versus
+    time were taken in your laboratory." - and gives no citation, no enzyme, no
+    enzyme loading, no temperature, no pH and no solvent. The whole of Exercise
+    9.15 was read (it runs from the reaction scheme through the hint) and the
+    book's bibliography was searched for an enzyme-kinetics entry; there is no
+    reference attached to these numbers. "Taken in your laboratory" is a
+    textbook framing addressed to the student, not a provenance claim.
+    So the table CANNOT be described as a laboratory record, and the J4.6 page
+    does not describe it as one. What the page does establish about it, by
+    computation:
+      (i) it is NOT an exactly-rounded evaluation of the model it is set to fit
+          - the best Michaelis-Menten fit leaves a maximum residual of
+          6.93e-3 cmol/L, 13.9 times the 5e-4 print resolution, so either
+          measurement or deliberately added scatter is present;
+      (ii) the fitted constants sit within 0.6 % of the round values
+          K = 2 L/cmol and K_M = 1/K = 0.5 cmol/L, and pinning K at exactly 2
+          costs 0.108 % in sum of squares - consistent with, though not proof
+          of, a synthetic table generated from round parameters plus noise.
+    Treat the tier below as a statement about the ACQUISITION ROUTE (a numeric
+    table read off a printed page, no digitising) and not as a claim that these
+    are measurements.
+  what_the_exercise_asks: >
+    "Estimate the parameters k and K appearing in the Michaelis-Menten rate
+    expression (be sure to give the parameters' units). Hint: consider the
+    transformation 1/r and formulate a linear least-squares problem that you can
+    solve on a calculator." The rate expression it prints is
+    r = k c_S/(1 + K c_S), which is Froment's eq. (1.5.1-15) with k = r_m/K_M
+    and K = 1/K_M.
+  no_enzyme_concentration: >
+    C_E0 is not printed. That matters for J4.6 specifically: r_m = k_2 C_E0, so
+    even a perfect fit cannot separate k_2 from the enzyme loading, and the
+    dimensionless group that controls whether the quasi-steady-state
+    approximation holds, C_E0/(c_A0 + K_M), cannot be evaluated for this run at
+    all.
+redistribution_basis: >
+  Seven numeric pairs and the exercise's own one-sentence framing, extracted for
+  verification and criticism. Numbers are facts and are not protected (Feist,
+  1991); the quoted sentence is a short quotation (Art. 15a Auteurswet). No page
+  image is reproduced.

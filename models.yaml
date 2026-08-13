@@ -5307,6 +5307,302 @@ models:
       paper.
     related: [J3.4, J1.5, B1.1]
 
+  - id: J4.6
+    slug: michaelis-menten-briggs-haldane
+    title: "Michaelis-Menten and Briggs-Haldane: one rate law, two constants, and what data can decide between them"
+    description: >
+      Froment, De Wilde & Bischoff section 1.5.1 derives the enzyme rate law
+      TWICE - by rapid equilibrium, giving eq. (1.5.1-8) with K_M = k_-1/k_1 and
+      named there "the Michaelis-Menten equation", and by the pseudo steady state,
+      "formulated by Briggs and Haldane", giving the identical expression with
+      K_M = (k_-1 + k_2)/k_1 as eq. (1.5.1-14). The two constants differ by
+      1 + k_2/k_-1, which nothing in the rate law bounds. This page asks what an
+      experiment can settle, and the answer is narrow and quantifiable.
+      FIRST: NO steady-state rate measurement can separate them, exactly - and the
+      exactness is ALGEBRAIC. Substituting k_2 = r_m/C_E0, k_-1 = k_2/rho,
+      k_1 = (k_-1+k_2)/K_M into eq. (1.5.1-13) returns eq. (1.5.1-15) identically
+      and d r/d rho = 0, proved in sympy in the notebook's symbolic cell
+      under "The published model". The
+      numerical sweep is a check on that algebra, not the evidence for it: holding
+      r_m and K_M fixed and sweeping rho = k_2/k_-1 over EIGHT DECADES, the rate
+      law evaluated from the elementary constants is identical to double precision
+      over four decades of concentration - max relative difference 0.0 on the nine
+      swept rho, and at most 4.44e-16 over 2000 seeded random (rho, C_E0) draws,
+      where the float round trips are no longer exact. The exact zero is a
+      property of the values swept; the degeneracy is a property of the algebra,
+      and the page reports both. Meanwhile K_M(BH)/K_M(MM) = 1 + rho runs from
+      1.0001 to 1e4. The map from four elementary constants to the two observable
+      ones has a two-dimensional fibre and rho runs along it.
+      SECOND: a batch transient does see rho - the spread of C_A(t) over those
+      eight decades is 0.9773 eps, with eps = C_E0/(c_A0+K_M) - but the maximum
+      sits INSIDE THE INDUCTION LAYER, at t = 2.011e-7 min, because the layer
+      duration 1/[k_1(c_A0+K_M)] itself runs from 2.09e-8 min at rho = 1e-4 to
+      2.09e-4 min at rho = 1e4. A uniform 181-point scan of the 18-minute run
+      reads that maximum 66.3 % LOW, so it is root-found on a combined logarithmic
+      and uniform scan rather than sampled. Froment's single sentence that "only
+      transient experimentation (stopped flow, or relaxation ...) can help" is
+      exactly right and this is the number behind it. Over the window an
+      experiment sampled like the source table can see (t >= 3 min) only 0.242 eps
+      survives as a persistent offset; root-found against that table's 5e-4 cmol/L
+      print resolution it needs eps = 2.069e-3, and with r_m, K_M and C_E0 all
+      free to compensate - which is what a fit does - eps = 5.798e-2. AT THAT
+      LOADING THE QUASI-STEADY-STATE APPROXIMATION IS ITSELF OFF BY 88.9 TIMES the
+      resolution the discrimination is read at (against the free substrate C_A;
+      38.8 times against total substrate C_A + C_A-E, the other defensible
+      convention): the regime where the two derivations differ observably in a
+      slow measurement is the regime where neither of them is the right model.
+      THOSE TWO EPSILONS ARE NOT THE SAME MEASUREMENT, and the page says so rather
+      than dividing one by the other: 2.069e-3 is a MAXIMUM over t in [3, 18] min
+      of the rho-spread, 5.798e-2 is an RMS over a 25-point grid from t = 0 of a
+      REFITTED misfit. The same RMS on the same grid with nothing free gives
+      eps = 3.185e-3, so of the raw ratio 28.0 a factor 1.539 is the change of
+      statistic and window and 18.20 is the price of compensation. All three are
+      separate metrics and each states its own statistic, window and grid.
+      THIRD, on measurement: Rawlings & Ekerdt Exercise 9.15's seven printed
+      c_S-versus-time points give r_m = 0.162583 cmol/(L min) and K_M = 0.503055
+      cmol/L at 4.02e-3 RMS - a FIT, since those are the same seven points -
+      against best-fitted one-parameter nulls of 5.34e-2 (zero order), 3.90e-2
+      (first) and 1.05e-1 (second). Pinning rho anywhere in [1e-4, 1e4] and
+      re-optimising the other three moves the achievable sum of squares by 8.58 %,
+      monotonically and with no interior optimum, and the four-parameter
+      mass-action model gives F = 1.9009 against F(2, 3) = 9.5521 at 95 %. So the
+      page states plainly what it does NOT establish: not "the Michaelis-Menten
+      mechanism", only that a two-parameter saturating law beats the best simple
+      order by 9.71x on one seven-point run - which every member of that
+      two-parameter family does equally well.
+      Ten symbolic identities close the printed chain, both routes, including
+      eq. (1.5.1-8) as the k_2 -> 0 limit of eq. (1.5.1-13). eps is DERIVED here,
+      not borrowed: at fixed C_E0/c_A0 with K_M swept over three decades,
+      C_E0/c_A0 mispredicts the error by a factor 95.0 while C_E0/(c_A0+K_M) holds
+      it inside 1.91 - Froment's printed comparison with the substrate alone is
+      the K_M << c_A0 corner of it and is right there (coefficient 0.9541).
+      "The decomposition is the rate determining step" is given a number:
+      rho <= 2.1951e-3 for route 1 to predict the batch curve to the table's own
+      resolution, root-found and then reproduced to 0.080 % by an analytic
+      sensitivity of the closed-form solution with its extremum root-found -
+      a second route sharing no ODE solver and no mass-action model. The fit is
+      likewise computed twice, through the Lambert-W closed form and through the
+      pymrm backward-Euler marcher with Richardson extrapolation, agreeing to
+      5.9e-8 relative. Two printed defects, reported and NOT repaired, both
+      settled from the book's own equations: p. 24's high-concentration limit
+      "rA = k1CE0" [sic], which contradicts the limit of its own eq. (1.5.1-8),
+      its eq. (1.5.1-15) definition of r_m, and its Problem 2.4(b) - and is
+      dimensionally impossible; and p. 25's "Lineweaver-Burke plot of 1/r versus
+      CA" [sic], where 1/r is exactly affine in 1/C_A (9.67e-16) and strictly
+      convex in C_A. The convexity is what settles that defect and it is
+      convention-free, and so is the size once the right line is named: the
+      statistic is a MAXIMUM, so the line that minimises it is the Chebyshev
+      (minimax) line, and no straight line comes closer than 31.72 % of the
+      curve's own range over 0.05-1.0 cmol/L (the floor is 31.7256 %, rounded
+      down) - closed form, certified by exact
+      three-point equioscillation, and independent of every weighting choice.
+      The distance from the best LEAST-SQUARES line is larger and IS a
+      convention, reported as one - 50.32 % log-weighted, 66.88 % uniformly
+      weighted - all three in closed form with the extremum root-found rather
+      than read off a grid.
+    section: J
+    status: published
+    page: pages/J4.6-michaelis-menten-briggs-haldane/
+    tier: T0
+    priority: P1
+    structures:
+      - S1
+    phases:
+      - liquid
+    predicts:
+      - the enzymatic rate law r_A = r_m C_A/(K_M + C_A) and its two derivations
+      - the batch substrate history C_A(t) under the full four-species mass-action
+        scheme (1.5.1-1), under the pseudo-steady-state reduction (1.5.1-13) and
+        under the rapid-equilibrium reduction (1.5.1-8)
+      - the error of each reduction against the full scheme, as a function of
+        C_E0/(c_A0+K_M) and of k_2/k_-1
+      - the enzyme loading a batch experiment would need before k_2/k_-1 - the
+        only thing separating the two definitions of K_M - leaves a trace above a
+        stated resolution
+      - r_m and K_M from a batch c_S-versus-time table, by direct fit of the
+        integrated rate law and by the reciprocal (Lineweaver) construction
+    pymrm_api:
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - Michaelis, L.
+        - Menten, M. L.
+        - Briggs, G. E.
+        - Haldane, J. B. S.
+      year: 1913
+      title: Die Kinetik der Invertinwirkung
+      container: "Biochemische Zeitschrift 49, 333-369 (1913); with Briggs, G. E. & Haldane, J. B. S., Biochemical Journal 19, 338-339 (1925)"
+      doi: null
+      note: >
+        ORIGIN_NOT_CONSULTED - neither paper is on disk and neither was read.
+        TEXTBOOK-CANONICAL-SOURCE PAGE under the standing decision of 2026-08-02.
+        READ FROM: Froment, G. F., De Wilde, J. & Bischoff, K. B., "Chemical
+        Reactor Analysis and Design", 3rd edition, John Wiley & Sons (2011), ISBN
+        978-0-470-56541-4, Chapter 1, section 1.5.1 "Enzymatic Kinetics", book
+        pp. 23-26 (PDF 65-68), eqs. (1.5.1-1) to (1.5.1-15). The E1.1 test passes
+        on BOTH halves of the case: both routes are derived, both are named, both
+        constants are printed. THE FILENAME SAYS "Froment_Bischoff": this is the
+        THIRD edition and De Wilde is a full author.
+        ATTRIBUTION IS BOUNDED BY WHAT THE BOOK PRINTS. That is two clauses -
+        p. 24 naming eq. (1.5.1-8) "the Michaelis-Menten equation" with
+        K_M = k_-1/k_1 "the Michaelis-Menten constant", and p. 24 introducing the
+        second route as "formulated by Briggs and Haldane" - plus Problem 2.4's
+        compound name "The Michaelis-Menten (Briggs-Haldane) mechanism", under
+        which the book prints the BRIGGS-HALDANE constant. No sentence of the form
+        "Michaelis and Menten showed/assumed/argued" appears anywhere on the page
+        or in its metadata; that sweep was done deliberately, against the A3.2
+        attribution-drift defect class.
+        AND THE BOOK PRINTS NO CITATION FOR EITHER ORIGIN - a checked negative
+        claim, with the search described on the page: a full-text search of all
+        902 PDF pages for michaelis|menten|briggs|haldane returns FOURTEEN lines -
+        five in sections 1.5.1-1.5.2, three in Problem 2.4, three in later running
+        text, three in the Subject Index, the same fourteen in all three
+        pdftotext modes - none a bibliographic entry; the Chapter 1 REFERENCES list (book pp. 58-59)
+        was read in full at the alphabetical positions the entries would occupy,
+        and Graef & Andrews [1973], Monod [1949] and Williams [1967] - the other
+        named results of section 1.5 - ARE there; the Subject Index carries page
+        numbers only.
+        LEVENSPIEL, "Chemical Reaction Engineering", 3rd edn (1999), p. 615, is
+        NOT a second canonical source and nothing is adjudicated between the two
+        books. He is cited for exactly two printed things, both read at 600 ppi
+        native: the reciprocal plot's axes "1/(-r_A) versus 1/C_A", which
+        corroborates the second printed defect independently of Froment's own
+        algebra; and his claim that the direct C_A-versus-tau fit "is direct, is
+        less prone to fiddling, and is more reliable", which this page measures
+        (the reciprocal construction returns K_M 46.7 % low and r_m 34.1 % low on
+        the one dataset, of which +14.0 points is the differencing alone).
+    data:
+      tier: 2
+      method: >
+        Two transcriptions, no digitising and no figure extraction. THE SOURCE
+        SECTION PRINTS NO NUMBERS AT ALL - no worked example, no table, no figure
+        in section 1.5.1 - so the empirical input comes from a different book:
+        the seven c_S-versus-time pairs printed in Exercise 9.15 of Rawlings &
+        Ekerdt, "Chemical Reactor Analysis and Design Fundamentals", 2nd edn
+        (2025 printing). ITS PROVENANCE IS NOT STATED BY THAT BOOK: the exercise
+        says only "The following measurements of cS versus time were taken in your
+        laboratory" and gives no citation, no enzyme, no enzyme loading, no
+        temperature and no pH; the whole exercise was read and the bibliography
+        searched. Tier 2 therefore describes the ACQUISITION ROUTE (a numeric table
+        read off a printed page) and is NOT a claim that these are measurements,
+        and the page says so on every surface. What the page does establish: the
+        table is not an exactly-rounded evaluation of the model it is set to fit
+        (max residual 13.87x the 5e-4 print resolution), and its fitted constants
+        sit within 0.61 % of the round values K = 2 L/cmol and K_M = 0.5 cmol/L.
+        C_E0 is not printed either, so r_m cannot be split into k_2 and the enzyme
+        loading and eps cannot be evaluated for that run at all. NOTHING THE PAGE
+        CONCLUDES DEPENDS ON THE TABLE. The second dataset is the FIRST FIFTEEN of
+        the eighteen numbered equations of Froment 1.5.1 - (1.5.1-16) to
+        (1.5.1-18) are competitive inhibition and are out of scope - plus nine
+        prose claims, quoted verbatim with the two printed defects flagged and not
+        repaired.
+      status: complete
+    related:
+      - J4.7
+      - J4.8
+      - J4.9
+      - B1.1
+      - C1.1
+      - B2.3
+      - C1.2
+    note: >
+      FIT/TEST, LABELLED ON EVERY SURFACE. r_m and K_M are FITTED to the same
+      seven points the agreement is reported against, so that agreement is a
+      goodness of fit; three best-fitted one-parameter nulls are computed beside
+      it and the only empirical claim made is the 9.71x RMS ratio against the
+      best of them, which is a claim about SATURATION and not about a mechanism.
+      Everything else is either an exact algebraic identity (the ten symbolic
+      identities, the rho-degeneracy - PROVED in sympy, not merely swept - and
+      the exact linearity of 1/r in 1/C_A) or a computed property of the printed
+      equations.
+      THE F TEST'S NESTING IS NON-REGULAR and the page says so: the null sits on
+      the boundary C_E0 = 0 and rho is unidentified under it, so F(2, 3) is an
+      approximation. The direction is safe - a boundary null makes the true null
+      distribution stochastically no larger, so the real p-value is at least the
+      tabulated 0.29 and "not justified" holds a fortiori.
+      DIRECTION OF THE DISCRIMINATION CLAIM: the misfit of a wrong-rho model to
+      right-rho data comes from an optimiser, which returns an UPPER BOUND on a
+      minimum, so "cannot be separated" is the safe direction and the reported
+      eps* is if anything an underestimate of what an experiment needs. A
+      ROBUSTNESS ROW narrows the multistart and must not move it much; it does
+      not - 5.7e-6 relative, 1.2x the 4.61e-6 that two brentq root-finds at this
+      page's own xtol can resolve, so of the ORDER of the tolerance rather than
+      provably below it, and about five orders below every genuine mover of the
+      same metric. That last comparison is the one the notebook asserts, and that
+      row is labelled a robustness row and is not counted as coverage.
+      The reverse direction (true rho = 1e-4 fitted by rho = 1e4) is easier -
+      4.45e-3 against 1.31e-3 at eps = 0.1 - so the direction reported is the
+      binding one.
+      NEVER A SAMPLED MAXIMUM, AND HERE IT MATTERED. Every max-over-t on this page
+      is located on a scan and then root-found in its own bracket. That is not a
+      rounding refinement: the two mass-action solutions differ most inside the
+      induction layer at t ~ 1e-7 min, and a uniform 181-point scan of the
+      18-minute run reads that maximum 66.3 % low. The metric recording that
+      shortfall is itself in agreement.json.
+      THREE THINGS EVERY REPORTED THRESHOLD IS A PROPERTY OF, all stated and all
+      three now carrying break rows: the 5e-4 cmol/L resolution it is read at
+      (doubled), the rho interval [1e-4, 1e4] (narrowed to [0.5, 2]), and, for the
+      compensated eps*, the 25-point sampling grid the misfit is computed on
+      (coarsened to 13). Those vary a declared CONVENTION and would move by the
+      same amounts even if the computation under them were wrong, so a fourth row
+      varies the computation itself - the ODE solve underneath the root-find
+      loosened to rtol 1e-6 - which is the only class of row that can expose a
+      wrong baseline, and whose move doubles as the convergence evidence for the
+      quoted eps*.
+      AND ONE MORE, added after a verification and sharpened by a second: the
+      STATISTIC, and WHICH LINE it is measured against. "How far from a straight
+      line" is a maximum, so the minimising line is the CHEBYSHEV one; the page
+      reports that convention-free floor (31.72 %) alongside the least-squares
+      distances under both weightings (50.32 %, 66.88 %), all in closed form. The
+      overclaim this replaced - three surfaces calling the least-squares distance
+      "the best straight line", which implies nothing straight gets within half
+      the range when a straight line comes within 31.7 % - is itself a break row
+      now, injecting 0.5032 into the 0.3173 floor; two more restore the
+      unconverged 400-point grid an earlier draft sampled and read the floor on a
+      tenth of the interval.
+      COVERAGE: 52 rows - 51 defect injections, all 51 of which move their metric
+      by more than MOVE_TOL = 1e-6 relative, covering 42 of 53 metrics; plus ONE
+      ROBUSTNESS ROW, written to show that a metric does NOT move, which is
+      labelled as such and is NOT counted as coverage for that metric. The
+      coverage map prints how hard each covered metric's strongest row hits it,
+      and the notebook asserts that the weakest of those is still above
+      ROOT_FIND_RES - which is now DERIVED, 2*ln(10)*XTOL_LOG10 = 4.61e-6, the
+      resolution of a difference between two root-finds at the page's own
+      tolerance, rather than the 1e-5 an earlier draft rounded it up to. An
+      earlier draft also had the compensated eps* "covered" by the robustness row
+      alone, which is the illusion this bookkeeping exists to prevent. The eleven
+      metrics with no mover are named individually as structural, definitional or
+      companion values and the notebook ASSERTS that BOTH generic not-coverage
+      labels are never used - the UNCOVERED fallback and the "robustness rows
+      only" branch, which was printed but unasserted until a verification pointed
+      out that a metric could land in it and still pass. Seven
+      metrics sit below CI's ABS_FLOOR of 1e-12 (three symbolic zeros - the
+      chain, the rho-degeneracy proof and the swept degeneracy check - the
+      degeneracy's float spread over random draws at 4.44e-16, the exact
+      linearity at 9.67e-16, and the two conservation balances at 1.2e-17 and
+      1.7e-15); each is named with an above-floor companion, and the substrate
+      balance is NOT an identity - a break row that doubles the P row of the
+      source moves it to O(1).
+      DETERMINISM: two consecutive executions give identical content and a
+      byte-identical agreement.json. Both pandas Stylers are rendered through
+      HTML(...to_html()) with a pinned uuid rather than displayed - the
+      display(styler) route emits a memory address into text/plain and a random
+      CSS id into text/html, which is the defect the 2026-08-13 handoff records on
+      five published pages - and stdout is batched so ipykernel's flush timer
+      cannot split a cell's output differently between runs.
+      WHAT PYMRM ADDS IS SMALL AND THE PAGE SAYS SO. A well-mixed batch of four
+      species is 0-D; solve_ivp would have integrated it, and does, as the
+      reference. What pymrm buys is a Jacobian assembled the way the rest of the
+      gallery assembles it - NumJac((1, n_c)) for the pointwise block, never a
+      bare 1-D shape - so BatchReduced.source transplants unchanged into J4.7
+      (immobilised enzyme particle) or B1.1's pellet.
+      SCOPE: competitive inhibition, eqs. (1.5.1-16) to (1.5.1-18), is out (a
+      different case), as is all of section 1.5.2 (Monod, Graef-Andrews, Williams)
+      which belongs to J4.9/J4.8. Product formation is irreversible as
+      eq. (1.5.1-1) prints it; the book's own Problem 2.4 derives a REVERSIBLE
+      form with a [P]/K term, which is a larger model and is not on this page.
+
   - id: J4.7
     slug: immobilised-enzyme-pellet
     title: "Diffusion-limited immobilised enzyme particle"

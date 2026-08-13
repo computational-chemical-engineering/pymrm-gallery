@@ -1,0 +1,190 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J4.6
+slug: michaelis-menten-briggs-haldane
+title: "Michaelis-Menten and Briggs-Haldane: one rate law, two constants, and what data can decide between them"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 195
+datasets:
+  - rawlings-ekerdt-ex9.15-batch
+  - froment-1.5.1-printed
+
+reference:                       # the ORIGINS - cited, NOT consulted
+  authors: ["Michaelis, L.", "Menten, M. L.", "Briggs, G. E.", "Haldane, J. B. S."]
+  year: 1913
+  container: "Biochemische Zeitschrift 49, 333-369 (1913); with Briggs, G. E. & Haldane, J. B. S., Biochemical Journal 19, 338-339 (1925)"
+  doi: null
+  note: >
+    ORIGIN_NOT_CONSULTED. Neither paper is on disk and neither was read. These
+    citations come from the gallery catalogue's own entry for J4.6, not from the
+    book the page was built from - which, as the page establishes and documents,
+    prints NO citation for either (see reference_read_from.note).
+
+reference_read_from:             # the text actually read, and where each equation came from
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  container: "Chemical Reactor Analysis and Design, 3rd edition, John Wiley & Sons"
+  isbn: "978-0-470-56541-4"
+  chapter_and_section: "Chapter 1 'Elements of Reaction Kinetics', section 1.5 'Bio-kinetics', subsection 1.5.1 'Enzymatic Kinetics', book pp. 23-26 (PDF 65-68), eqs. (1.5.1-1) to (1.5.1-15)"
+  note: >
+    TEXTBOOK-CANONICAL-SOURCE PAGE, built under the standing decision of
+    2026-08-02. The E1.1 test passes on both halves of the case: the book
+    derives the rapid-equilibrium route to eq. (1.5.1-8), naming it "the
+    Michaelis-Menten equation" and K_M = k_-1/k_1 "the Michaelis-Menten
+    constant", AND the pseudo-steady-state route to eq. (1.5.1-13), "formulated
+    by Briggs and Haldane", with K_M = (k_-1+k_2)/k_1 as eq. (1.5.1-14).
+    Identified from the book's own title page, imprint page and CIP record. THE
+    FILENAME SAYS "Froment_Bischoff": this is the THIRD edition and De Wilde is
+    a full author. Born-digital with embedded TrueType subsets, so the text
+    layer is clean including equation numbers - but the two lines the page's
+    defect findings rest on (p. 24's "rA = k1CE0" and p. 25's "1/r versus CA")
+    were each read on a 300 ppi render cropped to the line, and a third line
+    (eq. 1.5.1-17 on p. 26) proved the extractor drops terms: it renders as an
+    identity for C_A-E because "= C_A-E +" is lost, and the page says so rather
+    than reporting a defect that is not there.
+    THE BOOK PRINTS NO CITATION FOR EITHER ORIGIN. Three searches, described on
+    the page and in the dataset sidecar: a full-text search of all 902 PDF pages
+    for michaelis|menten|briggs|haldane (FOURTEEN lines, the same fourteen in
+    all three pdftotext modes - five in sections 1.5.1-1.5.2, three in Problem
+    2.4, three in later running text, three in the Subject Index - none a
+    bibliographic entry); the Chapter 1 REFERENCES list read in full at the alphabetical
+    positions the entries would occupy (Graef & Andrews [1973], Monod [1949] and
+    Williams [1967] - the other named results of section 1.5 - ARE there);
+    and the Subject Index, which carries page numbers only.
+
+other_source_used_for_one_thing:
+  authors: ["Levenspiel, O."]
+  year: 1999
+  container: "Chemical Reaction Engineering, 3rd edition, John Wiley & Sons, Ch. 27, p. 615"
+  note: >
+    NOT A SECOND CANONICAL SOURCE and no derivation is adjudicated between the
+    two books - the E1.1 target for this case was pinned to Froment before
+    dispatch because Froment alone derives BOTH halves. Levenspiel is cited on
+    the page for exactly two printed things, both read on a 600 ppi native
+    render of p. 615: the reciprocal plot's axes, "1/(-r_A) versus 1/C_A ...
+    the Lineweaver plot", which independently corroborates the second printed
+    defect (though Froment's own eq. (1.5.1-15) settles it); and his claim that
+    fitting C_A versus tau directly "is direct, is less prone to fiddling, and
+    is more reliable", which the page measures on its one dataset and finds
+    correct there.
+
+data:
+  tier: 2
+  method: >
+    Two transcriptions, no digitising and no figure extraction. (1) The seven
+    c_S-versus-time pairs printed in Exercise 9.15 of Rawlings & Ekerdt,
+    "Chemical Reactor Analysis and Design Fundamentals", 2nd edn (2025 printing)
+    - the page's only empirical input. (2) The FIRST FIFTEEN of the eighteen
+    numbered equations of Froment section 1.5.1 - (1.5.1-1) to (1.5.1-15), the
+    ones in scope; (1.5.1-16) to (1.5.1-18) are competitive inhibition and are
+    out - plus the nine prose claims the page tests or reports, quoted verbatim.
+  status: complete
+  provenance_of_the_measurements: UNSTATED_BY_THE_SOURCE
+  provenance_note: >
+    READ THIS BEFORE REUSING THE CSV. Exercise 9.15 introduces its table with
+    one sentence - "The following measurements of cS versus time were taken in
+    your laboratory." - and gives no citation, no enzyme, no enzyme loading, no
+    temperature, no pH and no solvent. The whole exercise was read and the
+    book's bibliography searched; nothing is attached to these numbers. The tier
+    2 above therefore describes the ACQUISITION ROUTE (a numeric table read off
+    a printed page) and is NOT a claim that these are measurements. What the
+    page does establish, by computation: the table is not an exactly-rounded
+    evaluation of the model it is set to fit (best-fit maximum residual
+    6.93e-3 cmol/L, 13.87 times the 5e-4 print resolution), and the fitted
+    constants sit within 0.61 % of the round values K = 2 L/cmol and
+    K_M = 0.5 cmol/L, with pinning K at exactly 2 costing 0.108 % in sum of
+    squares - consistent with, but not proof of, a synthetic table. NOTHING THE
+    PAGE CONCLUDES DEPENDS ON THE TABLE: the degeneracy, the eps scaling and
+    both printed defects are properties of the printed equations.
+
+fit_or_test: >
+  BOTH KINDS ARE PRESENT AND ARE KEPT APART EVERYWHERE.
+  FITTED: r_m = 0.162583 cmol/(L min) and K_M = 0.503055 cmol/L (equivalently
+  Exercise 9.15's k = 0.323192 1/min and K = 1.987853 L/cmol) were fitted to the
+  same seven points the agreement is then reported against, so THAT AGREEMENT IS
+  A GOODNESS OF FIT AND NOT A TEST. Three one-parameter null baselines are
+  computed beside it and each is itself best-fitted: zero order 5.34e-2
+  (13.29x), first order 3.90e-2 (9.71x), second order 1.05e-1 (26.04x) against
+  the two-parameter fit's 4.02e-3 RMS. That ratio is the only empirical claim
+  the page makes, and it is a claim about SATURATION, not about a mechanism.
+  STRUCTURAL: the ten symbolic identities closing eqs. (1.5.1-2) to (1.5.1-15),
+  the symbolic proof that the steady-state rate law does not contain rho, and
+  the exact linearity of 1/r in 1/C_A. These are proofs. They cannot fail for
+  the right reason, they are labelled structural in the coverage map, and five
+  of them sit below CI's ABS_FLOOR of 1e-12 with a named above-floor companion
+  each - including the numerical degeneracy check and its float spread over
+  random draws, which are reported as measurements OF an identity, not as the
+  identity.
+  COMPUTED PROPERTIES OF THE PRINTED MODEL: everything else - the cost of each
+  reduction against the full mass-action solution, the group the
+  quasi-steady-state error scales with, and the enzyme loading a discriminating
+  experiment would need.
+  DIRECTION OF THE DISCRIMINATION CLAIM: the misfit of a wrong-rho model to
+  right-rho data is obtained by an optimiser, which returns an UPPER BOUND on a
+  minimum. So "cannot be separated" is the safe direction, and the reported
+  eps* is if anything an underestimate of what an experiment needs. A
+  ROBUSTNESS ROW narrows the search and must not move it much; it does not -
+  its relative move is 5.7e-6, which is 1.2x the 4.61e-6 that two brentq
+  root-finds at this page's xtol can resolve, i.e. of the ORDER of the
+  tolerance rather than provably below it, and about five orders below every
+  genuine mover of the same metric. That last comparison is what the notebook
+  asserts, because it is the one that makes the row not-coverage. The row is
+  labelled a robustness row and is NOT counted as coverage for the metric; the
+  metric's coverage comes from three rows that do move it, one of which
+  perturbs the COMPUTATION (the ODE solve under the root-find loosened to
+  rtol 1e-6) rather than a declared convention, and so is the one that could
+  expose a systematically wrong baseline.
+
+validation:
+  - "HEADLINE, AND IT IS EXACT - AND THE EXACTNESS IS ALGEBRAIC, NOT NUMERICAL. Substituting k_2 = r_m/C_E0, k_-1 = k_2/rho, k_1 = (k_-1+k_2)/K_M into eq. (1.5.1-13) returns eq. (1.5.1-15) identically and d r/d rho = 0, in sympy, in the notebook's symbolic cell under 'The published model' (metric rho_degeneracy_symbolic_residual). That is the finding. The numerical sweep is a check on the code: with r_m and K_M held fixed, the rate law evaluated from the elementary constants is identical to double precision across eight decades of rho and four decades of C_A - max relative difference 0.0 on the nine swept rho at C_E0 = 1e-3, and at most 4.44e-16 over 2000 seeded random (rho, C_E0) draws, where the float round trips (k_-1+k_2)/k_1 == K_M and k_2 C_E0 == r_m are no longer exact. THE EXACT 0.0 IS A PROPERTY OF THE VALUES SWEPT, NOT OF THE ALGEBRA, and both numbers are reported for that reason. Meanwhile K_M(Briggs-Haldane)/K_M(Michaelis-Menten) = 1 + rho runs from 1.0001 to 1e4 over the same sweep. No rate-versus-substrate dataset of any size or precision separates the two derivations."
+  - "SECOND HEADLINE, AND IT IS THE CASE'S OWN QUESTION: a batch transient does see rho - the maximum spread of C_A(t) across the same eight decades is 0.9773 eps - but that maximum sits INSIDE THE INDUCTION LAYER, peaking at t = 2.011e-7 min, because the layer duration is 1/[k_1(c_A0+K_M)] and runs from 2.09e-8 min at rho = 1e-4 to 2.09e-4 min at rho = 1e4. A uniform 181-point scan of the 18-minute run reads that maximum 66.3 % low, so it is root-found on a combined logarithmic and uniform scan. Over the window an experiment sampled like the printed table can see (t >= 3 min) only 0.242 eps survives as a persistent offset; root-found against the 5e-4 cmol/L print resolution that needs eps = 2.069e-3, and with r_m, K_M and C_E0 all free to compensate it needs eps = 5.798e-2. At THAT loading the quasi-steady-state approximation is itself off by 0.04443 cmol/L = 88.9 times the resolution the discrimination is read at (that is against the FREE substrate C_A; against the total substrate C_A + C_A-E, the other defensible convention, 38.8 times - both far above 1, which is the claim)."
+  - "THE PRICE OF COMPENSATION, MEASURED LIKE FOR LIKE - and this is a correction to an earlier draft of this page, which quoted the raw ratio 28.0 as though the whole of it were compensation. The two published epsilons are NOT the same measurement: eps = 2.069e-3 is a MAXIMUM over t in [3, 18] min of the rho-spread with everything pinned, while eps = 5.798e-2 is an RMS over a 25-point grid starting at t = 0 of a REFITTED misfit. The same RMS on the same grid with nothing free to compensate gives eps = 3.185e-3. So of the raw 28.0, a factor 1.539 is the change of statistic and window and a factor 18.20 is the price of letting r_m, K_M and C_E0 compensate. 18.20 is what this page means by the cost of compensation; all three quantities are separate metrics, each stating its own statistic, window and grid."
+  - "on the actual seven points: pinning rho anywhere in [1e-4, 1e4] and re-optimising r_m, K_M and C_E0 changes the achievable sum of squares by 8.58 %, monotonically, with no interior optimum; and the four-parameter mass-action model against the two-parameter Michaelis-Menten fit gives F = 1.9009 against F(2, 3) = 9.5521 at 95 %, so the two elementary-step parameters are not justified"
+  - "ten symbolic identities close the printed chain: (1.5.1-4) from (2) and (3); (1.5.1-7) from (5), (6) and the enzyme balance; (1.5.1-8) from (7); (1.5.1-10) from (1.5.1-9); (1.5.1-11) from (2) and (10); (1.5.1-12) from the balance and (10); (1.5.1-13)+(1.5.1-14) from (11) and (12); (1.5.1-8) as the k_2 -> 0 limit of (1.5.1-13); the half-max property of (1.5.1-15); and the exact linearity of 1/r in 1/C_A"
+  - "conservation in the pymrm mass-action marcher, which integrates all four fields independently so a wrong stoichiometric row breaks it: enzyme balance 1.21e-17, substrate balance 1.67e-15, and a break row that doubles the P row moves the second to O(1)"
+  - "time-step refinement with an observed order: 0.9980 over four halvings (backward Euler is first order), Richardson extrapolation of the two finest agreeing with scipy Radau to 4.19e-7, and LSODA - the sweep solver - agreeing with Radau to 3.85e-11"
+  - "TWO SECOND, INDEPENDENT COMPUTATIONS OF HEADLINES. (i) The fit re-done through the pymrm backward-Euler marcher with Richardson extrapolation instead of the Lambert W closed form: k and K agree to 5.9e-8 and 5.6e-9 relative, and the two share no line of code, so an algebra error or a wrong Lambert branch would show. (ii) rho* from an analytic sensitivity of the closed-form solution to K_M - ds/dK_M = s ln(s_0/s)/(s+K_M), its maximum ROOT-FOUND at s = 0.228461 - giving 2.1934e-3 against the nonlinear root-find's 2.1951e-3, 0.080 % apart, with no ODE solver and no mass-action model in the second route"
+  - "a defect-injection table of 52 rows: 51 defect injections, all 51 of which move their metric by more than MOVE_TOL = 1e-6 relative, covering 42 of the 53 reported metrics, plus ONE ROBUSTNESS ROW - written to show that a metric does NOT move - which is labelled as such and is NOT counted as coverage for that metric anywhere. The coverage map prints, for every covered metric, how hard its strongest row hits it, because a row that clears a threshold by an ulp is not evidence: an earlier draft of this page had the compensated eps* 'covered' by that robustness row alone. The eleven metrics with no mover are named individually as structural, definitional or companion values, and BOTH generic not-coverage labels - the UNCOVERED fallback and the 'robustness rows only' branch - are asserted never to be used. The bar those judgements are made against is DERIVED rather than chosen: ROOT_FIND_RES = 2*ln(10)*XTOL_LOG10 = 4.61e-6, the resolution of a difference between two brentq root-finds at this page's own xtol of 1e-6 in log10. An earlier draft rounded it up to 1e-5, which is 2.2x the arithmetic and made the robustness row's 5.7e-6 move (1.2x the real bound, so of the ORDER of the tolerance rather than provably inside it) read as 'not resolved at all'"
+  - "every number quoted in prose, in this file and in README.md is checked against the live computation by an assertion cell (68 checks); the page fails to execute if any drifts. That includes the four values that exist only as break-table entries (8.757e-2, 6.954e-2, 9.622e-3 and the robustness row's 5.7e-6), which a verification found outside the net while the net's own claim said it covered everything: they are now looked up from the executed table by (row, metric) rather than retyped"
+
+caveats:
+  - "NEITHER ORIGIN WAS CONSULTED. Michaelis & Menten (1913) and Briggs & Haldane (1925) are cited as origins and were not read; neither is on disk. Everything the page says about them is bounded by the two clauses the book prints - p. 24 naming eq. (1.5.1-8) and K_M = k_-1/k_1, and p. 24 introducing the second route as 'formulated by Briggs and Haldane' - plus Problem 2.4's compound name 'The Michaelis-Menten (Briggs-Haldane) mechanism'. No sentence of the form 'Michaelis and Menten showed/assumed/argued' appears anywhere on the page, in this file, or in README.md. That sweep was done deliberately: it is the A3.2 attribution-drift defect class."
+  - "THE PAGE DOES NOT VALIDATE 'THE MICHAELIS-MENTEN MECHANISM' AND SAYS SO IN ITS OPENING. What the data support is that a two-parameter saturating rate law describes one seven-point batch run 9.71 times better than the best first-order alternative. That is compatible with every mechanism in the two-parameter family this page constructs, which contains both of the book's derivations as end members."
+  - "PRINTED DEFECT 1, REPORTED NOT REPAIRED (p. 24, verbatim): 'At high reactant concentration (CA much larger than KM), the rate levels off and becomes zero order with respect to the reactant, rA = k1CE0.' [sic] Settled three ways from the book itself: the limit of its own eq. (1.5.1-8) is k_2 C_E^0 (sympy); its eq. (1.5.1-15) introduces r_m = k_2 C_E^0 as 'the maximum possible rate'; and its Problem 2.4(b) on p. 144 instructs the student to show exactly that limit. The printed expression is also dimensionally impossible - k_1 is second order, so k_1 C_E^0 has units of 1/s where a rate needs mol/(m3 s). Read at digit scale on a 300 ppi crop: the subscript is a 1, upright, with no minus sign."
+  - "PRINTED DEFECT 2, REPORTED NOT REPAIRED (p. 25, verbatim): 'One example is the Lineweaver-Burke plot of 1/r versus CA.' [sic] 1/r is exactly affine in 1/C_A (d2(1/r)/du2 = 0 identically in u = 1/C_A, and 9.67e-16 off a straight line numerically, on the same 400-point geomspace(0.05, 1, 400) grid the metrics above are read on - not the wider 0.02835-1.0 range the figure plots, where the same check gives 1.21e-15) and strictly convex in C_A, d2(1/r)/dC_A2 = 2 K_M/(r_m C_A3) > 0. THE CONVEXITY IS WHAT SETTLES THE DEFECT AND IT IS CONVENTION-FREE, and so is the SIZE once the right line is named. The statistic is a MAXIMUM, so the line that minimises it is the CHEBYSHEV (minimax) line: no straight line comes closer than 31.72 % of the curve's own range over 0.05-1.0 cmol/L (the floor is 31.7256 %, rounded down). That floor is closed form for a convex A/C + B (chord slope, tangency at sqrt(ab), error (g(a)-g(c))/2), it is certified by exact three-point equioscillation at C = 0.05, 0.2236068, 1.0 which the notebook asserts, and it needs no weighting convention at all - the range normalisation cancels r_m and K_M exactly, leaving a pure property of the interval. The distance from the best LEAST-SQUARES line is larger and IS a convention, reported as one: 50.32 % of the range if the interval is weighted logarithmically (the page's convention, matching how it samples and plots), 66.88 % if it is weighted uniformly. All three are computed in closed form - weighted least squares by exact moments, every extremum root-found - so none is a grid artefact; the 400-point geomspace grid an earlier draft used returns 0.5024 and is not converged at four digits, and a break row keeps that value visible. UNTIL A VERIFICATION CAUGHT IT, the README bullet, the figure legend and the straightness_exact docstring all called the least-squares distance 'the best straight line', which told a reader nothing straight got closer than half the range when in fact a straight line comes within 31.7 %; that overclaim is now itself a break row, injecting 0.5032 into the 0.3173 floor. Corroborated independently by Levenspiel p. 615 at 600 ppi native. Froment prints the surname 'Burke'; LEVENSPIEL PRINTS NO SURNAME AT ALL - his line reads '1/(-r_A) versus 1/C_A ... the Lineweaver plot', and the string 'Burk' does not occur anywhere in that 684-page file. Nothing is repaired in the transcription CSV."
+  - "A DEFECT THAT IS NOT ONE, recorded because it is the failure mode the repository warns about: extracting eq. (1.5.1-17) on p. 26 from this clean born-digital text layer yields 'C_A-E = (k_3 C_I/k_-3 + 1) C_E', which is wrong. The 300 ppi render shows the printed equation is '= C_A-E + (k_3 C_I/k_-3 + 1) C_E' and is correct; the extractor dropped the leading term. A clean text layer is still not a page."
+  - "THE SOURCE SECTION PRINTS NO NUMBERS AT ALL - no worked example, no table, no figure in section 1.5.1. The empirical half of the page therefore comes from a different book, and its provenance is unstated (see data.provenance_note). Every number on the page is fitted, structural, or a computed property of the printed equations, and each is labelled."
+  - "C_E0 IS NOT PRINTED IN EXERCISE 9.15. Since r_m = k_2 C_E^0, no fit of that table can separate k_2 from the enzyme loading; and eps = C_E0/(c_A0+K_M), the group that decides whether the quasi-steady state holds for that particular run, cannot be evaluated for it at all. Every eps on the page is a property of a DESIGNED experiment, never of Exercise 9.15's."
+  - "eps = C_E0/(c_A0 + K_M) IS DERIVED HERE, NOT TAKEN FROM ANYWHERE, and is established rather than asserted: at fixed C_E0/c_A0 = 1e-3 and K_M swept over three decades, C_E0/c_A0 mispredicts the error by a factor 95.0 while C_E0/(c_A0+K_M) holds it inside a factor 1.91. Froment's printed comparison is with the substrate alone, which is the K_M << c_A0 corner of eps and is right there - the coefficient is 0.9541 at K_M = 0.05 cmol/L. The K_M term is what this page adds, and it is presented as this page's result, not as a correction to the book."
+  - "rho* = 2.1951e-3 is what 'the decomposition of the complex is the rate determining step' has to mean numerically FOR THIS SUBSTRATE LOADING AND THIS RESOLUTION, and is reported as such: it is the rho at which route 1, given the true elementary constants, mispredicts C_A(t) by the printed table's 5e-4 cmol/L. It is a property of the threshold, and a break row doubling the threshold moves it."
+  - "eps* = 5.798e-2 is likewise a property of the resolution it is read at, of the 25-point sampling grid the misfit is computed on, and of the rho interval [1e-4, 1e4]. All three are stated on the page and all three now have break rows: the resolution doubled (eps* -> 8.757e-2), the grid coarsened to 13 points (-> 6.954e-2), and, for its like-for-like sibling, the rho interval narrowed to [0.5, 2] (3.185e-3 -> 9.622e-3). Those three vary a declared CONVENTION, so they establish that the number is a property of the conventions it is quoted with - but they would move by the same amounts even if discriminate() itself were systematically wrong. A fourth row therefore varies the COMPUTATION instead, loosening the ODE solve underneath the root-find to rtol 1e-6, which is the only class of row that can expose a wrong baseline; its move is also the convergence evidence for the quoted eps*, solved at rtol 1e-11. An earlier draft had NO row that moved this metric - its only entry was the robustness row - which is the defect class this page is now explicit about."
+  - "THE F TEST'S NESTING IS NON-REGULAR, and the page says so. The reduced model is the C_E0 -> 0 limit of the full one at fixed r_m and K_M, so the models are nested; but the null sits on the boundary C_E0 = 0 and rho is unidentified under it, so F(2, 3) is an approximation to the null distribution rather than the exact one. The direction is safe: a boundary null makes the true null distribution stochastically no larger, so the real p-value is at least the tabulated 0.29 and 'the two extra parameters are not justified' holds a fortiori."
+  - "SCOPE. Competitive inhibition, eqs. (1.5.1-16) to (1.5.1-18), is out - a different case. All of section 1.5.2 (Monod, Graef-Andrews, Williams' structured model) is out and belongs to J4.9/J4.8. Product formation is taken as irreversible, as eq. (1.5.1-1) prints it; the book's own Problem 2.4 in Chapter 2 derives a REVERSIBLE form with a [P]/K term, which is a larger model and is not on this page."
+  - "WHAT PYMRM ADDS HERE IS SMALL AND THE PAGE SAYS SO. A well-mixed batch of four species is 0-D; solve_ivp would have integrated it, and does, as the reference. What pymrm buys is a Jacobian assembled the way the rest of the gallery assembles it, so the rate law transplants unchanged into J4.7 or B1.1, and the NumJac((1, n_c)) discipline that keeps the block pointwise."
+
+agreement: >
+  Three kinds, kept apart. STRUCTURE: ten symbolic identities close eqs.
+  (1.5.1-2) to (1.5.1-15) with no nonzero residual, and the steady-state rate
+  law is PROVED independent of k_2/k_-1 in sympy (and is identical to double
+  precision across eight decades of it, to 4.4e-16 over random draws). FIT: r_m = 0.162583
+  cmol/(L min), K_M = 0.503055 cmol/L at 4.02e-3 RMS on the seven points they
+  were fitted to, against 3.90e-2 for the best one-parameter first-order null;
+  adding the two elementary-step parameters gives F = 1.90 against F_crit,95 =
+  9.55. NUMERICS: backward Euler at observed order 0.998, Richardson vs Radau
+  4.19e-7, two conservation balances at 1.2e-17 and 1.7e-15, the fit reproduced
+  through a second, independent forward model to 5.9e-8, and rho* reproduced
+  through an analytic sensitivity to 0.080 %. Plus two printed defects settled
+  from the book's own equations and reported without repair.
+
+related: [J4.7, J4.8, J4.9, B1.1, C1.1, B2.3, C1.2]
