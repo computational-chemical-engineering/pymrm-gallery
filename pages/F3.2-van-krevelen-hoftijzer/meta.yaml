@@ -1,0 +1,86 @@
+id: F3.2
+slug: van-krevelen-hoftijzer
+title: "Van Krevelen–Hoftijzer: the chart replaced by a solve, and the assumption behind it measured"
+section: F
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-liquid]
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+pymrm_min_version: "2.3"
+runtime_seconds: 230
+datasets:
+  - vkh-printed-claims
+  - enhancement-chart-labels
+validation:
+  - the film equations solved twice, finite volumes against adaptive collocation
+  - the REFERENCE itself checked, not just one grid of it - the Richardson
+    extrapolation against collocation (4.37e-8) and against a finer
+    extrapolation (3.84e-8)
+  - the implicit relation solved twice, for F_A and for gamma'
+  - grid refinement at (10, 4) on the graded AND the uniform grid, observed
+    order 2.0000, so what grading costs is measured and not assumed away
+  - the first integral of the two film equations, q beta(0) = 1 + q - F_A,
+    which no discretisation is told about
+  - the two limits (6.3.5-1) must reproduce, q -> infinity and gamma -> infinity
+  - F3.1's own definition of the same error recomputed and reconciled against its
+    stored agreement.json, and F3.1's own first-order check reproduced on its own
+    grid to 6.3e-15
+adds: >
+  The reference solution the enhancement chart exists to avoid, and therefore a
+  price on three things that have been printed and reprinted for decades. THE
+  BASELINE IS NOT A SINGLE SOLVE: it is a Richardson extrapolation of the same
+  graded film on n_x = 400 and 800, because a single graded solve is
+  grid-limited exactly where the headline sits, by less than this page's own
+  pymrm-versus-collocation agreement. The approximation's worst error over the
+  whole printed chart is -2.7955 % at gamma = 4.7279, q = 1.5217, root-found in
+  both directions rather than sampled, against the "within 10 percent" the E1.1
+  target prints for it - a margin of 3.5772x. The assumption is measured rather
+  than repeated in BOTH of the book's wordings of it - weak depletion at the
+  interface (book p. 335) and constancy of B's concentration close to the
+  interface (book p. 340) - and NEITHER orders the error: at the worst point B
+  at the interface is at 0.1647 of bulk and the rate-weighted mean of beta is
+  2.115 times its interfacial value, while where B is consumed completely, with
+  constancy violated by orders of magnitude, the approximation is exact to
+  -0.00037 %. Froment's own sentence is qualified to moderately fast reactions
+  and, measured, that qualified claim stands. And one of Levenspiel's printed
+  asymptotic corrections turns out to expand the approximation rather than the
+  equations it approximates - algebraically so: E_i^2(E_i-1)/M_H^2 IS the
+  large-gamma asymptote of (6.3.5-1), which it tracks to 0.9953 at M_H = 400,
+  while the film's own deficit equals q beta(0) exactly, by the first integral,
+  and is therefore exponentially small. At M_H = 800 it is 44.24 times too
+  large, on a deficit two independent methods agree on to 8.61e-5.
+  What the graded grid is worth is measured and SPLIT rather than lumped: on
+  F3.1's own pseudo-first-order check grading at the same n_x is worth 124.8x
+  and the 400 -> 800 refinement a further 7.163x, which multiply to the 893.9x
+  against the 6.337e-3 loaded from F3.1's agreement.json. At the moderate gamma
+  the headline lives at, the same grading COSTS a factor 248.7.
+agreement: >
+  This is provenance tier 6: BOTH SIDES OF EVERY COMPARISON ARE EQUATIONS. The
+  numbers report how far an approximation departs from the film equations it
+  approximates, never how far a model is from a measurement. The reported
+  baseline - the Richardson extrapolation - agrees with scipy's collocation to
+  4.37e-8 over 20 points of the chart and with a finer extrapolation of itself
+  to 3.84e-8; the single n_x = 800 graded solve it is built from agrees only to
+  5.99e-6, which is why it is not the baseline. The graded discretisation
+  converges at order 2.0000; the film's first integral is satisfied to 6.4e-10;
+  the implicit relation solved for F_A and solved for gamma' agree to 8.0e-15,
+  which is below check_agreement.py's ABS_FLOOR and is named as such on the page.
+caveats: >
+  THE 1948 ORIGIN WAS NOT CONSULTED. Van Krevelen & Hoftijzer, Rec. Trav. Chim.
+  Pays-Bas 67, 563 (1948), is not on disk; every equation is transcribed from
+  Froment, De Wilde & Bischoff (2011) sections 6.3.2 and 6.3.5, read on 300 ppi
+  renders because that file's equations lose every operator to Private-Use-Area
+  glyphs under text extraction. The issue number, end page and DOI this page
+  prints for the 1948 origin come from a CROSSREF RECORD LOOKUP, not from any
+  document on disk - both books print only "67, 563 (1948)". Froment's
+  equations and prose are vector text, but its Fig. 6.3.2-1 is an embedded
+  148 ppi raster, so the curve labels were re-read at that native resolution
+  (unchanged). Levenspiel (1999) Ch. 23 is used only as an independent check on
+  the constants and to reconcile the two notations; the page does not
+  adjudicate between the books. Nothing here is evidence about what the 1948
+  paper says, only about the equation two monographs attribute to it, and
+  nothing here is evidence about a real absorber.

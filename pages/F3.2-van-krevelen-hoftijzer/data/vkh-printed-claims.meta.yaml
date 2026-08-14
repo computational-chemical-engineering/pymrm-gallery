@@ -1,0 +1,206 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: vkh-printed-claims
+title: >
+  The numeric constants, regime thresholds, accuracy claim and axis ends that
+  the two monographs print around the Van Krevelen-Hoftijzer enhancement
+  factor - Froment, De Wilde & Bischoff (2011) sections 6.3.2, 6.3.3 and 6.3.5,
+  and Levenspiel (1999) Fig. 23.4 and the Chapter 23 reference list.  Every
+  cell was read on a render at the file's native resolution.
+
+READ_THIS_FIRST: >
+  THIS IS NOT DATA.  Nothing in this file was measured.  Every row is a number
+  or a sentence PRINTED IN A BOOK, transcribed so that the notebook can test it
+  instead of retyping it.  The page's provenance tier is 6 - analytical - and
+  the "agreement" it reports is between an approximation and the equations it
+  approximates, never between a model and an experiment.
+  THE ORIGIN WAS NOT CONSULTED.  Van Krevelen, D. W. & Hoftijzer, P. J.,
+  "Kinetics of gas-liquid reactions. Part I. General theory", Recueil des
+  Travaux Chimiques des Pays-Bas 67, 563 (1948), is not on disk and was not
+  read.  Both books restate the result with attribution; the equation this page
+  solves is transcribed from Froment (6.3.2-11) and (6.3.5-1), and Levenspiel
+  is used only as an independent check on the constants.
+  THE FROMENT FILE'S EQUATIONS DO NOT SURVIVE TEXT EXTRACTION.  Every
+  Symbol-font operator extracts as an unmappable Private-Use-Area glyph
+  (U+F02D minus, U+F03D equals, U+F02B plus), so an extracted equation looks
+  complete and has no operators at all.  The extraction of (6.3.5-1) is
+  " '   1  FA  1" followed by
+  "b D A C Ai / a DB C Bb" - seven Private-Use characters, and the square root
+  has no character at all.  Nothing here came off that text layer.  Equation (6.3.5-1) and Porter's equation were read on 300 ppi
+  crops enlarged 2x and 3x.
+
+source:
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  container: >
+    "Chemical Reactor Analysis and Design", 3rd edition, John Wiley & Sons
+    (2011), ISBN 978-0-470-56541-4, Chapter 6 "Gas-Liquid Reactions",
+    sections 6.3.2 (book pp. 328-332), 6.3.3 (book p. 335) and 6.3.5
+    (book pp. 340-341), reference list book p. 365
+  doi: null
+  second_source: >
+    Levenspiel, O., "Chemical Reaction Engineering", 3rd edition, John Wiley &
+    Sons (1999), ISBN 0-471-25424-X, Chapter 23 "Fluid-Fluid Reactions:
+    Kinetics", Fig. 23.4 (book p. 530) and the chapter reference list (book
+    p. 537).  Rows whose `source` column reads `levenspiel` come from this
+    book; rows reading `froment` come from the one above.
+  origin_cited_but_not_consulted: >
+    Van Krevelen, D. W. & Hoftijzer, P. J., Rec. Trav. Chim. Pays-Bas 67, 563
+    (1948), doi:10.1002/recl.19480670708.  NOT on disk, NOT read.
+
+acquisition:
+  method: transcription
+  detail: >
+    Froment: born-digital TEXT AND EQUATIONS, rendered with
+    `pdftoppm -r 300 -png` and the equations cropped and enlarged 2x by Lanczos.
+    CORRECTED 2026-08-14, and the earlier wording here was wrong: this file is
+    NOT free of raster images.  An earlier version of this sidecar said "no
+    raster images at all (`pdfimages -list` returns nothing for the pages
+    used)".  `pdfimages -list -f 373 -l 374` returns TWO embedded greyscale
+    JPEGs, 536x771 at 148 ppi on PDF p. 373 and 241x777 at 149 ppi on PDF
+    p. 374 - the first of them is Fig. 6.3.2-1 itself, i.e. the source of the
+    ten curve labels, the four axis ends and the right-hand axis title.  A
+    300 ppi page render of that figure is therefore a 2x interpolation of a
+    148 ppi raster.  The claim IS correct for every equation and every sentence
+    used here: PDF pp. 370, 371, 372, 377, 382, 383 and 407 - which carry
+    (6.3.2-11), (6.3.3-10), (6.3.5-1), the 10 percent claim, both wordings of
+    the assumption, Porter's equation and the reference list - contain no
+    raster at all and are vector text.  THE FIGURE DATA WAS RE-READ AT NATIVE
+    RESOLUTION: the raster was extracted with `pdfimages -f 373 -l 373 -png`
+    and enlarged 4x by Lanczos, and the transcription is unchanged - labels 1,
+    2, 5, 10, 20, 50, 100, 200, 500, 1000; gamma axis 0.5 to 1000; F_A axis 1
+    to 1000; axis titles gamma = sqrt(kD_A)/k_L and aD_B C_Bb/(bD_A C_Ai).
+    THE FOUR AXIS-END ROWS IN THIS FILE - froment_gamma_axis_lo/hi and
+    froment_FA_axis_lo/hi - come from that raster and are covered by that
+    re-read; every other Froment row in this file is vector text.
+    Book page = PDF page - 42,
+    confirmed on the printed running heads (PDF 370 reads "328 CHAPTER 6:
+    GAS-LIQUID REACTIONS", PDF 373 reads "6.3 TWO-FILM THEORY  331", PDF 382
+    reads "340 CHAPTER 6: GAS-LIQUID REACTIONS").
+    Levenspiel: JBIG2 bilevel scan at 600x600 ppi (`pdfimages -list`), rendered
+    with `pdftoppm -r 600 -png` and cropped.  Book page = PDF page - 16,
+    confirmed on the printed running heads (PDF 546 reads "530  Chapter 23
+    Fluid-Fluid Reactions: Kinetics", PDF 553 reads "Problems  537").
+  ppi_native: 300
+  ppi_native_note: >
+    Froment's equations and prose are VECTOR, so "native ppi" is not a
+    meaningful quantity for them and 300 is the page-render resolution used.
+    The one exception is Fig. 6.3.2-1 on PDF p. 373, which is a raster with a
+    real native resolution of 148 ppi; the four axis-end rows come from it and
+    were re-read there.
+  ppi_native_figure: 148
+  ppi_native_levenspiel: 600
+  rendered_at_ppi: 300
+  rendered_at_ppi_levenspiel: 600
+
+printed_defect_reported_not_repaired:
+  levenspiel_surname_has_a_terminal_s: >
+    LEVENSPIEL SPELLS THE FIRST AUTHOR "van Krevelens", WITH A TERMINAL s, IN
+    BOTH PLACES HE NAMES HIM.  Verbatim, from the caption of Fig. 23.4 on book
+    p. 530, read on a 600 ppi render: "modified from the numerical solution of
+    van Krevelens and Hoftijzer (1954)."  And from the Chapter 23 reference
+    list on book p. 537, same render: "van Krevelens, D. W., and Hoftijzer,
+    P. J., Rec. Trav. Chim., 67, 563 (1948); Trans. I. Chem. E., 32, 5360
+    (1954)."
+    IT IS SETTLED AGAINST ANOTHER DOCUMENT, NOT AGAINST MEMORY.  The same 1948
+    paper - same journal, same volume 67, same page 563 - is cited in Froment,
+    De Wilde & Bischoff on book p. 365 as "Van Krevelen, D.W., and Hoftijzer,
+    P.J., Rec. Trav. Chim. Pays-Bas, 67, 563 (1948)." and named in their
+    running text on book p. 331 as "Van Krevelen and Hoftijzer [1948]", both
+    read on 300 ppi renders.  The catalogue row for this case carries the same
+    spelling.  So two documents on disk cite one paper and spell its first
+    author two ways, and only one of them adds an s.
+    REPORTED, NOT REPAIRED.  This file carries both spellings verbatim; the
+    page names Van Krevelen without the s in its own prose, because that is the
+    spelling the E1.1 target and the catalogue use, and says so.
+  levenspiel_1954_page_number_prints_as_5360: >
+    NOT FILED AS A DEFECT, BECAUSE IT CANNOT BE CHECKED HERE.  The 1954 half of
+    Levenspiel's reference-list entry prints "Trans. I. Chem. E., 32, 5360
+    (1954)".  The leading glyph was read at 3x on the 600 ppi render and is the
+    same digit-5 shape as the 5 of "563" three words earlier on the same line,
+    so the page really does print 5360 and this is not an OCR artefact - which
+    is what this repository's case file assumed before the render was made.
+    WHETHER 5360 IS ITSELF A MISPRINT CANNOT BE SETTLED FROM ANY DOCUMENT ON
+    DISK: the 1954 Trans. Instn Chem. Engrs volume is not here, neither is the
+    1948 origin, and nothing in either book constrains that page number.  The
+    number is transcribed as printed and no inference is drawn from it.
+  no_other_defect_found: >
+    Every other cell in this file was read on a crop at digit scale and is
+    clean: the "10 percent" of book p. 340, the "gamma > 3" and "gamma < 0.3"
+    of book p. 331, the "gamma >= 2" of book p. 340, and all seven Levenspiel
+    constants in the two annotation boxes of Fig. 23.4.
+
+columns:
+  claim_id:
+    units: "-"
+    description: The key the notebook looks the row up by; never retyped in a cell.
+  source:
+    units: "-"
+    description: >
+      `froment` = Froment, De Wilde & Bischoff (2011), the E1.1 target;
+      `levenspiel` = Levenspiel (1999), used on this page only as an
+      independent check on constants and to reconcile the two notations.
+  book_page:
+    units: "-"
+    description: The page number printed on the page itself.
+  pdf_page:
+    units: "-"
+    description: >
+      The 1-based page index inside the PDF, so that any reader can re-render
+      exactly what was read.  Froment: book = pdf - 42.  Levenspiel: book =
+      pdf - 16.
+  quantity:
+    units: "-"
+    description: >
+      Which symbol the value belongs to, in the source's own notation.  Empty
+      for the four spelling rows, which carry no number.
+  value:
+    units: "-"
+    description: >
+      The printed number.  Empty for the spelling rows.  All of these are
+      dimensionless: gamma, M_H, E, E_i and F_A are all dimensionless groups.
+  verbatim:
+    units: "-"
+    description: >
+      The sentence or label as printed, with the source's own wording.  Greek
+      letters are spelled out and superscripts written with ^ because the CSV
+      is ASCII; no digit, sign or word is otherwise altered.
+  used_for:
+    units: "-"
+    description: What the notebook does with the row, or that it does nothing.
+
+origin_bibliographic_detail_is_a_lookup: >
+  NEITHER BOOK ON DISK PRINTS MORE THAN "67, 563 (1948)".  The issue number
+  (7), the end page (586) and the DOI (10.1002/recl.19480670708) that this page
+  and its README carry therefore trace to NO DOCUMENT IN THIS REPOSITORY.  They
+  come from a Crossref record lookup on that DOI (`api.crossref.org/works/...`,
+  checked 2026-08-14), which returns: title "Kinetics of gas-liquid reactions
+  part I. General theory", authors D. W. van Krevelen and P. J. Hoftijzer,
+  container "Recueil des Travaux Chimiques des Pays-Bas", volume 67, issue 7,
+  pages 563-586, published 1948.  A metadata lookup is not a reading of the
+  article and the page says so where it prints them.  Note that Crossref gives
+  a THIRD capitalisation of the surname, "van Krevelen" with a lower-case v,
+  which is neither Froment's "Van Krevelen" nor Levenspiel's "van Krevelens";
+  it is recorded here and no inference is drawn from it.
+
+rows: 25
+transcription_checks:
+  internal_constraint_on_the_axis_ends: >
+    The four axis-end rows are constrained by the charts they come from: both
+    charts are log-log with decade gridlines, and the printed end labels are
+    powers of ten (and one 0.5) sitting on those gridlines.  A mis-read end
+    would not sit on a gridline.
+  external_constraint_on_the_two_thresholds: >
+    Levenspiel prints the SAME factor 5 three times in Fig. 23.4 - "E_i > 5
+    M_H", "E_i < M_H/5" and the band "5 E_i > M_H > E_i/5" - and the three are
+    mutually consistent only for that one value, so the number is printed
+    redundantly and checks itself.
+  what_has_no_second_printing: >
+    The "10 percent" of Froment book p. 340 appears once in the book and is
+    constrained by nothing inside it.  The page therefore does not treat it as
+    exact: it measures the worst error the equation actually makes and reports
+    the margin against the printed figure.
+
+license: >
+  Transcription of numeric constants and short quoted sentences from two
+  copyrighted monographs, for the purpose of testing the equations they state.
+  No page image is reproduced and no PDF is committed.

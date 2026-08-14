@@ -5,7 +5,8 @@ catalog_reference: Rec. Trav. Chim. 67 (1948)
 priority: P1
 tier: T0
 structures: S3
-status: unclaimed
+status: published
+page: pages/F3.2-van-krevelen-hoftijzer/
 reference:
   authors:
   - Van Krevelen, D. W.
@@ -27,8 +28,86 @@ paper:
     record: Froment, De Wilde & Bischoff, "Chemical Reactor Analysis and Design", 3rd edition, John
     Wiley & Sons 2011, ISBN 978-0-470-56541-4. Born-digital, clean text layer.'
 blocker: null
-notes: null
-updated: '2026-08-06'
+notes: 'BUILT 2026-08-14.  Three corrections to this file, all made on renders and none of
+  them changing the case:
+  (1) THE E1.1 MATERIAL IS SPLIT ACROSS THREE SECTIONS, not concentrated in 6.3.2 as the
+  pin says.  Section 6.3.2 (book p. 331) prints F_A = gamma/tanh gamma as (6.3.2-11), the
+  chart, and "as first given by Van Krevelen and Hoftijzer [1948]".  The ASSUMPTION quote
+  ("under the assumption that B is only weakly depleted near the interface") is in section
+  6.3.3, book p. 335.  THE APPROXIMATION ITSELF is (6.3.5-1) in section 6.3.5, book p. 340,
+  with "in a way analogous to that applied to pseudo-first-order" and the accuracy claim
+  "This approximate solution is valid to within 10 percent of the numerical solution".  The
+  target book and chapter are unchanged; the page cites all three sections with book pages.
+  (2) LEVENSPIEL''S "5360" IS PRINTED, NOT AN OCR MANGLING.  This file says the second page
+  number in his reference-list entry is "an OCR mangling"; on a 600 ppi render the leading
+  glyph is the same digit-5 shape as the 5 of "563" earlier on the same line, so book p. 537
+  really prints "Trans. I. Chem. E., 32, 5360 (1954)".  Whether 5360 is itself a misprint
+  cannot be settled from anything on disk and the page draws no inference from it.
+  (3) THE SPELLING DEFECT IS REAL AND IS REPORTED, NOT REPAIRED.  Levenspiel prints "van
+  Krevelens" with a terminal s in BOTH places he names him (Fig. 23.4''s caption, book
+  p. 530, and the Ch. 23 reference list, book p. 537), checked on 600 ppi renders.  It is
+  settled against Froment, who cites the same paper (Rec. Trav. Chim. Pays-Bas 67, 563,
+  1948) and spells it Van Krevelen, on a 300 ppi render of his book p. 365.  No citation
+  discrepancy was reported: the 1948 and 1954 entries are two publications and Levenspiel
+  carries both, exactly as the pin says.'
+updated: '2026-08-14'
+fix_applied: 'FIXER PASS 2026-08-14, after verification (review/verification.md, verdict "safe
+  after fixes"). All three headlines survived and were not relitigated. What changed:
+  (1) THE BASELINE. The film reference is no longer a single graded n_x = 800 solve - which was
+  grid-limited by 1.9e-6 relative, i.e. by less than the page''s own pymrm-vs-collocation
+  agreement, exactly where the headline sits - but a Richardson extrapolation of the same graded
+  film on n_x = 400 and 800. It agrees with scipy collocation to 4.37e-8 and with a finer
+  extrapolation to 3.84e-8. 20 of the 33 old agreement metrics moved in their fourth decimal;
+  worst error -2.7953 -> -2.7955 %, margin 3.5774 -> 3.5772x. The old single-solve baseline is
+  injected verbatim as a new break row.
+  (2) THE GRADING NARRATIVE. 893.9x is grading TIMES a refinement; measured on this page''s own
+  three grids it splits into 124.8x (grading at the same n_x) and 7.163x (400 -> 800), and at the
+  grid-study point grading COSTS 248.7x. The 1.03e-4 residual against F3.1 was this page''s own
+  grid error, not warm-vs-cold: it is now 1.29e-6 and attributed.
+  (3) THE ASSUMPTION. Both of Froment''s printed wordings are now transcribed into the CSV and
+  both are measured (beta(0) for p. 335; a rate-weighted mean of beta over the reaction zone for
+  p. 340). The conclusion holds under both. Froment''s "for moderately fast reactions ...
+  reasonably confirmed" qualifier is restored to README, meta.yaml and models_entry.yaml.
+  Also: the exact reason for the Levenspiel result is now given (deficit = q beta(0) by the first
+  integral, versus VKH''s exact q(1+q)^2/gamma^2); "three independent routes" restated as two
+  methods one of them refined; 19 break rows / 42 metrics corrected in models_entry.yaml; the
+  sidecars'' "no raster images at all" corrected (Fig. 6.3.2-1 IS a 148 ppi embedded JPEG, re-read
+  at native resolution, transcription unchanged); the DOI/issue/page-range named as a Crossref
+  lookup; runtime declared 225 s against 218 s measured twice.'
+fix_applied_2: 'SECOND FIXER PASS 2026-08-14, after the second verification (review/verification.md,
+  "F3.2 - second verification pass"). Five items, none touching a conclusion, all re-measured
+  here before being applied.
+  (1) THE F3.1 RESIDUAL WAS ATTRIBUTED TO THE WRONG PAGE. Notebook, README and models_entry said
+  the surviving 1.29e-6 was "THIS page''s own numerics". It is F3.1''s. Measured here: the same
+  recomputation run COLD on F3.1''s own uniform 400-cell grid gives 2.076893246 %, reproducing
+  F3.1''s stored value to 1.0e-11 relative, while an independent DOP853 shooting on the reduced
+  film ODE gives -2.076895892 % against this page''s reference -2.076895931 %. So the residual is
+  F3.1''s uniform-grid error, this page''s reference is the accurate side, and the cold run also
+  PROVES the "not warm-versus-cold" half instead of asserting it. That cold run is now computed
+  and printed on the page (block_f31 on F3.1''s grid) and asserted in CLAIMS.
+  (2) THE p. 340 CONSTANCY DIAGNOSTIC WAS GRID-LIMITED - the same defect class the first pass
+  caught, inside the material added to fix it. Extrapolated.beta_constancy took the ratio from
+  the fine grid alone on the ground that "the grid cancels to five digits"; measured, the fine
+  grid is 2.4e-6 from converged at the worst point but 7.3e-3 out at gamma = 100. The ratio is
+  now Richardson-extrapolated on the same two grids as F_A, the false comment is replaced by a
+  PRINTED measurement of both gaps, and beta_w/beta(0) at gamma = 100 is 3.684e9, not 3.66e9.
+  Two agreement.json values moved and no others: beta_constancy_at_worst 2.1152342627 ->
+  2.1152291951 and beta_constancy_at_99pct_depletion 19.1992153277 -> 19.2002066052.
+  (3) "NINE REPORTED NUMBERS MOVED" was an undercount and is now COUNTED BY THE NOTEBOOK from the
+  "one graded solve" break row: 27 of the 42 metrics move beyond the coverage tolerance, 19 of
+  them in their fourth decimal, both asserted in CLAIMS. The four local deficit exponents
+  (-1.9162, -2.4396, -3.3385, -5.3385), of which only the last was guarded, are now all in CLAIMS.
+  (4) THE _uniform ROW''S NOTE overstated what the relabelling removed. It is true for the five
+  metrics that carry the headline and false for the rest: the row still buys 13 sub-CI links and
+  11 real ones. The split is now printed under the coverage map and the note says what is true.
+  (5) "Three lines above (6.3.5-1)" is FIVE lines: measured on the text-layer line boxes of PDF
+  p. 382, the assumption sentence ends on the line at y=394 and the display begins five lines
+  below it. Also: the AST guard''s one unnamed blind spot (a dict comprehension) is CLOSED, with
+  the negative control extended to that form; runtime is 218.6 s and 218.8 s on two consecutive
+  executions, declared 230 s in meta.yaml and quoted the same way in README.
+  Determinism re-verified after the fix: two consecutive executions give byte-identical stream
+  output (15 chunks, zero on stderr), byte-identical figure payloads (3) and a byte-identical
+  agreement.json. check_metadata.py passes on a pages/-shaped copy.'
 canonical_class: 'FLIPPED UNDER THE TEXTBOOK-CANONICAL CLASS approved 2026-08-02. The class had been
   inert since approval because no qualifying monograph was on disk; four arrived 2026-08-05/06. AGENTS.md
   still forbids writing from memory: name what was read, cite the section, and use reference_read_from.'

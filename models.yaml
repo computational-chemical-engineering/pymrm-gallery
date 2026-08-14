@@ -4264,6 +4264,251 @@ models:
     page: pages/F3.1-hatta-regimes/
     related: [F3.2, F3.3, F3.5, B1.1, A4.9]
 
+  - id: F3.2
+    slug: van-krevelen-hoftijzer
+    title: "Van Krevelen–Hoftijzer: the chart replaced by a solve, and the assumption behind it measured"
+    description: >
+      THE ENHANCEMENT FACTOR FOR A SECOND-ORDER GAS-LIQUID REACTION IS AN IMPLICIT
+      RELATION THAT TEXTBOOKS HAND OVER AS A CHART, and this page replaces the chart
+      with a solve and then does the thing a chart cannot: it MEASURES THE ASSUMPTION
+      the approximation is built on.  THE 1948 ORIGIN WAS NOT CONSULTED - it is not on
+      disk - so every equation is transcribed from the E1.1 target, Froment, De Wilde &
+      Bischoff (2011) eqs. (6.3.2-11) and (6.3.5-1), read on 300 ppi renders because
+      that file's equations lose EVERY Symbol-font operator to Private-Use-Area glyphs
+      under text extraction and therefore look complete with no operators at all.
+      PROVENANCE TIER 6: BOTH SIDES OF EVERY COMPARISON ARE EQUATIONS, so nothing here
+      is evidence about a real absorber and the page says so wherever it matters.
+      THE BASELINE IS NOT A SINGLE SOLVE, AND THAT IS THE POINT OF THE PAGE'S NUMERICS.
+      Grading a grid towards the interface buys the high-gamma end and COSTS accuracy at
+      the moderate gamma where this page's headline sits, so the reference is a
+      Richardson extrapolation of the same graded film on n_x = 400 and 800, licensed by
+      the observed order 2.0000.  A single graded n_x = 800 solve is wrong by 1.9e-6
+      relative - LESS than this page's own pymrm-versus-collocation agreement of
+      5.99e-6, which is exactly why a second solver family cannot catch this class of
+      defect and a convergence study can.  WHAT THAT SHORTCUT COSTS IS COUNTED BY THE
+      NOTEBOOK RATHER THAN ASSERTED: 27 of the 42 reported metrics move by more than
+      the coverage tolerance and 19 of them change in their fourth decimal.  An earlier
+      version of this entry said "nine reported numbers", counted by hand; it was an
+      undercount.  The
+      extrapolated reference agrees with scipy's collocation to 4.37e-8 and with a finer
+      extrapolation of itself to 3.84e-8, and it is the "extrapolation switched off" row
+      of the break table that prices what shipping the single solve would have cost.
+      THE HEADLINE IS THE APPROXIMATION PRICED OVER THE CHART'S OWN PRINTED DOMAIN,
+      root-found in both directions and never sampled: worst error -2.7955 % at
+      gamma = 4.7279, q = 1.5217 (E_i = 2.5217), against the "This approximate solution
+      is valid to within 10 percent of the numerical solution" printed on book p. 340 -
+      a margin of 3.5772x - and -2.7294 % if the search is confined to the ten curve
+      labels the chart actually draws.  Van Krevelen-Hoftijzer UNDER-estimates
+      everywhere, and that is a THEOREM rather than a sampled sweep: beta' =
+      (alpha' + F_A)/q >= 0 so beta >= beta(0) everywhere, (6.3.5-1) is the fixed point
+      of the map that freezes beta at beta(0), and that map is strictly decreasing.
+      THE STATED ASSUMPTION IS TESTED RATHER THAN ILLUSTRATED, IN BOTH OF THE BOOK'S TWO
+      WORDINGS OF IT, AND NEITHER ORDERS THE ERROR.  Book p. 335 says the curves were
+      computed "under the assumption that B is only weakly depleted near the interface"
+      and adds "For moderately fast reactions, this assumption was reasonably confirmed
+      by more rigorous computations"; book p. 340, five lines above (6.3.5-1) itself,
+      says they proceeded "by assuming that the concentration of B remains approximately
+      constant close to the interface".  The first is about the LEVEL of depletion, which
+      beta(0) measures exactly; the second about the CONSTANCY of beta over the reaction
+      zone, which beta(0) does not measure at all and the rate-weighted mean does.  Along
+      the worst curve the error is -1.8304 % where B is half gone (gamma = 2.2036,
+      ROOT-FOUND on beta(0), constancy ratio 1.208), -2.7955 % at the worst point where
+      beta(0) is already down to 0.1647 and the constancy ratio is 2.115, -1.5035 % where
+      B is 99 % gone (gamma = 13.0378, root-found, ratio 19.20), and -0.00037 % where B
+      is gone completely and the ratio has run away without bound.  beta(0) falls
+      monotonically, the constancy ratio rises monotonically, and the error does NEITHER:
+      it peaks in between and vanishes at both ends, because the ceiling F_A -> 1 + q is
+      a limit the approximation reproduces by construction.  FROMENT'S OWN CLAIM IS
+      QUALIFIED TO MODERATELY FAST REACTIONS AND, MEASURED, IT STANDS - the worst point
+      is inside that band and errs by less than the 10 percent he prints; what fails is
+      the unqualified reading, that weak depletion is WHY the approximation works.  At
+      gamma = 1000 beta(0) is reported as numerically zero rather than as a bound with
+      digits: the solve returns a number of order 1e-58 whose sign is round-off.
+      LEVENSPIEL (1999) Ch. 23 IS A CROSS-CHECK ONLY - the page does not adjudicate
+      between the books - and his three printed expansions check Froment's constants
+      independently in a different notation.  1 + M_H^2/3 holds to 1 % up to a
+      root-found M_H = 0.7231; at the boundary E_i = 5 M_H that his own box declares,
+      E = M_H(1 - (M_H-1)/2E_i) is -0.5366 % against +9.3004 % for the uncorrected
+      E = M_H, and the same expansion of (6.3.5-1) - which carries E_i - 1 where he
+      prints E_i - is -0.7374 %, so the two books' groups agree to 0.20 percentage
+      points inside the domain the expansion is declared for.
+      ONE OF THOSE EXPANSIONS TURNS OUT TO EXPAND THE APPROXIMATION RATHER THAN THE
+      EQUATIONS IT APPROXIMATES, AND THE REASON IS EXACT RATHER THAN EMPIRICAL.  Putting
+      F_A = 1 + q - d into (6.3.5-1) gives d -> q(1+q)^2/gamma^2 for large gamma, which
+      in Levenspiel's symbols IS E_i^2(E_i-1)/M_H^2: his "more precisely" correction is
+      the algebraic asymptote of the APPROXIMATION.  The film's own deficit is fixed by
+      the first integral of the two film equations, q beta(0) = 1 + q - F_A, so it EQUALS
+      q beta(0) - the interfacial value of a reaction layer of thickness ~1/gamma, hence
+      exponentially small and no power law at all.  Measured, his correction tracks the
+      Van Krevelen-Hoftijzer deficit to 0.9953 of it at M_H = 400 and the VKH deficit's
+      local exponent converges on the printed -2 (-1.9949 on the finest octave), while
+      the FILM SOLUTION's exponent steepens octave by octave, -1.9162, -2.4396, -3.3385,
+      -5.3385.  At M_H = 800 the printed correction is therefore 44.24 times the true
+      deficit - and 44 times a correction of 0.00134 %, so at that M_H LEAVING THE
+      CORRECTION OUT is more accurate than applying it.  THAT DEFICIT IS NOT A
+      DISCRETISATION ARTEFACT AND THE PAGE PROVES IT RATHER THAN ASSERTING IT, with the
+      claim stated at its true strength: TWO INDEPENDENT METHODS, ONE OF THEM ALSO
+      REFINED - pymrm finite volumes (extrapolated from 400 and 800 cells, then again on
+      1600 cells with a different grading) and scipy's adaptive collocation, which share
+      no assembly - agree on it to 8.61e-5, orders below the factor it is used to
+      establish.  The middle entry is a refinement of the first, not a third route, and
+      the page says so.
+      THE TWO CHARTS' CURVE LABELS MEAN DIFFERENT THINGS AND THE PAGE PRICES IT.
+      Froment's Fig. 6.3.2-1 labels its curves with q = a D_B C_Bb/(b D_A C_Ai), his own
+      axis title, and his eq. (6.3.3-10) makes the plateau 1 + q; Levenspiel's Fig. 23.4
+      labels the same family with E_i itself.  Both print the same ten numerals, so a
+      curve labelled 1 plateaus at 2 in one book and at 1 in the other - a factor of 2 -
+      falling to 1.001 at the label 1000.  Established from the printed equations and
+      axis titles, NOT from where the curves appear to sit: NO CURVE IS DIGITISED
+      ANYWHERE ON THIS PAGE.
+      CROSS-PAGE, AND F3.1 IS NOT ANNEXED.  F3.1 owns Hatta and the regime map and
+      already reports 2.076893 % as its maximum VKH error.  That number is LOADED from
+      F3.1's own agreement.json and its definition - a sampled max over E_i in
+      {5, 20, 100} on a warm-started Ha sweep - is recomputed here cold, giving
+      2.076896 % and reproducing it to 1.29e-6 relative.  THE RESIDUAL IS ATTRIBUTED BY
+      MEASUREMENT RATHER THAN LEFT TO BE GUESSED AT, AND IT BELONGS TO F3.1: the same
+      recomputation run COLD on F3.1's OWN grid - uniform, n_x = 400 - lands on F3.1's
+      stored 2.076893 % to better than 1e-10 relative, so the warm start contributes
+      nothing to the residual and what is left is that grid's discretisation error.
+      This page's extrapolated reference is the accurate side of it, agreeing with
+      scipy's collocation to 4.37e-8; the single graded n_x = 800 grid this page used
+      before the baseline was extrapolated is on the wrong side of it by 0.000214
+      points, eighty times further.  The extra 0.7186
+      percentage points in this page's headline are SPLIT by measurement: root-finding
+      gamma at the same three E_i buys 0.0016 and letting q move off {4, 19, 99} buys
+      0.7170.  It is almost all q.
+      ONE PRINTED DEFECT IS REPORTED AND NOT REPAIRED, and it is in the cross-check
+      source: Levenspiel spells the first author "van Krevelens" [sic], with a terminal
+      s, in both places he names him - the caption of Fig. 23.4 and the Ch. 23 reference
+      list.  It is settled against another document rather than against memory, since
+      Froment cites the same paper (same journal, volume 67, page 563) and spells it
+      Van Krevelen.  THE TWO BOOKS' CITATIONS DO NOT CONFLICT: Froment cites the 1948
+      Rec. Trav. Chim. paper, Levenspiel's caption credits a 1954 Trans. I. Chem. E.
+      paper, and Levenspiel's own reference list carries BOTH.  A second feature is
+      recorded and explicitly NOT filed as a defect: that reference list prints the 1954
+      page as "5360", and the leading glyph was read at 3x on the 600 ppi render and is
+      the same digit-5 shape as the 5 of "563" on the same line - so the page really
+      prints it and it is not an OCR artefact - but whether 5360 is itself a misprint
+      cannot be settled from any document on disk, so no inference is drawn.
+      THE PYMRM CONTENT IS THE REFERENCE SOLUTION AND THE PAGE IS EXPLICIT THAT THE
+      APPROXIMATION ITSELF NEEDS NOTHING FROM THIS REPOSITORY: a bisection solves it.
+      What pymrm buys is the film equations themselves - two fields, per-species
+      boundary conditions in one pair of {a, b, d} dictionaries, NumJac given (n_x, 2)
+      and never a bare (n_x,), newton with clip_approach, and a grid built from
+      arbitrary face positions, which is one line.
+      WHAT GRADING IS WORTH IS MEASURED AND SPLIT RATHER THAN LUMPED, AND AN EARLIER
+      VERSION OF THIS ENTRY GOT IT WRONG BY A FACTOR OF SEVEN.  F3.1 names its own
+      uniform-grid error as "concentrated at high Ha where the reaction layer is thinner
+      than a cell", and its own pseudo-first-order check over its own Ha range comes out
+      893.9 times tighter here - 7.088e-6 against the 6.337e-3 LOADED from F3.1's
+      agreement.json.  But that factor compares F3.1's UNIFORM n_x = 400 against this
+      page's GRADED n_x = 800, so it is grading TIMES a refinement.  Run on this page's
+      own three grids it decomposes exactly: the 400 -> 800 refinement is worth 7.163x
+      (and the uniform n_x = 400 recomputation reproduces F3.1's stored number to 6.3e-15)
+      and grading at the same n_x is worth 124.8x.  At the moderate gamma the headline
+      lives at, the SAME grading is a liability: at the grid-study point a graded grid is
+      248.7 times LESS accurate than a uniform one of the same size, because its outer
+      cells are nearly eight times wider.  The extrapolated reference is how the page has
+      both ends at once.
+      Second routes throughout: the film solved again by scipy's
+      adaptive collocation, agreeing with the reference to 4.37e-8 over 20 points of the
+      chart, and the implicit relation solved a second time for gamma' instead of for
+      F_A.  Grid order 2.0000 observed, and the film's first integral q beta(0) =
+      1 + q - F_A, which no discretisation is told about, is satisfied to 6.4e-10.
+      19 break rows cover all 42 metrics with the coverage map
+      GENERATED from measured moves and an AST guard that rejects any row returning a
+      metric as a typed constant - and the page states what that guard CANNOT do (it
+      rejects literals, walks one level, and can never tell whether a computed
+      expression is the right one).  A verification's sabotage suite found one form the
+      guard missed, a DICT COMPREHENSION over literal key strings; it is now closed and
+      is the third form the guard's own negative control uses, and the forms that still
+      pass are named on the page rather than left implied.  ONE metric sits below check_agreement.py's ABS_FLOOR
+      (the two routes to the implicit relation, 8.0e-15) and is named on the page with
+      two above-floor companions.  Every solve is a COLD START from a closed-form
+      profile depending only on its own (gamma, q), so no reported number rides a
+      continuation chain.
+    section: F
+    status: published
+    page: pages/F3.2-van-krevelen-hoftijzer/
+    tier: T0
+    priority: P1
+    structures: [S3]
+    phases: [gas-liquid]
+    predicts:
+      - the enhancement factor of a second-order gas-liquid reaction from the implicit
+        Van Krevelen-Hoftijzer relation, solved rather than read off a chart, over the
+        whole domain of Froment's Fig. 6.3.2-1
+      - the film equations' own enhancement factor and interfacial reactant depletion,
+        as the reference the approximation is priced against
+      - where on the (gamma, q) plane the approximation is worst, root-found in both
+        directions, and by how much
+      - how far the interfacial reactant is depleted where the approximation is worst,
+        where it is half gone, where it is 99 % gone and where it is gone
+      - the asymptotic deficit E_i - E on the instantaneous branch, for the
+        approximation and for the equations separately
+      - the CONSTANCY of B over the reaction zone, as a rate-weighted mean of beta
+        divided by its interfacial value - the book's second wording of the same
+        assumption, which beta(0) alone does not test
+    pymrm_api: [construct_grad, construct_div, NumJac, newton, clip_approach,
+                compute_boundary_values]
+    reference:
+      authors: ["Van Krevelen, D. W.", "Hoftijzer, P. J."]
+      year: 1948
+      title: "Kinetics of gas-liquid reactions. Part I. General theory"
+      container: "Recueil des Travaux Chimiques des Pays-Bas 67(7) 563-586"
+      doi: 10.1002/recl.19480670708
+      note: >
+        ORIGIN NOT CONSULTED.  The 1948 paper is not on disk and was not read; it is
+        cited, not used.  See reference_read_from.
+        AND THE ISSUE NUMBER, THE END PAGE AND THE DOI ABOVE ARE A CROSSREF RECORD
+        LOOKUP, NOT A READING.  Both books on disk print only "67, 563 (1948)"; the
+        "(7)", the "-586" and the DOI were checked against api.crossref.org on
+        2026-08-14, which returns volume 67, issue 7, pp. 563-586, both authors and the
+        1948 date.  A metadata lookup is not the article, and the page says so.
+    reference_read_from:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      container: >
+        "Chemical Reactor Analysis and Design", 3rd edition, John Wiley & Sons,
+        ISBN 978-0-470-56541-4
+      note: >
+        THE E1.1 TARGET, and it passes on the strong reading: Chapter 6 names the result,
+        attributes it by year, DERIVES it and STATES ITS ASSUMPTION.  Section 6.3.2 (book
+        p. 331): the diagram is "as first given by Van Krevelen and Hoftijzer [1948]".
+        Section 6.3.3 (book p. 335): the intermediate curves "were calculated by Van
+        Krevelen and Hoftijzer [1948] under the assumption that B is only weakly depleted
+        near the interface".  Section 6.3.5 (book p. 340): the approximation itself, as
+        eq. (6.3.5-1), with "This approximate solution is valid to within 10 percent of
+        the numerical solution", AND, five lines above that equation, the second wording
+        of the same assumption: "by assuming that the concentration of B remains
+        approximately constant close to the interface".  Both wordings are transcribed
+        into the CSV and both are tested on the page.  Reference list book p. 365.
+        EVERY EQUATION AND EVERY NUMERAL WAS READ ON A 300 ppi RENDER, WITH ONE
+        CORRECTION MADE 2026-08-14: the book's equations and prose are vector text, but
+        Fig. 6.3.2-1 on PDF p. 373 is an EMBEDDED 536x771 GREYSCALE JPEG AT 148 ppi
+        (`pdfimages -list`), so a 300 ppi page render of that figure is a 2x
+        interpolation.  The ten curve labels, the four axis ends and both axis titles
+        were therefore re-read on the extracted raster at its native resolution, enlarged
+        4x, and are unchanged.  This file is
+        born-digital and its prose extracts cleanly, but its equations do not: every
+        Symbol-font operator becomes an unmappable Private-Use-Area glyph (U+F02D minus,
+        U+F03D equals, U+F02B plus), so the extraction of (6.3.5-1) is
+        " '   1  FA  1" over "b D A C Ai / a DB C Bb" - SEVEN Private-Use characters gone
+        (the two gammas, the equals, two minus signs and a bracket pair) and the square
+        root has no character at all.  Book page = PDF page - 42, confirmed on printed
+        running heads.
+        SECOND BOOK, CROSS-CHECK ONLY: Levenspiel, O. (1999), "Chemical Reaction
+        Engineering", 3rd edn, ISBN 0-471-25424-X, Ch. 23, Fig. 23.4 and its annotation
+        boxes (book p. 530) and the chapter reference list (book p. 537), read on 600 ppi
+        renders - that file's native resolution.  Used to check Froment's constants
+        independently and to reconcile the two notations; the page does NOT adjudicate
+        between the books and does not treat Levenspiel as a second E1.1 target.
+        NO CSV IS BORROWED from another page.  F3.1's agreement.json IS loaded, and its
+        stored VKH error is reconciled against a recomputation of its own definition
+        rather than retyped.
+    data: {tier: 6, method: analytical, status: complete}
+    related: [F3.1, F3.3, F3.5, B1.1, A3.2]
+
   # ---------------------------------------------------------------- section G
   - id: G1.7
     slug: wammes-high-pressure-trickle-bed

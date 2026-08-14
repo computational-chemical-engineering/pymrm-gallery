@@ -1,0 +1,109 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: enhancement-chart-labels
+title: >
+  The ten curve labels printed on the enhancement-factor chart in both
+  monographs - Froment, De Wilde & Bischoff (2011) Fig. 6.3.2-1, book p. 331,
+  and Levenspiel (1999) Fig. 23.4, book p. 530 - together with each book's own
+  printed definition of what the label means.
+
+READ_THIS_FIRST: >
+  NO CURVE IS DIGITISED AND NO POINT IS READ OFF EITHER CHART.  What is
+  transcribed here is TEXT: the ten numerals printed beside the curves, and the
+  parameter definition each book prints as its axis title or annotation.  Every
+  curve this page plots is computed from the equations, never traced.
+  THE SAME LABEL MEANS DIFFERENT THINGS IN THE TWO BOOKS, and that is the
+  reason this file exists.  Froment's right-hand axis title prints the
+  parameter as a D_B C_Bb / (b D_A C_Ai), which his own eq. (6.3.3-10) - F_A =
+  1 + a D_B C_Bb / (b D_A C_Ai) - identifies as F_A(infinity) MINUS ONE.
+  Levenspiel's annotation prints E_i = 1 + D_B C_B H_A / (b D_A p_Ai), which IS
+  the plateau.  So a curve labelled 10 plateaus at F_A = 11 in one book and at
+  E = 10 in the other.  THAT IS ESTABLISHED FROM THE PRINTED EQUATIONS, not
+  from where the curves appear to sit.
+
+source:
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  container: >
+    "Chemical Reactor Analysis and Design", 3rd edition, John Wiley & Sons
+    (2011), Fig. 6.3.2-1 "Enhancement factor diagram for C_Ab = 0", book
+    p. 331 (PDF page 373)
+  doi: null
+  second_source: >
+    Levenspiel, O., "Chemical Reaction Engineering", 3rd edition, John Wiley &
+    Sons (1999), Fig. 23.4 "The enhancement factor for fluid-fluid reactions as
+    a function of M_H and E_i, modified from the numerical solution of van
+    Krevelens [sic] and Hoftijzer (1954).", book p. 530 (PDF page 546)
+  origin_cited_but_not_consulted: >
+    Van Krevelen, D. W. & Hoftijzer, P. J., Rec. Trav. Chim. Pays-Bas 67, 563
+    (1948).  Froment's book p. 331 says the diagram is "as first given by Van
+    Krevelen and Hoftijzer [1948]".  The 1948 paper is not on disk.
+
+acquisition:
+  method: transcription
+  detail: >
+    Froment: CORRECTED 2026-08-14.  An earlier version of this file said the
+    Froment PDF is born-digital with no raster images.  That is true of its
+    equations and prose and FALSE OF THIS FIGURE: `pdfimages -list -f 373
+    -l 373` reports a 536x771 greyscale JPEG at 148x152 ppi, which IS
+    Fig. 6.3.2-1.  The labels were first read on a `pdftoppm -r 300 -png` page
+    render, i.e. on a 2x interpolation of that raster, which is exactly what
+    the house rule warns against; they were then re-read at native resolution
+    on the extracted raster (`pdfimages -f 373 -l 373 -png`, enlarged 4x by
+    Lanczos) and are unchanged - all ten labels, both axis ranges and both axis
+    titles read the same.  Levenspiel: `pdftoppm -r 600 -png` on PDF page 546
+    (JBIG2 bilevel, native 600 ppi), which is native and needed no correction.
+  ppi_native: 148
+  ppi_native_note: >
+    148 ppi is the native resolution of the EMBEDDED FIGURE RASTER on PDF
+    p. 373, which is what this dataset was read from.  The book's text and
+    equations are vector; 300 in the field below is the page-render resolution
+    used for them elsewhere, and is an interpolation for this figure.
+  ppi_native_levenspiel: 600
+  rendered_at_ppi: 300
+  rendered_at_native_figure_ppi: 148
+  rendered_at_ppi_levenspiel: 600
+
+columns:
+  label:
+    units: "-"
+    description: >
+      The numeral printed beside the curve.  Both books print the same ten:
+      1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, in that order from the bottom
+      of the right-hand edge upwards.
+  in_froment_fig_6_3_2_1:
+    units: "-"
+    description: >
+      Whether this numeral is printed on Froment's Fig. 6.3.2-1 (book p. 331).
+      All ten are.
+  in_levenspiel_fig_23_4:
+    units: "-"
+    description: >
+      Whether this numeral is printed on Levenspiel's Fig. 23.4 (book p. 530).
+      All ten are.
+  froment_parameter_as_printed:
+    units: "-"
+    description: >
+      Froment's own right-hand axis title, as printed: a D_B C_Bb /
+      (b D_A C_Ai).  With his stoichiometry a A + b B -> products this is the
+      group the page calls q, and his eq. (6.3.3-10) makes the plateau 1 + q.
+  levenspiel_parameter_as_printed:
+    units: "-"
+    description: >
+      Levenspiel's own annotation, as printed: E_i = 1 + D_B C_B H_A /
+      (b D_A p_Ai).  With p_Ai = C_Ai/H_A this is 1 + q, i.e. the plateau
+      itself.
+
+rows: 10
+transcription_checks:
+  internal_constraint: >
+    The ten labels are the standard 1-2-5 decade sequence and both books print
+    the identical set, so each book checks the other's transcription: a
+    mis-read numeral in one would break the match with the other.
+  what_this_file_does_not_establish: >
+    It does not establish where any curve lies.  The plateau values the
+    notebook computes come from the equations - Froment's (6.3.3-10) and
+    Levenspiel's own definition of E_i - and not from the drawings.
+
+license: >
+  Transcription of ten numerals and two axis titles from two copyrighted
+  monographs.  No page image is reproduced and no PDF is committed.
