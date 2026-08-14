@@ -1,0 +1,228 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: andrews1968-printed-model
+title: >
+  Every equation, constant, figure-legend parameter set and prose claim this page
+  reads out of Andrews (1968), transcribed verbatim, each with the printed book
+  page it was read from.
+
+READ_THIS_FIRST: >
+  THIS IS NOT A DATASET OF MEASUREMENTS AND THE PAPER CONTAINS NONE.  Andrews
+  presents a model and simulation output; his own text says so - "The solutions
+  presented in this paper were obtained using PACTOLUS on the IBM 360 computer"
+  (p. 708).  Every number in this file is either a constant he chose or a result
+  he read off his own plotted output.  Reproducing them is REPRODUCTION, not
+  validation, and the page says so in those words.
+  THE PAPER PRINTS NO TABLE.  The full-text search behind that claim is recorded
+  under negative_claims_and_how_they_were_checked.  Every parameter set is
+  typeset inside a figure legend, which is why this page exists at all: reading
+  a typeset legend is transcription, not digitising.  NO CURVE IS DIGITISED
+  ANYWHERE ON THIS PAGE and the page states plainly that it therefore does not
+  establish empirical adequacy against Andrews' plotted results.
+
+source:
+  authors: ["Andrews, J. F."]
+  year: 1968
+  container: >
+    "A Mathematical Model for the Continuous Culture of Microorganisms Utilizing
+    Inhibitory Substrates", Biotechnology and Bioengineering 10(6) 707-723 (1968),
+    Environmental Systems Engineering, Clemson University
+  doi: 10.1002/bit.260100602
+  doi_note: >
+    crossref-verified 2026-08-02 from the catalogue citation - title, container,
+    volume, issue, page range and year all agree.  The DOI itself is NOT printed
+    on the document (1968 predates DOIs); what IS confirmed from the document is
+    the masthead "BIOTECHNOLOGY AND BIOENGINEERING / VOL. X, PAGES 707-723
+    (1968)", the title, the by-line and the Summary, all read on a 300 ppi render
+    of page 1.
+  received: "February 18, 1968"
+  funding_as_printed: >
+    "This work was supported, in part, by a research grant, WP-00622, from the
+    Federal Water Pollution Control Administration."
+
+acquisition:
+  method: transcription
+  detail: >
+    No digitising and no figure extraction.  `pdfimages -list` reports all
+    seventeen pages of this file as CCITT-G4 bilevel at 300x300 ppi native, so
+    300 ppi is the native resolution and rendering higher would be interpolation.
+    All seventeen pages were rendered at 300 ppi with
+    `pdftoppm -r 300 -png` and read; every equation, every figure-legend
+    parameter set and every numeral quoted here was then re-read on a crop
+    enlarged to digit scale.  Three pages are LANDSCAPE in the file (PDF pages 8,
+    12 and 15, carrying Figs. 4, 7 and 9); pdftoppm returns them rotated, and
+    their legends were rotated back before reading.
+    THE TEXT LAYER WAS USED ONLY FOR SEARCHING, NEVER FOR A DIGIT.  It mangles
+    subscripts - X_1 comes out as "XI" - which is exactly the failure mode that
+    would have made eq. (10)'s subscript defect invisible.
+  ppi_native: 300
+  rendered_at_ppi: 300
+  duplicate_upload: >
+    Two byte-identical copies of this PDF arrived (md5
+    1cd0f791c388e168ab2304134187a5a3, 487616 bytes each).  The second is parked
+    in ~/papers/pymrm-gallery/duplicates/.  Not a second part and not a second
+    printing.
+
+columns:
+  key:
+    units: "-"
+    description: "Stable identifier the notebook looks a row up by; never printed by Andrews."
+  page:
+    units: "-"
+    description: >
+      The BOOK page as printed on the page itself (707-723), not the PDF index.
+      Add -706 to get the PDF page number.
+  where:
+    units: "-"
+    description: >
+      Which part of that page: an equation number as printed, a figure legend,
+      a named section, or `prose` / `reference N`.
+  as_printed:
+    units: "-"
+    description: >
+      The transcription.  ASCII stand-ins for Greek and for sub/superscripts
+      (muhat for mu-with-a-circumflex, K_s, S^0.5, S_1); no term added, removed
+      or reordered.  Prose is quoted verbatim including printed misspellings.
+  flag:
+    units: "-"
+    description: >
+      Empty when the row is unremarkable; otherwise what a reader must know
+      before using it, including every printed defect this page found.
+
+printed_defects_found_and_not_repaired:
+  eq10_subscript: >
+    eq. (10) on book p. 712 prints `X_i = Y(S_0 - S_1)` where X_1 is meant.  The
+    effluent organism concentration is X_1 in eq. (7), in the symbol list on
+    p. 712 and in the curve labels of Fig. 8; X_i is this paper's symbol for the
+    INITIAL INOCULUM (p. 713, "The initial innoculum (X_i) has been chosen as
+    0.005 g/l", and the curve key of Fig. 9, "X_i = 0.10 GM/L").  Read at digit
+    scale on a 300 ppi crop.  The page uses X_1 = Y(S_0 - S_1) and says why.
+  eq10_symbol_nuance: >
+    Andrews does not keep the X_1 / X_i convention perfectly, and the page says
+    so rather than overstating the argument.  On book p. 719 he writes "two
+    different values of initial organism concentration (X_1)" and three lines
+    later "The process fails when X_i = 0.10 g/l" - both symbols for the
+    inoculum on one page, read at digit scale on a 300 ppi crop (an upright 1 in
+    the first, a dotted italic i in the second).  The eq. (10) finding is
+    unaffected, because the quantity eq. (10) defines is the EFFLUENT
+    concentration whatever he calls the inoculum, but it rests on the symbol list
+    and on eq. (7) rather than on a convention the paper never breaks.
+  eq9_single_root: >
+    eq. (9) on book p. 712 is printed with a bare `+` before the radical and no
+    `+-`, confirmed at digit scale.  The quadratic it solves has two roots, and
+    Andrews' own running text one paragraph later says so ("Two values of
+    substrate and organism concentration are possible for each residence time
+    since the substrate equation is a quadratic").  The root eq. (9) as printed
+    returns is the HIGHER one - the one the same paper calls unstable.  The page
+    reports this and computes both roots by an independent Brent root-find; it
+    does not "correct" eq. (9).
+  fig4_and_fig7_yield_units: >
+    The legends of Figs. 4 (p. 714) and 7 (p. 718) print `Y = 0.5 GM/L`.  Y is
+    defined on p. 711 as "yield coefficient, mass organisms produced/mass
+    substrate utilized", i.e. DIMENSIONLESS, and eq. (5) requires it so.  Five of
+    the seven legends carrying Y - Figs. 5, 6, 8, 9 and 10 - print `GM/GM`.  The
+    constraint that decides it is the printed definition plus the dimensions of
+    eq. (5), not the 5-to-2 count; the numeral 0.5 is not in question, only the
+    unit.  Nothing is repaired.
+  ref1_spelling: >
+    Reference 1 prints "Recherces sur la croissance des cultures bacteriennes"
+    [sic] for "Recherches", read at digit scale.  Quoted as printed.
+  step_chances: >
+    Book p. 719 prints "failure may occur due to step chances in S_0" [sic] for
+    "step changes".  Quoted as printed.
+  innoculum: >
+    "innoculum" for "inoculum" throughout (pp. 713, 715, 719, and the captions of
+    Figs. 6 and 9).  Quoted as printed wherever it is quoted.
+  a_inhibition_function: >
+    The Summary prints "the use of a inhibition function" [sic].  Quoted as printed.
+
+approximations_stated_as_identities:
+  Ks_and_Ki_definitions: >
+    NOT LABELLED A DEFECT, because it is an approximation rather than a misprint,
+    and because Andrews' own text comes close to acknowledging it.  p. 709 defines
+    K_s as "the lowest concentration of substrate at which the specific growth
+    rate is equal to one-half the maximum specific growth rate in the absence of
+    inhibition" and K_i as "the highest" such concentration.  Setting eq. (1)
+    equal to muhat/2 gives S = K_i(1 -+ sqrt(1 - 4 K_s/K_i))/2, so the two
+    definitions are exact only as K_s/K_i -> 0, and they have NO SOLUTION AT ALL
+    unless K_i >= 4 K_s - which is exactly the condition under which his own
+    eq. (2) gives muhat_m >= muhat/2.  At his own constants K_s = 0.03,
+    K_i = 2.0 g/l the exact roots are 0.030464... and 1.969536..., i.e. +1.55 %
+    and -1.52 % off the constants he names them for - AND THAT IS THE MILDEST OF
+    THE THREE K_i HE PRINTS.  At the K_i = 1.0 g/l of Fig. 4 the roots are
+    0.030958 and 0.969042, +3.19 % and -3.10 %; at the K_i = 0.50 g/l of Fig. 1
+    they are 0.032055 and 0.467945, +6.85 % and -6.41 %.  The page prints all
+    three rows, because quoting only the K_i = 2.0 one understates the
+    approximation more than fourfold for a case Andrews himself plots.  The nearest thing in the
+    paper to a qualification is the remark on the same page that "even when K_s
+    and K_i are well separated there is a considerable reduction in the maximum
+    specific growth rate attainable" - which is about muhat_m, not about the two
+    definitions.  The page supplies the number and the exact condition and does
+    not claim Andrews was unaware.
+
+negative_claims_and_how_they_were_checked:
+  - claim: "The paper prints no table."
+    check: >
+      `pdftotext -layout` over all seventeen pages gives 51484 characters;
+      a case-insensitive search for `table` returns exactly two hits, and both are
+      inside the word "unstable" ("...represent an unstable situation in..." on
+      p. 713 and "The unstable nature of..." on p. 719).  Confirmed by reading all
+      seventeen 300 ppi renders: there is no ruled block, no column head and no
+      "Table N" caption anywhere in the paper.
+  - claim: "The paper prints exactly ten figures, Figs. 1 to 10, and every parameter set is inside a legend."
+    check: >
+      All seventeen renders read.  Fig. 1 p. 710, Fig. 2 p. 712, Fig. 3 p. 713,
+      Fig. 4 p. 714, Fig. 5 p. 716, Fig. 6 p. 717, Fig. 7 p. 718, Fig. 8 p. 720,
+      Fig. 9 p. 721, Fig. 10 p. 722 - each caption read on its own render.  Figs.
+      2 and 3 are PACTOLUS block diagrams and carry no parameter set; the other
+      eight carry one each, typeset, and all eight are transcribed in this CSV.
+      CORRECTED IN REVIEW: the legends are not the only typeset text inside those
+      figures.  Fig. 7 also carries two in-plot ANNOTATIONS naming the procedure
+      each curve represents, and the first of them settles a sentence the page
+      had called ambiguous.  Both are now transcribed (fig7_annotation,
+      fig7_annotation_control).  The claim this file makes is therefore about
+      PARAMETER SETS in legends; typeset text elsewhere inside a figure is
+      transcribed when the page uses it, and Fig. 7's is used.
+  - claim: "Andrews prints no value for X_0, the organism concentration in the influent."
+    check: >
+      X_0 is defined in the symbol list on p. 712 and appears in eq. (7).  Full-text
+      search of the extracted layer for `X0`, `X 0` and `influent` and a read of all
+      seventeen renders find no numeric value for it and no figure legend carrying
+      it.  Every continuous-culture simulation on this page therefore takes X_0 = 0
+      (sterile feed) and says so; the page also computes what a non-zero X_0 does,
+      as an extension clearly labelled as this page's and not Andrews'.
+  - claim: "Andrews prints no initial substrate concentration for Fig. 9 and no initial state for Fig. 10."
+    check: >
+      Both paragraphs read at digit scale on 300 ppi crops of book p. 719, and both
+      figure legends read on 300 ppi crops of pp. 721 and 722.  Fig. 9's legend
+      carries muhat, K_s, K_i, Y, theta, S_0 and the two X_i values and no S_1(0);
+      Fig. 10's carries the same six constants and the two forcings and no initial
+      state.  The page states which assumption it makes in each case and reports
+      the sensitivity of the answer to it over the whole sampled interval.
+      THE ASSUMPTION IS NOT UNSUPPORTED, THOUGH IT IS UNPRINTED: on a 300 ppi crop
+      of the rotated landscape page carrying Fig. 9, BOTH S_1 CURVES EMANATE FROM
+      THE ORIGIN while the two X_1 curves start at the labelled 0.10 and 0.50.
+      So S_1(0) = 0 is a reading of his own figure rather than a guess.  This is
+      a reading of where a curve STARTS, not a digitisation of its shape: no axis
+      was calibrated and no point was extracted.
+  - claim: "No experimental data appear anywhere in the paper."
+    check: >
+      All seventeen renders read.  The only experimental work referred to is
+      other people's, in prose and without numbers: Boon and Laudelout on
+      Nitrobacter winogradskyi (p. 708) and Dixon and Webb's parameter-estimation
+      techniques (p. 709).  Neither is on disk and neither was consulted.  This
+      is why the page fits nothing.
+
+relationship_to_J4.1:
+  note: >
+    J4.1 (pages/J4.1-monod/) transcribed the substrate-inhibition form into its
+    own data/printed-growth-laws.csv from two textbooks - Froment eq. (1.5.2-4)
+    and Rawlings & Ekerdt's `mu_m S/(K_s + S + K_1 S^2)` - flagged both rows
+    "OUT OF SCOPE - belongs to J4.2", and never fitted or evaluated either.  This
+    page loads that CSV, proves the three forms are the same function, and prints
+    every number it shares with J4.1 beside J4.1's own value.  It does NOT retype
+    any of them.
+
+license_basis: >
+  Short verbatim quotations of equations, figure legends and single sentences,
+  each cited to its printed page, for scientific verification.  No page image and
+  no figure is reproduced or committed.  See docs/data-strategy.md.

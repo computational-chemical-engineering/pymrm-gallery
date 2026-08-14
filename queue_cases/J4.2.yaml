@@ -5,7 +5,8 @@ catalog_reference: Andrews (1968)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J4.2-andrews-substrate-inhibition/
 reference:
   authors:
   - Andrews, J. F.
@@ -24,7 +25,7 @@ paper:
     Clemson University, Clemson, South Carolina 29631", plus the Summary.'
 blocker: null
 notes: null
-updated: '2026-08-06'
+updated: '2026-08-14'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because
@@ -53,3 +54,101 @@ what_it_carries: 'The Haldane inhibition function used as the growth-rate expres
   primary effect of substrate inhibition is an increase in the LAG TIME, whereas in CONTINUOUS culture
   it "may result in process instability". The stability claim is the interesting one - it is a statement
   about multiple steady states and washout that a continuation sweep can confirm or refute.'
+built: 'READY 2026-08-14. Staged at queue_cases/J4.2/page/ ; models.yaml has NO J4.2 entry, so
+  queue_cases/J4.2/models_entry.yaml is an APPEND, not an upgrade in place. Slug
+  andrews-substrate-inhibition -> pages/J4.2-andrews-substrate-inhibition/. Notebook executes clean
+  in ~45 s, deterministic (identical content hash and byte-identical agreement.json over two
+  consecutive executions; nothing stochastic, and the one sweep-shaped calculation uses a
+  deterministic per-tau initial guess, not a warm start).
+  THE COORDINATOR''S PRE-DISPATCH READ OF FIG. 9''S LEGEND IS CORRECTED ON TWO SYMBOLS, both settled
+  on a digit-scale 300 ppi crop of the rotated landscape page: the first line is MUHAT (mu with a
+  circumflex), "maximum specific growth rate in the absence of inhibition", NOT D; and the fourth is
+  Y = 0.5 GM/GM, the yield coefficient, NOT "K_Y = 0.5 GM/GH". The rest of the read stands exactly:
+  K_s = 0.03 GM/L, K_i = 2.0 GM/L, theta = 3 HRS, S_o = 5 GM/L. Also: there are TEN figures, not
+  "at least nine", and THREE pages are landscape in the file (PDF 8, 12, 15 = Figs. 4, 7, 9), not one.
+  THE PAPER PRINTS NO TABLE - confirmed, two hits for "table" in the text layer and both inside
+  "unstable" - and it is not figure-gated, as dispatched. NOTHING IS DIGITISED and the page says so.
+  BETTER THAN EXPECTED: the paper also prints TWO NUMERICAL RESULTS IN RUNNING TEXT on book p. 715
+  (12.5 hr and 36 hr) and SIX STATED OUTCOMES on p. 719, so the validation ranks at brief level 3
+  (stated numerical results) plus level 2 (internal identities), not at level 4. All eight reproduce.
+  Five printed defects were found beyond the dispatch: eq. (9) printed with a bare + (so it returns
+  the root the paper itself calls unstable), eq. (10) printed with the inoculum''s subscript X_i,
+  Y given as GM/L in the legends of Figs. 4 and 7, "Recherces" [sic] in reference 1, and "step
+  chances" [sic] on p. 719. None repaired.'
+fixed: 'FIXER PASS 2026-08-14 against review/verification.md ("safe after fixes", nine findings, no
+  headline number wrong). All nine applied, each re-measured first; the verifier was not overruled
+  anywhere. Still READY, still staged only in queue_cases/J4.2/page/.
+  WHAT MOVED IN agreement.json (58 -> 63 metrics): batch_time_seeded_h 12.366419 -> 12.371597 and
+  batch_time_seeded_vs_printed12p5_rel -1.0686 % -> -1.0272 %, because FIG. 7''S OWN TYPESET
+  ANNOTATION ("S_i ADDED IN INCREMENTS OF 2.0 GM/L", read here on a fresh 300 ppi crop and now
+  transcribed as CSV row fig7_annotation) settles the p. 715 sentence in favour of the INCREMENT
+  reading; seed_speedup_factor 2.953763 -> 2.952527 follows. pfr_outlet_X_at_tau6_g_per_l 0.6086420
+  (an ncell=1200 grid value pinned at 5e-7 but 0.1637 % from the converged answer) is replaced by
+  pfr_outlet_X_at_tau6_richardson_g_per_l = 0.6076462, the Richardson value of ncell 1200 and 2400.
+  theta_transcritical_two_routes_rel now reports its true 0.0 - the synthetic max(..., 1e-17) floors
+  are gone from every metric. RENAMES a re-run of check_agreement must know about:
+  all_four_stated_experiments_ok -> all_six_stated_outcomes_ok, critical_inoculum_S0_sensitivity_rel
+  -> critical_inoculum_S1_init_sensitivity_rel (and it now reports the WHOLE sampled S_1(0) range,
+  5.2120 %, not the [0, 0.05] truncation''s 0.4071 %), seed_reading_ambiguity_rel ->
+  seed_readings_raw_spread_rel (11.5442 %, the spread across all THREE literal readings) plus a new
+  seed_reset_vs_increment_rel, pfr_outlet_X_at_tau3_g_per_l -> pfr_outlet_X_at_tau3_ncell800_g_per_l
+  (same value, key now says it is a grid quantity). NEW: lag_share_of_delay_at_Xf1,
+  batch_realised_mean_growth_drop_rel, pfr_last_cell_read_order,
+  pfr_boundary_over_last_cell_err_ratio.
+  THE BREAK TABLE IS REBUILT: 17 hand-linked rows -> 23 rows whose coverage map is GENERATED from
+  measured moves (each row returns a dict keyed by metric name holding those metrics recomputed under
+  the defect; a row covers a metric only if it moves it by > 1e-6 relative). All 63 metrics covered,
+  153 measured row-metric links, and the notebook now fails to execute if any metric is uncovered or
+  any row moves nothing. Two coverage claims the old free text made were false and are gone.
+  THE compute_boundary_values CLAIM IS CORRECTED BY MEASUREMENT: both reads are FIRST ORDER here
+  (1.0011 boundary, 1.0013 last cell) and the last-cell read is the CLOSER of the two (1.3226x at
+  ncell 800), consistent with what J4.1 measured on its own problem; the call is kept and the reason
+  restated as flux consistency, not accuracy.
+  Runtime 45 s (was 38 s), declared 60. Two consecutive executions still give an identical content
+  hash, byte-identical agreement.json and byte-identical figure PNGs. check_metadata.py clean on a
+  pages/-shaped copy with models_entry.yaml spliced into models.yaml. CSV is now 51 rows, 40 flagged.
+  SECOND FIXER PASS 2026-08-14 against the SECOND PASS section of review/verification.md ("safe after
+  fixes", six findings, no number the first fix moved or added wrong). Both blocking findings fixed,
+  all four optional ones taken. NO agreement.json VALUE MOVED: the file is byte-identical key for key
+  and value for value except ONE RENAME, pfr_boundary_over_last_cell_err_ratio ->
+  pfr_boundary_over_last_cell_err_ratio_ncell800 (same value 1.322621457072709; it is an ncell = 800
+  quantity and it drifts, 1.3215 at 100 to 1.3226 at 800). Still 63 metrics, still READY, still
+  staged only in queue_cases/J4.2/page/.
+  THE FAKE-MOVER DEFECT INSIDE THE ANTI-FAKE MACHINERY IS FIXED AND THE CLASS IS CLOSED. _lag_alt
+  returned five hard-coded 0.0s, so its coverage links recorded a move of exactly 1.0 whatever the
+  reported value was, and it was the ONLY cover of four metrics. lag_split now takes tangent="start"
+  (S_m forced to S_i) and the row RECOMPUTES the alternative split through the same lag_split /
+  lag_share the reported split comes from: the returned lags are -1.1e-16 h and the shares -3.6e-18,
+  zero to round-off rather than zero by assertion, and no reported value changed. ON TOP OF THAT a
+  STATIC GUARD now parses every row''s own source plus one level of the notebook helpers it names and
+  rejects any agreement.json key bound to a numeric literal or to a local name only ever assigned
+  one - dict literals, dict(...) calls and d["key"] = ... assignments alike. All 24 rows are clean.
+  Its teeth are MEASURED, not claimed: the old row is kept verbatim as a negative control and the
+  guard is asserted to catch all five of its literal metrics and to leave its _-prefixed diagnostic
+  alone. Sabotage-tested three ways in a scratch tree, all three caught: a row returning a literal, a
+  row returning a name frozen to a literal, and a literal planted in the shared _reading HELPER two
+  lambda rows delegate to (both rows flagged, which is what the "one level" claim buys).
+  THE SWEEP COUNT NOW MATCHES THE SHIPPED SHAPE. FILES includes ../models_entry.yaml, which exists in
+  the queue tree and not in pages/ shape, so README.md and meta.yaml claimed 83 while the published
+  page would print 53. Both counts are now pinned in the notebook (SWEEP_TOKENS_BY_SHAPE = {4: 93,
+  3: 60}, the counts having grown with this pass''s prose) and the shape that is executing is
+  ASSERTED; both are quoted in README.md and meta.yaml; verified by a full integrate_case.py J4.2
+  J4.6 rehearsal in a throwaway clone, where the re-executed page prints 60 of 60 and check_metadata
+  says "metadata OK (0 warning(s))".
+  FOUR SMALLER THINGS. (1) critical_inoculum_S1_init_sensitivity_rel was the one metric of 63 whose
+  strongest cover, 0.23 %, sat below the 5 % at which check_agreement compares; it gets a new row
+  that drops the largest sampled S_1(0) and re-root-finds the rest (0.4071 % against the reported
+  5.2120 %, a 92 % move), and the notebook now PRINTS AND ASSERTS the weakest cover on the page,
+  10.0000 % on monod_theta_c_h. 24 rows, 154 links. (2) The sweep''s teeth are hardened in place:
+  every digit position of every token corrupted by +1 and by +5, 1430/1432 rejected in the queue
+  shape and 934/936 in the published one, leaving ONE distinct substitution, which the code names by
+  the live value it lands on - 0.6076462 -> 0.6076472, the reported Richardson tau = 6 h outlet
+  turning into the LSODA batch reference 0.60764725 printed beside it - and a second distinct
+  survivor fails the build. (3) The three restatement headlines that were metrics of nothing are now
+  written to five or more decimals in README.md and models_entry.yaml (99.90431 %, 1.7490088 %,
+  114.67072-fold) and printed to matching precision, which puts them inside the sweep. (4) The
+  X_crit-proportional-to-Y note now says the substitution u = X/Y is available BECAUSE THE FEED IS
+  STERILE.
+  Runtime 55 s (was 45), declared bumped 60 -> 70; the extra ~11 s is the new row''s four
+  event-terminated Brent root-finds. Two consecutive executions still give an identical content hash
+  over every cell source and output including both figure PNGs, and a byte-identical agreement.json.'

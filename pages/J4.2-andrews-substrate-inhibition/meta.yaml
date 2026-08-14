@@ -1,0 +1,435 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J4.2
+slug: andrews-substrate-inhibition
+title: "Andrews' inhibition function: the two claims in his Summary, tested"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 70
+datasets:
+  - andrews1968-printed-model
+
+reference:                       # the ORIGIN, and it IS on disk and WAS read
+  authors: ["Andrews, J. F."]
+  year: 1968
+  title: >
+    A Mathematical Model for the Continuous Culture of Microorganisms Utilizing
+    Inhibitory Substrates
+  container: "Biotechnology and Bioengineering 10(6) 707-723 (1968)"
+  doi: 10.1002/bit.260100602
+  note: >
+    ORIGIN_CONSULTED. The paper is on disk and all seventeen pages were read at
+    300 ppi, the file's native resolution (`pdfimages -list` reports every page
+    as CCITT-G4 bilevel at 300x300 ppi, so rendering higher would be
+    interpolation). Identity confirmed from the document's own first page: the
+    masthead "BIOTECHNOLOGY AND BIOENGINEERING / VOL. X, PAGES 707-723 (1968)",
+    the title, the by-line "JOHN F. ANDREWS, Environmental Systems Engineering,
+    Clemson University, Clemson, South Carolina 29631" and the Summary. The DOI
+    is the catalogue's, crossref-verified 2026-08-02 field by field against the
+    catalogue citation; a 1968 paper prints no DOI, so it is not confirmed from
+    the document and nothing on the page depends on it.
+    TWO BYTE-IDENTICAL COPIES of this PDF arrived (md5
+    1cd0f791c388e168ab2304134187a5a3, 487616 bytes each); the second is parked
+    in ~/papers/pymrm-gallery/duplicates/ and is not a second part.
+
+origin_not_consulted:
+  - authors: ["Haldane, J. B. S."]
+    year: 1930
+    container: "Enzymes, Longmans, London (1930)"
+    role: >
+      Andrews' reference 9 and the ORIGIN OF THE INHIBITION FUNCTION ITSELF.
+      Not on disk, not read. Nothing on this page is attributed to Haldane
+      beyond what Andrews prints about him - that the function was "proposed by
+      Haldane for the inhibition of enzymes by high substrate concentration".
+  - authors: ["Dixon, M.", "Webb, E. C."]
+    year: 1964
+    container: "Enzymes, Academic Press, New York (1964)"
+    role: >
+      Andrews' reference 11, cited on his p. 709 for "techniques which may be
+      used to evaluate the function parameters from experimental data". Not on
+      disk, not read - which is one reason this page FITS NOTHING.
+  - authors: ["Monod, J."]
+    year: 1942
+    container: "Recherces [sic] sur la croissance des cultures bacteriennes, Hermann et Cie, Paris (1942)"
+    role: >
+      Andrews' reference 1. Not on disk, not read. NOTE THE YEAR AND THE
+      SPELLING: Andrews cites the 1942 edition and prints "Recherces" for
+      "Recherches"; J4.1 records Levenspiel citing "Recherches ... Second ed.,
+      Herman [sic], Paris, 1958", while Froment and Rawlings & Ekerdt both cite
+      the 1949 Annual Review of Microbiology article. Three documents, three
+      different Monod publications, none on disk. This page adjudicates none of
+      it and reports only what each prints.
+  - authors: ["Moser, H."]
+    year: 1958
+    container: "The Dynamics of Bacterial Populations Maintained in the Chemostat, Carnegie Inst. of Washington (1958)"
+    role: >
+      Andrews' reference 2. Not on disk, not read. Transcribed into this page's
+      CSV as a service to J4.1, which could not attribute the Moser growth law
+      to Moser personally. Nothing on this page is attributed to him.
+  - authors: ["Teissier, G."]
+    year: 1936
+    container: "Ann. Physiol. Physicochim. Biol. 12, 527 (1936)"
+    role: >
+      Andrews' reference 3, spelled TEISSIER; Rawlings & Ekerdt, quoted on J4.1,
+      spell the growth law "Tessier". Neither spelling is repaired. Not on disk,
+      not read, nothing attributed.
+  - authors: ["Contois, D. E."]
+    year: 1959
+    container: "J. Gen. Microbiol. 21, 40 (1959)"
+    role: "Andrews' reference 4. Not on disk, not read, nothing attributed."
+  - authors: ["Brennan, R. D."]
+    year: 1964
+    container: "PACTOLUS - A digital analog simulator program for the IBM 1620, IBM Research RJ 297 (1964)"
+    role: >
+      Andrews' reference 8 and the solver he used. Not on disk, not read. It is
+      recorded because it is why the numbers this page reproduces are
+      SIMULATION OUTPUT and reproducing them is reproduction, not validation.
+
+other_sources_used:
+  - page: J4.1-monod
+    role: >
+      ONE BORROWED CSV, pages/J4.1-monod/data/printed-growth-laws.csv, loaded
+      with gallery_utils.load_data(..., page="J4.1-monod"). J4.1 was published
+      immediately before this page and DELIBERATELY LEFT SUBSTRATE INHIBITION
+      HERE: it transcribed Froment's eq. (1.5.2-4) and Rawlings & Ekerdt's
+      substrate-inhibition row, flagged both "OUT OF SCOPE - belongs to J4.2",
+      and never fitted or evaluated either. This page picks up exactly those two
+      rows plus J4.1's froment_rm_definition, froment_asymptote,
+      rawlings_steady_states and rawlings_Dc rows, proves all three printed
+      inhibition forms are one function in sympy, and prints every number it
+      shares with J4.1 beside J4.1's own value. NOTHING THAT IS A ROW IN THAT
+      CSV IS RETYPED. The findings J4.1 states about the rows used, and whether
+      each affects this page, are tabulated in the page's own `The data`
+      section. Froment, Rawlings & Ekerdt and Levenspiel themselves were NOT
+      opened for this page; everything from them arrives through J4.1's
+      transcription, which J4.1 made on 300 and 600 ppi renders.
+
+data:
+  tier: 1
+  method: >
+    Transcription only. Every equation, figure-legend parameter set and stated
+    result was read on a 300 ppi render of the page that prints it and re-read
+    on a crop enlarged to digit scale. NO CURVE IS DIGITISED anywhere on this
+    page.
+  status: complete
+  the_paper_prints_no_table: >
+    Confirmed two ways. `pdftotext -layout` over all seventeen pages gives 51484
+    characters and a case-insensitive search for `table` returns exactly two
+    hits, BOTH inside the word "unstable"; and all seventeen 300 ppi renders
+    were read, with no ruled block, no column head and no "Table N" caption
+    anywhere. The paper prints TEN figures, Figs. 1-10, and every parameter set
+    is typeset inside a legend, which is why this case is not figure-gated:
+    reading a typeset legend is transcription, not digitising. Figs. 2 and 3 are
+    PACTOLUS block diagrams and carry no parameter set; the other eight carry one
+    each and all eight are in the CSV.
+  no_measurements_anywhere: >
+    THE PAPER CONTAINS NO EXPERIMENTAL DATA. The only measurements it refers to
+    are other people's, in prose and without numbers (Boon and Laudelout on
+    Nitrobacter winogradskyi, p. 708). This page therefore FITS NOTHING and no
+    number on it is a goodness of fit.
+
+what_the_page_reproduces_and_what_it_cannot:
+  reproduced: >
+    Andrews' two stated batch times (36 hr and 12.5 hr, book p. 715) and all six
+    stated outcomes of his three continuous-culture experiments (book p. 719).
+    THESE ARE HIS OWN PACTOLUS OUTPUT, AND THE TWO TIMES ARE HIS OWN READINGS OF
+    HIS OWN PLOT - "It can be seen that only 12.5 hr are required..." - so they
+    carry his reading precision, not his solver's. Matching them is
+    REPRODUCTION, NOT VALIDATION: it says the equations were transcribed and
+    integrated correctly and says nothing about whether microorganisms behave
+    this way.
+  out_of_scope: >
+    THE FIGURE COMPARISON ITSELF. No curve on any of Andrews' ten figures is
+    traced, so THIS PAGE DOES NOT ESTABLISH EMPIRICAL ADEQUACY AGAINST HIS
+    PLOTTED RESULTS. TWO THINGS READ INSIDE FIGURES ARE DECLARED WHERE THEY ARE
+    USED, and neither is a digitisation: Fig. 7's typeset annotation, which is
+    text and is transcribed into the CSV, and the fact that both of Fig. 9's S_1
+    curves start at the origin, which corroborates an unprinted initial
+    condition. No axis was calibrated, no point was extracted, and no number on
+    the page comes from either curve. Any claim that lives only in the shape of one of those
+    curves is left there. Two initial conditions he does not print - Fig. 9's
+    S_1(0) and Fig. 10's initial state - are assumptions of this page, stated as
+    such, with the sensitivity of the answer to each reported over the WHOLE
+    sampled interval rather than a flattering part of it: the critical inoculum
+    varies 5.2120 % over S_1(0) in [0, 0.2] g/l (0.4071 % over [0, 0.05] alone).
+    THAT TRUNCATION IS ALSO A BREAK ROW, which is why the reported spread is
+    covered at 92 % rather than at the 0.23 % its only previous mover managed:
+    it was the one metric of the 63 whose strongest cover sat below the 5 % at
+    which check_agreement compares, so no defect this page injects could have
+    shown up as a regression in it. The row drops the largest sampled S_1(0),
+    re-root-finds the rest and reports 0.4071 % against the reported 5.2120 %.
+    S_1(0) = 0 IS CORROBORATED BY ANDREWS' OWN FIG. 9, where both S_1 curves
+    emanate from the origin while the two X_1 curves start at 0.10 and 0.50 as
+    labelled, read on a 300 ppi crop of the rotated landscape page.
+
+printed_defects_reported_not_repaired:
+  - >
+    eq. (9), book p. 712, is printed with a BARE `+` and no `+-`, read at digit
+    scale. The quadratic has two roots and Andrews' own text one paragraph later
+    says so; the root eq. (9) as printed returns is the HIGHER one, which the
+    same paper calls unstable. The page computes both roots by an independent
+    Brent root-find and checks eq. (9) against the upper one; it does not
+    "correct" eq. (9).
+  - >
+    eq. (10), book p. 712, is printed `X_i = Y(S_0 - S_1)` where X_1 is meant.
+    X_1 is the effluent organism concentration in eq. (7), in the symbol list on
+    the same page and in Fig. 8's labels; X_i is this paper's symbol for the
+    INITIAL INOCULUM (p. 713 and Fig. 9's key). The text layer of this scan
+    turns X_1 into "XI", so only a render could show it.
+    ONE NUANCE THE PAGE CARRIES: the symbol convention is not one Andrews keeps
+    perfectly. On p. 719 he writes "two different values of initial organism
+    concentration (X_1)" and three lines later "The process fails when
+    X_i = 0.10 g/l" - both symbols for the inoculum on one page, read at digit
+    scale (upright 1, then dotted italic i). The eq. (10) finding stands - the
+    quantity it defines is the effluent concentration whatever he calls the
+    inoculum - but it rests on the symbol list and eq. (7), not on a convention
+    the paper observes without exception.
+  - >
+    The legends of Figs. 4 (p. 714) and 7 (p. 718) print `Y = 0.5 GM/L`. Y is
+    defined on p. 711 as "yield coefficient, mass organisms produced/mass
+    substrate utilized", i.e. DIMENSIONLESS, and eq. (5) requires it so. Five of
+    the seven legends carrying Y print `GM/GM`. THE CONSTRAINT THAT DECIDES IT
+    IS THE PRINTED DEFINITION PLUS THE DIMENSIONS OF EQ. (5), not the
+    five-to-two count. The numeral 0.5 is not in question, only the unit.
+  - >
+    Reference 1 prints "Recherces sur la croissance des cultures bacteriennes"
+    [sic] for "Recherches", read at digit scale.
+  - >
+    Book p. 719 prints "failure may occur due to step chances in S_0" [sic] for
+    "step changes".
+  - >
+    "innoculum" for "inoculum" throughout (pp. 713, 715, 719 and the captions of
+    Figs. 6 and 9).
+  - >
+    The Summary prints "the use of a inhibition function" [sic].
+
+approximation_stated_as_an_identity_and_NOT_called_a_defect: >
+  Andrews defines K_s as "the lowest concentration of substrate at which the
+  specific growth rate is equal to one-half the maximum specific growth rate in
+  the absence of inhibition" and K_i as "the highest" (book p. 709). Setting
+  eq. (1) equal to muhat/2 gives S = K_i(1 -+ sqrt(1 - 4 K_s/K_i))/2, so both
+  definitions are exact only as K_s/K_i -> 0 and NEITHER HAS A SOLUTION unless
+  K_i >= 4 K_s - which is exactly the condition under which his own eq. (2)
+  gives muhat_m >= muhat/2. HOW FAR OUT THEY ARE DEPENDS ON WHICH OF HIS THREE
+  PRINTED K_i YOU TAKE, and the page prints all three rather than the mildest:
+  at K_i = 2.0 g/l (Figs. 6-10, this page's case) the exact roots are
+  0.030464028517 and 1.969535971483 g/l, +1.5468 % and -1.5232 % off the values
+  he names them for; at the K_i = 1.0 g/l of his Fig. 4, +3.1947 % and
+  -3.0958 %; and at the K_i = 0.50 g/l of his Fig. 1, +6.8502 % and -6.4110 %.
+  Quoting only the K_i = 2.0 row would understate the approximation more than
+  fourfold for a case he prints. THIS IS NOT FILED AS A DEFECT: it is an
+  approximation rather than a misprint, and the nearest thing in the paper to a
+  qualification is on the same page, "even when K_s and K_i are well separated
+  there is a considerable reduction in the maximum specific growth rate
+  attainable". The page supplies the number and the exact condition and does NOT
+  claim Andrews was unaware.
+
+validation:
+  ranking: >
+    No worked example with printed intermediates and no measurements exist, so
+    the two highest available routes are used and the fourth is refused:
+    (2) internal identities the paper must satisfy, and (3) stated numerical
+    results in the text. (4) figure digitisation is REFUSED, with the
+    consequence stated on the page.
+  identities: >
+    eqs. (2), (3), (6) and (11) re-derived from eq. (1) in sympy with residual
+    exactly 0; the batch-time closed form derived by partial fractions with both
+    the decomposition and the antiderivative residuals exactly 0; Andrews'
+    eq. (1) proved identical to Froment's eq. (1.5.2-4) and to Rawlings &
+    Ekerdt's substrate-inhibition form with K_1 = 1/K_i, both residuals exactly
+    0; eq. (11) equal to 1/eq. (2) to 0.0 in double precision. All printed,
+    NONE reported as metrics, because a symbolic zero is a proof rather than a
+    measurement.
+  one_sentence_with_three_readings_settled_by_a_figure_annotation: >
+    Book p. 715 describes the acclimated-seed procedure as "a substrate
+    concentration of 2.0 g/l with the substrate concentration being increased in
+    2.0 g/l steps after reduction in each case to 0.02 g/l". In isolation that
+    supports THREE literal readings - reset to 2.0, increment by 2.0 from the
+    0.02 left behind, or step the initial concentration up a 2.0/4.0/6.0 ladder -
+    giving 12.366419 h, 12.371597 h and 13.794022 h, a RAW SPREAD OF 11.5442 %
+    against his printed 12.5 hr. THE TYPESET ANNOTATION INSIDE FIG. 7 SETTLES IT:
+    "REPEATED ORGANISM SEPARATION & DILUTION. S_i ADDED IN INCREMENTS OF 2.0
+    GM/L", read at digit scale on a 300 ppi crop of the rotated landscape page
+    and transcribed into the CSV as fig7_annotation. "Added in increments of 2.0"
+    is the increment reading, so 12.371597 h (-1.0272 %) is what the page
+    reports; the reset reading is kept and priced at 0.0419 % away, and the
+    ladder reading is reported as the one the annotation excludes. The page does
+    not call the sentence ambiguous, because his own figure is not.
+  stated_results: >
+    36.527476 h against Andrews' 36 (+1.4652 %) and 12.371597 h against his 12.5
+    (-1.0272 %), both from the closed form; and all six stated outcomes of
+    Figs. 8, 9 and 10 reproduced, with the thresholds he does not print
+    root-found.
+  second_independent_computations: >
+    SIX quantities are computed twice, and the page distinguishes the FOUR that
+    are genuinely independent from the TWO that are transcription checks. The
+    four: the batch time by closed form against LSODA (6.7e-12 rel); the critical
+    inoculum by bisection on the IVP outcome against the saddle's
+    backward-integrated stable manifold (2.4e-12 rel); the critical step by
+    bisection against a separatrix side test (8.1e-14 rel); and the X_0 that
+    kills the fold by root counting against a double-root solve (1.2e-9 rel at
+    the finest scan). The two transcription checks: eq. (9) as printed against a
+    Brent root of mu(S) = 1/theta (1.1e-16 rel) and the transcritical residence
+    time as 1/mu(S_0) against a Brent root of eq. (9) at S_+ = S_0 (exactly 0.0)
+    - both are the same algebra written twice, so they agree by construction and
+    catch only a mis-transcription, which is what they are called on the page and
+    what the break table injects into them. The whole range is 0.0 to 1.2e-9.
+    Beyond those, the pymrm marcher and plug-flow solve are refined against LSODA
+    and the batch IVP with Richardson extrapolation.
+  root_found_never_swept: >
+    Every threshold on the page is a Brent root on an EVENT-TERMINATED
+    integration - the classifier stops on reaching the operating state or on
+    biomass falling through 1e-9 g/l - so no number is read off the end of a
+    fixed window and no extremum is a grid maximum. THE ONE GRID-LIMITED
+    QUANTITY IS CAUGHT AND NOT REPORTED: the X_0 fold found by bisecting an
+    integer root count is grid-limited by construction, its scan is refined over
+    three scans across six orders of magnitude to show it converging (4.9e-3,
+    5.3e-6, 1.2e-9), and the
+    reported value is the double-root one, which has no grid in it.
+  refinement: >
+    Both axes that carry error are refined. The pymrm backward-Euler chemostat
+    marcher gives observed order 1.0021 over nstep 150..2400 with Richardson
+    338x better than the finest step; the pymrm plug-flow solve gives observed
+    order 1.0011 over ncell 100..800 with Richardson 637x better than the finest
+    grid.
+    THE TWO WAYS OF READING THE OUTLET ARE BOTH REFINED AND THE PAGE REPORTS WHAT
+    IT MEASURED, not the standing warning: against the same batch reference on
+    the same four grids, the compute_boundary_values read converges at order
+    1.0011 and the last-cell-centre read at 1.0013 - BOTH FIRST ORDER - and the
+    last-cell read is the CLOSER of the two at every grid, by a ratio that hardly
+    moves under refinement (1.3215 at ncell 100, 1.3226 at ncell 800).
+    That is what a zero-gradient outflow condition does: the boundary value is
+    reconstructed from an interior solution that is itself only first-order
+    accurate. compute_boundary_values is kept because it returns the value the
+    flux operator transports, so a mass balance written on it closes - a
+    consistency argument, not an accuracy one - and because it stays right when
+    the outflow condition is not zero-gradient. J4.1 measured the same pair on
+    its own Monod plug-flow problem and found both reads first order there too,
+    with the last-cell read closer by a different constant.
+    NO PLUG-FLOW OUTLET IS REPORTED OFF A SINGLE GRID: the tau = 6 h outlet is
+    reported as the Richardson value of ncell 1200 and 2400, 0.6076462 g/l,
+    with the raw ncell 1200 value printed beside it and its 0.1637 % distance
+    from the batch reference stated; the tau = 3 h value is named
+    pfr_outlet_X_at_tau3_ncell800_g_per_l so that its key says it is a grid
+    quantity, and the ratio between the two reads is named
+    pfr_boundary_over_last_cell_err_ratio_ncell800 for the same reason - it is
+    a grid quantity too, and it drifts, 1.3215 at ncell 100 to 1.3226 at 800.
+  branches: >
+    The lag decomposition is piecewise in K_i - the steepest point of the batch
+    run is the interior peak S_m when S_m < S_i and the start of the run
+    otherwise - and BOTH BRANCHES AND THE SWITCH are exercised: K_i = 2, 5, 10
+    on the interior-peak branch, K_i -> infinity on the other, and
+    K_i = S_i^2/K_s = 3333.3333 exactly at the switch, where the lag is
+    -6.4e-23 h and the split is continuous.
+  break_table: >
+    TWENTY-FOUR defect injections, and the coverage map is GENERATED FROM THEIR
+    MEASURED MOVES rather than written by hand: every row returns a dictionary
+    keyed by metric name whose values are those metrics recomputed under the
+    defect, a row covers a metric only if the recomputed value moves it by more
+    than 1e-6 relative, and the notebook fails to execute if any metric is
+    neither moved nor named structural or if any row moves nothing. All 63
+    metrics are moved by at least one row, over 150 measured row-metric links.
+    AND THE ROWS THEMSELVES ARE PARSED RATHER THAN TRUSTED. A row that returned a
+    TYPED CONSTANT for a metric would record a relative move of exactly 1.0
+    whatever the reported value was, so its coverage links could not fail - a
+    hand-written coverage claim wearing the generator's clothes. This page
+    shipped that: the lag row returned five literal 0.0s and was the only cover
+    of four metrics. It now recomputes the alternative split through the same
+    lag_split/lag_share the reported split comes from, with S_m forced to S_i
+    (the values are unchanged, the link became falsifiable), and a static guard
+    reads every row's own source plus one level of the notebook helpers it names
+    and rejects any agreement.json key bound to a numeric literal or to a local
+    name only ever assigned one. The guard's teeth are MEASURED: the offending
+    row is kept verbatim as a negative control and the guard is asserted to catch
+    all five of its literal metrics and to leave its _-prefixed diagnostic alone.
+    An earlier draft carried the link as free text and two of its entries were
+    false - one named a row that never recomputed the metric, another asserted
+    that two routes "part company" under a defect they both carry, where they in
+    fact still agree to 6e-14. FOUR rows are transcription errors rather than
+    physics errors, because four reported residuals (eq. 2 and eq. 3 against
+    their root-found values, eq. 9 against the Brent root, and the transcritical
+    residence time by its two routes) are zero by algebra whenever the copying is
+    right: they are labelled transcription checks, not independent computations,
+    and each has a row that mis-transcribes one term of the equation it checks.
+  below_the_CI_floor: >
+    FIVE of the 63 metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 and
+    are therefore OUTSIDE the regression suite: eq2_vs_rootfound_max_rel,
+    eq3_vs_rootfound_argmax_rel, eq9_printed_vs_rootfound_upper_rel,
+    theta_transcritical_two_routes_rel and critical_step_two_routes_rel. Each is
+    named on the page with an ABOVE-FLOOR COMPANION carrying the same physics
+    (mu_hat_m_eq2_per_h, S_m_eq3_g_per_l, steady_S_upper_g_per_l,
+    theta_transcritical_h, critical_step_S0_g_per_l), and an assertion checks
+    that every below-floor metric has one and that no companion is itself below
+    the floor.
+  structural_and_labelled_so: >
+    eq. (11) minus 1/eq. (2) is exactly 0.0 because they are the same arithmetic
+    expression; S + X/Y conservation is enforced cell by cell by the
+    yield-coupled source whatever the grid; the Fig. 8 threshold is exactly
+    S_0 = 5.0 g/l BY CONSTRUCTION, because the initial state is the steady state
+    at that S_0, so what the +-0.2 excursions test is the DIRECTION and the
+    reported metric is fig8_direction_ok; and the plug-flow outlet is monotone in
+    residence time because dX/dt = mu X > 0, which is a property of eq. (4) and
+    not a measurement. All four are named as identities on the page, under the
+    names the code prints them by - none of them is an agreement.json key.
+  prose_sweep: >
+    101 prose and metadata values are checked against the live computation by an
+    assertion cell plus nine structural assertions; the notebook FAILS TO EXECUTE
+    if any drifts. A SECOND, MECHANICAL SWEEP then reads this file, README.md,
+    the data sidecar and models_entry.yaml and requires every number written to
+    five or more decimal places to match a live value to half an ulp of its own
+    printed digits. Five decimals rather than four is deliberate: it excludes the
+    DOI without needing an exception list. THE TOKEN COUNT DEPENDS ON THE SHAPE
+    THE PAGE IS IN, and both counts are pinned in the notebook and the one that
+    applies is asserted: 93 tokens across the four files in the case queue, 60 in
+    the published page, where integrate_case.py has spliced models_entry.yaml
+    into models.yaml so that only three of the four sit next to the notebook (on
+    Colab none of them do, and the sweep says so and counts them). The sweep
+    MEASURES ITS OWN TEETH instead of claiming completeness, by corrupting the
+    last printed digit of every token it found and reporting how many of those
+    corruptions it rejects: 100 %. HARDENED on the spot to every digit position,
+    by +1 and by +5, it rejects all but ONE substitution, which the code names by
+    the live value it lands on: the reported Richardson plug-flow outlet at
+    tau = 6 h, 0.6076462, corrupted in its seventh decimal into the LSODA batch
+    reference 0.60764725 printed beside it, a millionth away. A second distinct
+    survivor fails the build. Three quantities that are NOT metrics -
+    t_peak/t_f, the fraction of the run above half the peak rate and the fold
+    rise during the lag - are written to five or more decimals in README.md and
+    models_entry.yaml for exactly this reason: check_agreement never compares
+    them, so the sweep is the only net they can be inside.
+  determinism: >
+    Nothing on this page is stochastic - no sampling, no bootstrap, no random
+    initial guess, and the one continuation-shaped calculation (the plug-flow
+    sweep over residence time) uses a DETERMINISTIC per-tau initial guess, the
+    batch trajectory sampled at z/v, rather than a warm start from the previous
+    tau, so no reported number can depend on the sweep order. Two consecutive
+    executions give a byte-identical agreement.json and an identical content
+    hash over all cell sources and outputs including both figure PNGs.
+
+honesty:
+  what_pymrm_adds: >
+    Little to the 0-D physics and something real to the question Andrews leaves
+    open. The batch and chemostat balances are two ODEs; NumJac + newton solves
+    them at first order in the step and agrees with LSODA, which demonstrates
+    the pymrm route is correct rather than improving on Andrews, and the
+    batch-time closed form owes nothing to pymrm either. What pymrm does add is
+    the SPATIAL comparison: construct_convflux_upwind + construct_div + NumJac +
+    newton solve the plug-flow limit of the "multistage operation with separate
+    substrate supply" that Andrews' Discussion lists as work in progress, and
+    that reactor has NO bistability at any residence time or seed. That confirms
+    his prediction IN THAT LIMIT ONLY - a finite cascade is not solved here and
+    his other two modifications, both recycle problems, are untouched. The
+    non-sterile-feed result is likewise this page's, not Andrews'.
+  is_this_a_fit: >
+    NO. Nothing is fitted anywhere on this page and there is nothing to fit to.
+    Every constant is printed by Andrews in a typeset figure legend or in running
+    text, and the page contains no free parameter.
