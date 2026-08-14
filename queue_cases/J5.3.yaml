@@ -5,7 +5,8 @@ catalog_reference: Chiu, Carratt & Soong (1983)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J5.3-chiu-gel-effect/
 reference:
   authors:
   - Chiu, W. Y.
@@ -26,7 +27,74 @@ paper:
 blocker: null
 notes: DOI was already in the file as crossref-auto; confirmed against the Crossref title, container,
   volume and year on 2026-08-02.
-updated: '2026-08-06'
+updated: '2026-08-14'
+built:
+  staged_at: queue_cases/J5.3/page/
+  notes: >
+    Page built and executed clean (~190 s after the 2026-08-14 fixer pass; the
+    declared runtime_seconds is 190, measured 189.4 and 190.3 s on two
+    consecutive executions).  SCOPE DECISION, made explicitly and
+    recorded on the page: the experimental comparison lives only in Figures 3-9
+    (Marten & Hamielec's data, ref 7), so it is OUT OF SCOPE and nothing is
+    digitised; the page tests what the paper prints in numerals - Table I,
+    Table II, six stated results, two internal correlations and two structural
+    claims about the model.  The first_page_trap was honoured at both ends and
+    every numeral was located on a running-head-verified page before being read
+    on a 300 ppi crop.
+    models.yaml has NO J5 entry of any kind, so queue_cases/J5.3/models_entry.yaml
+    is an APPEND, not an upgrade in place.  J4.8 is currently the LAST entry in
+    models.yaml, so there is no `before_id` to splice against and the block goes
+    at the end of the file; verified 2026-08-14 by appending it to a scratch copy
+    and running check_metadata.py against a pages/-shaped copy of the page - it
+    parses, the id appears exactly once, status=published, slug=chiu-gel-effect,
+    page=pages/J5.3-chiu-gel-effect/, "metadata OK (0 warnings)".
+  fixer_2026_08_14: >
+    Nine findings from queue_cases/J5.3/review/verification.md applied.  THREE
+    agreement.json VALUES MOVED - eq22_rm_over_rD_max_dev 1.53e-16 -> 1.858e-05
+    (the metric was rewired from two closed-form scalars to the shell solve's
+    DISCRETE FLUX, which is the only version of it that is a second route),
+    switch_logkt_jump 0.759993 -> 0.760194 (lambda_0 root-found at x_c instead of
+    read at the nearest grid point) and onset_definition_band_max 0.024240 ->
+    0.051258 (the 3-5-decade window admitted to the band) - and FOUR METRICS WERE
+    ADDED: onset_dev_other_loading_max, onset_resample_floor_max_rel,
+    A_gain_min_at_Tgp_band_ends, A_second_difference.  52 metrics -> 56, 50 break
+    rows -> 52, 224 links -> 248, below-floor 4 -> 3.  Case remains `ready`.
+  fixer_2026_08_14_second_pass: >
+    F10 plus the three cosmetic items from the second verifier pass
+    (queue_cases/J5.3/review/verification.md, "Second pass") applied.  ONE
+    agreement.json VALUE MOVED: onset_definition_band_max 0.051258 -> 0.090094,
+    the 4-6-decade window ADMITTED to the definitional band rather than named
+    beside the excluded steepest-slope reading.  Measured before deciding: that
+    window's fit mask ends at x = 0.7766 / 0.7733 / 0.8568 / 0.8484 at the four
+    50 and 70 degC conditions and only reaches X_HI = 0.86 at 90 degC, so the
+    page's own (and only) exclusion ground - "the reading is set by where the
+    curve is truncated, not by the curve" - acquits it at four of six
+    conditions, INCLUDING the condition at which the widened band is attained
+    (70 degC / 0.0258).  Moving X_HI to 0.90/0.93/0.96 moves the 4-6 reading by
+    at most 5e-5 at 50 and 70 degC, against 0.057 for the steepest reading - so
+    on the very test that justifies the one exclusion this page makes, the 4-6
+    window behaves like the readings that are kept in and not like the one that
+    is kept out.  Every ratio built on the band was RECOMPUTED, not retyped:
+    band/largest-miss 5.31 -> 9.33, widening 2.1147x (five -> six readings) then
+    1.7576x (six -> seven), 3.7168x in all; both narrower bands are kept LIVE as
+    break rows so neither retraction is a remembered number.  Readings in the
+    band 6 -> 7 (six of "the sloped region", one of "the initial value"); break
+    rows 52 -> 53, method rows 33 -> 34, links 248 -> 249, CLAIMS 77 -> 82,
+    prose counts 17 -> 18; sweep pins 169/537 -> 186/540 (queue shape) and
+    126/464 -> 139/467 (published shape), both re-confirmed BY EXECUTION in
+    their own shape.  Cosmetic: models_entry.yaml now carries the
+    six-independent-routes-plus-one-deliberately-broken caveat the notebook and
+    meta.yaml already had; the eq. 22 maximum is stated to be attained at
+    r_m/r_D = 0.01 at every n on the ladder; and the tangent onset at the
+    tabulated theta_t is now printed at BOTH nx = 2001 (0.25455, the withdrawn
+    triple's resolution) and nx = 4001 (0.25453), with the 2.1e-05 between them
+    named as the resampling floor and asserted monotone at both.  No other
+    metric moved; 56 metrics, 0 weak, 3 below floor.  Two consecutive
+    build+execute runs: notebook stream output byte-identical (40 891 chars),
+    agreement.json byte-identical, figure PNG identical by SHA-256; 188.3 and
+    187.0 s against the declared 190, and 187.2 s in the pages/-shaped copy.  check_metadata.py on a pages/-shaped
+    scratch copy with models_entry.yaml appended to models.yaml: "metadata OK
+    (0 warning(s))", exit 0.  Case remains `ready`.
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because

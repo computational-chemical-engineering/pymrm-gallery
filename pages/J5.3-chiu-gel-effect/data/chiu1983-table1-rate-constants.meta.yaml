@@ -1,0 +1,127 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: chiu1983-table1-rate-constants
+title: >
+  Table I of Chiu, Carratt & Soong (1983), book p. 352 (PDF page 5),
+  "Numerical Values of Parameters Used in Model Calculation" - the eight printed
+  lines, parsed into a machine-readable form and read glyph by glyph on a
+  300 ppi crop enlarged to digit scale.
+
+READ_THIS_FIRST: >
+  THESE ARE NOT THIS PAPER'S MEASUREMENTS.  Table I carries the superscript
+  reference marks "6,7" in its own heading: the constants are taken from
+  Schmidt, A. D. & Ray, W. H., Chem. Eng. Sci. 1981, 36, 1401 (ref 6) and
+  Marten, F. L. & Hamielec, A. E., ACS Symp. Ser. 1979, No. 104, 43 (ref 7).
+  Neither of those papers is on disk, so NOTHING here is traced past this
+  table and the page says so; they are recorded as origins not consulted.
+  THE FILE STRADDLES THREE ARTICLES.  PDF page 1 opens with the References and
+  Notes of the PRECEDING article (a Zambelli stereochemistry paper) and Chiu et
+  al. begin below it; PDF page 10 opens the NEXT article (Moore, "Radical
+  Reactions of Highly Polar Molecules", Macromolecules 1983, 16, 357-359),
+  which has a Table I of its own about the chain length of normal alkanes.
+  Every value in this file sits on PDF page 5, whose running head reads
+  "Chiu, Carratt, and Soong" - checked on the crop before any digit was read.
+  A PRINTED UNIT IS REPORTED AND NOT REPAIRED: k_d is printed with the units
+  "L/min" although eq. 1, (1/V) d(IV)/dt = -k_d I, makes it a FIRST-ORDER
+  constant whose units are 1/min.  The CSV carries the printed string in
+  units_as_printed and the page uses 1/min, labelled as an inference.
+
+source:
+  authors: ["Chiu, W. Y.", "Carratt, G. M.", "Soong, D. S."]
+  year: 1983
+  container: >
+    "A Computer Model for the Gel Effect in Free-Radical Polymerization",
+    Macromolecules 16(3) 348-357 (1983), Department of Chemical Engineering,
+    University of California, Berkeley, California 94720
+  doi: 10.1021/ma00237a002
+  doi_note: >
+    The catalogue's DOI, crossref-verified 2026-08-02 field by field against the
+    catalogue citation.  The 1983 typesetting prints no DOI; the ACS download
+    stamp down the right margin of every page carries
+    pubs.acs.org/.../ma00237a002.pdf, which agrees with it.  Identity was
+    confirmed from the document's own title block on a 300 ppi render.
+  table: "Table I, book p. 352 = PDF page 5, right column, top"
+  caption_as_printed: >
+    "Table I.  Numerical Values of Parameters Used in Model Calculation^6,7"
+
+acquisition:
+  method: transcription
+  detail: >
+    PDF page 5 rendered at the file's native 300 ppi (`pdfimages -list` reports
+    every page as CCITT-G4 bilevel at 300x300 ppi, so rendering higher would be
+    interpolation), the table cropped and read at digit scale.  The text layer
+    was used only to search, never for a digit.
+  ppi_native: 300
+  rendered_at_ppi: 300
+
+arithmetic_check_on_the_transcription: >
+  THE TWO PRE-EXPONENTIALS AND THE TWO ACTIVATION ENERGIES CHECK THEMSELVES
+  AGAINST THE PAPER'S OWN FIGURES.  Evaluated at 50 degC these constants give
+  log10 k_t^0 = 9.2952 and log10 k_p^0 = 4.5257, and Figure 10 (book p. 354)
+  plots log k_t and log k_p against conversion at 50 degC with the two plateaux
+  at about 9.3 and about 4.5 on an axis labelled 0 to 12.  Figures 11 and 12 do
+  the same at 70 and 90 degC, where the transcription gives 9.3229/4.6968 and
+  9.3475/4.8496.  THAT IS A CORROBORATION OF THE TRANSCRIPTION, NOT A DATA
+  SOURCE: no value read off any figure enters this CSV, any fit, or any metric,
+  and no curve in this paper is digitised anywhere on the page.  A wrong
+  pre-exponential mantissa would move a plateau by a readable amount on that
+  axis.
+
+columns:
+  symbol:
+    units: "-"
+    description: >
+      The symbol as printed: f, k_d, k_t^0, k_p^0, k_tc, d_p, d_m, T_gp.
+  units_as_printed:
+    units: "-"
+    description: >
+      The unit string exactly as the table prints it, including the k_d line's
+      "L/min", which is reported and not repaired (see READ_THIS_FIRST).
+  kind:
+    units: "-"
+    description: >
+      How the two numeric fields are to be read.  "constant" - value is a;
+      "arrhenius_over_T" - a exp(-b/T) with T in K, b in K;
+      "arrhenius_over_RT" - a exp(-b/(1.987 T)) with T in K, b in cal/mol, and
+      1.987 is the gas constant the table itself writes into the exponent;
+      "linear_in_T_minus_273" - a - b (T[K] - 273), note 273 and NOT 273.15,
+      which is what the table prints.
+  a:
+    units: "-"
+    description: >
+      Leading coefficient: 0.58, 6.32e16, 5.88e9, 2.95e7, 0, 1.2, 0.973, 114.
+  b:
+    units: "-"
+    description: >
+      Second coefficient where the kind needs one: 15430 K for k_d (printed as
+      15.43 X 10^3), 701 cal/mol for k_t^0, 4353 cal/mol for k_p^0, and
+      1.164e-3 g/(cm^3 K) for d_m.  Empty otherwise.
+  printed_line:
+    units: "-"
+    description: >
+      The whole line as printed, transliterated, kept so that the parse can be
+      audited against the source without the crop.
+
+rows: 8
+what_is_inert_here: >
+  k_tc = 0 IS THE PAPER'S OWN CHOICE AND IT MAKES PART OF THE PUBLISHED MODEL
+  INERT.  Termination by combination appears in eq. 5 and in the second terms
+  of eq. 15, 16 and 17, and with k_tc = 0 not one of those terms is exercised by
+  any calculation the paper reports.  The paper states the consequence itself,
+  book p. 352: "Note that termination by recombination is ignored in the
+  calculation, so the molecular weight predictions will be underestimated."
+  The page exercises those terms in its moment-closure identity with a
+  non-printed k_tc and says plainly that no printed condition does.
+molar_mass_is_not_in_this_table: >
+  THE MOLAR MASS OF THE MONOMER IS NOT PRINTED ANYWHERE IN THE PAPER, and the
+  moment equations 13, 14, 16 and 17 need M_0 = d_m/MW.  The paper prints the
+  Registry No. 80-62-6 for methyl methacrylate (book p. 356) and the monomer
+  density line above; MW = 100.117 g/mol follows from the formula C5H8O2 and
+  standard atomic weights.  THAT IS A RECONSTRUCTION AND IS LABELLED ONE
+  wherever it is used.  It affects only the molecular-weight moments: the
+  conversion history, the radical concentration, k_t, k_p and every onset number
+  on the page are independent of M_0, and the notebook demonstrates that rather
+  than asserting it.
+
+license: >
+  Transcription of an eight-line table of constants from a 1983 journal article.
+  No page image is reproduced and the PDF is not committed.

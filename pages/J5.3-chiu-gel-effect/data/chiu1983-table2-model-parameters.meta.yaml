@@ -1,0 +1,115 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: chiu1983-table2-model-parameters
+title: >
+  Table II of Chiu, Carratt & Soong (1983), book p. 353 (PDF page 6),
+  "Model Parameters Used in Fitting Experimental Data" - six rows of
+  (polymerisation temperature, initiator loading, theta_t, theta_p, A, B),
+  read cell by cell on a 300 ppi crop enlarged to digit scale.
+
+READ_THIS_FIRST: >
+  EVERY NUMBER IN THIS TABLE IS A FITTED PARAMETER, NOT A MEASUREMENT.  The
+  table's own title says so - "Model Parameters Used in Fitting Experimental
+  Data" - and Figure 13's caption repeats it: "Model parameters theta_t and
+  theta_p chosen for the best fit of experimental data".  Anything this page
+  computes FROM these six rows and compares against the paper is therefore a
+  consistency check on the authors' own fit, never a validation of the model
+  against measurement.  The measurements themselves (Marten & Hamielec, ref 7)
+  appear in this paper ONLY as plotted points in Figures 3-9 and are out of
+  scope: no curve and no marker is digitised anywhere on this page.
+  THE FILE STRADDLES THREE ARTICLES; this table sits on PDF page 6, whose
+  running head reads "Gel Effect in Free-Radical Polymerization", checked on the
+  crop before any digit was read.
+  A PRINTED DISCREPANCY IS REPORTED AND NOT REPAIRED: this table's lower
+  initiator loading is 0.01548 mol/L and so are the legends of Figures 4, 5 and
+  8 and the captions of Figures 6 and 8, but the legend of FIGURE 3 (book
+  p. 352) prints 0.01584 - the last two digits transposed.  Read at 3x on the
+  300 ppi bilevel image, the Figure 3 glyphs are unambiguous.  Five printings
+  against one makes 0.01548 the value this file carries, and the odd one out is
+  recorded rather than corrected; nothing on the page depends on which is right,
+  because 0.01548 is what Table II uses and Table II is what the model is run
+  with.
+
+source:
+  authors: ["Chiu, W. Y.", "Carratt, G. M.", "Soong, D. S."]
+  year: 1983
+  container: >
+    "A Computer Model for the Gel Effect in Free-Radical Polymerization",
+    Macromolecules 16(3) 348-357 (1983)
+  doi: 10.1021/ma00237a002
+  table: "Table II, book p. 353 = PDF page 6, spanning both columns at the top"
+  caption_as_printed: >
+    "Table II.  Model Parameters Used in Fitting Experimental Data"
+  column_heads_as_printed: >
+    "polym temp, degC" | "initiator loading, mol/L" | "theta_t, min" |
+    "theta_p, min" | "A" | "B"
+
+acquisition:
+  method: transcription
+  detail: >
+    PDF page 6 rendered at the file's native 300 ppi and the table cropped and
+    read at digit scale.  The text layer was used only to search.  The
+    mantissa-exponent cells are printed as "1.50 X 10^3" and are stored here as
+    plain floats, so 4.90 X 10 becomes 49.0 and 3.0 X 10 becomes 30.0.
+  ppi_native: 300
+  rendered_at_ppi: 300
+
+internal_structure_the_table_imposes_on_itself: >
+  THE TABLE CONSTRAINS ITSELF THREE WAYS AND ALL THREE ARE ASSERTED BY THE
+  NOTEBOOK.  theta_p, A and B are shared between the two initiator loadings at
+  each temperature (three distinct theta_p, three distinct A, one B), so six
+  rows carry only thirteen distinct numbers; theta_t is the only parameter that
+  varies with initiator loading and it is LARGER at the LOWER loading in all
+  three temperature pairs, which is the direction the paper explains on book
+  p. 355 ("theta_t is consistently greater at the lower initiator loading");
+  and B is 0.03 in every row, as Figures 14 and 15 both state in their panels.
+  A mis-transcribed cell that broke any of the three would stop the notebook.
+  Two further checks live outside the table and are used as such: ln(1/theta_t)
+  and ln(1/theta_p) against 1/T are the axes of Figure 13, whose caption prints
+  activation energies of 34 and 28 kcal/mol, and A against (T - T_gp)^2 is the
+  axis of Figure 15, which claims all three points fall on one straight line.
+  Both are recomputed from these cells on the page.
+
+columns:
+  polym_temp_C:
+    units: degC
+    description: >
+      Polymerisation temperature.  Three levels, 50, 70 and 90, each printed
+      once and applying to the two rows beneath it.
+  initiator_loading_mol_per_L:
+    units: mol/L
+    description: >
+      Initial initiator concentration I_0.  Two levels, 0.0258 and 0.01548,
+      at every temperature.  See READ_THIS_FIRST for Figure 3's 0.01584.
+  theta_t_min:
+    units: min
+    description: >
+      The characteristic migration time of the growing radicals, defined by
+      eq. 27 as theta_t = r_m^2/(3 D_0), where r_m is the average minimum
+      separation for termination and D_0 the front factor of the radical
+      migration coefficient.  It is the ONLY parameter in the table that depends
+      on initiator loading, because the paper takes D_0 = D_0(I_0) (book p. 352)
+      on the ground that initiator loading sets the molecular weight.
+  theta_p_min:
+    units: min
+    description: >
+      The characteristic monomer diffusion time of eq. 28, "which is only a
+      function of temperature but not of molecular weight of the polymer" (book
+      p. 352) - and the table bears that out: one value per temperature.
+  A:
+    units: "-"
+    description: >
+      The temperature-dependent parameter of the Fujita-Doolittle free-volume
+      equation 29, log(D/D_0) = phi_m/(A + B phi_m).  One value per temperature,
+      increasing with T.
+  B:
+    units: "-"
+    description: >
+      The second Fujita-Doolittle parameter, 0.03 in every row.  Book p. 355:
+      "It has been found empirically that B(T) is not sensitive to temperature
+      for many systems and can be treated as a constant.  We have taken B to be
+      0.03 throughout this work".
+
+rows: 6
+license: >
+  Transcription of a six-row table of fitted parameters from a 1983 journal
+  article.  No page image is reproduced and the PDF is not committed.
