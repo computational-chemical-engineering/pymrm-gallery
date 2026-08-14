@@ -1,0 +1,76 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: larkins1961-table3-measured
+title: >
+  Table 3 of Larkins, White & Jeffrey (1961), book p. 234: "SAMPLE PROCESSED
+  DATA FOR WATER ON 3/8-IN. RASCHIG RINGS IN 4-IN. PIPE" - eight runs of
+  MEASURED two-phase data in a 4-in. plastic column.
+
+READ_THIS_FIRST: >
+  NOTHING HERE IS DIGITISED.  Every cell is a printed numeral, transcribed from
+  a 300 ppi render of PDF page 4 (= book p. 234), cropped and read at digit
+  scale.  The paper's own scan is CCITT-G4 bilevel at 300x300 ppi native
+  (pdfimages -list), so 300 ppi is native and not an interpolation.
+  RUN 5 IS DISPUTED BY THE PAPER'S OWN TABLE 4 AND MUST NOT BE REUSED AS A
+  MEASUREMENT.  Run 5 has no air, so the liquid saturation is 100 %, so
+  Eq. (21)'s mixture density equals the liquid density, so the manometer
+  correction of book p. 236 cancels exactly and Eq. (20) reduces to
+  delta_lg = pressure drop.  This table prints 2.321; Table 4 prints
+  delta_lg = 2.469 for the same run.  They cannot both be right.  The page
+  G1.1 establishes that the same procedure reproduces the other seven rows to
+  0.64 % or better and does NOT decide which cell is wrong.
+  THE PRESSURE IS GAUGE.  The column header prints "lb./sq. in. gauge".  An
+  absolute pressure is needed for the gas density and the paper prints no
+  atmospheric pressure, so 14.696 lb/sq.in. is supplied from outside.
+  THE TEMPERATURE IS THE BOTTOM OF THE COLUMN.  Book p. 234: "The temperature
+  in Table 3 was measured at the bottom of the test column.  The change in
+  temperature through the column was neglected".  The liquid viscosity column
+  is stated to be based on that same bottom-column temperature.
+  ROW ORDER IS THE PRINTED ORDER, and the run numbers are the printed run
+  numbers; they are not consecutive because Table 3 is a sample.
+
+source:
+  authors: ["Larkins, R. P.", "White, R. R.", "Jeffrey, D. W."]
+  year: 1961
+  title: "Two-Phase Concurrent Flow in Packed Beds"
+  container: "AIChE Journal 7(2) 231-239 (1961), Table 3, book p. 234"
+  doi: 10.1002/aic.690070213
+
+acquisition:
+  method: transcription
+  detail: >
+    pdftoppm -r 300 -png on PDF page 4, then per-column crops enlarged 1.5x.
+    Every numeral was read on the crop; the text layer was used only to locate
+    the table and is NOT the source of any digit - it renders the caption as
+    "TABLE3. SAMPLE PROCESSED DATA" with the words joined, so it was assumed to
+    damage digits too.  Cross-checks that passed on the printed page itself:
+    Table 5 (book p. 237) gives the minimum column pressure of the whole study
+    as 2.8 lb/sq.in. gauge, which is this table's run 86 (2.82) rounded; and
+    Table 5's maximum gas Reynolds number 6,200 and maximum liquid Reynolds
+    number 3,405 bracket every value Table 4 computes from these rows.
+  ppi_native: 300
+  ppi_used: 300
+  figure: null
+
+columns:
+  run: "printed run number (Table 3 and Table 4 share it)"
+  liquid_rate_lb_sqft_min: "liquid mass rate on the OPEN-PIPE area, lb/(sq.ft. min)"
+  air_rate_lb_sqft_min: "air mass rate on the open-pipe area, lb/(sq.ft. min)"
+  average_pressure_psig: "average column pressure in the test section, lb/sq.in. GAUGE"
+  pressure_drop_psi_per_ft: >
+    measured pressure drop across the two central taps, lb/sq.in. per ft.  Book
+    p. 236 says this value must be REDUCED by the head of one foot of the
+    liquid phase before substitution in Eq. (20), to correct for the unequal
+    manometer legs.
+  column_temperature_F: "temperature at the BOTTOM of the packed test section, degF"
+  liquid_viscosity_cP: "liquid viscosity at the bottom-column temperature, centipoise"
+  liquid_saturation_pct: >
+    fraction of the void volume occupied by liquid, per cent, from the
+    quick-closing-valve holdup measurement (book p. 232)
+
+review:
+  verdict: not-required
+  detail: >
+    No figure was digitised for this dataset, so no numbered overlay exists and
+    no maintainer review is needed.  The transcription was checked against the
+    paper's own arithmetic instead: Table 4 is reproduced from these rows to
+    0.64 % or better on every column for seven of the eight runs.

@@ -1,0 +1,142 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+# NOTE for the integrator: G1.1 does NOT exist in models.yaml. APPEND the block in
+# ../models_entry.yaml as the FIRST entry of the section-G group, immediately
+# before `- id: G1.7`, under the "section G" banner comment.
+id: G1.1
+slug: larkins-two-phase-packed-bed
+title: "Larkins two-phase concurrent flow in packed beds"
+section: G
+status: published
+tier: T0
+priority: P1
+structures: [S3]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 27
+datasets:
+  - larkins1961-table3-measured.csv
+  - larkins1961-table4-calculated.csv
+  - larkins1961-printed-constants.csv
+
+validation:
+  - THE PAPER'S OWN WORKED EXAMPLE, REDONE. Table 4 is the authors' arithmetic on the eight Table 3 rows, and every column of it is recomputed here from Eqs. (17)-(21) with the constants printed on book pp. 233 and 236. Liquid Reynolds numbers close to 0.174 % worst, delta_l to 0.218 %, delta_g to 0.416 % and delta_lg to 0.639 % over the seven rows that close at all.
+  - THE EIGHTH ROW DOES NOT CLOSE, AND IT IS REPORTED RATHER THAN REPAIRED. Run 5 has no gas, so Eq. (20) reduces to delta_lg = dP/dL exactly; Table 3 prints 2.321 and Table 4 prints 2.469 for the same run. Taking Table 3's cell makes the two-phase parameter 0.9408, -5.92 % off the unity the paper says the parameter approaches as chi -> infinity; taking Table 4's requires Table 3's cell to be wrong. BOTH READINGS ARE PRICED AGAINST THE PAPER'S OWN STATED SCATTER, not one against a requirement and the other as an observation: book p. 237 gives the friction-loss correlation a 13 % standard deviation with 87 % of points inside +/- 20 %, so -5.92 % is comfortably inside it (and the other single-phase row, run 160 at chi -> 0, is itself +0.90 % off unity), while run 5's 2.469 sits 0.081 % from Ergun's delta_l, 11.5 times closer than run 160's 0.93 %. THAT SECOND ARM IS THE SAME STATISTIC AS THE FIRST AND RESTS ON A NAMED HYPOTHESIS - with no gas, |delta_lg/delta_l - 1| IS Table 4's own two-phase parameter minus one, the quantity the chi -> infinity check reads (asserted in the notebook), so it is one datum read twice; and against a 13 % scatter alone a 0.081 % residual is the MORE probable of the two, not the less. It is evidence only under the hypothesis that Table 4's cell was BACK-COMPUTED from Eq. (17) rather than measured, with run 160 the only calibration for "too close". The page does not choose. Run 160 is the MIRROR single-phase row and NOT "the same reduction with the phases swapped" - with R_l = 0 nothing cancels, the manometer correction still applies in full and Eq. (21) still contributes rho_g, and dropping the correction alone would move that row by +22.29 %. What run 160 corroborates is the ingredients of run 5's reduction, not the reduction itself.
+  - A CONSTANT THE PAPER NEVER PRINTS, RECOVERED FROM ITS OWN TWO TABLES AND CHECKED OUT OF SAMPLE. The air viscosity behind Table 4's Reynolds column is determined row by row by Eq. (18); the seven values are linear in temperature to 0.0259 % worst residual, and extrapolating that line to 80 degF - a temperature no Table 3 row uses - lands 0.819 % from Table 2's printed 0.0192 cP, and 0.672 % once the systematic offset measured on the liquid rows is removed. The plain figure is the movable one; the offset-corrected one is labelled STRUCTURAL on the page and is invariant by construction.
+  - THE 0.15 % SYSTEMATIC IN THE REYNOLDS COLUMN IS INSIDE THE PAPER'S OWN ROUNDING, SHOWN NOT ASSERTED. N_Re = 6G/(S mu) has no other free input, seven rows spanning a 28-fold range of mass rate agree on +0.1454 % to within 0.0515 points, and that offset is exactly a specific surface of 148.22 sq.ft./cu.ft. against a printed 148.
+  - EQ. (17) EVALUATED TWO WAYS THAT SHARE NO EXPRESSION - the Reynolds-grouped form in the notation's minute units and the primitive Ergun expression in ft-lb-second units - agreeing to 5.6e-16, which pins the algebra of the regrouping. Labelled STRUCTURAL on the page: every constant cancels.
+  - THE AVERAGE-PRESSURE CLAIM OF BOOK P. 236, PROVED AND THEN MEASURED. For one phase in horizontal flow both Ergun terms carry rho^-1, so delta_g = K/P exactly and P^2 is linear in z, which makes evaluating the density at the ARITHMETIC mean of the terminal pressures an identity rather than an approximation - confirmed numerically at 1.16e-13, against 1.12e-05 for the geometric mean of the same two terminals.
+  - WITH THE TWO-PHASE CORRELATION IN THE LOOP THE IDENTITY GOES, AND THE HEADLINE LENGTH IS LABELLED AS THE WORST CASE IT IS. One section over a 4 ft bed is 0.332 % wrong in the pressure drop and the error reaches 1 % at 5.6012 ft, ROOT-FOUND. That is run 63, the LARGEST-FRICTION-LOSS row of Table 3 - it prints the largest delta_lg of the eight - which is exactly the condition step 1 names ("if the bed is of great length OR THE FRICTION LOSS IS LARGE"). The same root-find over every two-phase row of Table 3 spans 5.6012 ft to 466.9537 ft: 1 of the 6 is inside the 7 ft column the paper describes and 4 inside its 40 ft commercial reactor, so the recipe is good past the commercial reactor on the mildest row. A break row moves the demonstration run, so the evaluation point is not hard-wired. Sectioning converges at observed order 1.9999, which is the midpoint rule.
+  - THREE INDEPENDENT ROUTES TO THE COLUMN PROFILE: the paper's own sectional march, pymrm finite volumes (first-order upwind, observed order 1.0001, Richardson-extrapolated), and z(P) by adaptive quadrature inverted by bisection. THE QUADRATURE IS THE REFERENCE and the extrapolated pymrm pair is one of the things measured against it - they agree to 7.5e-10 relative, 6.6 orders below the 0.332 % recipe error they are used to measure and 4.1 orders below what 1600 cells alone achieve. The pair of the OTHER outlet read lands on the same reference at 1.1e-09, so the choice of read cannot reach a reported number.
+  - A SECOND PRINTED DEFECT, FOUND BY READING THE FIGURES FOR TEXT RATHER THAN FOR CURVES, AND NOT REPAIRED. Eq. (23) is printed twice on book p. 237 with two different constant terms - "- 0.774" as the typeset equation and "-0.744" in the annotation inside Figure 7 on the facing column - with 0.525, 0.109 and the whole of Eq. (22) identical in both places. The difference is worth 7.15 % in R_l everywhere. Against the six Table 4 rows inside the declared range the Figure 7 reading is better in r.m.s. (18.33 % against 19.55 %, a gain of 1.2232 points) and worse on the paper's own "within 20 %" count (3 rows outside against 2), so the printed data cannot settle it and the page adopts neither. What does not depend on settling it is stated: both readings put the ceiling below a full column (0.7730 against 0.7214) and both give a negative discriminant at R_l = 1.
+  - EQ. (23)'s CEILING, ROOT-FOUND: the fit maximises at chi = 256.010 (closed form recovered to 1.2e-09), eight times the upper limit of 30 it is declared for, at a liquid saturation of 0.7214 - and the discriminant of "Eq. (23) = 1" is -0.0618, so no chi makes the fit return a full column. This QUANTIFIES a caveat the paper prints on book p. 238; it does not contradict one.
+  - 29 break rows move 61 of the 68 metrics, with the coverage map GENERATED from measured moves and an AST guard rejecting any row that returns a metric as a typed constant. BOTH DIRECTIONS ARE ASSERTED - every metric has a row that moves it or a structural label, and every row moves at least one metric, which is what catches a perturbation that has been silently neutered. The structural labels are enforced too: a metric called structural must in fact have no row that moves it past CI's 5 %. 9 metrics are labelled structural with what each cannot detect and a named companion; 8 are enforced that way directly and the 9th, the two-unit-system algebra check, is excused because it sits below check_agreement.py's ABS_FLOOR where a relative move is the ratio of two machine-noise values - AND THAT EXCUSE IS ASSERTED, by requiring every break row to leave it below the floor. The guard is there because it fired - the ft-lb-second route read the centipoise conversion from the module rather than from Cfg, so the rounded-centipoise row moved one side of the identity and not the other, lifted it above the floor and into CI's comparison, and never reached the code it claims to perturb. A live negative control reruns that old path.
+  - THE OUTLET READ IS MEASURED, AND SO IS THE REASON. The notebook prints the outlet-face row of the operator it builds - [..., -0.125, +1.125] - and ASSERTS that the flux the operator transports out equals compute_boundary_values to 2e-16, because it does: construct_convflux_upwind folds the zero-gradient outlet into the flux operator, so what leaves the domain is (9 P_N - P_(N-1))/8 and NOT v*P_N. The last-cell read is reported because it is 3.84x closer here, and that is a cancellation of two O(h) errors rather than a statement about which value is the outflow. The mechanism is stated in the direction the operator works - the last cell's balance shortens the last step from h to (8/9)h, which moves P_N OFF the face that first-order upwind puts every cell value on anyway (the FIRST cell shows that face-locatedness, where no boundary condition can be responsible), and compute_boundary_values adds the same h S/9 back. Two predictions of that account are tested - the term is h S/9 and not h S/8, and compute_boundary_values therefore lands on a plain backward-Euler march, which is why such a march sits at 1.0002x the compute_boundary_values error and not at the last cell's.
+
+adds: >
+  Nothing for the correlation itself, and the page says so where it happens:
+  Eqs. (17)-(23) are arithmetic and the reproduction of Table 4 is plain NumPy.
+  What pymrm buys is the question the 1961 procedure could only answer by
+  judgement. The paper's design outline (book p. 239, step 1) tells the reader
+  to break a bed into sections "if the bed is of great length or the friction
+  loss is large" without saying how long or how many. Written as
+  dP/dz = rho_m/144 - delta_lg(P) and discretised with
+  construct_convflux_upwind + construct_div + NumJac + newton, the same physics
+  answers both: the one-section recipe is EXACT for a single phase in
+  horizontal flow (proved, then measured at 1.16e-13), reaches 1 % at a bed
+  length of 5.6012 ft with the two-phase correlation in the loop - on Table 3's
+  largest-friction-loss row, against 466.9537 ft on its mildest, a spread the
+  page root-finds and prints rather than generalising from one point - and the
+  sectional march converges at second order so that the number of sections for
+  a target accuracy follows from one number. The assembly is also the point of
+  entry for everything the paper does not do - a reaction, a species balance, a
+  heat balance - which is why the column is written with the operators rather
+  than as a hand-rolled march.
+
+agreement: >
+  Deviation is (this page - printed)/printed throughout. THE HEADLINE IS THE
+  WORKED EXAMPLE: over the seven of eight runs that close, the liquid Reynolds
+  column is reproduced to 0.174 % worst (0.147 % r.m.s.), delta_l to 0.218 %
+  (0.176 % r.m.s.), delta_g to 0.416 %, and delta_lg - which is a MEASUREMENT
+  corrected by two densities, not a correlation - to 0.639 % worst and 0.260 %
+  r.m.s. Run 5 is out by -5.99 % and is an inconsistency between the paper's own
+  two tables rather than a model error; it is excluded from every quoted figure
+  and reported separately. The residuals are systematic rather than scattered:
+  the Reynolds offset is +0.1454 % with a spread of 0.0515 points across a
+  28-fold range of mass rate, which is exactly a specific surface of 148.22
+  against a printed 148, and the g_c factor Table 4 requires comes back as
+  3593.8 against an exact 3600. THE CORRELATIONS ARE A GOODNESS OF FIT AND ARE
+  LABELLED SO EVERYWHERE: Eq. (22) is 25.53 % worst and 12.81 % r.m.s. against
+  these rows, Eq. (23) 33.90 % and 19.55 % over the six inside its declared
+  range with two of them outside 20 %. Both are printed beside nulls that use no
+  correlation - Eq. (22) beats the best single constant by 4.05x in log units,
+  Eq. (23) beats it by 6x - and neither number is evidence that either equation
+  predicts anything new, because these rows are a printed sample of the body
+  they were fitted to. THE 4.05x IS PRINTED WITH ITS OWN CAVEAT AND WITH THE
+  HONEST FIGURE BESIDE IT: 2 of those 8 rows are the chi -> 0 and chi -> infinity
+  limits where Eq. (22) returns exactly 1 for ANY constants, so the fit is not
+  free there while the null is charged in full. On the 6 rows that can
+  discriminate the gain is 2.48x and the r.m.s. 14.79 %, i.e. the eight-row
+  headline is 63 % larger than the comparison on the rows where the correlation
+  is actually free, and 14.79 % - not 12.81 % - is the number to set against the
+  paper's own 13 %. Eq. (23)'s null needs no such split: all six of its rows are
+  genuinely two-phase. THE COLUMN NUMBERS ARE ARITHMETIC, NOT VALIDATION: the
+  paper reports no axial pressure profile, so what is checked there is three
+  independent routes agreeing (extrapolated pymrm against quadrature, 7.5e-10)
+  and an identity that can be proved.
+
+caveats: >
+  DATA TIER 2, AND WHAT THAT DOES AND DOES NOT MEAN HERE. Table 3's rates,
+  pressures, temperatures, viscosities, pressure drops and liquid saturations
+  are MEASUREMENTS printed in a table, which is tier 2 and the tier-defining
+  dataset; Table 4 is the authors' own arithmetic on them and is tier 6 in
+  itself. But the page's headline - reproducing Table 4 - tests a
+  transcription, a set of equations and a unit system against numbers the
+  authors computed, NOT a model against nature. The only place a model meets a
+  measurement here is Eqs. (22) and (23) against Table 3's liquid saturations
+  and pressure drops, and that comparison is inside the correlations' own fit.
+  NO FIGURE IS TOUCHED. The paper's nine
+  figures carry the 600+ data points behind the correlations and none of them is
+  tabulated anywhere; digitising was ruled out because the builder brief ranks a
+  worked example with printed intermediates above a digitised figure and one
+  exists here. The page can therefore say nothing about the scatter behind
+  Figure 7, nothing about the foaming deviations of Figure 8, and nothing about
+  the Lockhart-Martinelli comparison of Figure 9 beyond the words the prose
+  prints. THE COMPARISONS WITH EQS. (22) AND (23) ARE INSIDE THE FIT. Table 3 is
+  "a sample of the processed data" and Figure 7 "summarizes all two-phase data",
+  so these eight rows are part of what the correlations were fitted to; which
+  individual points appear in Figure 7 cannot be checked without digitising it.
+  THE PAPER'S OWN SUPPORTING DOCUMENT IS NOT ON DISK. Reference 4 - Larkins's
+  1959 Michigan PhD thesis, "the complete tabulation of properties, data and
+  results", offered on microfilm - is the support the paper gives for the
+  average-pressure claim this page tests, so what is shown there and under what
+  assumptions is unknown here, and nothing on this page rules out that it also
+  addresses run 5. THE COLUMN IS A DESIGN CALCULATION, NOT A REPRODUCTION. No
+  run in Table 3 is a seven-foot bed; the demonstration uses run 63's own rates
+  and temperature with the inlet at the printed 90 lb/sq.in. gauge equipment
+  limit, and it is validated against arithmetic (three routes) rather than
+  against a measurement. RUN 63 IS THE EXTREME ROW, NOT A TYPICAL ONE - it
+  carries the largest friction loss of the eight - so the 1 % bed length is a
+  worst case; the spread over all six two-phase rows is root-found and printed,
+  and Cfg.demo_run with its break row is what keeps that evaluation point
+  movable. THREE CONSTANTS COME FROM OUTSIDE THE PAPER - the
+  standard atmosphere, the Rankine offset and the centipoise - because Table 3's
+  pressures are gauge and Table 2's densities are quoted at a reference
+  temperature; each is named on the page and each has a break row. ONLY ONE
+  (alpha, beta) PAIR IS EXERCISED: the Raschig-ring (266, 2.33). The sphere pair
+  (118.2, 1.0) and the cylinder pair (150, 1.75) are transcribed and used only
+  in the break table, because no printed data on this page belongs to those
+  packings. TWO METRICS SIT BELOW check_agreement.py's ABS_FLOOR and are named
+  on the page with above-floor companions, and nine are labelled structural
+  with what each cannot detect. ONE CLASS OF CLAIM IS NAMED AS UNPROTECTED: no
+  break row can check a PROSE EXPLANATION of a measured ratio, which is why the
+  outlet-read cell prints the operator row and asserts the identity instead of
+  asserting a sentence. THE RUN-5 FINDING IS AN INCONSISTENCY, NOT A
+  CORRECTION: the page establishes that the two cells cannot both be right and
+  declines to say which is wrong, and the CSV sidecars forbid reusing that row
+  as a measurement.

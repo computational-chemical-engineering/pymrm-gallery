@@ -5,7 +5,8 @@ catalog_reference: Larkins, White & Jeffrey, AIChE J 7 (1961)
 priority: P1
 tier: T0
 structures: S3
-status: unclaimed
+status: published
+page: pages/G1.1-larkins-two-phase-packed-bed/
 reference:
   authors:
   - Larkins, R. P.
@@ -23,8 +24,62 @@ paper:
     W. JEFFREY / Humble Oil and Refining Company, Baytown, Texas", plus the abstract and the present-address
     footnote. Wiley Subject metadata agrees: "AIChE Journal 1961.7:231-239".'
 blocker: null
-notes: null
-updated: '2026-08-06'
+staged_at: queue_cases/G1.1/page/
+notes: >-
+  BUILT 2026-08-14.  Staged at queue_cases/G1.1/page/ with models_entry.yaml beside it.
+  G1.1 is NOT in models.yaml, so the entry is an APPEND: it belongs as the FIRST entry of
+  the section-G group, immediately before `- id: G1.7`, under the "section G" banner
+  comment.  The entry carries `status: published` and `page: pages/G1.1-larkins-two-phase-packed-bed/`.
+  WHAT THE PAGE IS.  Table 3 (measured) and Table 4 (the authors' arithmetic on the same
+  eight runs) are a printed WORKED EXAMPLE, so the page redoes the chain cell by cell
+  rather than digitising anything.  Seven of eight rows close to 0.639 % or better on
+  every column.  No figure is digitised anywhere - a scope decision stated on the page,
+  since the brief ranks a worked example above a digitised figure and one exists here.
+  FIT VS TEST.  Eqs. (22) and (23) were fitted to the body of data these rows sample, so
+  every correlation comparison is a GOODNESS OF FIT and is labelled so in the notebook,
+  meta.yaml, models_entry.yaml, README.md, the CSV sidecars and here.  Null baselines
+  that use no correlation are printed beside every one of them: Eq. (22) beats the best
+  single constant by 4.05x in log units, Eq. (23) by 6.03x.  THE 4.05x IS PRINTED WITH THE
+  NUMBER THAT DOES NOT FLATTER IT: two of the eight rows are the chi -> 0 and chi ->
+  infinity limits where Eq. (22) returns exactly 1 for ANY constants, so on the six rows
+  that can discriminate the gain is 2.48x and the r.m.s. 14.79 %, not 12.81 %.  Both are
+  reported and 14.79 % is the figure to set beside the paper's own 13 %.
+  TWO PRINTED DEFECTS, REPORTED AND NOT REPAIRED.  (1) Table 3's run-5 pressure drop
+  2.321 and Table 4's run-5 delta_lg 2.469 cannot both be right: run 5 has no gas, so
+  Eq. (20) reduces to delta_lg = dP/dL exactly, and the same procedure closes the other
+  seven rows.  (2) Eq. (23) is printed twice on book p. 237 with two different constant
+  terms - "- 0.774" typeset and "-0.744" inside Figure 7 - and the paper's own printed
+  sample cannot settle which is right (the Figure 7 reading is better in r.m.s. and
+  worse on the paper's own "within 20 %" count).  A third item, the notation's g_c units
+  making Eq. (17) dimensionally inconsistent, is proved from Table 4's own arithmetic.
+  DATA TIER 2, not 6: Table 3 is a printed table of MEASUREMENTS and is the
+  tier-defining dataset; Table 4 is the authors' arithmetic and is tier 6 in itself.
+  NOT ON DISK: reference 4, Larkins's 1959 Michigan PhD thesis, which is the support the
+  paper gives for the average-pressure claim the page tests.  Nothing on the page rules
+  out that it also addresses run 5.
+  RUNTIME about 27 s; two consecutive executions give an identical agreement.json,
+  identical stream output and an identical figure hash.  68 metrics, 29 break rows, 61
+  metrics moved, 7 uncovered and all inside the 9 labelled structural, 2 below ABS_FLOOR
+  and named with companions.
+  FIXED 2026-08-14 after verification (verdict "safe after fixes"; no agreement value was
+  corrected and no previously reported metric changed).  Four substantive changes: the
+  page's explanation of WHY the last-cell outlet read wins was false and reached
+  models_entry.yaml - the operator does NOT transport v*P_N, it transports
+  (9 P_N - P_(N-1))/8, which IS compute_boundary_values, and the notebook now prints that
+  operator row and asserts the identity; the 5.6012 ft headline is now labelled as run
+  63's worst case with the 5.6012-466.9537 ft spread over all six two-phase rows printed
+  beside it and Cfg.demo_run + a break row making the evaluation point movable; the
+  Eq. (22) null gain is now reported on both row sets; and three prose numbers were wrong
+  (93 % -> 60.59 %, "four orders" static head -> 129x at the inlet, "four orders" below
+  the recipe error -> 6.6 orders), the computable one moved out of the sweep's
+  SOURCE_INTS escape hatch and into CLAIMS.  Also: run 160 is no longer described as "the
+  same reduction with the phases swapped" (nothing cancels there; the manometer
+  correction is worth +22.29 % on that row), the paper's own 13 %/+-20 % band is now
+  applied to the chi -> infinity check as well as to the Ergun comparison, README quotes
+  0.819 % as the plain out-of-sample figure with 0.672 % labelled offset-corrected, and
+  the break table now asserts that every ROW moves at least one metric and that every
+  STRUCTURAL label survives CI's 5 %.
+updated: '2026-08-14'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because

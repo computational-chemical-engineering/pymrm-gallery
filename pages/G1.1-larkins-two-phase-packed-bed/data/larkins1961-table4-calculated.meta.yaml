@@ -1,0 +1,71 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: larkins1961-table4-calculated
+title: >
+  Table 4 of Larkins, White & Jeffrey (1961), book p. 235: "SAMPLE CALCULATED
+  RESULTS FOR WATER ON 3/8-IN. RASCHIG RINGS IN 4-IN. PIPE" - the AUTHORS' OWN
+  arithmetic on the eight Table 3 rows of the same run numbers.
+
+READ_THIS_FIRST: >
+  THIS IS THE WORKED EXAMPLE, NOT DATA.  Every column here is computed by the
+  authors from Table 3 through Eqs. (17)-(21) and the constants of book
+  pp. 233 and 236.  It is on disk so that the arithmetic can be redone, which
+  is what page G1.1 does.  Treating these numbers as measurements would be a
+  category error: only Table 3's liquid saturation and pressure drop are
+  measured, and delta_lg is the measured pressure drop corrected by two
+  densities.
+  THE CHI COLUMN HEADER IS A GREEK CHI, not the Latin x, and the paper's
+  notation (book p. 239) and the annotation inside Figs. 5 and 7 both define it
+  as sqrt(delta_l/delta_g).  Run 5's cell prints the INFINITY SIGN; it is
+  stored here as `inf`.  Run 160's prints 0.
+  RUN 5 IS DISPUTED.  Its delta_lg of 2.469 is not what Eq. (20) returns from
+  Table 3's printed pressure drop of 2.321; see the Table 3 sidecar and the
+  G1.1 page.  Do not reuse run 5 as either a measurement or a check.
+  NO FOOTNOTE ATTACHES TO THIS TABLE.  The strip beneath its last row was
+  cropped and carries only the running head.
+
+source:
+  authors: ["Larkins, R. P.", "White, R. R.", "Jeffrey, D. W."]
+  year: 1961
+  title: "Two-Phase Concurrent Flow in Packed Beds"
+  container: "AIChE Journal 7(2) 231-239 (1961), Table 4, book p. 235"
+  doi: 10.1002/aic.690070213
+
+acquisition:
+  method: transcription
+  detail: >
+    pdftoppm -r 300 -png on PDF page 5, then a crop of the whole table enlarged
+    1.5x and per-row crops for the two rows the text layer garbled.  Internal
+    consistency checked BEFORE the page was built and afterwards: chi
+    recomputed from this table's own delta_l and delta_g columns reproduces the
+    printed chi column to better than 0.06 %, and delta_lg/(delta_l+delta_g)
+    reproduces the printed parameter column to better than 0.07 %, for all
+    eight rows.  Those checks are transcription checks only - every constant
+    cancels in a ratio taken inside one row - and they are reported as such on
+    the page.
+  ppi_native: 300
+  ppi_used: 300
+  figure: null
+
+columns:
+  run: "printed run number, matching Table 3"
+  reynolds_liquid: "Eq. (18) for the liquid, D_p G / (mu (1-eps))"
+  reynolds_air: >
+    Eq. (18) for the air.  The viscosity used is printed NOWHERE: Table 2 gives
+    air at 80 degF only, and these runs are at 59-79 degF.  Page G1.1 recovers
+    it row by row from this column.
+  delta_lg_psi_per_ft: >
+    two-phase friction loss from Eq. (20), i.e. the measured pressure drop of
+    Table 3 corrected for the manometer legs and for the mixture density of
+    Eq. (21).  lb-force/sq.in. per ft.
+  delta_l_psi_per_ft: >
+    single-phase friction loss the LIQUID would suffer flowing alone in the bed
+    at the two-phase superficial rate, Eq. (17) with alpha = 266, beta = 2.33
+  delta_g_psi_per_ft: "the same for the gas alone, Eq. (17)"
+  liquid_saturation_pct: "repeated from Table 3; measured, not calculated"
+  chi: "sqrt(delta_l/delta_g); `inf` where the run has no gas"
+  two_phase_parameter: "delta_lg/(delta_l + delta_g), the ordinate of Figs. 3, 5, 6 and 7"
+
+review:
+  verdict: not-required
+  detail: >
+    Nothing digitised; no overlay, no maintainer review needed.
