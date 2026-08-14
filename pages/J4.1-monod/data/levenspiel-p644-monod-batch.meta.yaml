@@ -1,0 +1,118 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: levenspiel-p644-monod-batch
+title: >
+  Seven time intervals of a batch bacterial growth run, reprinted in Levenspiel's
+  Problem 29.18 and attributed by him to Monod (1958), p. 74.
+
+READ_THIS_FIRST: >
+  THE ORIGIN OF THESE NUMBERS IS NOT THE 1949 PAPER THIS CASE CATALOGUES, AND
+  NEITHER MONOD PUBLICATION WAS CONSULTED.  Levenspiel's Problem 29.18 says, in
+  full: "In his thesis, which was published as a book in 1948, Monod first
+  proposed the celebrated equation that bears his name.  As experimental support
+  for this equation he presented results from four batch reactor runs on the
+  growth of a pure bacterial culture in a lactose solution (see Monod, 1958,
+  p. 74).  Here are the reported data for one of his runs."  His chapter
+  reference list carries BOTH "Monod J., Ann. Rev. Microbiology, 3, 371 (1949)"
+  - the catalogued origin - and "Recherches sur la Croissance des Cultures
+  Bacteriennes, Second ed., Herman, Paris, 1958", and his running text on
+  book p. 641 says the 1949 review "was later condensed and translated into
+  English" from the 1948 book.  That is Levenspiel's account, quoted, not this
+  page's finding.  WHICH of the two documents actually prints this table is not
+  established here, because neither is on disk.  Do not cite these rows as data
+  from Monod (1949).
+
+source:
+  authors: ["Levenspiel, O."]
+  year: 1999
+  container: "Chemical Reaction Engineering, 3rd edition, John Wiley & Sons, Chapter 29 'Substrate-Limiting Microbial Fermentation', Problem 29.18, book p. 644"
+  isbn: "0-471-25424-X"
+  doi: null
+  attributed_by_the_source_to:
+    authors: ["Monod, J."]
+    year: 1958
+    container: "Recherches sur la Croissance des Cultures Bacteriennes, 2nd edition, Hermann, Paris (1958), p. 74"
+    on_disk: false
+    consulted: false
+
+acquisition:
+  method: table
+  detail: >
+    Transcribed from a 600 ppi render of PDF page 660 (the file's native
+    resolution: pdfimages -list reports every page as 3552x5356 CCITT/JBIG2 at
+    600x600 ppi), cropped to the table and read at digit scale.  No digitising,
+    no figure extraction.  Every cell is a printed numeral; no cell was
+    reconstructed, inferred or repaired.
+  ppi_native: 600
+  rendered_at_ppi: 600
+
+columns:
+  interval:
+    units: "-"
+    description: "Time-interval number, printed 1..7 in the table's first column."
+  dt_hr:
+    units: h
+    description: >
+      Printed column "Dt, hr" - the duration of the interval.  The only column
+      whose units the table prints.
+  CA_bar:
+    units: "UNPRINTED (substrate concentration; Levenspiel's neighbouring
+      Problem 29.1 works the same organism/substrate pair in mg lactose/litre,
+      but this table says nothing, and nothing on the page depends on it)"
+    description: >
+      Printed column header is C-with-an-OVERBAR, subscript A: the interval
+      AVERAGE substrate concentration.  The overbar is visible on the 600 ppi
+      crop and is lost by every pdftotext mode.  It is load-bearing: reading the
+      column as a point value rather than an interval average is what the page
+      measures as the reduction bias.
+  CC_start:
+    units: "UNPRINTED (cell/biomass concentration, same scale as CC_end)"
+    description: >
+      First number of the printed "CC" column, which the table gives as a RANGE
+      per interval ("15.5 to 23.0").  Split here into two columns; no value
+      altered.
+  CC_end:
+    units: "same as CC_start"
+    description: "Second number of the printed range."
+
+print_resolution:
+  dt_hr: 0.005
+  CA_bar: 0.5
+  CC: 0.05
+
+findings_of_this_page_about_these_rows:
+  - >
+    ROW 4 IS INCONSISTENT WITH THE TABLE'S OWN MATERIAL BALANCE, AND IS REPORTED
+    NOT REPAIRED.  All three books this page reads assume a constant biomass
+    yield (Froment eq. 1.5.2-3, Rawlings eq. 10.18, Levenspiel Ch. 29), which
+    forces CA_bar to be an exact affine function of the interval-average biomass.
+    Six of the seven rows satisfy that line with R^2 = 0.99996; including row 4
+    drops it to 0.98505, and row 4 alone is the reason.  The line the other six
+    rows fix predicts CA_bar = 60.18 for row 4 against the printed 43.  Leaving
+    out any OTHER row gives R^2 = 0.975..0.985.  The printed 43 is close to the
+    interval's END-of-interval substrate concentration (44.33 on the same line),
+    which is a candidate explanation and is labelled an inference; applying the
+    same substitution to rows 3 and 5 does NOT reproduce their printed values
+    (74.89 vs 90, i.e. 16.8 % off, and 13.46 vs 29, i.e. 53.6 % off), so it is
+    not a systematic.  NOTHING IS EDITED IN THIS FILE.
+  - >
+    The reduction the exercise invites - fit mu_i = ln(CC_end/CC_start)/dt
+    against mu(CA_bar) - carries a bias of up to 0.0663 1/h at row 6 from
+    evaluating a curved rate law at an interval average.  That is 1.21 times the
+    residual scatter on which that reduction ranks the five candidate growth
+    laws.  See the page.
+  - >
+    ROW 4 ALSO DECIDES A SIGNIFICANCE VERDICT ON THE PAGE THAT READS THESE ROWS.
+    Fitting the five growth laws to mu(CA_bar) as the exercise invites gives
+    Moser's exponent n = 1.93 and F = 12.27 against F(1,4) = 7.71, i.e.
+    significant; with row 4's CA_bar at its balance-implied 60.18 the same fit
+    gives F = 5.45, i.e. not significant.  Any page reusing these rows for a
+    model-selection test must price that cell first.
+  - >
+    mu_i = ln(CC_end/CC_start)/dt is EXACT, not an approximation: it is the
+    time-average of the specific growth rate over the interval for any growth
+    law whatever, because d(ln CC)/dt = mu by definition.
+
+license_basis: >
+  Seven pairs of numerals transcribed from one printed exercise table, used for
+  scientific verification.  No text, figure or page image is reproduced.  See
+  docs/data-strategy.md.

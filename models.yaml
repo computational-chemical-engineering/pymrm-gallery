@@ -5307,6 +5307,186 @@ models:
       paper.
     related: [J3.4, J1.5, B1.1]
 
+  - id: J4.1
+    slug: monod
+    title: "Monod: what a growth curve can and cannot pick out of the family"
+    description: >
+      Froment, De Wilde & Bischoff section 1.5.2 prints the Monod equation as
+      eq. (1.5.2-1), defines its two constants by exactly two properties - the
+      asymptote r_m and the half-rate point K_S - and couples it to the biomass
+      balance eq. (1.5.2-2) and the constant-yield relation eq. (1.5.2-3); its
+      Chapter 1 reference list carries "Monod, J., Annu. Rev. Microbiol., 3, 371
+      (1949)", the exact citation this case catalogues, confirmed here on a 300 ppi
+      crop. Rawlings & Ekerdt p. 596 prints the same equation beside four
+      alternatives - Blackman, Tessier, Moser and Contois - and calls it "the
+      simplest form of the Langmuir adsorption isotherm". THIS PAGE ASKS WHETHER
+      DATA CAN PICK MONOD OUT OF THAT FAMILY, and answers with numbers.
+      TWO OF THE FOUR CANNOT BE SEPARATED FROM IT BY ANY CONSTANT-YIELD BATCH RUN,
+      AND THIS IS EXACT. Moser contains Monod at n = 1. And CONTOIS IS MONOD
+      REPARAMETERISED: constant yield makes X = phi(a - S), so
+      mu_m S/(K_sx X + S) = (mu_m/beta) S/(K_sx phi a/beta + S) with
+      beta = 1 - K_sx phi - a bijection between the two parameter pairs, sympy
+      residual exactly zero, confirmed to better than 1e-4 in both constants by two
+      optimisers started from different places on the two parameterisations (the
+      exact residuals are those optimisers' exit tolerances, printed on the page
+      and deliberately not reported as metrics). Of the
+      two that ARE separable at this design, Blackman needs 1.30 repeats of the run
+      and Tessier 10.3, N* being a ~50 %-power threshold rather than a
+      95 %-detection sample size.
+      MONOD AND BLACKMAN AGREE EXACTLY ON BOTH PROPERTIES FROMENT DEFINES THE
+      CONSTANTS BY - the asymptote, and the half rate at S = K_S, which sits on
+      Blackman's linear branch - and differ by EXACTLY mu_m/3 at the branch switch
+      S = 2 K_S, and by mu_m(3-2 sqrt 2)/2 = 0.0858 mu_m at S = (sqrt 2 - 1) K_S on
+      the lower branch. Both closed forms, both checked against a root-found
+      extremum.
+      AND ON THE ONE REAL DATASET, THE RANKING OF THE FIVE IS DECIDED BY THE DATA
+      REDUCTION, NOT BY THE DATA. Levenspiel's Problem 29.18 prints seven intervals
+      of a batch run, attributed by him to Monod (1958) p. 74 - not the 1949 paper,
+      and not consulted. Fit them as the exercise invites, comparing
+      ln(Cc_end/Cc_start)/dt with mu evaluated at the interval-AVERAGE substrate
+      concentration, and Monod comes LAST of the four two-parameter laws (RMS
+      0.054690 1/h against Blackman's 0.026772) while Moser's exponent n = 1.93
+      clears the 95 % F test at F = 12.27 against F(1,4) = 7.71 - a verdict CO-CAUSED
+      by the one printed cell the page flags, since at that cell's balance-implied
+      60.18 route A gives F = 5.45 against the same 7.71 and the verdict flips. Do
+      the interval average EXACTLY instead - the same seven growth rates, the same
+      five models, no new parameter, with the substrate trajectory taken from the
+      table's own material balance rather than from the printed averages (route B
+      never reads the CA_bar column, and the balance line it uses is the SIX-ROW
+      one) - and Monod's residual falls 42 % to 0.031466, Blackman becomes the
+      worst of the four, n drops to 1.51 and F to 1.44.
+      A SEEDED BOOTSTRAP PRICES THAT, WITH A CONTROL, every draw refitted the way
+      route A fits the real data rather than read off the scan grid. On data the
+      Monod model itself generates, the reduction rejects Monod 36.5 % +- 1.1 % of
+      the time and drives the median fitted exponent to 1.61 +- 0.0074; on data
+      drawn from the reduction's OWN model, where it is correctly specified, it
+      sits AT nominal size, 4.95 % +- 0.5 %, and returns 1.01 +- 0.0049. Those six
+      numbers are Monte-Carlo estimates at 2000 seeded draws - four frequencies
+      and two medians, not six frequencies - and every quotation of them carries
+      its sampling error; at that draw count the frequencies are seed-independent
+      in their leading figure only and the medians to at least two figures. So the
+      small-sample F
+      approximation at n = 7 is essentially exact and is not the culprit - the
+      reduction is - and the observed F = 12.27 has p = 0.23 +- 0.0094 against a
+      properly generated Monod null. The grid-only numbers the first version of this page
+      reported, 30.8 % and a conservative-looking 2.1 %, are kept as a break row.
+      The bias behind it is
+      0.0663 1/h at CA_bar = 9, which is 1.21 TIMES THE RESIDUAL SCATTER the
+      ranking is read off, and it has a sign: mu is concave, so the shortcut makes
+      every saturating law look too gradual near exhaustion.
+      THE EXPERIMENT THAT DOES SEPARATE CONTOIS FROM MONOD IS NAMED AND PRICED: a
+      chemostat sweeping the FEED. Monod washes out at D_c = mu_m S_f/(K_S + S_f),
+      Contois at D_c = mu_m whatever the feed; the two cross at EXACTLY S_f = a,
+      the substrate intercept of the batch run's own material balance (root-found
+      197.116 against 197.120), and differ by a factor 1.83 at S_f = 20.
+      ONE PRINTED CELL IS REPORTED AND NOT REPAIRED: the table's fourth
+      interval-average substrate concentration is off the constant-yield line the
+      other six rows fix at R^2 = 0.99996 (all seven give 0.98505), and a
+      leave-one-out sweep says which row rather than merely that one is off.
+    section: J
+    status: published
+    page: pages/J4.1-monod/
+    tier: T0
+    priority: P1
+    structures:
+      - S1
+    phases:
+      - liquid
+    predicts:
+      - the specific growth rate mu = mu_m S/(K_S + S) and the biomass balance
+        dC_B/dt = mu C_B closed by a constant yield
+      - mu_m and K_S from a batch table of biomass-versus-time intervals, both by
+        the interval-average shortcut and by integrating the law across each
+        interval
+      - which of the five printed growth laws (Monod, Blackman, Tessier, Moser,
+        Contois) a given batch design can distinguish, and how many repeats of it
+        each would take
+      - the chemostat steady states and the critical dilution rate for washout,
+        under Monod and under Contois, as a function of feed concentration
+      - the plug-flow fermenter profile, which is the batch problem in space
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_div
+      - compute_boundary_values
+      - NumJac
+      - newton
+    reference:
+      authors:
+        - Monod, J.
+      year: 1949
+      title: The growth of bacterial cultures
+      container: "Annual Review of Microbiology 3, 371-394 (1949)"
+      doi: 10.1146/annurev.mi.03.100149.002103
+      note: >
+        ORIGIN_NOT_CONSULTED - the 1949 paper is not on disk and could not be
+        obtained. TEXTBOOK-CANONICAL-SOURCE PAGE under the standing decision of
+        2026-08-02, with the E1.1 target pinned to Froment by the coordinator
+        before dispatch. READ FROM: Froment, G. F., De Wilde, J. & Bischoff, K. B.,
+        "Chemical Reactor Analysis and Design", 3rd edition, John Wiley & Sons
+        (2011), ISBN 978-0-470-56541-4, Chapter 1, section 1.5.2 "Microbial
+        Kinetics", book pp. 26-29 (PDF 68-71), eqs. (1.5.2-1) to (1.5.2-3). The
+        E1.1 test passes: the book STATES the rate law, ATTRIBUTES it (naming K_S
+        "the Monod- or saturation constant", recording that "in the original Monod
+        equation, r is represented by mu, r_m by mu_max and C_A by S", and carrying
+        the exact 1949 citation in its Chapter 1 reference list on book p. 58) and
+        CARRIES it, coupling it to the biomass balance rather than merely printing
+        the form. THE FILENAME SAYS "Froment_Bischoff": this is the THIRD edition
+        and De Wilde is a full author. Its born-digital text layer nonetheless
+        LOSES EVERY OPERATOR IN AN EQUATION - each Symbol-font operator extracts
+        as an unmappable Private-Use-Area glyph (U+F02D for the leading minus of
+        eq. (1.5.2-3), U+F03D for the = beside it), emitted by all three pdftotext
+        modes and rendering as nothing - so everything load-bearing was read on a
+        300 ppi render. This corrects the "dropped the leading term" diagnosis the
+        published J4.6 gives for eq. (1.5.1-17) of the same book.
+        RAWLINGS & EKERDT 2nd edn p. 596 is used as a MODEL CATALOGUE and for its
+        chemostat balances eqs. (10.18)-(10.19), NOT as a second E1.1 target, and
+        nothing is adjudicated between the books. Its five growth laws are cited
+        there to Bailey & Ollis and Shuler & Kargi, so NOTHING on the page is
+        attributed to Blackman, Tessier, Moser or Contois personally.
+        THE DATA COME FROM A THIRD BOOK AND FROM A DIFFERENT MONOD PUBLICATION:
+        Levenspiel, "Chemical Reaction Engineering", 3rd edn (1999), Problem 29.18,
+        book p. 644, which presents them as "the reported data for one of his runs"
+        and attributes them to "Monod, 1958, p. 74". That book is not on disk and
+        was not consulted, and the page does not imply the table is the 1949
+        paper's.
+    data:
+      tier: 2
+      method: table
+      status: complete
+    note: >
+      IDENTIFIABILITY IS A PROPERTY OF THE EXPERIMENT, NOT OF THE MODEL, and this
+      page is that sentence made quantitative. Two of the four alternatives
+      Rawlings & Ekerdt print beside Monod are provably indistinguishable from it
+      on a constant-yield batch run - Moser by nesting, Contois by an exact
+      reparameterisation - so a batch fit that "prefers" one of them is reporting
+      its own optimiser. Of the two that are separable, only Blackman is resolvable
+      by the single run available, at N* = 1.30 repeats against Tessier's 10.3.
+      The page's second finding is methodological and cost the first: the ranking
+      of the five laws on the one real dataset flips depending on whether the rate
+      law is evaluated at the interval-average substrate concentration or averaged
+      across the interval, and a seeded bootstrap WITH A CONTROL ARM shows the
+      shortcut rejects a true Monod 36.5 % +- 1.1 % of the time against
+      4.95 % +- 0.5 %, i.e. exactly nominal, for its own correctly-specified model. Every empirical number is a goodness of fit and is
+      labelled one; the identities are proofs and are labelled structural; and the
+      Rawlings reproduction is reproduction, not validation.
+      79 defect injections, all 79 of which move their metric, cover 60 of 74
+      metrics; the other 14 are named structural with above-floor companions, and
+      six quantities the page proves are exactly zero are printed but not
+      reported at all, because CI compares everything above ABS_FLOOR at 5 % and
+      they are optimiser and root-find exit tolerances - a rule asserted over the
+      whole enumerated class of 18 such quantities rather than over the list of
+      exclusions. An assertion cell checks 96 prose and metadata values plus 10
+      break-table lookups against the live computation, and a mechanical sweep
+      requires every number written in scientific notation in meta.yaml,
+      README.md, this entry and both data sidecars to match a live value to half
+      an ulp of its own printed digits, and measures its own detection rate by
+      mutating every token it finds.
+      SCOPE BOUNDARY: substrate inhibition (Froment eq. 1.5.2-4, Graef & Andrews
+      [1973]; Rawlings' mu_m S/(K_s+S+K_1 S^2)) belongs to J4.2 and gets no
+      quantitative treatment here; Williams' structured model, eqs. (1.5.2-5) to
+      (1.5.2-8) of the same section, is J4.9's.
+    related: [J4.2, J4.6, J4.8, J4.9, J1.1, C1.1, B1.1, J4.7]
+
   - id: J4.6
     slug: michaelis-menten-briggs-haldane
     title: "Michaelis-Menten and Briggs-Haldane: one rate law, two constants, and what data can decide between them"

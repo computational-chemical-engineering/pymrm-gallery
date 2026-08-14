@@ -5,7 +5,8 @@ catalog_reference: Monod (1949)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J4.1-monod/
 reference:
   authors:
   - Monod, J.
@@ -26,7 +27,7 @@ paper:
     did not need a render.'
 blocker: null
 notes: null
-updated: '2026-08-06'
+updated: '2026-08-13'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because
@@ -46,7 +47,11 @@ reference_read_from:
   year: 2011
   container: Chemical Reactor Analysis and Design, 3rd edition, John Wiley & Sons
   note: Section 1.5.2, eq. (1.5.2-1); see e1_1_test.
-chapter_and_section: Chapter 1, section 1.5.2, book pp. ~53-55 (PDF p. 69).
+chapter_and_section: 'Chapter 1, section 1.5.2, book pp. 26-29 = PDF pp. 68-71. CORRECTED BY THE
+  BUILD 2026-08-13: this line previously said "book pp. ~53-55 (PDF p. 69)", which is wrong and was
+  copied verbatim into the dispatch prompt before anyone checked it. PDF 69 is book p. 27, so only
+  the PDF number was right. The Chapter 1 reference list carrying the exact Monod 1949 citation is
+  on book p. 58 = PDF 100.'
 e1_1_test: 'PASSED. STATES: eq. (1.5.2-1), r = r_m C_A/(K_S + C_A). ATTRIBUTES: the text names K_S
   "the Monod- or saturation constant", explains that "in the original Monod equation r is represented
   by mu, r_m by mu_max and C_A by S", and the chapter reference list carries "Monod, J., Annu. Rev.
@@ -54,6 +59,33 @@ e1_1_test: 'PASSED. STATES: eq. (1.5.2-1), r = r_m C_A/(K_S + C_A). ATTRIBUTES: 
   rather than implied. CARRIES: it is then coupled to the biomass balance eq. (1.5.2-2) and contrasted
   with the substrate-inhibition form, whose rate exhibits a MAXIMUM where Monod tends to an asymptote
   - a qualitative discriminator a page can demonstrate.'
+e1_1_target_pinned: 'PINNED BY THE COORDINATOR 2026-08-13, BEFORE DISPATCH. Three books on disk
+  carry this case; it is decided here once, and the page does not adjudicate between them (an
+  unpinned target across several books is what parked C1.5).
+  THE E1.1 TARGET IS FROMENT, DE WILDE & BISCHOFF 3rd edn, SECTION 1.5.2 (book pp. ~53-55, PDF 69),
+  eq. (1.5.2-1). It is chosen because its chapter reference list carries "Monod, J., Annu. Rev.
+  Microbiol., 3, 371 (1949)" - the EXACT citation this case catalogues - so the origin is identified
+  rather than implied, and because it couples the rate to the biomass balance eq. (1.5.2-2) rather
+  than merely printing the form. Note the contrast with J4.6, where Froment cites neither origin.
+  RAWLINGS & EKERDT p. 596 IS A MODEL CATALOGUE, NOT A SECOND E1.1 TARGET. It prints Monod beside
+  Blackman, Tessier, Moser and Contois, and calls Monod "the simplest form of the Langmuir adsorption
+  isotherm". Use it for the competing forms and cite it for exactly that. The comparison against
+  those alternatives is the substance of this page: can the data identify Monod against them, or is
+  the choice underdetermined? Answer it with numbers.
+  LEVENSPIEL Chs. 28-30: use ONLY if his worked example genuinely prints Monod''s own reported data,
+  and CHECK IT FIRST - his attribution is to Monod (1958), NOT the 1949 paper this case catalogues.
+  If the numbers are real and traceable they are worth having (most gallery pages are tier 6 for want
+  of any measurement), but they must be labelled as coming from a different Monod publication that
+  is NOT on disk and was NOT consulted, and the page must not imply they are the 1949 paper''s data.
+  If they turn out to be illustrative rather than reported, say so and drop them.
+  SCOPE BOUNDARY, IMPORTANT: substrate inhibition belongs to J4.2 (Andrews/Haldane), which is a
+  SEPARATE case being built in this same batch. Froment contrasts Monod with the inhibition form
+  (asymptote vs maximum) and it is tempting to annex that comparison - DO NOT. Mention it in one
+  sentence as the neighbouring case and leave the quantitative treatment to J4.2, exactly as A3.1
+  and A3.3 left the three-way comparison to A3.2.
+  THE ORIGIN IS NOT ON DISK: Monod, Annu. Rev. Microbiol. 3, 371-394 (1949). Use reference_read_from
+  and origin_not_consulted, and attribute to Monod nothing beyond what Froment prints about him - the
+  A3.2 attribution-drift defect is the failure mode for this kind of page.'
 other_sources_on_disk: 'Rawlings & Ekerdt 2nd edn also passes and is complementary: book p. 596 prints
   Monod beside the Blackman, Tessier, Moser and Contois alternatives and beside substrate- and product-inhibition
   forms, notes that Monod is "the simplest form of the Langmuir adsorption isotherm", and closes the
@@ -61,8 +93,58 @@ other_sources_on_disk: 'Rawlings & Ekerdt 2nd edn also passes and is complementa
   also use it, and one worked example uses Monod''s OWN reported data ("see Monod, 1958, p. 74"),
   but note his attribution is to Monod (1958), not the 1949 paper.'
 text_layer:
-  quality: BORN-DIGITAL with embedded TrueType subsets - the text layer is clean, including equation
-    numbers and most Greek and sub/superscripts. The only monograph in the library besides Rawlings
-    & Ekerdt whose equations survive extraction. Still worth spot-checking a constant against the
-    page.
+  quality: 'BORN-DIGITAL with embedded TrueType subsets - the PROSE text layer is clean, including
+    equation numbers and most Greek and sub/superscripts. ITS EQUATIONS DO NOT SURVIVE EXTRACTION,
+    AND THE FAILURE IS SILENT: every Symbol-font operator comes out as an unmappable Private-Use-Area
+    glyph - U+F02D minus, U+F03D equals, U+F02B plus - which all three pdftotext modes emit and which
+    renders as nothing or as tofu, so an extracted equation looks complete and has no operators at
+    all. Measured on eqs. (1.5.1-17), (1.5.2-1) and (1.5.2-3) while fixing J4.1 on 2026-08-14.
+    docs/papers-inventory.yaml still says "Text layer is clean including equation numbers ... No
+    rendering needed" for this file, and J4.6 (published) describes the same phenomenon as the
+    extractor "dropping the leading term"; both need the same correction, and RENDER EVERY EQUATION
+    from this book.'
   render_at: not needed. The only image in the file is the 200 ppi cover JPEG.
+staged_at: queue_cases/J4.1/page/
+models_entry: queue_cases/J4.1/models_entry.yaml
+models_yaml_action: 'APPEND. models.yaml has NO J4.1 entry - grep "id: J4" returns only J4.6,
+  J4.7 and J4.8 - so there is nothing to upgrade in place. Splice the block immediately
+  before "- id: J4.6" to keep section J in catalogue order. The entry carries status:,
+  page: pages/J4.1-monod/ and section:, matching J4.6''s shape.'
+build_summary: 'READY, FIXED TWICE, 2026-08-14. Nine sections, executed clean, 110 s, deterministic
+  (two consecutive fresh executions give byte-identical agreement.json, byte-identical figure
+  PNGs and identical output in all 46 blocks; the one wall-clock timing the page used to print
+  was removed for that reason). 74 metrics, 79 defect injections all of which move their metric,
+  96 prose/metadata assertions plus 10 break-table lookups, plus a mechanical sweep asserting
+  every scientific-notation number in the metadata files against the live computation at half
+  an ulp of its own printed digits.
+  SECOND FIX PASS (six findings, all in the material the first pass added, all of one kind - an
+  assertion that did not do what the page said it did). The depth table''s "unconverged" column
+  was structurally incapable of being non-zero, because the second start of the two-start fit IS
+  the nesting point; it is now counted from the grid start alone and reads 994/131/11/0/0 over
+  zoom depths 0/2/4/6/8, a real convergence curve, with the structural zero printed beside it and
+  named as such. The mechanical sweep''s window was a RELATIVE 5e-sig, up to ten times looser than
+  the half ulp it claimed, and its regex skipped every token that ended a sentence and could not
+  read README.md''s x10^-n spelling at all; all three are fixed and the sweep now mutates every
+  token it finds and prints its own measured detection rate. Three more proved-exactly-zero
+  quantities were still above ABS_FLOOR in agreement.json (Sf_crossing_vs_a_relerr,
+  contois_map_mum_relerr, contois_map_KS_relerr): they are now printed and not reported, the rule
+  is asserted over the whole enumerated class of 18 such quantities, and the two-significant-figure
+  pins that the assertion cell still had on them (a tighter gate than the 5 % CI comparison the
+  rule removes) are bounds. The six bootstrap numbers now carry their Monte-Carlo sampling error
+  everywhere they are quoted. No reported number changed.
+  NINE VERIFICATION FINDINGS APPLIED. The largest: the bootstrap control''s headline was a
+  SEARCH-GRID ARTEFACT - each draw was fitted on the scan grid while the observed F it was
+  compared against came from a refined fit, which deflated F on every draw and made the control
+  look conservative at 2.1 % when a converged refit puts it AT nominal, 4.95 %. Six agreement
+  metrics moved (boot_size_forward_truth 0.308 -> 0.3655, boot_size_control_truth 0.021 -> 0.0495,
+  boot_median_n_forward_truth 1.603 -> 1.612, boot_median_n_control_truth 0.951 -> 1.009,
+  boot_p_of_observed_F 0.184 -> 0.228, boot_p_of_observed_n 0.106 -> 0.129) and three were
+  DROPPED as optimiser exit tolerances for quantities the page proves are exactly zero
+  (sep_moser, sep_over_scatter_moser, contois_minus_monod_rms). The page''s conclusion is
+  unchanged and strengthened. Also: route A''s significance verdict is co-caused by the one
+  flagged cell (F = 5.45 with it imputed) and now says so where the reader meets it; the
+  two-integrator cross-check''s claimed reach and the S + X/phi invariant are restated as what
+  they measurably are; and section 1.5.2 does print numbers (Fig. 1.5.2-1''s caption). E1.1 CONFIRMED BY THE BUILDER: Froment''s Chapter 1
+  reference list on book p. 58 prints "Monod, J., Annu. Rev. Microbiol., 3, 371 (1949)." -
+  read at digit scale on a 300 ppi crop. Origin NOT consulted; reference_read_from used
+  throughout and origin_not_consulted stated in meta.yaml, README.md and the page itself.'

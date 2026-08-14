@@ -1,0 +1,240 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J4.1
+slug: monod
+title: "Monod: what a growth curve can and cannot pick out of the family"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 110
+datasets:
+  - levenspiel-p644-monod-batch
+  - printed-growth-laws
+
+reference:                       # the ORIGIN - cited, NOT consulted
+  authors: ["Monod, J."]
+  year: 1949
+  container: "Annual Review of Microbiology 3, 371-394 (1949)"
+  doi: 10.1146/annurev.mi.03.100149.002103
+  note: >
+    ORIGIN_NOT_CONSULTED. The 1949 paper is not on disk and could not be
+    obtained. The DOI is the catalogue's, crossref-verified 2026-08-02 against
+    the catalogue citation string, NOT against the document. The citation is
+    however CONFIRMED FROM THE SOURCE THIS PAGE WAS READ FROM: Froment's
+    Chapter 1 reference list, book p. 58, prints "Monod, J., Annu. Rev.
+    Microbiol., 3, 371 (1949)." verbatim, read at digit scale on a 300 ppi crop;
+    Rawlings & Ekerdt's reference [12] prints the same with the page range
+    371-394; and Levenspiel's Chapter 29 reference list prints it too. So the
+    origin is IDENTIFIED by the reprints rather than implied.
+
+reference_read_from:             # the text actually read, and where each equation came from
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  container: "Chemical Reactor Analysis and Design, 3rd edition, John Wiley & Sons"
+  isbn: "978-0-470-56541-4"
+  chapter_and_section: "Chapter 1 'Elements of Reaction Kinetics', section 1.5 'Bio-kinetics', subsection 1.5.2 'Microbial Kinetics', book pp. 26-29 (PDF 68-71), eqs. (1.5.2-1) to (1.5.2-3)"
+  note: >
+    TEXTBOOK-CANONICAL-SOURCE PAGE, built under the standing decision of
+    2026-08-02, with the E1.1 target PINNED TO FROMENT by the coordinator before
+    dispatch. The E1.1 test passes: the book STATES eq. (1.5.2-1)
+    r = r_m C_A/(K_S + C_A); ATTRIBUTES it, naming K_S "the Monod- or saturation
+    constant", recording that "in the original Monod equation, r is represented
+    by mu, r_m by mu_max and C_A by S", and carrying the exact 1949 citation in
+    its Chapter 1 reference list; and CARRIES it, coupling it to the biomass
+    balance eq. (1.5.2-2) and the yield relation eq. (1.5.2-3) rather than
+    merely printing the form. Identified from the book's own title page, imprint
+    page and CIP record. THE FILENAME SAYS "Froment_Bischoff": this is the THIRD
+    edition and De Wilde is a full author.
+    THE TEXT LAYER LOSES EVERY OPERATOR IN AN EQUATION EVEN THOUGH THE FILE IS
+    BORN-DIGITAL, AND NOT BY DROPPING IT. Each Symbol-font operator extracts as
+    an unmappable Private-Use-Area glyph - U+F02D for the minus of eq. (1.5.2-3),
+    U+F03D for the = on the same line, U+F02B for the + of (1.5.2-1) - which
+    renders as nothing or as tofu. All three pdftotext modes emit the character,
+    so the failure is neither a drop nor specific to the sign; what a reader
+    copies is an equation with no operators at all, and reading it as printed
+    gives a sign error for free. Everything load-bearing here was read on a
+    300 ppi render for that reason.
+    THIS CORRECTS J4.6, WHICH IS PUBLISHED: that page describes the same
+    phenomenon on eq. (1.5.1-17) of this same book as "the extractor dropped the
+    leading term". pdftotext -layout returns that line as
+    "= C A <U+F02D> E <U+F02B> ...", i.e. the leading term IS present, with PUA
+    operators. J4.6's lesson and its transcription are right; only its diagnosis
+    needs the same rewording as this page's, and it is flagged here because this
+    page inherited the wording from it.
+
+other_sources_used:
+  - authors: ["Rawlings, J. B.", "Ekerdt, J. G."]
+    year: 2025
+    container: "Chemical Reactor Analysis and Design Fundamentals, 2nd edition (5th printing, 2025), Nob Hill Publishing, book pp. 595-597, 620"
+    role: >
+      MODEL CATALOGUE AND CHEMOSTAT BALANCES, NOT A SECOND E1.1 TARGET, and no
+      derivation is adjudicated between the books. Used for exactly three
+      printed things, all read on a 300 ppi render of book p. 596: the five
+      growth laws (Monod, Blackman, Tessier, Moser, Contois) that this page's
+      comparison is about; the claim that Monod is "the simplest form of the
+      Langmuir adsorption isotherm", which the page proves as an algebraic
+      identity; and the chemostat balances eq. (10.18) with the steady states
+      eq. (10.19) and the parameter set mu_m = 1, K_s = 1, S_f = 5, y = 1,
+      which is printed as BODY TEXT on book p. 597 ("The other parameter values
+      used to prepare the figure are"), not in Fig. 10.12's caption, and which
+      the page reproduces numerically. ITS FIVE GROWTH LAWS ARE CITED TO BAILEY
+      & OLLIS [1] AND SHULER & KARGI [17], in one sentence on book p. 595, not to Blackman, Tessier, Moser or Contois
+      themselves, and NOTHING ON THIS PAGE IS ATTRIBUTED TO THOSE FOUR PEOPLE.
+  - authors: ["Levenspiel, O."]
+    year: 1999
+    container: "Chemical Reaction Engineering, 3rd edition, John Wiley & Sons, Chapter 29, book pp. 641-644"
+    role: >
+      THE DATA, and one caption. Problem 29.18's seven-interval table is the
+      page's only empirical input; his Fig. 29.1 caption, "Behavior of batch or
+      plug flow reactors for Monod type microbial fermentation", is what makes
+      the pymrm plug-flow solve testable against an initial-value solution.
+      Read on 600 ppi native renders (pdfimages -list reports every page of that
+      file as 3552x5356 at 600x600 ppi, so 600 is native and anything higher
+      would be interpolation).
+
+data:
+  tier: 2
+  method: >
+    Two transcriptions, no digitising and no figure extraction. (1) The seven
+    time intervals printed in Levenspiel's Problem 29.18, book p. 644 - the
+    page's only empirical input. (2) Twenty-eight equations and prose claims
+    from the three books, verbatim, each with the book and page it was read
+    from.
+  status: complete
+  provenance_of_the_measurements: A_DIFFERENT_MONOD_PUBLICATION_NOT_CONSULTED
+  provenance_note: >
+    READ THIS BEFORE REUSING THE CSV. Levenspiel introduces the table with "As
+    experimental support for this equation he presented results from four batch
+    reactor runs on the growth of a pure bacterial culture in a lactose solution
+    (see Monod, 1958, p. 74). Here are the reported data for one of his runs."
+    So these are presented as REPORTED MEASUREMENTS, which is why the page uses
+    them - but they are attributed to MONOD (1958), the second edition of
+    "Recherches sur la Croissance des Cultures Bacteriennes", NOT to the 1949
+    paper this case catalogues. Neither document is on disk and neither was
+    consulted, so WHICH of them prints this table is not established here.
+    Levenspiel's own account of the history, quoted as his on the page, is that
+    the equation was proposed "in 1939, as part of his thesis", that the thesis
+    "was published as a book in 1948", and that it "was later condensed and
+    translated into English in 1949".
+    THE TABLE PRINTS NO UNITS for either concentration column; dt is in hours,
+    which is the only unit given and which matches the h^-1 Froment prints for
+    mu. Every conclusion on the page is in h^-1 or is a ratio, except K_S, which
+    is quoted as "in the units of the printed CA_bar column" every time.
+    THE CA_bar COLUMN HEADER CARRIES AN OVERBAR - an interval average - which
+    every pdftotext mode drops and which is load-bearing: reading it as a point
+    value is precisely the reduction bias the page measures.
+
+printed_defect_reported_not_repaired: >
+  ROW 4's CA_bar IS INCONSISTENT WITH THE TABLE'S OWN MATERIAL BALANCE. All
+  three books assume a constant biomass yield (Froment eq. 1.5.2-3, Rawlings
+  eq. 10.18, Levenspiel Ch. 29), which forces CA_bar to be an exact affine
+  function of the interval-average biomass - a check needing no kinetics at all.
+  Six of the seven rows satisfy that line at R^2 = 0.99995709; all seven give
+  0.98504707. A LEAVE-ONE-OUT SWEEP SAYS WHICH ROW: dropping row 4 gives
+  0.99995709, dropping any other leaves R^2 in [0.975738, 0.984806]. The
+  six-row line predicts CA_bar = 60.1804 for row 4 against the printed 43 - a
+  residual of -17.1804 where the largest of the other six is 0.6541.
+  A CANDIDATE EXPLANATION IS RECORDED AS AN INFERENCE AND THEN REFUSED AS A
+  SYSTEMATIC: 43 is within 3.1 % of that interval's END-of-interval substrate
+  concentration (44.33 on the same line), but the same substitution on rows 3
+  and 5 gives 74.89 against 90 (16.8 % off) and 13.46 against 29 (53.6 % off).
+  NOTHING IS EDITED IN THE CSV. A break row puts the cell back into the balance
+  line and another propagates its balance-implied value through all seven
+  route-A fits, so exactly what depends on it is visible.
+
+not_a_defect: >
+  Rawlings' Tessier row prints mu = mu_m (1 - e^{-K_s S}), in which K_s must be
+  a RECIPROCAL concentration - unlike the Monod and Blackman rows, where it is a
+  concentration. That reads like a misprint for the commoner exp(-S/K_s) until
+  the Moser row is read, where K_s adds to S^n and therefore carries units of
+  concentration^n: the book is reusing K_s as a MODEL-LOCAL symbol, and the
+  Moser row settles it. All three pdftotext modes and the 300 ppi render agree
+  on the printed exponent. Transcribed as printed, flagged in the CSV, and NOT
+  reported as a defect.
+
+fit_or_test: >
+  THREE KINDS ARE PRESENT AND ARE KEPT APART EVERYWHERE.
+  STRUCTURAL (proofs, which cannot fail for the right reason and are labelled as
+  identities in the coverage map): Monod == Langmuir with K_S = 1/K, which is
+  Rawlings' printed claim; Froment's two defining properties of r_m and K_S;
+  the fact that Blackman shares BOTH of them exactly while differing by exactly
+  mu_m/3 at its branch switch and by mu_m(3-2 sqrt 2)/2 = 0.0858 mu_m at
+  S = (sqrt 2 - 1) K_S; Moser == Monod at n = 1; and CONTOIS == MONOD under a
+  constant yield, with mu_m' = mu_m/(1 - K_sx phi) and
+  K_S' = K_sx phi a/(1 - K_sx phi). Five sympy residuals, all exactly zero, all
+  below CI's ABS_FLOOR, each named structural with an above-floor companion.
+  FITTED: every constant describing the culture. mu_m = 0.880923 1/h and
+  K_S = 20.4536 (in the units of the printed CA_bar column) were fitted to the
+  same seven intervals the residuals are then reported against, SO THAT
+  AGREEMENT IS A GOODNESS OF FIT AND NOT A TEST. Two one-parameter nulls are
+  computed beside it and each is itself best-fitted: zero order 0.278278 1/h and
+  first order 0.201476 (route A) - Monod beats the better of them by 3.68x and
+  Blackman by 7.53x. That ratio is a claim about SATURATION, not about a
+  mechanism, and the page says so.
+  REPRODUCED (not validated): Rawlings' eq. (10.19) and their D_c at their own
+  printed parameter set. That is their algebra reproduced by a different
+  computation, not a measurement.
+  DIRECTION OF THE IDENTIFIABILITY CLAIMS: the separations d are obtained by an
+  optimiser, so each is an UPPER BOUND on a minimum distance. "Cannot be
+  separated" is therefore the safe direction, and the quoted N* is if anything
+  an underestimate of what an experiment needs.
+
+validation:
+  - "HEADLINE 1, AND IT IS EXACT. Contois IS Monod on any constant-yield batch or plug-flow run. Constant yield makes X = phi(a - S), so mu_m S/(K_sx X + S) = (mu_m/beta) S/(K_sx phi a/beta + S) with beta = 1 - K_sx phi - a bijection between the two parameter pairs. sympy residual exactly 0 (metric sym_contois_is_monod_residual). Confirmed numerically by two optimisers started from different places on the two parameterisations: pushing the fitted Contois constants through the map reproduces the Monod fit's mu_m and K_S to better than 1e-4 relative, and the two residual RMS differ by less than 1e-11 1/h. THOSE THREE NUMBERS ARE QUOTED HERE AS BOUNDS AND NOT TO TWO SIGNIFICANT FIGURES, and they are not in agreement.json, for one reason: the identity makes them exactly zero, so what they measure is least_squares' stopping rule. Their exact values are printed on the page, where nothing pins them. Moser is the other undistinguishable one, by nesting at n = 1; the measured separations at the seven design points are below 1e-9 for both, which is xtol and not a separation, and are named structural."
+  - "HEADLINE 2, AND IT IS THE CASE'S OWN QUESTION. On the one real dataset, the ranking of the five printed laws is set by the DATA REDUCTION. Route A - mu_i = ln(Cc_end/Cc_start)/dt compared with mu(CA_bar), which is what the exercise invites - puts Monod LAST of the four two-parameter laws (RMS 0.054690 1/h against Contois 0.051534, Tessier 0.038710, Blackman 0.026772) and gives Moser n = 1.9317 with F = 12.2698 against F(1,4) = 7.7086, i.e. SIGNIFICANT - a verdict CO-CAUSED by the one printed cell the page flags, since putting that cell at its balance-implied 60.1804 gives F = 5.4477 against the same 7.7086, i.e. NOT significant, and the notebook and README say so where a reader meets the claim rather than only here. The RANKING claim is not co-caused: Blackman still beats Monod with the cell imputed (0.040646 against 0.046870), and the route-A-to-route-B reversal is the reduction. What the imputation does move is which law comes LAST of the four, from Monod to Contois, by 0.14 %. Route B - the same seven growth rates, the interval average done exactly by integrating the law across each interval, with phi and a taken from the table's own material balance and NO new parameter - gives Monod 0.031466 (a 42 % fall), makes Blackman the WORST of the four, and gives n = 1.5094 with F = 1.4389, NOT significant.
+      THE TWO ROUTES DO NOT READ THE SAME SEVEN NUMBERS AND THE PAGE NO LONGER SAYS THEY DO. Both fit the same seven mu_i. They differ in where the substrate comes from: route A reads all seven printed CA_bar directly, route B never touches that column at all and takes the substrate trajectory from phi and a, which come from the SIX-ROW balance line - the one that excludes the flagged row 4. So the datum route A's ranking leans on hardest is exactly the one route B's balance line leaves out. The break table prices that directly by refitting every route-B law and route B's own F with the ALL-SEVEN line."
+  - "THE BOOTSTRAP, WITH A CONTROL, WHICH IS WHAT MAKES THE SECOND HEADLINE A MEASUREMENT RATHER THAN AN OPINION. 2000 seeded draws (seed 20260813) at sigma = 0.031466 1/h, with EVERY DRAW FITTED THE WAY ROUTE A FITS THE REAL DATA - global scan, then refined. Truth = the FORWARD Monod model, i.e. data a Monod culture would actually produce: route A's nominal-5 % F test rejects Monod 36.5 % +- 1.1 % of the time and the median fitted exponent is 1.6117 +- 0.0074. Truth = mu(CA_bar), route A's OWN model, for which route A is correctly specified: size 4.95 % +- 0.5 %, median exponent 1.0089 +- 0.0049. THOSE SIX NUMBERS ARE MONTE-CARLO ESTIMATES AT 2000 DRAWS - FOUR FREQUENCIES (the two sizes and the two p values) AND TWO MEDIANS, not six frequencies - and each is printed with its sampling error beside it: binomial for the frequencies, from the order statistics for the medians. Those errors are what the four figures are worth, and the answer differs by statistic: one standard error exceeds half a unit in the SECOND significant figure of all four frequencies, so each of them is seed-independent in its LEADING FIGURE ONLY, while the two medians hold at least two figures. The four-figure values are exact for seed 20260813 and reproducible, not resolved. The page prints that comparison per statistic rather than asserting a single figure count. THE CONTROL SITS AT ITS NOMINAL SIZE, so the small-sample F approximation at n = 7 is essentially EXACT, is NOT the cause, and the whole of the distortion is the reduction. Against a properly generated Monod null the OBSERVED route-A verdict F = 12.2698 has p = 0.2280 +- 0.0094 and its exponent n = 1.9317 has p = 0.1285 +- 0.0075 - neither significant, and neither near enough to 0.05 for the sampling error to change that.
+      THE SIX NUMBERS ABOVE WERE WRONG IN THE FIRST VERSION OF THIS PAGE AND THE ERROR IS KEPT AS A BREAK ROW. That version read each draw's fit off the scan grid with no refinement while comparing it against a refined observed F; an unrefined Moser fit cannot reach its own optimum, so it deflates F on every draw. The grid-only numbers are size 0.3080/0.0210, median n 1.6029/0.9514, p 0.1835/0.1055, and they made the control look CONSERVATIVE at 2.1 % when it is at nominal. A grid-limited extremum is invisible to every perturbation test, which is why the refinement's convergence over zoom depths 0, 2, 4, 6, 8 is printed on the page - as the count of draws whose two-dimensional fit still ends ABOVE the one-dimensional fit that nests inside it, measured FROM THE GRID START ALONE. It has to be measured from that start: the fit as shipped adds a second start at the nesting point, where the two objectives are the same number to the last bit, so its own count is zero at every refined depth by construction - and the grid-only row has no pair of starts at all - and would be an identity of the code rather than a measurement. The page prints both, and says which is which. The conclusion is unchanged and stronger: a control at nominal size is a better exoneration of the F approximation than a conservative one.
+      THE NOISE SCALE IS A DECLARED CONVENTION FOR THE FORWARD ARM AND IS NOT ONE FOR THE CONTROL, and the page prints both: the forward size is a bias-to-noise ratio and reads 0.3655 +- 0.0108 at sigma = route B's RMS and 0.2355 +- 0.0095 at route A's, while the control's reads 0.0495 +- 0.0049 and 0.0470 +- 0.0047, i.e. scale-free to Monte-Carlo error - which is what a correctly specified test must do and is a second reason to read the F approximation as exonerated."
+  - "THE BIAS ITSELF, MEASURED. At CA_bar = 9 the shortcut misstates the rate by 0.066310 1/h, which is 1.2125 times the residual scatter route A ranks the five laws on. It has a SIGN - mu is concave, so mu(mean) > mean of mu - which is why it inflates a saturating law's sharpness. The largest substrate swing over an interval is 1.8901 times that interval's own printed average, so this is not a small-perturbation regime. Row 4's entry in the same table, -0.068561, is dominated by that row's departure from the material balance rather than by curvature, and is reported separately for that reason."
+  - "IDENTIFIABILITY AT THIS DESIGN, PRICED. Taking Monod as true at the route-B fit and asking how close each alternative can get at the seven design points: Blackman 0.034659 1/h (1.1015 times the scatter, N* = 1.30 repeats of the run), Tessier 0.012348 (0.39242, N* = 10.27), Moser and Contois at the optimiser floor. So BLACKMAN - THE LAW ROUTE A LIKED BEST - IS THE ONLY ONE THIS DESIGN CAN RESOLVE, which means route A is not merely biased but is confidently ordering laws it cannot tell apart."
+  - "THE DISCRIMINATING EXPERIMENT, NAMED AND PRICED. Rawlings' chemostat separates what the batch cannot: Monod washes out at D_c = mu_m S_f/(K_S + S_f) and Contois at D_c = mu_m independent of S_f. The two cross at EXACTLY S_f = a - an identity, verified by a root-find at 197.116342 against the material balance's a = 197.120267 (1.99e-05) - and separate on either side: a factor 1.8325 at S_f = 20, and more than 10 % apart for every S_f below 95.515."
+  - "A STATED NUMERICAL RESULT REPRODUCED. Rawlings' eq. (10.19), S_s = D K_s/(mu_m - D) and X_s = y(S_f - S_s), at their printed Fig. 10.12 parameter set, reproduced to 0.00e+00 (double precision) at D = 0.25, 0.5, 0.75 by marching eq. (10.18) to steady state; and their PRINTED FORMULA D_c = mu_m S_f/(K_s+S_f), which evaluates at their own printed parameter set to 5/6 - the formula is theirs, the number is this page's evaluation of it and Chapter 10 prints no numeric D_c anywhere - recovered to 2.14e-04 by a root-find on that marched model. Two break rows change their printed K_s and their printed y and the reproduction fails, at 6.6e+02 and 1.0e+300 relative (the second is the relative move away from a baseline of exactly zero, so its magnitude is set by the break table's 1e-300 guard and carries no information beyond the fact that it moves)."
+  - "THE SECOND, INDEPENDENT COMPUTATION OF THE HEADLINE FIT. Route B's Monod constants re-derived through a pymrm BACKWARD-EULER MARCHER built from NumJac((1,2)) and newton, Richardson-extrapolated from 200/400 steps, agreeing with the adaptive LSODA fit to 1.65e-06 in mu_m and 9.44e-06 in K_S. The two share no line of code: different discretisation, different Jacobian, different linear algebra. The marcher carries S as an UNKNOWN rather than substituting the yield relation, which is worth having, but S + X/phi = const is then a TAUTOLOGY of the scheme and not a test of it - BatchMarch builds its source as (-m/phi, m) from one m, so backward Euler conserves it for any growth law; it closes at round-off, below 1e-14, and tripling mu_m (grossly wrong physics, and it moves the biomass at the end of interval 1 from 23.4449 to 49.9666) leaves it below 1e-14 still, and the only thing that breaks it is a break row using a different yield in the source from the one in the invariant, which moves it to 2.5e-03. The coverage map has always labelled it structural; this file and the notebook now agree with it.
+      WHAT THE TWO-ROUTE COMPARISON DOES AND DOES NOT ESTABLISH, MEASURED ON THE PAGE. It catches a bug in either integrator. It is blind to everything the two share: both read a, phi, dt and Cc_start from the same place and integrate the same ODE, so a yield wrong by 30 % moves the common prediction by a factor 9.0 and leaves the LSODA-versus-pymrm gap at 5.00e-04 against 6.41e-04 with nothing injected; a wrong intercept and a mis-set interval behave the same way. An earlier version of this file and of the notebook claimed the opposite - that 'an algebra error in the reduction, a wrong yield, or a mis-set interval would move them apart' - and the injection table replacing that sentence is on the page. Observed order 0.9993 (backward Euler is first order), and a break row running the refit at 25 steps moves the agreement to 1.3e-02, so the check is converged rather than merely quiet."
+  - "AN EXACT IDENTITY FOR THE SPATIAL SOLVE. Levenspiel's Fig. 29.1 is captioned for 'batch OR PLUG FLOW' reactors, and that is a theorem: the plug-flow outlet at residence time tau is the batch state at t = tau. The pymrm solve (construct_convflux_upwind + construct_div(nu=0) + NumJac((n,2)) + newton) converges to the adaptive initial-value solution at observed order 0.9981 over five grids, with Richardson extrapolation 3.25e-06 from it. Break rows: nu = 1 instead of nu = 0 moves the outlet by 8.2e+02 relative, a flipped substrate sign by 2.7e+04. READING THE OUTLET AT THE LAST CELL CENTRE ALSO MOVES IT, BUT DOWN, BY A FACTOR 0.386 - and the page says so rather than repeating the general warning: with a ZERO-GRADIENT outflow condition both reads are first order (0.9981 and 0.9957) and differ only in their constant. compute_boundary_values is used because it stays right when the outflow condition is not zero-gradient, not because it wins here."
+  - "79 defect injections, ALL 79 of which move their metric by more than MOVE_TOL = 1e-6 relative, covering 60 of the 74 reported metrics. Ten of them are SWEEP rows - one injection recorded against every metric of a family (all five laws, all the separations, all the plug-flow numbers) - so that families are covered rather than only the member quoted in prose. The remaining 14 metrics are named individually as structural, definitional or companion values, and BOTH generic not-coverage labels (the UNCOVERED fallback and the below-floor assertion) are asserted never to be reached. The coverage map prints how hard each covered metric's strongest row hits it."
+  - "96 prose/metadata values plus 10 break-table lookups checked against the live computation by an assertion cell; the page fails to execute if any drifts. The break-table lookups are done BY (row, metric) rather than retyped, which is how the values that exist only in that table stay inside the net. ON TOP OF THAT CURATED LIST, WHICH CAN DRIFT BECAUSE IT IS CURATED, a MECHANICAL SWEEP reads meta.yaml, README.md, models_entry.yaml and both data sidecars, extracts every number written in scientific notation and requires each to match a live value - a reported metric, a printed-but-not-reported quantity, a break-table entry or a declared constant - to HALF AN ULP OF ITS OWN PRINTED DIGITS, computed from the token and compared absolutely. Files that are absent - models_entry.yaml once it has been spliced into models.yaml, or every file when the notebook runs on Colab - are skipped and counted. The sweep was written because four metadata values had drifted out of the curated net, and it caught one of them on its first execution - a magnitude quoted here as 3.4 times 10^15 where the break table says 1.0e+300.
+      WHAT THE SWEEP CAN AND CANNOT DO IS MEASURED ON THE PAGE, NOT CLAIMED HERE. Its window used to be a relative 5*10^-sig, which is half an ulp only when the mantissa is 1 and is up to ten times looser otherwise, and its regex skipped every token that ended a sentence; corrupting a last printed digit was caught in a small minority of cases. Both are fixed, and the cell now MUTATES the last printed digit of every token it finds and prints how many of those corruptions its own window rejects, together with the ones it cannot see. It remains blind to a wrong SIGN, which the regex does not read, and it reads e-notation only.
+      SIX QUANTITIES ARE PRINTED BUT DELIBERATELY NOT REPORTED as metrics, under the rule that no value this page PROVES is exactly zero may sit above ABS_FLOOR in agreement.json: sep_moser, sep_over_scatter_moser, contois_minus_monod_rms, contois_map_mum_relerr, contois_map_KS_relerr and Sf_crossing_vs_a_relerr, all of them below 1e-4 and all quoted in this file as bounds rather than to two significant figures, for the same reason. They are least_squares, LSODA and root-find exit tolerances for quantities the identities make exactly zero, and check_agreement.py compares everything above ABS_FLOOR at 5 % relative, so reporting them would guarantee a false alarm the day scipy changes its stopping rule. THE RULE IS ASSERTED OVER THE WHOLE CLASS AND NOT OVER THAT LIST: the page enumerates all 18 quantities it proves exactly zero and asserts that each is either below ABS_FLOOR and kept, or absent from agreement.json - the two sets being exactly the below-floor set and its complement. An earlier version asserted only that the three then-excluded names were excluded, which is why three more of the same class were still being compared at 5 %."
+
+caveats:
+  - "THE ORIGIN WAS NOT CONSULTED. Monod (1949) is not on disk and could not be obtained. Everything this page says about Monod is bounded by what Froment prints about him - eq. (1.5.2-1), the naming of K_S as 'the Monod- or saturation constant', the sentence about mu/mu_max/S in 'the original Monod equation', and the citation in the Chapter 1 reference list. NO SENTENCE OF THE FORM 'Monod showed/assumed/found/argued' APPEARS ANYWHERE on the page, in this file, or in README.md; that sweep was done deliberately, because attribution drift is the A3.2 defect class."
+  - "NOTHING IS ATTRIBUTED TO BLACKMAN, TESSIER, MOSER OR CONTOIS EITHER. Rawlings & Ekerdt introduce all five forms with one sentence, 'Many different cell growth expressions have been found useful [1, 17]', citing Bailey & Ollis and Shuler & Kargi; only Monod carries an individual citation. The page therefore attributes the four alternative forms to the page that prints them, and says nothing about who proposed them or why."
+  - "THE PAGE DOES NOT VALIDATE 'THE MONOD MECHANISM' AND SAYS SO. What the seven intervals support is that a two-parameter saturating law describes one batch run 3.68 times better than the best one-parameter alternative. That is a claim about SATURATION, and it is compatible with at least four of the five printed laws - two of which are exactly indistinguishable from Monod on this kind of experiment."
+  - "SCOPE. Substrate inhibition - Froment eq. (1.5.2-4), attributed there to Graef and Andrews [1973], and Rawlings' mu_m S/(K_s + S + K_1 S^2) - is CASE J4.2 and gets no quantitative treatment here. Froment's contrast, that the inhibited rate 'exhibits a maximum, whereas with Monod-kinetics it tends to an asymptotic value', is quoted once and left to that case, exactly as A3.1 and A3.3 left the three-way comparison to A3.2. Both forms are transcribed into the printed-laws CSV so that the boundary is checkable, and neither is fitted or evaluated anywhere. Williams' structured model, eqs. (1.5.2-5) to (1.5.2-8) of the same section, is J4.9's. Product inhibition (Rawlings p. 596, Levenspiel Ch. 30) is out and is named."
+  - "K_S IS IN UNITS THE SOURCE DOES NOT PRINT. The table gives no units for either concentration column; only dt is dimensioned, in hours. So mu_m = 0.880923 1/h is a proper rate - and it agrees in KIND with the h^-1 Froment prints for mu - but K_S = 20.4536 is a number in the units of the printed CA_bar column and nothing more. The organism is not named and the substrate is identified only as lactose. Do not cite K_S as a half-saturation constant for anything."
+  - "THE DATA ARE NOT FROM THE 1949 PAPER. See data.provenance_note. They are attributed by Levenspiel to Monod (1958) p. 74, which was not consulted."
+  - "THE FLAGGED CELL. See printed_defect_reported_not_repaired. Note in particular that the one significance verdict the page could have reported is sensitive to it: the route-A F test's outcome is not stable to that single cell, which is itself part of the finding rather than a footnote to it."
+  - "N* IS A CONVENTION AND IS REPORTED AS ONE. It is the number of independent repeats of this seven-interval design at which a chi-square separation at 95 % with 5 degrees of freedom becomes possible, computed with the route-B residual scatter as the noise scale. All three choices - the confidence level, the degrees of freedom and which route supplies the scatter - have break rows (N*_Blackman 1.30 -> 1.78 at 99 %, N*_Tessier 10.27 -> 31.03 on route A's scatter). The number is also an underestimate of the experimental effort in the direction that matters, because the separations bounding it are optimiser upper bounds."
+  - "DETERMINISM IS A SHIPPED PROPERTY OF THIS PAGE AND IS CHECKED, NOT ASSUMED. Everything stochastic is drawn from np.random.default_rng(SEED) with SEED = 20260813 printed on the page, and NO WALL-CLOCK TIMING IS PRINTED ANYWHERE. An earlier version ended the route-B cell with that cell's elapsed seconds; two consecutive executions then differed by one character (29 s against 30 s), which is enough to make the page undiffable and so to hide a real drift behind a false one. Two fresh build-and-execute runs in isolated copies now give byte-identical agreement.json, byte-identical figures and identical stream output in all 46 output blocks."
+  - "THE CHEMOSTAT PREDICTIONS ARE EXTRAPOLATIONS. The right-hand panel of the results figure takes constants fitted to a batch run and predicts an experiment nobody ran. It is presented as such. A break row rebuilds the whole prediction from the ROUTE-A constants instead, and every number moves - which is the page's point applied to itself."
+  - "WHAT PYMRM ADDS HERE IS SPECIFIC AND THE PAGE SAYS SO. The central argument is algebra plus a seven-point fit, and scipy does most of it - a well-mixed batch and a chemostat are 0-D and solve_ivp integrates them, as it does throughout, as the reference. What pymrm buys is (i) a genuinely independent second computation of the fit through NumJac + newton that tests the yield relation instead of assuming it, and (ii) turning Levenspiel's 'batch or plug flow' caption into a converged number. Neither is decoration, and neither is oversold."
+
+agreement: >
+  Three kinds, kept apart. STRUCTURE: five symbolic identities with residual
+  exactly zero - Monod == Langmuir, Froment's two defining properties, Blackman
+  sharing both of them, Moser == Monod at n = 1, and Contois == Monod under a
+  constant yield - plus the exact mu_m/3 gap at Blackman's switch, checked
+  against a root-found extremum. FIT: mu_m = 0.880923 1/h and K_S = 20.4536 at
+  0.031466 1/h RMS on the seven intervals they were fitted to, against 0.201476
+  for the best one-parameter null; the route-A reduction of the same data gives
+  0.054690 and a different ranking, and a seeded bootstrap with a control - every
+  draw refit rather than read off the scan grid - shows the reduction rejects a
+  true Monod 36.5 % +- 1.1 % of the time against 4.95 % +- 0.5 %, i.e. AT nominal
+  size, for its own correctly-specified model. NUMERICS: Rawlings' eq. (10.19) reproduced exactly
+  and their D_c to 2.1e-4; the fit reproduced through a pymrm backward-Euler
+  marcher to 1.7e-6 with conservation below 1e-14 and observed order 0.9993; and
+  the plug-flow-equals-batch identity at observed order 0.9981 with Richardson
+  3.2e-6. One printed cell reported and not repaired.
+
+related: [J4.2, J4.6, J4.8, J4.9, J1.1, C1.1, B1.1, J4.7]

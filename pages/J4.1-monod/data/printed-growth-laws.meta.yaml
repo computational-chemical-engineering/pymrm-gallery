@@ -1,0 +1,156 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: printed-growth-laws
+title: >
+  Every equation and prose claim this page reads, transcribed verbatim from the
+  three books, with the page and equation number each came from.
+
+acquisition:
+  method: transcription
+  detail: >
+    No digitising and no figure extraction.  Each row was read on a render of
+    the page it cites.  Froment and Rawlings & Ekerdt are born-digital with
+    embedded font subsets, so their text layers are clean and were used to
+    locate lines - but every row whose exact characters matter (the five growth
+    laws, Froment's eqs. 1.5.2-1 to 1.5.2-3, both Monod citations) was then read
+    at digit scale on a 300 ppi render of that page.  Levenspiel is a bilevel
+    scan whose native resolution `pdfimages -list` reports as 600x600 ppi on
+    every page; its rows were read on 600 ppi crops.  Rendering Levenspiel
+    higher than 600 would be interpolation.
+  renders:
+    Froment-DeWilde-Bischoff-2011: "300 ppi, PDF pages 68-71 (book 26-29) and 100 (book 58)"
+    Rawlings-Ekerdt-2025: "300 ppi, PDF pages 629-631 (book 595-597)"
+    Levenspiel-1999: "600 ppi native, PDF pages 657, 659, 660 (book 641, 643, 644)"
+
+# One CSV, three books: `source` therefore carries three KEYED entries rather
+# than the single mapping the schema shows.  The keys are the ones the `source`
+# column of the CSV uses, so every row points at its own book.
+source:
+  Froment-DeWilde-Bischoff-2011:
+    authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+    year: 2011
+    container: "Chemical Reactor Analysis and Design, 3rd edition, John Wiley & Sons"
+    isbn: "978-0-470-56541-4"
+    identified_from: >
+      Its own title page ("Chemical Reactor Analysis and Design / 3rd Edition /
+      Gilbert F. Froment ... Kenneth B. Bischoff (deceased) ... Juray De Wilde
+      ... John Wiley & Sons"), its imprint page and its Library of Congress CIP
+      record.  THE FILENAME SAYS "Froment_Bischoff": this is the THIRD edition
+      and De Wilde is a full author.
+    role: "THE E1.1 TARGET.  Section 1.5.2 'Microbial Kinetics', book pp. 26-29."
+  Rawlings-Ekerdt-2025:
+    authors: ["Rawlings, J. B.", "Ekerdt, J. G."]
+    year: 2025
+    container: "Chemical Reactor Analysis and Design Fundamentals, 2nd edition (5th printing, 2025), Nob Hill Publishing"
+    role: >
+      MODEL CATALOGUE, NOT A SECOND E1.1 TARGET.  Book p. 596 prints Monod
+      beside Blackman, Tessier, Moser and Contois and calls Monod "the simplest
+      form of the Langmuir adsorption isotherm"; pp. 596-597 close the chemostat
+      balances with it.  The comparison against those four alternatives is what
+      this page is about.  No derivation is adjudicated between the books.
+  Levenspiel-1999:
+    authors: ["Levenspiel, O."]
+    year: 1999
+    container: "Chemical Reaction Engineering, 3rd edition, John Wiley & Sons"
+    role: >
+      THE DATA (Problem 29.18) and the publication history he prints for it.
+      Chapters 28-30 are his microbial-fermentation chapters.
+
+columns:
+  key:
+    units: "-"
+    description: "Stable identifier used by the notebook to look a row up; never printed by any book."
+  source:
+    units: "-"
+    description: "Which of the three books, keyed to `source` above."
+  page:
+    units: "-"
+    description: "BOOK page number as printed on the page itself, not the PDF index."
+  equation_number:
+    units: "-"
+    description: "The equation number as printed, or `prose` / `references` where the row is running text."
+  as_printed:
+    units: "-"
+    description: >
+      The transcription.  ASCII stand-ins for Greek and sub/superscripts
+      (mu, K_s, S^n, e^(-K_s S)); no term added, removed or reordered.
+  flag:
+    units: "-"
+    description: "Empty when the row is unremarkable; otherwise what a reader must know about it."
+
+flagged_rows_explained:
+  froment_yield: >
+    THE CLEAN BORN-DIGITAL TEXT LAYER LOSES EVERY OPERATOR IN THIS BOOK'S
+    EQUATIONS, AND NOT BY DROPPING THEM.  Each Symbol-font operator extracts as
+    an unmappable Private-Use-Area glyph: U+F02D for the leading minus of
+    eq. (1.5.2-3), U+F03D for the = on the same line, U+F02B for the + of
+    eq. (1.5.2-1).  All three pdftotext modes emit those characters and all
+    three render as nothing or as tofu, so what a reader copies is
+    "dC A dC B / dt y B dt" - an equation with no operators at all, which reads
+    as a correct statement turned into a sign error.  The 300 ppi render shows
+    "- dC_A/dt = dC_B/(y_B dt)" and is correct.
+    THIS CORRECTS A PUBLISHED PAGE.  J4.6 documents the same phenomenon for
+    eq. (1.5.1-17) on p. 26 of this same book as "the extractor dropped the
+    leading term"; pdftotext -layout returns that line as
+    "= C A <U+F02D> E <U+F02B> ...", so the leading term is present with PUA
+    operators.  The lesson is unchanged in both places and it is the reason this
+    file exists: a clean text layer is still not a page.
+  rawlings_tessier: >
+    A DEFECT THAT IS NOT ONE.  In the Tessier row K_s appears as a coefficient
+    of S inside an exponent, so it must have units of 1/concentration - unlike
+    the Monod and Blackman rows, where K_s is a concentration.  That looks like
+    a misprint for the more common exp(-S/K_s) until the Moser row is read: there
+    K_s adds to S^n, so it has units of concentration^n.  The book is reusing
+    K_s as a MODEL-LOCAL constant, and the Moser row settles it.  All three
+    pdftotext modes and the 300 ppi render agree on "e^{-K_s S}".  Not repaired,
+    and not reported as a defect.
+  levenspiel_1958: >
+    "Herman, Paris" for the publisher usually written Hermann.  Quoted as
+    printed, with [sic] where it is quoted on the page.
+  froment_inhibition, rawlings_substrate_inhibition: >
+    SCOPE BOUNDARY.  Substrate inhibition is case J4.2 (Andrews/Haldane).  Both
+    rows are transcribed so that a reader can check the boundary was respected,
+    and neither is fitted, evaluated or compared anywhere on this page.
+
+negative_claims_and_how_they_were_checked:
+  - claim: "Froment section 1.5.2 prints no alternative to Monod except the substrate-inhibition form."
+    check: >
+      Case-insensitive full-text search of all 903 PDF pages for
+      blackman|tessier|moser|contois.  ONE hit, and it is a person, not a growth
+      law: "Gwyn, J.E., Moser, J.H., and Parker, W.A., Chem. Eng. Prog. Symp.
+      Ser." in a later chapter's reference list.  Section 1.5.2 itself prints
+      eq. (1.5.2-1) (Monod), eq. (1.5.2-4) (Graef & Andrews), and
+      eqs. (1.5.2-5)..(1.5.2-8) (Williams' structured model, which is J4.9's).
+  - claim: "Levenspiel prints none of the four alternatives either."
+    check: "Same search over all 685 PDF pages of the Levenspiel file: zero hits."
+  - claim: "Levenspiel prints no answer to Problem 29.18."
+    check: >
+      The string "29.18" occurs exactly once in the whole 685-page file - the
+      problem statement itself.  The book's only appendix is
+      "Appendix-Miscellany", a unit-conversion table (book pp. 655-660); there
+      is no answers section.  So the exercise supplies data, not a worked
+      example with printed intermediates, and this page's validation is ranked
+      accordingly (internal identities and a stated numerical result, not a
+      reproduction).
+  - claim: "Froment section 1.5.2 prints no value for r_m, K_S or K_i and no worked example for Monod kinetics."
+    check: >
+      Read on a 300 ppi render of all four pages of the section (book pp. 26-29 =
+      PDF 68-71).  The section prints exactly two sets of numerals and neither is
+      a Monod constant: y_B + y_P + y_D = 1 on book p. 26, a stoichiometric
+      identity; and Fig. 1.5.2-1's caption on book p. 29, "(for k1 = 0.0125 s-1;
+      k2 = 0.025 s-1; M0/D0 = 1)", which belongs to WILLIAMS' structured model,
+      eqs. (1.5.2-5) to (1.5.2-8), and is J4.9's.  Both are transcribed as rows of
+      the CSV so the claim is checkable.  An earlier version of the page said the
+      section "prints no numbers at all", which is a claim about a document and
+      was wrong as written.
+  - claim: "Rawlings & Ekerdt cite the five growth laws to two textbooks, not to their originators."
+    check: >
+      The sentence introducing them is "Many different cell growth expressions
+      have been found useful [1, 17]" on book p. 595; [1] is Bailey & Ollis and
+      [17] is Shuler & Kargi in the Chapter 10 bibliography (book p. 620-621).
+      Only Monod carries an individual citation, [12], which is the 1949 paper.
+      NOTHING ON THIS PAGE IS ATTRIBUTED TO BLACKMAN, TESSIER, MOSER OR CONTOIS
+      PERSONALLY; the four forms are attributed to the page that prints them.
+
+license_basis: >
+  Short verbatim quotations of equations and single sentences, cited to page,
+  for scientific verification.  No page image is reproduced or committed.
