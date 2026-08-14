@@ -1,0 +1,134 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: luedeking1959-table1-bacterial-density
+title: >
+  Table I of Luedeking & Piret (1959), book p. 401 (PDF page 9), "Bacterial
+  density during batch fermentation" - the 45 (time, N) pairs of the pH 6.0 run,
+  transcribed cell by cell from 300 ppi crops enlarged to digit scale.
+
+READ_THIS_FIRST: >
+  THIS IS MEASURED DATA, not simulation output: optical densities of samples
+  drawn from one batch fermentation of L. delbrueckii NRRL-B445 at 45 C on a
+  5 % glucose medium, with the pH held at 6.0.  It is the raw growth curve
+  behind Table II's N column, which the paper's own footnote marks
+  "* Interpolated".
+  EVERY DECIMAL POINT IN THIS PAPER IS A BRITISH MID-DOT: 2.2 prints as a 2
+  followed by a RAISED dot.  The text layer of this scan relocates and drops
+  them (it renders book p. 406's "pH 5.4" as "pH 3.4" and once as "pH 3 4", and
+  the U.O.D. definition "N = 0.125r" as "N = 0.12%").  NO NUMBER IN THIS FILE
+  CAME OFF THE TEXT LAYER.  Every one was read on a crop of the 300 ppi
+  bilevel image enlarged 3x by Lanczos, in two column-halves per table half;
+  the crop procedure is under `acquisition` and the enlargement quoted there is
+  the same one.
+  THE PAPER TABULATES THE pH 6.0 RUN AND NO OTHER.  Its six pH levels are
+  compared only in figures (Figs. 4-11) and in Table III's fitted constants; the
+  raw (time, N) and (time, P) data for the other five pH levels are NOT PRINTED
+  ANYWHERE IN THE PAPER.  The search behind that claim is recorded under
+  negative_claims_and_how_they_were_checked.  Nothing here is digitised from a
+  curve and no curve anywhere in this paper was traced.  (One figure READING is
+  declared on the page and in the Table III sidecar: Fig. 10's lower panel was
+  calibrated once to corroborate the SIGN of a Table III cell.  It contributes
+  no value to any dataset, fit or metric, and nothing in this file.)
+
+source:
+  authors: ["Luedeking, R.", "Piret, E. L."]
+  year: 1959
+  container: >
+    "A Kinetic Study of the Lactic Acid Fermentation. Batch Process at
+    Controlled pH", Journal of Biochemical and Microbiological Technology and
+    Engineering 1(4) 393-412 (1959), Department of Chemical Engineering,
+    University of Minnesota, Minneapolis 14, Minnesota
+  doi: 10.1002/jbmte.390010406
+  doi_note: >
+    The catalogue's DOI, crossref-verified 2026-08-02 field by field against the
+    catalogue citation (title, container, volume, issue, page range, year).  A
+    1959 paper prints no DOI, so it is NOT confirmed from the document and
+    nothing on the page depends on it.  What IS confirmed from the document, on
+    a 300 ppi render of its own first page, is the masthead "Journal of
+    Biochemical and Microbiological Technology and Engineering / VOL. I, NO. 4.
+    PAGES 393-412 (1959)", the title "A Kinetic Study of the Lactic Acid
+    Fermentation. Batch Process at Controlled pH", the by-line "ROBERT
+    LUEDEKING and EDGAR L. PIRET / Department of Chemical Engineering,
+    University of Minnesota / Minneapolis 14, Minnesota", and the Summary, which
+    prints the relation this case is about.
+  table: "Table I, book p. 401 = PDF page 9"
+  footnote_as_printed: >
+    "* At 45 C, pH controlled at 6.0, on a 5 per cent glucose medium fortified
+    with 3 per cent yeast extract and added mineral salts, L. delbrueckii."
+
+acquisition:
+  method: transcription
+  detail: >
+    `pdfimages -list` reports all twenty pages of this file as CCITT-G4 bilevel
+    at 300x300 ppi (two small 150 ppi JPEG photographs sit on PDF page 4, which
+    carries no numerals used here), so 300 ppi is native and rendering higher
+    would be interpolation.  Page 9 was rendered with `pdftoppm -r 300 -gray
+    -png` and the table read in four crops - the two (time, N) column pairs,
+    each split top and bottom - enlarged 3x by Lanczos.  Both column pairs were
+    read independently and the 45 rows concatenated in printed order: the
+    left-hand pair runs 0.10 to 8.25 h (25 rows) and the right-hand pair 8.30 to
+    13.60 h (20 rows).
+  ppi_native: 300
+  rendered_at_ppi: 300
+  duplicate_upload: >
+    THREE byte-identical copies of this PDF arrived (md5
+    601827724b39cac54e549e8aebb1227e, 885270 bytes each) under three different
+    filenames.  Two are parked in ~/papers/pymrm-gallery/duplicates/.  They are
+    not parts and not printings; md5 was checked, not the filenames.
+
+columns:
+  time_h:
+    units: "h"
+    description: >
+      Time after inoculation, printed "Time, h".  Verbatim; mid-dot decimals
+      rendered as ASCII points.
+  N_UOD_per_ml:
+    units: "U.O.D./ml"
+    description: >
+      Bacterial density, printed "N, U.O.D./ml".  One unit of optical density
+      (U.O.D.) is defined on book p. 400: a sample diluted r-fold to 75 %
+      transmission has N = 0.125r U.O.D./ml, and for the L. delbrueckii used
+      "one unit of optical density corresponded to between 150,000,000 and
+      450,000,000 cells as determined by plate counts".  It is an optical
+      surrogate for biomass, not a cell count and not a dry weight.
+
+rows: 45
+transcription_checks:
+  cross_table: >
+    Table II's N column is marked "* Interpolated" and covers 1.00-13.50 h on a
+    half-hour grid.  Interpolating THIS file onto that grid reproduces it to
+    1.25 % rms and 3.38 % at worst (t = 5.00 h, printed 0.72 against 0.7443 by a
+    monotone cubic; a linear interpolant gives 3.33 % at the same row).  That is
+    a cross-table check on both transcriptions and it is reported on the page as
+    such; the residual is the authors' own smoothing, since Table II's N is read
+    off a drawn curve rather than off Table I.
+  what_it_cannot_check: >
+    Nothing in this file constrains itself.  A single mis-read digit in a row
+    whose neighbours in time are far apart would show up only against Table II,
+    and only where the two tables overlap in time.  Table II's N column spans
+    1.00-13.50 h, so exactly TWO of these 45 rows lie outside the overlap - the
+    first, t = 0.10 h, and the last, t = 13.60 h - and both are carried on the
+    crop read alone.  Neither enters any fit on the page: the page's own
+    interpolants of Table I are used only in the cross-table comparison, which
+    is restricted to the overlap.
+
+negative_claims_and_how_they_were_checked:
+  only_three_tables: >
+    CLAIM: the paper prints exactly three tables and only the pH 6.0 run is
+    tabulated.  CHECKED, AND STATED SO THAT IT REPRODUCES: `pdftotext -layout`
+    over all twenty pages, then `grep -c "Table"` returns FIVE and
+    `grep -ci "table"` returns SIX.  The five case-sensitive hits are every
+    mention of a table in the paper - the captions of Tables I, II and III (the
+    text layer renders the last two as "Table 11" and "Table 111"), the
+    running-text sentence on book p. 401, "the rate information for the
+    fermentation at pH 6.0 is tabulated in Tables I and 11", and the
+    cross-reference on book p. 409, "can be seen from Table I11 and from
+    Fig. 10".  The sixth case-insensitive hit is the word "unsuitable" on book
+    p. 398 and is not a table.  All twenty rendered pages were then looked at
+    for ruled blocks; the only ones are on PDF pages 9, 10 and 18.  The raw data for pH 5.6, 5.4,
+    5.2, 4.8 and 4.5 appear only as plotted curves in Figs. 4-11, and the page
+    scopes them out on that basis rather than digitising them.
+
+license: >
+  Transcription of a table of experimental measurements from a 1959 journal
+  article.  Facts are not copyrightable; no page image is reproduced anywhere in
+  this repository and the PDF is not committed.

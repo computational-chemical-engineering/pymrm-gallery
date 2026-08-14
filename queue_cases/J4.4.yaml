@@ -5,7 +5,8 @@ catalog_reference: J. Biochem. Microbiol. 1 (1959)
 priority: P1
 tier: T0
 structures: S1
-status: unclaimed
+status: published
+page: pages/J4.4-luedeking-piret/
 reference:
   authors:
   - Luedeking, R.
@@ -29,7 +30,7 @@ notes: REPRINT ROUTE, WORTH ONE MORE TRY. Biotechnology and Bioengineering repub
   OpenAlex and Unpaywall flag that reprint as free at Wiley (publishedVersion). The direct pdfdirect
   URL returned HTTP 403 to curl on 2026-08-02 (Cloudflare, not a paywall notice), so it was not pursued
   further — it should download from a browser.
-updated: '2026-08-06'
+updated: '2026-08-14'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because
@@ -56,6 +57,12 @@ check_before_dispatch: 'ANSWERED 2026-08-14 by the coordinator. 20 pages, 300 pp
   THE ROUTE: Tables I and II are the raw pH 6.0 measurements, so refitting alpha and beta from them
   and comparing against Table III''s printed 2.2 and 0.55 is a real test rather than a restatement -
   and the six pairs then test whether the FORM holds across pH, which is the paper''s own claim.
+  CORRECTED BY THE BUILD 2026-08-14, and the error was mine: the six pairs DO NOT test the form.
+  The form is tested by the linearity of (1/N)(dP/dt) against k - Fig. 11 - and those points are
+  printed for pH 6.0 only. Six fitted pairs are six OUTPUTS of that test, not six instances of it.
+  What they do establish is the weaker claim the paper actually makes, that no single (alpha, beta)
+  describes all six pH levels (beta varies 5x). The page draws that distinction explicitly instead
+  of overselling the six pairs.
   Check whether the raw data behind the other five pH levels are printed anywhere or only plotted;
   if only plotted, that half is out of scope and the page must say so.'
 what_it_carries: 'The Luedeking-Piret relation is printed in the Summary itself: dP/dt = a dN/dt +
@@ -63,3 +70,32 @@ what_it_carries: 'The Luedeking-Piret relation is printed in the Summary itself:
   constant pH levels between 4.5 and 6.0, by measuring instantaneous rates of bacterial growth and
   of acid formation throughout each fermentation. Six independent (a, b) pairs is a built-in test
   of the form, not just a fit.'
+built: 'BUILT 2026-08-14.  Deliverables in queue_cases/J4.4/page/ (build_page.py, index.ipynb executed
+  clean, meta.yaml, README.md, agreement.json, three data/*.csv each with a sidecar) plus
+  queue_cases/J4.4/models_entry.yaml.  models.yaml has NO J4.4 entry, so the entry is an APPEND, not
+  an upgrade in place.  Page slug: J4.4-luedeking-piret.
+  ANSWERS TO check_before_dispatch, point by point.  (1) IDENTITY CONFIRMED from the document''s own
+  title page at 300 ppi - masthead, title, by-line and Summary all as the inventory says.  (2) TABLE III
+  READ AT DIGIT SCALE (3x, and the beta column again at 7x): the coordinator''s 150 ppi read is CORRECT
+  IN EVERY ONE OF THE EIGHTEEN CELLS - pH 6.0/5.6/5.4/5.2/4.8/4.5 against alpha 2.2/2.2/2.2/2.45/3.0/3.55
+  and beta 0.55/0.49/0.32/0.26/0.14/0.11, with the two unit footnotes as quoted.  (3) THE pH 5.6 STRAY
+  MARK IS REAL AND IS A DOT, NOT A MINUS, AND THE VALUE IS 0.49.  Settled by connected-component
+  measurement on the 300 ppi bilevel image: the mark is 8 px, 4 wide x 3 high, at (x 1023-1026,
+  y 545-547), 3 px left of a leading zero that is complete and undamaged; the five genuine mid-dots in
+  the same column are 3-4 px wide, area 8-11 (it matches them), while the page''s one true hyphen
+  ("Rouy-Photrometer") is 11 x 4 px, area 38 (it does not).  A whole-page census found no other
+  free-floating blob of that size in the body of the page; the 37 other "round blob with nothing to its
+  left" hits are all in the rotated Wiley watermark.  Whether it is broken type, an ink speck or platen
+  dirt CANNOT be settled from one copy and is not guessed at.  Reported, not repaired; a break row prices
+  the minus-sign reading.  (4) MID-DOTS CONFIRMED and the text layer is worse than warned - it renders
+  book p. 405''s "pH 5.4" as "pH 3.4" and then as "pH 3 4", and "N = 0.125r" as "N = 0.12%".  Nothing on
+  the page came off it.  (5) ALPHA/BETA vs "a and b" recorded as a discrepancy in meta.yaml,
+  models_entry.yaml, README.md and the Table III sidecar; the paper''s symbols are used throughout.
+  (6) THE RAW DATA FOR THE OTHER FIVE pH LEVELS ARE NOT PRINTED ANYWHERE - Tables I and II tabulate the
+  pH 6.0 run only, as book p. 401 says outright.  That half is OUT OF SCOPE and the page says so in four
+  places.  Nothing was digitised.
+  THE REFIT: alpha = 2.266562, beta = 0.528684 by OLS in the authors'' own eq. (3) variables, against
+  their printed 2.2 and 0.55 - both INSIDE ONE STANDARD ERROR, and their pair costs only 0.65 % in rms
+  against the least-squares optimum.  Two further routes (eq. (2), and an integral form touching no
+  differentiated column) bracket it.  Labelled a CONSISTENCY CHECK ON THEIR FIT, not a validation of
+  their model, because Fig. 11''s axes are Table II''s own last two columns.'

@@ -1,0 +1,131 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: luedeking1959-table2-growth-acid
+title: >
+  Table II of Luedeking & Piret (1959), book p. 402 (PDF page 10), "Growth and
+  lactic acid synthesis during batch fermentation" - the 27 rows of the pH 6.0
+  run carrying N, P, dN/dt, dP/dt, k and (1/N)(dP/dt), transcribed cell by cell
+  from 300 ppi crops enlarged to digit scale.
+
+READ_THIS_FIRST: >
+  THIS IS THE FILE THE PAGE REFITS alpha AND beta FROM.  Its last two columns
+  are exactly the two axes of the paper's own Fig. 11, which is where Luedeking
+  & Piret say the constants were determined - "The constants alpha and beta are
+  determined from the plots of Fig. 11" (book p. 409).  So refitting them here
+  and comparing against Table III's printed pair for pH 6.0 is a CONSISTENCY
+  CHECK ON THEIR GRAPHICAL FIT, not a validation of their model: the same
+  measurements are on both sides.
+  THE COLUMNS ARE NOT INDEPENDENT AND THE PAPER SAYS SO.  Book p. 400:
+  "Instantaneous rates of growth and of acid formation were determined by
+  graphical differentiation of curves of values computed from the original
+  measurements ... The specific rate of growth and the specific rate of acid
+  formation were determined by dividing the instantaneous rates by N."  So
+  k = (1/N)(dN/dt) and the last column = (1/N)(dP/dt) BY DEFINITION, and the
+  page uses that as an arithmetic check on the transcription: see
+  transcription_checks below.  Because the columns are rounded independently
+  after that division, they are self-consistent only to about 3 %, and the page
+  reports the measured figure rather than assuming exactness.
+  N IS INTERPOLATED AND THE TABLE SAYS SO: its own footnote is "* Interpolated".
+  It is not a second measurement of the Table I values; it is Table I read off a
+  drawn curve at half-hour intervals.
+  BRITISH MID-DOT DECIMALS THROUGHOUT.  Nothing here came off the text layer;
+  every cell was read on a 300 ppi crop enlarged at least 2.1x.
+
+source:
+  authors: ["Luedeking, R.", "Piret, E. L."]
+  year: 1959
+  container: >
+    "A Kinetic Study of the Lactic Acid Fermentation. Batch Process at
+    Controlled pH", Journal of Biochemical and Microbiological Technology and
+    Engineering 1(4) 393-412 (1959), Department of Chemical Engineering,
+    University of Minnesota, Minneapolis 14, Minnesota
+  doi: 10.1002/jbmte.390010406
+  doi_note: >
+    The catalogue's DOI, crossref-verified 2026-08-02 against the catalogue
+    citation.  Not printed on a 1959 document; identity confirmed instead from
+    the masthead, title, by-line and Summary on a 300 ppi render of page 1.
+  table: "Table II, book p. 402 = PDF page 10"
+  footnotes_as_printed: >
+    "* Interpolated."  and  "+ At 45 C, pH controlled at 6.0, on a 5 per cent
+    glucose medium fortified with 3 per cent yeast extract and added mineral
+    salts, L. delbrueckii."  (the dagger is printed as a dagger.)
+
+acquisition:
+  method: transcription
+  detail: >
+    Page 10 rendered with `pdftoppm -r 300 -gray -png` at the file's native
+    resolution, then read in four crops - left half (Time, N, P) and right half
+    (dN/dt, dP/dt, k, (1/N)dP/dt), each split top and bottom - enlarged 2.4x and
+    2.1x respectively by Lanczos.  Blank cells in the printed table are left
+    empty here, never filled by inference: the first three rows print no P and
+    no dP/dt, the 1.50 h row prints no k, and the final 14.00 h row prints only
+    P.
+  ppi_native: 300
+  rendered_at_ppi: 300
+
+columns:
+  time_h:
+    units: "h"
+    description: "Time after inoculation, printed \"Time, h\"."
+  N_UOD_per_ml:
+    units: "U.O.D./ml"
+    description: >
+      Bacterial density, printed "N*, U.O.D./ml", the asterisk carrying the
+      footnote "* Interpolated" - i.e. Table I read off a drawn curve at these
+      times.  Empty at 14.00 h, where the paper prints none.
+  P_mg_per_ml:
+    units: "mg/ml"
+    description: >
+      Lactic acid concentration, printed "P, mg/ml".  Empty at 1.00, 1.50, 3.00
+      h, where the paper prints none.  Printed to one decimal throughout except
+      at 1.25 and 1.95, the only two cells carrying two.
+  dNdt_UOD_per_ml_h:
+    units: "U.O.D./ml h"
+    description: >
+      Rate of bacterial growth, printed "dN/dt, U.O.D./ml h".  Obtained by the
+      authors by GRAPHICAL DIFFERENTIATION of the growth curve (book p. 400), so
+      it is a smoothed derivative, not a finite difference of Table I.
+  dPdt_mg_per_ml_h:
+    units: "mg/ml h"
+    description: >
+      Rate of lactic acid synthesis, printed "dP/dt, mg/ml h".  Also a graphical
+      derivative.
+  k_per_h:
+    units: "1/h"
+    description: >
+      Specific growth rate, printed "k, h-1", defined in the Nomenclature as
+      k = (1/N)(dN/dt).  Empty at 1.50 h.
+  invN_dPdt_mg_per_UOD_h:
+    units: "mg/U.O.D. h"
+    description: >
+      Specific rate of lactic acid synthesis, printed "(1/N)(dP/dt),
+      mg/U.O.D. h".  This and k are the two axes of Fig. 11 and therefore the
+      two variables the constants were fitted in.
+
+rows: 27
+transcription_checks:
+  k_identity: >
+    k = (1/N)(dN/dt) holds on all 25 rows that print k, to a maximum relative
+    deviation of 2.736 % (t = 3.50 h: printed k 0.47 against 0.16/0.35 =
+    0.4571) and a mean of 0.809 %.  The deviation is the round-off of three
+    independently rounded two-figure columns, not an error.
+  invN_identity: >
+    (1/N)(dP/dt) against dP/dt divided by N holds on all 22 rows that print
+    both, to a maximum of 1.841 % (t = 12.00 h) - the same round-off.
+  digit_substitution_detection: >
+    MEASURED, NOT ASSUMED.  Substituting every digit of every cell of the
+    (N, dN/dt, k) triple by each of the nine alternatives gives 2019 corrupted
+    rows; 1764 of them (87.37 %) break the k identity by more than the 2.736 %
+    the true table already shows, so the identity would have caught them.  The
+    255 it cannot see are almost all last-digit +-1 and +-2 changes, which the
+    round-off band swallows.  That number is the honest strength of the
+    arithmetic check and is printed on the page.
+  what_it_cannot_check: >
+    The P column enters no identity in this table at all - it is a measurement
+    with no printed companion - so the six P values are carried on the crop read
+    alone, checked only by monotonicity in time and by their agreement with the
+    integrated model.  Exactly ONE row prints P but no dP/dt - the final
+    14.00 h row - and it has nothing in this table to check against at all.
+
+license: >
+  Transcription of a table of experimental measurements from a 1959 journal
+  article.  No page image is reproduced and the PDF is not committed.

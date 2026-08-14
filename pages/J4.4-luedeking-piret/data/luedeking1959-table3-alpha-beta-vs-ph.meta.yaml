@@ -1,0 +1,180 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: luedeking1959-table3-alpha-beta-vs-ph
+title: >
+  Table III of Luedeking & Piret (1959), book p. 410 (PDF page 18),
+  "Experimental constants alpha and beta of equations 3 and 2 for each pH level"
+  - the six (pH, alpha, beta) triples, read cell by cell at digit scale on a
+  300 ppi crop enlarged 3x, with the pH 5.6 beta cell settled on a 7x crop and
+  a connected-component measurement.
+
+READ_THIS_FIRST: >
+  THE PAPER'S OWN SYMBOLS ARE alpha AND beta.  The catalogue entry and the case
+  yaml for J4.4 both call them "a and b"; the Summary, eq. (2), eq. (3),
+  Table III, Fig. 10 and the Nomenclature all print Greek alpha and beta.  This
+  file and the page use the paper's symbols and the discrepancy is noted rather
+  than silently renamed.
+  THESE ARE FITTED CONSTANTS, NOT MEASUREMENTS.  Book p. 409: "The constants
+  alpha and beta are determined from the plots of Fig. 11" - a straight line
+  drawn through (k, (1/N)dP/dt) points.  So each pair is a graphical
+  least-squares-by-eye on that pH level's own run.
+  ONLY THE pH 6.0 ROW HAS ITS RAW DATA PRINTED.  Tables I and II tabulate the
+  pH 6.0 run and no other; the other five runs appear only as plotted curves.
+  The page therefore refits and tests ONE of these six rows and says so.  The
+  other five are transcribed, used for the pH trends, and explicitly NOT
+  refitted.
+  BRITISH MID-DOT DECIMALS.  Nothing here came off the text layer.
+
+source:
+  authors: ["Luedeking, R.", "Piret, E. L."]
+  year: 1959
+  container: >
+    "A Kinetic Study of the Lactic Acid Fermentation. Batch Process at
+    Controlled pH", Journal of Biochemical and Microbiological Technology and
+    Engineering 1(4) 393-412 (1959), Department of Chemical Engineering,
+    University of Minnesota, Minneapolis 14, Minnesota
+  doi: 10.1002/jbmte.390010406
+  doi_note: >
+    The catalogue's DOI, crossref-verified 2026-08-02 against the catalogue
+    citation; not printed on the 1959 document.  Identity confirmed from the
+    masthead, title, by-line and Summary of page 1 on a 300 ppi render.
+  table: "Table III, book p. 410 = PDF page 18"
+  caption_as_printed: >
+    "Table III.  Experimental constants alpha and beta of equations 3 and 2 for
+    each pH level"
+  footnotes_as_printed: >
+    "alpha has the units mg lactic/U.O.D."  and
+    "beta has the units mg lactic/U.O.D./h"
+    (these two lines are the ONLY place in the paper that gives alpha and beta
+    units; the Nomenclature on book p. 411 lists them as "alpha, beta
+    Constants" with no units at all.)
+
+acquisition:
+  method: transcription
+  detail: >
+    Page 18 rendered at the file's native 300 ppi with `pdftoppm -r 300 -gray
+    -png`, the table cropped and enlarged 3x by Lanczos, then the beta column
+    alone cropped again and enlarged 7x.  Every one of the eighteen cells was
+    read on those crops.
+  ppi_native: 300
+  rendered_at_ppi: 300
+
+printed_defect_reported_not_repaired:
+  ph_5p6_beta_stray_mark: >
+    THE pH 5.6 beta CELL CARRIES A STRAY MARK BEFORE ITS LEADING ZERO.  At
+    150 ppi it renders as "-0-49".  THE VALUE IS 0.49 AND IT IS SETTLED THREE
+    WAYS; the two arithmetic ones lead and the pixels corroborate.
+    (1) MONOTONICITY.  beta falls strictly as pH falls over all six levels, and
+    the notebook executes `assert BETA_MONOTONE`.  Read the mark as a sign and
+    the descending-pH sequence becomes 0.55, -0.49, 0.32, ... which is not
+    monotone: the notebook would refuse to execute.  It prints both readings,
+    and a break row prices the violation at 2800 % on beta_monotone_margin.
+    This is a pattern in six printed numbers rather than a derived identity, and
+    it is labelled as one - but a sign error is exactly the size it catches.
+    (2) THE PAPER'S OWN Fig. 10, book p. 407 (PDF 15), plots beta against pH on
+    an axis that STARTS AT ZERO, labelled 0, 0.2, 0.4, 0.6, with six open
+    circles all clearly above the axis; the caption prints eq. (3) itself.
+    Calibrated on the panel's own gridlines the pH 5.6 marker sits at
+    beta ~ 0.50 and all six markers land within ABOUT 0.02 of this column -
+    approximate because the gridline centres are ambiguous by a pixel or two and
+    the largest deviation moves with them, and immaterial because what the
+    reading has to separate is +0.49 from -0.49.  THAT IS A
+    CORROBORATION OF A SIGN, NOT A DATA SOURCE: no value read off Fig. 10 enters
+    this CSV, any fit, or any metric, and the page digitises no curve.
+    (3) AND ONLY THEN THE PIXELS.  On the 300 ppi bilevel image the mark is a
+    single connected component of 8 pixels, bounding box 4 wide by 3 high, at
+    (x 1023-1026, y 545-547), sitting 3 px to the left of the leading zero,
+    which is itself complete and undamaged (its two strokes span x 1030-1044,
+    the same span as every other zero in the column).  The page's one true
+    hyphen, in "Rouy-Photrometer" on the same page, measures 11 x 4 px with an
+    area of 38, four to five times this mark in both width and area, while the
+    five genuine mid-dots in this same beta column measure 3-4 px wide, 3-4
+    high, area 8-11 - which is exactly this mark.  Its vertical centre sits
+    about 3 px above the row's own mid-dot, and that is the one respect in which
+    it does not match a mid-dot.  A census of the whole page returns ZERO
+    components of area 4-20 with no other ink within 12 px, so this scan
+    produces no free-floating specks of that size anywhere.
+    WITHDRAWN: this note previously added that a looser census - "round blob
+    with no ink within 14 px to its left" - returned 38 hits with 37 in the
+    Wiley watermark, leaving the mark unique in the body of the page.  THAT
+    COUNT DOES NOT REPRODUCE: it swings between 43 and 407 depending on how
+    "round blob" is pinned, so only the criterion above, which reproduces
+    exactly, is kept.
+    What the mark is - a broken-off piece of type, an ink speck on the
+    original, or dirt on the scanner platen - CANNOT BE SETTLED FROM ONE COPY
+    AND IS NOT GUESSED AT HERE.  What can be settled is the VALUE: two
+    arithmetic checks agree, the digits "0.49" are intact and unambiguous at 7x,
+    the mark is not a sign, and beta(pH 5.6) = 0.49.  Reported, not repaired:
+    the CSV carries 0.49 and this note carries the mark.
+  no_other_defect_found: >
+    The other seventeen cells, the caption and the two unit footnotes are clean.
+    Every glyph in the table was read at 3x and the beta column again at 7x.
+
+columns:
+  pH:
+    units: "-"
+    description: >
+      Controlled pH of the fermentation, printed "pH".  The six levels the paper
+      studied, printed in descending order 6.0, 5.6, 5.4, 5.2, 4.8, 4.5.  The
+      Summary describes them as "six constant pH levels between 4.5 and 6.0".
+  alpha_mg_lactic_per_UOD:
+    units: "mg lactic/U.O.D."
+    description: >
+      The growth-associated constant of eq. (2), dP/dt = alpha dN/dt + beta N -
+      milligrams of lactic acid produced per unit of optical density of NEW
+      bacteria.  Printed to two significant figures except at pH 5.2 and 4.5,
+      where three are printed (2.45 and 3.55).
+  beta_mg_lactic_per_UOD_h:
+    units: "mg lactic/U.O.D./h"
+    description: >
+      The non-growth-associated constant of eq. (2) - milligrams of lactic acid
+      per hour per unit of optical density of bacteria PRESENT.  The paper's own
+      reading of it, book p. 410: "For 'resting' cells where there is supposedly
+      no growth occurring, the first term should be zero and all acid is
+      produced in accordance with the second term of the equation, the constant
+      beta."  Printed to two decimals throughout.  See
+      printed_defect_reported_not_repaired for the pH 5.6 cell.
+
+rows: 6
+transcription_checks:
+  no_internal_constraint: >
+    NOTHING IN THIS TABLE CONSTRAINS ITSELF.  Six rows, three independent
+    columns, no derived quantity, no total, no ratio printed beside them - so
+    unlike Table II there is no INTERNAL identity here, and every cell rests on
+    the crop read.
+    THAT IS NOT THE SAME AS "NO ARITHMETIC", WHICH IS WHAT THIS NOTE USED TO
+    SAY.  Three checks live outside the table and all three are used: the pH
+    column is printed a second time in running text on book p. 400 (see
+    external_check_on_the_pH_column below); beta(pH) is plotted on a zero-based
+    axis in Fig. 10, book p. 407; and the monotonicity of beta is asserted by
+    the notebook.  The pH 5.6 mark was therefore NOT settled on geometry alone -
+    the two arithmetic checks lead and the component measurement corroborates.
+    The alpha column is the one that has nothing: no second printing, no
+    identity, and only Fig. 10's upper panel, which is read for shape and not
+    for a number.
+  external_check_on_the_pH_column: >
+    Book p. 400, running text: the six fermentations were "each of which was
+    continuously controlled at a different pH level (6.0, 5.6, 5.4, 5.2, 4.8 and
+    4.5)", read on a 300 ppi crop.  That is this file's whole pH column printed
+    a second time ten pages earlier, and the notebook ASSERTS the CSV against it
+    rather than describing it.  A third of the table's cells therefore do have
+    an external cross-check.
+  external_check_on_one_row: >
+    The pH 6.0 row is the one row that CAN be checked, because Tables I and II
+    print its raw data.  Refitting eq. (3) by ordinary least squares on the 22
+    (k, (1/N)dP/dt) pairs of Table II gives alpha = 2.266562, beta = 0.528684
+    against the printed 2.2 and 0.55 - +3.03 % and -3.88 %, both inside one
+    standard error of the refit (0.51 and 0.43 standard errors).  The other five
+    rows have no such check available anywhere in the paper.
+  monotonicity: >
+    beta is strictly decreasing as pH falls, over all six levels, 0.55 down to
+    0.11 - a factor of 5.  alpha is non-decreasing as pH falls, flat at 2.20 for
+    pH 6.0, 5.6 and 5.4 and then rising to 3.55 - a factor of 1.61.  Both hold
+    as transcribed and the notebook ASSERTS them, which is what makes this the
+    table's usable arithmetic: a mis-read digit large enough to matter breaks
+    the monotonicity of beta and stops the notebook, and the pH 5.6 sign
+    question is settled by exactly that.  The page prices the violation as a
+    break row (2800 % on beta_monotone_margin).
+
+license: >
+  Transcription of a six-row table of fitted constants from a 1959 journal
+  article.  No page image is reproduced and the PDF is not committed.

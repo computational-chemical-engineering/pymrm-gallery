@@ -1,0 +1,352 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J4.4
+slug: luedeking-piret
+title: "Luedeking-Piret: refitting alpha and beta from the one run whose raw data are printed"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 10
+datasets:
+  - luedeking1959-table1-bacterial-density
+  - luedeking1959-table2-growth-acid
+  - luedeking1959-table3-alpha-beta-vs-ph
+
+reference:                       # the ORIGIN, and it IS on disk and WAS read
+  authors: ["Luedeking, R.", "Piret, E. L."]
+  year: 1959
+  title: >
+    A Kinetic Study of the Lactic Acid Fermentation. Batch Process at
+    Controlled pH
+  container: >
+    Journal of Biochemical and Microbiological Technology and Engineering
+    1(4) 393-412 (1959)
+  doi: 10.1002/jbmte.390010406
+  note: >
+    ORIGIN_CONSULTED.  The paper is on disk and all twenty pages were read at
+    300 ppi, the file's native resolution (`pdfimages -list` reports every text
+    page as CCITT-G4 bilevel at 300x300 ppi, so rendering higher would be
+    interpolation; two small 150 ppi JPEG photographs sit on PDF page 4, which
+    carries no numeral used here).  Identity confirmed from the document's own
+    first page: the masthead "Journal of Biochemical and Microbiological
+    Technology and Engineering / VOL. I, NO. 4.  PAGES 393-412 (1959)", the
+    title, the by-line "ROBERT LUEDEKING and EDGAR L. PIRET / Department of
+    Chemical Engineering, University of Minnesota / Minneapolis 14, Minnesota",
+    and the Summary, which prints the relation this case is about.  The DOI is
+    the catalogue's, crossref-verified 2026-08-02 field by field against the
+    catalogue citation.  The 1959 TYPESETTING prints no DOI - it predates them -
+    but this FILE does: the Wiley download stamp down the right margin of all
+    twenty pages carries onlinelibrary.wiley.com/doi/10.1002/jbmte.390010406,
+    which is born-digital overlay text rather than a scanned numeral and is
+    therefore a legitimate trace of the DOI on the document.  It agrees with the
+    catalogue's.  Nothing on the page depends on it.
+    docs/papers-inventory.yaml still records doi: null for this file and should
+    be updated at integration.
+    THREE BYTE-IDENTICAL COPIES of this PDF arrived (md5
+    601827724b39cac54e549e8aebb1227e, 885270 bytes each) under three different
+    filenames; two are parked in ~/papers/pymrm-gallery/duplicates/ and are not
+    parts.
+    THE TEXT LAYER WAS USED ONLY FOR SEARCHING, NEVER FOR A DIGIT.  Every
+    decimal point in this paper is a British MID-DOT, and this scan's text layer
+    relocates and drops them: it renders book p. 406's "pH 5.4" as "pH 3.4" and,
+    one line later, as "pH 3 4", and the U.O.D. definition "N = 0.125r" as
+    "N = 0.12%".  Every numeral quoted anywhere on this page was read on a crop
+    of the 300 ppi bilevel image enlarged to digit scale.
+    NO CSV IS BORROWED.  pages/J4.1-monod/data/printed-growth-laws.csv was
+    searched cell by cell for luedeking, piret, lactic, product, alpha and beta
+    - zero hits across all six terms, printed by the notebook - so there is no
+    number in it this page could restate and nothing to reconcile.  That search
+    is the reason the file is not loaded, and it is run in the notebook rather
+    than asserted.
+
+origin_not_consulted: []
+
+symbol_discrepancy_with_the_catalogue: >
+  THE PAPER USES GREEK alpha AND beta.  The catalogue entry for J4.4 and this
+  repository's queue_cases/J4.4.yaml both write the relation with "a and b".
+  The Summary, eq. (2), eq. (3), Table III, Fig. 10 and the Nomenclature on book
+  p. 411 all print alpha and beta.  The page uses the paper's symbols throughout
+  and records the discrepancy rather than renaming anything silently.
+
+data:
+  tier: 2
+  method: table
+  status: complete
+  note: >
+    THREE PRINTED TABLES, TRANSCRIBED CELL BY CELL, NOTHING DIGITISED.  Table I
+    (book p. 401, 45 rows), Table II (book p. 402, 27 rows) and Table III (book
+    p. 410, 6 rows).  NO CURVE ON ANY OF THE PAPER'S ELEVEN FIGURES WAS TRACED
+    AND NO VALUE OFF A FIGURE ENTERS ANY DATASET, FIT OR METRIC.
+    ONE EXCEPTION, DECLARED BECAUSE IT IS ONE: the lower panel of Fig. 10 (book
+    p. 407) was calibrated on its own gridlines and its six markers located,
+    once, to CORROBORATE THE SIGN of a single Table III cell whose leading glyph
+    is ambiguous - the axis starts at zero and all six markers stand above it,
+    the pH 5.6 one at beta ~ 0.50 against the printed 0.49, every marker within
+    ABOUT 0.02 of the column - approximate because the gridline centres are
+    themselves ambiguous by a pixel or two and the largest deviation moves with
+    them, and immaterial because the reading has to separate +0.49 from -0.49.
+    That reading settles a SIGN, is recorded in the Table
+    III sidecar, and is used nowhere else: it is not in the CSV, not in a fit,
+    not in a metric, and it is not what the value 0.49 rests on.
+
+fit_vs_test: >
+  THE REFIT IS A CONSISTENCY CHECK ON THE AUTHORS' OWN FIT, NOT A VALIDATION OF
+  THEIR MODEL, and every number on the page is labelled accordingly.  Book
+  p. 409: "The constants alpha and beta are determined from the plots of
+  Fig. 11", and Fig. 11 plots (1/N)(dP/dt) against k - which ARE Table II's last
+  two columns.  The data on both sides of the comparison are the same
+  measurements from the same fermentation.  Recovering 2.2 and 0.55 from them
+  says the authors' straight edge and ordinary least squares agree; it says
+  nothing about whether the relation would hold on a fermentation they did not
+  run.  Every fitted quantity on the page is a GOODNESS OF FIT.  The only
+  quantities that are not fits are the two solver discretisations, which are
+  checked against a closed form, and the internal identities of Table II, which
+  are transcription checks.
+  NULL BASELINES ARE COMPUTED BESIDE THE HEADLINE and both of them are the
+  paper's own two rejected alternatives (book p. 410): "the rate of acid
+  production is proportional to the growth rate of the bacteria, or ... to the
+  quantity of bacteria present ... Neither statement was found to hold true
+  outside of the period of logarithmic growth."  Against those, the two-term
+  form is 5.5500x and 4.9158x better in rms on the rate data and 14.2416x and
+  17.7940x better on the integrated acid curve.
+  THE DIRECTION OF EVERY ONE OF THOSE RATIOS IS ALGEBRA, NOT EVIDENCE - each
+  null is an exactly nested submodel of the two-term fit on the same rows in the
+  same variables, so the ratio cannot fall below 1 and only its magnitude is a
+  finding.  The page says so, and it therefore tests BOTH halves of the
+  sentence it quotes: that sentence says the one-term forms ARE both valid while
+  k is constant.  The printed k column has a gap at 0.45 - it jumps from 0.40 to
+  0.46 - and every row above it lies on a plateau 0.46-0.48, a spread of
+  4.3478 %, which is the paper's own k_c.  On that plateau (12 rows) the two
+  one-term forms cost only 1.036042x and 1.033197x; outside it (10 rows) they
+  cost 5.011873x and 3.708246x.  That makes the authors' qualifier quantitative
+  in both directions, and the page states plainly why a ratio near 1 there is
+  DEGENERACY rather than agreement: on the plateau dN/dt = k_c N, the two
+  regressors are nearly proportional, and the plateau-only fit returns
+  alpha = 1.614396, beta = 0.792957.
+
+scope_out:
+  five_of_the_six_pH_levels: >
+    ONLY THE pH 6.0 RUN HAS PRINTED RAW DATA.  Tables I and II tabulate that run
+    and no other, and the running text on book p. 401 says so - "As an example,
+    the rate information for the fermentation at pH 6.0 is tabulated in Tables I
+    and II".  The other five fermentations appear only as plotted curves in
+    Figs. 4-11 and as fitted constants in Table III.  So five of Table III's six
+    rows cannot be refitted, cannot be residual-checked and are not tested here.
+    THE SEARCH BEHIND THAT CLAIM, STATED SO THAT IT REPRODUCES: `pdftotext
+    -layout` over all twenty pages, then `grep -c "Table"` returns FIVE and
+    `grep -ci "table"` returns SIX.  The five case-sensitive hits are every
+    mention of a table in the paper - the three captions (the text layer renders
+    the last two as "Table 11" and "Table 111"), the running-text sentence on
+    book p. 401 quoted above, and the cross-reference on book p. 409, "can be
+    seen from Table I11 and from Fig. 10".  The sixth case-insensitive hit is
+    the word "unsuitable" on book p. 398 and is not a table.  All twenty
+    rendered pages were then looked at for ruled blocks and the only three are
+    on PDF pages 9, 10 and 18.
+  what_six_fitted_pairs_are_not: >
+    Six fitted pairs are six OUTPUTS of the test of the form, not the test.  The
+    form is tested by the linearity of (1/N)(dP/dt) against k - Fig. 11 - and
+    those points are printed for exactly one level.  The page therefore does NOT
+    claim the form holds at the other five pH levels, does NOT fit any function
+    to alpha(pH) or beta(pH), and does NOT place the inflection the paper reads
+    off its Fig. 10 (three of the six alpha values are printed as the same
+    number, 2.2, so Table III alone cannot locate an inflection anywhere).
+  no_figure_is_digitised: >
+    The page does not establish empirical adequacy against anything in this
+    paper that lives only in a figure.
+
+printed_defects_reported_not_repaired:
+  - >
+    TABLE III, pH 5.6, beta CELL: a stray mark stands before the leading zero.
+    At 150 ppi it renders as "-0-49".  THE VALUE IS 0.49 AND IT IS SETTLED THREE
+    WAYS, ARITHMETIC FIRST.
+    (1) THE MINUS READING BREAKS A RELATION THIS NOTEBOOK ASSERTS.  beta falls
+    monotonically as pH falls over all six levels and the notebook executes
+    `assert BETA_MONOTONE`; read as a sign the sequence becomes 0.55, -0.49,
+    0.32, ... and the notebook refuses to execute.  The cell prints both
+    readings and a break row prices the violation at 2800 % on
+    beta_monotone_margin.
+    (2) THE PAPER PLOTS THIS COLUMN ON A ZERO-BASED AXIS.  Fig. 10, book p. 407,
+    plots beta against pH with the axis labelled 0, 0.2, 0.4, 0.6 and six open
+    circles all clearly above zero; calibrated on the panel's own gridlines the
+    pH 5.6 marker sits at beta ~ 0.50 and all six land within ABOUT 0.02 of the
+    printed column - "about", because the gridline centres are ambiguous by a
+    pixel or two and the largest deviation moves with them.  THAT READING CORROBORATES A SIGN AND IS NOT A DATA SOURCE:
+    no value off Fig. 10 enters a CSV, a fit or a metric, and no curve in this
+    paper is digitised.
+    (3) AND ONLY THEN THE PIXELS.  On the 300 ppi bilevel image the mark is a
+    single connected component of 8 pixels, 4 wide by 3 high, at (x 1023-1026,
+    y 545-547), 3 px to the left of a leading zero that is itself complete and
+    undamaged.  The page's one true hyphen ("Rouy-Photrometer", same page)
+    measures 11 x 4 px with area 38, four to five times this mark, while the
+    five genuine mid-dots in the same beta column measure 3-4 px wide, 3-4 high,
+    area 8-11 - exactly this mark.  A census of the whole page returns ZERO
+    components of area 4-20 with no other ink within 12 px, so this scan
+    produces no free-floating specks of that size anywhere.
+    WITHDRAWN: an earlier version of this page also quoted a looser census -
+    "round blob with no ink within 14 px to its left" - as 38 hits with 37 in
+    the Wiley watermark.  That count does not reproduce; it swings between 43
+    and 407 depending on how "round blob" is pinned, and only the criterion
+    above is kept.
+    What the mark IS - broken type, an ink speck, or dirt on the platen - cannot
+    be settled from one copy and is not guessed at.  The CSV carries 0.49, the
+    sidecar carries the mark, and a break row prices the alternative reading.
+  - >
+    THE NOMENCLATURE GIVES alpha AND beta NO UNITS.  Book p. 411 lists
+    "alpha, beta   Constants".  The only place in the paper that gives them
+    units is Table III's two footnotes, "alpha has the units mg lactic/U.O.D."
+    and "beta has the units mg lactic/U.O.D./h".  Reported, not repaired.
+  - >
+    NOT FILED AS A DEFECT, BUT MEASURED AND STATED: Table II's k and
+    (1/N)(dP/dt) columns are quotients of its other columns by the paper's own
+    definition (book p. 400), and they are self-consistent only to 2.7356 % and
+    1.841 % because all the columns are rounded independently after the
+    division.  That is round-off in a 1959 typeset table, not an error, and the
+    page uses the measured band as the resolution of its transcription check
+    rather than assuming exactness.
+
+validation:
+  ranked: >
+    The strongest validation available for a product-formation law would be a
+    fermentation the constants were NOT fitted to.  This paper prints one
+    fermentation's raw data and that is the fermentation the pH 6.0 constants
+    were fitted to, so that validation is NOT AVAILABLE AND IS NOT MANUFACTURED.
+    What is done instead, in descending order of what it proves: internal
+    identities in Table II (transcription checks, proved by the paper's own
+    definitions, with their teeth MEASURED - 87.3700 % of all 2019 single-digit
+    substitutions in the (N, dN/dt, k) triple break them); a second independent
+    column path for the crossover time; a third fitting route that touches no
+    differentiated column; two solver discretisations against an exact closed
+    form, both refined with observed orders; and two null baselines.
+  second_routes: >
+    Six quantities are computed twice.  alpha and beta by eq. (3) OLS against
+    the INTEGRAL form, which shares no reduced column with it (0.2683 % and
+    3.633 %); alpha by eq. (3) against eq. (2), the same problem weighted by N^2
+    (1.020 %); the crossover time root-found on the k column and separately on
+    the dN/dt and N columns (2.450e-05); the batch end-point by the pymrm
+    marcher against the closed form (0.006647 at nt = 1600); and the plug-flow
+    outlet by Richardson extrapolation against the same closed form
+    (2.224e-05).
+    THE 2.450e-05 IS A TRANSCRIPTION-CONSISTENCY RESIDUAL, NOT THE PRECISION OF
+    THE CROSSOVER TIME, and the page says so: the two routes read different
+    printed cells, so a mis-transcribed k cell moves one and not the other, and
+    a break row that runs the second route on the first route's column collapses
+    it to zero.  The band on t* itself is two orders of magnitude wider - a
+    linear interpolant instead of the monotone cubic moves it 0.16 %, and a
+    single mis-transcribed Table III cell moves it 6.5 % - so t* is quoted to
+    one decimal, ~10.1 h, and never to the digits brentq returns.
+  break_table: >
+    28 defect injections, and the coverage map is GENERATED from their measured
+    moves rather than written by hand: each row returns a dictionary of metrics
+    recomputed under the defect, a row covers a metric only if it moves it by
+    more than 1e-6 relative, and the notebook fails to execute if any metric is
+    uncovered or any row moves nothing.  All 28 rows move a reported metric; the
+    map holds 235 measured row-metric links and all 62 metrics are covered.  The
+    rows split 14 / 14 between MIS-TRANSCRIBING ONE PRINTED CELL and CHANGING A
+    METHOD or a resolution, and the notebook computes that split rather than
+    asserting it.
+    NO BLIND SPOT IS DECLARED: all 62 metrics are moved past the 5 % at which
+    check_agreement.py compares, and the weakest cover on the page is 5.62 % on
+    pfr_boundary_over_last_cell - the one metric that was under that tolerance
+    until a review broke it.  The page used to defend that metric as NEARLY
+    STRUCTURAL: it is a RATIO of two reads of the SAME solve, they agree to
+    1.7 % on every grid across a 16x refinement, and so "any defect that changes
+    the solution moves both reads and leaves the ratio where it was".  THAT IS
+    FALSE AS A UNIVERSAL AND THE COUNTEREXAMPLE IS NOW A ROW.  It holds for
+    defects acting AWAY from the outlet - the same single-digit substitution one
+    printed row earlier moves the ratio 0.15 % - but k at t = 13.50 h is the
+    LAST printed k cell, so on a grid whose axial coordinate is residence time
+    it sits in the OUTLET cell, and a defect there changes the local gradient,
+    which is the one quantity the two reads differ by.  Injected into the solve
+    and into the closed-form reference together it moves the ratio 5.62 %.  The
+    ratio was never structurally protected; it was protected by WHERE this page
+    happened to inject.
+    RETRACTED HERE: an earlier version declared SIX weak metrics and added that
+    each was "moved by more than 5 % by a row that changes the method".  THAT
+    MITIGATION WAS FALSE BY CONSTRUCTION - weak is DEFINED as the maximum move
+    over all rows, so nothing in the table those six were measured against moved
+    any of them past 3.25 % - and the notebook now computes and prints the true
+    per-metric statement instead.  It recomputes the blind spot with the
+    review's rows taken back OUT of the coverage map and prints the ladder: six
+    weak before either review pass, one after the first pass added two rows,
+    none after the second added two more.  Five of the six left on the first
+    pass and the last on the second, and for ALL six the strongest mover is one
+    of those four rows - not one left on a row that was already in the table.  A
+    previous version of this block said "three of those six": wrong on the
+    page's own coverage data, and spelled as a WORD, which no sweep here can
+    see.  Every count in this block is pinned against the live computation.
+    NO metric sits below check_agreement.py's ABS_FLOOR of 1e-12.
+  determinism: >
+    Nothing on the page is stochastic - no sampling, no bootstrap, no random
+    initial guess, and no continuation chain: every plug-flow grid is solved
+    from the same feed-state initial guess, so no answer can depend on the sweep
+    order.  Two consecutive executions give identical content, figures and
+    agreement.json.
+  prose_sweep: >
+    82 prose and metadata values are checked against the live computation and
+    the notebook fails to execute if any drifts - every count this metadata
+    states about the break table among them, because a count in a YAML file is a
+    hand-typed number no computation can rewrite.  A mechanical sweep then reads
+    meta.yaml, README.md, models_entry.yaml, the three data sidecars AND THE
+    NOTEBOOK'S OWN MARKDOWN for TWO token classes.  Numbers written with five or
+    more decimal places must match a live value to half an ulp of their own
+    printed digits.  INTEGERS OF TWO OR MORE DIGITS must match a count the
+    computation produced or one of a pinned set of source-derived constants
+    (book pages, ppi, pixel bounds, the year) that no computation here can
+    check.  THE INTEGER HALF WAS ADDED BY THIS PASS: the decimal sweep could not
+    see a single count on the page, and both factual errors a review found were
+    counts - "167 row-metric links" where the notebook printed 176, and "29
+    rows" written of a CSV whose next cell printed 30.  The sweep REPORTS ITS
+    ACHIEVED DETECTION RATE rather than claiming completeness, because small
+    counts and source constants are dense and a corrupted digit sometimes lands
+    on another allowed value.  BOTH TOKEN COUNTS ARE SHAPE-DEPENDENT and both
+    shapes are pinned: integrate_case.py copies page/ only and splices
+    models_entry.yaml into models.yaml, so that file is swept here, in the queue
+    tree, and is absent - and counted as absent - in the published page.
+    AND IT REPORTS WHAT IT CANNOT SEE AT ALL.  The integer class is DIGIT
+    STRINGS of two or more digits, so a count SPELLED AS A WORD and a count
+    written as a SINGLE DIGIT are outside it entirely; the notebook counts both
+    classes in the swept prose and prints the totals rather than leaving the
+    impression they are covered.  That hole is not hypothetical - the third
+    error a review found on this page was "three of those six", word-spelled, on
+    three surfaces at once.  Word numbers were NOT folded into the matcher,
+    because the small integers this page legitimately produces are dense enough
+    that almost every such token would match something and the sweep would then
+    advertise teeth it does not have; the counts are pinned in the claims list
+    instead.
+
+what_pymrm_adds: >
+  HONESTLY, NOT MUCH TO THE FIT, AND THE PAGE SAYS SO.  Refitting a
+  two-parameter linear model to 22 printed rows is numpy.linalg.lstsq and pymrm
+  is not involved in any headline number.  What pymrm adds is downstream: it
+  makes the relation COMPOSABLE - eq. (2) written as a source term drops
+  unchanged into a batch marcher (newton + NumJac((1,2))) and into a plug-flow
+  fermenter (construct_convflux_upwind + construct_div, nu=0, outlet via
+  compute_boundary_values), which is the form the Summary's own "rational design
+  of continuous fermentation processes" needs and the paper never writes - and
+  it gives the relation a closed form to be checked against, since with k(t)
+  prescribed eq. (2) integrates exactly.  Both discretisations come back FIRST
+  ORDER (1.008072 and 1.004313) as backward Euler and donor-cell upwind must.
+  No new physics, no extension to conditions the paper did not measure, and no
+  resolution of the five pH levels whose data are not printed.  The plug-flow
+  result is an illustration of composability; no measurement in this paper tests
+  it.
+
+boundary_read: >
+  MEASURED ON THIS PAGE'S OWN PHYSICS, NOT INHERITED.  With a zero-gradient
+  outflow condition both outlet reads are first order and the LAST-CELL read is
+  the closer of the two, by 1.016655 at ncell 3200 - the same direction J4.2
+  measured on different physics.  compute_boundary_values is used anyway,
+  because it returns the value the flux operator actually transports, so a
+  balance written on it closes: CONSISTENCY, NOT ACCURACY, and the page says so
+  rather than claiming an accuracy it does not buy.
+
+related: [J4.1, J4.2, J4.6, J4.8, C1.1, J3.5]
