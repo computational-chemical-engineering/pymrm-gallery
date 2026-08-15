@@ -243,7 +243,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from IPython.display import Markdown, display
+from IPython.display import HTML, Markdown, display
 from scipy.integrate import quad, solve_ivp
 from scipy.optimize import brentq
 from scipy.special import gammaincc, gammaln, expi
@@ -254,7 +254,14 @@ from gallery_utils import load_data, load_meta, cite_data, report_agreement
 warnings.filterwarnings("ignore", category=UserWarning)
 PAGE = "A2.8-zwietering-segregation"
 rng = np.random.default_rng(20260805)      # nothing here is stochastic; seeded anyway
-plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})'''))
+plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})
+
+# DETERMINISM: a pandas Styler's text/plain repr carries a MEMORY ADDRESS and its
+# HTML carries a RANDOM CSS id, so displaying one directly would make two runs of
+# this notebook differ even with no other change. Route styled tables through
+# HTML(...to_html()) with a pinned uuid, never display a Styler directly.
+def show(styler):
+    display(HTML(styler.to_html()))'''))
 
 # ------------------------------------------------ pymrm implementation ------
 cells.append(md(r"""## PyMRM implementation
@@ -512,8 +519,8 @@ for row, (name, fn) in closed.items():
                  "max |dev| vs Table 1 row": d1, "max |dev| vs Table 2 row": d2,
                  "lands on": "Table 1" if d1 < d2 else "Table 2"})
 swap = pd.DataFrame(recs)
-display(swap.style.format({"max |dev| vs Table 1 row": "{:.4f}",
-                           "max |dev| vs Table 2 row": "{:.4f}"}).hide(axis="index"))
+show(swap.style.format({"max |dev| vs Table 1 row": "{:.4f}",
+                           "max |dev| vs Table 2 row": "{:.4f}"}).hide(axis="index").set_uuid("a2801"))
 
 EQ38_T2 = max(abs(eq38(K) - v) for K, v in printed(2, "complete_segregation").items())
 EQ38_T1 = max(abs(eq38(K) - v) for K, v in printed(1, "complete_segregation").items())
@@ -583,14 +590,14 @@ tab = pd.DataFrame([
     {"reading": "as captioned", "N": DEV_CAP.size,
      "max |dev|": DEV_CAP.max(), "rms |dev|": np.sqrt(np.mean(DEV_CAP ** 2)),
      "within 0.001": int((DEV_CAP <= 0.001).sum())}])
-display(tab.style.format({"max |dev|": "{:.4f}", "rms |dev|": "{:.5f}"}).hide(axis="index"))
+show(tab.style.format({"max |dev|": "{:.4f}", "rms |dev|": "{:.5f}"}).hide(axis="index").set_uuid("a2802"))
 
 per = pd.DataFrame([{"table": t, "caption": f"{CAP_N[t]} tanks",
                      "row": r, "max |dev| interchanged": PER_FIX[(t, r)],
                      "max |dev| as captioned": PER_CAP[(t, r)]}
                     for t in (1, 2) for r in ROWS])
-display(per.style.format({"max |dev| interchanged": "{:.4f}",
-                          "max |dev| as captioned": "{:.4f}"}).hide(axis="index"))
+show(per.style.format({"max |dev| interchanged": "{:.4f}",
+                          "max |dev| as captioned": "{:.4f}"}).hide(axis="index").set_uuid("a2803"))
 
 MM_ROW_MAX = max(PER_FIX[(1, "maximum_mixedness")], PER_FIX[(2, "maximum_mixedness")])
 ALG_ROW_MAX = max(PER_FIX[(t, r)] for t in (1, 2) for r in ROWS[:3])
@@ -718,9 +725,9 @@ for n in (2, 3):
                      "scipy DOP853 (IVP)": b, "difference": a - b})
 two = pd.DataFrame(recs)
 MM_TWO_ROUTES = two["difference"].abs().max()
-display(two.style.format({"pymrm (finite volume)": "{:.9f}",
+show(two.style.format({"pymrm (finite volume)": "{:.9f}",
                           "scipy DOP853 (IVP)": "{:.9f}",
-                          "difference": "{:+.2e}"}).hide(axis="index"))
+                          "difference": "{:+.2e}"}).hide(axis="index").set_uuid("a2804"))
 display(Markdown(
     f"Worst disagreement over the twelve cases: **{MM_TWO_ROUTES:.1e}**, which is "
     f"the discretisation error of the {NCELL}-cell grid and not a modelling "
@@ -752,8 +759,8 @@ for K, n in ((10, 2), (30, 3)):
 g = pd.DataFrame(grid_rows)
 piv = g.pivot_table(index=["K", "n", "scheme"], columns="cells", values="|error|")
 piv["observed order"] = [ORDERS[(k, n, s)] for k, n, s in piv.index]
-display(piv.style.format({c: "{:.2e}" for c in piv.columns[:-1]}
-                         | {"observed order": "{:.2f}"}))
+show(piv.style.format({c: "{:.2e}" for c in piv.columns[:-1]}
+                         | {"observed order": "{:.2f}"}).set_uuid("a2805"))
 
 ORD_VL = min(ORDERS[(K, n, "van Leer deferred correction")] for K, n in ((10, 2), (30, 3)))
 ORD_UW = min(ORDERS[(K, n, "bare upwind")] for K, n in ((10, 2), (30, 3)))
@@ -768,8 +775,8 @@ sel = trunc > 1e-13
 TRUNC_RATE = float(-np.polyfit(Xs[sel], np.log(trunc[sel]), 1)[0])
 TRUNC_AT_PROD = float(trunc[np.argmin(np.abs(Xs - XDOM))]) if XDOM in Xs else \
     float(abs(mm_ode(K0, N0, X=XDOM, rtol=1e-13, atol=1e-15) - ref_long))
-display(pd.DataFrame({"X": Xs, "|error| in gamma(0)": trunc})
-        .style.format({"X": "{:.1f}", "|error| in gamma(0)": "{:.2e}"}).hide(axis="index"))
+show(pd.DataFrame({"X": Xs, "|error| in gamma(0)": trunc})
+        .style.format({"X": "{:.1f}", "|error| in gamma(0)": "{:.2e}"}).hide(axis="index").set_uuid("a2806"))
 
 # The decay is not merely fitted, it is PREDICTED. A perturbation imposed at X is
 # damped on the way to the exit by exp(-int_0^X mu dx) with
@@ -790,9 +797,9 @@ for a, b in zip(Xs[1:5], Xs[2:6]):
                       "obs / predicted": obs / pred})
 pt = pd.DataFrame(pred_rows)
 TRUNC_MODEL_MAX = float(np.abs(pt["obs / predicted"] - 1).max())
-display(pt.style.format({"observed ratio": "{:.2f}", "exp(int mu dx)": "{:.2f}",
+show(pt.style.format({"observed ratio": "{:.2f}", "exp(int mu dx)": "{:.2f}",
                          "predicted ratio": "{:.2f}",
-                         "obs / predicted": "{:.3f}"}).hide(axis="index"))
+                         "obs / predicted": "{:.3f}"}).hide(axis="index").set_uuid("a2807"))
 
 # --- axis 3: tolerance of the independent solver ---------------------------
 ref_tol = mm_ode(K0, N0, X=XDOM, rtol=1e-13, atol=1e-15)
@@ -849,9 +856,9 @@ for K in (1, 5, 20, 100):
                  "|difference|": abs(mm - root)})
 lim_a = pd.DataFrame(rows)
 LIM_CSTR = lim_a["|difference|"].max()
-display(lim_a.style.format({"maximum mixedness, n=1": "{:.12f}",
+show(lim_a.style.format({"maximum mixedness, n=1": "{:.12f}",
                             "stirred-tank root": "{:.12f}",
-                            "|difference|": "{:.1e}"}).hide(axis="index"))
+                            "|difference|": "{:.1e}"}).hide(axis="index").set_uuid("a2808"))
 
 rows = []
 for n in (2, 3):
@@ -865,9 +872,9 @@ lim_b = pd.DataFrame(rows)
 FIRST_ORDER_WIDTH = lim_b["bracket width"].max()
 FIRST_ORDER_VS_EXACT = max(lim_b["segregation - exact"].abs().max(),
                            lim_b["max mixedness - exact"].abs().max())
-display(lim_b.style.format({"(1+K/n)^-n": "{:.10f}", "segregation - exact": "{:+.1e}",
+show(lim_b.style.format({"(1+K/n)^-n": "{:.10f}", "segregation - exact": "{:+.1e}",
                             "max mixedness - exact": "{:+.1e}",
-                            "bracket width": "{:.1e}"}).hide(axis="index"))
+                            "bracket width": "{:.1e}"}).hide(axis="index").set_uuid("a2809"))
 
 rows = []
 for n in (2, 3, 5, 10, 30, 100, 300):
@@ -878,9 +885,9 @@ for n in (2, 3, 5, 10, 30, 100, 300):
 lim_c = pd.DataFrame(rows)
 PFR_WIDTH_300 = float(lim_c["relative width"].iloc[-1])
 PFR_GAP_300 = float(lim_c["segregation - plug flow"].iloc[-1])
-display(lim_c.style.format({"segregation": "{:.6f}", "max mixedness": "{:.6f}",
+show(lim_c.style.format({"segregation": "{:.6f}", "max mixedness": "{:.6f}",
                             "relative width": "{:.4f}",
-                            "segregation - plug flow": "{:.2e}"}).hide(axis="index"))
+                            "segregation - plug flow": "{:.2e}"}).hide(axis="index").set_uuid("a2810"))
 
 rows = []
 for p in (0.5, 0.7, 0.9, 1.0, 1.1, 1.5, 2.0, 3.0):
@@ -893,9 +900,9 @@ for p in (0.5, 0.7, 0.9, 1.0, 1.1, 1.5, 2.0, 3.0):
 lim_d = pd.DataFrame(rows)
 ORDER_MARGIN_BELOW = float(lim_d[lim_d["order p"] == 0.9]["mm - seg"].iloc[0])
 ORDER_MARGIN_ABOVE = float(lim_d[lim_d["order p"] == 1.1]["mm - seg"].iloc[0])
-display(lim_d.style.format({"order p": "{:.1f}", "segregation": "{:.7f}",
+show(lim_d.style.format({"order p": "{:.1f}", "segregation": "{:.7f}",
                             "max mixedness": "{:.7f}",
-                            "mm - seg": "{:+.3e}"}).hide(axis="index"))
+                            "mm - seg": "{:+.3e}"}).hide(axis="index").set_uuid("a2811"))
 
 display(Markdown(
     f"**(a)** The exponential-RTD collapse holds to **{LIM_CSTR:.1e}** over two "
@@ -975,8 +982,8 @@ J_MAX = Jtab["deviation"].abs().max()
 J_MAX_EX = Jtab[~((Jtab.table == 2) & (Jtab.row == "maximum_mixedness"))]["deviation"].abs().max()
 J_MM3 = float(Jtab[(Jtab.table == 2) & (Jtab.row == "maximum_mixedness")]["computed"].iloc[0])
 J_MM3_P = float(Jtab[(Jtab.table == 2) & (Jtab.row == "maximum_mixedness")]["printed"].iloc[0])
-display(Jtab.style.format({"computed": "{:.6f}", "printed": "{:.4f}",
-                           "deviation": "{:+.5f}"}).hide(axis="index"))
+show(Jtab.style.format({"computed": "{:.6f}", "printed": "{:.4f}",
+                           "deviation": "{:+.5f}"}).hide(axis="index").set_uuid("a2812"))
 
 VAR_RESID = max(abs(J_mm(n) * var_alpha(n) + var_within_mm(n) - var_alpha(n))
                 for n in (2, 3))
@@ -1019,10 +1026,10 @@ for n in (2, 3):
                      "mu (real segregated)": (rs - s) / (hi - s),
                      "mu (real ideally mixed)": (rm - s) / (hi - s)})
 bind = pd.DataFrame(rows)
-display(bind.style.format({"segregation": "{:.5f}", "max mixedness": "{:.5f}",
+show(bind.style.format({"segregation": "{:.5f}", "max mixedness": "{:.5f}",
                            "relative width": "{:.3f}", "ratio hi/lo": "{:.2f}",
                            "mu (real segregated)": "{:.3f}",
-                           "mu (real ideally mixed)": "{:.3f}"}).hide(axis="index"))
+                           "mu (real ideally mixed)": "{:.3f}"}).hide(axis="index").set_uuid("a2813"))
 
 mus = np.concatenate([bind["mu (real segregated)"].values,
                       bind["mu (real ideally mixed)"].values])
@@ -1146,8 +1153,8 @@ rows.append({"injected defect": "E/w replaced by its far-field constant n",
              "note": "returns gamma_inf exactly"})
 
 bt = pd.DataFrame(rows)
-display(bt.style.format({"gamma(0)": "{:.6f}", "shift from reference": "{:+.2e}"})
-        .hide(axis="index"))
+show(bt.style.format({"gamma(0)": "{:.6f}", "shift from reference": "{:+.2e}"})
+        .hide(axis="index").set_uuid("a2814"))
 
 PHYSICS_DEFECTS = ["reaction sign flipped",
                    "side feed E(x) deleted from the source",
@@ -1181,7 +1188,7 @@ fo_rows = [
          - gamma_seg(K0, N0, p=1.0))),
 ]
 fo = pd.DataFrame(fo_rows, columns=["injected defect", "|mm - segregation|"])
-display(fo.style.format({"|mm - segregation|": "{:.2e}"}).hide(axis="index"))
+show(fo.style.format({"|mm - segregation|": "{:.2e}"}).hide(axis="index").set_uuid("a2815"))
 FO_SENS = float(fo["|mm - segregation|"].iloc[1:].min())
 
 display(Markdown(
@@ -1267,9 +1274,9 @@ fdf = pd.DataFrame(fill)
 fdf["bracket width / segregated"] = ((fdf["maximum mixedness (NOT printed)"]
                                       - fdf["segregation (printed)"])
                                      / fdf["segregation (printed)"])
-display(fdf.style.format({"segregation (printed)": "{:.3f}",
+show(fdf.style.format({"segregation (printed)": "{:.3f}",
                           "maximum mixedness (NOT printed)": "{:.4f}",
-                          "bracket width / segregated": "{:.3f}"}).hide(axis="index"))
+                          "bracket width / segregated": "{:.3f}"}).hide(axis="index").set_uuid("a2816"))
 FILLED_K50_N2 = float(fdf[(fdf["RTD the body is"] == "2 tanks") & (fdf.K == 50)]
                       ["maximum mixedness (NOT printed)"].iloc[0])
 display(Markdown(

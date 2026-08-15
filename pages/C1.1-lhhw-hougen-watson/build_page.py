@@ -276,8 +276,15 @@ else:
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from IPython.display import Markdown, display
+from IPython.display import HTML, Markdown, display
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
+
+# DETERMINISM: a pandas Styler's text/plain repr carries a MEMORY ADDRESS and its
+# HTML carries a RANDOM CSS id, so displaying one directly would make two runs of
+# this notebook differ even with no other change. Route styled tables through
+# HTML(...to_html()) with a pinned uuid, never display a Styler directly.
+def show(styler):
+    display(HTML(styler.to_html()))
 
 PAGE = "C1.1-lhhw-hougen-watson"      # for cross-checkout resolution on Colab
 A    = load_data("hougen-watson-1947-tableA-rates.csv", page=PAGE)
@@ -364,9 +371,9 @@ for k, v in printed.items():
                  abs(mine_book_rounding[k] - v) / abs(v)))
 df = pd.DataFrame(rows, columns=["sum", "printed", "full precision",
                                  "book's rounding", "rel dev (book rounding)"])
-display(df.style.format({"printed": "{:.3f}", "full precision": "{:.4f}",
+show(df.style.format({"printed": "{:.3f}", "full precision": "{:.4f}",
                          "book's rounding": "{:.4f}",
-                         "rel dev (book rounding)": "{:.1e}"}).hide(axis="index"))
+                         "rel dev (book rounding)": "{:.1e}"}).hide(axis="index").set_uuid("c1101"))
 
 lin_cols  = ["Sum pH", "Sum pU", "Sum pS"]
 prod_cols = ["Sum pH2", "Sum pU2", "Sum pS2", "Sum pHpU", "Sum pHpS", "Sum pUpS"]
@@ -551,7 +558,7 @@ tbl = pd.DataFrame(
      "route i: from transcribed data": coef_data,
      "route ii: from printed sums": coef_sums},
     index=["a", "b", "c", "f"])
-display(tbl.style.format("{:.4f}"))
+show(tbl.style.format("{:.4f}").set_uuid("c1102"))
 
 M["mechd_200C_vs_printed_max_rel"]   = float(np.max(np.abs(coef_data - book) / book))
 M["mechd_200C_two_routes_max_rel"]   = float(np.max(np.abs(coef_data - coef_sums) / coef_sums))
@@ -660,10 +667,10 @@ display(Markdown(f"**{len(clean)} of 54 printed rows** are consistent with the "
     f"transcribed data to better than 3 % in every implied summation (worst "
     f"{clean.max_rel_rhs.max():.1%} - the book's hand rounding). The distinct "
     f"anomalous fits:"))
-display(dirty[["mech", "T_C", "max_rel_rhs"]].assign(
+show(dirty[["mech", "T_C", "max_rel_rhs"]].assign(
     family=lambda d: d.mech.map({'c': "c=j=k=o=p=r", 'g': "g=m", 'h': "h",
                                  'e': "e=l", 'f': "f", 'b': "b=q"})
-    ).style.format({"max_rel_rhs": "{:.2f}"}).hide(axis="index"))
+    ).style.format({"max_rel_rhs": "{:.2f}"}).hide(axis="index").set_uuid("c1103"))
 M["DEF_clean_rows_worst_rel_rhs"] = float(clean.max_rel_rhs.max())
 M["DEF_clean_row_count"] = float(len(clean))
 
@@ -795,7 +802,7 @@ sw_tbl = pd.DataFrame(
      for thr, (fl, joint) in sweep.items()],
     columns=["threshold", "per-table flips vs printed", "which",
              "acceptable at ALL three temperatures"])
-display(sw_tbl.style.hide(axis="index"))
+show(sw_tbl.style.hide(axis="index").set_uuid("c1104"))
 
 M["DEF_verdict_flips_thr5pct"] = float(len(sweep[0.05][0]))
 M["DEF_joint_acceptable_set_size"] = float(len(sweep[0.05][1]))
@@ -864,7 +871,7 @@ disc = pd.DataFrame(
       np.mean([scores[(m, T)] for T in (200, 275, 325)]))
      for m in MECH_RATE],
     columns=["mech", "200C", "275C", "325C", "pooled"]).sort_values("pooled")
-display(disc.style.format({c: "{:.1f}" for c in disc.columns[1:]}).hide(axis="index"))
+show(disc.style.format({c: "{:.1f}" for c in disc.columns[1:]}).hide(axis="index").set_uuid("c1105"))
 
 pool = disc.set_index("mech").pooled
 M["nls_d_mean_abs_pct_pooled"]  = float(pool['d'])
@@ -966,7 +973,7 @@ corr_tbl = pd.DataFrame(
      for lab, arr in (("(refit)", corr_fit[k]),
                       ("(printed)", TG.loc[f"{k}_corrected"].to_numpy(float)))},
     index=["200C", "275C", "325C"]).T
-display(corr_tbl.style.format("{:.3f}"))
+show(corr_tbl.style.format("{:.3f}").set_uuid("c1106"))
 M["tableG_corrected_max_rel"] = float(max(
     np.max(np.abs(corr_fit[k] - TG.loc[f"{k}_corrected"].to_numpy(float))
            / TG.loc[f"{k}_corrected"].to_numpy(float)) for k in "abcf"))
@@ -1009,7 +1016,7 @@ vh_tbl = pd.DataFrame({
                    "alpha_Ek": -TH["A"]},
     "printed dS": {"K_U": TH["dS_U"], "K_S": TH["dS_S"], "K_H": TH["dS_H"],
                    "alpha_Ek": TH["B"]}})
-display(vh_tbl.style.format("{:.2f}"))
+show(vh_tbl.style.format("{:.2f}").set_uuid("c1107"))
 
 # adjudication: which printed dS_S reproduces the printed K_S row?
 KS_row = TG.loc["K_S"].to_numpy(float)
@@ -1335,7 +1342,7 @@ labelled reproduction, not validation."""))
 cells.append(code(r'''"""Break table and agreement metrics."""
 bt = pd.DataFrame(BREAKS, columns=["metric", "healthy", "injected defect",
                                    "with defect", "verdict"])
-display(bt.style.hide(axis="index"))
+show(bt.style.hide(axis="index").set_uuid("c1108"))
 
 display(Markdown("""
 **Structural / labelled rows** (kept, with what they are):

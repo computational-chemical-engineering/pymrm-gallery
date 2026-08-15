@@ -195,8 +195,16 @@ from scipy.optimize import brentq
 from scipy.special import j0, j1
 from pymrm import construct_grad, construct_div, construct_convflux_upwind, NumJac, newton
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from IPython.display import HTML, display
 
-np.set_printoptions(precision=6, suppress=True)'''))
+np.set_printoptions(precision=6, suppress=True)
+
+# DETERMINISM: a pandas Styler's text/plain repr carries a MEMORY ADDRESS and its
+# HTML carries a RANDOM CSS id, so displaying one directly would make two runs of
+# this notebook differ even with no other change. Route styled tables through
+# HTML(...to_html()) with a pinned uuid, never display a Styler directly.
+def show(styler):
+    display(HTML(styler.to_html()))'''))
 
 cells.append(md(r"""## Parameters and assumptions
 
@@ -350,7 +358,7 @@ rows = [
 tab = pd.DataFrame(rows, columns=["constant", "this page (Froment 1967)",
                                   "D2.2 page (VW&F 1970)"])
 tab["rel diff"] = (tab.iloc[:, 1] - tab.iloc[:, 2]).abs() / tab.iloc[:, 2].abs()
-display(tab.style.format({"rel diff": "{:.2e}"}))
+show(tab.style.format({"rel diff": "{:.2e}"}).set_uuid("c21001"))
 assert (tab["rel diff"][:8] < 1e-3).all(), "shared-constant reconciliation failed"
 print("First eight rows identical to <0.1 %: two independent transcriptions of "
       "the shared constants agree. The last row differs by "
@@ -842,7 +850,7 @@ rows = [
 ]
 tab = pd.DataFrame(rows, columns=["quantity", "paper", "this page", "qualifier"])
 tab["dev %"] = 100 * (tab["this page"] - tab["paper"]).abs() / tab["paper"].abs()
-display(tab.style.format({"paper": "{:.2f}", "this page": "{:.2f}", "dev %": "{:.2f}"}))
+show(tab.style.format({"paper": "{:.2f}", "this page": "{:.2f}", "dev %": "{:.2f}"}).set_uuid("c21002"))
 
 stated = tab.iloc[4:9]     # the five model-output statements with real content
 print(f"five stated model results: mean |dev| = {stated['dev %'].mean():.1f} %, "
@@ -1029,8 +1037,8 @@ break_rows = [
 bt = pd.DataFrame(break_rows,
                   columns=["injected defect", "tm_max @357 (degC)",
                            "exchanger check", "note"])
-display(bt.style.format({"tm_max @357 (degC)": "{:.2f}",
-                         "exchanger check": lambda v: "-" if v is None else f"{v:.1e}"}))
+show(bt.style.format({"tm_max @357 (degC)": "{:.2f}",
+                         "exchanger check": lambda v: "-" if v is None else f"{v:.1e}"}).set_uuid("c21003"))
 
 print("1-D sensitivities on the 363 degC rise (paper: 48):")
 for lab, kw in [("U = 82.7 (printed, baseline)", {}),

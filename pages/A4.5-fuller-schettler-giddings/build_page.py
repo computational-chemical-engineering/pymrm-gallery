@@ -73,11 +73,18 @@ _T_START = time.time()
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from IPython.display import Markdown, display
+from IPython.display import HTML, Markdown, display
 
 np.random.seed(19660501)   # nothing here is stochastic; seeded for reproducibility
 PAGE = "A4.5-fuller-schettler-giddings"
-pd.set_option("display.width", 120)"""))
+pd.set_option("display.width", 120)
+
+# DETERMINISM: a pandas Styler's text/plain repr carries a MEMORY ADDRESS and its
+# HTML carries a RANDOM CSS id, so displaying one directly would make two runs of
+# this notebook differ even with no other change. Route styled tables through
+# HTML(...to_html()) with a pinned uuid, never display a Styler directly.
+def show(styler):
+    display(HTML(styler.to_html()))"""))
 
 # --------------------------------------------------------------------------- 2
 cells.append(md(r"""## Background
@@ -595,7 +602,7 @@ for name, nP, eP, mask in CATS:
     rows.append((name, mask.sum(), nP, e.abs().mean(), eP))
 T2 = pd.DataFrame(rows, columns=["category", "n", "n printed",
                                  "mean |error| %", "printed %"])
-display(T2.style.format({"mean |error| %": "{:.2f}", "printed %": "{:.1f}"}))
+show(T2.style.format({"mean |error| %": "{:.2f}", "printed %": "{:.1f}"}).set_uuid("a4501"))
 
 e = DATA.err_fsg_pct
 ave_err = e.abs().mean()
@@ -754,9 +761,9 @@ display(Markdown(
                                    "in_sample_refit_%": "in_sample_refit_"})
      .assign(gain=lambda d: d.held_out_ - d.in_sample_refit_)
      .nlargest(4, "gain").itertuples()) + "."))
-display(LOCO.sort_values("held_out_%", ascending=False).head(12)
+show(LOCO.sort_values("held_out_%", ascending=False).head(12)
         .style.format({"held_out_%": "{:.2f}", "in_sample_refit_%": "{:.2f}",
-                       "in_sample_published_%": "{:.2f}"}).hide(axis="index"))'''))
+                       "in_sample_published_%": "{:.2f}"}).hide(axis="index").set_uuid("a4502"))'''))
 
 cells.append(md(r"""### 5. The temperature exponent, measured from the paper's own data
 
@@ -988,8 +995,8 @@ BREAK.append(("any defect whatever  (structural: flux is divergence-free by "
 
 BT = pd.DataFrame(BREAK, columns=["injected defect", "metric", "undefected", "defected"])
 BT["ratio"] = BT.defected / BT.undefected
-display(BT.style.format({"undefected": "{:.3e}", "defected": "{:.3e}",
-                         "ratio": "{:.2e}"}).hide(axis="index"))'''))
+show(BT.style.format({"undefected": "{:.3e}", "defected": "{:.3e}",
+                         "ratio": "{:.2e}"}).hide(axis="index").set_uuid("a4503"))'''))
 
 cells.append(code(r'''# Grid convergence of the pymrm solve against the quadrature reference.
 ns = np.array([25, 50, 100, 200, 400, 800])
@@ -1047,9 +1054,13 @@ cells.append(code(r'''metrics = dict(
     break_revised_increments=float(BT.defected[1]),
     break_wrong_bc=float(BT.loc[BT["injected defect"].str.contains("Neumann"),
                                 "defected"].iloc[0]),
-    runtime_s=float(time.time() - _T_START),
 )
-report_agreement("A4.5", metrics)'''))
+report_agreement("A4.5", metrics)
+# Wall-clock runtime is a machine-load measurement, not a reproducibility metric -
+# scripts/check_agreement.py diffs every key in agreement.json at REL_TOL, so a
+# wall-clock key would fail CI the first time the runner is busy. Runtime lives in
+# meta.yaml's `runtime_seconds` instead, alongside every other page's.
+print(f"wall-clock runtime: {time.time() - _T_START:.1f} s (not an agreement metric)")'''))
 
 # --------------------------------------------------------------------------- 9
 cells.append(md(r"""## What pymrm adds
@@ -1131,7 +1142,10 @@ against one measured-$D_{12}$ axis. `A4.2` (Maxwell-Stefan vs Fick), `A4.3`
 (dusty gas), `A4.4` (Knudsen/Bosanquet) and `A4.9` (Duncan-Toor) all consume a
 binary pair diffusivity of exactly the kind this page estimates.
 
-**Runtime** is printed in the agreement metrics as `runtime_s`."""))
+**Runtime** is printed at the end of the notebook as a wall-clock diagnostic and
+recorded in `meta.yaml`'s `runtime_seconds`; it is not an agreement metric, since
+a machine-load measurement has no business being diffed at a fixed tolerance
+against a stored baseline."""))
 
 nb = nbf.v4.new_notebook(cells=cells)
 nb.metadata = {"kernelspec": {"display_name": "Python 3", "language": "python",

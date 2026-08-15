@@ -267,7 +267,7 @@ if not any("shared" in p for p in sys.path):
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from IPython.display import Markdown, display
+from IPython.display import HTML, Markdown, display
 from scipy.linalg import solve_banded
 from scipy.integrate import quad
 from scipy.optimize import brentq
@@ -278,6 +278,13 @@ from gallery_utils import load_data, load_meta, cite_data, report_agreement
 
 PAGE = "A3.3-danckwerts-surface-renewal"
 plt.rcParams.update({"figure.dpi": 110, "axes.grid": True, "grid.alpha": 0.3})
+
+# DETERMINISM: a pandas Styler's text/plain repr carries a MEMORY ADDRESS and its
+# HTML carries a RANDOM CSS id, so displaying one directly would make two runs of
+# this notebook differ even with no other change. Route styled tables through
+# HTML(...to_html()) with a pinned uuid, never display a Styler directly.
+def show(styler):
+    display(HTML(styler.to_html()))
 
 M = {}                      # every reported metric lands here, once
 printed = load_data("danckwerts-1951-printed-numbers.csv", page=PAGE).set_index("id")
@@ -525,8 +532,8 @@ M["R_vs_eq8_raw_rel"] = float(R8_raw / e8 - 1)
 M["R_vs_eq30_rel"] = float(R10 / e10 - 1)
 M["R_vs_eq34_rel"] = float(R34 / e34 - 1)
 M["eq13_vs_eq12"]  = float(e13 / e34 - 1)
-display(closed.style.format({"closed form": "{:.6f}", "pymrm": "{:.6f}",
-                             "rel. dev.": "{:+.2e}"}))
+show(closed.style.format({"closed form": "{:.6f}", "pymrm": "{:.6f}",
+                             "rel. dev.": "{:+.2e}"}).set_uuid("a3301"))
 display(Markdown(
     f"The pymrm element reproduces all three closed forms: "
     f"**{abs(M['R_vs_eq8_rel']):.1e}**, **{abs(M['R_vs_eq30_rel']):.1e}** and "
@@ -583,7 +590,7 @@ for kk in (0.1, 1.0, 10.0):
                      "$\\tfrac12\\times$(liquid share of the resistance)"))
 
 expo = pd.DataFrame(exp_rows, columns=["eq.", "system", "$n$", "what the algebra gives"])
-display(expo.style.format({"$n$": "{:.5f}"}))
+show(expo.style.format({"$n$": "{:.5f}"}).set_uuid("a3302"))
 M["n_eq8"]  = float(exp_rows[1][2])
 M["n_eq21_uniform_phi"] = float(exp_rows[2][2])
 M["n_eq22_patchwork"]   = float(exp_rows[3][2])
@@ -620,11 +627,11 @@ growth = kk ** 2 * (H - 1) / 1.0 - s
 M["eq25_printed_growth_rate"] = float(growth)
 trunc = [(T, eq25(1.0, H * kk, H, phi_exp, th_max=T, H_squared=False)) for T in (10, 20, 40)]
 M["eq25_printed_ratio_T40_over_T20"] = float(trunc[2][1] / trunc[1][1])
-display(pd.DataFrame(
+show(pd.DataFrame(
     [(T, v, v / eq9) for T, v in trunc],
     columns=["age cut-off $s\\theta_{max}$", "eq. 25 with the printed $HD$",
              "ratio to eq. 9"]).style.format({"eq. 25 with the printed $HD$": "{:.4g}",
-                                              "ratio to eq. 9": "{:.4g}"}))
+                                              "ratio to eq. 9": "{:.4g}"}).set_uuid("a3303"))
 
 # (i-b) THE ARGUMENT THAT DOES NOT DEPEND ON THE POINT CHOSEN. Divergence is a
 # property of (H, k); the collapse onto eq. 9 is not. Sweep both.
@@ -640,10 +647,10 @@ hkt = pd.DataFrame(hk, columns=["$H$", "$k_G/H$", "growth rate $k^2(H-1)/D - s$"
                                 "$|H^2D$ form / eq. 9 $-1|$",
                                 "printed $HD$ / eq. 9, cut at 40",
                                 "same, cut at 80"])
-display(hkt.style.format({"growth rate $k^2(H-1)/D - s$": "{:+.3f}",
+show(hkt.style.format({"growth rate $k^2(H-1)/D - s$": "{:+.3f}",
                           "$|H^2D$ form / eq. 9 $-1|$": "{:.1e}",
                           "printed $HD$ / eq. 9, cut at 40": "{:.4g}",
-                          "same, cut at 80": "{:.4g}"}).hide(axis="index"))
+                          "same, cut at 80": "{:.4g}"}).hide(axis="index").set_uuid("a3304"))
 M["eq25_collapse_worst_over_Hk"] = float(hkt["$|H^2D$ form / eq. 9 $-1|$"].max())
 M["eq25_printed_best_dev_over_Hk"] = float(
     (hkt["printed $HD$ / eq. 9, cut at 40"] - 1.0).abs().min())
@@ -776,7 +783,7 @@ targets = pd.DataFrame([
     ("sthetac_10pct",  "deficit of erf sqrt(s theta_c) at s theta_c = 1.5", "< 10 %", defic),
     ("age_cut_0p33",   "share of R from surfaces older than 0.33 s at s = 5", "< 1/10", frac_old),
 ], columns=["id", "quantity", "as printed", "recomputed"])
-display(targets.style.format({"recomputed": "{:.4f}"}))'''))
+show(targets.style.format({"recomputed": "{:.4f}"}).set_uuid("a3305"))'''))
 
 cells.append(code(r'''display(Markdown(f"""
 All six reproduce, and three of them are looser than they look — which is worth
@@ -916,9 +923,9 @@ for c0p in (0.5, 1.0, 3.0, 10.0):
     ident.append((c0p, v, 1.0 + c0p, v / (1.0 + c0p) - 1, erf(lam), 1 / (1 + c0p)))
 idf = pd.DataFrame(ident, columns=["$c_o'/c^*$", "eq. 15", "eq. 17", "rel. dev.",
                                    "erf$(\\beta/\\sqrt{D})$", "$c^*/(c^*+c_o')$"])
-display(idf.style.format({"eq. 15": "{:.9f}", "eq. 17": "{:.9f}", "rel. dev.": "{:+.1e}",
+show(idf.style.format({"eq. 15": "{:.9f}", "eq. 17": "{:.9f}", "rel. dev.": "{:+.1e}",
                           "erf$(\\beta/\\sqrt{D})$": "{:.6f}",
-                          "$c^*/(c^*+c_o')$": "{:.6f}"}))
+                          "$c^*/(c^*+c_o')$": "{:.6f}"}).set_uuid("a3306"))
 M["eq17_from_eq15_16"] = float(max(abs(r[3]) for r in ident))
 # The swap is INVISIBLE at c0' = c*, where the equation is symmetric in erf/erfc.
 # Test it where it can be seen; the row below records the value that is used.
@@ -980,8 +987,8 @@ M["time_order"]  = float(np.nanmean(ct["order"].values[1:]))
 M["space_order"] = float(np.nanmean(cx["order"].values[1:4]))
 M["space_err_n400"] = float(cx["|err|"].iloc[3])
 M["time_err_n3200"] = float(ct["|err|"].iloc[4])
-display(pd.concat([ct, cx], axis=1).style.format({"|err|": "{:.3e}", "order": "{:.2f}"},
-                                                  na_rep="—"))
+show(pd.concat([ct, cx], axis=1).style.format({"|err|": "{:.3e}", "order": "{:.2f}"},
+                                                  na_rep="—").set_uuid("a3307"))
 display(Markdown(
     f"Observed orders: **{M['time_order']:.2f}** in the age step (backward Euler, "
     f"first order as expected) and **{M['space_order']:.2f}** in the grid "
@@ -1130,10 +1137,10 @@ for c0p in (1.0, 2.0, 5.0, 10.0, 25.0, 50.0, 100.0):
 sw = pd.DataFrame(sweep, columns=["$c_o'/c^*$", "pymrm (exact 2nd order, extrapolated)",
                                   "eq. 12 with $r = r'c_o'$", "error of eq. 12 (%)",
                                   "same, raw at $n_t$ = 400 (%)"])
-display(sw.style.format({"pymrm (exact 2nd order, extrapolated)": "{:.5f}",
+show(sw.style.format({"pymrm (exact 2nd order, extrapolated)": "{:.5f}",
                          "eq. 12 with $r = r'c_o'$": "{:.5f}",
                          "error of eq. 12 (%)": "{:+.3f}",
-                         "same, raw at $n_t$ = 400 (%)": "{:+.3f}"}))
+                         "same, raw at $n_t$ = 400 (%)": "{:+.3f}"}).set_uuid("a3308"))
 
 M["so_err_at_printed_50_pct"] = float(sw["error of eq. 12 (%)"].iloc[5])
 M["so_err_at_ratio_1_pct"]    = float(sw["error of eq. 12 (%)"].iloc[0])
@@ -1161,7 +1168,7 @@ for n_t in (400, 800, 1600):
 Rc_ext, _, _ = R_second_order(1e6, 1.0, n_t=400)        # Richardson from 400/800
 ctrl_rows.append(("400, 800 extrapolated", Rc_ext, 100 * (R1_pfo / Rc_ext - 1)))
 ct2 = pd.DataFrame(ctrl_rows, columns=["$n_t$", "pymrm", "apparent error (%)"])
-display(ct2.style.format({"pymrm": "{:.7f}", "apparent error (%)": "{:+.4f}"}).hide(axis="index"))
+show(ct2.style.format({"pymrm": "{:.7f}", "apparent error (%)": "{:+.4f}"}).hide(axis="index").set_uuid("a3309"))
 M["so_control_raw_n400_pct"] = float(ct2["apparent error (%)"].iloc[0])
 M["so_control_extrap_pct"]   = float(ct2["apparent error (%)"].iloc[3])
 display(Markdown(f"""
@@ -1221,9 +1228,9 @@ for Dp, c0p in ((0.5, 1.0), (1.0, 3.0), (2.0, 1.0)):
 inf = pd.DataFrame(inst, columns=["$D'/D$", "$c_o'/c^*$", "$\\beta/\\sqrt{D}$ from eq. 16",
                                   "eq. 15", "pymrm at $r'c_o'/s = 3000$", "dev. (%)",
                                   "same, raw at $n_t$ = 600 (%)"])
-display(inf.style.format({"$\\beta/\\sqrt{D}$ from eq. 16": "{:.5f}", "eq. 15": "{:.6f}",
+show(inf.style.format({"$\\beta/\\sqrt{D}$ from eq. 16": "{:.5f}", "eq. 15": "{:.6f}",
                           "pymrm at $r'c_o'/s = 3000$": "{:.6f}", "dev. (%)": "{:+.3f}",
-                          "same, raw at $n_t$ = 600 (%)": "{:+.3f}"}))
+                          "same, raw at $n_t$ = 600 (%)": "{:+.3f}"}).set_uuid("a3310"))
 M["inst_vs_eq15_worst_pct"] = float(np.max(np.abs(inf["dev. (%)"])))
 M["inst_vs_eq15_worst_raw_pct"] = float(np.max(np.abs(inf["same, raw at $n_t$ = 600 (%)"])))
 
@@ -1236,7 +1243,7 @@ for ratio in (300.0, 3000.0, 10000.0):
           R_second_order(c0p_w, ratio, Dp=Dp_w, n_x=350, n_t=600)[0])
     ratio_rows.append((ratio, Rv, 100 * (Rv / tgt_w - 1)))
 rt = pd.DataFrame(ratio_rows, columns=["$r'c_o'/s$", "pymrm", "dev. from eq. 15 (%)"])
-display(rt.style.format({"pymrm": "{:.6f}", "dev. from eq. 15 (%)": "{:+.3f}"}).hide(axis="index"))
+show(rt.style.format({"pymrm": "{:.6f}", "dev. from eq. 15 (%)": "{:+.3f}"}).hide(axis="index").set_uuid("a3311"))
 M["inst_dev_at_ratio_300_pct"]   = float(rt["dev. from eq. 15 (%)"].iloc[0])
 M["inst_dev_at_ratio_10000_pct"] = float(rt["dev. from eq. 15 (%)"].iloc[2])
 display(Markdown(
@@ -1285,8 +1292,8 @@ for dep in (0.3, 1.0, 2.0, 5.0):
     check.append((dep, R, np.sqrt(1.0) / np.tanh(dep), R / (1 / np.tanh(dep)) - 1))
 ck = pd.DataFrame(check, columns=["$d\\sqrt{s/D}$", "pymrm $k_L/\\sqrt{Ds}$",
                                   "$\\coth z$", "rel. dev."])
-display(ck.style.format({"pymrm $k_L/\\sqrt{Ds}$": "{:.6f}", "$\\coth z$": "{:.6f}",
-                         "rel. dev.": "{:+.1e}"}))
+show(ck.style.format({"pymrm $k_L/\\sqrt{Ds}$": "{:.6f}", "$\\coth z$": "{:.6f}",
+                         "rel. dev.": "{:+.1e}"}).set_uuid("a3312"))
 M["kL_coth_worst_rel"] = float(np.max(np.abs(ck["rel. dev."])))
 
 z_075 = brentq(lambda z: 0.5 + z / np.sinh(2 * z) - 0.75, 0.01, 10.0)
@@ -1356,8 +1363,8 @@ def ratio_needed(eps, nsig=3.0):
 
 need = pd.DataFrame([(e, ratio_needed(e)) for e in (0.02, 0.05, 0.10, 0.20)],
                     columns=["1σ scatter on $k_L$", "$D_2/D_1$ needed for a 3σ separation"])
-display(need.style.format({"1σ scatter on $k_L$": "{:.0%}",
-                           "$D_2/D_1$ needed for a 3σ separation": "{:.2f}"}))
+show(need.style.format({"1σ scatter on $k_L$": "{:.0%}",
+                           "$D_2/D_1$ needed for a 3σ separation": "{:.2f}"}).set_uuid("a3313"))
 M["D_ratio_needed_3sigma_5pct"] = ratio_needed(0.05)
 
 display(Markdown(f"""
@@ -1525,7 +1532,7 @@ breaks.append(("the $n$ = $\\tfrac12$ exponents of eqs. 8, 21, 22 and the $\\tfr
 
 bt = pd.DataFrame(breaks, columns=["injected defect", "metric it should move",
                                    "as built", "when broken", "verdict"])
-display(bt.style.hide(axis="index"))'''))
+show(bt.style.hide(axis="index").set_uuid("a3314"))'''))
 
 cells.append(md(r"""**Three warnings about this table, all of which apply to numbers on this page.**
 
