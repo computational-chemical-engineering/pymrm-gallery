@@ -5,7 +5,8 @@ catalog_reference: AIChE J 22 (1976)
 priority: P1
 tier: T0
 structures: S6
-status: unclaimed
+status: published
+page: pages/I1.3-heck-wei-katzer-monolith/
 reference:
   authors:
   - Heck, R. H.
@@ -24,8 +25,69 @@ paper:
     University of Delaware, Newark, Delaware 19711", plus the abstract and SCOPE section. Wiley Subject
     metadata agrees: "AIChE Journal 1976.22:477-484".'
 blocker: null
-notes: null
-updated: '2026-08-06'
+notes: >-
+  BUILT 2026-08-15. Staged at queue_cases/I1.3/page/, models_entry.yaml alongside (APPEND;
+  must PRECEDE the existing I1.7 entry in section I, not go at the end). Title page confirmed
+  from the document itself: "Mathematical Modeling of Monolithic Catalysts", ROLAND H. HECK /
+  JAMES WEI / JAMES R. KATZER, Department of Chemical Engineering, University of Delaware,
+  Newark, Delaware 19711; footer "AIChE Journal (Vol. 22, No. 3) May, 1976 Page 477"; the
+  article ends at the top of p. 484 where the next article (Wellek & Gurkan) begins. The
+  Wiley download stamp in the page margin carries doi 10.1002/aic.690220310, matching the
+  crossref-verified value. Manuscript received October 7, 1975; accepted January 17, 1976.
+  FIGURES SCOPED OUT (no maintainer review available): no curve digitised. ELEVEN PRINTED
+  CHARACTER rows are read from inside figure frames, and the notebook now ENUMERATES AND
+  COUNTS them from the CSV rather than restating a number: six annotation boxes
+  (dH = 336.9 MJ/kmol from Fig. 13, D = 1.52 mm from Fig. 3, the two inlet mole fractions,
+  the 316 degC inlet, Nu = 3.608), three abscissa tick labels added at fixer stage
+  (Fig. 2 0.20, Figs. 3-5 0.25, Fig. 11 0.50), one curve label (Fig. 8's Q_w) and one case
+  label (Fig. 11's 349 degC); nine of the eleven appear nowhere else in the paper. Four
+  further rows name a figure from running text or a caption. Each is labelled with its
+  figure in the data sidecar.
+  PRINTED DEFECTS FOUND, none repaired: three incompatible meanings of X* in one paper;
+  eq. (14) printed with "=" where a multiplication is required (dimensionally impossible);
+  eqs. (17)/(18) and eqs. (10)/(12) carry mutually impossible signs; Fig. 8 labels two
+  different curves with the same Q_w formula; "336.9 mJ/kg-mole" where MJ is required; the
+  reference list prints "Shar, R. K., and A. L. London" where Table 1's footnote says "Shah".
+  Table 1's square-duct Nu_T is printed 2.976 where two independent solves give 2.977523 -
+  NOT attributed, because Shah and London (1971) was not consulted.
+  FIXED 2026-08-15 after verification (verdict "safe after fixes", 11 findings). The one that
+  mattered: the page claimed on five surfaces that the paper's two light-off windows
+  "contradict the mechanism it derives on p. 482". THEY DO NOT - the two windows are quoted
+  for two figures whose abscissae stop at 0.20 (Fig. 2) and 0.50 (Fig. 11), and run at each
+  figure's own length the page's own models reproduce both statements and the apparent 11 degC
+  between them (-10.83). That claim is WITHDRAWN in the notebook, meta.yaml, README and
+  models_entry.yaml, with the retraction stated rather than quietly removed; the genuine part
+  (the windows are SAMPLED, and on a common length the 2-D sits above the 1-D) survives.
+  Also fixed: T_up_2d_strict had no continuum limit and is now reported as
+  T_up_2d_first_step_dG1em4 with its divergence printed and a dG break row; the reconstruction's
+  "two checks" are restated as one transcription check on the kinetics and one number with no
+  printed referent; the shape/dimensionality split is redone like-for-like on one threshold
+  (+2.07 shape, +2.05 entrance+dimensionality of the +4.12); the Q_w/2 invariance is now
+  actually solved; two retyped literals removed; the spectral "lower bound" renamed and its
+  reasoning corrected; the coverage cell now asserts a PARTITION and works per (row, metric)
+  pair; the sidecar's Re.Pr fixed to 400 under the X* scaling the page itself establishes.
+  A latent NON-DETERMINISM the verifier's stream-only check missed was also fixed: pandas
+  Styler emitted a random table uuid in text/html and its memory address in text/plain, so two
+  runs differed byte for byte. Tables now go through a `show()` helper with pinned uuids. THIS
+  IS LIKELY REPO-WIDE - every page that calls display(df.style...) has it.
+  FINAL FIXER PASS 2026-08-15 (second verification, verdict "safe after fixes", 4 items; no
+  agreement.json value moved - 71 metrics byte-identical). (1) The figure-provenance audit
+  trail is now GENERATED from the CSV's `where` column and printed as a table - 15 rows name a
+  figure, 11 read inside a frame (annotation box 6, tick labels 3, curve label 1, case label 1),
+  9 of them with no other source - and README, meta.yaml, the data sidecar, the queue notes and
+  both notebook prose surfaces were corrected to that count; the third abscissa row
+  (fig3_abscissa_end = 0.25, used and printed by the sweep) had been named nowhere. (2) The
+  -10.83 degC is no longer "purely" length: the notebook decomposes it into -13.42 degC of
+  length and +2.59 degC of model difference at the common L* = 0.50, and models_entry.yaml says
+  so, keeping the +4.73-to-+2.59 model difference that is the page's own result. (3) The L*
+  sweep now runs 0.20/0.25/0.30, the two ends read from the CSV, matching the prose that
+  defends it (it had still started at 0.21, the number the 0.21 -> 0.20 overrule removed).
+  (4) The coverage cell now also asserts `not set(COV) - set(M)`, closing the last hole the
+  sabotage test found. Plus, on the verifier's note that the paper-scheme pole is
+  scheme-dependent: the page now quotes a MARGIN (its two paper-count solves span 2.2-2.4 %
+  short of 0.032 and sit within 0.3 % of converged, against the +2.6 % that reaching 0.032
+  needs) instead of leaning on the single smallest value.
+updated: '2026-08-15'
 doi_source: 'crossref-verified 2026-08-02 — resolved from the catalogue citation and then checked
   field by field against the Crossref record: title, container, volume, issue, page range and year
   all agree with the catalogue''s own citation string. NOT verified against the document itself, because

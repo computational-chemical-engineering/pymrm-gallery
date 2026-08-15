@@ -1,0 +1,64 @@
+dataset_id: heck-1976-table1-nusselt
+title: "Table 1 of Heck, Wei & Katzer (1976): asymptotic Nusselt numbers for flow in ducts"
+status: complete
+
+source:
+  authors:
+    - "Heck, R. H."
+    - "Wei, J."
+    - "Katzer, J. R."
+  year: 1976
+  container: "AIChE Journal 22(3) 477-484"
+  doi: 10.1002/aic.690220310
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "Table 1, journal page 479"
+  tool: "poppler pdftoppm -r 300 (the file's native resolution: pdfimages -list reports 300 ppi CCITT-G4 bilevel on all 8 pages)"
+  procedure: >
+    The whole table was cropped out of the 300 ppi page-3 bitmap and re-read at
+    digit scale. No value came from the PDF text layer. All eight cells are clean
+    printing - no broken glyphs, no ambiguous digits, nothing argued rather than
+    read. The header, the two footnotes and the source attribution were read on
+    the same crop.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-15
+  estimated_error: "None beyond the paper's own rounding (3 decimals, except Nu_T of the sinusoidal row which is printed to 2)."
+
+validation:
+  internal_consistency: >
+    The table is not the authors' own computation: its footnote attributes every
+    value to Shah and London (1971). Two of the eight cells have exact closed
+    forms that this page derives independently rather than quoting - 48/11 for the
+    circular duct at constant wall flux and 28/9 for the equilateral triangle -
+    and both reproduce the printed digits. The square-duct pair is computed here
+    from scratch on two unrelated discretisations. The sinusoidal row cannot be
+    checked at all from this paper, because the geometry column prints only a
+    glyph and the paper states no aspect ratio or wall profile for it.
+  what_it_tests: >
+    These are the asymptotic values the paper's one-dimensional model uses as its
+    constant Nusselt number (3.608 for a square channel) and the values its
+    two-dimensional Graetz solution must reproduce far from the inlet (4.364 and
+    3.657 for a circular tube). They are therefore the anchor for the paper's
+    first claim, that a two-dimensional model predicts unusual Nusselt-number
+    behaviour - the "usual" behaviour is exactly this table.
+
+printed_defects: >
+  None in transcription. One cell disagrees with a converged solve of the problem
+  it names: the square duct at constant wall temperature is printed as 2.976,
+  where an independently converged finite-volume solve and a Fourier-Galerkin
+  solve both give 2.9775. The printed 2.976 implies the interval [2.9755, 2.9765],
+  which excludes 2.9775, so this is not rounding. The page cannot tell from this
+  paper alone whether the discrepancy is in Heck et al.'s transcription or in the
+  1971 Shah and London tabulation they cite, and says so; Shah and London was not
+  consulted. Separately, the reference list on page 483 prints the source as
+  "Shar, R. K., and A. L. London" where Table 1's own footnote says "Shah and
+  London" - reported, not repaired.
+
+columns:
+  geometry: "channel cross-section named in words; the paper prints only a glyph"
+  glyph: "the glyph as printed in the Geometry column (O, square, triangle, approx-equal)"
+  Nu_H: "asymptotic Nusselt number for constant wall heat flux, footnote (1); dimensionless, based on the hydraulic diameter"
+  Nu_T: "asymptotic Nusselt number for constant wall temperature, footnote (2); dimensionless"

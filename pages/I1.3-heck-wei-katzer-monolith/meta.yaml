@@ -1,0 +1,176 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: I1.3
+slug: heck-wei-katzer-monolith
+title: "Heck-Wei-Katzer monolith: 1-D versus 2-D"
+section: I
+status: published
+tier: T0
+priority: P1
+structures: [S6]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 220
+datasets:
+  - heck-1976-table1-nusselt.csv
+  - heck-1976-printed-values.csv
+
+validation:
+  # PRIMARY - Table 1, the paper's only printed table, derived rather than quoted
+  - "two of Table 1's eight cells are derived in CLOSED FORM and neither is quoted from anywhere: Nu_H1 = 48/11 for the circular duct and Nu_H1 = 28/9 for the equilateral triangle, both from exact polynomial solutions of the cross-section problem (for the triangle, the velocity is the product of the three wall distances and the H1 temperature is a degree-5 polynomial). Both reproduce the printed 4.364 and 3.111"
+  - "the square-duct pair is computed twice on discretisations that share no code: a pymrm finite-volume solve extrapolated over a four-rung ladder, and a Fourier-sine Galerkin solve with its own quadrature and its own eigen-formulation. Nu_H1 = 3.607950 against the printed 3.608. The velocity field is checked independently by f.Re -> 16 for the circle (exact) and 14.227 for the square"
+  - "Nu_T for the circular duct comes out 3.656793, which is A3.15's published mu_1^2/2 = 3.65679346 to seven digits by an entirely different route (a u-weighted eigenproblem on a radial finite-volume grid, not an eigenfunction series). Printed 3.657"
+  - "ONE PRINTED CELL DISAGREES: the square duct at constant wall temperature is printed 2.976, where the finite-volume route extrapolates to 2.977523 and the spectral route has already reached 2.977359 at N = 24 and is still increasing. 2.976 implies [2.9755, 2.9765], which excludes both, so this is not rounding. The spectral sequence is NOT a bound and the page says so explicitly: the sine-Galerkin eigenproblem is a Rayleigh-Ritz restriction, so it bounds the eigenvalue from ABOVE while the truncated integral of u converges from below, and the product has no one-sided guarantee (an earlier draft called it a lower bound; the metric is now named nu_t_square_spectral_N24 for what it is). NOT ATTRIBUTED: Table 1 is credited to Shah and London (1971), which was not consulted, so the page cannot say whether the digit was lost in 1971 or in 1976"
+  # PRIMARY - claim 1, the Nusselt anomaly, root-found
+  - "the Nusselt singularity is reproduced from the two wall-flux functions the paper prints (Fig. 8's -9.46+(46.0X)^8 and Fig. 9's -3+(40X)^8) and every landmark is ROOT-FOUND, never sampled: the flux zero at X* = 0.028789 and 0.028680 (the text says 'near 0.029'), where the Nusselt number passes through ZERO because eq. (19)'s numerator vanishes; and the pole, the zero of T_w - Tbar, at X* = 0.031300 and 0.031183 - 8.7 % FURTHER DOWNSTREAM in both cases"
+  - "so the cause the running text gives ('as the wall flux passes through zero, infinite negative and positive values for the Nusselt number occur') is not the cause. The paper's OWN NEXT PARAGRAPH gives the correct mechanism in terms of the two signs, and this page says so: it is a wrong one-sentence summary, not a missed effect. That paragraph's X* = 0.032 and 0.033 statements bracket the pole in (0.032, 0.033); the solve puts it 4.1 % below the centre of that bracket, and this is NOT a grid effect on any grid the paper could plausibly have run: at its own ten radial points the pole moves by 0.33 %, and on its FULL stated discretisation (ten radial points, dX* = 0.00025, and the TVD correction off so the axial scheme is first order like a 1955-vintage marching code) it is 0.031241 - 2.4 % short of 0.032. HOW SHORT EXACTLY IS SCHEME-DEPENDENT and the page says so: 0.031241 is this page's own radial operator on the paper's stated counts, not the paper's 1955 code, so the conclusion is stated as a MARGIN - the two paper-count solves span 2.2 to 2.4 % short and both sit within 0.3 % of converged, while REACHING 0.032 needs +2.6 %, about 8x the discretisation error the paper's own stated grid produces here"
+  - "the pole location is invariant to the normalisation of Q_w, which the paper never states: the problem is linear in T, so scaling the flux scales the field and leaves the zero of T_w - Tbar where it is. Not argued from linearity but SOLVED TWICE on one grid, with Q_w and with Q_w/2: the two poles agree to 3e-18"
+  # PRIMARY - three meanings of X*, each settled against a computation
+  - "the paper carries THREE incompatible definitions of X*. The Notation and eq. (9) require 4x/(D Re Pr); eqs. (15)-(16) and every figure abscissa require x/(D Re Pr); the two Grigull-Tratz correlations reprinted on p. 482 require 1000x/(D Re Pr). Each is settled by computation, not by inspection"
+  - "the one that matters is settled by the paper's own printed check value: 'at the point X* = 0.25, Tbar_G* is 0.0224'. Under eq. (15)'s scaling a converged solve gives 0.021147 (5.6 % low); under the Notation's it gives 0.32869, 14.7x the printed number. The same statement settles that the overbar is the MIXING-CUP mean, not the area mean, which the Notation leaves ambiguous - the area mean gives 0.015004, 33 % low"
+  - "the Grigull-Tratz constant-flux correlation reproduces this page's own Graetz solve to 1.3 % over G = 0.001 to 0.05 with X* = 1000x/(D Re Pr), and is one to two orders of magnitude wrong under either of the paper's own two meanings"
+  # THE PAPER'S PRINTED CHECK VALUE MEASURES ITS OWN GRID
+  - "and the residual 5.6 % on Tbar(0.25) is the paper's grid, not a transcription error: p. 480 states ten radial grid points, and a solve on ten radial points gives 0.02158 (uniform) to 0.02245 (wall-clustered), bracketing the printed 0.0224. So that printed number is a measurement of the 2-D model's radial discretisation error: the printed 0.0224 is 5.9 % above converged and the wall-clustered ten-point solve is 6.2 % above converged (two different quantities, both printed on the page). That is the same order as the 1-D/2-D difference the model is used to adjudicate, which is why every adequacy statement on this page is a difference between two models on one grid rather than an absolute"
+  # PRIMARY - claim 2, thresholds root-found instead of sampled
+  - "the paper's two light-off windows are SAMPLED, not root-found: 304, 316, 320 and 343 degC are the four inlet temperatures of Fig. 2, and 293, 316, 343 and 349 are the four cases of Fig. 11"
+  - "AND THE TWO WINDOWS ARE QUOTED FOR CHANNELS OF DIFFERENT LENGTH, which is why they look mutually inconsistent when they are not: Fig. 2's abscissa is labelled to X/(D Re Pr) = 0.20 and Fig. 11's to 0.50 (tick labels, printed characters, no curve read). Run at each figure's OWN length this page's own models reproduce both statements - the 304 degC case lights off at G* = 0.2405, beyond Fig. 2, and the 293 degC case at G* = 0.5767, beyond Fig. 11 - and the thresholds come out 306.44 degC (1-D at 0.20) and 295.61 degC (2-D at 0.50), a gap of -10.83 degC which reproduces the -11 degC between the paper's two quoted windows to 0.17 degC. THE GAP IS DECOMPOSED RATHER THAN ASSERTED, because it is not purely length: taking the SAME 1-D model out to 0.50 gives -13.42 degC from the length alone and +2.59 degC from the model difference at the common length. Length dominates and fixes the sign; the model difference the page measures (+4.73 degC at L* = 0.20 down to +2.59 at 0.50) survives the retraction. RETRACTION, STATED ON THE PAGE: an earlier draft called that gap a contradiction with the mechanism the authors derive on p. 482. It is a channel-length artefact, the paper's two numbers are consistent with each other and with its own mechanism, and the claim is withdrawn here, in the notebook, in README and in models_entry"
+  - "root-found on a COMMON channel length and with identical parameters, the 2-D model needs a HIGHER inlet temperature at every length tested: +4.12 degC over the constant-Nu 1-D and +1.94 degC over the paper's own Grigull-Tratz 1-D at L* = 0.25, and the sign is unchanged at L* = 0.20 and 0.30. That is the direction the paper's own argument requires. The magnitude is length-dependent - about 2.8 degC per 0.05 of L* - which is exactly why the two quoted windows cannot be read against each other"
+  - "SHAPE VERSUS DIMENSIONALITY, SPLIT LIKE-FOR-LIKE ON ONE THRESHOLD AND ONE LENGTH (L* = 0.25): 1-D at Nu = 3.608 (square, what the paper's 1-D uses) 303.47 degC, 1-D at Nu = 4.364 (round tube, shape matched to the 2-D) 305.54 degC, 2-D 307.59 degC - so channel SHAPE alone is +2.07 degC and entrance region plus dimensionality +2.05 degC, an even split of the +4.12. An earlier draft measured the shape effect on the UPPER threshold (329.92 -> 335.21, +5.29 degC) and called it 'as large as the whole gap' measured on the LOWER one; that cross-threshold comparison is withdrawn and the like-for-like split replaces it. The upper-threshold pair is still reported, as a sensitivity of that threshold"
+  - "THE 2-D MODEL HAS NO INLET LIGHT-OFF THRESHOLD AT ALL, and the page prints the divergence rather than a number: with an infinite local Sherwood number at X* = 0, light-off always occurs at some X* > 0, so what a march reports is the inlet temperature at which light-off falls inside the FIRST axial step. Refined: 378.86, 386.90, 395.05, 403.33 degC at dG = 4e-4, 2e-4, 1e-4, 5e-5 - about +8.2 degC per halving with no sign of a limit. The metric is named T_up_2d_first_step_dG1em4 for its step size and carries a dG break row; an earlier draft reported it as 'T_up_2d_strict = 395.05 degC' with only a 0.29 % break row, which made a divergent quantity look converged"
+  - "the paper's adequacy claim - 'the difference between the one- and two-dimensional models is equivalent to less than a 2 degC difference in inlet gas temperature' - is measured as an equivalent inlet shift, root-found by matching light-off positions. For the Grigull-Tratz 1-D model of Fig. 12, which is what the claim is about, it is +2.84 degC at the 316 degC inlet of that figure, rising to +6.78 degC at 340. For the constant-Nu 1-D model that produced Figs. 2-6 it is +5.71 degC, rising to +15.46. So the claim is the right size for the procedure it was made about and 2-5x too small for the model carrying the paper's parametric study"
+  # RECONSTRUCTION, and what it can and cannot support
+  - "two dimensional groups are RECONSTRUCTED because the paper prints neither: dT_AD = 425.2 K from the printed dH = 336.9 MJ/kmol with an ordinary exhaust-gas molar heat capacity, and beta = 3.327e-3 from P/(R T) Sh D_AB/D. NOTHING is fitted to any result of the paper. NEITHER RECONSTRUCTED GROUP IS CHECKED BY ANY PRINTED NUMBER, and the page measures that rather than claiming otherwise. The rate maximum root-finds at C_w = 0.00261 against the stated 0.003 (one significant figure), but C_w at the maximum barely depends on dT_AD: root-found, it still rounds to the printed 0.003 for EVERY dT_AD from 0 up to 1474 K (minimum 0.002509 at 205 K, against a rounding edge of 0.0025), so that test constrains dT_AD not at all. What it does check is the TRANSCRIPTION of k_a0 and E_a/R, both printed: at dT_AD = 0 the maximum is exactly 1/k_a(589 K) = 0.00299. beta is checked by nothing - C_w,max does not contain it. The implied fully-lit wall at 741 degC has NO PRINTED REFERENT: the paper states no adiabatic flame temperature in words anywhere in pp. 477-483 (checked page by page on the 300 ppi bitmaps; the ~750 degC plateau is a plotted curve in Figs. 2, 3, 7 and 13, and figures are scoped out), so it is a consequence of the reconstruction, not a check on it. An earlier draft called these two 'two printed facts that check the reconstruction'; that is withdrawn"
+  - "SENSITIVITY MEASURED, not assumed: +/-10 % in dT_AD and a factor 1.5 either way in beta swing the ABSOLUTE upper threshold by 22.3 degC and the 1-D/2-D equivalent shift by 4.55 degC - a factor of 5 less sensitive in degrees, but not insensitive. What survives EVERY variation is the two statements the page makes: the constant-Nu 1-D exceeds the paper's 2 degC claim under all of them (smallest +3.96 degC) and the Grigull-Tratz 1-D is at or above it under all of them (smallest +1.84 degC). Every conclusion about claim 2 is therefore stated as a difference between two models on identical parameters, and no absolute threshold on the page should be read as the paper's number - including the 303.5 degC that happens to land within a degree of the printed 304"
+  # REFINEMENT - both axes of both 2-D solves
+  - "square duct refined on each Cartesian axis separately against a (384,384) reference: observed order 2.12 (Nu_H1) and 2.11 (Nu_T) on both. Labelled STRUCTURAL on the page - the square is symmetric under swapping the axes so the two columns must agree - and the genuinely independent pair is the Graetz solve, where axis 0 carries convection and axis 1 diffusion: least-squares slope 2.25 on the radial axis, and a noisy 2.68 on the axial one, which the page explains rather than reports as third order - the pole is located ON the axial axis, so the locator's own interpolation error is inside that ladder, and the axial errors are three times smaller than the radial ones at the coarsest rung, so the axial axis is not the limiting one. Its break row is clean: with TVD off the same fit gives first order"
+  - "the 1-D light-off position is computed two ways sharing no discretisation AND no parametrisation: a marched finite-volume integration in C_G, and a Gauss-Legendre quadrature in C_w. They agree to within 1.30 axial steps everywhere - i.e. the march reports the step at which the fold is crossed. A THIRD route - the same integral parametrised by C_G with scipy's adaptive quad - is up to 0.97 % out, because dC_G/dC_w vanishes at the fold and that form has a square-root endpoint. Recorded as a trap: had it been the reference, a 1 % error would have sat under every threshold and no break row would have shown it, and the break row that DOES exist for it - dropping the adaptive integrator's subdivision limit from 600 to 30 - makes it worse still"
+  # DEFECT INJECTION
+  - "defect-injection table with 17 injected defects covering 54 (row, metric) pairs, every row built from a solver ARGUMENT so it cannot silently perturb nothing. The coverage cell asserts a PARTITION - 71 metrics = 40 moved + 31 declared structural, with the two sets disjoint (an earlier draft listed two metrics in both and printed 35 + 28 for 61) - and it asserts per (ROW, METRIC) PAIR that each row moves each number it names, not per metric as an earlier draft did, which had let a row that moved nothing hide behind another row on the same metric. Both sides of the mapping are closed too: a key that is not a metric fires whether it appears in the structural list or in the coverage map, so a row naming a renamed or deleted metric cannot be counted as coverage. Weakest of the 54 pairs: 3.52e-4 relative. Rows: plug velocity, Neumann wall, unweighted eigenproblem, nu=0 in both radial divergences, the paper's own ten radial points (twice), half=2 (the Notation's X*), TVD off, X*=G in Grigull-Tratz, E_a sign flipped, k_a0 = 0 (which removes the fold entirely - without CO inhibition there IS no light-off), stoichiometric oxygen depletion, a 10x axial step in the 1-D march, a 2x axial step in the 2-D march (the row that exhibits the divergence above), the quad subdivision limit, and the last-cell boundary read"
+  - "WHAT THE TABLE CANNOT REACH, stated on the page: the two closed forms are symbolic identities that no solver argument can move, so their rows perturb the finite-volume solve that agrees with them and their above-floor companions are the printed-value deviations; the boundary-read metric IS a difference between two reads, so it is structural and its row is the identity; and no row perturbs the model STRUCTURE (constant oxygen, Le = 1, Sh = Nu are the paper's assumptions, adopted here, with oxygen the one assumption varied)"
+  # BOUNDARY READ
+  - "wall values come from compute_boundary_values, not from the last cell centre; on this problem the two differ by 1.8e-5 at a representative wall flux and 1.1e-4 at zero flux, and the wall value is the argument of the kinetics. For a Dirichlet wall the same call returns the boundary condition exactly (max deviation 0 over the tube), which is the check that the reconstruction is the operator's own and not an extrapolation bolted on"
+
+adds: >
+  The paper's Table 1 stops being a citation: five of its eight cells are derived
+  here and two of them in closed form - 48/11 for the circular duct and 28/9 for
+  the equilateral triangle, both from exact polynomial solutions rather than
+  quoted from anywhere - which matters because Table 1 is the baseline against
+  which the paper calls a Nusselt number unusual. One printed cell disagrees with
+  a converged solve by more than its printed digits allow (2.976 against
+  2.977523), and the page declines to attribute it because the cited 1971 source
+  was not consulted.
+  The anomaly itself reproduces and its landmarks are root-found. The paper
+  attributes the infinite Nusselt numbers to the wall flux passing through zero;
+  at that point eq. (19)'s numerator vanishes, so the Nusselt number passes
+  through zero, and the pole - the zero of T_w - Tbar - sits 8.7 % further
+  downstream in both of the flux functions the paper prints. The paper's own next
+  paragraph gives the correct mechanism, so this is a wrong summary rather than a
+  missed effect, and the page says so.
+  On the adequacy claim the page's contribution is that the paper's thresholds are
+  SAMPLED and this page's are ROOT-FOUND, on a COMMON length. The paper's two
+  windows are quoted for two figures whose abscissae stop at 0.20 and 0.50; run at
+  each figure's own length this page's models reproduce both of them and reproduce
+  the apparent 11 degC between them (306.44 against 295.61 degC, a gap of -10.83,
+  decomposed on the page into -13.42 degC of length and +2.59 degC of model).
+  An earlier draft called that apparent gap a contradiction with the mechanism the
+  authors derive on p. 482; it is a channel-length artefact and the claim is
+  withdrawn, on the page and in every metadata file. Root-found on a common length
+  with identical parameters the 2-D model sits ABOVE the 1-D at every length
+  (+4.12 degC at L* = 0.25), and split like-for-like on that same threshold the
+  gap is +2.07 degC of channel shape and +2.05 degC of entrance region plus
+  dimensionality - the 1-D runs using the square-channel Nusselt number against a
+  round 2-D tube.
+  The "less than 2 degC" claim is then given a number and a scope: +2.84 degC at a
+  316 degC inlet for the variable-Nusselt 1-D model of Fig. 12 that the claim is
+  about, rising to +6.78 degC over the range, against +5.71 rising to +15.46 degC
+  for the constant-Nusselt model that produced the paper's parametric figures.
+  Three incompatible meanings of X* are separated, each settled against a
+  computation - and the printed check value that settles the important one turns
+  out to measure the paper's own grid: 0.0224 is what ten radial points give, and
+  it sits 5.9 % above the converged answer.
+
+agreement: >
+  Against what the paper prints: four of the five reproducible Table 1 cells agree
+  to every printed digit (48/11 and 28/9 exactly, square Nu_H1 to 1e-5, circular
+  Nu_T to 6e-5), the fifth (square Nu_T) is 5.8e-4 away and outside the interval
+  its printed digits allow; the stated flux zero "near X* = 0.029" root-finds at
+  0.028680 and 0.028789; the stated rate maximum "at C_w = 0.003" root-finds at
+  0.00261; the stated Tbar = 0.0224 is reproduced to 0.2 % on the paper's own
+  ten-point radial grid and is 5.9 % above converged; the reprinted Grigull-Tratz
+  correlation reproduces this page's Graetz solve to 1.3 %; and BOTH of its
+  light-off statements hold at the length of the figure each is made about
+  (G* = 0.2405 at 304 degC against Fig. 2's 0.20, G* = 0.5767 at 293 degC against
+  Fig. 11's 0.50).
+  Against limits the paper did not have: the Nusselt pole is root-found 8.7 %
+  downstream of the flux zero it is attributed to; the 1-D/2-D light-off
+  difference on a common length is +4.12 degC at L* = 0.25, of which +2.07 degC is
+  channel shape rather than dimensionality; and the equivalent inlet shift is +2.84 degC (Grigull-Tratz
+  1-D) and +5.71 degC (constant-Nu 1-D) at a 316 degC inlet, against the paper's
+  "less than 2 degC".
+  Refinement: order 2.11-2.12 on both Cartesian axes of the square duct (structural
+  - the domain is symmetric) and a least-squares slope of 2.25 radial on the Graetz
+  pole, which is the genuinely independent pair; the axial slope is noisy and the
+  page says why rather than claiming it. Two routes to the light-off position agree
+  to within one axial step.
+
+caveats: >
+  Data tier 6 - these are the paper's own printed values, not measurements, so
+  nothing here is validation against experiment and the page never says otherwise.
+  FIGURES ARE SCOPED OUT. Digitisation needs a maintainer review that is not
+  available, so Figs. 1-13 are used only for PRINTED CHARACTERS inside their
+  frames. The notebook ENUMERATES AND COUNTS every such row from the CSV itself
+  rather than restating a number in prose, because that list is what the scope
+  promise is audited against: 15 of the 31 rows name a figure, 11 of them were read
+  inside a figure's frame (annotation boxes 6, abscissa tick labels 3, one curve
+  label, one case label) and 9 of those 11 appear nowhere else in the paper. The
+  three abscissa rows are Fig. 2 (0.20), Figs. 3-5 (0.25) and Fig. 11 (0.50): the
+  first and third because the paper's two light-off windows are quoted for those
+  two figures and they are not the same length, the second because it is the other
+  length the paper fixes for its one-dimensional model, and the two together set
+  the swept range. No curve is traced, no profile shape is checked, no light-off POSITION is
+  compared against the paper's own, and none of the conversion curves of Figs. 4-6
+  and 12 is checked. Every comparison is against a statement the paper makes in
+  words.
+  TWO DIMENSIONAL GROUPS ARE RECONSTRUCTED, not read: the paper prints neither the
+  molar heat capacity nor the diffusivity, so dT_AD and beta come from ordinary
+  gas properties. Section 7f measures what that costs - plausible variations move
+  the absolute thresholds by tens of degC while moving the 1-D/2-D difference by
+  under a degree - so NO ABSOLUTE THRESHOLD ON THIS PAGE SHOULD BE READ AS THE
+  PAPER'S NUMBER. The 303.5 degC that lands within a degree of the printed 304 is
+  not evidence, and the notebook says so in the cell that prints it.
+  THE 2-D INLET THRESHOLD DOES NOT EXIST as a continuum quantity - the local
+  Sherwood number is infinite at X* = 0 - so the number the page reports for it is
+  named for the axial step it was computed at and is shown diverging under
+  refinement. It is not comparable with the paper's 1-D bracket and the page does
+  not compare them.
+  The channel length is not printed anywhere; the lower threshold needs one, so it
+  is swept over 0.20-0.30 in Graetz units - the two ends the paper does fix for its
+  1-D model, Fig. 2's abscissa at 0.20 and Figs. 3-5's at 0.25, with 0.30 as a
+  margin past both - and every conclusion is checked to be independent of the
+  choice.
+  Three of Table 1's eight cells are not reproduced. The equilateral triangle at
+  constant wall temperature needs a u-weighted eigenproblem on a non-tensor
+  domain, which this page does not build. Both sinusoidal cells are
+  UNDER-DETERMINED BY THE PAPER - the geometry column prints a glyph and no aspect
+  ratio or wall profile appears anywhere - so there is no problem to solve.
+  The transient model (eqs. 1-4, Fig. 7) is not built: its only quantitative
+  statement needs the solid heat capacity and the monolith dimensions, none of
+  which is printed. I1.2 (Oh & Cavendish 1982) does transient monolith light-off
+  against a printed table.
+  Printed defects are reported and none repaired. Equation (14) is printed with an
+  "=" where a multiplication is required and is dimensionally impossible as
+  printed; the form used here is derived from eq. (13) under the paper's own two
+  stated approximations and is labelled an inference. Equations (17) and (18)
+  cannot both carry the sign they are printed with, nor can eq. (10) and eq. (12)
+  agree on the sign of dH. Figure 8 labels two different curves with the same Q_w
+  formula. The delta_H annotation reads "mJ" where the figure's own temperature
+  scale requires MJ. The reference list prints "Shar, R. K., and A. L. London"
+  where Table 1's footnote says "Shah and London".
+  Neither Shah and London (1971), nor Voltz et al. (1973), nor Grigull and Tratz
+  (1965) was consulted; all three are used exactly as Heck et al. reprint them,
+  which is the reprint route in AGENTS.md.

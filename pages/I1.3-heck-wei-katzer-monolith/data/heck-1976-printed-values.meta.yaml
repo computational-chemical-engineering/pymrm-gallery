@@ -1,0 +1,108 @@
+dataset_id: heck-1976-printed-values
+title: "Every constant and stated numerical result printed by Heck, Wei & Katzer (1976)"
+status: complete
+
+source:
+  authors:
+    - "Heck, R. H."
+    - "Wei, J."
+    - "Katzer, J. R."
+  year: 1976
+  container: "AIChE Journal 22(3) 477-484"
+  doi: 10.1002/aic.690220310
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+acquisition:
+  method: table
+  figure: "running text, displayed equations, one figure caption, and characters printed inside figure frames (annotation boxes, abscissa tick labels, one curve label, one case label), journal pages 477-483"
+  tool: "poppler pdftoppm -r 300 (native resolution; pdfimages -list reports 300 ppi CCITT-G4 bilevel on all 8 pages)"
+  procedure: >
+    The paper contains exactly one printed table (Table 1, in its own file). Every
+    other number it states is in running text, in a displayed equation, in a figure's
+    caption, or in characters printed inside a figure's frame - an annotation box, an
+    abscissa tick label, a curve label or a case label. All of those kinds are
+    transcribed here, each cropped out
+    of the native 300 ppi bitmap and re-read at digit scale; none came from the PDF
+    text layer, which the inventory records as thin for this scan.
+    NO CURVE WAS DIGITISED AND NO POINT WAS READ OFF A PLOTTED LINE. The rows read
+    INSIDE a figure's frame are, exhaustively - the page counts them from this file
+    rather than repeating a number, so the list cannot go stale:
+      annotation boxes (6): CG_CO_inlet, CG_O2_inlet, TG_inlet_fig1, delta_H,
+        channel_diameter, Nu_used_1D
+      abscissa TICK LABELS (3): fig2_abscissa_end (0.20), fig3_abscissa_end (0.25),
+        fig11_abscissa_end (0.50) - needed because the paper quotes its two light-off
+        windows for two figures whose axes stop at different Graetz numbers, and
+        because Figs. 3-5 fix the other length the paper states for its 1-D model
+      curve label (1): Qw_fig8
+      case label (1): lightoff_window_2D_inlet_case
+    That is ELEVEN rows in all, of which NINE appear nowhere else in the paper
+    (CG_CO_inlet and TG_inlet_fig1 are also printed in running text). Four further
+    rows name a figure without being read inside its frame - Qw_fig9 is in Fig. 9's
+    CAPTION, and lightoff_window_2D_low, lightoff_window_2D_high and Tbar_at_X_0p25
+    are in running text that merely identifies the figure it discusses. All eleven
+    are printed characters, not plotted data, and each is labelled with the figure it
+    sits in so a reader can tell.
+  operator: "Claude Opus 5 (assisted)"
+  date: 2026-08-15
+  estimated_error: >
+    None beyond the paper's own rounding. Two values are stated to one significant
+    figure by the authors themselves (Cw_at_rate_maximum = 0.003, Qw_zero_stated =
+    0.029) and are compared as such.
+
+validation:
+  internal_consistency: >
+    Several rows check each other and are used that way on the page.
+    (1) delta_H = 336.9 MJ/kg-mole with CG_CO_inlet = 0.04 fixes the adiabatic rise
+    once a molar heat capacity is chosen; 31.7 kJ/kmol.K - an ordinary exhaust-gas
+    value - gives 425 K, and the same 425 K independently puts the maximum of the
+    paper's own rate curve at Cw = 0.0026, against the 0.003 the text states.
+    (2) Qw_fig8 and Qw_fig9 are different functions but both cross zero at
+    X* = 0.0288, which is the 0.029 the text states.
+    (3) Tbar_at_X_0p25 = 0.0224 is reproduced to 0.2 % by a wall-clustered solve on
+    the paper's own stated grid (radial_points_2D = 10), which is itself 6.2 % above
+    the converged answer; the printed 0.0224 is 5.9 % above converged. So this row
+    measures the discretisation error of the paper's 2-D model rather than checking
+    it. (The two percentages are different quantities and the page prints both.)
+    (4) axial_step_1D is stated for the ONE-dimensional model, whose eq. (9) requires
+    the Notation's X* = 4x/(D Re Pr) - the page establishes that against the energy
+    balance. Under that scaling axial_step_1D = 0.0005 and axial_step_1D_metric =
+    0.0076 cm together imply D.Re.Pr = 4(7.6e-5)/5e-4 = 0.608 m, which with
+    channel_diameter = 1.52 mm gives Re.Pr = 400. An earlier version of this file
+    used eq. (15)'s scaling here and quoted 0.152 m and Re.Pr = 100; that is the
+    scaling the page's own section 7a REJECTS for the 1-D model.
+  what_it_tests: >
+    The kinetic constants, the two inlet mole fractions, the inlet temperature, the
+    channel diameter and the Nusselt number are the model's inputs; the light-off
+    windows, the stated rate maximum, the flux zero, Tbar(0.25), the grid statements
+    and the adequacy claim are results the page predicts rather than uses. The two
+    light-off windows (1-D 304-343 degC for Fig. 2, 2-D 293-343 degC for Fig. 11) and
+    the adequacy claim (2 degC) are the paper's two headline claims in numerical form.
+    The THREE abscissa rows exist for two reasons. fig2_abscissa_end and
+    fig11_abscissa_end are the lengths the two windows are quoted for, and their
+    being different is what makes the windows look mutually inconsistent when they
+    are not. fig3_abscissa_end is the only other length the paper fixes for its
+    one-dimensional model (Figs. 3-5 all end at 0.25); with fig2_abscissa_end it
+    sets the range over which the page sweeps the channel length, since the paper
+    prints no length anywhere.
+
+printed_defects: >
+  Reported on the page, none repaired here. The Graetz variable X* is defined in the
+  Notation as 4x/(D Re Pr) but eqs. (15) and (16), the figure abscissae, and the
+  Grigull-Tratz correlations all use different scalings; the correlation rows in this
+  file are transcribed exactly as printed and the page shows that their X* is
+  1000 x/(D Re Pr). Equation (14) is printed with an "=" where a multiplication is
+  required and is dimensionally impossible as printed. Fig. 8 labels two different
+  curves with the same Q_w formula. The value in the delta_H row is printed "mJ";
+  the figure's own temperature scale requires MJ.
+
+columns:
+  quantity: "identifier used on the page"
+  value: "as printed; expressions are given as Python-evaluable strings"
+  unit: "unit as printed, or 'dimensionless'"
+  where: >
+    journal page and location - running text, displayed equation, figure caption, or a
+    character printed INSIDE a figure's frame (annotation box, abscissa tick label,
+    curve label, case label). The page classifies every row by this field, so the
+    wording of the four in-frame kinds is load-bearing and must not be paraphrased.
+  note: "how the paper qualifies the value"

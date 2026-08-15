@@ -5244,6 +5244,83 @@ models:
     data: {tier: 6, method: table, status: complete}
     related: [I1.1, C2.13, D2.2]
 
+  - id: I1.3
+    slug: heck-wei-katzer-monolith
+    title: "Heck-Wei-Katzer monolith: 1-D versus 2-D"
+    description: >
+      The paper's two abstract claims, tested rather than illustrated, and neither
+      needs a figure. Table 1 - the paper's only printed table, and the baseline
+      against which it calls a Nusselt number unusual - is derived rather than
+      quoted: 48/11 for the circular duct and 28/9 for the equilateral triangle in
+      CLOSED FORM from exact polynomial solutions of the cross-section problem, and
+      the square pair twice on discretisations sharing no code (pymrm finite volumes
+      extrapolated, and a Fourier-sine Galerkin solve). Four of the five reproducible
+      cells match every printed digit; the fifth, the square duct at constant wall
+      temperature, is printed 2.976 where both routes give 2.977523 - outside the
+      interval its own printed digits allow - and the page declines to attribute it
+      because Shah and London (1971), which Table 1 credits, was not consulted.
+      The anomaly reproduces from the two wall-flux functions the paper prints, with
+      every landmark root-found: the flux zero at X* = 0.02879 and 0.02868, where
+      eq. (19)'s NUMERATOR vanishes so the Nusselt number passes through zero, and
+      the pole - the zero of T_w minus the mixing-cup mean - 8.7 % further downstream
+      in both. So the cause the running text gives ("as the wall flux passes through
+      zero, infinite ... values ... occur") is not the cause; the paper's own next
+      paragraph gives the correct mechanism, so this is a wrong one-sentence summary
+      rather than a missed effect, and the page says so.
+      On the adequacy claim the contribution is that the paper's thresholds are
+      SAMPLED - 304, 316, 320, 343 are the four inlet temperatures of Fig. 2 and 293,
+      316, 343, 349 the four cases of Fig. 11 - and these are ROOT-FOUND, on a COMMON
+      length. The paper's two windows are quoted for two figures whose abscissae stop
+      at 0.20 and 0.50; run at each figure's own length this page's own models
+      reproduce both statements (the 304 degC case lights off at G* = 0.2405, beyond
+      Fig. 2; the 293 degC case at G* = 0.5767, beyond Fig. 11) and reproduce the
+      apparent -11 degC between the two windows as -10.83. That gap is DECOMPOSED, not
+      attributed to length wholesale: taking the same 1-D model out to Fig. 11's length
+      gives -13.42 degC from the length alone and +2.59 degC from the difference between
+      the two models at the common L* = 0.50. Length dominates and is what fixes the
+      sign; the model difference (+4.73 degC at L* = 0.20 falling to +2.59 at 0.50) is
+      what survives. An earlier draft of this page called that gap a contradiction with
+      the mechanism the authors derive on p. 482; that claim is WITHDRAWN and the
+      retraction is stated on the page. Root-found on a common channel length with
+      identical parameters the 2-D model sits +4.12 degC ABOVE the constant-Nu 1-D at
+      L* = 0.25, with the same sign at 0.20 and 0.30 - and split like-for-like on that
+      same threshold, +2.07 degC of it is CHANNEL SHAPE and +2.05 degC entrance region
+      plus dimensionality, because the 1-D runs use the square-channel Nusselt number
+      of the paper's own Table 1 against a round 2-D tube. The "less than a 2 degC
+      difference in inlet gas temperature" is then given a number and a scope:
+      +2.84 degC for the variable-Nusselt 1-D model of Fig. 12 that the claim is
+      about, and +5.71 to +15.46 degC for the constant-Nusselt model that produced
+      Figs. 2-6.
+      Three incompatible meanings of X* are separated, each settled against a
+      computation - 4x/(D Re Pr) in the Notation and eq. (9), x/(D Re Pr) in
+      eqs. (15)-(16) and every figure abscissa, 1000x/(D Re Pr) in the two reprinted
+      Grigull-Tratz correlations - and the printed check value that settles the
+      important one ("at X* = 0.25, Tbar_G* is 0.0224") turns out to MEASURE THE
+      PAPER'S OWN GRID: it is what ten radial points give, and it sits 5.9 % above
+      the converged answer (the wall-clustered ten-point solve itself is 6.2 % above),
+      which is the same order as the 1-D/2-D difference it is used to adjudicate.
+      Two dimensional groups are reconstructed because the paper prints neither, with
+      nothing fitted to any of its results; sensitivity is measured rather than
+      asserted, and every conclusion is stated as a difference between two models on
+      identical parameters for exactly that reason. Figures are scoped out: no curve
+      is digitised anywhere, and the page states what it therefore cannot conclude.
+    section: I
+    status: published
+    page: pages/I1.3-heck-wei-katzer-monolith/
+    tier: T0
+    priority: P1
+    structures: [S6]
+    phases: [gas-solid]
+    predicts: [asymptotic Nusselt numbers for duct flow, local Nusselt number with a reacting wall, light-off threshold inlet temperature, 1-D versus 2-D adequacy]
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, compute_boundary_values, interp_cntr_to_stagg_tvd]
+    reference:
+      authors: ["Heck, R. H.", "Wei, J.", "Katzer, J. R."]
+      year: 1976
+      container: "AIChE Journal 22(3) 477-484"
+      doi: 10.1002/aic.690220310
+    data: {tier: 6, method: table, status: complete}
+    related: [I1.2, A3.15, C2.1, D2.2]
+
   - id: I1.7
     slug: reverse-flow-reactor
     title: "Reverse-flow reactor for autothermal oxidation"
