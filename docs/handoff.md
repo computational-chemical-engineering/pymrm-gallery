@@ -1,4 +1,4 @@
-# Handoff — state as of 2026-08-09
+# Handoff — state as of 2026-08-15
 
 Start here if you are picking this up fresh. Read this, then
 [`AGENTS.md`](../AGENTS.md), then [`pdf-findings.md`](pdf-findings.md).
@@ -46,13 +46,101 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-72 page directories, 73 published catalog entries, 81 models.yaml entries
+81 page directories, 82 published catalog entries, 90 models.yaml entries
 (6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 73 published, 44 unclaimed, 140
+`splice_entry.py --replace`). Queue: 82 published, 35 unclaimed, 140
 needs-paper, 6 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 71 pages, 0 regressions at handoff (2026-08-09);
+covers `D3.4`.) `check_agreement.py`: 80 pages, 0 regressions at handoff (2026-08-15);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
+
+### Added 2026-08-13/15 — NINE pages, at the maintainer's instruction to work a named list to the end
+
+The maintainer picked nine unclaimed T0/P1 cases whose source was on disk and
+said "process all the cases sequentially, one at a time". All nine are published.
+One case at a time throughout; each committed and pushed before the next began.
+
+| Page | Headline |
+|---|---|
+| `B3.3` Bhatia–Perlmutter | Reduces exactly to the two models it claims to subsume (eq. 40 ≡ published `B3.1` at ω→0, 1.1e-16; Petersen parts at X = 0.7423 against the printed "about 75 %"); **the paper's own least-squares integral contradicts its own sentence** — "this match at m = 1" is m = 0.6639, misfitting 5.34× worse at 1 |
+| `J4.6` Michaelis–Menten / Briggs–Haldane | The two derivations are **exactly degenerate** — algebraically independent of k₂/k₋₁ at fixed (r_m, K_M), proved symbolically — so NO rate-versus-substrate dataset separates them. The discriminating signal lives in an induction layer ~2e-7 min wide; buying it back costs 18× the enzyme, where the QSSA is itself 89× larger than the effect |
+| `J4.1` Monod | **Contois IS Monod** on any constant-yield batch/PFR run (bijective reparameterisation, residual 0). The model ranking is decided by the DATA REDUCTION, not the data: F = 12.27 one way, 1.44 the other, and a bootstrap with a control convicts the reduction |
+| `J4.2` Andrews | Both Summary claims tested, not illustrated: the batch delay is 94 % lag (but only near his own target — 109 % elsewhere), and the continuous claim is proved with eigenvalues plus an exact bistable window he operates inside without saying so. **Eq. (9) as printed returns the root his own paper calls unstable** |
+| `J4.4` Luedeking–Piret | **tier 2.** Their hand-drawn constants sit inside one standard error of least squares (0.65 % in rms); their two rejected alternatives are only rejectable OUTSIDE the log phase, where on the plateau a ratio near 1 is degeneracy (regressors collinear at 0.9997) |
+| `J5.3` Chiu | The "ad hoc" criticism of earlier switch-on treatments **survives**; "only a small number of adjustable parameters" does not (4 named, 13 fitted over 6 conditions). Its definitional band is **9.3× the agreement it reports** |
+| `F3.2` Van Krevelen–Hoftijzer | **The assumption the approximation is derived under does not predict where it fails** — worst error where B is far from weakly depleted, ~zero where B is gone. Holds under BOTH of Froment's printed wordings. That VKH always under-estimates is a theorem, not a sweep |
+| `G1.1` Larkins | **tier 2.** The paper's own Tables 3 and 4 disagree about the one run where the arithmetic forces them to agree — and the page **declines to say which is wrong**, having shown no single-parameter change reconciles them |
+| `I1.3` Heck–Wei–Katzer | The Nusselt anomaly is real; the paper's one-line summary of its cause is not (flux zero and pole 8.7 % apart, and its own next paragraph is right). Table 1's square Nu_T printed 2.976 against 2.977523 by three routes |
+
+**THE RE-VERIFY RULE IS NOW 9 FOR 9, AND SHOULD BE TREATED AS MANDATORY.** Every
+one of the nine needed a second pass, three needed a third, and *the second pass
+found something on every single page*. The recurring shape is exact: **a fix
+written against one instance of a defect reproduces that defect in the material
+it adds.** `J4.1` did it three times running (a cannot-fail check → an empty
+convergence column → a mutation test that caught 3 of 28); `B3.3`, `J4.2`,
+`J5.3`, `F3.2` and `G1.1` each did it once. Budget the second pass into every
+case; it is not optional and it is not a judgement call.
+
+**The single most important catch of the batch was a page WRONGING THE AUTHORS.**
+`I1.3` accused Heck, Wei and Katzer of a contradiction. The two temperature
+windows it compared come from two figures with **different channel lengths**;
+run at each figure's own length the page's own model reproduces the whole −11 °C
+gap with nothing wrong anywhere. Withdrawn on five surfaces, with the retraction
+stated rather than deleted. AGENTS.md's "look hardest where you most want the gap
+to exist" is the rule that should have caught it at build time.
+
+**Five defect classes worth carrying forward, all found more than once:**
+
+1. **A claim that over-reads its own evidence.** Not a wrong number — a right
+   number described too well. `J4.6`'s "factor 28" compared a max over one window
+   to an RMS over another (18.2× like-for-like); `J4.2`'s "peak μ falls only
+   19.4 %" hid a realised-mean drop of 81 %; `J5.3` quoted a grid convention to
+   four digits; `J4.4`'s mitigation sentence was **false by construction** (weak
+   is *defined* as nothing moving it past 5 %, then six metrics were said to be
+   moved past 5 %).
+2. **A second route that is no route.** `J5.3` shipped a "pymrm BVP result" that
+   returned a bit-identical value with the geometry switched to Cartesian, with
+   two cells, and with pymrm deleted — it read closed-form scalars computed
+   *inside* the solver and never the solver's answer. Rebuilt to read the solved
+   flux, it converges at order 1.90 and the geometry row now moves it 5e4.
+3. **Coverage that is asserted rather than measured.** Break rows returning
+   hard-coded literals (`J4.2`, sole cover for four metrics), a row whose
+   baseline equalled its injected value (`J4.6`), and a row that **never reached
+   the code it perturbed** because the function read a module constant instead of
+   the config (`G1.1`). Fixed structurally: `pages/J4.2-*` ships an **AST guard**
+   rejecting any metric bound to a literal, with the broken function retained as a
+   negative control; several pages now assert a coverage *partition* and compute
+   "dead" per (row, metric) pair.
+4. **A false explanation attached to a true measurement.** `G1.1` blamed a real
+   3.84× outlet difference on "the upwind flux is v·P_N"; the operator's own
+   outlet row is `compute_boundary_values`. Settled by *printing the operator*.
+5. **The reference itself being the defect.** `F3.2`'s graded baseline was
+   grid-limited exactly where its headline lived, so the row it labelled a
+   *defect* was computing the answer better. Twenty metrics moved. **A graded
+   grid is not automatically the accurate one — extrapolate the reference.**
+
+**Two repo-wide repairs came out of the batch.** `docs/papers-inventory.yaml` said
+the Froment book needs no rendering; its **equations do not survive extraction at
+all** — every operator becomes an invisible Private-Use-Area glyph, so an
+extracted equation *looks complete and has no operators*. That entry backs eleven
+other cases. And the **`Styler` non-determinism** recorded on 2026-08-09 is fixed:
+`I1.3` and `J4.6` carry the pattern (pinned `set_uuid` + an HTML-only display
+helper), now ported to the five affected published pages. Also: `A4.5` was
+storing its **wall-clock runtime as an agreement metric**, which
+`check_agreement.py` compares at 5 % — a false regression waiting for a busy
+machine, and the only page of 81 doing it.
+
+**Three coordinator lessons, all mine to own.** (1) I restated repo prose I had
+not checked and it reached four dispatches — a table count, a page range, an "OCR
+mangling" that was printed, and a framing of what six fitted pairs can test.
+Builders caught all four with measurements. **Open the PDF before asserting what
+a source contains.** (2) Pre-dispatch renders changed the shape of five cases and
+cost minutes each; `J4.2` looked figure-gated until its legends turned out to
+print the full parameter sets. (3) `check_metadata.py` walks `pages/` ONLY, so
+queue-staged metadata is unvalidated until `integrate_case.py` has already
+copied — `J4.1` shipped sidecars keyed `name:` instead of `dataset_id:` that would
+have halted integration mid-copy. Verify against a `pages/`-shaped copy before
+integrating; several pages now do this themselves.
 
 ### Added 2026-08-09 (second session) — two pages, and the re-verify rule earned its keep twice more
 
@@ -560,17 +648,38 @@ day). `A3.5`, `E1.1`, `A4.1`, `A2.4` and `J1.3` are now published, and the
 adsorption trio and the modulus quartet are both complete. Still avoid
 `D1.1`–`D1.5`: the maintainer's scope decision is open.
 
-The remaining T0/P1 pool is split by model demand (maintainer, 2026-08-08,
-to protect the Fable budget). **Updated 2026-08-09 (second session): the
-Opus-suitable list is now EXHAUSTED except for `J2.3`, which is blocked on the
-maintainer.** `J1.10` and `A3.2` are published; `J2.3` is demoted and needs a
-scope decision that is live on the decisions dashboard. So **the next session
-has no unblocked Opus T0/P1 case in this pool** and must either (a) take the
-`J2.3` decision if it has been answered, (b) draw from the Fable reserve below
-if the session is on Fable, or (c) pick from the 44 `unclaimed` cases by
-tier/priority outside this pool — check each candidate's own yaml against the
-disk before dispatching, per the two dispatch-misleading incidents recorded
-above. The historical list, with outcomes:
+**UPDATED 2026-08-15, AND THIS IS THE LIVE PARAGRAPH — READ IT FIRST.** The
+nine buildable T0/P1 cases whose source was on disk are ALL PUBLISHED (`B3.3`,
+`J4.6`, `J4.1`, `J4.2`, `J4.4`, `J5.3`, `F3.2`, `G1.1`, `I1.3`; see the
+2026-08-13/15 section). **There is no unblocked T0/P1 case left with a source on
+disk**, on any model. What remains, in the order a fresh session should consider
+it:
+
+1. **Two maintainer decisions, both live on the decisions dashboard and both
+   now blocking rather than merely open.** `J2.3` (Nyvlt) is figure-only and
+   needs a scope decision; `D1.1`–`D1.5` are five buildable cases held behind
+   the open D1.x scope question, with their E1.1 verdicts already recorded
+   against Froment §11.5–11.9. Answering the D1.x question alone would unblock
+   five cases — it is the highest-leverage thing the maintainer can do.
+2. **The Fable reserve**, unchanged and untouched by this batch: `D2.4`
+   (Uppal–Ray–Poore, squarely in the deterministic-metrics trap), `J2.1`
+   (Hulburt & Katz, prove-the-printed-structure, heavy symbolic adjudication),
+   `C1.5` (E1.1 target unpinned across five books — the scope adjudication IS
+   the case), `A4.8` (its `on_disk` points at Taylor & Krishna but the Carty &
+   Schrodt experiment the case is FOR is not on disk; likely a needs-paper flip,
+   decide before building).
+3. **35 `unclaimed` cases outside the pool.** Most are T1+ or lack a source.
+   Before dispatching any of them, run the pre-dispatch check that earned its
+   keep nine times this week: confirm the file on disk, confirm what it actually
+   prints (tables vs figures vs constants in figure legends), and **check the
+   case yaml's claims against the paper rather than restating them** — four of
+   this batch's yaml lines were wrong and reached a dispatch.
+4. **A standing chore, if a session wants a cheap win:** three published pages
+   still print a wall-clock duration into a committed notebook (`A3.3`, `A4.6`,
+   `I1.2` — recorded 2026-08-09, fixed on none of them), which dirties the tree
+   on every re-execution. `J1.10`'s builder removed one; the fix is one line.
+
+The historical model-split list, with outcomes:
 
 1. ~~**`J1.10`** van Deemter~~ — **PUBLISHED 2026-08-09.** Its inventory line
    was wrong (four tables, not two; the plate height is in 3 and 4) and the
