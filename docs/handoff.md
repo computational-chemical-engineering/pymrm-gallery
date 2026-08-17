@@ -655,12 +655,28 @@ nine buildable T0/P1 cases whose source was on disk are ALL PUBLISHED (`B3.3`,
 disk**, on any model. What remains, in the order a fresh session should consider
 it:
 
-1. **Two maintainer decisions, both live on the decisions dashboard and both
-   now blocking rather than merely open.** `J2.3` (Nyvlt) is figure-only and
-   needs a scope decision; `D1.1`–`D1.5` are five buildable cases held behind
-   the open D1.x scope question, with their E1.1 verdicts already recorded
-   against Froment §11.5–11.9. Answering the D1.x question alone would unblock
-   five cases — it is the highest-leverage thing the maintainer can do.
+1. **`D1.1` — THE D1.x SCOPE QUESTION IS ANSWERED, so this is the next case to
+   build.** The maintainer decided on **2026-08-17: ONE PAGE WITH FIVE
+   CONFIGURATIONS, not five pages**, agreeing with the reasoning that the five
+   Froment Ch. 11 sections are a deliberate ladder — each adding one transport
+   mechanism to the previous — so separate pages would repeat most of their
+   assembly while one page can show *what each rung actually buys*. The
+   comparison IS the page, which is the shape the 2026-08-13/15 batch showed is
+   worth most (`J4.1`'s Contois-is-Monod, `F3.2`'s assumption that does not
+   predict its own failure).
+   **`D1.1` owns it**; the full decision and the rung table are in
+   `queue_cases/D1.1.yaml` under `scope_decision`, with a pointer in each of
+   `D1.2`–`D1.5`. Those four stay `unclaimed` and are flipped to `covered` /
+   `covered_by: D1.1` **at integration time, not before** (the C2.10/D3.4
+   precedent), so the queue never claims coverage that has not been built.
+   The rungs, with sections and structures: `D1.1` S2 §11.5 p. 505 · `D1.2` S4
+   §11.6 p. 548 (Danckwerts) · `D1.3` S7 §11.8 p. 585 · `D1.4` S8 §11.9 p. 597
+   · `D1.5` S6 §11.7 p. 565. The page therefore carries **S2, S4, S6, S7 and
+   S8 — the widest structure set in the gallery**. Note the book order is not
+   the ladder order (§11.7 sits between the heterogeneous sections), so the page
+   must say which ordering it uses and why.
+   The remaining open decision is `J2.3` (Nyvlt, figure-only), still on the
+   dashboard and still non-blocking now that D1.x is unblocked.
 2. **The Fable reserve**, unchanged and untouched by this batch: `D2.4`
    (Uppal–Ray–Poore, squarely in the deterministic-metrics trap), `J2.1`
    (Hulburt & Katz, prove-the-printed-structure, heavy symbolic adjudication),
