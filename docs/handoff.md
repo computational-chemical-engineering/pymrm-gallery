@@ -46,13 +46,74 @@ title.
 
 **https://computational-chemical-engineering.github.io/pymrm-gallery/**
 
-81 page directories, 82 published catalog entries, 90 models.yaml entries
-(6 still `planned` — `E1.1` was the first upgraded in place, via the new
-`splice_entry.py --replace`). Queue: 82 published, 35 unclaimed, 140
-needs-paper, 6 covered, 3 deferred.
+82 page directories, 87 published catalog entries, 93 models.yaml entries
+(4 still `planned`; `D1.4` and `D1.5` were the second and third upgraded in
+place, after `E1.1`). Queue: 83 published, 30 unclaimed, 140
+needs-paper, 10 covered, 3 deferred.
 (Counts differ because `B1.1` covers `B1.5`; `A2.1` covers `A2.2`; `C2.10`
-covers `D3.4`.) `check_agreement.py`: 80 pages, 0 regressions at handoff (2026-08-15);
+covers `D3.4`; and `D1.1` covers `D1.2`–`D1.5`.) `check_agreement.py`: 81 pages,
+0 regressions at handoff (2026-08-18);
 `check_metadata.py` OK, 0 warnings; tree clean, everything pushed.
+
+### Added 2026-08-17/18 — `D1.1`, the fixed-bed ladder, and what three send-backs taught
+
+The maintainer answered the D1.x scope question on 2026-08-17: **one page with
+five configurations, not five pages**, because Ch. 11's five sections are a
+ladder and the comparison is the thing worth having. Built as `D1.1`, covering
+`D1.2`–`D1.5`, carrying **S2, S4, S6, S7 and S8 — the widest structure set in
+the gallery**. Those four cases were flipped to `covered`/`covered_by: D1.1`
+only AT INTEGRATION, never before, so the queue never advertised coverage that
+did not exist (the `C2.10`/`D3.4` precedent).
+
+**The result the shape bought.** Each rung's worth, as a shift in the
+root-found safe inlet partial pressure: axial dispersion **+0.17 %**, film
+resistance **−4.74 %**, intraparticle **+15.69 %**, 2-D radial **−8.94 %**. The
+two heterogeneous rungs pull OPPOSITE WAYS and the second is 4.3× the first, so
+stopping at the film rung leaves you further from the full model than never
+leaving plug flow. Ranked by how far a parameter must move before a rung matters
+at 1 %: 2-D 1.25×, axial 4.02×, film 4.93×, intraparticle 22.7×. Fourteen
+printed defects, none repaired — including §11.5.2's atm→bar conversion, which
+is inconsistent and whose own figure axis still reads "p₀, atm" (on the book's
+printed values the hot spot is 627 °C, **212 K above the ceiling stated on the
+facing page**), and §11.6's two criteria for climbing to rung 2, which CANNOT BE
+EVALUATED on the reactors §11.5 designs — one divides by zero by construction,
+the other is dimensionally inhomogeneous, with §12.7.2 recording both 147 pages
+later and neither section citing the other.
+
+**FOUR VERIFICATION PASSES, THREE SEND-BACKS, and the pattern is the lesson.**
+Each send-back found the PREVIOUS FIX'S OWN NEW MATERIAL defective:
+
+1. a threshold that was a **Newton convergence boundary, not a root** (constant
+   to 8 digits across three widely different inputs, with the page's own control
+   showing both sides supercritical);
+2. two rows and a "not monotone" sentence that were **grid noise** — the two
+   grids differed by 7.5 percentage points there, and the verifier's own
+   independent 2-D solver gave a smooth monotone curve;
+3. a sweep that **stopped at its first control refusal**, when the refusals were
+   failures of the bisection path INTERLEAVED WITH SUCCESSES — so a crossover
+   the page declared absent was sitting three sweep points further down.
+
+The structural answer is now in the page: the crossing control lives INSIDE the
+threshold solver, so **714 bisected thresholds are checked where 5 were before,
+and 93 rejected**, and both wrong versions ship as break rows that reproduce
+their own bad numbers. Two pre-existing break rows had to move because the new
+control bit them — which is the mechanism working, not a nuisance.
+
+**Three coordinator lessons from it, worth more than the page.**
+(a) **Scope the later passes at what the FIXER CHOSE TO ADD**, not at what it
+was told to change: passes 1–3 were scoped at the fix list and all three sent
+back; pass 4 was scoped only at unprompted additions and came back clean.
+(b) **A fix that is prescribed is not thereby safe** — every one of these
+defects entered as a correct repair of a real finding.
+(c) **Know the park point before you need it.** This page cost about what the
+preceding nine cost combined. Every pass earned its keep, but the stopping rule
+should be stated up front: publish, or park with a `resume:` block — not
+unbounded iteration. Pass 4 was dispatched with "ship-or-park, not iterate"
+written into it, which is what made a clean verdict actionable.
+
+The page also **retracts three of its own claims**, each with the measurement
+that overturned it: "the ladder is a loop" (its own best line), "rung 2's shift
+never reaches 1 %", and "below 9.67 mm this solver says nothing".
 
 ### Added 2026-08-13/15 — NINE pages, at the maintainer's instruction to work a named list to the end
 
@@ -655,28 +716,10 @@ nine buildable T0/P1 cases whose source was on disk are ALL PUBLISHED (`B3.3`,
 disk**, on any model. What remains, in the order a fresh session should consider
 it:
 
-1. **`D1.1` — THE D1.x SCOPE QUESTION IS ANSWERED, so this is the next case to
-   build.** The maintainer decided on **2026-08-17: ONE PAGE WITH FIVE
-   CONFIGURATIONS, not five pages**, agreeing with the reasoning that the five
-   Froment Ch. 11 sections are a deliberate ladder — each adding one transport
-   mechanism to the previous — so separate pages would repeat most of their
-   assembly while one page can show *what each rung actually buys*. The
-   comparison IS the page, which is the shape the 2026-08-13/15 batch showed is
-   worth most (`J4.1`'s Contois-is-Monod, `F3.2`'s assumption that does not
-   predict its own failure).
-   **`D1.1` owns it**; the full decision and the rung table are in
-   `queue_cases/D1.1.yaml` under `scope_decision`, with a pointer in each of
-   `D1.2`–`D1.5`. Those four stay `unclaimed` and are flipped to `covered` /
-   `covered_by: D1.1` **at integration time, not before** (the C2.10/D3.4
-   precedent), so the queue never claims coverage that has not been built.
-   The rungs, with sections and structures: `D1.1` S2 §11.5 p. 505 · `D1.2` S4
-   §11.6 p. 548 (Danckwerts) · `D1.3` S7 §11.8 p. 585 · `D1.4` S8 §11.9 p. 597
-   · `D1.5` S6 §11.7 p. 565. The page therefore carries **S2, S4, S6, S7 and
-   S8 — the widest structure set in the gallery**. Note the book order is not
-   the ladder order (§11.7 sits between the heterogeneous sections), so the page
-   must say which ordering it uses and why.
-   The remaining open decision is `J2.3` (Nyvlt, figure-only), still on the
-   dashboard and still non-blocking now that D1.x is unblocked.
+1. ~~**`D1.1`** the fixed-bed ladder~~ — **PUBLISHED 2026-08-18**, covering
+   `D1.2`–`D1.5`; see the 2026-08-17/18 section above for the result and for
+   the three-send-back lesson. **The only decision still open is `J2.3`**
+   (Nyvlt, figure-only), on the dashboard and non-blocking.
 2. **The Fable reserve**, unchanged and untouched by this batch: `D2.4`
    (Uppal–Ray–Poore, squarely in the deterministic-metrics trap), `J2.1`
    (Hulburt & Katz, prove-the-printed-structure, heavy symbolic adjudication),
