@@ -1,0 +1,139 @@
+# Provenance sidecar. Schema: docs/data-strategy.md
+dataset_id: froment-2011-ch11-printed
+title: >
+  Every model constant, stated result and quantitative claim this page reads out
+  of Chapter 11 of Froment, De Wilde & Bischoff (2011), each with the printed
+  book page it was read from.
+status: complete
+
+READ_THIS_FIRST: >
+  THIS IS NOT A DATASET OF MEASUREMENTS AND CHAPTER 11 CONTAINS NONE. Every row
+  is either a constant the book states for one of its worked cases, a number the
+  book reports from its own computation, or a sentence the book asserts. Rows are
+  labelled by `kind`: `parameter`, `stated_result`, `claim`. Comparing this page's
+  solves against a `stated_result` is a REPRODUCTION of the book's arithmetic, not
+  a validation against experiment, and the page says so throughout.
+  Several rows are transcribed BECAUSE THEY ARE WRONG or mutually inconsistent -
+  `mean_density` (1293 kg/m3, three orders out), `specific_heat` (0.992 kJ/kg K,
+  5.7 % below what four routes require), `vwf_A` (6150, where the book's own
+  formula gives 6165), `vwf_dTad_upper_625` (521.1 C, where the formula printed
+  beside it gives 630.7) and `vwf_Q_625` (3.4675, which belongs to the critical
+  radius 0.0175 m computed later in the same example, not to the 0.0125 m of the
+  case tabulated). They are recorded AS PRINTED and are never repaired here or in
+  the notebook.
+  UNITS. Section 11.5.2 labels its pressures `bar` and `fig1152_1_ordinate_unit`
+  records that its own Fig. 11.5.2-1 labels the same quantity `atm`. The rows are
+  transcribed with the unit the book prints beside them; the notebook states which
+  reading the model is in (atm), why, and what the other reading would cost.
+
+source:
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  title: "Chemical Reactor Analysis and Design, 3rd edition"
+  container: "John Wiley & Sons, ISBN 978-0-470-56541-4, Chapter 11 'Fixed Bed Catalytic Reactors'"
+  doi: null
+  access: >
+    Copy on the maintainer's disk as
+    BOOK-FromentDeWildeBischoff-2011-chemical-reactor-analysis-and-design-3ed.pdf,
+    902 PDF pages, born digital. Identity verified from its own title page,
+    imprint page and Library of Congress CIP record (docs/papers-inventory.yaml).
+    NOT the "Froment & Bischoff" of the catalogue's citation: this is the THIRD
+    edition and De Wilde is a full author.
+  licence: >
+    all rights reserved. Facts and constants extracted; no page image and no
+    figure image is reproduced anywhere in this page directory.
+
+acquisition:
+  method: table
+  figure: >
+    Running text, displayed equations and Tables 11.4-1, 11.5.3.A-1 and
+    11.5.3.A-2 of Chapter 11, book pages 505-521, 548-579, 585-606. The chapter's
+    quantitative content is in prose and displayed equations; only Tables
+    11.5.3.A-1 and 11.5.3.A-2 are tabulated.
+    ONE ROW COMES FROM A FIGURE AND IT IS A UNIT, NOT A DATUM:
+    `fig1152_1_ordinate_unit` is the ordinate LABEL of Fig. 11.5.2-1, read on a
+    300 ppi crop of book page 512 as "p0, atm". No curve, tick or point is read
+    from that figure or from any other; nothing is digitised or traced.
+  tool: "pymupdf 1.28.2 page renders at 300-450 ppi; digits cropped and read at digit scale"
+  procedure: >
+    THE TEXT LAYER WAS NOT TRUSTED FOR ANY ROW. docs/papers-inventory.yaml records
+    that this file's Symbol-font operators extract as unmappable Private-Use-Area
+    glyphs (U+F02D minus, U+F03D equals, U+F02B plus) in all three pdftotext
+    modes, so an extracted equation looks complete and has no operators at all.
+    Every equation and every number in this file was read from a render. The text
+    layer additionally dropped a leading `eps` from eq. (11.6-1) and turned the
+    Haughey-Beveridge amplitude 0.073 into 0.0731 during this transcription; both
+    were caught on the render.
+  operator: "builder agent, 2026-08-17"
+  date: '2026-08-17'
+  estimated_error: >
+    None beyond the book's own printed precision. `value` is the plain numeric
+    reading of `as_printed` with Celsius converted to kelvin at 273.15; no
+    inference, no unit repair, no rounding.
+
+validation:
+  independent_check: >
+    Eleven rows are checked against Van Welsenaere & Froment's own printed
+    originals, loaded from pages/D2.2-van-welsenaere-froment-runaway/data/, and
+    seven against Froment (1967)'s, loaded from
+    pages/C2.10-o-xylene-phthalic-anhydride/data/. Both reconciliations are
+    printed in the notebook's Parameters section, and both are how the atm/bar
+    audit and the c_p discrepancy were established.
+  arithmetic_constraints_used: >
+    Ambiguous or mutually inconsistent readings were settled by arithmetic the
+    chapter imposes on itself, never by pixel shape: `overall_U` = 0.096 is
+    reproduced to 4 digits by eq. (11.7.4-1) from `alpha_w` and `lam_er` at
+    R_t = 0.0125 m; `pe_hr` = 5.25 fixes the volumetric heat capacity; `vwf_B`
+    = 257e6 is reproduced to 4 significant figures from `heat_of_reaction`,
+    `bulk_density` and Van Welsenaere & Froment's volumetric c_p.
+
+columns:
+  key: "Stable identifier the notebook looks a row up by; never printed by the book."
+  quantity: "What the number is, in the page's words."
+  as_printed: "The character string on the book page, verbatim, thousands separators and all. For kind=claim, the sentence."
+  value: "Numeric reading of as_printed; empty for kind=claim rows that carry no number. Celsius converted to K at 273.15."
+  unit: "Unit of `value`. `-` for dimensionless."
+  section: "The book's own section or example number."
+  book_page: "The printed page number of the book (PDF page = book page + 42)."
+  kind: "parameter | stated_result | claim."
+
+printed_defects_recorded_and_not_repaired:
+  - "`mean_density` 1293 kg/m3: the same sentence prints 4684 kg/(m2 h) and 3600 m/h, whose ratio is 1.301 kg/m3."
+  - "`specific_heat` 0.992 kJ/(kg K): three groups later in the same chapter require 1.046-1.048."
+  - "`fig1152_1_ordinate_unit` 'p0, atm' against the `bar` the same section's text prints for the same quantity. Van Welsenaere & Froment's rate constant is restated unchanged, so the section's pressures are their atm values with only some of them converted."
+  - "`vwf_Q_625` 3.4675 is the Q of `vwf_R_critical_625` = 0.0175 m, not of the 0.0125 m case Table 11.5.3.A-2 tabulates. The book's own printed C = Q^2 A exp(-E/RT + b) with C = 2U/(c_p R_t) gives Q proportional to R_t^(-1/2), and the p0 column of the same table needs Q = 4.11."
+  - "`vwf_A` 6150: the formula printed two lines above gives 29.48 x 1 x 0.208 x 1300 / 1.293 = 6165."
+  - "`vwf_dTad_upper_625` 521.1 C on the row labelled dT(1+Q)^2, which at Q = 3.4675 and dT = 31.6 K is 630.7 C."
+  - "`oxygen_pressure` 0.211 bar in 11.5.2 against 0.208 in the group A of 11.5.3.A; the two differ by exactly the atm-to-bar factor."
+  - "`vwf_caption_year` 1979 against `vwf_text_year` 1970 for the same reference."
+  - "`curve_list_text` names a curve 5 that `curve_list_caption` does not carry, and skips curve 3."
+  - "`crossref_1175` sends the reader to Section 11.7.5 for kinetics that are in Section 11.7.3."
+  - "`E1_over_R_1173` 13,588 against `rate_E_over_R` 13,636 for the same reaction on the same catalyst."
+
+negative_claims_and_how_they_were_checked:
+  - claim: "The chapter prints no effective axial thermal conductivity and no axial heat Peclet number for its own design case."
+    checked: >
+      Searched the whole 902-page text layer for `Peclet number` (13 hits, all
+      inspected) and read the notation list entries between `Pr` and `PN`, which
+      define only Pe_a = u_i d_p / D_ea and Pe_a' = u_i L / D_ea. Section 11.6
+      says in as many words "Little information is available on lambda_ea". The
+      symbols Pe_ha, Pe_ma appear in (11.6-3) and (11.6-4) with no definition
+      anywhere in the book.
+  - claim: "The chapter prints no effective intraparticle diffusivity for the hydrocarbon-oxidation catalyst."
+    checked: >
+      Section 11.9.1 (book p. 598) sends the reader to Satterfield [1970] and
+      Weisz & Hicks [1962] instead - transcribed as `De_source_claim`. Searched
+      the chapter for `De =`, `D_e`, `tortuosity` and `effective diffusivity`:
+      the only numeric value in Chapter 11 is `tortuosity_smr` = 3.54, which
+      belongs to the steam-reforming catalyst of Example 11.9.1.A, not to the
+      V2O5-on-silica of 11.5.2.
+  - claim: "Section 11.6 nowhere notes that (11.6-3)'s heat criterion is undefined when T_0 = T_r."
+    checked: >
+      Read 11.6 in full on renders (book pp. 548-564). Section 12.7.2 (book
+      p. 709, the paragraph runs across the 708/709 break) records that Mears
+      found the criteria "not general" and supplied alternates "for equal feed and
+      wall temperatures" - transcribed as `ch12_yf_claim`. That the two problems
+      it records are THIS page's two problems - a division by (T_0 - T_w) that is
+      zero here and a dimensionally inhomogeneous heat criterion - is the page's
+      INFERENCE from the sentence, not something 12.7.2 states, and the page says
+      so. Neither section cross-references the other.

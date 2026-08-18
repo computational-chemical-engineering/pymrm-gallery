@@ -1,0 +1,573 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: D1.1
+slug: froment-fixed-bed-ladder
+title: "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"
+section: D
+status: published
+tier: T0
+priority: P1
+structures: [S2, S4, S6, S7, S8]
+phases: [gas-solid]
+covers: [D1.1, D1.2, D1.3, D1.4, D1.5]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "2.3"
+runtime_seconds: 2400   # measured 2228 s and 2219 s for two concurrent executions
+datasets:
+  - froment-2011-ch11-printed.csv
+
+reference:
+  authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+  year: 2011
+  title: "Chemical Reactor Analysis and Design, 3rd edition"
+  container: "John Wiley & Sons, ISBN 978-0-470-56541-4"
+  doi: null
+  note: >
+    CANONICAL-CLASS (textbook) source, read directly: the book is on the
+    maintainer's disk and every equation and number on this page was read from a
+    300-450 ppi render of its own pages. Chapter 11 "Fixed Bed Catalytic
+    Reactors", sections 11.5 (book p. 505), 11.6 (p. 548), 11.7 (p. 565), 11.8
+    (p. 585) and 11.9 (p. 597), with Examples 11.5.1.A (p. 510), 11.5.3.A
+    (p. 519) and section 11.8.2 (p. 590). NOT the "Froment & Bischoff" of the
+    catalogue citation: this is the THIRD edition and De Wilde is a full author.
+    The E1.1 test passes for all five rungs - the chapter states, derives and
+    works each model on printed data, not merely mentions it.
+
+origin_not_consulted:
+  - authors: ["Van Welsenaere, R. J.", "Froment, G. F."]
+    year: 1970
+    container: "Chemical Engineering Science 25(10) 1503-1516"
+    role: >
+      The origin of section 11.5.2's parameter set and of Example 11.5.3.A. NOT
+      re-read here: its printed values are loaded from published D2.2's CSVs,
+      which is how the atm-to-bar audit was done.
+  - authors: ["Froment, G. F."]
+    year: 1967
+    container: "Industrial & Engineering Chemistry 59(2) 18-27"
+    role: >
+      The origin of sections 11.7.3 and 11.7.4. NOT re-read here: its printed
+      values are loaded from published C2.10's CSVs.
+  - authors: ["Young, L. C.", "Finlayson, B. A."]
+    year: 1973
+    container: "Industrial & Engineering Chemistry Fundamentals 12, 412"
+    role: >
+      The origin of criteria (11.6-3) and (11.6-4). Not on disk. The page reports
+      only what the BOOK prints of them and what the book's own Chapter 12 says
+      about them; no claim is made about the 1973 paper's own formulation.
+  - authors: ["Satterfield, C. N."]
+    year: 1970
+    role: >
+      Where section 11.9.1 sends the reader for D_e and lambda_e. Not on disk,
+      which is why rung 4's magnitude is bounded by a root-find rather than pinned.
+  - authors: ["Wakao, N.", "Funazkri, T."]
+    year: 1978
+    role: >
+      The film mass-transfer correlation, used through published A3.4 rather than
+      re-read.
+
+other_sources_used:
+  - page: D2.2-van-welsenaere-froment-runaway
+    role: >
+      Both CSVs loaded. Supplies Van Welsenaere & Froment's 12 printed parameters
+      and all 30 of their Section-6 numbers, against which the book's SI
+      restatement and its Example 11.5.3.A are audited. D2.2's finding that the
+      printed c_p is ALREADY VOLUMETRIC is asserted against its own unit column
+      and is not rediscovered here; its criteria are not rebuilt.
+  - page: C2.10-o-xylene-phthalic-anhydride
+    role: >
+      Both CSVs loaded. Supplies Froment (1967)'s gas constant 1.98, its
+      activation energies and heats of reaction, and its two runaway limits
+      (2-D 360.01 C, equivalent 1-D 363.93 C) against which the book's
+      restatement in section 11.7.4 is reconciled. The 1967 case is NOT re-run.
+  - page: B1.1-thiele-weisz-hicks
+    role: >
+      isothermal-exact.csv loaded. Its 60 exact sphere rows are the reference for
+      eq. (11.9.1-11), an independent transcription of the same closed form from
+      Thiele (1939). Its NumJac (n_r, 1) rule is followed in the pellet class.
+      Its non-isothermal fold is not touched; the Prater number here is 1e4 times
+      smaller and is printed.
+  - page: A1.1-ergun-pressure-drop
+    role: >
+      ergun-1952-parameters.csv loaded and asserted equal to the book's printed
+      a = 1.75, b = 150. A1.1's refit (151.9 / 1.697) is a break row. A1.1 carries
+      neither the McDonald nor the Hicks constants and does not discuss the
+      equivalent-diameter definition, which is the part of Example 11.5.1.A that
+      is new here.
+  - page: A2.1-danckwerts-boundary-conditions
+    role: >
+      Its published inlet/outlet dicts are used as-is for rung 2, and its finding
+      that first-order upwind adds a numerical dispersion length dz/2 is applied
+      rather than rediscovered. It ships no CSV.
+  - page: A3.4-wakao-funazkri
+    role: >
+      Sh = 2 + 1.1 Sc^(1/3) Re^0.6 used as published; the analogous Nu for h_f is
+      not on that page.
+  - page: B1.7-mears-criteria
+    role: >
+      Owns the Mears criterion family; its eq. 14 (interphase temperature) is
+      evaluated here on this reactor and credited.
+
+data:
+  tier: 6
+  method: table
+  status: complete
+  note: >
+    Chapter 11 REPORTS NO EXPERIMENT. Every comparison is against a number the
+    book computed itself or a sentence it asserts. Nothing on this page is a
+    validation against measurement, and the notebook says so in Background, in
+    The data and at the head of Validation.
+
+what_the_page_reproduces_and_what_it_cannot:
+  reproduced:
+    - "Example 11.5.1.A's three friction factors and three pressure drops, from the printed inputs."
+    - "Section 11.5.2's parametric-sensitivity sentence, as a root-found threshold against the chapter's own 415 C operating ceiling - to +0.028 % IN ATM, which is the unit the model is in and which the section itself does not print (see units, below)."
+    - "The printed U = 0.096 kJ/(m2 s K) from eq. (11.7.4-1) and section 11.7.3's alpha_w and lambda_er, to both of the digits it prints. Reported as a consistency check on the tube radius and NOT as evidence that the book derived it that way: VWF's own U = 82.7 kcal/(m2 h K) = 0.09618 rounds to the same two figures."
+    - "Group B = 257e6 of Example 11.5.3.A from the chapter's own (-dH), rho_b, p_B0 and volumetric c_p."
+    - "Section 11.8.2's 'of the order of 1 C' gas-to-solid temperature difference, at its own printed startup temperature (362 C) but with an inlet composition and film coefficients it does not print - the 0.00924 of section 11.7.3 and A3.4's correlation. Two imported inputs, stated on the page."
+    - "Section 11.9.1's claim that the particle is practically isothermal and that the film carries the temperature resistance."
+    - "Eq. (11.9.1-11) against a spherical pymrm pellet solve and against B1.1's exact table."
+  out_of_scope:
+    - "Section 11.10, the two-dimensional heterogeneous model - the sixth cell of Table 11.4-1."
+    - "Sections 11.5.4, 11.5.5, 11.5.6, 11.7.5, 11.7.6, and Examples 11.9.1.A/B/C (the steam reformer, the butene reactor and the reforming case)."
+    - "Every figure in Chapter 11. No curve, tick or point is digitised, traced or read off any plot, and no page image exists in the directory. ONE EXCEPTION, and it is a unit rather than a datum: the ORDINATE LABEL of Fig. 11.5.2-1, read on a 300 ppi crop as 'p0, atm', which is what decides the unit the whole page is in."
+    - "Van Welsenaere & Froment's runaway criteria themselves (D2.2) and Froment (1967)'s o-xylene case (C2.10)."
+    - "Absolute advice about a real o-xylene reactor: the base case is section 11.5.2's own single-rate simplification, shown in the notebook to be k_1 alone used as the total consumption rate."
+
+units_the_page_is_in:
+  statement: >
+    EVERY PRESSURE THIS PAGE REPORTS IS IN ATM, including p_A0*, the figure axes
+    and section 11.7.3's 0.00924. Section 11.5.2 prints "bar" for the same
+    quantities. The atm reading is a deliberate, stated choice, not an oversight,
+    and the notebook prints what the other reading would cost.
+  why: >
+    (1) ln k = 19.837 - 13,636/T is Van Welsenaere & Froment's, printed by them for
+    pressures in atm, and section 11.5.2 restates it unchanged while relabelling
+    the pressures bar - a partial conversion, so the self-consistent model is the
+    unconverted one. (2) Fig. 11.5.2-1's own ordinate label reads "p0, atm" (read
+    on a 300 ppi crop of book page 512; that unit word is the only thing this page
+    takes from any figure in the chapter, and no curve, tick or point is read from
+    any of them). (3) Example 11.5.3.A's group A, in the same chapter, uses
+    p_B0 = 0.208 where 11.5.2 prints 0.211 bar, and the notebook's audit shows
+    0.211 IS 0.208 converted. (4) MEASURED, both readings by the same grid-free
+    Radau solve with one constant changed: in atm the sensitivity sentence
+    reproduces to +0.028 % and the hot spot at 0.018 is 414.5 C, 0.5 K inside the
+    ceiling the facing page states; read in the printed bar it is off by -1.105 %
+    and the hot spot at 0.018 is 627.3 C, 212 K ABOVE that ceiling. Both are
+    agreement.json metrics (p0_star_bar_reading_dev, T_hot_0018_bar_reading_C).
+  what_this_changes: >
+    Labels, not numbers. The ladder has always run on D2.2's CSV of Van Welsenaere
+    & Froment's atm parameter set; what was wrong was calling the result bar and
+    presenting the +0.028 % as a reproduction of section 11.5.2's own arithmetic
+    rather than of Van Welsenaere & Froment's 0.018 atm.
+
+printed_defects_reported_not_repaired:   # fifteen, none repaired anywhere
+  - >
+    Section 11.5.2's pressures are labelled bar throughout while its own
+    Fig. 11.5.2-1 labels the ordinate "p0, atm" and its rate constant is Van
+    Welsenaere & Froment's atm one, restated unchanged. Read in the printed bar,
+    the section's own sensitivity sentence is out by -1.105 % and its own design
+    point 0.018 gives a 627.3 C hot spot, 212 K above the 415 C ceiling the facing
+    page states. Read in atm it reproduces to +0.028 %.
+  - >
+    Table 11.5.3.A-2's two columns disagree by up to 37 %. dT_ad = (B/A) p0 with
+    the example's own printed A = 6150 and B = 257e6 requires 565.4 / 825.7 /
+    695.8 K where the table prints 411.5 / 521.1 / 466.3; inverting each row for
+    the Q it needs gives 4.1102-4.1117 against the printed Q = 3.4675. The cause
+    is that Q = 3.4675 belongs to the CRITICAL radius 0.0175 m that the same
+    example computes two paragraphs later from its own printed
+    C = Q^2 A exp(-E/RT + b) - and C = 2U/(c_p R_t), so Q scales as R_t^(-1/2) and
+    the 0.0125 m case tabulated needs 4.11. Four routes agree on that. This is
+    LARGER than any other defect on the list and it is invisible to a row-by-row
+    transcription check, because the number was copied correctly - from the wrong
+    case. AND IT IS IN BOTH TABLES: inverting each table's own printed Q for the
+    radius it implies, by the same route (validated against Van Welsenaere &
+    Froment's printed Q at two radii and against their printed C = 29206.4 1/h,
+    which returns R = 0.017533 m on its own), puts Table 11.5.3.A-1's Q = 2.9203 at
+    R_t = 0.01749 m and A-2's 3.4675 at 0.01752 m, while both tables state
+    0.0125 m. A-1 nevertheless PASSES the cross-column test, at 1.8 %, because its
+    two columns are not independent of each other where A-2's p0 column is Van
+    Welsenaere & Froment's own; an earlier version of this page read that pass as
+    "what confines the defect to A-2", which is WITHDRAWN. What the pass does rule
+    out is a wrong B/A, a wrong conversion or a misread formula, since every one of
+    those would move both tables.
+  - >
+    Example 11.5.1.A takes the equivalent particle diameter as sqrt(1.5) x 0.003
+    = 0.0037 m, the sphere of equal surface AREA. Eq. (11.5.1-9), printed two
+    pages earlier and the definition (11.5.1-3) refers to, is d_p = 6(1-eps)/a_v
+    = 6 V_p/S_p, which for a cylinder with d = h = 3 mm is exactly 0.003 m. On
+    the chapter's own definition the Ergun pressure drop rises by
+    +30.7 %, from 0.319 bar to 0.417 bar. Not repaired.
+  - >
+    No single Reynolds number produces all three of Example 11.5.1.A's printed
+    friction factors: inverting them at the printed eps = 0.38 needs Re = 155.5
+    (Ergun), 155.1 (McDonald) and 155.5 (Hicks) against the printed Re = 155.
+  - >
+    Section 11.5.2 prints "a mean fluid density of 1293 kg/m3" in the same
+    sentence as G = 4684 kg/(m2 h) and u_s = 3600 m/h, whose ratio is 1.301
+    kg/m3. Out by 10^3. Van Welsenaere & Froment's 1.293 is loaded from D2.2.
+  - >
+    Section 11.5.2 prints "the specific heat is 0.992 kJ/kg K". Four routes -
+    three of them inside Chapter 11 (group B = 257e6; the C group's
+    rho_g c_p = 0.323; Pe_hr = 5.25 with the printed lambda_er) and the fourth
+    Froment (1967)'s own 0.25 kcal/(kg C) loaded from C2.10 - span 0.94 % and sit
+    5.7 % above it. They are NOT four independent determinations and the notebook
+    says so: route 2 reproduces route 1 to 2.2e-5 by construction, route 4 is
+    route 1 rounded, and C2.10's own note says its 0.25 is pinned by route 3. The
+    conclusion - the printed 0.992 is inconsistent with the chapter's own groups -
+    survives on either reading; the 0.94 % is not an agreement among witnesses.
+    The printed value is used nowhere.
+  - >
+    Group A of Example 11.5.3.A is printed 6150. Its own formula, printed two
+    lines above, gives 29.48 x 1 x 0.208 x 1300 / 1.293 = 6165, and the example's
+    own dT_ad = 312.6 K at p0 = 0.0075 requires 6166.
+  - >
+    Table 11.5.3.A-2's "Upper limit" row is labelled dT(1+Q)^2, which at the
+    printed Q = 3.4675 and dT = 31.6 K is 630.7 C; the 521.1 C printed beside it
+    is what the "Mean" row's formula dT(1+Q+Q^2) gives. The "Mean" row then
+    prints 466.3 C, the arithmetic mean of the two printed numbers, which no
+    formula in the table produces. Table 11.5.3.A-1 is internally consistent.
+  - >
+    Example 11.5.3.A converts Van Welsenaere & Froment's three inlet-pressure
+    limits from atm to bar (factor 1.01325, reproduced to 4 digits on all three)
+    but leaves the back-integrated critical value 0.01651 in atm while labelling
+    it bar. The book calls the two "in excellent agreement"; as printed they
+    differ by +2.2 %, and converting consistently improves that to +0.84 %.
+  - >
+    Section 11.5.2 prints p_B0 = 0.211 bar where group A of Example 11.5.3.A uses
+    0.208 - the same number in atm, unconverted.
+  - >
+    Book page 574 prints a_1 = (D_er)_s/(u_i d_p) = 1/Pe_mr, while book page 572
+    states that (D_er)_s = eps D_er with D_er on u_i. The two are inconsistent by
+    a factor eps; the denominator should be u_s, as a_2's G c_p is. Taken
+    literally the group scales radial mass dispersion by 1/eps = 2.02. The page
+    uses the u_s form, labels that an inference, and MEASURES what the literal
+    reading costs - +0.362 percentage points in the threshold shift, against
+    +1.794 for a 5 % change in lambda_er, i.e. a factor five smaller, which is the
+    chapter's own sentence that results are "not very sensitive with respect to
+    Pe_mr" confirmed on the threshold as well as on the profiles.
+  - >
+    Section 11.5.2 prints E/R = 13,636 (= 27,000/1.98, the 1967 paper's own gas
+    constant, per C2.10) and section 11.7.3 prints 13,588 (= 27,000/1.987) for
+    the same reaction on the same catalyst, 0.353 % apart. Neither section
+    mentions the other's value.
+  - >
+    The caption of Fig. 11.5.3-1 gives "Van Welsenaere and Froment [1979]" where
+    the running text and the reference list both give [1970].
+  - >
+    Example 11.5.3.A's text says the point "falls well above curves 1, 2, 4, and
+    5 in Fig. 11.5.3-1". The caption of that figure names curves 1, 2, 3 and 4
+    plus two Morbidelli-Varma curves labelled n = 0 and n = 2; the rendered figure
+    carries labels 1, 2, 3, 4, n = 0, n = 1, n = 2 and no curve 5.
+  - >
+    Section 11.5.2 sends the reader to "Section 11.7.5" for the fuller kinetics
+    of this reaction; they are in section 11.7.3.
+
+repairs_by_inference_labelled_as_such:
+  - >
+    (11.6-4)'s heat criterion is dimensionally inhomogeneous as printed - a
+    temperature per particle diameter compared with a dimensionless Peclet number
+    - while its own companion (11.6-3) is normalised by (T_0 - T_w). The
+    notebook evaluates it as printed, says it cannot be used, and then evaluates a
+    natural repair (dividing by the adiabatic temperature rise) LABELLED AS AN
+    INFERENCE, not as the book's.
+  - >
+    a_1 = (D_er)_s/(u_s d_p), as above.
+
+negative_claims_and_the_search_behind_each:
+  - claim: "Pe_ha and Pe_ma are used in (11.6-3)/(11.6-4) and defined nowhere in the book."
+    search: >
+      All 13 occurrences of "Peclet number" in the 902-page text layer read, plus
+      the notation list entries between Pr and PN, which define only
+      Pe_a = u_i d_p/D_ea and Pe_a' = u_i L/D_ea.
+  - claim: "Section 11.5.2 nowhere states that its own model fails near the threshold."
+    search: >
+      WITHDRAWN - IT DOES, in the sentence immediately after the one this page uses
+      as its anchor. Book p. 513: "Note that for the upper part of the curves with
+      pA0 = 0.0181, 0.0182, and 0.019 ... the model used here is no longer entirely
+      adequate: heat and mass transfer effects would have to be taken into
+      account." That is the qualitative form of the page's rung-3 finding, printed
+      in the chapter, and the notebook now prints it beside that finding. What
+      survives as the contribution is the SIZE and SIGN (-4.74 % in the threshold,
+      4.3x the margin the sensitivity sentence hangs on) and the observation that
+      the chapter's own yardsticks are RATE criteria while its own warning is about
+      the THRESHOLD.
+  - claim: "The chapter prints no D_e for the V2O5-on-silica catalyst."
+    search: >
+      Section 11.9.1 (p. 598) sends the reader to Satterfield [1970] and Weisz &
+      Hicks [1962] instead; the chapter's only numeric tortuosity, 3.54, belongs
+      to the steam-reforming catalyst of Example 11.9.1.A.
+  - claim: "Section 11.6 nowhere notes that (11.6-3)'s heat criterion is undefined at T_0 = T_r."
+    search: >
+      NOT SUSTAINED AS AN ABSENCE, and the page says so. Section 12.7.2, book
+      p. 709 (the paragraph runs across the 708/709 break; the book's own index
+      reads "Mears, D. E., 230, 588, 708, 709"), records that "Mears [1976] pointed
+      out that these criteria were not general, and he provided alternate ones for
+      equal feed and wall temperatures" - 148 pages later and with no
+      cross-reference in either direction. That the alternates exist BECAUSE of the
+      two problems this page finds is the page's INFERENCE from that sentence and
+      is labelled as one in the notebook; what is not an inference is that the
+      situation 12.7.2 singles out, equal feed and wall temperatures, is the one
+      section 11.5.2 builds. The finding is the missing cross-reference, not
+      missing knowledge.
+
+validation:
+  ranking: >
+    Ranked in the notebook before any of it is used. (1) Example 11.5.1.A, fully
+    printed arithmetic. (2) Section 11.5.2's sensitivity sentence, a root-findable
+    threshold with a printed ceiling. (3) Example 11.5.3.A against D2.2's CSV of
+    the originals - a transcription check, not a model check. (4) Eq. (11.9.1-11)
+    against a pellet grid solve and against B1.1's table. (5) Four claims stated
+    without arithmetic ("of the order of 1 C", "about 30", "less than 360",
+    "365"), checkable to a figure or two. (6) Grid convergence and a second solver
+    family, which are internal but are what makes the rung differences meaningful.
+  second_independent_computations:
+    - >
+      Rung 1's threshold and hot spot by an adaptive Radau initial-value solve with
+      no grid, no pymrm operator and no Newton, root-finding dT/dz = 0 and then
+      the threshold. Agrees with the Richardson-extrapolated pymrm threshold to
+      4.0e-07 and with the extrapolated hot spot to 3.3e-05, on the SIX-grid chain
+      (150-4800) the notebook displays - which is now also the chain agreement.json
+      carries, because the display and the metric are the same memoised call. (An
+      earlier version of the helper ran its own three-grid chain and reported
+      6.1e-6 and an observed order of 0.80 where the page displayed 4.0e-07 and
+      0.94; that is fixed, and the assertion list is now checked against the metric
+      set so no metric can be added without one.) This is what says the reported
+      threshold must be the extrapolated one: the 1200-cell value is 0.104 % away,
+      which is comparable to the +0.1665 % rung-2 effect.
+    - >
+      Eq. (11.9.1-11) checked twice: against a spherical pymrm pellet solve
+      (second-order convergent, agreeing at the h -> 0 limit) and against B1.1's
+      60 exact sphere rows, an independent transcription of the same closed form
+      from a different document.
+    - >
+      U = 0.096 kJ/(m2 s K) reproduced from eq. (11.7.4-1) - i.e. rung 1's wall
+      group recovered from rung 5's two radial parameters - which also fixes
+      R_t = 0.0125 m independently of the printed tube diameter.
+    - >
+      Group B = 257e6 reproduced from four other printed constants.
+  root_found_never_swept: >
+    Every extremum and every threshold. Hot spots come from a brentq/cubic root of
+    dT/dz = 0 with an assertion that the maximum is not at a grid edge; every
+    threshold from BISECTION (90 halvings to a 1e-12 bracket) on the 415 C ceiling,
+    with an 81-point scan used ONLY for bracketing; the crossovers from a
+    CONTROLLED SCAN - a sweep outward from the chapter's own value, then bisection
+    inside the region the sweep validates. No sampled maximum and no swept crossing
+    is reported anywhere.
+    WHY BISECTION AND NOT BRENTQ, measured rather than asserted: above the
+    threshold the first-order upwind Newton eventually stops converging and the
+    hot-spot function returns NaN, on which brentq raises "The function value at
+    x = ... is NaN". The notebook runs that as a control on ALL FIVE rungs - brentq
+    dies on two of them and, on the three where it survives, returns the bisection
+    root to every digit. (An earlier version of this file described a five-rung
+    control that the notebook ran on two.)
+    AND BECAUSE bisection treats a non-converged solve as supercritical, the number
+    it returns could be a Newton-convergence boundary rather than a ceiling
+    crossing. THAT IS NOW CHECKED ON EVERY CALL, not on the five default rungs:
+    `p0_critical` evaluates the hot spot at p0*(1 -/+ 1e-5) and RAISES unless the
+    solve converges below the ceiling on one side, above it on the other, and
+    without a jump (the five reported rungs move 0.02 to 0.10 K between the two
+    solves; the control allows 1 K; an ignition discontinuity gives hundreds).
+    The notebook counts the checks and the rejections: 714 bisected thresholds over
+    the whole page, of which 93 were rejected and never became a number. The staged
+    version ran the same check five times.
+    THE DEFECT THIS REPAIRS, stated because it shipped twice: the control used to
+    run on the five default rungs and never inside the sweeps and bisections that
+    perturb them, which is exactly where p0_critical works outside its tested
+    envelope. Two published numbers came from thresholds that fail it. The rung-2
+    "1 % crossover" at Pe_a = 0.0969: the shift there is 2.818 %, not 1 %, the
+    returned p0* = 0.01851251 is the same to eight digits at Pe = 0.09 and 0.05,
+    and the control gives 918.6 C just below the returned value and 415.0 C just
+    above it - the hot spot falls THROUGH the ceiling as p0 rises, which is a jump
+    and not a crossing. And the tube-radius rows below R_t = 0.0095 m: at 0.0090 m
+    the control returns about 1060 C on BOTH sides, so the returned threshold is
+    where this Newton gives up and not where the ceiling is crossed. Both are now
+    rejected by the control instead of printed, and the rejected points are shown
+    in the swept tables rather than dropped.
+    AND THE SECOND DEFECT, WHICH WAS THE FIRST REPAIR'S OWN. Having put the control
+    inside the scans, the version this replaces then treated the FIRST REFUSAL as
+    the end of the answerable region: it bisected the gap, called the result an
+    "edge of validity", named the metric `pe_axial_limit`, printed "the shift never
+    reaches 1 % anywhere the control validates", and declared rungs 2 and 3
+    unorderable. All of that was an artefact of where one sweep stopped. THE
+    CONTROL'S VERDICT IS SPECKLED IN THE SWEPT PARAMETER, not an interval: on a
+    regular 0.001 grid through the region where the sweep first refuses, Pe_a =
+    0.316 and 0.314 validate while 0.315 and 0.313 do not, and the reported "edge"
+    flipped its own verdict one ulp away. Rung 5 is speckled the same way, with
+    smaller stakes: R_t = 9.6875 mm is refused while 9.70 mm and 9.675 mm on either
+    side of it validate. So the scans now sweep THROUGH refusals and refine by
+    subdividing and keeping what validates rather than by bisecting (a bisection
+    dies at its first refused midpoint, and about half the interior points of the
+    rung-2 refinement are refused), and a scan that cannot straddle its target
+    between two validated points RAISES - there is no bound fallback. All four rows
+    are roots, the metric is `crossover_pe_axial`, and the ranking is decidable:
+    rung 5 at 1.25, rung 2 at 4.02, rung 3 at 4.93, rung 4 at 22.7. Rungs 2 and 3
+    are 23 % apart, which is the honest caveat on that pair. Both wrong versions of
+    the rung-2 search - the uncontrolled one at 0.097 and the stop-at-first-refusal
+    one at 0.3156 - are injected as break rows.
+    WHAT THE RUNG-2 SWEEP STILL DOES NOT REACH: the largest |shift| any validated
+    point of it carries is 1.19 %, so a 2 % rung-2 crossover is not locatable on it
+    and the break row that moves the target moves it to 1.1 %. That is a statement
+    about the scan and not a claim about the model.
+    ONE SHIFT DEFINITION, and it is the same-grid one. The crossover table used to
+    mix two - two rows against the Richardson-extrapolated rung-1 threshold and two
+    against a same-grid one - which is worth 4.08 against 4.93 on the film row,
+    because rung 1's own 600-cell discretisation error is +0.208 pp, a fifth of the
+    1 % target. Both readings of that row are measured and printed.
+    AN EARLIER VERSION OF THIS FILE SAID "brentq" IN THREE PLACES AND JUSTIFIED
+    BISECTION BY CLAIMING sections 11.6 and 11.8.1 show that no bounded steady
+    state exists inside the bracket. Both are withdrawn. 11.6 (p. 561) describes
+    THREE steady-state profiles in the adiabatic axial-mixing model, of which "the
+    outer two ... are stable ... whereas the middle one is unstable", and 11.8.1
+    (p. 588) says the limits within which its own multiple steady states "could be
+    experienced ... will probably be extremely narrow": multiplicity, not absence -
+    and 11.6 warns that which profile a steady-state computation finds "depends on
+    the initial guesses", i.e. that a cold start may MISS a state that exists. A bounded state does exist above the threshold - the grid-free
+    Radau route returns one at every p0 in the bracket, at 800-1000 C - so the
+    ladder table's one empty cell is labelled "Newton did not converge at this
+    grid" and the page rests nothing on it.
+  refinement: >
+    Rung 1 on six grids (150 to 4800) with observed orders for the threshold, the
+    hot-spot temperature and the hot-spot location, and Richardson limits for all
+    three. Rung 5 on BOTH axes separately, 3 x 4 grids: the radial axis converges
+    at second order and the axial at first, so the two-dimensional rung's error is
+    set by the axis the model is not named after. The pellet on five radial grids.
+    The rung-2 shift itself refined over five grids, because at n_z = 1200
+    first-order upwind's numerical dispersion length dz/2 = 1.25 mm is 62 % of the
+    physical d_p/Pe_ma = 2.0 mm - so the rung is only resolvable extrapolated.
+    NOT REFINED, AND THE NOTEBOOK SAYS SO: rung 5's THRESHOLD, which is the
+    quantity the ladder table reports for that rung. Its (600, 10) and (1200, 20)
+    values differ by 0.107 percentage points, which is printed in a table beside the
+    displayed values, but no observed order or Richardson limit is offered for it.
+    The two rung-5 refinements are of the hot spot at a fixed inlet, not of the
+    threshold. That gap is now CONVERTED INTO AN ERROR BAR on the one number that
+    depends on it: the tube-radius crossover. The (600, 10)-vs-(1200, 20) gap in the
+    rung-5 shift, divided by the local slope of the swept shift-versus-radius curve,
+    gives R_t* = 10.028 +/- 0.030 mm, d_t/d_p = 6.69 +/- 0.02, factor 1.246 +/- 0.004 -
+    three figures on R_t*, not the six that an earlier version claimed from the
+    BISECTION TOLERANCE, which is not an accuracy. Also corrected here: the reported radial grid error USED to compare
+    a BULK hot spot with an AXIS-temperature Richardson limit and came out
+    -4.295 K. Like for like, axis against axis, the radial discretisation error at
+    (1200, 20) is -0.003 K and the axial one at (1200, 40) is -0.029 K - both below
+    0.03 K on a 366 C hot spot. The -4.295 K is the axis-minus-bulk radial
+    temperature difference, i.e. the physics the 2-D model exists to capture, and
+    it is now reported as that.
+  determinism: >
+    TWO CONSECUTIVE EXECUTIONS GIVE A BYTE-IDENTICAL agreement.json AND IDENTICAL
+    STREAM OUTPUT, TABLE HTML AND FIGURE PNG BYTES (measured 2026-08-18 after the
+    third fix round: 2228 s and 2219 s, run concurrently; 37 stream outputs, 54
+    table/text outputs and both figure PNGs identical). Getting there needed one fix beyond the usual ones:
+    a diverging Newton iterate far above the threshold overflows in Ladder.source,
+    and the RuntimeWarning numpy stores in the notebook carries the KERNEL'S PID in
+    its path (/tmp/ipykernel_<pid>/...), so two runs differed in stored output for a
+    reason unconnected to the physics. That overflow is now suppressed inside
+    Ladder.source only - the iterate is rejected by the residual check regardless -
+    and nowhere else, so a genuine overflow in any other cell is still loud.
+    Nothing stochastic: no sampling, no bootstrap, no random or warm-started
+    initial guess. Every solve is cold-started from a guess that is a fixed
+    function of its inputs (the rung-1 profile); the two-dimensional runaway states
+    that the direct guess cannot reach fall back to a FIXED four-fraction ramp,
+    which is a deterministic function of p0 and not a sweep. Stylers are rendered
+    through to_html() with pinned uuids and stdout's flush interval is disabled, so
+    two executions give identical stream output and agreement.json.
+  break_table: >
+    31 injected defects against 39 helper-computed metrics, and agreement.json now
+    holds exactly those 39. Every metric a break row computes is produced by exactly
+    ONE helper function, and EVERY ONE of those helpers' default calls is asserted
+    equal, to 1e-12, to a number printed earlier in the notebook - from ONE list,
+    used both for the value check and for the completeness check, so a metric cannot
+    be added without an assertion. (That list used to be written out twice, so
+    "checked as a set" held only if an author edited both copies.) For the six
+    rung-1 metrics the assertion is an identity: the Validation cell displays the
+    helper's own memoised return value. The four rung-to-rung shifts are the one
+    place where the metric and the displayed number are DIFFERENT computations - the
+    break rows cannot afford the (1200, 20) grid 31 times, so agreement.json carries
+    the (600, 10) values - and both, with the gap (at most 0.107 percentage points),
+    are printed in a table rather than left to be discovered. The coverage map is
+    GENERATED from the measured moves, not written.
+    SIX METRICS USED TO ESCAPE ALL OF THIS: the three film/pellet temperature
+    differences, Mears' margin and the two chapter-against-itself numbers were
+    computed inline in Validation cells, sat outside the break-table metric set, and
+    were covered by a printed SENTENCE claiming that rows in the table moved them.
+    They did not - brk_film_scale returns the four shifts and nothing else, and no
+    row could reach a ratio of two CSV rows at all. Two helpers (h_film_dt,
+    h_chapter_internal) and one new break row (11.5.2's E/R swapped with 11.7.3's
+    E_1/R) close that, and the assertion is now that agreement.json has no metric
+    outside the set.
+    An AST guard (copied from published J4.2) parses each row's own source plus one
+    level of the helpers it names and rejects a metric key bound to a numeric
+    literal, to arithmetic on literals, to a float/int cast of one, to a subscript
+    of a frozen literal tuple, or to a local name - in the row's own body or a
+    one-level helper - bound by a plain Name or flat-tuple-unpacking assignment:
+    `0.1656 + 0.0001`, `float("15.688")`, a subscript off a frozen tuple, a
+    one-line laundering helper and tuple unpacking are all caught.
+    Its teeth are measured on SIX negative controls, one per laundering form, each
+    asserted to catch exactly its own keys; its FALSE-POSITIVE control binds a
+    METRIC key to a computed value (the version it replaces bound a non-metric key,
+    which literal_metrics filters out before it looks at anything, so it measured
+    nothing); and AT LEAST SIXTEEN forms that walk through - a module-level
+    constant, a conditional expression, round(), an array subscript, an f-string
+    cast, sum(), a dict comprehension, a lambda, dict.update, dict(zip(...)),
+    dict.setdefault, abs() of a literal, an annotated assignment, a list-target
+    assignment, nested tuple unpacking and a walrus binding - are printed and
+    asserted to escape, so the page states the blind spot rather than implying
+    there is none.
+    THE COUNT AND THE WORDING HAVE MOVED TWICE, and why is worth recording: a
+    verifier's third-pass sabotage set found two forms the list did not name. One
+    was tuple unpacking, which the guard's own positive claim ("a local that only
+    ever carries one") covered while `_frozen` read only Name targets - the guard
+    was widened and it is a negative control now. The other was `abs(0.1657)`,
+    which is constant-FOLDABLE but is a call to something that is not a numeric
+    constructor; it stays an escape and the claim no longer says
+    "constant-foldable". A fourth-pass sabotage set then found that "a local name
+    ... that only ever carries one" was still a category and not a list: annotated
+    (`_a: float = 0.1657`), list-target (`[_a, _b] = 0.1657, 2.0`), nested-tuple
+    (`(_a, _b), _c = (0.1657, 2.0), 3.0`) and walrus (`(_a := 0.1657)`) bindings all
+    escape the same way tuple unpacking used to, and are now named in the escape
+    list rather than folded into a trailing "or to a local name ... that only ever
+    carries one". The escape count is quantified as AT LEAST rather than presented
+    as complete. The claim it supports is a list of forms, not a category, and
+    certainly not "rejects any row returning a metric as a typed constant".
+  structural_and_labelled_so:
+    - "cp_route_spread: a spread AMONG four routes to c_p. Two rows move it, but it cannot detect a c_p wrong the same way in all four places, which is what a shared source looks like - C2.10 warns that U = 82.7 is exactly such a shared source between it and D2.2. The notebook goes further and shows the four are NOT four determinations: route 2 reproduces route 1 by construction and route 4 is route 1 rounded, so the 0.94 % is route 3 against one printed number, not a consensus."
+  below_the_CI_floor: >
+    ONE metric, named by the notebook from the coverage table rather than asserted:
+    `U_from_2d_dev` = -1.1e-16. Section 11.5.2's printed U = 0.096 kJ/(m2 s K) IS
+    eq. (11.7.4-1) evaluated at alpha_w = 0.156, lambda_er = 0.78e-3 and
+    R_t = 0.0125 m to every digit it prints, so the deviation is machine zero and
+    check_agreement.py's ABS_FLOOR = 1e-12 puts it outside CI. Its above-floor
+    companion is `U_from_2d_dev_at_printed_radius` = -6.1e-3, the same identity at
+    the radius the printed 2.54 cm tube diameter implies: it carries the same
+    information, CI can see it, and both are moved by the alpha_w and lambda_er
+    rows.
+
+honesty:
+  what_pymrm_adds: >
+    Not accuracy. Every rung is a system Froment solved with a Crank-Nicolson code
+    in the 1960s, and section 11.7.4 says outright that present-day computers
+    remove any reason not to use the two-dimensional model. What pymrm adds is
+    that the five models are five ARGUMENTS to one assembly rather than five
+    programs - rung 2 adds a grad/div pair on the same axis, rung 5 a second pair
+    on a second axis with nu = 1, rungs 3 and 4 two algebraic fields masked out of
+    the divergence by a coefficient matrix - so a difference between two rungs is a
+    difference between two models and not between two codebases. That is what makes
+    the comparison possible at all. Also: eta is read from the surface-flux row of
+    the gradient operator, the same quantity the film balance uses, so eq.
+    (11.9.1-11) is checked against the equation it solves.
+  is_this_a_fit: >
+    NO. Nothing is fitted anywhere on this page. Every constant is either printed
+    in Chapter 11, loaded from D2.2's or C2.10's CSV of a printed original, or - in
+    the three cases the chapter does not print (lambda_ea, k_g/h_f, D_e) - varied
+    over decades with the crossover root-found and the gap stated as a gap.
+  caveats:
+    - "Tier 6. No experimental comparison exists anywhere in Chapter 11."
+    - "The rung-4 magnitude is not decidable from the chapter: D_e is not printed for this catalyst. Its SIGN and its crossover are established; its size is not."
+    - "The rung-2 magnitude (+0.1665 % extrapolated; agreement.json's coarse-grid value is +0.1657 %) depends on lambda_ea, of which the chapter says 'little information is available'; Pe_ma and Pe_ha are varied together."
+    - "The film coefficients come from A3.4's correlation, not from the chapter, and the root-found crossover is at 4.93x the correlated coefficients - so that rung's size depends on which correlation is chosen. (4.08x against the Richardson-extrapolated rung-1 baseline; the table now uses the same-grid baseline in every row and prints both readings. This file previously said ~2x, which no cell of the notebook prints, and then 4.1x, which was the mixed-baseline value.)"
+    - "Rung 2's 1 % point is a ROOT: Pe_a* = 0.2488 +/- 0.0002, factor 4.02, located between two validated sweep points and itself carrying the control's certificate (414.98 C below, 415.02 C above). The +/- is the grid, measured same-grid on 600/900/1200 cells, not the refinement tolerance. Two earlier versions of this row were wrong in opposite directions and are both break rows now: an uncontrolled search that returned 0.097 (where the shift is 2.8 % and both sides are past the ceiling), and a controlled one that stopped at its first refusal and reported a bound of 'at least 3.2 times'. The largest |shift| the sweep validates is 1.19 %, so a 2 % rung-2 crossover is outside what it can locate - a statement about the scan, not about the model."
+    - "Rung 5's signed shift passes through zero between R_t = 0.0098 m (-0.169 %) and 0.00975 m (+0.015 %), so the two-dimensional correction is negative on this tube and positive on a narrower one, and |shift| stays under 1 % from R_t* = 0.01003 m down to at least 0.009675 m. Validity is speckled here too - 0.0096875 m is refused while 0.0097 m and 0.009675 m on either side of it validate - so the previous version's 'below 0.00967 m this solver says nothing' is withdrawn; what happens on narrower tubes is simply not reported."
+    - "Four stored output lines carry the absolute path of the machine that executed the page (a pymrm MatrixRankWarning and a NumJac RuntimeWarning). DECIDED, not inherited: they are kept. They are the solver failing in exactly the way the crossing control exists to detect, the page argues that a visible warning is worth more than a suppressed one, and CI compares agreement.json only. A reader executing elsewhere will see their own path there."
+    - "The magnitudes of all four shifts belong to section 11.5.2's pseudo-first-order simplification, which the notebook shows is k_1 alone used as the total o-xylene consumption rate. Only the ordering and the signs transfer."

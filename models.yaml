@@ -3818,30 +3818,206 @@ models:
     page: pages/C2.1-xu-froment-smr/
     related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
+  - id: D1.1
+    slug: froment-fixed-bed-ladder
+    title: "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"
+    description: >
+      Chapter 11 of Froment, De Wilde & Bischoff classifies fixed-bed reactor models in
+      a 2x3 table and works five of its six cells. All five are built here on ONE
+      reactor - the hydrocarbon-oxidation design case of section 11.5.2 - and compared
+      by the shift each produces in the root-found inlet partial pressure at which the
+      hot spot reaches the top of the book's own stated operating range. The two
+      heterogeneous rungs pull in opposite directions and, measured like for like
+      against the model each corrects, the second is about four and a half times the
+      first, so stopping at the film model leaves you further from the
+      particle-resolved one than plug flow was; axial dispersion moves the threshold by
+      less than the discretisation error of a single 1200-cell plug-flow solve. Rung
+      1's wall coefficient and rung 5's two radial parameters are the same measurement
+      through eq. (11.7.4-1), which is what fixes the tube radius at 0.0125 m against
+      the printed 2.54 cm diameter. Every pressure the page reports is in ATM, which is
+      a stated reading: section 11.5.2 labels its pressures bar while restating Van
+      Welsenaere & Froment's atm rate constant unchanged, and its own Fig. 11.5.2-1
+      labels the ordinate "p0, atm". In atm its parametric-sensitivity sentence is
+      reproduced to about one part in three thousand; read in the bar it prints, the
+      same sentence is out by 1.1 % and its own design point sits 212 K above the
+      ceiling the facing page states. Section 11.6's two printed criteria for
+      deciding whether the axial-dispersion rung is needed cannot be evaluated on the
+      reactor the chapter designs - one divides by a temperature difference that is zero
+      by construction there, the other is dimensionally inhomogeneous as printed - and
+      section 12.7.2, 148 pages later, says the criteria are not general and supplies
+      alternates for equal feed and wall temperatures - with no cross-reference in
+      either direction. That those alternates exist BECAUSE of the two problems above
+      is this page's inference from that sentence and is labelled as one. Mears' interphase criterion passes while the same film
+      temperature difference moves the runaway threshold by several times the margin
+      section 11.5.2's own sentence hangs on: the chapter's criteria test the rate, and
+      what this reactor needs tested is the threshold - though the chapter itself warns,
+      at that operating point, that "heat and mass transfer effects would have to be
+      taken into account", and the page prints that sentence beside the finding.
+      Fifteen printed defects reported and none repaired. The largest is that the two
+      columns of Table 11.5.3.A-2 disagree by up to 37 %, because its Q = 3.4675 is the
+      value belonging to the critical radius 0.0175 m that the same example computes two
+      paragraphs later, transplanted onto the 0.0125 m case tabulated; the book's own
+      printed C = Q^2 A exp(-E/RT + b) makes Q proportional to R_t^(-1/2) and closes the
+      argument, and a row-by-row transcription check cannot see it because every row was
+      copied correctly - from the wrong case. Next largest is the unit slip above, of
+      which the atm-to-bar conversion of Example 11.5.3.A is the visible half: the
+      back-integrated critical pressure is left in atm and labelled bar, and converting
+      it consistently makes the "excellent agreement" the book claims better than the
+      numbers printed beside it.
+    section: D
+    status: published
+    page: pages/D1.1-froment-fixed-bed-ladder/
+    tier: T0
+    priority: P1
+    structures: [S2, S4, S6, S7, S8]
+    phases: [gas-solid]
+    covers: [D1.1, D1.2, D1.3, D1.4, D1.5]
+    reference:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      title: "Chemical Reactor Analysis and Design, 3rd edition"
+      container: "John Wiley & Sons, ISBN 978-0-470-56541-4, Chapter 11"
+      doi: null
+    predicts:
+      - hot spot temperature and its axial location
+      - critical inlet partial pressure against a stated temperature ceiling
+      - packed-bed pressure drop by three friction-factor correlations
+      - interfacial and intraparticle concentration and temperature differences
+      - radial temperature profile and axis-to-mean difference in a cooled tube
+      - effectiveness factor for a first-order reaction in a spherical pellet
+    pymrm_api:
+      - construct_convflux_upwind
+      - construct_grad
+      - construct_div
+      - construct_coefficient_matrix
+      - NumJac
+      - newton
+    data: {tier: 6, method: table, status: complete}
+    note: >
+      CANONICAL-CLASS source, read directly: the monograph is on disk and every
+      equation and every number was read from a 300-450 ppi render of its own pages,
+      because this file's Symbol-font operators extract as invisible Private-Use-Area
+      glyphs and an extracted equation looks complete with no operators at all. Tier 6:
+      Chapter 11 reports no experiment, so every comparison is with a number the book
+      computed itself or a sentence it asserts. Cite what is on disk - this is the
+      THIRD edition and De Wilde is a full author, not the "Froment & Bischoff" of the
+      catalogue citation. Loads and reconciles five published pages rather than
+      restating them: D2.2 (Van Welsenaere & Froment's printed originals, which is how
+      the atm/bar audit was done), C2.10 (Froment 1967's constants and its two runaway
+      limits, against the book's restatement), B1.1 (exact effectiveness factor),
+      A1.1 (Ergun's printed constants), plus A2.1's boundary-condition dicts and
+      A3.4's Sherwood correlation used as published and B1.7's Mears criterion
+      evaluated here.
+    related: [D1.2, D1.3, D1.4, D1.5, D2.1, D2.2, C2.10, C2.1, A2.1, A2.6, B1.1, B1.7, A1.1, A3.4]
+
+  - id: D1.2
+    slug: fixed-bed-axial-dispersion
+    title: "One-dimensional fixed bed with axial mixing and Danckwerts conditions"
+    section: D
+    status: published
+    covered_by: D1.1          # rung 2 of the Chapter 11 ladder, built as one page
+    page: pages/D1.1-froment-fixed-bed-ladder/
+    tier: T0
+    priority: P1
+    structures: [S4]
+    phases: [gas-solid]
+    reference:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      container: "Chemical Reactor Analysis and Design, 3rd ed., Wiley, section 11.6 (book p. 548)"
+    note: >
+      Covered by D1.1, which builds eqs. (11.6-1) and (11.6-2) with the Danckwerts
+      conditions of section 11.6 on the same reactor as the other four rungs, refines
+      the rung-1-to-rung-2 shift over five grids because first-order upwind's numerical
+      dispersion length is a large fraction of the physical one, and ROOT-FINDS the
+      axial Peclet number at which the rung would move the runaway threshold by 1 %:
+      Pe_a* = 0.2488 +/- 0.0002, i.e. axial dispersion 4.02 times stronger than the
+      chapter's own lower limit, located between two points whose thresholds pass the
+      page's crossing control. An earlier version of that page reported a bound
+      instead, because its sweep stopped at the first point the control refused; the
+      control's verdict is speckled in Pe_a rather than an interval, and both the
+      bound and the uncontrolled number that preceded it are now break rows.
+    related: [D1.1, D1.3, A2.1, A2.6, A2.5]
+
+  - id: D1.3
+    slug: fixed-bed-interfacial-gradients
+    title: "Heterogeneous fixed bed with interfacial gradients"
+    section: D
+    status: published
+    covered_by: D1.1          # rung 3 of the Chapter 11 ladder, built as one page
+    page: pages/D1.1-froment-fixed-bed-ladder/
+    tier: T0
+    priority: P1
+    structures: [S7]
+    phases: [gas-solid]
+    reference:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      container: "Chemical Reactor Analysis and Design, 3rd ed., Wiley, section 11.8 (book p. 585)"
+    note: >
+      Covered by D1.1, which builds eqs. (11.8.1-1) to (11.8.1-4) as two differential
+      and two algebraic fields on one pymrm state, reproduces section 11.8.2's "of the
+      order of 1 C" gas-to-solid temperature difference at its own printed startup
+      temperature but with an inlet composition and film coefficients that section does
+      not print, and shows that the same difference moves the runaway threshold by several times
+      the margin section 11.5.2's sensitivity sentence relies on while Mears'
+      interphase criterion correctly passes.
+    related: [D1.1, D1.4, B1.7, A3.4, A3.5]
+
   - id: D1.4
     slug: fixed-bed-particle-coupling
     title: "Heterogeneous fixed bed with resolved intraparticle profiles"
     section: D
-    status: planned
+    status: published
+    covered_by: D1.1          # rung 4 of the Chapter 11 ladder, built as one page
+    page: pages/D1.1-froment-fixed-bed-ladder/
     tier: T0
     priority: P1
     structures: [S8, S7, S3]
     phases: [gas-solid]
+    reference:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      container: "Chemical Reactor Analysis and Design, 3rd ed., Wiley, section 11.9 (book p. 597)"
     note: >
-      The S8 flagship. Schur-complement coupling of a pellet model to a column
-      model — what pymrm does that spreadsheet-level tools cannot.
-    related: [D1.3, D1.5, B1.1, J3.4]
+      Covered by D1.1, which builds section 11.9.1 through the effectiveness-factor
+      reduction (11.9.1-9) to (11.9.1-11), validates eq. (11.9.1-11) against a
+      spherical pymrm pellet solve of (11.9.1-3) and against B1.1's exact table, and
+      tests the chapter's own claim that the particle is practically isothermal while
+      the film carries the temperature resistance. The magnitude of this rung is NOT
+      decidable from the chapter, which prints no effective diffusivity for the
+      catalyst and sends the reader to two documents that are not on disk; D1.1
+      root-finds the crossover instead and says so.
+    related: [D1.1, D1.3, D1.5, B1.1, B1.4, J3.4]
 
   - id: D1.5
     slug: fixed-bed-2d-radial
-    title: "2D fixed bed with radial dispersion and wall cooling"
+    title: "Two-dimensional fixed bed with radial dispersion and wall cooling"
     section: D
-    status: planned
+    status: published
+    covered_by: D1.1          # rung 5 of the Chapter 11 ladder, built as one page
+    page: pages/D1.1-froment-fixed-bed-ladder/
     tier: T0
     priority: P1
     structures: [S6]
     phases: [gas-solid]
-    related: [D1.1, D2.2, A3.11]
+    reference:
+      authors: ["Froment, G. F.", "De Wilde, J.", "Bischoff, K. B."]
+      year: 2011
+      container: "Chemical Reactor Analysis and Design, 3rd ed., Wiley, section 11.7 (book p. 565)"
+    note: >
+      Covered by D1.1, which builds eqs. (11.7.2-1) with the alpha_w wall condition on
+      a (n_z, n_r, 2) pymrm state, refines BOTH axes separately - the radial converges
+      at second order and the axial at first, both errors below 0.03 K - and reproduces
+      section 11.5.2's printed U from eq. (11.7.4-1) and this section's alpha_w and
+      lambda_er, which is what ties rung 1 to this rung. It root-finds the tube radius
+      at which this rung stops mattering - 0.01003 m, a factor 1.25 narrower than this
+      reactor, which makes it the rung CLOSEST to irrelevance of the four measured, not
+      the one that can never be dropped. It also reports the inconsistency between
+      the a_1 group printed on book p. 574 and the definition of (D_er)_s printed on
+      p. 572, and measures what the literal reading costs. Froment (1967)'s own
+      o-xylene 1-D/2-D comparison is owned by C2.10 and is reconciled, not re-run.
+    related: [D1.1, D1.4, D2.2, C2.10, A2.6, A3.12]
 
   - id: D2.1
     slug: barkelew-runaway-diagram

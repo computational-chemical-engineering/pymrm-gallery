@@ -5,7 +5,8 @@ catalog_reference: S2
 priority: P1
 tier: T0
 structures: S2
-status: unclaimed
+status: published
+page: pages/D1.1-froment-fixed-bed-ladder/
 reference:
   authors:
   - Froment, G. F.
@@ -26,8 +27,101 @@ paper:
     and De Wilde is a full author. Born-digital, so the text layer is clean and the identification
     did not need a render.'
 blocker: null
+built: >
+  READY 2026-08-17, REPAIRED AFTER VERIFICATION 2026-08-17 (see review/verification.md
+  and the fixer report).  Deliverables in queue_cases/D1.1/page/ (build_page.py,
+  executed index.ipynb, meta.yaml, README.md, agreement.json,
+  data/froment-2011-ch11-printed.csv + sidecar) and queue_cases/D1.1/models_entry.yaml.
+  ONE PAGE, FIVE RUNGS, as the maintainer's scope_decision requires; the comparison is
+  the page.  Slug: froment-fixed-bed-ladder.  39 agreement metrics = 39 helper-computed
+  metrics (the two sets are now the same set), 30 break rows, every metric moved by at
+  least one row and ALL asserted against a number printed in the notebook from ONE list,
+  1 labelled structural, 1 (U_from_2d_dev = -1.1e-16) below the CI floor with an
+  above-floor companion.
+  Two consecutive executions (2059 s and 2067 s, run concurrently) give a byte-identical
+  agreement.json and identical stream output, table HTML and figure PNG bytes.  One
+  determinism fix was needed on top of the verified ones: an overflow RuntimeWarning
+  raised by a diverging Newton iterate stored the KERNEL PID in the notebook, and is now
+  suppressed inside Ladder.source only.  check_metadata.py OK / 0 warnings and check_agreement.py
+  "NEW, no committed baseline" against a pages/-shaped copy with the five models.yaml
+  entries spliced.
+  WHAT THE FIX ROUND CHANGED, in one line each: every pressure is now labelled ATM
+  (the unit the model has always been in) with the alternative reading measured;
+  rung 5's "no crossover" NaN is replaced by a bisected crossover at R_t = 0.01003 m,
+  which makes rung 5 the rung CLOSEST to irrelevance rather than the one that can
+  never be dropped; two printed defects added (fifteen now), the larger being that
+  Table 11.5.3.A-2's Q = 3.4675 belongs to the critical radius 0.0175 m; the rung-1
+  block of agreement.json is now the displayed six-grid chain rather than a coarser
+  one; the AST guard constant-folds and is measured on five laundering forms; the
+  "-4.295 K radial grid error" was a bulk-vs-axis comparison and is -0.003 K; the
+  bisection-not-brentq justification is now what a control measures, not a mis-cited
+  11.6/11.8.1.
+  WHAT THE SECOND FIX ROUND CHANGED (2026-08-18, after the second verification pass):
+  the +-1e-5 crossing control now runs INSIDE p0_critical on every call and RAISES,
+  so no sweep, bisection or table can report a threshold that is not a ceiling
+  crossing - 618 checked over the page, 25 rejected, against 5 checked before.  The
+  crossover rows became CONTROLLED SCANS (validated sweep, monotonicity checked, then
+  bisection) and one of them is now an honest BOUND: rung 2's shift reaches only
+  0.79 % before validity ends at Pe_a = 0.3156, so the "1 % crossover at Pe = 0.0969,
+  factor 10.3" is withdrawn as a value read off an ignition jump and the rung is
+  reported as "at least 3.2x".  The tube-radius sweep lost every row below 9.67 mm to
+  the same control, which withdraws the "sign change near 0.009 m" and the "smallest
+  |shift| 0.093 %"; what replaces them is better - the signed shift is monotone over
+  the validated range and changes sign between 9.80 and 9.67 mm.  One shift definition
+  (same-grid) in every crossover row, which moves the film row from 4.08 to 4.93; both
+  readings printed.  Table 11.5.3.A-1's own Q inverts to the SAME 0.0175 m as A-2's, so
+  "which is what confines the defect to A-2" is withdrawn.  brentq control on all five
+  rungs.  Six agreement.json metrics that had no helper and no break row got both.  The
+  AST guard's eleven escape forms are printed and asserted to escape and its
+  false-positive control now binds a metric key.  R_t* carries a measured +-0.03 mm
+  instead of a bisection tolerance.  agreement.json: crossover_pe_axial removed,
+  pe_axial_limit and crossover_film_scale added, crossover_D_e and crossover_R_t moved
+  in their last digits, all 35 others byte-identical.
+  WHAT THE THIRD FIX ROUND CHANGED (2026-08-18, after the third verification pass):
+  the second round's own repair was the defect.  Putting the control inside the scans
+  was right; ENDING A SCAN AT THE FIRST REFUSAL was not.  The control's verdict is
+  SPECKLED in the swept parameter - on a regular 0.001 grid the notebook now prints,
+  Pe_a = 0.316 and 0.314 validate while 0.315 and 0.313 do not - so "the shift never
+  reaches 1 % anywhere the control validates" and the bound "at least 3.2x" were
+  artefacts of where one sweep stopped.  cross_scan now sweeps THROUGH refusals to
+  the first straddling pair of VALIDATED points, refines by subdividing and keeping
+  what validates instead of bisecting (13 of the 24 interior points of the rung-2
+  refinement are refused, and the bracket midpoint - the one point a bisection would
+  take - is refused at the first level), and RAISES when it cannot straddle its
+  target: there is no bound fallback.  All four crossover rows are ROOTS and the
+  ranking is decidable - rung 5 at 1.25, rung 2 at 4.02, rung 3 at 4.93, rung 4 at
+  22.66, with rungs 2 and 3 23 % apart.  Pe_a* = 0.2488 +/- 0.0002 (the +/- is the
+  grid, measured SAME-GRID on 600/900/1200: 0.0008 pp, divided by the local slope),
+  and the located threshold carries the control's own certificate, 414.98 C below and
+  415.02 C above.  `pe_axial_limit` is GONE from agreement.json - it was a four-figure
+  CI metric named "limit" sitting on a one-ulp island - and `crossover_pe_axial` is
+  back in its place.  Rung 5 had the same structure at smaller stakes: 9.6875 mm is
+  refused while 9.70 and 9.675 mm on either side validate, so "below 9.67 mm this
+  solver says nothing" is withdrawn; the sign change is now bracketed by two VALIDATED
+  radii (-0.169 % at 9.80 mm, +0.015 % at 9.75 mm).  Two new/changed break rows:
+  brk_stop_at_first_refusal injects the stop-at-first-refusal scan verbatim (moves
+  crossover_pe_axial 27 %) and the target row moves the crossover definition to 1.1 %
+  rather than 2 %, because the largest |shift| the control validates anywhere on that
+  sweep is 1.186 % - measured and printed, not assumed.  31 break rows now.  The AST
+  guard was widened for tuple unpacking (a form its own positive claim covered and
+  which a verifier's sabotage set found escaping), abs(literal) was added to the
+  escape list, the claim is now a LIST OF FORMS rather than "constant-foldable", and
+  the count is quantified as AT LEAST TWELVE.  "control=False is the only place on
+  this page" corrected to two.  Control counts: 714 checked, 93 rejected.
+  agreement.json: pe_axial_limit REMOVED, crossover_pe_axial ADDED (0.2488336),
+  crossover_film_scale, crossover_D_e and crossover_R_t moved in their last digits
+  (5.9e-7, 2.1e-6, 9.7e-5 relative), all 35 others byte-identical.  Still 39 metrics.
+  Two consecutive executions (2228 s and 2219 s, concurrent) give a byte-identical
+  agreement.json and identical stream output, table HTML and figure PNG bytes.
+  AT INTEGRATION TIME: models_entry.yaml carries FIVE entries - D1.1 APPEND before the
+  existing `- id: D1.4` (models.yaml line 3821), D1.2 and D1.3 APPEND after it, and
+  D1.4 and D1.5 UPGRADE IN PLACE of their `status: planned` skeletons (lines 3821 and
+  3835) into the covered shape of the B1.5 precedent.  Flip queue_cases/D1.2-D1.5.yaml
+  to `status: covered` with `covered_by: D1.1` at that point and not before.
+  ALSO REPORT TO THE MAINTAINER, not repaired here: models.yaml D2.1 has a DUPLICATED
+  `related:` key at lines 3902-3903.
 notes: null
-updated: '2026-08-06'
+updated: '2026-08-18'
 canonical_class: 'FLIPPED UNDER THE TEXTBOOK-CANONICAL CLASS approved by the maintainer 2026-08-02
   (docs/standing-decisions.yaml records the decision; AGENTS.md "Published work only" records the
   standard that still applies). The class had been INERT since approval because no qualifying monograph
