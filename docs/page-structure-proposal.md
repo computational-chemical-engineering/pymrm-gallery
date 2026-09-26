@@ -1,6 +1,6 @@
 # Proposal: pages that are easy to download, run and reuse
 
-Status: PROPOSAL, 2026-09-26, not implemented. The gallery queue is paused; this
+Status: APPROVED DIRECTION, 2026-09-26 (decisions in section 5), not implemented. The gallery queue is paused; this
 note is for the session that resumes it. Written alongside the pymrm agent
 plugin (pymrm repo, branch `feature/claude-plugin`), whose output-format rule
 this proposal follows.
@@ -98,13 +98,19 @@ second-route rules. The restructuring must not change any agreement metric.
   it and edit the notebook directly (with `jupytext` pairing if a text source
   is wanted); where it computes content, keep it but have it import `model.py`.
 
-## 5. Decisions for the maintainer
+## 5. Decisions (agreed with the maintainer on 2026-09-26)
 
-1. Tag scheme for published assets, and whether old pages are re-tagged when
-   migrated.
-2. Keep, pair (`jupytext`) or retire `build_page.py`.
-3. Whether each `model.py` gets a tiny test file run in CI, or the notebook's
-   own checks are enough.
-4. Whether the zip artefact is worth the publish-workflow complexity, given that
-   Colab and tagged single-notebook downloads already cover most users; the zip
-   is for offline use.
+1. **Tags.** The publish workflow creates a calendar tag for every release it
+   deploys (for example `gallery-2026.10`) and writes it into each notebook's
+   bootstrap at publication. Bootstraps never reference `main`. Old pages keep
+   their current bootstrap until they are migrated; history is not re-tagged.
+2. **`build_page.py`.** Pair each notebook with a `jupytext` percent-format text
+   file (`index.py`, cells marked `# %%`) as the edited source, and retire the
+   string generators page by page during migration. Content a generator
+   computes moves into `model.py` or a notebook cell.
+3. **Tests.** Every `model.py` gets a small test (import, one fast solve, a
+   stored value within its tolerance, seconds to run) executed in CI on every
+   pull request. The notebooks keep their scheduled full runs.
+4. **Zip.** Not now. Colab and tagged single-notebook downloads cover almost all
+   users; the README documents a shallow clone or sparse checkout for offline
+   use. Revisit if users ask for it.
