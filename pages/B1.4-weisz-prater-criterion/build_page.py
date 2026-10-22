@@ -294,7 +294,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from scipy.optimize import brentq, minimize_scalar
 from scipy.special import i0, i1
-from pymrm import construct_grad, construct_div, NumJac, newton, clip_approach
+from pymrm import construct_grad, construct_div, NumJac, newton
 from gallery_utils import report_agreement
 
 PAGE = "B1.4-weisz-prater-criterion"
@@ -392,7 +392,7 @@ class Pellet:
 
         y0 = np.ones(self.shape) if y_init is None else np.asarray(y_init, float)
         r = newton(residual, y0.reshape((-1, 1)), maxfev=maxfev, tol=1e-13,
-                   callback=lambda x, g: clip_approach(x, g, 0.0, 1.0))
+                   bounds=(0.0, 1.0))
         y = r.x.ravel()
         res, _ = residual(y)
         return y, float(np.max(np.abs(res)))
@@ -580,7 +580,7 @@ def _build_and_solve(shape):
 
     t0 = _time.time()
     r = newton(res, np.ones(shape).reshape((-1, 1)), maxfev=80, tol=1e-13,
-               callback=lambda x, g: clip_approach(x, g, 0.0, 1.0))
+               bounds=(0.0, 1.0))
     rr, _ = res(r.x.ravel())
     return t_build, _time.time() - t0, float(np.max(np.abs(rr))), r.x.ravel()
 
