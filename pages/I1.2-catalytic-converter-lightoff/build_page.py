@@ -156,7 +156,7 @@ from scipy.sparse import diags_array
 from scipy.sparse.linalg import spsolve
 from pymrm import (generate_grid, construct_grad, construct_div,
                    construct_convflux_upwind, construct_coefficient_matrix,
-                   compute_boundary_values, NumJac, newton, clip_approach)
+                   compute_boundary_values, NumJac, newton)
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
 
 PAGE = "I1.2-catalytic-converter-lightoff"
@@ -502,8 +502,7 @@ cells.append(code('''class Monolith:
         g_old = g_old.reshape(-1, 1)
         r = newton(lambda w: self.residual(w, g_old), self.u / self.col_scale,
                    tol=tol, maxfev=maxfev, solver=self._limited_direction,
-                   callback=lambda x, g: clip_approach(
-                       x, None, lower_bounds=self._lb, upper_bounds=self._ub))
+                   bounds=(self._lb, self._ub))
         self.u = r.x.reshape(self.u.shape) * self.col_scale
         return r
 
