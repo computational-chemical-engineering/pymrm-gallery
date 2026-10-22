@@ -301,7 +301,7 @@ from scipy.integrate import solve_bvp
 from scipy.optimize import brentq
 from IPython.display import Markdown, display
 from pymrm import (construct_grad, construct_div, construct_boundary_value_matrices,
-                   NumJac, newton, clip_approach)
+                   NumJac, newton)
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
 
 PAGE = "A4.3-dusty-gas-model"
@@ -522,7 +522,7 @@ cells.append(code('''class DustyGas:
         """
         r = newton(self.residual_fn, np.asarray(c0, float).reshape((-1, 1)),
                    maxfev=maxfev, tol=tol,
-                   callback=lambda x, gg: clip_approach(x, gg, 1e-30, None))
+                   bounds=(1e-30, np.inf))
         c = r.x.reshape(self.shape)
         res, _ = self.residual_fn(r.x)
         scale = np.max(np.abs(self.flux(c))) / np.min(np.diff(self.x_f))
