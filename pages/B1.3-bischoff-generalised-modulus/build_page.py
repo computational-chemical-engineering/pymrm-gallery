@@ -437,7 +437,7 @@ class Slab:
             return (jac_diff @ cflat.reshape(-1, 1) + g_const + gr.reshape(-1, 1),
                     jac_diff + jr)
         sol = newton(residual, c0.ravel(), tol=1e-13, maxfev=60,
-                     callback=lambda x, dx: clip_approach(x, dx, lower_bounds=0.0))
+                     bounds=(0.0, np.inf))
         res_norm = float(np.max(np.abs(residual(sol.x)[0])))
         return sol.x.reshape(self.shape), res_norm
 
@@ -550,7 +550,7 @@ def eta_deadzone(m, eps):
              + (Phi ** 2 * (np.sqrt(c + eps) - np.sqrt(eps))).reshape(-1, 1))
         return g, JD + diags(Phi ** 2 * 0.5 / np.sqrt(c + eps))
     sol = newton(residual, np.ones(SLAB.n), tol=1e-13, maxfev=200,
-                 callback=lambda x, g: clip_approach(x, g, lower_bounds=0.0))
+                 bounds=(0.0, np.inf))
     rn = float(np.max(np.abs(residual(sol.x)[0])))
     assert rn < 1e-9, f"regularised dead-zone solve unconverged: {rn:.1e}"
     return float(SLAB.w @ np.sqrt(np.maximum(sol.x, 0.0)))
@@ -563,6 +563,7 @@ def plain_deadzone(m):
         c2 = cflat.reshape(SLAB.shape)
         gr, jr = SLAB.numjac(lambda cc: Phi ** 2 * Power(0.5).r(cc), c2)
         return JD @ cflat.reshape(-1, 1) + G0 + gr.reshape(-1, 1), JD + jr
+    # clip_approach, not bounds=: this demonstrates clipping itself
     sol = newton(residual, np.ones(SLAB.n), tol=1e-13, maxfev=60,
                  callback=lambda x, g: clip_approach(x, g, lower_bounds=0.0))
     rn = float(np.max(np.abs(residual(sol.x)[0])))
@@ -1194,7 +1195,7 @@ class Cyl2D:
                     + gr.reshape(-1, 1), self.jac_diff + jr)
         sol = newton(residual, np.ones(int(np.prod(self.shape))), tol=1e-12,
                      maxfev=40,
-                     callback=lambda x, dx: clip_approach(x, dx, lower_bounds=0.0))
+                     bounds=(0.0, np.inf))
         res_norm = float(np.max(np.abs(residual(sol.x)[0])))
         assert res_norm < 1e-9, f"unconverged 2-D Newton residual {res_norm:.1e}"
         return float(self.w @ rf.r(sol.x))

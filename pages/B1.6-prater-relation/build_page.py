@@ -230,7 +230,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp, solve_bvp
 from scipy.sparse import diags_array
 from pymrm import (construct_grad, construct_div, construct_boundary_value_matrices,
-                   NumJac, newton, clip_approach)
+                   NumJac, newton)
 from gallery_utils import report_agreement
 
 PAGE = "B1.6-prater-relation"
@@ -335,7 +335,7 @@ class TwoFieldPellet:
 
         v0 = np.ones(self.shape) if v_init is None else np.array(v_init, float).reshape(self.shape)
         res = newton(residual, v0.reshape((-1, 1)), maxfev=maxfev, tol=tol,
-                     callback=lambda x, g: clip_approach(x, g, self.lower, None))
+                     bounds=(self.lower, np.inf))
         v = res.x.reshape(self.shape)
         g, _ = residual(v)
         return v, float(np.max(np.abs(g)))
@@ -941,7 +941,7 @@ cells.append(code('''class ReducedPellet:
                     + np.asarray(g_s).reshape((-1, 1))), self.lap + j_s
 
         r = newton(residual, np.asarray(y_init, float).reshape((-1, 1)), maxfev=60,
-                   tol=1e-13, callback=lambda x, g: clip_approach(x, g, 0.0, None))
+                   tol=1e-13, bounds=(0.0, np.inf))
         return r.x.ravel()
 
     def eta(self, y, phi):

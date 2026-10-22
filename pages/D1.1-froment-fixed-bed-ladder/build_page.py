@@ -790,11 +790,12 @@ cells.append(code(r'''class Ladder:
                 x0[..., 2] = p0; x0[..., 3] = T0
         else:
             x0 = guess
-        # solver="spsolve" is PINNED. pymrm's newton switches to a preconditioned
-        # BICGSTAB above 50 000 unknowns, and on the two-dimensional rung's finest
-        # grids that iterative solve breaks down (info = -11) on a Jacobian this
-        # ill-conditioned. A direct sparse factorisation is the right choice here
-        # and it also makes the answer independent of an iterative tolerance.
+        # solver="spsolve": a direct sparse factorisation. Up to pymrm 2.5.0 newton
+        # switched to a preconditioned BICGSTAB above 50 000 unknowns, and on the
+        # two-dimensional rung's finest grids that iterative solve broke down
+        # (info = -11) on a Jacobian this ill-conditioned. From pymrm 3.0.0 the
+        # direct solve is the default at every size; it stays explicit here because
+        # the answer must not depend on an iterative tolerance.
         sol = newton(fun, np.asarray(x0).reshape(-1), tol=tol, maxfev=100,
                      solver="spsolve")
         x = sol.x if hasattr(sol, "x") else np.asarray(sol)
