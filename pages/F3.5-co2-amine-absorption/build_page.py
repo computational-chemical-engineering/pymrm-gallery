@@ -207,7 +207,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import root
 from scipy.sparse import diags
 from scipy.sparse.linalg import spsolve
-from pymrm import construct_grad, construct_div, NumJac, newton, clip_approach
+from pymrm import construct_grad, construct_div, NumJac, newton
 from gallery_utils import load_data, report_agreement
 
 PAGE = "F3.5-co2-amine-absorption"
@@ -330,7 +330,7 @@ geometry). Both boundary conditions are written on the **outward normal**
 
 The pointwise reaction source couples only the species axis, so
 `NumJac(shape)` with its default last-axis stencil is the right Jacobian
-structure. The steady state is found with `pymrm.newton` plus `clip_approach`
+structure. The steady state is found with `pymrm.newton(..., bounds=...)`
 (positivity), marching the instantaneous-reaction constant up a fixed ladder
 $k_{inst} = 10^2 \dots 10^7$ s⁻¹ — a deterministic continuation whose end
 point is checked for $k_{inst}$-independence below."""))
@@ -506,7 +506,7 @@ class Film:
         for k_i in k_ladder:
             self.k_inst = k_i
             res = newton(self.residual, c, tol=tol, maxfev=200,
-                         callback=lambda x, g: clip_approach(x, g, 1e-12, None))
+                         bounds=(1e-12, np.inf))
             if not res.success:
                 raise RuntimeError(f"newton failed at k_inst={k_i}")
             c = res.x.reshape(self.shape)
@@ -1219,7 +1219,7 @@ def res2(u):
     return (A2 @ u.reshape((-1, 1)) + g2.reshape((-1, 1))
             + gr.reshape((-1, 1))), A2 + jr
 sol2 = newton(res2, np.tile([0.5, 1.0], (n_x, 1)), tol=1e-11, maxfev=100,
-              callback=lambda x, g: clip_approach(x, g, 0.0, None))
+              bounds=(0.0, np.inf))
 u2 = sol2.x.reshape((n_x, 2))
 flux0 = float((-grad2 @ u2.reshape((-1, 1))).ravel()[0]
               + np.asarray(-gbc2.todense()).ravel()[0])
