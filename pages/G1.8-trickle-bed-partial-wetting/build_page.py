@@ -233,7 +233,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 from IPython.display import Markdown, display
 
-from pymrm import construct_grad, construct_div, NumJac, newton, clip_approach
+from pymrm import construct_grad, construct_div, NumJac, newton
 from gallery_utils import load_data, load_meta, cite_data, report_agreement
 
 PAGE = "G1.8-trickle-bed-partial-wetting"
@@ -452,7 +452,7 @@ cells.append(code('''class WettedSphere:
         hi = max(1.0, C_star)
         r = newton(residual, np.full((self.n_u, 1), min(1.0, C_star)),
                    maxfev=maxfev, tol=1e-13,
-                   callback=lambda x, g: clip_approach(x, g, 0.0, hi))
+                   bounds=(0.0, hi))
         y = r.x.ravel()
         res, _ = residual(y)
         return y, float(np.max(np.abs(res)))
