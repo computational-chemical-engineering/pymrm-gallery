@@ -374,7 +374,7 @@ from scipy.sparse import eye_array
 from scipy.sparse.linalg import splu
 from pymrm import (construct_grad, construct_div, construct_convflux_upwind,
                    interp_cntr_to_stagg_tvd, vanleer, compute_boundary_values,
-                   NumJac, newton, clip_approach)
+                   NumJac, newton)
 from gallery_utils import report_agreement
 
 T_START = time.time()
@@ -541,7 +541,7 @@ class Pellet:
                     + np.asarray(g_s).reshape((-1, 1))), self.lap + j_s
         y0 = np.ones(self.shape) if y_init is None else np.asarray(y_init, float)
         r = newton(residual, y0.reshape((-1, 1)), maxfev=maxfev, tol=1e-13,
-                   callback=lambda x, g: clip_approach(x, g, 0.0, 1.0))
+                   bounds=(0.0, 1.0))
         y = r.x.ravel()
         res, _ = residual(y)
         return y, float(np.max(np.abs(res)))
