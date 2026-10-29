@@ -6098,10 +6098,10 @@ models:
       REPARAMETERISED: constant yield makes X = phi(a - S), so
       mu_m S/(K_sx X + S) = (mu_m/beta) S/(K_sx phi a/beta + S) with
       beta = 1 - K_sx phi - a bijection between the two parameter pairs, sympy
-      residual exactly zero, confirmed to better than 1e-4 in both constants by two
+      residual exactly zero, confirmed to better than 1e-3 in both constants by two
       optimisers started from different places on the two parameterisations (the
       exact residuals are those optimisers' exit tolerances, printed on the page
-      and deliberately not reported as metrics). Of the
+      and registered as bounds that every run checks, not as values). Of the
       two that ARE separable at this design, Blackman needs 1.30 repeats of the run
       and Tessier 10.3, N* being a ~50 %-power threshold rather than a
       95 %-detection sample size.
@@ -6150,7 +6150,8 @@ models:
       chemostat sweeping the FEED. Monod washes out at D_c = mu_m S_f/(K_S + S_f),
       Contois at D_c = mu_m whatever the feed; the two cross at EXACTLY S_f = a,
       the substrate intercept of the batch run's own material balance (root-found
-      197.116 against 197.120), and differ by a factor 1.83 at S_f = 20.
+      at 197.1 against 197.120, equal within the Contois fit's exit tolerance), and
+      differ by a factor 1.83 at S_f = 20.
       ONE PRINTED CELL IS REPORTED AND NOT REPAIRED: the table's fourth
       interval-average substrate concentration is off the constant-yield line the
       other six rows fix at R^2 = 0.99996 (all seven give 0.98505), and a
