@@ -37,20 +37,36 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          if [ "${{ matrix.pymrm }}" = "latest" ]; then
+          # "pinned" installs the floor that requirements.txt declares, so the
+          # floor is actually tested; "latest" installs the newest release.
+          if [ "${{ matrix.pymrm }}" = "pinned" ]; then
+            floor=$(grep -oP '^pymrm>=\K[0-9.]+' requirements.txt)
+            pip install "pymrm==${floor}"
+          else
             pip install --upgrade --pre pymrm
           fi
           python -c "import pymrm; print('pymrm', pymrm.__version__)"
 
+      - name: Record the machine
+        # Pages that pass on one runner and fail on another differ in round-off;
+        # the CPU and the BLAS kernel are what to look at first.
+        run: |
+          lscpu | grep -E 'Model name|^CPU\(s\)' || true
+          python -c "import numpy; numpy.show_config()" | grep -iE 'openblas|version' | head -4 || true
+
       - name: Execute every page
         run: python scripts/run_pages.py
 
+      # Run even when a page failed: before 2026-10-29 this step was skipped on
+      # every run with a failing page, so the metrics went unchecked for weeks.
       - name: Check agreement metrics against baseline
-        if: matrix.pymrm == 'pinned'
+        if: always()
         run: python scripts/check_agreement.py
 
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
-          name: executed-notebooks-${{ matrix.pymrm }}
-          path: pages/**/index.ipynb
+          name: executed-pages-${{ matrix.pymrm }}
+          path: |
+            pages/**/index.ipynb
+            pages/**/agreement.json
