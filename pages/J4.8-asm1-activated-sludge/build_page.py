@@ -186,7 +186,7 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 from pymrm import construct_div, construct_convflux_upwind, NumJac, newton
-from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from gallery_utils import load_data, load_meta, cite_data, Claims
 
 plt.rcParams.update({"figure.dpi": 110, "axes.grid": True, "grid.alpha": 0.3})
 PAGE = "J4.8-asm1-activated-sludge"'''))
@@ -643,17 +643,20 @@ b150, pred150, s150 = rows[("printed 2.86 / 4.57", 150)]
 bx150, _, _ = rows[("exact 20/7 / 32/7", 150)]
 worst_n = max(abs(b["N"]) for b, _, _ in rows.values())
 worst_q = max(abs(b["charge"]) for b, _, _ in rows.values())
-print(f"\n   Nitrogen closes to {worst_n:.0e} and charge to {worst_q:.0e} g m-3 d-1, against")
-print(f"   an oxygen demand of {s150['otr']:.0f} g m-3 d-1 - eleven to fifteen orders of")
-print("   magnitude down, i.e. machine precision. That is a genuine test of the")
+print(f"\n   Nitrogen and charge both close to below 1e-8 g m-3 d-1 (here {worst_n:.0e} and")
+print(f"   {worst_q:.0e}), against an oxygen demand of {s150['otr']:.0f} g m-3 d-1: round-off,")
+print("   whose exact digits differ from machine to machine. That is a genuine test of the")
 print("   discretisation: the upwind boundary fluxes and the summed source term have")
 print("   to cancel exactly, and they do at every grid.")
 print(f"\n   COD does not close. It leaks {b150['COD']:.4f} g O2 m-3 d-1. The matrix's own")
-print(f"   two residuals predict that leak to {abs(b150['COD'] - pred150) / abs(pred150):.0e} relative, so it is")
+print(f"   two residuals predict that leak to below 1e-8 relative (here {abs(b150['COD'] - pred150) / abs(pred150):.0e}), so it is")
 print("   stoichiometric and not numerical - and it is grid independent, which")
 print("   numerical error would not be.")
-print(f"\n   Substituting 20/7 and 32/7 closes the same lane to {abs(bx150['COD']):.0e}, better by a")
-print(f"   factor of {abs(b150['COD'] / bx150['COD']):.0e}, with nothing else changed anywhere.")
+# The exact-factor leak is round-off, and exactly 0 on some BLAS kernels, so the
+# improvement is stated against its bound, never as a ratio to it.
+print(f"\n   Substituting 20/7 and 32/7 closes the same lane to below 1e-8 (here")
+print(f"   {abs(bx150['COD']):.0e}), better by a factor of more than {abs(b150['COD']) / 1e-8:.0e},"
+      " with nothing else changed anywhere.")
 print(f"   In practice the printed rounding mis-states the oxygen requirement by")
 print(f"   {100 * abs(b150['COD']) / s150['otr']:.3f} % - irrelevant for design, and decisive as evidence that")
 print("   the transcription is right.")'''))
@@ -787,24 +790,35 @@ print("   inorganic nitrogen very little, because ammonification only decides ho
 print("   fast an already-small pool turns over. It does not touch continuity at all -")
 print("   no kinetic parameter appears in any of the checks above.")
 
-report_agreement("J4.8", {
-    "charge_residuals_all_zero": float(all(res["charge"][j] == 0 for j in sorted(NU))),
-    "nitrogen_residuals_all_zero": float(all(res["N"][j] == 0 for j in sorted(NU))),
-    "cod_residual_p2": float(res["COD"][2].subs(STOICH)),
-    "cod_residual_p3": float(res["COD"][3].subs(STOICH)),
-    "cod_residuals_zero_with_exact_factors": float(
-        all(res_exact["COD"][j] == 0 for j in sorted(NU))),
-    "coefficients_recovered_identically": float(n_exact),
-    "coefficients_recovered_up_to_rounding": float(n_rounding),
-    "eq3_cross_check": float(delta_eq3 == 0),
-    "reactor_charge_balance": float(abs(b150["charge"])),
-    "reactor_nitrogen_balance": float(abs(b150["N"])),
-    "reactor_cod_leak": float(abs(b150["COD"])),
-    "reactor_cod_leak_vs_prediction": float(abs(b150["COD"] - pred150) / abs(pred150)),
-    "reactor_cod_leak_exact_factors": float(abs(bx150["COD"])),
-    "reactor_cod_leak_fraction_of_otr": float(abs(b150["COD"]) / s150["otr"]),
-    "tn_reduction_at_optimum": float(1 - TN[i_min] / TN[0]),
-})'''))
+# Every number is registered once with how it is checked (docs/claims-design.md).
+# The symbolic results are exact; the reactor balances are round-off of a
+# conservative discretisation, so they are bounds (identity), 1e-8 g m-3 d-1 being
+# eleven orders of magnitude below the oxygen demand and seven below the COD leak.
+# No break table yet: the page predates the rule and is flagged until it has one.
+claims = Claims("J4.8")
+claims.exact("charge_residuals_all_zero", all(res["charge"][j] == 0 for j in sorted(NU)))
+claims.exact("nitrogen_residuals_all_zero", all(res["N"][j] == 0 for j in sorted(NU)))
+claims.value("cod_residual_p2", float(res["COD"][2].subs(STOICH)))
+claims.value("cod_residual_p3", float(res["COD"][3].subs(STOICH)))
+claims.exact("cod_residuals_zero_with_exact_factors",
+             all(res_exact["COD"][j] == 0 for j in sorted(NU)))
+claims.exact("coefficients_recovered_identically", n_exact)
+claims.exact("coefficients_recovered_up_to_rounding", n_rounding)
+claims.exact("eq3_cross_check", delta_eq3 == 0)
+claims.bound("reactor_charge_balance", abs(b150["charge"]), max=1e-8, basis="identity",
+             unit="g m-3 d-1", note="conservative discretisation closes charge to round-off")
+claims.bound("reactor_nitrogen_balance", abs(b150["N"]), max=1e-8, basis="identity",
+             unit="g m-3 d-1", note="conservative discretisation closes nitrogen to round-off")
+claims.value("reactor_cod_leak", abs(b150["COD"]), unit="g m-3 d-1")
+claims.bound("reactor_cod_leak_vs_prediction", abs(b150["COD"] - pred150) / abs(pred150),
+             max=1e-8, basis="identity",
+             note="the leak is the matrix's two residuals times the rates, to round-off")
+claims.bound("reactor_cod_leak_exact_factors", abs(bx150["COD"]), max=1e-8,
+             basis="identity", unit="g m-3 d-1",
+             note="with 20/7 and 32/7 COD closes; exactly 0 on some BLAS kernels")
+claims.value("reactor_cod_leak_fraction_of_otr", abs(b150["COD"]) / s150["otr"])
+claims.value("tn_reduction_at_optimum", 1 - TN[i_min] / TN[0])
+claims.report(require_breaks=False)'''))
 
 cells.append(md(r"""**What this page does not establish.** No comparison with a
 measurement, anywhere, and that is a property of the source: the abbreviated

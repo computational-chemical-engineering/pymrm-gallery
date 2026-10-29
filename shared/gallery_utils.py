@@ -367,7 +367,11 @@ class Claims:
     # -- output ---------------------------------------------------------------
 
     def report(self, write: bool = True, require_breaks: bool = True) -> dict:
-        """Print the claims, write ``agreement.json`` (format 2), raise on failure."""
+        """Print the claims, write ``agreement.json`` (format 2), raise on failure.
+
+        ``require_breaks=False`` is for a page migrated before it has a break
+        table; the file records it and ``scripts/check_claims.py`` lists the page.
+        """
         problems = list(self._problems)
         if require_breaks:
             for name, c in self.metrics.items():
@@ -384,6 +388,10 @@ class Claims:
             "quoted": self.quoted,
             "breaks": {n: [r for r, caught in rows if caught] for n, rows in self._rows.items()},
         }
+        if not require_breaks:
+            # A page migrated before its break table: visible in the file and
+            # listed by scripts/check_claims.py until the table exists.
+            payload["breaks_required"] = False
         width = max((len(k) for k in self.metrics), default=0)
         print(f"Claims for {self.page}:")
         for k, c in self.metrics.items():
