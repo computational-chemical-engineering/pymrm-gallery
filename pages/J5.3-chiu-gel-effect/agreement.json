@@ -1,61 +1,706 @@
 {
   "page": "J5.3-chiu-gel-effect",
+  "format": 2,
+  "env": {
+    "pymrm": "3.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "onset_x_50C": 0.2551611032826162,
-    "onset_x_70C": 0.348377541516603,
-    "onset_x_90C": 0.4403385111827638,
-    "onset_dev_50C": -0.0048388967173838004,
-    "onset_dev_70C": -0.0016224584833969824,
-    "onset_dev_90C": -0.009661488817236219,
-    "onset_max_abs_dev": 0.009661488817236219,
-    "onset_dev_other_loading_max": 0.031260607396432605,
-    "onset_definition_band_max": 0.09009400933194978,
-    "onset_two_route_max_rel": 9.078293672359905e-12,
-    "onset_resample_floor_max_rel": 1.3111239727940114e-05,
-    "onset_i0_shift_max": 0.026705667920466192,
-    "onset_compressed_shift_max": 0.016334236164114557,
-    "onset_per_decade_theta_t": -0.217347340692004,
-    "qss_start_max_rel": 7.361703121988583e-06,
-    "dE_theta_t_0258_kcal": 34.908160697823085,
-    "dE_theta_t_01548_kcal": 34.516600258394256,
-    "dE_theta_p_kcal": 27.771564111550873,
-    "dE_theta_t_rel_vs_printed": 0.026710608759502596,
-    "dE_theta_p_rel_vs_printed": 0.008158424587468849,
-    "A_linear_in_Tgp2_max_rel": 0.0008819441969856734,
-    "A_null_linear_in_T_max_rel": 0.015350877192982408,
-    "A_null_gain": 17.405723905717554,
-    "Tgp_implied_C": 111.42857142857153,
-    "Tgp_band_width_C": 25.777777777777715,
-    "A_exponent_implied": 2.0658640708524194,
-    "A_gain_min_at_Tgp_band_ends": 3.53468093539435,
-    "A_second_difference": -0.0069999999999999785,
-    "qssa_lam0_ratio_50C": 3.5175513584224323,
-    "qssa_lam0_ratio_other_max": 2.5480910060511723,
-    "qssa_conv_max_dev_50C": 0.03861088696764359,
-    "concave_up_lower_x_max": 0.3064307458903581,
-    "concave_onset_margin_min": 0.12933477911579233,
-    "switch_d2x_max_pre": -1.3914687586303442e-06,
-    "switch_logkt_jump": 0.7601937773740151,
-    "compress_theta_t_max_rel": 0.18828079660302155,
-    "compress_theta_p_max_rel": 0.0836954146700446,
-    "compress_A_max_rel": 0.0008819441969857289,
-    "moment_identity_max_rel": 2.0950177865767862e-16,
-    "moment_identity_ktc_max_rel": 1.594165641583458e-16,
-    "moment_identity_broken_max_rel": 2.0,
-    "moment_identity_trunc_max_rel": 0.031251083720956446,
-    "eq26_symbolic_residual": 0.0,
-    "eq22_rm_over_rD_max_dev": 1.8582692051469576e-05,
-    "bvp_rms_err_finest": 1.6099989218232278e-06,
-    "bvp_order": 1.8617771981908688,
-    "bvp_K_spread_rel": 1.5050369607186877e-10,
-    "march_order": 1.0094352088716685,
-    "march_err_finest": 2.1196163680681224e-05,
-    "mw_approx_pre_onset_max": 0.000821179544655215,
-    "mw_approx_post_onset_max": 0.5240333097475882,
-    "xlim_50C": 0.9553484443358589,
-    "xlim_monotone_margin": 0.011165332809713435,
-    "i0_dlogkt_max": 0.21996846543298254,
-    "ln10_onset_shift": 0.0011582886257126002,
-    "mw_reconstruction_x_maxdiff": 1.3419265698644267e-12
+    "onset_x_50C": {
+      "kind": "value",
+      "value": 0.2551611032826165,
+      "rtol": 0.05
+    },
+    "onset_x_70C": {
+      "kind": "value",
+      "value": 0.348377541516603,
+      "rtol": 0.05
+    },
+    "onset_x_90C": {
+      "kind": "value",
+      "value": 0.44033851118276357,
+      "rtol": 0.05
+    },
+    "onset_dev_50C": {
+      "kind": "value",
+      "value": -0.004838896717383523,
+      "rtol": 0.05
+    },
+    "onset_dev_70C": {
+      "kind": "value",
+      "value": -0.0016224584833969824,
+      "rtol": 0.05
+    },
+    "onset_dev_90C": {
+      "kind": "value",
+      "value": -0.009661488817236441,
+      "rtol": 0.05
+    },
+    "onset_max_abs_dev": {
+      "kind": "value",
+      "value": 0.009661488817236441,
+      "rtol": 0.05
+    },
+    "onset_dev_other_loading_max": {
+      "kind": "value",
+      "value": 0.03126060739643266,
+      "rtol": 0.05
+    },
+    "onset_definition_band_max": {
+      "kind": "value",
+      "value": 0.0900940093319495,
+      "rtol": 0.05
+    },
+    "onset_two_route_max_rel": {
+      "kind": "bound",
+      "value": 9.07673936012543e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "relative to the onset; x-route Radau at rtol 1e-10 against the t-route BDF at rtol 1e-11; measured 8.9e-12 to 9.2e-12 across BLAS kernels, the bound is about 11x that"
+    },
+    "onset_resample_floor_max_rel": {
+      "kind": "value",
+      "value": 1.3111239727309784e-05,
+      "rtol": 0.05,
+      "note": "a discretisation result: the onset against the resampling grid"
+    },
+    "onset_i0_shift_max": {
+      "kind": "value",
+      "value": 0.026705667920466192,
+      "rtol": 0.05
+    },
+    "onset_compressed_shift_max": {
+      "kind": "value",
+      "value": 0.016334236164113447,
+      "rtol": 0.05
+    },
+    "onset_per_decade_theta_t": {
+      "kind": "value",
+      "value": -0.21734734069200448,
+      "rtol": 0.05
+    },
+    "qss_start_max_rel": {
+      "kind": "value",
+      "value": 7.361703121988583e-06,
+      "rtol": 0.05,
+      "note": "the quasi-steady-state error of lambda_0 at the start state, set by the kinetics, not by a solver tolerance (BDF at rtol 1e-11)"
+    },
+    "dE_theta_t_0258_kcal": {
+      "kind": "value",
+      "value": 34.90816069782293,
+      "rtol": 0.05
+    },
+    "dE_theta_t_01548_kcal": {
+      "kind": "value",
+      "value": 34.5166002583941,
+      "rtol": 0.05
+    },
+    "dE_theta_p_kcal": {
+      "kind": "value",
+      "value": 27.77156411155074,
+      "rtol": 0.05
+    },
+    "dE_theta_t_rel_vs_printed": {
+      "kind": "value",
+      "value": 0.026710608759497934,
+      "rtol": 0.05
+    },
+    "dE_theta_p_rel_vs_printed": {
+      "kind": "value",
+      "value": 0.008158424587473512,
+      "rtol": 0.05
+    },
+    "A_linear_in_Tgp2_max_rel": {
+      "kind": "value",
+      "value": 0.0008819441969856734,
+      "rtol": 0.05
+    },
+    "A_null_linear_in_T_max_rel": {
+      "kind": "value",
+      "value": 0.015350877192982408,
+      "rtol": 0.05
+    },
+    "A_null_gain": {
+      "kind": "value",
+      "value": 17.405723905717554,
+      "rtol": 0.05
+    },
+    "Tgp_implied_C": {
+      "kind": "value",
+      "value": 111.42857142857153,
+      "rtol": 0.05
+    },
+    "Tgp_band_width_C": {
+      "kind": "value",
+      "value": 25.777777777777715,
+      "rtol": 0.05
+    },
+    "A_exponent_implied": {
+      "kind": "value",
+      "value": 2.0658640708524194,
+      "rtol": 0.05
+    },
+    "A_gain_min_at_Tgp_band_ends": {
+      "kind": "value",
+      "value": 3.5346809353952424,
+      "rtol": 0.05
+    },
+    "A_second_difference": {
+      "kind": "value",
+      "value": -0.0069999999999999785,
+      "rtol": 0.05
+    },
+    "qssa_lam0_ratio_50C": {
+      "kind": "value",
+      "value": 3.5175513584224323,
+      "rtol": 0.05
+    },
+    "qssa_lam0_ratio_other_max": {
+      "kind": "value",
+      "value": 2.5480910060511723,
+      "rtol": 0.05
+    },
+    "qssa_conv_max_dev_50C": {
+      "kind": "value",
+      "value": 0.03861088696764359,
+      "rtol": 0.05
+    },
+    "concave_up_lower_x_max": {
+      "kind": "value",
+      "value": 0.3064307458903581,
+      "rtol": 0.05
+    },
+    "concave_onset_margin_min": {
+      "kind": "value",
+      "value": 0.12933477911579228,
+      "rtol": 0.05,
+      "note": "spreads 1e-5 absolute across BLAS kernels; quoted to three decimals"
+    },
+    "switch_d2x_max_pre": {
+      "kind": "value",
+      "value": -1.3914687586303442e-06,
+      "rtol": 0.05
+    },
+    "switch_logkt_jump": {
+      "kind": "value",
+      "value": 0.7601937773740151,
+      "rtol": 0.05
+    },
+    "compress_theta_t_max_rel": {
+      "kind": "value",
+      "value": 0.18828079660301422,
+      "rtol": 0.05
+    },
+    "compress_theta_p_max_rel": {
+      "kind": "value",
+      "value": 0.08369541467002906,
+      "rtol": 0.05
+    },
+    "compress_A_max_rel": {
+      "kind": "value",
+      "value": 0.0008819441969857289,
+      "rtol": 0.05
+    },
+    "moment_identity_max_rel": {
+      "kind": "bound",
+      "value": 2.0950177865767862e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "relative to each moment's chain-length sum; measured 2.1e-16"
+    },
+    "moment_identity_ktc_max_rel": {
+      "kind": "bound",
+      "value": 1.594165641583458e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "relative to each moment's chain-length sum; measured 1.6e-16"
+    },
+    "moment_identity_broken_max_rel": {
+      "kind": "bound",
+      "value": 2.0,
+      "min": 1.99,
+      "max": 2.01,
+      "basis": "identity",
+      "structural": true,
+      "note": "a sign flip on an exactly matching term gives |-2c|/|c| = 2 on any population, so no break row can move it"
+    },
+    "moment_identity_trunc_max_rel": {
+      "kind": "value",
+      "value": 0.031251083720956446,
+      "rtol": 0.05
+    },
+    "eq26_symbolic_residual": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.0,
+      "basis": "identity",
+      "note": "sympy simplifies eq. 26 minus its own integration of eq. 21 to 0"
+    },
+    "eq22_rm_over_rD_max_dev": {
+      "kind": "value",
+      "value": 1.8582692051469576e-05,
+      "rtol": 0.05
+    },
+    "bvp_rms_err_finest": {
+      "kind": "value",
+      "value": 1.6099989218232278e-06,
+      "rtol": 0.05
+    },
+    "bvp_order": {
+      "kind": "bound",
+      "value": 1.8617771981908688,
+      "min": 1.5,
+      "max": 2.5,
+      "basis": "theory",
+      "note": "second-order finite volumes on the spherical shell; 1.86 at n = 1280"
+    },
+    "bvp_K_spread_rel": {
+      "kind": "bound",
+      "value": 1.5050369607186877e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "relative to K_exact; the flux of a conservative finite-volume scheme with no source is the same at every face to round-off of the solve; measured 1.5e-10, the bound is about 66x that"
+    },
+    "march_order": {
+      "kind": "bound",
+      "value": 1.0094352088716685,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "backward Euler is first order in dt; 1.0094 over a 16x refinement"
+    },
+    "march_err_finest": {
+      "kind": "value",
+      "value": 2.1196163680681224e-05,
+      "rtol": 0.05
+    },
+    "mw_approx_pre_onset_max": {
+      "kind": "value",
+      "value": 0.000821179544655215,
+      "rtol": 0.05
+    },
+    "mw_approx_post_onset_max": {
+      "kind": "value",
+      "value": 0.5240333097475882,
+      "rtol": 0.05
+    },
+    "xlim_50C": {
+      "kind": "value",
+      "value": 0.9553484443358589,
+      "rtol": 0.05
+    },
+    "xlim_monotone_margin": {
+      "kind": "value",
+      "value": 0.011165332809713435,
+      "rtol": 0.05
+    },
+    "i0_dlogkt_max": {
+      "kind": "value",
+      "value": 0.21996846543298254,
+      "rtol": 0.05
+    },
+    "ln10_onset_shift": {
+      "kind": "value",
+      "value": 0.001158288625712267,
+      "rtol": 0.05
+    },
+    "mw_reconstruction_x_maxdiff": {
+      "kind": "bound",
+      "value": 1.3419265698644267e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "conversion, absolute; x contains no M_0, so the gap is BDF at rtol 1e-11; measured 1.0e-12 to 1.7e-12 across BLAS kernels, the bound is about 60x that"
+    }
+  },
+  "quoted": {
+    "onset_x_50C": [
+      "0.25516"
+    ],
+    "onset_x_70C": [
+      "0.34838"
+    ],
+    "onset_x_90C": [
+      "0.44034"
+    ],
+    "onset_dev_50C": [
+      "-0.00484"
+    ],
+    "onset_dev_70C": [
+      "-0.00162"
+    ],
+    "onset_dev_90C": [
+      "-0.00966"
+    ],
+    "onset_max_abs_dev": [
+      "0.00966"
+    ],
+    "onset_dev_other_loading_max": [
+      "0.03126"
+    ],
+    "onset_definition_band_max": [
+      "0.09009"
+    ],
+    "onset_two_route_max_rel": [
+      "below 1e-10"
+    ],
+    "onset_resample_floor_max_rel": [
+      "1.311e-05"
+    ],
+    "onset_compressed_shift_max": [
+      "0.01633"
+    ],
+    "onset_per_decade_theta_t": [
+      "-0.21735"
+    ],
+    "qss_start_max_rel": [
+      "7.36e-06"
+    ],
+    "dE_theta_t_0258_kcal": [
+      "34.908161"
+    ],
+    "dE_theta_t_01548_kcal": [
+      "34.516600"
+    ],
+    "dE_theta_p_kcal": [
+      "27.771564"
+    ],
+    "A_linear_in_Tgp2_max_rel": [
+      "8.819e-04"
+    ],
+    "A_null_linear_in_T_max_rel": [
+      "1.535e-02"
+    ],
+    "A_null_gain": [
+      "17.4057"
+    ],
+    "A_gain_min_at_Tgp_band_ends": [
+      "3.5347"
+    ],
+    "A_second_difference": [
+      "-0.007000"
+    ],
+    "Tgp_implied_C": [
+      "111.42857"
+    ],
+    "A_exponent_implied": [
+      "2.0659"
+    ],
+    "qssa_lam0_ratio_50C": [
+      "3.5176"
+    ],
+    "qssa_conv_max_dev_50C": [
+      "0.038611"
+    ],
+    "concave_up_lower_x_max": [
+      "0.30643"
+    ],
+    "concave_onset_margin_min": [
+      "0.129"
+    ],
+    "switch_d2x_max_pre": [
+      "-1.391e-06"
+    ],
+    "switch_logkt_jump": [
+      "0.760194"
+    ],
+    "compress_theta_t_max_rel": [
+      "0.188281",
+      "18.8281 %"
+    ],
+    "compress_theta_p_max_rel": [
+      "0.083695"
+    ],
+    "compress_A_max_rel": [
+      "0.000882"
+    ],
+    "moment_identity_max_rel": [
+      "below 1e-14"
+    ],
+    "moment_identity_ktc_max_rel": [
+      "below 1e-14"
+    ],
+    "moment_identity_trunc_max_rel": [
+      "3.13e-02"
+    ],
+    "eq22_rm_over_rD_max_dev": [
+      "1.858e-05"
+    ],
+    "bvp_K_spread_rel": [
+      "less than 1e-8"
+    ],
+    "bvp_order": [
+      "1.8618"
+    ],
+    "march_order": [
+      "1.0094"
+    ],
+    "march_err_finest": [
+      "2.12e-05"
+    ],
+    "mw_reconstruction_x_maxdiff": [
+      "less than 1e-10"
+    ],
+    "xlim_50C": [
+      "0.95535"
+    ],
+    "xlim_monotone_margin": [
+      "0.011165"
+    ]
+  },
+  "breaks": {
+    "dE_theta_t_0258_kcal": [
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)"
+    ],
+    "dE_theta_t_01548_kcal": [
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3"
+    ],
+    "dE_theta_p_kcal": [
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min"
+    ],
+    "dE_theta_t_rel_vs_printed": [
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)"
+    ],
+    "dE_theta_p_rel_vs_printed": [
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: theta_p(70) 250 -> 2500 min, both rows",
+      "stated: printed dE(theta_p) 28 -> 24 kcal/mol"
+    ],
+    "A_linear_in_Tgp2_max_rel": [
+      "Table I: T_gp 114 -> 111 degC",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_null_linear_in_T_max_rel": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_null_gain": [
+      "Table I: T_gp 114 -> 111 degC",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "Tgp_implied_C": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_exponent_implied": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_gain_min_at_Tgp_band_ends": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_second_difference": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "compress_theta_t_max_rel": [
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)"
+    ],
+    "compress_theta_p_max_rel": [
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: theta_p(70) 250 -> 2500 min, both rows"
+    ],
+    "compress_A_max_rel": [
+      "Table I: T_gp 114 -> 111 degC",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "onset_x_50C": [
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
+    ],
+    "onset_x_70C": [
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: A(70) 0.152 -> 0.142",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
+    ],
+    "onset_x_90C": [
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4"
+    ],
+    "onset_dev_50C": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4"
+    ],
+    "onset_dev_70C": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_p(70) 250 -> 2500 min, both rows",
+      "Table II: A(70) 0.152 -> 0.142",
+      "stated: printed onset at 70 degC 0.35 -> 0.30",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4"
+    ],
+    "onset_dev_90C": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: A(90) 0.163 -> 0.168",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4"
+    ],
+    "onset_max_abs_dev": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "stated: printed onset at 70 degC 0.35 -> 0.30",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
+    ],
+    "onset_dev_other_loading_max": [
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(70, 0.01548) 83.0 -> 88.0 min",
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3"
+    ],
+    "onset_i0_shift_max": [
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(70, 0.01548) 83.0 -> 88.0 min",
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: theta_p(70) 250 -> 2500 min, both rows",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258"
+    ],
+    "ln10_onset_shift": [
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
+    ],
+    "onset_two_route_max_rel": [
+      "second route run at rtol 1e-6 on 801 points"
+    ],
+    "qss_start_max_rel": [
+      "start-up check run against a lambda_0 that is 3 % wrong"
+    ],
+    "qssa_lam0_ratio_50C": [
+      "QSSA comparison rebuilt with theta_t doubled"
+    ],
+    "qssa_conv_max_dev_50C": [
+      "QSSA comparison rebuilt with theta_t doubled"
+    ],
+    "switch_d2x_max_pre": [
+      "the counterfactual switched at x_c = 0.45 instead of 0.30"
+    ],
+    "switch_logkt_jump": [
+      "the counterfactual switched at x_c = 0.45 instead of 0.30"
+    ],
+    "concave_up_lower_x_max": [
+      "concavity recomputed with theta_t doubled"
+    ],
+    "concave_onset_margin_min": [
+      "concavity recomputed with theta_t doubled"
+    ],
+    "moment_identity_max_rel": [
+      "one sign flipped in eq. 13, in eq. 17, and in eq. 12"
+    ],
+    "moment_identity_ktc_max_rel": [
+      "one sign flipped in eq. 13, in eq. 17, and in eq. 12"
+    ],
+    "moment_identity_trunc_max_rel": [
+      "one sign flipped in eq. 13, in eq. 17, and in eq. 12",
+      "moment identity on a different seeded population, N = 24"
+    ],
+    "bvp_rms_err_finest": [
+      "BVP refined only to n = 80 instead of n = 640",
+      "construct_div with nu = 0 (Cartesian) instead of nu = 2"
+    ],
+    "bvp_order": [
+      "BVP refined only to n = 80 instead of n = 640"
+    ],
+    "bvp_K_spread_rel": [
+      "construct_div with nu = 0 (Cartesian) instead of nu = 2"
+    ],
+    "eq22_rm_over_rD_max_dev": [
+      "construct_div with nu = 0 (Cartesian) instead of nu = 2",
+      "eq. 22 compared against a K_approx 10 % off",
+      "eq. 22 priced on a shell refined only to n = 40"
+    ],
+    "eq26_symbolic_residual": [
+      "eq. 26's 3 D written as 2 D"
+    ],
+    "march_err_finest": [
+      "backward Euler refined only to nt = 200 instead of nt = 3200"
+    ],
+    "march_order": [
+      "backward Euler refined only to nt = 200 instead of nt = 3200"
+    ],
+    "mw_approx_pre_onset_max": [
+      "molecular-weight split moved from the onset to halfway to x = 1"
+    ],
+    "mw_approx_post_onset_max": [
+      "molecular weights read only to half the integration horizon"
+    ],
+    "xlim_50C": [
+      "limiting-conversion threshold 1e-3 -> 1e-2 of the peak rate"
+    ],
+    "xlim_monotone_margin": [
+      "limiting-conversion threshold 1e-3 -> 1e-2 of the peak rate"
+    ],
+    "i0_dlogkt_max": [
+      "initiator-loading gap with every theta_t(0.01548) 40 % smaller"
+    ],
+    "mw_reconstruction_x_maxdiff": [
+      "MW test contaminated with a 0.1 % change in k_p0"
+    ],
+    "onset_per_decade_theta_t": [
+      "theta_t leverage measured at 90 degC instead of 50 degC"
+    ],
+    "onset_compressed_shift_max": [
+      "compressed A perturbed by 1 % before the onset is recomputed"
+    ],
+    "Tgp_band_width_C": [
+      "T_gp band computed at +-0.001 in A instead of +-0.0005"
+    ],
+    "qssa_lam0_ratio_other_max": [
+      "QSSA comparison rebuilt with theta_t doubled"
+    ],
+    "onset_definition_band_max": [
+      "definition band formed without the 3-5 and 4-6 decade windows (the narrowest band this page ever reported)",
+      "definition band formed without the 4-6 decade window (the band this page reported until the exclusion test was applied to it)"
+    ],
+    "onset_resample_floor_max_rel": [
+      "resampling floor measured over nx = 2001/4001/8001 only"
+    ]
   }
 }

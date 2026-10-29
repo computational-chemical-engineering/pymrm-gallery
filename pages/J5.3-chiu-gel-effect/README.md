@@ -42,7 +42,7 @@ construction on the 0.01548 curve of the same figures misses by up to
 readings — six of *"the sloped region"*, one of *"the initial value"* — spread
 the answer by **0.09009**, **9.33×** the largest miss, while the resampling grid
 moves it by **1.311e-05** relative (so five decimals are quoted, not six) and a
-completely independent integration reproduces it to **9.08e-12** — a number that
+completely independent integration reproduces it to **below 1e-10** relative — a number that
 prices the attracting manifold `lambda_0(x)`, not the accuracy of either
 integration. The band is reported beside the value, and the page says what the
 band does **not** cover: the steepest-slope tangent, the most literal reading of
@@ -89,7 +89,7 @@ construction. The counterfactual settles the paper's own argument: the same mode
 switched on at `x_c = 0.3` is concave **down** over 100 % of its pre-switch
 portion and jumps **0.760194** of a decade in `log k_t` at the switch, while the
 published model is concave **up** from `x = 0.30643` to the sharp rise, every
-onset inside that window by at least **0.12933**. **One qualification the paper
+onset inside that window, the smallest margin **0.129**. **One qualification the paper
 does not make:** below that lower bound the published model's curve is concave
 *down* too — initiator depletion — so the sentence is true of the region it means
 and not of the whole pre-gel curve.
@@ -105,7 +105,7 @@ cost **exactly r_m/r_D**, symbolically and then a second time through the flux a
 pymrm spherical-shell BVP actually computes — **1.858e-05** over five ratios at
 `n = 6400`, converging onto `r_m/r_D` at observed order **1.8953**; the moment
 equations 12–17 reproduced from eq. 4a, 4b and 5 summed over a
-seeded population to **2.10e-16** — including the `k_tc` terms, which Table I sets
+seeded population to a relative residual **below 1e-14** — including the `k_tc` terms, which Table I sets
 to zero and which therefore **no condition the paper reports ever exercises**.
 
 **One retraction, about what a number *was*.** Until 2026-08-14 this page priced
