@@ -125,6 +125,8 @@ def main() -> int:
     for pdf in ROOT.rglob("*.pdf"):
         if ".git" in pdf.parts or "_site" in pdf.parts:
             continue
+        if any(part.startswith(".venv") for part in pdf.parts):
+            continue          # a local virtual environment, ignored by git
         errors.append(f"{pdf.relative_to(ROOT)}: source PDFs must not be committed")
 
     # ---- optional reports ---------------------------------------------------
