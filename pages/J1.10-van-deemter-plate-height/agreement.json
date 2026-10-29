@@ -1,33 +1,290 @@
 {
   "page": "J1.10-van-deemter-plate-height",
+  "format": 2,
+  "env": {
+    "pymrm": "3.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "pymrm_H_vs_eq38_rel": 4.1209905283112747e-05,
-    "pymrm_grid_order": 3.0013701136208617,
-    "pymrm_upwind_dispersion_coeff_err": 7.2440014061703195e-06,
-    "pymrm_dt_order_mu1": 1.7908724833540575,
-    "pymrm_kappa3_vs_laplace_rel": 0.002087180949040368,
-    "pymrm_kappa4_vs_laplace_rel": 0.015140145687928763,
-    "pymrm_bc_insensitivity": 1.4506190517682427e-06,
-    "DII_from_table3_rel_dev": 0.03697116881713969,
-    "DII_D_I_sensitivity": 0.018271375406853307,
-    "lambda_from_table3_rel_dev": 0.002433389676793296,
-    "df_worst_rel_dev": 0.05712075354647128,
-    "eq56_celite_rel_dev": 0.011209658706663905,
-    "slope_ratio_rel_dev": 0.03467109612666619,
-    "table3_n_median_rel_dev": 0.021016244522443883,
-    "table3_n_max_rel_dev": 0.2911532451179031,
-    "table1_calc_frac_reproduced": 1.0,
-    "table1_dS0_window_lo_ml": 165.974,
-    "table1_dS0_window_hi_ml": 167.4188,
-    "table3_recovered_length_mm": 558.4950000000001,
-    "eq54_fit_rmse_mm": 0.28233807469253985,
-    "eq54_null_rmse_mm": 0.9208993189027536,
-    "sterchamol_free_A_t_stat": 0.12648035095967278,
-    "eq21_printed_a0_limit": 2.0000000299999985,
-    "eq21_corrected_large_a_dev": 1.0529188869679018e-06,
-    "skewness_at_recovered_column": 0.14350364730499396,
-    "z_for_skewness_0p05_mm": 4600.501316255881,
-    "sym_chain_residual": 0.0,
-    "rootfind_vs_closed_form_optimum": 2.220446049250313e-16
+    "pymrm_H_vs_eq38_rel": {
+      "kind": "value",
+      "value": 4.121012503999211e-05,
+      "rtol": 0.05,
+      "note": "discretisation error at n_z = 1400, dt = 1 s; grid-limited"
+    },
+    "pymrm_grid_order": {
+      "kind": "bound",
+      "value": 3.001238990885788,
+      "min": 2.5,
+      "max": 3.5,
+      "basis": "chosen",
+      "note": "observed order of the two-station H against eq (38) over a 4x grid refinement with the van Leer correction; 3.00 measured, bare upwind gives 1.00"
+    },
+    "pymrm_upwind_dispersion_coeff_err": {
+      "kind": "value",
+      "value": 7.2440014061703195e-06,
+      "rtol": 0.05,
+      "note": "|mean (H - H_38)/h - 1| with bare upwind; the prediction is exactly 1"
+    },
+    "pymrm_dt_order_mu1": {
+      "kind": "bound",
+      "value": 2.1089450563859167,
+      "min": 1.5,
+      "max": 2.5,
+      "basis": "chosen",
+      "note": "pre-asymptotic three-point fit of log|mu1(dt) - mu1(1 s)| on dt = 8, 4, 2 s; the deferred correction lagged one step makes the scheme first order asymptotically. A fit of differences of nearly equal moments: it gave 1.79 under the August 2026 numpy/scipy and 2.11 under the current ones with identical model code, so only the range is claimed. Backward Euler gives 0.91 and 0.65 in the same two environments, below it"
+    },
+    "pymrm_kappa3_vs_laplace_rel": {
+      "kind": "value",
+      "value": 0.0020871830495707844,
+      "rtol": 0.05,
+      "note": "cancellation-limited at n_z = 1400, dt = 1 s; a regression guard"
+    },
+    "pymrm_kappa4_vs_laplace_rel": {
+      "kind": "value",
+      "value": 0.01514007239116566,
+      "rtol": 0.05,
+      "note": "cancellation-limited at n_z = 1400, dt = 1 s; a regression guard"
+    },
+    "pymrm_bc_insensitivity": {
+      "kind": "bound",
+      "value": 1.5067377738819943e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "relative move of the two-station H when the Danckwerts inlet is replaced by a Dirichlet one; a difference of nearly equal plate heights (1.45e-6 and 1.51e-6 in two numerical environments). The bound keeps it 4x below the baseline's own error against eq (38)"
+    },
+    "DII_from_table3_rel_dev": {
+      "kind": "value",
+      "value": 0.03697116881713969,
+      "rtol": 0.05
+    },
+    "DII_D_I_sensitivity": {
+      "kind": "value",
+      "value": 0.018271375406853307,
+      "rtol": 0.05
+    },
+    "lambda_from_table3_rel_dev": {
+      "kind": "value",
+      "value": 0.002433389676793296,
+      "rtol": 0.05
+    },
+    "df_worst_rel_dev": {
+      "kind": "value",
+      "value": 0.05712075354647128,
+      "rtol": 0.05
+    },
+    "eq56_celite_rel_dev": {
+      "kind": "value",
+      "value": 0.011209658706663905,
+      "rtol": 0.05
+    },
+    "slope_ratio_rel_dev": {
+      "kind": "value",
+      "value": 0.03467109612666619,
+      "rtol": 0.05
+    },
+    "table3_n_median_rel_dev": {
+      "kind": "value",
+      "value": 0.021016244522443883,
+      "rtol": 0.05
+    },
+    "table3_n_max_rel_dev": {
+      "kind": "value",
+      "value": 0.2911532451179031,
+      "rtol": 0.05
+    },
+    "table1_calc_frac_reproduced": {
+      "kind": "exact",
+      "value": 1.0,
+      "note": "fraction of Table 1's eleven printed calc values reproduced"
+    },
+    "table1_dS0_window_lo_ml": {
+      "kind": "value",
+      "value": 165.974,
+      "rtol": 0.05,
+      "unit": "ml"
+    },
+    "table1_dS0_window_hi_ml": {
+      "kind": "value",
+      "value": 167.4188,
+      "rtol": 0.05,
+      "unit": "ml"
+    },
+    "table3_recovered_length_mm": {
+      "kind": "value",
+      "value": 558.4950000000001,
+      "rtol": 0.05,
+      "unit": "mm"
+    },
+    "eq54_fit_rmse_mm": {
+      "kind": "value",
+      "value": 0.28233807469253985,
+      "rtol": 0.05,
+      "unit": "mm"
+    },
+    "eq54_null_rmse_mm": {
+      "kind": "value",
+      "value": 0.9208993189027536,
+      "rtol": 0.05,
+      "unit": "mm"
+    },
+    "sterchamol_free_A_t_stat": {
+      "kind": "value",
+      "value": 0.12648035095967,
+      "rtol": 0.05
+    },
+    "eq21_printed_a0_limit": {
+      "kind": "value",
+      "value": 2.0000000299999985,
+      "rtol": 0.05
+    },
+    "eq21_corrected_large_a_dev": {
+      "kind": "value",
+      "value": 1.0529188869679018e-06,
+      "rtol": 0.05,
+      "note": "the corrected eq (21) at a = 5 against the a + sqrt(2 pi) of eq (25); an asymptotic error, not round-off"
+    },
+    "skewness_at_recovered_column": {
+      "kind": "value",
+      "value": 0.14350364730499396,
+      "rtol": 0.05
+    },
+    "z_for_skewness_0p05_mm": {
+      "kind": "value",
+      "value": 4600.501316255881,
+      "rtol": 0.05,
+      "unit": "mm"
+    },
+    "sym_chain_residual": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.0,
+      "basis": "identity",
+      "note": "sympy simplifies (38) with (45), (46), (48) substituted, minus (49), to 0; recorded as 1 if it does not"
+    },
+    "rootfind_vs_closed_form_optimum": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "max relative gap between the root-found u_opt (brentq, xtol 1e-14, rtol 8.9e-16) and sqrt(B/C); measured 2.2e-16"
+    }
+  },
+  "quoted": {
+    "pymrm_dt_order_mu1": [
+      "between 1.5 and 2.5"
+    ],
+    "pymrm_bc_insensitivity": [
+      "below 1e-5"
+    ],
+    "pymrm_grid_order": [
+      "between 2.5 and 3.5"
+    ],
+    "pymrm_H_vs_eq38_rel": [
+      "4e-5"
+    ],
+    "skewness_at_recovered_column": [
+      "0.14"
+    ]
+  },
+  "breaks": {
+    "pymrm_H_vs_eq38_rel": [
+      "break table 1: bare upwind (limiter=None)",
+      "break table 1: coarse grid, n_z = 175",
+      "break table 1: F_II halved (a different phase ratio)",
+      "break table 1: alpha halved",
+      "break table 1: K perturbed by +1 %",
+      "break table 1: D perturbed by +1 %",
+      "break table 1: time window truncated to 60 %",
+      "break table 1: construct_div with nu=1 (cylindrical)",
+      "break table 1: ONE station (z2 = 600 mm) instead of two",
+      "break table 1: ONE station at z = 20 mm (a short column)"
+    ],
+    "pymrm_bc_insensitivity": [
+      "ONE station: Dirichlet inlet against Danckwerts"
+    ],
+    "pymrm_grid_order": [
+      "bare upwind in place of van Leer"
+    ],
+    "pymrm_upwind_dispersion_coeff_err": [
+      "van Leer runs read as if bare upwind"
+    ],
+    "pymrm_dt_order_mu1": [
+      "backward Euler (theta = 1) in place of Crank-Nicolson"
+    ],
+    "pymrm_kappa3_vs_laplace_rel": [
+      "time window truncated to 60 %"
+    ],
+    "pymrm_kappa4_vs_laplace_rel": [
+      "time window truncated to 60 %"
+    ],
+    "DII_from_table3_rel_dev": [
+      "d_p = mesh geometric mean",
+      "drop the fastest row"
+    ],
+    "DII_D_I_sensitivity": [
+      "75 -> 7.5 in eq (49)"
+    ],
+    "lambda_from_table3_rel_dev": [
+      "restore the 1/X molecular term",
+      "drop the slowest row"
+    ],
+    "df_worst_rel_dev": [
+      "iso-butane x used on the n-butane C"
+    ],
+    "eq56_celite_rel_dev": [
+      "Sterchamol d_p on the Celite d_f"
+    ],
+    "slope_ratio_rel_dev": [
+      "the two printed x exchanged"
+    ],
+    "table3_n_median_rel_dev": [
+      "eq (21) exactly as printed"
+    ],
+    "table3_n_max_rel_dev": [
+      "eq (21) exactly as printed"
+    ],
+    "table1_calc_frac_reproduced": [
+      "v sqrt(n) = 41.25 (dS0 = 165 exactly)"
+    ],
+    "table1_dS0_window_lo_ml": [
+      "one printed calc cell altered"
+    ],
+    "table1_dS0_window_hi_ml": [
+      "one printed calc cell altered"
+    ],
+    "table3_recovered_length_mm": [
+      "Table 3 cell 0.93 mis-read as 9.3"
+    ],
+    "eq54_fit_rmse_mm": [
+      "C for iso-butane x1.5"
+    ],
+    "eq54_null_rmse_mm": [
+      "the two slowest Celite rows dropped"
+    ],
+    "sterchamol_free_A_t_stat": [
+      "+0.3 mm on every Sterchamol H"
+    ],
+    "eq21_printed_a0_limit": [
+      "the corrected denominator, a -> 0"
+    ],
+    "eq21_corrected_large_a_dev": [
+      "eq (21) as printed at a = 5"
+    ],
+    "skewness_at_recovered_column": [
+      "alpha halved"
+    ],
+    "z_for_skewness_0p05_mm": [
+      "alpha halved"
+    ],
+    "sym_chain_residual": [
+      "eq (49): 75 -> 80"
+    ],
+    "rootfind_vs_closed_form_optimum": [
+      "closed form inverted, u_opt = sqrt(C/B)"
+    ]
   }
 }

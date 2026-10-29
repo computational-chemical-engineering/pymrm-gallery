@@ -152,7 +152,7 @@ from scipy.special import erf, erfinv
 from scipy.optimize import brentq
 from pymrm import (construct_grad, construct_div, construct_convflux_upwind,
                    interp_cntr_to_stagg_tvd, vanleer)
-from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from gallery_utils import Claims, load_data, load_meta, cite_data
 
 PAGE = "J1.10-van-deemter-plate-height"
 np.random.seed(0)                       # nothing here is stochastic; pinned anyway
@@ -1258,7 +1258,14 @@ for and applies it in the *next* step, which at `sweeps=1` is a perturbation of
 size $O(\Delta t)$. So the configuration this page runs should be asymptotically
 *first* order in time even though the underlying scheme is second order. Both
 are measured below with reference-free successive-difference orders, which need
-no converged reference and cannot be flattered by the choice of one."""))
+no converged reference and cannot be flattered by the choice of one.
+
+The three-point order on $\mu_1$ printed below is therefore claimed only as a
+range: between 1.5 and 2.5. It is a fit of differences of nearly equal first
+moments on the coarse end of the sequence, and with identical model code it moved
+by 18 % between two numerical environments (older and current NumPy/SciPy), both
+times inside that range. The range excludes backward Euler, which is what the
+break row below uses."""))
 
 cells.append(code('''KAPZ = {}                    # (n_z, dt) -> (kappa_3/z, kappa_4/z), kept for later
 
@@ -1347,8 +1354,9 @@ print(f"   one step at sweeps = 1; with it on the last three orders are "
 print(f"   first order, not second. So {ORD_DT:.2f} above is a PRE-ASYMPTOTIC three-point fit")
 print("   on the coarse end of that sequence, not evidence of a second-order")
 print("   integration in time.")
-print("   It is reported as an observed order, it is the metric the break row below")
-print("   moves, and no result on this page needs it to be 2.")
+print("   It is claimed only as a range, 1.5 to 2.5 (a fit of differences of nearly")
+print("   equal moments, whose digits move with the numerical environment), it is the")
+print("   metric the break row below moves, and no result on this page needs it to be 2.")
 
 # The order is a claim about the SCHEME, so break the scheme: theta = 1 is
 # backward Euler, first order in time, and nothing else changes.
@@ -1364,10 +1372,12 @@ print("   the scheme does; theta = 0.5 is used for every reported number.")'''))
 
 cells.append(md(r"""### Break table
 
-Every metric this page reports needs something that moves it. Rows marked
-**structural** are identities: they are named as such and cannot move, and each
-has an above-floor companion in the metric list. The last row is a deliberate
-*non*-mover, included because the insensitivity is the design claim being made."""))
+Every number this page reports needs something that moves it. The last row is
+a deliberate *non*-mover, included because the insensitivity is the design claim
+being made: the inlet condition moves the two-station $H$ by less than $10^{-5}$
+relative. That claim is a bound, not a value, because it is a difference of two
+nearly equal plate heights; what breaks it is reading $H$ from ONE station, where
+the same change of inlet condition is no longer cancelled."""))
 
 cells.append(code('''brk = []
 def add(label, value, note=""):
@@ -1417,6 +1427,10 @@ _, _, zsD, KcD = solve(n_z=700, dt=2.0,
 H_DIR = float(plate_height(KcD, zsD))
 add("Dirichlet inlet instead of Danckwerts", H_DIR, "DESIGNED non-mover")
 BC_MOVE = float(brk[-1][2])                          # against the BASELINE run
+# what breaks that insensitivity: the same inlet change read from ONE station
+# (z2), where nothing cancels it. Same two runs, no new solve.
+H_single_D = float(zsD[1] * (KcD[1][2] - mu2_in) / (KcD[1][1] - mu1_in) ** 2)
+BC_MOVE_SINGLE = float(abs(dev(H_single_D, H_single)))
 
 print(f"{'break':<44}{'H (mm)':>10}{'move vs base':>14}{'|dev| eq (38)':>15}  note")
 for lab, v, dbase, d38, note in brk:
@@ -1427,8 +1441,10 @@ print(f"\\n   smallest move among the {len(moves)} genuine breaks: {BREAK_MIN_MO
       f"i.e. {BREAK_MIN_MOVE/abs(H_REL):.0f}x the baseline's own error against eq (38)")
 print(f"   nu = 1 gives {H_nu} - the wrong geometry does not bias this model, it")
 print("   removes it, which is a weaker kind of alarm and is labelled as one.")
-print(f"\\n   Changing the INLET CONDITION moves H by {BC_MOVE:.1e} relative to the")
-print("   baseline - the two-station difference cancels it, as designed and claimed.")'''))
+print(f"\\n   Changing the INLET CONDITION moves H by less than 1e-5 relative to the")
+print(f"   baseline (here {BC_MOVE:.1e}) - the two-station difference cancels it, as")
+print("   designed and claimed. Read from ONE station (z2) the same change moves H by")
+print(f"   {BC_MOVE_SINGLE:.1e}: that is the row that breaks the claim.")'''))
 
 
 
@@ -1706,109 +1722,192 @@ print(f"\\n   {len(abrk)} rows, covering "
       f"{len(set(m for m, *_ in abrk))} of the metrics reported below.")"""))
 
 # ----------------------------------------------------------------- agreement --
-cells.append(md(r"""### Agreement metrics
+cells.append(md(r"""### Claims
 
-Two of these are **structural** and sit below the CI floor of $10^{-12}$: the
-symbolic chain residual (exactly zero, by construction, when the algebra is
-right) and the root-found-versus-closed-form optimum (the same three constants
-evaluated two ways). Both are named here and both have an above-floor companion:
-the chain is guarded by `pymrm_H_vs_eq38_rel`, which tests the same physics
-numerically and does move; the optimum is guarded by `eq54_fit_rmse_mm`.
+Every number above is registered once, with how it is checked
+(`docs/claims-design.md`): a **value** against the committed baseline within
+5 %, a **bound** against its stated limits on every run and every machine, an
+**exact** result by equality. Residuals, identities, tolerance gaps and the
+fitted convergence orders are bounds, whatever their size.
 
-Two more need a different warning. `pymrm_kappa3_vs_laplace_rel` and
+Three are bounds for a reason worth stating. `pymrm_dt_order_mu1` is a
+three-point fit of differences of nearly equal first moments, claimed only as
+the range between 1.5 and 2.5 (see the refinement study). `pymrm_bc_insensitivity` is a
+difference of two nearly equal plate heights, claimed only as below $10^{-5}$.
+`pymrm_grid_order` is an observed order, claimed as the range between 2.5 and 3.5.
+
+Two values need a different warning. `pymrm_kappa3_vs_laplace_rel` and
 `pymrm_kappa4_vs_laplace_rel` are **cancellation-limited**, not converged: the
 grid and time-step errors on the higher cumulants have opposite signs and the
-reported values sit near where they cancel — the dt table above shows both
+reported values sit near where they cancel; the dt table above shows both
 passing through zero. They are honest at the stated settings and are regression
 guards like any other, but neither is evidence that the PDE reproduces a
 cumulant to that precision. The converging companion is `pymrm_H_vs_eq38_rel`,
-which is grid-limited at observed order 3 and barely moves with $\Delta t$."""))
+which is grid-limited at observed order 3 and barely moves with $\Delta t$.
 
-cells.append(code('''metrics = {
-    # --- the second, independent computation of the headline -----------------
-    "pymrm_H_vs_eq38_rel": abs(H_REL),
-    "pymrm_grid_order": ORD_GRID,
-    "pymrm_upwind_dispersion_coeff_err": UPWIND_COEF_DEV,
-    "pymrm_dt_order_mu1": ORD_DT,
-    "pymrm_kappa3_vs_laplace_rel": K3_DEV,
-    "pymrm_kappa4_vs_laplace_rel": K4_DEV,
-    "pymrm_bc_insensitivity": BC_MOVE,
-    # --- the paper's stated results, recomputed ------------------------------
-    "DII_from_table3_rel_dev": DII_DEV,
-    "DII_D_I_sensitivity": DII_SPREAD,
-    "lambda_from_table3_rel_dev": LAMBDA_DEV,
-    "df_worst_rel_dev": DF_MAX_DEV,
-    "eq56_celite_rel_dev": EQ56_DEV,
-    "slope_ratio_rel_dev": SLOPE_RATIO_DEV,
-    "table3_n_median_rel_dev": N_MED,
-    "table3_n_max_rel_dev": N_MAX,
-    "table1_calc_frac_reproduced": CALC_FRAC,
-    "table1_dS0_window_lo_ml": 4 * W_LO,
-    "table1_dS0_window_hi_ml": 4 * W_HI,
-    "table3_recovered_length_mm": L_SW,
-    # --- fit, not test: labelled as such everywhere it appears ---------------
-    "eq54_fit_rmse_mm": max(f["rmse"] for f in fitstat.values()),
-    "eq54_null_rmse_mm": min(f["null"] for f in fitstat.values()),
-    "sterchamol_free_A_t_stat": abs(A_STER_T),
-    # --- the printed defect --------------------------------------------------
-    "eq21_printed_a0_limit": EQ21_A0_PRINTED,
-    "eq21_corrected_large_a_dev": EQ21_LARGE_A_DEV,
-    # --- what pymrm adds -----------------------------------------------------
-    "skewness_at_recovered_column": SKEW_SW,
-    "z_for_skewness_0p05_mm": Z_SKEW,
-    # --- structural (below ABS_FLOOR; named, with companions above) ----------
-    "sym_chain_residual": 0.0,
-    "rootfind_vs_closed_form_optimum": ROOT_ID,
-}
-report_agreement(PAGE, metrics)
+Every claim has a break row that fails its own check: break table 1, break
+table 2, the bare-upwind and backward-Euler runs of the refinement study, and,
+for the two identities, a deliberately wrong algebra (75 to 80 in eq. (49)) and
+a deliberately inverted closed form $u_{\text{opt}} = \sqrt{C/B}$."""))
 
-PDE_COVERED = {
-    "pymrm_H_vs_eq38_rel": f"break table 1: {len(moves)} rows, smallest move "
-                           f"{BREAK_MIN_MOVE:.1e} against a baseline error of {abs(H_REL):.1e}",
-    "pymrm_grid_order": f"the refinement study: bare upwind converges at {ORD_UPWIND:.2f}, "
-                        f"the limiter at {ORD_GRID:.2f}",
-    "pymrm_upwind_dispersion_coeff_err": "the refinement study itself: van Leer moves the coefficient off 1",
-    "pymrm_dt_order_mu1": f"backward Euler (theta = 1) in place of Crank-Nicolson: the "
-                          f"observed order moves {ORD_DT:.2f} -> {ORD_DT_BE:.2f} and H's own dt "
-                          f"swing {DT_SWING_H:.1e} -> {DT_SWING_H_BE:.1e}",
-    "pymrm_bc_insensitivity": "DESIGNED NON-MOVER - the two-station difference cancels the inlet, "
-                              f"measured at {BC_MOVE:.1e}; stated, not hidden",
-    "table3_n_max_rel_dev": "same row as table3_n_median_rel_dev (eq 21 as printed)",
-    "table1_dS0_window_hi_ml": "same row as table1_dS0_window_lo_ml",
-    "eq21_printed_a0_limit": "the printed and corrected denominators are the two arms of "
-                             "the same comparison; 2 against the 4 eq (24) requires",
-    "eq21_corrected_large_a_dev": "same comparison, at the other limit",
-    "table3_recovered_length_mm": "break table 2: a mis-read Table 3 cell",
-    "sym_chain_residual": "STRUCTURAL, below ABS_FLOOR: 75 -> 80 makes it non-zero "
-                          "(break table 2); above-floor companion pymrm_H_vs_eq38_rel",
-    "rootfind_vs_closed_form_optimum": "STRUCTURAL, below ABS_FLOOR: the same three constants "
-                                       "evaluated two ways; companion eq54_fit_rmse_mm",
+cells.append(code('''claims = Claims(PAGE)
+
+# --- the second, independent computation of the headline ---------------------
+claims.value("pymrm_H_vs_eq38_rel", abs(H_REL),
+             note="discretisation error at n_z = 1400, dt = 1 s; grid-limited")
+claims.bound("pymrm_grid_order", ORD_GRID, min=2.5, max=3.5, basis="chosen",
+             note="observed order of the two-station H against eq (38) over a 4x grid"
+                  " refinement with the van Leer correction; 3.00 measured, bare upwind"
+                  " gives 1.00")
+claims.value("pymrm_upwind_dispersion_coeff_err", UPWIND_COEF_DEV,
+             note="|mean (H - H_38)/h - 1| with bare upwind; the prediction is exactly 1")
+claims.bound("pymrm_dt_order_mu1", ORD_DT, min=1.5, max=2.5, basis="chosen",
+             note="pre-asymptotic three-point fit of log|mu1(dt) - mu1(1 s)| on dt = 8, 4,"
+                  " 2 s; the deferred correction lagged one step makes the scheme first"
+                  " order asymptotically. A fit of differences of nearly equal moments: it"
+                  " gave 1.79 under the August 2026 numpy/scipy and 2.11 under the current"
+                  " ones with identical model code, so only the range is claimed. Backward"
+                  " Euler gives 0.91 and 0.65 in the same two environments, below it")
+claims.value("pymrm_kappa3_vs_laplace_rel", K3_DEV,
+             note="cancellation-limited at n_z = 1400, dt = 1 s; a regression guard")
+claims.value("pymrm_kappa4_vs_laplace_rel", K4_DEV,
+             note="cancellation-limited at n_z = 1400, dt = 1 s; a regression guard")
+claims.bound("pymrm_bc_insensitivity", BC_MOVE, max=1e-5, basis="chosen",
+             note="relative move of the two-station H when the Danckwerts inlet is"
+                  " replaced by a Dirichlet one; a difference of nearly equal plate"
+                  " heights (1.45e-6 and 1.51e-6 in two numerical environments). The"
+                  " bound keeps it 4x below the baseline's own error against eq (38)")
+# --- the paper's stated results, recomputed ----------------------------------
+claims.value("DII_from_table3_rel_dev", DII_DEV)
+claims.value("DII_D_I_sensitivity", DII_SPREAD)
+claims.value("lambda_from_table3_rel_dev", LAMBDA_DEV)
+claims.value("df_worst_rel_dev", DF_MAX_DEV)
+claims.value("eq56_celite_rel_dev", EQ56_DEV)
+claims.value("slope_ratio_rel_dev", SLOPE_RATIO_DEV)
+claims.value("table3_n_median_rel_dev", N_MED)
+claims.value("table3_n_max_rel_dev", N_MAX)
+claims.exact("table1_calc_frac_reproduced", CALC_FRAC,
+             note="fraction of Table 1's eleven printed calc values reproduced")
+claims.value("table1_dS0_window_lo_ml", 4 * W_LO, unit="ml")
+claims.value("table1_dS0_window_hi_ml", 4 * W_HI, unit="ml")
+claims.value("table3_recovered_length_mm", L_SW, unit="mm")
+# --- fit, not test: labelled as such everywhere it appears -------------------
+claims.value("eq54_fit_rmse_mm", max(f["rmse"] for f in fitstat.values()), unit="mm")
+claims.value("eq54_null_rmse_mm", min(f["null"] for f in fitstat.values()), unit="mm")
+claims.value("sterchamol_free_A_t_stat", abs(A_STER_T))
+# --- the printed defect ------------------------------------------------------
+claims.value("eq21_printed_a0_limit", EQ21_A0_PRINTED)
+claims.value("eq21_corrected_large_a_dev", EQ21_LARGE_A_DEV,
+             note="the corrected eq (21) at a = 5 against the a + sqrt(2 pi) of eq (25);"
+                  " an asymptotic error, not round-off")
+# --- what pymrm adds ---------------------------------------------------------
+claims.value("skewness_at_recovered_column", SKEW_SW)
+claims.value("z_for_skewness_0p05_mm", Z_SKEW, unit="mm")
+# --- identities --------------------------------------------------------------
+claims.bound("sym_chain_residual", 0.0 if r2 == 0 else 1.0, max=0.0, basis="identity",
+             note="sympy simplifies (38) with (45), (46), (48) substituted, minus (49), to 0;"
+                  " recorded as 1 if it does not")
+claims.bound("rootfind_vs_closed_form_optimum", ROOT_ID, max=1e-12, basis="tolerance",
+             note="max relative gap between the root-found u_opt (brentq, xtol 1e-14,"
+                  " rtol 8.9e-16) and sqrt(B/C); measured 2.2e-16")
+
+# --- break rows: the value each claim takes with the defect injected ----------
+# Break table 1 moves the PDE at n_z = 700, dt = 2 s; each row is carried onto
+# the reported run as the relative move it causes there.
+for lab, v, dbase, d38, note in brk[1:-1]:
+    claims.breaks(f"break table 1: {lab}", "pymrm_H_vs_eq38_rel",
+                  abs(dev(H_PYMRM * v / brk[0][1], H38)))
+claims.breaks("ONE station: Dirichlet inlet against Danckwerts", "pymrm_bc_insensitivity",
+              BC_MOVE_SINGLE)
+claims.breaks("bare upwind in place of van Leer", "pymrm_grid_order", ORD_UPWIND)
+VL_COEF = float(np.mean([(r[2] - H38) / r[1] for r in grid_rows]))
+claims.breaks("van Leer runs read as if bare upwind", "pymrm_upwind_dispersion_coeff_err",
+              abs(VL_COEF - 1.0))
+claims.breaks("backward Euler (theta = 1) in place of Crank-Nicolson", "pymrm_dt_order_mu1",
+              ORD_DT_BE)
+claims.breaks("time window truncated to 60 %", "pymrm_kappa3_vs_laplace_rel",
+              abs(dev(k3_trunc, k3a)))
+claims.breaks("time window truncated to 60 %", "pymrm_kappa4_vs_laplace_rel",
+              abs(dev(k4_trunc, k4a)))
+DII_P = P["D_II_ion_exclusion"]
+claims.breaks("d_p = mesh geometric mean", "DII_from_table3_rel_dev", abs(dev(DII_MESH, DII_P)))
+claims.breaks("drop the fastest row", "DII_from_table3_rel_dev", abs(dev(DII_DROP, DII_P)))
+claims.breaks("75 -> 7.5 in eq (49)", "DII_D_I_sensitivity", _spread(10 * a_c))
+claims.breaks("restore the 1/X molecular term", "lambda_from_table3_rel_dev",
+              abs(dev(b3t[1] / 2, P["lambda_50_100"])))
+claims.breaks("drop the slowest row", "lambda_from_table3_rel_dev",
+              abs(dev(twolam_d / 2, P["lambda_50_100"])))
+df_broken = dict(df_um, **{"Celite, n-butane": df_bad})
+claims.breaks("iso-butane x used on the n-butane C", "df_worst_rel_dev",
+              max(abs(dev(df_broken[n], p)) for n, _, _, p in CASES))
+claims.breaks("Sterchamol d_p on the Celite d_f", "eq56_celite_rel_dev",
+              abs(dev(r56_bad, P["ratio56_celite"])))
+claims.breaks("the two printed x exchanged", "slope_ratio_rel_dev",
+              abs(dev(ratio_swapped, P["slope_ratio_predicted"])))
+claims.breaks("eq (21) exactly as printed", "table3_n_median_rel_dev",
+              N_MED if EQ21_N_SOLVABLE == len(single) else np.nan)
+claims.breaks("eq (21) exactly as printed", "table3_n_max_rel_dev",
+              N_MAX if EQ21_N_SOLVABLE == len(single) else np.nan)
+claims.breaks("v sqrt(n) = 41.25 (dS0 = 165 exactly)", "table1_calc_frac_reproduced",
+              n_match(P["delta_S0_glc"] / 4) / len(A_vals))
+grid_bad = np.linspace(38.0, 46.0, 4001)
+win_bad = grid_bad[hits_bad == CALC_N_OK]
+claims.breaks("one printed calc cell altered", "table1_dS0_window_lo_ml",
+              4 * win_bad.min() if win_bad.size else np.nan)
+claims.breaks("one printed calc cell altered", "table1_dS0_window_hi_ml",
+              4 * win_bad.max() if win_bad.size else np.nan)
+claims.breaks("Table 3 cell 0.93 mis-read as 9.3", "table3_recovered_length_mm",
+              float(L_bad.mean()))
+claims.breaks("C for iso-butane x1.5", "eq54_fit_rmse_mm",
+              max([rmse_bad] + [f["rmse"] for n, f in fitstat.items() if n != "Celite, iso-butane"]))
+claims.breaks("the two slowest Celite rows dropped", "eq54_null_rmse_mm",
+              min([null_bad] + [f["null"] for n, f in fitstat.items() if n != "Celite, n-butane"]))
+claims.breaks("+0.3 mm on every Sterchamol H", "sterchamol_free_A_t_stat",
+              abs(b3_off["A"] / se3_off["A"]))
+claims.breaks("the corrected denominator, a -> 0", "eq21_printed_a0_limit", EQ21_A0_CORRECTED)
+claims.breaks("eq (21) as printed at a = 5", "eq21_corrected_large_a_dev",
+              abs(dev(EQ21_LARGE_A_PRINTED, 5 + np.sqrt(2 * np.pi))))
+claims.breaks("alpha halved", "skewness_at_recovered_column", skew_half)
+claims.breaks("alpha halved", "z_for_skewness_0p05_mm", Z_half)
+claims.breaks("eq (49): 75 -> 80", "sym_chain_residual", 0.0 if r2_bad == 0 else 1.0)
+ROOT_BAD = max(abs(f["u_opt"] / np.sqrt(FITS[n][2] / FITS[n][0]) - 1) for n, f in fitstat.items())
+claims.breaks("closed form inverted, u_opt = sqrt(C/B)", "rootfind_vs_closed_form_optimum",
+              ROOT_BAD)
+
+# --- prose: every number the Markdown quotes for a claim ----------------------
+SAYS = {
+    "pymrm_dt_order_mu1": ["between 1.5 and 2.5"],
+    "pymrm_bc_insensitivity": ["below 1e-5"],
+    "pymrm_grid_order": ["between 2.5 and 3.5"],
+    "pymrm_H_vs_eq38_rel": ["4e-5"],
+    "skewness_at_recovered_column": ["0.14"],
 }
-MEASURED = {m for m, *_ in abrk}
-COVERAGE = {}
-for k in metrics:
-    if k in MEASURED:
-        rows = [f"break table 2: {lab} ({mv})" for m, lab, val, mv in abrk if m == k]
-        COVERAGE[k] = "; ".join(rows)
-    elif k in PDE_COVERED:
-        COVERAGE[k] = PDE_COVERED[k]
-assert set(COVERAGE) == set(metrics), f"uncovered metrics: {set(metrics) - set(COVERAGE)}"
-for k, v in COVERAGE.items():
-    print(f"  {k:<34} {v}")
-print(f"\\ncoverage map GENERATED from the two executed break tables and checked "
-      f"key-for-key against agreement.json:")
-print(f"  {len(metrics)} metrics, {sum(1 for v in COVERAGE.values() if v.startswith('STRUCTURAL'))} structural, "
-      f"{sum(1 for v in COVERAGE.values() if 'NON-MOVER' in v)} designed non-mover, "
-      f"{len(MEASURED & set(metrics))} with a measured mover in break table 2")
-FLOOR_COMPANION = {"sym_chain_residual": "pymrm_H_vs_eq38_rel",
-                   "rootfind_vs_closed_form_optimum": "eq54_fit_rmse_mm"}
-below = [k for k, v in metrics.items() if abs(v) < 1e-12]
-print(f"\\nbelow ABS_FLOOR = 1e-12 and therefore outside CI: {below}")
-for k in below:
-    c = FLOOR_COMPANION[k]
-    print(f"   {k}  ->  above-floor companion {c} = {metrics[c]:.4g}")
-assert set(below) == set(FLOOR_COMPANION)
-assert all(abs(metrics[c]) > 1e-12 for c in FLOOR_COMPANION.values())'''))
+for k, lits in SAYS.items():
+    for lit in lits:
+        claims.says(lit, k)
+# quoted numbers that are not claims, each checked to one unit of its last place
+OTHER = [("lambda = 2.99", 2.99, two_lam / 2, 0.01),
+         ("D_II = 1.34e-10", 1.34e-10, DII_BEST, 0.01e-10),
+         ("d_f = 10.1 um", 10.1, df_um["Celite, n-butane"], 0.1),
+         ("d_f = 10.6 um", 10.6, df_um["Celite, iso-butane"], 0.1),
+         ("d_f = 8.7 um", 8.7, df_um["Sterchamol, n-butane"], 0.1),
+         ("2D/(uz) = 2e-3 at the recovered column", 2e-3, G1(L_SW), 1e-3),
+         ("bare-upwind coefficient 0.99999", 0.99999, UPWIND_COEF, 1e-5)]
+for lab, quoted, computed, unit in OTHER:
+    assert abs(quoted - computed) <= unit, f"{lab}: computed {computed!r}"
+
+_kinds = {kd: [k for k, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"{len(claims.metrics)} claims: {len(_kinds['value'])} values, "
+      f"{len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact. The bounds:")
+for k in _kinds["bound"]:
+    c = claims.metrics[k]
+    lo, hi = c.get("min"), c.get("max")
+    rng = f"[{lo:g}, {hi:g}]" if lo is not None else f"<= {hi:g}"
+    print(f"  {k:<34} {rng:<12} [{c['basis']}]  here {c['value']:.3g}")
+print(f"{sum(len(v) for v in SAYS.values())} prose literals checked with claims.says, "
+      f"{len(OTHER)} other quoted numbers checked explicitly\\n")
+claims.report()'''))
 
 # --------------------------------------------------------------------- reuse --
 cells.append(md(r"""## Reuse
