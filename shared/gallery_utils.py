@@ -396,10 +396,14 @@ class Claims:
         for k, c in self.metrics.items():
             v = c["value"]
             shown = f"{v:.5g}" if isinstance(v, float) else repr(v)
+            if c["kind"] == "bound":
+                # a bound publishes its limits; the value is this run's, and its
+                # digits differ between machines, so it is shown as such
+                shown = f"(here {v:.1e})"
             rule = {"value": lambda: f"rtol {c['rtol']:g}" + (f", atol {c['atol']:g}" if "atol" in c else ""),
                     "bound": lambda: _bound_text(c) + f" [{c['basis']}]",
                     "exact": lambda: "exact" + (f", margin {c['margin']:.3g}" if "margin" in c else "")}[c["kind"]]()
-            print(f"  {k:<{width}} = {shown:<12} {c['kind']:<5}  {rule}")
+            print(f"  {k:<{width}} = {shown:<16} {c['kind']:<5}  {rule}")
         if write:
             try:
                 Path("agreement.json").write_text(json.dumps(payload, indent=2) + "\n",
