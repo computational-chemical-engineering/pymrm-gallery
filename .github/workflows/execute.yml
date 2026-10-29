@@ -4,6 +4,14 @@ name: execute
 # whether the notebooks still run. This workflow is the real check, and it runs
 # on a schedule as well as on PRs so a pymrm release cannot silently break every
 # page while the site keeps rendering stale output.
+#
+# Each notebook job changes one thing against the baselines
+# (docs/claims-design.md, section 7):
+#   locked       requirements-lock.txt, pinned BLAS kernel. Defines the baselines.
+#   latest       the newest pymrm, everything else locked.
+#   portability  locked, but OPENBLAS_CORETYPE=Sandybridge: finds claims that hold
+#                on one machine only. Changed pages on PRs, every page weekly.
+# scripts/run_pages.py pins OPENBLAS_CORETYPE=Haswell and one thread unless set.
 
 on:
   push:
@@ -18,44 +26,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}     # the loosening check needs the merge-base
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - run: pip install pyyaml
+        with: {python-version: "3.13"}
+      - run: pip install -r requirements-lock.txt
       - run: python scripts/check_metadata.py
+      - name: Unit tests of the shared helpers and checks
+        run: python -m pytest -q tests/
+      - name: Refuse loosened claims (PRs)
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          python scripts/check_agreement.py --base "origin/${{ github.base_ref }}"
 
   notebooks:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        pymrm: ["pinned", "latest"]
+        job: ["locked", "latest", "portability"]
+    env:
+      # Only the portability job sets the kernel; run_pages.py pins the rest.
+      OPENBLAS_CORETYPE: ${{ matrix.job == 'portability' && 'Sandybridge' || 'Haswell' }}
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}     # --changed diffs against origin/main
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
+        with: {python-version: "3.13"}
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          # "pinned" installs the floor that requirements.txt declares, so the
-          # floor is actually tested; "latest" installs the newest release.
-          if [ "${{ matrix.pymrm }}" = "pinned" ]; then
-            floor=$(grep -oP '^pymrm>=\K[0-9.]+' requirements.txt)
-            pip install "pymrm==${floor}"
-          else
+          pip install -r requirements-lock.txt
+          if [ "${{ matrix.job }}" = "latest" ]; then
             pip install --upgrade --pre pymrm
           fi
           python -c "import pymrm; print('pymrm', pymrm.__version__)"
 
       - name: Record the machine
-        # Pages that pass on one runner and fail on another differ in round-off;
-        # the CPU and the BLAS kernel are what to look at first.
+        # The CPU and NumPy's SIMD dispatch are what the BLAS pin does not fix.
         run: |
-          lscpu | grep -E 'Model name|^CPU\(s\)' || true
-          python -c "import numpy; numpy.show_config()" | grep -iE 'openblas|version' | head -4 || true
+          lscpu | grep -E 'Model name|^CPU\(s\)|Flags' | cut -c1-200 || true
+          python -c "import numpy; numpy.show_config()" | grep -iE 'openblas|version|found' | head -8 || true
 
-      - name: Execute every page
-        run: python scripts/run_pages.py
+      - name: Execute pages
+        run: |
+          if [ "${{ matrix.job }}" = "portability" ] && [ "${{ github.event_name }}" = "pull_request" ]; then
+            python scripts/run_pages.py --changed
+          else
+            python scripts/run_pages.py
+          fi
 
       # Run even when a page failed: before 2026-10-29 this step was skipped on
       # every run with a failing page, so the metrics went unchecked for weeks.
@@ -66,7 +85,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: executed-pages-${{ matrix.pymrm }}
+          name: executed-pages-${{ matrix.job }}
           path: |
             pages/**/index.ipynb
             pages/**/agreement.json

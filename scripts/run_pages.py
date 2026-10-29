@@ -11,6 +11,7 @@ page-relative data paths behave the same as they do locally.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import time
@@ -23,6 +24,15 @@ from nbclient.exceptions import CellExecutionError
 ROOT = Path(__file__).resolve().parents[1]
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 TIMEOUT = int(ARGS[0]) if ARGS else 1800
+
+# The arithmetic is pinned here and not only in CI, so that a local run, the
+# baselines and CI compute the same way (docs/claims-design.md, section 7). The
+# kernels inherit this environment. A value already set is kept: the portability
+# job sets OPENBLAS_CORETYPE=Sandybridge to find claims that hold on one machine only.
+PINNED_ENV = {"OPENBLAS_CORETYPE": "Haswell", "OPENBLAS_NUM_THREADS": "1",
+              "OMP_NUM_THREADS": "1"}
+for _k, _v in PINNED_ENV.items():
+    os.environ.setdefault(_k, _v)
 
 
 def run(path: Path) -> tuple[bool, float, str]:
@@ -79,6 +89,7 @@ def main() -> int:
             print("--changed: nothing under pages/ has changed; running nothing\n")
             return 0
 
+    print("arithmetic: " + ", ".join(f"{k}={os.environ[k]}" for k in PINNED_ENV) + "\n")
     failures = []
     for nb_path in notebooks:
         page = nb_path.parent.name
