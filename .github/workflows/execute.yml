@@ -47,6 +47,10 @@ jobs:
       fail-fast: false
       matrix:
         job: ["locked", "latest", "portability"]
+    # Weekly, portability reports on every page without blocking: pages not yet
+    # migrated to Claims are expected to fail there (docs/refresh-plan.md, step 0).
+    # On a PR it runs only the changed pages, and there it blocks.
+    continue-on-error: ${{ matrix.job == 'portability' && github.event_name != 'pull_request' }}
     env:
       # Only the portability job sets the kernel; run_pages.py pins the rest.
       OPENBLAS_CORETYPE: ${{ matrix.job == 'portability' && 'Sandybridge' || 'Haswell' }}

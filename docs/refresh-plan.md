@@ -1,6 +1,7 @@
 # Plan: refresh the published pages and bring them up to current pymrm
 
-Status: AGREED 2026-10-29 (decisions in section 7); step 0 in progress. It builds on
+Status: AGREED 2026-10-29 (decisions in section 7); step 0 in progress, scoped to CI on
+2026-10-29 (section 4). Published numbers follow [`claims-design.md`](claims-design.md). It builds on
 [`page-structure-proposal.md`](page-structure-proposal.md), whose format decisions
 (section 5 there) stand. It replaces that proposal's migration rule, "existing pages
 move when they are next touched", with a deliberate sweep, at the maintainer's
@@ -84,8 +85,14 @@ Per [`page-structure-proposal.md`](page-structure-proposal.md):
   data and `model.py` from the release tag, never `main`;
 - notebook maths that passes `check_notebook_math.py`.
 
-**Acceptance:** every `agreement.json` metric unchanged within its stored tolerance;
-`check_model.py` reports nothing new; the notebook runs from a clean download.
+- every published number registered with `gallery_utils.Claims` as a value, bound or
+  exact result ([`claims-design.md`](claims-design.md)), prose numbers checked with
+  `claims.says`, and a break row that fails each non-structural claim.
+
+**Acceptance:** every metric unchanged within its stored tolerance, or reclassified with
+its reason (a value that turns out to be noise becomes a bound); the page passes under
+`OPENBLAS_CORETYPE` Haswell, Sandybridge and Nehalem; `check_claims.py` and
+`check_model.py` report nothing new; the notebook runs from a clean download.
 Pages that are closed forms or correlation audits (many in A1, A4, H, J) get the
 bootstrap, pin and maths fixes, and no `model.py`.
 
@@ -111,10 +118,13 @@ value, explained on the page, and re-checked by a verifier scoped to what change
 
 ## 4. Order
 
-0. **CI green.** Replace round-off-level prose assertions with ones that hold on any
-   machine (state an order of magnitude or a bound, or compare at a tolerance), and
-   find why `D1.1`'s crossing and `J4.1`'s `sep_moser` depend on the runner. Then run
-   every page locally on pymrm 3.1.x and record metrics and run times as the baseline.
+0. **CI green.** Build `Claims`, agreement format 2, the pinned arithmetic, the lock
+   and the CI jobs (`claims-design.md`). Migrate only the pages that fail CI: the six
+   that failed on other machines (`D1.1 F3.2 J4.1 J4.6 J4.8 J5.3`) and the three whose
+   metrics moved in the locked environment (`B2.3 J1.1 J1.10`). The other pages whose
+   metrics move between kernels (about 20, `docs/reproducibility/spread.json`) are
+   migrated in lane A when the sweep reaches them, so each page is touched once; until
+   then the weekly portability job reports on them without blocking.
 1. **Infrastructure, one PR.** Calendar tag in the publish workflow; the bootstrap
    that loads `model.py` and fetches from the tag; the pin read from `meta.yaml`;
    `jupytext` configuration; a CI job for the model tests; `check_model.py` and
