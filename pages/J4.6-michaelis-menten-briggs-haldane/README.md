@@ -23,9 +23,11 @@ identically and ∂r/∂ρ ≡ 0, in sympy, in the notebook's symbolic cell unde
 numerical sweep is a check on the code, not the evidence: hold r_m and K_M fixed,
 sweep ρ = k₂/k₋₁ over **eight decades**, evaluate the rate law from the
 elementary constants over four decades of concentration, and the curves are
-identical to double precision — maximum relative difference **0.0** on the nine
-swept ρ, and at most **4.4×10⁻¹⁶** over 2000 random (ρ, C_E⁰) draws, where the
-float round trip through the elementary constants is no longer exact. That exact
+identical to double precision: maximum relative difference **below 10⁻¹⁴** on
+the nine swept ρ (exactly zero there, because the float round trip through the
+elementary constants happens to be exact for those values), and **below 10⁻¹⁴**
+over 2000 random (ρ, C_E⁰) draws, where that round trip is no longer exact and
+the difference is a few ulp. That exact
 zero is a property of the values swept; the degeneracy is a property of the
 algebra, and both are reported. Meanwhile K_M(BH)/K_M(MM) = 1 + ρ runs from
 1.0001 to 10⁴. The map from four elementary constants to the two observable ones
@@ -63,7 +65,7 @@ means by that price.
 **On the actual data, ρ is free.** Rawlings & Ekerdt's Exercise 9.15 gives
 r_m = 0.162583 cmol/(L·min) and K_M = 0.503055 cmol/L at 4.02×10⁻³ RMS, against
 3.90×10⁻² for the best first-order null. Pin ρ anywhere in [10⁻⁴, 10⁴] and let
-the rest re-optimise: the achievable sum of squares moves **8.58 %**,
+the rest re-optimise: the achievable sum of squares moves **8.6 %**,
 monotonically, no interior optimum. Adding both elementary-step parameters gives
 **F = 1.90 against F(2,3) = 9.55** at 95 %.
 
@@ -86,7 +88,7 @@ on 300 ppi crops.
   rate"; its Problem 2.4(b) on p. 144 asks the student to show that limit; and
   k₁C_E⁰ has units of s⁻¹, which a rate cannot have.
 - **p. 25**, verbatim: *"the Lineweaver-Burke plot of 1/r versus C_A."* [sic]
-  1/r is exactly affine in 1/C_A (9.67×10⁻¹⁶ off a straight line) and strictly
+  1/r is exactly affine in 1/C_A (below 10⁻¹³ off a straight line) and strictly
   convex in C_A, d²(1/r)/dC_A² = 2K_M/(r_m C_A³) > 0. The convexity settles the
   defect and is convention-free. So is the *size*, once the right line is named:
   the statistic is a **maximum**, so the line that minimises it is the Chebyshev
@@ -149,18 +151,18 @@ derivation and nothing is adjudicated between the two books.
 | `build_page.py` | regenerates `index.ipynb` |
 | `data/rawlings-ekerdt-ex9.15-batch.csv` | the seven printed points, with a sidecar that leads on the unstated provenance |
 | `data/froment-1.5.1-printed.csv` | the first fifteen of the section's eighteen numbered equations, and nine prose claims, verbatim, defects flagged and not repaired |
-| `agreement.json` | 53 metrics; 7 sit below CI's `ABS_FLOOR` and are named structural with above-floor companions |
+| `agreement.json` | 53 claims in format 2, each a value, a bound or an exact result; the seven at round-off are bounds, named structural or covered by a break row |
 
 ## Validation summary
 
 - ten symbolic identities close eqs. (1.5.1-2) → (1.5.1-15), both routes;
-- two conservation balances in the pymrm mass-action marcher (1.2×10⁻¹⁷,
-  1.7×10⁻¹⁵) on a model that integrates all four fields independently;
+- two conservation balances in the pymrm mass-action marcher (both below
+  10⁻¹³) on a model that integrates all four fields independently;
 - backward Euler at observed order **0.9980**, Richardson vs Radau
-  **4.19×10⁻⁷**, LSODA vs Radau **3.85×10⁻¹¹**;
+  **4.19×10⁻⁷**, LSODA vs Radau **below 10⁻⁹**;
 - **two second, independent computations**: the fit re-done through the pymrm
-  marcher instead of the Lambert-W closed form (agreeing to 5.9×10⁻⁸ / 5.6×10⁻⁹,
-  sharing no line of code), and ρ* from an analytic sensitivity with its extremum
+  marcher instead of the Lambert-W closed form (agreeing to better than 10⁻⁵ / 10⁻⁶
+  relative, sharing no line of code), and ρ* from an analytic sensitivity with its extremum
   root-found (2.1934×10⁻³ vs 2.1951×10⁻³, **0.080 %** apart);
 - a defect-injection table of **52 rows: 51 defect injections, all 51 of which
   move their metric** by more than 1×10⁻⁶ relative, covering 42 of the 53
@@ -171,9 +173,11 @@ derivation and nothing is adjudicated between the two books.
   not-coverage labels — the `UNCOVERED` fallback and the "robustness rows only"
   branch — are asserted never to be used;
 - an assertion cell checking **every number quoted in prose, in `meta.yaml` and
-  in this README** against the live computation (68 checks), including the four
-  values that exist only as break-table entries, which are looked up from the
-  table rather than retyped. The page fails to execute if any drifts.
+  in this README** against the live computation: each number that is a
+  registered claim through `claims.says`, each round-off-level one as the bound
+  it is checked against, and the values that exist only as break-table entries
+  looked up from the table rather than retyped. The page fails to execute if any
+  drifts.
 
 ## Reuse
 

@@ -124,3 +124,17 @@ def test_report_writes_format_2_and_load_claims_reads_both(tmp_path, monkeypatch
         (tmp_path / "pages" / page / "agreement.json").write_text(json.dumps(payload))
     assert load_claims("P2") == {"m": 0.7186}
     assert load_claims("P1") == {"m": 0.5}
+
+
+def test_says_exact_integer():
+    c = Claims("T0.0")
+    c.exact("n", 10)
+    assert c.says("10", "n")
+    assert not c.says("9", "n")
+    assert c.says("between 9 and 11", "n")
+
+
+def test_unbroken_recorded_when_breaks_not_required():
+    c = _one()
+    payload = c.report(write=False, require_breaks=False)
+    assert payload["breaks_required"] is False and payload["unbroken"] == ["m"]

@@ -6766,9 +6766,9 @@ models:
       numerical sweep is a check on that algebra, not the evidence for it: holding
       r_m and K_M fixed and sweeping rho = k_2/k_-1 over EIGHT DECADES, the rate
       law evaluated from the elementary constants is identical to double precision
-      over four decades of concentration - max relative difference 0.0 on the nine
-      swept rho, and at most 4.44e-16 over 2000 seeded random (rho, C_E0) draws,
-      where the float round trips are no longer exact. The exact zero is a
+      over four decades of concentration - max relative difference below 1e-14 on
+      the nine swept rho (exactly zero there), and below 1e-14 over 2000 seeded
+      random (rho, C_E0) draws, where the float round trips are no longer exact. The exact zero is a
       property of the values swept; the degeneracy is a property of the algebra,
       and the page reports both. Meanwhile K_M(BH)/K_M(MM) = 1 + rho runs from
       1.0001 to 1e4. The map from four elementary constants to the two observable
@@ -6803,7 +6803,7 @@ models:
       cmol/L at 4.02e-3 RMS - a FIT, since those are the same seven points -
       against best-fitted one-parameter nulls of 5.34e-2 (zero order), 3.90e-2
       (first) and 1.05e-1 (second). Pinning rho anywhere in [1e-4, 1e4] and
-      re-optimising the other three moves the achievable sum of squares by 8.58 %,
+      re-optimising the other three moves the achievable sum of squares by 8.6 %,
       monotonically and with no interior optimum, and the four-parameter
       mass-action model gives F = 1.9009 against F(2, 3) = 9.5521 at 95 %. So the
       page states plainly what it does NOT establish: not "the Michaelis-Menten
@@ -6823,12 +6823,12 @@ models:
       a second route sharing no ODE solver and no mass-action model. The fit is
       likewise computed twice, through the Lambert-W closed form and through the
       pymrm backward-Euler marcher with Richardson extrapolation, agreeing to
-      5.9e-8 relative. Two printed defects, reported and NOT repaired, both
+      better than 1e-5 relative. Two printed defects, reported and NOT repaired, both
       settled from the book's own equations: p. 24's high-concentration limit
       "rA = k1CE0" [sic], which contradicts the limit of its own eq. (1.5.1-8),
       its eq. (1.5.1-15) definition of r_m, and its Problem 2.4(b) - and is
       dimensionally impossible; and p. 25's "Lineweaver-Burke plot of 1/r versus
-      CA" [sic], where 1/r is exactly affine in 1/C_A (9.67e-16) and strictly
+      CA" [sic], where 1/r is exactly affine in 1/C_A (below 1e-13) and strictly
       convex in C_A. The convexity is what settles that defect and it is
       convention-free, and so is the size once the right line is named: the
       statistic is a MAXIMUM, so the line that minimises it is the Chebyshev

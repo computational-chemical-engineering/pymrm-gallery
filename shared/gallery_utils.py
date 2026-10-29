@@ -373,13 +373,11 @@ class Claims:
         table; the file records it and ``scripts/check_claims.py`` lists the page.
         """
         problems = list(self._problems)
+        unbroken = [name for name, c in self.metrics.items() if not c.get("structural")
+                    and not any(caught for _, caught in self._rows.get(name, []))]
         if require_breaks:
-            for name, c in self.metrics.items():
-                if c.get("structural"):
-                    continue
-                if not any(caught for _, caught in self._rows.get(name, [])):
-                    problems.append(f"{name}: no break row fails its check "
-                                    "(add one, or mark the claim structural and say why)")
+            problems += [f"{name}: no break row fails its check (add one, or mark the "
+                         "claim structural and say why)" for name in unbroken]
         payload = {
             "page": self.page,
             "format": 2,
@@ -392,6 +390,7 @@ class Claims:
             # A page migrated before its break table: visible in the file and
             # listed by scripts/check_claims.py until the table exists.
             payload["breaks_required"] = False
+            payload["unbroken"] = unbroken
         width = max((len(k) for k in self.metrics), default=0)
         print(f"Claims for {self.page}:")
         for k, c in self.metrics.items():
@@ -442,8 +441,9 @@ def _says_ok(lit: dict, c: dict) -> bool:
         if isinstance(x, str):
             return False
         x = float(x)
-        return {"eq": x == nums[0], "max": x < nums[0], "min": x > nums[0],
-                "between": nums[0] <= x <= nums[1]}[op]
+        if op == "between":
+            return nums[0] <= x <= nums[1]
+        return {"eq": x == nums[0], "max": x < nums[0], "min": x > nums[0]}[op]
     if op == "eq":
         return abs(nums[0] - float(x)) <= unit
     if c["kind"] == "bound":

@@ -51,7 +51,9 @@ def check_page(page_dir: Path, spread: dict) -> list[str]:
     page, problems = page_dir.name, []
     metrics, sp = data["metrics"], spread.get(page_dir.name, {})
     if data.get("breaks_required") is False:
-        print(f"WARN {page}: no break table yet (breaks_required: false)")
+        missing = data.get("unbroken")
+        print(f"WARN {page}: breaks_required is false; claims with no failing break row: "
+              + (", ".join(missing) if missing else "not recorded"))
 
     for name, c in metrics.items():
         s = sp.get(name, {}).get("abs")

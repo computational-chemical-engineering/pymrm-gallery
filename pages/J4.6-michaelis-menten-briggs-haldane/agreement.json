@@ -1,58 +1,623 @@
 {
   "page": "J4.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "froment_chain_symbolic_max_residual": 0.0,
-    "froment_chain_identities_verified": 10.0,
-    "rho_degeneracy_symbolic_residual": 0.0,
-    "mm_fit_k_per_min": 0.32319212092828603,
-    "mm_fit_K_L_per_cmol": 1.9878533031368453,
-    "mm_fit_rm_cmol_per_L_min": 0.16258348662765346,
-    "mm_fit_KM_cmol_per_L": 0.503055229690236,
-    "mm_fit_rms_cmol_per_L": 0.004020286831122744,
-    "mm_fit_maxres_over_print_resolution": 13.865088235622158,
-    "mm_fit_sse_penalty_K_pinned_at_2": 0.0010831592863316253,
-    "mm_fit_KM_with_s0_free": 0.4931091686632502,
-    "null_first_order_rms_ratio": 9.712782795363925,
-    "lineweaver_printed_axes_nonlinearity_minimax": 0.3172560023684433,
-    "lineweaver_printed_axes_nonlinearity": 0.503158181986443,
-    "lineweaver_printed_axes_nonlinearity_uniform_measure": 0.6687562430924995,
-    "lineweaver_correct_axes_nonlinearity": 9.669129001283937e-16,
-    "lb_rm_bias_vs_nls": -0.3406356205070935,
-    "lb_KM_bias_vs_nls": -0.4672878227088909,
-    "lb_KM_bias_finite_difference_only": 0.14024339306899058,
-    "rate_law_rho_degeneracy_max_rel": 0.0,
-    "KM_ratio_at_rho_1e4": 10001.0,
-    "rate_law_rho_degeneracy_random_draws_max_rel": 4.440892098500626e-16,
-    "rate_law_break_k2_plus_1pct": 0.009758182679510563,
-    "rho_spread_induction_over_eps": 0.9772584052021954,
-    "rho_spread_induction_peak_min": 2.0109014445706597e-07,
-    "sampled_max_shortfall_uniform_scan": 0.6627137447477849,
-    "rho_spread_over_eps_trace_limit": 0.24227268983182706,
-    "CE0_star_cmol_per_L": 0.003064199490587384,
-    "eps_star_rho_visible_at_print_resolution": 0.0020689299285808972,
-    "eps_star_discrimination_with_compensation": 0.05797636889778094,
-    "eps_star_rms_25pt_grid_no_compensation": 0.003184735412028877,
-    "eps_star_compensation_penalty": 18.20445387042258,
-    "eps_star_statistic_and_window_factor": 1.5393152605285785,
-    "eps_star_raw_ratio_unlike_statistics": 28.02239365233002,
-    "qssa_error_order_in_eps": 0.9988307074166772,
-    "qssa_error_over_eps_rho1": 0.8118953820938575,
-    "qssa_error_at_discrimination_eps_over_resolution": 88.86235709395463,
-    "qssa_group_spread_CE0_over_cA0": 94.9574056725309,
-    "qssa_group_spread_CE0_over_cA0_plus_KM": 1.9148694148723324,
-    "rho_star_equilibrium_route": 0.0021951181181210917,
-    "rho_star_equilibrium_analytic": 0.0021933618697102903,
-    "rho_star_equilibrium_two_route_rel_diff": 0.0008000701175500113,
-    "dsdKM_rootfound_over_sampled": 1.0000015349430789,
-    "rho_profile_sse_span_fraction": 0.08581590544034068,
-    "full_model_F_statistic": 1.9009294390792295,
-    "full_model_F_crit_95": 9.552094495921152,
-    "lsoda_vs_radau_reference": 3.8464786911163173e-11,
-    "pymrm_be_time_order": 0.997957237920689,
-    "pymrm_richardson_vs_radau": 4.192750087672614e-07,
-    "pymrm_enzyme_balance_max": 1.214306433183765e-17,
-    "pymrm_substrate_balance_max": 1.6653345369377348e-15,
-    "fit_second_route_k_rel_diff": 5.9047809086720804e-08,
-    "fit_second_route_K_rel_diff": 5.6492854838552375e-09
-  }
+    "froment_chain_symbolic_max_residual": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.0,
+      "basis": "identity",
+      "structural": true,
+      "note": "ten sympy identities simplify to 0; protects the transcription"
+    },
+    "froment_chain_identities_verified": {
+      "kind": "exact",
+      "value": 10,
+      "structural": true,
+      "note": "the number of identities the code checks; it changes only if the code does"
+    },
+    "rho_degeneracy_symbolic_residual": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.0,
+      "basis": "identity",
+      "structural": true,
+      "note": "sympy d r/d rho of eq. (1.5.1-13) under the reparameterisation"
+    },
+    "rate_law_rho_degeneracy_max_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "relative to the rate; exactly 0 where the float round trips are exact"
+    },
+    "rate_law_rho_degeneracy_random_draws_max_rel": {
+      "kind": "bound",
+      "value": 4.440892098500626e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "structural": true,
+      "note": "relative to the rate; a few ulp over 2000 draws (4.4e-16 measured), the arithmetic under an exact identity"
+    },
+    "KM_ratio_at_rho_1e4": {
+      "kind": "exact",
+      "value": 10001.0,
+      "structural": true,
+      "note": "definitional: 1 + rho at rho = 1e4"
+    },
+    "rate_law_break_k2_plus_1pct": {
+      "kind": "value",
+      "value": 0.009758182679510563,
+      "rtol": 0.05,
+      "note": "the above-floor companion of the degeneracy: r_m no longer held fixed"
+    },
+    "lineweaver_correct_axes_nonlinearity": {
+      "kind": "bound",
+      "value": 4.834564500641968e-16,
+      "max": 1e-13,
+      "basis": "identity",
+      "note": "fraction of the range of 1/r; 1/r is exactly affine in 1/C_A, measured 4.8e-16 to 1.2e-15 across BLAS kernels"
+    },
+    "mm_fit_k_per_min": {
+      "kind": "value",
+      "value": 0.32319212092828603,
+      "rtol": 1e-05,
+      "unit": "1/min"
+    },
+    "mm_fit_K_L_per_cmol": {
+      "kind": "value",
+      "value": 1.9878533031368453,
+      "rtol": 1e-05,
+      "unit": "L/cmol"
+    },
+    "mm_fit_rm_cmol_per_L_min": {
+      "kind": "value",
+      "value": 0.16258348662765346,
+      "rtol": 1e-05,
+      "unit": "cmol/L/min"
+    },
+    "mm_fit_KM_cmol_per_L": {
+      "kind": "value",
+      "value": 0.503055229690236,
+      "rtol": 1e-05,
+      "unit": "cmol/L"
+    },
+    "mm_fit_rms_cmol_per_L": {
+      "kind": "value",
+      "value": 0.004020286831122744,
+      "rtol": 0.001,
+      "unit": "cmol/L"
+    },
+    "mm_fit_maxres_over_print_resolution": {
+      "kind": "value",
+      "value": 13.865088235622158,
+      "rtol": 0.001
+    },
+    "mm_fit_sse_penalty_K_pinned_at_2": {
+      "kind": "value",
+      "value": 0.0010831592863316253,
+      "rtol": 0.001
+    },
+    "mm_fit_KM_with_s0_free": {
+      "kind": "value",
+      "value": 0.4931091686632502,
+      "rtol": 1e-05,
+      "unit": "cmol/L"
+    },
+    "null_first_order_rms_ratio": {
+      "kind": "value",
+      "value": 9.712782795363925,
+      "rtol": 0.001
+    },
+    "lb_rm_bias_vs_nls": {
+      "kind": "value",
+      "value": -0.3406356205070935,
+      "rtol": 1e-05
+    },
+    "lb_KM_bias_vs_nls": {
+      "kind": "value",
+      "value": -0.4672878227088909,
+      "rtol": 1e-05
+    },
+    "lb_KM_bias_finite_difference_only": {
+      "kind": "value",
+      "value": 0.14024339306899058,
+      "rtol": 0.0001
+    },
+    "lineweaver_printed_axes_nonlinearity_minimax": {
+      "kind": "value",
+      "value": 0.3172560023684433,
+      "rtol": 0.05
+    },
+    "lineweaver_printed_axes_nonlinearity": {
+      "kind": "value",
+      "value": 0.503158181986443,
+      "rtol": 0.05
+    },
+    "lineweaver_printed_axes_nonlinearity_uniform_measure": {
+      "kind": "value",
+      "value": 0.6687562430924995,
+      "rtol": 0.05
+    },
+    "rho_spread_induction_over_eps": {
+      "kind": "value",
+      "value": 0.9772584052021954,
+      "rtol": 0.05
+    },
+    "rho_spread_induction_peak_min": {
+      "kind": "value",
+      "value": 2.0109014445706597e-07,
+      "rtol": 0.05
+    },
+    "sampled_max_shortfall_uniform_scan": {
+      "kind": "value",
+      "value": 0.6627137447477849,
+      "rtol": 0.05
+    },
+    "rho_spread_over_eps_trace_limit": {
+      "kind": "value",
+      "value": 0.24227268983182706,
+      "rtol": 0.05
+    },
+    "CE0_star_cmol_per_L": {
+      "kind": "value",
+      "value": 0.003064199490587384,
+      "rtol": 0.05
+    },
+    "eps_star_rho_visible_at_print_resolution": {
+      "kind": "value",
+      "value": 0.0020689299285808972,
+      "rtol": 0.05
+    },
+    "eps_star_discrimination_with_compensation": {
+      "kind": "value",
+      "value": 0.05797636889778094,
+      "rtol": 0.05
+    },
+    "eps_star_rms_25pt_grid_no_compensation": {
+      "kind": "value",
+      "value": 0.003184735412028877,
+      "rtol": 0.05
+    },
+    "eps_star_compensation_penalty": {
+      "kind": "value",
+      "value": 18.20445387042258,
+      "rtol": 0.05
+    },
+    "eps_star_statistic_and_window_factor": {
+      "kind": "value",
+      "value": 1.5393152605285785,
+      "rtol": 0.05
+    },
+    "eps_star_raw_ratio_unlike_statistics": {
+      "kind": "value",
+      "value": 28.02239365233002,
+      "rtol": 0.05
+    },
+    "qssa_error_over_eps_rho1": {
+      "kind": "value",
+      "value": 0.8118953820938575,
+      "rtol": 0.05
+    },
+    "qssa_error_at_discrimination_eps_over_resolution": {
+      "kind": "value",
+      "value": 88.86235709395463,
+      "rtol": 0.05
+    },
+    "qssa_group_spread_CE0_over_cA0": {
+      "kind": "value",
+      "value": 94.9574056725309,
+      "rtol": 0.05
+    },
+    "qssa_group_spread_CE0_over_cA0_plus_KM": {
+      "kind": "value",
+      "value": 1.9148694148723324,
+      "rtol": 0.05
+    },
+    "rho_star_equilibrium_two_route_rel_diff": {
+      "kind": "value",
+      "value": 0.0008000701175500113,
+      "rtol": 0.05
+    },
+    "qssa_error_order_in_eps": {
+      "kind": "bound",
+      "value": 0.9988307074166772,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "the quasi-steady-state error is first order in eps"
+    },
+    "rho_star_equilibrium_route": {
+      "kind": "value",
+      "value": 0.0021951181181210917,
+      "rtol": 0.0001
+    },
+    "rho_star_equilibrium_analytic": {
+      "kind": "value",
+      "value": 0.0021933618697102903,
+      "rtol": 1e-05
+    },
+    "dsdKM_rootfound_over_sampled": {
+      "kind": "value",
+      "value": 1.0000015349430789,
+      "rtol": 1e-05
+    },
+    "rho_profile_sse_span_fraction": {
+      "kind": "value",
+      "value": 0.08581590544034068,
+      "rtol": 0.05,
+      "note": "spreads 1e-4 relative across BLAS kernels (multi-start refits), so it keeps the default rtol and the one-print-ulp row (6.5e-3) does not fail it"
+    },
+    "full_model_F_statistic": {
+      "kind": "value",
+      "value": 1.9009294390792295,
+      "rtol": 0.001
+    },
+    "full_model_F_crit_95": {
+      "kind": "value",
+      "value": 9.552094495921152,
+      "rtol": 0.05,
+      "note": "definitional: the 95 % point of F(2, 3)"
+    },
+    "lsoda_vs_radau_reference": {
+      "kind": "bound",
+      "value": 3.8464786911163173e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "unit": "cmol/L",
+      "note": "LSODA at rtol 1e-11, atol 1e-14 against Radau at rtol 1e-12, atol 1e-15; measured 3.8e-11 to 5.8e-11 across BLAS kernels"
+    },
+    "pymrm_be_time_order": {
+      "kind": "bound",
+      "value": 0.997957237920689,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "backward Euler is first order in dt"
+    },
+    "pymrm_richardson_vs_radau": {
+      "kind": "value",
+      "value": 4.192750087672614e-07,
+      "rtol": 0.05,
+      "unit": "cmol/L",
+      "note": "the O(dt^2) remainder of Richardson(720, 1440), a discretisation error"
+    },
+    "pymrm_enzyme_balance_max": {
+      "kind": "bound",
+      "value": 1.214306433183765e-17,
+      "max": 1e-13,
+      "basis": "identity",
+      "structural": true,
+      "unit": "cmol/L",
+      "note": "a linear invariant of the source, kept by every Newton step to round-off"
+    },
+    "pymrm_substrate_balance_max": {
+      "kind": "bound",
+      "value": 1.6653345369377348e-15,
+      "max": 1e-13,
+      "basis": "identity",
+      "unit": "cmol/L",
+      "note": "a linear invariant of the source, kept by every Newton step to round-off"
+    },
+    "fit_second_route_k_rel_diff": {
+      "kind": "bound",
+      "value": 5.9047809086720804e-08,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "two-route gap, Lambert W against Richardson-extrapolated backward Euler at 1800/3600 steps; measured 5.9e-8 to 1.1e-7 across BLAS kernels, the bound is about 100x that and 1e2 below the no-Richardson row"
+    },
+    "fit_second_route_K_rel_diff": {
+      "kind": "bound",
+      "value": 5.6492854838552375e-09,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "as for k; measured 8e-10 to 7.4e-8 across BLAS kernels, the bound is about 13x the largest and 1e3 below the no-Richardson row"
+    }
+  },
+  "quoted": {
+    "mm_fit_KM_cmol_per_L": [
+      "0.503055"
+    ],
+    "mm_fit_rm_cmol_per_L_min": [
+      "0.162583"
+    ],
+    "mm_fit_k_per_min": [
+      "0.323192"
+    ],
+    "mm_fit_K_L_per_cmol": [
+      "1.987853"
+    ],
+    "mm_fit_rms_cmol_per_L": [
+      "4.02e-3"
+    ],
+    "mm_fit_maxres_over_print_resolution": [
+      "13.9",
+      "13.87"
+    ],
+    "mm_fit_sse_penalty_K_pinned_at_2": [
+      "0.108 %"
+    ],
+    "null_first_order_rms_ratio": [
+      "9.71"
+    ],
+    "rate_law_rho_degeneracy_max_rel": [
+      "below 1e-14"
+    ],
+    "rate_law_rho_degeneracy_random_draws_max_rel": [
+      "below 1e-14"
+    ],
+    "rho_spread_over_eps_trace_limit": [
+      "0.242"
+    ],
+    "rho_spread_induction_over_eps": [
+      "0.977",
+      "0.9773"
+    ],
+    "rho_spread_induction_peak_min": [
+      "2.0e-7",
+      "2.011e-7"
+    ],
+    "sampled_max_shortfall_uniform_scan": [
+      "66 %",
+      "66.3 %"
+    ],
+    "eps_star_rho_visible_at_print_resolution": [
+      "2.07e-3",
+      "2.069e-3"
+    ],
+    "eps_star_discrimination_with_compensation": [
+      "5.80e-2",
+      "5.798e-2"
+    ],
+    "eps_star_rms_25pt_grid_no_compensation": [
+      "3.18e-3",
+      "3.185e-3"
+    ],
+    "eps_star_compensation_penalty": [
+      "18.2",
+      "18.20"
+    ],
+    "eps_star_statistic_and_window_factor": [
+      "1.54",
+      "1.539"
+    ],
+    "eps_star_raw_ratio_unlike_statistics": [
+      "28.0"
+    ],
+    "rho_profile_sse_span_fraction": [
+      "8.6 %"
+    ],
+    "full_model_F_statistic": [
+      "1.90",
+      "1.9009"
+    ],
+    "full_model_F_crit_95": [
+      "9.55",
+      "9.5521"
+    ],
+    "lineweaver_printed_axes_nonlinearity_minimax": [
+      "31.7 %",
+      "31.72 %",
+      "31.7256 %"
+    ],
+    "lineweaver_printed_axes_nonlinearity": [
+      "50.3 %",
+      "50.32 %"
+    ],
+    "lineweaver_printed_axes_nonlinearity_uniform_measure": [
+      "66.9 %",
+      "66.88 %"
+    ],
+    "lineweaver_correct_axes_nonlinearity": [
+      "below 1e-13"
+    ],
+    "lb_KM_bias_vs_nls": [
+      "-0.4673",
+      "-46.7 %"
+    ],
+    "lb_rm_bias_vs_nls": [
+      "-0.3406",
+      "-34.1 %"
+    ],
+    "lb_KM_bias_finite_difference_only": [
+      "0.1402",
+      "14.0 %"
+    ],
+    "qssa_group_spread_CE0_over_cA0": [
+      "94.9",
+      "95.0"
+    ],
+    "qssa_group_spread_CE0_over_cA0_plus_KM": [
+      "1.91"
+    ],
+    "qssa_error_at_discrimination_eps_over_resolution": [
+      "88.9"
+    ],
+    "rho_star_equilibrium_route": [
+      "2.195e-3",
+      "2.1951e-3"
+    ],
+    "rho_star_equilibrium_analytic": [
+      "2.1934e-3"
+    ],
+    "rho_star_equilibrium_two_route_rel_diff": [
+      "8.00e-4",
+      "0.080 %"
+    ],
+    "pymrm_be_time_order": [
+      "0.998",
+      "0.9980"
+    ],
+    "pymrm_richardson_vs_radau": [
+      "4.19e-7"
+    ],
+    "pymrm_enzyme_balance_max": [
+      "below 1e-13"
+    ],
+    "pymrm_substrate_balance_max": [
+      "below 1e-13"
+    ],
+    "lsoda_vs_radau_reference": [
+      "below 1e-9"
+    ],
+    "fit_second_route_k_rel_diff": [
+      "below 1e-5"
+    ],
+    "fit_second_route_K_rel_diff": [
+      "below 1e-6"
+    ]
+  },
+  "breaks": {
+    "qssa_error_over_eps_rho1": [
+      "eq. (1.5.1-14) -> (1.5.1-8): K_M = k_-1/k_1 at rho = 1"
+    ],
+    "rate_law_rho_degeneracy_max_rel": [
+      "k2 raised 1 % with C_E0 left alone"
+    ],
+    "mm_fit_KM_cmol_per_L": [
+      "Lineweaver run on Froment's printed axes (1/r vs C_A)",
+      "c_S(9 min) moved by +5e-4 (one print ulp)",
+      "c_A0 fitted instead of read off the table"
+    ],
+    "mm_fit_rms_cmol_per_L": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "pymrm_substrate_balance_max": [
+      "P row of the pymrm source doubled"
+    ],
+    "pymrm_richardson_vs_radau": [
+      "k_-1 term deleted from the pymrm source",
+      "coarsest run (n = 180) reported instead of Richardson"
+    ],
+    "pymrm_be_time_order": [],
+    "dsdKM_rootfound_over_sampled": [
+      "max |ds/dK_M| sampled on a 19-point t grid"
+    ],
+    "rho_star_equilibrium_route": [
+      "ODE tolerance loosened to rtol 1e-6 under the root-find"
+    ],
+    "eps_star_rho_visible_at_print_resolution": [
+      "resolution threshold doubled to 1e-3 cmol/L"
+    ],
+    "CE0_star_cmol_per_L": [
+      "resolution threshold doubled to 1e-3 cmol/L"
+    ],
+    "sampled_max_shortfall_uniform_scan": [
+      "induction peak read on a uniform 181-point scan (sampled max)"
+    ],
+    "rho_spread_induction_over_eps": [
+      "induction spread read over the observable window instead"
+    ],
+    "rho_spread_induction_peak_min": [
+      "induction spread read over the observable window instead"
+    ],
+    "eps_star_discrimination_with_compensation": [
+      "resolution threshold doubled to 1e-3 cmol/L",
+      "discrimination misfit read on 13 grid points instead of 25"
+    ],
+    "eps_star_rms_25pt_grid_no_compensation": [
+      "resolution threshold doubled to 1e-3 cmol/L",
+      "rho range narrowed from [1e-4, 1e4] to [0.5, 2]"
+    ],
+    "null_first_order_rms_ratio": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_k_per_min": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_K_L_per_cmol": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_rm_cmol_per_L_min": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_maxres_over_print_resolution": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_sse_penalty_K_pinned_at_2": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "mm_fit_KM_with_s0_free": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "lb_KM_bias_vs_nls": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "lb_rm_bias_vs_nls": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "lb_KM_bias_finite_difference_only": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "lineweaver_correct_axes_nonlinearity": [
+      "straightness of 1/r measured against C_A"
+    ],
+    "lineweaver_printed_axes_nonlinearity": [
+      "straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)",
+      "straightness weighted uniformly instead of logarithmically"
+    ],
+    "lineweaver_printed_axes_nonlinearity_uniform_measure": [
+      "straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)"
+    ],
+    "lineweaver_printed_axes_nonlinearity_minimax": [
+      "the floor measured against the LEAST-SQUARES line instead of the minimax one",
+      "straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)"
+    ],
+    "qssa_group_spread_CE0_over_cA0": [
+      "K_M swept over 0.4-0.6 instead of 0.05-50"
+    ],
+    "qssa_group_spread_CE0_over_cA0_plus_KM": [
+      "K_M swept over 0.4-0.6 instead of 0.05-50"
+    ],
+    "rho_profile_sse_span_fraction": [],
+    "full_model_F_statistic": [
+      "c_S(9 min) moved by +5e-4 (one print ulp)"
+    ],
+    "rho_star_equilibrium_analytic": [
+      "analytic route's max |ds/dK_M| sampled on 19 points"
+    ],
+    "rho_star_equilibrium_two_route_rel_diff": [
+      "analytic route's max |ds/dK_M| sampled on 19 points"
+    ],
+    "fit_second_route_k_rel_diff": [
+      "second fit route run without Richardson extrapolation"
+    ],
+    "fit_second_route_K_rel_diff": [
+      "second fit route run without Richardson extrapolation"
+    ],
+    "lsoda_vs_radau_reference": [
+      "LSODA at rtol 1e-6 instead of 1e-11"
+    ],
+    "rho_spread_over_eps_trace_limit": [
+      "rho range narrowed from [1e-4, 1e4] to [0.5, 2]"
+    ],
+    "qssa_error_at_discrimination_eps_over_resolution": [
+      "eq. (1.5.1-14) -> (1.5.1-8): K_M = k_-1/k_1 at rho = 1"
+    ],
+    "qssa_error_order_in_eps": [],
+    "eps_star_compensation_penalty": [
+      "resolution threshold doubled to 1e-3 cmol/L"
+    ],
+    "eps_star_statistic_and_window_factor": [
+      "rho range narrowed from [1e-4, 1e4] to [0.5, 2] (like-for-like eps* only)"
+    ],
+    "eps_star_raw_ratio_unlike_statistics": [
+      "discrimination misfit read on 13 grid points instead of 25"
+    ]
+  },
+  "breaks_required": false,
+  "unbroken": [
+    "rate_law_break_k2_plus_1pct",
+    "qssa_error_order_in_eps",
+    "rho_profile_sse_span_fraction",
+    "full_model_F_crit_95",
+    "pymrm_be_time_order"
+  ]
 }
