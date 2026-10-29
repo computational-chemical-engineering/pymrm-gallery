@@ -33,6 +33,8 @@ jobs:
       - run: python scripts/check_metadata.py
       - name: Unit tests of the shared helpers and checks
         run: python -m pytest -q tests/
+      - name: Claims of format 2 pages (admissible values, quoted precision, README)
+        run: python scripts/check_claims.py
       - name: Refuse loosened claims (PRs)
         if: github.event_name == 'pull_request'
         run: |
