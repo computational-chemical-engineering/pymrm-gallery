@@ -1,6 +1,8 @@
 # Proposal: pages that are easy to download, run and reuse
 
-Status: APPROVED DIRECTION, 2026-09-26 (decisions in section 5), not implemented. The gallery queue is paused; this
+Status: APPROVED DIRECTION, 2026-09-26 (decisions in section 5), not implemented.
+Update 2026-10-29: [`refresh-plan.md`](refresh-plan.md) proposes replacing the
+migration rule of section 4 with a deliberate sweep, adding the pymrm 3.x changes. The gallery queue is paused; this
 note is for the session that resumes it. Written alongside the pymrm agent
 plugin (pymrm repo, branch `feature/claude-plugin`), whose output-format rule
 this proposal follows.
