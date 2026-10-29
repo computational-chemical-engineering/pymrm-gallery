@@ -3150,9 +3150,9 @@ models:
       resolution, ONE of the twelve class pairs is separable in ONE of the four
       devices (plug flow, parallel vs independent, 2.20e-3); parallel vs series in
       a bed is 8.07e-4. Each of the 64 entries is min(multistart fit, identity
-      twin) - 44 have a twin, and on nine of those the fit alone stopped more than
-      1e-6 short of a minimum that is exactly zero, by up to 1.31e-3, all in the
-      safe direction and none changing a verdict. What does discriminate is not
+      twin) - 44 have a twin, and on one of those the fit alone stops more than
+      1e-6 short of a minimum that is exactly zero, by 1.31e-3 (a wrong basin),
+      in the safe direction and changing no verdict. What does discriminate is not
       the effluent but the activity PROFILE, and both bed inlet values are EXACT:
       at the feed face C_R = 0, so the series inlet never decays at all (a = 1
       identically) while the parallel inlet is exp(-lambda theta) = 0.049787; the
@@ -3171,7 +3171,7 @@ models:
       the level set starts, how many levels) it ranges 0.073 to 0.382. Its
       one-knob/two-constraint
       problem with a consumed poison has an exact blind spot at d = 1 (consumption
-      ~ a^(d-1), so the recovered order is unbiased to 5.5e-7 for any sigma) while
+      ~ a^(d-1), so the recovered order is unbiased to below 1e-7 for any sigma) while
       at d = 2 it biases the order by -30.8 % - though holding C_A rather than
       C_P is the inverse of the paper's own instruction for eq. (6), and under
       that instruction (sigma = 0) the order comes back unbiased to 5.4e-9. The
@@ -3270,23 +3270,37 @@ models:
       off the other step-count pair.
       Where the two disagree the identity wins, and it wins IN THE MATRIX: every
       entry is min(multistart fit, identity twin), 44 of 64 have a twin, and the
-      nine entries where the fit alone stopped short are printed beside what the
-      algebra gives (worst shortfall 1.31e-3, all in the safe direction, no
-      verdict changed).
+      one entry where the fit alone stops short is printed beside what the
+      algebra gives (a shortfall of 1.31e-3, in the safe direction, no verdict
+      changed).
 
       THE DIAGONAL IS AN OPTIMISER STALL, NOT A NULL. A class fitted to its own
-      response with every parameter free has exact minimum zero, so the 8.55e-6
-      (batch) and 2.38e-5 (mixed) the multistart stops at are solver stalls; the
-      twin sets them to zero exactly. Where it stalls IS informative and is now
-      computed rather than asserted: the recovered parameters sit 3.6 % and 10.5 %
-      from the truth in their worst coordinate while a 1 % move along any single
-      parameter costs 17x to 311x the stall - eq. (6)'s five constants trade along
-      a valley and are not separately identifiable. THE 20x FLOOR HAS BEEN REMOVED
-      because it never bound: 20x the stall is below the instrument resolution on
-      every device (worst case 0.24 of it), so every threshold equalled the
-      resolution exactly and removing it changes no count. 0 of 64 fits hit their
-      evaluation budget - and sep_matrix now passes a tag to fit_class, so a
-      capped fit would actually be recorded.
+      response with every parameter free has exact minimum zero, and the twin
+      sets the diagonal to zero exactly; the side-by-side fit alone, the only
+      diagonal fit that starts off the truth (the seed grid contains the truth
+      for the other three classes), reaches below 1e-9 on every device. That
+      eq. (6)'s five constants are not separately identifiable is measured with
+      a profile: holding d anywhere in [0.5, 1.5] in either device, or n'
+      anywhere in [0.5, 1.5] (mixed flow), the other four refit to an RMS
+      residual below 2e-4, a tenth of the conversion resolution, while +1 % on
+      any single constant with the others held at the truth costs at least
+      3.9e-4. 0 of 64 fits hit their evaluation budget, and the largest share of
+      it any fit uses is recorded against that budget.
+
+      CORRECTION (2026-10-29): the August page published the diagonal as a stall
+      of 8.55e-6 (batch) and 2.38e-5 (mixed flow), at constants 3.6 % and 10.5 %
+      from the truth, a 1 % move costing 17x to 311x that stall, and nine
+      entries where the multistart alone stopped more than 1e-6 short. Those
+      were artefacts of least_squares' default one-sided Jacobian, whose step
+      (about 1.5e-8) is below the integrator's non-smooth error at rtol 1e-9:
+      perturbing the target by 1e-15 moved the batch stall from 9.5e-9 to
+      9.1e-6 (measured in the 2026-10-29 diagnosis, docs/refresh-learnings.md
+      row 11). With a central-difference Jacobian (relative step 1e-4) they are
+      gone, three published fit-only off-diagonal entries moved downward, the
+      safe direction (mixed s-b-s to par 1.85e-5 to 7.4e-6, mixed ser to s-b-s
+      5.31e-5 to 3.45e-5, plug ser to s-b-s 1.86e-5 to 1.39e-5), the 20x floor check that rested on them is withdrawn, and an
+      expm1 form of the Fig.-6 transform takes the d = 1 bias from 5.5e-7 to
+      below 1e-7. The separability verdicts stand.
 
       RECONSTRUCTION DECLARED: sigma, the poison-consumption group implied by
       eq. (6)'s "P -> P(down)", is not printed anywhere in the paper. It is swept,
@@ -3302,7 +3316,8 @@ models:
       a^d from every right-hand side and makes the finite-time extinction of d < 1
       (the printed d = 0 case) ordinary rather than stiff; with a terminal event
       at extinction it cut this page's separability sweep from tens of minutes to
-      a few. Whole page: 310 s.
+      a few. Whole page: about 660 s (the central-difference Jacobian
+      and the identifiability profiles doubled it from 310 s).
 
   - id: B3.2
     slug: grain-model
