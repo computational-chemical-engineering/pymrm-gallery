@@ -101,7 +101,7 @@ both of the paper's collapse claims about eq. (30) hold exactly; and the same
 occupancy ladder summed **to infinity in closed form**, with no truncation
 anywhere, gives $cx/[(1-x)(1+(c-1)x)]$ exactly — so the identity does not depend
 on stopping eq. (29) at $b$. A numerical ladder summed term by term, sharing no
-algebra with either closed form, returns the same answer to $5.6\times10^{-16}$.
+algebra with either closed form, returns the same answer to summation round-off, below $10^{-13}$.
 
 **The collapse is Langmuir's own, and so is its consequence.** Journal page 1375,
 printed immediately under eq. (30) and read here on a 300 ppi crop: *"If

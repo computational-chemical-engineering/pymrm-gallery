@@ -10,7 +10,7 @@ cells = []
 # --------------------------------------------------------------------- title
 cells.append(md(r"""---
 title: "Langmuir 1918: the isotherm that could not have proved its own conclusion"
-description: "Langmuir's isotherm is fitted to his own data by a hand-drawn straight line, so the agreement in Tables II-XVII is a goodness of fit and this page labels it as one everywhere. What can be tested is elsewhere, and there are two of them. Langmuir's own contest against Freundlich is a fair one - two parameters each, the same eleven points - and Freundlich loses by a factor 3.82 in RMS on Table VII and on 13 of the 14 tables that can host the comparison, the single exception being the table Langmuir himself excludes. And the monomolecular conclusion does not rest on the isotherm at all: it rests on beta, the saturation amount against a monolayer count computed from the liquid density, whose worst row leaves only 17 % of headroom. The page's own result is why that had to be so. Langmuir's Case VI, eqs. (29) and (30) of the same paper, is shown by symbolic algebra to be EXACTLY the BET isotherm twenty years early; and every pressure he reached lies below p/p0 = 1.5e-3, where his monolayer and multilayer equations differ by at most 0.16 %, against observational scatter 12 to 1100 times larger. Four printed defects are reported and none repaired, including eq. (15)'s logarithm, which contradicts eq. (16) two lines below it; a fifth pattern, the sigma column running low, is reported separately because it is a truncation convention and not an error."
+description: "Langmuir's isotherm is fitted to his own data by a hand-drawn straight line, so the agreement in Tables II-XVII is a goodness of fit and this page labels it as one everywhere. What can be tested is elsewhere, and there are two of them. Langmuir's own contest against Freundlich is a fair one - two parameters each, the same eleven points - and Freundlich loses by a factor 3.82 in RMS on Table VII and on 13 of the 14 tables that can host the comparison, the single exception being the table Langmuir himself excludes. And the monomolecular conclusion does not rest on the isotherm at all: it rests on beta, the saturation amount against a monolayer count computed from the liquid density, whose worst row leaves only 17 % of headroom. The page's own result is why that had to be so. Langmuir's Case VI, eqs. (29) and (30) of the same paper, is shown by symbolic algebra to be EXACTLY the BET isotherm twenty years early; and every pressure he reached lies below p/p0 = 1.6e-3, where his monolayer and multilayer equations differ by at most 0.16 %, against observational scatter 12 to 1100 times larger. Four printed defects are reported and none repaired, including eq. (15)'s logarithm, which contradicts eq. (16) two lines below it; a fifth pattern, the sigma column running low, is reported separately because it is a truncation convention and not an error."
 categories: [sec:J, struct:S1, tier:T0, data:tier5, phase:gas-solid]
 date: 2026-08-07
 ---
@@ -284,7 +284,7 @@ from decimal import Decimal
 from scipy.optimize import brentq, minimize_scalar
 
 from pymrm import newton, NumJac
-from gallery_utils import load_data, load_meta, report_agreement
+from gallery_utils import Claims, load_data, load_meta
 
 warnings.filterwarnings("ignore")
 np.random.seed(0)          # nothing here is stochastic; seeded so two runs are identical
@@ -970,9 +970,10 @@ print("\\n" + dsc.to_string(index=False, float_format=lambda v: f"{v:.5g}"))
 
 keep("fit_two_route_max_rel", max(v for _, v in TWO_ROUTE))
 keep("fit_two_route_count", len(TWO_ROUTE))
+FIT_TWO_ROUTE_MAX = 1e-9   # the bound it is held to: set by newton tol 1e-12 and brentq xtol 1e-13
 print(f"\\nevery fit above was root-found TWICE -- pymrm's newton and a bracketing Brent solve. "
-      f"Over {int(RES['fit_two_route_count'])} fits the worst disagreement is "
-      f"{RES['fit_two_route_max_rel']:.3e} relative. READ THAT NARROWLY: both solvers are given "
+      f"Over {int(RES['fit_two_route_count'])} fits the worst disagreement is below "
+      f"{FIT_TWO_ROUTE_MAX:.0e} relative (here {RES['fit_two_route_max_rel']:.1e}). READ THAT NARROWLY: both solvers are given "
       f"the SAME objective S, the SAME profiled amplitude and the SAME central-difference dS, "
       f"and differ only in how they iterate, so this is a ROOT-FINDER CROSS-CHECK and not an "
       f"independent computation. What IS independent here is the objective itself -- these fits "
@@ -1087,7 +1088,7 @@ which rather than leaving a reader to assume:
 
 Only the third is independent. The fourth inverts $\theta_1(1-e^{-kt})$ at half
 coverage, which returns $\ln 2/k$, which eqs. (7) and (10) turn into eq. (16)
-*identically* — so its $10^{-16}$ residual is float round-off and **could not have
+*identically*, so its residual, below $10^{-15}$, is float round-off and **could not have
 come out otherwise**. It is kept because it closes the algebra of eqs. (7), (10),
 (14) and (16), and it is labelled so that it is never read as a fourth
 confirmation. The march is the confirmation: it reaches eq. (16) with a
@@ -1200,11 +1201,13 @@ for n, tm, rel in th_rows:
 print(f"      observed order in dt: {RES['t_half_march_order']:.3f}. THIS is the independent "
       f"numerical confirmation of eq. (16); it converges to it and cannot reach eq. (15) as "
       f"printed at any dt.")
-print(f"  CLOSED FORM vs eq. (16): {RES['t_half_closed_form_vs_eq16_rel']:.3e} relative -- and "
+print(f"  CLOSED FORM vs eq. (16): below 1e-15 relative (here "
+      f"{RES['t_half_closed_form_vs_eq16_rel']:.1e}) -- and "
       f"this line is an ALGEBRAIC IDENTITY, NOT a fourth route. Inverting theta1(1-exp(-kt)) "
       f"at half coverage gives ln2/k, which eqs. (7) and (10) turn into eq. (16) exactly, so "
-      f"the number below 1e-15 is float round-off and could not have come out otherwise. It is "
+      f"that number is float round-off and could not have come out otherwise. It is "
       f"shown because it closes the algebra, and it is cited as evidence for nothing.")
+assert RES["t_half_closed_form_vs_eq16_rel"] < 1e-15
 print(f"  printed    vs eq. (16): eq. (15) as printed gives EXACTLY ZERO, which is not a small "
       f"discrepancy but a different function.")
 print("\\nREPORTED, NOT REPAIRED. The paper's eq. (15) is quoted verbatim in section 2. The "
@@ -1375,8 +1378,9 @@ xf, cf, nf = 0.60, 37.0, 20
 keep("caseVI_ladder_20layer_rel",
      abs(caseVI_series(xf, cf, nf) / float(bet.subs({cc: cf, xx: xf})) - 1))
 print(f"\\nnumerical ladder (4000 layers, summed term by term) against the closed form: "
-      f"{RES['caseVI_series_vs_closed_form']:.3e} relative at x={xt}, c={ct} -- BELOW ABS_FLOOR, "
-      f"so its ABOVE-FLOOR companion is the same ladder truncated at {nf} layers at x={xf}: "
+      f"below 1e-13 relative at x={xt}, c={ct} (here "
+      f"{RES['caseVI_series_vs_closed_form']:.1e}), which is summation round-off; the same "
+      f"ladder truncated at {nf} layers at x={xf} gives "
       f"{RES['caseVI_ladder_20layer_rel']:.3e}, which is the truncation error and moves when "
       f"eq. (30) is broken.")
 print("\\nCONCLUSION: eqs. (29) and (30) of Langmuir 1918, with the paper's own stated "
@@ -1666,7 +1670,9 @@ keep("t7_L_second_route_rel",
 print(f"CASE I  refitted, both parameters free: a = {a_L7:.6f}, b = {ab_L7 / a_L7:.5f}, "
       f"RMS = {rL7:.10f}")
 print(f"        the SAME optimum by the independent route of section 6.6: relative difference "
-      f"{RES['t7_L_second_route_rel']:.3e} -- two searches, two objectives, one answer.")
+      f"below 1e-12 (here {RES['t7_L_second_route_rel']:.1e}) -- two searches, two objectives, "
+      f"one answer.")
+assert RES["t7_L_second_route_rel"] < 1e-12
 print(f"CASE VI refitted, both parameters free: c = {c_B7:.6g}, v_m = {vm_B7:.5f}, "
       f"RMS = {rB7:.10f}")
 print(f"        (grid minima before refinement: {gridL:.8f} and {gridB:.8f}, so neither number "
@@ -1687,9 +1693,11 @@ rB_s, _, _, _ = profile_rms(lambda p, cpar: BET_BASIS(p, cpar, p0_syn), p7, q_sy
 keep("t7_BET_free_over_L_multilayer", rB_s / rL_s)
 print(f"\\nPOWER CHECK (this is the section 7 break row): feed the same eleven pressures a "
       f"curve that Case VI generated at p/p0 up to 0.3, and the ratio collapses from "
-      f"{RES['t7_BET_free_over_L']:.6f} to {RES['t7_BET_free_over_L_multilayer']:.3e}. The "
+      f"{RES['t7_BET_free_over_L']:.6f} to below 1e-9 (here "
+      f"{RES['t7_BET_free_over_L_multilayer']:.1e}): Case VI fits its own curve to round-off. The "
       f"comparison CAN see multilayer adsorption. It does not see it in Langmuir's data "
-      f"because it is not there to be seen at his pressures.")'''))
+      f"because it is not there to be seen at his pressures.")
+assert RES["t7_BET_free_over_L_multilayer"] < 1e-9'''))
 
 cells.append(code('''fig, ax = plt.subplots(figsize=(7.2, 4.3))
 xg = np.logspace(-7, -0.3, 400)
@@ -1906,8 +1914,11 @@ _, _, rF7b = fit_freundlich(p7, q7b)
 brk("Table VII top row q_obs 33.0 -> 30.0", "t7_F_over_L", RES["t7_F_over_L"], rF7b / rL7b)
 
 # 17. one isotherm row dropped
+_A17 = A.drop(A[A.table == "VIII"].index[:1])
+_chk17 = pd.concat([stated, _A17.groupby(["table", "gas"]).size().rename("transcribed")], axis=1)
 brk("one Bulb A row dropped from Table VIII", "n_obs_mismatches",
-    RES["n_obs_mismatches"], 1.0, "the 'Number of obs.' identity of section 4")
+    RES["n_obs_mismatches"], int((_chk17.printed_n_obs != _chk17.transcribed).sum()),
+    "the 'Number of obs.' identity of section 4, recounted")
 
 # 18. the ordering claim under the printed beta
 brk("Table XX beta 0.36 accepted rather than recomputed", "order_breaks_recomputed_beta",
@@ -1928,11 +1939,13 @@ brk("monolayer chain: cube root replaced by square root", "mono_n_rel_pct",
     float((1.0 / (Vm_N2 / NAV) ** (2 / 2) / float(clm.loc["monolayer_N2", "value"]) - 1) * 100))
 
 # 22. the departure evaluated at the mean pressure instead of the maximum
-dep_mean = []
+dep_mean, dep_mean_90 = [], []
 for _, r in rp.iterrows():
     grp = A[(A.table == r.table) & (A.gas == r.gas)]
     xm = grp.p_bars.mean() / r.p0_bars
     dep_mean.append(((1 + r.c * xm) / ((1 - xm) * (1 + (r.c - 1) * xm)) - 1) * 100)
+    if r.T_K == 90:
+        dep_mean_90.append(dep_mean[-1])
 brk("separation read at the mean pressure instead of the maximum",
     "departure_max_pct", RES["departure_max_pct"], float(np.max(dep_mean)),
     "monotonicity is what licenses the maximum; without it this is a sampled max")
@@ -2058,8 +2071,9 @@ def caseVI_series_bad(x, cpar, n_layers):
     th = [1.0 / (cpar * x)] + [np.prod([1.0] + [x] * (k - 1)) for k in range(1, n_layers + 1)]
     return sum(k * th[k] for k in range(1, n_layers + 1)) / sum(th[1:])    # theta_0 dropped
 brk("ladder: the bare fraction dropped from the inventory", "caseVI_series_vs_closed_form",
-    RES["caseVI_series_vs_closed_form"],
-    abs(caseVI_series_bad(xt, ct, 4000) / float(bet.subs({cc: ct, xx: xt})) - 1))
+    1e-13,
+    abs(caseVI_series_bad(xt, ct, 4000) / float(bet.subs({cc: ct, xx: xt})) - 1),
+    "'before' is the bound the gap is held to; the gap itself is round-off")
 brk("ladder truncated at 5 layers instead of 20", "caseVI_ladder_20layer_rel",
     RES["caseVI_ladder_20layer_rel"],
     abs(caseVI_series(xf, cf, 5) / float(bet.subs({cc: cf, xx: xf})) - 1))
@@ -2101,7 +2115,7 @@ brk("1 % separation sampled on a 40-point log grid, not root-found", "p_1pct_ove
 brk("Table XXI sigma_liq inverted", "x_max_90K_only", RES["x_max_90K_only"],
     float(RES["x_max_90K_only"] * (K3 * liv.loc["N2", "sigma_liq_90K_s"]) ** 2))
 brk("separation read at the mean pressure instead of the maximum", "departure_max_90K_only",
-    RES["departure_max_90K_only"], float(np.max(dep_mean[:len(rp)]) * 0.25))
+    RES["departure_max_90K_only"], float(np.max(dep_mean_90)))
 brk("every 155 K row kept rather than dropped", "scatter_over_sep_min_90K_only",
     RES["scatter_over_sep_min_90K_only"], RES["scatter_over_sep_min"],
     "this is the sensitivity itself: the metric IS the value with those rows dropped")
@@ -2134,11 +2148,12 @@ _S = lambda tt: float(np.sum((_amp(tt) * LANG_BASIS(p7, tt) - q7) ** 2))
 _dS = lambda tt: (_S(tt + 1e-6 * max(abs(tt), 1)) - _S(tt - 1e-6 * max(abs(tt), 1))) / (2e-6 * max(abs(tt), 1))
 _j = NumJac((1, 1))
 _z = newton(lambda z: _j(lambda zz: np.array([[_dS(float(zz[0, 0]))]]), z),
-            np.array([[0.05]]), tol=1e-3, maxfev=120)
+            np.array([[0.05]]), tol=1e-3, backward_tol=1e-3, maxfev=120)
 _tn = float(np.asarray(getattr(_z, "x", _z), float).reshape(1)[0])
 TWO_ROUTE.extend(TWO_ROUTE_SAVE)
-brk("newton tolerance loosened from 1e-12 to 1e-3 on one fit", "fit_two_route_max_rel",
-    RES["fit_two_route_max_rel"], abs(_tn / brentq(_dS, 1e-6, 50.0) - 1))
+brk("newton tol and backward_tol loosened to 1e-3 on one fit", "fit_two_route_max_rel",
+    FIT_TWO_ROUTE_MAX, abs(_tn / brentq(_dS, 1e-6, 50.0) - 1),
+    "'before' is the bound the gap is held to; the gap itself is round-off")
 
 # 53-54. the bound's headroom and the count above unity
 brk("methane/CO2 monolayer counts swapped", "beta_headroom", RES["beta_headroom"],
@@ -2159,86 +2174,151 @@ print(f"\\n{int(RES['break_rows_moving'])} of {int(RES['break_rows'])} injected 
       f"notice a common factor, and a symbolic identity cannot notice a renaming. Both metrics "
       f"they name are separately covered by rows that DO move them.")'''))
 
-cells.append(md(r"""### 7.3 Metrics, coverage, and what CI cannot see
+cells.append(md(r"""### 7.3 Claims, coverage, and how CI checks them
 
-Every reported metric has at least one break row aimed at it, and the coverage is
-**asserted key-for-key** against `agreement.json` rather than eyeballed.
+Every number above that the page stands behind is registered once, with how it is
+checked (`docs/claims-design.md`): a **value** against the committed baseline
+within its stated relative tolerance, a **bound** against its stated limits on every
+run and every machine, an **exact** result by equality.
 
-Metrics below `check_agreement.py`'s `ABS_FLOOR = 1e-12` are **outside** the
-regression suite while both sides stay under it. Here that is the whole symbolic
-family — eqs. (26) and (30), the two collapse claims, the BET identity, the
-infinite-ladder identity (all exactly zero) and the 4000-layer numerical ladder
-($5.6\times10^{-16}$). The cell
-below names every one of them, and names the family's **above-floor companions**
-too: the same ladder truncated at 20 layers, and the break rows that move each
-symbolic residual to a finite value.
+The bounds are the quantities whose size is not physics. The nine symbolic
+residuals are zero by construction (sympy simplifies them to 0) and are held at
+exactly 0. The 4000-layer numerical ladder against the BET closed form is
+floating-point summation error, held below $10^{-13}$. `fit_two_route_max_rel`
+is the gap between two root-finders handed the same objective, set by their
+tolerances, held below $10^{-9}$. The observed order of the implicit march is
+held between 0.9 and 1.1, because implicit Euler is first order.
+
+Every claim has at least one break row from §7.2 that fails its own check, and the
+set of claims is **asserted key-for-key** against the set of metrics the break
+table aims at. Where a row moves its value by less than 5 %, the value's tolerance
+is tightened below that move; every value on this page is identical to the last
+digit under three BLAS kernels, so a tight tolerance is admissible.
 """))
 
-cells.append(code('''# The REPORTED set is hand-written, not derived from the break table, so that a
-# forgotten row raises instead of silently shrinking the coverage map.
-REPORT = [
-    # transcription and the printed identity web
-    "chain_max_rel_pct", "n_obs_mismatches", "qcal_max_abs_cu_mm",
-    "s_inlier_max_dev_pct", "s_worst_dev_pct", "N0_max_rel_pct", "beta_max_abs_dev",
-    "sigma_max_abs_rel_pct", "t22_single_max_pct", "t22_multi_geom_max_pct",
-    "pt_N0_max_abs_dev", "mono_n_rel_pct", "t4_two_route_b_rel_pct",
-    "t4_b_printed_dev_pct",
-    # fit vs test: the discrimination and its nulls
-    "disc_median_ratio", "t7_F_over_L", "t7_null_mean", "t7_null_kp",
-    "t7_graphical_penalty", "qF_column_max_dev_pct", "fit_two_route_max_rel",
-    # the out-of-sample bound
-    "beta_max", "beta_headroom", "beta_n_above_one", "order_breaks_recomputed_beta",
-    # the symbolic family (all below ABS_FLOOR, all named in the cell below)
-    "sym_eq26_residual", "sym_eq30_a_residual", "sym_eq30_b_residual",
-    "sym_eq30_c_residual", "sym_collapse_b_residual", "sym_collapse_c_residual",
-    "sym_collapse2_c_residual", "sym_caseVI_minus_BET",
-    "sym_ladder_infinite_minus_BET",
-    "caseVI_series_vs_closed_form", "caseVI_ladder_20layer_rel",
-    # the rate equation
-    "t_half_eq15_corrected", "eq14_vs_eq15corrected_max_abs", "eq14_time_order",
-    "t_half_march_vs_eq16_rel",
-    # the page's own result
-    "x_max_anywhere", "departure_max_pct", "scatter_over_sep_min",
-    "scatter_over_sep_t7", "p0_N2_90K_atm", "x_1pct_rootfind",
-    "x_1pct_two_route_rel", "x_1pct_sampling_error_pct", "p_1pct_over_p_max",
-    "x_max_90K_only", "departure_max_90K_only", "scatter_over_sep_min_90K_only",
-    "x_max_155K_permanent_gases", "t7_BET_free_over_L", "p0_shrink_factor_for_parity",
-    # the log-log slope claim
-    "slope_at_3bars", "slope_100_factor", "p_for_slope_020",
-]
-metrics = {k: RES[k] for k in REPORT}
-not_reported = sorted(set(RES) - set(REPORT))
-print(f"{len(RES)} quantities computed; {len(metrics)} REPORTED to agreement.json. "
-      f"The other {len(not_reported)} are printed on the page and deliberately not "
-      f"reported: they are counts, cardinalities, intermediates and alternative readings "
-      f"whose CI comparison would manufacture regressions rather than catch them.")
-print("  not reported:", ", ".join(not_reported))
-ABS_FLOOR = 1e-12
-below = {k: v for k, v in metrics.items() if abs(v) < ABS_FLOOR}
-print("BELOW ABS_FLOOR = 1e-12, therefore NOT compared by CI:")
-for k, v in below.items():
-    print(f"  {k:<34s} = {v:.3g}")
-print("\\nABOVE-FLOOR COMPANIONS for that family, each named: sym_caseVI_minus_BET is guarded "
-      "by the break row 'sign of sigma_1 in b flipped', which moves it to a finite value; "
-      "sym_collapse_c_residual by 'the 4 sigma_2^2 in c changed to 3 sigma_2^2'; "
-      "sym_ladder_infinite_minus_BET by 'infinite ladder built with no distinguished first "
-      "layer'; and "
-      f"caseVI_ladder_20layer_rel = {RES['caseVI_ladder_20layer_rel']:.3e} is the SAME ladder "
-      "truncated, above the floor, testing the same algebra by a different route.")
+cells.append(code('''claims = Claims(PAGE)
+# tolerances tightened below the move of the break row aimed at the value (every
+# value here has zero spread across three BLAS kernels, so each is admissible)
+RTOL = {"t7_BET_free_over_L": 1e-6, "t7_graphical_penalty": 1e-3, "slope_at_3bars": 2e-3, "beta_headroom": 5e-3,
+        "slope_100_factor": 5e-3, "p_for_slope_020": 5e-3}
+def value(k, **kw):
+    claims.value(k, RES[k], rtol=RTOL.get(k, 0.05), **kw)
+
+# transcription and the printed identity web
+value("chain_max_rel_pct", unit="%")
+claims.exact("n_obs_mismatches", int(RES["n_obs_mismatches"]),
+             note="tables whose printed 'Number of obs.' differs from the rows transcribed")
+value("qcal_max_abs_cu_mm", unit="cu.mm")
+value("s_inlier_max_dev_pct", unit="%")
+value("s_worst_dev_pct", unit="%")
+value("N0_max_rel_pct", unit="%")
+value("beta_max_abs_dev")
+value("sigma_max_abs_rel_pct", unit="%")
+value("t22_single_max_pct", unit="%")
+value("t22_multi_geom_max_pct", unit="%")
+claims.value("pt_N0_max_abs_dev", RES["pt_N0_max_abs_dev"], rtol=0.0, atol=5e-3,
+             note="Table XXV N0 recomputed and rounded to the printed 0.01 against the "
+                  "printed cells; 0 when every cell matches, at least 0.01 when one does not")
+value("mono_n_rel_pct", unit="%")
+value("t4_two_route_b_rel_pct", unit="%",
+      note="two routes through printed, rounded constants; the gap is set by the printed digits")
+value("t4_b_printed_dev_pct", unit="%")
+# fit vs test: the discrimination and its nulls
+value("disc_median_ratio")
+value("t7_F_over_L")
+value("t7_null_mean")
+value("t7_null_kp")
+value("t7_graphical_penalty")
+value("qF_column_max_dev_pct", unit="%")
+claims.bound("fit_two_route_max_rel", RES["fit_two_route_max_rel"], max=FIT_TWO_ROUTE_MAX,
+             basis="tolerance",
+             note="relative gap between newton (tol 1e-12) and brentq (xtol 1e-13) on the same "
+                  "central-difference dS, worst over every fit; 9.4e-12 to 1.3e-11 on three BLAS "
+                  "kernels in the locked environment, 3.4e-11 in August 2026")
+# the out-of-sample bound
+value("beta_max")
+value("beta_headroom")
+claims.exact("beta_n_above_one", int(RES["beta_n_above_one"]),
+             margin=float((1.0 - g.beta_recomputed).abs().min()), min_margin=0.05,
+             note="entries with recomputed beta >= 1; the margin is the smallest |beta - 1|")
+claims.exact("order_breaks_recomputed_beta", int(RES["order_breaks_recomputed_beta"]),
+             note="sets in which the order by recomputed beta differs from the order by b'")
+# the symbolic family: zero by construction
+for k in ("sym_eq26_residual", "sym_eq30_a_residual", "sym_eq30_b_residual",
+          "sym_eq30_c_residual", "sym_collapse_b_residual", "sym_collapse_c_residual",
+          "sym_collapse2_c_residual", "sym_caseVI_minus_BET", "sym_ladder_infinite_minus_BET"):
+    claims.bound(k, RES[k], max=0.0, basis="identity",
+                 note="sympy simplifies the difference to 0, evaluated at rational arguments")
+claims.bound("caseVI_series_vs_closed_form", RES["caseVI_series_vs_closed_form"], max=1e-13,
+             basis="chosen",
+             note="4000-layer ladder summed term by term against the BET closed form at x = 0.2; "
+                  "truncation is x^4000, so the gap is summation round-off (5.6e-16 measured)")
+value("caseVI_ladder_20layer_rel", note="truncation error of the 20-layer ladder at x = 0.6")
+# the rate equation
+value("t_half_eq15_corrected")
+value("eq14_vs_eq15corrected_max_abs", note="discretisation error, 1600 implicit steps")
+claims.bound("eq14_time_order", RES["eq14_time_order"], min=0.9, max=1.1, basis="theory",
+             note="observed order of implicit Euler over 200 to 1600 steps; first order")
+value("t_half_march_vs_eq16_rel", note="discretisation error, 1600 implicit steps")
+# the page's own result
+for k in ("x_max_anywhere", "departure_max_pct", "scatter_over_sep_min",
+          "scatter_over_sep_t7", "p0_N2_90K_atm", "x_1pct_rootfind"):
+    value(k)
+value("x_1pct_two_route_rel", note="the finite-c correction to the c -> infinity limit 1/101")
+for k in ("x_1pct_sampling_error_pct", "p_1pct_over_p_max", "x_max_90K_only",
+          "departure_max_90K_only", "scatter_over_sep_min_90K_only",
+          "x_max_155K_permanent_gases", "t7_BET_free_over_L", "p0_shrink_factor_for_parity",
+          # the log-log slope claim
+          "slope_at_3bars", "slope_100_factor", "p_for_slope_020"):
+    value(k)
+
+# --- break rows: every row of section 7.2 that re-runs a computation ---------
+# The two STRUCTURAL rows are designed non-movers and are not wired.
+caught = set()
+for name, target, before, after, effect, note in breaks:
+    if not note.startswith("STRUCTURAL") and claims.breaks(name, target, after):
+        caught.add(target)
 
 targeted = set(bt.metric)
-reported = set(metrics)
-print(f"\\nCOVERAGE MAP, asserted key-for-key:")
-print(f"  reported but never broken : {sorted(reported - targeted) or 'none'}")
-print(f"  broken but not reported   : {sorted(targeted - reported) or 'none'}")
-assert reported == targeted, "coverage map and agreement.json disagree"
-
-payload = report_agreement(PAGE, metrics)
-assert set(payload["metrics"]) == reported, "agreement.json does not match the coverage map"
-print(f"\\n{len(payload['metrics'])} metrics written; every one carries at least one break "
-      f"row, and {int(RES['break_rows_moving'])} of {int(RES['break_rows'])} rows move theirs.")'''))
+claimed = set(claims.metrics)
+print("COVERAGE MAP, asserted key-for-key:")
+print(f"  claimed but never broken : {sorted(claimed - targeted) or 'none'}")
+print(f"  broken but not claimed   : {sorted(targeted - claimed) or 'none'}")
+assert claimed == targeted, "coverage map and the claim registry disagree"
+print(f"  {len(caught)} of {len(claimed)} claims have a break row "
+      f"that FAILS the claim's own check")
+not_reported = sorted(set(RES) - claimed)
+print(f"\\n{len(RES)} quantities computed; {len(claimed)} registered as claims. The other "
+      f"{len(not_reported)} are printed on the page and checked in the prose audit below "
+      f"where the markdown quotes them: counts, cardinalities, intermediates and alternative "
+      f"readings.")
+print("  not registered:", ", ".join(not_reported))'''))
 
 cells.append(code('''# ------------ prose audit: every number quoted in markdown, re-derived ------
+# Numbers that are claims are checked by claims.says: within one unit of the last
+# written place. Every one of them is identical to the last digit on three kernels.
+SAYS = [
+    ("3.82", "t7_F_over_L"), ("2.12", "disc_median_ratio"),
+    ("1.1667", "beta_headroom"), ("0.857", "beta_max"), ("0", "beta_n_above_one"),
+    ("below 1.6e-3", "x_max_anywhere"), ("0.160", "departure_max_pct"),
+    ("12.2", "scatter_over_sep_min"), ("0.99999", "t7_BET_free_over_L"),
+    ("12.14", "p0_shrink_factor_for_parity"), ("1104", "scatter_over_sep_t7"),
+    ("0.434", "qcal_max_abs_cu_mm"), ("1.40", "t4_b_printed_dev_pct"),
+    ("0.011", "t4_two_route_b_rel_pct"), ("0.136", "chain_max_rel_pct"),
+    ("3.77", "sigma_max_abs_rel_pct"), ("0.6812", "slope_at_3bars"),
+    ("25.64", "p_for_slope_020"), ("3.32", "slope_100_factor"),
+    ("0.0098993", "x_1pct_rootfind"), ("1114", "p_1pct_over_p_max"),
+    ("6.26", "x_1pct_sampling_error_pct"), ("1.063", "t7_graphical_penalty"),
+    ("1.33", "qF_column_max_dev_pct"), ("3.775", "p0_N2_90K_atm"),
+    ("1.78e-3", "eq14_vs_eq15corrected_max_abs"), ("0.995", "eq14_time_order"),
+    ("1.875e-3", "t_half_march_vs_eq16_rel"), ("1.391", "s_worst_dev_pct"),
+    ("0.451", "mono_n_rel_pct"), ("2.27", "t22_single_max_pct"),
+    ("below 1e-9", "fit_two_route_max_rel"), ("below 1e-13", "caseVI_series_vs_closed_form"),
+]
+for lit, k in SAYS:
+    claims.says(lit, k)
+
+# Numbers that are not claims: counts compared exactly, the rest relative.
 def close(name, quoted, key, tol=5e-3):
     got = RES[key]
     ok = abs(got - quoted) <= tol * max(1.0, abs(quoted))
@@ -2247,62 +2327,36 @@ def close(name, quoted, key, tol=5e-3):
     return True
 
 audit = [
-    ("Freundlich/Langmuir on Table VII", 3.82, "t7_F_over_L", 5e-3),
     ("tables where Langmuir wins", 13, "disc_n_langmuir_wins", 0),
     ("tables compared", 14, "disc_tables", 0),
-    ("median discrimination ratio", 2.12, "disc_median_ratio", 1e-2),
-    ("beta headroom", 1.1667, "beta_headroom", 1e-3),
-    ("worst beta", 0.857, "beta_max", 2e-3),
-    ("entries above unity", 0, "beta_n_above_one", 0),
     ("entries above unity under the text layer's 25.2e16", 17,
      "beta_n_above_one_textlayer", 0),
     ("beta entries", 20, "beta_entries", 0),
     ("separation-table entries", 18, "rp_entries", 0),
     ("table/gas/bulb entries with a p/p0", 30, "x_entries_all", 0),
-    ("highest relative pressure", 1.5e-3, "x_max_anywhere", 2e-2),
-    ("largest Case VI vs Case I departure", 0.160, "departure_max_pct", 2e-2),
-    ("smallest scatter/separation", 12.2, "scatter_over_sep_min", 1e-2),
-    ("best free Case VI over best free Case I", 0.99999, "t7_BET_free_over_L", 1e-4),
-    ("p0 error needed for parity", 12.14, "p0_shrink_factor_for_parity", 1e-2),
-    ("scatter/separation on Table VII", 1104.0, "scatter_over_sep_t7", 1e-2),
-    ("q_cal worst residual", 0.434, "qcal_max_abs_cu_mm", 1e-2),
     ("q_cal cells", 101, "qcal_cells", 0),
-    ("Table IV printed b deviation", 1.40, "t4_b_printed_dev_pct", 1e-2),
-    ("Table IV two-route agreement", 0.011, "t4_two_route_b_rel_pct", 5e-2),
     ("eq. (37) text-layer factor", 10.0, "eq37_textlayer_factor", 1e-6),
-    ("constant chain worst residual", 0.136, "chain_max_rel_pct", 1e-2),
-    ("sigma worst residual", 3.77, "sigma_max_abs_rel_pct", 1e-2),
     ("sigma printed below computed", 18, "sigma_n_below", 0),
     ("sigma cells", 21, "sigma_cells", 0),
     ("beta cells exact", 22, "beta_n_exact", 0),
     ("beta cells", 23, "beta_cells", 0),
-    ("slope at 3 bars", 0.6812, "slope_at_3bars", 1e-3),
-    ("pressure giving 0.20", 25.64, "p_for_slope_020", 1e-2),
-    ("printed 0.20 over computed", 3.32, "slope_100_factor", 1e-2),
-    ("1 % separation", 0.0098993, "x_1pct_rootfind", 1e-4),
-    ("1 % pressure over p_max", 1114.0, "p_1pct_over_p_max", 1e-2),
-    ("sampling error on the 1 % point", 6.26, "x_1pct_sampling_error_pct", 2e-2),
-    ("graphical fit penalty", 1.063, "t7_graphical_penalty", 5e-3),
-    ("q_F column departure", 1.33, "qF_column_max_dev_pct", 2e-2),
-    ("p0 for N2 at 90 K, atm", 3.775, "p0_N2_90K_atm", 1e-2),
     ("break rows", 64, "break_rows", 0),
     ("break rows that move", 62, "break_rows_moving", 0),
-    ("eq. (14) march residual", 1.78e-3, "eq14_vs_eq15corrected_max_abs", 2e-2),
-    ("observed order in dt", 0.995, "eq14_time_order", 2e-2),
-    ("half-coverage from the march vs eq. (16)", 1.875e-3,
-     "t_half_march_vs_eq16_rel", 2e-2),
     ("fits done", 29, "fit_two_route_count", 0),
     ("implied mica area", 5747.4, "mica_s_implied_median", 1e-4),
-    ("worst b-prime outlier", 1.391, "s_worst_dev_pct", 1e-2),
     ("second b-prime outlier", 0.659, "s_second_worst_dev_pct", 1e-2),
-    ("mono chain n residual", 0.451, "mono_n_rel_pct", 2e-2),
-    ("Table XXII single-source worst", 2.27, "t22_single_max_pct", 2e-2),
     ("printed-claims rows", 36, "printed_claims_rows", 0),
 ]
 for name, quoted, key, tol in audit:
     close(name, quoted, key, tol)
-print(f"prose audit: {len(audit)} numbers re-derived and matched. "
-      f"This cell RAISES on any drift between the markdown and the output.")'''))
+print(f"prose audit: {len(SAYS)} literals checked against their claims with claims.says, "
+      f"{len(audit)} other numbers re-derived and matched. This cell RAISES on any drift "
+      f"between the markdown and the output.\\n")
+_kinds = {kd: [k for k, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"{len(claims.metrics)} claims: {len(_kinds['value'])} values, "
+      f"{len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.\\n")
+payload = claims.report()'''))
 
 # ---------------------------------------------------- 8. What pymrm adds
 cells.append(md(r"""## 8. What pymrm adds
