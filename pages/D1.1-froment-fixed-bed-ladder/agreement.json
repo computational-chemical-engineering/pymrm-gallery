@@ -1,44 +1,415 @@
 {
   "page": "D1.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "ex1151a_worst_dev": 0.0014888901946201738,
-    "dp_definition_cost": 0.3067516186599417,
-    "re_implied_spread": 0.4533983223924736,
-    "conversion_worst_dev": 0.0011577369090323142,
-    "backint_residual": -0.013076733283987174,
-    "group_B_dev": 2.1683873221656214e-05,
-    "group_A_printed_dev": 0.0024449348901840473,
-    "cp_printed_dev": 0.0570030514594424,
-    "cp_route_spread": 0.00936423806975828,
-    "U_from_2d_dev": -1.1102230246251565e-16,
-    "U_from_2d_dev_at_printed_radius": -0.006116207951070263,
-    "table2_upper_ratio": 0.8262374353412426,
-    "table1_worst_dev": 0.004759005877743583,
-    "table2_dTad_worst_dev": 0.36887467858017464,
-    "table2_Q_implied_by_p0": 4.110152618400759,
-    "p0_star_bar_reading_dev": -0.011053661479156651,
-    "T_hot_0018_bar_reading_C": 627.2612337461263,
-    "rung1_p0_star_extrapolated": 0.01800507931085399,
-    "rung1_order_p0": 0.9983513647230046,
-    "rung1_order_T": 0.9430230133128753,
-    "ode_vs_pymrm_p0": 3.964107015974605e-07,
-    "ode_vs_pymrm_T": 3.336764016648175e-05,
-    "p0_star_vs_printed_0018": 0.0002825804590522729,
-    "shift_rung2_pct": 0.1656968705642914,
-    "shift_rung3_pct": -4.744252080847389,
-    "shift_rung4_pct": 15.688352355493397,
-    "shift_rung5_pct": -8.941922256574086,
-    "eta_grid_vs_11_9_1_11": 4.5785325931690934e-06,
-    "eta_vs_B11_worst": 3.1520787705519027e-06,
-    "film_dT_over_pellet_dT": 9.063840608558845,
-    "film_dT_at_startup_K": 0.8451515996098351,
-    "film_dT_at_hotspot_K": 3.3083317389374542,
-    "crossover_pe_axial": 0.24883361816406252,
-    "crossover_film_scale": 4.93035888671875,
-    "crossover_D_e": 2.2664489746093748e-05,
-    "crossover_R_t": 0.010029296875,
-    "E_over_R_internal_dev": 0.0035325287017957674,
-    "lump_deficit": -0.11410637447619765,
-    "mears_margin": 3.792511665713521
+    "E_over_R_internal_dev": {
+      "kind": "value",
+      "value": 0.0035325287017957674,
+      "rtol": 0.05
+    },
+    "T_hot_0018_bar_reading_C": {
+      "kind": "value",
+      "value": 627.2612337461263,
+      "rtol": 0.05
+    },
+    "U_from_2d_dev": {
+      "kind": "bound",
+      "value": -1.1102230246251565e-16,
+      "min": -1e-12,
+      "max": 1e-12,
+      "basis": "chosen",
+      "note": "eq. (11.7.4-1) at R_t = 0.0125 m returns the printed U = 0.096 to round-off; measured -1.1e-16"
+    },
+    "U_from_2d_dev_at_printed_radius": {
+      "kind": "value",
+      "value": -0.006116207951070263,
+      "rtol": 0.05
+    },
+    "backint_residual": {
+      "kind": "value",
+      "value": -0.013076733283987174,
+      "rtol": 0.05
+    },
+    "conversion_worst_dev": {
+      "kind": "value",
+      "value": 0.0011577369090323142,
+      "rtol": 0.05
+    },
+    "cp_printed_dev": {
+      "kind": "value",
+      "value": 0.0570030514594424,
+      "rtol": 0.05
+    },
+    "cp_route_spread": {
+      "kind": "value",
+      "value": 0.00936423806975828,
+      "rtol": 0.05
+    },
+    "crossover_D_e": {
+      "kind": "value",
+      "value": 2.2664489746093748e-05,
+      "rtol": 0.05
+    },
+    "crossover_R_t": {
+      "kind": "value",
+      "value": 0.010029296875,
+      "rtol": 0.01
+    },
+    "crossover_film_scale": {
+      "kind": "value",
+      "value": 4.93035888671875,
+      "rtol": 0.05
+    },
+    "crossover_pe_axial": {
+      "kind": "value",
+      "value": 0.248831787109375,
+      "rtol": 0.05
+    },
+    "dp_definition_cost": {
+      "kind": "value",
+      "value": 0.3067516186599417,
+      "rtol": 0.001
+    },
+    "eta_grid_vs_11_9_1_11": {
+      "kind": "bound",
+      "value": 4.5785325931690934e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "256-cell second-order pellet grid against the closed form; measured 4.6e-6"
+    },
+    "eta_vs_B11_worst": {
+      "kind": "bound",
+      "value": 3.1520787705519027e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "the same closed form against B1.1's tabulated exact eta, whose phi column is printed to 6 significant figures; measured 3.2e-6"
+    },
+    "ex1151a_worst_dev": {
+      "kind": "value",
+      "value": 0.0014888901946201738,
+      "rtol": 0.05
+    },
+    "film_dT_at_hotspot_K": {
+      "kind": "value",
+      "value": 3.3083317389374542,
+      "rtol": 0.05
+    },
+    "film_dT_at_startup_K": {
+      "kind": "value",
+      "value": 0.8451515996098351,
+      "rtol": 0.05
+    },
+    "film_dT_over_pellet_dT": {
+      "kind": "value",
+      "value": 9.063840608558845,
+      "rtol": 0.05
+    },
+    "group_A_printed_dev": {
+      "kind": "value",
+      "value": 0.0024449348901840473,
+      "rtol": 0.05
+    },
+    "group_B_dev": {
+      "kind": "value",
+      "value": 2.1683873221656214e-05,
+      "rtol": 0.05
+    },
+    "lump_deficit": {
+      "kind": "value",
+      "value": -0.11410637447619765,
+      "rtol": 0.05
+    },
+    "mears_margin": {
+      "kind": "value",
+      "value": 3.792511665713521,
+      "rtol": 0.05
+    },
+    "ode_vs_pymrm_T": {
+      "kind": "bound",
+      "value": 3.336764017181082e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "two routes to rung 1's hot spot at 0.018 atm, as for ode_vs_pymrm_p0; measured 3.3e-5, the bound 3x that; the 4800-cell value alone is off by about 17x the measured gap"
+    },
+    "ode_vs_pymrm_p0": {
+      "kind": "bound",
+      "value": 3.964107015974605e-07,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "two routes to rung 1's threshold: Richardson limit of the 150-4800 chain against grid-free Radau (rtol 1e-12); the limit's own error, measured 4.0e-7; the bound is 25x that, and the finest grid alone is off by 2.6e-4"
+    },
+    "p0_star_bar_reading_dev": {
+      "kind": "value",
+      "value": -0.011053661479156651,
+      "rtol": 0.05
+    },
+    "p0_star_vs_printed_0018": {
+      "kind": "value",
+      "value": 0.0002825804590522729,
+      "rtol": 0.05
+    },
+    "re_implied_spread": {
+      "kind": "value",
+      "value": 0.4533983223924736,
+      "rtol": 0.05
+    },
+    "rung1_order_T": {
+      "kind": "bound",
+      "value": 0.9430230133089893,
+      "min": 0.85,
+      "max": 1.15,
+      "basis": "theory",
+      "note": "first-order upwind; the hot spot is a root-found maximum, measured 0.94"
+    },
+    "rung1_order_p0": {
+      "kind": "bound",
+      "value": 0.9983513647230046,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind on the 150-4800 chain"
+    },
+    "rung1_p0_star_extrapolated": {
+      "kind": "value",
+      "value": 0.01800507931085399,
+      "rtol": 0.001
+    },
+    "shift_rung2_pct": {
+      "kind": "value",
+      "value": 0.1656968705642914,
+      "rtol": 0.05
+    },
+    "shift_rung3_pct": {
+      "kind": "value",
+      "value": -4.744252080847389,
+      "rtol": 0.05
+    },
+    "shift_rung4_pct": {
+      "kind": "value",
+      "value": 15.688352588550103,
+      "rtol": 0.05
+    },
+    "shift_rung5_pct": {
+      "kind": "value",
+      "value": -8.941922256574086,
+      "rtol": 0.05
+    },
+    "table1_worst_dev": {
+      "kind": "value",
+      "value": 0.004759005877743583,
+      "rtol": 0.05
+    },
+    "table2_Q_implied_by_p0": {
+      "kind": "value",
+      "value": 4.110152618400759,
+      "rtol": 0.001
+    },
+    "table2_dTad_worst_dev": {
+      "kind": "value",
+      "value": 0.36887467858017464,
+      "rtol": 0.001
+    },
+    "table2_upper_ratio": {
+      "kind": "value",
+      "value": 0.8262374353412426,
+      "rtol": 0.001
+    },
+    "rung1_finest_err_over_start_floor": {
+      "kind": "bound",
+      "value": 26072.36898948262,
+      "min": 1000.0,
+      "basis": "theory",
+      "structural": true,
+      "note": "|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a threshold; a guard on the order fit rather than a result, so no physics row moves it"
+    },
+    "ladder_controls_rejected": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.005980087482271301,
+      "min_margin": 1e-06,
+      "note": "margin in K: closest control solve to the 415 C ceiling, or jump to the 1 K allowance, over the five ladder rungs"
+    },
+    "thresholds_rejected": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.004787184875794992,
+      "min_margin": 1e-06,
+      "note": "over every bisected threshold on the page, break rows included; margin in K as for ladder_controls_rejected"
+    },
+    "scan_points_rejected": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.00599992823674711,
+      "min_margin": 1e-06,
+      "note": "thresholds rejected in the four crossover scans (sweep points and refinement probes) and the 9-point fine Pe_a grid; margin in K over the four scans. The earlier version reported 13 of 24 probes refused on the rung-2 row alone"
+    }
+  },
+  "quoted": {
+    "crossover_pe_axial": [
+      "0.24883"
+    ],
+    "scan_points_rejected": [
+      "0"
+    ]
+  },
+  "breaks": {
+    "crossover_pe_axial": [
+      "crossover definition read as 2 %, not 1 %",
+      "crossover definition read as 0.5 %, not 1 %",
+      "rung-2 shift against rung 1's extrapolated threshold"
+    ],
+    "crossover_film_scale": [
+      "crossover definition read as 2 %, not 1 %",
+      "crossover definition read as 0.5 %, not 1 %"
+    ],
+    "crossover_D_e": [
+      "crossover definition read as 2 %, not 1 %",
+      "crossover definition read as 0.5 %, not 1 %"
+    ],
+    "rung1_p0_star_extrapolated": [
+      "R_t = 0.0127 m, from the printed 2.54 cm diameter",
+      "permissible ceiling read as 410 C"
+    ],
+    "rung1_order_p0": [
+      "rung 1: orders fitted with the grid ratio read as 3"
+    ],
+    "rung1_order_T": [
+      "rung 1: orders fitted with the grid ratio read as 3"
+    ],
+    "ode_vs_pymrm_p0": [
+      "rung 1: finest grid against the ODE, no Richardson limit"
+    ],
+    "ode_vs_pymrm_T": [
+      "rung 1: finest grid against the ODE, no Richardson limit",
+      "R_t = 0.0127 m, from the printed 2.54 cm diameter"
+    ],
+    "p0_star_vs_printed_0018": [
+      "R_t = 0.0127 m, from the printed 2.54 cm diameter",
+      "permissible ceiling read as 410 C"
+    ],
+    "ladder_controls_rejected": [
+      "ladder controls run at the neighbouring rung's threshold"
+    ],
+    "scan_points_rejected": [
+      "crossing control's jump allowance read as 0.005 K"
+    ],
+    "thresholds_rejected": [
+      "crossing control's jump allowance read as 0.005 K"
+    ],
+    "crossover_R_t": [
+      "tube-radius crossover read as 2 %, not 1 %"
+    ],
+    "table2_upper_ratio": [
+      "Table 11.5.3.A-2: dT read 31.9 K"
+    ],
+    "table1_worst_dev": [
+      "Table 11.5.3.A-1: Q read 2.9023"
+    ],
+    "table2_dTad_worst_dev": [
+      "Table 11.5.3.A-2 cross-checked against A = 6165",
+      "units: atm-to-bar factor set to 1"
+    ],
+    "table2_Q_implied_by_p0": [
+      "Table 11.5.3.A-2 cross-checked against A = 6165",
+      "units: atm-to-bar factor set to 1",
+      "Table 11.5.3.A-2: dT read 31.9 K"
+    ],
+    "p0_star_bar_reading_dev": [
+      "11.5.2's pressures read in atm, not the printed bar"
+    ],
+    "T_hot_0018_bar_reading_C": [
+      "11.5.2's pressures read in atm, not the printed bar"
+    ],
+    "ex1151a_worst_dev": [
+      "Ex 11.5.1.A: d_p from eq. (11.5.1-9), 6V/S = d",
+      "Ergun constants: A1.1's refit 151.9 / 1.697"
+    ],
+    "dp_definition_cost": [
+      "Ergun constants: A1.1's refit 151.9 / 1.697"
+    ],
+    "re_implied_spread": [
+      "Ergun constants: A1.1's refit 151.9 / 1.697"
+    ],
+    "conversion_worst_dev": [
+      "units: atm-to-bar factor set to 1",
+      "units: p_B0 read as 0.208 bar, not 0.208 atm converted"
+    ],
+    "backint_residual": [
+      "units: atm-to-bar factor set to 1"
+    ],
+    "group_B_dev": [
+      "c_p: the printed 0.992 kJ/(kg K) used instead",
+      "(-dH): the kJ/kmol value used in the kcal groups",
+      "p_B0 read as 0.211 bar in the kcal groups"
+    ],
+    "group_A_printed_dev": [
+      "p_B0 read as 0.211 bar in the kcal groups"
+    ],
+    "cp_printed_dev": [
+      "c_p: the printed 0.992 kJ/(kg K) used instead",
+      "(-dH): the kJ/kmol value used in the kcal groups",
+      "p_B0 read as 0.211 bar in the kcal groups"
+    ],
+    "cp_route_spread": [
+      "c_p: the printed 0.992 kJ/(kg K) used instead",
+      "(-dH): the kJ/kmol value used in the kcal groups",
+      "p_B0 read as 0.211 bar in the kcal groups"
+    ],
+    "U_from_2d_dev": [
+      "R_t = 0.0127 m, from the printed 2.54 cm diameter",
+      "lambda_er raised 5 %",
+      "alpha_w raised 5 %"
+    ],
+    "U_from_2d_dev_at_printed_radius": [
+      "lambda_er raised 5 %",
+      "alpha_w raised 5 %"
+    ],
+    "shift_rung2_pct": [
+      "Pe_ma = Pe_ha = 0.5 (2x the chapter's lower limit)"
+    ],
+    "shift_rung3_pct": [
+      "film coefficients halved"
+    ],
+    "shift_rung4_pct": [
+      "film coefficients halved",
+      "D_e raised to 1e-5 m2/s",
+      "rung 4 with eq. (11.9.1-11) switched off"
+    ],
+    "shift_rung5_pct": [
+      "R_t = 0.0127 m, from the printed 2.54 cm diameter",
+      "lambda_er raised 5 %"
+    ],
+    "eta_grid_vs_11_9_1_11": [
+      "pellet: construct_div nu = 1, not 2",
+      "pellet: 16 radial cells, not 256"
+    ],
+    "eta_vs_B11_worst": [
+      "B1.1's exact eta column shifted 1e-4"
+    ],
+    "film_dT_at_hotspot_K": [
+      "film coefficients halved"
+    ],
+    "film_dT_at_startup_K": [
+      "film coefficients halved"
+    ],
+    "film_dT_over_pellet_dT": [
+      "film coefficients halved"
+    ],
+    "mears_margin": [
+      "film coefficients halved"
+    ],
+    "E_over_R_internal_dev": [
+      "11.5.2's E/R and 11.7.3's E_1/R swapped"
+    ],
+    "lump_deficit": [
+      "11.5.2's E/R and 11.7.3's E_1/R swapped"
+    ]
   }
 }

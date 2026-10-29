@@ -16,7 +16,7 @@ authors:
     orcid: null
 
 pymrm_min_version: "2.3"
-runtime_seconds: 2400   # measured 2228 s and 2219 s for two concurrent executions
+runtime_seconds: 1150   # measured 2026-10-29: about 1140 s per execution, single-threaded BLAS (three kernels, 3445 s in all)
 datasets:
   - froment-2011-ch11-printed.csv
 
@@ -360,58 +360,60 @@ validation:
     WHY BISECTION AND NOT BRENTQ, measured rather than asserted: above the
     threshold the first-order upwind Newton eventually stops converging and the
     hot-spot function returns NaN, on which brentq raises "The function value at
-    x = ... is NaN". The notebook runs that as a control on ALL FIVE rungs - brentq
-    dies on two of them and, on the three where it survives, returns the bisection
-    root to every digit. (An earlier version of this file described a five-rung
-    control that the notebook ran on two.)
+    x = ... is NaN". The notebook runs that as a control on ALL FIVE rungs: brentq
+    fails on at least one, and where it survives it returns the bisection root to
+    better than 1e-10 (asserted). WHICH rungs it survives is decided by round-off -
+    its points above the threshold are cold-started fixed-inlet solves - and
+    differs between BLAS kernels (2 and 4 fail on Haswell, 1 to 4 on Sandybridge,
+    2 to 4 on Nehalem, in the 2026-10-29 runs), so the page does not name them.
+    HOW EACH THRESHOLD SOLVE IS STARTED: one cold solve at the bottom of the
+    bracket, where a single steady state exists, then every scan point and every
+    bisection midpoint started from the converged state at the current lower end
+    of the bracket, which moves up only on a sub-ceiling result. The threshold is
+    the one on the branch the reactor follows as the feed is raised; no state
+    crosses from one p0_critical call to the next.
     AND BECAUSE bisection treats a non-converged solve as supercritical, the number
     it returns could be a Newton-convergence boundary rather than a ceiling
-    crossing. THAT IS NOW CHECKED ON EVERY CALL, not on the five default rungs:
-    `p0_critical` evaluates the hot spot at p0*(1 -/+ 1e-5) and RAISES unless the
-    solve converges below the ceiling on one side, above it on the other, and
-    without a jump (the five reported rungs move 0.02 to 0.10 K between the two
-    solves; the control allows 1 K; an ignition discontinuity gives hundreds).
-    The notebook counts the checks and the rejections: 714 bisected thresholds over
-    the whole page, of which 93 were rejected and never became a number. The staged
-    version ran the same check five times.
-    THE DEFECT THIS REPAIRS, stated because it shipped twice: the control used to
-    run on the five default rungs and never inside the sweeps and bisections that
-    perturb them, which is exactly where p0_critical works outside its tested
-    envelope. Two published numbers came from thresholds that fail it. The rung-2
-    "1 % crossover" at Pe_a = 0.0969: the shift there is 2.818 %, not 1 %, the
-    returned p0* = 0.01851251 is the same to eight digits at Pe = 0.09 and 0.05,
-    and the control gives 918.6 C just below the returned value and 415.0 C just
-    above it - the hot spot falls THROUGH the ceiling as p0 rises, which is a jump
-    and not a crossing. And the tube-radius rows below R_t = 0.0095 m: at 0.0090 m
-    the control returns about 1060 C on BOTH sides, so the returned threshold is
-    where this Newton gives up and not where the ceiling is crossed. Both are now
-    rejected by the control instead of printed, and the rejected points are shown
-    in the swept tables rather than dropped.
-    AND THE SECOND DEFECT, WHICH WAS THE FIRST REPAIR'S OWN. Having put the control
-    inside the scans, the version this replaces then treated the FIRST REFUSAL as
-    the end of the answerable region: it bisected the gap, called the result an
-    "edge of validity", named the metric `pe_axial_limit`, printed "the shift never
-    reaches 1 % anywhere the control validates", and declared rungs 2 and 3
-    unorderable. All of that was an artefact of where one sweep stopped. THE
-    CONTROL'S VERDICT IS SPECKLED IN THE SWEPT PARAMETER, not an interval: on a
-    regular 0.001 grid through the region where the sweep first refuses, Pe_a =
-    0.316 and 0.314 validate while 0.315 and 0.313 do not, and the reported "edge"
-    flipped its own verdict one ulp away. Rung 5 is speckled the same way, with
-    smaller stakes: R_t = 9.6875 mm is refused while 9.70 mm and 9.675 mm on either
-    side of it validate. So the scans now sweep THROUGH refusals and refine by
-    subdividing and keeping what validates rather than by bisecting (a bisection
-    dies at its first refused midpoint, and about half the interior points of the
-    rung-2 refinement are refused), and a scan that cannot straddle its target
-    between two validated points RAISES - there is no bound fallback. All four rows
-    are roots, the metric is `crossover_pe_axial`, and the ranking is decidable:
-    rung 5 at 1.25, rung 2 at 4.02, rung 3 at 4.93, rung 4 at 22.7. Rungs 2 and 3
-    are 23 % apart, which is the honest caveat on that pair. Both wrong versions of
-    the rung-2 search - the uncontrolled one at 0.097 and the stop-at-first-refusal
-    one at 0.3156 - are injected as break rows.
-    WHAT THE RUNG-2 SWEEP STILL DOES NOT REACH: the largest |shift| any validated
-    point of it carries is 1.19 %, so a 2 % rung-2 crossover is not locatable on it
-    and the break row that moves the target moves it to 1.1 %. That is a statement
-    about the scan and not a claim about the model.
+    crossing. THAT IS CHECKED ON EVERY CALL: `p0_critical` evaluates the hot spot
+    at p0*(1 -/+ 1e-5), from the branch state, and RAISES unless the solve
+    converges below the ceiling on one side, above it on the other, and without a
+    jump (the five reported rungs move 0.012 to 0.095 K between the two solves;
+    the control allows 1 K). The notebook counts the checks: 0 rejected over
+    every bisected threshold on the page, the closest verdict about 5e-3 K from its
+    threshold; registered as the exact claim thresholds_rejected with that margin.
+    CORRECTION (2026-10-29). The earlier version cold-started EVERY bisection
+    solve from the rung-1 profile at the same p0. Between rung 1's threshold and a
+    higher one that guess is already a runaway profile, and Newton from it reached
+    the ignited state (about 990 C) or failed, decided by round-off. On one
+    machine (Haswell kernel), in the 2026-10-29 diagnosis, direct starts on rung 2 at
+    n_z = 900, Pe_a = 0.24 and 0.01817, 0.01818, 0.01819 and 0.01820 atm gave
+    990.9 C, 411.5 C, no convergence and 992.1 C; the page does not recompute them.
+    THE FIX DOES NOT COVER fixed-inlet solves above a threshold, which still start
+    cold: so the ladder table prints "past threshold" instead of a hot spot at
+    0.018 atm for rungs 3 and 5, rung 5's (600, 10) state there is stated only as
+    a bound (above 900 C), and brentq's survival is not attributed to rungs. The page published that
+    noise as physics: 714 checks with 93 rejections on its pinned kernel; a
+    control verdict "speckled" along Pe_a (0.316 and 0.314 accepted, 0.315 and
+    0.313 refused) and along R_t (9.6875 mm refused); Pe_a = 0.30 shown as an
+    "ignition jump", 414.2 C against 999.3 C; 13 of 24 refinement probes of the
+    rung-2 crossover refused; R_t = 0.0090 m with about 1060 C on both control
+    sides; rung 4's anchor at n_z = 300 rejected; a rung-2 crossover of
+    0.24883362; and NotACrossing on other BLAS kernels. With the branch followed,
+    the five ladder thresholds, BASE600, the shifts and the film, D_e and R_t
+    crossovers are unchanged in every printed digit (shift_rung4_pct moves
+    1.5e-8 relative), the rung-2 crossover is 0.24883179, every scan point and
+    probe validates on three BLAS kernels, and the 0.001 grid in Pe_a validates 9
+    of 9. Earlier repairs described in older versions of this file (the control
+    run on five rungs only; the scan stopped at the first refusal) were real
+    defects of the search logic, but the rejections they were reacting to were
+    this round-off; the two break rows that injected them no longer moved anything
+    and are replaced.
+    WHAT THE RUNG-2 SWEEP REACHES: every one of its 15 points validates, and the
+    shift reaches 2.52 % at Pe_a = 0.10, so the break row that moves the target
+    moves it to 2 % (it was 1.1 % while the validated maximum appeared to be
+    1.19 %). All four crossover rows are roots and the ranking is decidable: rung 5
+    at 1.25, rung 2 at 4.02, rung 3 at 4.93, rung 4 at 22.7. Rungs 2 and 3 are
+    23 % apart, which is the honest caveat on that pair.
     ONE SHIFT DEFINITION, and it is the same-grid one. The crossover table used to
     mix two - two rows against the Richardson-extrapolated rung-1 threshold and two
     against a same-grid one - which is worth 4.08 against 4.93 on the film row,
@@ -425,10 +427,12 @@ validation:
     (p. 588) says the limits within which its own multiple steady states "could be
     experienced ... will probably be extremely narrow": multiplicity, not absence -
     and 11.6 warns that which profile a steady-state computation finds "depends on
-    the initial guesses", i.e. that a cold start may MISS a state that exists. A bounded state does exist above the threshold - the grid-free
-    Radau route returns one at every p0 in the bracket, at 800-1000 C - so the
-    ladder table's one empty cell is labelled "Newton did not converge at this
-    grid" and the page rests nothing on it.
+    the initial guesses", i.e. that a computation may MISS a state that exists,
+    which is exactly what the cold-started bisection did (see the correction
+    above). A bounded state does exist above the threshold - the grid-free
+    Radau route returns one at every p0 in the bracket, at 800-1000 C - so where a
+    fixed-inlet Newton solve above the threshold fails, the page says so and rests
+    nothing on it.
   refinement: >
     Rung 1 on six grids (150 to 4800) with observed orders for the threshold, the
     hot-spot temperature and the hot-spot location, and Richardson limits for all
@@ -466,16 +470,31 @@ validation:
     reason unconnected to the physics. That overflow is now suppressed inside
     Ladder.source only - the iterate is rejected by the residual check regardless -
     and nowhere else, so a genuine overflow in any other cell is still loud.
-    Nothing stochastic: no sampling, no bootstrap, no random or warm-started
-    initial guess. Every solve is cold-started from a guess that is a fixed
-    function of its inputs (the rung-1 profile); the two-dimensional runaway states
-    that the direct guess cannot reach fall back to a FIXED four-fraction ramp,
-    which is a deterministic function of p0 and not a sweep. Stylers are rendered
+    Nothing stochastic: no sampling, no bootstrap, no random initial guess. Every
+    fixed-inlet solve starts from a guess that is a fixed function of its inputs
+    (the rung-1 profile, with a FIXED four-fraction ramp as fallback); every
+    threshold is followed along its branch from one such start, inside a single
+    p0_critical call, so no state crosses from one call to the next and no result
+    depends on sweep order or direction. The 2026-10-29 run on three BLAS kernels
+    (Haswell, Sandybridge, Nehalem) gives the same claims on all three. Stylers are rendered
     through to_html() with pinned uuids and stdout's flush interval is disabled, so
     two executions give identical stream output and agreement.json.
   break_table: >
-    31 injected defects against 39 helper-computed metrics, and agreement.json now
-    holds exactly those 39. Every metric a break row computes is produced by exactly
+    34 injected defects against 42 helper-computed metrics; agreement.json (format
+    2) registers those 42 plus one guard as 43 claims - 32 values, 8 bounds, 3
+    exact counts - and every break row is fed to the claims it touches. Every
+    non-structural claim has a row that fails its own check; the one structural
+    claim is rung1_finest_err_over_start_floor, a guard that the rung-1 order fit
+    is not fitted to the thresholds' 1e-8 start-dependence floor. Five rows are new on 2026-10-29: the rung-2 shift
+    against rung 1's extrapolated threshold and the crossovers on 300 cells (back
+    from 450) replace the two rows that injected the cold-started search's
+    defects; the rung-1 chain compared without its Richardson limit, and with the
+    grid ratio misread as 3, fail the two-route and order bounds; and the ladder
+    controls run at the neighbouring rung's threshold fail ladder_controls_rejected;
+    and a fifth new row, the control's jump allowance read as 0.005 K (below every
+    measured jump), re-runs the five ladder controls and the 9-point fine Pe_a grid
+    and fails scan_points_rejected and thresholds_rejected.
+    Every metric a break row computes is produced by exactly
     ONE helper function, and EVERY ONE of those helpers' default calls is asserted
     equal, to 1e-12, to a number printed earlier in the notebook - from ONE list,
     used both for the value check and for the completeness check, so a metric cannot
@@ -484,7 +503,7 @@ validation:
     rung-1 metrics the assertion is an identity: the Validation cell displays the
     helper's own memoised return value. The four rung-to-rung shifts are the one
     place where the metric and the displayed number are DIFFERENT computations - the
-    break rows cannot afford the (1200, 20) grid 31 times, so agreement.json carries
+    break rows cannot afford the (1200, 20) grid once per row, so agreement.json carries
     the (600, 10) values - and both, with the gap (at most 0.107 percentage points),
     are printed in a table rather than left to be discovered. The coverage map is
     GENERATED from the measured moves, not written.
@@ -533,16 +552,15 @@ validation:
     certainly not "rejects any row returning a metric as a typed constant".
   structural_and_labelled_so:
     - "cp_route_spread: a spread AMONG four routes to c_p. Two rows move it, but it cannot detect a c_p wrong the same way in all four places, which is what a shared source looks like - C2.10 warns that U = 82.7 is exactly such a shared source between it and D2.2. The notebook goes further and shows the four are NOT four determinations: route 2 reproduces route 1 by construction and route 4 is route 1 rounded, so the 0.94 % is route 3 against one printed number, not a consensus."
-  below_the_CI_floor: >
-    ONE metric, named by the notebook from the coverage table rather than asserted:
-    `U_from_2d_dev` = -1.1e-16. Section 11.5.2's printed U = 0.096 kJ/(m2 s K) IS
-    eq. (11.7.4-1) evaluated at alpha_w = 0.156, lambda_er = 0.78e-3 and
-    R_t = 0.0125 m to every digit it prints, so the deviation is machine zero and
-    check_agreement.py's ABS_FLOOR = 1e-12 puts it outside CI. Its above-floor
-    companion is `U_from_2d_dev_at_printed_radius` = -6.1e-3, the same identity at
-    the radius the printed 2.54 cm tube diameter implies: it carries the same
-    information, CI can see it, and both are moved by the alpha_w and lambda_er
-    rows.
+  bounds_not_values: >
+    Registered as bounds with a stated basis, because their size is set by a
+    tolerance, an identity or theory rather than by physics: U_from_2d_dev
+    (-1.1e-16; eq. (11.7.4-1) at R_t = 0.0125 m returns the printed 0.096 to
+    round-off; bound +/-1e-12), ode_vs_pymrm_p0 (below 1e-5) and ode_vs_pymrm_T
+    (below 1e-4), the two-route gaps of rung 1; rung1_order_p0 in [0.9, 1.1] and
+    rung1_order_T in [0.85, 1.15], first-order upwind; eta_grid_vs_11_9_1_11
+    (below 1e-4) and eta_vs_B11_worst (below 1e-5). Exact: ladder_controls_rejected,
+    thresholds_rejected (each 0, with its margin in K) and scan_points_rejected (0).
 
 honesty:
   what_pymrm_adds: >
@@ -567,7 +585,7 @@ honesty:
     - "The rung-4 magnitude is not decidable from the chapter: D_e is not printed for this catalyst. Its SIGN and its crossover are established; its size is not."
     - "The rung-2 magnitude (+0.1665 % extrapolated; agreement.json's coarse-grid value is +0.1657 %) depends on lambda_ea, of which the chapter says 'little information is available'; Pe_ma and Pe_ha are varied together."
     - "The film coefficients come from A3.4's correlation, not from the chapter, and the root-found crossover is at 4.93x the correlated coefficients - so that rung's size depends on which correlation is chosen. (4.08x against the Richardson-extrapolated rung-1 baseline; the table now uses the same-grid baseline in every row and prints both readings. This file previously said ~2x, which no cell of the notebook prints, and then 4.1x, which was the mixed-baseline value.)"
-    - "Rung 2's 1 % point is a ROOT: Pe_a* = 0.2488 +/- 0.0002, factor 4.02, located between two validated sweep points and itself carrying the control's certificate (414.98 C below, 415.02 C above). The +/- is the grid, measured same-grid on 600/900/1200 cells, not the refinement tolerance. Two earlier versions of this row were wrong in opposite directions and are both break rows now: an uncontrolled search that returned 0.097 (where the shift is 2.8 % and both sides are past the ceiling), and a controlled one that stopped at its first refusal and reported a bound of 'at least 3.2 times'. The largest |shift| the sweep validates is 1.19 %, so a 2 % rung-2 crossover is outside what it can locate - a statement about the scan, not about the model."
-    - "Rung 5's signed shift passes through zero between R_t = 0.0098 m (-0.169 %) and 0.00975 m (+0.015 %), so the two-dimensional correction is negative on this tube and positive on a narrower one, and |shift| stays under 1 % from R_t* = 0.01003 m down to at least 0.009675 m. Validity is speckled here too - 0.0096875 m is refused while 0.0097 m and 0.009675 m on either side of it validate - so the previous version's 'below 0.00967 m this solver says nothing' is withdrawn; what happens on narrower tubes is simply not reported."
-    - "Four stored output lines carry the absolute path of the machine that executed the page (a pymrm MatrixRankWarning and a NumJac RuntimeWarning). DECIDED, not inherited: they are kept. They are the solver failing in exactly the way the crossing control exists to detect, the page argues that a visible warning is worth more than a suppressed one, and CI compares agreement.json only. A reader executing elsewhere will see their own path there."
+    - "Rung 2's 1 % point is a ROOT: Pe_a* = 0.2488 +/- 0.0002, factor 4.02, located between two validated sweep points and itself carrying the control's certificate (414.98 C below, 415.02 C above). The +/- is the grid, measured same-grid on 600/900/1200 cells, not the refinement tolerance. Earlier versions published 0.0969, then a bound of 'at least 3.2 times', then 0.24883362; all three were shaped by a cold-started threshold search whose result near rung 2's threshold was decided by round-off (see validation.root_found_never_swept). The value is now 0.24883179."
+    - "Rung 5's signed shift passes through zero between R_t = 0.0098 m (-0.169 %) and 0.00975 m (+0.015 %), so the two-dimensional correction is negative on this tube and positive on a narrower one. |shift| stays under 1 % from R_t* = 0.01003 m down to 0.0096 m (+0.572 %) and is past 1 % again, positive, by 0.0094 m (+1.327 %); at 0.0090 m it is +2.879 %. All of these thresholds pass the control. The earlier version reported 'speckle' here (0.0096875 m refused) and both control sides near 1060 C at 0.0090 m; both were the cold-started search."
+    - "No stored output carries a machine path any more. The earlier version kept four (a pymrm MatrixRankWarning and a NumJac RuntimeWarning from Newton solves that failed in the cold-started search); the branch-following search no longer produces them."
     - "The magnitudes of all four shifts belong to section 11.5.2's pseudo-first-order simplification, which the notebook shows is k_1 alone used as the total o-xylene consumption rate. Only the ordering and the signs transfer."
