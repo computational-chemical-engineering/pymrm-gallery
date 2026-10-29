@@ -4462,7 +4462,8 @@ models:
       5.99e-6, which is exactly why a second solver family cannot catch this class of
       defect and a convergence study can.  WHAT THAT SHORTCUT COSTS IS COUNTED BY THE
       NOTEBOOK RATHER THAN ASSERTED: 27 of the 42 reported metrics move by more than
-      the coverage tolerance and 19 of them change in their fourth decimal.  An earlier
+      the coverage tolerance, the headline error among them by more than a unit in its
+      fourth decimal.  An earlier
       version of this entry said "nine reported numbers", counted by hand; it was an
       undercount.  The
       extrapolated reference agrees with scipy's collocation to 4.37e-8 and with a finer
@@ -4470,7 +4471,7 @@ models:
       of the break table that prices what shipping the single solve would have cost.
       THE HEADLINE IS THE APPROXIMATION PRICED OVER THE CHART'S OWN PRINTED DOMAIN,
       root-found in both directions and never sampled: worst error -2.7955 % at
-      gamma = 4.7279, q = 1.5217 (E_i = 2.5217), against the "This approximate solution
+      gamma = 4.728, q = 1.522 (E_i = 2.522), against the "This approximate solution
       is valid to within 10 percent of the numerical solution" printed on book p. 340 -
       a margin of 3.5772x - and -2.7294 % if the search is confined to the ten curve
       labels the chart actually draws.  Van Krevelen-Hoftijzer UNDER-estimates
@@ -4486,10 +4487,10 @@ models:
       constant close to the interface".  The first is about the LEVEL of depletion, which
       beta(0) measures exactly; the second about the CONSTANCY of beta over the reaction
       zone, which beta(0) does not measure at all and the rate-weighted mean does.  Along
-      the worst curve the error is -1.8304 % where B is half gone (gamma = 2.2036,
+      the worst curve the error is -1.8304 % where B is half gone (gamma = 2.204,
       ROOT-FOUND on beta(0), constancy ratio 1.208), -2.7955 % at the worst point where
       beta(0) is already down to 0.1647 and the constancy ratio is 2.115, -1.5035 % where
-      B is 99 % gone (gamma = 13.0378, root-found, ratio 19.20), and -0.00037 % where B
+      B is 99 % gone (gamma = 13.038, root-found, ratio 19.20), and -0.00037 % where B
       is gone completely and the ratio has run away without bound.  beta(0) falls
       monotonically, the constancy ratio rises monotonically, and the error does NEITHER:
       it peaks in between and vanishes at both ends, because the ceiling F_A -> 1 + q is
@@ -4525,7 +4526,7 @@ models:
       claim stated at its true strength: TWO INDEPENDENT METHODS, ONE OF THEM ALSO
       REFINED - pymrm finite volumes (extrapolated from 400 and 800 cells, then again on
       1600 cells with a different grading) and scipy's adaptive collocation, which share
-      no assembly - agree on it to 8.61e-5, orders below the factor it is used to
+      no assembly - agree on it to below 1e-3 relative, orders below the factor it is used to
       establish.  The middle entry is a refinement of the first, not a third route, and
       the page says so.
       THE TWO CHARTS' CURVE LABELS MEAN DIFFERENT THINGS AND THE PAGE PRICES IT.
@@ -4540,10 +4541,11 @@ models:
       already reports 2.076893 % as its maximum VKH error.  That number is LOADED from
       F3.1's own agreement.json and its definition - a sampled max over E_i in
       {5, 20, 100} on a warm-started Ha sweep - is recomputed here cold, giving
-      2.076896 % and reproducing it to 1.29e-6 relative.  THE RESIDUAL IS ATTRIBUTED BY
+      2.076896 % and reproducing it to 1.29e-6 relative, checked as below 2e-5 because
+      F3.1's number was made on another machine.  THE RESIDUAL IS ATTRIBUTED BY
       MEASUREMENT RATHER THAN LEFT TO BE GUESSED AT, AND IT BELONGS TO F3.1: the same
       recomputation run COLD on F3.1's OWN grid - uniform, n_x = 400 - lands on F3.1's
-      stored 2.076893 % to better than 1e-10 relative, so the warm start contributes
+      stored 2.076893 % to below 1e-9 relative, so the warm start contributes
       nothing to the residual and what is left is that grid's discretisation error.
       This page's extrapolated reference is the accurate side of it, agreeing with
       scipy's collocation to 4.37e-8; the single graded n_x = 800 grid this page used
@@ -4579,7 +4581,8 @@ models:
       agreement.json.  But that factor compares F3.1's UNIFORM n_x = 400 against this
       page's GRADED n_x = 800, so it is grading TIMES a refinement.  Run on this page's
       own three grids it decomposes exactly: the 400 -> 800 refinement is worth 7.163x
-      (and the uniform n_x = 400 recomputation reproduces F3.1's stored number to 6.3e-15)
+      (and the uniform n_x = 400 recomputation reproduces F3.1's stored number to below
+      1e-12 relative)
       and grading at the same n_x is worth 124.8x.  At the moderate gamma the headline
       lives at, the SAME grading is a liability: at the grid-study point a graded grid is
       248.7 times LESS accurate than a uniform one of the same size, because its outer
@@ -4597,9 +4600,10 @@ models:
       expression is the right one).  A verification's sabotage suite found one form the
       guard missed, a DICT COMPREHENSION over literal key strings; it is now closed and
       is the third form the guard's own negative control uses, and the forms that still
-      pass are named on the page rather than left implied.  ONE metric sits below check_agreement.py's ABS_FLOOR
-      (the two routes to the implicit relation, 8.0e-15) and is named on the page with
-      two above-floor companions.  Every solve is a COLD START from a closed-form
+      pass are named on the page rather than left implied.  Every metric declares how it
+      is checked: the solver and two-method gaps, the first integral, the two limits and
+      the grid order as bounds with a stated basis (the two routes to the implicit
+      relation below 1e-12), the rest as values.  Every solve is a COLD START from a closed-form
       profile depending only on its own (gamma, q), so no reported number rides a
       continuation chain.
     section: F
