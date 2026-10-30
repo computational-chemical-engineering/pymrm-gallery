@@ -33,7 +33,7 @@ $$\textstyle\sum t_i = 60\ \text{s},\qquad \sum t_i^2 = 4(81)+576 = 900\ \text{s
 — exactly the two numbers the method uses. Three things have to be said carefully
 about what follows, and the page says all three:
 
-- the difference is **23.2 % in outlet concentration**, first order, and only
+- the difference is **23.2 % <!-- claim: ambiguity_first_order_max_gap --> in outlet concentration**, first order, and only
   **0.16 %** in *conversion* (99.334 % against 99.488 %). Over the whole sweep
   the relative gap in conversion never exceeds 0.38 %;
 - 23.2 % is the value at $k\bar t = 10$, and it is **monotone** — 1.53 % at
@@ -100,23 +100,30 @@ printed.
   closed-vessel variance or on the conversion instead of on the small-deviation
   variance shifts Pe by an $O(1)$ offset (1.01 and 1.34 at $N=64$), so the three
   rules agree to $O(1/N)$ relatively and the page says so.
-- **A caution about pymrm itself.** There is no pure-outflow boundary condition
-  in the library. The nearest, zero-gradient, reconstructs the exit face to second
-  order — right for a discretised PDE, wrong when the cell count is a physical
-  parameter. It costs **5.9 % at $N=2$ and 3.8 % at $N=4$** and decays as
+- **A caution about outflow boundaries.** The usual PDE outflow, zero-gradient,
+  reconstructs the exit face to second order: right for a discretised PDE, wrong
+  when the cell count is a physical parameter. It costs **5.9 % <!-- claim: outflow_bc_relerr_N2 -->
+  at $N=2$ and 3.8 % <!-- claim: outflow_bc_relerr_N4 --> at $N=4$** and decays as
   $N^{-0.87}$, i.e. it is indistinguishable from ordinary discretisation error and
-  is not it. The page suppresses the boundary flux and adds the outflow as a
-  `construct_coefficient_matrix` sink on the last tank.
+  is not it. `model.py` uses the boundary `{"outflow": True}` (pymrm pitfall P6);
+  the page also builds the stirred exit by hand (no flux on the exit face, the
+  outflow as a `construct_coefficient_matrix` sink) and shows that the two are
+  the same operator.
+- **Steady TVD by Newton.** The dispersion vessel uses `ConvFluxTVD` with
+  `newton(..., damping="monotone")` (pitfall P10). The same discrete equations
+  solved by deferred correction agree to below 1e-9.
 
 ## Reproduce
 
 ```bash
-cd queue_cases/A2.4/page
-python build_page.py          # regenerate index.ipynb from source
+cd pages/A2.4-tanks-in-series
+jupytext --sync index.py      # index.py is the source; index.ipynb is paired with it
 jupyter nbconvert --to notebook --execute --inplace index.ipynb
+GALLERY_OFFLINE=1 python -m pytest -q test_model.py
 ```
 
-Runtime ≈ 8 s, all of it in the dispersion root-finds. Two consecutive executions
+The model (`Cascade`, `dispersion_exit`) is in `model.py`. Runtime about 8 s,
+most of it in the dispersion root-finds. Two consecutive executions
 give identical content and an identical `agreement.json`; nothing here is
 stochastic and the seed is set anyway.
 
@@ -135,14 +142,6 @@ stochastic and the seed is set anyway.
   $N=4$) and the figure draws one level. Both are reported and neither is scored.
 - **E14.3 is scoped out.** Its data live only in the curve of Fig. E14.3a, and no
   curve is traced anywhere on this page.
-- **26 of the 81 metrics are below `check_agreement.py`'s `ABS_FLOOR`** and are
-  outside CI entirely — several of them because they reproduce a printed integer
-  exactly. Each is named on the page with an above-floor companion that the
-  companion string must actually *name*, asserted in code; an earlier draft had
-  four whose companion strings named no metric, so their assert ran over an empty
-  set and proved nothing.
-- **The break table's associations are declared, not measured.** Each row
-  recomputes the one metric it is pinned to, and that row's baseline is asserted
-  to equal the reported value; the wider mover list is a judgement with every
-  name checked against `agreement.json`. The coverage map is built from those
-  lists rather than written by hand.
+- **Exact reproductions are bounds, not values.** Several claims reproduce a
+  printed number to 0; they are bounds at 1e-12 with their basis, checked on every
+  run. Five identities no break row can move are registered as structural.

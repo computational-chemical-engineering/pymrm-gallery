@@ -2234,7 +2234,7 @@ claims.bound("fit_two_route_max_rel", RES["fit_two_route_max_rel"], max=FIT_TWO_
              basis="tolerance",
              note="relative gap between newton (tol 1e-12) and brentq (xtol 1e-13) on the same "
                   "central-difference dS, worst over every fit; 9.4e-12 to 1.3e-11 on three BLAS "
-                  "kernels in the locked environment, 3.4e-11 in August 2026")
+                  "kernels in the locked environment")
 # the out-of-sample bound
 value("beta_max")
 value("beta_headroom")

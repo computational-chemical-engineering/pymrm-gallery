@@ -114,7 +114,7 @@ def test_report_writes_format_2_and_load_claims_reads_both(tmp_path, monkeypatch
     c = _one()
     c.breaks("sign flip", "m", -1.0)
     c.says("0.7186", "m")
-    c.report()
+    c.report(write=True)
     data = json.loads((tmp_path / "agreement.json").read_text())
     assert data["format"] == 2 and data["metrics"]["m"]["kind"] == "value"
     assert data["quoted"] == {"m": ["0.7186"]}
@@ -138,3 +138,15 @@ def test_unbroken_recorded_when_breaks_not_required():
     c = _one()
     payload = c.report(write=False, require_breaks=False)
     assert payload["breaks_required"] is False and payload["unbroken"] == ["m"]
+
+
+def test_report_writes_only_in_a_page_folder(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    c = _one()
+    c.breaks("sign flip", "m", -1.0)
+    c.report()
+    assert not (tmp_path / "agreement.json").exists()      # a reader's folder
+    (tmp_path / "meta.yaml").write_text("id: X\n")
+    (tmp_path / "index.py").write_text("# %%\n")
+    c.report()
+    assert (tmp_path / "agreement.json").exists()          # a page folder

@@ -13,7 +13,21 @@ from pathlib import Path
 
 import numpy as np
 
-RAW_BASE = "https://raw.githubusercontent.com/computational-chemical-engineering/pymrm-gallery/main"
+REPO_RAW = "https://raw.githubusercontent.com/computational-chemical-engineering/pymrm-gallery"
+
+
+def _raw_base() -> str:
+    """Raw URL of the gallery at ``GALLERY_REF`` (default ``main``), read per call.
+
+    The bootstrap of a migrated page sets ``GALLERY_REF`` to the release tag the
+    page was published with, so its data come from the same tag.
+    """
+    return f"{REPO_RAW}/{os.environ.get('GALLERY_REF', 'main')}"
+
+
+def _offline() -> bool:
+    """True when ``GALLERY_OFFLINE`` forbids fetching (set by run_pages.py and CI)."""
+    return os.environ.get("GALLERY_OFFLINE", "").strip().lower() in ("1", "true", "yes")
 
 __all__ = [
     "in_colab",
@@ -47,7 +61,11 @@ def _page_dir() -> Path:
 
 
 def _resolve(name: str, page: str | None):
-    """Return a local path if it exists, otherwise a raw GitHub URL."""
+    """Return a local path if it exists, otherwise a raw GitHub URL.
+
+    The URL points at ``GALLERY_REF`` (default ``main``). With ``GALLERY_OFFLINE``
+    set, a file that is not local raises instead.
+    """
     candidates = []
     if page:
         candidates.append(Path(__file__).resolve().parents[1] / "pages" / page / "data" / name)
@@ -61,7 +79,11 @@ def _resolve(name: str, page: str | None):
             f"{name!r} not found locally and no `page=` given, so the raw URL "
             f"cannot be constructed. Pass page='<catalog-id>-<slug>'."
         )
-    return f"{RAW_BASE}/pages/{page}/data/{name}"
+    if _offline():
+        raise FileNotFoundError(
+            f"{name!r} not found locally for page {page!r}, and GALLERY_OFFLINE is "
+            f"set, so it is not fetched from GitHub.")
+    return f"{_raw_base()}/pages/{page}/data/{name}"
 
 
 def load_data(name: str, page: str | None = None, **kwargs):
@@ -366,8 +388,12 @@ class Claims:
 
     # -- output ---------------------------------------------------------------
 
-    def report(self, write: bool = True, require_breaks: bool = True) -> dict:
+    def report(self, write: bool | None = None, require_breaks: bool = True) -> dict:
         """Print the claims, write ``agreement.json`` (format 2), raise on failure.
+
+        ``write=None`` writes only when the working directory is a page folder
+        (it holds ``meta.yaml`` and ``index.py`` or ``build_page.py``), so a
+        reader's run on Colab or elsewhere never leaves a file behind.
 
         ``require_breaks=False`` is for a page migrated before it has a break
         table; the file records it and ``scripts/check_claims.py`` lists the page.
@@ -404,6 +430,10 @@ class Claims:
                     "bound": lambda: _bound_text(c) + f" [{c['basis']}]",
                     "exact": lambda: "exact" + (f", margin {c['margin']:.3g}" if "margin" in c else "")}[c["kind"]]()
             print(f"  {k:<{width}} = {shown:<16} {c['kind']:<5}  {rule}")
+        if write is None:
+            here = Path.cwd()
+            write = (here / "meta.yaml").is_file() and (
+                (here / "index.py").is_file() or (here / "build_page.py").is_file())
         if write:
             try:
                 Path("agreement.json").write_text(json.dumps(payload, indent=2) + "\n",
@@ -481,8 +511,12 @@ def load_claims(page: str) -> dict:
             data = json.loads(p.read_text(encoding="utf-8"))
             break
     else:
+        if _offline():
+            raise FileNotFoundError(
+                f"pages/{page}/agreement.json not found locally, and GALLERY_OFFLINE "
+                f"is set, so it is not fetched from GitHub.")
         from urllib.request import urlopen
 
-        with urlopen(f"{RAW_BASE}/pages/{page}/agreement.json") as fh:  # noqa: S310
+        with urlopen(f"{_raw_base()}/pages/{page}/agreement.json") as fh:  # noqa: S310
             data = json.load(fh)
     return {k: (v["value"] if isinstance(v, dict) else v) for k, v in data["metrics"].items()}

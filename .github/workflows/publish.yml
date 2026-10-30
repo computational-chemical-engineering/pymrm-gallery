@@ -14,11 +14,77 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# TODO (refresh plan, step 1): the "Open in Colab" badge and download link
+# filter (docs/page-infrastructure.md, section 1.5) is not built yet.
+
 jobs:
-  build:
+  # Tags the release (docs/page-infrastructure.md, section 1). The release commit
+  # rewrites GALLERY_REF = "main" to the tag in every migrated page and lives only
+  # on the tag, whose parent is the main commit. Tags pushed with GITHUB_TOKEN
+  # trigger no workflow, so there is no loop. An organisation tag ruleset could
+  # refuse the bot's push: check before the first deploy.
+  release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0, fetch-tags: true}
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+
+      - run: pip install nbformat pyyaml jupytext
+
+      - name: Tag the release
+        id: tag
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          head=$(git rev-parse HEAD)
+
+          # A re-run reuses the tag made for this commit: one on HEAD itself, or
+          # (the normal case) a release commit whose parent is HEAD.
+          existing=""
+          for t in $(git tag --list 'gallery-*' --sort=-creatordate); do
+            c=$(git rev-parse "$t^{commit}")
+            if [ "$c" = "$head" ] || [ "$(git rev-parse "$c^" 2>/dev/null)" = "$head" ]; then
+              existing=$t; break
+            fi
+          done
+          if [ -n "$existing" ]; then
+            echo "reusing $existing"
+            echo "tag=$existing" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          base="gallery-$(date -u +%Y.%m.%d)"
+          taken=$(git ls-remote --tags origin 'gallery-*' | sed -e 's#.*refs/tags/##' -e 's#\^{}$##' | sort -u)
+          tag=$base; n=2
+          while printf '%s\n' "$taken" | grep -qxF "$tag"; do tag="$base.$n"; n=$((n + 1)); done
+
+          git checkout --detach
+          python scripts/release_ref.py "$tag"
+          git add -A pages
+          git commit --allow-empty -m "release $tag"
+          git tag -a "$tag" -m "release $tag"
+          # Check the tag tree before it is pushed: a pushed tag is reused by
+          # every re-run, so a broken one must never leave this job.
+          python scripts/check_metadata.py --gallery-ref "$tag"
+          git push origin "refs/tags/$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      # Render the tag, so the site shows the tag in every bootstrap.
+      - uses: actions/checkout@v4
+        with: {ref: "${{ needs.release.outputs.tag }}"}
 
       - uses: quarto-dev/quarto-actions/setup@v2
         with:
@@ -30,18 +96,62 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Emit machine-readable index
-        run: python scripts/check_metadata.py --emit-json
+        run: python scripts/check_metadata.py --emit-json --gallery-ref "${{ needs.release.outputs.tag }}"
 
-      # _freeze/ is committed, so this reuses cached output and only re-executes
-      # notebooks whose source actually changed.
+      # Quarto renders the committed notebook outputs as they are: _quarto.yml has
+      # no `execute: enabled`, so .ipynb pages are not executed, and _freeze/ is
+      # not committed (.gitignore). Executing the pages is execute.yml's job.
       - name: Render site
         run: quarto render
 
       - uses: actions/upload-pages-artifact@v3
         with: {path: _site}
 
+  # Runs one migrated page as a reader would: its index.ipynb downloaded from the
+  # tag into an empty directory, in a fresh venv without pymrm, so the bootstrap
+  # must install pymrm and fetch the gallery files itself (section 7). Nothing
+  # else tests the download path. Skipped cleanly while no page is migrated.
+  smoke:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: "${{ needs.release.outputs.tag }}"}
+
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+
+      - name: Pick a migrated page
+        id: page
+        run: |
+          pip install -q pyyaml
+          page=$(python scripts/check_metadata.py --list-migrated | head -n 1)
+          echo "page=${page#pages/}" >> "$GITHUB_OUTPUT"
+          echo "migrated page: ${page:-none, nothing to run}"
+
+      - name: Run it from the tag in a fresh venv
+        if: steps.page.outputs.page != ''
+        env:
+          TAG: ${{ needs.release.outputs.tag }}
+          PAGE: ${{ steps.page.outputs.page }}
+          MPLBACKEND: Agg
+        run: |
+          set -euo pipefail
+          work=$(mktemp -d)
+          cd "$work"
+          python -m venv "$RUNNER_TEMP/smoke-venv"
+          export PATH="$RUNNER_TEMP/smoke-venv/bin:$PATH"   # the kernel's `python` too
+          py="$RUNNER_TEMP/smoke-venv/bin/python"
+          # The kernel only, plus the packages Colab provides that the page
+          # template assumes; pymrm is the bootstrap's job.
+          "$py" -m pip install -q nbclient ipykernel pandas matplotlib pyyaml
+          if "$py" -c "import pymrm" 2>/dev/null; then echo "pymrm present"; exit 1; fi
+          curl -fsSL --retry 5 --retry-all-errors -o index.ipynb \
+            "https://raw.githubusercontent.com/computational-chemical-engineering/pymrm-gallery/$TAG/pages/$PAGE/index.ipynb"
+          "$py" -c 'import nbformat; from nbclient import NotebookClient; nb = nbformat.read("index.ipynb", as_version=4); NotebookClient(nb, timeout=1800, kernel_name="python3").execute(); print("smoke OK")'
+
   deploy:
-    needs: build
+    needs: [build, smoke]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
