@@ -120,7 +120,7 @@ difference — 0.85 K at section 11.8.2's printed startup temperature, and 3.31 
 11.5.2's own sensitivity sentence hangs on. **The criteria in the chapter test the rate;
 what a designer of this reactor needs tested is the threshold.**
 
-**The chapter says the qualitative half of this itself, and the page now prints it
+**The chapter says the qualitative half of this itself, and the page prints it
 beside the finding.** Book p. 513, in the sentence immediately after the one quoted at
 the top of this file: *"Note that for the upper part of the curves with
 p_A0 = 0.0181, 0.0182, and 0.019 …, the model used here is no longer entirely adequate:
@@ -151,37 +151,25 @@ than the chapter's own lower limit. Then rung 3, at 4.93× the correlated film
 coefficients. Rung 4 is furthest, at 22.7× the D_e it was measured at. Rungs 2 and 3 are
 23 % apart, which is the honest caveat on *that* pair.
 
-**Correction (2026-10-29): the rung-2 row, and everything this page said about
-"speckle", came from a threshold search decided by round-off.** The earlier version
-started every bisection solve cold, from the rung-1 profile at the same p0. Between rung
-1's threshold and a higher one that guess is already a runaway profile, and Newton then
-landed on the ignited state (about 990 °C) or failed, by round-off. On one machine
-(Haswell kernel), in the diagnosis of 2026-10-29, direct starts on rung 2 at n_z = 900,
-Pe_a = 0.24 and 0.01817, 0.01818, 0.01819 and 0.01820 atm gave 990.9 °C, 411.5 °C, no
-convergence and 992.1 °C; the page does not recompute them, since by this argument they
-differ between machines. The page published that noise: the
-crossing control's verdict was "speckled" along the Pe_a sweep and along the tube radius,
-Pe_a = 0.30 was shown as an "ignition jump" (414.2 against 999.3 °C), 13 of the 24
-refinement probes of the rung-2 crossover were reported refused, the crossover was given
-as 0.24883362, and on other BLAS kernels the page stopped with `NotACrossing`.
-`p0_critical` now makes one cold solve at the bottom of the bracket and starts every
-later scan point and bisection midpoint from the converged state at the current lower
-end, so it follows the branch the reactor is on as the feed is raised. The five ladder
-thresholds, the shifts and the other three crossovers are unchanged in every printed
-digit; the rung-2 crossover is now 0.24883 <!-- claim: crossover_pe_axial -->,
+**How the thresholds are located.** `p0_critical` makes one cold solve at the bottom
+of the bracket and starts every later scan point and bisection midpoint from the
+converged state at the current lower end, so it follows the branch the reactor is on as
+the feed is raised. A cold start from the rung-1 profile at the same p0 is not neutral:
+between rung 1's threshold and a higher one that guess is already a runaway profile, and
+Newton then lands on the ignited state (about 990 °C) or fails, by round-off. On one
+machine (Haswell kernel), direct starts on rung 2 at n_z = 900, Pe_a = 0.24 and 0.01817,
+0.01818, 0.01819 and 0.01820 atm gave 990.9 °C, 411.5 °C, no convergence and 992.1 °C;
+the page does not recompute them, since by this argument they differ between machines.
+With the branch followed, the rung-2 crossover is 0.24883 <!-- claim: crossover_pe_axial -->,
 inside its ±0.0002; Pe_a = 0.30 is a clean crossing (414.98 / 415.02 °C, shift
 +0.8288 %); and 0 <!-- claim: scan_points_rejected --> thresholds of the four scans
-are rejected, on three BLAS kernels. The two break rows that injected the earlier
-search's defects (control off, stop at the first refusal) no longer moved anything and
-are replaced; see the validation summary.
+are rejected, on three BLAS kernels.
 
 Below the crossover the *signed* shift passes through zero (**−0.169 % at 9.80 mm,
 +0.015 % at 9.75 mm**), so the two-dimensional correction is negative on this tube and
 positive on a narrower one. |shift| stays under 1 % from 10.03 mm down to 9.60 mm
 (+0.572 %), and is past 1 % again, on the positive side, by 9.40 mm (+1.327 %); at
-9.00 mm it is +2.879 %. Every one of those thresholds passes the control. The earlier
-version reported 9.6875 mm as refused and, at 9.0 mm, a threshold with both control
-solves near 1060 °C; both were the cold start.
+9.00 mm it is +2.879 %. Every one of those thresholds passes the control.
 
 **7. Fifteen printed defects, reported and none repaired.** Two are larger than the rest.
 
@@ -207,8 +195,7 @@ C = Q²A·exp(−E/RT + b), with C = 2U/(c_p R_t), makes Q ∝ R_t^(−1/2) and 
 page runs the cross-column test the table imposes on itself.
 
 *And the cross-column test cannot see all of it either.* Table 11.5.3.A-1 passes that
-test at 1.8 %, which the page used to read as evidence that the defect is *confined* to
-A-2. It is not: inverting each table's own printed Q for the radius it implies — by the
+test at 1.8 %, which does not mean the defect is *confined* to A-2: inverting each table's own printed Q for the radius it implies — by the
 same route, validated against Van Welsenaere & Froment's printed Q at two radii and
 against their printed C, which pins R = 0.01753 m by itself — puts **both** tables' Q at
 0.0175 m while both state 0.0125 m. A-1 passes only because its two columns are not
@@ -271,7 +258,7 @@ range into a number**; the two are printed side by side.
 - **Rung 1 computed a second, independent way** — adaptive Radau on the two ODEs, no
   grid, no pymrm operator, no Newton — agreeing with the Richardson-extrapolated pymrm
   threshold to **4.0e-07** and with the extrapolated hot spot to 3.3e-05, on the six-grid
-  chain (150–4800) the notebook displays *and* `agreement.json` now carries: the display
+  chain (150–4800) the notebook displays *and* `agreement.json` carries: the display
   and the metric are the same memoised call. This is why the reported thresholds are the
   extrapolated ones: the 1200-cell value is 0.104 % off, comparable to the whole rung-2
   effect.
@@ -299,13 +286,11 @@ range into a number**; the two are printed side by side.
   spot is below the ceiling on one side, above it on the other, and continuous across it.
   The notebook counts the checks: **0 rejected** over every bisected threshold on the
   page, the closest verdict about 5e-3 K from its threshold, registered as an exact claim
-  with that margin. The earlier, cold-started version counted 714 checks and 93 rejections on its
-  pinned kernel; those rejections were the round-off described in the correction above.
+  with that margin.
 - **The searches still tolerate a rejection, and meet none.** The crossover scans sweep
   through a rejected point, refine by subdividing and keeping what validates, and *raise*
-  when they cannot straddle their target. On a regular 0.001 grid in Pe_a, where the
-  earlier version showed accepted and refused points interleaved, all 9 points validate
-  and the shift rises monotonically.
+  when they cannot straddle their target. On a regular 0.001 grid in Pe_a all 9 points
+  validate and the shift rises monotonically.
 - **Eq. (11.9.1-11) checked twice** — against a spherical pymrm pellet solve (second-order
   convergent) and against `B1.1`'s 60 exact sphere rows, an independent transcription of
   the same closed form from a different document.
@@ -328,10 +313,9 @@ range into a number**; the two are printed side by side.
   below 1e-5 (threshold) and 1e-4 (hot spot), the orders in [0.9, 1.1] and [0.85, 1.15].
   The four rung-to-rung shifts are computed on (600, 10), because the break rows cannot
   afford the (1200, 20) grid once per row; a table gives both plus the gap (at most
-  0.107 pp). Five break rows are new: the rung-2 shift against rung 1's extrapolated
-  threshold and the coarse-grid row back at 300 cells replace the two rows that injected
-  the earlier search's defects, and two rung-1 rows (no Richardson limit; grid ratio
-  misread) give the bounds a row that fails them; a row running the ladder's controls at
+  0.107 pp). Among the break rows: the rung-2 shift against rung 1's extrapolated
+  threshold, the crossovers on a 300-cell grid, and two rung-1 rows (no Richardson
+  limit; grid ratio misread) that give the bounds a row that fails them; a row running the ladder's controls at
   the neighbouring rung's threshold fails `ladder_controls_rejected`; and a row reading
   the control's jump allowance as 0.005 K (below every measured jump, 0.012 to 0.095 K)
   re-runs the five ladder controls and the 9-point fine Pe_a grid and fails the two
@@ -342,16 +326,12 @@ range into a number**; the two are printed side by side.
   assignment; its teeth are measured on **six** negative controls, one per laundering
   form, its false-positive control binds a *metric* key to a computed value, and
   **at least sixteen** forms it does *not* catch — a module-level constant among them —
-  are printed and asserted to escape. The count and the wording have moved twice after
-  verifiers wrote their own sabotage sets. The third pass found two escapes the page had
-  not named: tuple unpacking, which the guard's own positive claim covered and which the
-  guard now catches, and `abs(0.1657)`, which is constant-*foldable* but is a call rather
-  than arithmetic — so the claim no longer says "constant-foldable" and the escape list is
-  quantified as "at least". The fourth pass found that "a local name … that only ever
-  carries one" was still a category rather than a list: annotated (`_a: float = 0.1657`),
+  are printed and asserted to escape. `abs(0.1657)` is constant-*foldable* but is a call
+  rather than arithmetic and escapes, so the claim does not say "constant-foldable", and
+  the escape list is quantified as "at least". Annotated (`_a: float = 0.1657`),
   list-target (`[_a, _b] = 0.1657, 2.0`), nested-tuple (`(_a, _b), _c = (0.1657, 2.0),
-  3.0`) and walrus (`(_a := 0.1657)`) bindings all escape the same way tuple unpacking used
-  to, and are now named in the escape list instead of folded into that trailing clause.
+  3.0`) and walrus (`(_a := 0.1657)`) bindings all escape, and are named in the escape
+  list.
 
 ## Honest limits
 
@@ -365,15 +345,13 @@ range into a number**; the two are printed side by side.
   point moves 0.0008 pp between 600 and 1200 cells, which on the local slope of the sweep
   is ±0.0002 in Pe_a — three figures, not the six the refinement tolerance would suggest.
 - **What the rung-2 sweep does not reach.** The sweep ends at Pe_a = 0.10, where the
-  shift is 2.52 %; nothing is claimed about smaller Péclet numbers. (The earlier version
-  said the largest validated shift was 1.19 % and moved the break row's target to 1.1 %
-  for that reason; both were the cold start, and the row now moves it to 2 %.)
+  shift is 2.52 %; nothing is claimed about smaller Péclet numbers.
 - The film coefficients come from `A3.4`'s correlation, not from the chapter, and the
   root-found crossover is at 4.93× the correlated coefficients — so that rung's size
   depends on which correlation you pick. (That number is 4.08 if the shift is measured
   against the Richardson-extrapolated rung-1 threshold instead of the same-grid one; the
-  crossover table uses the same-grid definition in **every** row, which it did not
-  before, and prints both readings of this row.)
+  crossover table uses the same-grid definition in **every** row, and prints both
+  readings of this row.)
 - **The magnitudes of all four shifts belong to section 11.5.2's simplification.** The
   notebook shows its single "pseudo-first order" rate is k₁ alone — the wanted reaction —
   used as the rate of total o-xylene consumption, with the combustion route's much larger
@@ -412,9 +390,9 @@ range into a number**; the two are printed side by side.
   coefficient fixes it.
 - **The helper-plus-injection pattern**: one function per metric, *every* reported number
   asserted against its default call as a checked set, every break row perturbing one of
-  its arguments. The failure mode this page shipped once: an unasserted helper ran a
-  coarser chain than the display, and `agreement.json` carried an observed order of 0.80
-  where the page displayed 0.94.
+  its arguments. The failure mode it prevents: an unasserted helper running a coarser
+  chain than the display, so that `agreement.json` carries a number the page does not
+  show.
 - **Check a two-column table against itself.** Every row of Table 11.5.3.A-2 transcribes
   from its 1970 source at ratio 1.000000 and the table is still internally wrong by a
   third, because one row was copied correctly *from a different case*. The cross-column
@@ -433,3 +411,16 @@ python build_page.py                    # regenerate index.ipynb from the builde
 python ../../../scripts/run_pages.py    # execute it
 python ../../../scripts/check_agreement.py
 ```
+
+## Corrections
+
+- 2026-10-29: the rung-2 crossover was stated as 0.24883362; it is 0.24883 (±0.0002).
+- 2026-10-29: the crossing control's verdict was stated as "speckled" along the Pe_a
+  sweep and the tube radius, with 13 of 24 refinement probes refused; every point of
+  every scan is a clean crossing.
+- 2026-10-29: Pe_a = 0.30 was stated as an "ignition jump" (414.2 against 999.3 °C); it
+  is a clean crossing (414.98 / 415.02 °C).
+- 2026-10-29: 9.6875 mm and 9.0 mm were stated as rejected thresholds; both are clean
+  crossings.
+- 2026-10-29: the largest validated rung-2 shift was stated as 1.19 %; the sweep
+  reaches 2.52 %.

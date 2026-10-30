@@ -218,7 +218,7 @@ Constraints:
   `GALLERY_REF = "main"` (the publish workflow rewrites it to the release tag),
   `PYMRM = ">={pymrm_min_version},<{next major}"` from `meta.yaml`, and `PAGE`
   the directory name. Migrating a page sets `meta.yaml` `pymrm_min_version` to
-  the `pymrm==` version of `requirements-lock.txt` (now `3.1.0`), the version
+  the `pymrm==` version of `requirements-lock.txt` (now `3.2.0`), the version
   the page is checked with: the old value `"2.3"` would pin `>=2.3,<3`, and
   Colab would install pymrm 2.5. `scripts/check_metadata.py` checks all of
   this, that the locked pymrm satisfies the pin, and that a migrated page has
@@ -260,6 +260,25 @@ Constraints:
   substituted in.
 
 Then run `python scripts/check_metadata.py` before opening a PR.
+
+## A page shows current pymrm, not history
+
+A page illustrates what pymrm can do now. It is not a history of pymrm or of the
+page (maintainer, 2026-10-30). In the notebook, `meta.yaml` and the `models.yaml`
+entry:
+
+- never mention earlier pymrm versions, what a pymrm version could not do, or
+  workarounds the page used to need ("up to pymrm 2.5 newton switched to ...",
+  "3.1.0 stopped here", "replaced the deferred correction by ConvFluxTVD");
+- never narrate the page's own past ("the earlier version of this page", "the
+  old loop", "before the refresh");
+- keep a second route only as what it is now: an independent validation route,
+  described by what it computes ("the same profile by van Leer deferred
+  correction agrees to 1.4e-11"), never as "the old method";
+- a statement an earlier version of the page published wrongly is corrected in
+  place. The record of it goes only in the README, as a short dated
+  `## Corrections` list (what was stated, what is true); details belong in the
+  commit message and `docs/refresh-learnings.md`.
 
 ## Honesty requirements
 

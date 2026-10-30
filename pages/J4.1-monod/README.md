@@ -85,9 +85,9 @@ that draw count the four frequencies are seed-independent in their **leading
 figure only** and the two medians to at least **two** figures; the four-figure values on
 the page are exact for the seed and reproducible, not resolved.
 
-The first version of this page got those six numbers wrong, and the error is now
-a **break row**: it read each draw's fit off the scan grid instead of refining
-it, while comparing the result against a *refined* observed F. An unrefined Moser
+Reading each draw's fit off the scan grid instead of refining it, while
+comparing the result against a *refined* observed F, gets those six numbers
+wrong, and it is a **break row**. An unrefined Moser
 fit cannot reach its own optimum, so it deflates F on every draw — grid-only, the
 control reads a **conservative-looking 2.1 %** and a median exponent of 0.95. A
 grid-limited extremum is invisible to every perturbation test, so the page prints
@@ -95,7 +95,7 @@ the refinement's convergence instead — as the count of draws whose two-dimensi
 fit still ends above the one-dimensional fit nested inside it, taken from the grid
 start alone, because the shipped fit's second start sits exactly on the nesting
 point and makes that count zero at every refined depth by construction (the grid-only row has no pair of starts at all). The page prints
-both counts and says which of them is a measurement. The conclusion is unchanged and stronger: a
+both counts and says which of them is a measurement. The conclusion: a
 control **at** nominal size exonerates the F approximation better than a
 conservative one does. One convention worth stating with it — the forward size is
 a bias-to-noise ratio and reads 0.3655 ± 0.0108 at route B's residual scatter
@@ -231,7 +231,7 @@ every `pdftotext` mode drops.
   page *proves* are exactly zero (identities, exact arithmetic, optimiser and
   root-find exits) are each registered as a **bound** with a stated basis and a
   limit that holds on any machine, checked on every run and never compared as a
-  value, so the set of claims no longer depends on where a round-off number
+  value, so the set of claims does not depend on where a round-off number
   lands;
 - **57 prose literals checked against their claims, 48 further prose/metadata
   values and 10 break-table lookups** checked against the

@@ -40,7 +40,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.1.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "C2.10-o-xylene-phthalic-anhydride"  # equals the page directory
 
 import os, sys, urllib.request
@@ -430,13 +430,10 @@ print(f"First eight rows identical to <0.1 % (largest {D22_SHARED_MAX:.1e}): two
 # triangular scheme appears. The cell below builds both models of this page from
 # those pieces.
 #
-# **What the 2026-10 refresh changed in the numerics.** Before the refresh the
-# 2-D march let `solve_ivp` build its Jacobian by finite differences, field by
-# field in a field-major vector; now the integrator gets the exact Jacobian from
-# the operators, and the two routes are compared below (they agree to the
-# integrator tolerance). The runaway limits are now bisected to 1e-4 °C instead
-# of 0.02 °C, which moves them by less than 0.008 °C, half the old bracket (the old
-# values are printed beside the new ones). pymrm 3 also has `pseudo_transient` and `continuation`,
+# **The numerics.** The 2-D march hands the integrator the exact Jacobian from
+# the operators; a second route lets `solve_ivp` build it by finite differences,
+# and the two are compared below (they agree to the integrator tolerance). The
+# runaway limits are bisected to 1e-4 °C. pymrm also has `pseudo_transient` and `continuation`,
 # but neither fits this page: both solve a steady residual, while here $z$ is a
 # marching coordinate and the only steady problem (the 1-D boundary-value route
 # below) has one solution, which Newton reaches from a cold start. The runaway
@@ -664,13 +661,11 @@ print(f"  deviations: {100 * abs(RISE362 - 40) / 40:.1f} % and {100 * abs(RISE36
 T0C_2D = limit_2d()
 T0C_1D = limit_1d()
 GAP = T0C_1D - T0C_2D
-OLD = {"t0crit_2d_C": 360.0078125, "t0crit_1d_C": 363.9296875, "runaway_gap_C": 3.921875}
-print(f"2-D runaway limit: T0 = {T0C_2D:.4f} degC   (published before the refresh, bisected to "
-      f"0.02: {OLD['t0crit_2d_C']:.4f}; paper: 'predicts a runaway ... for an inlet temperature "
-      "of 360 degC')")
-print(f"1-D runaway limit: T0 = {T0C_1D:.4f} degC   (before: {OLD['t0crit_1d_C']:.4f}; "
+print(f"2-D runaway limit: T0 = {T0C_2D:.4f} degC   (paper: 'predicts a runaway ... for an "
+      "inlet temperature of 360 degC')")
+print(f"1-D runaway limit: T0 = {T0C_1D:.4f} degC   ("
       "paper: 'now found to be 365 degC'; Figure 12 probes 363 then 365)")
-print(f"gap between the models: {GAP:.2f} degC   (before: {OLD['runaway_gap_C']:.2f}; "
+print(f"gap between the models: {GAP:.2f} degC   ("
       "paper: 'within five degrees ... has to be considered excellent')")
 
 # the paper's statements as labels, each decided directly at the stated temperatures
@@ -862,8 +857,8 @@ print("\nREPRODUCTION, not validation: every 'paper' value here is Froment's own
 # the 1-D route starts from zero in every field, not from the march, and raises
 # if it does not converge. Agreement therefore tests discretisation, integration
 # and assembly: everything except the transcription, which is guarded separately
-# above. A third comparison checks the refresh itself: the 2-D march with the
-# integrator's own finite-difference Jacobian, the route used before.
+# above. A third comparison checks the Jacobian: the 2-D march with the
+# integrator's own finite-difference Jacobian.
 
 # %%
 def indep_2d(T0C, n_r=80, case=CASE, cap=CAP_2D):
@@ -956,7 +951,7 @@ print(f"  363 degC on n_z = 2000/4000/8000: {BVP_ERRS[0]:.2e} / {BVP_ERRS[1]:.2e
 
 
 def march_fd_jacobian(T0C, rtol=1e-8):
-    """The 2-D march as before the refresh: no Jacobian given to the integrator."""
+    """The 2-D march with no Jacobian given to the integrator (finite differences)."""
     m = tube2d(T0C)
     m.sol = solve_ivp(m.rhs, (0.0, Z_END), np.zeros(m.shape).ravel(), method="BDF",
                       rtol=rtol, atol=rtol * 1e-2, dense_output=True)
@@ -967,8 +962,8 @@ def march_fd_jacobian(T0C, rtol=1e-8):
 _t = time.perf_counter(); TM357_FDJ = march_fd_jacobian(357.0); _t_fd = time.perf_counter() - _t
 _t = time.perf_counter(); tube2d(357.0).march(Z_END, cap=CAP_2D); _t_ex = time.perf_counter() - _t
 FDJ_GAP = abs(TM357_FDJ - TM357)
-print(f"\n2-D march at 357 degC with the integrator's finite-difference Jacobian (before the "
-      f"refresh) against the exact one: gap below 1e-5 degC (here {FDJ_GAP:.1e}); "
+print(f"\n2-D march at 357 degC with the integrator's finite-difference Jacobian "
+      f"against the exact one: gap below 1e-5 degC (here {FDJ_GAP:.1e}); "
       f"runtime (here {_t_fd:.2f} s against {_t_ex:.2f} s)")
 
 # %% [markdown]
@@ -1044,29 +1039,19 @@ print(f"\nn_r = 160: runs away at 360 degC? {RA_360_N160}; limit {T0C_2D_N160:.4
       "the label; the input reading does (above).")
 
 # %% [markdown]
-# **Correction (2026-10-30).** The version of this page before the 2026-10
-# refresh stated four things that its own computations do not support:
+# **Four results, stated to the precision the computations support.**
 #
-# - The README and the page metadata said both runaway limits land inside the
-#   paper's integer brackets, "360.01 in (357, 360]". 360.01 is not in that
-#   bracket, and the notebook itself said it was outside. Neither reading is
-#   right: the 2-D limit is 360.006 °C, at the paper's 360 within 0.01 °C, and
-#   which side of 360 it falls on is set by how the inputs are read (the
-#   printed $\mathrm{Pe}_{hR} = 5.25$ puts it below 360), not by the
-#   numerics.
-# - The notebook quoted that margin as "+0.0078 °C"; that was the midpoint of a
-#   0.0156 °C bisection bracket. Bisected to 1e-4 °C the margin is 0.006 °C.
-# - The $\mathrm{Pe}_{mR} = 8$ check said the runaway limit moves "0.04 °C,
-#   below the 0.05 °C bisection tolerance". The two limits had been bisected on
-#   different radial grids (80 and 48 cells) and tolerances. On the same grid,
-#   bisected to 1e-4 °C, the shift is 0.043 °C (What pymrm adds): resolved, not
-#   below the tolerance, and still small, about a seventh of the shift from a
-#   1 % change in the heat-transfer parameters.
-# - It said the phthalic anhydride maximum at 357 °C "sits at or just beyond
-#   the 3 m exit", consistent "to within the flatness of the profile" with the
-#   paper's "a length of 3 meters is sufficient to reach the maximum". Marched
-#   on, the maximum is at 6.6 m and the exit is 10 % below it; the paper's
-#   statement is not reproduced at 357 °C. It almost holds at 360 °C, where
+# - The 2-D limit is 360.006 °C, at the paper's 360 within 0.01 °C. Which side
+#   of 360 it falls on is set by how the inputs are read (the printed
+#   $\mathrm{Pe}_{hR} = 5.25$ puts it below 360), not by the numerics.
+# - Bisected to 1e-4 °C, the margin above 360 °C is 0.006 °C.
+# - At $\mathrm{Pe}_{mR} = 8$, on the same radial grid and bisected to 1e-4 °C,
+#   the runaway limit shifts by 0.043 °C (What pymrm adds): resolved, and still
+#   small, about a seventh of the shift from a 1 % change in the heat-transfer
+#   parameters.
+# - At 357 °C the phthalic anhydride maximum is at 6.6 m and the 3 m exit is
+#   10 % below it, so the paper's "a length of 3 meters is sufficient to reach
+#   the maximum" is not reproduced at 357 °C. It almost holds at 360 °C, where
 #   the maximum is at 3.2 m, still past the 3 m exit.
 #
 # ### Claims: what each number is, and how it is checked
@@ -1133,9 +1118,6 @@ claims.value("stated_worst_dev_pct", STATED_WORST)
 claims.value("t0crit_2d_C", T0C_2D, rtol=1e-5)
 claims.value("t0crit_1d_C", T0C_1D, rtol=1e-5)
 claims.value("t0crit_2d_minus_360_C", MARGIN_2D)
-OLD_CHANGE = max(abs(T0C_2D - OLD["t0crit_2d_C"]), abs(T0C_1D - OLD["t0crit_1d_C"]))
-claims.bound("t0crit_change_from_published_C", OLD_CHANGE, max=0.0079, basis="tolerance",
-             note="the published limits were midpoints of brackets 0.0156 degC wide")
 claims.value("runaway_gap_C", GAP, rtol=1e-3)
 claims.value("t0crit_2d_printed_pehr_C", T0C_2D_PEHR, rtol=1e-5)
 claims.value("t0crit_2d_na0_p19_C", T0C_2D_NA0P19, rtol=1e-5)
@@ -1189,7 +1171,7 @@ claims.bound("t0crit_cap_range_C", CAP_RANGE, max=2e-3, basis="chosen",
 # %% [markdown]
 # ### The defect-injection table
 #
-# Rebuilt in the 2026-10 refresh. Each row breaks one thing on purpose,
+# Each row breaks one thing on purpose,
 # **re-runs** the computation behind one claim with the defect in place, and
 # hands the result to `claims.breaks`, which records whether the claim's own
 # check (its tolerance or its bound) catches it. Several rows are the
@@ -1303,8 +1285,6 @@ T0C_1D_K273 = limit_1d(case=CASE_K273)
 brk("Kelvin offset 273 instead of 273.15", "t0crit_2d_C", T0C_2D_K273)
 brk("Kelvin offset 273 instead of 273.15", "t0crit_1d_C", T0C_1D_K273)
 brk("Kelvin offset 273 instead of 273.15", "t0crit_2d_minus_360_C", T0C_2D_K273 - 360.0)
-brk("Kelvin offset 273 instead of 273.15", "t0crit_change_from_published_C",
-    max(abs(T0C_2D_K273 - OLD["t0crit_2d_C"]), abs(T0C_1D_K273 - OLD["t0crit_1d_C"])))
 brk("Kelvin offset 273 instead of 273.15", "t0crit_2d_printed_pehr_C",
     limit_2d(a=(CASE.a1, 1 / 5.25), case=CASE_K273))
 brk("Kelvin offset 273 instead of 273.15", "t0crit_2d_na0_p19_C",
@@ -1470,7 +1450,7 @@ claims.value("rise363_kelvin273_shift_C", RISE363 - hot_spot_1d(363.0, n_z=2500,
 
 brk("Pe_mR = 5 instead of 8", "pe8_tm357_rel_shift",
     abs(tube2d(357.0, a=(1 / 5.0, CASE.a2)).march(Z_END, cap=CAP_2D).hot_spot()[1] - TM357) / TM357)
-brk("Pe_mR = 8 limit on n_r = 48 (the comparison published before)", "pe8_t0crit_shift_C",
+brk("Pe_mR = 8 limit on n_r = 48, against the baseline on n_r = 80", "pe8_t0crit_shift_C",
     T0C_2D - _t0c_pe8_48)
 _crit_lam_only = margin_curve(scale_aw=False)
 _slope_lam = np.polyfit(100 * (SCALES - 1), _crit_lam_only, 1)[0]
@@ -1490,13 +1470,12 @@ claims.says("0.024", "kelvin_offset_rel_T_pct")              # Parameters: "0.02
 claims.says("0.5", "k1_shift_kelvin_pct")                    # Parameters: "about 0.5 %"
 claims.says("282", "dh3_literal_ratio")                      # thousands separators
 claims.says("17.36", "k_printed_series_factor")              # Validation 1
-claims.says("less than 0.008", "t0crit_change_from_published_C")  # PyMRM implementation
-claims.says("360.006", "t0crit_2d_C")                        # Correction
-claims.says("0.006", "t0crit_2d_minus_360_C")                # Correction
-claims.says("0.043", "pe8_t0crit_shift_C")                   # Correction, What pymrm adds
-claims.says("6.6", "z_pa_max_357_m")                         # Correction
-claims.says("10%", "pa_shortfall_at_3m_357")                 # Correction
-claims.says("3.2", "z_pa_max_360_m")                         # Correction
+claims.says("360.006", "t0crit_2d_C")                        # Four results
+claims.says("0.006", "t0crit_2d_minus_360_C")                # Four results
+claims.says("0.043", "pe8_t0crit_shift_C")                   # Four results, What pymrm adds
+claims.says("6.6", "z_pa_max_357_m")                         # Four results
+claims.says("10%", "pa_shortfall_at_3m_357")                 # Four results
+claims.says("3.2", "z_pa_max_360_m")                         # Four results
 claims.says("0.3", "heat_transfer_slope_C_per_pct")          # Reuse
 claims.says("1.9", "rise363_kelvin273_shift_C")              # Reuse
 claims.says("3", "ten_percent_limit_shift_C")                # Reuse: "~3 degC"

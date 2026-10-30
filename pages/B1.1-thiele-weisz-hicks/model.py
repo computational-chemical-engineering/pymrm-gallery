@@ -18,8 +18,7 @@ CentrePinned
 trace_branch
     The whole S-curve by :func:`pymrm.continuation` in the centre value.
 trace_branch_own
-    The same sweep by the page's own warm-start loop, used up to the 2026-10
-    refresh; kept only for the page's comparison row.
+    The same sweep by a plain warm-start loop, the page's second route.
 wh_reference
     Independent reference: one shooting integration from the centre.
 locate_folds
@@ -266,13 +265,6 @@ def trace_branch(problem, y_centres, psi_init=0.005, **kwargs):
         The solution vectors ``[y, psi]``.
     result : scipy.optimize.OptimizeResult
         The continuation result; ``success`` is False when it stopped early.
-
-    Notes
-    -----
-    pymrm 3.1.0's secant predictor divides by the previous parameter step.
-    Two nearly equal consecutive values (``1 - 0.9`` and ``0.1`` differ by
-    3e-17) make the prediction explode, and the march stops with a message
-    about a turning point. Remove such near-duplicates before calling.
     """
     kwargs.setdefault("newton_kwargs", {"maxfev": 40, "tol": 1e-11})
     n = problem.pellet.n_r
@@ -283,11 +275,11 @@ def trace_branch(problem, y_centres, psi_init=0.005, **kwargs):
 
 
 def trace_branch_own(problem, y_centres, psi_init=0.005, **newton_kwargs):
-    """The page's own warm-start sweep in ``y_c``, used up to the 2026-10 refresh.
+    """The page's own warm-start sweep in ``y_c``, a second route to the branch.
 
     Each centre value starts from the previous solution (no predictor); a
-    failed solve is skipped and the march goes on. Superseded by
-    :func:`trace_branch`; kept for the page's comparison row.
+    failed solve is skipped and the march goes on. The page compares it with
+    :func:`trace_branch` point by point.
 
     Parameters
     ----------

@@ -89,6 +89,10 @@ Per [`page-structure-proposal.md`](page-structure-proposal.md):
   exact result ([`claims-design.md`](claims-design.md)), prose numbers checked with
   `claims.says`, and a break row that fails each non-structural claim.
 
+- the page describes current pymrm only: no pymrm version history, no narrative of
+  the page's own past; a corrected statement is listed only in the README's dated
+  `## Corrections` (`AGENTS.md`, "A page shows current pymrm, not history").
+
 **Acceptance:** every metric unchanged within its stored tolerance, or reclassified with
 its reason (a value that turns out to be noise becomes a bound); the page passes under
 `OPENBLAS_CORETYPE` Haswell, Sandybridge and Nehalem; `check_claims.py` and

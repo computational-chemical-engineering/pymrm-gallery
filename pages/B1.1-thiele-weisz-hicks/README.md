@@ -38,36 +38,11 @@ The branch is traced by `pymrm.continuation` in the centre concentration, with
 phi^2 as an unknown, so it is single-valued and has no folds in the swept
 parameter. The folds are located on the shooting reference, refined from a scan.
 
-## Refresh of 2026-10
-
-- New layout: `index.py`, `model.py`, `test_model.py`, bootstrap cell, pymrm
-  pin 3.1.0, every number registered with `Claims` (48 claims, 55 break rows,
-  each re-running its computation).
-- The page's own warm-start loop is replaced by `pymrm.continuation`; the old
-  loop stays on the page as a comparison (same branch to 4e-12 in phi^2). The
-  library routine stopped on the old sweep, whose two segments both contained
-  0.1 (as 1 - 0.9 and as 0.1, 3e-17 apart): its secant predictor divides by
-  that step. The sweep now drops the repeated value.
-- The rate is no longer clipped at zero and the solves no longer pass
-  `bounds=(0, inf)` (pymrm pitfall P9); no number changed.
-- The folds are refined instead of read off 900 samples (upper fold
-  0.57179 before, 0.57186 now), and the steady states at the probe are
-  root-found and solved by Newton instead of interpolated. The old table
-  (reference 1.177 / 6.207 / 44.450, pymrm 1.173 / 6.225 / 44.450) suggested a
-  discretisation error of 0.3 %; it was interpolation, and the true difference
-  is about 1e-5. The page computes both methods side by side.
-- Correction (2026-10-30), also on the page: the earlier version said eta
-  exceeds 1000 and the pellet runs a thousand times faster (the page's largest
-  eta is 151, at beta = 0.8); that the middle branch is unreachable by Newton
-  however the guess is chosen (from a guess close to it, taken off the traced
-  branch, Newton at fixed phi converges there in a few iterations); that the
-  discretisation is pinned to 1e-4 (it is 2.2e-4); it quoted the 0.3 %
-  interpolation gap above as a pymrm-vs-reference difference; and it printed
-  one averaged order, 2.35, which hid the per-geometry orders (all second
-  order; the slab's 2.96 at phi = 5 is pre-asymptotic).
-- The library continuation's stop on the old sweep is shown with the secant
-  ratio it hits, 2.4e14 (exact from the sweep's values); where it stops depends
-  on round-off and is printed only as this run's.
+The page's own warm-start loop traces the same branch to below 1e-9 in phi^2. The
+rate is not clipped at zero and the solves pass no bounds (pymrm pitfall P9).
+Reading the folds off 900 samples and interpolating the states instead is
+computed beside the refined values: it shifts the states by up to 3e-3, which
+would look like a discretisation error.
 
 ## Data
 
@@ -75,3 +50,18 @@ parameter. The folds are located on the shooting reference, refined from a scan.
 Weisz-Hicks (1962) is computational; neither reports measurements. Validation is
 against exact solutions and an independent shooting reference. Experimental
 effectiveness-factor data exists elsewhere and would make a good companion page.
+
+## Corrections
+
+- 2026-10-30: stated that eta exceeds 1000 and the pellet runs a thousand times
+  faster than its surface conditions; the largest eta on the diagram is 151, at
+  beta = 0.8.
+- 2026-10-30: stated that the middle branch is unreachable by Newton however the
+  guess is chosen; Newton at fixed phi converges there from a guess close to it.
+- 2026-10-30: stated that the discretisation is pinned to 1e-4; it is 2.2e-4.
+- 2026-10-30: quoted a 0.3 % pymrm-vs-reference gap at the probe modulus (6.225
+  against 6.207); that was linear interpolation, and the difference is about 1e-5.
+- 2026-10-30: printed one mean convergence order, 2.35; each geometry is second
+  order (the slab's 2.96 at phi = 5 is pre-asymptotic).
+- 2026-10-30: stated the upper fold as 0.57179, read off samples; refined, it is
+  0.57186.

@@ -1274,9 +1274,9 @@ def fit_class(config, target, cls, kappa0=1.5, lam0=3.0, n=1.0, c_set=0.4,
     The Jacobian is a CENTRAL difference with a relative step of 1e-4. The
     residual is an ODE solution, accurate to rtol 1e-9 and not smooth below
     that, so scipy's default (a one-sided step of about 1.5e-8) differentiates
-    the integrator's error rather than the model: in the 2026-10-29 diagnosis
-    (docs/refresh-learnings.md row 11) its columns were wrong by up to 7e-2,
-    and on an ill-conditioned valley the trust region then stopped at a point
+    the integrator's error rather than the model: measured outside this page
+    (docs/refresh-learnings.md row 11) its columns are wrong by up to 7e-2,
+    and on an ill-conditioned valley the trust region then stops at a point
     set by round-off. With the step well above the integrator noise the
     side-by-side diagonal (the fitter recovering the truth from off-truth
     seeds) reaches below 1e-9 on every device.
@@ -1958,8 +1958,7 @@ print(f"               series    a(inlet) = {M['bed_a_inlet_end_ser']:.6f} "
       f"bound {M['bed_a_outlet_residual_bound_ser']:.1e})   -> ascending")
 print(f"The outlets are quoted to five decimals and not six: the residual "
       f"bounds above are {max(M['bed_a_outlet_residual_bound_par'], M['bed_a_outlet_residual_bound_ser']):.1e} "
-      f"at worst, which resolves the fifth decimal and not the sixth. Six was "
-      f"printed here before, and the last two of them were wrong.")
+      f"at worst, which resolves the fifth decimal and not the sixth.")
 # The defect this repairs becomes two rows per class - one that must move and
 # one that must not.  Both classes, because both outlets are reported.
 for cls in ("parallel", "series"):
@@ -2012,13 +2011,12 @@ print(f"For comparison, the production grid (m = {BED.m}) reads its first cell "
       f"limit is the wrong-baseline defect class this gallery keeps finding "
       f"(`B1.7`), and here the exact statement is the stronger one - the series "
       f"inlet does not merely stay high, it does not decay AT ALL.")
-print(f"\nTHE SAME MISTAKE, THREE TIMES, ON THIS ONE SECTION. The inlet was "
-      f"first a sampled cell centre where an exact limit exists; the outlet "
-      f"was then a single-grid sample where a space extrapolation exists; and "
-      f"the outlet was then a space extrapolation at one step count where a "
-      f"TIME extrapolation exists. All three are one defect: a number read at "
-      f"whatever resolution the code happened to be run at, and printed as if "
-      f"it were the limit. The general rule this section now follows is that a "
+print(f"\nONE DEFECT, THREE FORMS, ON THIS ONE SECTION: a sampled cell centre "
+      f"where an exact limit exists, a single-grid sample where a space "
+      f"extrapolation exists, and a space extrapolation at one step count where "
+      f"a TIME extrapolation exists. Each is a number read at whatever "
+      f"resolution the code happened to be run at, and printed as if it were "
+      f"the limit. The general rule this section follows is that a "
       f"reported value must not be a function of any resolution the page "
       f"chose - every such knob is either extrapolated away or shown, by "
       f"halving it in the break table, not to matter - and that a value may "
@@ -2302,36 +2300,7 @@ Four layers, in order of what they can catch.
    the illustrative first-order case; they are the strongest available check
    and they are the paper's, not this page's.
 3. **A defect-injection table**, with a row for every reported metric.
-4. **The pseudo-steady assumption itself**, dropped and costed.
-
-**Correction (2026-10-29).** The August version of this page published the
-diagonal of the separability matrices as an optimiser stall of 8.55e-6 (batch)
-and 2.38e-5 (mixed flow), at recovered constants 3.6 % and 10.5 % from the
-truth, with a 1 % move along any single constant costing 17x to 311x that
-stall; it concluded that "the stall is a side-by-side phenomenon", counted nine
-identity-backed entries on which the multistart alone stopped more than 1e-6
-short, and checked that twenty times the stall never reached the instrument
-resolution. Those numbers described the fitter, not eq. (6). `least_squares`
-used its default one-sided Jacobian, whose step of about 1.5e-8 is below the
-non-smooth error of the integrator at rtol 1e-9. In the 2026-10-29 diagnosis
-(measured outside this page, `docs/refresh-learnings.md` row 11) the Jacobian
-columns were wrong by up to 7e-2, and perturbing the target by 1e-15 moved the
-batch stall from 9.5e-9 to 9.1e-6: the trust region stopped wherever round-off
-left it. The fitter now uses a central-difference Jacobian with a relative step
-of 1e-4. Every side-by-side diagonal fit, the only diagonal fits that start off
-the truth, reaches below 1e-9; three published fit-only off-diagonal entries
-moved, all downward, the safe direction (mixed flow side-by-side to parallel
-1.85e-5 to 7.4e-6, mixed flow series to side-by-side 5.31e-5 to 3.45e-5, plug
-flow series to side-by-side 1.86e-5 to 1.39e-5); one identity-backed entry (plug flow,
-independent truth, series candidate, a genuine wrong basin) is still more than
-1e-6 short, the floor check is withdrawn because there is no stall left for it
-to bound, and the non-identifiability of eq. (6)'s constants is stated from a
-profile (section 5) instead of from where the optimiser stopped. A second,
-smaller fix: the Fig.-6 transform $(\tau'^{\,d-1}-1)/(d-1)$ lost digits to
-cancellation near $d = 1$ and is now computed with `expm1`, which takes the
-published $d = 1$ bias of 5.5e-7 to below 1e-7. **No separability verdict
-changes**: the counts of separable pairs are still 0, 1, 0 and 0, and the
-mixed-flow boundary and the $d = 1$ blind spot hold as published."""))
+4. **The pseudo-steady assumption itself**, dropped and costed."""))
 
 cells.append(code(r'''"""(1a) SPATIAL order, isolated: frozen a(s), bed outlet vs exact quadrature."""
 from scipy.integrate import cumulative_simpson as _csimp
@@ -2765,8 +2734,7 @@ B["degen_sbs_is_parallel_famB_batch"] = dict(
     note="degeneracy 5 in the batch, five sigma, LSODA at rtol 1e-9")
 B["degen_sbs_is_parallel_famB_plug"] = dict(
     max=1e-8, basis="tolerance",
-    note="degeneracy 5 in the bed, five sigma; 1.9e-11 with a 7.7e-12 spread "
-         "across BLAS kernels under the August fitter")
+    note="degeneracy 5 in the bed, five sigma")
 # -- the separability matrices ---------------------------------------------------
 FIT_BOUND = {("plug", "series", "side-by-side"), ("mixed", "series", "side-by-side"),
              ("mixed", "side-by-side", "parallel"), ("mixed", "side-by-side", "series")}
@@ -2786,8 +2754,7 @@ for cfg in SEP:
                 B[nm] = dict(max=2e-4, basis="chosen",
                              note="no twin: an optimiser upper bound on a minimum, "
                                   "claimed only as a tenth of the conversion "
-                                  "resolution; the August fitter moved it by 2 % "
-                                  "to 66 % between BLAS kernels")
+                                  "resolution")
 B["sep_identity_twin_worst"] = dict(
     max=1e-8, basis="tolerance",
     note="largest twin residual over the 44 identity-backed entries, rtol 1e-9")
@@ -2795,8 +2762,7 @@ for cfg in SEP:
     B[f"sep_stall_{cfg}"] = dict(
         max=1e-9, basis="tolerance",
         note="largest diagonal fit (exact minimum 0) with the central-difference "
-             "Jacobian; ODE rtol 1e-9. The August 2-point fitter published 8.5e-6 "
-             "(batch) and 2.4e-5 (mixed)")
+             "Jacobian; ODE rtol 1e-9")
 B["sep_stall_worst"] = dict(max=1e-9, basis="tolerance",
                             note="the largest of the four sep_stall_* bounds")
 B["sep_stall_worst_not_sbs"] = dict(
@@ -2824,11 +2790,10 @@ for nm in ("mixed_boundary_np1_d1.5", "mixed_boundary_np1_d1", "mixed_boundary_w
 B["mixed_boundary_np1_d0.75"] = dict(
     max=1e-3, basis="chosen",
     note="no twin: an optimiser upper bound, claimed only as below 1e-3, half the "
-         "2e-3 resolution (7.5e-4 with a 21 % spread under the August fitter)")
+         "2e-3 resolution")
 for nm in ("mixed_boundary_np2_d1.5", "mixed_boundary_best_outside"):
     B[nm] = dict(max=1e-4, basis="chosen",
-                 note="no twin: an optimiser upper bound, claimed only as below 1e-4 "
-                      "(4.2e-5 with a 3 % spread under the August fitter)")
+                 note="no twin: an optimiser upper bound, claimed only as below 1e-4")
 # -- held C_A, side-by-side --------------------------------------------------------
 B["constC_sbs_bias_at_d1_max"] = dict(
     max=1e-7, basis="tolerance",
@@ -2912,7 +2877,7 @@ print(f"largest share of the evaluation budget used by any production fit: "
       f"below 0.9 (here {max(_share.values()):.2f}, {max(_share, key=_share.get)})")
 claims.count("sep_optimiser_overstated", SEP_OVER, 1e-6, min_margin=0.5,
              note="identity-backed entries where the fit alone stops more than 1e-6 "
-                  "above the twin; 9 under the August 2-point fitter")
+                  "above the twin")
 for cfg in SEP:
     n_ = claims.count(f"sep_{cfg}_n_separable", SEP_OFF[cfg], res_of.get(cfg, RES_X),
                       min_margin=0.02,

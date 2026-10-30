@@ -105,14 +105,13 @@ printed.
   when the cell count is a physical parameter. It costs **5.9 % <!-- claim: outflow_bc_relerr_N2 -->
   at $N=2$ and 3.8 % <!-- claim: outflow_bc_relerr_N4 --> at $N=4$** and decays as
   $N^{-0.87}$, i.e. it is indistinguishable from ordinary discretisation error and
-  is not it. The page first built the stirred exit by hand (no flux on the exit
-  face, the outflow as a `construct_coefficient_matrix` sink); that became pymrm
-  pitfall P6 and the boundary `{"outflow": True}`, which `model.py` now uses. The
-  page keeps its own construction and shows that the two are the same operator.
+  is not it. `model.py` uses the boundary `{"outflow": True}` (pymrm pitfall P6);
+  the page also builds the stirred exit by hand (no flux on the exit face, the
+  outflow as a `construct_coefficient_matrix` sink) and shows that the two are
+  the same operator.
 - **Steady TVD by Newton.** The dispersion vessel uses `ConvFluxTVD` with
-  `newton(..., damping="monotone")` (pitfall P10). The deferred correction it
-  replaced converged here and agrees to below 1e-9; it is kept on the page as a
-  comparison row.
+  `newton(..., damping="monotone")` (pitfall P10). The same discrete equations
+  solved by deferred correction agree to below 1e-9.
 
 ## Reproduce
 

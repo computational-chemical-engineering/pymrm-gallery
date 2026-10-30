@@ -459,7 +459,7 @@ print("  lim_{C_A -> oo} of (1.5.1-13)       =", LIM13)
 print("  K_M(Briggs-Haldane)/K_M(Michaelis-Menten) =", KMRAT, "= 1 + k2/k_-1")
 
 # ---- THE DEGENERACY, PROVED rather than sampled. This is the page's central
-# structural result, and until this cell it was only ever *checked* on a grid.
+# structural result; a grid can only *check* it.
 rho_s = sp.symbols("rho", positive=True)
 REPARAM = {k2: rm_s/CE0s, km1: (rm_s/CE0s)/rho_s,
            k1: ((rm_s/CE0s)/rho_s + rm_s/CE0s)/KM_s}
@@ -945,7 +945,7 @@ cells.append(code(r'''# "How far from a straight line" is a MAXIMUM OVER AN INTE
 #       stationary point, C* = sqrt(-A/q1), in closed form.
 # Moments and extrema are therefore all exact - there is no grid under any of
 # these numbers. The grid sequence below is shown only as evidence that refining
-# the old 400-point convention converges to the closed form.
+# a 400-point grid converges to the closed form.
 A_LW, B_LW = KM_fit/rm_fit, 1.0/rm_fit             # 1/r = A/C_A + B
 
 
@@ -1698,9 +1698,9 @@ Every metric in `agreement.json` needs something that moves it. Rows below are
 run live; the coverage map at the end is **generated from the measured movers**,
 not asserted."""))
 
-cells.append(code(r'''# MOVE_TOL is 1e-6, not the 1e-9 an earlier version of this cell used, and the
-# table prints the relative move of every row. Both changes are there for one
-# reason: a row can clear a 1e-9 threshold and still be no evidence at all. Two
+cells.append(code(r'''# MOVE_TOL is 1e-6, not 1e-9, and the table prints the relative move of every
+# row. Both for one reason: a row can clear a 1e-9 threshold and still be no
+# evidence at all. Two
 # of this page's root-finds are themselves converged only to ~2e-6 relative
 # (brentq xtol 1e-6 in log10), so a "move" below that is inside the noise of the
 # computation being probed. And a ROBUSTNESS row - one written to show a metric
@@ -1711,9 +1711,9 @@ MOVE_TOL = 1e-6
 # ROOT_FIND_RES is DERIVED, not chosen. Each eps* on this page comes from brentq
 # at xtol = XTOL_LOG10 in log10, i.e. ln(10)*XTOL_LOG10 relative; a row that
 # compares two such root-finds inherits both, so the worst case is twice that.
-# An earlier draft of this cell rounded the number UP to 1e-5, which is 2.2x the
-# arithmetic and made the robustness row's move (5.7e-6, i.e. 1.2x the real
-# bound) look unresolved when it is not quite. The bound is now the arithmetic.
+# Rounding it UP to 1e-5 would be 2.2x the arithmetic and would make the
+# robustness row's move (5.7e-6, i.e. 1.2x the real bound) look unresolved when
+# it is not quite. The bound is the arithmetic.
 ROOT_FIND_RES = 2*np.log(10)*XTOL_LOG10             # = 4.61e-6
 
 
@@ -1934,16 +1934,15 @@ rec("straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)",
 rec("the 400-point geomspace grid used instead of the closed form",
     "lineweaver_printed_axes_nonlinearity", M["lineweaver_printed_axes_nonlinearity"],
     straightness(c_ex, 1/r_ex),
-    "the unconverged sampled value the page previously reported (0.5024); the "
+    "the unconverged sampled value (0.5024); the "
     "grid sequence in Results 2 converges to the closed form")
 rec("the floor measured against the LEAST-SQUARES line instead of the minimax one",
     "lineweaver_printed_axes_nonlinearity_minimax",
     M["lineweaver_printed_axes_nonlinearity_minimax"],
     M["lineweaver_printed_axes_nonlinearity"],
-    "THE DEFECT THIS ROW EXISTS FOR, injected verbatim: until a verification "
-    "caught it, three surfaces of this page called the least-squares distance "
-    "'the distance from the best straight line'. A MAXIMUM is minimised by the "
-    "Chebyshev line, not the least-squares one, and the gap between them is "
+    "THE DEFECT THIS ROW EXISTS FOR, injected verbatim: calling the "
+    "least-squares distance 'the distance from the best straight line'. A "
+    "MAXIMUM is minimised by the Chebyshev line, not the least-squares one, and the gap between them is "
     "larger than either weighting convention")
 rec("straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)",
     "lineweaver_printed_axes_nonlinearity_minimax",
@@ -2077,9 +2076,8 @@ for r in ROB:
     # no free constant at all: the robustness row must be weaker than EVERY
     # defect row on the same metric, which is what "not coverage" means here.
     # The second bounds it to within one decade of the derived resolution - the
-    # decade is a unit, not a fitted pad, and the margin today is 8x, so it is
-    # not a number chosen to make the claim come out true (which is exactly what
-    # the 1e-5 it replaced was).
+    # decade is a unit, not a fitted pad, and the margin is 8x, so it is not a
+    # number chosen to make the claim come out true.
     assert r["rel move"] < min(_rivals), r
     assert r["rel move"] < 10*ROOT_FIND_RES, r
 assert n_def == n_move, [r for r in BREAK if r["role"] == "defect"
@@ -2204,11 +2202,11 @@ for name in M:
 assert set(COVER) == set(M), set(COVER) ^ set(M)
 uncovered = [k for k, v in COVER.items() if v == "UNCOVERED"]
 assert not uncovered, uncovered
-# ...and the OTHER not-coverage branch, which was printed but not asserted until
-# a verification pointed out that a metric whose only rows were robustness rows
-# would land here, print a loud label and still PASS - including n_def == n_move,
-# since robustness rows are excluded from n_def. That is precisely the illusion
-# the robustness/defect split was introduced to prevent, so it is now an assert.
+# ...and the OTHER not-coverage branch: a metric whose only rows are robustness
+# rows would land here, print a loud label and still PASS - including
+# n_def == n_move, since robustness rows are excluded from n_def. That is
+# precisely the illusion the robustness/defect split exists to prevent, so it is
+# an assert.
 robonly = [k for k, v in COVER.items() if v.startswith("ROBUSTNESS ROWS ONLY")]
 assert not robonly, robonly
 
