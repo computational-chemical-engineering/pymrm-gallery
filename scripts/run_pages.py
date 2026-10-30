@@ -20,7 +20,7 @@ from pathlib import Path
 
 import nbformat
 from nbclient import NotebookClient
-from nbclient.exceptions import CellExecutionError
+from nbclient.exceptions import CellExecutionError, DeadKernelError
 
 ROOT = Path(__file__).resolve().parents[1]
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -48,7 +48,7 @@ for _k, _v in PINNED_ENV.items():
 os.environ.setdefault("GALLERY_OFFLINE", "1")
 
 
-def run(path: Path) -> tuple[bool, float, str]:
+def run(path: Path, retry: bool = True) -> tuple[bool, float, str]:
     nb = nbformat.read(path, as_version=4)
     client = NotebookClient(
         nb, timeout=TIMEOUT, kernel_name="python3",
@@ -59,6 +59,13 @@ def run(path: Path) -> tuple[bool, float, str]:
         client.execute()
     except CellExecutionError as exc:
         return False, time.perf_counter() - t0, str(exc).splitlines()[-1][:200]
+    except (DeadKernelError, RuntimeError, TimeoutError) as exc:
+        # the kernel, not the page: one retry, then report it as this page's
+        # failure instead of aborting every page after it
+        if retry:
+            print(f"     {path.parent.name}: {type(exc).__name__}, retrying once")
+            return run(path, retry=False)
+        return False, time.perf_counter() - t0, f"{type(exc).__name__}: {exc}"[:200]
     nbformat.write(nb, path)
     return True, time.perf_counter() - t0, ""
 
