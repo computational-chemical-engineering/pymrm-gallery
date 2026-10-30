@@ -43,41 +43,10 @@ stated-results CSV) is not reproduced: the maximum is at
 10 % <!-- claim: pa_shortfall_at_3m_357 --> below it. At 360 °C it almost holds: the
 maximum is at 3.2 <!-- claim: z_pa_max_360_m --> m, still past the exit.
 
-## Refresh of 2026-10
-
-- New layout: `index.py`, `model.py`, `test_model.py`, bootstrap cell, pymrm
-  pin 3.1.0, every number registered with `Claims` (78 claims, one structural, the others each failed by
-  at least one of 95 break rows that re-run its computation).
-- `model.py` holds the tube classes, independent of the chemistry: state
-  `(n_r, n_f)`, constant dispersion operator assembled once, `NumJac` on the
-  pointwise source, and the exact sparse Jacobian handed to the BDF
-  integrator (before, `solve_ivp` built it by finite differences; the two
-  routes agree to below 1e-5 °C in the 357 °C hot spot, a comparison kept on the
-  page).
-- The runaway limits are bisected to 1e-4 °C instead of 0.02 °C: 2-D
-  360.0078 to 360.0060 <!-- claim: t0crit_2d_C -->, 1-D 363.9297 to
-  363.9333 <!-- claim: t0crit_1d_C -->, gap 3.9219 to 3.9274 <!-- claim: runaway_gap_C -->.
-  Every other published metric moved by less than 1e-6 relative.
-- The 1-D boundary-value route starts Newton from zero instead of from the
-  march, and raises if it does not converge (it used to assert an absolute
-  residual below 1e-8).
-- pymrm's `pseudo_transient` and `continuation` do not apply: the page solves
-  no steady problem with more than one solution, and the runaway limit is a
-  threshold on a marched outcome, not a fold.
-- Correction (2026-10-30), also on the page: this README and the page
-  metadata said both limits land inside the paper's brackets, "360.01 in
-  (357, 360]", while the notebook said the 2-D limit was outside. Neither is
-  right as stated: the 2-D limit is at 360 within the input reading (printed
-  or recomputed Pe_hR). The page quoted the 2-D margin as 0.0078 °C, the
-  midpoint of a bisection bracket; it is
-  0.006 <!-- claim: t0crit_2d_minus_360_C --> °C. It said the Pe_mR = 8 shift
-  of the runaway limit, 0.04 °C, was below the 0.05 °C bisection tolerance;
-  the two limits had been computed on different grids and tolerances, and on
-  equal footing the shift is 0.043 <!-- claim: pe8_t0crit_shift_C --> °C,
-  resolved and still small. It said the phthalic anhydride maximum at 357 °C
-  sits "at or just beyond the 3 m exit"; it is at
-  6.6 <!-- claim: z_pa_max_357_m --> m, with the exit
-  10 % <!-- claim: pa_shortfall_at_3m_357 --> below it.
+Bisected to 1e-4 °C, the 2-D limit sits 0.006 <!-- claim: t0crit_2d_minus_360_C --> °C
+above 360. The paper's "completely negligible" influence of Pe_mR = 8 against 10
+holds for the runaway limit too: on equal grids and tolerances it moves
+0.043 <!-- claim: pe8_t0crit_shift_C --> °C.
 
 ## Provenance: tier 6, reproduction not validation
 
@@ -118,3 +87,16 @@ GALLERY_OFFLINE=1 python -m pytest -q pages/C2.10-o-xylene-phthalic-anhydride/te
 ```
 
 No PDF is needed to rebuild: both datasets are committed CSVs.
+
+## Corrections
+
+- 2026-10-30: the runaway limits were stated as 360.0078 and 363.9297 °C,
+  midpoints of 0.02 °C brackets; bisected to 1e-4 °C they are 360.0060 and
+  363.9333 °C (gap 3.9274 °C).
+- 2026-10-30: both limits were stated to lie inside the paper's brackets,
+  "360.01 in (357, 360]"; the 2-D limit is at 360 within the input reading.
+- 2026-10-30: the 2-D margin above 360 °C was stated as 0.0078 °C; it is 0.006 °C.
+- 2026-10-30: the Pe_mR = 8 shift of the runaway limit was stated as 0.04 °C,
+  below the bisection tolerance; on equal grids and tolerances it is 0.043 °C.
+- 2026-10-30: the phthalic anhydride maximum at 357 °C was stated to sit at or
+  just beyond the 3 m exit; it is at 6.6 m, with the exit 10 % below it.

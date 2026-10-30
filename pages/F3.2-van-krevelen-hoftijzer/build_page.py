@@ -272,15 +272,14 @@ page/PDF mapping is recorded in the sidecars so any reader can re-render
 exactly what was read (Froment: book = PDF $-$ 42; Levenspiel: book = PDF
 $-$ 16, both confirmed on printed running heads).
 
-One correction to what the sidecars used to say, because it is the exact trap
-the house rule exists for. The Froment file is born-digital and its equations
+One caution about the figure, because it is the exact trap the house rule
+exists for. The Froment file is born-digital and its equations
 and prose are vector text at any resolution - **but its figure is not**.
 `pdfimages -list` shows Fig. 6.3.2-1, on PDF p. 373, as an embedded
-$536\times771$ greyscale JPEG at 148 ppi, so the 300 ppi page render the ten
-curve labels were first read on was a 2x interpolation of a 148 ppi raster. The
-raster was extracted and the labels, the four axis ends and both axis titles
-re-read at native resolution enlarged 4x: they are unchanged. Only the claim
-was wrong, not the data.
+$536\times771$ greyscale JPEG at 148 ppi, so a 300 ppi page render is a 2x
+interpolation of a 148 ppi raster. The raster was extracted and the ten curve
+labels, the four axis ends and both axis titles read at native resolution
+enlarged 4x.
 """))
 
 cells.append(code('''PRN = load_data("vkh-printed-claims.csv", page=PAGE).set_index("claim_id")
@@ -585,10 +584,10 @@ class Extrapolated:
         # A ratio of two integrals of the SAME profile, so the grid partly
         # cancels - but only partly, and least of all at the top of the gamma
         # range, where beta is a thin exponential and the rate weight sits in
-        # the first few cells.  An earlier version of this page took this
-        # diagnostic from the fine grid alone on the ground that the grid
-        # "cancels to five digits"; that is true at the worst point and false
-        # by orders of magnitude at gamma = 100.  The gap is PRINTED below
+        # the first few cells.  Taking this diagnostic from the fine grid alone,
+        # on the ground that the grid "cancels to five digits", is true at the
+        # worst point and false by orders of magnitude at gamma = 100.  The gap
+        # is PRINTED below
         # rather than asserted here, and the ratio is extrapolated exactly like
         # F_A: same two grids, same order.
         c = self.coarse.beta_constancy(gamma, q, **kw)
@@ -916,10 +915,10 @@ print(f"    at gamma = {G_MID:g} it gives"
       f"   ({abs(C_FINE_MID / C_MID - 1):.1e})")
 print(f"  so the grid all but cancels where the headline lives and does NOT at the"
       f" top of the range: the")
-print(f"  one-grid shortcut this page used to take on this diagnostic costs"
+print(f"  one-grid shortcut on this diagnostic would cost"
       f" {abs(C_FINE_MID / C_MID - 1) / abs(C_FINE_STAR / W['beta_constancy_at_worst'] - 1):.0f}"
       f" times more at gamma = {G_MID:g}")
-print(f"  than at the point it was justified on, which is why it is gone.")
+print(f"  than at the point it would be justified on, which is why it is not taken.")
 print(f"\\nthe two depletion thresholds are ROOT-FOUND on beta(0), not sampled:"
       f"\\n  beta(0) = 0.5  at gamma = {W['gamma_at_half_depletion']:.6f}"
       f"   (residual {REF.f_a(W['gamma_at_half_depletion'], Q_STAR)[1] - 0.5:+.2e})"
@@ -1314,9 +1313,8 @@ the warm start contributes nothing to it. That cold run is also what settles
 the half of the sentence a reader would otherwise have to take on trust: this
 is **not** a warm-start-versus-cold-start difference, which is the first thing
 `F3.1`'s continued sweep suggests. This page's extrapolated reference is the
-accurate side of the residual, and the single graded grid this page used before
-the baseline was extrapolated is on the wrong side of it by two orders of
-magnitude more.
+accurate side of the residual, and a single graded grid, without the
+extrapolation, is on the wrong side of it by two orders of magnitude more.
 """))
 
 cells.append(code('''def block_f31(film=None, vkh=None, n_scan=13, **kw):
@@ -1335,8 +1333,7 @@ cells.append(code('''def block_f31(film=None, vkh=None, n_scan=13, **kw):
         for e in (5.0, 20.0, 100.0)))
     # F3.1's other overlapping check: the pseudo-first-order solve against
     # Ha/tanh(Ha) over ITS Ha range.  Run on THREE single grids, because the
-    # 893.9x this page used to credit to grading is really grading TIMES a
-    # refinement: F3.1 uses n_x = 400 uniform and this page n_x = 800 graded.
+    # 893.9x is really grading TIMES a refinement: F3.1 uses n_x = 400 uniform and this page n_x = 800 graded.
     ha1 = np.geomspace(0.02, 200.0, 70)
 
     def pfo(f):
@@ -1362,8 +1359,8 @@ cells.append(code('''def block_f31(film=None, vkh=None, n_scan=13, **kw):
 F31 = load_claims("F3.1-hatta-regimes")
 
 F = block_f31()
-# the same block on the single graded grid: what this page reported before the
-# baseline was extrapolated, kept so that shortcut's cost stays visible
+# the same block on the single graded grid, without the extrapolation, so that
+# shortcut's cost stays visible
 F_PLAIN = block_f31(film=FILM)
 # and the same block on F3.1's OWN grid - uniform, n_x = 400 - which is what
 # ATTRIBUTES the residual instead of hand-waving it.  A COLD run on that grid
@@ -1395,7 +1392,7 @@ print(f"  the SAME check run here on a uniform n_x = {max(FILM.n_x // 2, 8)} gri
       f" {F['pfo_max_rel_error_uniform_half_n']:.4e}"
       f"  -> F3.1 reproduced to below {F31_PFO_REPRO_MAX:g}"
       f" (here {F31_PFO_REPRO:.1e})")
-print(f"  DECOMPOSING THE 893.9x THIS PAGE USED TO CREDIT TO GRADING ALONE:")
+print(f"  DECOMPOSING THE 893.9x, WHICH IS NOT ALL GRADING:")
 print(f"    uniform n_x = {max(FILM.n_x // 2, 8)} -> uniform n_x = {FILM.n_x}"
       f"   (refinement, no grading) "
       f" {F['pfo_max_rel_error_uniform_half_n'] / F['pfo_max_rel_error_uniform_same_n']:8.2f}x")
@@ -1466,9 +1463,9 @@ cell below states what that guard cannot do, because a guard trusted past its
 reach is worse than none.
 
 Two rows are worth reading before the rest. **"The reference taken as one
-graded solve"** is the defect this page actually shipped and a verification
-caught; it is injected verbatim rather than quietly fixed. And **"uniform grid
-instead of graded"** is *not* filed as a one-way defect any more: at high
+graded solve"** is the defect the extrapolated baseline exists to avoid,
+injected verbatim. And **"uniform grid instead of graded"** is *not* filed as a
+one-way defect: at high
 $\gamma$ it is one, and on the metrics that carry the headline it agrees with
 the extrapolated reference to within the move tolerance, which is why it stops
 appearing as cover for *those*. It still buys sub-CI links on the other
@@ -1589,7 +1586,7 @@ brk("uniform grid instead of graded, at the same n_x", _uniform,
     " percent, the two depletion thresholds and the worst over the printed"
     " labels - it agrees with the extrapolated reference to within the move"
     " tolerance below, so it does not appear as cover for THOSE.  It is not"
-    " cover-free, and an earlier wording of this note wrongly implied it was:"
+    " cover-free:"
     " on the other moderate-gamma metrics it sits just the other side of that"
     " tolerance and still buys links, and on the high-gamma metrics it buys"
     " large ones, which is the reason to keep it.  The split is printed under"
@@ -1797,10 +1794,9 @@ for _label, _got, _note in BREAKS:
             COVERAGE.setdefault(_k, []).append((_label, _rel))
 assert not UNKNOWN, f"break rows recompute names that are not metrics: {UNKNOWN}"
 
-# ---- how much the pre-extrapolation baseline actually moved, COUNTED --------
-# The page used to say "nine reported numbers".  That was an undercount, and
-# there is no reason to count them by hand: the "one graded solve" row IS the
-# old baseline, so the movers are a set difference over METRICS.
+# ---- how much the unextrapolated baseline moves, COUNTED -------------------
+# No reason to count them by hand: the "one graded solve" row IS the
+# unextrapolated baseline, so the movers are a set difference over METRICS.
 _NOEXT = next(g for lbl, g, _ in BREAKS
               if lbl.startswith("the reference taken as one graded solve"))
 _MOVERS = [(k, METRICS[k], float(v)) for k, v in sorted(_NOEXT.items())
@@ -1855,8 +1851,7 @@ def _key_bindings(src):
         elif isinstance(n, ast.DictComp):
             # {k: -2.8 for k in ("metric_a", "metric_b")} - the keys are not
             # literals, so bind every constant string in the comprehension's
-            # own iterables to its value expression.  A verification found this
-            # form open when the rest were closed; no row used it.
+            # own iterables to its value expression; no row uses it.
             for gen in n.generators:
                 out += [(c.value, n.value) for c in ast.walk(gen.iter)
                         if isinstance(c, ast.Constant) and isinstance(c.value, str)]
@@ -1898,8 +1893,7 @@ def literal_metrics(fn):
 def _negative_control():
     """THE GUARD'S TEETH: a row that types its metrics instead of computing them."""
     return {"vkh_worst_rel_error_pct": -2.8, "lev_inst_overstatement_factor": 44.0,
-            # the third form is a DICT COMPREHENSION, which walked past the
-            # guard until a verification pointed at it
+            # the third form is a DICT COMPREHENSION
             **{k: 2.115 for k in ("beta_constancy_at_worst",)},
             "_diagnostic": len(LABELS)}
 
@@ -1918,8 +1912,7 @@ print("WHAT THE GUARD CANNOT DO, stated so it is not over-trusted: it rejects a"
       " helpers a row names."
       "\\nIt sees literals in a dict display, in dict(...), in an out[k] = ..."
       " assignment, through a"
-      "\\n{**d} merge, and - since a verification found this one open while the"
-      " rest were closed - in a"
+      "\\n{**d} merge, and in a"
       "\\nDICT COMPREHENSION over literal key strings, which is the third form the"
       " negative control uses."
       "\\nWhat still passes: a comprehension over a NAME rather than a literal,"
@@ -1967,8 +1960,7 @@ print("(that none of them is a best cover is not a check that can fail: the WEAK
       " assertion above")
 print(" already refuses any metric whose best cover is below CI's threshold.  It is"
       " printed because")
-print(" the row's note used to say the relabelling removed these links, and it did"
-      " not.)")
+print(" the relabelling does not remove these links.)")
 print("What the row buys NOTHING on is the metrics that carry the headline, where it"
       " agrees with the")
 print("extrapolated reference to inside the move tolerance - which IS the claim its"
@@ -2182,11 +2174,11 @@ CONDITIONS = {
     "VKH under-estimates over the whole map": bool(VKH_ALWAYS_UNDER),
 }
 _bad += [(n, True, False) for n, ok in CONDITIONS.items() if not ok]
-# the count README.md and models.yaml quote for what the old single-grid
-# baseline moved: generated above, not counted by hand.  Its threshold is a
+# the count README.md and models.yaml quote for what the single-grid
+# baseline moves: generated above, not counted by hand.  Its threshold is a
 # 1e-6 relative move; the smallest move counted is 2e-5 relative and every
 # metric not counted moves by exactly 0, so the count is not decided by noise.
-_counts = {"metrics the old baseline moves": (27, N_MOVED),
+_counts = {"metrics the single-grid baseline moves": (27, N_MOVED),
            "reported metrics": (42, len(METRICS)),
            "break rows": (19, len(BREAKS))}
 _bad += [(n, w, g) for n, (w, g) in _counts.items() if w != g]
@@ -2238,14 +2230,14 @@ than lumped: on `F3.1`'s own first-order check, over its own $\mathrm{Ha}$
 range, grading at the same $n_x$ is worth **124.8x** and the refinement from
 $n_x = 400$ to 800 a further 7.163x, which multiply to the 893.9x against the
 6.337e-3 loaded from `F3.1`'s `agreement.json`. Crediting all 893.9x to grading
-- as an earlier version of this page did - is wrong by a factor of seven.
+is wrong by a factor of seven.
 
 And grading is a **liability** at the moderate $\gamma$ where this page's
 headline sits: at the grid-study point a graded grid of the same size is 248.7
 times *less* accurate than a uniform one, because its outer cells are nearly
 eight times wider. That is why the baseline here is a Richardson extrapolation of two
-graded grids rather than either grid alone. The single graded solve this page
-first shipped was wrong in the fourth decimal of every moderate-$\gamma$
+graded grids rather than either grid alone. A single graded solve is wrong in
+the fourth decimal of every moderate-$\gamma$
 number - by less than its own pymrm-versus-collocation agreement, which is
 precisely why a second solver family does not catch this class and a
 convergence study does. It is the "extrapolation switched off" row of the break

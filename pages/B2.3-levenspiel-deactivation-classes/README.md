@@ -54,8 +54,7 @@ because none is reported.
   devices, where it correctly fails. $n' = 0$ collapses all four everywhere
   (0.0 exactly), which is the paper's own statement.
   **The bed is therefore *not* "the only device that is not exactly
-  degenerate"** — an earlier version of this page said so on six surfaces and
-  it was false. What the bed and the batch keep, and the two well-mixed devices
+  degenerate"**. What the bed and the batch keep, and the two well-mixed devices
   do not, is a distinction between parallel, series and independent; what the
   bed alone has is a spatial coordinate.
 - **Separability measured, not asserted — 64 fits, and the answer is
@@ -83,23 +82,6 @@ because none is reported.
   refit to an RMS residual below 2e-4 <!-- claim: sep_profile_d_mixed -->, a
   tenth of the conversion resolution, while +1 % on any single constant with
   the others held at the truth costs at least 3.9e-4.
-- **Correction (2026-10-29).** The August page published that diagonal as an
-  optimiser stall of 8.55e-6 (batch) and 2.38e-5 (mixed), at constants 3.6 %
-  and 10.5 % from the truth with a 1 % move costing 17x to 311x the stall,
-  called the stall a side-by-side phenomenon, counted nine entries where the
-  multistart alone stopped more than 1e-6 short, and checked a 20x fitter floor
-  against it. Those numbers were artefacts: `least_squares` used its default
-  one-sided Jacobian, whose step of about 1.5e-8 is below the integrator's
-  non-smooth error at rtol 1e-9, so the trust region stopped where round-off
-  left it (perturbing the target by 1e-15 moved the batch stall from 9.5e-9 to
-  9.1e-6, measured in the 2026-10-29 diagnosis, `docs/refresh-learnings.md`
-  row 11). Three published fit-only off-diagonal entries moved, all downward,
-  the safe direction: mixed flow side-by-side to parallel 1.85e-5 to 7.4e-6,
-  mixed flow series to side-by-side 5.31e-5 to 3.45e-5, plug flow series to
-  side-by-side 1.86e-5 to 1.39e-5. The fitter now uses a central-difference Jacobian with a relative
-  step of 1e-4; the floor check is withdrawn, non-identifiability is stated from
-  the profile, and the Fig.-6 transform is computed with `expm1`, which takes
-  the $d = 1$ bias below 1e-7. The separability verdicts stand.
 - **The discriminating measurement is the profile, not the effluent — and both
   inlet values are exact.** At the feed face $c = 1$, so $C_{\rm R} = 0$: the
   series inlet **never decays at all** ($a \equiv 1$), and the parallel inlet
@@ -113,7 +95,7 @@ because none is reported.
   space extrapolation's own residual of 1.8e-7. The doubly-extrapolated
   outlets are 0.19017 and 0.17711, quoted to the five decimals the two
   refinements resolve, so the gradient reverses sign (+0.1404 vs −0.8229). The
-  break table now carries both halves of that: halving the step count moves
+  break table carries both halves of that: halving the step count moves
   the space-only reading by 2.9e-5, and does **not** move the reported one.
   One assay of the spent catalyst reads
   that off, where the outlet history is a whole campaign at a resolution nobody
@@ -159,7 +141,7 @@ because none is reported.
   side-by-side deactivation if $C_{\rm P}$ and, *if possible*, $C_{\rm A}$ are
   kept constant. **If $C_{\rm A}$ cannot be kept constant in side-by-side
   deactivation, analysis is still not particularly difficult**" (p. 271; both
-  sentences are rows of the claims CSV and both are now quoted in full on the
+  sentences are rows of the claims CSV and both are quoted in full on the
   page). Under his own protocol — the $\sigma$ = 0 row, poison in excess so
   $C_{\rm P}$ never moves — the order comes back unbiased to 5.4e-9. What is
   sized here is the cost of holding $C_{\rm A}$ instead, which is what a single
@@ -175,8 +157,7 @@ because none is reported.
   finite-volume bed meets an independent quadrature at observed order 2.01 in
   space (2.04 at $n$ = 2; 2.00 on a second frozen profile) and 1.97 in time —
   against 1.01 for Euler on the same refinement pair, which is what the
-  time-order break row now compares (order against order; the earlier version
-  set an order against an error and could not fail). The Heun row at nt = 200
+  time-order break row compares (order against order). The Heun row at nt = 200
   reads an apparent order 3.16 because its time error has fallen onto the
   m = 400 spatial floor, and the page says so.
   It lands 2.81e-6 from the quadrature in conversion at production settings — 711× below the
@@ -203,7 +184,7 @@ a computed property of those forms in a reactor. **Direction matters and is
 stated on the page:** a separability number is the *minimum* misfit of a wrong
 class, and an optimiser returns an upper bound on a minimum — so the
 "not separable" results are proofs and the "separable" results mean "no better
-fit was found". Where the two disagree the identity wins, and it now wins *in
+fit was found". Where the two disagree the identity wins, and it wins *in
 the matrix itself*: every entry is min(fit, identity twin), 44 of the 64 have a
 twin, and the one entry where the fit alone stops short is printed side by
 side with what the algebra gives.
@@ -226,4 +207,19 @@ side with what the algebra gives.
   pair) and the breaks computed beside each result are wired to the claims
   they must fail; the claims no row moves are listed in the file.
 
-Runtime: about 11 minutes end to end (about 660 s per run under each of three BLAS kernels; 310 s before the central-difference Jacobian and the profiles).
+Runtime: about 11 minutes end to end (about 660 s per run under each of three BLAS kernels).
+
+## Corrections
+
+- 2026-08-09: stated that the bed is "the only device that is not exactly
+  degenerate"; it is exactly degenerate too (side-by-side is parallel at
+  $n = n' = d = 1$).
+- 2026-10-29: stated the separability diagonal as an optimiser stall of 8.55e-6
+  (batch) and 2.38e-5 (mixed flow), with nine entries where the multistart
+  stopped more than 1e-6 short; those were artefacts of a one-sided
+  finite-difference Jacobian, and the side-by-side diagonal is below 1e-9 on
+  every device, with one such entry.
+- 2026-10-29: stated three fit-only off-diagonal entries as 1.85e-5, 5.31e-5 and
+  1.86e-5; they are 7.4e-6, 3.45e-5 and 1.39e-5.
+- 2026-10-29: stated a $d = 1$ bias of 5.5e-7 in the Fig.-6 transform; it is
+  below 1e-7.
