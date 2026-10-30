@@ -42,7 +42,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.1.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "X0.0-replace-me"  # equals the page directory
 
 import os, sys, urllib.request
@@ -60,7 +60,7 @@ if _shared is None:
 sys.path.insert(0, str(_shared))
 sys.modules.pop("gallery_bootstrap", None)
 from gallery_bootstrap import setup
-setup(PAGE, PYMRM, GALLERY_REF)
+setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path
 
 # %%
 # Imports. Packages beyond pymrm and the Colab defaults (numpy, scipy, pandas,
@@ -148,4 +148,4 @@ claims = Claims(PAGE.split("-")[0])
 # %%
 # Claims: prints every registered number, writes agreement.json for CI, and
 # raises when a claim fails its own check or has no break row.
-claims.report()
+claims.report();   # the semicolon keeps the notebook from echoing the payload

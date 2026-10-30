@@ -224,6 +224,7 @@ def test_offline_resolve_still_finds_local_files(monkeypatch):
 def test_numpy_simd_pin_matches_run_pages():
     src = (ROOT / "scripts" / "run_pages.py").read_text()
     assert f'NPY_PIN = "{gb.NPY_PIN}"' in src
+    assert f'NPY_PIN = "{gb.NPY_PIN}"' in (ROOT / "scripts" / "run_kernels.py").read_text()
 
 
 @pytest.mark.parametrize("machine, preset, loaded, expect", [

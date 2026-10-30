@@ -19,4 +19,4 @@ if _shared is None:
 sys.path.insert(0, str(_shared))
 sys.modules.pop("gallery_bootstrap", None)
 from gallery_bootstrap import setup
-setup(PAGE, PYMRM, GALLERY_REF)
+setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path

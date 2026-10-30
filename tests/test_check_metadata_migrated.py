@@ -1,6 +1,7 @@
 """Tests for the migrated-page checks of scripts/check_metadata.py
 (docs/page-infrastructure.md, sections 3 and 4)."""
 
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -14,7 +15,10 @@ import check_metadata as cm  # noqa: E402
 import page_layout  # noqa: E402
 
 PAGE = "X0.0-demo"
-META = {"id": "X0.0", "pymrm_min_version": "3.1.0"}
+# the fixture page is pinned to whatever the lock holds, so a lock bump needs no edit here
+LOCK = re.search(r"^pymrm==(\S+)$", (ROOT / "requirements-lock.txt").read_text(), re.M).group(1)
+PIN = page_layout.pin_for(LOCK)
+META = {"id": "X0.0", "pymrm_min_version": LOCK}
 TEMPLATE_PY = ROOT / "templates" / "index.py"
 TEMPLATE_PAGE = 'PAGE = "X0.0-replace-me"'
 
@@ -56,20 +60,20 @@ def test_released_tree_passes_with_its_tag(tmp_path):
 
 def test_aligned_comments_still_match_the_template(tmp_path):
     page = make_page(tmp_path, lambda t: t.replace(
-        'PYMRM = ">=3.1.0,<4"  #', 'PYMRM = ">=3.1.0,<4"           #'))
+        f'PYMRM = "{PIN}"  #', f'PYMRM = "{PIN}"           #'))
     assert errors(page) == []
 
 
 @pytest.mark.parametrize("edit, meta, needle", [
-    (lambda t: t.replace(">=3.1.0,<4", ">=3.0.0,<4"), META, "PYMRM"),
-    (lambda t: t, {**META, "pymrm_min_version": "3.2"}, "requires '>=3.2,<4'"),
+    (lambda t: t.replace(PIN, ">=3.0.0,<4"), META, "PYMRM"),
+    (lambda t: t, {**META, "pymrm_min_version": "9.9"}, "requires '>=9.9,<10'"),
     (lambda t: t, {"id": "X0.0"}, "no pymrm_min_version"),
     (lambda t: t.replace(f'PAGE = "{PAGE}"', 'PAGE = "X0.0-other"'), META, "directory name"),
     (lambda t: t.replace('GALLERY_REF = "main"', 'GALLERY_REF = "dev"'), META, "expected 'main'"),
     (lambda t: t.replace("setup(PAGE, PYMRM, GALLERY_REF)",
                          "setup(PAGE, PYMRM, GALLERY_REF)\nimport numpy"), META, "templates/bootstrap_cell.py"),
-    (lambda t: t.replace("setup(PAGE, PYMRM, GALLERY_REF)",
-                         'setup(PAGE, PYMRM, GALLERY_REF)\nPAGE = "x"'), META, "PAGE 2 times"),
+    (lambda t: t.replace("from gallery_bootstrap import setup",
+                         'from gallery_bootstrap import setup\nPAGE = "x"'), META, "PAGE 2 times"),
     (lambda t: t.replace("# Bootstrap: the pymrm", "# %%\nx = 1\n\n# %%\n# Bootstrap: the pymrm"),
      META, "must be the first"),
 ])
@@ -126,8 +130,8 @@ def test_index_py_alone_marks_a_page_migrated(tmp_path):
 
 
 def test_pin_the_lock_does_not_satisfy_is_reported(tmp_path):
-    """meta.yaml says 2.3 and the cell matches it, but the lock has pymrm 3.1.0."""
-    page = make_page(tmp_path, lambda t: t.replace(">=3.1.0,<4", ">=2.3,<3"))
+    """meta.yaml says 2.3 and the cell matches it, but the lock has a 3.x pymrm."""
+    page = make_page(tmp_path, lambda t: t.replace(PIN, ">=2.3,<3"))
     meta = {**META, "pymrm_min_version": "2.3"}
     errs = errors(page, meta)
     assert len(errs) == 1 and "does not satisfy" in errs[0], errs

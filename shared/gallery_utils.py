@@ -388,8 +388,12 @@ class Claims:
 
     # -- output ---------------------------------------------------------------
 
-    def report(self, write: bool = True, require_breaks: bool = True) -> dict:
+    def report(self, write: bool | None = None, require_breaks: bool = True) -> dict:
         """Print the claims, write ``agreement.json`` (format 2), raise on failure.
+
+        ``write=None`` writes only when the working directory is a page folder
+        (it holds ``meta.yaml`` and ``index.py`` or ``build_page.py``), so a
+        reader's run on Colab or elsewhere never leaves a file behind.
 
         ``require_breaks=False`` is for a page migrated before it has a break
         table; the file records it and ``scripts/check_claims.py`` lists the page.
@@ -426,6 +430,10 @@ class Claims:
                     "bound": lambda: _bound_text(c) + f" [{c['basis']}]",
                     "exact": lambda: "exact" + (f", margin {c['margin']:.3g}" if "margin" in c else "")}[c["kind"]]()
             print(f"  {k:<{width}} = {shown:<16} {c['kind']:<5}  {rule}")
+        if write is None:
+            here = Path.cwd()
+            write = (here / "meta.yaml").is_file() and (
+                (here / "index.py").is_file() or (here / "build_page.py").is_file())
         if write:
             try:
                 Path("agreement.json").write_text(json.dumps(payload, indent=2) + "\n",
