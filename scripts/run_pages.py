@@ -12,6 +12,7 @@ page-relative data paths behave the same as they do locally.
 from __future__ import annotations
 
 import os
+import platform
 import subprocess
 import sys
 import time
@@ -29,8 +30,15 @@ TIMEOUT = int(ARGS[0]) if ARGS else 1800
 # baselines and CI compute the same way (docs/claims-design.md, section 7). The
 # kernels inherit this environment. A value already set is kept: the portability
 # job sets OPENBLAS_CORETYPE=Sandybridge to find claims that hold on one machine only.
+# NumPy picks its own SIMD code per CPU, independent of OpenBLAS: on an AVX-512 CPU
+# exp, log and pow come from other code and differ in the last bits. Disabling the
+# AVX-512 targets gives every x86-64 machine the AVX2 (X86_V3) path the baselines
+# were made with (docs/claims-design.md, section 7). Names a CPU lacks are ignored.
+NPY_PIN = "X86_V4 AVX512_ICL AVX512_SPR"
 PINNED_ENV = {"OPENBLAS_CORETYPE": "Haswell", "OPENBLAS_NUM_THREADS": "1",
               "OMP_NUM_THREADS": "1"}
+if platform.machine().lower() in ("x86_64", "amd64"):
+    PINNED_ENV["NPY_DISABLE_CPU_FEATURES"] = NPY_PIN
 for _k, _v in PINNED_ENV.items():
     os.environ.setdefault(_k, _v)
 
