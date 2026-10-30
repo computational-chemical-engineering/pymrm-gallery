@@ -884,11 +884,9 @@ real difference between the routes and not a nuisance: the break table prices it
 directly, refitting every route-B law - and route B's own $F$ - with the
 **all-seven** balance line instead."""))
 
-cells.append(code(r'''# NO WALL-CLOCK TIMING IS PRINTED ANYWHERE ON THIS PAGE.
-# An earlier version ended this cell with the cell's elapsed seconds, and two
-# consecutive executions then differed by one character (29 s / 30 s) - a page
-# whose stream output is not reproducible cannot be diffed, which is how a real
-# drift would be spotted.  The runtime lives in meta.yaml, where it belongs.
+cells.append(code(r'''# NO WALL-CLOCK TIMING IS PRINTED ANYWHERE ON THIS PAGE: elapsed seconds differ
+# between two consecutive executions, and a page whose stream output is not
+# reproducible cannot be diffed, which is how a real drift would be spotted.  The runtime lives in meta.yaml, where it belongs.
 RB = {k: fit_B(k) for k in LAWS + NULLS}
 rows = []
 for k in LAWS + NULLS:
@@ -1004,12 +1002,11 @@ The second is the control. If route A's size is inflated in both, the culprit is
 the small-sample F approximation; if only in the first, it is the reduction.
 
 **Every draw is fitted the way route A fits the real data - global scan, then
-refined.** This is not a detail. An earlier version of this cell read both fits
-off the scan grid with no refinement, while the observed $F$ it compares them
-against comes from a *refined* fit, and the mismatch was worth a factor two in
-the control's size: an unrefined Moser fit cannot reach its own optimum, so it
-under-states $F$ on every draw and makes the test look conservative when it is
-not. The refinement is a per-draw zoom on the winning grid cell, its convergence
+refined.** This is not a detail. The observed $F$ the draws are compared against
+comes from a *refined* fit, and reading the draws' fits off the scan grid with no
+refinement is worth a factor two in the control's size: an unrefined Moser fit
+cannot reach its own optimum, so it under-states $F$ on every draw and makes the
+test look conservative when it is not. The refinement is a per-draw zoom on the winning grid cell, its convergence
 is printed below, and the grid-only numbers are kept as a **break row** because
 that is exactly the class of defect - a grid-limited extremum - that no
 perturbation test can see."""))
@@ -1612,8 +1609,8 @@ print(f"          relative: below 1e-4 for both (here"
 
 # ---- WHAT THIS CROSS-CHECK CAN AND CANNOT SEE, measured.  Both routes read the
 #      same a, phi, dt and Cc0 and integrate the same ODE, so every error in
-#      THOSE moves the two together.  Three injections, each a failure mode an
-#      earlier version of this cell claimed the check would catch.
+#      THOSE moves the two together.  Three injections, each a failure mode
+#      such a check might be thought to catch.
 base_o = mu_pred_ode("Monod", pM[0], pM[1:], A_BAL, PHI_BAL)
 blind = []
 for lab, a_, ph_, dt_ in (("phi x 1.3   (a wrong yield)", A_BAL, PHI_BAL*1.3, dt),
@@ -2185,8 +2182,7 @@ B = {   # name -> bound arguments; every name in PROVED_ZERO is here
     "contois_minus_monod_rms": dict(
         max=RMS_GAP_BOUND, basis="tolerance", unit="1/h",
         note="one curve fitted twice; two least_squares exits; measured 7.9e-13"
-             " to 4.2e-12 across BLAS kernels (6.7e-12 before the arithmetic was"
-             " pinned), the bound is 15x the largest"),
+             " to 4.2e-12 across BLAS kernels, the bound is 15x the largest"),
     "contois_map_mum_relerr": dict(
         max=MAP_BOUND, basis="tolerance",
         note="relative to the Monod mu_m; two least_squares exits; measured 3.4e-7"
@@ -2199,8 +2195,7 @@ B = {   # name -> bound arguments; every name in PROVED_ZERO is here
         max=MAP_BOUND, basis="tolerance",
         note="relative to a; S_f = a identically, the gap is the Contois fit's two"
              " exit tolerances (decomposed on the page); measured 4.1e-7 to 1.0e-5"
-             " across BLAS kernels (2.0e-5 before the arithmetic was pinned), the"
-             " bound is 50x the largest"),
+             " across BLAS kernels, the bound is 50x the largest"),
     # -- convergence orders and the second computation of the fit
     "pymrm_batch_observed_order": dict(
         min=0.995, max=1.005, basis="theory",
@@ -2218,13 +2213,12 @@ B = {   # name -> bound arguments; every name in PROVED_ZERO is here
         max=1e-4, basis="chosen",
         note="two-route gap, LSODA fit against Richardson-extrapolated backward Euler"
              " at 200/400 steps; set by the two fits' stopping rules, measured 1.0e-6 to"
-             " 1.2e-6 across BLAS kernels (1.65e-6 before the arithmetic was pinned);"
-             " the bound is the prose claim and 1e2 below the 25-step row"),
+             " 1.2e-6 across BLAS kernels; the bound is the prose claim and 1e2 below"
+             " the 25-step row"),
     "pymrm_refit_KS_relerr": dict(
         max=1e-4, basis="chosen",
-        note="as for mu_m; measured 2.6e-6 to 7.8e-6 across BLAS kernels (9.4e-6"
-             " before the arithmetic was pinned); the bound is the prose claim and"
-             " below the unconverged 25-step refit"),
+        note="as for mu_m; measured 2.6e-6 to 7.8e-6 across BLAS kernels; the bound"
+             " is the prose claim and below the unconverged 25-step refit"),
 }
 assert set(PROVED_ZERO) <= set(B), set(PROVED_ZERO) - set(B)
 # Value claims whose rtol is tightened so that their break row fails the claim's
@@ -2481,14 +2475,11 @@ print(f"{N_SAYS} prose literals of registered claims checked by claims.says,"
 # a claim is checked against, a break-table entry or a declared constant - to
 # HALF AN ULP OF ITS OWN PRINTED DIGITS, taken from the token itself:
 #     half ulp = 0.5 * 10**(exponent - decimals in the mantissa),  compared
-# ABSOLUTELY. An earlier version of this cell computed 5*10**-sig and applied it
-# RELATIVELY, which is half an ulp only when the mantissa is 1 and is up to ten
-# times looser otherwise - a +-5 % window on 6.6e+02, where half an ulp is 0.8 %
-# - so it caught fewer than a quarter of the last-digit errors it was written for.
-# The window below is exact, and the sweep MEASURES its own detection rate below
-# instead of claiming one. The regex also used to reject any token followed by a
-# full stop, i.e. every value that ends a sentence - which in these files
-# included the one this page cares most about. Files absent (Colab, or
+# ABSOLUTELY. A relative window of 5*10**-sig is half an ulp only when the
+# mantissa is 1 and is up to ten times looser otherwise - a +-5 % window on
+# 6.6e+02, where half an ulp is 0.8 %. The window below is exact, and the sweep
+# MEASURES its own detection rate below instead of claiming one. The regex
+# accepts a token followed by a full stop, i.e. a value that ends a sentence. Files absent (Colab, or
 # models_entry.yaml once spliced into models.yaml) are skipped and counted.
 import re
 POOL = ([float(v) for v in M.values()] + [MOVE_TOL, RES_CA, RES_CC, RES_DT]
@@ -2540,10 +2531,9 @@ for fn in SCAN:
         if not _matched(v, h):
             missing.append((fn, tok))
         # the sweep's own teeth, measured on the spot: would it notice this very
-        # token if its LAST PRINTED DIGIT were one out?  BOTH WAYS: an earlier
-        # version probed only +1 and quoted that single count as "the" detection
-        # rate, which flatters it - a mantissa of exactly 1 corrupts DOWNWARD to
-        # zero, and 0.0 is a live value on this page.
+        # token if its LAST PRINTED DIGIT were one out?  BOTH WAYS: probing only
+        # +1 would flatter the detection rate - a mantissa of exactly 1 corrupts
+        # DOWNWARD to zero, and 0.0 is a live value on this page.
         for sgn, key in ((+1.0, "up"), (-1.0, "down")):
             if _matched(v + sgn*2*h, h):
                 blind[key].add(len(found) - 1)
@@ -2607,10 +2597,9 @@ Load-bearing:
   re-derives $\mu_m$ and $K_S$ through a different discretisation, a different
   Jacobian and a different linear solve, agreeing with the LSODA fit to below
   1e-4 in both constants. A break row confirms the check has teeth by running it unconverged. Be
-  precise about what it buys, because an earlier version of this page was not:
-  it catches a bug in *either integrator*, and it is blind to everything the two
+  precise about what it buys: it catches a bug in *either integrator*, and it is blind to everything the two
   share - a wrong yield, a wrong intercept or a mis-set interval moves both
-  predictions together, which the Validation section now measures. Carrying $S$
+  predictions together, which the Validation section measures. Carrying $S$
   as an unknown instead of substituting the yield relation is worth having for
   its own sake, but $S + X/\varphi$ is then a **tautology** of the scheme, not a
   test of it: the source is $(-m/\varphi,\,m)$ built from one $m$, so backward

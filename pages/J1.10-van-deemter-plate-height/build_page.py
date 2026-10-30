@@ -1765,8 +1765,8 @@ claims.bound("pymrm_dt_order_mu1", ORD_DT, min=1.5, max=2.5, basis="chosen",
              note="pre-asymptotic three-point fit of log|mu1(dt) - mu1(1 s)| on dt = 8, 4,"
                   " 2 s; the deferred correction lagged one step makes the scheme first"
                   " order asymptotically. A fit of differences of nearly equal moments: it"
-                  " gave 1.79 under the August 2026 numpy/scipy and 2.11 under the current"
-                  " ones with identical model code, so only the range is claimed. Backward"
+                  " gives 1.79 and 2.11 under two numpy/scipy versions with identical model"
+                  " code, so only the range is claimed. Backward"
                   " Euler gives 0.91 and 0.65 in the same two environments, below it")
 claims.value("pymrm_kappa3_vs_laplace_rel", K3_DEV,
              note="cancellation-limited at n_z = 1400, dt = 1 s; a regression guard")

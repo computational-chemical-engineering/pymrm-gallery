@@ -108,14 +108,6 @@ equations 12–17 reproduced from eq. 4a, 4b and 5 summed over a
 seeded population to a relative residual **below 1e-14** — including the `k_tc` terms, which Table I sets
 to zero and which therefore **no condition the paper reports ever exercises**.
 
-**One retraction, about what a number *was*.** Until 2026-08-14 this page priced
-eq. 22 as `1 − K_22/K_exact` and reported the result, 1.53e-16, as a pymrm BVP
-result and as one of its independent routes. It was neither: both factors are
-closed-form scalars computed inside the shell function, so the expression is the
-identity `1 − r_m(1/r_m − 1/r_D) = r_m/r_D` in floating point, and it returns the
-same bits with the geometry set to Cartesian, with two cells, and with no solve
-at all. The notebook now demonstrates that beside the corrected number.
-
 **And a structural point the paper's prose does not make.** Its *"limiting
 conversion at long times"* is reproduced as an **ordering** (0.95535, 0.98173,
 0.99289 at a stated rate threshold), but this model has **no limiting conversion

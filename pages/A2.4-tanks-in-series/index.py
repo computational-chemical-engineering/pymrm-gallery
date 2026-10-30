@@ -54,7 +54,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.1.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "A2.4-tanks-in-series"  # equals the page directory
 
 import os, sys, urllib.request
@@ -72,7 +72,7 @@ if _shared is None:
 sys.path.insert(0, str(_shared))
 sys.modules.pop("gallery_bootstrap", None)
 from gallery_bootstrap import setup
-setup(PAGE, PYMRM, GALLERY_REF)
+setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path
 
 # %%
 import textwrap
@@ -397,12 +397,12 @@ display(Markdown(
 #
 # pymrm has a boundary for this case: `{"outflow": True}` sets the exit-face value
 # to the adjacent cell value, which is what a stirred tank discharges (pymrm
-# pitfall P6). `Cascade` in this page's `model.py` uses it. Before the library had
-# it, this page built the same thing by hand: no operator flux on the exit face
-# (`b=1, d=0`) and the outflow as a sink $v C_N / V_N$ on the last tank, built
-# with `construct_coefficient_matrix`. That construction is kept as
-# `outlet="stirred"`, and the cell below shows that the library's boundary and the
-# page's own derivation give the same operator, entry for entry. The matrix,
+# pitfall P6). `Cascade` in this page's `model.py` uses it. The same thing can be
+# built by hand: no operator flux on the exit face (`b=1, d=0`) and the outflow
+# as a sink $v C_N / V_N$ on the last tank, built with
+# `construct_coefficient_matrix`. That construction is `outlet="stirred"`, and the
+# cell below shows that the library's boundary and the hand construction give the
+# same operator, entry for entry. The matrix,
 # scaled by $\bar t_i$, is exactly the lower-bidiagonal cascade.
 
 # %%
@@ -1088,8 +1088,6 @@ final conversion is *not*; see the next section.
 #
 # The first of them is the most consequential, because it is a **modelling rule**
 # and not a unit or a tick label: a reader who applies it gets a different reactor.
-# It is also the one this page nearly missed — an earlier draft asserted that the
-# chapter printed no such rule at all.
 
 # %%
 # (0) Fig. 14.7's dispersion-conversion rule, inverted.  Everything here is
@@ -1533,19 +1531,17 @@ with five tanks and is quoted because it is concrete, not because it is extreme.
 # So this section, unlike everything above it, does have a grid-refinement axis,
 # and it is measured.
 #
-# **How the limiter is solved, and what changed.** The TVD face values depend
-# nonlinearly on the state. Up to pymrm 3.1.0 this page applied the limiter by
-# *deferred correction*: the upwind operator factorised once, the limiter
-# correction lagged in the right-hand side, up to 200 sweeps. That is a fixed-point
+# **How the limiter is solved.** The TVD face values depend nonlinearly on the
+# state. `dispersion_exit` in `model.py` builds the limited fluxes and their exact
+# Jacobian with `ConvFluxTVD` and solves with `newton(..., damping="monotone")`,
+# as pymrm pitfall P10 recommends. A second route checks it:
+# `dispersion_exit_deferred` solves the same discrete equations by *deferred
+# correction*, the upwind operator factorised once and the limiter correction
+# lagged in the right-hand side, up to 200 sweeps. That is a fixed-point
 # iteration, not Newton, and for steady problems it converges slowly with minmod
-# and can stall with van Leer (pymrm pitfall P10). `dispersion_exit` in `model.py`
-# now builds the limited fluxes and their exact Jacobian with `ConvFluxTVD` and
-# solves with `newton(..., damping="monotone")`, as P10 recommends; the old routine
-# is kept as `dispersion_exit_deferred` for the comparison below. On this smooth
-# one-dimensional problem the deferred correction did converge, in a few sweeps, so
-# the change is one of method and not of answer: the two agree to the round-off
-# floor of the exit value, and every number in this section moved by that much and
-# no more.
+# and can stall with van Leer (P10). On this smooth one-dimensional problem it
+# converges in a few sweeps, and the two routes agree to the round-off floor of
+# the exit value.
 #
 # Then the question is turned around: rather than trusting $\mathrm{Pe} = 2N$, the
 # Péclet number that *reproduces* the $N$-tank conversion is root-found, and its
@@ -1561,8 +1557,8 @@ _exu = np.array([dispersion_exit(8.0, 2.0, n=n, limiter=None) for n in _ns])
 DISP_GRID_ORDER_UPWIND = float(-np.polyfit(np.log(_ns[:-1]),
                                            np.log(np.abs(_exu[:-1] - _exu[-1])), 1)[0])
 
-# The solver change, computed rather than asserted: the deferred correction this
-# page used up to pymrm 3.1.0 against ConvFluxTVD + Newton, on the same grids.
+# The second route: the same discrete equations by deferred correction against
+# ConvFluxTVD + Newton, on the same grids.
 _dc = [dispersion_exit_deferred(8.0, 2.0, n=n, return_info=True) for n in _ns]
 _nw = [dispersion_exit(8.0, 2.0, n=n, return_info=True) for n in _ns]
 _exd = np.array([v for v, _ in _dc])
@@ -1623,14 +1619,14 @@ PE_EFF_OFFSET_N64 = float(2 * 64 - DISP[(DISP.N == 64) & (DISP.ktbar == 0.5)].Pe
 
 display(SOLVER_CHANGE.round(8))
 display(Markdown(f"""
-**The solver change, side by side.** At $\\mathrm{{Pe}} = 8$, $k\\bar t = 2$ on 200 to
-3200 cells, the old deferred correction and `ConvFluxTVD` with Newton give exit
+**Two solvers, side by side.** At $\\mathrm{{Pe}} = 8$, $k\\bar t = 2$ on 200 to
+3200 cells, deferred correction and `ConvFluxTVD` with Newton give exit
 concentrations that differ by less than $10^{{-9}}$ (here
 {DISP_TVD_VS_DEFERRED:.1e}), which is the round-off floor of an exit value on
 these grids. Both converged on every grid (here in at most {DISP_DEFERRED_SWEEPS}
 sweeps and at most {DISP_NEWTON_ITS} Newton iterations): van Leer did not stall on
-this smooth profile. The fitted grid order is {DISP_GRID_ORDER_DEFERRED:.2f} by the old
-route and {DISP_GRID_ORDER:.2f} by the new one.
+this smooth profile. The fitted grid order is {DISP_GRID_ORDER_DEFERRED:.2f} by deferred
+correction and {DISP_GRID_ORDER:.2f} by Newton.
 """))
 display(DISP.round(6))
 display(PEVAR.round(6))
@@ -2108,7 +2104,7 @@ brk("ambiguity: unequal chain with the zero-gradient outflow bc",
                 faces=np.concatenate([[0.0], np.cumsum(T_UN) / T_UN.sum()])).first_order(_k)[0]
         - 1.0 / np.prod(1.0 + _k * T_UN)))
 
-# --- the outflow penalty: the old workaround with its sink forgotten -----------
+# --- the outflow penalty: the sink construction with its sink forgotten -------
 def _no_sink(N):
     """Exit face suppressed (b=1, d=0) and the outflow sink forgotten."""
     cs = Cascade(N, tbar=1.0, c_in=1.0, outlet="stirred")
@@ -2289,8 +2285,8 @@ $10^{{-12}}$. Those are the two numbers to quote.
 #   it.
 # - `eq4_equal_convolution_dev` **and `rtd_convolution_dev`**. These are the same
 #   identity at two stage counts: Gamma $\star$ Gamma at equal scale *is* Gamma.
-#   Neither can detect anything physical, and — this is the part an earlier draft
-#   got wrong — neither says anything about the quadrature either. For equal tank
+#   Neither can detect anything physical, and neither says anything about the
+#   quadrature either. For equal tank
 #   sizes the integrand $E_M(s)E_N(t-s)$ is $s^{M-1}(t-s)^{N-1}e^{-t/\bar t_i}$, a
 #   polynomial of degree $M+N-2 \le 3$ times a factor constant in $s$, and Simpson
 #   is exact on cubics: the same round-off comes back on 20 panels as on 2000, and
@@ -2354,8 +2350,7 @@ $10^{{-12}}$. Those are the two numbers to quote.
 # construction for arbitrary kinetics (p. 328), which is a drawing rather than a
 # formula, and the closed-recirculation superpositions **Eqs. 6a–c and 7a–c**
 # (p. 325). Both are named in *The published model*, and neither is claimed as
-# tested. (Eqs. 6–7 are recirculation results; Eq. 5 is not, and an earlier draft of
-# this page said otherwise.)
+# tested. (Eqs. 6–7 are recirculation results; Eq. 5 is not.)
 
 # %% [markdown]
 # ## What pymrm adds
@@ -2407,17 +2402,16 @@ Fig. E14.4b's axis ({TICK_P:g} against a printed-curve maximum of
 {E144_EMAX_PRINTED:.5f}), "272 moles", and a variance printed in seconds. Plus one
 typesetting ambiguity in Eq. 11's denominator, settled by the book's own E14.4.
 
-**4. A caution about outflow boundaries, now a library feature.** The usual PDE
+**4. A caution about outflow boundaries.** The usual PDE
 outflow, zero-gradient, reconstructs the exit face to second order: right for a
 discretised PDE, wrong for a model whose cell count is a physical parameter, and
 wrong by **{OUTFLOW_N4 * 100:.1f} %** at $N=4$ while decaying like
 $N^{{-{OUTFLOW_ORDER:.2f}}}$, which is close enough to what ordinary discretisation
-error looks like to be dismissed as one. When this page was first built pymrm had
-no pure-outflow boundary, and the page worked one out (suppress the boundary flux,
-add the outflow as a `construct_coefficient_matrix` sink on the last cell). That
-case became pymrm pitfall P6, and pymrm now provides `{{"outflow": True}}`, which
-`Cascade` uses. The page keeps its own construction and shows that the two are the
-same operator, entry for entry (below $10^{{-14}}$, here {OUTFLOW_VS_SINK:.1e}).
+error looks like to be dismissed as one. pymrm provides `{{"outflow": True}}`
+(pitfall P6), which `Cascade` uses. The page also builds the same boundary by hand
+(suppress the boundary flux, add the outflow as a `construct_coefficient_matrix`
+sink on the last cell) and shows that the two are the same operator, entry for
+entry (below $10^{{-14}}$, here {OUTFLOW_VS_SINK:.1e}).
 """))
 
 # %% [markdown]

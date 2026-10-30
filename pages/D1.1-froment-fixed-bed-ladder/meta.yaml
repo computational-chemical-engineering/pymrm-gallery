@@ -190,8 +190,8 @@ printed_defects_reported_not_repaired:   # fifteen, none repaired anywhere
     R_t = 0.01749 m and A-2's 3.4675 at 0.01752 m, while both tables state
     0.0125 m. A-1 nevertheless PASSES the cross-column test, at 1.8 %, because its
     two columns are not independent of each other where A-2's p0 column is Van
-    Welsenaere & Froment's own; an earlier version of this page read that pass as
-    "what confines the defect to A-2", which is WITHDRAWN. What the pass does rule
+    Welsenaere & Froment's own, so the pass does NOT confine the defect to A-2.
+    What the pass does rule
     out is a wrong B/A, a wrong conversion or a misread formula, since every one of
     those would move both tables.
   - >
@@ -285,12 +285,12 @@ negative_claims_and_the_search_behind_each:
       Pe_a = u_i d_p/D_ea and Pe_a' = u_i L/D_ea.
   - claim: "Section 11.5.2 nowhere states that its own model fails near the threshold."
     search: >
-      WITHDRAWN - IT DOES, in the sentence immediately after the one this page uses
+      FALSE - IT DOES, in the sentence immediately after the one this page uses
       as its anchor. Book p. 513: "Note that for the upper part of the curves with
       pA0 = 0.0181, 0.0182, and 0.019 ... the model used here is no longer entirely
       adequate: heat and mass transfer effects would have to be taken into
       account." That is the qualitative form of the page's rung-3 finding, printed
-      in the chapter, and the notebook now prints it beside that finding. What
+      in the chapter, and the notebook prints it beside that finding. What
       survives as the contribution is the SIZE and SIGN (-4.74 % in the threshold,
       4.3x the margin the sensitivity sentence hangs on) and the observation that
       the chapter's own yardsticks are RATE criteria while its own warning is about
@@ -330,12 +330,10 @@ validation:
       no grid, no pymrm operator and no Newton, root-finding dT/dz = 0 and then
       the threshold. Agrees with the Richardson-extrapolated pymrm threshold to
       4.0e-07 and with the extrapolated hot spot to 3.3e-05, on the SIX-grid chain
-      (150-4800) the notebook displays - which is now also the chain agreement.json
-      carries, because the display and the metric are the same memoised call. (An
-      earlier version of the helper ran its own three-grid chain and reported
-      6.1e-6 and an observed order of 0.80 where the page displayed 4.0e-07 and
-      0.94; that is fixed, and the assertion list is now checked against the metric
-      set so no metric can be added without one.) This is what says the reported
+      (150-4800) the notebook displays - which is also the chain agreement.json
+      carries, because the display and the metric are the same memoised call, and
+      the assertion list is checked against the metric set so no metric can be
+      added without one. This is what says the reported
       threshold must be the extrapolated one: the 1200-cell value is 0.104 % away,
       which is comparable to the +0.1665 % rung-2 effect.
     - >
@@ -381,55 +379,38 @@ validation:
     the control allows 1 K). The notebook counts the checks: 0 rejected over
     every bisected threshold on the page, the closest verdict about 5e-3 K from its
     threshold; registered as the exact claim thresholds_rejected with that margin.
-    CORRECTION (2026-10-29). The earlier version cold-started EVERY bisection
-    solve from the rung-1 profile at the same p0. Between rung 1's threshold and a
-    higher one that guess is already a runaway profile, and Newton from it reached
-    the ignited state (about 990 C) or failed, decided by round-off. On one
-    machine (Haswell kernel), in the 2026-10-29 diagnosis, direct starts on rung 2 at
-    n_z = 900, Pe_a = 0.24 and 0.01817, 0.01818, 0.01819 and 0.01820 atm gave
-    990.9 C, 411.5 C, no convergence and 992.1 C; the page does not recompute them.
-    THE FIX DOES NOT COVER fixed-inlet solves above a threshold, which still start
-    cold: so the ladder table prints "past threshold" instead of a hot spot at
-    0.018 atm for rungs 3 and 5, rung 5's (600, 10) state there is stated only as
-    a bound (above 900 C), and brentq's survival is not attributed to rungs. The page published that
-    noise as physics: 714 checks with 93 rejections on its pinned kernel; a
-    control verdict "speckled" along Pe_a (0.316 and 0.314 accepted, 0.315 and
-    0.313 refused) and along R_t (9.6875 mm refused); Pe_a = 0.30 shown as an
-    "ignition jump", 414.2 C against 999.3 C; 13 of 24 refinement probes of the
-    rung-2 crossover refused; R_t = 0.0090 m with about 1060 C on both control
-    sides; rung 4's anchor at n_z = 300 rejected; a rung-2 crossover of
-    0.24883362; and NotACrossing on other BLAS kernels. With the branch followed,
-    the five ladder thresholds, BASE600, the shifts and the film, D_e and R_t
-    crossovers are unchanged in every printed digit (shift_rung4_pct moves
-    1.5e-8 relative), the rung-2 crossover is 0.24883179, every scan point and
-    probe validates on three BLAS kernels, and the 0.001 grid in Pe_a validates 9
-    of 9. Earlier repairs described in older versions of this file (the control
-    run on five rungs only; the scan stopped at the first refusal) were real
-    defects of the search logic, but the rejections they were reacting to were
-    this round-off; the two break rows that injected them no longer moved anything
-    and are replaced.
+    A cold start of every bisection solve from the rung-1 profile at the same p0
+    would not be neutral: between rung 1's threshold and a higher one that guess
+    is already a runaway profile, and Newton from it reaches the ignited state
+    (about 990 C) or fails, decided by round-off. On one machine (Haswell kernel),
+    direct starts on rung 2 at n_z = 900, Pe_a = 0.24 and 0.01817, 0.01818, 0.01819
+    and 0.01820 atm gave 990.9 C, 411.5 C, no convergence and 992.1 C; the page
+    does not recompute them. BRANCH FOLLOWING DOES NOT COVER fixed-inlet solves
+    above a threshold, which start cold: so the ladder table prints "past
+    threshold" instead of a hot spot at 0.018 atm for rungs 3 and 5, rung 5's
+    (600, 10) state there is stated only as a bound (above 900 C), and brentq's
+    survival is not attributed to rungs. With the branch followed, the rung-2
+    crossover is 0.24883179, every scan point and probe validates on three BLAS
+    kernels, and the 0.001 grid in Pe_a validates 9 of 9.
     WHAT THE RUNG-2 SWEEP REACHES: every one of its 15 points validates, and the
     shift reaches 2.52 % at Pe_a = 0.10, so the break row that moves the target
-    moves it to 2 % (it was 1.1 % while the validated maximum appeared to be
-    1.19 %). All four crossover rows are roots and the ranking is decidable: rung 5
+    moves it to 2 %. All four crossover rows are roots and the ranking is decidable: rung 5
     at 1.25, rung 2 at 4.02, rung 3 at 4.93, rung 4 at 22.7. Rungs 2 and 3 are
     23 % apart, which is the honest caveat on that pair.
-    ONE SHIFT DEFINITION, and it is the same-grid one. The crossover table used to
-    mix two - two rows against the Richardson-extrapolated rung-1 threshold and two
-    against a same-grid one - which is worth 4.08 against 4.93 on the film row,
+    ONE SHIFT DEFINITION, and it is the same-grid one. Mixing two - some rows
+    against the Richardson-extrapolated rung-1 threshold and others against a
+    same-grid one - is worth 4.08 against 4.93 on the film row,
     because rung 1's own 600-cell discretisation error is +0.208 pp, a fifth of the
     1 % target. Both readings of that row are measured and printed.
-    AN EARLIER VERSION OF THIS FILE SAID "brentq" IN THREE PLACES AND JUSTIFIED
-    BISECTION BY CLAIMING sections 11.6 and 11.8.1 show that no bounded steady
-    state exists inside the bracket. Both are withdrawn. 11.6 (p. 561) describes
+    Sections 11.6 and 11.8.1 do NOT show that no bounded steady state exists
+    inside the bracket. 11.6 (p. 561) describes
     THREE steady-state profiles in the adiabatic axial-mixing model, of which "the
     outer two ... are stable ... whereas the middle one is unstable", and 11.8.1
     (p. 588) says the limits within which its own multiple steady states "could be
     experienced ... will probably be extremely narrow": multiplicity, not absence -
     and 11.6 warns that which profile a steady-state computation finds "depends on
     the initial guesses", i.e. that a computation may MISS a state that exists,
-    which is exactly what the cold-started bisection did (see the correction
-    above). A bounded state does exist above the threshold - the grid-free
+    which is what a cold-started bisection does (see above). A bounded state does exist above the threshold - the grid-free
     Radau route returns one at every p0 in the bracket, at 800-1000 C - so where a
     fixed-inlet Newton solve above the threshold fails, the page says so and rests
     nothing on it.
@@ -447,27 +428,25 @@ validation:
     values differ by 0.107 percentage points, which is printed in a table beside the
     displayed values, but no observed order or Richardson limit is offered for it.
     The two rung-5 refinements are of the hot spot at a fixed inlet, not of the
-    threshold. That gap is now CONVERTED INTO AN ERROR BAR on the one number that
+    threshold. That gap is CONVERTED INTO AN ERROR BAR on the one number that
     depends on it: the tube-radius crossover. The (600, 10)-vs-(1200, 20) gap in the
     rung-5 shift, divided by the local slope of the swept shift-versus-radius curve,
     gives R_t* = 10.028 +/- 0.030 mm, d_t/d_p = 6.69 +/- 0.02, factor 1.246 +/- 0.004 -
-    three figures on R_t*, not the six that an earlier version claimed from the
-    BISECTION TOLERANCE, which is not an accuracy. Also corrected here: the reported radial grid error USED to compare
-    a BULK hot spot with an AXIS-temperature Richardson limit and came out
-    -4.295 K. Like for like, axis against axis, the radial discretisation error at
+    three figures on R_t*, not the six the BISECTION TOLERANCE would suggest,
+    which is not an accuracy. Like for like, axis against axis, the radial discretisation error at
     (1200, 20) is -0.003 K and the axial one at (1200, 40) is -0.029 K - both below
     0.03 K on a 366 C hot spot. The -4.295 K is the axis-minus-bulk radial
     temperature difference, i.e. the physics the 2-D model exists to capture, and
-    it is now reported as that.
+    it is reported as that.
   determinism: >
     TWO CONSECUTIVE EXECUTIONS GIVE A BYTE-IDENTICAL agreement.json AND IDENTICAL
-    STREAM OUTPUT, TABLE HTML AND FIGURE PNG BYTES (measured 2026-08-18 after the
-    third fix round: 2228 s and 2219 s, run concurrently; 37 stream outputs, 54
-    table/text outputs and both figure PNGs identical). Getting there needed one fix beyond the usual ones:
-    a diverging Newton iterate far above the threshold overflows in Ladder.source,
-    and the RuntimeWarning numpy stores in the notebook carries the KERNEL'S PID in
-    its path (/tmp/ipykernel_<pid>/...), so two runs differed in stored output for a
-    reason unconnected to the physics. That overflow is now suppressed inside
+    STREAM OUTPUT, TABLE HTML AND FIGURE PNG BYTES (measured 2026-08-18: 2228 s
+    and 2219 s, run concurrently; 37 stream outputs, 54 table/text outputs and
+    both figure PNGs identical). One measure beyond the usual ones: a diverging
+    Newton iterate far above the threshold overflows in Ladder.source, and the
+    RuntimeWarning numpy stores in the notebook carries the KERNEL'S PID in its
+    path (/tmp/ipykernel_<pid>/...), which would make two runs differ in stored
+    output for a reason unconnected to the physics. That overflow is suppressed inside
     Ladder.source only - the iterate is rejected by the residual check regardless -
     and nowhere else, so a genuine overflow in any other cell is still loud.
     Nothing stochastic: no sampling, no bootstrap, no random initial guess. Every
@@ -485,21 +464,19 @@ validation:
     exact counts - and every break row is fed to the claims it touches. Every
     non-structural claim has a row that fails its own check; the one structural
     claim is rung1_finest_err_over_start_floor, a guard that the rung-1 order fit
-    is not fitted to the thresholds' 1e-8 start-dependence floor. Five rows are new on 2026-10-29: the rung-2 shift
-    against rung 1's extrapolated threshold and the crossovers on 300 cells (back
-    from 450) replace the two rows that injected the cold-started search's
-    defects; the rung-1 chain compared without its Richardson limit, and with the
-    grid ratio misread as 3, fail the two-route and order bounds; and the ladder
-    controls run at the neighbouring rung's threshold fail ladder_controls_rejected;
-    and a fifth new row, the control's jump allowance read as 0.005 K (below every
-    measured jump), re-runs the five ladder controls and the 9-point fine Pe_a grid
+    is not fitted to the thresholds' 1e-8 start-dependence floor. Among the rows:
+    the rung-2 shift against rung 1's extrapolated threshold and the crossovers on
+    300 cells; the rung-1 chain compared without its Richardson limit, and with the
+    grid ratio misread as 3, which fail the two-route and order bounds; the ladder
+    controls run at the neighbouring rung's threshold, which fail
+    ladder_controls_rejected; and the control's jump allowance read as 0.005 K
+    (below every measured jump), which re-runs the five ladder controls and the 9-point fine Pe_a grid
     and fails scan_points_rejected and thresholds_rejected.
     Every metric a break row computes is produced by exactly
     ONE helper function, and EVERY ONE of those helpers' default calls is asserted
     equal, to 1e-12, to a number printed earlier in the notebook - from ONE list,
     used both for the value check and for the completeness check, so a metric cannot
-    be added without an assertion. (That list used to be written out twice, so
-    "checked as a set" held only if an author edited both copies.) For the six
+    be added without an assertion. For the six
     rung-1 metrics the assertion is an identity: the Validation cell displays the
     helper's own memoised return value. The four rung-to-rung shifts are the one
     place where the metric and the displayed number are DIFFERENT computations - the
@@ -507,15 +484,11 @@ validation:
     the (600, 10) values - and both, with the gap (at most 0.107 percentage points),
     are printed in a table rather than left to be discovered. The coverage map is
     GENERATED from the measured moves, not written.
-    SIX METRICS USED TO ESCAPE ALL OF THIS: the three film/pellet temperature
-    differences, Mears' margin and the two chapter-against-itself numbers were
-    computed inline in Validation cells, sat outside the break-table metric set, and
-    were covered by a printed SENTENCE claiming that rows in the table moved them.
-    They did not - brk_film_scale returns the four shifts and nothing else, and no
-    row could reach a ratio of two CSV rows at all. Two helpers (h_film_dt,
-    h_chapter_internal) and one new break row (11.5.2's E/R swapped with 11.7.3's
-    E_1/R) close that, and the assertion is now that agreement.json has no metric
-    outside the set.
+    The three film/pellet temperature differences, Mears' margin and the two
+    chapter-against-itself numbers are computed by two helpers (h_film_dt,
+    h_chapter_internal) and moved by the film-scale and coarse-pellet rows and a
+    row swapping 11.5.2's E/R with 11.7.3's E_1/R, and the assertion is that
+    agreement.json has no metric outside the set.
     An AST guard (copied from published J4.2) parses each row's own source plus one
     level of the helpers it names and rejects a metric key bound to a numeric
     literal, to arithmetic on literals, to a float/int cast of one, to a subscript
@@ -525,27 +498,19 @@ validation:
     one-line laundering helper and tuple unpacking are all caught.
     Its teeth are measured on SIX negative controls, one per laundering form, each
     asserted to catch exactly its own keys; its FALSE-POSITIVE control binds a
-    METRIC key to a computed value (the version it replaces bound a non-metric key,
-    which literal_metrics filters out before it looks at anything, so it measured
-    nothing); and AT LEAST SIXTEEN forms that walk through - a module-level
+    METRIC key to a computed value (a non-metric key would be filtered out by
+    literal_metrics before it looks at anything, and measure nothing); and AT LEAST SIXTEEN forms that walk through - a module-level
     constant, a conditional expression, round(), an array subscript, an f-string
     cast, sum(), a dict comprehension, a lambda, dict.update, dict(zip(...)),
     dict.setdefault, abs() of a literal, an annotated assignment, a list-target
     assignment, nested tuple unpacking and a walrus binding - are printed and
     asserted to escape, so the page states the blind spot rather than implying
     there is none.
-    THE COUNT AND THE WORDING HAVE MOVED TWICE, and why is worth recording: a
-    verifier's third-pass sabotage set found two forms the list did not name. One
-    was tuple unpacking, which the guard's own positive claim ("a local that only
-    ever carries one") covered while `_frozen` read only Name targets - the guard
-    was widened and it is a negative control now. The other was `abs(0.1657)`,
-    which is constant-FOLDABLE but is a call to something that is not a numeric
-    constructor; it stays an escape and the claim no longer says
-    "constant-foldable". A fourth-pass sabotage set then found that "a local name
-    ... that only ever carries one" was still a category and not a list: annotated
-    (`_a: float = 0.1657`), list-target (`[_a, _b] = 0.1657, 2.0`), nested-tuple
-    (`(_a, _b), _c = (0.1657, 2.0), 3.0`) and walrus (`(_a := 0.1657)`) bindings all
-    escape the same way tuple unpacking used to, and are now named in the escape
+    `abs(0.1657)` is constant-FOLDABLE but is a call to something that is not a
+    numeric constructor; it is an escape and the claim does not say
+    "constant-foldable". Annotated (`_a: float = 0.1657`), list-target
+    (`[_a, _b] = 0.1657, 2.0`), nested-tuple (`(_a, _b), _c = (0.1657, 2.0), 3.0`)
+    and walrus (`(_a := 0.1657)`) bindings all escape, and are named in the escape
     list rather than folded into a trailing "or to a local name ... that only ever
     carries one". The escape count is quantified as AT LEAST rather than presented
     as complete. The claim it supports is a list of forms, not a category, and
@@ -584,8 +549,8 @@ honesty:
     - "Tier 6. No experimental comparison exists anywhere in Chapter 11."
     - "The rung-4 magnitude is not decidable from the chapter: D_e is not printed for this catalyst. Its SIGN and its crossover are established; its size is not."
     - "The rung-2 magnitude (+0.1665 % extrapolated; agreement.json's coarse-grid value is +0.1657 %) depends on lambda_ea, of which the chapter says 'little information is available'; Pe_ma and Pe_ha are varied together."
-    - "The film coefficients come from A3.4's correlation, not from the chapter, and the root-found crossover is at 4.93x the correlated coefficients - so that rung's size depends on which correlation is chosen. (4.08x against the Richardson-extrapolated rung-1 baseline; the table now uses the same-grid baseline in every row and prints both readings. This file previously said ~2x, which no cell of the notebook prints, and then 4.1x, which was the mixed-baseline value.)"
-    - "Rung 2's 1 % point is a ROOT: Pe_a* = 0.2488 +/- 0.0002, factor 4.02, located between two validated sweep points and itself carrying the control's certificate (414.98 C below, 415.02 C above). The +/- is the grid, measured same-grid on 600/900/1200 cells, not the refinement tolerance. Earlier versions published 0.0969, then a bound of 'at least 3.2 times', then 0.24883362; all three were shaped by a cold-started threshold search whose result near rung 2's threshold was decided by round-off (see validation.root_found_never_swept). The value is now 0.24883179."
-    - "Rung 5's signed shift passes through zero between R_t = 0.0098 m (-0.169 %) and 0.00975 m (+0.015 %), so the two-dimensional correction is negative on this tube and positive on a narrower one. |shift| stays under 1 % from R_t* = 0.01003 m down to 0.0096 m (+0.572 %) and is past 1 % again, positive, by 0.0094 m (+1.327 %); at 0.0090 m it is +2.879 %. All of these thresholds pass the control. The earlier version reported 'speckle' here (0.0096875 m refused) and both control sides near 1060 C at 0.0090 m; both were the cold-started search."
-    - "No stored output carries a machine path any more. The earlier version kept four (a pymrm MatrixRankWarning and a NumJac RuntimeWarning from Newton solves that failed in the cold-started search); the branch-following search no longer produces them."
+    - "The film coefficients come from A3.4's correlation, not from the chapter, and the root-found crossover is at 4.93x the correlated coefficients - so that rung's size depends on which correlation is chosen. (4.08x against the Richardson-extrapolated rung-1 baseline; the table uses the same-grid baseline in every row and prints both readings.)"
+    - "Rung 2's 1 % point is a ROOT: Pe_a* = 0.2488 +/- 0.0002, factor 4.02, located between two validated sweep points and itself carrying the control's certificate (414.98 C below, 415.02 C above). The +/- is the grid, measured same-grid on 600/900/1200 cells, not the refinement tolerance. The value is 0.24883179."
+    - "Rung 5's signed shift passes through zero between R_t = 0.0098 m (-0.169 %) and 0.00975 m (+0.015 %), so the two-dimensional correction is negative on this tube and positive on a narrower one. |shift| stays under 1 % from R_t* = 0.01003 m down to 0.0096 m (+0.572 %) and is past 1 % again, positive, by 0.0094 m (+1.327 %); at 0.0090 m it is +2.879 %. All of these thresholds pass the control."
+    - "No stored output carries a machine path."
     - "The magnitudes of all four shifts belong to section 11.5.2's pseudo-first-order simplification, which the notebook shows is k_1 alone used as the total o-xylene consumption rate. Only the ordering and the signs transfer."

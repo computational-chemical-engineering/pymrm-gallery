@@ -794,7 +794,7 @@ print("   no kinetic parameter appears in any of the checks above.")
 # The symbolic results are exact; the reactor balances are round-off of a
 # conservative discretisation, so they are bounds (identity), 1e-8 g m-3 d-1 being
 # eleven orders of magnitude below the oxygen demand and seven below the COD leak.
-# No break table yet: the page predates the rule and is flagged until it has one.
+# No break table yet: the page is flagged until it has one.
 claims = Claims("J4.8")
 claims.exact("charge_residuals_all_zero", all(res["charge"][j] == 0 for j in sorted(NU)))
 claims.exact("nitrogen_residuals_all_zero", all(res["N"][j] == 0 for j in sorted(NU)))
