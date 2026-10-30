@@ -218,7 +218,7 @@ Constraints:
   `GALLERY_REF = "main"` (the publish workflow rewrites it to the release tag),
   `PYMRM = ">={pymrm_min_version},<{next major}"` from `meta.yaml`, and `PAGE`
   the directory name. Migrating a page sets `meta.yaml` `pymrm_min_version` to
-  the `pymrm==` version of `requirements-lock.txt` (now `3.1.0`), the version
+  the `pymrm==` version of `requirements-lock.txt` (now `3.2.0`), the version
   the page is checked with: the old value `"2.3"` would pin `>=2.3,<3`, and
   Colab would install pymrm 2.5. `scripts/check_metadata.py` checks all of
   this, that the locked pymrm satisfies the pin, and that a migrated page has
