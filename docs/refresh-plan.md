@@ -187,3 +187,13 @@ Unknown until the pilot measures it. What is known:
    shown on the page and verified.
 3. **Deprecate `clip_approach`** in pymrm once `B1.3` and `F3.2` no longer use it
    (newton plan, decision 4).
+4. **Sweep order and review scope (2026-10-30, after the pilots).** Option B of the
+   pilot report: by reuse value as in section 4 step 3. Each page is refreshed in both
+   lanes by one `implement` agent and committed one page per commit on a section
+   branch (`refresh/sweep-reactors` first: D2.2, D2.1, G1.7, G1.8, G1.1, H1.4, H1.1,
+   H1.7, H1.9, H1.8, I1.2, I1.3; D1.1 last of all). An independent `think` review
+   runs only when a published statement or a metric beyond its tolerance changes;
+   a page that only changes format is accepted on its mechanical checks
+   (`run_kernels.py`, `check_agreement.py --base`, `check_claims.py`, the model test).
+   Closed-form and correlation pages get the lighter lane: bootstrap, pin, Claims and
+   maths, no `model.py`.
