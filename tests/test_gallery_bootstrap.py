@@ -219,3 +219,32 @@ def test_offline_resolve_still_finds_local_files(monkeypatch):
                 if (p / "data").is_dir() and any((p / "data").glob("*.csv")))
     csv = next((page / "data").glob("*.csv"))
     assert gu._resolve(csv.name, page.name) == csv
+
+
+def test_numpy_simd_pin_matches_run_pages():
+    src = (ROOT / "scripts" / "run_pages.py").read_text()
+    assert f'NPY_PIN = "{gb.NPY_PIN}"' in src
+
+
+@pytest.mark.parametrize("machine, preset, loaded, expect", [
+    ("x86_64", None, False, True),
+    ("aarch64", None, False, False),     # the names exist on x86 only
+    ("x86_64", "", False, False),        # a value already set is kept
+    ("x86_64", None, True, False),       # too late: numpy reads it at import
+])
+def test_numpy_simd_pin_only_when_it_can_act(monkeypatch, machine, preset, loaded, expect):
+    import platform
+    monkeypatch.setattr(platform, "machine", lambda: machine)
+    monkeypatch.setenv("NPY_DISABLE_CPU_FEATURES", "x")
+    if preset is None:
+        monkeypatch.delenv("NPY_DISABLE_CPU_FEATURES")
+    else:
+        monkeypatch.setenv("NPY_DISABLE_CPU_FEATURES", preset)
+    modules = dict(sys.modules)
+    modules.pop("numpy", None)
+    if loaded:
+        modules["numpy"] = types.ModuleType("numpy")
+    monkeypatch.setattr(sys, "modules", modules)
+    assert gb._pin_numpy_simd() is expect
+    if expect:
+        assert gb.os.environ["NPY_DISABLE_CPU_FEATURES"] == gb.NPY_PIN
