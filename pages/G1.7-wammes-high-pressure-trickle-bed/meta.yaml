@@ -14,7 +14,7 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
+pymrm_min_version: "3.2.0"
 runtime_seconds: 5
 datasets:
   - wammes-1991-fig7.csv
@@ -25,11 +25,12 @@ validation:
   - Table 2's gas-density coefficients recomputed from the ideal gas law at 293 K (N2 -0.0%, He +2.7%), and the paper's He-7.0-MPa == N2-1.0-MPa density-equivalence argument reproduced
   - the printed fitted-range caps recomputed from the printed operating envelope (Ga_l of water on 3.2 mm packing IS the 0.32e6 cap to 0.5%; Re_l at v_l,max = 51 vs cap 55)
   - the Eq. (7)/(8) prefactor discrepancy quantified (factor 155 x 6^-0.37 = 80) and the implemented friction factor shown to reproduce Eq. (8) as an identity
-  - the pymrm S3 plug-flow solve of Eqs. (1)-(2) against the paper's own closed form Eq. (3), with observed first-order grid convergence and an a_gl round trip
+  - the pymrm S3 plug-flow solve of Eqs. (1)-(2), outlet read on the exit face, against the paper's own closed form Eq. (3), with observed first-order grid convergence (orders 0.991 to 0.999, finest error 2.5e8 times the round-off bound) and an a_gl round trip
+  - the coupled Eqs. (8)+(9) solved by newton for all points at once and by brentq point by point, agreeing below 1e-9; one root per point (the residual is monotone in the hold-up, and a scan finds one sign change at all 36 points)
   - coupled Eqs. (8)+(9) against 16 digitised Fig. 7 hold-up points, deviations compared with the paper's own 8% mean relative error
-  - coupled Eqs. (8)+(9) against 20 digitised Fig. 6 pressure-gradient points, compared with the paper's own 12%, with in-range/out-of-range Re_g split and a porosity sensitivity sweep
+  - coupled Eqs. (8)+(9) against 20 digitised Fig. 6 pressure-gradient points, compared with the paper's own 12%, with in-range/out-of-range Re_g split and measured sensitivities to porosity, particle diameter and gas identity
   - the gas-density claim tested on the one properly matched pair in the data (two series sharing v_g and the same four nominal v_l settings, differing only 5x in rho_g) - measured shift 9.2%, predicted 13.1%, i.e. the mechanism is confirmed in sign and order of magnitude and overpredicted in size
-  - the a_s-per-bed-volume convention in Eq. (9) confirmed against the data (the alternative reading is off by 1.44x)
+  - the a_s-per-bed-volume convention in Eq. (9) confirmed against the data (the per-particle-volume reading multiplies Eq. (9) by 1.44 at a given pressure gradient and, in the coupled solve, raises the hold-ups by 21% to 41%, a +29.5% bias)
 
 adds: >
   The paper states that its pressure-gradient correlation (which contains the
@@ -43,7 +44,8 @@ adds: >
   hold-up by 9.2%, while routing the whole effect through the pressure gradient
   - which is what Eq. (9) does - predicts 13.1%. The plug-flow CO2-absorption model
   behind the paper's interfacial-area measurements is discretised with pymrm
-  operators and converges at first order onto the paper's own closed form.
+  operators, its outlet read on the exit face, and converges at first order onto
+  the paper's own closed form.
 
 agreement: >
   Deviation is (model - measured)/measured throughout. The coupled pair
@@ -53,10 +55,12 @@ agreement: >
   pressure-gradient points with mean absolute deviation 10.4% (bias +10.3%;
   8.9% over the 12 points inside Eq. 8's fitted Reynolds range) against the
   paper's stated 12%. Nothing is fitted anywhere. The systematic +10% pressure
-  bias is within the porosity uncertainty of the tall bed, whose value is not
-  printed in this paper: the bias vanishes at eps = 0.3987, i.e. under +0.01 on
-  the printed 0.39, and +0.02 overshoots to -11.8%. That is a sensitivity, not
-  a fit - the page keeps the printed 0.39 and says so.
+  bias has two published-parameter candidates, each enough alone: the bias
+  vanishes at eps = 0.3987, under +0.01 on the printed 0.39 for the tall bed,
+  whose porosity is not printed (+0.02 overshoots to -11.8%), and at
+  d_p = 3.18 mm, inside the printed 3 +/- 0.5 mm size fraction. The gas-identity
+  ambiguity is the smallest candidate (1.45 points). These are sensitivities,
+  not fits - the page keeps the printed 0.39 and 3.0 mm and says so.
 
 caveats: >
   The measured points are the same experiments the correlations were fitted to,
@@ -70,9 +74,10 @@ caveats: >
   The bed porosities (0.43/0.39) are printed for the short absorption
   bed and assumed for the 2.70 m hydrodynamic bed (the page prints the
   porosity that would zero the pressure bias, 0.3987, and keeps 0.39); the sphere diameter is
-  3 +/- 0.5 mm; Fig. 6 does not say which gas each point used (density forces
+  printed as 3 +/- 0.5 mm, the spread of the size fraction rather than the
+  uncertainty of the effective diameter (3.18 mm would zero the bias); Fig. 6 does not say which gas each point used (density forces
   helium below 1.15 kg/m3 and nitrogen above 12; the rest affects only the gas
-  viscosity, under 4% in dP/L). Eq. (7) as printed lacks the prefactor that
+  viscosity, at most 3.9% in dP/L). Eq. (7) as printed lacks the prefactor that
   Eq. (8) carries; the page implements Eq. (8) and documents the discrepancy.
   The one Fig. 7 point below beta_t = 0.25 and the four above Re_g = 5000 are
   mild extrapolations of Eq. (8), reported as such. The correlations are

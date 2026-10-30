@@ -1,15 +1,649 @@
 {
   "page": "G1.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "holdup_mean_abs_dev": 0.028562099798442535,
-    "holdup_bias": -0.02015951805402371,
-    "holdup_worst_abs_dev": 0.06817729574708109,
-    "pgrad_mean_abs_dev": 0.10382952368723761,
-    "pgrad_bias": 0.10318721216388585,
-    "pgrad_inrange_mean_abs_dev": 0.08862746831257194,
-    "gas_density_ratio_meas": 1.0924479041267081,
-    "gas_density_ratio_model": 1.1310243676863783,
-    "xi_upwind_err_n200": 0.0011883967443268029,
-    "table2_n2_density_relerr": -2.2238862301016127e-05
+    "holdup_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.028562099798442535,
+      "rtol": 0.05
+    },
+    "holdup_bias": {
+      "kind": "value",
+      "value": -0.02015951805402371,
+      "rtol": 0.05
+    },
+    "holdup_worst_abs_dev": {
+      "kind": "value",
+      "value": 0.06817729574708109,
+      "rtol": 0.05
+    },
+    "pgrad_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.10382952368723761,
+      "rtol": 0.05
+    },
+    "pgrad_bias": {
+      "kind": "value",
+      "value": 0.10318721216388585,
+      "rtol": 0.05
+    },
+    "pgrad_worst_abs_dev": {
+      "kind": "value",
+      "value": 0.2178542395001717,
+      "rtol": 0.05
+    },
+    "pgrad_inrange_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.08862746831257194,
+      "rtol": 0.05
+    },
+    "pgrad_inrange_bias": {
+      "kind": "value",
+      "value": 0.0875569491069857,
+      "rtol": 0.05
+    },
+    "ser024_dev_min": {
+      "kind": "value",
+      "value": -0.06817729574708109,
+      "rtol": 0.05,
+      "note": "v_g = 0.24 m/s series"
+    },
+    "ser024_dev_max": {
+      "kind": "value",
+      "value": 0.015624659914727612,
+      "rtol": 0.05,
+      "note": "v_g = 0.24 m/s series"
+    },
+    "n_operating_points": {
+      "kind": "exact",
+      "value": 36,
+      "structural": true,
+      "note": "rows of the two digitised CSVs"
+    },
+    "n_gas_ambiguous": {
+      "kind": "exact",
+      "value": 8,
+      "structural": true,
+      "note": "Fig. 6 rows whose density admits either gas; set by the data"
+    },
+    "fig7_n_re_l_in_range": {
+      "kind": "exact",
+      "value": 16,
+      "margin": 0.1278545454545454,
+      "min_margin": 0.01,
+      "note": "margin: closest Re_l to 2 or 55, relative"
+    },
+    "fig7_dp_grav_max": {
+      "kind": "value",
+      "value": 8.463493842965699,
+      "rtol": 0.05
+    },
+    "fig7_n_beta_t_above_025": {
+      "kind": "exact",
+      "value": 15,
+      "margin": 0.07136775790531846,
+      "min_margin": 0.01,
+      "note": "beta_t > 0.25, Eq. 8's fitted floor"
+    },
+    "fig7_beta_t_min": {
+      "kind": "value",
+      "value": 0.23215806052367038,
+      "rtol": 0.01
+    },
+    "fig7_n_re_g_in_range": {
+      "kind": "exact",
+      "value": 12,
+      "margin": 0.02362242965346286,
+      "min_margin": 0.01,
+      "note": "margin: closest Re_g to 5000, relative"
+    },
+    "fig6_n_re_g_in_range": {
+      "kind": "exact",
+      "value": 12,
+      "margin": 0.07743072953474202,
+      "min_margin": 0.01,
+      "note": "margin: closest Re_g to 200 or 5000, relative"
+    },
+    "fig6_n_dp_grav_above_16": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.019060122804268387,
+      "min_margin": 0.01,
+      "note": "margin: closest dP/(rho_l g L) to 16, relative"
+    },
+    "closure_newton_vs_brentq": {
+      "kind": "bound",
+      "value": 2.1649348980190553e-15,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "newton tol 1e-10 on hold-ups of order 0.1; brentq to 1e-14"
+    },
+    "closure_unique_roots": {
+      "kind": "exact",
+      "value": 36,
+      "structural": true,
+      "note": "the residual increases with the hold-up at every point: a property of Eqs. 6, 8 and 9 (Eq. 9 decreases in dP/L, dP/L increases in beta_t)"
+    },
+    "table2_n2_density_relerr": {
+      "kind": "value",
+      "value": -2.2238862301016127e-05,
+      "rtol": 1e-06
+    },
+    "table2_he_density_relerr": {
+      "kind": "value",
+      "value": 0.026938812037100135,
+      "rtol": 1e-06
+    },
+    "he_n2_density_coeff_ratio": {
+      "kind": "value",
+      "value": 7.187499999999999,
+      "rtol": 1e-09
+    },
+    "he70_n2_10_equiv_relerr": {
+      "kind": "value",
+      "value": 0.02678571428571419,
+      "rtol": 1e-09
+    },
+    "ga_l_cap_relerr": {
+      "kind": "value",
+      "value": 0.0045440000000003256,
+      "rtol": 1e-06
+    },
+    "re_l_at_vl_max": {
+      "kind": "value",
+      "value": 51.2,
+      "rtol": 1e-09
+    },
+    "eq5_eq8_identity": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "Eq. 5 with f_lg = 155 Re^-0.37 is Eq. 8 rearranged"
+    },
+    "eq7_eq8_factor": {
+      "kind": "value",
+      "value": 79.87589465350783,
+      "rtol": 1e-09,
+      "note": "155 x 6^-0.37"
+    },
+    "xi_n200": {
+      "kind": "value",
+      "value": 0.658138335733923,
+      "rtol": 1e-06
+    },
+    "xi_upwind_err_n200": {
+      "kind": "value",
+      "value": 0.0009838732327407396,
+      "rtol": 0.05,
+      "note": "exit-face value against Eq. 2 integrated"
+    },
+    "xi_upwind_err_n800": {
+      "kind": "value",
+      "value": 0.00024656818721857654,
+      "rtol": 0.05
+    },
+    "a_gl_roundtrip_n200_pct": {
+      "kind": "value",
+      "value": -0.26779893281042577,
+      "rtol": 0.05
+    },
+    "a_gl_roundtrip_n800_pct": {
+      "kind": "value",
+      "value": -0.06718552491092877,
+      "rtol": 0.05
+    },
+    "xi_cell_err_n200": {
+      "kind": "value",
+      "value": 0.002665392630925578,
+      "rtol": 0.05,
+      "note": "largest cell-centre error of the profile"
+    },
+    "xi_order_finest": {
+      "kind": "bound",
+      "value": 0.9988281772573435,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind, n = 400 and 800"
+    },
+    "xi_order_coarsest": {
+      "kind": "bound",
+      "value": 0.9906598287668175,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind, n = 50 and 100"
+    },
+    "xi_balance_gap": {
+      "kind": "bound",
+      "value": 3.47499806707674e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "1 - c_face - K a_gl sum(c dx)/v_g, n = 50, 200, 800"
+    },
+    "xi_two_solver_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "splu COLAMD against natural ordering, n = 800"
+    },
+    "xi_finest_err_over_noise": {
+      "kind": "bound",
+      "value": 246568187.21857655,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest-grid error over the declared round-off bound 1e-12"
+    },
+    "pgrad_bias_eps037": {
+      "kind": "value",
+      "value": 0.38700274219734865,
+      "rtol": 0.05
+    },
+    "pgrad_bias_eps041": {
+      "kind": "value",
+      "value": -0.11834825673279362,
+      "rtol": 0.05
+    },
+    "eps_zero_bias": {
+      "kind": "value",
+      "value": 0.3987150684164147,
+      "rtol": 1e-06,
+      "note": "brentq to 1e-10"
+    },
+    "eps_zero_shift": {
+      "kind": "value",
+      "value": 0.008715068416414673,
+      "rtol": 0.0001
+    },
+    "dpl_eps_exponent_fixed_beta": {
+      "kind": "value",
+      "value": -3.8759016279956797,
+      "rtol": 1e-06,
+      "note": "central difference h = 1e-4; at fixed beta_t it is -3 - 1.37 eps/(1-eps)"
+    },
+    "dpl_eps_exponent_coupled_min": {
+      "kind": "value",
+      "value": -5.615610287637334,
+      "rtol": 0.001
+    },
+    "dpl_eps_exponent_coupled_max": {
+      "kind": "value",
+      "value": -4.091437466683398,
+      "rtol": 0.001
+    },
+    "pgrad_bias_dp25": {
+      "kind": "value",
+      "value": 0.5026663179807942,
+      "rtol": 0.05
+    },
+    "dp_zero_bias_mm": {
+      "kind": "value",
+      "value": 3.177342334908455,
+      "rtol": 1e-06,
+      "note": "brentq to 1e-12 m"
+    },
+    "bias_step_dp_005mm_pts": {
+      "kind": "value",
+      "value": 3.1392587601457476,
+      "rtol": 0.05
+    },
+    "bias_step_eps_0005_pts": {
+      "kind": "value",
+      "value": 6.247694572957505,
+      "rtol": 0.05
+    },
+    "gas_flip_smallest_candidate": {
+      "kind": "exact",
+      "value": true,
+      "margin": 1.6875468775956646,
+      "min_margin": 0.5,
+      "note": "margin in percentage points of bias"
+    },
+    "pgrad_bias_dp35": {
+      "kind": "value",
+      "value": -0.1530648224766839,
+      "rtol": 0.05
+    },
+    "he_n2_viscosity_ratio_max": {
+      "kind": "value",
+      "value": 1.1455619133106727,
+      "rtol": 1e-06
+    },
+    "gas_flip_dpl_change_max": {
+      "kind": "value",
+      "value": 0.039360682523594814,
+      "rtol": 0.05
+    },
+    "gas_flip_bias": {
+      "kind": "value",
+      "value": 0.11770433098938668,
+      "rtol": 0.05
+    },
+    "gas_flip_bias_shift_pts": {
+      "kind": "value",
+      "value": 1.451711882550083,
+      "rtol": 0.02
+    },
+    "gas_density_ratio_meas": {
+      "kind": "value",
+      "value": 1.0924479041267081,
+      "rtol": 0.001
+    },
+    "gas_density_ratio_model": {
+      "kind": "value",
+      "value": 1.1310243676863783,
+      "rtol": 0.001
+    },
+    "gas_density_shift_meas_pct": {
+      "kind": "value",
+      "value": 9.244790412670811,
+      "rtol": 0.05
+    },
+    "gas_density_shift_model_pct": {
+      "kind": "value",
+      "value": 13.102436768637826,
+      "rtol": 0.05
+    },
+    "gas_density_overprediction": {
+      "kind": "value",
+      "value": 1.4172778596126707,
+      "rtol": 0.05
+    },
+    "gas_density_ratio_discrepancy_pct": {
+      "kind": "value",
+      "value": 3.5311947978432734,
+      "rtol": 0.05
+    },
+    "matched_pair_vl_mismatch_max": {
+      "kind": "value",
+      "value": 0.010152284263959421,
+      "rtol": 0.05
+    },
+    "as_alt_factor": {
+      "kind": "value",
+      "value": 1.4410576120181129,
+      "rtol": 1e-09
+    },
+    "as_alt_coupled_rise_min_pct": {
+      "kind": "value",
+      "value": 21.21998232408595,
+      "rtol": 0.05
+    },
+    "as_alt_coupled_rise_max_pct": {
+      "kind": "value",
+      "value": 40.75065796985462,
+      "rtol": 0.05
+    },
+    "as_alt_bias": {
+      "kind": "value",
+      "value": 0.2946519381510738,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {
+    "eq7_eq8_factor": [
+      "80"
+    ],
+    "as_alt_factor": [
+      "1.44"
+    ],
+    "as_alt_coupled_rise_min_pct": [
+      "21"
+    ],
+    "as_alt_coupled_rise_max_pct": [
+      "41"
+    ],
+    "holdup_mean_abs_dev": [
+      "2.9 %"
+    ],
+    "pgrad_mean_abs_dev": [
+      "10 %"
+    ],
+    "gas_density_shift_meas_pct": [
+      "9.2"
+    ],
+    "gas_density_shift_model_pct": [
+      "13.1"
+    ],
+    "gas_density_overprediction": [
+      "1.4"
+    ],
+    "gas_density_ratio_discrepancy_pct": [
+      "3.5"
+    ],
+    "eps_zero_shift": [
+      "under 0.01"
+    ],
+    "eps_zero_bias": [
+      "0.3987"
+    ],
+    "pgrad_bias_eps041": [
+      "-11.8 %"
+    ],
+    "dp_zero_bias_mm": [
+      "3.18"
+    ],
+    "as_alt_bias": [
+      "29.5 %"
+    ],
+    "xi_order_coarsest": [
+      "0.991"
+    ],
+    "xi_order_finest": [
+      "0.999"
+    ],
+    "xi_finest_err_over_noise": [
+      "2.5e8"
+    ],
+    "gas_flip_dpl_change_max": [
+      "3.9 %"
+    ]
+  },
+  "breaks": {
+    "holdup_mean_abs_dev": [
+      "cylinder porosity 0.41 instead of 0.43",
+      "a_s per particle volume in Eq. 9"
+    ],
+    "holdup_bias": [
+      "a_s per particle volume in Eq. 9"
+    ],
+    "holdup_worst_abs_dev": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "ser024_dev_min": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "ser024_dev_max": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "fig7_dp_grav_max": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "fig7_n_beta_t_above_025": [
+      "a_s per particle volume in Eq. 9"
+    ],
+    "fig7_beta_t_min": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "fig7_n_re_g_in_range": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "as_alt_factor": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "as_alt_coupled_rise_min_pct": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "as_alt_coupled_rise_max_pct": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "as_alt_bias": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "gas_density_ratio_model": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "gas_density_shift_model_pct": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "gas_density_overprediction": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "gas_density_ratio_discrepancy_pct": [
+      "cylinder porosity 0.41 instead of 0.43"
+    ],
+    "ga_l_cap_relerr": [
+      "water viscosity 1.5 mPa s instead of 1.0"
+    ],
+    "re_l_at_vl_max": [
+      "water viscosity 1.5 mPa s instead of 1.0"
+    ],
+    "fig7_n_re_l_in_range": [
+      "water viscosity 0.5 mPa s instead of 1.0"
+    ],
+    "pgrad_mean_abs_dev": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "pgrad_bias": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "pgrad_worst_abs_dev": [
+      "sphere diameter 2.5 mm instead of 3.0"
+    ],
+    "pgrad_inrange_mean_abs_dev": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "pgrad_inrange_bias": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "fig6_n_re_g_in_range": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "fig6_n_dp_grav_above_16": [
+      "sphere diameter 2.5 mm instead of 3.0"
+    ],
+    "pgrad_bias_eps037": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "pgrad_bias_eps041": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "eps_zero_bias": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "eps_zero_shift": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "gas_flip_bias": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "gas_flip_bias_shift_pts": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "dpl_eps_exponent_coupled_min": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "dpl_eps_exponent_coupled_max": [
+      "sphere diameter 3.5 mm instead of 3.0"
+    ],
+    "pgrad_bias_dp25": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "pgrad_bias_dp35": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "dpl_eps_exponent_fixed_beta": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "dp_zero_bias_mm": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "bias_step_dp_005mm_pts": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "bias_step_eps_0005_pts": [
+      "sphere porosity 0.41 instead of 0.39"
+    ],
+    "gas_flip_smallest_candidate": [
+      "He viscosity at 100 bar 0.060 mPa s instead of 0.020"
+    ],
+    "he_n2_viscosity_ratio_max": [
+      "He viscosity at 100 bar 0.025 mPa s instead of 0.020"
+    ],
+    "gas_flip_dpl_change_max": [
+      "He viscosity at 100 bar 0.025 mPa s instead of 0.020"
+    ],
+    "table2_n2_density_relerr": [
+      "N2 density coefficient 1.25 per bar instead of 1.15"
+    ],
+    "he_n2_density_coeff_ratio": [
+      "N2 density coefficient 1.25 per bar instead of 1.15"
+    ],
+    "he70_n2_10_equiv_relerr": [
+      "N2 density coefficient 1.25 per bar instead of 1.15"
+    ],
+    "table2_he_density_relerr": [
+      "He density coefficient 0.18 per bar instead of 0.16"
+    ],
+    "eq5_eq8_identity": [
+      "Eq. 7 as printed used as the friction factor of Eq. 5"
+    ],
+    "eq7_eq8_factor": [
+      "hydraulic diameter eps/a_s with a_s per particle volume"
+    ],
+    "gas_density_ratio_meas": [
+      "matched pair taken as open vs filled circles (v_g 0.05 vs 0.11)"
+    ],
+    "gas_density_shift_meas_pct": [
+      "matched pair taken as open vs filled circles (v_g 0.05 vs 0.11)"
+    ],
+    "matched_pair_vl_mismatch_max": [
+      "matched pair taken as open vs filled circles (v_g 0.05 vs 0.11)"
+    ],
+    "xi_upwind_err_n200": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "xi_upwind_err_n800": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "xi_n200": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "a_gl_roundtrip_n200_pct": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "a_gl_roundtrip_n800_pct": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "xi_balance_gap": [
+      "conversion read from the last cell centre (pitfall P8)"
+    ],
+    "xi_cell_err_n200": [
+      "K of the 2 M DEA system 10 % high in the solve only"
+    ],
+    "xi_order_finest": [
+      "finest grid 600 cells, read as a doubling"
+    ],
+    "xi_order_coarsest": [
+      "second grid 75 cells, read as a doubling"
+    ],
+    "xi_two_solver_gap": [
+      "second solve on 799 cells"
+    ],
+    "xi_finest_err_over_noise": [
+      "reference conversion taken from the n = 800 solve"
+    ],
+    "closure_newton_vs_brentq": [
+      "brentq stopped at xtol 1e-3"
+    ]
   }
 }
