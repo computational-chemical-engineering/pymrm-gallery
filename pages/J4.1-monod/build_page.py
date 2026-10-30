@@ -15,7 +15,7 @@ cells = []
 # --------------------------------------------------------------- front matter
 cells.append(md(r"""---
 title: "Monod: what a growth curve can and cannot pick out of the family"
-description: "Froment, De Wilde & Bischoff section 1.5.2 prints the Monod equation as eq. (1.5.2-1), defines its two constants by exactly two properties - the asymptote r_m and the half-rate point K_S - and couples it to the biomass balance eq. (1.5.2-2); its Chapter 1 reference list carries the exact 1949 citation this case catalogues. Rawlings & Ekerdt p. 596 prints the same equation beside four alternatives - Blackman, Tessier, Moser, Contois - and calls it 'the simplest form of the Langmuir adsorption isotherm'. This page asks whether data can pick Monod out of that family, on the one batch run Levenspiel's Problem 29.18 reprints as Monod's own reported measurements, and answers with numbers. Two of the four alternatives are not distinguishable AT ALL by a constant-yield batch experiment: Moser contains Monod at n = 1, and CONTOIS IS EXACTLY MONOD REPARAMETERISED once the yield fixes X as an affine function of S - proved in sympy, and confirmed by two independent fits that land on the same curve, agreeing to better than 1e-4 in both constants (the exact residuals are optimiser exit tolerances: printed on the page, deliberately not reported as metrics). Of the two that are, Tessier needs 10.3 replicates of this design and Blackman 1.30. And the ranking of the five on this run is decided by the DATA REDUCTION, not by the data: fit as the exercise instructs, and Monod is last of the four two-parameter laws and Moser's exponent n = 1.93 clears the 95 % F test - a verdict that is CO-CAUSED by the one printed cell the page flags, because at that cell's balance-implied value route A's F falls to 5.45, below the same 7.71. Do the interval average exactly instead - same seven growth rates, same models, no new parameters - and Monod's residual falls by 42 %, n drops to 1.51, and F falls from 12.3 to 1.44. A seeded parametric bootstrap prices that, with every draw's fit REFINED off the search grid rather than read from it: on data the Monod model itself generates, the reduction rejects Monod 36.5 % +- 1.1 % of the time against a nominal 5 %, and drives the median fitted exponent to 1.61 +- 0.0074 - while the same test on data drawn from route A's OWN model, the control, sits AT nominal size, 4.95 % +- 0.5 % against 5.00 %, and returns 1.01 +- 0.0049 (those six numbers are Monte-Carlo estimates at 2000 draws - FOUR FREQUENCIES AND TWO MEDIANS, not six frequencies - and every quotation of them carries its sampling error: at that draw count the four frequencies are seed-independent in their leading figure only, the two medians to at least two figures). So the small-sample F approximation at n = 7 is essentially exact and is not the culprit; the reduction is, and the observed F = 12.3 has p = 0.23 +- 0.0094 against a properly generated Monod null. One printed cell is reported and not repaired: the table's fourth interval-average substrate concentration is off the constant-yield line the other six rows fix to R^2 = 0.99996. Monod = Langmuir is proved as an identity; Monod and Blackman are shown to share BOTH of Froment's defining properties exactly while differing by exactly r_m/3 at the switch; and the experiment that does separate Monod from Contois is named and priced - a chemostat feed sweep, where the critical dilution rates cross exactly at the batch run's own substrate intercept and differ by a factor 1.83 at S_f = 20."
+description: "Froment, De Wilde & Bischoff section 1.5.2 prints the Monod equation as eq. (1.5.2-1), defines its two constants by exactly two properties - the asymptote r_m and the half-rate point K_S - and couples it to the biomass balance eq. (1.5.2-2); its Chapter 1 reference list carries the exact 1949 citation this case catalogues. Rawlings & Ekerdt p. 596 prints the same equation beside four alternatives - Blackman, Tessier, Moser, Contois - and calls it 'the simplest form of the Langmuir adsorption isotherm'. This page asks whether data can pick Monod out of that family, on the one batch run Levenspiel's Problem 29.18 reprints as Monod's own reported measurements, and answers with numbers. Two of the four alternatives are not distinguishable AT ALL by a constant-yield batch experiment: Moser contains Monod at n = 1, and CONTOIS IS EXACTLY MONOD REPARAMETERISED once the yield fixes X as an affine function of S - proved in sympy, and confirmed by two independent fits that land on the same curve, agreeing to better than 1e-3 in both constants (the exact residuals are optimiser exit tolerances, checked on every run as bounds rather than compared as values). Of the two that are, Tessier needs 10.3 replicates of this design and Blackman 1.30. And the ranking of the five on this run is decided by the DATA REDUCTION, not by the data: fit as the exercise instructs, and Monod is last of the four two-parameter laws and Moser's exponent n = 1.93 clears the 95 % F test - a verdict that is CO-CAUSED by the one printed cell the page flags, because at that cell's balance-implied value route A's F falls to 5.45, below the same 7.71. Do the interval average exactly instead - same seven growth rates, same models, no new parameters - and Monod's residual falls by 42 %, n drops to 1.51, and F falls from 12.3 to 1.44. A seeded parametric bootstrap prices that, with every draw's fit REFINED off the search grid rather than read from it: on data the Monod model itself generates, the reduction rejects Monod 36.5 % +- 1.1 % of the time against a nominal 5 %, and drives the median fitted exponent to 1.61 +- 0.0074 - while the same test on data drawn from route A's OWN model, the control, sits AT nominal size, 4.95 % +- 0.5 % against 5.00 %, and returns 1.01 +- 0.0049 (those six numbers are Monte-Carlo estimates at 2000 draws - FOUR FREQUENCIES AND TWO MEDIANS, not six frequencies - and every quotation of them carries its sampling error: at that draw count the four frequencies are seed-independent in their leading figure only, the two medians to at least two figures). So the small-sample F approximation at n = 7 is essentially exact and is not the culprit; the reduction is, and the observed F = 12.3 has p = 0.23 +- 0.0094 against a properly generated Monod null. One printed cell is reported and not repaired: the table's fourth interval-average substrate concentration is off the constant-yield line the other six rows fix to R^2 = 0.99996. Monod = Langmuir is proved as an identity; Monod and Blackman are shown to share BOTH of Froment's defining properties exactly while differing by exactly r_m/3 at the switch; and the experiment that does separate Monod from Contois is named and priced - a chemostat feed sweep, where the critical dilution rates cross exactly at the batch run's own substrate intercept and differ by a factor 1.83 at S_f = 20."
 categories: [sec:J, struct:S1, tier:T0, data:tier2, phase:liquid]
 date: 2026-08-13
 ---
@@ -131,7 +131,7 @@ else:
         if (_p / "shared" / "gallery_utils.py").is_file():
             sys.path.insert(0, str(_p / "shared"))
             break
-from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from gallery_utils import Claims, load_data, load_meta, cite_data, parse_literal
 
 PAGE = "J4.1-monod"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})
@@ -314,10 +314,13 @@ M["num_blackman_gap_lower_relerr"] = abs(
 M["num_blackman_gap_switch_relerr"] = abs(
     gap_sw_num - M["sym_blackman_gap_at_switch_over_mum"])/M["sym_blackman_gap_at_switch_over_mum"]
 M["num_blackman_Sstar_over_Ks_relerr"] = abs(S_hat - S_STAR_OVER_KS)/S_STAR_OVER_KS
+# all three are round-off or brentq's xtol, so each is printed against its bound
 print(f"root-found S*/K_S = {S_hat:.12f} against the closed form {S_STAR_OVER_KS:.12f}"
-      f"  (rel. {M['num_blackman_Sstar_over_Ks_relerr']:.2e})")
-print(f"lower-branch gap  {gap_lo_num:.12f} mu_m   (rel. {M['num_blackman_gap_lower_relerr']:.2e})")
-print(f"gap at the switch {gap_sw_num:.12f} mu_m   (rel. {M['num_blackman_gap_switch_relerr']:.2e})")
+      f"  (rel. below 1e-13, here {M['num_blackman_Sstar_over_Ks_relerr']:.1e})")
+print(f"lower-branch gap  {gap_lo_num:.12f} mu_m   (rel. below 1e-14, here"
+      f" {M['num_blackman_gap_lower_relerr']:.1e})")
+print(f"gap at the switch {gap_sw_num:.12f} mu_m   (rel. below 1e-14, here"
+      f" {M['num_blackman_gap_switch_relerr']:.1e})")
 print("\nSo the two laws agree EXACTLY on both properties Froment defines the")
 print("constants by, and differ by a third of the maximum rate at S = 2 K_S.")'''))
 
@@ -881,11 +884,9 @@ real difference between the routes and not a nuisance: the break table prices it
 directly, refitting every route-B law - and route B's own $F$ - with the
 **all-seven** balance line instead."""))
 
-cells.append(code(r'''# NO WALL-CLOCK TIMING IS PRINTED ANYWHERE ON THIS PAGE.
-# An earlier version ended this cell with the cell's elapsed seconds, and two
-# consecutive executions then differed by one character (29 s / 30 s) - a page
-# whose stream output is not reproducible cannot be diffed, which is how a real
-# drift would be spotted.  The runtime lives in meta.yaml, where it belongs.
+cells.append(code(r'''# NO WALL-CLOCK TIMING IS PRINTED ANYWHERE ON THIS PAGE: elapsed seconds differ
+# between two consecutive executions, and a page whose stream output is not
+# reproducible cannot be diffed, which is how a real drift would be spotted.  The runtime lives in meta.yaml, where it belongs.
 RB = {k: fit_B(k) for k in LAWS + NULLS}
 rows = []
 for k in LAWS + NULLS:
@@ -923,35 +924,30 @@ cells.append(code(r'''# ---- Contois lands on the Monod curve, to the optimiser'
 mumC, KsxC = RB["Contois"]["p"]
 beta = 1 - KsxC*PHI_BAL
 map_mum, map_Ks = mumC/beta, KsxC*PHI_BAL*A_BAL/beta
-# THE RULE, stated once here and enforced over the WHOLE class in the coverage
-# map: a quantity this page PROVES is exactly zero is an optimiser or root-finder
-# exit tolerance, not a measurement.  check_agreement.py compares every metric
-# above ABS_FLOOR = 1e-12 at 5 % relative, so such a value above the floor is a
-# guaranteed false alarm the day scipy changes a stopping rule.  It is printed
-# either way; it is REPORTED only when it falls below the floor on its own.
-NOT_REPORTED = {}                 # name -> value: printed, never a metric
-
-
-def not_reported(name, value):
-    NOT_REPORTED[name] = float(value)
-    return float(value)
-
-
-MAP_MUM_RELERR = not_reported("contois_map_mum_relerr",
-                              abs(map_mum - RB["Monod"]["p"][0])/RB["Monod"]["p"][0])
-MAP_KS_RELERR = not_reported("contois_map_KS_relerr",
-                             abs(map_Ks - RB["Monod"]["p"][1])/RB["Monod"]["p"][1])
-CONTOIS_MINUS_MONOD_RMS = not_reported(
-    "contois_minus_monod_rms", abs(RB["Contois"]["rms"] - RB["Monod"]["rms"]))
+# THE RULE, stated once here and applied over the WHOLE class in the claims
+# cell: a quantity this page PROVES is exactly zero is an optimiser or
+# root-finder exit tolerance, not a measurement, so its digits differ between
+# machines.  It is registered as a BOUND (docs/claims-design.md), checked on
+# every run against a limit that holds on any machine, and never compared as a
+# value.  The printed digits below are this run's; the prose quotes the bound.
+MAP_BOUND = 1e-3      # relative: the bound on the two map errors and on S_f/a - 1
+RMS_GAP_BOUND = 1e-10  # 1/h: the bound on the Contois-minus-Monod RMS gap
+MAP_MUM_RELERR = M["contois_map_mum_relerr"] = float(
+    abs(map_mum - RB["Monod"]["p"][0])/RB["Monod"]["p"][0])
+MAP_KS_RELERR = M["contois_map_KS_relerr"] = float(
+    abs(map_Ks - RB["Monod"]["p"][1])/RB["Monod"]["p"][1])
+CONTOIS_MINUS_MONOD_RMS = M["contois_minus_monod_rms"] = float(
+    abs(RB["Contois"]["rms"] - RB["Monod"]["rms"]))
 print("The Contois fit, pushed through the identity proved in *The published model*:")
 print(f"   mu_m -> {map_mum:.9f}   against the Monod fit's"
-      f" {RB['Monod']['p'][0]:.9f}   (rel. {MAP_MUM_RELERR:.2e})")
+      f" {RB['Monod']['p'][0]:.9f}   (rel. below {MAP_BOUND:g}, here {MAP_MUM_RELERR:.1e})")
 print(f"   K_S  -> {map_Ks:.9f}   against the Monod fit's"
-      f" {RB['Monod']['p'][1]:.9f}   (rel. {MAP_KS_RELERR:.2e})")
-print(f"   residual RMS differs by {CONTOIS_MINUS_MONOD_RMS:.3e} 1/h")
-print("   All three of those numbers are PRINTED AND NOT REPORTED: the page proves")
-print("   this is one curve fitted twice, so they are two optimisers' exit")
-print("   tolerances, and CI would compare them at 5 % relative.")
+      f" {RB['Monod']['p'][1]:.9f}   (rel. below {MAP_BOUND:g}, here {MAP_KS_RELERR:.1e})")
+print(f"   residual RMS differs by less than {RMS_GAP_BOUND:g} 1/h (here"
+      f" {CONTOIS_MINUS_MONOD_RMS:.1e})")
+print("   All three of those numbers are BOUNDS, not values: the page proves this")
+print("   is one curve fitted twice, so they are two optimisers' exit tolerances,")
+print("   and each is checked against a limit that holds on any machine.")
 print("\nTwo optimisers, started from different places on two different")
 print("parameterisations, landed on the same curve - because it IS the same curve.")'''))
 
@@ -1006,12 +1002,11 @@ The second is the control. If route A's size is inflated in both, the culprit is
 the small-sample F approximation; if only in the first, it is the reduction.
 
 **Every draw is fitted the way route A fits the real data - global scan, then
-refined.** This is not a detail. An earlier version of this cell read both fits
-off the scan grid with no refinement, while the observed $F$ it compares them
-against comes from a *refined* fit, and the mismatch was worth a factor two in
-the control's size: an unrefined Moser fit cannot reach its own optimum, so it
-under-states $F$ on every draw and makes the test look conservative when it is
-not. The refinement is a per-draw zoom on the winning grid cell, its convergence
+refined.** This is not a detail. The observed $F$ the draws are compared against
+comes from a *refined* fit, and reading the draws' fits off the scan grid with no
+refinement is worth a factor two in the control's size: an unrefined Moser fit
+cannot reach its own optimum, so it under-states $F$ on every draw and makes the
+test look conservative when it is not. The refinement is a per-draw zoom on the winning grid cell, its convergence
 is printed below, and the grid-only numbers are kept as a **break row** because
 that is exactly the class of defect - a grid-limited extremum - that no
 perturbation test can see."""))
@@ -1336,7 +1331,9 @@ freedom, and which route supplies the scatter - are declared conventions with
 break rows, and the separations $d$ that go into it are optimiser *upper* bounds,
 so $N^*$ errs low in the direction that matters."""))
 
-cells.append(code(r'''s_obs, ABS_FLOOR = RB["Monod"]["rms"], 1e-12
+cells.append(code(r'''s_obs = RB["Monod"]["rms"]
+SEP_BOUND = 1e-9          # 1/h: the bound the two degenerate separations are held to
+SEP_SCATTER_BOUND = 1e-7  # the same, over the route-B scatter
 SEP = {}
 sep_rows = []
 for k in ["Blackman", "Tessier", "Moser", "Contois"]:
@@ -1349,12 +1346,10 @@ for k in ["Blackman", "Tessier", "Moser", "Contois"]:
                          verdict=("degenerate - see the identities" if d < 1e-9 else
                                   "within reach of one clean run, at ~50 % power"
                                   if Nstar <= 1.5 else "needs more data")))
-    # the RULE stated where the Contois map is computed, applied again here
-    for nm, val in ((f"sep_{k.lower()}", d), (f"sep_over_scatter_{k.lower()}", d/s_obs)):
-        if d > 1e-9 or abs(val) < ABS_FLOOR:
-            M[nm] = float(val)
-        else:
-            not_reported(nm, val)
+    # every separation is a claim; the degenerate two are BOUNDS (the rule stated
+    # where the Contois map is computed), registered as such in the claims cell
+    M[f"sep_{k.lower()}"] = float(d)
+    M[f"sep_over_scatter_{k.lower()}"] = float(d/s_obs)
     if np.isfinite(Nstar):     # only where a separation exists at all: for Moser
         M[f"Nstar_{k.lower()}"] = float(Nstar)   # and Contois it is not a number
 
@@ -1365,14 +1360,9 @@ print("\nMoser and Contois sit at the optimiser's own floor, and that is not an"
 print("accident of this dataset - it is the algebra of *The published model*: Moser")
 print("CONTAINS Monod at n = 1, and Contois IS Monod once a constant yield makes X an")
 print("affine function of S. Their symbolic residuals are exactly zero; the numbers")
-print(f"above ({SEP['Moser']:.1e}, {SEP['Contois']:.1e}) measure least_squares' xtol,"
-      f" not a separation.")
-print(f"\n{len(NOT_REPORTED)} such values are printed but NOT reported to"
-      f" agreement.json so far, because a\nquantity proved exactly zero is a"
-      f" tolerance and CI would compare it at 5 %:")
-for nm, v in NOT_REPORTED.items():
-    print(f"   {nm:28s} = {v:.3e}   (above ABS_FLOOR = {ABS_FLOOR:g}, so it would"
-          f" be compared)")
+print(f"above (here {SEP['Moser']:.1e} and {SEP['Contois']:.1e}) measure"
+      f" least_squares' xtol, not a\nseparation, so both are registered as BOUNDS,"
+      f" below {SEP_BOUND:g} 1/h, and never compared as values.")
 print(f"\nTessier and Blackman are genuinely separable. Blackman needs"
       f" {M['Nstar_blackman']:.2f} repeats of this")
 print(f"design and Tessier {M['Nstar_tessier']:.1f}. So one clean run of it is"
@@ -1413,7 +1403,7 @@ SF_ROOTFIND_RELERR = abs(Sf_cross - SF_CLOSED)/SF_CLOSED
 # tests it against this bound and not against the value below.
 SF_XTOL, SF_RTOL = 1e-10, 8.9e-16
 SF_ROOTFIND_BOUND = (SF_XTOL + SF_RTOL*abs(Sf_cross))/SF_CLOSED
-CROSS_VS_A = not_reported("Sf_crossing_vs_a_relerr", abs(Sf_cross - A_BAL)/A_BAL)
+CROSS_VS_A = M["Sf_crossing_vs_a_relerr"] = float(abs(Sf_cross - A_BAL)/A_BAL)
 # The two exit tolerances of the Contois fit, SIGNED, and the sensitivity of the
 # closed form to each.  S_f/a = (1+e_mu)/[(1+e_K)(1 - e_mu beta/(1-beta))], so to
 # first order S_f/a - 1 = e_mu/(1-beta) - e_K: the mu_m error is amplified by
@@ -1427,10 +1417,10 @@ print("  putting mu_m^C = beta mu_m^M and K_S = K_sx phi a / beta into")
 print("  mu_m^M S_f/(K_S + S_f) = mu_m^C gives S_f = a identically. Numerically:")
 print(f"    root-found crossing        S_f = {Sf_cross:.6f}")
 print(f"    material-balance intercept a   = {A_BAL:.6f}"
-      f"   (rel. gap {CROSS_VS_A:.2e})")
+      f"   (rel. gap below {MAP_BOUND:g}, here {CROSS_VS_A:.2e})")
 print(f"\n  That gap is NOT the root-find's. Solving the same equation in closed form,"
       f"\n  S_f = mu_m^C K_S/(mu_m^M - mu_m^C) = {SF_CLOSED:.6f}, and brentq reproduces it"
-      f" to\n  {SF_ROOTFIND_RELERR:.1e} - four orders below ABS_FLOOR, and inside its own"
+      f" to\n  {SF_ROOTFIND_RELERR:.1e} - at round-off, and inside its own"
       f" declared\n  guarantee (xtol + rtol|x| = {SF_ROOTFIND_BOUND:.1e} relative here),"
       f" which is what is asserted.")
 print(f"\n  What the {CROSS_VS_A:.2e} measures is the Contois fit's own two exit"
@@ -1444,15 +1434,17 @@ print(f"      K_S  error {E_KS:+.3e}, unamplified, other sign  contributes"
       f" {-E_KS:+.3e}")
 print(f"                                                        sum"
       f" {CROSS_DECOMP:+.3e}\n      - which is the {CROSS_VS_A:.2e} above.")
-# the decomposition is the justification for not reporting this quantity, so it
-# is checked rather than left as prose: the first-order form is good to 1e-5
+# the decomposition is the justification for treating this quantity as a
+# tolerance bound, so it is checked rather than left as prose: the first-order
+# form is good to 1e-5
 assert abs(abs(CROSS_DECOMP) - CROSS_VS_A) <= 5e-3*CROSS_VS_A, (CROSS_DECOMP, CROSS_VS_A)
 print(f"\n  The K_S error alone is within"
       f" {100*abs(abs(E_KS)/CROSS_VS_A - 1):.0f} % of the {CROSS_VS_A:.2e}, which is a"
       f" coincidence and\n  not an explanation: amplify THAT one by the {AMP:.1f}"
-      f" instead and you get {abs(E_KS)*AMP:.2e},\n  ten times the number being"
-      f" explained. Either way it is the same exactly-zero\n  quantity as the two map"
-      f" errors, and it is PRINTED AND NOT REPORTED for the same reason.")
+      f" instead and you get {abs(E_KS)*AMP:.2e},\n  {abs(E_KS)*AMP/CROSS_VS_A:.0f} times the"
+      f" number being explained. Either way it is the same exactly-zero\n  quantity as"
+      f" the two map errors, and it is a BOUND for the same reason: below"
+      f" {MAP_BOUND:g}\n  relative, checked on every run.")
 print(f"\n  Away from it they separate: at S_f = 20 the two critical dilution rates"
       f"\n  differ by a factor {M['Dc_ratio_at_Sf20']:.4f}, and the gap exceeds 10 %"
       f" for every S_f\n  below {Sf_10pct:.2f} - in the units of the printed CA_bar"
@@ -1574,8 +1566,8 @@ Dc_r_num = brentq(lambda D: Chemostat(g_r, y_r, Sf_r, D).steady()[1] - WASH*y_r*
 M["rawlings_Dc_relerr"] = abs(Dc_r_num - Dc_r_closed)/Dc_r_closed
 print(f"\nRawlings' printed D_c = mu_m S_f/(K_s+S_f) = {Dc_r_closed:.10f}; root-found"
       f" on the marched\nmodel it is {Dc_r_num:.10f}  (rel. {M['rawlings_Dc_relerr']:.2e})."
-      f"  Their eq. (10.19) is reproduced\nto {M['rawlings_10_19_max_relerr']:.2e} at"
-      f" three dilution rates.")'''))
+      f"  Their eq. (10.19) is reproduced\nto below 1e-9 relative (here"
+      f" {M['rawlings_10_19_max_relerr']:.1e}) at three dilution rates.")'''))
 
 cells.append(code(r'''# ---- 2. the SECOND, INDEPENDENT computation of route B's fit
 pM = RB["Monod"]["p"]
@@ -1607,17 +1599,18 @@ M["pymrm_refit_KS_relerr"] = float(abs(rr.x[1] - pM[1])/pM[1])
 print(f"\nbackward Euler observed order {M['pymrm_batch_observed_order']:.4f}"
       f" (first order, as it must be)")
 print(f"S + X/phi over interval 1: {inv0:.15g} -> {inv1:.15g}"
-      f"   (rel. {M['pymrm_batch_conservation_relerr']:.2e})")
+      f"   (rel. below 1e-13, here {M['pymrm_batch_conservation_relerr']:.1e})")
 print(f"\nroute B's Monod fit, re-derived through the pymrm marcher with Richardson")
 print(f"extrapolation:  mu_m = {rr.x[0]:.9f}  K_S = {rr.x[1]:.7f}")
 print(f"          LSODA: mu_m = {pM[0]:.9f}  K_S = {pM[1]:.7f}")
-print(f"          relative: {M['pymrm_refit_mum_relerr']:.2e} and"
-      f" {M['pymrm_refit_KS_relerr']:.2e}")
+print(f"          relative: below 1e-4 for both (here"
+      f" {M['pymrm_refit_mum_relerr']:.1e} and {M['pymrm_refit_KS_relerr']:.1e}),"
+      f" the two fits' stopping rules")
 
 # ---- WHAT THIS CROSS-CHECK CAN AND CANNOT SEE, measured.  Both routes read the
 #      same a, phi, dt and Cc0 and integrate the same ODE, so every error in
-#      THOSE moves the two together.  Three injections, each a failure mode an
-#      earlier version of this cell claimed the check would catch.
+#      THOSE moves the two together.  Three injections, each a failure mode
+#      such a check might be thought to catch.
 base_o = mu_pred_ode("Monod", pM[0], pM[1:], A_BAL, PHI_BAL)
 blind = []
 for lab, a_, ph_, dt_ in (("phi x 1.3   (a wrong yield)", A_BAL, PHI_BAL*1.3, dt),
@@ -1663,8 +1656,8 @@ print(f"\nS + X/phi is a TAUTOLOGY of the marcher, not a test of it: the source 
 print(f"(-m/phi, m) from one m, so backward Euler conserves it for ANY growth law.")
 print(f"Tripling mu_m - grossly wrong physics, and it moves the biomass at the end"
       f"\nof interval 1 from {c_end[0, 1]:.4f} to {c_end_3x[0, 1]:.4f} - takes the"
-      f" invariant from {M['pymrm_batch_conservation_relerr']:.2e}\nto"
-      f" {INV_3X_RELERR:.2e} relative, i.e. nowhere. What DOES break it is using a"
+      f" invariant from {M['pymrm_batch_conservation_relerr']:.1e}\nto"
+      f" {INV_3X_RELERR:.1e} relative, both below 1e-13, i.e. nowhere. What DOES break it is using a"
       f" different yield\nin the source from the one in the invariant, and that is"
       f" the break row.")'''))
 
@@ -1726,9 +1719,8 @@ cells.append(code(r'''MOVE_TOL = 1e-6            # relative move that counts as 
 
 
 def rec(name, metric, value, note):
-    # a row may target a PRINTED-BUT-NOT-REPORTED quantity: those still need
-    # something that moves them, they simply do not go to agreement.json
-    base = M[metric] if metric in M else NOT_REPORTED[metric]
+    # every row targets a registered claim, and is wired to it in the claims cell
+    base = M[metric]
     rel = abs(value - base)/max(abs(base), 1e-300)
     BREAK.append(dict(row=name, metric=metric, baseline=base, broken=value,
                       **{"rel. move": rel}, moves=rel > MOVE_TOL, note=note))
@@ -2025,33 +2017,42 @@ assert n_move == len(TBK), TBK[~TBK["moves"]]'''))
 cells.append(code(r'''# ---- coverage map, asserted key-for-key against agreement.json
 STRUCTURAL = {
  "sym_monod_is_langmuir_residual":
-   "EXACT ZERO, below ABS_FLOOR. Rawlings' printed claim, proved in sympy. "
-   "Above-floor companion: sym_blackman_gap_at_switch_over_mum, the same class of "
+   "EXACT ZERO, a bound at 0 (identity). Rawlings' printed claim, proved in sympy. "
+   "Companion: sym_blackman_gap_at_switch_over_mum, the same class of "
    "closed-form statement with a numerical check attached.",
  "sym_monod_half_rate_residual":
-   "EXACT ZERO, below ABS_FLOOR. Froment's definition of K_S, verified. "
+   "EXACT ZERO, a bound at 0 (identity). Froment's definition of K_S, verified. "
    "Companion: num_blackman_gap_switch_relerr, which is what that property does "
    "NOT settle, and which has a break row.",
  "sym_blackman_half_rate_residual":
-   "EXACT ZERO, below ABS_FLOOR - and it IS the finding: Blackman shares the "
-   "property. Companion: sym_blackman_gap_at_switch_over_mum = 1/3.",
+   "EXACT ZERO, a bound at 0 (identity) - and it IS the finding: Blackman shares "
+   "the property. Companion: sym_blackman_gap_at_switch_over_mum = 1/3.",
  "sym_moser_at_n1_residual":
-   "EXACT ZERO, below ABS_FLOOR, by nesting. Companion: routeA_F_moser_vs_monod, "
-   "which has a break row freezing n = 1 and collapsing it.",
+   "EXACT ZERO, a bound at 0 (identity), by nesting. Companion: "
+   "routeA_F_moser_vs_monod, which has a break row freezing n = 1 and collapsing it.",
  "sym_contois_is_monod_residual":
-   "EXACT ZERO, below ABS_FLOOR, and it is the page's strongest claim. "
-   "Above-floor companions IN agreement.json: Sf_crossing, the crossing this very "
-   "identity fixes at S_f = a, and Dc_ratio_at_Sf20 - both functions of the "
-   "Contois fit, both with break rows. The two contois_map_* errors that used to "
-   "be named here are themselves exactly-zero quantities and are now printed but "
-   "not reported; they keep their break rows.",
- "sep_contois": "STRUCTURAL and below ABS_FLOOR: zero to the optimiser's "
-              "tolerance because Contois IS Monod under a constant yield. It does "
+   "EXACT ZERO, a bound at 0 (identity), and it is the page's strongest claim. "
+   "Companions: Sf_crossing, the crossing this very identity fixes at S_f = a, and "
+   "Dc_ratio_at_Sf20 - both functions of the Contois fit, both with break rows. "
+   "The two contois_map_* errors are themselves exactly-zero quantities, "
+   "registered as tolerance bounds, and keep their break rows.",
+ "sep_contois": "STRUCTURAL: zero to the optimiser's tolerance because Contois IS "
+              "Monod under a constant yield, so it is a tolerance bound. It does "
               "have a break row - measuring the same separation on the ROUTE-A "
               "design gives 6.7e-3, which is the reduction manufacturing a "
-              "separation that is not there - and its above-floor companions in "
-              "agreement.json are Sf_crossing and Dc_ratio_at_Sf20.",
+              "separation that is not there - and its companions are Sf_crossing "
+              "and Dc_ratio_at_Sf20.",
  "sep_over_scatter_contois": "STRUCTURAL, see sep_contois.",
+ "sep_moser": "STRUCTURAL: zero to the optimiser's tolerance because Moser "
+              "CONTAINS Monod at n = 1, so it is a tolerance bound. Companion: "
+              "routeA_F_moser_vs_monod.",
+ "sep_over_scatter_moser": "STRUCTURAL, see sep_moser.",
+ "contois_minus_monod_rms": "STRUCTURAL: one curve fitted twice, so the RMS gap is "
+              "the two optimisers' exit tolerances, a tolerance bound. Companions: "
+              "the two contois_map_* errors, which have break rows.",
+ "Sf_crossing_vs_a_relerr": "STRUCTURAL: S_f = a identically, so what is left is "
+              "the Contois fit's two exit tolerances, decomposed on the page; a "
+              "tolerance bound. Companion: Sf_crossing, which has a break row.",
  "F_crit_95": "A TABULATED CONSTANT, not a computed result: F(1,4) at 95 %. It "
               "cannot move and must not.",
  "sym_blackman_gap_at_switch_over_mum":
@@ -2061,23 +2062,22 @@ STRUCTURAL = {
    "EXACT SURD (3 - 2 sqrt 2)/2, closed form. Companion and check: "
    "num_blackman_gap_lower_relerr.",
  "num_blackman_Sstar_over_Ks_relerr":
-   "a root-find checked against a closed form, so it measures brentq's xtol. "
-   "Companion: sym_blackman_gap_lower_over_mum.",
+   "a root-find checked against a closed form, so it measures brentq's xtol: a "
+   "tolerance bound. Companion: sym_blackman_gap_lower_over_mum.",
  "num_blackman_gap_lower_relerr": "as above.",
  "pymrm_batch_conservation_relerr":
-   "below ABS_FLOOR at ~3e-16 because backward Euler conserves S + X/phi to "
-   "round-off when both fields use the same yield. It IS covered by a break row "
-   "(the yield changed in the source but not in the invariant, 2.5e-3), and its "
-   "above-floor companion is pymrm_refit_mum_relerr.",
+   "a bound (identity) at round-off, because backward Euler conserves S + X/phi "
+   "when both fields use the same yield. It IS covered by a break row (the yield "
+   "changed in the source but not in the invariant, 2.5e-3), and its companion is "
+   "pymrm_refit_mum_relerr.",
  "rawlings_10_19_max_relerr":
-   "EXACT ZERO to double precision and therefore below ABS_FLOOR: the marched "
-   "steady state reproduces Rawlings' eq. (10.19) to the last bit. Two break rows "
-   "DO move it (their K_s and their y changed), and its above-floor companion is "
-   "rawlings_Dc_relerr.",
+   "EXACT ZERO to double precision, a tolerance bound: the marched steady state "
+   "reproduces Rawlings' eq. (10.19) to the last bit. Two break rows DO move it "
+   "(their K_s and their y changed), and its companion is rawlings_Dc_relerr.",
  "num_blackman_gap_switch_relerr":
-   "below ABS_FLOOR because it is exact arithmetic (1 - 2/3 against 1/3), not a "
-   "computation. It IS covered by a break row - reading the gap at S = K_S "
-   "instead of the switch moves it to 0.5 - and its above-floor companion is "
+   "a bound (identity), because it is exact arithmetic (1 - 2/3 against 1/3), not "
+   "a computation. It IS covered by a break row - reading the gap at S = K_S "
+   "instead of the switch moves it to 0.5 - and its companion is "
    "sym_blackman_gap_at_switch_over_mum.",
  "Dc_contois_transient_relerr":
    "STRUCTURAL: D_c = mu_m for Contois is exact, so what is left is a measurement "
@@ -2106,34 +2106,16 @@ for k in sorted(M):
         uncovered.append(k)
         lines.append(f"  {k:38s} UNCOVERED")
 N_METRICS = len(M)
-N_COVERED = len([k for k in covered if k in M])   # rows may target a non-metric
+N_COVERED = len([k for k in covered if k in M])
 N_STRUCT = N_METRICS - N_COVERED - len(uncovered)
 print("coverage map (%d metrics: %d moved by an injection, %d structural):"
       % (N_METRICS, N_COVERED, N_STRUCT))
 print("\n".join(lines))
-below = [k for k, v in M.items() if abs(v) < ABS_FLOOR]
-N_BELOW = len(below)
-print(f"\n{len(below)} metrics sit below CI's ABS_FLOOR = {ABS_FLOOR:g} and are"
-      f" therefore outside the\nregression suite entirely; each is named structural"
-      f" above with an above-floor companion:")
-for k in below:
-    print(f"   {k} = {M[k]:.3e}")
-    assert k in STRUCTURAL, k
-print(f"\n{len(NOT_REPORTED)} quantities are PRINTED BUT NOT REPORTED, under the"
-      f" rule that no value\nthis page proves is exactly zero may sit above"
-      f" ABS_FLOOR in agreement.json:")
-for nm, v in NOT_REPORTED.items():
-    print(f"   {nm} = {v:.3e}"
-          + ("   (a break row moves it anyway)" if nm in covered else ""))
-    assert abs(v) > ABS_FLOOR and nm not in M, nm
-# The rule is now enforced over the WHOLE CLASS, not over the names that happen
-# to have been excluded: every quantity this page proves is exactly zero is
-# enumerated here, and each must be EITHER below ABS_FLOOR (kept, structural) OR
-# absent from agreement.json (printed, not reported).  Enumerating the class is
-# the enforcement - a new proved-zero quantity added to M above the floor AND
-# ENUMERATED HERE fails this cell, and one dropped from the list fails the
-# two-way check below.  What no hand list can detect is a new proved-zero
-# quantity that is never added to it; the printed prose claims no more.
+# The quantities this page PROVES are exactly zero (identities, nesting, exact
+# arithmetic, optimiser and root-finder exits).  Every one of them is a
+# registered BOUND in the claims cell below, with a basis and a limit that holds
+# on any machine, so none is ever compared as a value and the set of claims
+# never depends on where a round-off number happens to land.
 PROVED_ZERO = [
     "sym_monod_is_langmuir_residual", "sym_monod_half_rate_residual",
     "sym_blackman_half_rate_residual", "sym_moser_at_n1_residual",
@@ -2143,25 +2125,161 @@ PROVED_ZERO = [
     "sep_moser", "sep_over_scatter_moser", "sep_contois",
     "sep_over_scatter_contois", "contois_minus_monod_rms",
     "contois_map_mum_relerr", "contois_map_KS_relerr", "Sf_crossing_vs_a_relerr"]
-for nm in PROVED_ZERO:
-    assert (nm in M) != (nm in NOT_REPORTED), nm      # exactly one of the two
-    assert nm not in M or abs(M[nm]) < ABS_FLOOR, (nm, M.get(nm))
-assert set(NOT_REPORTED) <= set(PROVED_ZERO), set(NOT_REPORTED) - set(PROVED_ZERO)
-# and the class is exactly the below-floor set, both ways round
-assert set(below) == set(PROVED_ZERO) - set(NOT_REPORTED), set(below)
-print(f"\n{len(PROVED_ZERO)} quantities on this page are PROVED exactly zero"
-      f" (identities, nesting, exact\narithmetic). The rule is asserted over that"
-      f" whole class and not over a list of\nexclusions: {len(below)} of them fall"
-      f" below ABS_FLOOR on their own and are kept and named\nstructural, the other"
-      f" {len(NOT_REPORTED)} are printed and not reported, and the two sets are"
-      f" asserted\nto be exactly the below-floor set and its complement. Nothing this"
-      f" page proves\nto be zero is compared at 5 % by CI.")
+assert set(PROVED_ZERO) <= set(M), set(PROVED_ZERO) - set(M)
 assert not uncovered, uncovered
 assert set(covered) | set(STRUCTURAL) >= set(M), set(M) - set(covered) - set(STRUCTURAL)
 print("\nEvery metric is either moved by an injection or named structural, and no")
 print("generic fallback label is used anywhere in this map.")'''))
 
-cells.append(code(r'''report_agreement(PAGE, M)'''))
+cells.append(code(r'''# Every metric is registered ONCE with how it is checked (docs/claims-design.md):
+# a value against the committed baseline within its rtol, a bound against its
+# limit on every run and on any machine, an exact result by equality.  The set
+# of names is fixed and never depends on a value.  Residuals, identities,
+# two-route gaps and optimiser or root-finder exits are BOUNDS whatever their
+# size, and the prose quotes the bound, never their round-off digits.
+claims = Claims("J4.1")
+B = {   # name -> bound arguments; every name in PROVED_ZERO is here
+    # -- symbolic identities: sympy simplifies each to exactly 0
+    **{k: dict(max=0.0, basis="identity", structural=True,
+               note="sympy residual, simplified to exactly 0")
+       for k in ("sym_monod_is_langmuir_residual", "sym_monod_half_rate_residual",
+                 "sym_blackman_half_rate_residual", "sym_moser_at_n1_residual",
+                 "sym_contois_is_monod_residual")},
+    # -- exact arithmetic and root-finds against closed forms
+    "num_blackman_gap_switch_relerr": dict(
+        max=1e-14, basis="identity",
+        note="relative to 1/3; exact arithmetic, 1 - 2/3 against 1/3, measured 1.7e-16"),
+    "num_blackman_gap_lower_relerr": dict(
+        max=1e-14, basis="tolerance",
+        note="relative to the closed-form gap; brentq at xtol 1e-14 on a stationary"
+             " point, so the error is second order in xtol; measured 1.6e-16"),
+    "num_blackman_Sstar_over_Ks_relerr": dict(
+        max=1e-13, basis="tolerance",
+        note="relative to S*/K_S; brentq's own guarantee xtol + rtol|x| is 2.5e-14"
+             " relative here; measured 0"),
+    "rawlings_10_19_max_relerr": dict(
+        max=1e-9, basis="tolerance",
+        note="relative to the closed-form steady state; LSODA at rtol 1e-11 marched"
+             " to t = 40000; measured exactly 0"),
+    "pymrm_batch_conservation_relerr": dict(
+        max=1e-13, basis="identity",
+        note="relative to S + X/phi; backward Euler keeps a linear invariant of the"
+             " source to round-off; measured 4.3e-16 to 1.3e-15 across BLAS kernels,"
+             " the bound is about 77x that"),
+    # -- optimiser exits on quantities the identities make exactly zero
+    "sep_moser": dict(max=SEP_BOUND, basis="tolerance", unit="1/h",
+                      note="Moser contains Monod at n = 1; least_squares at xtol 1e-13;"
+                           " measured 2.0e-14 to 3.9e-14 across BLAS kernels and above 1e-12 on"
+                           " other machines; 1e-9 is also the degeneracy threshold"),
+    "sep_over_scatter_moser": dict(max=SEP_SCATTER_BOUND, basis="tolerance",
+                                   note="sep_moser over the route-B scatter"),
+    "sep_contois": dict(max=SEP_BOUND, basis="tolerance", unit="1/h",
+                        note="Contois is Monod under a constant yield; least_squares"
+                             " at xtol 1e-13; measured 2.0e-14 to 6.3e-14 across BLAS"
+                             " kernels; 1e-9 is also the degeneracy threshold"),
+    "sep_over_scatter_contois": dict(max=SEP_SCATTER_BOUND, basis="tolerance",
+                                     note="sep_contois over the route-B scatter"),
+    "contois_minus_monod_rms": dict(
+        max=RMS_GAP_BOUND, basis="tolerance", unit="1/h",
+        note="one curve fitted twice; two least_squares exits; measured 7.9e-13"
+             " to 4.2e-12 across BLAS kernels, the bound is 15x the largest"),
+    "contois_map_mum_relerr": dict(
+        max=MAP_BOUND, basis="tolerance",
+        note="relative to the Monod mu_m; two least_squares exits; measured 3.4e-7"
+             " to 2.2e-6 across BLAS kernels"),
+    "contois_map_KS_relerr": dict(
+        max=MAP_BOUND, basis="tolerance",
+        note="relative to the Monod K_S; two least_squares exits; measured 3.2e-6"
+             " to 1.3e-5 across BLAS kernels, the bound is about 78x the largest"),
+    "Sf_crossing_vs_a_relerr": dict(
+        max=MAP_BOUND, basis="tolerance",
+        note="relative to a; S_f = a identically, the gap is the Contois fit's two"
+             " exit tolerances (decomposed on the page); measured 4.1e-7 to 1.0e-5"
+             " across BLAS kernels, the bound is 50x the largest"),
+    # -- convergence orders and the second computation of the fit
+    "pymrm_batch_observed_order": dict(
+        min=0.995, max=1.005, basis="theory",
+        note="backward Euler is first order in dt, and 200/400 steps are in the"
+             " asymptotic range: 0.9993 measured; the 25/50-step row gives 0.9942"),
+    "pfr_observed_order": dict(
+        min=0.99, max=1.01, basis="theory",
+        note="first-order upwind, asymptotic at 800/1600 cells; outlet from"
+             " compute_boundary_values, 0.9981 measured; the 100/200 row gives 0.985"),
+    "pfr_centre_read_order": dict(
+        min=0.99, max=1.01, basis="theory",
+        note="first-order upwind, asymptotic at 800/1600 cells; outlet read at the"
+             " last cell centre, 0.9957 measured; the 100/200 row gives 0.965"),
+    "pymrm_refit_mum_relerr": dict(
+        max=1e-4, basis="chosen",
+        note="two-route gap, LSODA fit against Richardson-extrapolated backward Euler"
+             " at 200/400 steps; set by the two fits' stopping rules, measured 1.0e-6 to"
+             " 1.2e-6 across BLAS kernels; the bound is the prose claim and 1e2 below"
+             " the 25-step row"),
+    "pymrm_refit_KS_relerr": dict(
+        max=1e-4, basis="chosen",
+        note="as for mu_m; measured 2.6e-6 to 7.8e-6 across BLAS kernels; the bound"
+             " is the prose claim and below the unconverged 25-step refit"),
+}
+assert set(PROVED_ZERO) <= set(B), set(PROVED_ZERO) - set(B)
+# Value claims whose rtol is tightened so that their break row fails the claim's
+# own check; each stays admissible (rtol*|x0| at least 100x its spread across
+# BLAS kernels), and the row's relative move is in the comment.
+RTOL = {"balance_R2_six_rows": 1e-3,          # flagged row kept: 1.5e-2
+        "balance_R2_all_rows": 1e-4,          # arithmetic-mean biomass: 3.3e-4
+        "balance_phi": 1e-3,                  # drop row 1 instead: 1.4e-2
+        "balance_a": 1e-3,                    # drop row 1 instead: 2.5e-2
+        "balance_row4_residual": 1e-3,        # arithmetic-mean biomass: 1.1e-2
+        "rmsA_zero_order": 1e-3,              # forward-difference mu: 8.3e-3
+        "rmsB_zero_order": 1e-3,              # forward-difference mu: 8.3e-3
+        "rmsB_Monod": 1e-2,                   # all-seven balance line: 4.2e-2
+        "rmsB_Contois": 1e-2,                 # all-seven balance line: 4.2e-2
+        "rmsB_first_order": 1e-2,             # all-seven balance line: 3.9e-2
+        "routeB_monod_mu_m": 1e-2,            # all-seven balance line: 2.9e-2
+        "routeA_over_routeB_monod_rms": 1e-2,  # all-seven balance line: 4.3e-2
+        "Sf_crossing": 5e-3,                  # route-A constants: 9.9e-3
+        "pfr_centre_over_boundary_read": 5e-3}  # two coarsest grids: 1.2e-2
+for k_, v in M.items():
+    if k_ in B:
+        claims.bound(k_, v, **B[k_])
+    else:
+        claims.value(k_, v, rtol=RTOL.get(k_, 0.05))
+# The one count on the page: N* exists only for an alternative whose separation
+# exceeds the 1e-9 1/h the degenerate two are bounded by, and the margin to that
+# threshold is recorded so that the set of N* claims can never be decided by noise.
+claims.exact("n_separable_alternatives", sum(1 for d in SEP.values() if d > SEP_BOUND),
+             margin=min(abs(np.log10(d/SEP_BOUND)) for d in SEP.values()),
+             min_margin=1.0, structural=True,
+             note="alternatives with a separation above the SEP_BOUND 1/h bound, so"
+                  " that N* is defined: Blackman and Tessier; margin in decades to"
+                  " that bound; decided by the identities, which no row can move")
+assert claims["n_separable_alternatives"] == sum(1 for k in M if k.startswith("Nstar_"))
+
+# -- the break table, wired row by row to the claim it targets: a row breaks a
+#    claim when the claim's own check (rtol or bound) fails on the injected value
+for r in BREAK:
+    claims.breaks(r["row"], r["metric"], r["broken"])
+# the route-A-design row on sep_contois, carried to its scatter ratio
+_r = [r for r in BREAK if r["metric"] == "sep_contois"]
+assert len(_r) == 1
+claims.breaks(_r[0]["row"], "sep_over_scatter_contois", _r[0]["broken"]/s_obs)
+# the drop-row-1 row on balance_phi, carried to the same line's other coefficient
+claims.breaks("balance line drops row 1 instead of the flagged row", "balance_a",
+              loo[0][0])
+# the route-A-constants row on Sf_crossing, carried to its gap from a
+_r = [r for r in BREAK if r["metric"] == "Sf_crossing"]
+assert len(_r) == 1
+claims.breaks(_r[0]["row"], "Sf_crossing_vs_a_relerr", abs(_r[0]["broken"] - A_BAL)/A_BAL)
+_kinds = {kd: [k_ for k_, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"{len(claims.metrics)} claims registered: {len(_kinds['value'])} values,"
+      f" {len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.  The bounds:")
+for k_ in _kinds["bound"]:
+    c = claims.metrics[k_]
+    lo, hi = c.get("min"), c.get("max")
+    rng = (f"[{lo:g}, {hi:g}]" if lo is not None else f"<= {hi:g}")
+    print(f"  {k_:36s} {rng:14s} [{c['basis']}]  here {c['value']:.3g}")
+# claims.report() runs at the end of the prose cell below, after every number
+# the prose quotes has been checked against its claim with claims.says.'''))
 
 cells.append(code(r'''# Every number quoted in prose, in meta.yaml and in README.md is checked here
 # against the live computation. The page fails to execute if any has drifted.
@@ -2171,52 +2289,80 @@ def close(a, b, tol=5e-3, label=""):
 
 
 # BOUNDS, NOT PINS. Every quantity in the proved-exactly-zero class is an exit
-# tolerance, so it is asserted UNDER one of these round numbers and quoted the
-# same way in meta.yaml and models_entry.yaml - never to two significant figures,
-# which would gate this page harder than the 5 % CI comparison that the
-# not-reported rule was written to escape. The exact values are PRINTED in the
-# cells above, where nothing pins them. The bounds join the sweep's pool below.
-# One bound is NOT a round number and is not in this list: the crossing's
-# root-find is asserted against brentq's own xtol + rtol|x|, computed where the
-# root is found, because a round number there would be a bound on an accident.
-BOUNDS = [1e-14, 1e-11, 1e-9, 1e-4]
+# tolerance or a round-off residual, so it is a registered bound and is quoted
+# as that bound in the prose, in meta.yaml and in models.yaml - never to two
+# significant figures, whose last digit differs between machines.  The exact
+# values are PRINTED in the cells above, beside their bound.  The limits join
+# the sweep's pool below.  One bound is NOT a claim limit and is not in this
+# list: the crossing's root-find is asserted against brentq's own xtol +
+# rtol|x|, computed where the root is found, because a round number there
+# would be a bound on an accident.
+BOUNDS = sorted({c["max"] for c in claims.metrics.values()
+                 if c["kind"] == "bound" and c.get("max")})
 
+# -- numbers that ARE registered claims, as written in the prose: checked by
+#    claims.says, within one unit of the last written place, or, for a bound
+#    phrase such as "below 1e-9", at least as loose as the claim's own bound
+SAYS = {
+    "balance_R2_six_rows": ["0.99996"], "balance_R2_all_rows": ["0.98505"],
+    "balance_row4_residual": ["-17.2"], "balance_phi": ["0.3174"],
+    "balance_a": ["197.12"], "balance_worst_other_residual": ["0.65"],
+    "row4_end_of_interval_relgap": ["3.1 %"],
+    "rmsA_Monod": ["0.05469"], "rmsA_Blackman": ["0.02677"],
+    "rmsA_Tessier": ["0.03871"], "rmsA_Contois": ["0.05153"],
+    "rmsB_Monod": ["0.03147"], "rmsB_Blackman": ["0.03955"],
+    "rmsB_Tessier": ["0.02631"],
+    "routeA_n_moser": ["1.93"], "routeB_n_moser": ["1.51"],
+    "routeA_F_moser_vs_monod": ["12.3"], "routeB_F_moser_vs_monod": ["1.44"],
+    "F_crit_95": ["7.71"],
+    "routeB_monod_mu_m": ["0.8809"], "routeB_monod_K_S": ["20.45"],
+    "boot_size_forward_truth": ["0.37", "36.55 %"],
+    "boot_size_control_truth": ["0.0495"],
+    "boot_median_n_forward_truth": ["1.61"], "boot_median_n_control_truth": ["1.01"],
+    "boot_p_of_observed_F": ["0.23"], "boot_p_of_observed_n": ["0.13"],
+    "Nstar_tessier": ["10.3"], "Nstar_blackman": ["1.30"],
+    "Dc_ratio_at_Sf20": ["1.83"], "Sf_for_10pct_gap": ["95.5"],
+    "Sf_crossing": ["197.1"],
+    "sym_blackman_gap_lower_over_mum": ["0.0858"],
+    "bias_over_routeA_rms": ["1.21"], "bias_max_abs_excl_bad_row": ["0.0663"],
+    "max_swing_over_CAbar": ["1.89"],
+    "pfr_observed_order": ["1.00", "0.9981"],
+    "pymrm_batch_observed_order": ["1.00", "0.9993"],
+    "pfr_centre_read_order": ["1.00"],
+    "pfr_centre_over_boundary_read": ["0.39"],
+    "pfr_richardson_relerr": ["3.2e-6"],
+    "rawlings_Dc_relerr": ["2.1e-4"],
+    "rawlings_10_19_max_relerr": ["below 1e-9"],
+    "Dc_monod_transient_relerr": ["below 1 %"],
+    "Dc_contois_transient_relerr": ["below 1 %"],
+    "pymrm_refit_mum_relerr": ["below 1e-4"],
+    "pymrm_refit_KS_relerr": ["below 1e-4"],
+    "pymrm_batch_conservation_relerr": ["below 1e-13"],
+    # the proved-zero class, quoted only as the bounds they are checked against
+    "contois_map_mum_relerr": [f"below {MAP_BOUND:g}"],
+    "contois_map_KS_relerr": [f"below {MAP_BOUND:g}"],
+    "Sf_crossing_vs_a_relerr": [f"below {MAP_BOUND:g}"],
+    "contois_minus_monod_rms": [f"below {RMS_GAP_BOUND:g}"],
+    "sep_moser": [f"below {SEP_BOUND:g}"], "sep_contois": [f"below {SEP_BOUND:g}"],
+}
+for k_, lits in SAYS.items():
+    for lit in lits:
+        claims.says(lit, k_)
+N_SAYS = sum(len(v) for v in SAYS.values())
 
+# -- quoted numbers that are NOT claims: derived quantities, other readings and
+#    the page's own counts.  Each is deterministic to far below the tolerance it
+#    is checked at, on any machine.
 CHECKS = [
- ("balance R2, six rows = 0.99996",     round(M["balance_R2_six_rows"], 5), 0.99996),
- ("balance R2, all rows  = 0.98505",    round(M["balance_R2_all_rows"], 5), 0.98505),
  ("flagged row is row 4",               BAD_ROW + 1, 4),
- ("row-4 balance residual = -17.2",     round(M["balance_row4_residual"], 1), -17.2),
- ("yield phi = 0.3174",                 round(M["balance_phi"], 4), 0.3174),
- ("intercept a = 197.12",               round(M["balance_a"], 2), 197.12),
- ("route A Monod RMS = 0.05469",        round(M["rmsA_Monod"], 5), 0.05469),
- ("route A Blackman RMS = 0.02677",     round(M["rmsA_Blackman"], 5), 0.02677),
- ("route A Tessier RMS = 0.03871",      round(M["rmsA_Tessier"], 5), 0.03871),
- ("route A Contois RMS = 0.05153",      round(M["rmsA_Contois"], 5), 0.05153),
- ("route B Monod RMS = 0.03147",        round(M["rmsB_Monod"], 5), 0.03147),
- ("route B Blackman RMS = 0.03955",     round(M["rmsB_Blackman"], 5), 0.03955),
- ("route B Tessier RMS = 0.02631",      round(M["rmsB_Tessier"], 5), 0.02631),
  ("Monod last of the four on route A",  1.0,
   1.0*(M["rmsA_Monod"] == max(M[f"rmsA_{k}"] for k in TWO_PAR))),
  ("Blackman worst of the four on route B", 1.0,
   1.0*(M["rmsB_Blackman"] == max(M[f"rmsB_{k}"] for k in TWO_PAR))),
- ("route A n = 1.93",                   round(M["routeA_n_moser"], 2), 1.93),
- ("route B n = 1.51",                   round(M["routeB_n_moser"], 2), 1.51),
- ("route A F = 12.3",                   round(M["routeA_F_moser_vs_monod"], 1), 12.3),
- ("route B F = 1.44",                   round(M["routeB_F_moser_vs_monod"], 2), 1.44),
- ("F crit = 7.71",                      round(M["F_crit_95"], 2), 7.71),
  ("Monod residual falls 42 %",
   round(100*(1 - M["rmsB_Monod"]/M["rmsA_Monod"])), 42.0),
- ("fitted mu_m = 0.8809 1/h",           round(M["routeB_monod_mu_m"], 4), 0.8809),
- ("fitted K_S = 20.45",                 round(M["routeB_monod_K_S"], 2), 20.45),
- ("bootstrap size, forward truth = 0.37", round(M["boot_size_forward_truth"], 2), 0.37),
- ("bootstrap size, control = 0.0495",   round(M["boot_size_control_truth"], 4), 0.0495),
  ("the control is AT nominal, not conservative", 1.0,
   1.0*(abs(M["boot_size_control_truth"] - 0.05) < 3*(0.05*0.95/NBOOT)**0.5)),
- ("bootstrap median n, forward = 1.61", round(M["boot_median_n_forward_truth"], 2), 1.61),
- ("bootstrap median n, control = 1.01", round(M["boot_median_n_control_truth"], 2), 1.01),
- ("p of the observed route-A F = 0.23", round(M["boot_p_of_observed_F"], 2), 0.23),
- ("p of the observed route-A n = 0.13", round(M["boot_p_of_observed_n"], 2), 0.13),
  ("grid-only control size = 0.021",     round(GRID_ONLY["control"]["size"], 3), 0.021),
  ("grid-only control median n = 0.95",  round(GRID_ONLY["control"]["med"], 2), 0.95),
  ("grid-only forward size = 0.308",     round(GRID_ONLY["forward"]["size"], 3), 0.308),
@@ -2240,34 +2386,21 @@ CHECKS = [
  ("row 4 end-of-interval value = 44.33",
   round(A_BAL - Cc1[3]/PHI_BAL, 2), 44.33),
  ("Rawlings' D_c at their printed set is 5/6", Dc_r_closed, 5/6),
- ("74 metrics reported",                N_METRICS, 74),
- ("60 of them covered by an injection", N_COVERED, 60),
- ("14 named structural",                N_STRUCT, 14),
- ("12 below ABS_FLOOR",                 N_BELOW, 12),
+ ("81 claims registered",               len(claims.metrics), 81),
+ ("57 of them values",                  len(_kinds["value"]), 57),
+ ("23 of them bounds",                  len(_kinds["bound"]), 23),
+ ("1 of them exact",                    len(_kinds["exact"]), 1),
+ ("57 prose literals checked by claims.says", N_SAYS, 57),
+ ("80 metrics in the coverage map",     N_METRICS, 80),
+ ("62 of them covered by an injection", N_COVERED, 62),
+ ("18 named structural",                N_STRUCT, 18),
  ("79 injections, all 79 move",         len(TBK), 79),
- ("6 quantities printed but not reported", len(NOT_REPORTED), 6),
- ("18 quantities proved exactly zero",  len(PROVED_ZERO), 18),
+ ("18 quantities proved exactly zero, all bounds", len(PROVED_ZERO), 18),
  ("the cross-check is blind to a wrong yield", 1.0,
   1.0*(BLIND_MOVE[1] > 1.0 and abs(BLIND_GAP[1] - BLIND_GAP[0])
        < 0.5*BLIND_GAP[0])),
- ("S + X/phi does not move when mu_m is tripled", 1.0, 1.0*(INV_3X_RELERR < 1e-14)),
- ("N* Tessier = 10.3",                  round(M["Nstar_tessier"], 1), 10.3),
- ("N* Blackman = 1.30",                 round(M["Nstar_blackman"], 2), 1.30),
- ("D_c factor at S_f = 20 is 1.83",     round(M["Dc_ratio_at_Sf20"], 2), 1.83),
- ("10 % gap below S_f = 95.5",          round(M["Sf_for_10pct_gap"], 1), 95.5),
- ("both Contois map errors below 1e-4", 1.0,
-  1.0*(max(MAP_MUM_RELERR, MAP_KS_RELERR) < 1e-4)),
- ("pymrm refit agrees to < 1e-4",       1.0,
-  1.0*(max(M["pymrm_refit_mum_relerr"], M["pymrm_refit_KS_relerr"]) < 1e-4)),
- ("plug-flow order = 1.00",             round(M["pfr_observed_order"], 2), 1.00),
- ("washout root-find agrees to < 1 %",  1.0,
-  1.0*(max(M["Dc_monod_transient_relerr"], M["Dc_contois_transient_relerr"]) < 1e-2)),
- ("backward Euler order = 1.00",        round(M["pymrm_batch_observed_order"], 2), 1.00),
+ ("S + X/phi does not move when mu_m is tripled", 1.0, 1.0*(INV_3X_RELERR < 1e-13)),
  ("Blackman gap at the switch = 1/3",   M["sym_blackman_gap_at_switch_over_mum"], 1/3),
- ("Blackman lower gap = 0.0858",        round(M["sym_blackman_gap_lower_over_mum"], 4), 0.0858),
- ("bias / route-A scatter = 1.21",      round(M["bias_over_routeA_rms"], 2), 1.21),
- ("largest clean bias = 0.0663",        round(M["bias_max_abs_excl_bad_row"], 4), 0.0663),
- ("bootstrap size, forward = 36.55 %",  round(100*M["boot_size_forward_truth"], 2), 36.55),
  # the Monte-Carlo sampling errors, quoted beside every one of the six numbers
  ("forward size MC error = 1.1 %",     round(100*out["forward"]["size_se"], 1), 1.1),
  ("control size MC error = 0.5 %",     round(100*out["control"]["size_se"], 1), 0.5),
@@ -2275,55 +2408,30 @@ CHECKS = [
  ("control median n MC error = 0.0049", round(out["control"]["med_se"], 4), 0.0049),
  ("p(F>obs) MC error = 0.0094",        round(out["forward"]["pF_se"], 4), 0.0094),
  ("p(n>obs) MC error = 0.0075",        round(out["forward"]["pn_se"], 4), 0.0075),
- # NOT pinned to two significant figures: these three are exit tolerances for
- # quantities the page proves are exactly zero, which is why they are kept out of
- # agreement.json - pinning them here would reintroduce the same fragility, and
- # tighter than CI's 5 %. They are BOUNDED, and the mechanical sweep below holds
- # whatever the metadata prints to whatever precision it prints it.
- ("the crossing gap to a is a fit tolerance, below 1e-4", 1.0,
-  1.0*(CROSS_VS_A < 1e-4)),
- # and the root-find is inside BRENTQ'S OWN GUARANTEE, xtol + rtol|x|, rather than
+ # the root-find is inside BRENTQ'S OWN GUARANTEE, xtol + rtol|x|, rather than
  # under the round 1e-15 the observed residual happens to sit below: that residual
  # is Brent's last interpolation, not anything declared - it moves by more than an
  # order under a change of BRACKET that changes no mathematics - so asserting it
  # would stop this page executing the day scipy moves a fitted constant in its 9th
- # figure.  The printed 1.4e-16 is the observation; this line is the guarantee.
- # It is the looser of the two by some three orders and still seven orders below
- # the 1.99e-05 the paragraph up there is distinguishing it from, which is all
- # the argument needs.
+ # figure.  The printed residual is the observation; this line is the guarantee.
  ("the root-find is inside brentq's declared tolerance", 1.0,
   1.0*(SF_ROOTFIND_RELERR < SF_ROOTFIND_BOUND)),
  ("cell-centre read is 2.59x closer",   round(1/M["pfr_centre_over_boundary_read"], 2), 2.59),
  ("substrate ran 148.3 -> 0.23",        round(M["balance_a"] - Cc0[0]/M["balance_phi"], 1), 148.3),
- ("largest swing / CA_bar = 1.89",      round(M["max_swing_over_CAbar"], 2), 1.89),
  ("Monod beats the best null 3.68x",    round(M["rmsA_first_order"]/M["rmsA_Monod"], 2), 3.68),
  ("Blackman beats it 7.53x",            round(M["rmsA_first_order"]/M["rmsA_Blackman"], 2), 7.53),
- ("largest other balance residual 0.65", round(M["balance_worst_other_residual"], 2), 0.65),
  ("worst leave-one-out R2 = 0.9757",    round(min(loo[i][2] for i in range(NOBS)
                                                   if i != BAD_ROW), 4), 0.9757),
  ("best other leave-one-out = 0.9848",  round(max(loo[i][2] for i in range(NOBS)
                                                   if i != BAD_ROW), 4), 0.9848),
- ("row-4 end-of-interval gap = 3.1 %",  round(100*M["row4_end_of_interval_relgap"], 1), 3.1),
  ("row 3 end-of-interval 16.8 % off",
   round(100*abs((A_BAL - Cc1[2]/PHI_BAL) - CAb[2])/CAb[2], 1), 16.8),
  ("row 5 end-of-interval 53.6 % off",
   round(100*abs((A_BAL - Cc1[4]/PHI_BAL) - CAb[4])/CAb[4], 1), 53.6),
- ("crossing root-found at 197.116",     round(M["Sf_crossing"], 3), 197.116),
- ("conservation below 1e-14",           1.0,
-  1.0*(M["pymrm_batch_conservation_relerr"] < 1e-14)),
- ("marcher order 0.9993",               round(M["pymrm_batch_observed_order"], 4), 0.9993),
- ("plug-flow order 0.9981",             round(M["pfr_observed_order"], 4), 0.9981),
- ("plug-flow Richardson 3.2e-6",        round(M["pfr_richardson_relerr"]*1e6, 1), 3.2),
- ("Rawlings D_c recovered to 2.1e-4",   round(M["rawlings_Dc_relerr"]*1e4, 1), 2.1),
- ("Contois/Monod RMS gap below 1e-11",  1.0, 1.0*(CONTOIS_MINUS_MONOD_RMS < 1e-11)),
- ("both degenerate separations below 1e-9", 1.0,
-  1.0*(max(NOT_REPORTED["sep_moser"], M["sep_contois"]) < 1e-9)),
- ("pymrm refit 1.7e-6 and 9.4e-6",
-  round(M["pymrm_refit_mum_relerr"]*1e6, 1) + round(M["pymrm_refit_KS_relerr"]*1e6, 1),
-  1.7 + 9.4),
 ]
 for lab, a, b in CHECKS:
     close(float(a), float(b), 5e-3, lab)
+assert len(CHECKS) == 48, len(CHECKS)       # the count README.md and meta.yaml quote
 # values that exist only in the break table are LOOKED UP, never retyped
 brk = {(r["row"], r["metric"]): r for r in BREAK}
 assert brk[("the flagged row kept in the balance line",
@@ -2356,28 +2464,26 @@ close(round(M["pfr_centre_over_boundary_read"], 2), 0.39, 2e-2,
       "the cell-centre read is 0.39x the boundary read here")
 close(round(M["pfr_centre_read_order"], 2), 1.00, 5e-3, "cell-centre read order")
 N_BRK_LOOKUPS = 10          # the asserts and close() calls immediately above
-print(f"{len(CHECKS)} prose/metadata values checked against the live computation,"
-      f" plus {N_BRK_LOOKUPS} break-table\nlookups. All agree.")
+print(f"{N_SAYS} prose literals of registered claims checked by claims.says,"
+      f" {len(CHECKS)} other prose/metadata\nvalues checked against the live"
+      f" computation, plus {N_BRK_LOOKUPS} break-table lookups. All agree.")
 
 # ---- MECHANICAL SWEEP of the metadata files for numbers in scientific notation.
 # The list above is curated and a curated list drifts; this one enumerates the
 # tokens instead. Every a.bce+xy in meta.yaml, README.md, models_entry.yaml and
-# the two data sidecars must match a live value - a reported metric, a printed
-# but not reported quantity, a break-table entry or a declared constant - to
+# the two data sidecars must match a live value - a registered claim, a bound
+# a claim is checked against, a break-table entry or a declared constant - to
 # HALF AN ULP OF ITS OWN PRINTED DIGITS, taken from the token itself:
 #     half ulp = 0.5 * 10**(exponent - decimals in the mantissa),  compared
-# ABSOLUTELY. An earlier version of this cell computed 5*10**-sig and applied it
-# RELATIVELY, which is half an ulp only when the mantissa is 1 and is up to ten
-# times looser otherwise - a +-5 % window on 6.6e+02, where half an ulp is 0.8 %
-# - so it caught fewer than a quarter of the last-digit errors it was written for.
-# The window below is exact, and the sweep MEASURES its own detection rate below
-# instead of claiming one. The regex also used to reject any token followed by a
-# full stop, i.e. every value that ends a sentence - which in these files
-# included the one this page cares most about. Files absent (Colab, or
+# ABSOLUTELY. A relative window of 5*10**-sig is half an ulp only when the
+# mantissa is 1 and is up to ten times looser otherwise - a +-5 % window on
+# 6.6e+02, where half an ulp is 0.8 %. The window below is exact, and the sweep
+# MEASURES its own detection rate below instead of claiming one. The regex
+# accepts a token followed by a full stop, i.e. a value that ends a sentence. Files absent (Colab, or
 # models_entry.yaml once spliced into models.yaml) are skipped and counted.
 import re
-POOL = ([float(v) for v in M.values()] + [ABS_FLOOR, MOVE_TOL, RES_CA, RES_CC, RES_DT]
-        + [float(v) for v in NOT_REPORTED.values()] + BOUNDS   # printed, not reported
+POOL = ([float(v) for v in M.values()] + [MOVE_TOL, RES_CA, RES_CC, RES_DT]
+        + BOUNDS                                     # the claims' own limits
         + BLIND_GAP + BLIND_MOVE + [INV_3X_RELERR, FA_IMP, CAB_IMPUTED]
         + [float(v) for d in GRID_ONLY.values() for v in d.values()]
         + [float(v) for pair in SIG_TABLE.values() for v in pair]
@@ -2425,10 +2531,9 @@ for fn in SCAN:
         if not _matched(v, h):
             missing.append((fn, tok))
         # the sweep's own teeth, measured on the spot: would it notice this very
-        # token if its LAST PRINTED DIGIT were one out?  BOTH WAYS: an earlier
-        # version probed only +1 and quoted that single count as "the" detection
-        # rate, which flatters it - a mantissa of exactly 1 corrupts DOWNWARD to
-        # zero, and 0.0 is a live value on this page.
+        # token if its LAST PRINTED DIGIT were one out?  BOTH WAYS: probing only
+        # +1 would flatter the detection rate - a mantissa of exactly 1 corrupts
+        # DOWNWARD to zero, and 0.0 is a live value on this page.
         for sgn, key in ((+1.0, "up"), (-1.0, "down")):
             if _matched(v + sgn*2*h, h):
                 blind[key].add(len(found) - 1)
@@ -2461,10 +2566,23 @@ for i in BLIND_ANY:
     print(f"   {found[i][0]} {found[i][1]}   (blind to {d})")
 print(f"So the sweep is a guard against a value drifting out of the curated list, not"
       f"\na proof that every printed digit is right; it is also blind to a wrong SIGN,"
-      f"\nwhich its regex does not read. {len(CHECKS)} curated checks stand behind it.")
+      f"\nwhich its regex does not read. {N_SAYS + len(CHECKS)} curated checks stand"
+      f" behind it.")
 print("   per file: " + ",  ".join(f"{fn} {sum(1 for r in found if r[0] == fn)}"
                                    for fn in SCAN if fn not in skipped))
-assert not missing, missing'''))
+assert not missing, missing
+print()
+# Ten claims have no break row that fails their own check, so breaks are not
+# required page-wide: two closed-form constants, two root-finds against closed
+# forms, the tabulated F(1,4), a property of the printed table, two degenerate
+# separations of Moser and the Contois RMS gap (nothing on this page injects a
+# defect into those fits) and the Contois washout error.  report() lists them
+# in agreement.json; every other claim has a row that fails it.
+PAYLOAD = claims.report(require_breaks=False)
+# the counts README.md and meta.yaml quote for the break table's reach
+assert len(PAYLOAD["unbroken"]) == 10, PAYLOAD["unbroken"]
+assert sum(1 for v in PAYLOAD["breaks"].values() if v) == 65, PAYLOAD["breaks"]
+assert sum(1 for c in claims.metrics.values() if c.get("structural")) == 6'''))
 
 # ------------------------------------------------------------ what pymrm adds
 cells.append(md(r"""## What pymrm adds
@@ -2477,12 +2595,11 @@ Load-bearing:
 - **The second, independent computation of the fit.** `BatchMarch` is a
   backward-Euler marcher built from `NumJac((1, 2))` and `newton`, and it
   re-derives $\mu_m$ and $K_S$ through a different discretisation, a different
-  Jacobian and a different linear solve, agreeing with the LSODA fit to 2e-6 and
-  1e-5. A break row confirms the check has teeth by running it unconverged. Be
-  precise about what it buys, because an earlier version of this page was not:
-  it catches a bug in *either integrator*, and it is blind to everything the two
+  Jacobian and a different linear solve, agreeing with the LSODA fit to below
+  1e-4 in both constants. A break row confirms the check has teeth by running it unconverged. Be
+  precise about what it buys: it catches a bug in *either integrator*, and it is blind to everything the two
   share - a wrong yield, a wrong intercept or a mis-set interval moves both
-  predictions together, which the Validation section now measures. Carrying $S$
+  predictions together, which the Validation section measures. Carrying $S$
   as an unknown instead of substituting the yield relation is worth having for
   its own sake, but $S + X/\varphi$ is then a **tautology** of the scheme, not a
   test of it: the source is $(-m/\varphi,\,m)$ built from one $m$, so backward

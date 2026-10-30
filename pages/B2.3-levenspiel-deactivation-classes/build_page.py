@@ -301,7 +301,7 @@ import pandas as pd
 import sympy as sp
 import matplotlib.pyplot as plt
 from IPython.display import Markdown, display
-from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from gallery_utils import Claims, load_data, load_meta, cite_data
 
 PAGE = "B2.3-levenspiel-deactivation-classes"
 EQS    = load_data("levenspiel-1972-printed-equations.csv", page=PAGE)
@@ -320,7 +320,7 @@ def md_table(df, index=False):
         lines.append("| " + " | ".join(str(v) for v in r.values) + " |")
     return "\n".join(lines)
 
-M = {}          # agreement metrics, assembled across the page
+M = {}          # every published number, registered as a claim at the end
 BREAKS = []     # defect-injection rows: (metric, base, injection, result, note)
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})
 
@@ -857,6 +857,9 @@ print(f"symbolic identities checked: {len(SYM)};  nonzero residuals: {bad if bad
 M["printed_chain_identities"] = float(len(SYM))
 M["printed_chain_nonzero"] = float(len(bad))
 assert not bad, bad
+# what the count is for: one mis-read rate constant in eq. (12) (k for k_d) is
+# caught as a nonzero residual
+SYM_TYPO_NONZERO = float(sp.simplify(a12 - sp.exp(-k * t)) != 0)
 '''))
 
 cells.append(md(r"""### 2. Eq. (24) is wrong as printed, by exactly $\ln(k_d/k)$
@@ -874,6 +877,10 @@ required_24 = kd * t + sp.log(sp.log(CA0 / CA) / k)      # from eq. (21)
 gap = sp.simplify(sp.log(tau21) - printed_24)
 M["eq24_residual_is_log_kd_over_k"] = float(sp.simplify(gap - sp.log(kd / k)) == 0)
 M["eq24_repaired_residual"] = float(sp.simplify(sp.log(tau21) - required_24) == 0)
+# the break rows: each boolean flips when the other form is read in its place
+EQ24_BROKEN = (float(sp.simplify(sp.simplify(sp.log(tau21) - required_24)
+                                 - sp.log(kd / k)) == 0),
+               float(sp.simplify(sp.log(tau21) - printed_24) == 0))
 print(f"eq. (21) minus eq. (24) as printed  =  {gap}")
 print(f"eq. (21) minus eq. (24) with 1/k    =  {sp.simplify(sp.log(tau21) - required_24)}")
 
@@ -1004,6 +1011,10 @@ with a spatial coordinate, so it is the only one whose activity carries a
 Each identity is checked **on** its condition and **off** it."""))
 
 cells.append(code(r'''"""The degeneracies: predicted from algebra, then measured by subtraction."""
+def below(v, b):
+    """A round-off or tolerance-sized number, printed as the bound it is checked
+    against; its digits differ between machines and are given only as 'here'."""
+    return f"below {b:g} (here {v:.1e})"
 rows = []
 
 # (1) n' = 0 collapses the four classes in every device
@@ -1014,13 +1025,14 @@ for cfg in ("batch", "plug", "mixed", "constC"):
         y = respond(cfg, cls, 1.5, 3.0, 1.0, 0.0, 0.0, c_set=BASE["c_set"])
         worst = max(worst, float(np.max(np.abs(y - ref))))
     M[f"degen_nprime0_{cfg}"] = worst
-    rows.append([f"n' = 0: all four classes identical", DEV[cfg], f"{worst:.2e}"])
+    rows.append([f"n' = 0: all four classes identical", DEV[cfg], below(worst, 1e-12)])
 # ... and the control: give the decay a concentration order and it stops holding
-worst_np0 = 0.0
+worst_np0, OFF_NP0 = 0.0, {}
 for cfg in ("batch", "plug", "mixed", "constC"):
     ref = respond(cfg, "independent", 1.5, 3.0, 1.0, 0.0, 0.0, c_set=BASE["c_set"])
     y = respond(cfg, "parallel", 1.5, 3.0, 1.0, 0.7, 0.0, c_set=BASE["c_set"])
-    worst_np0 = max(worst_np0, float(np.max(np.abs(y - ref))))
+    OFF_NP0[cfg] = float(np.max(np.abs(y - ref)))
+    worst_np0 = max(worst_np0, OFF_NP0[cfg])
 M["degen_nprime0_off_condition"] = worst_np0
 rows.append(["...the same comparison at n' = 0.7", "worst of the four",
              f"{worst_np0:.2e}"])
@@ -1037,9 +1049,17 @@ def _degen2(rtol):
             worst = max(worst, float(np.max(np.abs(ys - yp))))
     return worst
 worst2 = _degen2(1e-9)                 # the production tolerance
+# the break row: the same nine comparisons WITHOUT the relabelling of the orders
+# and of lam (series(n', d) against parallel(n', d)) are not an identity at all
+DEGEN2_UNMAPPED = max(
+    float(np.max(np.abs(run_mixed("series", kp_, lm, dv, npv, n=nn)[0]
+                        - run_mixed("parallel", kp_, lm, dv, npv, n=nn)[0])))
+    for nn in (0.5, 1.0, 2.0)
+    for npv, dv, lm, kp_ in ((1.0, 1.0, 3.0, 1.5), (0.5, 2.0, 2.0, 4.0),
+                             (2.0, 0.5, 1.0, 0.8)))
 M["degen_mixed_series_is_parallel"] = worst2
 M["degen_mixed_series_is_parallel_rtol1e-13"] = _degen2(1e-13)
-rows.append(["series(n',d) == parallel(n n', d+n')", DEV["mixed"], f"{worst2:.2e}"])
+rows.append(["series(n',d) == parallel(n n', d+n')", DEV["mixed"], below(worst2, 1e-8)])
 
 # (3) held-C_A device: parallel == series == independent after relabelling lam,
 #     and at d = 1 side-by-side joins them (consumption ~ a^(d-1) = const, so
@@ -1051,7 +1071,11 @@ for npv, dv in ((1.0, 1.0), (2.0, 3.0), (0.5, 0.0)):
     t3 = np.log(run_const_c("independent", 1.5, 3.0 * cs ** npv, dv, npv, cs)[0])
     worst3 = max(worst3, float(max(np.max(np.abs(t1 - t2)), np.max(np.abs(t1 - t3)))))
 M["degen_constC_par_ser_ind"] = worst3
-rows.append(["parallel == series == independent", DEV["constC"], f"{worst3:.2e}"])
+# the break row: series WITHOUT the relabelling lam -> lam (c/(1-c))^n'
+DEGEN3_UNMAPPED = float(np.max(np.abs(
+    np.log(run_const_c("parallel", 1.5, 3.0, 1.0, 1.0, cs)[0])
+    - np.log(run_const_c("series", 1.5, 3.0, 1.0, 1.0, cs)[0]))))
+rows.append(["parallel == series == independent", DEV["constC"], below(worst3, 1e-12)])
 
 # (4) side-by-side(sigma = kappa/lambda, n' = n, d = 1) == parallel, IDENTICAL
 #     parameters, because the poison then solves the reactant's own equation.
@@ -1068,12 +1092,16 @@ for cfg, runner in (("batch", run_batch), ("plug", PLUG.run),
     famA[cfg] = on
     M[f"degen_sbs_is_parallel_famA_{cfg}"] = on
     rows.append(["side-by-side(sig=kappa/lam) == parallel, n'=n and d=1",
-                 DEV[cfg], f"{on:.2e}"])
-off_cond = 0.0
-for nn, npv, dv in ((1.0, 1.0, 2.0), (1.0, 2.0, 1.0)):      # d != 1, or n' != n
-    yp = run_batch("parallel", KA, LA, dv, npv, n=nn)[0]
-    ys = run_batch("side-by-side", KA, LA, dv, npv, n=nn, sig=KA / LA)[0]
-    off_cond = max(off_cond, float(np.max(np.abs(yp - ys))))
+                 DEV[cfg], below(on, 1e-12)])
+OFF_A = {}                                                  # per device
+for cfg, runner in (("batch", run_batch), ("plug", PLUG.run),
+                    ("mixed", run_mixed)):
+    OFF_A[cfg] = 0.0
+    for nn, npv, dv in ((1.0, 1.0, 2.0), (1.0, 2.0, 1.0)):  # d != 1, or n' != n
+        yp = runner("parallel", KA, LA, dv, npv, n=nn)[0]
+        ys = runner("side-by-side", KA, LA, dv, npv, n=nn, sig=KA / LA)[0]
+        OFF_A[cfg] = max(OFF_A[cfg], float(np.max(np.abs(yp - ys))))
+off_cond = OFF_A["batch"]
 M["degen_batch_sbs_is_parallel_on_condition"] = famA["batch"]
 M["degen_batch_sbs_off_condition"] = off_cond
 rows.append(["...the same comparison OFF that condition (d = 2, or n' != n)",
@@ -1104,7 +1132,7 @@ for nn, npv, dv in ((1.0, 0.5, 1.0), (1.0, 2.0, 1.0), (1.0, 1.0, 2.0), (2.0, 1.0
 M["degen_sbs_famB_off_condition"] = famB_off
 for cfg in ("batch", "plug"):
     rows.append([f"side-by-side(any sig) == parallel(n' = lam sig/kap), n=n'=d=1",
-                 DEV[cfg], f"{famB[cfg]:.2e}"])
+                 DEV[cfg], below(famB[cfg], {"batch": 1e-7, "plug": 1e-8}[cfg])])
 rows.append(["...the same identity in the two WELL-MIXED devices (it fails)",
              "mixed / constC",
              f"{famB['mixed']:.2e} / {famB['constC']:.2e}"])
@@ -1115,19 +1143,23 @@ display(Markdown("**Exact degeneracies, measured as max |difference| in the "
                  "device's observable:**\n\n"
                  + md_table(pd.DataFrame(rows, columns=["identity", "device",
                                                         "max |difference|"]))))
-ratio = "infinitely" if famA["batch"] == 0.0 else f"{off_cond / famA['batch']:.1e}x"
-print(f"\nControls. Degeneracy 4 off its condition (d = 2, or n' != n) separates "
-      f"by {off_cond:.2e} - {ratio} larger than on it ({famA['batch']:.2e}). "
-      f"Degeneracy 5 holds in the batch ({famB['batch']:.1e}) and the bed "
-      f"({famB['plug']:.1e}) over sigma = {SIG_FAM[0]:g}-{SIG_FAM[-1]:g}, and "
-      f"FAILS in the mixed reactor ({famB['mixed']:.1e}) and the held-C_A device "
-      f"({famB['constC']:.1e}) - {famB['mixed']/max(famB['plug'],1e-300):.0e}x "
-      f"larger - and fails in the bed itself off n = n' = d = 1 "
-      f"({famB_off:.1e}). The identities are sharp, not approximate.")
+# A ratio to a round-off residual is a ratio to noise, so every control is
+# stated against the BOUND the identity is checked at, never divided by it.
+print(f"\nControls. Degeneracy 4 holds to below 1e-12 on its condition and off "
+      f"it (d = 2, or n' != n) separates by {off_cond:.2e}, more than 1e10 times "
+      f"that bound. Degeneracy 5 holds in the batch (below 1e-7) and the bed "
+      f"(below 1e-8, the integrator tolerance) over sigma = "
+      f"{SIG_FAM[0]:g}-{SIG_FAM[-1]:g}, and FAILS in the mixed reactor "
+      f"({famB['mixed']:.1e}) and the held-C_A device ({famB['constC']:.1e}), "
+      f"each more than 1e6 times the bed's bound, and in the bed itself off "
+      f"n = n' = d = 1 ({famB_off:.1e}). The identities are sharp, not "
+      f"approximate.")
+assert min(off_cond / 1e-12, min(famB['mixed'], famB['constC'], famB_off) / 1e-8) > 1e6
 print(f"\nDegeneracy 2 is reported at the production integrator tolerance "
-      f"(rtol 1e-9): {worst2:.2e}. It is a TOLERANCE, not a separation - "
-      f"re-integrating the same nine order combinations at rtol 1e-13 gives "
-      f"{M['degen_mixed_series_is_parallel_rtol1e-13']:.2e}, i.e. the identity "
+      f"(rtol 1e-9): below 1e-8 (here {worst2:.1e}). It is a TOLERANCE, not a "
+      f"separation - re-integrating the same nine order combinations at rtol "
+      f"1e-13 gives below 1e-11 (here "
+      f"{M['degen_mixed_series_is_parallel_rtol1e-13']:.1e}), i.e. the identity "
       f"is exact and the printed number measures the ODE solver.")
 BREAKS.append(("degen_batch_sbs_is_parallel_on_condition", famA["batch"],
                "step off the n' = n, d = 1 condition (d = 2)", off_cond,
@@ -1159,9 +1191,9 @@ the twin is used instead.** Each of the five degeneracies names a *specific*
 parameter vector at which some candidate reproduces some truth exactly — $n'=0$
 for degeneracy 1, $(nn', d+n')$ with $\lambda\kappa^{n'}$ for degeneracy 2, and
 so on. Those points are inside the fitter's own bounds and next to its own seed
-grid, and yet the optimiser does not always find them: with the fit alone, a
-number of entries whose exact minimum is **zero** came out well above it — the
-count and the size are printed below, not typed here.
+grid, and yet the optimiser does not always find them: with the fit alone, an
+entry whose exact minimum is **zero** can come out well above it. The count and
+the size are printed below, not typed here.
 So every entry is evaluated **both** ways — the multistart fit, and the
 identity twin where §4 predicts one — and the matrix reports the smaller,
 flagged as an identity. An entry with no predicted twin is the fit alone and is
@@ -1170,18 +1202,22 @@ an upper bound; the table below says which is which.
 **The diagonal's exact minimum is zero by construction**, since it is a class
 fitted to its own response with every parameter free. Any non-zero diagonal is
 therefore an **optimiser stall**, not a null and not a result, and the twin
-(the truth itself) sets those entries to zero exactly. The size of the stall is
-still worth reporting — it is what the fit alone would have claimed — and its
-recovered parameters are printed below, because the interesting question is
-*where* the optimiser stalled.
+(the truth itself) sets those entries to zero exactly. The fit alone is still
+reported, with one caveat stated up front: for parallel, series and
+independent the seed grid contains the truth (to the last bit of its log
+transform), so those twelve diagonal fits only evaluate the truth and test
+nothing about recovery. The side-by-side
+column is the real test, because $\sigma$ is seeded at 1 and the truth is 0.8:
+from that off-truth start the fit gets below $10^{-9}$, the integrator's own
+tolerance, on all four devices, so the fitter's floor sits six orders below the
+instrument resolution and no threshold on this page needs anything beyond the
+instrument.
 
-**A floor of twenty times that stall would be a natural extra safeguard, and it
-is not applied here, because it never binds.** Twenty times the worst stall is
-below the instrument resolution on all four devices, so such a threshold would
-equal the instrument resolution exactly on every one of them. The check is
-printed below rather than asserted in prose. Nothing that follows is claimed
-inside the machinery's own noise — but the constraint that guarantees it is the
-instrument, not the fitter, and the page says which."""))
+**That the five constants of eq. (6) trade against each other is measured
+with a profile, not read off where an optimiser stopped.** One constant is held
+away from the truth, the other four are refitted, and the smallest residual
+left is reported; it is compared with what a +1 % move of a single constant
+costs when the other four are held at the truth. Both tables are printed below."""))
 
 cells.append(code(r'''"""The separability matrices.  Two-stage multistart: screen every seed cheaply,
 then polish the best two.  Deterministic - a fixed seed list, no randomness."""
@@ -1225,21 +1261,33 @@ class _Budget(Exception):
     """Raised inside the residual to cap the cost of one fit."""
 
 CAPPED = []          # entries whose evaluation budget bound
+EVALS = {}           # tag -> share of the budget that fit used
 
 def fit_class(config, target, cls, kappa0=1.5, lam0=3.0, n=1.0, c_set=0.4,
-              theta=TH, nfev=300, keep=2, rounds=5, seeds=None, budget=3500,
+              theta=TH, nfev=300, keep=2, rounds=5, seeds=None, budget=10000,
               tag=None):
     """Best fit of one class to one response.  Deterministic: a fixed seed grid
     over the two ORDERS (the parameters the landscape is nonconvex in), ranked
     by a direct residual evaluation, then the best `keep` polished with
-    x_scale='jac' - which is what gets the diagonal of the matrix (the fitter
-    recovering the truth) down to machine zero instead of 1e-6.
+    x_scale='jac'.
 
-    `budget` caps the residual evaluations of ONE fit.  It binds only where the
-    minimum is an exact degeneracy the optimiser is still chasing below 1e-9;
-    the best value seen is kept, so a capped fit can only report a residual that
-    is too LARGE.  Capped entries are listed, and the summary below refuses to
-    call anything separable on one."""
+    The Jacobian is a CENTRAL difference with a relative step of 1e-4. The
+    residual is an ODE solution, accurate to rtol 1e-9 and not smooth below
+    that, so scipy's default (a one-sided step of about 1.5e-8) differentiates
+    the integrator's error rather than the model: measured outside this page
+    (docs/refresh-learnings.md row 11) its columns are wrong by up to 7e-2,
+    and on an ill-conditioned valley the trust region then stops at a point
+    set by round-off. With the step well above the integrator noise the
+    side-by-side diagonal (the fitter recovering the truth from off-truth
+    seeds) reaches below 1e-9 on every device.
+
+    `budget` caps the residual evaluations of ONE fit, Jacobian evaluations
+    included.  The best value seen is kept, so a capped fit can only report a
+    residual that is too LARGE.  Capped entries are listed, and the summary
+    below refuses to call anything separable on one.  At 3500 two fits of the
+    sweep hit it (series truth, side-by-side candidate, plug and mixed flow)
+    with the central-difference Jacobian; at 10000 none does, and their
+    residuals are unchanged to seven digits."""
     lo, hi = _bounds(cls)
     state = {"n": 0, "best": np.inf, "capped": False, "bx": None}
     def res(x):
@@ -1274,7 +1322,8 @@ def fit_class(config, target, cls, kappa0=1.5, lam0=3.0, n=1.0, c_set=0.4,
             # the exact degeneracies from ~1e-6 to machine zero.
             try:
                 r = least_squares(res, x, bounds=(lo, hi), xtol=1e-15, ftol=1e-15,
-                                  gtol=1e-15, max_nfev=nfev, x_scale="jac")
+                                  gtol=1e-15, max_nfev=nfev, x_scale="jac",
+                                  jac="3-point", diff_step=1e-4)
             except _Budget:
                 break
             except Exception:
@@ -1288,6 +1337,8 @@ def fit_class(config, target, cls, kappa0=1.5, lam0=3.0, n=1.0, c_set=0.4,
             prev = v
         if state["capped"]:
             break
+    if tag is not None:
+        EVALS[tag] = min(state["n"], budget + 1) / budget
     if state["capped"] and tag is not None:
         CAPPED.append(tag)
     return state["best"], (bx if state["bx"] is None else state["bx"])
@@ -1393,7 +1444,10 @@ print(f"{4 * len(CLASSES) ** 2} fits done "
       f"others, no randomness anywhere)")
 for cfg, D in SEP.items():
     lab = np.where(np.isfinite(SEP_TWIN[cfg]), "*", " ")
-    df = pd.DataFrame([[f"{D[i, j]:.2e}{lab[i, j]}" for j in range(4)]
+    # identity-backed entries are at the integrator's round-off, whose digits
+    # differ between machines: they are printed as the bound they are checked at
+    df = pd.DataFrame([[("0*" if D[i, j] == 0.0 else "<1e-8*") if lab[i, j] == "*"
+                        else f"{D[i, j]:.2e}" for j in range(4)]
                        for i in range(4)],
                       index=[f"truth: {c}" for c in CLASSES],
                       columns=[f"fit {SHORT[c]}" for c in CLASSES])
@@ -1413,65 +1467,194 @@ has = np.isfinite(tw_all)
 over = ft_all[has] - tw_all[has]
 M["sep_identity_backed"] = float(has.sum())
 M["sep_identity_twin_worst"] = float(np.max(tw_all[has]))
-M["sep_optimiser_overstated"] = float(int((over > 1e-6).sum()))
+# registered as a thresholded count with its margin; differences below 1e-8 are
+# the integrator's round-off and are recorded as 0, so the margin is not noise
+SEP_OVER = np.where(np.abs(over) < 1e-8, 0.0, over)
 M["sep_optimiser_worst_overstatement"] = float(np.max(over))
 ov_rows = [[DEV[cfg], f"truth {tr}", f"fit {SHORT[cd]}",
-            f"{SEP_FIT[cfg][i, j]:.2e}", f"{SEP_TWIN[cfg][i, j]:.2e}"]
+            f"{SEP_FIT[cfg][i, j]:.2e}", "<1e-8"]
            for cfg in SEP for i, tr in enumerate(CLASSES)
            for j, cd in enumerate(CLASSES)
            if np.isfinite(SEP_TWIN[cfg][i, j])
            and SEP_FIT[cfg][i, j] - SEP_TWIN[cfg][i, j] > 1e-6]
 display(Markdown(
     f"**{int(M['sep_identity_backed'])} of 64 entries have an exact identity "
-    f"behind them** (worst twin residual {M['sep_identity_twin_worst']:.1e}, "
-    f"which is the ODE tolerance, not a separation). For "
-    f"{int(M['sep_optimiser_overstated'])} of them the multistart alone stopped "
-    f"more than 1e-6 short - these are the entries a fit-only matrix would have "
+    f"behind them** (every twin residual below 1e-8, the ODE tolerance, not a "
+    f"separation; here at worst {M['sep_identity_twin_worst']:.1e}). For "
+    f"{int((over > 1e-6).sum())} of them the multistart alone stopped "
+    f"more than 1e-6 short - the entries a fit-only matrix would have "
     f"printed as measured separations:\n\n"
     + md_table(pd.DataFrame(ov_rows, columns=["device", "truth", "candidate",
                                               "multistart fit alone",
                                               "identity twin"]))))
-print(f"Every one of those errors is in the SAFE direction (an optimiser bound "
-      f"is an upper bound on a minimum), and none of them crosses a threshold "
-      f"below - the largest, {M['sep_optimiser_worst_overstatement']:.2e}, is "
-      f"under the {RES_X:g} conversion resolution. But printed as fits they "
-      f"would have read as measurements of a separation that is exactly zero.")
+print(f"Every such error is in the SAFE direction (an optimiser bound is an "
+      f"upper bound on a minimum), and none crosses a threshold below: the "
+      f"largest, {M['sep_optimiser_worst_overstatement']:.2e}, is under the "
+      f"{RES_X:g} conversion resolution. But printed as a fit it would have read "
+      f"as the measurement of a separation that is exactly zero.")
 assert M["sep_optimiser_worst_overstatement"] < RES_X, \
     "an optimiser shortfall now crosses the instrument resolution - a verdict "\
     "would change, and the sentence above would be false"
+# the break row: the worst entry refitted with the twin's own parameters added
+# as a seed
+_worst = max(((cfg, i, j) for cfg in SEP for i in range(4) for j in range(4)
+              if np.isfinite(SEP_TWIN[cfg][i, j])),
+             key=lambda e: SEP_FIT[e[0]][e[1], e[2]] - SEP_TWIN[e[0]][e[1], e[2]])
+_cfg, _i, _j = _worst
+_tw = twin_params(_cfg, CLASSES[_i], CLASSES[_j], BASE["kappa"], BASE["lam"],
+                  BASE["d"], BASE["nprime"], BASE["sig"], BASE["n"], BASE["c_set"])
+_x = [np.log(_tw[0]), np.log(_tw[1]), _tw[2]]
+if CLASSES[_j] != "independent":
+    _x.append(_tw[3])
+if CLASSES[_j] == "side-by-side":
+    _x.append(np.log(_tw[4]))
+_y = respond(_cfg, CLASSES[_i], BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"],
+             BASE["sig"], n=BASE["n"], c_set=BASE["c_set"])
+OVER_TWIN_SEEDED = float(fit_class(_cfg, _y, CLASSES[_j], BASE["kappa"], BASE["lam"],
+                                   n=BASE["n"], c_set=BASE["c_set"],
+                                   seeds=_seeds(CLASSES[_j], BASE["kappa"], BASE["lam"])
+                                   + [_x])[0] - SEP_TWIN[_cfg][_i, _j])
+print(f"The largest shortfall ({DEV[_cfg]}, truth {CLASSES[_i]}, candidate "
+      f"{CLASSES[_j]}) is a wrong basin, not noise: with the twin's parameters "
+      f"added to the seed list the same fit closes it to below 1e-8 (here "
+      f"{abs(OVER_TWIN_SEEDED):.0e}).")
+# and the twin bound's break row: degeneracy 2's twin WITHOUT the lam mapping
+_b = BASE
+_ys = respond("mixed", "series", _b["kappa"], _b["lam"], _b["d"], _b["nprime"], 0.0)
+_yp = respond("mixed", "parallel", _b["kappa"], _b["lam"], _b["d"] + _b["nprime"],
+              _b["n"] * _b["nprime"], 0.0)
+TWIN_UNMAPPED = float(np.sqrt(np.mean((_ys - _yp) ** 2)))
 
 # ------------------------------------------------------- the optimiser's stall
 # The diagonal is a class fitted to its OWN response with every parameter free,
 # so its exact minimum is identically zero: any non-zero diagonal is an
 # optimiser stall, not a null and not a result.  The twin (the truth itself)
 # sets the diagonal of the matrix above to zero; what is reported here is how
-# far the multistart ALONE got, and where it stopped.
+# far the multistart ALONE got.  It is a BOUND, below 1e-9, the ODE tolerance.
 for cfg in SEP:
     M[f"sep_stall_{cfg}"] = float(np.max(np.diag(SEP_FIT[cfg])))
 M["sep_stall_worst"] = float(max(M[f"sep_stall_{cfg}"] for cfg in SEP))
 M["sep_stall_worst_not_sbs"] = float(max(
     SEP_FIT[cfg][i, i] for cfg in SEP for i, c in enumerate(CLASSES)
     if c != "side-by-side"))
-stall_df = pd.DataFrame({DEV[cfg]: {c: f"{SEP_FIT[cfg][i, i]:.1e}"
+# printed as the bound each entry is checked at: the digits are round-off
+stall_df = pd.DataFrame({DEV[cfg]: {c: ("<1e-9" if SEP_FIT[cfg][i, i] < 1e-9
+                                        else f"{SEP_FIT[cfg][i, i]:.1e}")
+                                    + ("" if c == "side-by-side" else " (seed = truth)")
                                     for i, c in enumerate(CLASSES)} for cfg in SEP})
-display(Markdown("**The multistart's stall on the diagonal** - the same "
-                 "machinery asked to recover the truth, whose exact minimum is "
-                 "0 by construction:\n\n" + md_table(stall_df, index=True)))
-print(f"worst stall over all devices and classes: {M['sep_stall_worst']:.2e}; "
-      f"excluding the side-by-side candidate: {M['sep_stall_worst_not_sbs']:.2e} "
-      f"- so the stall is a side-by-side phenomenon.")
-assert M["sep_stall_worst"] < 1e-4, "the fitter cannot recover the truth at all"
+display(Markdown("**The multistart on the diagonal** - the same machinery asked "
+                 "to recover the truth, whose exact minimum is 0 by "
+                 "construction. Only the side-by-side row starts off the truth "
+                 "(sigma seeded at 1, truth 0.8); the other three rows only "
+                 "evaluate it:\n\n" + md_table(stall_df, index=True)))
+print(f"every side-by-side diagonal fit, started off the truth, reaches below "
+      f"1e-9 (here at worst {max(SEP_FIT[c][2, 2] for c in SEP):.1e}), so the "
+      f"fitter's own floor is six orders below the {RES_X:g} conversion "
+      f"resolution and binds nowhere.")
+assert M["sep_stall_worst"] < 1e-9, "the fitter no longer recovers the truth"
+# the break row for the stall bounds: the same diagonal fits stopped after
+# three evaluations of the polish, i.e. an optimiser that quits early.  The
+# parallel seed grid contains the truth itself, so that fit starts from one
+# seed off it, (kappa, lam) x (1.2, 0.8) and (d, n') = (1.5, 1.5)
+STALL_EARLY = {}
+for cfg in SEP:
+    for cls in ("parallel", "side-by-side"):
+        y_ = respond(cfg, cls, BASE["kappa"], BASE["lam"], BASE["d"],
+                     BASE["nprime"], BASE["sig"], n=BASE["n"], c_set=BASE["c_set"])
+        sd = ([[np.log(1.2 * BASE["kappa"]), np.log(0.8 * BASE["lam"]), 1.5, 1.5]]
+              if cls == "parallel" else None)
+        STALL_EARLY[(cfg, cls)] = fit_class(cfg, y_, cls, BASE["kappa"], BASE["lam"],
+                                            n=BASE["n"], c_set=BASE["c_set"],
+                                            nfev=3, keep=1, rounds=1, seeds=sd)[0]
+# the break row for the shortfall count: the same count recomputed with the
+# early-stopped diagonal fits in place of the converged ones
+_fit_e = {c: SEP_FIT[c].copy() for c in SEP}
+for (c, cl), v in STALL_EARLY.items():
+    _fit_e[c][CLASSES.index(cl), CLASSES.index(cl)] = v
+_over_e = (np.concatenate([_fit_e[c].ravel() for c in SEP])[has] - tw_all[has])
+OVER_COUNT_EARLY = float(int((_over_e > 1e-6).sum()))
 
-# WHERE it stalled: the recovered parameters, which are the point of the claim.
+# ------------------------------------- identifiability: a profile, not a stall
+# Whether eq. (6)'s five constants trade against each other is a property of
+# the model, so it is measured as one: hold ONE constant away from the truth,
+# refit the other four (central-difference Jacobian, the response integrated at
+# rtol 1e-12), and report the smallest residual that is left.  Each profile is
+# walked outward from the truth on either side, every point started from the
+# previous one and from the truth.  A profile value is an optimiser UPPER bound
+# on that minimum, which is the safe direction for a non-identifiability claim.
+PROF_RTOL = 1e-12
+X_TRUE = np.array([np.log(BASE["kappa"]), np.log(BASE["lam"]), BASE["d"],
+                   BASE["nprime"], np.log(BASE["sig"])])
 TRU = np.array([BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"], BASE["sig"]])
 PNAMES = ("kappa", "lambda", "d", "n'", "sigma")
-rec_rows, cost_rows = [], []
-for cfg in ("batch", "mixed"):          # the two devices whose stall is > 1e-6
-    rec = np.array(SEP_BX[cfg][("side-by-side", "side-by-side")])
-    dev = np.abs(rec / TRU - 1.0)
-    M[f"sep_stall_pardev_{cfg}"] = float(np.max(dev))
-    rec_rows.append([DEV[cfg], f"{SEP_FIT[cfg][2, 2]:.2e}"]
-                    + [f"{v:.4f}" for v in rec] + [f"{100*np.max(dev):.1f} %"])
+
+def _sbs_resp(cfg, x, rtol=PROF_RTOL):
+    runner = run_batch if cfg == "batch" else run_mixed
+    return runner("side-by-side", np.exp(x[0]), np.exp(x[1]), x[2], x[3],
+                  n=BASE["n"], sig=np.exp(x[4]), rtol=rtol)[0]
+
+def profile(cfg, q, values):
+    """Min RMS residual over the four other constants, constant q held fixed."""
+    lo, hi = _bounds("side-by-side")
+    y0 = _sbs_resp(cfg, X_TRUE)
+    free = [i for i in range(5) if i != q]
+    out, xprev = {}, X_TRUE.copy()
+    for val in values:
+        if (val - X_TRUE[q]) * (xprev[q] - X_TRUE[q]) < 0:
+            xprev = X_TRUE.copy()                    # the other side: restart
+        def r(z, val=val):
+            x = X_TRUE.copy(); x[free] = z; x[q] = val
+            return (_sbs_resp(cfg, x) - y0) / np.sqrt(y0.size)
+        best = None
+        for z0 in (xprev[free], X_TRUE[free]):
+            s_ = least_squares(r, z0, bounds=(lo[free], hi[free]), jac="3-point",
+                               diff_step=1e-4, x_scale="jac", xtol=1e-14,
+                               ftol=1e-14, gtol=1e-14, max_nfev=400)
+            if best is None or s_.cost < best.cost:
+                best = s_
+        xprev = X_TRUE.copy(); xprev[free] = best.x; xprev[q] = val
+        out[val] = (float(np.sqrt(2.0 * best.cost)), xprev.copy())
+    # the break row: the end of the range with the other four NOT refitted
+    far = max(values, key=lambda v: abs(v - X_TRUE[q]))
+    x_far = X_TRUE.copy(); x_far[q] = far
+    unfit = float(np.sqrt(np.mean((_sbs_resp(cfg, x_far) - y0) ** 2)))
+    return out, unfit
+
+PROFILES = {   # claim name -> (device, constant held, values, bound)
+    "sep_profile_d_batch": ("batch", 2, (1.05, 1.1, 1.2, 1.35, 1.5,
+                                          0.95, 0.9, 0.8, 0.65, 0.5), 2e-4),
+    "sep_profile_d_mixed": ("mixed", 2, (1.05, 1.1, 1.2, 1.35, 1.5,
+                                          0.95, 0.9, 0.8, 0.65, 0.5), 2e-4),
+    "sep_profile_nprime_mixed": ("mixed", 3, (1.1, 1.2, 1.35, 1.5,
+                                               0.9, 0.8, 0.65, 0.5), 2e-4),
+}
+_plo, _phi = _bounds("side-by-side")
+PROF, PROF_UNFIT, prof_rows = {}, {}, []
+for name, (cfg, q, vals, bnd) in PROFILES.items():
+    PROF[name], PROF_UNFIT[name] = profile(cfg, q, vals)
+    M[name] = float(max(v for v, _ in PROF[name].values()))
+    for val in sorted(PROF[name]):
+        v, x = PROF[name][val]
+        p_ = [np.exp(x[0]), np.exp(x[1]), x[2], x[3], np.exp(x[4])]
+        # a free constant pinned at the edge of the fitter's box: that point is
+        # an upper bound limited by the box, not by the model
+        edge = [PNAMES[i] for i in range(5) if i != q
+                and min(x[i] - _plo[i], _phi[i] - x[i]) < 1e-6]
+        prof_rows.append([DEV[cfg], f"{PNAMES[q]} = {val:g}", f"{v:.1e}"]
+                         + [f"{w:.3f}" for w in p_]
+                         + [", ".join(edge) if edge else "-"])
+display(Markdown("**Profiles of the side-by-side self-fit** (one constant held, "
+                 "the other four refitted; truth "
+                 + ", ".join(f"{p} = {v:g}" for p, v in zip(PNAMES, TRU))
+                 + "):\n\n"
+                 + md_table(pd.DataFrame(prof_rows, columns=["device", "held",
+                                                             "min RMS residual"]
+                                         + list(PNAMES)
+                                         + ["free constant at the box edge"]))))
+
+# ... against what a move along a single coordinate costs when nothing refits
+cost_rows, COST_2PCT = [], {}
+for cfg in ("batch", "mixed"):
     y0 = respond(cfg, "side-by-side", *TRU, n=BASE["n"], c_set=BASE["c_set"])
     costs = []
     for q in range(5):
@@ -1479,49 +1662,52 @@ for cfg in ("batch", "mixed"):          # the two devices whose stall is > 1e-6
         y1 = respond(cfg, "side-by-side", *p, n=BASE["n"], c_set=BASE["c_set"])
         costs.append(float(np.sqrt(np.mean((y1 - y0) ** 2))))
     M[f"sep_stall_1pct_cheapest_{cfg}"] = float(min(costs))
-    M[f"sep_stall_1pct_cheapest_over_stall_{cfg}"] = float(
-        min(costs) / SEP_FIT[cfg][2, 2])
-    M[f"sep_stall_1pct_dearest_over_stall_{cfg}"] = float(
-        max(costs) / SEP_FIT[cfg][2, 2])
-    cost_rows.append([DEV[cfg]] + [f"{c:.2e}" for c in costs]
-                     + [f"{min(costs)/SEP_FIT[cfg][2, 2]:.0f}x"])
-display(Markdown("**Where the multistart stalled** (side-by-side fitted to its "
-                 "own response; truth "
-                 + ", ".join(f"{p} = {v:g}" for p, v in zip(PNAMES, TRU))
-                 + "):\n\n"
-                 + md_table(pd.DataFrame(rec_rows, columns=["device", "stall"]
-                                         + list(PNAMES) + ["worst |rel. dev.|"]))
-                 + "\n\n**and what a move along a single coordinate costs** "
-                   "(+1 % in one parameter, RMS change in the response):\n\n"
+    # break row: the cheapest constant moved by 2 % instead of 1 %
+    p = TRU.copy(); p[int(np.argmin(costs))] *= 1.02
+    y2 = respond(cfg, "side-by-side", *p, n=BASE["n"], c_set=BASE["c_set"])
+    COST_2PCT[cfg] = float(np.sqrt(np.mean((y2 - y0) ** 2)))
+    cost_rows.append([DEV[cfg]] + [f"{c:.2e}" for c in costs])
+display(Markdown("**What a move along a single coordinate costs** (+1 % in one "
+                 "constant, the others held at the truth, RMS change in the "
+                 "response):\n\n"
                  + md_table(pd.DataFrame(cost_rows, columns=["device"]
-                                         + [f"+1 % {p}" for p in PNAMES]
-                                         + ["cheapest / stall"]))))
-_rat = [M[f"sep_stall_1pct_{w}_over_stall_{c}"] for w in ("cheapest", "dearest")
-        for c in ("batch", "mixed")]
-print(f"Read the two tables together. A 1 % move along ANY single coordinate "
-      f"costs {min(_rat):.0f}x to {max(_rat):.0f}x the stall, yet the stalled "
-      f"point sits {100*M['sep_stall_pardev_batch']:.1f} % (batch) and "
-      f"{100*M['sep_stall_pardev_mixed']:.1f} % (mixed flow) from the truth in "
-      f"its worst coordinate. That is what 'the five constants of eq. (6) trade "
-      f"against each other' means quantitatively: there is a valley along which "
-      f"the response is far less sensitive than along any parameter axis, and "
-      f"the trust-region solve stops in it. It is a stall - the exact minimum "
-      f"is zero and the identity twin reaches it - but the reason it stalls is "
-      f"a real non-identifiability of eq. (6)'s constants, and that is now a "
-      f"printed result rather than an assertion.")
+                                         + [f"+1 % {p}" for p in PNAMES]))))
+_edge = [r[:2] for r in prof_rows if r[-1] != "-"]
+print(f"Read the two tables together. Holding d anywhere in [0.5, 1.5], in "
+      f"either device, or n' anywhere in [0.5, 1.5] (mixed flow), the other four "
+      f"constants refit to an RMS residual below 2e-4, a tenth of the "
+      f"conversion resolution (here at most {M['sep_profile_d_batch']:.1e} "
+      f"batch d, {M['sep_profile_d_mixed']:.1e} mixed d, "
+      f"{M['sep_profile_nprime_mixed']:.1e} mixed n'), while +1 % on any single "
+      f"constant with the other four held at the truth costs at least "
+      f"{min(M['sep_stall_1pct_cheapest_batch'], M['sep_stall_1pct_cheapest_mixed']):.1e}. "
+      f"That is what 'the five constants of eq. (6) trade against each other' "
+      f"means quantitatively: an ORDER held up to 50 % away from the truth is "
+      f"absorbed by the other constants to below what a 1 % move of one "
+      f"constant costs, so the constants of eq. (6) are not separately "
+      f"identifiable from one run in either device. The profile values are "
+      f"optimiser upper bounds on a minimum, the safe direction for that "
+      f"claim; where a free constant ends on the edge of the fitter's box "
+      f"({'; '.join(f'{a}, {b}' for a, b in _edge) if _edge else 'nowhere'}) the "
+      f"bound is set by the box, which can only make it larger.")
+assert max(M[n] for n in PROFILES) < min(M['sep_stall_1pct_cheapest_batch'],
+                                         M['sep_stall_1pct_cheapest_mixed'])
 M["fits_capped"] = float(len(CAPPED))
+# break row: the same machinery with a budget of 50 evaluations is recorded
+_n0 = len(CAPPED)
+fit_class("batch", respond("batch", "side-by-side", *TRU, n=BASE["n"]), "side-by-side",
+          BASE["kappa"], BASE["lam"], n=BASE["n"], budget=50, tag=("budget-break",))
+FITS_CAPPED_BROKEN = float(len(CAPPED)); del CAPPED[_n0:]
 print(f"\nfits whose evaluation budget bound: {len(CAPPED)} of 64"
       + (f" -> {CAPPED}" if CAPPED else ""))
 '''))
 
 cells.append(code(r'''"""Read the matrices: which pairs are separable, and at what resolution."""
 res_of = {"constC": RES_TAU}
-rows = []
+rows, SEP_OFF, N_SEP = [], {}, {}
 for cfg, D in SEP.items():
-    # The threshold is the INSTRUMENT RESOLUTION, and nothing else.  A floor of
-    # 20 x the fitter's own stall would be the natural extra safeguard; the
-    # check printed below shows it never binds on any device, so it is not
-    # applied rather than carried as a decorative constraint.
+    # The threshold is the INSTRUMENT RESOLUTION, and nothing else: the
+    # fitter's own floor (the diagonal, above) is below 1e-9 on every device.
     thr = res_of.get(cfg, RES_X)
     M[f"sep_threshold_{cfg}"] = float(thr)
     off = [(CLASSES[i], CLASSES[j], D[i, j]) for i in range(4) for j in range(4)
@@ -1531,10 +1717,18 @@ for cfg, D in SEP.items():
         assert (cfg, o[0], o[1]) not in CAPPED, \
             f"separability claimed on a capped fit: {(cfg, o[0], o[1])}"
     best = max(off, key=lambda o: o[2])
-    rows.append([DEV[cfg], f"{thr:.1e}", f"{len(sep)}/12", f"{best[2]:.2e}",
-                 f"{best[0]} vs {best[1]}", f"{min(o[2] for o in off):.1e}"])
+    # every pair within 1e-4 relative of the largest is listed: ties (the batch
+    # has three at 1.764e-3) are decided by round-off, so no one of them is
+    # "the" pair; and where every entry is at round-off there is no pair at all
+    tied = [o for o in off if o[2] >= best[2] * (1 - 1e-4)]
+    rnd = lambda v: "<1e-8" if v < 1e-8 else f"{v:.2e}"
+    rows.append([DEV[cfg], f"{thr:.1e}", f"{len(sep)}/12", rnd(best[2]),
+                 "none (all at round-off)" if best[2] < 1e-8 else
+                 "; ".join(f"{a} vs {b}" for a, b, _ in tied),
+                 rnd(min(o[2] for o in off))])
     M[f"sep_{cfg}_best_pair"] = float(best[2])
-    M[f"sep_{cfg}_n_separable"] = float(len(sep))
+    SEP_OFF[cfg] = [0.0 if o[2] < 1e-8 else o[2] for o in off]  # round-off as 0
+    N_SEP[cfg] = float(len(sep))
 display(Markdown(
     "**Which devices can separate anything at all?**\n\n"
     + md_table(pd.DataFrame(rows, columns=[
@@ -1544,26 +1738,6 @@ print(f"threshold = the instrument resolution: conversion {RES_X:g}, "
       f"ln tau' {RES_TAU:g}. Raw residuals are in the matrices above - rescale "
       f"at will.")
 
-# The removed floor, priced: it never bound, and dropping it changes no verdict.
-flr = pd.DataFrame([[DEV[cfg], f"{M[f'sep_stall_{cfg}']:.1e}",
-                     f"{20 * M[f'sep_stall_{cfg}']:.1e}",
-                     f"{res_of.get(cfg, RES_X):g}",
-                     "no" if 20 * M[f"sep_stall_{cfg}"] < res_of.get(cfg, RES_X)
-                     else "YES"] for cfg in SEP],
-                   columns=["device", "multistart stall", "20 x stall",
-                            "instrument resolution", "would the floor bind?"])
-display(Markdown("**Does the fitter's own floor ever bind?**\n\n"
-                 + md_table(flr)))
-M["sep_floor_binds_anywhere"] = float(any(
-    20 * M[f"sep_stall_{cfg}"] >= res_of.get(cfg, RES_X) for cfg in SEP))
-M["sep_floor_worst_ratio"] = float(max(
-    20 * M[f"sep_stall_{cfg}"] / res_of.get(cfg, RES_X) for cfg in SEP))
-assert M["sep_floor_binds_anywhere"] == 0.0
-print(f"Nowhere: the worst case is {M['sep_floor_worst_ratio']:.2f} of its "
-      f"device's resolution, so every threshold above equals the instrument "
-      f"resolution exactly and every count above is unchanged by dropping it. "
-      f"A criterion that never binds is not a safeguard, and the page does not "
-      f"present it as one.")
 '''))
 
 cells.append(md(r"""### 6. Why the bed is different: the profile
@@ -1670,7 +1844,7 @@ def bed_ends(cls, m, nt):
         OUT[(cls, m, nt)] = float(Ag[-1, -1])
     return INL[(cls, m, nt)], OUT[(cls, m, nt)]
 
-gr = []
+gr, INLET_ERRS = [], {}
 for cls in ("parallel", "series"):
     ex = M[f"bed_a_inlet_end_{SHORT[cls]}"]
     errs, outs = [], []
@@ -1682,6 +1856,7 @@ for cls in ("parallel", "series"):
                    f"{outs[-1]:.6f}",
                    "" if len(outs) == 1 else f"{outs[-1]-outs[-2]:+.2e}"])
     M[f"bed_a_inlet_cellcentre_err_{SHORT[cls]}"] = float(errs[-1])
+    INLET_ERRS[cls] = errs
     M[f"bed_a_inlet_cellcentre_order_{SHORT[cls]}"] = float(
         np.log2(errs[-2] / errs[-1]))
 display(Markdown(
@@ -1783,8 +1958,7 @@ print(f"               series    a(inlet) = {M['bed_a_inlet_end_ser']:.6f} "
       f"bound {M['bed_a_outlet_residual_bound_ser']:.1e})   -> ascending")
 print(f"The outlets are quoted to five decimals and not six: the residual "
       f"bounds above are {max(M['bed_a_outlet_residual_bound_par'], M['bed_a_outlet_residual_bound_ser']):.1e} "
-      f"at worst, which resolves the fifth decimal and not the sixth. Six was "
-      f"printed here before, and the last two of them were wrong.")
+      f"at worst, which resolves the fifth decimal and not the sixth.")
 # The defect this repairs becomes two rows per class - one that must move and
 # one that must not.  Both classes, because both outlets are reported.
 for cls in ("parallel", "series"):
@@ -1804,6 +1978,30 @@ for cls in ("parallel", "series"):
                    "limit of the march, so which pair the limit is read from "
                    "cannot matter - and after the second extrapolation it "
                    "does not"))
+# break rows for the refinement study, every one on numbers already computed
+# except the Euler ladder: (1) the inlet error one grid coarser; (2) the inlet
+# order against a reference 1e-3 off the exact face value (a sampled inlet);
+# (3) the space extrapolation read off the coarsest grid pair, and the time
+# extrapolation's residual off the coarser step pair; (4) the outlet's
+# temporal order with Euler in place of Heun on the activity march
+BED_BROKEN = {}
+for cls in ("parallel", "series"):
+    sh, ex = SHORT[cls], M[f"bed_a_inlet_end_{SHORT[cls]}"]
+    BED_BROKEN[f"bed_a_inlet_cellcentre_err_{sh}"] = float(INLET_ERRS[cls][-2])
+    e_off = [abs(bed_ends(cls, m, NT_CONV)[0] - (ex - 1e-3)) for m in GRIDS[-2:]]
+    BED_BROKEN[f"bed_a_inlet_cellcentre_order_{sh}"] = float(np.log2(e_off[0] / e_off[1]))
+    coarse = float(abs(space_rich(cls, NT_CONV, GRIDS[:2]) - space_rich(cls, NT_CONV)))
+    BED_BROKEN[f"bed_a_outlet_space_spread_{sh}"] = coarse
+    BED_BROKEN[f"bed_a_outlet_residual_bound_{sh}"] = max(coarse, abs(RR[cls][1] - RR[cls][0]) / 3.0)
+    BED_BROKEN[f"bed_a_outlet_time_bias_{sh}"] = float(RR[cls][0] - M[f"bed_a_outlet_end_{sh}"])
+    Re = []
+    for nt in NT_SET:
+        o = [float(Bed(m).march(cls, BASE["kappa"], BASE["lam"], BASE["d"],
+                                BASE["nprime"], n=BASE["n"], nt=nt, theta=TH,
+                                scheme="euler")[1][-1, -1]) for m in GRIDS[-2:]]
+        Re.append(o[1] + (o[1] - o[0]))
+    BED_BROKEN[f"bed_a_outlet_time_order_{sh}"] = float(np.log2((Re[1] - Re[0])
+                                                                / (Re[2] - Re[1])))
 print(f"the two contrasts have opposite sign: "
       f"{M['bed_profile_contrast_par']:+.4f} vs {M['bed_profile_contrast_ser']:+.4f}")
 print(f"For comparison, the production grid (m = {BED.m}) reads its first cell "
@@ -1813,13 +2011,12 @@ print(f"For comparison, the production grid (m = {BED.m}) reads its first cell "
       f"limit is the wrong-baseline defect class this gallery keeps finding "
       f"(`B1.7`), and here the exact statement is the stronger one - the series "
       f"inlet does not merely stay high, it does not decay AT ALL.")
-print(f"\nTHE SAME MISTAKE, THREE TIMES, ON THIS ONE SECTION. The inlet was "
-      f"first a sampled cell centre where an exact limit exists; the outlet "
-      f"was then a single-grid sample where a space extrapolation exists; and "
-      f"the outlet was then a space extrapolation at one step count where a "
-      f"TIME extrapolation exists. All three are one defect: a number read at "
-      f"whatever resolution the code happened to be run at, and printed as if "
-      f"it were the limit. The general rule this section now follows is that a "
+print(f"\nONE DEFECT, THREE FORMS, ON THIS ONE SECTION: a sampled cell centre "
+      f"where an exact limit exists, a single-grid sample where a space "
+      f"extrapolation exists, and a space extrapolation at one step count where "
+      f"a TIME extrapolation exists. Each is a number read at whatever "
+      f"resolution the code happened to be run at, and printed as if it were "
+      f"the limit. The general rule this section follows is that a "
       f"reported value must not be a function of any resolution the page "
       f"chose - every such knob is either extrapolated away or shown, by "
       f"halving it in the break table, not to matter - and that a value may "
@@ -1856,7 +2053,8 @@ for npv, dv in ((1.0, 1.5), (1.0, 1.0), (1.0, 0.75), (1.0, 0.5), (1.0, 0.25),
     if tw is not None:
         D = min(D, tw)
     rows.append([npv, dv, f"{ds:+.2f}", "attainable" if ds >= 0 else "d < 0: none",
-                 f"{D:.2e}{'*' if tw is not None else ''}",
+                 ("<1e-8*" if tw is not None and D < 1e-8 else
+                  f"{D:.2e}{'*' if tw is not None else ''}"),
                  "no" if D <= RES_X else "YES"])
     M[f"mixed_boundary_np{npv:g}_d{dv:g}"] = float(D)
 display(Markdown(
@@ -1871,15 +2069,16 @@ M["mixed_boundary_worst_inside"] = float(max(M[f"mixed_boundary_np{r[0]:g}_d{r[1
 M["mixed_boundary_best_outside"] = float(min(M[f"mixed_boundary_np{r[0]:g}_d{r[1]:g}"]
                                              for r in outside))
 print(f"\nInside the region where the exact twin exists (d >= n'/n) the best "
-      f"series impersonation is <= {M['mixed_boundary_worst_inside']:.1e} - i.e. "
-      f"nothing. Outside it the residual grows smoothly with distance from the "
-      f"line, from {M['mixed_boundary_np1_d0.75']:.1e} at d - n'/n = -0.25 to "
+      f"series impersonation is below 1e-8 (here "
+      f"{M['mixed_boundary_worst_inside']:.1e}), i.e. nothing. Outside it the "
+      f"residual grows smoothly with distance from the line, from below 1e-3 at "
+      f"d - n'/n = -0.25 (here {M['mixed_boundary_np1_d0.75']:.1e}) to "
       f"{M['mixed_boundary_np1_d0.25']:.1e} at -0.75, and only crosses the "
       f"{RES_X:g} resolution around d - n'/n = -0.5.")
 print("The line is a prediction about EXACTNESS, and it holds. It is not a "
       "prediction about measurability, and the (n' = 2, d = 1.5) row shows why: "
-      f"it lies half a unit below the line yet is still fitted to "
-      f"{M['mixed_boundary_np2_d1.5']:.1e}, because an inexact series twin is "
+      f"it lies half a unit below the line yet is still fitted to below 1e-4 "
+      f"(here {M['mixed_boundary_np2_d1.5']:.1e}), because an inexact series twin is "
       "still an excellent one there. Crossing the boundary is necessary for the "
       "mixed reactor to separate the two classes, and nowhere near sufficient.")
 BREAKS.append(("mixed_boundary_np1_d0.5", M["mixed_boundary_np1_d0.5"],
@@ -2024,7 +2223,10 @@ def recovered_d(sig, d_true):
     tau, _ = run_const_c("side-by-side", BASE["kappa"], BASE["lam"], d_true,
                          BASE["nprime"], BASE["c_set"], n=BASE["n"], sig=sig)
     def bend(dv):
-        y = np.log(tau) if abs(dv - 1) < 1e-9 else (tau ** (dv - 1) - 1) / (dv - 1)
+        # (tau^(d-1) - 1)/(d-1) loses digits to cancellation near d = 1, and no
+        # ODE tolerance recovers them; expm1 does
+        lt = np.log(tau)
+        y = lt if dv == 1.0 else np.expm1((dv - 1) * lt) / (dv - 1)
         A = np.vstack([np.ones_like(TH), TH]).T
         coef, *_ = np.linalg.lstsq(A, y, rcond=None)
         return float(np.sqrt(np.mean((y - A @ coef) ** 2)) / max(np.ptp(y), 1e-300))
@@ -2040,8 +2242,9 @@ def recovered_d(sig, d_true):
 SIG_SCAN = np.geomspace(1e-3, 2e1, 21)
 bias1 = np.array([abs(recovered_d(sv, 1.0) - 1.0) for sv in SIG_SCAN])
 M["constC_sbs_bias_at_d1_max"] = float(bias1.max())
-print(f"d = 1: the recovered order is unbiased to {M['constC_sbs_bias_at_d1_max']:.1e} "
-      f"for every sigma up to {SIG_SCAN[-1]:g} - an exact cancellation "
+print(f"d = 1: the recovered order is unbiased to below 1e-7 (here "
+      f"{M['constC_sbs_bias_at_d1_max']:.1e}) for every sigma up to "
+      f"{SIG_SCAN[-1]:g} - an exact cancellation "
       f"(consumption rate ~ a^(d-1) = const at d = 1), not a small number.")
 
 # --- d = 2, where the drift is real ---------------------------------------
@@ -2057,6 +2260,7 @@ M["constC_sbs_bias_target"] = float(target)
 M["constC_sbs_sigma_for_bias"] = float(brentq(
     lambda sv: abs(recovered_d(sv, D_TRUE) / D_TRUE - 1.0) - target,
     SIG_SCAN[j - 1], SIG_SCAN[j], xtol=1e-9))
+SIG_SCAN_READ = float(SIG_SCAN[j])     # break row: read off the scan, not root-found
 M["constC_sbs_bias_sig0"] = float(abs(M["constC_sbs_recovered_d_sig0"] / D_TRUE
                                       - 1.0))
 print(f"\nd = {D_TRUE:g}: recovered {M['constC_sbs_recovered_d_sig0']:.4f} at "
@@ -2104,7 +2308,7 @@ def exact_outlet(kappa, n, afun, ns=20001):
     s = np.linspace(0, 1, ns)
     return _cascade(np.concatenate(([0.0], _csimp(afun(s), x=s))), kappa, n)[-1]
 
-rows = []
+rows, SPATIAL_BROKEN = [], {}
 for label, afun in (("a = e^{-3s}", lambda s: np.exp(-3 * s)),
                     ("a = 0.2 + 0.8 s^2", lambda s: 0.2 + 0.8 * s ** 2)):
     for n_ in (1.0, 2.0):
@@ -2115,9 +2319,17 @@ for label, afun in (("a = e^{-3s}", lambda s: np.exp(-3 * s)),
             rows.append([label, n_, m, f"{e:.3e}",
                          "" if prev is None else f"{np.log2(prev/e):.2f}"])
             prev = e
-        M[f"bed_spatial_err_n{n_:g}_{'exp' if 'e^' in label else 'quad'}"] = float(e)
-        M[f"bed_spatial_order_n{n_:g}_{'exp' if 'e^' in label else 'quad'}"] = \
-            float(np.log2(float(rows[-2][3]) / e))
+        key = f"n{n_:g}_{'exp' if 'e^' in label else 'quad'}"
+        M[f"bed_spatial_err_{key}"] = float(e)
+        M[f"bed_spatial_order_{key}"] = float(np.log2(float(rows[-2][3]) / e))
+        # break rows: the error one grid coarser, and the observed order with
+        # the deferred correction removed (plain first-order upwind)
+        SPATIAL_BROKEN[f"bed_spatial_err_{key}"] = float(rows[-2][3])
+        e_up = []
+        for mm in (200, 400):
+            bu = Bed(mm, tvd=False)
+            e_up.append(abs(bu.outlet(bu.steady_c(1.5, afun(bu.s_c), n_)) - ref))
+        SPATIAL_BROKEN[f"bed_spatial_order_{key}"] = float(np.log2(e_up[0] / e_up[1]))
 display(Markdown("**Spatial convergence of the pymrm bed against the quadrature "
                  "(activity frozen, so no time error can leak in):**\n\n"
                  + md_table(pd.DataFrame(rows,
@@ -2195,20 +2407,25 @@ cb = 1.0 - Xb
 c_inf = np.exp(-kap / lam)
 lhs = np.log(np.log(cb / c_inf)); rhs = np.log(np.log(1.0 / c_inf)) - lam * TH
 M["eq15_maxdev"] = float(np.max(np.abs(lhs - rhs)))
-rows.append(["(15)", "batch fluid, Fig. 2", f"{M['eq15_maxdev']:.2e}"])
+CF_BROKEN = {"eq15_maxdev": float(np.max(np.abs(lhs - (rhs - 0.01 * lam * TH))))}
+rows.append(["(15)", "batch fluid, Fig. 2", f"below 1e-7 (here {M['eq15_maxdev']:.1e})"])
 
 # eq. (19): mixed flow, constant rate
 Xm, am = run_mixed("independent", kap, lam, 1.0, 0.0, n=1.0)
 cm = 1.0 - Xm
 M["eq19_maxdev"] = float(np.max(np.abs(np.log(1.0 / cm - 1.0)
                                        - (np.log(kap) - lam * TH))))
-rows.append(["(19)", "mixed flow, Fig. 3", f"{M['eq19_maxdev']:.2e}"])
+CF_BROKEN["eq19_maxdev"] = float(np.max(np.abs(np.log(1.0 / cm - 1.0)
+                                               - (np.log(kap) - 1.01 * lam * TH))))
+rows.append(["(19)", "mixed flow, Fig. 3", f"below 1e-7 (here {M['eq19_maxdev']:.1e})"])
 
 # eq. (22): plug flow, constant rate - the pymrm BED, not the quadrature
 Xp, Ap, _ = BED.march("independent", kap, lam, 1.0, 0.0, n=1.0, nt=200)
 cp = 1.0 - Xp
 M["eq22_maxdev_pymrm"] = float(np.max(np.abs(np.log(np.log(1.0 / cp))
                                              - (np.log(kap) - lam * TH))))
+CF_BROKEN["eq22_maxdev_pymrm"] = float(np.max(np.abs(np.log(np.log(1.0 / cp))
+                                                     - (np.log(kap) - 1.01 * lam * TH))))
 rows.append(["(22)", "plug flow, Fig. 4 - solved on the pymrm bed",
              f"{M['eq22_maxdev_pymrm']:.2e}"])
 
@@ -2230,8 +2447,16 @@ for dv, form in ((0, "1/tau'"), (1, "ln tau'"), (2, "tau'"), (3, "(tau')^2")):
     dev = float(np.max(np.abs(lhs - rhs)) / np.max(np.abs(rhs)))
     M[f"eq{28+dv}_reldev"] = dev
     M[f"a_end_d{dv}_branch"] = float(aa[-1])
+    # break rows: the closed form with k'_d off by 1 % (same lam_c in the run),
+    # and the branch activity with lam_c raised by a quarter
+    tau_b, _ = run_const_c("independent", kap, 1.01 * lam_c, float(dv), 0.0, cs, n=1.0)
+    lhs_b = {0: 1.0 / tau_b, 1: np.log(tau_b), 2: tau_b, 3: tau_b ** 2}[dv]
+    CF_BROKEN[f"eq{28+dv}_reldev"] = float(np.max(np.abs(lhs_b - rhs))
+                                           / np.max(np.abs(rhs)))
+    CF_BROKEN[f"a_end_d{dv}_branch"] = float(run_const_c(
+        "independent", kap, 1.25 * lam_c, float(dv), 0.0, cs, n=1.0)[1][-1])
     rows.append([f"({28+dv})", f"held C_A, d = {dv} ({form} linear in t)",
-                 f"{dev:.2e}"])
+                 f"below 1e-7 (here {dev:.1e})"])
 display(Markdown("**The paper's own closed forms, met by the reactors solved "
                  "here** (max deviation; relative for eqs. 28-31)\n\n"
                  + md_table(pd.DataFrame(rows, columns=["printed eq.",
@@ -2267,6 +2492,13 @@ M["pseudo_steady_cost_slope"] = float(np.polyfit(np.log(eps_grid[:4]),
 eps_star = brentq(lambda e: pseudo_steady_cost(np.exp(e)) - RES_X,
                   np.log(1e-4), np.log(3e-2), xtol=1e-3)
 M["pseudo_steady_eps_star"] = float(np.exp(eps_star))
+# break rows: the slope with the accumulation term scaled by sqrt(eps) instead
+# of eps (a wrong time scale), and eps* read at half the resolution off the grid
+PS_SLOPE_SQRT = float(np.polyfit(np.log(eps_grid[:4]),
+                                 np.log([pseudo_steady_cost(np.sqrt(e))
+                                         for e in eps_grid[:4]]), 1)[0])
+PS_EPS_HALF = float(np.exp(np.interp(np.log(RES_X / 2), np.log(cost),
+                                     np.log(eps_grid))))
 fig, ax = plt.subplots(figsize=(5.0, 3.1))
 ax.loglog(eps_grid, cost, "o-", color="#0072B2", lw=1.5, ms=4)
 ax.axhline(RES_X, color="0.4", ls="--", lw=1,
@@ -2293,9 +2525,11 @@ BREAKS.append(("pseudo_steady_cost_eps1e-3", M["pseudo_steady_cost_eps1e-3"],
 
 cells.append(md(r"""### The break table
 
-Every reported metric needs something that moves it. Where a metric is an
-identity that cannot fail — and several here are, deliberately — it is named
-as structural and paired with a number that can."""))
+Every reported number needs something that moves it. The table below holds the
+defects injected into the model and the solver; the claims cell after it wires
+those rows, and the breaks computed beside each result above, to the claim each
+one must fail. A claim that no row can move is an identity, and it is named as
+structural there."""))
 
 cells.append(code(r'''"""Defect injection: break something on purpose, watch the number move."""
 kap, lam, dv, npv = BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"]
@@ -2378,27 +2612,28 @@ BREAKS.append(("degen_nprime0_plug", M["degen_nprime0_plug"],
                M["degen_nprime0_off_condition"],
                "the collapse is exactly at n' = 0 and nowhere else"))
 
-# (h) the fitter itself: double the multistart on the headline entry
+# (h) the fitter itself: widen the multistart on the entry that carries the
+# plug-flow count of 1 (parallel truth, independent candidate, 2.2e-3)
 y_true = respond("plug", "parallel", kap, lam, dv, npv, BASE["sig"],
                  c_set=BASE["c_set"])
-big = _seeds("series", kap, lam) + [[np.log(kap * f), np.log(lam * g), dvv, npvv]
-                                    for f in (0.5, 2.0) for g in (0.25, 4.0)
-                                    for dvv in (0.5, 2.5) for npvv in (0.25, 2.5)]
-D_big = fit_class("plug", y_true, "series", kap, lam, seeds=big, keep=6)[0]
-BREAKS.append(("sep_plug_par_vs_ser", M["sep_plug_par_vs_ser"],
-               f"multistart widened from {len(_seeds('series', kap, lam))} to "
+big = _seeds("independent", kap, lam) + [[np.log(kap * f), np.log(lam * g), dvv]
+                                         for f in (0.5, 2.0) for g in (0.25, 4.0)
+                                         for dvv in (0.25, 0.75, 1.5, 2.5)]
+D_big = fit_class("plug", y_true, "independent", kap, lam, seeds=big, keep=6)[0]
+BREAKS.append(("sep_plug_par_vs_ind", M["sep_plug_par_vs_ind"],
+               f"multistart widened from {len(_seeds('independent', kap, lam))} to "
                f"{len(big)} seeds", D_big,
                "ROBUSTNESS (must NOT move): a separability number is an UPPER "
                "bound, and this bounds the bound - a lower value here would mean "
                "the headline overstates the separation"))
-M["sep_plug_par_vs_ser_wideseed"] = float(D_big)
+M["sep_plug_par_vs_ind_wideseed"] = float(D_big)
 
 # (i) the resolution the verdicts are read at - ONE ROW PER DEVICE, so that the
 # three counts carrying the page's negative headline (batch, mixed, constC) each
 # have a mover of their own.  The alternative resolution is chosen per device to
 # be one that actually moves that device's count.
 for cfg, alt in (("plug", 1e-4), ("batch", 1e-4), ("mixed", 1e-4)):
-    BREAKS.append((f"sep_{cfg}_n_separable", M[f"sep_{cfg}_n_separable"],
+    BREAKS.append((f"sep_{cfg}_n_separable", N_SEP[cfg],
                    f"read the {cfg} matrix at resolution {alt:g} instead of "
                    f"{M[f'sep_threshold_{cfg}']:g}",
                    float(sum(1 for i in range(4) for j in range(4)
@@ -2427,7 +2662,7 @@ def constC_count_at(d_inj, res):
             cnt += int(v > res)
     return float(cnt)
 CONSTC_ALT_RES = 1e-4
-BREAKS.append(("sep_constC_n_separable", M["sep_constC_n_separable"],
+BREAKS.append(("sep_constC_n_separable", N_SEP["constC"],
                f"move the held-C_A device to d = 2, where the a^(d-1) "
                f"cancellation that pins C_P fails, AND read at "
                f"{CONSTC_ALT_RES:g}",
@@ -2444,7 +2679,13 @@ df["kind"] = ["robustness" if str(nn).startswith("ROBUSTNESS") else "mover"
 df["moves?"] = [("yes" if (not np.isfinite(b) or abs(b - a) >
                            max(1e-14, 1e-6 * max(abs(a), abs(b)))) else "no")
                 for a, b in zip(df["as built"], df["with the defect"])]
-display(Markdown("**Defect-injection table**\n\n" + md_table(df)))
+# printed to four figures, and round-off-sized numbers as the bound they are
+# checked at, so the table reads the same on every machine
+_show = df.copy()
+for col in ("as built", "with the defect"):
+    _show[col] = [("<1e-8" if 0 < abs(v) < 1e-8 else f"{v:.4g}")
+                  if np.isfinite(v) else str(v) for v in df[col]]
+display(Markdown("**Defect-injection table**\n\n" + md_table(_show)))
 movers = df[df["kind"] == "mover"]
 assert (movers["moves?"] == "yes").all(), movers[movers["moves?"] != "yes"]
 rob = df[df["kind"] == "robustness"]
@@ -2457,320 +2698,353 @@ M["break_rows"] = float(len(movers))
 M["break_robustness_rows"] = float(len(rob))
 '''))
 
-cells.append(code(r'''"""Coverage: which injected defect moves each reported metric, key for key."""
-CHK_SYM = "sec. 1 symbolic identities"
-COVERAGE = {}
-for kk in M:
-    if kk.startswith("span_"):
-        COVERAGE[kk] = ("break (e)/(f): the response gap under a swapped rate "
-                        "form is exactly a change of these spans")
-    elif kk == "sep_plug_par_vs_ser_wideseed":
-        COVERAGE[kk] = "break (h) is this metric"
-    elif kk.startswith("sep_") and "_vs_" in kk:
-        COVERAGE[kk] = ("break (e) directly (unfitted class swap) + (h) "
-                        "(multistart width); entries marked * in the matrix are "
-                        "identities of sec. 4, not measurements")
-    elif kk.startswith("sep_") and kk.endswith("n_separable"):
-        COVERAGE[kk] = (
-            ("break (i-constC), which is COMPOUND and has to be: NO resolution "
-             "moves this count, because after the twins every off-diagonal "
-             "entry of this device is at double-precision zero. The row "
-             "therefore moves the DEVICE (d = 2, where the a^(d-1) "
-             "cancellation fails) as well as the resolution, and its own note "
-             "says so")
-            if kk.startswith("sep_constC") else
-            ("break (i-" + kk.split("_")[1] + ") directly: this device's own "
-             "matrix re-read at another resolution"))
-    elif kk.startswith("sep_") and kk.endswith("best_pair"):
-        COVERAGE[kk] = "break (e),(h) class (same fits)"
-    elif kk.startswith("mixed_boundary"):
-        COVERAGE[kk] = ("break: the boundary row pair itself - crossing "
-                        "d = n'/n switches it by "
-                        f"{M['mixed_boundary_np1_d0.5']/M['mixed_boundary_np1_d1.5']:.0e}"
-                        " (that ratio is the executed row, not an estimate)")
-    elif kk.startswith("bed_spatial"):
-        COVERAGE[kk] = "break (a) nu=1, (b) tvd=False, (d) inlet bc"
-    elif kk.startswith("bed_time"):
-        COVERAGE[kk] = ("break (c) Euler for Heun, order against order on the "
-                        "same refinement pair")
-    elif kk.startswith("bed_vs_quadrature"):
-        COVERAGE[kk] = "break (a),(b),(d) directly"
-    elif kk.startswith("bed_a_inlet_cellcentre"):
-        COVERAGE[kk] = ("the grid refinement in sec. 6 IS the injection: the "
-                        "cell-centre error halves per refinement against the "
-                        "exact face value, which is what makes the reported "
-                        "inlet activity exact rather than sampled")
-    elif kk == "bed_profile_time_sensitivity":
-        COVERAGE[kk] = ("the nt doubling beside it, on floats and on BOTH "
-                        "classes: it is the number that shows the outlet "
-                        "reading is NOT purely spatial, which is why the "
-                        "outlet carries a second extrapolation. Read on the "
-                        "series class alone, and off a 6-decimal string, it "
-                        "was 14x too small and hid a wrong printed value")
-    elif kk == "bed_inlet_time_sensitivity":
-        COVERAGE[kk] = ("the same nt doubling, on the inlet cell centres: the "
-                        "control showing that the sec.-6 SPATIAL study and its "
-                        "observed orders are uncontaminated by the step count")
-    elif kk.startswith("bed_a_outlet_spaceonly"):
-        COVERAGE[kk] = ("break: halve NT_CONV. This metric is the space "
-                        "extrapolation ALONE, it does move with the step "
-                        "count, and that is precisely why it is not the "
-                        "reported outlet")
-    elif kk.startswith("bed_a_outlet_end") or kk.startswith("bed_profile_contrast"):
-        COVERAGE[kk] = ("break: this class's own ROBUSTNESS row - the time "
-                        "extrapolation read off the other nt pair, which must "
-                        "not move it; plus break (f), which inverts the "
-                        "profile these numbers measure")
-    elif kk.startswith("bed_a_outlet_altpair"):
-        COVERAGE[kk] = ("it IS this class's robustness row value: the reported "
-                        "outlet read off the other nt pair, and the row "
-                        "asserts the two agree")
-    elif kk.startswith("bed_a_outlet_time_order"):
-        COVERAGE[kk] = ("the nt ladder beside it, which is what this order is "
-                        "read from; break (c) prices the same knob on the "
-                        "conversion history, where Heun's 1.97 becomes Euler's "
-                        "1.01 on one refinement pair")
-    elif (kk.startswith("bed_a_outlet_time_bias")
-          or kk.startswith("bed_a_outlet_space_spread")
-          or kk.startswith("bed_a_outlet_residual_bound")):
-        COVERAGE[kk] = ("the two refinements beside it: this is the SIZE of "
-                        "the error the second extrapolation removes, and the "
-                        "bound that fixes how many decimals may be printed. "
-                        "Halving NT_CONV moves the first of them")
-    elif kk.startswith("bed_a_") or kk.startswith("bed_profile"):
-        COVERAGE[kk] = ("break (f): swapping the subscript in eq. (5) inverts the "
-                        "profile, which is what these numbers measure")
-    elif kk.startswith("pseudo_steady"):
-        COVERAGE[kk] = "break: the eps sweep is itself the injection (1e-3 -> 3e-2)"
-    elif kk.startswith("constC_span"):
-        COVERAGE[kk] = ("break (constC): the demanded precision on k'_d moves "
-                        "it, and so does the unprinted starting level C_LO")
-    elif kk.startswith("constC_sbs"):
-        COVERAGE[kk] = "break (constC-sbs): sigma = 0 removes the bias entirely"
-    elif kk == "constC_misfit_at_span_0p5":
-        COVERAGE[kk] = "same family: the span is the knob and it is swept"
-    elif kk.startswith("degen_nprime0"):
-        COVERAGE[kk] = "break (g) directly (n' = 0.7)"
-    elif kk == "degen_mixed_series_is_parallel_rtol1e-13":
-        COVERAGE[kk] = ("the rtol refinement beside it: this metric and its "
-                        "production-tolerance twin differ by the SOLVER "
-                        "tolerance only, which is what shows the identity exact")
-    elif kk == "degen_mixed_series_is_parallel":
-        COVERAGE[kk] = ("STRUCT: an exact algebraic identity, and the printed "
-                        "value is the ODE tolerance rather than a separation "
-                        "(rtol 1e-9 -> 1e-13 moves it by four orders). Its "
-                        "companion that CAN move is mixed_boundary_np1_d0.5, "
-                        "the same identity evaluated where it does not hold")
-    elif kk == "degen_constC_par_ser_ind":
-        COVERAGE[kk] = ("STRUCT: exact by construction (k'_d is a constant). "
-                        "Companion that runs through the device itself: "
-                        "span_constC_par. constC_span_needed_prec5pct is the "
-                        "PRICE of the degeneracy, but it is an analytic "
-                        "least-squares argument and shares no code with "
-                        "run_const_c, so it cannot stand as the detector")
-    elif kk.startswith("degen_sbs_is_parallel_famA"):
-        COVERAGE[kk] = ("STRUCT: degeneracy 4, exact wherever it holds. "
-                        "Companion/mover: degen_batch_sbs_off_condition, the "
-                        "same comparison off n' = n, d = 1")
-    elif kk.startswith("degen_sbs_is_parallel_famB"):
-        COVERAGE[kk] = ("degeneracy 5, exact in the batch and the bed only - "
-                        "the mixed/constC entries of this same family ARE the "
-                        "break row that moves it, and so is "
-                        "degen_sbs_famB_off_condition")
-    elif kk == "degen_sbs_famB_off_condition":
-        COVERAGE[kk] = "the mover for degeneracy 5 inside the bed itself"
-    elif kk == "degen_batch_sbs_is_parallel_on_condition":
-        COVERAGE[kk] = "break: the off-condition row (d = 2) in the same table"
-    elif kk == "degen_batch_sbs_off_condition":
-        COVERAGE[kk] = "the mover for the row above"
-    elif kk == "degen_nprime0_off_condition":
-        COVERAGE[kk] = "break (g) is this metric"
-    elif kk in ("printed_chain_identities", "printed_chain_nonzero"):
-        COVERAGE[kk] = (f"STRUCT: {CHK_SYM} cannot fail once the transcription is "
-                        "right - that is what they are for. Companion: break (f), "
-                        "which prices one mis-read subscript in the response")
-    elif kk.startswith("eq24"):
-        COVERAGE[kk] = ("break: reading eq. (24) with 1/k sends the residual to 0 "
-                        "exactly (first BREAKS row)")
-    elif kk.startswith("eq15") or kk.startswith("eq19") or kk.startswith("eq22") \
-            or kk.startswith("eq28") or kk.startswith("eq29") \
-            or kk.startswith("eq30") or kk.startswith("eq31"):
-        COVERAGE[kk] = ("break (a),(b),(c),(d) for eq. (22), which is solved on the "
-                        "pymrm bed; the lumped ones are ODE-vs-closed-form and move "
-                        "with any rate-form defect, e.g. break (f)")
-    elif kk.startswith("a_end_d"):
-        COVERAGE[kk] = ("branch-liveness guard for eqs. (28)-(31): moves with "
-                        "lam_c and with d, and is what shows d = 0 is exercised "
-                        "on a live activity rather than stepped over")
-    elif kk == "fits_capped":
-        COVERAGE[kk] = ("a COUNTER, not an identity: sep_matrix now passes a tag "
-                        "to fit_class, so a capped sweep fit would be recorded "
-                        "and the assertion beside it would fire. It is 0 because "
-                        "no fit hits the budget, not because nothing can")
-    elif kk.startswith("sep_threshold"):
-        COVERAGE[kk] = (
-            ("STRUCT for this device: a stated design constant, and re-reading "
-             "the held-C_A matrix at another resolution moves NOTHING, because "
-             "every off-diagonal entry of it is exactly 0. Break (i-constC) "
-             "does re-read it, but only as half of a compound injection; what "
-             "moves that count is the other half, d = 2")
-            if kk.endswith("constC") else
-            ("break (i-" + kk.split("_")[2] + "): the stated resolution moves "
-             "the counts read at it; the threshold IS that resolution"))
-    elif kk.startswith("sep_stall"):
-        COVERAGE[kk] = ("the multistart's own shortfall on a problem whose "
-                        "exact minimum is 0. Its knob is break (h)'s - the "
-                        "seed count - but note that (h) is run as a ROBUSTNESS "
-                        "row, on a separation that must NOT move; widening the "
-                        "seeds can only lower a stall, never raise one, so the "
-                        "stalls are upper bounds and the displacement table "
-                        "beside them says where the fit stopped")
-    elif kk.startswith("sep_identity") or kk.startswith("sep_optimiser"):
-        COVERAGE[kk] = ("the fit-vs-identity comparison in sec. 5 is itself the "
-                        "injection: it is the multistart alone, measured against "
-                        "the algebra, entry by entry")
-    elif kk.startswith("sep_floor"):
-        COVERAGE[kk] = ("the printed floor check in sec. 5: 20 x the stall "
-                        "against each device's resolution, on all four devices")
-    elif kk in ("break_rows", "break_robustness_rows"):
-        COVERAGE[kk] = "STRUCT: a count of the rows of the table above it"
+cells.append(code(r'''"""Claims: every published number, registered once with how it is checked.
+
+docs/claims-design.md.  A VALUE (a physical, data or discretisation result
+above round-off) is held to the committed baseline within its rtol; a BOUND (a
+residual, an identity, a solver-tolerance effect, an optimiser stall, an
+observed order) is checked against its limit on every run and on any machine;
+an EXACT result (a count, a boolean, a stated constant) by equality, and a
+count decided by a threshold carries its margin to that threshold.  The set of
+names is fixed and never depends on a value."""
+claims = Claims("B2.3")
+B = {}            # name -> bound arguments
+RTOL = {}         # value claims held tighter than 5 %, each with the reason
+# -- identities measured by subtraction: degeneracies 1 to 5 --------------------
+for cfg in ("batch", "plug", "mixed", "constC"):
+    B[f"degen_nprime0_{cfg}"] = dict(
+        max=1e-12, basis="identity",
+        note="n' = 0: the class enters only through f^n', and _pow(x, 0) is 1.0")
+B["degen_mixed_series_is_parallel"] = dict(
+    max=1e-8, basis="tolerance",
+    note="degeneracy 2 over nine order combinations, LSODA at rtol 1e-9")
+B["degen_mixed_series_is_parallel_rtol1e-13"] = dict(
+    max=1e-11, basis="tolerance", note="the same nine combinations at rtol 1e-13")
+B["degen_constC_par_ser_ind"] = dict(
+    max=1e-12, basis="identity",
+    note="degeneracy 3: k'_d is a constant for three classes in one held-C_A run")
+for cfg in ("batch", "plug", "mixed"):
+    B[f"degen_sbs_is_parallel_famA_{cfg}"] = dict(
+        max=1e-12, basis="identity",
+        note="degeneracy 4: the poison solves the reactant's own equation")
+B["degen_batch_sbs_is_parallel_on_condition"] = dict(
+    max=1e-12, basis="identity", note="degeneracy 4 in the batch, as above")
+B["degen_sbs_is_parallel_famB_batch"] = dict(
+    max=1e-7, basis="tolerance",
+    note="degeneracy 5 in the batch, five sigma, LSODA at rtol 1e-9")
+B["degen_sbs_is_parallel_famB_plug"] = dict(
+    max=1e-8, basis="tolerance",
+    note="degeneracy 5 in the bed, five sigma")
+# -- the separability matrices ---------------------------------------------------
+FIT_BOUND = {("plug", "series", "side-by-side"), ("mixed", "series", "side-by-side"),
+             ("mixed", "side-by-side", "parallel"), ("mixed", "side-by-side", "series")}
+for cfg in SEP:
+    for i, tr in enumerate(CLASSES):
+        for j, cd in enumerate(CLASSES):
+            nm = f"sep_{cfg}_{SHORT[tr]}_vs_{SHORT[cd]}"
+            if i == j:
+                B[nm] = dict(max=0.0, basis="identity", structural=True,
+                             note="a class against its own response: the twin is "
+                                  "the truth itself, residual exactly 0")
+            elif np.isfinite(SEP_TWIN[cfg][i, j]):
+                B[nm] = dict(max=1e-8, basis="tolerance",
+                             note="identity-backed (a twin of sec. 4); what is left "
+                                  "is the integrator's, rtol 1e-9")
+            elif (cfg, tr, cd) in FIT_BOUND:
+                B[nm] = dict(max=2e-4, basis="chosen",
+                             note="no twin: an optimiser upper bound on a minimum, "
+                                  "claimed only as a tenth of the conversion "
+                                  "resolution")
+B["sep_identity_twin_worst"] = dict(
+    max=1e-8, basis="tolerance",
+    note="largest twin residual over the 44 identity-backed entries, rtol 1e-9")
+for cfg in SEP:
+    B[f"sep_stall_{cfg}"] = dict(
+        max=1e-9, basis="tolerance",
+        note="largest diagonal fit (exact minimum 0) with the central-difference "
+             "Jacobian; ODE rtol 1e-9")
+B["sep_stall_worst"] = dict(max=1e-9, basis="tolerance",
+                            note="the largest of the four sep_stall_* bounds")
+B["sep_stall_worst_not_sbs"] = dict(
+    max=1e-9, basis="tolerance",
+    note="as sep_stall_worst, side-by-side excluded. Close to vacuous: for these "
+         "classes the seed grid contains the truth, so the fits only evaluate it")
+for name, (cfg, q, vals, bnd) in PROFILES.items():
+    B[name] = dict(max=bnd, basis="chosen",
+                   note=f"profile of the side-by-side self-fit in {DEV[cfg]}: "
+                        f"{PNAMES[q]} held at {min(vals):g} to {max(vals):g}, the other "
+                        f"four refitted (ODE rtol 1e-12, central differences). A "
+                        f"nonzero physical minimum, not a tolerance; the bound is a "
+                        f"tenth of the 2e-3 conversion resolution, and below the "
+                        f"3.9e-4 a +1 % move of one constant costs. Optimiser upper "
+                        f"bounds, safe in the direction of a non-identifiability "
+                        f"claim; a point whose free constant ends on the box edge is "
+                        f"limited by the box (printed)")
+B["sep_constC_best_pair"] = dict(
+    max=1e-12, basis="identity",
+    note="every off-diagonal entry of the held-C_A matrix is a twin of degeneracy 3")
+# -- the mixed-flow boundary -------------------------------------------------------
+for nm in ("mixed_boundary_np1_d1.5", "mixed_boundary_np1_d1", "mixed_boundary_worst_inside"):
+    B[nm] = dict(max=1e-8, basis="tolerance",
+                 note="inside d >= n'/n the exact twin exists; integrator rtol 1e-9")
+B["mixed_boundary_np1_d0.75"] = dict(
+    max=1e-3, basis="chosen",
+    note="no twin: an optimiser upper bound, claimed only as below 1e-3, half the "
+         "2e-3 resolution")
+for nm in ("mixed_boundary_np2_d1.5", "mixed_boundary_best_outside"):
+    B[nm] = dict(max=1e-4, basis="chosen",
+                 note="no twin: an optimiser upper bound, claimed only as below 1e-4")
+# -- held C_A, side-by-side --------------------------------------------------------
+B["constC_sbs_bias_at_d1_max"] = dict(
+    max=1e-7, basis="tolerance",
+    note="|recovered d - 1| over 21 sigma at d = 1; minimize_scalar xatol 1e-10 on "
+         "an expm1 transform (5.5e-7 and 1.0e-6 before, from cancellation)")
+B["constC_sbs_bias_sig0"] = dict(
+    max=1e-7, basis="tolerance",
+    note="|recovered d / 2 - 1| at sigma = 0, the author's own protocol")
+# -- the paper's closed forms ------------------------------------------------------
+for nm in ("eq15_maxdev", "eq19_maxdev", "eq28_reldev", "eq29_reldev",
+           "eq30_reldev", "eq31_reldev"):
+    B[nm] = dict(max=1e-7, basis="tolerance",
+                 note="ODE solution against the printed closed form, LSODA at rtol 1e-9")
+# -- the bed: tolerance effects and observed orders --------------------------------
+B["bed_inlet_time_sensitivity"] = dict(
+    max=1e-7, basis="chosen",
+    note="inlet cell centre, nt doubled at m = 800; the bound is 400x below the "
+         "parallel cell-centre error the spatial study measures")
+for sh in ("par", "ser"):
+    B[f"bed_a_inlet_cellcentre_order_{sh}"] = dict(
+        min=0.9, max=1.1, basis="theory",
+        note="first order: the first cell centre sits 1/2m from the face")
+    B[f"bed_a_outlet_time_order_{sh}"] = dict(
+        min=1.8, max=2.2, basis="theory", note="Heun on the activity march")
+for key in ("n1_exp", "n2_exp", "n1_quad", "n2_quad"):
+    B[f"bed_spatial_order_{key}"] = dict(
+        min=1.8, max=2.2, basis="theory",
+        note="upwind with the van Leer deferred correction, outlet from "
+             "compute_boundary_values, m = 200 to 400")
+B["bed_time_order"] = dict(min=1.8, max=2.2, basis="theory",
+                           note="Heun, nt = 50 to 100 at m = 400")
+B["bed_time_order_euler"] = dict(min=0.9, max=1.1, basis="theory",
+                                 note="Euler, nt = 50 to 100 at m = 400")
+B["bed_time_order_euler_finest"] = dict(min=0.9, max=1.1, basis="theory",
+                                        note="Euler, nt = 100 to 200 at m = 400")
+B["bed_time_order_heun_finest"] = dict(
+    min=2.5, max=4.0, basis="chosen",
+    note="the apparent Heun order where its error meets the m = 400 spatial floor: "
+         "an artefact of the reference, printed as one")
+B["pseudo_steady_cost_slope"] = dict(min=0.9, max=1.1, basis="theory",
+                                     note="the cost of the pseudo-steady assumption "
+                                          "is first order in eps")
+# -- value claims held tighter than 5 %, so that their break rows fail them --------
+RTOL.update({"bed_a_inlet_end_par": 1e-4,       # cell centre at m = 800: 8.9e-4
+             "bed_a_inlet_end_ser": 1e-4,       # production cell centre: 1.1e-2
+             "bed_a_outlet_spaceonly_par": 2e-6,  # nt halved: 1.5e-4
+             "bed_a_outlet_spaceonly_ser": 2e-6})  # nt halved: 1.7e-5
+EXACT = {   # name -> structural note, or None when a break row moves it
+    "printed_chain_identities": "the number of symbolic identities checked",
+    "printed_chain_nonzero": None,
+    "eq24_residual_is_log_kd_over_k": None,
+    "eq24_repaired_residual": None,
+    "sep_identity_backed": "entries with a twin of sec. 4, decided by the algebra",
+    "fits_capped": None,
+    "constC_sbs_bias_target": "a stated target, the first of 5 %, 2 %, 1 % reached",
+    "break_rows": "rows of the break table",
+    "break_robustness_rows": "robustness rows of the break table",
+    **{f"sep_threshold_{cfg}": "the stated instrument resolution" for cfg in SEP},
+}
+STRUCT_VALUE = {"eq24_offset_expected": "ln(k/k_d) of the chosen constants, the "
+                                        "reference the numeric offset is compared with"}
+for k_, v in M.items():
+    if k_ in B:
+        claims.bound(k_, v, **B[k_])
+    elif k_ in EXACT:
+        claims.exact(k_, v, structural=EXACT[k_] is not None, note=EXACT[k_])
+    elif k_ in STRUCT_VALUE:
+        claims.value(k_, v, note=STRUCT_VALUE[k_])
     else:
-        COVERAGE[kk] = "UNCOVERED"
-missing = [kk for kk, v in COVERAGE.items() if v == "UNCOVERED"]
-assert set(COVERAGE) == set(M), (set(M) - set(COVERAGE), set(COVERAGE) - set(M))
-assert not missing, missing
-print("break-row coverage (which injected defect moves each reported metric):")
-for kk in M:
-    print(f"  {kk:<44s} {COVERAGE[kk]}")
-ABS_FLOOR = 1e-12
-below = sorted(kk for kk, v in M.items() if abs(v) < ABS_FLOOR)
+        claims.value(k_, v, rtol=RTOL.get(k_, 0.05))
+assert set(B) <= set(M), set(B) - set(M)
+# -- thresholded counts, with their margins ----------------------------------------
+# the margin of fits_capped = 0: the largest share of its evaluation budget any
+# production fit used (Jacobian evaluations included), against the budget
+_share = {t: v for t, v in EVALS.items() if t != ("budget-break",)}
+claims.bound("fits_budget_share_max", max(_share.values()), max=0.9, basis="chosen",
+             note=f"largest share of the 10000-evaluation budget used by any of the "
+                  f"{len(_share)} production fits; 0 capped fits needs it below 1, "
+                  f"and 0.9 keeps a margin")
+print(f"largest share of the evaluation budget used by any production fit: "
+      f"below 0.9 (here {max(_share.values()):.2f}, {max(_share, key=_share.get)})")
+claims.count("sep_optimiser_overstated", SEP_OVER, 1e-6, min_margin=0.5,
+             note="identity-backed entries where the fit alone stops more than 1e-6 "
+                  "above the twin")
+for cfg in SEP:
+    n_ = claims.count(f"sep_{cfg}_n_separable", SEP_OFF[cfg], res_of.get(cfg, RES_X),
+                      min_margin=0.02,
+                      note="off-diagonal entries above the instrument resolution")
+    assert n_ == N_SEP[cfg]
 
-def floor_note(kk):
-    """For a metric below ABS_FLOOR: what KIND of number it is, what it cannot
-    detect, and an ABOVE-FLOOR companion metric that can.  Not every sub-floor
-    number here is a degeneracy or an identity - some are counts and some are
-    numerical deviations - and saying so is the point of this table."""
-    if kk.startswith("degen_nprime0"):
-        return ("exact degeneracy 1",
-                "nothing: 0 by code construction, since the class enters only "
-                "through f^n' and _pow(x, 0) returns 1.0",
-                "degen_nprime0_off_condition")
-    if (kk.startswith("degen_sbs_is_parallel_famA")
-            or kk == "degen_batch_sbs_is_parallel_on_condition"):
-        return ("exact degeneracy 4", "any change that keeps p == c",
-                "degen_batch_sbs_off_condition")
-    if kk.startswith("degen_sbs_is_parallel_famB"):
-        return ("exact degeneracy 5", "any change that keeps p a power of c",
-                "degen_sbs_famB_off_condition")
-    if kk == "degen_constC_par_ser_ind":
-        return ("exact degeneracy 3",
-                "anything at all inside one held-C_A run: k'_d is a constant "
-                "for three of the four classes by construction",
-                "span_constC_par")
-    if kk == "degen_mixed_series_is_parallel_rtol1e-13":
-        return ("exact degeneracy 2, integrated tightly",
-                "nothing: it measures the ODE tolerance",
-                "mixed_boundary_np1_d0.5")
-    if kk == "printed_chain_nonzero":
-        return ("count of failed symbolic identities",
-                "a transcription error that is self-consistent across the whole "
-                "printed chain",
-                "sep_plug_par_vs_ser")
-    if kk == "fits_capped":
-        return ("count of fits that hit the evaluation budget",
-                "nothing about the physics; it is a cost counter, and it is now "
-                "wired to fire (a tag is passed from sep_matrix)",
-                "sep_optimiser_worst_overstatement")
-    if kk == "sep_floor_binds_anywhere":
-        return ("boolean: does 20 x the stall ever exceed a resolution",
-                "nothing - it is 0 because the floor never binds, which is why "
-                "the floor was removed",
-                "sep_floor_worst_ratio")
-    if kk.endswith("n_separable"):
-        return ("count of separable class pairs - THE PAGE'S NEGATIVE HEADLINE, "
-                "not an identity",
-                "a separation smaller than the stated resolution",
-                "sep_plug_best_pair" if kk.startswith("sep_plug")
-                else ("span_constC_par" if kk.startswith("sep_constC")
-                      else f"sep_{kk.split('_')[1]}_best_pair"))
-    if kk.endswith("best_pair"):
-        return ("largest off-diagonal entry of a matrix that is entirely "
-                "identity-backed",
-                "any confusion in a device where every pair is exactly "
-                "degenerate", "span_constC_par")
-    if kk.startswith("sep_stall"):
-        return ("optimiser stall on a problem whose exact minimum is 0",
-                "nothing on this device: the multistart reached the truth",
-                "sep_stall_worst")
-    if kk.startswith("sep_"):
-        cfg = kk.split("_")[1]
-        return ("min(fit, identity twin) where an identity of sec. 4 applies",
-                "any separation, because the exact minimum of this entry is zero",
-                "span_constC_par" if cfg == "constC"
-                else f"sep_{cfg}_best_pair")
-    if kk.startswith("eq") and (kk.endswith("reldev") or kk.endswith("maxdev")):
-        return ("NUMERICAL deviation of an ODE solution from the paper's own "
-                "closed form - not a symbolic identity",
-                "an error that the closed form shares, i.e. a mis-transcription "
-                "of the printed solution itself", "eq22_maxdev_pymrm")
-    if kk.startswith("degen_"):
-        return ("exact algebraic degeneracy between the printed rate forms",
-                "any change that preserves the identity",
-                "degen_nprime0_off_condition")
-    if kk.startswith("mixed_boundary"):
-        return ("identity twin inside d >= n'/n, optimiser bound outside it",
-                "the loss of exactness at the boundary, which is what the row "
-                "below the line measures", "mixed_boundary_np1_d0.5")
-    if kk.startswith("constC"):
-        return ("property of the held-C_A device, which is exactly degenerate",
-                "any class distinction inside one run",
-                "constC_sbs_recovered_d_base")
-    if kk.startswith("bed_") or kk.startswith("span_") or kk.startswith("a_end"):
-        return ("computed property of the bed or of a response span",
-                "an error shared by the independent quadrature",
-                "bed_vs_quadrature_production")
-    return None
-
-fl_rows, unnamed, bad_comp = [], [], []
-for kk in below:
-    note = floor_note(kk)
-    if note is None:
-        unnamed.append(kk); continue
-    kind, blind, comp = note
-    if comp not in M or abs(M[comp]) <= ABS_FLOOR:
-        bad_comp.append((kk, comp, M.get(comp)))
+# -- break rows ----------------------------------------------------------------------
+# Rows that only re-read a count at another resolution re-run nothing; they stay
+# in the table as documentation of the threshold, and the counts get a row that
+# recomputes the matrix (the candidates not refitted) instead.
+for metric, base, inj, broken, note in BREAKS:
+    if metric == "printed_chain_nonzero":      # wired below, on the count itself
         continue
-    fl_rows.append([kk, kind, blind, f"{comp} = {M[comp]:.2e}"])
-assert not unnamed, f"sub-floor metrics with no stated kind: {unnamed}"
-assert not bad_comp, f"sub-floor metrics whose companion is not above floor: {bad_comp}"
-kinds = sorted({r[1] for r in fl_rows})
-M["subfloor_metrics"] = float(len(below))
-M["subfloor_kinds"] = float(len(kinds))
-print(f"\n{len(below)} of {len(M)} metrics sit below check_agreement's "
-      f"ABS_FLOOR = {ABS_FLOOR:g} and are therefore documented rather than "
-      f"protected by CI. They are NOT all identities: they fall into "
-      f"{len(kinds)} kinds -")
-for kd in kinds:
-    print(f"  {sum(1 for r in fl_rows if r[1] == kd):3d}  {kd}")
-display(Markdown("**Every sub-floor metric, what it cannot detect, and its "
-                 "above-floor companion.** A companion is only useful if it "
-                 "runs through the SAME code the sub-floor metric comes from, "
-                 "so that a defect there moves it. The held-C_A family named "
-                 "`constC_span_needed_prec5pct` until this was checked - a "
-                 "numpy least-squares fit to analytic power laws that never "
-                 "calls `run_const_c`, and so could not have detected a defect "
-                 "in the device at all; those rows now name numbers that are "
-                 "outputs of that device.\n\n"
-                 + md_table(pd.DataFrame(fl_rows, columns=[
-                     "metric", "kind", "what it cannot detect",
-                     "above-floor companion (asserted > ABS_FLOOR)"]))))
-COVERAGE["subfloor_metrics"] = COVERAGE["subfloor_kinds"] = (
-    "bookkeeping of the table above; every entry in it is asserted to name a "
-    "companion that is itself above the floor")
-assert set(COVERAGE) == set(M), (set(M) - set(COVERAGE), set(COVERAGE) - set(M))
+    if metric.endswith("_n_separable") and metric != "sep_constC_n_separable":
+        continue
+    claims.breaks(inj, metric, broken)
+claims.breaks("eq. (12) read with k for k_d", "printed_chain_nonzero", SYM_TYPO_NONZERO)
+claims.breaks("eq. (24) taken with 1/k", "eq24_residual_is_log_kd_over_k", EQ24_BROKEN[0])
+claims.breaks("eq. (24) taken as printed", "eq24_repaired_residual", EQ24_BROKEN[1])
+claims.breaks("the reference inverted, ln(k_d/k)", "eq24_offset_expected", np.log(_kd / _k))
+SWAP = {"parallel": "series", "series": "parallel",
+        "side-by-side": "independent", "independent": "side-by-side"}
+for cfg in ("batch", "plug", "mixed", "constC"):
+    for cls in CLASSES:
+        claims.breaks("rate form swapped (eq. 5 for 4, eq. 7 for 6)",
+                      f"span_{cfg}_{SHORT[cls]}", float(np.ptp(RESP[(cfg, SWAP[cls])])))
+for cfg in ("batch", "plug", "mixed", "constC"):
+    claims.breaks("n' = 0.7 instead of 0", f"degen_nprime0_{cfg}", OFF_NP0[cfg])
+claims.breaks("n' set back to 0", "degen_nprime0_off_condition",
+              max(M[f"degen_nprime0_{c}"] for c in ("batch", "plug", "mixed", "constC")))
+claims.breaks("degeneracy 2 without relabelling the orders and lam",
+              "degen_mixed_series_is_parallel", DEGEN2_UNMAPPED)
+claims.breaks("integrated at the production rtol 1e-9",
+              "degen_mixed_series_is_parallel_rtol1e-13", M["degen_mixed_series_is_parallel"])
+claims.breaks("series without relabelling lam", "degen_constC_par_ser_ind", DEGEN3_UNMAPPED)
+for cfg in ("batch", "plug", "mixed"):
+    claims.breaks("off the n' = n, d = 1 condition", f"degen_sbs_is_parallel_famA_{cfg}",
+                  OFF_A[cfg])
+claims.breaks("back on the n' = n, d = 1 condition", "degen_batch_sbs_off_condition",
+              M["degen_batch_sbs_is_parallel_on_condition"])
+claims.breaks("the same identity in the mixed reactor", "degen_sbs_is_parallel_famB_batch",
+              M["degen_sbs_is_parallel_famB_mixed"])
+for cfg in ("mixed", "constC"):
+    claims.breaks("the same identity in the batch, where it holds",
+                  f"degen_sbs_is_parallel_famB_{cfg}", M["degen_sbs_is_parallel_famB_batch"])
+claims.breaks("back on the n = n' = d = 1 condition", "degen_sbs_famB_off_condition",
+              M["degen_sbs_is_parallel_famB_plug"])
+UNFIT = {}        # the candidate's rate form at the truth's constants, not refitted
+for cfg in SEP:
+    for i, tr in enumerate(CLASSES):
+        for j, cd in enumerate(CLASSES):
+            if i != j:
+                UNFIT[(cfg, i, j)] = float(np.sqrt(np.mean(
+                    (RESP[(cfg, cd)] - RESP[(cfg, tr)]) ** 2)))
+                claims.breaks("candidate's rate form at the truth's constants, not "
+                              "refitted", f"sep_{cfg}_{SHORT[tr]}_vs_{SHORT[cd]}",
+                              UNFIT[(cfg, i, j)])
+    claims.breaks("not refitted", f"sep_{cfg}_best_pair",
+                  max(v for (c, _, _), v in UNFIT.items() if c == cfg))
+claims.breaks("not refitted", "sep_plug_par_vs_ind_wideseed", UNFIT[("plug", 0, 3)])
+for cfg in ("batch", "plug", "mixed"):
+    claims.breaks("the matrix with the candidates not refitted", f"sep_{cfg}_n_separable",
+                  float(sum(1 for (c, _, _), v in UNFIT.items()
+                            if c == cfg and v > res_of.get(cfg, RES_X))))
+claims.breaks("degeneracy 2's twin without the lam mapping", "sep_identity_twin_worst",
+              TWIN_UNMAPPED)
+claims.breaks("the twin's parameters added as a seed", "sep_optimiser_worst_overstatement",
+              OVER_TWIN_SEEDED)
+claims.breaks("the diagonal fits stopped after 3 evaluations",
+              "sep_optimiser_overstated", OVER_COUNT_EARLY)
+for cfg in SEP:
+    claims.breaks("polish stopped after 3 evaluations", f"sep_stall_{cfg}",
+                  max(STALL_EARLY[(cfg, c)] for c in ("parallel", "side-by-side")))
+claims.breaks("polish stopped after 3 evaluations", "sep_stall_worst",
+              max(STALL_EARLY.values()))
+claims.breaks("polish stopped after 3 evaluations", "sep_stall_worst_not_sbs",
+              max(v for (c, cl), v in STALL_EARLY.items() if cl == "parallel"))
+for name in PROFILES:
+    claims.breaks("the far end of the range with the other four NOT refitted", name,
+                  PROF_UNFIT[name])
+for cfg in ("batch", "mixed"):
+    claims.breaks("the cheapest constant moved 2 %, not 1 %",
+                  f"sep_stall_1pct_cheapest_{cfg}", COST_2PCT[cfg])
+claims.breaks("a budget of 50 evaluations", "fits_capped", FITS_CAPPED_BROKEN)
+claims.breaks("a budget of 50 evaluations", "fits_budget_share_max",
+              EVALS[("budget-break",)])
+for nm in ("mixed_boundary_np1_d1.5", "mixed_boundary_np1_d1", "mixed_boundary_worst_inside",
+           "mixed_boundary_np1_d0.25"):
+    claims.breaks("d moved below the line to 0.5", nm, M["mixed_boundary_np1_d0.5"])
+claims.breaks("d moved further from the line, to 0.25", "mixed_boundary_np1_d0.75",
+              M["mixed_boundary_np1_d0.25"])
+for nm in ("mixed_boundary_np2_d1.5", "mixed_boundary_best_outside"):
+    claims.breaks("n' = 1, d = 0.5 instead", nm, M["mixed_boundary_np1_d0.5"])
+claims.breaks("demand 5 % instead of 2 %", "constC_span_needed_prec2pct",
+              M["constC_span_needed_prec5pct"])
+claims.breaks("demand 5 % instead of 10 %", "constC_span_needed_prec10pct",
+              M["constC_span_needed_prec5pct"])
+claims.breaks("a span of 0.05", "constC_misfit_at_span_0p5", wrong_class_misfit(0.05))
+claims.breaks("start the levels at 0.40", "constC_span_prec5pct_min",
+              M["constC_span_prec5pct_max"])
+claims.breaks("base sigma instead of 0", "constC_sbs_recovered_d_sig0",
+              M["constC_sbs_recovered_d_base"])
+claims.breaks("base sigma instead of 0", "constC_sbs_bias_sig0",
+              abs(M["constC_sbs_recovered_d_base"] / D_TRUE - 1.0))
+claims.breaks("d = 1 instead of 2", "constC_sbs_bias_max_scanned",
+              M["constC_sbs_bias_at_d1_max"])
+claims.breaks("read off the sigma scan, not root-found", "constC_sbs_sigma_for_bias",
+              SIG_SCAN_READ)
+for nm, v in {**BED_BROKEN, **SPATIAL_BROKEN, **CF_BROKEN}.items():
+    claims.breaks("refinement, scheme or closed-form defect (see the cell that "
+                  "computes it)", nm, v)
+for cls in ("parallel", "series"):
+    sh, other = SHORT[cls], SHORT[SWAP[cls]]
+    claims.breaks("the production cell centre in place of the exact inlet",
+                  f"bed_a_inlet_end_{sh}", float(prof[cls][1][0, -1]))
+    for nm in ("bed_a_outlet_end", "bed_a_outlet_altpair", "bed_profile_contrast"):
+        claims.breaks("the other class's profile (eq. 5 for eq. 4)", f"{nm}_{sh}",
+                      M[f"{nm}_{other}"])
+claims.breaks("read at the outlet cell", "bed_inlet_time_sensitivity",
+              M["bed_profile_time_sensitivity"])
+claims.breaks("read at the inlet cell", "bed_profile_time_sensitivity",
+              M["bed_inlet_time_sensitivity"])
+claims.breaks("Heun for Euler", "bed_time_order_euler", M["bed_time_order"])
+claims.breaks("Heun for Euler", "bed_time_order_euler_finest", M["bed_time_order_heun_finest"])
+claims.breaks("Euler for Heun", "bed_time_order_heun_finest", M["bed_time_order_euler_finest"])
+_nu = [r for r in BREAKS if r[2].startswith("construct_div(nu=1)")]
+assert len(_nu) == 1
+claims.breaks("construct_div(nu=1)", "bed_vs_quadrature_over_resolution", _nu[0][3] / RES_X)
+claims.breaks("series bed against the parallel quadrature", "bed_vs_quadrature_series",
+              float(np.max(np.abs(Xser - ref_par))))
+claims.breaks("eps = 1e-3 instead of 3e-2", "pseudo_steady_cost_eps3e-2",
+              M["pseudo_steady_cost_eps1e-3"])
+claims.breaks("accumulation scaled by sqrt(eps)", "pseudo_steady_cost_slope", PS_SLOPE_SQRT)
+claims.breaks("eps* read at half the resolution", "pseudo_steady_eps_star", PS_EPS_HALF)
+
+_kinds = {kd: [k_ for k_, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"{len(claims.metrics)} claims registered: {len(_kinds['value'])} values, "
+      f"{len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.  The bounds that "
+      f"are not identities at 0:")
+for k_ in _kinds["bound"]:
+    c = claims.metrics[k_]
+    if c.get("max") == 0.0:
+        continue
+    lo, hi = c.get("min"), c.get("max")
+    rng = f"[{lo:g}, {hi:g}]" if lo is not None else f"<= {hi:g}"
+    print(f"  {k_:44s} {rng:14s} [{c['basis']}]  (here {c['value']:.3g})")
+
+# -- numbers written in the prose of this page, checked against their claims -------
+SAYS = {
+    "sep_stall_worst": ["below 1e-9"],
+    "sep_profile_d_batch": ["below 2e-4"],
+    "sep_profile_d_mixed": ["below 2e-4"],
+    "sep_profile_nprime_mixed": ["below 2e-4"],
+    "fits_budget_share_max": ["below 0.9"],
+    "mixed_boundary_worst_inside": ["below 1e-8"],
+    "mixed_boundary_np1_d0.75": ["below 1e-3"],
+    "mixed_boundary_np2_d1.5": ["below 1e-4"],
+    "constC_sbs_bias_at_d1_max": ["below 1e-7"],
+    "sep_optimiser_worst_overstatement": ["1.3e-3"],
+}
+for k_, lits in SAYS.items():
+    for lit in lits:
+        claims.says(lit, k_)
 # wall clock is deliberately neither printed nor reported: it is machine
 # dependent, and two executions of this page must give identical content.
-report_agreement("B2.3", M)
+claims.report()
 '''))
 
 # ------------------------------------------------------------ what pymrm adds
@@ -2798,10 +3072,10 @@ solver:
   sufficient).
 - **And the identities are used, not just admired.** Each one names a parameter
   vector at which some candidate reproduces some truth exactly. Those vectors
-  are evaluated directly and reported beside the fits — because on a ninth of
-  the matrix the multistart, seeded next to the twin and free to reach it,
-  stopped short and would have printed an exactly-zero separation as a measured
-  one. That is the asymmetry this page is built on: a non-separability result
+  are evaluated directly and reported beside the fits, because on one entry of
+  the matrix the multistart, seeded next to the twin and free to reach it, fell
+  into a wrong basin 1.3e-3 short and would have printed an exactly-zero
+  separation as a measured one. That is the asymmetry this page is built on: a non-separability result
   is a proof, a separability result is only "no better fit was found".
 - **And the honest negative.** At a 0.2-percentage-point conversion resolution,
   one of the twelve class pairs is separable in one of the four devices. A page

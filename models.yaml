@@ -1065,8 +1065,7 @@ models:
       agree to O(1/N) and not exactly.
 
       FIVE PRINTED DEFECTS, each proved from the book's own numbers and none
-      repaired. (0) THE CONSEQUENTIAL ONE, and the one an earlier draft of this page
-      got backwards by asserting the chapter printed no conversion rule at all.
+      repaired. (0) THE CONSEQUENTIAL ONE.
       Fig. 14.7, p. 327, carries inside its own axes box: "When N > 50 the curve
       becomes symmetrical in which case use fig. 13-11 with N = 1/2 (D/uL)". The
       ratio is INVERTED. The book refutes itself twice: Ch. 13's printed
@@ -1126,14 +1125,12 @@ models:
       number by definition. The alternative chain's moment match is exact by
       construction and asserted. 26 of the 81 metrics sit below check_agreement.py's
       ABS_FLOOR of 1e-12 and are outside CI entirely, and each is named with an
-      above-floor companion that the companion string must NAME - asserted, after an
-      earlier draft had four companion strings naming no metric at all.
+      above-floor companion that the companion string must NAME - asserted.
 
       THE BREAK TABLE IS 35 ROWS AND EACH PINS A METRIC. Every row recomputes the one
       metric named in its `metric` column, and that row's baseline is asserted to
       equal the reported value of that metric, so no row can report a metric against
-      an unrelated number and still be named as its mover (an earlier draft had one
-      that did, for seven metrics). The wider mover list is a declared scope with
+      an unrelated number and still be named as its mover. The wider mover list is a declared scope with
       every name checked against agreement.json, and the coverage map is built from
       those lists rather than written by hand.
 
@@ -2639,7 +2636,7 @@ models:
       container: "Chemical Engineering Science 17(4) 265–275"
       doi: 10.1016/0009-2509(62)85005-2
     predicts: [effectiveness factor, ignition, steady-state multiplicity]
-    pymrm_api: [construct_grad, construct_div, NumJac, newton, clip_approach]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton, continuation]
     data: {tier: 6, method: analytical, status: complete}
     page: pages/B1.1-thiele-weisz-hicks/
     related: [B1.2, B1.4, B1.5, D1.4, J4.7, A4.9]
@@ -3150,9 +3147,9 @@ models:
       resolution, ONE of the twelve class pairs is separable in ONE of the four
       devices (plug flow, parallel vs independent, 2.20e-3); parallel vs series in
       a bed is 8.07e-4. Each of the 64 entries is min(multistart fit, identity
-      twin) - 44 have a twin, and on nine of those the fit alone stopped more than
-      1e-6 short of a minimum that is exactly zero, by up to 1.31e-3, all in the
-      safe direction and none changing a verdict. What does discriminate is not
+      twin) - 44 have a twin, and on one of those the fit alone stops more than
+      1e-6 short of a minimum that is exactly zero, by 1.31e-3 (a wrong basin),
+      in the safe direction and changing no verdict. What does discriminate is not
       the effluent but the activity PROFILE, and both bed inlet values are EXACT:
       at the feed face C_R = 0, so the series inlet never decays at all (a = 1
       identically) while the parallel inlet is exp(-lambda theta) = 0.049787; the
@@ -3171,7 +3168,7 @@ models:
       the level set starts, how many levels) it ranges 0.073 to 0.382. Its
       one-knob/two-constraint
       problem with a consumed poison has an exact blind spot at d = 1 (consumption
-      ~ a^(d-1), so the recovered order is unbiased to 5.5e-7 for any sigma) while
+      ~ a^(d-1), so the recovered order is unbiased to below 1e-7 for any sigma) while
       at d = 2 it biases the order by -30.8 % - though holding C_A rather than
       C_P is the inverse of the paper's own instruction for eq. (6), and under
       that instruction (sigma = 0) the order comes back unbiased to 5.4e-9. The
@@ -3270,23 +3267,22 @@ models:
       off the other step-count pair.
       Where the two disagree the identity wins, and it wins IN THE MATRIX: every
       entry is min(multistart fit, identity twin), 44 of 64 have a twin, and the
-      nine entries where the fit alone stopped short are printed beside what the
-      algebra gives (worst shortfall 1.31e-3, all in the safe direction, no
-      verdict changed).
+      one entry where the fit alone stops short is printed beside what the
+      algebra gives (a shortfall of 1.31e-3, in the safe direction, no verdict
+      changed).
 
       THE DIAGONAL IS AN OPTIMISER STALL, NOT A NULL. A class fitted to its own
-      response with every parameter free has exact minimum zero, so the 8.55e-6
-      (batch) and 2.38e-5 (mixed) the multistart stops at are solver stalls; the
-      twin sets them to zero exactly. Where it stalls IS informative and is now
-      computed rather than asserted: the recovered parameters sit 3.6 % and 10.5 %
-      from the truth in their worst coordinate while a 1 % move along any single
-      parameter costs 17x to 311x the stall - eq. (6)'s five constants trade along
-      a valley and are not separately identifiable. THE 20x FLOOR HAS BEEN REMOVED
-      because it never bound: 20x the stall is below the instrument resolution on
-      every device (worst case 0.24 of it), so every threshold equalled the
-      resolution exactly and removing it changes no count. 0 of 64 fits hit their
-      evaluation budget - and sep_matrix now passes a tag to fit_class, so a
-      capped fit would actually be recorded.
+      response with every parameter free has exact minimum zero, and the twin
+      sets the diagonal to zero exactly; the side-by-side fit alone, the only
+      diagonal fit that starts off the truth (the seed grid contains the truth
+      for the other three classes), reaches below 1e-9 on every device. That
+      eq. (6)'s five constants are not separately identifiable is measured with
+      a profile: holding d anywhere in [0.5, 1.5] in either device, or n'
+      anywhere in [0.5, 1.5] (mixed flow), the other four refit to an RMS
+      residual below 2e-4, a tenth of the conversion resolution, while +1 % on
+      any single constant with the others held at the truth costs at least
+      3.9e-4. 0 of 64 fits hit their evaluation budget, and the largest share of
+      it any fit uses is recorded against that budget.
 
       RECONSTRUCTION DECLARED: sigma, the poison-consumption group implied by
       eq. (6)'s "P -> P(down)", is not printed anywhere in the paper. It is swept,
@@ -3302,7 +3298,8 @@ models:
       a^d from every right-hand side and makes the finite-time extinction of d < 1
       (the printed d = 0 case) ordinary rather than stiff; with a terminal event
       at extinction it cut this page's separability sweep from tens of minutes to
-      a few. Whole page: 310 s.
+      a few. Whole page: about 660 s (the central-difference Jacobian
+      and the identifiability profiles doubled it from 310 s).
 
   - id: B3.2
     slug: grain-model
@@ -3933,10 +3930,7 @@ models:
       axial Peclet number at which the rung would move the runaway threshold by 1 %:
       Pe_a* = 0.2488 +/- 0.0002, i.e. axial dispersion 4.02 times stronger than the
       chapter's own lower limit, located between two points whose thresholds pass the
-      page's crossing control. An earlier version of that page reported a bound
-      instead, because its sweep stopped at the first point the control refused; the
-      control's verdict is speckled in Pe_a rather than an interval, and both the
-      bound and the uncontrolled number that preceded it are now break rows.
+      page's crossing control.
     related: [D1.1, D1.3, A2.1, A2.6, A2.5]
 
   - id: D1.3
@@ -4462,15 +4456,14 @@ models:
       5.99e-6, which is exactly why a second solver family cannot catch this class of
       defect and a convergence study can.  WHAT THAT SHORTCUT COSTS IS COUNTED BY THE
       NOTEBOOK RATHER THAN ASSERTED: 27 of the 42 reported metrics move by more than
-      the coverage tolerance and 19 of them change in their fourth decimal.  An earlier
-      version of this entry said "nine reported numbers", counted by hand; it was an
-      undercount.  The
+      the coverage tolerance, the headline error among them by more than a unit in its
+      fourth decimal.  The
       extrapolated reference agrees with scipy's collocation to 4.37e-8 and with a finer
       extrapolation of itself to 3.84e-8, and it is the "extrapolation switched off" row
       of the break table that prices what shipping the single solve would have cost.
       THE HEADLINE IS THE APPROXIMATION PRICED OVER THE CHART'S OWN PRINTED DOMAIN,
       root-found in both directions and never sampled: worst error -2.7955 % at
-      gamma = 4.7279, q = 1.5217 (E_i = 2.5217), against the "This approximate solution
+      gamma = 4.728, q = 1.522 (E_i = 2.522), against the "This approximate solution
       is valid to within 10 percent of the numerical solution" printed on book p. 340 -
       a margin of 3.5772x - and -2.7294 % if the search is confined to the ten curve
       labels the chart actually draws.  Van Krevelen-Hoftijzer UNDER-estimates
@@ -4486,10 +4479,10 @@ models:
       constant close to the interface".  The first is about the LEVEL of depletion, which
       beta(0) measures exactly; the second about the CONSTANCY of beta over the reaction
       zone, which beta(0) does not measure at all and the rate-weighted mean does.  Along
-      the worst curve the error is -1.8304 % where B is half gone (gamma = 2.2036,
+      the worst curve the error is -1.8304 % where B is half gone (gamma = 2.204,
       ROOT-FOUND on beta(0), constancy ratio 1.208), -2.7955 % at the worst point where
       beta(0) is already down to 0.1647 and the constancy ratio is 2.115, -1.5035 % where
-      B is 99 % gone (gamma = 13.0378, root-found, ratio 19.20), and -0.00037 % where B
+      B is 99 % gone (gamma = 13.038, root-found, ratio 19.20), and -0.00037 % where B
       is gone completely and the ratio has run away without bound.  beta(0) falls
       monotonically, the constancy ratio rises monotonically, and the error does NEITHER:
       it peaks in between and vanishes at both ends, because the ceiling F_A -> 1 + q is
@@ -4525,7 +4518,7 @@ models:
       claim stated at its true strength: TWO INDEPENDENT METHODS, ONE OF THEM ALSO
       REFINED - pymrm finite volumes (extrapolated from 400 and 800 cells, then again on
       1600 cells with a different grading) and scipy's adaptive collocation, which share
-      no assembly - agree on it to 8.61e-5, orders below the factor it is used to
+      no assembly - agree on it to below 1e-3 relative, orders below the factor it is used to
       establish.  The middle entry is a refinement of the first, not a third route, and
       the page says so.
       THE TWO CHARTS' CURVE LABELS MEAN DIFFERENT THINGS AND THE PAGE PRICES IT.
@@ -4540,14 +4533,15 @@ models:
       already reports 2.076893 % as its maximum VKH error.  That number is LOADED from
       F3.1's own agreement.json and its definition - a sampled max over E_i in
       {5, 20, 100} on a warm-started Ha sweep - is recomputed here cold, giving
-      2.076896 % and reproducing it to 1.29e-6 relative.  THE RESIDUAL IS ATTRIBUTED BY
+      2.076896 % and reproducing it to 1.29e-6 relative, checked as below 2e-5 because
+      F3.1's number was made on another machine.  THE RESIDUAL IS ATTRIBUTED BY
       MEASUREMENT RATHER THAN LEFT TO BE GUESSED AT, AND IT BELONGS TO F3.1: the same
       recomputation run COLD on F3.1's OWN grid - uniform, n_x = 400 - lands on F3.1's
-      stored 2.076893 % to better than 1e-10 relative, so the warm start contributes
+      stored 2.076893 % to below 1e-9 relative, so the warm start contributes
       nothing to the residual and what is left is that grid's discretisation error.
       This page's extrapolated reference is the accurate side of it, agreeing with
-      scipy's collocation to 4.37e-8; the single graded n_x = 800 grid this page used
-      before the baseline was extrapolated is on the wrong side of it by 0.000214
+      scipy's collocation to 4.37e-8; a single graded n_x = 800 grid, without the
+      extrapolation, is on the wrong side of it by 0.000214
       points, eighty times further.  The extra 0.7186
       percentage points in this page's headline are SPLIT by measurement: root-finding
       gamma at the same three E_i buys 0.0016 and letting q move off {4, 19, 99} buys
@@ -4571,15 +4565,16 @@ models:
       boundary conditions in one pair of {a, b, d} dictionaries, NumJac given (n_x, 2)
       and never a bare (n_x,), newton with clip_approach, and a grid built from
       arbitrary face positions, which is one line.
-      WHAT GRADING IS WORTH IS MEASURED AND SPLIT RATHER THAN LUMPED, AND AN EARLIER
-      VERSION OF THIS ENTRY GOT IT WRONG BY A FACTOR OF SEVEN.  F3.1 names its own
+      WHAT GRADING IS WORTH IS MEASURED AND SPLIT RATHER THAN LUMPED; crediting it all
+      to grading is wrong by a factor of seven.  F3.1 names its own
       uniform-grid error as "concentrated at high Ha where the reaction layer is thinner
       than a cell", and its own pseudo-first-order check over its own Ha range comes out
       893.9 times tighter here - 7.088e-6 against the 6.337e-3 LOADED from F3.1's
       agreement.json.  But that factor compares F3.1's UNIFORM n_x = 400 against this
       page's GRADED n_x = 800, so it is grading TIMES a refinement.  Run on this page's
       own three grids it decomposes exactly: the 400 -> 800 refinement is worth 7.163x
-      (and the uniform n_x = 400 recomputation reproduces F3.1's stored number to 6.3e-15)
+      (and the uniform n_x = 400 recomputation reproduces F3.1's stored number to below
+      1e-12 relative)
       and grading at the same n_x is worth 124.8x.  At the moderate gamma the headline
       lives at, the SAME grading is a liability: at the grid-study point a graded grid is
       248.7 times LESS accurate than a uniform one of the same size, because its outer
@@ -4594,12 +4589,12 @@ models:
       GENERATED from measured moves and an AST guard that rejects any row returning a
       metric as a typed constant - and the page states what that guard CANNOT do (it
       rejects literals, walks one level, and can never tell whether a computed
-      expression is the right one).  A verification's sabotage suite found one form the
-      guard missed, a DICT COMPREHENSION over literal key strings; it is now closed and
-      is the third form the guard's own negative control uses, and the forms that still
-      pass are named on the page rather than left implied.  ONE metric sits below check_agreement.py's ABS_FLOOR
-      (the two routes to the implicit relation, 8.0e-15) and is named on the page with
-      two above-floor companions.  Every solve is a COLD START from a closed-form
+      expression is the right one).  A DICT COMPREHENSION over literal key strings is
+      caught and is the third form the guard's own negative control uses, and the forms that still
+      pass are named on the page rather than left implied.  Every metric declares how it
+      is checked: the solver and two-method gaps, the first integral, the two limits and
+      the grid order as bounds with a stated basis (the two routes to the implicit
+      relation below 1e-12), the rest as values.  Every solve is a COLD START from a closed-form
       profile depending only on its own (gamma, q), so no reported number rides a
       continuation chain.
     section: F
@@ -4659,12 +4654,12 @@ models:
         approximately constant close to the interface".  Both wordings are transcribed
         into the CSV and both are tested on the page.  Reference list book p. 365.
         EVERY EQUATION AND EVERY NUMERAL WAS READ ON A 300 ppi RENDER, WITH ONE
-        CORRECTION MADE 2026-08-14: the book's equations and prose are vector text, but
+        EXCEPTION: the book's equations and prose are vector text, but
         Fig. 6.3.2-1 on PDF p. 373 is an EMBEDDED 536x771 GREYSCALE JPEG AT 148 ppi
         (`pdfimages -list`), so a 300 ppi page render of that figure is a 2x
         interpolation.  The ten curve labels, the four axis ends and both axis titles
-        were therefore re-read on the extracted raster at its native resolution, enlarged
-        4x, and are unchanged.  This file is
+        were therefore read on the extracted raster at its native resolution, enlarged
+        4x.  This file is
         born-digital and its prose extracts cleanly, but its equations do not: every
         Symbol-font operator becomes an unmappable Private-Use-Area glyph (U+F02D minus,
         U+F03D equals, U+F02B plus), so the extraction of (6.3.5-1) is
@@ -5529,7 +5524,7 @@ models:
       headroom. The page's own result explains why it had to: Langmuir's Case VI,
       eqs. (29) and (30) of the same paper, is shown symbolically to be EXACTLY the
       BET isotherm twenty years early, and every pressure he reached lies below
-      p/p0 = 1.5e-3 - recovered by inverting his own Table XXI - where his monolayer
+      p/p0 = 1.6e-3 - recovered by inverting his own Table XXI - where his monolayer
       and multilayer equations differ by at most 0.16 %, against observational scatter
       12 to 1100 times larger; and refitting BET to Table VII with BOTH parameters free
       improves the fit by 1.26 parts in 100000, the multilayer model returning Case I
@@ -5839,7 +5834,7 @@ models:
       residence-time cumulants give H = kappa_2/kappa_1^2 - reproduces eq. (38) symbolically as
       well. Eq. (38) is then computed WITHOUT eq. (38), by integrating eqs. (29)/(30) in time with
       pymrm and reading H from the difference of the first two time moments at two interior
-      stations: 4.1e-5, with the two-station difference cancelling the boundary condition to 1.5e-6.
+      stations: 4.1e-5, with the two-station difference cancelling the boundary condition to below 1e-5.
       The grid study has a known answer rather than only an order - first-order upwind adds u h / 2
       of numerical dispersion, so switching the limiter off must shift H by exactly h, and the
       measured coefficient is 0.99999 (observed order 3.00 with van Leer, 1.00 bare). Refitting
@@ -6094,10 +6089,10 @@ models:
       REPARAMETERISED: constant yield makes X = phi(a - S), so
       mu_m S/(K_sx X + S) = (mu_m/beta) S/(K_sx phi a/beta + S) with
       beta = 1 - K_sx phi - a bijection between the two parameter pairs, sympy
-      residual exactly zero, confirmed to better than 1e-4 in both constants by two
+      residual exactly zero, confirmed to better than 1e-3 in both constants by two
       optimisers started from different places on the two parameterisations (the
       exact residuals are those optimisers' exit tolerances, printed on the page
-      and deliberately not reported as metrics). Of the
+      and registered as bounds that every run checks, not as values). Of the
       two that ARE separable at this design, Blackman needs 1.30 repeats of the run
       and Tessier 10.3, N* being a ~50 %-power threshold rather than a
       95 %-detection sample size.
@@ -6146,7 +6141,8 @@ models:
       chemostat sweeping the FEED. Monod washes out at D_c = mu_m S_f/(K_S + S_f),
       Contois at D_c = mu_m whatever the feed; the two cross at EXACTLY S_f = a,
       the substrate intercept of the batch run's own material balance (root-found
-      197.116 against 197.120), and differ by a factor 1.83 at S_f = 20.
+      at 197.1 against 197.120, equal within the Contois fit's exit tolerance), and
+      differ by a factor 1.83 at S_f = 20.
       ONE PRINTED CELL IS REPORTED AND NOT REPAIRED: the table's fourth
       interval-average substrate concentration is off the constant-yield line the
       other six rows fix at R^2 = 0.99996 (all seven give 0.98505), and a
@@ -6766,9 +6762,9 @@ models:
       numerical sweep is a check on that algebra, not the evidence for it: holding
       r_m and K_M fixed and sweeping rho = k_2/k_-1 over EIGHT DECADES, the rate
       law evaluated from the elementary constants is identical to double precision
-      over four decades of concentration - max relative difference 0.0 on the nine
-      swept rho, and at most 4.44e-16 over 2000 seeded random (rho, C_E0) draws,
-      where the float round trips are no longer exact. The exact zero is a
+      over four decades of concentration - max relative difference below 1e-14 on
+      the nine swept rho (exactly zero there), and below 1e-14 over 2000 seeded
+      random (rho, C_E0) draws, where the float round trips are no longer exact. The exact zero is a
       property of the values swept; the degeneracy is a property of the algebra,
       and the page reports both. Meanwhile K_M(BH)/K_M(MM) = 1 + rho runs from
       1.0001 to 1e4. The map from four elementary constants to the two observable
@@ -6803,7 +6799,7 @@ models:
       cmol/L at 4.02e-3 RMS - a FIT, since those are the same seven points -
       against best-fitted one-parameter nulls of 5.34e-2 (zero order), 3.90e-2
       (first) and 1.05e-1 (second). Pinning rho anywhere in [1e-4, 1e4] and
-      re-optimising the other three moves the achievable sum of squares by 8.58 %,
+      re-optimising the other three moves the achievable sum of squares by 8.6 %,
       monotonically and with no interior optimum, and the four-parameter
       mass-action model gives F = 1.9009 against F(2, 3) = 9.5521 at 95 %. So the
       page states plainly what it does NOT establish: not "the Michaelis-Menten
@@ -6823,12 +6819,12 @@ models:
       a second route sharing no ODE solver and no mass-action model. The fit is
       likewise computed twice, through the Lambert-W closed form and through the
       pymrm backward-Euler marcher with Richardson extrapolation, agreeing to
-      5.9e-8 relative. Two printed defects, reported and NOT repaired, both
+      better than 1e-5 relative. Two printed defects, reported and NOT repaired, both
       settled from the book's own equations: p. 24's high-concentration limit
       "rA = k1CE0" [sic], which contradicts the limit of its own eq. (1.5.1-8),
       its eq. (1.5.1-15) definition of r_m, and its Problem 2.4(b) - and is
       dimensionally impossible; and p. 25's "Lineweaver-Burke plot of 1/r versus
-      CA" [sic], where 1/r is exactly affine in 1/C_A (9.67e-16) and strictly
+      CA" [sic], where 1/r is exactly affine in 1/C_A (below 1e-13) and strictly
       convex in C_A. The convexity is what settles that defect and it is
       convention-free, and so is the size once the right line is named: the
       statistic is a MAXIMUM, so the line that minimises it is the Chebyshev
@@ -6981,7 +6977,7 @@ models:
       18-minute run reads that maximum 66.3 % low. The metric recording that
       shortfall is itself in agreement.json.
       THREE THINGS EVERY REPORTED THRESHOLD IS A PROPERTY OF, all stated and all
-      three now carrying break rows: the 5e-4 cmol/L resolution it is read at
+      three carrying break rows: the 5e-4 cmol/L resolution it is read at
       (doubled), the rho interval [1e-4, 1e4] (narrowed to [0.5, 2]), and, for the
       compensated eps*, the 25-point sampling grid the misfit is computed on
       (coarsened to 13). Those vary a declared CONVENTION and would move by the
@@ -6990,33 +6986,29 @@ models:
       loosened to rtol 1e-6 - which is the only class of row that can expose a
       wrong baseline, and whose move doubles as the convergence evidence for the
       quoted eps*.
-      AND ONE MORE, added after a verification and sharpened by a second: the
+      AND ONE MORE: the
       STATISTIC, and WHICH LINE it is measured against. "How far from a straight
       line" is a maximum, so the minimising line is the CHEBYSHEV one; the page
       reports that convention-free floor (31.72 %) alongside the least-squares
-      distances under both weightings (50.32 %, 66.88 %), all in closed form. The
-      overclaim this replaced - three surfaces calling the least-squares distance
-      "the best straight line", which implies nothing straight gets within half
-      the range when a straight line comes within 31.7 % - is itself a break row
-      now, injecting 0.5032 into the 0.3173 floor; two more restore the
-      unconverged 400-point grid an earlier draft sampled and read the floor on a
-      tenth of the interval.
+      distances under both weightings (50.32 %, 66.88 %), all in closed form.
+      Calling the least-squares distance "the best straight line", which implies
+      nothing straight gets within half the range when a straight line comes
+      within 31.7 %, is a break row, injecting 0.5032 into the 0.3173 floor; two
+      more use an unconverged 400-point grid and read the floor on a tenth of the
+      interval.
       COVERAGE: 52 rows - 51 defect injections, all 51 of which move their metric
       by more than MOVE_TOL = 1e-6 relative, covering 42 of 53 metrics; plus ONE
       ROBUSTNESS ROW, written to show that a metric does NOT move, which is
       labelled as such and is NOT counted as coverage for that metric. The
       coverage map prints how hard each covered metric's strongest row hits it,
       and the notebook asserts that the weakest of those is still above
-      ROOT_FIND_RES - which is now DERIVED, 2*ln(10)*XTOL_LOG10 = 4.61e-6, the
+      ROOT_FIND_RES - which is DERIVED, 2*ln(10)*XTOL_LOG10 = 4.61e-6, the
       resolution of a difference between two root-finds at the page's own
-      tolerance, rather than the 1e-5 an earlier draft rounded it up to. An
-      earlier draft also had the compensated eps* "covered" by the robustness row
-      alone, which is the illusion this bookkeeping exists to prevent. The eleven
+      tolerance. The eleven
       metrics with no mover are named individually as structural, definitional or
       companion values and the notebook ASSERTS that BOTH generic not-coverage
       labels are never used - the UNCOVERED fallback and the "robustness rows
-      only" branch, which was printed but unasserted until a verification pointed
-      out that a metric could land in it and still pass. Seven
+      only" branch, in which a metric could otherwise land and still pass. Seven
       metrics sit below CI's ABS_FLOOR of 1e-12 (three symbolic zeros - the
       chain, the rho-degeneracy proof and the swept degeneracy check - the
       degeneracy's float spread over random draws at 4.44e-16, the exact
@@ -7114,7 +7106,7 @@ models:
       0.09009, 9.33 times the largest miss, while the resampling grid moves it by
       1.311e-05 relative (which is why five decimals are quoted and not six) and a
       completely independent integration - the six ODEs re-parametrised by conversion,
-      different solver family - reproduces it to 9.08e-12, a residual that prices the
+      different solver family - reproduces it to below 1e-10 relative, a residual that prices the
       ATTRACTING MANIFOLD lambda_0(x) rather than the accuracy of either integration.
       The band is reported beside the value, the fit's digits are never quoted as if
       they were the onset, and the page states what the band does NOT cover: the
@@ -7159,8 +7151,8 @@ models:
       expression evaluated at x_c exactly, the radical concentration root-found on the
       dense solution rather than read off the nearest grid point - while the published
       model is
-      concave UP from x = 0.30643 to the sharp rise with every onset inside that window
-      by at least 0.12933.  ONE QUALIFICATION THE PAPER DOES NOT MAKE: below that lower
+      concave UP from x = 0.30643 to the sharp rise with every onset inside that window,
+      the smallest margin 0.129.  ONE QUALIFICATION THE PAPER DOES NOT MAKE: below that lower
       bound the published curve is concave down too - initiator depletion - so
       "concave upward preceding the sharp rise" is true of the region it means and not
       of the whole pre-gel curve.
@@ -7177,16 +7169,10 @@ models:
       1.858e-05 over five ratios at n = 6400 and converging onto r_m/r_D at observed
       order 1.8953 - and the moment
       equations 12-17 reproduced from eq. 4a, 4b and 5 summed over a seeded finite
-      population to 2.10e-16, INCLUDING the k_tc terms, which Table I sets to zero and
+      population to a relative residual below 1e-14, INCLUDING the k_tc terms, which Table I sets to zero and
       which therefore no condition the paper reports ever exercises.
-      ONE RETRACTION IS CARRIED IN THE OPEN.  Until 2026-08-14 that eq. 22 line read
-      1.53e-16 "on a pymrm spherical-shell BVP" and the number was counted among the
-      page's independent routes.  It was neither: 1 - K_22/K_exact reads two CLOSED-FORM
-      scalars computed inside the shell function, so it is the identity in floating
-      point and returns the same bits with nu = 0, with two cells and with no solve at
-      all.  The metric now reads the discrete flux, the notebook demonstrates the old
-      form's insensitivity beside the corrected number, and the nu = 0 break row - which
-      never covered the old metric - moves the corrected one by four orders.
+      The eq. 22 metric reads the discrete flux, and the nu = 0 break row moves it by
+      four orders.
       A STRUCTURAL POINT THE PAPER'S PROSE DOES NOT MAKE: its "limiting conversion at
       long times" is reproduced as an ORDERING (0.95535, 0.98173, 0.99289 at a stated
       rate threshold, smallest gap 0.011165) but this model has NO limiting conversion
@@ -7279,44 +7265,36 @@ models:
       THE HEADLINE IS A GRAPHICAL CONSTRUCTION DESCRIBED IN WORDS, and the page's main
       methodological contribution is separating what the arithmetic knows from what the
       sentence means: the arithmetic floors are 1.311e-05 (the resampling grid, which is
-      the real one) and 9.08e-12 (two integration routes, which prices the attractor),
+      the real one) and below 1e-10 (two integration routes, which prices the attractor),
       while the definitional band is 0.09009 - so the band is what limits the number and
       it is reported beside it.
-      FOUR RETRACTIONS ARE CARRIED IN THE OPEN AND ALL FOUR ARE RECOMPUTED LIVE.
-      (a) THE CONSTRUCTION was wrong and its own break row caught it: taking the global
-      minimum of the second derivative of log k_t as "the bend" jumped to the
-      GLASS-effect feature at large theta_t and made the onset non-monotone in theta_t
-      (0.32043, 0.25455, 0.42929 at half, one and twice the tabulated value).  The
-      monotonicity is now asserted on BOTH constructions - until 2026-08-14 it was
-      asserted only on the derivative-free window fit, which never had the defect and
-      could not have detected its return.  (b) THE BAND excluded the 3-5-decade window
-      while the page's own break row already treated that window as defensible;
-      admitting it widened the band from 0.02424 to 0.05126, 2.1147x.  (b2) IT THEN
-      STILL EXCLUDED THE 4-6-DECADE WINDOW, the widest-swinging reading of the same
-      family and one the page's own truncation test acquits - its fit mask ends inside
-      x = 0.86 at four of the six conditions, including the one where the band is widest
-      - so admitting that one as well took the band to 0.09009, 1.7576x again and
-      3.7168x in all, and turned "two and a half times the largest miss" into 9.33
-      times.  Both narrower bands are kept as break rows.  (c) THE SWITCH JUMP was read
-      from a lambda_0 at the nearest resampling-grid point (x = 0.29993) while the
-      Fujita factor of the same expression was evaluated at 0.30, which printed 0.759993
-      where the quantity as defined is 0.760194.
+      THE CONSTRUCTION reads the FIRST local minimum of the second derivative of
+      log k_t as "the bend": the global minimum is the GLASS-effect feature at large
+      theta_t and would make the onset non-monotone in theta_t.  The monotonicity is
+      asserted on BOTH constructions, the derivative-free window fit and the tangent.
+      THE BAND admits the 3-5- and the 4-6-decade windows, the widest-swinging readings
+      of the same family; the page's own truncation test acquits the 4-6 window - its
+      fit mask ends inside x = 0.86 at four of the six conditions, including the one
+      where the band is widest - and the band is 0.09009, 9.33 times the largest miss.
+      Both narrower bands are break rows.  THE SWITCH JUMP reads both factors of its
+      expression at x_c = 0.30 exactly, lambda_0 root-found on the dense solution:
+      0.760194.
       53 defect injections cover all 56 metrics with 249 measured row-metric links, and
       the coverage map is GENERATED from the measured moves rather than written by hand;
       all 53 rows move a reported metric and the 19/34 split between mis-transcribed
       cells and changed methods is computed rather than asserted.  ONE metric is declared
       STRUCTURAL with what it cannot detect (a sign flip on an exact identity gives
       exactly 2 on any population, so it is paired with a truncation companion that does
-      depend on the population and IS covered); NO weak metric is declared, every metric
-      being moved past check_agreement.py's 5 % comparison tolerance with the weakest
-      cover 5.4023 % on onset_x_90C; THREE metrics sit below ABS_FLOOR and each has an
-      above-floor companion.  Seven
+      depend on the population and IS covered); NO weak metric is declared, every value claim
+      being moved past its 5 % comparison tolerance with the weakest
+      cover 5.4023 % on onset_x_90C; every metric declares how it is checked, the
+      round-off quantities as bounds with a stated basis and the rest as values.  Seven
       quantities are computed a second way, and the page says what each one tests - SIX
       of the seven are independent routes, while the seventh is the first route
       DELIBERATELY BROKEN (the moment identity with its convolution truncation
       violated), which is a companion rather than a second route and the notebook and
-      meta.yaml both say so inline; and one of the six was a closed-form identity in
-      floating point until it was rewired to the shell solve's discrete flux.
+      meta.yaml both say so inline; the eq. 22 route reads the shell solve's discrete
+      flux.
       Nothing is stochastic except a
       seeded test population, so two executions give an identical agreement.json.
       THE PAGE IS EXPLICIT ABOUT WHAT PYMRM DOES NOT ADD: the model is zero-dimensional,

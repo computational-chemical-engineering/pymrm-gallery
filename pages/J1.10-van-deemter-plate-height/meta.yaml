@@ -190,7 +190,9 @@ validation:
     moments at two interior stations. Agreement 4.1e-5. The route shares no
     algebra with eq. (38) - no Gaussian, no plate theory - and the two-station
     difference cancels every boundary effect (measured: changing the inlet from
-    Danckwerts to Dirichlet moves H by 1.5e-6).
+    Danckwerts to Dirichlet moves H by less than 1e-5 relative; a bound, because
+    it is a difference of two nearly equal plate heights, and read from one
+    station the same change is not cancelled).
   secondary: >
     A third route, also independent: the Laplace transform of eqs. (29)/(30)
     gives the residence-time cumulants in closed form - kappa_1 to kappa_4, the
@@ -216,37 +218,44 @@ validation:
     known answer - first-order upwind adds u h / 2 of numerical dispersion, which
     adds exactly h to H - and the measured coefficient is 0.99999. Time step
     refined over 8x: the two-station H moves 1.2e-6 (it is not the error-carrying
-    axis, and the page says so), while mu_1 at the downstream station moves
-    2.3e-5 at observed order 1.79. THAT 1.79 IS NOT A DEGRADED SECOND ORDER, and
-    the page measures what it is: Crank-Nicolson is second order, but the van Leer
-    correction is deferred and LAGGED ONE STEP at sweeps = 1, so the configuration
-    run here is first order in time. Reference-free successive-difference orders
-    over dt = 8 -> 0.125 s at n_z = 700 are printed for both settings:
-    +1.65 +1.41 +1.01 +0.83 +0.99 with the limiter on, against
-    +1.85 +1.96 +1.99 +2.00 +2.00 with limiter = None. The 1.79 is a
-    pre-asymptotic three-point fit on the coarse end of the first sequence, and
-    nothing on the page needs it to be 2. The order is also broken deliberately:
-    rerunning the same sweep with backward Euler (theta = 1) in place of
-    Crank-Nicolson moves the observed order to 0.91 and blows H's own dt swing up
+    axis, and the page says so), while mu_1 at the downstream station moves about
+    2e-5, with a three-point observed order claimed only as a range, between 1.5
+    and 2.5. THAT ORDER IS NOT A DEGRADED SECOND ORDER, and the page measures
+    what it is: Crank-Nicolson is second order, but the van Leer correction is
+    deferred and LAGGED ONE STEP at sweeps = 1, so the configuration run here is
+    first order in time. Reference-free successive-difference orders over
+    dt = 8 -> 0.125 s at n_z = 700 are printed for both settings: with the
+    limiter on they fall from about 2 at the coarse end to about 1, against
+    +1.85 +1.96 +1.99 +2.00 +2.00 with limiter = None. The three-point order is a
+    pre-asymptotic fit of differences of nearly equal moments on the coarse end
+    of the first sequence; with identical model code it moved by 18 % between two
+    numerical environments (older and current NumPy/SciPy), both times inside the
+    claimed range, which is why only the range is claimed. Nothing on the page
+    needs it to be 2. The order is also broken deliberately: rerunning the same
+    sweep with backward Euler (theta = 1) in place of Crank-Nicolson moves the
+    observed order below 1, outside the range, and blows H's own dt swing up
     from 1.2e-6 to 4.1e-1.
   break_tables: >
     Two, both executed, and the coverage map is GENERATED from the measured
     movers rather than asserted. Break table 1 perturbs the PDE (9 genuine
-    movers, smallest 1.7e-4 against a baseline error of 4.1e-5, plus one
+    movers, smallest above 1e-4 against a baseline error of 4.1e-5, plus one
     deliberate non-mover and one row that produces NaN rather than a bias).
     Break table 2 perturbs the algebra and the extractions (22 rows). The one
     metric neither table reaches directly, pymrm_dt_order_mu1, is covered by the
-    backward-Euler run in the refinement study.
-  structural_metrics: >
-    Two metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 and are outside
-    the regression suite: sym_chain_residual (exactly 0 when the algebra is
-    right; a break row moves it off zero) and rootfind_vs_closed_form_optimum
-    (2.2e-16; the same three constants evaluated two ways). Both are named on the
-    page and each is given an above-floor companion. Two further metrics are
+    backward-Euler run in the refinement study. Every one of the 28 claims has a
+    break row that fails its own check (agreement.json, format 2).
+  claims: >
+    28 claims in agreement.json format 2: 22 values, 5 bounds and 1 exact
+    result, each checked by its kind on every run. The bounds:
+    sym_chain_residual (identity, exactly 0 when the algebra is right; the 75 ->
+    80 row moves it off zero), rootfind_vs_closed_form_optimum (tolerance, below
+    1e-12; the same three constants evaluated two ways), pymrm_grid_order
+    (between 2.5 and 3.5), pymrm_dt_order_mu1 (between 1.5 and 2.5, see
+    grid_and_time) and pymrm_bc_insensitivity (below 1e-5). Two values are
     flagged on the page for a different reason: pymrm_kappa3_vs_laplace_rel and
-    pymrm_kappa4_vs_laplace_rel are above the floor and inside CI, but they are
-    CANCELLATION-LIMITED rather than converged (see validation.secondary), and
-    the page names pymrm_H_vs_eq38_rel as the converging companion.
+    pymrm_kappa4_vs_laplace_rel are CANCELLATION-LIMITED rather than converged
+    (see validation.secondary), and the page names pymrm_H_vs_eq38_rel as the
+    converging companion.
 
 what_pymrm_adds: >
   Not the plate height - eq. (38) is exact for this model and the page proves it

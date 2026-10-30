@@ -13,7 +13,7 @@ cells = []
 # --------------------------------------------------------------- front matter
 cells.append(md(r"""---
 title: "Van Krevelen-Hoftijzer: the chart replaced by a solve, and the assumption behind it measured"
-description: "The enhancement factor for a second-order gas-liquid reaction is an implicit relation that textbooks hand over as a chart. Solving the film equations instead prices the approximation everywhere on that chart - worst error -2.7955 % at gamma = 4.7279, q = 1.5217, comfortably inside the 10 percent Froment, De Wilde & Bischoff print for it - and tests the assumption they state for it, in both of the two wordings they print: that B is only weakly depleted near the interface (book p. 335) and that its concentration remains approximately constant close to the interface (book p. 340). Neither failure orders the error: at the worst point B at the interface is already down to 0.1647 of bulk and the rate-weighted mean of beta is 2.115 times its interfacial value, and where B is gone completely the approximation is exact to -0.00037 %. Levenspiel's three printed expansions of the same result check every constant independently, and one of them turns out to expand the approximation rather than the equations it approximates: his E = E_i - E_i^2(E_i-1)/M_H^2 is algebraically the asymptote of the Van Krevelen-Hoftijzer relation, which it tracks to 0.9953 of the deficit at M_H = 400, while the true deficit is q times beta(0) exactly and therefore exponentially small, so at M_H = 800 the printed correction is 44.24 times too big."
+description: "The enhancement factor for a second-order gas-liquid reaction is an implicit relation that textbooks hand over as a chart. Solving the film equations instead prices the approximation everywhere on that chart - worst error -2.7955 % at gamma = 4.728, q = 1.522, comfortably inside the 10 percent Froment, De Wilde & Bischoff print for it - and tests the assumption they state for it, in both of the two wordings they print: that B is only weakly depleted near the interface (book p. 335) and that its concentration remains approximately constant close to the interface (book p. 340). Neither failure orders the error: at the worst point B at the interface is already down to 0.1647 of bulk and the rate-weighted mean of beta is 2.115 times its interfacial value, and where B is gone completely the approximation is exact to -0.00037 %. Levenspiel's three printed expansions of the same result check every constant independently, and one of them turns out to expand the approximation rather than the equations it approximates: his E = E_i - E_i^2(E_i-1)/M_H^2 is algebraically the asymptote of the Van Krevelen-Hoftijzer relation, which it tracks to 0.9953 of the deficit at M_H = 400, while the true deficit is q times beta(0) exactly and therefore exponentially small, so at M_H = 800 the printed correction is 44.24 times too big."
 categories: [sec:F, struct:S3, tier:T0, data:tier6, phase:gas-liquid]
 date: 2026-08-14
 ---
@@ -223,8 +223,7 @@ cells.append(code("""try:
 except ImportError:
     %pip install -q pymrm pyyaml"""))
 
-cells.append(code('''import json
-import sys
+cells.append(code('''import sys
 import urllib.request
 from pathlib import Path
 
@@ -245,7 +244,7 @@ else:
         if (_p / "shared" / "gallery_utils.py").is_file():
             sys.path.insert(0, str(_p / "shared"))
             break
-from gallery_utils import cite_data, load_data, load_meta, report_agreement
+from gallery_utils import Claims, cite_data, load_data, load_meta, load_claims
 
 PAGE = "F3.2-van-krevelen-hoftijzer"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5, "axes.grid": True,
@@ -273,15 +272,14 @@ page/PDF mapping is recorded in the sidecars so any reader can re-render
 exactly what was read (Froment: book = PDF $-$ 42; Levenspiel: book = PDF
 $-$ 16, both confirmed on printed running heads).
 
-One correction to what the sidecars used to say, because it is the exact trap
-the house rule exists for. The Froment file is born-digital and its equations
+One caution about the figure, because it is the exact trap the house rule
+exists for. The Froment file is born-digital and its equations
 and prose are vector text at any resolution - **but its figure is not**.
 `pdfimages -list` shows Fig. 6.3.2-1, on PDF p. 373, as an embedded
-$536\times771$ greyscale JPEG at 148 ppi, so the 300 ppi page render the ten
-curve labels were first read on was a 2x interpolation of a 148 ppi raster. The
-raster was extracted and the labels, the four axis ends and both axis titles
-re-read at native resolution enlarged 4x: they are unchanged. Only the claim
-was wrong, not the data.
+$536\times771$ greyscale JPEG at 148 ppi, so a 300 ppi page render is a 2x
+interpolation of a 148 ppi raster. The raster was extracted and the ten curve
+labels, the four axis ends and both axis titles read at native resolution
+enlarged 4x.
 """))
 
 cells.append(code('''PRN = load_data("vkh-printed-claims.csv", page=PAGE).set_index("claim_id")
@@ -586,10 +584,10 @@ class Extrapolated:
         # A ratio of two integrals of the SAME profile, so the grid partly
         # cancels - but only partly, and least of all at the top of the gamma
         # range, where beta is a thin exponential and the rate weight sits in
-        # the first few cells.  An earlier version of this page took this
-        # diagnostic from the fine grid alone on the ground that the grid
-        # "cancels to five digits"; that is true at the worst point and false
-        # by orders of magnitude at gamma = 100.  The gap is PRINTED below
+        # the first few cells.  Taking this diagnostic from the fine grid alone,
+        # on the ground that the grid "cancels to five digits", is true at the
+        # worst point and false by orders of magnitude at gamma = 100.  The gap
+        # is PRINTED below
         # rather than asserted here, and the ratio is extrapolated exactly like
         # F_A: same two grids, same order.
         c = self.coarse.beta_constancy(gamma, q, **kw)
@@ -917,10 +915,10 @@ print(f"    at gamma = {G_MID:g} it gives"
       f"   ({abs(C_FINE_MID / C_MID - 1):.1e})")
 print(f"  so the grid all but cancels where the headline lives and does NOT at the"
       f" top of the range: the")
-print(f"  one-grid shortcut this page used to take on this diagnostic costs"
+print(f"  one-grid shortcut on this diagnostic would cost"
       f" {abs(C_FINE_MID / C_MID - 1) / abs(C_FINE_STAR / W['beta_constancy_at_worst'] - 1):.0f}"
       f" times more at gamma = {G_MID:g}")
-print(f"  than at the point it was justified on, which is why it is gone.")
+print(f"  than at the point it would be justified on, which is why it is not taken.")
 print(f"\\nthe two depletion thresholds are ROOT-FOUND on beta(0), not sampled:"
       f"\\n  beta(0) = 0.5  at gamma = {W['gamma_at_half_depletion']:.6f}"
       f"   (residual {REF.f_a(W['gamma_at_half_depletion'], Q_STAR)[1] - 0.5:+.2e})"
@@ -1128,14 +1126,16 @@ print(f"    VKH        : {[round(e, 4) for e in L['_exponents_vkh']]}")
 print(f"  the VKH deficit converges on the printed -2; the film solve's does not"
       f"\\n  the M_H = 800 deficit by TWO INDEPENDENT METHODS, the first also refined:"
       f"\\n    pymrm FV, extrapolated (n_x = {FILM_C.n_x}, {FILM.n_x}, s = 8)"
-      f"  {L['_three'][0]:.6e}"
+      f"  {L['_three'][0]:.3e}"
       f"\\n    pymrm FV, n_x = {2 * FILM.n_x}, s = 9 (the same assembly, refined)  "
-      f"{L['_three'][1]:.6e}"
+      f"{L['_three'][1]:.3e}"
       f"\\n    scipy collocation (no assembly in common)               "
-      f"{L['_three'][2]:.6e}"
-      f"\\n  max relative spread {L['inst_deficit_routes_max_rel_diff']:.3e}"
-      f" - far below the {L['lev_inst_overstatement_factor']:.1f}x it is being used to"
-      f" establish")
+      f"{L['_three'][2]:.3e}"
+      f"\\n  max relative spread below 1e-3 (here"
+      f" {L['inst_deficit_routes_max_rel_diff']:.1e}; the M_H = 800 deficit, E_i - F_A,"
+      f"\\n  is about 1.3e-5 of F_A, so its last digits differ between BLAS"
+      f" kernels) - far below the\\n  {L['lev_inst_overstatement_factor']:.1f}x it is"
+      f" being used to establish")
 print(f"\\n  WHY there can be no power law, exactly.  Subtracting the two film"
       f" equations gives"
       f"\\n  (beta - alpha/q)'' = 0, and the four boundary conditions close it:"
@@ -1313,21 +1313,11 @@ the warm start contributes nothing to it. That cold run is also what settles
 the half of the sentence a reader would otherwise have to take on trust: this
 is **not** a warm-start-versus-cold-start difference, which is the first thing
 `F3.1`'s continued sweep suggests. This page's extrapolated reference is the
-accurate side of the residual, and the single graded grid this page used before
-the baseline was extrapolated is on the wrong side of it by two orders of
-magnitude more.
+accurate side of the residual, and a single graded grid, without the
+extrapolation, is on the wrong side of it by two orders of magnitude more.
 """))
 
-cells.append(code('''def load_agreement(page):
-    for _p in (Path.cwd(), *Path.cwd().parents):
-        c = _p / "pages" / page / "agreement.json"
-        if c.is_file():
-            return json.loads(c.read_text())
-    with urllib.request.urlopen(f"{RAW}/pages/{page}/agreement.json") as fh:
-        return json.load(fh)
-
-
-def block_f31(film=None, vkh=None, n_scan=13, **kw):
+cells.append(code('''def block_f31(film=None, vkh=None, n_scan=13, **kw):
     """F3.1's OWN definitions - its three E_i, its two Ha grids - recomputed here."""
     film = REF if film is None else film
     ha = np.geomspace(0.05, 300.0, 55)
@@ -1343,8 +1333,7 @@ def block_f31(film=None, vkh=None, n_scan=13, **kw):
         for e in (5.0, 20.0, 100.0)))
     # F3.1's other overlapping check: the pseudo-first-order solve against
     # Ha/tanh(Ha) over ITS Ha range.  Run on THREE single grids, because the
-    # 893.9x this page used to credit to grading is really grading TIMES a
-    # refinement: F3.1 uses n_x = 400 uniform and this page n_x = 800 graded.
+    # 893.9x is really grading TIMES a refinement: F3.1 uses n_x = 400 uniform and this page n_x = 800 graded.
     ha1 = np.geomspace(0.02, 200.0, 70)
 
     def pfo(f):
@@ -1355,25 +1344,23 @@ def block_f31(film=None, vkh=None, n_scan=13, **kw):
     out["pfo_max_rel_error_graded"] = pfo(graded_film(film.n_x, film.stretch))
     out["pfo_max_rel_error_uniform_same_n"] = pfo(graded_film(film.n_x, 0.0))
     out["pfo_max_rel_error_uniform_half_n"] = pfo(graded_film(n_half, 0.0))
-    if F31 is not None:
-        out["f31_stored_vs_recomputed_rel"] = abs(
-            v / F31["metrics"]["vkh_max_error_pct"] - 1.0)
-        out["f31_first_order_error_ratio"] = (
-            F31["metrics"]["first_order_max_rel_error"]
-            / out["pfo_max_rel_error_graded"])
+    out["f31_stored_vs_recomputed_rel"] = abs(v / F31["vkh_max_error_pct"] - 1.0)
+    out["f31_first_order_error_ratio"] = (F31["first_order_max_rel_error"]
+                                          / out["pfo_max_rel_error_graded"])
     return out
 
 
-try:
-    F31 = load_agreement("F3.1-hatta-regimes")
-except Exception as exc:                      # no checkout and no network
-    F31 = None
-    print(f"F3.1's agreement.json is not reachable ({type(exc).__name__});"
-          " the reconciliation below is skipped rather than typed from memory.")
+# F3.1's committed numbers, {name: value} from either agreement.json format,
+# from the local checkout or else the raw URL.  They are REQUIRED: the set of
+# metrics this page reports is fixed and never depends on what is reachable,
+# so with no checkout and no network the page stops here rather than skipping
+# the reconciliation.  They were made on another machine, so every comparison
+# of a live number with one of them below is a BOUND, never an equality.
+F31 = load_claims("F3.1-hatta-regimes")
 
 F = block_f31()
-# the same block on the single graded grid: what this page reported before the
-# baseline was extrapolated, kept so that shortcut's cost stays visible
+# the same block on the single graded grid, without the extrapolation, so that
+# shortcut's cost stays visible
 F_PLAIN = block_f31(film=FILM)
 # and the same block on F3.1's OWN grid - uniform, n_x = 400 - which is what
 # ATTRIBUTES the residual instead of hand-waving it.  A COLD run on that grid
@@ -1391,72 +1378,78 @@ print("    reaction layer is thinner than a cell'.  Affects this page directly:"
 print("    it is the reason this page grades its grid AT ALL, and the same check")
 print("    is run here on three grids so that grading and refinement are separated")
 print("    instead of being credited to grading together.")
-if F31 is not None:
-    print(f"\\n  F3.1 agreement.json  first_order_max_rel_error ="
-          f" {F31['metrics']['first_order_max_rel_error']:.4e}  (uniform, n_x = 400)")
-    print(f"  the SAME check run here on a uniform n_x = {max(FILM.n_x // 2, 8)} grid ="
-          f" {F['pfo_max_rel_error_uniform_half_n']:.4e}"
-          f"  -> F3.1 reproduced to"
-          f" {abs(F['pfo_max_rel_error_uniform_half_n'] / F31['metrics']['first_order_max_rel_error'] - 1):.1e}")
-    print(f"  DECOMPOSING THE 893.9x THIS PAGE USED TO CREDIT TO GRADING ALONE:")
-    print(f"    uniform n_x = {max(FILM.n_x // 2, 8)} -> uniform n_x = {FILM.n_x}"
-          f"   (refinement, no grading) "
-          f" {F['pfo_max_rel_error_uniform_half_n'] / F['pfo_max_rel_error_uniform_same_n']:8.2f}x")
-    print(f"    uniform n_x = {FILM.n_x} -> graded n_x = {FILM.n_x}"
-          f"     (grading, same n_x)   "
-          f" {F['pfo_max_rel_error_uniform_same_n'] / F['pfo_max_rel_error_graded']:8.2f}x")
-    print(f"    product                                              "
-          f" {F['f31_first_order_error_ratio']:8.1f}x")
-    print(f"  SO GRADING IS WORTH"
-          f" {F['pfo_max_rel_error_uniform_same_n'] / F['pfo_max_rel_error_graded']:.0f}x"
-          f" ON THIS CHECK, NOT {F['f31_first_order_error_ratio']:.0f}x - and it is"
-          f" worth it here because")
-    print(f"  the check runs to Ha = 200, where the reaction layer is thinner than a"
-          f" uniform cell.")
-    print(f"  At the moderate gamma this page's headline lives at, the same grading"
-          f" COSTS a factor"
-          f" {R['fv_rel_error_n800'] / R['fv_rel_error_n800_uniform']:.0f} (Validation,"
-          f" check 4), which is why the")
-    print(f"  baseline is an extrapolation of two graded grids rather than either grid"
-          f" on its own.")
-if F31 is not None:
-    print(f"\\nF3.1 agreement.json  vkh_max_error_pct  = "
-          f"{F31['metrics']['vkh_max_error_pct']:.6f}")
-    print(f"recomputed here, same definition, cold  = "
-          f"{F['f31_definition_vkh_max_error_pct']:.6f}"
-          f"   (relative {F['f31_stored_vs_recomputed_rel']:.2e})")
-    print(f"  the SAME recomputation, run COLD on F3.1's OWN grid (uniform,"
-          f" n_x = {FILM_F31.n_x}) = "
-          f"{F_F31GRID['f31_definition_vkh_max_error_pct']:.9f}")
-    print(f"      -> reproduces F3.1's stored value to"
-          f" {F_F31GRID['f31_stored_vs_recomputed_rel']:.1e} relative.")
-    print(f"  -> SO THE RESIDUAL IS F3.1's OWN GRID ERROR, not this page's numerics"
-          f" - and the cold run on")
-    print(f"     F3.1's grid PROVES the other half too: the warm start is worth"
-          f" nothing here, since cold on")
-    print(f"     that grid lands on the warm-started stored number.  What is left,"
-          f" {F['f31_stored_vs_recomputed_rel']:.2e}, is the")
-    print(f"     uniform 400-cell discretisation; this page's extrapolated reference"
-          f" is the accurate side of")
-    print(f"     it, agreeing with scipy's collocation to"
-          f" {R['ref_vs_bvp_max_rel_diff']:.2e} over 20 points of the chart.")
-    print(f"     (For scale: this page's OWN pre-extrapolation shortcut, a single"
-          f" n_x = {FILM.n_x} graded grid,")
-    print(f"      lands {F_PLAIN['f31_definition_vkh_max_error_pct'] - F31['metrics']['vkh_max_error_pct']:+.6f}"
-          f" away - {abs(F_PLAIN['f31_stored_vs_recomputed_rel'] / F['f31_stored_vs_recomputed_rel']):.0f}"
-          f" times the residual left here.)")
-    print(f"\\nthis page's root-found worst over the chart = "
-          f"{abs(W['vkh_worst_rel_error_pct']):.6f}")
-    print(f"  the same three E_i, gamma root-found instead of sampled ="
-          f" {F['f31_definition_rootfound_pct']:.6f}")
-    print(f"  -> of the"
-          f" {abs(W['vkh_worst_rel_error_pct']) - F['f31_definition_vkh_max_error_pct']:.4f}"
-          f" extra points in this page's headline,"
-          f" {F['f31_definition_rootfound_pct'] - F['f31_definition_vkh_max_error_pct']:.4f}"
-          f" come from root-finding gamma")
-    print(f"     and"
-          f" {abs(W['vkh_worst_rel_error_pct']) - F['f31_definition_rootfound_pct']:.4f}"
-          f" from letting q move off {{4, 19, 99}}.  It is almost all q.")'''))
+F31_PFO_REPRO = abs(F["pfo_max_rel_error_uniform_half_n"]
+                    / F31["first_order_max_rel_error"] - 1.0)
+F31_COLD_REPRO = F_F31GRID["f31_stored_vs_recomputed_rel"]
+# the two reproductions of F3.1's committed numbers, as bounds: F3.1 made them
+# on another machine.  Measured 6.3e-15 and 1.0e-11 on three BLAS kernels, and
+# F3.1's own vkh_max_error_pct spreads 5e-12 relative across kernels; each
+# limit is about 100x what is measured.
+F31_PFO_REPRO_MAX, F31_COLD_REPRO_MAX = 1e-12, 1e-9
+print(f"\\n  F3.1 agreement.json  first_order_max_rel_error ="
+      f" {F31['first_order_max_rel_error']:.4e}  (uniform, n_x = 400)")
+print(f"  the SAME check run here on a uniform n_x = {max(FILM.n_x // 2, 8)} grid ="
+      f" {F['pfo_max_rel_error_uniform_half_n']:.4e}"
+      f"  -> F3.1 reproduced to below {F31_PFO_REPRO_MAX:g}"
+      f" (here {F31_PFO_REPRO:.1e})")
+print(f"  DECOMPOSING THE 893.9x, WHICH IS NOT ALL GRADING:")
+print(f"    uniform n_x = {max(FILM.n_x // 2, 8)} -> uniform n_x = {FILM.n_x}"
+      f"   (refinement, no grading) "
+      f" {F['pfo_max_rel_error_uniform_half_n'] / F['pfo_max_rel_error_uniform_same_n']:8.2f}x")
+print(f"    uniform n_x = {FILM.n_x} -> graded n_x = {FILM.n_x}"
+      f"     (grading, same n_x)   "
+      f" {F['pfo_max_rel_error_uniform_same_n'] / F['pfo_max_rel_error_graded']:8.2f}x")
+print(f"    product                                              "
+      f" {F['f31_first_order_error_ratio']:8.1f}x")
+print(f"  SO GRADING IS WORTH"
+      f" {F['pfo_max_rel_error_uniform_same_n'] / F['pfo_max_rel_error_graded']:.0f}x"
+      f" ON THIS CHECK, NOT {F['f31_first_order_error_ratio']:.0f}x - and it is"
+      f" worth it here because")
+print(f"  the check runs to Ha = 200, where the reaction layer is thinner than a"
+      f" uniform cell.")
+print(f"  At the moderate gamma this page's headline lives at, the same grading"
+      f" COSTS a factor"
+      f" {R['fv_rel_error_n800'] / R['fv_rel_error_n800_uniform']:.0f} (Validation,"
+      f" check 4), which is why the")
+print(f"  baseline is an extrapolation of two graded grids rather than either grid"
+      f" on its own.")
+print(f"\\nF3.1 agreement.json  vkh_max_error_pct  = "
+      f"{F31['vkh_max_error_pct']:.6f}")
+print(f"recomputed here, same definition, cold  = "
+      f"{F['f31_definition_vkh_max_error_pct']:.6f}"
+      f"   (relative {F['f31_stored_vs_recomputed_rel']:.2e})")
+print(f"  the SAME recomputation, run COLD on F3.1's OWN grid (uniform,"
+      f" n_x = {FILM_F31.n_x}) = "
+      f"{F_F31GRID['f31_definition_vkh_max_error_pct']:.9f}")
+print(f"      -> reproduces F3.1's stored value to below {F31_COLD_REPRO_MAX:g}"
+      f" relative (here {F31_COLD_REPRO:.1e}).")
+print(f"  -> SO THE RESIDUAL IS F3.1's OWN GRID ERROR, not this page's numerics"
+      f" - and the cold run on")
+print(f"     F3.1's grid PROVES the other half too: the warm start is worth"
+      f" nothing here, since cold on")
+print(f"     that grid lands on the warm-started stored number.  What is left,"
+      f" {F['f31_stored_vs_recomputed_rel']:.2e}, is the")
+print(f"     uniform 400-cell discretisation; this page's extrapolated reference"
+      f" is the accurate side of")
+print(f"     it, agreeing with scipy's collocation to"
+      f" {R['ref_vs_bvp_max_rel_diff']:.2e} over 20 points of the chart.")
+print(f"     (For scale: this page's OWN pre-extrapolation shortcut, a single"
+      f" n_x = {FILM.n_x} graded grid,")
+print(f"      lands {F_PLAIN['f31_definition_vkh_max_error_pct'] - F31['vkh_max_error_pct']:+.6f}"
+      f" away - {abs(F_PLAIN['f31_stored_vs_recomputed_rel'] / F['f31_stored_vs_recomputed_rel']):.0f}"
+      f" times the residual left here.)")
+print(f"\\nthis page's root-found worst over the chart = "
+      f"{abs(W['vkh_worst_rel_error_pct']):.6f}")
+print(f"  the same three E_i, gamma root-found instead of sampled ="
+      f" {F['f31_definition_rootfound_pct']:.6f}")
+print(f"  -> of the"
+      f" {abs(W['vkh_worst_rel_error_pct']) - F['f31_definition_vkh_max_error_pct']:.4f}"
+      f" extra points in this page's headline,"
+      f" {F['f31_definition_rootfound_pct'] - F['f31_definition_vkh_max_error_pct']:.4f}"
+      f" come from root-finding gamma")
+print(f"     and"
+      f" {abs(W['vkh_worst_rel_error_pct']) - F['f31_definition_rootfound_pct']:.4f}"
+      f" from letting q move off {{4, 19, 99}}.  It is almost all q.")'''))
 
 # --------------------------------------------------------------- break table
 cells.append(md(r"""### The break table
@@ -1470,9 +1463,9 @@ cell below states what that guard cannot do, because a guard trusted past its
 reach is worse than none.
 
 Two rows are worth reading before the rest. **"The reference taken as one
-graded solve"** is the defect this page actually shipped and a verification
-caught; it is injected verbatim rather than quietly fixed. And **"uniform grid
-instead of graded"** is *not* filed as a one-way defect any more: at high
+graded solve"** is the defect the extrapolated baseline exists to avoid,
+injected verbatim. And **"uniform grid instead of graded"** is *not* filed as a
+one-way defect: at high
 $\gamma$ it is one, and on the metrics that carry the headline it agrees with
 the extrapolated reference to within the move tolerance, which is why it stops
 appearing as cover for *those*. It still buys sub-CI links on the other
@@ -1593,7 +1586,7 @@ brk("uniform grid instead of graded, at the same n_x", _uniform,
     " percent, the two depletion thresholds and the worst over the printed"
     " labels - it agrees with the extrapolated reference to within the move"
     " tolerance below, so it does not appear as cover for THOSE.  It is not"
-    " cover-free, and an earlier wording of this note wrongly implied it was:"
+    " cover-free:"
     " on the other moderate-gamma metrics it sits just the other side of that"
     " tolerance and still buys links, and on the high-gamma metrics it buys"
     " large ones, which is the reason to keep it.  The split is printed under"
@@ -1780,10 +1773,9 @@ cells.append(code('''METRICS = {
     "pfo_max_rel_error_graded": F["pfo_max_rel_error_graded"],
     "pfo_max_rel_error_uniform_same_n": F["pfo_max_rel_error_uniform_same_n"],
     "pfo_max_rel_error_uniform_half_n": F["pfo_max_rel_error_uniform_half_n"],
+    "f31_stored_vs_recomputed_rel": F["f31_stored_vs_recomputed_rel"],
+    "f31_first_order_error_ratio": F["f31_first_order_error_ratio"],
 }
-for _k in ("f31_stored_vs_recomputed_rel", "f31_first_order_error_ratio"):
-    if _k in F:
-        METRICS[_k] = F[_k]
 
 # ---- coverage: GENERATED from the break rows' measured moves ---------------
 COVERAGE, UNKNOWN = {}, []
@@ -1802,10 +1794,9 @@ for _label, _got, _note in BREAKS:
             COVERAGE.setdefault(_k, []).append((_label, _rel))
 assert not UNKNOWN, f"break rows recompute names that are not metrics: {UNKNOWN}"
 
-# ---- how much the pre-extrapolation baseline actually moved, COUNTED --------
-# The page used to say "nine reported numbers".  That was an undercount, and
-# there is no reason to count them by hand: the "one graded solve" row IS the
-# old baseline, so the movers are a set difference over METRICS.
+# ---- how much the unextrapolated baseline moves, COUNTED -------------------
+# No reason to count them by hand: the "one graded solve" row IS the
+# unextrapolated baseline, so the movers are a set difference over METRICS.
 _NOEXT = next(g for lbl, g, _ in BREAKS
               if lbl.startswith("the reference taken as one graded solve"))
 _MOVERS = [(k, METRICS[k], float(v)) for k, v in sorted(_NOEXT.items())
@@ -1813,11 +1804,20 @@ _MOVERS = [(k, METRICS[k], float(v)) for k, v in sorted(_NOEXT.items())
            and abs(float(v) - METRICS[k])
            / max(abs(METRICS[k]), abs(float(v)), 1e-300) > MOVE_TOL]
 N_MOVED = len(_MOVERS)
-N_MOVED_4DP = sum(1 for _k, _b, _v in _MOVERS if round(_b, 4) != round(_v, 4))
+# the headline's own move, which the prose quotes as "more than a unit in its
+# fourth decimal": 1.6e-4 against a spread of 1e-8 across BLAS kernels.  How
+# MANY metrics change in their fourth decimal is not counted any more: several
+# sit within a few kernel spreads of a rounding boundary (vkh_worst_gamma,
+# vkh_worst_q), so that count is decided by round-off.
+HEADLINE_SHIFT = abs(float(_NOEXT["vkh_worst_rel_error_pct"])
+                     - METRICS["vkh_worst_rel_error_pct"])
 print(f"\\nwhat the pre-extrapolation baseline moved, counted rather than asserted:"
       f" {N_MOVED} of the {len(METRICS)} metrics")
-print(f"move by more than the {MOVE_TOL:g} coverage tolerance, and {N_MOVED_4DP} of"
-      f" them change in their fourth decimal:")
+print(f"move by more than the {MOVE_TOL:g} coverage tolerance; the headline moves by"
+      f" {HEADLINE_SHIFT:.1e} points.  The marks below")
+print("are a rounding comparison, shown for reading and not counted: a metric near a"
+      " rounding boundary can")
+print("flip its mark between BLAS kernels.")
 for _k, _b, _v in _MOVERS:
     print(f"   {_k:44s} {_v:>16.6g} -> {_b:<16.6g}"
           f"{'   4th decimal' if round(_b, 4) != round(_v, 4) else ''}")
@@ -1851,8 +1851,7 @@ def _key_bindings(src):
         elif isinstance(n, ast.DictComp):
             # {k: -2.8 for k in ("metric_a", "metric_b")} - the keys are not
             # literals, so bind every constant string in the comprehension's
-            # own iterables to its value expression.  A verification found this
-            # form open when the rest were closed; no row used it.
+            # own iterables to its value expression; no row uses it.
             for gen in n.generators:
                 out += [(c.value, n.value) for c in ast.walk(gen.iter)
                         if isinstance(c, ast.Constant) and isinstance(c.value, str)]
@@ -1894,8 +1893,7 @@ def literal_metrics(fn):
 def _negative_control():
     """THE GUARD'S TEETH: a row that types its metrics instead of computing them."""
     return {"vkh_worst_rel_error_pct": -2.8, "lev_inst_overstatement_factor": 44.0,
-            # the third form is a DICT COMPREHENSION, which walked past the
-            # guard until a verification pointed at it
+            # the third form is a DICT COMPREHENSION
             **{k: 2.115 for k in ("beta_constancy_at_worst",)},
             "_diagnostic": len(LABELS)}
 
@@ -1914,8 +1912,7 @@ print("WHAT THE GUARD CANNOT DO, stated so it is not over-trusted: it rejects a"
       " helpers a row names."
       "\\nIt sees literals in a dict display, in dict(...), in an out[k] = ..."
       " assignment, through a"
-      "\\n{**d} merge, and - since a verification found this one open while the"
-      " rest were closed - in a"
+      "\\n{**d} merge, and in a"
       "\\nDICT COMPREHENSION over literal key strings, which is the third form the"
       " negative control uses."
       "\\nWhat still passes: a comprehension over a NAME rather than a literal,"
@@ -1963,8 +1960,7 @@ print("(that none of them is a best cover is not a check that can fail: the WEAK
       " assertion above")
 print(" already refuses any metric whose best cover is below CI's threshold.  It is"
       " printed because")
-print(" the row's note used to say the relabelling removed these links, and it did"
-      " not.)")
+print(" the relabelling does not remove these links.)")
 print("What the row buys NOTHING on is the metrics that carry the headline, where it"
       " agrees with the")
 print("extrapolated reference to inside the move tolerance - which IS the claim its"
@@ -1975,99 +1971,169 @@ for _k in ("vkh_worst_rel_error_pct", "froment_10pct_claim_margin",
            "gamma_at_99pct_depletion"):
     print(f"   {_k:44s}"
           f"{'   still covered, ' + format(_U[_k], '.1e') if _k in _U else '   no link'}")
-FLOOR = 1e-12
-BELOW_FLOOR = sorted(k for k, v in METRICS.items() if abs(v) < FLOOR)
-print(f"below check_agreement.py's ABS_FLOOR = {FLOOR:g}, so outside the regression"
-      f" suite: {BELOW_FLOOR}")
-print("  its above-floor companions, which come from the same two equations and"
-      "\\n  ARE inside the suite: vkh_pfo_limit_max_rel_error,"
-      " vkh_instantaneous_limit_rel_error")
 assert not UNCOVERED, f"uncovered metrics: {UNCOVERED}"
 assert not WEAK, f"metrics whose best cover is below CI's 5 %: {WEAK}"
 
-report_agreement("F3.2", METRICS)'''))
+# ---- every metric registered ONCE, with how it is checked -------------------
+# (docs/claims-design.md).  A value is held to rtol 0.05 of the committed
+# baseline; a bound is checked on every run and in CI.  Solver gaps, two-method
+# gaps, closures, the two limits and the grid order are BOUNDS whatever their
+# size, and the comparison with F3.1's committed number is one too, because
+# F3.1 made it on another machine.  Every other metric is a physical or
+# discretisation result whose spread across BLAS kernels is at most 8.4e-5
+# relative (vkh_error_at_full_depletion_pct), far inside its 5 %.
+BOUNDS = {
+    "inst_deficit_routes_max_rel_diff": dict(
+        min=0.0, max=1e-3, basis="chosen",
+        note="two methods on the M_H = 800 deficit E_i - F_A, about 1.3e-5 of F_A,"
+             " so kernel round-off in F_A is amplified; measured 8.4e-5 to 9.0e-5"
+             " across BLAS kernels, the bound is about 11x that and still far below"
+             " the 44x it supports"),
+    "fv_vs_bvp_max_rel_diff": dict(
+        max=1e-5, basis="chosen",
+        note="one graded n_x = 800 solve against collocation at tol 1e-10, set by"
+             " its second-order discretisation; measured 5.99e-6 on three kernels"),
+    "fv_vs_bvp_max_abs_diff_beta": dict(
+        max=5e-6, basis="chosen",
+        note="beta(0), the same two solvers; measured 2.91e-6 on three kernels"),
+    "ref_vs_bvp_max_rel_diff": dict(
+        max=1e-7, basis="chosen",
+        note="the Richardson reference against collocation at tol 1e-10; measured"
+             " 4.37e-8 on three kernels"),
+    "ref_self_refinement_max_rel_diff": dict(
+        max=1e-7, basis="chosen",
+        note="the reference against Richardson (800, 1600); measured 3.84e-8 on"
+             " three kernels"),
+    "first_integral_max_abs_resid": dict(
+        max=1e-8, basis="chosen",
+        note="|q beta(0) - (1 + q - F_A)|/(1 + q) on the reference, never told to"
+             " the discretisation; measured 6.4e-10 on three kernels"),
+    "vkh_two_routes_max_rel_diff": dict(
+        max=1e-12, basis="tolerance",
+        note="the implicit relation solved for F_A and for gamma', Brent at"
+             " xtol 1e-13, rtol 8.9e-16; measured 8.0e-15"),
+    "vkh_pfo_limit_max_rel_error": dict(
+        max=2e-8, basis="theory",
+        note="evaluated at q = 1e10, so the finite-q error is about gamma/(2q),"
+             " 1.5e-8 at gamma = 300"),
+    "vkh_instantaneous_limit_rel_error": dict(
+        max=1e-9, basis="theory",
+        note="evaluated at gamma = 1e6, where the deficit q(1+q)^2/gamma^2 is"
+             " 3.8e-10 of 1 + q = 20"),
+    "fv_convergence_order": dict(
+        min=1.9, max=2.1, basis="theory",
+        note="second-order finite volumes; 2.0000 between n_x = 400 and 800 at"
+             " (gamma, q) = (10, 4)"),
+    "f31_stored_vs_recomputed_rel": dict(
+        max=2e-5, basis="chosen",
+        note="this page's recomputation of F3.1's definition against F3.1's"
+             " committed vkh_max_error_pct, made on another machine; the residual is"
+             " F3.1's uniform n_x = 400 discretisation, 1.29e-6 on three kernels,"
+             " and F3.1's own number spreads 5e-12 relative across kernels"),
+}
+claims = Claims("F3.2")
+for _k, _v in METRICS.items():
+    if _k in BOUNDS:
+        claims.bound(_k, _v, **BOUNDS[_k])
+    else:
+        claims.value(_k, _v)
+# the break table, wired row by row to the claims it recomputes: a row breaks
+# a claim when the claim's own check (rtol or bound) fails on its value
+for _label, _got, _note in BREAKS:
+    for _k, _v in _got.items():
+        if _k in METRICS:
+            claims.breaks(_label, _k, _v)
+_kinds = {kd: [k for k, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"\\n{len(METRICS)} metrics registered as claims: {len(_kinds['value'])} values,"
+      f" {len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.  The bounds:")
+for _k in _kinds["bound"]:
+    _c = claims.metrics[_k]
+    _rng = (f"[{_c['min']:g}, {_c['max']:g}]" if "min" in _c else f"<= {_c['max']:g}")
+    print(f"  {_k:36s} {_rng:14s} [{_c['basis']}]  here {_c['value']:.3g}")
+# claims.report() runs at the end of the prose cell below, after every number
+# the prose quotes has been checked against its claim with claims.says.'''))
 
 # ------------------------------------------------------------- prose assertion
 cells.append(code('''# Every number written in the markdown of this notebook, in meta.yaml, in
-# README.md and in models_entry.yaml is checked here against the live
-# computation.  THE NOTEBOOK FAILS TO EXECUTE if any of them drifts.
-CLAIMS = [
-    ("worst VKH error [%]", -2.7955, W["vkh_worst_rel_error_pct"], 5e-4),
-    ("worst gamma", 4.7279, W["vkh_worst_gamma"], 5e-4),
-    ("worst q", 1.5217, W["vkh_worst_q"], 5e-4),
-    ("E_i at the worst point", 2.5217, 1 + W["vkh_worst_q"], 5e-4),
-    ("beta(0) at the worst point", 0.1647, W["beta_interface_at_worst"], 5e-4),
+# README.md and in models.yaml is checked here against the live computation.
+# THE NOTEBOOK FAILS TO EXECUTE if any of them drifts.
+# A number that is a registered claim is checked by claims.says, as written:
+# within one unit of its last written place, or, for a bound phrase such as
+# "below 1e-12", at least as loose as the claim's declared bound.  Where the
+# last written place was finer than 10x the spread across BLAS kernels the
+# literal was rounded: the worst point's gamma and q (spread 2e-5 and 1.4e-5)
+# to three decimals, the two depletion thresholds to 2.204 and 13.038.  The
+# two-method gap on the deficit spreads 8.4e-5 to 9.0e-5 and is quoted as its
+# bound only.
+SAYS = {
+    "vkh_worst_rel_error_pct": ["-2.7955"],
+    "vkh_worst_gamma": ["4.728"],
+    "vkh_worst_q": ["1.522"],
+    "beta_interface_at_worst": ["0.1647"],
+    "beta_constancy_at_worst": ["2.115"],
+    "beta_constancy_at_99pct_depletion": ["19.20"],
+    "froment_10pct_claim_margin": ["3.5772"],
+    "vkh_worst_on_printed_labels_pct": ["-2.7294"],
+    "gamma_at_half_depletion": ["2.204"],
+    "vkh_error_at_half_depletion_pct": ["-1.8304"],
+    "gamma_at_99pct_depletion": ["13.038"],
+    "vkh_error_at_99pct_depletion_pct": ["-1.5035"],
+    "vkh_error_at_full_depletion_pct": ["-0.00037"],
+    "lev_small_M_1pct_threshold": ["0.7231"],
+    "lev_pfo_expansion_err_pct": ["-0.5366"],
+    "vkh_form_pfo_expansion_err_pct": ["-0.7374"],
+    "uncorrected_E_eq_M_err_pct": ["9.3004"],
+    "lev_inst_asymptote_ratio_vkh": ["0.9953"],
+    "lev_inst_asymptote_ratio_num": ["0.2286"],
+    "lev_inst_overstatement_factor": ["44.24"],
+    "inst_deficit_exponent_num_steepest": ["-5.3385"],
+    "inst_deficit_exponent_vkh_finest": ["-1.9949"],
+    "inst_deficit_routes_max_rel_diff": ["below 1e-3"],
+    "fv_vs_bvp_max_rel_diff": ["5.99e-6"],
+    "ref_vs_bvp_max_rel_diff": ["4.37e-8"],
+    "ref_self_refinement_max_rel_diff": ["3.84e-8"],
+    "first_integral_max_abs_resid": ["6.4e-10"],
+    "vkh_two_routes_max_rel_diff": ["below 1e-12"],
+    "fv_convergence_order": ["2.0000"],
+    "fv_rel_error_n800": ["1.9e-6"],
+    "chart_label_max_plateau_ratio": ["2.0"],
+    "f31_definition_vkh_max_error_pct": ["2.0769", "2.076896"],
+    "pfo_max_rel_error_graded": ["7.088e-6"],
+    "pfo_max_rel_error_uniform_same_n": ["8.847e-4"],
+    "f31_first_order_error_ratio": ["893.9"],
+    "f31_stored_vs_recomputed_rel": ["below 2e-5", "1.29e-6"],
+}
+for _k, _lits in SAYS.items():
+    for _lit in _lits:
+        claims.says(_lit, _k)
+N_SAYS = sum(len(v) for v in SAYS.values())
+
+# quoted numbers that are NOT metrics: ratios, points along the worst curve,
+# the local exponents, and F3.1's own committed numbers.  Each tolerance is at
+# least 10x the quantity's spread across BLAS kernels.
+OTHER = [
+    ("E_i at the worst point", 2.522, 1 + W["vkh_worst_q"], 5e-4),
     ("beta_w/beta(0) at half depletion", 1.208,
      W["_beta_constancy_at_half"], 5e-4),
-    ("beta_w/beta(0) at the worst point", 2.115,
-     W["beta_constancy_at_worst"], 5e-4),
-    ("beta_w/beta(0) at 99 % depletion", 19.20,
-     W["beta_constancy_at_99pct_depletion"], 5e-3),
-    ("beta(0) at gamma = 100", 1.367e-11, B_MID, 5e-15),
-    ("beta_w/beta(0) at gamma = 100", 3.684e9, C_MID, 5e6),
-    ("the fine grid alone, same ratio, same point", 3.657e9, C_FINE_MID, 5e6),
+    ("beta(0) at gamma = 100", 1.37e-11, B_MID, 5e-14),
+    ("beta_w/beta(0) at gamma = 100", 3.68e9, C_MID, 1e7),
+    ("the fine grid alone, same ratio, same point", 3.66e9, C_FINE_MID, 1e7),
     ("VKH error at gamma = 100 [%]", -0.0373, E_MID, 5e-5),
     ("how much smaller that error is", 75.0,
      abs(W["vkh_worst_rel_error_pct"] / E_MID), 0.5),
-    ("margin on the printed 10 percent", 3.5772, W["froment_10pct_claim_margin"], 5e-4),
-    ("worst on the printed labels [%]", -2.7294,
-     W["vkh_worst_on_printed_labels_pct"], 5e-4),
-    ("gamma at half depletion", 2.2036, W["gamma_at_half_depletion"], 5e-4),
-    ("error at half depletion [%]", -1.8304,
-     W["vkh_error_at_half_depletion_pct"], 5e-4),
-    ("gamma at 99 % depletion", 13.0378, W["gamma_at_99pct_depletion"], 5e-4),
-    ("error at 99 % depletion [%]", -1.5035,
-     W["vkh_error_at_99pct_depletion_pct"], 5e-4),
-    ("error at full depletion [%]", -0.00037,
-     W["vkh_error_at_full_depletion_pct"], 5e-6),
-    ("small-M 1 % threshold", 0.7231, L["lev_small_M_1pct_threshold"], 5e-4),
-    ("Levenspiel pfo expansion [%]", -0.5366, L["lev_pfo_expansion_err_pct"], 5e-4),
-    ("VKH-form pfo expansion [%]", -0.7374,
-     L["vkh_form_pfo_expansion_err_pct"], 5e-4),
-    ("E = M_H at the branch boundary [%]", 9.3004,
-     L["uncorrected_E_eq_M_err_pct"], 5e-4),
     ("the two books' groups differ by [points]", 0.20,
      abs(L["lev_pfo_expansion_err_pct"] - L["vkh_form_pfo_expansion_err_pct"]), 5e-3),
-    ("instantaneous ratio, VKH", 0.9953, L["lev_inst_asymptote_ratio_vkh"], 5e-4),
-    ("instantaneous ratio, film", 0.2286, L["lev_inst_asymptote_ratio_num"], 5e-4),
-    ("overstatement at M_H = 800", 44.24, L["lev_inst_overstatement_factor"], 5e-2),
-    ("steepest measured exponent", -5.3385,
-     L["inst_deficit_exponent_num_steepest"], 5e-4),
     # all four local exponents, not only the steepest: the other three are
-    # printed in README.md and models_entry.yaml and were outside this guard.
+    # printed in README.md and models.yaml
     ("local exponent, octave 50 -> 100", -1.9162, L["_exponents_num"][0], 5e-4),
     ("local exponent, octave 100 -> 200", -2.4396, L["_exponents_num"][1], 5e-4),
     ("local exponent, octave 200 -> 400", -3.3385, L["_exponents_num"][2], 5e-4),
     ("local exponent, octave 400 -> 800", -5.3385, L["_exponents_num"][3], 5e-4),
-    ("VKH exponent, finest octave", -1.9949,
-     L["inst_deficit_exponent_vkh_finest"], 5e-4),
-    ("two methods on the smallest deficit", 8.61e-5,
-     L["inst_deficit_routes_max_rel_diff"], 5e-7),
     ("the deficit E = E_i is already within [%]", 0.00134,
      100.0 * L["_three"][0] / 20.0, 5e-6),
-    ("pymrm n_x = 800 vs collocation", 5.99e-6, R["fv_vs_bvp_max_rel_diff"], 5e-8),
-    ("the REFERENCE vs collocation", 4.37e-8, R["ref_vs_bvp_max_rel_diff"], 5e-10),
-    ("the REFERENCE vs a finer extrapolation", 3.84e-8,
-     R["ref_self_refinement_max_rel_diff"], 5e-10),
     ("how much better the reference is than one grid", 137.0,
      R["fv_vs_bvp_max_rel_diff"] / R["ref_vs_bvp_max_rel_diff"], 0.5),
-    ("the single graded n_x = 800 solve's own error", 1.9e-6,
-     R["fv_rel_error_n800"], 5e-8),
-    ("the first integral, residual", 6.4e-10,
-     R["first_integral_max_abs_resid"], 5e-11),
-    ("grid order", 2.0000, R["fv_convergence_order"], 5e-4),
-    ("chart label ratio", 2.0, CHART_LABEL_MAX_RATIO, 1e-12),
-    ("F3.1 definition recomputed [%]", 2.0769,
-     F["f31_definition_vkh_max_error_pct"], 5e-4),
-    ("F3.1 definition recomputed, 6 dp [%]", 2.076896,
-     F["f31_definition_vkh_max_error_pct"], 5e-6),
-    ("beta(0) at gamma = 1000 is numerically zero", 1.0,
-     float(abs(W["_beta_at_full_depletion"]) < 1e-40), 0.0),
-    ("VKH under-estimates over the whole map", 1.0, float(VKH_ALWAYS_UNDER), 0.0),
-    ("pseudo-first-order check, graded grid", 7.088e-6,
-     F["pfo_max_rel_error_graded"], 5e-9),
-    ("pseudo-first-order check, uniform, same n_x", 8.847e-4,
-     F["pfo_max_rel_error_uniform_same_n"], 5e-7),
     ("what grading is worth on that check", 124.8,
      F["pfo_max_rel_error_uniform_same_n"] / F["pfo_max_rel_error_graded"], 5e-2),
     ("what the 400 -> 800 refinement is worth on it", 7.163,
@@ -2075,46 +2141,52 @@ CLAIMS = [
      / F["pfo_max_rel_error_uniform_same_n"], 5e-3),
     ("what grading COSTS at the grid-study point", 248.7,
      R["fv_rel_error_n800"] / R["fv_rel_error_n800_uniform"], 5e-2),
-    # the count README.md and models_entry.yaml quote for what the old
-    # single-grid baseline moved - generated above, not counted by hand
-    ("metrics the old baseline moves", 27.0, float(N_MOVED), 0.0),
-    ("of those, in their fourth decimal", 19.0, float(N_MOVED_4DP), 0.0),
+    # F3.1's committed numbers, as loaded; F3.1's spread is at most 5e-12
+    # relative, so half a unit in the last written place holds on any machine
+    ("F3.1's stored first-order error", 6.337e-3,
+     F31["first_order_max_rel_error"], 5e-7),
+    ("F3.1's stored VKH error [%]", 2.076893, F31["vkh_max_error_pct"], 5e-6),
+    ("the single-grid recomputation's offset from F3.1", 0.000214,
+     abs(F_PLAIN["f31_definition_vkh_max_error_pct"] - F31["vkh_max_error_pct"]), 5e-7),
+    ("the same recomputation on F3.1's OWN grid, cold [%]", 2.076893,
+     F_F31GRID["f31_definition_vkh_max_error_pct"], 5e-6),
+    ("points bought by root-finding and by q", 0.7186,
+     abs(W["vkh_worst_rel_error_pct"]) - F["f31_definition_vkh_max_error_pct"], 5e-4),
+    ("of which root-finding gamma", 0.0016,
+     F["f31_definition_rootfound_pct"] - F["f31_definition_vkh_max_error_pct"], 5e-4),
+    ("of which letting q move", 0.7170,
+     abs(W["vkh_worst_rel_error_pct"]) - F["f31_definition_rootfound_pct"], 5e-4),
 ]
-if F31 is not None:
-    CLAIMS.append(("graded over F3.1's uniform grid", 893.9,
-                   F["f31_first_order_error_ratio"], 5e-2))
-    CLAIMS.append(("F3.1's stored first-order error", 6.337e-3,
-                   F31["metrics"]["first_order_max_rel_error"], 5e-7))
-    CLAIMS.append(("F3.1's stored VKH error [%]", 2.076893,
-                   F31["metrics"]["vkh_max_error_pct"], 5e-6))
-    CLAIMS.append(("F3.1's first-order check reproduced to", 6.3e-15,
-                   abs(F["pfo_max_rel_error_uniform_half_n"]
-                       / F31["metrics"]["first_order_max_rel_error"] - 1.0), 5e-16))
-    CLAIMS.append(("the single-grid recomputation's offset from F3.1", 0.000214,
-                   abs(F_PLAIN["f31_definition_vkh_max_error_pct"]
-                       - F31["metrics"]["vkh_max_error_pct"]), 5e-7))
-    CLAIMS.append(("the same recomputation on F3.1's OWN grid, cold [%]", 2.076893,
-                   F_F31GRID["f31_definition_vkh_max_error_pct"], 5e-6))
-    CLAIMS.append(("which reproduces F3.1's stored value to better than 1e-10", 1.0,
-                   float(F_F31GRID["f31_stored_vs_recomputed_rel"] < 1e-10), 0.0))
-if F31 is not None:
-    CLAIMS.append(("F3.1 stored vs recomputed", 1.29e-6,
-                   F["f31_stored_vs_recomputed_rel"], 5e-9))
-    CLAIMS.append(("points bought by root-finding and by q", 0.7186,
-                   abs(W["vkh_worst_rel_error_pct"])
-                   - F["f31_definition_vkh_max_error_pct"], 5e-4))
-    CLAIMS.append(("of which root-finding gamma", 0.0016,
-                   F["f31_definition_rootfound_pct"]
-                   - F["f31_definition_vkh_max_error_pct"], 5e-4))
-    CLAIMS.append(("of which letting q move", 0.7170,
-                   abs(W["vkh_worst_rel_error_pct"])
-                   - F["f31_definition_rootfound_pct"], 5e-4))
-BAD = [(n, w, g) for n, w, g, t in CLAIMS if not abs(w - g) <= t]
-for n, w, g, t in CLAIMS:
+_bad = [(n, w, g) for n, w, g, t in OTHER if not abs(w - g) <= t]
+for n, w, g, t in OTHER:
     print(f"  {'ok ' if abs(w - g) <= t else 'DRIFT'} {n:42s} written {w:>12}"
           f"   computed {g:.10g}")
-assert not BAD, f"prose has drifted from the computation: {BAD}"
-print(f"\\nall {len(CLAIMS)} numbers written in prose match the live computation")'''))
+# bounds and conditions stated in prose that are not metrics
+CONDITIONS = {
+    "F3.1's first-order check reproduced to below 1e-12":
+        F31_PFO_REPRO < F31_PFO_REPRO_MAX,
+    "the cold run on F3.1's grid reproduces its stored value to below 1e-9":
+        F31_COLD_REPRO < F31_COLD_REPRO_MAX,
+    "the single graded solve moves the headline by more than a unit in its"
+    " fourth decimal": HEADLINE_SHIFT > 1e-4,
+    "beta(0) at gamma = 1000 is numerically zero":
+        abs(W["_beta_at_full_depletion"]) < 1e-40,
+    "VKH under-estimates over the whole map": bool(VKH_ALWAYS_UNDER),
+}
+_bad += [(n, True, False) for n, ok in CONDITIONS.items() if not ok]
+# the count README.md and models.yaml quote for what the single-grid
+# baseline moves: generated above, not counted by hand.  Its threshold is a
+# 1e-6 relative move; the smallest move counted is 2e-5 relative and every
+# metric not counted moves by exactly 0, so the count is not decided by noise.
+_counts = {"metrics the single-grid baseline moves": (27, N_MOVED),
+           "reported metrics": (42, len(METRICS)),
+           "break rows": (19, len(BREAKS))}
+_bad += [(n, w, g) for n, (w, g) in _counts.items() if w != g]
+assert not _bad, f"prose has drifted from the computation: {_bad}"
+print(f"\\n{N_SAYS} prose literals of registered claims checked by claims.says,"
+      f" {len(OTHER)} other prose values, {len(CONDITIONS)} stated bounds and"
+      f" conditions and {len(_counts)} counts; all agree.\\n")
+claims.report()'''))
 
 # ------------------------------------------------------------ what pymrm adds
 cells.append(md(r"""## What pymrm adds
@@ -2158,14 +2230,14 @@ than lumped: on `F3.1`'s own first-order check, over its own $\mathrm{Ha}$
 range, grading at the same $n_x$ is worth **124.8x** and the refinement from
 $n_x = 400$ to 800 a further 7.163x, which multiply to the 893.9x against the
 6.337e-3 loaded from `F3.1`'s `agreement.json`. Crediting all 893.9x to grading
-- as an earlier version of this page did - is wrong by a factor of seven.
+is wrong by a factor of seven.
 
 And grading is a **liability** at the moderate $\gamma$ where this page's
 headline sits: at the grid-study point a graded grid of the same size is 248.7
 times *less* accurate than a uniform one, because its outer cells are nearly
 eight times wider. That is why the baseline here is a Richardson extrapolation of two
-graded grids rather than either grid alone. The single graded solve this page
-first shipped was wrong in the fourth decimal of every moderate-$\gamma$
+graded grids rather than either grid alone. A single graded solve is wrong in
+the fourth decimal of every moderate-$\gamma$
 number - by less than its own pymrm-versus-collocation agreement, which is
 precisely why a second solver family does not catch this class and a
 convergence study does. It is the "extrapolation switched off" row of the break

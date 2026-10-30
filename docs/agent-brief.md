@@ -165,10 +165,12 @@ data{tier,method,status}, related`. Keep `slug` and `title` identical to your
 
 ### Before reporting ready
 
-Regenerate and execute:
+Regenerate and execute. A new or refreshed page is edited as `index.py`
+(`templates/index.py`, AGENTS.md "Adding a page"), so sync the notebook from it;
+an unrefreshed page in the old layout runs `python build_page.py` instead:
 
 ```
-python build_page.py
+jupytext --sync index.py
 python - <<'EOF'
 import nbformat; from nbclient import NotebookClient
 nb=nbformat.read("index.ipynb",as_version=4)

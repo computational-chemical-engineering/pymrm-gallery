@@ -30,9 +30,8 @@ exactly where this page's headline sits — its error, 1.9e−6 relative, is
 solver family cannot see it and only a convergence study can. It is the
 "extrapolation switched off" row of the break table, and what that row moves is
 **counted by the notebook** rather than asserted: **27 of the 42 reported
-metrics** move by more than the coverage tolerance, **19 of them in their
-fourth decimal**. An earlier version of this page said "nine reported numbers",
-counted by hand; it was an undercount.
+metrics** move by more than the coverage tolerance, the headline error among
+them by more than a unit in its fourth decimal.
 
 | the baseline, checked | |
 |---|---|
@@ -48,7 +47,7 @@ surface has one interior extremum, root-found in both directions:
 
 | | value |
 |---|---|
-| worst error | **−2.7955 %** at γ = 4.7279, q = 1.5217 (E_i = 2.5217) |
+| worst error | **−2.7955 %** at γ = 4.728, q = 1.522 (E_i = 2.522) |
 | worst over the ten *printed* curve labels only | −2.7294 % |
 | the book's printed claim | "valid to within 10 percent" — margin **3.5772×** |
 | sign | Van Krevelen–Hoftijzer **under**-estimates everywhere — and provably so |
@@ -68,14 +67,14 @@ they proceeded "by assuming that the concentration of B remains approximately
 constant close to the interface". The first is about the *level* of depletion,
 which β(0) measures; the second about the *constancy* of β where the reaction
 happens, which β(0) does not measure at all — that is the rate-weighted mean
-β̄ divided by β(0). Along the worst curve (q = 1.5217):
+β̄ divided by β(0). Along the worst curve (q = 1.522):
 
 | | γ | β(0) | β̄/β(0) | VKH error |
 |---|---|---|---|---|
-| B half gone | 2.2036 | 0.5 | 1.208 | −1.8304 % |
-| the worst point | 4.7279 | 0.1647 | **2.115** | **−2.7955 %** |
-| B 99 % gone | 13.0378 | 0.01 | 19.20 | −1.5035 % |
-| B essentially gone | 100 | 1.367e−11 | 3.684e+9 | −0.0373 % |
+| B half gone | 2.204 | 0.5 | 1.208 | −1.8304 % |
+| the worst point | 4.728 | 0.1647 | **2.115** | **−2.7955 %** |
+| B 99 % gone | 13.038 | 0.01 | 19.20 | −1.5035 % |
+| B essentially gone | 100 | 1.37e−11 | 3.68e+9 | −0.0373 % |
 | B gone (γ = 1000) | 1000 | numerically zero | — | **−0.00037 %** |
 
 β(0) falls monotonically, β̄/β(0) rises monotonically, and the error does
@@ -111,23 +110,23 @@ no power law at all. Its local exponent steepens octave by octave (−1.92,
 **44.24× too large** — and 44× of a 0.00134 % correction, so *leaving it out*
 is there more accurate than applying it. **Two independent methods** — pymrm
 finite volumes and scipy collocation, sharing no assembly — agree on that
-deficit to 8.61e−5, the first of them also refined on a finer, differently
+deficit to below 1e−3 relative, the first of them also refined on a finer, differently
 graded mesh. (That is two methods, one of them refined; it is not three
 independent routes.)
 
 **Reconciled with `F3.1`, which owns Hatta.** `F3.1` reports 2.076893 % as its
 maximum VKH error. Its definition — a sampled max over E_i ∈ {5, 20, 100} on a
 warm-started Ha sweep — recomputed here cold gives 2.076896 %, reproducing it
-to 1.29e−6. That residual is **`F3.1`'s own grid error — not this page's
+to 1.29e−6 relative, checked as below 2e−5 because `F3.1`'s number was made on
+another machine. That residual is **`F3.1`'s own grid error — not this page's
 numerics, and not a warm-vs-cold difference either**, and both halves are
 measured rather than asserted: run *cold* on `F3.1`'s own grid — uniform,
 n_x = 400 — the same recomputation lands on 2.076893 %, reproducing `F3.1`'s
-warm-started stored value to better than 1e−10 relative. The warm start
+warm-started stored value to below 1e−9 relative. The warm start
 therefore contributes nothing to the residual, and what is left is the uniform
 400-cell discretisation. This page's extrapolated reference is the accurate
 side of it: it agrees with scipy's collocation to 4.37e−8. For scale, the
-single graded n_x = 800 grid this page used before the baseline was
-extrapolated lands 0.000214 points away, eighty times further. The stored
+single graded n_x = 800 grid, without the extrapolation, lands 0.000214 points away, eighty times further. The stored
 number is **loaded** from `F3.1`'s `agreement.json`, not retyped.
 
 The gap to this page's headline is 0.7186 points, and it splits: root-finding γ
@@ -146,8 +145,7 @@ is not what grading buys.** Split on this page's own three grids:
 | uniform 800 → graded 800 (grading, same n_x) | **124.8×** |
 | product | 893.9× |
 
-Crediting all 893.9× to grading, as an earlier version of this page did, is
-wrong by a factor of seven. And at the moderate γ where the headline lives
+Crediting all 893.9× to grading is wrong by a factor of seven. And at the moderate γ where the headline lives
 grading is a **liability**: at the grid-study point (γ, q) = (10, 4) a graded
 grid is **248.7× less accurate** than a uniform one of the same size, because
 its outer cells are nearly eight times wider. Hence the extrapolated baseline,

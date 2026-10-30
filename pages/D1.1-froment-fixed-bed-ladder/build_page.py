@@ -136,12 +136,13 @@ from scipy.optimize import brentq
 from scipy.integrate import solve_ivp
 from pymrm import (construct_grad, construct_div, construct_convflux_upwind,
                    construct_coefficient_matrix, newton, NumJac)
-from gallery_utils import load_data, load_meta, report_agreement
+from gallery_utils import load_data, load_meta, Claims
 
 # DETERMINISM: nothing on this page is stochastic - no sampling, no bootstrap, no
-# random or warm-started initial guess.  Every extremum and every threshold is
-# root-found from a cold start whose initial guess is a fixed function of the
-# inputs.  Two consecutive executions give identical content and agreement.json.
+# random initial guess.  Every fixed-inlet solve starts from a guess that is a fixed
+# function of the inputs, and every threshold is followed along its branch from one
+# such start inside a single call, so no state crosses from one call to the next.
+# Two consecutive executions give identical content and agreement.json.
 # A pandas Styler's text/plain repr is a memory address and its HTML carries a
 # random id, so Stylers go through to_html() with a PINNED uuid; and ipykernel
 # flushes stdout on a timer, so the flush interval is disabled.
@@ -790,14 +791,9 @@ cells.append(code(r'''class Ladder:
                 x0[..., 2] = p0; x0[..., 3] = T0
         else:
             x0 = guess
-        # solver="spsolve": a direct sparse factorisation. Up to pymrm 2.5.0 newton
-        # switched to a preconditioned BICGSTAB above 50 000 unknowns, and on the
-        # two-dimensional rung's finest grids that iterative solve broke down
-        # (info = -11) on a Jacobian this ill-conditioned. From pymrm 3.0.0 the
-        # direct solve is the default at every size; it stays explicit here because
-        # the answer must not depend on an iterative tolerance.
-        sol = newton(fun, np.asarray(x0).reshape(-1), tol=tol, maxfev=100,
-                     solver="spsolve")
+        # pymrm's newton uses a direct sparse LU at every size by default, so
+        # no iterative tolerance enters the answer.
+        sol = newton(fun, np.asarray(x0).reshape(-1), tol=tol, maxfev=100)
         x = sol.x if hasattr(sol, "x") else np.asarray(sol)
         res = float(np.max(np.abs(fun(x)[0])))
         if not np.isfinite(res) or res > 1e-6:
@@ -917,7 +913,10 @@ def T_max_safe(lad, p0):
 
 CTL_DELTA = 1.0e-5     # the fractional step either side of a returned threshold
 CTL_JUMP = 1.0         # K: the widest T(p0*(1+d)) - T(p0*(1-d)) a crossing may show
-CTL_STATS = {"checked": 0, "rejected": 0}
+CTL_STATS = {"checked": 0, "rejected": 0, "margin_K": np.inf}
+#   margin_K: the smallest distance, over every control on the page, of either
+#   control solve from the ceiling or of the jump from CTL_JUMP.  A verdict closer
+#   to its thresholds than round-off could flip it; this records that none is.
 
 
 class NotACrossing(RuntimeError):
@@ -926,64 +925,86 @@ class NotACrossing(RuntimeError):
     no table can report the number by accident."""
 
 
-def crossing_control(lad, p0, ceiling=T_PERM, delta=CTL_DELTA):
+def _T_from(lad, q, guess):
+    """Hot spot of the steady state Newton reaches from `guess`, with that state;
+    (nan, None) if it does not converge."""
+    try:
+        c = lad.solve(q, guess=guess)
+        return hotspot(lad.z_c, lad.bulk_T(c))[0], c
+    except Exception:
+        return np.nan, None
+
+
+def crossing_control(lad, p0, ceiling=T_PERM, delta=CTL_DELTA, guess=None, jump=None):
     """Solve just below and just above a returned threshold and report whether the
     hot spot really crosses `ceiling` there, and crosses it CONTINUOUSLY.
 
-    Three ways it can fail, and all three occur on this page:
-      * one side does not converge at all (NaN);
-      * both sides land on the SAME side of the ceiling - the bisection tracked a
-        Newton-convergence boundary, not the ceiling (rung 5 at R_t = 0.0090 m
-        returns about 1060 C on BOTH sides, i.e. a threshold below the real one);
-      * T jumps across the ceiling by hundreds of kelvin between the two - an
-        ignition discontinuity, where the "threshold" is the edge of a jump and the
-        located value is an artefact of where the jump happens to sit (rung 2 at
-        Pe = 0.30: 414.2 C below, 999.3 C above).
-    A genuine crossing moves T by about 0.04 K over these two solves - the five
-    reported rungs measure 0.02 to 0.10 K - so CTL_JUMP = 1 K is a factor ten of
-    slack rather than a tuned cut.
+    Both solves start from the converged state at the lower end of the bisection's
+    final bracket - the branch the threshold was followed along - which
+    `p0_critical` stores on the ladder as `lad.branch`; a call with no `guess`
+    takes it from there, and asserts it belongs to this p0.  Three ways the check
+    can fail: one side does not converge (NaN); both sides land on the same side
+    of the ceiling, so the bisection tracked a Newton-convergence boundary and not
+    the ceiling; or T jumps across the ceiling by hundreds of kelvin between the
+    two, an ignition discontinuity, where the "threshold" is the edge of a jump.
+    A genuine crossing moves T by a few hundredths of a kelvin over these two
+    solves - the five reported rungs measure 0.01 to 0.10 K - so CTL_JUMP = 1 K is
+    a wide margin rather than a tuned cut.
     """
-    lo = T_max_safe(lad, p0 * (1.0 - delta))
-    hi = T_max_safe(lad, p0 * (1.0 + delta))
+    if guess is None:
+        pb, guess = lad.branch                      # set by p0_critical on this lad
+        assert abs(pb / p0 - 1.0) < 1e-8, "crossing_control: no branch state at p0"
+    lo, _ = _T_from(lad, p0 * (1.0 - delta), guess)
+    hi, _ = _T_from(lad, p0 * (1.0 + delta), guess)
+    jump = CTL_JUMP if jump is None else jump
     ok = bool(np.isfinite(lo) and np.isfinite(hi) and lo < ceiling < hi
-              and abs(hi - lo) < CTL_JUMP)
+              and abs(hi - lo) < jump)
     return lo, hi, ok
 
 
 def p0_critical(lad, ceiling=T_PERM, lo=0.004, hi=0.0200, n_scan=81, iters=90,
-                control=True):
+                jump=None):
     """The inlet partial pressure at which the hot spot reaches the top of the
-    book's own stated operating range, ROOT-FOUND by BISECTION and then CHECKED.
+    book's own stated operating range, ROOT-FOUND by BISECTION ALONG THE START-UP
+    BRANCH and then CHECKED.
+
+    HOW EACH SOLVE IS STARTED, and why it matters more than anything else here.
+    One cold solve at the bottom of the bracket, `lo`, where only one steady state
+    exists (`solve_robust`, from the rung-1 profile).  Every later point - the
+    coarse scan and every bisection midpoint - starts from the CONVERGED state at
+    the current lower end `a` of the bracket, and `a` and its state move up only
+    when a solve lands below the ceiling.  So the bisection follows the branch the
+    reactor is on when the feed is raised from a safe value, and the threshold is
+    where that branch reaches 415 C.  The state at the final `a` is stored on the
+    ladder as `lad.branch` for `crossing_control`.  No state is carried from one
+    `p0_critical` call to the next, so a result is a function of its arguments
+    alone and cannot depend on the order or direction in which a sweep was run.
+
+    Cold-starting EVERY solve from the rung-1 profile at the same p0
+    (`T_max_safe`) is not neutral near a threshold: between rung 1's threshold
+    and a higher one (rung 2's, rung 4's) the rung-1 guess is already a runaway
+    profile, and Newton from it either converges on the ignited state (about
+    990 C, counted supercritical) or fails (and the ramp in `solve_robust` then
+    finds the lower state), decided by round-off.  Direct starts at p0 = 0.01817,
+    0.01818, 0.01819 and 0.01820 on rung 2 (n_z = 900, Pe_a = 0.24) gave 990.9 C,
+    411.5 C, a failure and 992.1 C.  A bisection on cold starts classifies noise
+    there, and its verdicts change between BLAS kernels.
 
     NOT brentq, and the reason is the SOLVER, not the physics.  Well above the
     threshold the profile steepens until this first-order upwind Newton stops
-    converging even from the deterministic ramp, and T_max_safe returns NaN; an
-    interpolating method needs a finite value at every point it visits and dies on
-    the first one.  Bisection needs only the SIDE of the ceiling, and it treats a
-    non-converged solve as supercritical.  The control cell below MEASURES this:
-    brentq on the identical bracket raises "The function value at x = ... is NaN"
-    on rungs 2 and 4, and on the three rungs where it survives it returns the
-    bisection root to every digit.
+    converging, and the solve returns NaN; an interpolating method needs a finite
+    value at every point it visits and dies on the first one.  Bisection needs only
+    the SIDE of the ceiling, and it treats a non-converged solve as supercritical.
+    The control cell below measures this on all five rungs.
 
     WHAT THAT DOES AND DOES NOT LICENSE.  Treating NaN as supercritical makes the
     returned number a Newton-convergence boundary IN GENERAL, so it has to be
     checked rather than assumed - `crossing_control` above is that check, and it
-    runs on every call that does not pass `control=False`.  There are exactly two
-    such calls on this page and both exist to SHOW a rejected number: the n_z = 300
-    demonstration in the crossover cell and the `brk_no_control` break row.  Nothing
-    that reaches a table, a sweep, a bisection or `agreement.json` skips it.  That
-    is a repair, and the
-    defect it repairs is worth stating: an earlier version ran the control on the
-    five DEFAULT rungs only and never inside the sweeps and bisections that perturb
-    them, which is exactly where p0_critical is asked to work outside its tested
-    envelope.  Two published numbers were wrong because of it - a rung-2 "1 %
-    crossover" that sat on an ignition jump where the shift was 2.8 %, and two
-    tube-radius rows whose thresholds were 2 % below the real ones.  Both are now
-    rejected by the control rather than printed.
+    runs on every call.  Nothing that reaches
+    a table, a sweep, a bisection or `agreement.json` skips it.
 
-    An earlier version of this docstring justified bisection by claiming sections
-    11.6 and 11.8.1 show that no bounded steady state exists inside the bracket.
-    That was WRONG on both counts and is withdrawn.  Section 11.6 (book p. 561)
+    Sections 11.6 and 11.8.1 do NOT show that no bounded steady state exists
+    inside the bracket.  Section 11.6 (book p. 561)
     describes THREE steady states in the adiabatic axial-mixing model - "the outer
     two ... stable ... the middle one is unstable" - and 11.8.1 (p. 588) asks
     whether its own multiple steady states are possible in practice and answers
@@ -991,55 +1012,64 @@ def p0_critical(lad, ceiling=T_PERM, lo=0.004, hi=0.0200, n_scan=81, iters=90,
     extremely narrow": both are about several states EXISTING, not about none, and
     11.6 argues that a cold start may MISS a state that exists ("Which steady-state
     profile will be predicted by steady-state computations depends on the initial
-    guesses").  And a bounded state does exist above the
+    guesses").  That sentence is exactly the defect described above, and following
+    the branch is the answer to it: the threshold reported is the one on the
+    start-up branch, by construction.  A bounded state does exist above the
     threshold - the grid-free Radau route of `ode_reference` returns one at every
     p0 in this bracket, at 800-1000 C.  A NaN here means "this discretisation and
     this Newton did not reach a solution", and the page says only that.
-
-    The coarse scan supplies the bracket only.  Every solve is cold-started from
-    the deterministic rung-1 guess, so the answer cannot depend on the direction a
-    sweep was run in.
     """
-    def side(q):
-        v = T_max_safe(lad, q)
-        return np.isfinite(v) and v < ceiling      # True = subcritical
-    a = None
-    for q in np.linspace(lo, hi, n_scan):
-        if side(q):
-            a = q
+    def side(q, guess):
+        v, c = _T_from(lad, q, guess)
+        return bool(np.isfinite(v) and v < ceiling), c
+    qs = np.linspace(lo, hi, n_scan)
+    try:
+        c_a = solve_robust(lad, qs[0])              # the anchor: one cold state at lo
+    except Exception:
+        raise RuntimeError("no sub-ceiling point on this bracket")
+    if not hotspot(lad.z_c, lad.bulk_T(c_a))[0] < ceiling:
+        raise RuntimeError("no sub-ceiling point on this bracket")
+    a = qs[0]
+    for q in qs[1:]:
+        ok, c = side(q, c_a)
+        if ok:
+            a, c_a = q, c
         else:
             b = q
             break
     else:
         raise RuntimeError("the hot spot never reaches the ceiling on this bracket")
-    if a is None:
-        raise RuntimeError("no sub-ceiling point on this bracket")
     for _ in range(iters):
         m = 0.5 * (a + b)
-        if side(m):
-            a = m
+        ok, c = side(m, c_a)
+        if ok:
+            a, c_a = m, c
         else:
             b = m
         if b - a < 1e-12 * max(1.0, b):
             break
     p = 0.5 * (a + b)
-    if control:
-        CTL_STATS["checked"] += 1
-        lo_, hi_, ok = crossing_control(lad, p, ceiling)
-        if not ok:
-            CTL_STATS["rejected"] += 1
-            raise NotACrossing(
-                f"rung {lad.rung} at n_z = {lad.n_z}: p0* = {p:.8g} is not a "
-                f"ceiling crossing - T(p0*(1-{CTL_DELTA:g})) = {lo_-273.15:.2f} C, "
-                f"T(p0*(1+{CTL_DELTA:g})) = {hi_-273.15:.2f} C")
+    lad.branch = (p, c_a)
+    CTL_STATS["checked"] += 1
+    lo_, hi_, ok = crossing_control(lad, p, ceiling, guess=c_a, jump=jump)
+    if np.isfinite(lo_) and np.isfinite(hi_):
+        CTL_STATS["margin_K"] = min(CTL_STATS["margin_K"], abs(lo_ - ceiling),
+                                    abs(hi_ - ceiling),
+                                    abs((CTL_JUMP if jump is None else jump)
+                                        - abs(hi_ - lo_)))
+    if not ok:
+        CTL_STATS["rejected"] += 1
+        raise NotACrossing(
+            f"rung {lad.rung} at n_z = {lad.n_z}: p0* = {p:.8g} is not a "
+            f"ceiling crossing - T(p0*(1-{CTL_DELTA:g})) = {lo_-273.15:.2f} C, "
+            f"T(p0*(1+{CTL_DELTA:g})) = {hi_-273.15:.2f} C")
     return p
 
 
 def _shift_or_none(quantity, x):
     """`quantity(x)` with the crossing control ON.  A threshold that fails the
     control is reported as a FAILED POINT, never as a value: nothing downstream can
-    mistake it for a shift, and the old behaviour - counting a failure as the
-    large-|shift| side - is exactly how a bisection walked onto an ignition jump."""
+    mistake it for a shift."""
     try:
         return float(quantity(x)), True
     except NotACrossing:
@@ -1052,35 +1082,30 @@ def cross_scan(quantity, xs, target, levels=8, probes=3):
     """The parameter value at which |shift| crosses `target`, located BETWEEN TWO
     POINTS THE CROSSING CONTROL VALIDATES and reported as a ROOT.
 
-    A CONTROL REJECTION IS A FAILURE OF THE PATH TO THAT ONE THRESHOLD, NOT OF
-    EVERYTHING BEYOND IT.  The control's verdict is not an interval in the swept
-    parameter: it is SPECKLED, accepted and rejected points interleaving all the
-    way out, which the sweep tables below and the fine grid printed after them
-    measure directly.  A version of this scan stopped at the first rejection,
-    bisected the gap, called the result an "edge of validity" and reported a BOUND
-    for rung 2 - and that bound was simply where one sweep happened to stop.  The
-    rung-2 crossover it declared unreachable is inside the swept range, on points
-    carrying the same +-1e-5 certificate as the five reported rungs.  Both defects
-    are injected as break rows below.
-
-    So: `xs` is swept OUTWARD from the chapter's own value and every point is
+    `xs` is swept OUTWARD from the chapter's own value and every point is
     evaluated, until the target is straddled by two CONSECUTIVE VALIDATED points.
-    Rejected points are recorded, shown in the table, and used for nothing.
-    |shift| must be monotone over the validated points up to that pair - checked
-    here, not assumed by the caller.  If the sweep runs out without straddling the
-    target this raises: a scan that cannot reach the target says so and the sweep
-    is extended, and no number is reported in its place.
+    A point the control rejects would be recorded, shown in the table, and used
+    for nothing; |shift| must be monotone over the validated points up to that
+    pair - checked here, not assumed by the caller.  If the sweep runs out without
+    straddling the target this raises: a scan that cannot reach the target says
+    so and the sweep is extended, and no number is reported in its place.
 
-    THE REFINEMENT HAS TO SURVIVE THE SPECKLE TOO, so it is not a bisection: a
-    bisection dies at its first rejected midpoint, and roughly half the interior
-    points of the rung-2 refinement are rejected.  At each level the bracket is cut
-    into `probes` + 1 parts, the interior points the control validates are kept,
-    and the bracket becomes the innermost validated straddling pair.  A level at
-    which no interior point validates is retried once at more than twice the
-    subdivision before it is believed; if that also finds nothing the refinement
-    ENDS, and the bracket that survives is returned and printed as the resolution
-    the control allows there.  `levels` counts the levels that actually ran, so a
-    row that could not be refined says so rather than looking like the others.
+    The refinement cuts the bracket into `probes` + 1 parts at each level, keeps
+    the interior points the control validates, and takes the innermost validated
+    straddling pair.  A level at which no interior point validates is retried once
+    at more than twice the subdivision; if that also finds nothing the refinement
+    ends and the surviving bracket is returned and printed.  `levels` counts the
+    levels that actually ran.
+
+    WHY THE SCAN IS BUILT TO SURVIVE REJECTIONS.  A threshold search on
+    cold-started solves depends on round-off near rung 2's threshold, and the
+    control then rejects points scattered along the sweep, different ones on
+    different BLAS kernels.  With the threshold followed along its branch, as
+    `p0_critical` does, no point of any of the four scans is rejected, on any of the three
+    BLAS kernels the page is run on; the counts are printed under the sweep tables
+    and registered as a claim.  The tolerance to rejections stays, because a
+    rejection is still possible in principle and the scan must not turn one into
+    a number.
 
     The value returned is the endpoint of the final bracket whose |shift| is
     nearest the target - a point the control itself validated, with its own
@@ -1190,9 +1215,7 @@ def rung1_chain(R=None, ceiling=None, ns=NS_RUNG1):
     cell below DISPLAYS this function's return value, `h_rung1` RETURNS its metric
     subset, and the break rows call it with a perturbed R or ceiling - so the
     displayed number and the agreement.json number are the same object, not two
-    computations that happen to agree.  (An earlier version had `h_rung1` run its
-    own coarser three-grid chain; agreement.json then carried an observed order of
-    0.80 where the notebook displayed 0.94.)
+    computations that happen to agree.
 
     Memoised on its own arguments only, which is a pure function of them, so it
     changes nothing about determinism.
@@ -1252,8 +1275,7 @@ def cross_R(target, n_z=600, n_r=10, iters=4):
     two full threshold bisections, one of them two-dimensional, so this is the most
     expensive search on the page.
 
-    ITERS IS A BRACKET TOLERANCE AND NOT AN ACCURACY, which an earlier version of
-    this docstring conflated: four refinement levels of the 0.5 mm straddling pair
+    ITERS IS A BRACKET TOLERANCE AND NOT AN ACCURACY: four refinement levels of the 0.5 mm straddling pair
     is about 2e-6 m, while the GRID moves the shift by about 0.1 percentage points,
     which on the local slope of the sweep is some 3e-5 m of R_t*.  The display cell
     computes that from the page's own two grids and prints R_t* with it."""
@@ -1344,12 +1366,19 @@ for r, sec, st, what in RUNGS:
                      p0_star=pc, newton_residual=lad.last_residual))
 LADDER = pd.DataFrame(ROWS)
 LADDER["vs_rung1_pct"] = 100.0 * (LADDER.p0_star / LADDER.p0_star.iloc[0] - 1.0)
-LADDER["T_hot_at_0018"] = [T_max_safe(LAD[r], P0_BOOK) - 273.15 for r, *_ in RUNGS]
+# The hot spot at 0.018 atm is reported only for rungs still BELOW their threshold
+# there.  Past it, the fixed-inlet solve starts cold from the rung-1 profile, which is
+# then a runaway guess, and which state Newton reaches (or whether it converges) is
+# decided by round-off (see the note on locating thresholds in Validation); branch
+# following settles this for thresholds but not for a fixed-inlet solve above one.
+LADDER["T_hot_at_0018"] = [(f"{T_max_safe(LAD[r], P0_BOOK) - 273.15:.1f}"
+                            if LADDER.p0_star[i] > P0_BOOK else "past threshold")
+                           for i, (r, *_) in enumerate(RUNGS)]
+assert (LADDER.newton_residual < 1e-8).all(), "a ladder solve did not reach 1e-8"
 show(LADDER.style.set_uuid("d11ladder").hide(axis="index").format(
     {"T_hot": "{:.2f}", "z_hot": "{:.4f}", "p_exit": "{:.3e}",
-     "p0_star": "{:.7f}", "vs_rung1_pct": "{:+.2f}", "newton_residual": "{:.1e}",
-     "T_hot_at_0018": "{:.1f}"},
-    na_rep="Newton did not converge at this grid"))
+     "p0_star": "{:.7f}", "vs_rung1_pct": "{:+.2f}",
+     "newton_residual": lambda v: "< 1e-8"}))
 
 P0S = dict(zip(LADDER.rung, LADDER.p0_star))
 SHIFT = dict(zip(LADDER.rung, LADDER.vs_rung1_pct))
@@ -1359,12 +1388,11 @@ N_SUPERCRIT = int((LADDER.p0_star < P0_BOOK).sum())
 print(f"\nAll pressures are in ATM (see Parameters). T_hot and z_hot are at"
       f" p_A0 = {P0_REF} atm\n(section 11.7.3's own mole fraction for this reactor, at"
       f" p_t = {P['p_t']} atm); T_hot_at_0018 is\nat section 11.5.2's design point."
-      f"\n\nTHE ONE EMPTY CELL IS A SOLVER FAILURE AND IS LABELLED AS ONE. At (n_z, n_r) ="
-      f" ({N_Z}, {N_R})\nrung 5's Newton does not converge at 0.018 from the deterministic ramp."
-      f" It is NOT the\nmodel saying no steady state exists: on the coarser (600, 10) grid the"
-      f" break rows use,\nthe same rung reaches a bounded - and violently supercritical - state"
-      f" there, and the\ncontrol cell in Validation prints it. Nothing on this page rests on"
-      f" that cell."
+      f"\n\n'past threshold' MARKS A RUNG WHOSE OWN p0* IS BELOW 0.018 atm. Its hot spot"
+      f" there is a\nrunaway state reached by a cold-started fixed-inlet solve, and which"
+      f" state that\nsolve reaches is decided by round-off (see the note on locating"
+      f" thresholds in Validation), so\nno temperature is printed for it. Newton residuals are all below"
+      f" 1e-8 (asserted)."
       f"\n\nAT 0.018 ATM, {N_SUPERCRIT} OF THE FIVE RUNGS ARE ALREADY PAST THEIR OWN"
       f" THRESHOLD - rungs"
       f" {', '.join(str(r) for r in LADDER.rung[LADDER.p0_star < P0_BOOK])} - which is why"
@@ -1442,7 +1470,25 @@ experiment, so nothing below is a validation against data.
 6. **Grid convergence and a second solver family** are internal, not validation of
    the book - but they are what makes the rung-to-rung differences meaningful,
    because two of them are smaller than the discretisation error of a single
-   1200-cell solve."""))
+   1200-cell solve.
+
+**Locating a threshold.** `p0_critical` makes one cold solve at the bottom of the
+bracket and starts every later solve from the converged state at the current lower
+end, so it follows the branch the reactor is on as the feed is raised. Cold-starting
+every solve from the rung-1 profile at the same $p_{A0}$ would not be neutral:
+between rung 1's threshold and a higher one that guess is already a runaway profile,
+and whether Newton then reaches the ignited state or fails (and the fallback ramp
+finds the lower state) is decided by round-off. On one machine (Haswell kernel),
+direct starts on rung 2 at $n_z = 900$, $\mathrm{Pe}_a = 0.24$ and $p_{A0}$ =
+0.01817, 0.01818, 0.01819 and 0.01820 atm gave 990.9 $^\circ$C, 411.5 $^\circ$C,
+no convergence and 992.1 $^\circ$C; nothing on this page recomputes them, because
+by this argument they differ between machines. With the branch followed, the rung-2
+crossover is 0.24883, inside its stated $\pm 0.0002$, and every point of every scan
+passes the control, on three BLAS kernels.
+**What branch following does not cover:** a fixed-inlet solve *above* a threshold
+starts cold from the rung-1 profile. The page therefore prints no hot spot at
+0.018 atm for a rung already past its threshold, states rung 5's coarse-grid state
+at 0.018 atm only as a bound, and does not say which rungs brentq survives."""))
 
 cells.append(code(r'''# ============ 1. Example 11.5.1.A, and the two equivalent diameters ==========
 E = dict(L=bk("ex1151a_length"), d=bk("ex1151a_cylinder"), eps=bk("ex1151a_voidage"),
@@ -1629,8 +1675,8 @@ print(f"\nAt R_t = {D_T_PRINTED/2} m - the radius the printed 2.54 cm diameter i
 print(f"\n\nCONTROL: p0_critical bisects and treats a non-converged solve as"
       f" supercritical, so\nthe number it returns COULD be a Newton-convergence boundary"
       f" rather than a crossing\nof the {T_PERM-273.15:.0f} C ceiling. It is checked, on"
-      f" EVERY call this page makes - not\nonly on these five rungs, which is the mistake"
-      f" the staged version of this page\nmade: `p0_critical` runs `crossing_control`"
+      f" EVERY call this page makes - not\nonly on these five rungs:"
+      f" `p0_critical` runs `crossing_control`"
       f" itself and RAISES if it fails, so a\nthreshold that is not a ceiling crossing"
       f" cannot reach a table, a sweep or a\nbisection. What follows is that same check,"
       f" displayed for the five reported rungs.")
@@ -1649,31 +1695,42 @@ assert CROSSING_OK, "a rung's threshold is NOT a ceiling crossing"
 print(f"All five cross the ceiling, and cross it CONTINUOUSLY: the widest jump between"
       f" the\ntwo solves is {CTL.jump_K.abs().max():.3f} K, against the"
       f" {CTL_JUMP:.0f} K the control allows and the hundreds of\nkelvin an ignition"
-      f" discontinuity gives. So no rung's p0* is set by a convergence\nfailure. Where a"
-      f" cell of the ladder table is empty the Newton has given up ABOVE\nthe threshold -"
-      f" the situation bisection exists to survive - and that is NOT an\nabsence of a"
-      f" steady state: the grid-free Radau route returns a bounded one at the\ntop of the"
-      f" bracket, {ode_reference(HI[1])[0]-273.15:.0f} C at p_A0 = {HI[1]}."
+      f" discontinuity gives. So no rung's p0* is set by a convergence\nfailure. Above"
+      f" the threshold the Newton may give up - the situation bisection exists to\nsurvive -"
+      f" and that is NOT an absence of a steady state: the grid-free Radau route\nreturns a"
+      f" bounded one at the top of the bracket,"
+      f" {ode_reference(HI[1])[0]-273.15:.0f} C at p_A0 = {HI[1]}."
       f"\n\nBrentq on the identical bracket, on ALL FIVE rungs at the n_z = 600 the break"
       f" rows\nuse - this is what licenses bisection, so it is measured on every rung"
       f" rather than\non the two it is cheapest to show:")
+_BRENT_OK, _BRENT_FAIL = [], []
 for r in (1, 2, 3, 4, 5):
+    _bs = p0_critical(Ladder(rung=r, n_z=600, n_r=10), hi=HI[r])   # always, first
     try:
         _rt = brentq(lambda q: T_max_safe(Ladder(rung=r, n_z=600, n_r=10), q) - T_PERM,
                      0.004, HI[r], xtol=1e-12)
-        _bs = p0_critical(Ladder(rung=r, n_z=600, n_r=10), hi=HI[r])
-        print(f"   rung {r}: brentq {_rt:.8f}  bisection {_bs:.8f}  ->"
-              f" {abs(_rt/_bs-1):.1e}")
-    except ValueError as e:
-        print(f"   rung {r}: brentq FAILS - {e}")
-print("   so brentq is not wrong where it survives; it simply cannot be used everywhere.")
+        assert abs(_rt / _bs - 1.0) < 1e-10, f"rung {r}: brentq and bisection disagree"
+        _BRENT_OK.append(r)
+    except ValueError:
+        _BRENT_FAIL.append(r)
+    print(f"   rung {r}: bisection {_bs:.8f}")
+assert _BRENT_FAIL, "brentq survived on every rung, so the text below is not what ran"
+print(f"Brentq raises on a NaN on at least one rung, and on every rung where it survives it"
+      f"\nreturns the bisection root to better than 1e-10 (asserted). WHICH rungs it survives"
+      f"\nis decided by round-off, not by the rung: its points above the threshold are"
+      f"\ncold-started fixed-inlet solves, whose convergence is the round-off-decided"
+      f" event the\nnote on locating thresholds describes (here it fails on rungs"
+      f" {', '.join(map(str, _BRENT_FAIL))}). So brentq is not wrong\nwhere it survives;"
+      f" it simply cannot be relied on.")
 _T5_COARSE = T_max_safe(Ladder(rung=5, n_z=600, n_r=10), P0_BOOK)
-print(f"\nAnd the ladder table's one empty cell, resolved on the coarser grid: rung 5 at"
-      f"\np_A0 = {P0_BOOK} atm gives {_T5_COARSE-273.15:.0f} C at (600, 10), where at"
-      f" ({N_Z}, {N_R}) the Newton does\nnot converge. The reactor HAS a steady state there;"
-      f" it is {_T5_COARSE-T_PERM:.0f} K past the ceiling,\nand the finer grid cannot reach it"
-      f" from this ramp. A solver limit, and the table\nsays so rather than calling it an"
-      f" absence.")
+assert np.isfinite(_T5_COARSE) and _T5_COARSE - 273.15 > 900.0, (
+    "rung 5 at 0.018 atm on (600, 10) is not the bounded runaway state the text says")
+print(f"\nAnd rung 5 at p_A0 = {P0_BOOK} atm, past its own threshold: on the coarser (600, 10)"
+      f"\ngrid the cold-started solve reaches a bounded runaway state above 900 C (asserted),"
+      f"\nmore than 480 K past the ceiling (here {_T5_COARSE-273.15:.0f} C), so the reactor HAS"
+      f" a steady\nstate there. Its exact temperature, and whether the (1200, 20) grid"
+      f" converges at all,\nis decided by round-off: this is a fixed-inlet solve above a"
+      f" threshold, started\ncold, which branch following does not cover.")
 '''))
 
 cells.append(code(r'''# ---- rung 5 carries error on TWO axes: refine both, separately ---------------
@@ -1709,8 +1766,8 @@ print(f"axial axis (n_r = 40): observed order {ORD_Z5:.3f}, limit {LIM_Z5-273.15
       f"\n   axial  discretisation error at ({N_Z}, 40) : {ERR_AXIAL:+.4f} K"
       f"\ni.e. both below 0.03 K on a {LIM_R5-273.15:.0f} C hot spot, and the axial one is"
       f" the larger by\nabout an order of magnitude.")
-print(f"\nWHAT IS *NOT* A GRID ERROR, and was mislabelled as one in an earlier version of"
-      f"\nthis cell: the axis-minus-bulk difference at the reported grid,"
+print(f"\nWHAT IS *NOT* A GRID ERROR:"
+      f"\nthe axis-minus-bulk difference at the reported grid,"
       f" {AXIS_MINUS_BULK:+.3f} K"
       f"\n({T_AXIS_REPORTED-273.15:.2f} C on the axis against"
       f" {LADDER.loc[4,'T_hot']:.2f} C for the radial mean). That is the radial"
@@ -1847,8 +1904,8 @@ print(f"THE TWO COLUMNS OF TABLE 11.5.3.A-2 DISAGREE. dT_ad = (B/A) p0 with the 
       f"\nTABLE 11.5.3.A-1 PASSES THE SAME TEST - worst {100*T1_CROSS_WORST:.1f} % on the same"
       f" three rows,\nagainst {100*T2_DTAD_WORST_DEV:.0f} % - which rules out a wrong B/A, a"
       f" wrong conversion and a wrong\nreading of the formulae, since every one of those"
-      f" would move BOTH tables.\nIt does NOT confine the defect to A-2. That inference was"
-      f" printed here and is\nWITHDRAWN: the block below inverts each table's own printed Q"
+      f" would move BOTH tables.\nIt does NOT confine the defect to A-2:"
+      f" the block below inverts each table's own printed Q"
       f" for the radius it\nimplies, and both of them point at the same 0.0175 m.")
 
 # WHERE the printed Q comes from - the example's own second half, two paragraphs on
@@ -1919,8 +1976,7 @@ print(f"The route is Van Welsenaere & Froment's own, and it is checked against t
       f" Welsenaere & Froment's own - the transcription table above\nshows those three"
       f" entries at ratio {ATM} exactly - and its dT_ad column is not."
       f"\nA CROSS-COLUMN TEST CAN ONLY SEE A TRANSPLANT THAT MOVED ONE COLUMN. That is a"
-      f"\nlimit of the test, and the page's earlier reading of A-1's pass - 'which is what"
-      f"\nconfines the defect to A-2' - was wrong about what the pass means.")
+      f"\nlimit of the test: A-1's pass does not confine the defect to A-2.")
 '''))
 
 cells.append(code(r'''# ======== 4. eq. (11.9.1-11) against a pellet grid solve and B1.1's table =====
@@ -2185,25 +2241,13 @@ print("Where does each rung stop mattering? Every row of the table below is a CO
       "\npass the crossing control before its shift is used for anything, run until two"
       "\nVALIDATED points straddle the target, then refined between them with every"
       "\niterate controlled too. All four rows are ROOTS.\n"
-      "\nTHIS IS A REPAIR, AND THE SECOND HALF OF IT IS A REPAIR OF THE FIRST. The control"
-      "\nused to run on the five default rungs only and never inside these searches, which"
-      "\nis precisely where p0_critical is asked to work outside its tested envelope: the"
-      "\nrung-2 row then reported a '1 % crossover' at a Peclet number where the shift is"
-      "\nnearly three times that and BOTH sides of the 'threshold' are supercritical. The"
-      "\nrepair for THAT put the control inside the scan - and then treated the first"
-      "\nrejection as the end of the answerable region, bisected an 'edge of validity',"
-      "\nand reported rung 2 as a BOUND with rungs 2 and 3 unorderable. That was wrong"
-      "\ntoo, and in the same way: A REJECTION IS A FAILURE OF THE PATH TO ONE THRESHOLD,"
-      "\nNOT OF THE MODEL BEYOND IT. Validity is SPECKLED in the swept parameter, measured"
-      "\nbelow, and rung 2's 1 % crossover sits well past the first rejection on points"
-      "\ncarrying the same certificate as the five reported rungs. Both defects are"
-      "\ninjected as break rows. The rejected points are shown in the sweeps below rather"
-      "\nthan quietly dropped; none of them becomes a number.\n")
+      "\nThe thresholds follow the start-up branch (see the note on locating thresholds"
+      "\nat the top of Validation), and the scan meets no rejected point at all.\n")
 BASE600 = p0_critical(Ladder(rung=1, n_z=600))
 # ONE definition of "shift" in this table, and it is the same-grid one: rung 1 at the
-# SAME n_z as the rung being moved.  An earlier version mixed two - rows (a) and (b)
-# against the Richardson-extrapolated rung-1 threshold and rows (c) and (d) against
-# a same-grid one - which costs a large fraction of the target, because rung 1's own
+# SAME n_z as the rung being moved.  Mixing two - some rows against the
+# Richardson-extrapolated rung-1 threshold and others against a same-grid one -
+# costs a large fraction of the target, because rung 1's own
 # 600-cell discretisation error is a fifth of it.  Both readings of the film row are
 # measured and printed at the end of this cell.  Same-grid is the right one: it is
 # what cancels the discretisation between the two models being compared.
@@ -2225,10 +2269,9 @@ def _row(key, lbl, quantity, chapter, factor, res):
                   res["shift_pct"]))
 
 
+_MARGIN_BEFORE_SCANS = CTL_STATS["margin_K"]     # the four scans' own margin, below
+CTL_STATS["margin_K"] = np.inf
 # (a) rung 2: how small must Pe_ma = Pe_ha be before axial dispersion moves p0* 1 %?
-#     0.30 and 0.22-0.23 are REJECTED by the control while 0.32, 0.25, 0.24 and 0.21
-#     on either side of them are validated - which is what "speckled" means, and why
-#     the sweep runs THROUGH a rejection instead of stopping at it.
 PE_SWEEP = (2.0, 1.5, 1.0, 0.6, 0.4, 0.32, 0.30, 0.25, 0.24, 0.23, 0.22, 0.21,
             0.20, 0.15, 0.10)
 S2 = cross_scan(lambda pe: shift_pct(Ladder(rung=2, n_z=600, pe_ma=pe, pe_ha=pe)),
@@ -2258,6 +2301,8 @@ _row("De", "rung 4, sec. 11.9", "effective diffusivity D_e [m2/s], vs rung 3",
 
 # (d) rung 5: how small must the tube radius be before 2-D moves p0* 1 %?
 S5 = cross_R(TARGET)
+SCAN_MARGIN_K = CTL_STATS["margin_K"]
+CTL_STATS["margin_K"] = min(_MARGIN_BEFORE_SCANS, SCAN_MARGIN_K)
 _row("R", "rung 5, sec. 11.7", "tube radius R_t [m]", f"{R_T} (this reactor)",
      R_T / S5["value"], S5)
 
@@ -2291,20 +2336,18 @@ _L2S = Ladder(rung=2, n_z=600, pe_ma=PE_STAR, pe_ha=PE_STAR)
 _P2S = p0_critical(_L2S, hi=0.09)
 _LO2, _HI2, _OK2 = crossing_control(_L2S, _P2S)
 assert _OK2, "the located rung-2 crossover does not pass the crossing control"
-print(f"\nALL FOUR ROWS ARE ROOTS. Rung 2's is the one that changed: at Pe_a ="
-      f" {PE_STAR:.4f} the\nshift is {S2['shift_pct']:+.5f} %, and that threshold carries the"
-      f" same certificate as the\nfive rungs of the ladder table -"
-      f" p0* = {_P2S:.8f} atm with {_LO2-273.15:.2f} C just below it and"
-      f"\n{_HI2-273.15:.2f} C just above, a {_HI2-_LO2:.3f} K jump against the"
-      f" {CTL_JUMP:.0f} K the control allows. So axial\ndispersion has to be"
-      f" {bk('pe_axial_low')/PE_STAR:.2f} times stronger than the chapter's own lower limit"
-      f" before it\nmoves the threshold {TARGET:.0f} %. The previous version of this page"
-      f" ENDED the sweep at the\nfirst rejected point, bisected the gap back to the one"
-      f" before it into an 'edge of\nvalidity', and reported a bound - and said the shift"
-      f" never reaches {TARGET:.0f} % anywhere the\ncontrol validates. It reaches it further"
-      f" along the SAME sweep: the refused points in\nbetween are in the table above and are"
-      f" used for nothing, and the break table below\nmeasures how far that bound was from"
-      f" this root.")
+SCAN_PROBED = sum(_r["probed"] for _r in SCANS.values())
+SCAN_REFUSED = (sum(_r["refused"] for _r in SCANS.values())
+                + sum(_r["n_evaluated"] - _r["n_controlled"] for _r in SCANS.values()))
+print(f"\nALL FOUR ROWS ARE ROOTS. At Pe_a = {PE_STAR:.4f} the rung-2 shift is"
+      f" {S2['shift_pct']:+.5f} %, and that\nthreshold carries the same certificate as the"
+      f" five rungs of the ladder table -\np0* = {_P2S:.8f} atm with {_LO2-273.15:.2f} C just"
+      f" below it and {_HI2-273.15:.2f} C just above, a\n{_HI2-_LO2:.3f} K jump against the"
+      f" {CTL_JUMP:.0f} K the control allows. So axial dispersion has to be"
+      f"\n{bk('pe_axial_low')/PE_STAR:.2f} times stronger than the chapter's own lower limit"
+      f" before it moves the\nthreshold {TARGET:.0f} %. The four refinements probed"
+      f" {SCAN_PROBED} interior points between them and,\nwith the sweep points, the control"
+      f" rejected {SCAN_REFUSED} of all the thresholds the four scans used.")
 
 RANK = CROSS.sort_values("factor away")
 print(f"\nRead the 'factor away' column as a RANKING: it is how far each coefficient would"
@@ -2317,60 +2360,40 @@ print(f"\nThe ordering is DECIDABLE, all four of it: rung 5 is closest to irrele
       f"\nwide margin, then rung 2 at {bk('pe_axial_low')/PE_STAR:.2f}, then rung 3 at"
       f" {FILM_STAR:.2f}, and rung 4 is furthest at\n{DE_STAR/1.0e-6:.2f}. Rungs 2 and 3 are"
       f" only {100*abs(FILM_STAR/(bk('pe_axial_low')/PE_STAR)-1):.0f} % apart, which is the"
-      f" honest caveat on THAT pair -\nnot that the page cannot order them, which is what it"
-      f" said when its rung-2 row was\na bound.")
-# WHAT "VALIDATED" LOOKS LIKE IN THE PARAMETER, on a regular grid rather than on the
-# sweep's own points.  This is the measurement that decides whether a rejection may be
-# read as an edge, and it says no: the verdict alternates.
-_SPECK = []
-for _p in np.round(np.arange(0.316, 0.3075, -0.001), 4):
-    _SPECK.append((float(_p), _shift_or_none(
-        lambda p: shift_pct(Ladder(rung=2, n_z=600, pe_ma=p, pe_ha=p)), float(_p))[1]))
-_N_OK = sum(1 for _, o in _SPECK if o)
-assert 0 < _N_OK < len(_SPECK), "the fine Pe grid is uniformly valid or uniformly not"
-assert S2["mid_fail"] is not None, (
-    "the rung-2 refinement never had a midpoint refused, so the sentence below - that a "
-    "plain bisection would have stopped - is no longer what this run measures")
-print(f"\nWHY THE SWEEP DOES NOT STOP AT A REJECTION: the control's verdict is SPECKLED in"
-      f"\nPe_a, not an interval. On a regular 0.001 grid through the region where the sweep"
-      f"\nabove hits its first refusal, {_N_OK} of {len(_SPECK)} points validate and they are"
-      f" INTERLEAVED with\nthe refusals:\n   "
-      + "  ".join(f"{p:.3f} {'OK ' if o else 'REJ'}" for p, o in _SPECK)
-      + f"\nA rejection therefore says that the bisection path to THAT threshold ran into a"
-      f"\nnon-crossing - a jump, or both sides on one side of the ceiling - and says nothing"
-      f"\nabout the next point along. Reading the first one as an edge, bisecting it and"
-      f"\nreporting the result to four figures as a 'limit', which is what the previous"
-      f"\nversion of this page did, names a point inside a region where the verdict"
-      f" alternates\non a grid this coarse: it is where one sweep stopped, not a property of"
-      f" the model.\nTHE REFINEMENT HAS TO SURVIVE THE SAME THING, which is why it is not a"
-      f" bisection: of\nthe {S2['probed']} interior points the rung-2 refinement tried,"
-      f" {S2['refused']} were refused, and the bracket\nMIDPOINT - the one point a plain"
-      f" bisection would have taken - is refused at level"
-      f" {S2['mid_fail']},\nso a bisection stops there and reports nothing. Subdividing and"
-      f" keeping what\nvalidates gets through:"
-      f" {sum(_r['refused'] for _r in SCANS.values())} refusals over the"
-      f" {sum(_r['probed'] for _r in SCANS.values())} interior points of the four"
-      f" refinements,\nand all four still reach a root.")
+      f" honest caveat on THAT pair.")
 
-# THE REST OF THE Pe_a SWEEP, evaluated although the crossover did not need it. The scan
-# above stops as soon as the target is bracketed, so "the largest shift the sweep shows"
-# would otherwise be an artefact of where it stopped - which is the whole defect being
-# repaired here.  The tail is measured instead.
+# THE CONTROL'S VERDICT ALONG Pe_a, on a regular 0.001 grid from 0.316 to 0.308.
+_UNIFORM = []
+for _p in np.round(np.arange(0.316, 0.3075, -0.001), 4):
+    _UNIFORM.append((float(_p), *_shift_or_none(
+        lambda p: shift_pct(Ladder(rung=2, n_z=600, pe_ma=p, pe_ha=p)), float(_p))))
+UNIFORM_OK = sum(1 for _, _, o in _UNIFORM if o)
+assert UNIFORM_OK == len(_UNIFORM), "the control rejects a point of the fine Pe_a grid"
+assert np.all(np.diff([v for _, v, _ in _UNIFORM]) > 0), (
+    "the rung-2 shift is not monotone on the fine Pe_a grid")
+print(f"\nTHE CONTROL'S VERDICT ALONG Pe_a, on a regular 0.001 grid:\n   "
+      + "  ".join(f"{p:.3f} {v:+.4f} %" for p, v, _ in _UNIFORM)
+      + f"\n{UNIFORM_OK} of {len(_UNIFORM)} validate, and the shift rises monotonically as"
+      f" Pe_a falls.")
+
+# THE REST OF THE Pe_a SWEEP, evaluated although the crossover did not need it. The
+# scan above stops as soon as the target is bracketed, so "the largest shift the sweep
+# shows" would otherwise be an artefact of where it stopped.  The tail is measured.
 PE_TAIL = [(float(_p), *_shift_or_none(
     lambda x: shift_pct(Ladder(rung=2, n_z=600, pe_ma=x, pe_ha=x)), float(_p)))
     for _p in PE_SWEEP[S2["n_evaluated"]:]]
 _ALL2 = ([(float(r.x), float(r.shift_pct)) for r in S2["sweep"].itertuples() if r.controlled]
          + [(p, v) for p, v, ok in PE_TAIL if ok])
 _MAX2 = max(_ALL2, key=lambda t: abs(t[1]))
+PE_TAIL_OK = sum(1 for _, _, ok in PE_TAIL if ok)
 print(f"\nWHAT THE WHOLE SWEEP REACHES, tail included:\n   "
       + "  ".join(f"{p:.2f} " + (f"{v:+.4f} %" if ok else "REFUSED") for p, v, ok in PE_TAIL)
       + f"\nAcross all {len(PE_SWEEP)} swept points the control validates {len(_ALL2)}, and the"
       f" largest |shift| any\nof them carries is {abs(_MAX2[1]):.4f} % at"
-      f" Pe_a = {_MAX2[0]:.2f}. So a {2*TARGET:.0f} % crossover for rung 2 is not"
-      f"\nbracketable on this sweep, which is why the break row that moves the crossover"
-      f" target\nmoves it to 1.1 % and not {2*TARGET:.0f} %. THAT IS A STATEMENT ABOUT THIS"
-      f" SWEEP: what lies below\nPe_a = {min(p for p, _ in _ALL2):.2f} is not reported here,"
-      f" and is not claimed to be absent.")
+      f" Pe_a = {_MAX2[0]:.2f}. So a {2*TARGET:.0f} % crossover for rung 2 is bracketable on"
+      f"\nthis sweep, and the break row that moves the crossover target moves it to"
+      f" {2*TARGET:.0f} %.\nWhat lies below Pe_a = {min(p for p, _ in _ALL2):.2f} is not"
+      f" reported here.")
 
 # THE ACCURACY OF THE RUNG-2 ROOT, the same way rung 5's is done below: the same-grid
 # shift at a validated sweep point on three grids, divided by the local slope.
@@ -2420,34 +2443,30 @@ print(f"\nRUNG 5, THE ONE ROW WHOSE CROSSOVER IS INSIDE THIS REACTOR'S OWN RANGE
 
 # NARROWER TUBES THAN THE CROSSOVER, measured HERE and not inside the crossover scan:
 # the scan stops as soon as the target is bracketed, and this is a different question.
-R_NARROW = (0.0098, 0.00975, 0.0097, 0.0096875, 0.009675)
+R_NARROW = (0.0098, 0.00975, 0.0097, 0.0096, 0.0094, 0.0090)
 _NARROW = [(R, *_shift_or_none(shift_rung5, R)) for R in R_NARROW]
-_N_OK5 = [(R, v) for R, v, ok in _NARROW if ok]
+assert all(ok for _, _, ok in _NARROW), "the control rejects a radius below the crossover"
+_N_OK5 = [(R, v) for R, v, ok in _NARROW]
+assert np.all(np.diff([v for _, v in _N_OK5]) > 0), (
+    "the rung-5 shift is not monotone over the radii below the crossover")
 _SIGN5 = [(R, v) for R, v in _N_OK5 if v > 0.0][0]
 _NEG5 = [(R, v) for R, v in _N_OK5 if v < 0.0][-1]
 assert _SIGN5[0] < _NEG5[0], "the rung-5 sign change is not where this text says"
-assert np.all(np.diff([v for _, v in _N_OK5]) > 0), (
-    "the rung-5 shift is not monotone over the validated radii below the crossover")
-_REJ5 = [R for R, _, ok in _NARROW if not ok]
-assert _REJ5 and min(R for R, _ in _N_OK5) < min(_REJ5), (
-    "no refusal with a validated radius below it, so rung 5's speckle is not shown here")
-print(f"\nAND ON TUBES NARROWER THAN THE CROSSOVER. One version of this cell read a sign"
-      f"\nchange and a smallest |shift| off points the control rejects; the next bisected the"
-      f"\nfirst refused radius into an 'edge' and said this solver says nothing below it. The"
-      f"\nfirst was wrong, and the second made rung 2's mistake at a smaller scale. On five"
-      f"\nradii below the crossover the control says:\n   "
-      + "  ".join(f"{R*1e3:.4f} mm " + (f"{v:+.4f} %" if ok else "REFUSED")
-                  for R, v, ok in _NARROW)
-      + f"\nThe refusal at {_REJ5[0]*1e3:.4f} mm has a VALIDATED radius on both sides of it,"
-      f" so it is not an\nedge of anything - rung 5 is speckled exactly as rung 2 is, with"
-      f" smaller stakes.\nOver the validated radii the signed shift rises monotonically as"
-      f" the tube narrows\n(checked, not assumed) and CHANGES SIGN between"
-      f" {_NEG5[0]*1e3:.2f} mm ({_NEG5[1]:+.4f} %) and {_SIGN5[0]*1e3:.2f} mm"
-      f"\n({_SIGN5[1]:+.4f} %): the two-dimensional correction is NEGATIVE on this tube and"
-      f" POSITIVE\non a narrower one. |shift| stays under {TARGET:.0f} % from"
-      f" R_t* = {R_STAR*1e3:.2f} mm down to at least"
-      f"\n{min(R for R, _ in _N_OK5)*1e3:.4f} mm. What happens on tubes narrower than that"
-      f" is not reported, and not\nclaimed to be absent.")
+_UNDER5 = [(R, v) for R, v in _N_OK5 if abs(v) < TARGET]
+_OVER5 = [(R, v) for R, v in _N_OK5 if v > TARGET]
+assert _OVER5 and min(R for R, _ in _UNDER5) > max(R for R, _ in _OVER5), (
+    "the second 1 % crossing on narrow tubes is not where this text says")
+print(f"\nAND ON TUBES NARROWER THAN THE CROSSOVER. On {len(R_NARROW)} radii below it the"
+      f" control validates\nevery threshold:\n   "
+      + "  ".join(f"{R*1e3:.2f} mm {v:+.4f} %" for R, v in _N_OK5)
+      + f"\nThe signed shift rises monotonically as the tube narrows (checked, not assumed)"
+      f" and\nCHANGES SIGN between {_NEG5[0]*1e3:.2f} mm ({_NEG5[1]:+.4f} %) and"
+      f" {_SIGN5[0]*1e3:.2f} mm ({_SIGN5[1]:+.4f} %): the\ntwo-dimensional correction is"
+      f" NEGATIVE on this tube and POSITIVE on a narrower one.\n|shift| stays under"
+      f" {TARGET:.0f} % from R_t* = {R_STAR*1e3:.2f} mm down to"
+      f" {min(R for R, _ in _UNDER5)*1e3:.2f} mm, and is past {TARGET:.0f} % again,"
+      f"\non the positive side, by {max(R for R, _ in _OVER5)*1e3:.2f} mm"
+      f" ({[v for R, v in _OVER5][0]:+.4f} %).")
 print(f"\nNone of that contradicts section 11.7.3's own sentence, which reads, verbatim:"
       f"\n   \"" + bk("radial_gradient_claim", "as_printed") + "\"" + f"\nThat sentence is"
       f" about the radial temperature GRADIENT and this measure is about the"
@@ -2461,23 +2480,15 @@ print(f"\nNone of that contradicts section 11.7.3's own sentence, which reads, v
       f"\nand the chapter prints no D_e for this catalyst - it sends the reader to two"
       f"\ndocuments ({bk('De_source_claim','as_printed')[:52]}...).")
 
-# THE CONTROL BITING ON A GRID RATHER THAN ON A PARAMETER, measured here because a
-# break row below had to move because of it.  control=False is deliberate and this is
-# ONE OF THE TWO PLACES on this page that uses it - the other is `brk_no_control`,
-# the break row that injects the uncontrolled search.  Both want the same thing: to
-# SHOW the number the control rejects, which means computing it.
+# THE CONTROL ON A COARSE GRID: rung 4's anchor at n_z = 300, the grid of the
+# coarse-grid break row.
 _L300 = Ladder(rung=4, n_z=300)
-_P300 = p0_critical(_L300, hi=0.09, control=False)
+_P300 = p0_critical(_L300, hi=0.09)
 _LO3, _HI3, _OK3 = crossing_control(_L300, _P300)
-print(f"\nAND THE CONTROL BITES ON A GRID, NOT ONLY ON A PARAMETER. At n_z = 300 -"
-      f" where this\npage's break table used to relocate the crossovers - rung 4's own"
-      f" anchor point, its\ndefault D_e = {1.0e-6:.0e} m2/s, returns p0* = {_P300:.8f} with"
-      f" {_LO3-273.15:.2f} C just below it and\n{_HI3-273.15:.2f} C just above: BOTH under the"
-      f" {T_PERM-273.15:.0f} C ceiling"
-      f" ({_OK3}), because the Newton gives up\n{T_PERM-_HI3:.2f} K short of it. A sweep whose"
-      f" own anchor fails the control cannot be\nanchored, so that row now runs at 450 cells."
-      f" At {N_Z//2} the same point is a clean crossing:"
-      f" the\nfailure is the coarse grid, not the rung.")
+print(f"\nAND ON A COARSE GRID. At n_z = 300, rung 4's own anchor point - its default"
+      f"\nD_e = {1.0e-6:.0e} m2/s, the first point of that sweep - returns p0* = {_P300:.10f}"
+      f" with\n{_LO3-273.15:.3f} C just below it and {_HI3-273.15:.3f} C just above: a clean"
+      f" crossing ({_OK3}), so the\ncoarse-grid break row runs at 300 cells.")
 
 # WHAT THE OTHER SHIFT DEFINITION WOULD COST, measured on the row where it is largest
 S3_EXTRAP = cross_scan(lambda fs: shift_pct(Ladder(rung=3, n_z=600, film_scale=fs),
@@ -2651,10 +2662,9 @@ def h_equiv1d(R=None, alpha_w=None, lam_er=None):
     ai = 1.0 / (1.0 / alpha_w + R / (4.0 * lam_er))
     ai_printed_R = 1.0 / (1.0 / alpha_w + (D_T_PRINTED / 2.0) / (4.0 * lam_er))
     # U_from_2d_dev lands at machine zero - the book's 0.096 IS eq. (11.7.4-1) at
-    # R_t = 0.0125 m to every digit it prints - which puts it under
-    # check_agreement.py's ABS_FLOOR and therefore outside CI.  The companion is the
-    # same identity evaluated at the radius the printed tube diameter implies: it
-    # carries the same information, well above the floor, and CI can see it.
+    # R_t = 0.0125 m to every digit it prints - so it is registered as a bound.  The
+    # companion is the same identity evaluated at the radius the printed tube
+    # diameter implies, a value well away from zero.
     return dict(U_from_2d_dev=ai / bk("overall_U") - 1.0,
                 U_from_2d_dev_at_printed_radius=ai_printed_R / bk("overall_U") - 1.0)
 
@@ -2748,12 +2758,25 @@ def h_shifts(n_z=600, ceiling=None, **kw):
 
 
 
-def h_rung1(R=None, ceiling=None, ns=NS_RUNG1):
+def h_rung1(R=None, ceiling=None, ns=NS_RUNG1, extrapolate=True, ratio_read=None):
     """rung 1's six metrics, from THE SAME `rung1_chain` call the Validation cell
     displayed - the default call is memoised, so these are the displayed numbers
     themselves rather than a second, coarser computation of them.  A row that
-    perturbs R or the ceiling re-runs the full chain."""
-    return dict(rung1_chain(R=R, ceiling=ceiling, ns=ns)["metrics"])
+    perturbs R or the ceiling re-runs the full chain.  `extrapolate=False` compares
+    the finest grid with the ODE route instead of the Richardson limit, and
+    `ratio_read` fits the orders with the grid ratio misread; both reuse the chain."""
+    out = rung1_chain(R=R, ceiling=ceiling, ns=ns)
+    m = dict(out["metrics"])
+    tab = out["table"]
+    if not extrapolate:
+        m["rung1_p0_star_extrapolated"] = float(tab.p0_star.iloc[-1])
+        m["ode_vs_pymrm_p0"] = abs(float(tab.p0_star.iloc[-1]) / out["p0_ode"] - 1.0)
+        m["ode_vs_pymrm_T"] = abs(float(tab.T_hot.iloc[-1]) / out["T_ode"] - 1.0)
+    if ratio_read is not None:
+        ns_read = [ns[0] * ratio_read ** i for i in range(len(ns))]
+        m["rung1_order_p0"] = richardson(tab.p0_star, ns_read)[0]
+        m["rung1_order_T"] = richardson(tab.T_hot, ns_read)[0]
+    return m
 
 
 def h_units_model(p_B0=None, p_t=None, ceiling=None):
@@ -2811,10 +2834,7 @@ def h_film_dt(film_scale=None, n_r_pellet=None):
     """The three film/pellet temperature differences and Mears' margin, recomputed
     from the same solves the Validation cells displayed.
 
-    THESE FOUR WERE IN agreement.json WITH NO HELPER AND NO BREAK ROW, and the
-    cell that lists them asserted that rows in the break table moved them - which
-    was false: `brk_film_scale` returns the four shifts and nothing else.  They are
-    helper-computed and covered now, by the film-scale and coarse-pellet rows."""
+    They are covered by the film-scale and coarse-pellet rows."""
     fs = 1.0 if film_scale is None else film_scale
     n_p = 128 if n_r_pellet is None else n_r_pellet
     lad3 = Ladder(rung=3, n_z=N_Z, n_r=N_R, film_scale=fs)
@@ -2837,6 +2857,44 @@ def h_film_dt(film_scale=None, n_r_pellet=None):
                 mears_margin=(bk("mears_constant") / (P["a"] / start[i, 1])) / chi)
 
 
+def h_control(p0s=None):
+    """The crossing control on the five ladder rungs, as the Validation cell ran it:
+    each rung's own threshold, solved either side from the branch state its own
+    bisection stored.  `p0s` hands each rung a different threshold, which is how a
+    break row tests that the control rejects one that is not the rung's own."""
+    if p0s is None:
+        for r, *_ in RUNGS:
+            assert abs(LAD[r].branch[0] / P0S[r] - 1.0) < 1e-8, (
+                f"rung {r}: the stored branch state is not at this rung's threshold")
+    p0s = P0S if p0s is None else p0s
+    out = [crossing_control(LAD[r], p0s[r], guess=LAD[r].branch[1]) for r, *_ in RUNGS]
+    return dict(ladder_controls_rejected=sum(1 for *_, ok in out if not ok))
+
+
+PE_FINE = tuple(float(x) for x in np.round(np.arange(0.316, 0.3075, -0.001), 4))
+
+
+def h_rejections(jump=None):
+    """The two rejection counts, recomputed over the ladder's five controls and the
+    9-point fine Pe_a grid of the crossover cell, with the control's jump allowance
+    as an argument.  The page-wide counts cover more thresholds than this; a row
+    that injects a defect here recomputes what it can afford, and the counts it
+    returns are rejections that defect produces.  CTL_STATS is restored, so a break
+    row does not leak into the page-wide count."""
+    saved = dict(CTL_STATS)
+    try:
+        lad_rej = sum(1 for r, *_ in RUNGS
+                      if not crossing_control(LAD[r], P0S[r], guess=LAD[r].branch[1],
+                                              jump=jump)[2])
+        grid_rej = sum(1 for p in PE_FINE if not _shift_or_none(
+            lambda x: 100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=x, pe_ha=x),
+                                           hi=0.09, jump=jump) / BASE600 - 1.0), p)[1])
+    finally:
+        CTL_STATS.clear()
+        CTL_STATS.update(saved)
+    return dict(scan_points_rejected=grid_rej, thresholds_rejected=lad_rej + grid_rej)
+
+
 def h_chapter_internal(E_over_R=None, E1_1173=None):
     """The two chapter-against-itself numbers.  Both hang on the same printed
     constant - section 11.5.2's own E/R - which is why one row moves both, and
@@ -2853,7 +2911,8 @@ BASE_M.update(h_ex1151a()); BASE_M.update(h_units()); BASE_M.update(h_groups())
 BASE_M.update(h_equiv1d()); BASE_M.update(h_tables()); BASE_M.update(h_eta())
 BASE_M.update(h_rung1()); BASE_M.update(h_cross()); BASE_M.update(h_cross_R())
 BASE_M.update(h_units_model())
-BASE_M.update(h_film_dt()); BASE_M.update(h_chapter_internal())
+BASE_M.update(h_film_dt()); BASE_M.update(h_chapter_internal()); BASE_M.update(h_control())
+BASE_M.update(h_rejections())
 BASE_SHIFTS = h_shifts()
 BASE_M.update(BASE_SHIFTS)
 
@@ -2876,8 +2935,8 @@ print(f"agreement.json carries the RIGHT-HAND column, because every break row th
 # the helpers ARE the route to the reported numbers, asserted rather than asserted-to
 _R1M = R1["metrics"]
 # ONE list, used BOTH to check each helper against its printed number and to check
-# that no metric escapes the check.  An earlier version wrote the 32 names out
-# twice, so "checked as a set" held only if an author edited both copies.
+# that no metric escapes the check.  Written once, so "checked as a set" cannot
+# drift between two copies.
 _ASSERTED = (("ex1151a_worst_dev", EX1151A_WORST),
                 ("dp_definition_cost", DP_DEFINITION_COST),
                 ("re_implied_spread", RE_IMPLIED_SPREAD),
@@ -2916,7 +2975,10 @@ _ASSERTED = (("ex1151a_worst_dev", EX1151A_WORST),
                 ("film_dT_over_pellet_dT", FILM_DT_HS / PELLET_DT),
                 ("mears_margin", MEARS_RHS / CHI),
                 ("E_over_R_internal_dev", ER_INTERNAL),
-                ("lump_deficit", LUMP_DEFICIT))
+                ("lump_deficit", LUMP_DEFICIT),
+                ("ladder_controls_rejected", int((~CTL.crossing).sum())),
+                ("scan_points_rejected", SCAN_REFUSED + (len(_UNIFORM) - UNIFORM_OK)),
+                ("thresholds_rejected", CTL_STATS["rejected"]))
 _MISMATCH = [(k, BASE_M[k], float(live)) for k, live in _ASSERTED
              if abs(BASE_M[k] - live) > 1e-12 * max(1.0, abs(live))]
 assert not _MISMATCH, ("a helper does not reproduce the number reported above, so a "
@@ -3031,10 +3093,9 @@ def brk_eta_csv():
 def brk_pe_axial():
     """Pe_ma = Pe_ha = 0.5, twice as strong as the chapter's own lower limit.
 
-    This row used to inject 0.15, ten times stronger - and 0.15 is one of the
-    values at which rung 2's threshold is NOT a ceiling crossing (403 C below it,
-    950 C above), so the row was moving the metrics with a number the crossing
-    control now rejects.  0.5 is inside the validated region of the same sweep the
+    Not 0.15, ten times stronger: 0.15 is one of the values at which rung 2's
+    threshold is NOT a ceiling crossing (403 C below it, 950 C above), a number
+    the crossing control rejects.  0.5 is inside the validated region of the same sweep the
     crossover row scans."""
     return h_shifts(pe_ma=0.5, pe_ha=0.5)
 
@@ -3075,13 +3136,9 @@ def brk_eta_off():
 
 
 def brk_target_up():
-    """The crossover definition read as a larger shift than 1 %.  1.1 % and not 2 %,
-    and the reason is measured and printed in the crossover cell: the largest
-    |shift| any CONTROL-VALIDATED point of the whole Pe_a sweep carries is under
-    2 %, so a 2 % rung-2 crossover cannot be bracketed there and `cross_scan` raises
-    rather than reporting the point it stopped at.  1.1 % is inside the validated
-    range on all three rows."""
-    return h_cross(target=1.1)
+    """The crossover definition read as a 2 % shift instead of 1 %.  (The Pe_a
+    sweep validates every point and reaches 2.5 %, printed in the crossover cell.)"""
+    return h_cross(target=2.0)
 
 
 def brk_target_half():
@@ -3089,82 +3146,56 @@ def brk_target_half():
     return h_cross(target=0.5)
 
 
-def brk_no_control():
-    """THE DEFECT THIS PAGE WAS SENT BACK FOR, INJECTED VERBATIM: rung 2's crossover
-    located the way the staged version located it - a bisection over the whole
-    bracket with the crossing control OFF, monotonicity assumed rather than checked,
-    and a failed inner solve counted as the large-|shift| side.  It converges on the
-    ignition jump.  The row exists so that the difference between that number and
-    the controlled scan's bound is MEASURED in the break table rather than only
-    argued in prose."""
-    lo, hi = -2.0, 0.0
-
-    def big(x):
-        try:
-            v = abs(100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=10.0 ** x,
-                                                pe_ha=10.0 ** x), hi=0.09,
-                                         control=False) / BASE600 - 1.0))
-        except RuntimeError:
-            return True
-        return (not np.isfinite(v)) or v > TARGET
-
-    fa = big(lo)
-    for _ in range(24):
-        m = 0.5 * (lo + hi)
-        if big(m) == fa:
-            lo = m
-        else:
-            hi = m
-    return dict(crossover_pe_axial=10.0 ** (0.5 * (lo + hi)))
+def brk_pe_extrap_baseline():
+    """The rung-2 shift measured against rung 1's Richardson-extrapolated
+    threshold instead of the same-grid one: the mixed-baseline defect the
+    crossover cell measures.  Rung 1's own 600-cell discretisation error is a
+    fifth of the target, so the crossover moves."""
+    sc = cross_scan(lambda p: 100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=p,
+                                                          pe_ha=p), hi=0.09)
+                                       / LIM_P - 1.0), PE_SWEEP, TARGET)
+    return dict(crossover_pe_axial=sc["value"])
 
 
-def brk_stop_at_first_refusal():
-    """THE DEFECT THE THIRD REVIEW FOUND, INJECTED VERBATIM: the rung-2 scan as the
-    PREVIOUS FIX ran it - the sweep ENDS at the first point the crossing control
-    refuses, the gap between the last accepted point and that one is bisected on the
-    control's own verdict, and the resulting 'edge of validity' is reported in place
-    of a crossover.  Nothing in that prefix straddles 1 %, so the page printed a
-    bound, said the shift 'never reaches 1 % anywhere the control validates', and
-    declared rungs 2 and 3 unorderable.  All three were artefacts of where one sweep
-    stopped: the crossover is at a Pe_a the same sweep reaches further out.  This
-    row prints the distance between the two, so the second defect is measured in the
-    table exactly as the first one is."""
-    def val(pe):
-        return _shift_or_none(
-            lambda p: 100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=p,
-                                                  pe_ha=p), hi=0.09)
-                               / BASE600 - 1.0), pe)[1]
-    edge_lo, edge_hi = None, None
-    for i, pe in enumerate(PE_SWEEP):
-        if not val(pe):
-            edge_lo, edge_hi = PE_SWEEP[i - 1], pe
-            break
-    assert edge_lo is not None, "no refusal in the sweep, so this defect cannot be shown"
-    for _ in range(6):
-        m = 0.5 * (edge_lo + edge_hi)
-        edge_lo, edge_hi = (m, edge_hi) if val(m) else (edge_lo, m)
-    return dict(crossover_pe_axial=edge_lo)
+def brk_richardson_skipped():
+    """rung 1's finest grid compared with the ODE route, no Richardson limit."""
+    return h_rung1(extrapolate=False)
+
+
+def brk_richardson_ratio():
+    """the rung-1 orders fitted with the grid ratio read as 3 instead of 2."""
+    return h_rung1(ratio_read=3.0)
+
+
+def brk_wrong_rung_threshold():
+    """each rung's crossing control run at the NEIGHBOURING rung's threshold (rung 1
+    at rung 2's, every other rung at rung 1's): a threshold that is not the rung's
+    own, which the control must reject."""
+    return h_control(p0s={r: P0S[2 if r == 1 else 1] for r, *_ in RUNGS})
+
+
+def brk_jump_allowance():
+    """the crossing control's jump allowance read as 0.005 K instead of 1 K - below
+    every jump the five rungs measure (0.012 to 0.095 K), so a correct threshold is
+    rejected and the rejection counts must leave zero."""
+    return h_rejections(jump=0.005)
 
 
 def brk_cross_coarse():
-    """The crossovers located on a coarser grid, 450 cells instead of 600.
-
-    NOT 300, which is what this row used before the crossing control was moved
-    inside the scans.  At 300 cells rung 4's own anchor point - its default
-    D_e = 1e-6, the first point of that sweep - has a threshold that is NOT a
-    ceiling crossing: the Newton gives up short of 415 C and both control solves
-    land below it.  The crossover cell measures and prints that.  A sweep whose
-    anchor fails the control cannot be anchored at all, so the row runs at the
-    coarser grid on which all three scans are defined."""
-    return h_cross(n_z=450)
+    """The crossovers located on a coarser grid, 300 cells instead of 600.  (The
+    crossover cell prints rung 4's anchor point at 300 cells as a clean crossing.)"""
+    return h_cross(n_z=300)
 
 
 BREAK_FNS = [
-    ("crossover definition read as 1.1 %, not 1 %", brk_target_up),
+    ("crossover definition read as 2 %, not 1 %", brk_target_up),
     ("crossover definition read as 0.5 %, not 1 %", brk_target_half),
-    ("crossovers located on a 450-cell grid", brk_cross_coarse),
-    ("rung-2 crossover located with the control OFF", brk_no_control),
-    ("rung-2 scan stopped at the first control refusal", brk_stop_at_first_refusal),
+    ("crossovers located on a 300-cell grid", brk_cross_coarse),
+    ("rung-2 shift against rung 1's extrapolated threshold", brk_pe_extrap_baseline),
+    ("rung 1: finest grid against the ODE, no Richardson limit", brk_richardson_skipped),
+    ("rung 1: orders fitted with the grid ratio read as 3", brk_richardson_ratio),
+    ("ladder controls run at the neighbouring rung's threshold", brk_wrong_rung_threshold),
+    ("crossing control's jump allowance read as 0.005 K", brk_jump_allowance),
     ("tube-radius crossover read as 2 %, not 1 %", brk_target_R_2pct),
     ("Table 11.5.3.A-2 cross-checked against A = 6165", brk_table_A),
     ("11.5.2's pressures read in atm, not the printed bar", brk_unit_reading),
@@ -3195,9 +3226,10 @@ BREAK_FNS = [
 
 METRICS = sorted(BASE_M)
 MOVE_TOL = 1e-6
-rows, COVERAGE = [], {}
+rows, COVERAGE, BREAK_GOT = [], {}, {}
 for lbl, fn in BREAK_FNS:
     got = fn()
+    BREAK_GOT[lbl] = got
     unknown = sorted(set(got) - set(METRICS))
     assert not unknown, f"break row '{lbl}' recomputes names that are not metrics: {unknown}"
     moved = []
@@ -3215,26 +3247,14 @@ show(BREAKS.style.set_uuid("d11breaks").hide(axis="index").format(
     {"worst_rel_move": "{:.3e}"}))
 
 # ---- a break row's OWN cross_scan refinement is not announced above, unlike the ----
-# ---- four reported rows' (printed earlier, in the crossover cell) - check whether ----
-# ---- any of them stopped early, rather than assuming none did ----
-_D11 = _H_CROSS_DIAG[(1.1, 600)]["pe"]
-_D10 = _H_CROSS_DIAG[(TARGET, 600)]["pe"]
-_MOVE11 = next(rel for lbl, rel in COVERAGE["crossover_pe_axial"]
-               if lbl == "crossover definition read as 1.1 %, not 1 %")
-_BRACKET_REL11 = 100.0 * _D11["bracket"] / abs(_D11["value"])
-print(f"\nBREAK-ROW SCANS DO NOT PRINT LEVELS/PROBED/REFUSED/BRACKET THE WAY THE FOUR"
-      f" REPORTED\nROWS DO (crossover cell, above) - the table above only shows whether a"
-      f" row moved a\nmetric. Checked rather than assumed: the rung-2 scan behind"
-      f" 'crossover definition\nread as 1.1 %, not 1 %' stops after {_D11['levels']} levels"
-      f" (the reported target = {TARGET:.0f} %\nscan, same quantity, runs"
-      f" {_D10['levels']}), {_D11['probed']} interior points probed and"
-      f" {_D11['refused']}\nrefused - refinement ended early. It costs this row nothing:"
-      f" the residual bracket is\n{_D11['bracket']:.3g}, {_BRACKET_REL11:.2f} % of the"
-      f" located value, against the {_MOVE11 * 100:.1f} % this row\nmoves"
-      f" `crossover_pe_axial` by - an order of magnitude larger. So a break row that could"
-      f" not\nfully refine currently looks identical, in the table above, to one that"
-      f" could; this is\nthe check that it did not matter here, printed rather than left"
-      f" implicit.")
+# ---- four reported rows' (printed earlier, in the crossover cell) - so print it ----
+_DIAG = [(t, n, k, d) for (t, n), dd in sorted(_H_CROSS_DIAG.items()) for k, d in dd.items()]
+print("\nTHE BREAK-ROW SCANS' OWN REFINEMENT, which the table above does not show:")
+for _t, _n, _k, _d in _DIAG:
+    print(f"   target {_t:4.1f} %  n_z = {_n:4d}  {_k:<3s}: {_d['levels']} levels,"
+          f" {_d['probed']:3d} probed, {_d['refused'] + _d['n_evaluated'] - _d['n_controlled']}"
+          f" rejected, bracket {_d['bracket']:.3g}"
+          f" ({100.0 * _d['bracket'] / abs(_d['value']):.2g} % of the value)")
 '''))
 
 cells.append(code(r'''# ---- and the rows must COMPUTE what they return, parsed rather than trusted ----
@@ -3252,9 +3272,8 @@ _NUM_CTORS = {"float", "int", "complex", "float64", "float32"}
 
 def _const(node, env, depth=0):
     """True if `node` is PROVABLY a numeric constant.  Constant-folds, so it also
-    catches the laundering forms an earlier version of this guard let through:
-    `0.1656 + 0.0001`, `float("15.688")`, `_T[0]` off a frozen tuple, and a helper
-    whose every `return` is a literal.  All four escaped before; the negative
+    catches the laundering forms `0.1656 + 0.0001`, `float("15.688")`, `_T[0]` off
+    a frozen tuple, and a helper whose every `return` is a literal; the negative
     controls below are exactly those four plus the bare literal."""
     if depth > 6:
         return False
@@ -3299,10 +3318,8 @@ def _const(node, env, depth=0):
 def _frozen(tree):
     """names assigned once, to something constant-foldable or to a frozen tuple.
 
-    TUPLE UNPACKING IS INCLUDED, and it was not: `a, b = 0.1657, 2.0` binds a local
-    that only ever carries a literal, which is a form the guard's own positive claim
-    names, and it walked straight through.  Found by a verifier's sabotage set, not
-    by this page's, which is why the escape list below now says "at least"."""
+    TUPLE UNPACKING IS INCLUDED: `a, b = 0.1657, 2.0` binds a local that only ever
+    carries a literal, which is a form the guard's own positive claim names."""
     env = {}
     for n in ast.walk(tree):
         if isinstance(n, ast.Assign):
@@ -3358,7 +3375,7 @@ def literal_metrics(fn):
 
 
 def _nc_bare():
-    """1. the bare literal - the only form the earlier guard caught."""
+    """1. the bare literal."""
     return {"shift_rung2_pct": 0.0, "shift_rung3_pct": -4.7,
             "shift_rung4_pct": 15.7, "eta_grid_vs_11_9_1_11": 1e-5,
             "_diagnostic": np.log(2.0)}
@@ -3391,10 +3408,9 @@ def _nc_helper():
 
 
 def _nc_unpack():
-    """6. a local bound by TUPLE UNPACKING.  A verifier's sabotage set found this
-    walking through a guard whose own positive claim - "a local that only ever
-    carries one" - covers it exactly.  `_frozen` reads tuple targets now, so it is
-    a negative control rather than an escape."""
+    """6. a local bound by TUPLE UNPACKING, which the guard's own positive claim -
+    "a local that only ever carries one" - covers exactly.  `_frozen` reads tuple
+    targets, so it is a negative control rather than an escape."""
     _u, _v = 0.2488, 2.0
     return {"crossover_pe_axial": _u}
 
@@ -3453,17 +3469,16 @@ def _nc_setdefault():
 
 def _nc_abs():
     """abs() of a literal: constant-FOLDABLE, but a call and not arithmetic, and
-    `abs` is not one of the numeric constructors `_const` unwraps.  Found by a
-    verifier's sabotage set.  It stays an escape and the positive claim below no
-    longer says 'constant-foldable', which is what let it look covered."""
+    `abs` is not one of the numeric constructors `_const` unwraps.  It is an
+    escape, which is why the positive claim below does not say
+    'constant-foldable'."""
     return {"shift_rung2_pct": abs(0.1657)}
 
 
 def _nc_annassign():
     """13. an ANNOTATED assignment: `_a: float = 0.1657` is an ast.AnnAssign, which
-    `_frozen` never reads at all (it only walks ast.Assign).  Found by a verifier's
-    fourth-pass sabotage set narrowing the guard's own positive claim about
-    "a local name ... that only ever carries one" - that phrase is still a
+    `_frozen` never reads at all (it only walks ast.Assign).  The guard's own
+    positive claim about "a local name ... that only ever carries one" is a
     category, and this is one more form inside it that escapes."""
     _a: float = 0.1657
     return {"shift_rung2_pct": _a}
@@ -3493,9 +3508,8 @@ def _nc_walrus():
 
 def _fp_computed():
     """FALSE-POSITIVE control, and this one is not vacuous. It binds a METRIC key
-    to a computed value; the guard must not flag it.  The version this replaces
-    asserted that a NON-metric key was not flagged, which `literal_metrics` filters
-    out before it looks at anything - so it measured nothing at all."""
+    to a computed value; the guard must not flag it.  A NON-metric key would not
+    do: `literal_metrics` filters it out before it looks at anything."""
     return {"shift_rung2_pct": float(np.log(2.0))}
 
 
@@ -3529,9 +3543,7 @@ NEG_CONTROLS = [("bare literal", _nc_bare,
                 ("tuple unpacking", _nc_unpack, {"crossover_pe_axial"})]
 LITERAL_ROWS = {lbl: bad for lbl, fn in BREAK_FNS for bad in [literal_metrics(fn)] if bad}
 print(f"{len(BREAK_FNS)} rows parsed; {len(LITERAL_ROWS)} return a metric as a typed"
-      f" constant.\nTHE GUARD'S TEETH, MEASURED on {len(NEG_CONTROLS)} laundering forms -"
-      f" four of which an earlier version\nof this guard let through, including the helper"
-      f" case it advertises, and one of which\na verifier's sabotage set found after that:")
+      f" constant.\nTHE GUARD'S TEETH, MEASURED on {len(NEG_CONTROLS)} laundering forms:")
 _TEETH = []
 for lbl, fn, want in NEG_CONTROLS:
     got = set(literal_metrics(fn))
@@ -3544,10 +3556,8 @@ print(f"   false positives: a metric key bound to float(np.log(2.0)) is NOT flag
       f" ({literal_metrics(_fp_computed) == []}).")
 print(f"\nAND WHAT IT DOES NOT CATCH: AT LEAST {len(ESCAPES)} more forms, measured rather"
       f" than left to be\ndiscovered - each of these binds a metric key to 0.1657 and walks"
-      f" through. AT LEAST is\nthe honest quantifier and it was not there before: a verifier"
-      f" writing its own\nsabotage set found two the list did not name, one of which"
-      f" (tuple unpacking) the\nguard's positive claim covered and now catches, and one of"
-      f" which (abs of a literal)\nis in this list:")
+      f" through. AT LEAST is\nthe honest quantifier: an independent sabotage set can"
+      f" find a form this list\ndoes not name. The list:")
 _ESCAPED = [(lbl, literal_metrics(fn)) for lbl, fn in ESCAPES]
 print("   " + "; ".join(lbl for lbl, got in _ESCAPED if not got))
 assert all(not got for _, got in _ESCAPED), (
@@ -3558,9 +3568,8 @@ print(f"So the accurate claim is a LIST OF FORMS and not a category: a metric ke
       f" float/int/\nnp.float64 cast of one, to a subscript of a frozen literal tuple, or to"
       f" a local name -\nin the row's own body or a one-level __main__ helper - bound by a"
       f" plain Name or\nflat-tuple-unpacking assignment (annotated, list-target, nested-tuple"
-      f" and walrus\nbindings escape). NOT 'constant-foldable', which is what an earlier"
-      f" wording said and\nwhat made abs(0.1657) - foldable, but a call to something that is"
-      f" not a numeric\nconstructor - look covered when it escapes. And NOT 'any row"
+      f" and walrus\nbindings escape). NOT 'constant-foldable': abs(0.1657) is foldable,"
+      f" but a call to\nsomething that is not a numeric constructor, and it escapes. And NOT 'any row"
       f" returning a metric as\na typed constant'. The realistic accidental case, a"
       f" module-level constant, is in\nthe escape list. What the guard still cannot say is"
       f" whether the expression is the\nRIGHT one; that is what the measured moves in the"
@@ -3586,18 +3595,14 @@ for k in METRICS:
     movers = COVERAGE.get(k, [])
     cov.append(dict(metric=k, value=BASE_M[k], n_movers=len(movers),
                     best_mover=(max(movers, key=lambda t: t[1])[0] if movers else ""),
-                    best_rel_move=(max(t[1] for t in movers) if movers else np.nan),
-                    below_CI_floor=abs(BASE_M[k]) < 1e-12))
+                    best_rel_move=(max(t[1] for t in movers) if movers else np.nan)))
 COV = pd.DataFrame(cov)
 show(COV.style.set_uuid("d11cov").hide(axis="index").format(
     {"value": "{:.6g}", "best_rel_move": "{:.2e}"}))
 uncovered = sorted(set(METRICS) - set(COVERAGE) - set(STRUCTURAL))
 assert not uncovered, f"metrics no row moves and none named structural: {uncovered}"
-FLOOR = sorted(COV[COV.below_CI_floor].metric)
 print(f"{len(METRICS)} metrics, {len(COVERAGE)} moved by at least one row,"
       f" {len(STRUCTURAL)} labelled structural.")
-print(f"below check_agreement.py's ABS_FLOOR = 1e-12 and therefore outside CI:"
-      f" {FLOOR if FLOOR else 'none'}")
 for k, why in STRUCTURAL.items():
     print(f"\nSTRUCTURAL - {k}:\n   {why}")
 print(f"\nTHE CROSSING CONTROL, COUNTED OVER THE WHOLE PAGE. Every threshold this"
@@ -3605,82 +3610,129 @@ print(f"\nTHE CROSSING CONTROL, COUNTED OVER THE WHOLE PAGE. Every threshold thi
       f" chain, the\nrung-2 grid chain, the four crossover scans and all"
       f" {len(BREAK_FNS)} break rows -"
       f" has been\nchecked: {CTL_STATS['checked']} bisected thresholds, of which"
-      f" {CTL_STATS['rejected']} were REJECTED as not being ceiling\ncrossings and never"
-      f" became a number anywhere. The staged version of this page ran\nthe same check"
-      f" {len(RUNGS)} times, on the five default rungs, and reported the other"
-      f" {CTL_STATS['checked']-len(RUNGS)}\nunchecked - which is how a crossover landed on"
-      f" an ignition jump and two tube radii\nwere printed 2 % below their own thresholds.")
+      f" {CTL_STATS['rejected']} were REJECTED as not being ceiling\ncrossings. The"
+      f" smallest distance of any control solve from the ceiling, or of any\njump from"
+      f" the {CTL_JUMP:.0f} K allowance, is {CTL_STATS['margin_K']:.2e} K, so no verdict"
+      f" sits near round-off.")
 '''))
 
-cells.append(code(r'''AGREE = {
-    # --- the strongest check in the chapter: printed arithmetic
-    "ex1151a_worst_dev": BASE_M["ex1151a_worst_dev"],
-    "dp_definition_cost": BASE_M["dp_definition_cost"],
-    "re_implied_spread": BASE_M["re_implied_spread"],
-    # --- the SI restatement of Van Welsenaere & Froment, audited against D2.2
-    "conversion_worst_dev": BASE_M["conversion_worst_dev"],
-    "backint_residual": BASE_M["backint_residual"],
-    "group_B_dev": BASE_M["group_B_dev"],
-    "group_A_printed_dev": BASE_M["group_A_printed_dev"],
-    "cp_printed_dev": BASE_M["cp_printed_dev"],
-    "cp_route_spread": BASE_M["cp_route_spread"],
-    "U_from_2d_dev": BASE_M["U_from_2d_dev"],
-    "U_from_2d_dev_at_printed_radius": BASE_M["U_from_2d_dev_at_printed_radius"],
-    "table2_upper_ratio": BASE_M["table2_upper_ratio"],
-    "table1_worst_dev": BASE_M["table1_worst_dev"],
-    "table2_dTad_worst_dev": BASE_M["table2_dTad_worst_dev"],
-    "table2_Q_implied_by_p0": BASE_M["table2_Q_implied_by_p0"],
-    # --- which pressure unit section 11.5.2's own sentence is right in
-    "p0_star_bar_reading_dev": BASE_M["p0_star_bar_reading_dev"],
-    "T_hot_0018_bar_reading_C": BASE_M["T_hot_0018_bar_reading_C"],
-    # --- rung 1, extrapolated, and the same number a second way
-    "rung1_p0_star_extrapolated": BASE_M["rung1_p0_star_extrapolated"],
-    "rung1_order_p0": BASE_M["rung1_order_p0"],
-    "rung1_order_T": BASE_M["rung1_order_T"],
-    "ode_vs_pymrm_p0": BASE_M["ode_vs_pymrm_p0"],
-    "ode_vs_pymrm_T": BASE_M["ode_vs_pymrm_T"],
-    "p0_star_vs_printed_0018": BASE_M["p0_star_vs_printed_0018"],
-    # --- what each rung buys
-    "shift_rung2_pct": BASE_M["shift_rung2_pct"],
-    "shift_rung3_pct": BASE_M["shift_rung3_pct"],
-    "shift_rung4_pct": BASE_M["shift_rung4_pct"],
-    "shift_rung5_pct": BASE_M["shift_rung5_pct"],
-    # --- the intraparticle rung against its own closed form and against B1.1
-    "eta_grid_vs_11_9_1_11": BASE_M["eta_grid_vs_11_9_1_11"],
-    "eta_vs_B11_worst": BASE_M["eta_vs_B11_worst"],
-    "film_dT_over_pellet_dT": BASE_M["film_dT_over_pellet_dT"],
-    "film_dT_at_startup_K": BASE_M["film_dT_at_startup_K"],
-    "film_dT_at_hotspot_K": BASE_M["film_dT_at_hotspot_K"],
-    # --- the crossovers, all four ROOT-FOUND between two points the crossing
-    #     control validates - see the CROSS table and the speckle grid beside it
-    "crossover_pe_axial": BASE_M["crossover_pe_axial"],
-    "crossover_film_scale": BASE_M["crossover_film_scale"],
-    "crossover_D_e": BASE_M["crossover_D_e"],
-    "crossover_R_t": BASE_M["crossover_R_t"],
-    # --- the chapter against itself
-    "E_over_R_internal_dev": BASE_M["E_over_R_internal_dev"],
-    "lump_deficit": BASE_M["lump_deficit"],
-    "mears_margin": BASE_M["mears_margin"],
+cells.append(code(r'''# ============ claims: every published number says what it is ===================
+# docs/claims-design.md.  One registration per metric.
+# VALUES are physical, data and discretisation results; CI holds them to rtol of the
+# committed baseline.  The default rtol is 0.05; it is tightened ONLY where a break
+# row needs it, and only for numbers that are exact arithmetic on printed constants
+# or bisected to 1e-12, so the tighter band is still far above any machine spread.
+claims = Claims("D1.1")
+RTOL = {
+    "dp_definition_cost": 1e-3,          # printed-constant arithmetic; Ergun refit moves 0.8 %
+    "table2_upper_ratio": 1e-3,          # printed-constant arithmetic; dT row moves 0.9 %
+    "table2_dTad_worst_dev": 1e-3,       # printed-constant arithmetic; atm row moves 2.2 %
+    "table2_Q_implied_by_p0": 1e-3,      # printed-constant arithmetic; atm row moves 0.7 %
+    "rung1_p0_star_extrapolated": 1e-3,  # thresholds start-dependent at ~1e-8; R_t row moves 1.3 %
+    "crossover_R_t": 1e-2,               # refinement bracket 2e-4 relative; 2 % row moves 2.8 %
 }
-missing = sorted(set(k for k in METRICS) - set(AGREE))
-assert not missing, f"metrics with a break row but absent from agreement.json: {missing}"
-extra = sorted(set(AGREE) - set(METRICS))
-assert not extra, ("agreement.json carries a metric with no helper and no break row: "
-                   + repr(extra))
-print(f"EVERY ONE of agreement.json's {len(AGREE)} metrics is helper-computed, asserted"
-      f" against a\nnumber printed above, and moved by at least one break row. That was not"
-      f" true of the\nstaged version of this page: six of them - the four film/pellet"
-      f" temperatures and\nthe two chapter-against-itself numbers - were computed inline in"
-      f" the Validation\ncells, sat outside the break table's metric set, and were covered by"
-      f" a SENTENCE\nasserting that rows moved them. They did not: brk_film_scale returned"
-      f" the four\nshifts and nothing else, and no row could reach a ratio of two CSV rows at"
-      f" all.\nThe measured coverage of those six, from the table above:")
-for _k in ("film_dT_at_hotspot_K", "film_dT_at_startup_K", "film_dT_over_pellet_dT",
-           "mears_margin", "E_over_R_internal_dev", "lump_deficit"):
-    _mv = COVERAGE.get(_k, [])
-    print(f"   {_k:<24s} = {AGREE[_k]:12.6g}   moved by {len(_mv)}:"
-          f" {', '.join(m[0] for m in _mv)}")
-_ = report_agreement("D1.1", AGREE)
+# BOUNDS: identities, two-route gaps and convergence orders.  Each states its basis.
+BOUNDS = {
+    "U_from_2d_dev": dict(
+        min=-1e-12, max=1e-12, basis="chosen",
+        note="eq. (11.7.4-1) at R_t = 0.0125 m returns the printed U = 0.096 to "
+             "round-off; measured -1.1e-16"),
+    "ode_vs_pymrm_p0": dict(
+        max=1e-5, basis="chosen",
+        note="two routes to rung 1's threshold: Richardson limit of the 150-4800 chain "
+             "against grid-free Radau (rtol 1e-12); the limit's own error, measured "
+             "4.0e-7; the bound is 25x that, and the finest grid alone is off by 2.6e-4"),
+    "ode_vs_pymrm_T": dict(
+        max=1e-4, basis="chosen",
+        note="two routes to rung 1's hot spot at 0.018 atm, as for ode_vs_pymrm_p0; "
+             "measured 3.3e-5, the bound 3x that; the 4800-cell value alone is off by "
+             "about 17x the measured gap"),
+    "rung1_order_p0": dict(
+        min=0.9, max=1.1, basis="theory",
+        note="first-order upwind on the 150-4800 chain"),
+    "rung1_order_T": dict(
+        min=0.85, max=1.15, basis="theory",
+        note="first-order upwind; the hot spot is a root-found maximum, measured 0.94"),
+    "eta_grid_vs_11_9_1_11": dict(
+        max=1e-4, basis="theory",
+        note="256-cell second-order pellet grid against the closed form; measured 4.6e-6"),
+    "eta_vs_B11_worst": dict(
+        max=1e-5, basis="chosen",
+        note="the same closed form against B1.1's tabulated exact eta, whose phi column "
+             "is printed to 6 significant figures; measured 3.2e-6"),
+}
+EXACT = ("ladder_controls_rejected", "scan_points_rejected", "thresholds_rejected")
+for k_ in METRICS:
+    v_ = BASE_M[k_]
+    if k_ in BOUNDS:
+        claims.bound(k_, v_, **BOUNDS[k_])
+    elif k_ in EXACT:
+        continue
+    else:
+        claims.value(k_, v_, rtol=RTOL.get(k_, 0.05))
+
+# the order fit is only meaningful if the finest grid's error is far above the
+# thresholds' own noise floor (claims-design section 3).  That floor is NOT the 1e-12
+# bisection bracket: a threshold moves by about 1e-8 relative when only its starting
+# guess changes (shift_rung4_pct moved 1.5e-8 when the search changed to branch
+# following), so 1e-8 is the measured floor used here.
+START_FLOOR = 1e-8
+R1_FINEST_OVER_FLOOR = abs(float(CONV1.p0_star.iloc[-1]) / LIM_P - 1.0) / START_FLOOR
+claims.bound("rung1_finest_err_over_start_floor", R1_FINEST_OVER_FLOOR, min=1e3,
+             basis="theory", structural=True,
+             note="|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a "
+                  "threshold; a guard on the order fit rather than a result, so no "
+                  "physics row moves it")
+
+# THRESHOLDED RESULTS carry their margin.  The crossing control decides a verdict by
+# comparing two temperatures with the ceiling and their difference with CTL_JUMP; the
+# margin is the smallest of those distances, in K.  Round-off in T is about 1e-10 K.
+_CTL_MARGIN = float(min(min(T_PERM - (lo + 273.15), (hi + 273.15) - T_PERM,
+                            CTL_JUMP - abs(j))
+                        for lo, hi, j in zip(CTL.T_just_below_C, CTL.T_just_above_C,
+                                             CTL.jump_K)))
+claims.exact("ladder_controls_rejected", BASE_M["ladder_controls_rejected"],
+             margin=_CTL_MARGIN, min_margin=1e-6,
+             note="margin in K: closest control solve to the 415 C ceiling, or jump to "
+                  "the 1 K allowance, over the five ladder rungs")
+claims.exact("thresholds_rejected", CTL_STATS["rejected"],
+             margin=CTL_STATS["margin_K"], min_margin=1e-6,
+             note="over every bisected threshold on the page, break rows included; "
+                  "margin in K as for ladder_controls_rejected")
+claims.exact("scan_points_rejected", SCAN_REFUSED + (len(_UNIFORM) - UNIFORM_OK),
+             margin=SCAN_MARGIN_K, min_margin=1e-6,
+             note="thresholds rejected in the four crossover scans (sweep points and "
+                  "refinement probes) and the 9-point fine Pe_a grid; margin in K over "
+                  "the four scans")
+
+# every break row, measured above, is fed to the claims it touches
+for lbl, fn in BREAK_FNS:
+    for k_, v_ in BREAK_GOT[lbl].items():
+        claims.breaks(lbl, k_, v_)
+
+missing = sorted(set(METRICS) - set(claims.metrics))
+assert not missing, f"metrics with a break row but no claim: {missing}"
+_kinds = {kd: sorted(k_ for k_, c in claims.metrics.items() if c["kind"] == kd)
+          for kd in ("value", "bound", "exact")}
+print(f"{len(claims.metrics)} claims: {len(_kinds['value'])} values,"
+      f" {len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.")
+for kd in ("bound", "exact"):
+    for k_ in _kinds[kd]:
+        c = claims.metrics[k_]
+        print(f"   {kd:<5s} {k_:<34s} = {c['value']:<10.2g}  {c.get('note', '')[:70]}")
+print(f"Values tightened below rtol 0.05, each because a break row needs it: {RTOL}")
+
+# PROSE: the numbers the Markdown cells quote, checked against their claims (one unit
+# in the last written place).  Everything else this notebook prints is an f-string of
+# the registered number itself.
+SAYS = {
+    "crossover_pe_axial": ["0.24883"],          # the note on locating thresholds
+    "scan_points_rejected": ["0"],              # "every point of every scan passes"
+}
+for k_, lits in SAYS.items():
+    for lit in lits:
+        claims.says(lit, k_)
+PAYLOAD = claims.report()
 '''))
 
 cells.append(md(r"""## What pymrm adds
@@ -3732,10 +3784,7 @@ above rather than of pymrm:
   same question with an answer - and they **rank** all four rungs, which is the part
   a rule of thumb cannot do. Each root is located between two points the crossing
   control validates, and each carries a grid-set error bar rather than its
-  refinement tolerance. Two earlier versions of this cell got the rung-2 row wrong
-  in opposite directions - one read a "crossover" off a discontinuity of its own
-  shift function, the next refused to name a number at all because its sweep stopped
-  at the first refusal - and both are now break rows."""))
+  refinement tolerance."""))
 
 cells.append(md(r"""## Reuse
 
@@ -3743,27 +3792,23 @@ cells.append(md(r"""## Reuse
 
 * `Ladder` is the whole ladder. Substituting a different reaction means replacing
   `source`; the five configurations, the boundary conditions and the diagnostics
-  carry over unchanged. `p0_critical` is the reusable part of the comparison: it
-  root-finds a threshold on a *cold-started* solve whose initial guess is a fixed
-  function of the inputs, so the number does not depend on the direction a sweep
-  was run in - which is the defect `B1.1` records for continuation chains.
+  carry over unchanged. `p0_critical` is the reusable part of the comparison.
+* **Locate a threshold by following the branch, not by cold starts.** Near a
+  runaway threshold there are several steady states, and Newton's damping does not
+  choose between them: which one a cold start reaches is decided by the guess, and
+  when the guess is itself a runaway profile, by round-off. The remedy is one cold solve at a
+  safe parameter value, then every scan point and every bisection midpoint started
+  from the converged state at the current lower end of the bracket. No state is
+  carried from one search to the next, so the result still cannot depend on the
+  direction a sweep was run in - the defect `B1.1` records for continuation chains.
 * **Put the control inside the root-find, not beside it.** A bisection that treats a
   non-converged solve as "past the threshold" returns a *solver* boundary wherever
-  the solver gives out, and it does it silently. This page checked that boundary on
-  the five configurations it displayed and not on the hundreds of thresholds its
-  sweeps and bisections computed - so one crossover landed on an ignition jump and
-  two swept rows were reported below their own thresholds. The repair is inside
-  `p0_critical`: run the $\pm 10^{-5}$ control on **every** call and *raise* when it
-  fails, so a bad threshold cannot become a number anywhere. The searches then have
-  to be written to expect refusals - and *that* is the part to get right, because
-  the obvious way to write them is wrong: a refusal is a failure of the path to one
-  threshold, and the verdict is **speckled** in the swept parameter, so a scan that
-  stops at the first one reports where it stopped as if it were a limit. This page
-  did that, for a whole review cycle, and called a rung's crossover unreachable when
-  the same sweep reaches it further out. Sweep through refusals, refine by subdividing
-  and keeping what validates rather than by bisecting, and make the scan *raise*
-  when it cannot straddle its target - a bound is not an answer. Both wrong versions
-  are break rows.
+  the solver gives out, and it does it silently. Run the $\pm 10^{-5}$ control on
+  **every** call and *raise* when it fails, so a bad threshold cannot become a
+  number anywhere, and write the searches so that a rejected point is recorded and
+  used for nothing and a scan that cannot straddle its target raises. On this page,
+  with the branch followed, the control rejects nothing; it is there for the case
+  where it would.
 * The **Danckwerts inlet as a length**: because $\varepsilon D_{ea}/u_s$ and
   $\lambda_{ea}/(\rho_g c_p u_s)$ are both lengths, the inlet condition of rung 2
   is `{"a": d_p/Pe, "b": 1.0, "d": c_in}` with no unit bookkeeping at all, and the
@@ -3780,34 +3825,31 @@ cells.append(md(r"""## Reuse
   to a number printed earlier in the notebook to 1e-12, and every break row
   perturbs one of its arguments. That is what makes "the row reaches the code it
   perturbs" checkable rather than a claim - `G1.1` shipped a row that read a module
-  constant instead of the configuration. Two lessons this page learned the hard
-  way, both of them defects it shipped before they were caught:
-  * **an unasserted helper drifts.** `h_rung1` originally ran its own three-grid
-    refinement while the notebook displayed a six-grid one, and nothing compared
-    them: `agreement.json` carried an observed order of 0.80 where the page
-    displayed 0.94, and the metadata quoted the coarse number as the result. The
-    fix is structural rather than a tighter tolerance - the display and the metric
-    are now the *same call*, memoised - and the assertion list is now checked
-    against the metric set, so a metric cannot be added without one.
+  constant instead of the configuration. Two further rules:
+  * **an unasserted helper drifts.** A helper that runs its own coarser refinement
+    while the notebook displays a finer one carries a different number into
+    `agreement.json`, and nothing compares them. The remedy is structural rather
+    than a tighter tolerance - the display and the metric are the *same call*,
+    memoised - and the assertion list is checked against the metric set, so a
+    metric cannot be added without one.
   * **the four shifts are the exception, and exceptions get printed.** The break
-    rows cannot afford the displayed grid twenty-eight times, so those four
+    rows cannot afford the displayed grid once per row, so those four
     metrics are computed on a coarser one. Both values and their gap are printed
     in a table; an exception you can see is a caveat, an exception you cannot is a
     discrepancy.
 * **The AST guard, but only if you measure its teeth on the forms you care about
   AND publish the ones it misses.** This one parses each row plus one level of the
-  helpers it names and rejects a metric key bound to a numeric literal - and it now
+  helpers it names and rejects a metric key bound to a numeric literal - and it
   constant-folds, so `0.1656 + 0.0001`, `float("15.688")`, a subscript off a frozen
-  tuple and a one-line laundering helper are all caught. The first version caught
-  only the bare literal and its negative control tested only that, which made the
-  control a measure of the guard's easiest case rather than of its coverage. Five
-  controls now, one per laundering form, each asserted to catch exactly its own
+  tuple and a one-line laundering helper are all caught. A negative control that
+  tests only the bare literal measures the guard's easiest case rather than its
+  coverage, so there are five controls, one per laundering form, each asserted to catch exactly its own
   keys - and eleven ESCAPE forms, printed and asserted to escape, so the notebook
   states the guard's blind spots rather than implying it has none. A module-level
   constant is one of them, and it is the realistic accidental case. The
-  false-positive control binds a *metric* key to a computed value; the version it
-  replaces bound a non-metric key, which the guard filters out before it looks at
-  anything, so it measured nothing.
+  false-positive control binds a *metric* key to a computed value; a non-metric
+  key is filtered out before the guard looks at anything, and would measure
+  nothing.
 
 **What not to lift.**
 
@@ -3851,10 +3893,8 @@ cells.append(md(r"""## Reuse
   is available" and never defines $\mathrm{Pe}_{ha}$; the page sweeps the two Péclet
   numbers together, so the crossover it root-finds is a crossover in *both* at once
   and not in $\lambda_{ea}$ alone. Nor is the shift below the swept range reported:
-  the crossover cell prints the largest $|$shift$|$ the crossing control validates
-  on that sweep, and a 2 % rung-2 crossover is past it, which is why the break row
-  that moves the target moves it to 1.1 %. That is a statement about the scan and
-  not a claim that nothing is there.
+  the crossover cell prints the largest $|$shift$|$ on that sweep, and nothing is
+  claimed about smaller Péclet numbers.
 * Anything about section 11.10, the sixth cell of Table 11.4-1 - the
   two-dimensional heterogeneous model. It is out of scope, and the Papageorgiou &
   Froment [1995] kinetics it uses are a different reaction model.
@@ -3873,13 +3913,13 @@ cells.append(md(r"""## Reuse
   would suggest.
 * **Whether a state exists that the Newton cannot reach.** `p0_critical` counts a
   non-converged solve as supercritical. A control shows that every threshold this
-  page reports - not only the five default rungs, which was the earlier and much
-  weaker version of this sentence - is a genuine 415 $^\circ$C crossing rather than
+  page reports - not only the five default rungs - is a genuine 415 $^\circ$C crossing rather than
   a convergence boundary, and thresholds that fail it are raised on rather than
   returned. What the control cannot do is find a bounded state the Newton never
-  reaches: section
-  11.6's own three-steady-state discussion is a warning that a cold start can miss
-  a state that exists, and nothing here rules that out on rungs 2 and 5."""))
+  reaches: section 11.6's own three-steady-state discussion is a warning that a
+  computation can miss a state that exists. Each threshold here is, by
+  construction, the one on the branch followed up from a safe feed; other branches
+  are not searched for."""))
 
 nb = nbf.v4.new_notebook(cells=cells)
 nb.metadata.kernelspec = {"display_name": "Python 3", "language": "python",

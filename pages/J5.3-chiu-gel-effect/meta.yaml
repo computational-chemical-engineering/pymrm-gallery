@@ -150,9 +150,9 @@ scope_out:
     by eq. 13, 14, 16 and 17; the paper gives d_m and, on book p. 356, the
     Registry No. 80-62-6, and MW = 100.117 g/mol follows from C5H8O2.  The
     notebook DEMONSTRATES that this cannot reach a headline rather than
-    asserting it: doubling MW moves the conversion history by 1.34e-12 and
-    lambda_0 by 1.57e-11 - both solver noise - and mu_1 by 0.499939, exactly the
-    factor it should.
+    asserting it: doubling MW moves the conversion history by less than 1e-10
+    and lambda_0 by less than 1e-9 relative - both solver noise - and mu_1 by
+    0.499939, exactly the factor it should.
 
 printed_defects_reported_not_repaired:
   - >
@@ -191,8 +191,8 @@ validation:
     second time through the flux a pymrm spherical-shell BVP actually computes -
     1.858e-05 over five ratios at n = 6400, converging onto r_m/r_D at observed
     order 1.8953; and the moment equations 12-17 reproduced from eq. 4a, 4b and 5
-    summed over a seeded finite population, 2.10e-16 with k_tc = 0 and 1.59e-16
-    with a non-zero k_tc.
+    summed over a seeded finite population, a relative residual below 1e-14
+    both with k_tc = 0 and with a non-zero k_tc.
     (2) THE PAPER'S OWN CORRELATIONS recomputed from its own Table II - Figure
     13's activation energies (34.908161 and 34.516600 against a printed 34;
     27.771564 against a printed 28) and Figure 15's straight line (8.819e-04,
@@ -205,15 +205,6 @@ validation:
     of the resampling grid the onsets are read on, which fixes how many of their
     digits are worth printing (1.311e-05 relative, so five).
     (5) 53 DEFECT INJECTIONS with a generated coverage map.
-    A RETRACTION SITS INSIDE (1) AND IS STATED WHEREVER THE NUMBER IS.  Until
-    2026-08-14 the eq. 22 line above read "1.53e-16 on a pymrm spherical-shell
-    BVP" and the number was counted among the page's independent routes.  It was
-    neither: 1 - K_22/K_exact reads two CLOSED-FORM scalars computed inside the
-    shell function, so it is the identity 1 - r_m(1/r_m - 1/r_D) = r_m/r_D in
-    floating point and returns the same bits with nu = 0, with two cells and with
-    no solve at all.  The metric now reads the discrete flux, the notebook
-    demonstrates the old form's insensitivity beside it, and the nu = 0 break row
-    moves the corrected metric by four orders.
   headline: >
     THE THREE ONSET CONVERSIONS.  Book p. 354 defines the onset as the
     intersection of a line extrapolated from "the sloped region" of the log k_t
@@ -237,7 +228,7 @@ validation:
     miss.  The two arithmetic floors are far below that and are named for what
     they measure: the resampling grid moves the onsets by 1.311e-05 relative,
     which is why five decimals are quoted and not six, and an independent
-    integration reproduces them to 9.08e-12, which prices the ATTRACTING
+    integration reproduces them to below 1e-10 relative, which prices the ATTRACTING
     MANIFOLD lambda_0(x) rather than the accuracy of either integration.
     THE BAND IS A SPREAD OVER SEVEN READINGS, NOT A BOUND OVER EVERY READING OF
     THE SENTENCE, and the page states the difference.  The most literal reading
@@ -252,38 +243,25 @@ validation:
     inside x = 0.86 at four of the six conditions, including the condition at
     which the reported band is widest, so that band is not set by the truncation
     either.
-    THREE RETRACTIONS ON THIS HEADLINE, ALL RECOMPUTED LIVE RATHER THAN
-    REMEMBERED.  (a) The band excluded the 3-5-decade window while the page's own
-    break row already treated that window as defensible; admitting it widened the
-    band from 0.02424 to 0.05126, 2.1147x.  (a2) It then still excluded the
-    4-6-decade window, the widest-swinging reading of the same family, without a
-    measured reason; admitting that one too widened the band to 0.09009, 1.7576x
-    again and 3.7168x in all, and turned "two and a half times the largest miss"
-    into 9.33 times.  Both narrower bands are kept as break rows so that neither
-    retraction is a remembered number.  (b) The construction itself once took the
-    GLOBAL MINIMUM of the second derivative as "the bend": at large theta_t the
-    deeper curvature feature is the GLASS effect at high conversion, so the
-    construction jumped there and the onset came out NON-MONOTONE in theta_t
-    (0.32043, 0.25455, then 0.42929 at half, one and twice the tabulated value).
+    Both narrower bands, without the 4-6-decade window and without the 3-5 and
+    4-6 windows, are break rows.  The construction reads the FIRST local
+    minimum of the second derivative as "the bend": at large theta_t the GLOBAL
+    minimum is the GLASS effect at high conversion, which would make the onset
+    NON-MONOTONE in theta_t.
     THE CONSTRUCTION IS ROOT-FOUND OR SOLVED, NEVER SAMPLED, and the tangent
     variants that enter the band are root-finds on the third derivative of
     log10 k_t.
-    THE MONOTONICITY GUARD IS NOW ON THE CONSTRUCTION THAT FAILED.  Until
-    2026-08-14 the notebook asserted monotonicity only on the derivative-free
-    WINDOW fit, which has no curvature-feature selection, never had the defect
-    and could not have detected its return - and at the tabulated theta_t the
-    broken and the fixed tangent construction agree exactly at equal resampling
-    resolution (the notebook now prints the tabulated-theta_t tangent at both
-    nx = 2001 and nx = 4001 so that the two triples can be compared), so a
-    recurrence
-    would have been invisible everywhere the tangent is actually used.  Both
-    constructions are now asserted monotone at half, one and twice theta_t.
+    THE MONOTONICITY GUARD IS ON THE TANGENT CONSTRUCTION as well as on the
+    derivative-free WINDOW fit, which has no curvature-feature selection and so
+    cannot show this defect; the notebook prints the tabulated-theta_t tangent at
+    both nx = 2001 and nx = 4001.  Both constructions are asserted monotone at
+    half, one and twice theta_t.
   second_routes: >
     SEVEN QUANTITIES ARE COMPUTED A SECOND WAY - SIX OF THEM BY AN INDEPENDENT
     ROUTE, THE SEVENTH BY THE FIRST ROUTE DELIBERATELY BROKEN - AND THE PAGE
     SAYS WHAT EACH ONE ACTUALLY TESTS.  The constitutive curve from the six ODEs
     re-parametrised by conversion and integrated with a different solver family
-    (9.08e-12) - which prices the ATTRACTING MANIFOLD lambda_0(x) and not the
+    (below 1e-10) - which prices the ATTRACTING MANIFOLD lambda_0(x) and not the
     accuracy of either integration, since the residual is unchanged across solver
     families and tolerances while the resampling grid moves the onset by
     1.311e-05; the start state the two routes share, pinned separately against
@@ -292,18 +270,12 @@ validation:
     eq. 22's error against the symbolic r_m/r_D, read off the DISCRETE FLUX the
     pymrm shell solve computes (1.858e-05 at n = 6400, converging at order
     1.8953); the moment equations against the chain-length equations summed
-    (1.59e-16); the same identity with its truncation deliberately violated
-    (3.13e-02, which is the first route deliberately broken and is labelled the
-    above-floor companion, not an independent check); and the conversion through
+    (below 1e-14); the same identity with its truncation deliberately violated
+    (3.13e-02, which is the first route deliberately broken and is labelled a
+    companion, not an independent check); and the conversion through
     the gel region by the pymrm backward-Euler marcher against BDF (2.12e-05).
-    ONE OF THE SEVEN USED TO BE NO ROUTE AT ALL.  Until 2026-08-14 the eq. 22
-    entry read 1.53e-16 and was computed as 1 - K_22/K_exact from two CLOSED-FORM
-    scalars inside the shell function - the identity 1 - r_m(1/r_m - 1/r_D) =
-    r_m/r_D evaluated in floating point, bit-identical with nu = 0, with two
-    cells and with no solve at all, and already proved symbolically two cells
-    earlier.  It now reads the discrete flux, the notebook demonstrates the old
-    form's insensitivity beside the corrected number, and the nu = 0 break row
-    moves the corrected metric by four orders.
+    The eq. 22 route reads the discrete flux, and the nu = 0 break row moves it
+    by four orders.
   break_table: >
     53 DEFECT INJECTIONS, and the coverage map is GENERATED from their measured
     moves rather than written by hand: each row returns a dictionary of metrics
@@ -314,15 +286,10 @@ validation:
     named structural.  The rows split 19 / 34 between MIS-TRANSCRIBING ONE
     PRINTED CELL and CHANGING A METHOD or a resolution, and the notebook
     computes that split rather than asserting it.
-    THE MAP IS ALSO WHAT SHOULD HAVE CAUGHT THE eq. 22 DEFECT AND DID NOT, WHICH
-    IS WORTH SAYING.  The nu = 0 (Cartesian) row moved bvp_rms_err_finest by
-    1.9e5 and bvp_K_spread_rel by 1.3e11 and never appeared against
-    eq22_rm_over_rD_max_dev, because that metric read no BVP output; its only
-    cover was a row that hand-wrote a 10 %-wrong K_approx, which touched no BVP
-    output either.  A metric wired to the wrong quantity is invisible to a
-    coverage map that only asks whether SOMETHING moves it.  Now that the metric
-    reads the discrete flux, the nu = 0 row covers it and moves it by four
-    orders, and a coarse-shell row covers it too.
+    A metric wired to the wrong quantity is invisible to a coverage map that
+    only asks whether SOMETHING moves it.  eq22_rm_over_rD_max_dev reads the
+    discrete flux, so the nu = 0 row covers it and moves it by four orders, and
+    a coarse-shell row covers it too.
     ONE METRIC IS DECLARED STRUCTURAL AND SAYS WHAT IT CANNOT DETECT:
     moment_identity_broken_max_rel is exactly 2 by construction, because flipping
     the sign of a moment term that matches its chain-length sum exactly turns
@@ -330,31 +297,34 @@ validation:
     teeth against a sign and says nothing about magnitude, about the truncation
     or about the population - which is why moment_identity_trunc_max_rel exists
     beside it, depends on the population, and IS covered.
-    NO WEAK METRIC IS DECLARED: every one of the 56 metrics is moved past
-    check_agreement.py's 5 % comparison tolerance by at least one row, and the
-    weakest cover on the page is 5.4023 % on onset_x_90C - the onset at the
+    NO WEAK METRIC IS DECLARED: every value claim is moved past its 5 %
+    comparison tolerance by at least one row, and the weakest cover among the
+    values is 5.4023 % on onset_x_90C - the onset at the
     temperature where the diffusion term is smallest and the curve therefore
-    least sensitive to a mis-transcribed constant.  AN EARLIER VERSION OF THIS
-    PAGE DID DECLARE ONE, and the retraction is instructive rather than
-    cosmetic: onset_per_decade_theta_t was covered only to 0.1016 %, because the
-    onset responds to theta_t almost exactly log-linearly and re-measuring the
-    slope over a narrower interval barely moved it.  The row that fixed it
-    measures the same leverage at 90 degC instead of 50 degC, where the response
-    genuinely differs, and moves the metric 8.258 %.
-    THREE METRICS SIT BELOW check_agreement.py's ABS_FLOOR of 1e-12 and are
-    outside CI entirely: the two moment-identity residuals and the symbolic
-    eq. 26 residual (exactly zero).  Each is named with an above-floor companion
-    that moves.  A FOURTH USED TO BE IN THAT LIST - eq. 22's deviation from
-    r_m/r_D, at 1.53e-16 - and it is not there any more because the number was
-    float round-off on a closed-form identity rather than a measurement; the
-    quantity now reported is a discretisation error on the shell solve's own
-    flux, 1.858e-05, which is above the floor and inside CI.  A metric pinned at
-    1e-16 is unprotected, and this one was also not measuring what it said.
-    AND THE PHRASE "moved past check_agreement.py's 5 % comparison tolerance"
-    DOES QUIET WORK FOR THE THREE BELOW-FLOOR METRICS: the coverage generator
-    divides by max(|base|, 1e-12), so for those three "moved past 5 %" means
-    moved by 0.05 ABSOLUTE, not 5 % relative.  That is why each is named with an
-    above-floor companion.
+    least sensitive to a mis-transcribed constant.  onset_per_decade_theta_t
+    responds to theta_t almost exactly log-linearly, so re-measuring the slope
+    over a narrower interval barely moves it; its row measures the same leverage
+    at 90 degC instead of 50 degC, where the response genuinely differs, and
+    moves the metric 8.258 %.
+    EVERY METRIC DECLARES HOW IT IS CHECKED (agreement.json, format 2), and the
+    set of claims never depends on a value.  Round-off quantities are BOUNDS
+    with a stated basis, checked on every machine and in CI: the two
+    moment-identity residuals (below 1e-14), the symbolic eq. 26 residual
+    (exactly 0), the shell's flux constancy (below 1e-8), the two-route onset
+    gap and the MW-doubled conversion (both below 1e-10, set by the solver
+    tolerances); the two observed orders are bounds from theory, and the
+    sign-flip identity is a structural bound at 2.  Every other metric is a
+    value, held to 5 % of its baseline in CI, far above its measured spread
+    across BLAS kernels.  The prose states those bounds, never the round-off
+    digits, which differ from machine to machine.  A break row breaks a claim
+    when the claim's own check fails on the injected value, and every claim
+    except the structural sign-flip identity has such a row.  eq. 22's
+    deviation from r_m/r_D is a discretisation error on the shell solve's own
+    flux, 1.858e-05, a value.
+    THE 5 % COMPARISON APPLIES TO THE VALUES ONLY: a relative move means
+    nothing for a number at round-off, whose digits differ between BLAS
+    kernels, so each round-off metric is a bound, checked against its bound
+    rather than against its baseline, and is broken by a row that leaves it.
   determinism: >
     Nothing on the page is stochastic except the test population of the
     moment-closure identity, which is drawn from a SEEDED generator (seed
@@ -364,7 +334,7 @@ validation:
     sweep order.  Two consecutive executions give identical content, figures and
     agreement.json.
   prose_sweep: >
-    82 prose values and 18 prose counts are pinned against the live computation
+    79 prose values and 17 prose counts are pinned against the live computation
     and the notebook fails to execute if any drifts - every count this metadata
     states about the break table among them, because a count in a YAML file is a
     hand-typed integer no computation can rewrite.  A mechanical sweep then
@@ -382,14 +352,9 @@ validation:
     completeness, and it COUNTS THE TWO CLASSES IT CANNOT SEE AT ALL:
     word-spelled small integers and single-digit numbers are outside the token
     classes entirely and are checked against nothing, so no count in this
-    metadata is written as a word or a single digit where it matters.
-    THAT BLIND SPOT IS DEMONSTRATED AND NOT HYPOTHETICAL.  A stale count sat in
-    it on this page until 2026-08-14: the stated-results sidecar said the band
-    was a spread over "three defensible readings" while every other file said
-    five, and the sweep could not see it because the count was WORD-SPELLED.  It
-    was found by a line-by-line read in review, and the same hole had already
-    been found on pages/J4.4-luedeking-piret.  The page names the class, counts
-    its instances, and does not claim coverage of it.
+    metadata is written as a word or a single digit where it matters.  The
+    page names the class, counts its instances, and does not claim coverage of
+    it.
 
 what_pymrm_adds: >
   HONESTLY, VERY LITTLE TO THE PHYSICS, AND THE PAGE SAYS SO.  This is a
@@ -405,7 +370,7 @@ what_pymrm_adds: >
   COMPUTED, because nothing in this paper would test it.  (2) The paper's own
   eq. 21 SOLVED instead of approximated: construct_grad and construct_div(nu=2)
   on the shell r_m <= r <= r_D reproduce the exact first integral (the same flux
-  at all 1281 faces to 1.505e-10 - STRUCTURAL for a conservative finite-volume
+  at all 1281 faces to less than 1e-8 relative - STRUCTURAL for a conservative finite-volume
   scheme with no source, and named as such) at observed order 1.8618, and give
   the page the one thing the derivation leaves unpriced: the VALUE of that flux
   is not structural, and it agrees with eq. 22 understating K by exactly r_m/r_D

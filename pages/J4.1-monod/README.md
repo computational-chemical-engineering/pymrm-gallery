@@ -32,11 +32,12 @@ affine function of the substrate, `X = φ(a − S)`, so
 which is Monod with `μ_m' = μ_m/β`, `K_S' = K_sx φ a/β`. The sympy residual is
 exactly zero, and two optimisers started from different places on the two
 different parameterisations land on the same curve — agreeing to better than
-**1×10⁻⁴** in both constants, with residual RMS differing by less than 1×10⁻¹¹
+**1×10⁻³** in both constants, with residual RMS differing by less than 1×10⁻¹⁰
 h⁻¹. Those three residuals are quoted as bounds, here and everywhere else in this
-page's metadata, and are kept out of `agreement.json`: the identity makes them
-exactly zero, so what they measure is `least_squares`' stopping rule. The exact
-values are printed in the notebook, where nothing pins them.
+page's metadata, and `agreement.json` registers them as bounds that every run
+checks: the identity makes them exactly zero, so what they measure is
+`least_squares`' stopping rule, whose digits differ between machines. The exact
+values are printed in the notebook, beside their bounds.
 Of the two alternatives that *are* separable at this design, **Blackman needs
 1.30 repeats of the run and Tessier 10.3** — and `N*` is the threshold at which
 the *expected* excess sum of squares first reaches the critical value, so it is a
@@ -84,9 +85,9 @@ that draw count the four frequencies are seed-independent in their **leading
 figure only** and the two medians to at least **two** figures; the four-figure values on
 the page are exact for the seed and reproducible, not resolved.
 
-The first version of this page got those six numbers wrong, and the error is now
-a **break row**: it read each draw's fit off the scan grid instead of refining
-it, while comparing the result against a *refined* observed F. An unrefined Moser
+Reading each draw's fit off the scan grid instead of refining it, while
+comparing the result against a *refined* observed F, gets those six numbers
+wrong, and it is a **break row**. An unrefined Moser
 fit cannot reach its own optimum, so it deflates F on every draw — grid-only, the
 control reads a **conservative-looking 2.1 %** and a median exponent of 0.95. A
 grid-limited extremum is invisible to every perturbation test, so the page prints
@@ -94,7 +95,7 @@ the refinement's convergence instead — as the count of draws whose two-dimensi
 fit still ends above the one-dimensional fit nested inside it, taken from the grid
 start alone, because the shipped fit's second start sits exactly on the nesting
 point and makes that count zero at every refined depth by construction (the grid-only row has no pair of starts at all). The page prints
-both counts and says which of them is a measurement. The conclusion is unchanged and stronger: a
+both counts and says which of them is a measurement. The conclusion: a
 control **at** nominal size exonerates the F approximation better than a
 conservative one does. One convention worth stating with it — the forward size is
 a bias-to-noise ratio and reads 0.3655 ± 0.0108 at route B's residual scatter
@@ -114,7 +115,8 @@ printed average substrate concentration.
 chemostat, sweeping the *feed*. Monod washes out at `D_c = μ_m S_f/(K_S+S_f)`;
 Contois at `D_c = μ_m` whatever the feed. The two cross at **exactly `S_f = a`**,
 the substrate intercept of the batch run's own material balance (root-found
-197.116 against the balance's 197.120), and separate on either side: the gap
+at 197.1, equal to the balance's 197.120 to within the Contois fit's exit
+tolerance, below 1×10⁻³ relative), and separate on either side: the gap
 exceeds 10 % below `S_f = 95.5` and reaches a factor **1.83** at `S_f = 20`.
 
 ## One printed cell, reported and not repaired
@@ -198,7 +200,7 @@ every `pdftotext` mode drops.
 | `build_page.py` | regenerates `index.ipynb` |
 | `data/levenspiel-p644-monod-batch.csv` | the seven printed intervals, with a sidecar that leads on the provenance chain and the flagged row |
 | `data/printed-growth-laws.csv` | 30 equations and prose claims from the three books, verbatim, flagged and not repaired |
-| `agreement.json` | 74 metrics; 12 sit below CI's `ABS_FLOOR` and are named structural with above-floor companions |
+| `agreement.json` | 81 claims in format 2: 57 values, 23 bounds (the 18 proved-zero quantities among them) and 1 exact count, each checked by its kind on every run |
 
 ## Validation summary
 
@@ -207,7 +209,7 @@ every `pdftotext` mode drops.
   Moser ≡ Monod at n = 1; Contois ≡ Monod under a constant yield. Plus a
   *positive* statement that Tessier admits no such reduction;
 - **a stated numerical result reproduced**: Rawlings' eq. (10.19) at their
-  printed parameter set, to 0 (double precision) at three dilution rates, with
+  printed parameter set, to below 1×10⁻⁹ at three dilution rates, with
   their **printed formula** `D_c = μ_m S_f/(K_s+S_f)` — which evaluates to 5/6 at
   their own printed parameter set, an evaluation of theirs by this page and not a
   number they print — recovered to 2.1×10⁻⁴ from a marched model — and break rows that
@@ -216,21 +218,23 @@ every `pdftotext` mode drops.
   constants re-derived through a pymrm backward-Euler marcher
   (`NumJac((1,2))` + `newton`, order 0.9993, Richardson extrapolated) that
   carries `S` as an unknown rather than substituting the yield — agreeing with
-  LSODA to **1.7×10⁻⁶** and **9.4×10⁻⁶**, with `S + X/φ` closing at round-off,
-  below 1×10⁻¹⁴ (a tautology of the scheme, so it is quoted as a bound);
+  LSODA to below **1×10⁻⁴** in both constants (the gap is set by the two fits'
+  stopping rules, so it is quoted as that bound), with `S + X/φ` closing at round-off,
+  below 1×10⁻¹³ (a tautology of the scheme, so it is quoted as a bound);
 - **an exact identity for the spatial solve**: the pymrm plug-flow outlet equals
   the batch at `t = τ` (Levenspiel's Fig. 29.1 caption), observed order 0.9981,
   Richardson 3.2×10⁻⁶;
 - **79 defect injections, all 79 of which move their metric** by more than
-  1×10⁻⁶ relative, covering 60 of the 74 metrics; the other 14 are named
-  individually as structural with an above-floor companion each, and both
-  generic not-coverage labels are asserted never to be used. **Six** quantities
-  the page *proves* are exactly zero are printed but deliberately **not
-  reported**, because CI compares everything above `ABS_FLOOR` at 5 % and they
-  are optimiser and root-find exit tolerances — and the rule is asserted over
-  the whole enumerated class of 18 such quantities, not over the list of
-  exclusions, which is how three of the six were found still being compared;
-- **96 prose/metadata values plus 10 break-table lookups** checked against the
+  1×10⁻⁶ relative, covering 62 of the 80 metrics; the other 18 are named
+  individually as structural with a companion each, and the generic
+  not-coverage label is asserted never to be used. The **18** quantities the
+  page *proves* are exactly zero (identities, exact arithmetic, optimiser and
+  root-find exits) are each registered as a **bound** with a stated basis and a
+  limit that holds on any machine, checked on every run and never compared as a
+  value, so the set of claims does not depend on where a round-off number
+  lands;
+- **57 prose literals checked against their claims, 48 further prose/metadata
+  values and 10 break-table lookups** checked against the
   live computation by an assertion cell, **plus a mechanical sweep** of this file,
   `meta.yaml`, `models_entry.yaml` and both data sidecars that requires every
   number written in scientific notation — in the plain `e`-notation the YAML

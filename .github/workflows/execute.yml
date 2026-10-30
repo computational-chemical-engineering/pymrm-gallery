@@ -4,6 +4,18 @@ name: execute
 # whether the notebooks still run. This workflow is the real check, and it runs
 # on a schedule as well as on PRs so a pymrm release cannot silently break every
 # page while the site keeps rendering stale output.
+#
+# Each notebook job changes one thing against the baselines
+# (docs/claims-design.md, section 7):
+#   locked       requirements-lock.txt, pinned BLAS kernel. Defines the baselines.
+#   latest       the newest pymrm, everything else locked.
+#   portability  locked, but OPENBLAS_CORETYPE=Sandybridge: finds claims that hold
+#                on one machine only. Changed pages on PRs, every page weekly;
+#                weekly it also leaves NumPy's SIMD dispatch free, so on an
+#                AVX-512 runner it reports what the NumPy pin hides.
+# scripts/run_pages.py pins OPENBLAS_CORETYPE=Haswell, one thread and NumPy's
+# SIMD dispatch (AVX2, NPY_DISABLE_CPU_FEATURES) unless set. Runners are a mix
+# of AVX2 and AVX-512 machines; without the NumPy pin a run depends on which.
 
 on:
   push:
@@ -18,39 +30,133 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}     # the loosening check needs the merge-base
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
-      - run: pip install pyyaml
+        with: {python-version: "3.13"}
+      - run: pip install -r requirements-lock.txt
       - run: python scripts/check_metadata.py
+      - name: Unit tests of the shared helpers and checks
+        run: python -m pytest -q tests/
+      - name: Claims of format 2 pages (admissible values, quoted precision, README)
+        run: python scripts/check_claims.py
+
+      # Each page's model test in its own pytest process: the same file name in
+      # folders without __init__.py collides, and `import model` would reuse the
+      # first page's module (docs/page-infrastructure.md, section 5). Offline, so
+      # a file deleted in the PR cannot be replaced by main's copy.
+      - name: Model tests of migrated pages
+        env:
+          GALLERY_OFFLINE: "1"
+          PYTHONPATH: shared
+        run: |
+          shopt -s nullglob
+          status=0
+          for t in pages/*/test_model.py; do
+            echo "::group::$t"
+            python -m pytest -q -p no:cacheprovider "$t" || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
+      - name: Refuse loosened claims (PRs)
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags origin "${{ github.base_ref }}"
+          python scripts/check_agreement.py --base "origin/${{ github.base_ref }}"
+
+      # The pymrm plugin's checkers, at the tag that matches the lock, never a
+      # branch (docs/page-infrastructure.md, section 6). Migrated pages only.
+      # They come after every step that reads the tracked agreement.json files:
+      # check_model runs index.py, whose claims.report() rewrites agreement.json
+      # without the BLAS pin. Its step restores pages/ when it ends.
+      - name: Fetch the pymrm checkers (v3.2.0)
+        run: |
+          mkdir -p "$RUNNER_TEMP/pymrm-checks"
+          base=https://raw.githubusercontent.com/computational-chemical-engineering/pymrm/v3.2.0/plugins/pymrm/skills/conventions/scripts
+          for f in check_notebook_math.py check_model.py; do
+            curl -fsSL "$base/$f" -o "$RUNNER_TEMP/pymrm-checks/$f"
+          done
+          npm install --silent --prefix ~/.cache/pymrm-katex katex@0.16
+          python scripts/check_metadata.py --list-migrated | tee "$RUNNER_TEMP/migrated.txt"
+
+      - name: Notebook maths of migrated pages
+        run: |
+          status=0
+          while read -r page; do
+            python "$RUNNER_TEMP/pymrm-checks/check_notebook_math.py" "$page/index.ipynb" || status=1
+          done < "$RUNNER_TEMP/migrated.txt"
+          exit $status
+
+      # Warns only until the pilot measures its false-positive rate.
+      - name: pymrm pitfalls of migrated pages (warning)
+        continue-on-error: true
+        env:
+          GALLERY_OFFLINE: "1"
+          MPLBACKEND: Agg
+        run: |
+          status=0
+          while read -r page; do
+            [ -f "$page/index.py" ] || continue
+            (cd "$page" && python "$RUNNER_TEMP/pymrm-checks/check_model.py" index.py) || status=1
+          done < "$RUNNER_TEMP/migrated.txt"
+          git checkout -- pages
+          exit $status
 
   notebooks:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        pymrm: ["pinned", "latest"]
+        job: ["locked", "latest", "portability"]
+    # Weekly, portability reports on every page without blocking: pages not yet
+    # migrated to Claims are expected to fail there (docs/refresh-plan.md, step 0).
+    # On a PR it runs only the changed pages, and there it blocks.
+    continue-on-error: ${{ matrix.job == 'portability' && github.event_name != 'pull_request' }}
+    env:
+      # Only the portability job sets the kernel; run_pages.py pins the rest.
+      OPENBLAS_CORETYPE: ${{ matrix.job == 'portability' && 'Sandybridge' || 'Haswell' }}
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}     # --changed diffs against origin/main
       - uses: actions/setup-python@v5
-        with: {python-version: "3.12"}
+        with: {python-version: "3.13"}
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          if [ "${{ matrix.pymrm }}" = "latest" ]; then
+          pip install -r requirements-lock.txt
+          if [ "${{ matrix.job }}" = "latest" ]; then
             pip install --upgrade --pre pymrm
           fi
           python -c "import pymrm; print('pymrm', pymrm.__version__)"
 
-      - name: Execute every page
-        run: python scripts/run_pages.py
+      - name: Record the machine
+        # The CPU and NumPy's SIMD dispatch are what the BLAS pin does not fix.
+        run: |
+          lscpu | grep -E 'Model name|^CPU\(s\)|Flags' | cut -c1-200 || true
+          python -c "import numpy; numpy.show_config()" | grep -iE 'openblas|version|found' | head -8 || true
+          python -c "from numpy._core._multiarray_umath import __cpu_features__ as f, __cpu_dispatch__ as d; print('NumPy dispatch targets this CPU has:', [k for k in d if f.get(k)])" || true
 
+      - name: Execute pages
+        run: |
+          if [ "${{ matrix.job }}" = "portability" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            export NPY_DISABLE_CPU_FEATURES=    # set but empty: run_pages.py keeps it
+          fi
+          if [ "${{ matrix.job }}" = "portability" ] && [ "${{ github.event_name }}" = "pull_request" ]; then
+            python scripts/run_pages.py --changed
+          else
+            python scripts/run_pages.py
+          fi
+
+      # Run even when a page failed: before 2026-10-29 this step was skipped on
+      # every run with a failing page, so the metrics went unchecked for weeks.
       - name: Check agreement metrics against baseline
-        if: matrix.pymrm == 'pinned'
+        if: always()
         run: python scripts/check_agreement.py
 
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
-          name: executed-notebooks-${{ matrix.pymrm }}
-          path: pages/**/index.ipynb
+          name: executed-pages-${{ matrix.job }}
+          path: |
+            pages/**/index.ipynb
+            pages/**/agreement.json

@@ -1,20 +1,114 @@
 {
   "page": "J4.8",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "charge_residuals_all_zero": 1.0,
-    "nitrogen_residuals_all_zero": 1.0,
-    "cod_residual_p2": -0.0007742183488853016,
-    "cod_residual_p3": -0.01020408163265306,
-    "cod_residuals_zero_with_exact_factors": 1.0,
-    "coefficients_recovered_identically": 8.0,
-    "coefficients_recovered_up_to_rounding": 2.0,
-    "eq3_cross_check": 1.0,
-    "reactor_charge_balance": 2.842170943040401e-14,
-    "reactor_nitrogen_balance": 1.3642420526593924e-12,
-    "reactor_cod_leak": 0.2071576023226953,
-    "reactor_cod_leak_vs_prediction": 6.118838108692497e-11,
-    "reactor_cod_leak_exact_factors": 7.275957614183426e-12,
-    "reactor_cod_leak_fraction_of_otr": 0.0003175690548549939,
-    "tn_reduction_at_optimum": 0.6746250048765576
-  }
+    "charge_residuals_all_zero": {
+      "kind": "exact",
+      "value": true
+    },
+    "nitrogen_residuals_all_zero": {
+      "kind": "exact",
+      "value": true
+    },
+    "cod_residual_p2": {
+      "kind": "value",
+      "value": -0.0007742183488853016,
+      "rtol": 0.05
+    },
+    "cod_residual_p3": {
+      "kind": "value",
+      "value": -0.01020408163265306,
+      "rtol": 0.05
+    },
+    "cod_residuals_zero_with_exact_factors": {
+      "kind": "exact",
+      "value": true
+    },
+    "coefficients_recovered_identically": {
+      "kind": "exact",
+      "value": 8
+    },
+    "coefficients_recovered_up_to_rounding": {
+      "kind": "exact",
+      "value": 2
+    },
+    "eq3_cross_check": {
+      "kind": "exact",
+      "value": true
+    },
+    "reactor_charge_balance": {
+      "kind": "bound",
+      "value": 2.842170943040401e-14,
+      "max": 1e-08,
+      "basis": "identity",
+      "unit": "g m-3 d-1",
+      "note": "conservative discretisation closes charge to round-off"
+    },
+    "reactor_nitrogen_balance": {
+      "kind": "bound",
+      "value": 1.3642420526593924e-12,
+      "max": 1e-08,
+      "basis": "identity",
+      "unit": "g m-3 d-1",
+      "note": "conservative discretisation closes nitrogen to round-off"
+    },
+    "reactor_cod_leak": {
+      "kind": "value",
+      "value": 0.2071576023226953,
+      "rtol": 0.05,
+      "unit": "g m-3 d-1"
+    },
+    "reactor_cod_leak_vs_prediction": {
+      "kind": "bound",
+      "value": 6.118838108692497e-11,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "the leak is the matrix's two residuals times the rates, to round-off"
+    },
+    "reactor_cod_leak_exact_factors": {
+      "kind": "bound",
+      "value": 7.275957614183426e-12,
+      "max": 1e-08,
+      "basis": "identity",
+      "unit": "g m-3 d-1",
+      "note": "with 20/7 and 32/7 COD closes; exactly 0 on some BLAS kernels"
+    },
+    "reactor_cod_leak_fraction_of_otr": {
+      "kind": "value",
+      "value": 0.0003175690548549939,
+      "rtol": 0.05
+    },
+    "tn_reduction_at_optimum": {
+      "kind": "value",
+      "value": 0.6746250048765576,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {},
+  "breaks_required": false,
+  "unbroken": [
+    "charge_residuals_all_zero",
+    "nitrogen_residuals_all_zero",
+    "cod_residual_p2",
+    "cod_residual_p3",
+    "cod_residuals_zero_with_exact_factors",
+    "coefficients_recovered_identically",
+    "coefficients_recovered_up_to_rounding",
+    "eq3_cross_check",
+    "reactor_charge_balance",
+    "reactor_nitrogen_balance",
+    "reactor_cod_leak",
+    "reactor_cod_leak_vs_prediction",
+    "reactor_cod_leak_exact_factors",
+    "reactor_cod_leak_fraction_of_otr",
+    "tn_reduction_at_optimum"
+  ]
 }

@@ -56,9 +56,11 @@ numerical sweep is a *check on the code*, not the finding: holding
 $r_m = k_2 C_{\rm E}^0$ and $K_M = (k_{-1}+k_2)/k_1$ fixed and sweeping $\rho$
 over **eight decades**, $r(C_{\rm A})$ evaluated from the elementary constants is
 identical to double precision over four decades of concentration - **maximum
-relative difference 0.0** on the nine swept $\rho$ at $C_{\rm E}^0 = 10^{-3}$,
-and at most **4.4e-16** over 2000 random $(\rho, C_{\rm E}^0)$ draws, where the
-floating-point round trip through the elementary constants is no longer exact.
+relative difference below 1e-14** on the nine swept $\rho$ at
+$C_{\rm E}^0 = 10^{-3}$ (where it comes out exactly zero, because the
+floating-point round trip through the elementary constants happens to be exact
+for those values), and **below 1e-14** over 2000 random $(\rho, C_{\rm E}^0)$
+draws, where that round trip is no longer exact and the difference is a few ulp.
 The exact zero is a property of those particular values; the *degeneracy* is a
 property of the algebra. The map from four elementary constants
 $(k_1, k_{-1}, k_2, C_{\rm E}^0)$ to the two observable ones $(r_m, K_M)$ has a
@@ -133,7 +135,7 @@ own limit is $k_2 C_{\rm E}^0$, eq. (1.5.1-15) calls $k_2 C_{\rm E}^0$ "the
 maximum possible rate", the book's Problem 2.4(b) on p. 144 asks the student to
 *show* that limit, and $k_1 C_{\rm E}^0$ has units of s$^{-1}$, which a rate
 cannot have. On p. 25: *"the Lineweaver-Burke plot of $1/r$ versus $C_A$"*
-[sic] - $1/r$ is exactly linear in $1/C_{\rm A}$ (9.7e-16 off a straight line)
+[sic] - $1/r$ is exactly linear in $1/C_{\rm A}$ (below 1e-13 off a straight line)
 and strictly convex in $C_{\rm A}$, $\mathrm{d}^2(1/r)/\mathrm{d}C_{\rm A}^2 =
 2K_M/(r_m C_{\rm A}^3) > 0$, missing the best *least-squares* line by 50.3 % of
 its own range over 0.05-1.0 cmol/L. **That percentage is a convention and is
@@ -367,7 +369,7 @@ else:
         if (_p / "shared" / "gallery_utils.py").is_file():
             sys.path.insert(0, str(_p / "shared"))
             break
-from gallery_utils import load_data, load_meta, cite_data, report_agreement
+from gallery_utils import load_data, load_meta, cite_data, Claims, parse_literal
 
 PAGE = "J4.6-michaelis-menten-briggs-haldane"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})
@@ -457,7 +459,7 @@ print("  lim_{C_A -> oo} of (1.5.1-13)       =", LIM13)
 print("  K_M(Briggs-Haldane)/K_M(Michaelis-Menten) =", KMRAT, "= 1 + k2/k_-1")
 
 # ---- THE DEGENERACY, PROVED rather than sampled. This is the page's central
-# structural result, and until this cell it was only ever *checked* on a grid.
+# structural result; a grid can only *check* it.
 rho_s = sp.symbols("rho", positive=True)
 REPARAM = {k2: rm_s/CE0s, km1: (rm_s/CE0s)/rho_s,
            k1: ((rm_s/CE0s)/rho_s + rm_s/CE0s)/KM_s}
@@ -943,7 +945,7 @@ cells.append(code(r'''# "How far from a straight line" is a MAXIMUM OVER AN INTE
 #       stationary point, C* = sqrt(-A/q1), in closed form.
 # Moments and extrema are therefore all exact - there is no grid under any of
 # these numbers. The grid sequence below is shown only as evidence that refining
-# the old 400-point convention converges to the closed form.
+# a 400-point grid converges to the closed form.
 A_LW, B_LW = KM_fit/rm_fit, 1.0/rm_fit             # 1/r = A/C_A + B
 
 
@@ -1051,7 +1053,7 @@ print(f"  1/r vs C_A, best LEAST-SQUARES line, log-weighted    : "
 print(f"  1/r vs C_A, best LEAST-SQUARES line, uniform         : "
       f"{M['lineweaver_printed_axes_nonlinearity_uniform_measure']:.6f}")
 print(f"  1/r vs 1/C_A (Levenspiel p. 615), least squares      : "
-      f"{M['lineweaver_correct_axes_nonlinearity']:.3e}")
+      f"below 1e-13 (here {M['lineweaver_correct_axes_nonlinearity']:.1e})")
 print(f"  and symbolically d2(1/r)/dC_A^2 = {CURV} > 0, so no straight line "
       f"exists\n  -- which is the convention-free part, and the part the defect "
       f"rests on.")
@@ -1208,7 +1210,8 @@ show(df.style.format({"rho = k2/k-1": "{:.0e}", "k1 (L/cmol/min)": "{:.4g}",
                       "K_M(MM) = k-1/k1": "{:.6f}", "max |dr/r|": "{:.2e}"})
      .set_caption("All nine mechanisms have r_m = %.6f and K_M(BH) = %.6f"
                   % (rm_fit, KM_fit)).set_uuid("j46deg"))
-print(f"max relative difference in r(C_A) across eight decades of rho: {worst:.3e}")
+print(f"max relative difference in r(C_A) across eight decades of rho: below 1e-14 "
+      f"(here {worst:.1e})")
 print(f"K_M(Briggs-Haldane)/K_M(Michaelis-Menten) = 1 + rho over the same sweep: "
       f"{1+rho_dec[0]:.5f} .. {1+rho_dec[-1]:.4g}")
 print()
@@ -1217,8 +1220,8 @@ print("WHAT THAT EXACT ZERO IS, AND IS NOT. The degeneracy is proved above in "
       "(k_-1+k_2)/k_1 == K_M and\nk_2 C_E0 == r_m to be exact, which they happen "
       f"to be for these nine rho at\nC_E0 = {CE0_probe:g}. Over {_NDRAW} random "
       f"(rho, C_E0) draws from the same ranges they are\ninexact in {_inexact} "
-      f"cases, and the same computation returns up to "
-      f"{M['rate_law_rho_degeneracy_random_draws_max_rel']:.2e}\n-- one ulp of "
+      f"cases, and the same computation returns below 1e-14 (here up to "
+      f"{M['rate_law_rho_degeneracy_random_draws_max_rel']:.1e})\n-- a few ulp of "
       "the rate, not a failure of the identity. Reported as such.")
 print()
 print("Companion that CAN move (the break table uses it): raise k2 by 1 % and "
@@ -1613,9 +1616,9 @@ Five kinds, kept apart:
 
 1. **Structural identities** (the ten symbolic ones, the symbolic proof of the
    $\rho$-degeneracy, the exact linearity of $1/r$ in $1/C_{\rm A}$). These are
-   proofs; they cannot fail for the right reason, they sit below CI's
-   `ABS_FLOOR` of 1e-12, and each is named with an above-floor companion in the
-   coverage map. The *numerical* zero that goes with the degeneracy is reported
+   proofs; they cannot fail for the right reason, the numerical ones sit at
+   round-off and are registered as bounds, and each is named with a companion
+   that can move in the coverage map. The *numerical* zero that goes with the degeneracy is reported
    beside its own float spread over random draws, because an exact 0.0 in
    floating point is a property of the values chosen, not of the algebra.
 2. **Conservation** in the pymrm mass-action marcher: the two balances the
@@ -1658,11 +1661,12 @@ M["pymrm_substrate_balance_max"] = float(np.max(np.abs(o2[:, 0] + o2[:, 2]
                                                        + o2[:, 3] - cA0)))
 print(f"\n  mean observed order {M['pymrm_be_time_order']:.4f} (backward Euler: 1)")
 print(f"  Richardson(720, 1440) vs Radau      {M['pymrm_richardson_vs_radau']:.4e}")
-print(f"  LSODA vs Radau on the same problem  {M['lsoda_vs_radau_reference']:.4e}")
-print(f"  enzyme balance   max |C_E + C_A-E - C_E0|      "
-      f"{M['pymrm_enzyme_balance_max']:.3e}")
-print(f"  substrate balance max |C_A + C_A-E + C_P - c_A0| "
-      f"{M['pymrm_substrate_balance_max']:.3e}")'''))
+print(f"  LSODA vs Radau on the same problem  below 1e-9 "
+      f"(here {M['lsoda_vs_radau_reference']:.1e})")
+print(f"  enzyme balance   max |C_E + C_A-E - C_E0|      below 1e-13 "
+      f"(here {M['pymrm_enzyme_balance_max']:.0e})")
+print(f"  substrate balance max |C_A + C_A-E + C_P - c_A0| below 1e-13 "
+      f"(here {M['pymrm_substrate_balance_max']:.0e})")'''))
 
 cells.append(code(r'''# --- SECOND INDEPENDENT ROUTE TO THE FIT: pymrm backward Euler + Richardson,
 #     sharing no algebra with the Lambert W closed form.
@@ -1681,8 +1685,9 @@ M["fit_second_route_k_rel_diff"] = abs(k_alt/k_fit - 1)
 M["fit_second_route_K_rel_diff"] = abs(K_alt/K_fit - 1)
 print(f"Lambert W closed form  : k = {k_fit:.9f}   K = {K_fit:.9f}")
 print(f"pymrm BE + Richardson  : k = {k_alt:.9f}   K = {K_alt:.9f}")
-print(f"relative difference    : {M['fit_second_route_k_rel_diff']:.3e} / "
-      f"{M['fit_second_route_K_rel_diff']:.3e}")
+print(f"relative difference    : below 1e-5 / below 1e-6 (here "
+      f"{M['fit_second_route_k_rel_diff']:.1e} / "
+      f"{M['fit_second_route_K_rel_diff']:.1e})")
 print("\nWhat this catches that a break row cannot: an algebra error in the "
       "Lambert W inversion, or a wrong branch. Both routes integrate the same "
       "printed ODE; they share no line of code.")'''))
@@ -1693,9 +1698,9 @@ Every metric in `agreement.json` needs something that moves it. Rows below are
 run live; the coverage map at the end is **generated from the measured movers**,
 not asserted."""))
 
-cells.append(code(r'''# MOVE_TOL is 1e-6, not the 1e-9 an earlier version of this cell used, and the
-# table prints the relative move of every row. Both changes are there for one
-# reason: a row can clear a 1e-9 threshold and still be no evidence at all. Two
+cells.append(code(r'''# MOVE_TOL is 1e-6, not 1e-9, and the table prints the relative move of every
+# row. Both for one reason: a row can clear a 1e-9 threshold and still be no
+# evidence at all. Two
 # of this page's root-finds are themselves converged only to ~2e-6 relative
 # (brentq xtol 1e-6 in log10), so a "move" below that is inside the noise of the
 # computation being probed. And a ROBUSTNESS row - one written to show a metric
@@ -1706,9 +1711,9 @@ MOVE_TOL = 1e-6
 # ROOT_FIND_RES is DERIVED, not chosen. Each eps* on this page comes from brentq
 # at xtol = XTOL_LOG10 in log10, i.e. ln(10)*XTOL_LOG10 relative; a row that
 # compares two such root-finds inherits both, so the worst case is twice that.
-# An earlier draft of this cell rounded the number UP to 1e-5, which is 2.2x the
-# arithmetic and made the robustness row's move (5.7e-6, i.e. 1.2x the real
-# bound) look unresolved when it is not quite. The bound is now the arithmetic.
+# Rounding it UP to 1e-5 would be 2.2x the arithmetic and would make the
+# robustness row's move (5.7e-6, i.e. 1.2x the real bound) look unresolved when
+# it is not quite. The bound is the arithmetic.
 ROOT_FIND_RES = 2*np.log(10)*XTOL_LOG10             # = 4.61e-6
 
 
@@ -1762,7 +1767,7 @@ ob = BadStoich(p_h).run([cA0, CE0h, 0., 0.], 18., 720, n_out)
 rec("P row of the pymrm source doubled", "pymrm_substrate_balance_max",
     M["pymrm_substrate_balance_max"],
     float(np.max(np.abs(ob[:, 0] + ob[:, 2] + ob[:, 3] - cA0))),
-    "the conservation check is below ABS_FLOOR but is NOT an identity")
+    "the conservation check sits at round-off but is NOT an identity")
 
 # R8 -- drop the reverse step from the pymrm source
 class NoReverse(BatchMassAction):
@@ -1929,16 +1934,15 @@ rec("straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)",
 rec("the 400-point geomspace grid used instead of the closed form",
     "lineweaver_printed_axes_nonlinearity", M["lineweaver_printed_axes_nonlinearity"],
     straightness(c_ex, 1/r_ex),
-    "the unconverged sampled value the page previously reported (0.5024); the "
+    "the unconverged sampled value (0.5024); the "
     "grid sequence in Results 2 converges to the closed form")
 rec("the floor measured against the LEAST-SQUARES line instead of the minimax one",
     "lineweaver_printed_axes_nonlinearity_minimax",
     M["lineweaver_printed_axes_nonlinearity_minimax"],
     M["lineweaver_printed_axes_nonlinearity"],
-    "THE DEFECT THIS ROW EXISTS FOR, injected verbatim: until a verification "
-    "caught it, three surfaces of this page called the least-squares distance "
-    "'the distance from the best straight line'. A MAXIMUM is minimised by the "
-    "Chebyshev line, not the least-squares one, and the gap between them is "
+    "THE DEFECT THIS ROW EXISTS FOR, injected verbatim: calling the "
+    "least-squares distance 'the distance from the best straight line'. A "
+    "MAXIMUM is minimised by the Chebyshev line, not the least-squares one, and the gap between them is "
     "larger than either weighting convention")
 rec("straightness measured on 0.4-0.6 cmol/L only (a tenth of the range)",
     "lineweaver_printed_axes_nonlinearity_minimax",
@@ -2059,11 +2063,12 @@ for r in ROB:
                and x["role"] == "defect" and x["moves"] == "yes"]
     _sgn = "+" if r["injected"] > r["baseline"] else "-"
     print(f"  {r['broken']} -> {r['metric']}: relative move "
-          f"{_sgn}{r['rel move']:.2e}, i.e. "
-          f"{r['rel move']/ROOT_FIND_RES:.2f}x the {ROOT_FIND_RES:.2e} that two "
+          f"below 1e-5 (here {_sgn}{r['rel move']:.1e}), i.e. about "
+          f"{r['rel move']/ROOT_FIND_RES:.1f}x the {ROOT_FIND_RES:.2e} that two "
           f"brentq\n    root-finds at xtol {XTOL_LOG10:g} in log10 can resolve "
           f"-- the order of the tolerance, not a\n    resolved effect; and "
-          f"{min(_rivals)/r['rel move']:.0f}x smaller than the WEAKEST of the "
+          f"more than {10**np.floor(np.log10(min(_rivals)/r['rel move'])):.0f}x "
+          f"smaller than the WEAKEST of the "
           f"{len(_rivals)} defect rows on the same metric,\n    which is the "
           f"comparison that makes it not-coverage. Direction {_sgn}, as the "
           f"note argues.")
@@ -2071,9 +2076,8 @@ for r in ROB:
     # no free constant at all: the robustness row must be weaker than EVERY
     # defect row on the same metric, which is what "not coverage" means here.
     # The second bounds it to within one decade of the derived resolution - the
-    # decade is a unit, not a fitted pad, and the margin today is 8x, so it is
-    # not a number chosen to make the claim come out true (which is exactly what
-    # the 1e-5 it replaced was).
+    # decade is a unit, not a fitted pad, and the margin is 8x, so it is not a
+    # number chosen to make the claim come out true.
     assert r["rel move"] < min(_rivals), r
     assert r["rel move"] < 10*ROOT_FIND_RES, r
 assert n_def == n_move, [r for r in BREAK if r["role"] == "defect"
@@ -2096,8 +2100,7 @@ print(f"every covered metric has a row that moves it by at least "
 assert min(STRENGTH.values()) > ROOT_FIND_RES, weak[0]'''))
 
 # ------------------------------------------------------------ agreement + map
-cells.append(code(r'''ABS_FLOOR = 1e-12
-STRUCTURAL = {
+cells.append(code(r'''STRUCTURAL = {
     "froment_chain_symbolic_max_residual":
         "exactly zero by construction: ten sympy identities. It cannot fail for "
         "the right reason; what it protects is the TRANSCRIPTION of the printed "
@@ -2108,8 +2111,8 @@ STRUCTURAL = {
         "is a float coincidence of those values: it needs (k_-1+k_2)/k_1 == K_M "
         "and k_2 C_E0 == r_m to round-trip exactly. The RESULT is the algebra, "
         "which is proved in rho_degeneracy_symbolic_residual; the arithmetic "
-        "spread is rate_law_rho_degeneracy_random_draws_max_rel (4.4e-16 over "
-        "2000 random draws). Companion: rate_law_break_k2_plus_1pct (9.8e-3), "
+        "spread is rate_law_rho_degeneracy_random_draws_max_rel (below 1e-14 "
+        "over 2000 random draws). Companion: rate_law_break_k2_plus_1pct (9.8e-3), "
         "the same computation with r_m no longer held fixed.",
     "rate_law_rho_degeneracy_random_draws_max_rel":
         "ulp-level: the same computation as above over 2000 seeded random "
@@ -2129,12 +2132,12 @@ STRUCTURAL = {
         "measure on the abscissa Froment prints.",
     "pymrm_enzyme_balance_max":
         "C_E + C_A-E is conserved to round-off by the mass-action source. NOT "
-        "an identity - the two fields are integrated separately - but far below "
-        "ABS_FLOOR. Companion: pymrm_richardson_vs_radau (4.2e-7).",
+        "an identity - the two fields are integrated separately - but at "
+        "round-off. Companion: pymrm_richardson_vs_radau (4.2e-7).",
     "pymrm_substrate_balance_max":
         "as above for C_A + C_A-E + C_P. Break row R7 doubles the P row and "
-        "moves it to O(1), so the check does have teeth; it simply passes far "
-        "below the CI floor. Companion: pymrm_richardson_vs_radau.",
+        "moves it to O(1), so the check does have teeth; it simply passes at "
+        "round-off. Companion: pymrm_richardson_vs_radau.",
 }
 # metrics with no break row of their own, each named individually - a generic
 # fallback is how an uncovered metric hides (the A4.1 mechanism)
@@ -2199,173 +2202,272 @@ for name in M:
 assert set(COVER) == set(M), set(COVER) ^ set(M)
 uncovered = [k for k, v in COVER.items() if v == "UNCOVERED"]
 assert not uncovered, uncovered
-# ...and the OTHER not-coverage branch, which was printed but not asserted until
-# a verification pointed out that a metric whose only rows were robustness rows
-# would land here, print a loud label and still PASS - including n_def == n_move,
-# since robustness rows are excluded from n_def. That is precisely the illusion
-# the robustness/defect split was introduced to prevent, so it is now an assert.
+# ...and the OTHER not-coverage branch: a metric whose only rows are robustness
+# rows would land here, print a loud label and still PASS - including
+# n_def == n_move, since robustness rows are excluded from n_def. That is
+# precisely the illusion the robustness/defect split exists to prevent, so it is
+# an assert.
 robonly = [k for k, v in COVER.items() if v.startswith("ROBUSTNESS ROWS ONLY")]
 assert not robonly, robonly
 
-below = {k: v for k, v in M.items() if abs(v) < ABS_FLOOR}
-print(f"{len(M)} metrics; {len(below)} sit below CI's ABS_FLOOR of {ABS_FLOOR:g} "
-      f"and are therefore OUTSIDE the regression suite:")
-for k, v in below.items():
-    print(f"  {k} = {v:.3g}")
+# The metrics at round-off are registered as bounds in the next cell, so CI
+# checks each against its bound rather than skipping it.
+roundoff = [k for k, v in M.items() if abs(v) < 1e-12]
+print(f"{len(M)} metrics; {len(roundoff)} sit at round-off and are registered as "
+      f"bounds, never as values:")
+for k in roundoff:
+    print(f"  {k}")
     assert k in STRUCTURAL, k
 print()
 for k in sorted(COVER):
     print(f"  {k}\n      {COVER[k]}")'''))
 
-cells.append(code(r'''# every number quoted in prose, in meta.yaml, in README.md and in
-# models_entry.yaml, checked against the live computation. Nothing typed is
-# allowed to drift from what the code prints.
+cells.append(code(r'''# Every metric is registered ONCE with how it is checked (docs/claims-design.md):
+# a value against the committed baseline within its rtol, a bound against its
+# bound on every machine, an exact result by equality. Round-off-level numbers
+# are bounds; their exact digits differ between BLAS kernels and are never quoted.
+claims = Claims("J4.6")
+
+# -- structure: proofs and their numerical companions
+claims.bound("froment_chain_symbolic_max_residual", M["froment_chain_symbolic_max_residual"],
+             max=0.0, basis="identity", structural=True,
+             note="ten sympy identities simplify to 0; protects the transcription")
+claims.exact("froment_chain_identities_verified", int(M["froment_chain_identities_verified"]),
+             structural=True, note="the number of identities the code checks; it changes "
+             "only if the code does")
+claims.bound("rho_degeneracy_symbolic_residual", M["rho_degeneracy_symbolic_residual"],
+             max=0.0, basis="identity", structural=True,
+             note="sympy d r/d rho of eq. (1.5.1-13) under the reparameterisation")
+claims.bound("rate_law_rho_degeneracy_max_rel", M["rate_law_rho_degeneracy_max_rel"],
+             max=1e-14, basis="identity",
+             note="relative to the rate; exactly 0 where the float round trips are exact")
+claims.bound("rate_law_rho_degeneracy_random_draws_max_rel",
+             M["rate_law_rho_degeneracy_random_draws_max_rel"], max=1e-14, basis="identity",
+             structural=True, note="relative to the rate; a few ulp over 2000 draws "
+             "(4.4e-16 measured), the arithmetic under an exact identity")
+claims.exact("KM_ratio_at_rho_1e4", M["KM_ratio_at_rho_1e4"], structural=True,
+             note="definitional: 1 + rho at rho = 1e4")
+claims.value("rate_law_break_k2_plus_1pct", M["rate_law_break_k2_plus_1pct"],
+             note="the above-floor companion of the degeneracy: r_m no longer held fixed")
+claims.bound("lineweaver_correct_axes_nonlinearity", M["lineweaver_correct_axes_nonlinearity"],
+             max=1e-13, basis="identity", note="fraction of the range of 1/r; 1/r is exactly "
+             "affine in 1/C_A, measured 4.8e-16 to 1.2e-15 across BLAS kernels")
+
+# -- the fit to the seven printed points. The tolerances are tight so that the
+#    one-print-ulp row (a 1e-4 relative shift) fails them; the closed-form fit is
+#    reproducible far below that.
+claims.value("mm_fit_k_per_min", M["mm_fit_k_per_min"], rtol=1e-5, unit="1/min")
+claims.value("mm_fit_K_L_per_cmol", M["mm_fit_K_L_per_cmol"], rtol=1e-5, unit="L/cmol")
+claims.value("mm_fit_rm_cmol_per_L_min", M["mm_fit_rm_cmol_per_L_min"], rtol=1e-5,
+             unit="cmol/L/min")
+claims.value("mm_fit_KM_cmol_per_L", M["mm_fit_KM_cmol_per_L"], rtol=1e-5, unit="cmol/L")
+claims.value("mm_fit_rms_cmol_per_L", M["mm_fit_rms_cmol_per_L"], rtol=1e-3, unit="cmol/L")
+claims.value("mm_fit_maxres_over_print_resolution",
+             M["mm_fit_maxres_over_print_resolution"], rtol=1e-3)
+claims.value("mm_fit_sse_penalty_K_pinned_at_2", M["mm_fit_sse_penalty_K_pinned_at_2"],
+             rtol=1e-3)
+claims.value("mm_fit_KM_with_s0_free", M["mm_fit_KM_with_s0_free"], rtol=1e-5,
+             unit="cmol/L")
+claims.value("null_first_order_rms_ratio", M["null_first_order_rms_ratio"], rtol=1e-3)
+claims.value("lb_rm_bias_vs_nls", M["lb_rm_bias_vs_nls"], rtol=1e-5)
+claims.value("lb_KM_bias_vs_nls", M["lb_KM_bias_vs_nls"], rtol=1e-5)
+claims.value("lb_KM_bias_finite_difference_only", M["lb_KM_bias_finite_difference_only"],
+             rtol=1e-4)
+
+# -- straightness of the printed Lineweaver axes (closed form)
+claims.value("lineweaver_printed_axes_nonlinearity_minimax",
+             M["lineweaver_printed_axes_nonlinearity_minimax"])
+claims.value("lineweaver_printed_axes_nonlinearity", M["lineweaver_printed_axes_nonlinearity"])
+claims.value("lineweaver_printed_axes_nonlinearity_uniform_measure",
+             M["lineweaver_printed_axes_nonlinearity_uniform_measure"])
+
+# -- what a batch transient sees, and the epsilons
+for _k in ("rho_spread_induction_over_eps", "rho_spread_induction_peak_min",
+           "sampled_max_shortfall_uniform_scan", "rho_spread_over_eps_trace_limit",
+           "CE0_star_cmol_per_L", "eps_star_rho_visible_at_print_resolution",
+           "eps_star_discrimination_with_compensation",
+           "eps_star_rms_25pt_grid_no_compensation", "eps_star_compensation_penalty",
+           "eps_star_statistic_and_window_factor", "eps_star_raw_ratio_unlike_statistics",
+           "qssa_error_over_eps_rho1", "qssa_error_at_discrimination_eps_over_resolution",
+           "qssa_group_spread_CE0_over_cA0", "qssa_group_spread_CE0_over_cA0_plus_KM",
+           "rho_star_equilibrium_two_route_rel_diff"):
+    claims.value(_k, M[_k])
+claims.bound("qssa_error_order_in_eps", M["qssa_error_order_in_eps"], min=0.9, max=1.1,
+             basis="theory", note="the quasi-steady-state error is first order in eps")
+claims.value("rho_star_equilibrium_route", M["rho_star_equilibrium_route"], rtol=1e-4)
+claims.value("rho_star_equilibrium_analytic", M["rho_star_equilibrium_analytic"], rtol=1e-5)
+claims.value("dsdKM_rootfound_over_sampled", M["dsdKM_rootfound_over_sampled"], rtol=1e-5)
+claims.value("rho_profile_sse_span_fraction", M["rho_profile_sse_span_fraction"],
+             note="spreads 1e-4 relative across BLAS kernels (multi-start refits), so "
+             "it keeps the default rtol and the one-print-ulp row (6.5e-3) does not fail it")
+claims.value("full_model_F_statistic", M["full_model_F_statistic"], rtol=1e-3)
+claims.value("full_model_F_crit_95", M["full_model_F_crit_95"],
+             note="definitional: the 95 % point of F(2, 3)")
+
+# -- numerics of the pymrm marcher and the second routes
+claims.bound("lsoda_vs_radau_reference", M["lsoda_vs_radau_reference"], max=1e-9,
+             basis="tolerance", unit="cmol/L",
+             note="LSODA at rtol 1e-11, atol 1e-14 against Radau at rtol 1e-12, atol 1e-15; "
+             "measured 3.8e-11 to 5.8e-11 across BLAS kernels")
+claims.bound("pymrm_be_time_order", M["pymrm_be_time_order"], min=0.9, max=1.1,
+             basis="theory", note="backward Euler is first order in dt")
+claims.value("pymrm_richardson_vs_radau", M["pymrm_richardson_vs_radau"], unit="cmol/L",
+             note="the O(dt^2) remainder of Richardson(720, 1440), a discretisation error")
+claims.bound("pymrm_enzyme_balance_max", M["pymrm_enzyme_balance_max"], max=1e-13,
+             basis="identity", structural=True, unit="cmol/L",
+             note="a linear invariant of the source, kept by every Newton step to round-off")
+claims.bound("pymrm_substrate_balance_max", M["pymrm_substrate_balance_max"], max=1e-13,
+             basis="identity", unit="cmol/L",
+             note="a linear invariant of the source, kept by every Newton step to round-off")
+claims.bound("fit_second_route_k_rel_diff", M["fit_second_route_k_rel_diff"], max=1e-5,
+             basis="chosen", note="two-route gap, Lambert W against Richardson-extrapolated "
+             "backward Euler at 1800/3600 steps; measured 5.9e-8 to 1.1e-7 across BLAS "
+             "kernels, the bound is about 100x that and 1e2 below the no-Richardson row")
+claims.bound("fit_second_route_K_rel_diff", M["fit_second_route_K_rel_diff"], max=1e-6,
+             basis="chosen", note="as for k; measured 8e-10 to 7.4e-8 across BLAS kernels, "
+             "the bound is about 13x the largest and 1e3 below the no-Richardson row")
+
+# -- the break table: every defect row is wired to the claim it targets; the
+#    robustness row is not, because it is written NOT to move its metric.
+for r in BREAK:
+    if r["role"] == "defect":
+        claims.breaks(r["broken"], r["metric"], r["injected"])
+
+
 def brk(broken_prefix, metric, field="injected"):
     """The live value of a break-table row, looked up by (row, metric).
 
-    meta.yaml and models_entry.yaml quote four numbers that exist ONLY as
-    break-table entries. A verification found all four outside this cell's net,
-    which made this cell's own "every number in prose" claim false while every
-    value in it was still correct - a regression gap, not an error. They are
-    looked up here instead of retyped, so a row that changes cannot drift."""
+    meta.yaml and models_entry.yaml quote numbers that exist ONLY as break-table
+    entries; they are looked up here instead of retyped, so a row that changes
+    cannot drift."""
     hits = [r for r in BREAK if r["metric"] == metric
             and r["broken"].startswith(broken_prefix)]
     assert len(hits) == 1, (broken_prefix, metric, len(hits))
     return float(hits[0][field])
 
 
-QUOTED = [
-    ("front matter / Results 1", "K_M", 0.503055, M["mm_fit_KM_cmol_per_L"], 1e-6),
-    ("front matter / Results 1", "r_m", 0.162583, M["mm_fit_rm_cmol_per_L_min"], 1e-6),
-    ("front matter / Results 1", "fit RMS", 4.02e-3, M["mm_fit_rms_cmol_per_L"], 5e-6),
-    ("front matter", "first-order null RMS", 3.90e-2,
-     M["null_first_order_rms_ratio"]*M["mm_fit_rms_cmol_per_L"], 5e-5),
-    ("front matter", "max residual / print ulp", 13.9,
-     M["mm_fit_maxres_over_print_resolution"], 0.05),
-    ("front matter / Results 3", "rate-law degeneracy", 0.0,
-     M["rate_law_rho_degeneracy_max_rel"], 0.0),
-    ("front matter / Results 3", "degeneracy proved symbolically", 0.0,
-     M["rho_degeneracy_symbolic_residual"], 0.0),
-    ("front matter / Results 3", "degeneracy over random draws", 4.4e-16,
-     M["rate_law_rho_degeneracy_random_draws_max_rel"], 5e-17),
-    ("front matter / Results 4", "observable spread/eps", 0.242,
-     M["rho_spread_over_eps_trace_limit"], 5e-4),
-    ("front matter / Results 4", "induction spread/eps", 0.977,
-     M["rho_spread_induction_over_eps"], 5e-4),
-    ("front matter / Results 4", "induction peak, min", 2.0e-7,
-     M["rho_spread_induction_peak_min"], 5e-8),
-    ("front matter / Results 4", "uniform-scan shortfall", 0.66,
-     M["sampled_max_shortfall_uniform_scan"], 5e-3),
-    ("front matter / Results 4", "eps* no compensation", 2.07e-3,
-     M["eps_star_rho_visible_at_print_resolution"], 5e-6),
-    ("front matter / Results 4", "eps* with compensation", 5.80e-2,
-     M["eps_star_discrimination_with_compensation"], 5e-4),
-    ("front matter / Results 4", "eps* same statistic, no compensation", 3.18e-3,
-     M["eps_star_rms_25pt_grid_no_compensation"], 5e-6),
-    ("front matter / Results 4", "compensation penalty, like for like", 18.2,
-     M["eps_star_compensation_penalty"], 0.05),
-    ("front matter / Results 4", "statistic-and-window factor", 1.54,
-     M["eps_star_statistic_and_window_factor"], 5e-3),
-    ("front matter / Results 4", "raw ratio of the two headline epsilons", 28.0,
-     M["eps_star_raw_ratio_unlike_statistics"], 0.05),
-    ("front matter / Results 6", "SSE span over rho", 0.086,
-     M["rho_profile_sse_span_fraction"], 5e-4),
-    ("front matter / Results 6", "F statistic", 1.90,
-     M["full_model_F_statistic"], 5e-3),
-    ("front matter / Results 6", "F crit 95", 9.55, M["full_model_F_crit_95"], 5e-3),
-    ("front matter / defect 2", "printed-axes nonlinearity, MINIMAX floor", 0.3173,
-     M["lineweaver_printed_axes_nonlinearity_minimax"], 5e-5),
-    ("front matter / defect 2", "printed-axes nonlinearity, log-weighted", 0.5032,
-     M["lineweaver_printed_axes_nonlinearity"], 5e-5),
-    ("front matter / defect 2", "printed-axes nonlinearity, uniform", 0.669,
-     M["lineweaver_printed_axes_nonlinearity_uniform_measure"], 5e-4),
-    ("front matter / defect 2", "correct-axes nonlinearity", 9.7e-16,
-     M["lineweaver_correct_axes_nonlinearity"], 5e-17),
-    ("Results 2", "Lineweaver K_M bias", -0.4673, M["lb_KM_bias_vs_nls"], 5e-4),
-    ("Results 2", "Lineweaver r_m bias", -0.3406, M["lb_rm_bias_vs_nls"], 5e-4),
-    ("Results 2", "differencing-only K_M bias", 0.1402,
-     M["lb_KM_bias_finite_difference_only"], 5e-4),
-    ("Results 5", "QSSA order in eps", 1.000, M["qssa_error_order_in_eps"], 5e-3),
-    ("Results 5", "eps group spread, C_E0/c_A0", 94.9,
-     M["qssa_group_spread_CE0_over_cA0"], 0.5),
-    ("Results 5", "eps group spread, C_E0/(c_A0+K_M)", 1.91,
-     M["qssa_group_spread_CE0_over_cA0_plus_KM"], 5e-3),
-    ("Results 5", "rho*", 2.195e-3, M["rho_star_equilibrium_route"], 5e-7),
-    ("Results 5", "rho* two-route difference", 8.00e-4,
-     M["rho_star_equilibrium_two_route_rel_diff"], 5e-6),
-    ("Validation", "pymrm order in dt", 0.998, M["pymrm_be_time_order"], 5e-3),
-    ("Validation", "Richardson vs Radau", 4.19e-7,
-     M["pymrm_richardson_vs_radau"], 5e-9),
-    ("Validation", "K pinned at 2, SSE penalty", 1.083e-3,
-     M["mm_fit_sse_penalty_K_pinned_at_2"], 5e-6),
-]
-QUOTED += [
-    # numbers that live only in meta.yaml, README.md or models_entry.yaml
-    ("meta / README / entry", "QSSA error at eps* / resolution", 88.9,
-     M["qssa_error_at_discrimination_eps_over_resolution"], 1.0),
-    ("meta / entry", "null zero-order ratio", 13.29, NULLS["zero"][0]/rms_fit, 5e-3),
-    ("meta / entry", "null second-order ratio", 26.04,
-     NULLS["second"][0]/rms_fit, 5e-3),
-    ("meta / entry", "null zero-order RMS", 5.34e-2, NULLS["zero"][0], 5e-5),
-    ("meta / entry", "null second-order RMS", 1.05e-1, NULLS["second"][0], 5e-4),
-    ("meta / README", "K_M within of 0.5 cmol/L", 0.0061,
-     abs(KM_fit/0.5 - 1), 5e-5),
-    ("meta / entry", "eps coefficient at K_M = 0.05", 0.9541, GROUP[0.05][2], 5e-5),
-    ("meta / entry", "induction time at rho = 1e-4, min", 2.09e-8,
-     1/(elem(RHO_LO, 1e-4, rm_fit, KM_fit)[0]*(cA0 + KM_fit)), 5e-11),
-    ("meta / entry", "induction time at rho = 1e4, min", 2.09e-4,
-     1/(elem(RHO_HI, 1e-4, rm_fit, KM_fit)[0]*(cA0 + KM_fit)), 5e-7),
-    ("meta / entry", "rho* analytic", 2.1934e-3,
-     M["rho_star_equilibrium_analytic"], 5e-8),
-    ("meta / entry", "rho* root-found", 2.1951e-3,
-     M["rho_star_equilibrium_route"], 5e-8),
-    ("meta / entry", "ds/dK_M peak location", 0.228461, s_pk, 5e-7),
-    ("meta / entry", "QSSA error at eps*, cmol/L", 0.04443, qssa_at_eps_star, 5e-6),
-    ("meta / entry", "QSSA error at eps*, total substrate / resolution", 38.8,
-     qssa_at_eps_star_tot/RES, 0.05),
-    ("meta / README", "LSODA vs Radau", 3.85e-11, M["lsoda_vs_radau_reference"], 5e-13),
-    ("meta / README", "second-route k", 5.9e-8, M["fit_second_route_k_rel_diff"], 5e-10),
-    ("meta / README", "second-route K", 5.6e-9, M["fit_second_route_K_rel_diff"], 5e-11),
-    ("README", "Lineweaver K_M low, per cent", 46.7, -100*M["lb_KM_bias_vs_nls"], 0.05),
-    ("README", "Lineweaver r_m low, per cent", 34.1, -100*M["lb_rm_bias_vs_nls"], 0.05),
-    ("README", "differencing-only, points", 14.0,
-     100*M["lb_KM_bias_finite_difference_only"], 0.05),
-    # numbers that live only as break-table entries, quoted in meta.yaml and
-    # models_entry.yaml -- looked up, never retyped
-    ("meta", "eps* with compensation, resolution doubled", 8.757e-2,
-     brk("resolution threshold doubled",
-         "eps_star_discrimination_with_compensation"), 5e-6),
-    ("meta", "eps* with compensation, 13-point grid", 6.954e-2,
-     brk("discrimination misfit read on 13",
-         "eps_star_discrimination_with_compensation"), 5e-6),
-    ("meta", "like-for-like eps*, rho pair narrowed", 9.622e-3,
-     brk("rho range narrowed", "eps_star_rms_25pt_grid_no_compensation"), 5e-7),
-    ("meta / entry", "robustness row's relative move", 5.7e-6,
-     brk("discrimination fit reduced to a single start",
-         "eps_star_discrimination_with_compensation", "rel move"), 5e-8),
-    # self-referential counts quoted in meta.yaml, README.md and models_entry.yaml
-    ("meta / README / entry", "break rows", 52.0, float(len(BREAK)), 0.0),
-    ("meta / README / entry", "defect-injection rows", 51.0, float(n_def), 0.0),
-    ("meta / README / entry", "rows that move", 51.0, float(n_move), 0.0),
-    ("meta / README / entry", "robustness rows", 1.0, float(len(ROB)), 0.0),
-    ("meta / README / entry", "metrics covered by a mover", 42.0,
-     float(len(movers)), 0.0),
-    ("meta / README / entry", "metrics", 53.0, float(len(M)), 0.0),
-    ("meta / README / entry", "metrics below ABS_FLOOR", 7.0, float(len(below)), 0.0),
-    ("meta / README / entry", "identities", 10.0,
-     M["froment_chain_identities_verified"], 0.0),
-]
+# the three eps* ratios, evaluated with one of their factors broken by a row
+_RES2, _NARROW, _GRID13 = ("resolution threshold doubled to 1e-3 cmol/L",
+                           "rho range narrowed from [1e-4, 1e4] to [0.5, 2]",
+                           "discrimination misfit read on 13 grid points instead of 25")
+claims.breaks(_RES2, "eps_star_compensation_penalty",
+              brk(_RES2, "eps_star_discrimination_with_compensation")
+              / brk(_RES2, "eps_star_rms_25pt_grid_no_compensation"))
+claims.breaks(_NARROW + " (like-for-like eps* only)", "eps_star_statistic_and_window_factor",
+              brk(_NARROW, "eps_star_rms_25pt_grid_no_compensation")
+              / M["eps_star_rho_visible_at_print_resolution"])
+claims.breaks(_GRID13, "eps_star_raw_ratio_unlike_statistics",
+              brk(_GRID13, "eps_star_discrimination_with_compensation")
+              / M["eps_star_rho_visible_at_print_resolution"])
 
-# meta.yaml and README.md quote this count, so pin it rather than print it:
-# comparing len(QUOTED) with itself would be a check that cannot fail.
-assert len(QUOTED) == 68, len(QUOTED)
-bad = [(w, n, q, l) for w, n, q, l, tol in QUOTED if abs(q - l) > tol]
-print(f"{len(QUOTED)} quoted numbers checked against the live computation; "
-      f"{len(bad)} mismatched")
+# -- every number quoted in prose, in meta.yaml, in README.md and in models.yaml
+#    that is a registered claim, as written there. A round-off-level number is
+#    quoted as the bound it is checked against.
+for name, lits in {
+    "mm_fit_KM_cmol_per_L": ["0.503055"],
+    "mm_fit_rm_cmol_per_L_min": ["0.162583"],
+    "mm_fit_k_per_min": ["0.323192"],
+    "mm_fit_K_L_per_cmol": ["1.987853"],
+    "mm_fit_rms_cmol_per_L": ["4.02e-3"],
+    "mm_fit_maxres_over_print_resolution": ["13.9", "13.87"],
+    "mm_fit_sse_penalty_K_pinned_at_2": ["0.108 %"],
+    "null_first_order_rms_ratio": ["9.71"],
+    "rate_law_rho_degeneracy_max_rel": ["below 1e-14"],
+    "rate_law_rho_degeneracy_random_draws_max_rel": ["below 1e-14"],
+    "rho_spread_over_eps_trace_limit": ["0.242"],
+    "rho_spread_induction_over_eps": ["0.977", "0.9773"],
+    "rho_spread_induction_peak_min": ["2.0e-7", "2.011e-7"],
+    "sampled_max_shortfall_uniform_scan": ["66 %", "66.3 %"],
+    "eps_star_rho_visible_at_print_resolution": ["2.07e-3", "2.069e-3"],
+    "eps_star_discrimination_with_compensation": ["5.80e-2", "5.798e-2"],
+    "eps_star_rms_25pt_grid_no_compensation": ["3.18e-3", "3.185e-3"],
+    "eps_star_compensation_penalty": ["18.2", "18.20"],
+    "eps_star_statistic_and_window_factor": ["1.54", "1.539"],
+    "eps_star_raw_ratio_unlike_statistics": ["28.0"],
+    "rho_profile_sse_span_fraction": ["8.6 %"],
+    "full_model_F_statistic": ["1.90", "1.9009"],
+    "full_model_F_crit_95": ["9.55", "9.5521"],
+    "lineweaver_printed_axes_nonlinearity_minimax": ["31.7 %", "31.72 %", "31.7256 %"],
+    "lineweaver_printed_axes_nonlinearity": ["50.3 %", "50.32 %"],
+    "lineweaver_printed_axes_nonlinearity_uniform_measure": ["66.9 %", "66.88 %"],
+    "lineweaver_correct_axes_nonlinearity": ["below 1e-13"],
+    "lb_KM_bias_vs_nls": ["-0.4673", "-46.7 %"],
+    "lb_rm_bias_vs_nls": ["-0.3406", "-34.1 %"],
+    "lb_KM_bias_finite_difference_only": ["0.1402", "14.0 %"],
+    "qssa_group_spread_CE0_over_cA0": ["94.9", "95.0"],
+    "qssa_group_spread_CE0_over_cA0_plus_KM": ["1.91"],
+    "qssa_error_at_discrimination_eps_over_resolution": ["88.9"],
+    "rho_star_equilibrium_route": ["2.195e-3", "2.1951e-3"],
+    "rho_star_equilibrium_analytic": ["2.1934e-3"],
+    "rho_star_equilibrium_two_route_rel_diff": ["8.00e-4", "0.080 %"],
+    "pymrm_be_time_order": ["0.998", "0.9980"],
+    "pymrm_richardson_vs_radau": ["4.19e-7"],
+    "pymrm_enzyme_balance_max": ["below 1e-13"],
+    "pymrm_substrate_balance_max": ["below 1e-13"],
+    "lsoda_vs_radau_reference": ["below 1e-9"],
+    "fit_second_route_k_rel_diff": ["below 1e-5"],
+    "fit_second_route_K_rel_diff": ["below 1e-6"],
+}.items():
+    for lit in lits:
+        claims.says(lit, name)
+
+
+# -- quoted numbers that are NOT metrics: derived quantities and break-table
+#    entries, checked by the same rule as claims.says (one unit in the last
+#    written place), and the table's own counts, checked exactly.
+def near(literal, computed):
+    lit = parse_literal(literal)
+    return abs(lit["nums"][0] - float(computed)) <= lit["unit"]
+
+
+ROB_MOVE = brk("discrimination fit reduced to a single start",
+               "eps_star_discrimination_with_compensation", "rel move")
+OTHER = [
+    ("first-order null RMS", "3.90e-2",
+     M["null_first_order_rms_ratio"]*M["mm_fit_rms_cmol_per_L"]),
+    ("null zero-order ratio", "13.29", NULLS["zero"][0]/rms_fit),
+    ("null second-order ratio", "26.04", NULLS["second"][0]/rms_fit),
+    ("null zero-order RMS", "5.34e-2", NULLS["zero"][0]),
+    ("null second-order RMS", "1.05e-1", NULLS["second"][0]),
+    ("K_M within of 0.5 cmol/L", "0.61 %", abs(KM_fit/0.5 - 1)),
+    ("eps coefficient at K_M = 0.05", "0.9541", GROUP[0.05][2]),
+    ("induction time at rho = 1e-4, min", "2.09e-8",
+     1/(elem(RHO_LO, 1e-4, rm_fit, KM_fit)[0]*(cA0 + KM_fit))),
+    ("induction time at rho = 1e4, min", "2.09e-4",
+     1/(elem(RHO_HI, 1e-4, rm_fit, KM_fit)[0]*(cA0 + KM_fit))),
+    ("ds/dK_M peak location", "0.228461", s_pk),
+    ("QSSA error at eps*, cmol/L", "0.04443", qssa_at_eps_star),
+    ("QSSA error at eps*, total substrate / resolution", "38.8",
+     qssa_at_eps_star_tot/RES),
+    ("eps* with compensation, resolution doubled", "8.757e-2",
+     brk("resolution threshold doubled", "eps_star_discrimination_with_compensation")),
+    ("eps* with compensation, 13-point grid", "6.954e-2",
+     brk("discrimination misfit read on 13", "eps_star_discrimination_with_compensation")),
+    ("like-for-like eps*, rho pair narrowed", "9.622e-3",
+     brk("rho range narrowed", "eps_star_rms_25pt_grid_no_compensation")),
+]
+COUNTS = [("break rows", 52, len(BREAK)), ("defect-injection rows", 51, n_def),
+          ("rows that move", 51, n_move), ("robustness rows", 1, len(ROB)),
+          ("metrics covered by a mover", 42, len(movers)), ("metrics", 53, len(M)),
+          # an exact claim, compared here because Claims.says cannot yet take a
+          # bare integer for one (shared/gallery_utils.py _says_ok indexes nums[1])
+          ("identities", 10, claims["froment_chain_identities_verified"])]
+bad = [(w, lit, x) for w, lit, x in OTHER if not near(lit, x)]
+bad += [(w, n, x) for w, n, x in COUNTS if n != x]
+# the robustness row is quoted as "below 1e-5": it is of the order of the
+# root-find resolution, and its exact size differs between BLAS kernels
+bad += [] if ROB_MOVE < 1e-5 else [("robustness row's relative move", "below 1e-5", ROB_MOVE)]
+n_says = sum(len(v) for v in claims.quoted.values())
+print(f"{n_says} prose literals of registered claims checked by claims.says, and "
+      f"{len(OTHER) + len(COUNTS) + 1} other quoted numbers; {len(bad)} mismatched")
 for b in bad:
     print("  MISMATCH", b)
 assert not bad, bad
-report_agreement("J4.6", M)'''))
+# Five claims have no break row that fails their check, so breaks are not
+# required page-wide: two orders (theory bounds that no row leaves), two
+# definitional or companion values, and the SSE span, whose only row moves it
+# by less than its admissible tolerance. Every other claim has one.
+claims.report(require_breaks=False)'''))
 
 # ------------------------------------------------------------- what pymrm adds
 cells.append(md(r"""## What pymrm adds

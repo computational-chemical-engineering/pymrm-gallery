@@ -58,7 +58,9 @@ measurement of either constant.
   with pymrm and reading $H$ from the difference of the first two time moments
   at two interior stations agrees to **4.1 × 10⁻⁵**. The two-station difference
   cancels every boundary effect — measured: swapping a Danckwerts inlet for a
-  Dirichlet one moves $H$ by 1.5 × 10⁻⁶.
+  Dirichlet one moves $H$ by less than 1 × 10⁻⁵ relative (a bound, because it is
+  a difference of two nearly equal plate heights), while the same swap read from
+  one station is not cancelled.
 
 - **A refinement study with a known answer.** First-order upwind adds $uh/2$ of
   numerical dispersion, so switching the limiter off must shift $H$ by *exactly

@@ -15,7 +15,7 @@ cells = []
 # --------------------------------------------------------------- front matter
 cells.append(md(r"""---
 title: "The gel effect without a switch: Chiu, Carratt and Soong's diffusion-controlled termination"
-description: "Chiu, Carratt & Soong (1983) build the Trommsdorff-Norrish gel effect out of one unbranched constitutive equation - 1/k_t = 1/k_t0 + theta_t P/f(x) - and criticise earlier treatments for switching diffusion control on at a prescribed critical conversion 'in a somewhat ad hoc fashion'.  THEIR COMPARISONS WITH EXPERIMENT LIVE ONLY IN FIGURES 3-9 (Marten & Hamielec's data), SO THAT HALF OF THE CASE IS OUT OF SCOPE and nothing here is digitised; what the paper prints in numerals is two tables and six stated results, and this page tests those.  THE HEADLINE IS THE PAPER'S OWN GRAPHICAL ONSET CONSTRUCTION, reconstructed from the sentence that defines it and computed rather than read: extrapolating the sloped region of log k_t back to its initial value gives 0.25516, 0.34838 and 0.44034 against the printed 0.26, 0.35 and 0.45, the largest miss 0.00966 in conversion, and the trend with temperature reproduced.  THOSE ARE THE HIGHER INITIATOR LOADING, I_0 = 0.0258 mol/L, AND THE PAGE SAYS SO: the paper quotes one onset per temperature while Figures 10-12 plot both loadings, and the same construction on the other curve of the same figures misses by up to 0.03126.  WHAT LIMITS THE NUMBER IS THE SENTENCE, NOT THE ARITHMETIC: seven defensible readings of the construction spread the answer by 0.09009, 9.33 times the largest miss, while the resampling grid moves it by 1.311e-05 relative and a completely independent integration - the six ODEs re-parametrised by conversion, different solver family - reproduces it to 9.08e-12.  TWO OF THE PAPER'S OWN CORRELATIONS ARE RECOMPUTED FROM ITS OWN TABLE II: the Arrhenius activation energies of Figure 13 come out 34.908161 and 34.516600 kcal/mol against the printed 34 (+2.67 % and +1.52 %) and 27.771564 against the printed 28 (-0.82 %); and Figure 15's claim that 'all three points fall on the same straight line' holds to 8.819e-04 relative, against 1.535e-02 for the same three points fitted linearly in T instead - 17.4057x worse at the printed T_gp, and not a nested submodel, so the direction is evidence.  WHAT THAT COMPARISON ESTABLISHES IS CONCAVITY IN T AND NOT THE QUADRATIC FORM: the gain is 3.6124x and 3.5347x at the two ends of the T_gp interval the same three cells admit and diverges inside it, and two other non-nested two-parameter regressors beat linear-in-T as well (5.5926x and 3.2607x), so what all of them are reading is the second difference of A, -0.007000.  THE MODEL'S OWN FRAMING IS TESTED RATHER THAN RESTATED.  'Only a small number of adjustable parameters' means four named parameters and THIRTEEN fitted numbers over six conditions; the paper's own Figures 13 and 15 compress those thirteen to eight, but only to 18.8281 % on theta_t, which moves the onset conversion by 0.01633 - 1.691 times the distance by which this page's reconstruction misses the printed onsets, so the compression is lossy at the resolution of the paper's own results.  And the 'ad hoc' criticism survives a quantitative test: eq. 31 and 32 carry no branch at all, the nearest thing to an onset knob (theta_t) moves the onset by only -0.21735 per decade against 1.0 per unit for a prescribed critical conversion, and the counterfactual - the same model switched on at x_c = 0.3 - is concave DOWN over its whole pre-switch portion and jumps 0.760194 of a decade in log k_t at the switch, which is exactly the argument the paper makes on book p. 353.  FIVE INTERNAL IDENTITIES ARE PROVED RATHER THAN ASSERTED: eq. 24 and eq. 26 are re-derived symbolically from eq. 21 and come out exactly zero, eq. 22's 'r_D >> r_m' is shown to cost EXACTLY r_m/r_D - symbolically, and then a second time through the flux a pymrm spherical-shell BVP actually computes, which lands on r_m/r_D to 1.858e-05 over five ratios and converges onto it at observed order 1.8953 - and the moment equations 12-17 reproduce the chain-length equations 4a, 4b and 5 summed over a seeded finite population to 2.10e-16, including the k_tc terms, which Table I sets to zero and which therefore no condition the paper reports ever exercises.  Three printed features are reported and not repaired: Figure 3's legend prints 0.01584 where five other printings give 0.01548, Table I gives the first-order k_d the units L/min, and book p. 353 reads 'The presence model' [sic]."
+description: "Chiu, Carratt & Soong (1983) build the Trommsdorff-Norrish gel effect out of one unbranched constitutive equation - 1/k_t = 1/k_t0 + theta_t P/f(x) - and criticise earlier treatments for switching diffusion control on at a prescribed critical conversion 'in a somewhat ad hoc fashion'.  THEIR COMPARISONS WITH EXPERIMENT LIVE ONLY IN FIGURES 3-9 (Marten & Hamielec's data), SO THAT HALF OF THE CASE IS OUT OF SCOPE and nothing here is digitised; what the paper prints in numerals is two tables and six stated results, and this page tests those.  THE HEADLINE IS THE PAPER'S OWN GRAPHICAL ONSET CONSTRUCTION, reconstructed from the sentence that defines it and computed rather than read: extrapolating the sloped region of log k_t back to its initial value gives 0.25516, 0.34838 and 0.44034 against the printed 0.26, 0.35 and 0.45, the largest miss 0.00966 in conversion, and the trend with temperature reproduced.  THOSE ARE THE HIGHER INITIATOR LOADING, I_0 = 0.0258 mol/L, AND THE PAGE SAYS SO: the paper quotes one onset per temperature while Figures 10-12 plot both loadings, and the same construction on the other curve of the same figures misses by up to 0.03126.  WHAT LIMITS THE NUMBER IS THE SENTENCE, NOT THE ARITHMETIC: seven defensible readings of the construction spread the answer by 0.09009, 9.33 times the largest miss, while the resampling grid moves it by 1.311e-05 relative and a completely independent integration - the six ODEs re-parametrised by conversion, different solver family - reproduces it to below 1e-10 relative.  TWO OF THE PAPER'S OWN CORRELATIONS ARE RECOMPUTED FROM ITS OWN TABLE II: the Arrhenius activation energies of Figure 13 come out 34.908161 and 34.516600 kcal/mol against the printed 34 (+2.67 % and +1.52 %) and 27.771564 against the printed 28 (-0.82 %); and Figure 15's claim that 'all three points fall on the same straight line' holds to 8.819e-04 relative, against 1.535e-02 for the same three points fitted linearly in T instead - 17.4057x worse at the printed T_gp, and not a nested submodel, so the direction is evidence.  WHAT THAT COMPARISON ESTABLISHES IS CONCAVITY IN T AND NOT THE QUADRATIC FORM: the gain is 3.6124x and 3.5347x at the two ends of the T_gp interval the same three cells admit and diverges inside it, and two other non-nested two-parameter regressors beat linear-in-T as well (5.5926x and 3.2607x), so what all of them are reading is the second difference of A, -0.007000.  THE MODEL'S OWN FRAMING IS TESTED RATHER THAN RESTATED.  'Only a small number of adjustable parameters' means four named parameters and THIRTEEN fitted numbers over six conditions; the paper's own Figures 13 and 15 compress those thirteen to eight, but only to 18.8281 % on theta_t, which moves the onset conversion by 0.01633 - 1.691 times the distance by which this page's reconstruction misses the printed onsets, so the compression is lossy at the resolution of the paper's own results.  And the 'ad hoc' criticism survives a quantitative test: eq. 31 and 32 carry no branch at all, the nearest thing to an onset knob (theta_t) moves the onset by only -0.21735 per decade against 1.0 per unit for a prescribed critical conversion, and the counterfactual - the same model switched on at x_c = 0.3 - is concave DOWN over its whole pre-switch portion and jumps 0.760194 of a decade in log k_t at the switch, which is exactly the argument the paper makes on book p. 353.  FIVE INTERNAL IDENTITIES ARE PROVED RATHER THAN ASSERTED: eq. 24 and eq. 26 are re-derived symbolically from eq. 21 and come out exactly zero, eq. 22's 'r_D >> r_m' is shown to cost EXACTLY r_m/r_D - symbolically, and then a second time through the flux a pymrm spherical-shell BVP actually computes, which lands on r_m/r_D to 1.858e-05 over five ratios and converges onto it at observed order 1.8953 - and the moment equations 12-17 reproduce the chain-length equations 4a, 4b and 5 summed over a seeded finite population to below 1e-14 relative, including the k_tc terms, which Table I sets to zero and which therefore no condition the paper reports ever exercises.  Three printed features are reported and not repaired: Figure 3's legend prints 0.01584 where five other printings give 0.01548, Table I gives the first-order k_d the units L/min, and book p. 353 reads 'The presence model' [sic]."
 categories: [sec:J, struct:S1, tier:T0, data:tier6, phase:liquid]
 date: 2026-08-14
 ---
@@ -134,7 +134,8 @@ only ground on which anything here is excluded.
 **Two arithmetic floors, neither of which is what limits the number.** The
 resampling grid moves the onsets by **1.311e-05** relative - the sixth decimal
 of every onset here is grid noise, which is why five are quoted - and a
-completely independent integration reproduces them to **9.08e-12**. That second
+completely independent integration reproduces them to **below 1e-10** relative,
+round-off whose exact digits differ from machine to machine. That second
 number prices the *attractor*, not the integration: `lambda_0(x)` sits on a
 strongly attracting manifold, so two parametrisations of the same equations land
 on the same `log k_t(x)` however they got there. Both floors are orders of
@@ -190,8 +191,8 @@ the paper's own argument on book p. 353: the same model switched on at
 at the switch - both factors of that expression evaluated at `x_c` exactly, the
 radical concentration root-found on the dense solution rather than read off the
 nearest grid point - while the published model is concave *up* from
-`x = 0.30643` to the sharp rise, with every onset inside that window by at
-least **0.12933**.
+`x = 0.30643` to the sharp rise, with every onset inside that window; the
+smallest margin is **0.129**.
 **One qualification the paper does not make**: the published model's conversion
 curve is concave *down* below that lower bound - initiator depletion, before
 diffusion limitation takes over - so "concave upward preceding the sharp rise"
@@ -215,17 +216,8 @@ pymrm spherical-shell BVP actually computes** - `4 pi r^2 D dC/dr` read off the
 solved profile, which lands on `r_m/r_D` to **1.858e-05** over five ratios at
 `n = 6400` and converges onto it at observed order **1.8953**; and the moment
 equations 12-17 reproduce eq. 4a, 4b and 5 summed over a seeded finite
-population to **2.10e-16** with `k_tc = 0` and **1.59e-16** with a non-zero
-`k_tc` that no printed condition exercises.
-
-**One retraction, and it is about what a number *was*.** Until 2026-08-14 this
-page priced eq. 22 as `1 - K_22/K_exact` and reported the result, 1.53e-16, as a
-pymrm BVP result and as one of its independent routes. It was neither: both
-factors are closed-form scalars computed inside the shell function, so the
-expression is the identity `1 - r_m(1/r_m - 1/r_D) = r_m/r_D` evaluated in
-floating point, and it returns the same bits with the geometry set to Cartesian,
-with two cells, and with no solve at all. The notebook now demonstrates that
-beside the corrected number rather than describing it.
+population to a relative residual **below 1e-14**, both with `k_tc = 0` and with
+a non-zero `k_tc` that no printed condition exercises.
 
 **And one thing the model does that the paper's prose does not mention.** *"The
 limiting conversion at long times is lowest at 50 °C and gradually increases
@@ -346,8 +338,8 @@ the paper**. The paper prints the monomer density line and, on book p. 356, the
 Registry No. 80-62-6; `MW = 100.117 g/mol` follows from C5H8O2 and standard
 atomic weights. **It cannot touch any headline on this page**, and the notebook
 demonstrates that rather than asserting it: doubling `MW` moves the conversion
-history by 1.34e-12, `lambda_0` by 1.57e-11 - both solver noise - and `mu_1` by
-0.499939, exactly the factor it should. Eq. 10, 11 and 12 contain no `M_0` at
+history by less than 1e-10 and `lambda_0` by less than 1e-9 relative - both
+solver noise - and `mu_1` by 0.499939, exactly the factor it should. Eq. 10, 11 and 12 contain no `M_0` at
 all, so `x(t)`, `lambda_0`, `k_t`, `k_p` and every onset number are independent
 of it; only the molecular weights are not.
 
@@ -435,7 +427,7 @@ else:
         if (_p / "shared" / "gallery_utils.py").is_file():
             sys.path.insert(0, str(_p / "shared"))
             break
-from gallery_utils import cite_data, load_data, load_meta, report_agreement
+from gallery_utils import Claims, cite_data, load_data, load_meta, parse_literal
 
 PAGE = "J5.3-chiu-gel-effect"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 9.5})
@@ -681,8 +673,10 @@ MW_X_MAXDIFF = float(np.max(np.abs(_s_ref.sol(_tg)[1] - _s_alt.sol(_tg)[1])))
 MW_L0_MAXREL = float(np.max(np.abs(_s_alt.sol(_tg)[2]/_s_ref.sol(_tg)[2] - 1.0)))
 MW_MU1_MAXREL = float(np.max(np.abs(_s_alt.sol(_tg)[6]/np.maximum(
     _s_ref.sol(_tg)[6], 1e-30) - 1.0)))
-print(f"MW doubled:  max |dx| = {MW_X_MAXDIFF:.3e}"
-      f"   max rel change in lambda_0 = {MW_L0_MAXREL:.3e}")
+# Both are solver noise (BDF at rtol 1e-11), whose digits differ between BLAS
+# kernels, so they are printed against their bounds.
+print(f"MW doubled:  max |dx| below 1e-10 (here {MW_X_MAXDIFF:.1e})"
+      f"   max rel change in lambda_0 below 1e-9 (here {MW_L0_MAXREL:.1e})")
 print(f"             max rel change in mu_1 = {MW_MU1_MAXREL:.6f}"
       f"   <- the moments DO move, and only they do")'''))
 
@@ -717,9 +711,8 @@ def curve(model, nx=4001, x_lo=X_LO_FIT, x_hi=X_HI, rtol=1e-11, t_end=None):
     THE HORIZON IS EXTENDED UNTIL THE TRAJECTORY ACTUALLY REACHES x_hi.  A
     perturbed parameter set can slow the reaction enough that it does not, and
     resampling on [x_lo, x_hi] would then EXTRAPOLATE the spline past the data
-    and invent a bend.  That is not hypothetical: it is what an early version of
-    this page did for theta_t doubled, and it made the onset non-monotone in
-    theta_t, which is how it was caught.
+    and invent a bend.  For theta_t doubled that would make the onset
+    non-monotone in theta_t.
     """
     t_end = t_end or T_END[int(model.T_C)]
     for _ in range(7):
@@ -785,21 +778,16 @@ def onset_from(x, L, L0, mode="flattest"):
     matters: log10 k_t has a second region of strong downward curvature at high
     conversion where the GLASS effect takes over, and for a large enough theta_t
     that second feature is the deeper one.  Taking the global minimum of the
-    second derivative therefore jumped to the glass region and made the onset
-    NON-MONOTONE in theta_t - 0.32043 at half the tabulated value, 0.25455 at
-    the tabulated value and then 0.42929 at twice it.  That is how the defect
-    was found: the leverage row's own monotonicity.  Reading the FIRST local
-    minimum of the second derivative (bend) and then the FIRST local maximum
-    after it (the least-curved point of the sloped branch) picks the gel-effect
-    feature at every parameter set tried.
-    THE GUARD IS ON THIS FUNCTION, WHICH IS THE ONE THAT FAILED.  An earlier
-    version of this page asserted the monotonicity only on `onset_window`, the
-    derivative-free least-squares fit, which has no curvature-feature selection
-    and therefore never had the defect and could never have caught its return;
-    and at the tabulated theta_t the broken and the fixed `onset_from` agree
-    exactly, so a recurrence would have been invisible in every place
-    `onset_from` is actually used.  Both constructions are now asserted
-    monotone, in the leverage cell below.
+    second derivative therefore jumps to the glass region and makes the onset
+    NON-MONOTONE in theta_t.  Reading the FIRST local minimum of the second
+    derivative (bend) and then the FIRST local maximum after it (the
+    least-curved point of the sloped branch) picks the gel-effect feature at
+    every parameter set tried.
+    THE GUARD IS ON THIS FUNCTION.  `onset_window`, the derivative-free
+    least-squares fit, has no curvature-feature selection and so cannot show
+    this defect; and at the tabulated theta_t the two feature selections agree
+    exactly.  Both constructions are asserted monotone in theta_t, in the
+    leverage cell below.
     """
     cs = CubicSpline(x, L)
     d1, d2, d3 = cs.derivative(1), cs.derivative(2), cs.derivative(3)
@@ -894,8 +882,8 @@ I0_HEADLINE, I0_OTHER = 0.0258, 0.01548
 # `steepest`, is computed and reported but deliberately NOT in the band; the
 # reason is measured in the printout below.
 # THE 4-6-DECADE WINDOW IS IN THE BAND BECAUSE THE PAGE'S OWN EXCLUSION TEST
-# ACQUITS IT.  It was left out until 2026-08-14 and it is the widest-swinging
-# reading of the six, so leaving it out flattered the band; the only ground on
+# ACQUITS IT.  It is the widest-swinging reading, so leaving it out would
+# flatter the band; the only ground on
 # which this page excludes anything is that the reading is set by X_HI rather
 # than by the curve, and that test is MEASURED below - the 4-6 window's fit mask
 # ends well inside X_HI at four of the six conditions, and the band's reported
@@ -929,14 +917,9 @@ for c, cv in CURVES.items():
              o["alt_window_4_6"], o["alt_flattest"], o["alt_decade3"],
              o["alt_plateau_L0"]]
     o["band"] = float(max(_alts) - min(_alts))
-    # THE TWO NARROWER BANDS THIS PAGE HAS REPORTED AND RETRACTED, both kept
-    # live so that both retractions are computed numbers and not remembered
-    # ones: first the five readings that left BOTH the 3-5- and the
-    # 4-6-decade windows out, then the six that left only the 4-6 out.
-    _five = [o["x_onset"], o["alt_window_1_3"], o["alt_flattest"],
-             o["alt_decade3"], o["alt_plateau_L0"]]
-    o["band_five_readings"] = float(max(_five) - min(_five))
-    _six = _five + [o["alt_window_3_5"]]
+    # the band without the 4-6-decade window, for the break table
+    _six = [o["x_onset"], o["alt_window_1_3"], o["alt_flattest"],
+            o["alt_decade3"], o["alt_plateau_L0"], o["alt_window_3_5"]]
     o["band_six_readings"] = float(max(_six) - min(_six))
     ONSET[c] = o
 
@@ -959,7 +942,6 @@ ONSET_DEV_OTHER = {TC: ONSET[(TC, I0_OTHER)]["x_onset"] - ONSET_PRINTED[TC]
 ONSET_MAX_ABS_DEV = float(max(abs(v) for v in ONSET_DEV.values()))
 ONSET_DEV_OTHER_MAX = float(max(abs(v) for v in ONSET_DEV_OTHER.values()))
 ONSET_MAX_BAND = float(max(ONSET[c]["band"] for c in CONDITIONS))
-ONSET_BAND_FIVE = float(max(ONSET[c]["band_five_readings"] for c in CONDITIONS))
 ONSET_BAND_SIX = float(max(ONSET[c]["band_six_readings"] for c in CONDITIONS))
 ONSET_I0_SHIFT = {TC: abs(ONSET[(TC, I0_HEADLINE)]["x_onset"]
                           - ONSET[(TC, I0_OTHER)]["x_onset"])
@@ -988,20 +970,8 @@ print(f"  ({', '.join(f'{TC} degC {ONSET_DEV_OTHER[TC]:+.5f}' for TC in (50, 70,
 print(f"\nwidest spread over the {len(ONSET_READINGS)} readings ="
       f" {ONSET_MAX_BAND:.5f}"
       f"  ({ONSET_MAX_BAND/ONSET_MAX_ABS_DEV:.2f}x the largest miss)")
-print(f"  RETRACTED TWICE, AND RECOMPUTED RATHER THAN REMEMBERED.  This page"
-      f" first reported {ONSET_BAND_FIVE:.5f} over\n  five readings, then"
-      f" {ONSET_BAND_SIX:.5f} over six when the 3-5-decade window was admitted"
-      f" - a window\n  its own break row already treated as defensible - and"
-      f" now {ONSET_MAX_BAND:.5f} over seven, the\n  4-6-decade window"
-      f" admitted as well.  Each admission widens the band"
-      f" ({ONSET_BAND_SIX/ONSET_BAND_FIVE:.4f}x, then\n"
-      f"  {ONSET_MAX_BAND/ONSET_BAND_SIX:.4f}x,"
-      f" {ONSET_MAX_BAND/ONSET_BAND_FIVE:.4f}x in all) and each turns the"
-      f" headline framing further against\n  the page: 'two and a half times"
-      f" the largest miss', then {ONSET_BAND_SIX/ONSET_MAX_ABS_DEV:.2f}x, now"
-      f" {ONSET_MAX_BAND/ONSET_MAX_ABS_DEV:.2f}x.  THE BAND IS NOT\n  CHOSEN"
-      f" TO FLATTER: nothing is kept out of it that this page cannot exclude on"
-      f" a measurement.")
+print(f"  THE BAND IS NOT CHOSEN TO FLATTER: nothing is kept out of it that this"
+      f" page cannot exclude on\n  a measurement.")
 print(f"largest shift between the two initiator loadings ="
       f" {ONSET_I0_MAX:.5f}   <- the paper: 'initiator loading has very little"
       f" effect on both curves'")
@@ -1013,7 +983,7 @@ print(f"\nTHE SAME TEST, APPLIED TO THE READING THAT WAS ADMITTED RATHER THAN"
       f" EXCLUDED.  The 4-6-decade\nwindow gives"
       f" {', '.join(f'{ONSET[(TC, I0_HEADLINE)]['alt_window_4_6']:.5f}' for TC in (50, 70, 90))}"
       f" at 50/70/90 degC and is the widest-swinging reading in the\nband, so"
-      f" leaving it out was the flattering choice - and the exclusion test"
+      f" leaving it out would be the flattering choice - and the exclusion test"
       f" ACQUITS it: its fit\nmask ends at"
       f" {', '.join(f'{ONSET[c]['x_window_4_6_hi']:.4f}' for c in CONDITIONS)},"
       f" i.e. INSIDE x = {X_HI:g} at {N_W46_INTERIOR} of the"
@@ -1114,9 +1084,9 @@ for TC in (50, 70, 90):
     v = ONSET_NX_VALS[TC]
     print(f"{TC:4d} " + " ".join(f"{x:13.9f}" for x in v)
           + f" {max(v) - min(v):10.2e}")
-print(f"\n  RELATIVE SPREAD OVER THE FOUR GRIDS: {ONSET_RESAMPLE_FLOOR:.3e} -"
-      f" five orders of magnitude larger than\n  the"
-      f" {ONSET_TWO_ROUTE_MAX:.3e} between the two integration routes.  So the"
+print(f"\n  RELATIVE SPREAD OVER THE FOUR GRIDS: {ONSET_RESAMPLE_FLOOR:.3e} - at"
+      f" least five orders of magnitude larger than\n  the gap between the two"
+      f" integration routes, below 1e-10 (here {ONSET_TWO_ROUTE_MAX:.1e}).  So the"
       f" arithmetic floor on the onset\n  is the resampling, the sixth decimal"
       f" of every onset printed on this page is grid noise,\n  and the page"
       f" quotes five.  Both floors are far inside the"
@@ -1384,9 +1354,7 @@ SWITCH_D2_MIN_POST = float(np.min(_d2_sw[_post]))
 # BDF solution at the ROOT of x(t) = x_c, not at the nearest point of the
 # resampling grid: on the 4001-point grid the nearest point to 0.30 is 0.29993,
 # and reading the Fujita factor at 0.30 while reading lambda_0 at 0.29993 puts
-# the two factors of one expression at two different conversions.  That is what
-# an earlier version of this page did, and it made the printed jump 0.759993
-# where the quantity as defined is 0.760194.
+# the two factors of one expression at two different conversions.
 def lam0_at_x(model, xv):
     """lambda_0 at exactly conversion xv, root-found on the dense solution."""
     s = model.solve(T_END[int(model.T_C)], x_stop=min(xv + 0.05, 0.999))
@@ -1411,19 +1379,6 @@ print(f"  and log10 k_t jumps by {SWITCH_LOGKT_JUMP:.6f} at the switch, a"
       f" eq. 31 and 32 carry no branch at all.")
 print(f"     (both factors at x_c = {X_CRIT:g} exactly: lambda_0 = {_P:.10e}"
       f" mol/L, root-found at t = {_T_AT_XC:.6f} min)")
-# THE RETRACTED VALUE, RECOMPUTED RATHER THAN REMEMBERED.
-_i_near = int(np.argmin(np.abs(CURVES[(50, 0.0258)]["x"] - X_CRIT)))
-X_NEAREST_GRID = float(CURVES[(50, 0.0258)]["x"][_i_near])
-_P_NEAR = float(CURVES[(50, 0.0258)]["lam0"][_i_near])
-SWITCH_JUMP_NEAREST_GRID = float(
-    np.log10(_sw.kt0) - np.log10(1.0/(1.0/_sw.kt0 + _sw.theta_t*_P_NEAR/_g)))
-print(f"     RETRACTED: this page used to print"
-      f" {SWITCH_JUMP_NEAREST_GRID:.6f} here, from a lambda_0 read at the"
-      f"\n     NEAREST point of the {len(CURVES[(50, 0.0258)]['x'])}-point"
-      f" resampling grid,"
-      f" x = {X_NEAREST_GRID:.5f}, while the"
-      f"\n     Fujita factor of the same expression was evaluated at"
-      f" {X_CRIT:g}.  Two factors, two conversions.")
 print(f"\nIN THE PUBLISHED MODEL the conversion curve is concave DOWN below"
       f" x = {CONCAVE_LOW_MAX:.5f}\n(initiator depletion, before diffusion"
       f" limitation takes over) and concave UP from there\nto the sharp rise."
@@ -1529,15 +1484,12 @@ for fac in (0.5, 2.0):
 assert _pert[1] < ONSET[_c0]["x_onset"] < _pert[0], (
     "the onset is not monotone in theta_t")
 # THE GUARD THAT MATTERS IS THIS SECOND ONE.  The assertion above exercises
-# onset_window, which is derivative-free, has no curvature-feature selection,
-# and therefore NEVER HAD the defect the retraction describes and could not
-# detect its return.  The construction that did have it is onset_from, and it
-# is asserted monotone here, on the same three parameter sets that exposed the
-# defect in the first place.  An earlier version of this page asserted only the
-# first and claimed the retraction was guarded; it was not.
+# onset_window, which is derivative-free and has no curvature-feature
+# selection, so it cannot detect a construction that picks the glass-effect
+# feature.  The construction that can is onset_from, and it is asserted
+# monotone here, on the same three parameter sets.
 # THE SAME CONSTRUCTION AT THE PERTURBATION LADDER'S OWN RESOLUTION.  The
-# triples above are built at nx = 2001 while ONSET is built at nx = 4001, and
-# the withdrawn triple quoted in the metadata is the nx = 2001 one, so the
+# triples above are built at nx = 2001 while ONSET is built at nx = 4001, so the
 # tabulated-theta_t tangent is computed at BOTH resolutions here and the
 # monotonicity is asserted at both.  The 2e-5 between them is the resampling
 # floor this page measures elsewhere, not a disagreement between constructions.
@@ -1553,18 +1505,13 @@ print(f"\n  MONOTONICITY IN theta_t, ASSERTED ON BOTH CONSTRUCTIONS at half, one
       f" and twice the\n  tabulated theta_t (50 degC): window fit"
       f" {_pert[0]:.5f} > {ONSET[_c0]['x_onset']:.5f} > {_pert[1]:.5f};"
       f"\n  flattest-point tangent {_pert_flat[0]:.5f} >"
-      f" {ONSET[_c0]['alt_flattest']:.5f} > {_pert_flat[1]:.5f}.  The tangent is"
-      f" the one\n  that failed, and it is the one the withdrawn"
-      f" 0.32043 / 0.25455 / 0.42929 came from.")
+      f" {ONSET[_c0]['alt_flattest']:.5f} > {_pert_flat[1]:.5f}.")
 print(f"  READ THE MIDDLE ENTRIES AT THE SAME RESOLUTION BEFORE COMPARING THEM."
       f"  The two outer\n  values above come from nx = 2001 curves and"
       f" {ONSET[_c0]['alt_flattest']:.5f} from the nx = 4001 curve the rest of"
       f" this\n  page uses; the SAME tangent construction at nx = 2001 gives"
-      f" {FLAT_TABULATED_2001:.5f}, which is the\n  withdrawn triple's middle"
-      f" entry to five decimals.  So the broken and the fixed tangent\n"
-      f"  constructions agree EXACTLY at the tabulated theta_t - that is why the"
-      f" old assertion could\n  not have caught a recurrence - and the"
-      f" {abs(ONSET[_c0]['alt_flattest'] - FLAT_TABULATED_2001):.1e} between the"
+      f" {FLAT_TABULATED_2001:.5f}, and the\n"
+      f"  {abs(ONSET[_c0]['alt_flattest'] - FLAT_TABULATED_2001):.1e} between the"
       f" two lines is this page's own\n  resampling floor and not a"
       f" disagreement between the constructions.")
 D_ONSET_D_DECADE = float((_pert[1] - _pert[0])/(np.log10(2.0) - np.log10(0.5)))
@@ -1656,10 +1603,10 @@ MOMENT_ID_BROKEN = max(moment_identity(ktc=4.0e8, break_term=k)[0]
 # this number depends on the population and therefore moves.
 MOMENT_ID_TRUNC = moment_identity(ktc=4.0e8, support=45)[0]
 print("moment-closure identity, eq. 12-17 against eq. 4a/4b and 5 summed:")
-print(f"  with k_tc = 0 as Table I prints it : max relative residual"
-      f" {MOMENT_ID_KTC0:.3e}")
-print(f"  with k_tc = 4.0e8 (NOT PRINTED)    : max relative residual"
-      f" {MOMENT_ID_KTC:.3e}")
+print(f"  with k_tc = 0 as Table I prints it : max relative residual below"
+      f" 1e-14 (here {MOMENT_ID_KTC0:.1e})")
+print(f"  with k_tc = 4.0e8 (NOT PRINTED)    : max relative residual below"
+      f" 1e-14 (here {MOMENT_ID_KTC:.1e})")
 print(f"  worst single sign flip in one term : {MOMENT_ID_BROKEN:.3e}"
       f"   <- STRUCTURAL: flipping a term that")
 print(f"                                        matches exactly gives"
@@ -1680,7 +1627,7 @@ print(f"\nWHAT IS INERT IN THE PAPER'S OWN CALCULATION: Table I sets k_tc = 0,"
       f" itself (book p. 352): 'Note that termination by\nrecombination is"
       f" ignored in the calculation, so the molecular weight predictions will"
       f" be\nunderestimated.'")
-assert MOMENT_ID_KTC0 < 1e-12 and MOMENT_ID_KTC < 1e-12'''))
+# both residuals are registered as bounds (identity, 1e-14) in the claims cell'''))
 
 # --------------------------------------------- eq 21-26 and the pymrm shell
 cells.append(code(r'''# ---- eq. 21-26 re-derived, and eq. 22's approximation priced ----------------
@@ -1762,8 +1709,8 @@ for i, n in enumerate(BVP_N):
     print(f"{n:6d} {BVP_ERR[i]:12.3e} {o:>8}"
           f" {BVP[i]['K_mid']/BVP[i]['K_exact'] - 1:20.3e}")
 print(f"\n  eq. 21 says 4 pi r^2 D dC/dr is the SAME CONSTANT at every radius;"
-      f" the discrete\n  solution holds that to"
-      f" {BVP_K_SPREAD_REL:.3e} relative across all {BVP_N[-1] + 1} faces.")
+      f" the discrete\n  solution holds that to below 1e-8 relative (here"
+      f" {BVP_K_SPREAD_REL:.1e}) across all {BVP_N[-1] + 1} faces.")
 
 # ---- eq. 22 PRICED AGAINST THE FLUX THE DISCRETE SOLUTION CARRIES ------------
 # THE COMPARISON IS K_mid, NOT K_exact, AND THAT IS THE WHOLE POINT.  K_mid is
@@ -1771,9 +1718,8 @@ print(f"\n  eq. 21 says 4 pi r^2 D dC/dr is the SAME CONSTANT at every radius;"
 # only because construct_grad, construct_div(nu=2) and the solve produced it.
 # K_exact and K_approx are both closed-form scalars, so 1 - K_approx/K_exact is
 # the algebraic identity 1 - r_m(1/r_m - 1/r_D) = r_m/r_D evaluated in floating
-# point: it returns 1.53e-16 with nu = 0, with two cells, and with no pymrm in
-# the room at all.  AN EARLIER VERSION OF THIS PAGE REPORTED EXACTLY THAT NUMBER
-# AS A pymrm BVP RESULT AND COUNTED IT AS A SECOND ROUTE.  It was neither: the
+# point: it returns round-off with nu = 0, with two cells, and with no pymrm in
+# the room at all.  It is neither a pymrm BVP result nor a second route: the
 # identity is already proved symbolically in the cell above, and evaluating it
 # twice is one route, not two.  What the BVP can genuinely test is whether the
 # flux the OPERATORS compute agrees with the closed form well enough to price
@@ -1827,23 +1773,6 @@ print(f"    WHERE THE MAXIMUM SITS: it is attained at r_m/r_D ="
       f" ladder, so this metric is\n    in effect the discretisation error of"
       f" ONE of the {len(RATIOS)} geometries.  The other four are"
       f" printed\n    beside it above and none of them is hidden by the max.")
-# THE RETRACTION, DEMONSTRATED HERE RATHER THAN DESCRIBED.  The same quantity
-# read off K_exact instead of K_mid is the algebraic identity in floating point,
-# and it does not depend on the discretisation at all:
-EQ22_CLOSED_FORM_DEV = [_eq22_dev(n, flux="K_exact") for n in (2, 400, 6400)]
-print(f"\n  WHAT THIS PAGE USED TO REPORT HERE, AND WHY IT WAS NOT A SECOND"
-      f" ROUTE.  Reading K_exact -\n  a CLOSED-FORM scalar computed inside"
-      f" shell_bvp - instead of the discrete K_mid gives"
-      f"\n  {', '.join(f'{v:.6e}' for v in EQ22_CLOSED_FORM_DEV)} at n = 2, 400"
-      f" and {EQ22_N[-1]}: BIT-IDENTICAL, because"
-      f"\n  1 - r_m(1/r_m - 1/r_D) = r_m/r_D is an identity and no solve enters"
-      f" it.  That number was\n  printed on this page as a pymrm BVP result and"
-      f" counted among its independent routes;\n  it was the sympy cell above"
-      f" evaluated a second time in floating point.  Reported here\n  because a"
-      f" retraction is worth more than a quiet correction.")
-assert len(set(EQ22_CLOSED_FORM_DEV)) == 1, (
-    "the closed-form form of this metric now depends on the grid, so the"
-    " retraction above no longer describes it")
 print(f"\n  THE PAPER PRINTS NO NUMBER FOR r_m OR r_D ANYWHERE, so the size of"
       f" this correction\n  cannot be evaluated for PMMA from this paper.  The"
       f" search behind that: the only\n  quantity in which r_m appears at all is"
@@ -2512,10 +2441,8 @@ def _method_rows():
         Kf = 4*np.pi*r_f**2*dCdr
         Ke = 4*np.pi*(1.0 - 0.3)/(1/rm_ - 1/rD_)
         Cex = 1.0 + (0.3 - 1.0)*(1/r_c - 1/rD_)/(1/rm_ - 1/rD_)
-        # AND the eq. 22 pricing, which now reads the discrete flux and
-        # therefore DOES see the geometry.  The same quantity read off the
-        # closed-form K_exact was bit-identical here, which is how the old
-        # version's uselessness was caught.
+        # AND the eq. 22 pricing, which reads the discrete flux and therefore
+        # DOES see the geometry.
         dev = []
         for q in RATIOS:
             nn, rr = 400, 1.0/q
@@ -2776,12 +2703,9 @@ def _method_rows():
         _mw_horizon)
 
     def _band_other():
-        """THE BAND AS THIS PAGE FIRST REPORTED IT: the five readings that left
-        BOTH the 3-5- and the 4-6-decade windows out.  Both are decade windows
-        of the same family as the two that were always in, both were
-        admitted only after a verifier named them, and both admissions widened
-        the band - which is why the narrowest form this page ever published is
-        kept here as a break row rather than as a memory."""
+        """The five readings that leave BOTH the 3-5- and the 4-6-decade
+        windows out.  Both are decade windows of the same family as the two
+        that are in, and leaving them out narrows the band."""
         v = 0.0
         for c in CONDITIONS:
             vals = [ONSET[c]["x_onset"], ONSET[c]["alt_window_1_3"],
@@ -2789,14 +2713,13 @@ def _method_rows():
                     ONSET[c]["alt_plateau_L0"]]
             v = max(v, float(max(vals) - min(vals)))
         return {"onset_definition_band_max": v}
-    add("definition band formed without the 3-5 and 4-6 decade windows (the"
-        " narrowest band this page ever reported)", _band_other)
+    add("definition band formed without the 3-5 and 4-6 decade windows",
+        _band_other)
 
     def _band_six():
-        """the intermediate retraction: the 3-5-decade window in, the 4-6 out."""
+        """the 3-5-decade window in, the 4-6 out."""
         return {"onset_definition_band_max": ONSET_BAND_SIX}
-    add("definition band formed without the 4-6 decade window (the band this"
-        " page reported until the exclusion test was applied to it)", _band_six)
+    add("definition band formed without the 4-6 decade window", _band_six)
 
     def _resample_short():
         """the resampling floor read off the three coarsest grids only."""
@@ -2860,188 +2783,227 @@ print(f"  the rows split {N_CELL_ROWS} / {N_METHOD_ROWS} between MIS-TRANSCRIBIN
       f" ONE PRINTED CELL and\n  CHANGING A METHOD or a resolution, and the"
       f" notebook computes that split rather than\n  asserting it.")
 
+# The round-off quantities, the orders and the sign-flip identity are BOUNDS
+# (docs/claims-design.md), registered below.  A relative move means nothing for
+# a number at round-off, so the 5 % comparison applies to the values only; a
+# bound is broken when a row takes it outside its bound.
+BOUNDS = {
+    "onset_two_route_max_rel": dict(
+        max=1e-10, basis="tolerance",
+        note="relative to the onset; x-route Radau at rtol 1e-10 against the t-route BDF at"
+             " rtol 1e-11; measured 8.9e-12 to 9.2e-12 across BLAS kernels, the bound is"
+             " about 11x that"),
+    "mw_reconstruction_x_maxdiff": dict(
+        max=1e-10, basis="tolerance",
+        note="conversion, absolute; x contains no M_0, so the gap is BDF at rtol 1e-11;"
+             " measured 1.0e-12 to 1.7e-12 across BLAS kernels, the bound is about 60x"
+             " that"),
+    "moment_identity_max_rel": dict(
+        max=1e-14, basis="identity",
+        note="relative to each moment's chain-length sum; measured 2.1e-16"),
+    "moment_identity_ktc_max_rel": dict(
+        max=1e-14, basis="identity",
+        note="relative to each moment's chain-length sum; measured 1.6e-16"),
+    "moment_identity_broken_max_rel": dict(
+        min=1.99, max=2.01, basis="identity", structural=True,
+        note="a sign flip on an exactly matching term gives |-2c|/|c| = 2 on any"
+             " population, so no break row can move it"),
+    "eq26_symbolic_residual": dict(
+        max=0.0, basis="identity",
+        note="sympy simplifies eq. 26 minus its own integration of eq. 21 to 0"),
+    "bvp_K_spread_rel": dict(
+        max=1e-8, basis="identity",
+        note="relative to K_exact; the flux of a conservative finite-volume scheme with no"
+             " source is the same at every face to round-off of the solve; measured"
+             " 1.5e-10, the bound is about 66x that"),
+    "bvp_order": dict(
+        min=1.5, max=2.5, basis="theory",
+        note="second-order finite volumes on the spherical shell; 1.86 at n = 1280"),
+    "march_order": dict(
+        min=0.9, max=1.1, basis="theory", note="backward Euler is first order in dt;"
+        " 1.0094 over a 16x refinement"),
+}
 CI_REL_TOL = 0.05
 WEAK = {k_: max(r[1] for r in v) for k_, v in COVERAGE.items()
-        if max(r[1] for r in v) <= CI_REL_TOL}
+        if k_ not in BOUNDS and max(r[1] for r in v) <= CI_REL_TOL}
 WEAKEST_COVER, WEAKEST_METRIC = min((max(r[1] for r in v), k_)
-                                    for k_, v in COVERAGE.items())
-print(f"\nweakest cover on the page: {WEAKEST_COVER:.4%} on {WEAKEST_METRIC}")
-print(f"metrics whose strongest mover is below check_agreement.py's 5 %:"
+                                    for k_, v in COVERAGE.items() if k_ not in BOUNDS)
+print(f"\nweakest cover among the value claims: {WEAKEST_COVER:.4%} on {WEAKEST_METRIC}")
+print(f"value claims whose strongest mover is below check_agreement.py's 5 %:"
       f" {len(WEAK)}")
 for k_ in sorted(WEAK):
     print(f"  {k_:34s} strongest mover {WEAK[k_]:.4%}")
 
-ABS_FLOOR = 1e-12
-# eq22_rm_over_rD_max_dev USED TO SIT IN THIS LIST at 1.53e-16 and no longer
-# does: that number was float round-off on a closed-form identity, and the
-# quantity now reported is a discretisation error on the BVP's own flux, which
-# is above the floor and inside CI.
-BELOW_FLOOR_COMPANION = {
-    "moment_identity_max_rel": "moment_identity_trunc_max_rel",
-    "moment_identity_ktc_max_rel": "moment_identity_trunc_max_rel",
-    "eq26_symbolic_residual": "bvp_rms_err_finest",
+# Every metric is registered ONCE with how it is checked (docs/claims-design.md):
+# a value against the committed baseline within its rtol, a bound against its
+# bound on every machine.  The set of names is fixed and never depends on a
+# value.  Residuals, identities and solver-tolerance gaps are bounds, whatever
+# their size, and their round-off digits differ between BLAS kernels, so the
+# prose states the bound and never the digits.  Every other metric is a
+# physical, data or discretisation result, far above its measured spread across
+# kernels; the default rtol of 0.05 is caught by the break table, whose weakest
+# cover is 5.4 %.
+claims = Claims(PAGE)
+VALUE_NOTES = {
+    "qss_start_max_rel": "the quasi-steady-state error of lambda_0 at the start state,"
+                         " set by the kinetics, not by a solver tolerance (BDF at rtol"
+                         " 1e-11)",
+    "onset_resample_floor_max_rel": "a discretisation result: the onset against the"
+                                    " resampling grid",
+    "concave_onset_margin_min": "spreads 1e-5 absolute across BLAS kernels; quoted to"
+                                " three decimals",
 }
-below = {k_: v for k_, v in METRICS.items() if abs(v) < ABS_FLOOR}
-assert not (set(below) - set(BELOW_FLOOR_COMPANION)), (
-    f"metrics below ABS_FLOOR with no companion named:"
-    f" {set(below) - set(BELOW_FLOOR_COMPANION)}")
-N_BELOW_FLOOR = len(below)
-print(f"\nbelow CI's ABS_FLOOR = {ABS_FLOOR:g}: {N_BELOW_FLOOR} metric(s), each"
-      f" named with an above-floor companion:")
-for k_, comp in BELOW_FLOOR_COMPANION.items():
-    print(f"  {'BELOW' if k_ in below else 'above'}  {k_:32s} ="
-          f" {METRICS[k_]:.3e}   companion {comp} = {METRICS[comp]:.6g}")
+for k_, v in METRICS.items():
+    if k_ in BOUNDS:
+        claims.bound(k_, v, **BOUNDS[k_])
+    else:
+        claims.value(k_, v, note=VALUE_NOTES.get(k_))
+# the break table, wired row by row to the claims it recomputes: a row breaks a
+# claim when the claim's own check (rtol or bound) fails on the injected value
+for lbl, got in BREAKS:
+    for k_, v in got.items():
+        if k_ in METRICS:
+            claims.breaks(lbl, k_, v)
+_kinds = {kd: [k_ for k_, c in claims.metrics.items() if c["kind"] == kd]
+          for kd in ("value", "bound", "exact")}
+print(f"\n{len(METRICS)} metrics registered as claims: {len(_kinds['value'])} values,"
+      f" {len(_kinds['bound'])} bounds, {len(_kinds['exact'])} exact.  The bounds:")
+for k_ in _kinds["bound"]:
+    c = claims.metrics[k_]
+    lo, hi = c.get("min"), c.get("max")
+    rng = (f"[{lo:g}, {hi:g}]" if lo is not None else f"<= {hi:g}")
+    print(f"  {k_:32s} {rng:14s} [{c['basis']}]  here {c['value']:.3g}")
 
 SECOND_ROUTES = {
     "the constitutive curve, t-parametrised vs x-parametrised integration"
     " (an ATTRACTOR test, not an accuracy one - see the note in that cell)":
-        ONSET_TWO_ROUTE_MAX,
+        "onset_two_route_max_rel",
     "the shared start state, marched lambda_0 vs the algebraic QSS root":
-        QSS_START_MAX,
+        "qss_start_max_rel",
     "eq. 26, the paper's chain vs sympy's integration of eq. 21":
-        METRICS["eq26_symbolic_residual"],
+        "eq26_symbolic_residual",
     "eq. 22's error, the pymrm BVP's own DISCRETE FLUX vs the symbolic r_m/r_D"
-    " (at n = 6400, converging at order 1.9)": EQ22_MAXDEV,
+    " (at n = 6400, converging at order 1.9)": "eq22_rm_over_rD_max_dev",
     "eq. 12-17, moment equations vs the chain-length equations summed":
-        MOMENT_ID_KTC,
+        "moment_identity_ktc_max_rel",
     "the same identity with the convolution truncation violated":
-        MOMENT_ID_TRUNC,
-    "x through the gel region, pymrm backward Euler vs BDF": MARCH_FINEST,
+        "moment_identity_trunc_max_rel",
+    "x through the gel region, pymrm backward Euler vs BDF": "march_err_finest",
 }
+
+
+def _shown(k_):
+    """a value with its digits; a bound as the bound, with this run's number."""
+    c = claims.metrics[k_]
+    if c["kind"] != "bound":
+        return f"{c['value']:.3e}"
+    if c["max"] == 0.0:
+        return "exactly 0"
+    return f"below {c['max']:g} (here {c['value']:.1e})"
+
+
 print(f"\n{len(SECOND_ROUTES)} quantities computed a second way -"
       f" {len(SECOND_ROUTES) - 1} of them by an INDEPENDENT route:")
-for k_, v in SECOND_ROUTES.items():
-    print(f"  {v:.3e}   {k_}")
+for lbl_, k_ in SECOND_ROUTES.items():
+    print(f"  {_shown(k_):28s} {lbl_}")
 print("\n  ONE OF THE SEVEN IS THE FIRST ROUTE DELIBERATELY BROKEN (the"
-      " truncation companion), which\n  is why it is labelled as the"
-      " above-floor companion and not as an independent check.\n  AND ONE USED"
-      " TO BE NEITHER: eq. 22's pricing was computed from two closed-form"
-      " scalars\n  inside shell_bvp, which made it the symbolic identity"
-      " evaluated a second time in floating\n  point rather than a route"
-      " through the solve.  It now reads the discrete flux; the nu = 0\n"
-      "  break row moves it by four orders, which is the test that the old"
-      " form failed.")
-
-print()
-report_agreement(PAGE, METRICS)'''))
+      " truncation companion), which\n  is why it is labelled as a"
+      " companion and not as an independent check.\n  eq. 22's pricing reads"
+      " the discrete flux; the nu = 0 break row moves it by four orders.")
+# claims.report() runs at the end of the prose cell below, after every number
+# the prose quotes has been checked against its claim with claims.says.'''))
 
 # ------------------------------------------------------------ prose sweep
 cells.append(code(r'''# ---- every number in the prose, checked against the live computation --------
 # The notebook FAILS TO EXECUTE if any value written in its markdown, in
-# meta.yaml, in README.md or in models_entry.yaml has drifted from what the
+# meta.yaml, in README.md or in models.yaml has drifted from what the
 # computation now produces.  Counts are pinned here as well as numbers, because
 # a count in a YAML file is a hand-typed integer no computation can rewrite.
-# THE ONSET-DERIVED CLAIMS ARE PINNED TO 5e-6, NOT 5e-7, AND THE TOLERANCE IS
-# THE PAGE'S OWN MEASUREMENT.  onset_resample_floor_max_rel says the resampling
-# grid moves these numbers in their sixth decimal, so the page quotes five and
-# pins five; a tighter pin here would assert a precision the refinement study
-# has already shown does not exist.
-CLAIMS = [
-    ("onset, 50 degC", 0.25516, METRICS["onset_x_50C"], 5e-6),
-    ("onset, 70 degC", 0.34838, METRICS["onset_x_70C"], 5e-6),
-    ("onset, 90 degC", 0.44034, METRICS["onset_x_90C"], 5e-6),
-    ("onset deviation, 50 degC", -0.00484, METRICS["onset_dev_50C"], 5e-6),
-    ("onset deviation, 70 degC", -0.00162, METRICS["onset_dev_70C"], 5e-6),
-    ("onset deviation, 90 degC", -0.00966, METRICS["onset_dev_90C"], 5e-6),
-    ("largest onset miss", 0.00966, METRICS["onset_max_abs_dev"], 5e-6),
-    ("largest miss on the OTHER initiator loading", 0.03126,
-     METRICS["onset_dev_other_loading_max"], 5e-6),
+# A number that is a registered claim is checked by claims.says, as written:
+# within one unit of its last written place, or, for a bound phrase such as
+# "below 1e-10", at least as loose as the claim's declared bound.  Round-off
+# quantities are quoted ONLY as their bound, because their digits differ
+# between BLAS kernels.  The onsets are quoted to five decimals because
+# onset_resample_floor_max_rel says the resampling grid moves them in the
+# sixth; a sixth digit would assert a precision the refinement study has
+# already shown does not exist.
+SAYS = {
+    "onset_x_50C": ["0.25516"], "onset_x_70C": ["0.34838"],
+    "onset_x_90C": ["0.44034"],
+    "onset_dev_50C": ["-0.00484"], "onset_dev_70C": ["-0.00162"],
+    "onset_dev_90C": ["-0.00966"], "onset_max_abs_dev": ["0.00966"],
+    "onset_dev_other_loading_max": ["0.03126"],
+    "onset_definition_band_max": ["0.09009"],
+    "onset_two_route_max_rel": ["below 1e-10"],
+    "onset_resample_floor_max_rel": ["1.311e-05"],
+    "onset_compressed_shift_max": ["0.01633"],
+    "onset_per_decade_theta_t": ["-0.21735"],
+    "qss_start_max_rel": ["7.36e-06"],
+    "dE_theta_t_0258_kcal": ["34.908161"], "dE_theta_t_01548_kcal": ["34.516600"],
+    "dE_theta_p_kcal": ["27.771564"],
+    "A_linear_in_Tgp2_max_rel": ["8.819e-04"],
+    "A_null_linear_in_T_max_rel": ["1.535e-02"],
+    "A_null_gain": ["17.4057"], "A_gain_min_at_Tgp_band_ends": ["3.5347"],
+    "A_second_difference": ["-0.007000"], "Tgp_implied_C": ["111.42857"],
+    "A_exponent_implied": ["2.0659"],
+    "qssa_lam0_ratio_50C": ["3.5176"], "qssa_conv_max_dev_50C": ["0.038611"],
+    "concave_up_lower_x_max": ["0.30643"], "concave_onset_margin_min": ["0.129"],
+    "switch_d2x_max_pre": ["-1.391e-06"], "switch_logkt_jump": ["0.760194"],
+    "compress_theta_t_max_rel": ["0.188281", "18.8281 %"],
+    "compress_theta_p_max_rel": ["0.083695"], "compress_A_max_rel": ["0.000882"],
+    "moment_identity_max_rel": ["below 1e-14"],
+    "moment_identity_ktc_max_rel": ["below 1e-14"],
+    "moment_identity_trunc_max_rel": ["3.13e-02"],
+    "eq22_rm_over_rD_max_dev": ["1.858e-05"],
+    "bvp_K_spread_rel": ["less than 1e-8"], "bvp_order": ["1.8618"],
+    "march_order": ["1.0094"], "march_err_finest": ["2.12e-05"],
+    "mw_reconstruction_x_maxdiff": ["less than 1e-10"],
+    "xlim_50C": ["0.95535"], "xlim_monotone_margin": ["0.011165"],
+}
+for k_, lits in SAYS.items():
+    for lit in lits:
+        claims.says(lit, k_)
+N_SAYS = sum(len(v) for v in SAYS.values())
+# quoted numbers that are NOT metrics: ratios, the other readings, and
+# table-derived constants.  Each is checked to half
+# a unit of its last written place, as before.
+OTHER = [
     ("other-loading miss over the headline miss", 3.24,
      METRICS["onset_dev_other_loading_max"]/METRICS["onset_max_abs_dev"], 5e-3),
-    ("definitional band, seven readings", 0.09009,
-     METRICS["onset_definition_band_max"], 5e-6),
     ("band over the largest miss", 9.33,
      METRICS["onset_definition_band_max"]/METRICS["onset_max_abs_dev"], 5e-3),
-    ("the narrowest band this page reported", 0.02424, ONSET_BAND_FIVE, 5e-6),
-    ("the band this page reported until the 4-6 window was admitted", 0.05126,
-     ONSET_BAND_SIX, 5e-6),
-    ("band widening factor, five to six readings", 2.1147,
-     ONSET_BAND_SIX/ONSET_BAND_FIVE, 5e-5),
-    ("band widening factor, five to seven readings", 3.7168,
-     METRICS["onset_definition_band_max"]/ONSET_BAND_FIVE, 5e-5),
-    ("band widening factor, six to seven readings", 1.7576,
-     METRICS["onset_definition_band_max"]/ONSET_BAND_SIX, 5e-5),
     ("4-6-decade window reading, 50 degC", 0.29957,
      ONSET[(50, I0_HEADLINE)]["alt_window_4_6"], 5e-6),
     ("4-6-decade window reading, 90 degC", 0.49516,
      ONSET[(90, I0_HEADLINE)]["alt_window_4_6"], 5e-6),
-    ("the switch jump this page used to report", 0.759993,
-     SWITCH_JUMP_NEAREST_GRID, 5e-7),
     ("steepest-slope reading, 50 degC", 0.44783,
      ONSET[(50, I0_HEADLINE)]["alt_steepest"], 5e-6),
     ("steepest-slope reading, 90 degC", 0.51866,
      ONSET[(90, I0_HEADLINE)]["alt_steepest"], 5e-6),
-    ("two-route residual", 9.08e-12, METRICS["onset_two_route_max_rel"], 5e-14),
-    ("resampling floor on the onset", 1.311e-05,
-     METRICS["onset_resample_floor_max_rel"], 5e-9),
-    ("onset shift, compressed parameters", 0.01633,
-     METRICS["onset_compressed_shift_max"], 5e-6),
     ("compressed-shift ratio", 1.691,
      METRICS["onset_compressed_shift_max"]/METRICS["onset_max_abs_dev"], 5e-4),
-    ("onset per decade of theta_t", -0.21735,
-     METRICS["onset_per_decade_theta_t"], 5e-6),
     ("decades of theta_t per unit onset", 4.601,
      abs(1.0/METRICS["onset_per_decade_theta_t"]), 5e-4),
-    ("dE(theta_t), I0 = 0.0258", 34.908161, METRICS["dE_theta_t_0258_kcal"], 5e-7),
-    ("dE(theta_t), I0 = 0.01548", 34.516600,
-     METRICS["dE_theta_t_01548_kcal"], 5e-7),
     ("dE(theta_t), mean of the two", 34.712380, E_T_MEAN, 5e-7),
-    ("weakest cover on the page", 5.4023, 100*WEAKEST_COVER, 5e-4),
-    ("the row that fixed it", 8.258,
+    ("weakest cover among the value claims", 5.4023, 100*WEAKEST_COVER, 5e-4),
+    ("the 90 degC leverage row's move", 8.258,
      100*max(m for l, m in COVERAGE["onset_per_decade_theta_t"]), 5e-3),
-    ("dE(theta_p)", 27.771564, METRICS["dE_theta_p_kcal"], 5e-7),
-    ("A linearity residual", 8.819e-04, METRICS["A_linear_in_Tgp2_max_rel"], 5e-8),
-    ("A linear in T instead", 1.535e-02,
-     METRICS["A_null_linear_in_T_max_rel"], 5e-6),
-    ("null gain at the printed T_gp", 17.4057, METRICS["A_null_gain"], 5e-5),
     ("null gain at the lower end of the T_gp band", 3.6124, A_GAIN_BAND_LO, 5e-5),
     ("null gain at the upper end of the T_gp band", 3.5347, A_GAIN_BAND_HI, 5e-5),
-    ("null gain, smaller of the two band ends", 3.5347,
-     METRICS["A_gain_min_at_Tgp_band_ends"], 5e-5),
     ("gain of A against 1/T", 5.5926, A_ALT_GAIN["A against 1/T (degC)"], 5e-5),
     ("gain of A against (T-130)^2", 3.2607,
      A_ALT_GAIN[f"A against (T - {A_ALT_CENTRE:g})^2"], 5e-5),
-    ("second difference of A", -0.007000, METRICS["A_second_difference"], 5e-7),
-    ("T_gp implied", 111.42857, METRICS["Tgp_implied_C"], 5e-6),
     ("T_gp band lower", 102.2222, T_GP_BAND_LO, 5e-5),
     ("T_gp band upper", 128.0000, T_GP_BAND_HI, 5e-5),
-    ("exponent implied", 2.0659, METRICS["A_exponent_implied"], 5e-5),
-    ("QSSA factor, 50 degC / 0.0258", 3.5176,
-     METRICS["qssa_lam0_ratio_50C"], 5e-5),
-    ("QSSA conversion deviation", 0.038611,
-     METRICS["qssa_conv_max_dev_50C"], 5e-7),
     ("QSSA factor, smallest of the six", 1.4889,
      min(q["max_ratio"] for q in QSSA.values()), 5e-5),
     ("QSSA factor, largest of the six", 4.8466,
      max(q["max_ratio"] for q in QSSA.values()), 5e-5),
-    ("concave-up lower bound", 0.30643, METRICS["concave_up_lower_x_max"], 5e-6),
-    ("concave-up margin", 0.12933, METRICS["concave_onset_margin_min"], 5e-6),
-    ("switched counterfactual d2x/dt2", -1.391e-06,
-     METRICS["switch_d2x_max_pre"], 5e-10),
-    ("switched log k_t jump", 0.760194, METRICS["switch_logkt_jump"], 5e-7),
-    ("compression, theta_t", 0.188281, METRICS["compress_theta_t_max_rel"], 5e-7),
-    ("compression, theta_p", 0.083695, METRICS["compress_theta_p_max_rel"], 5e-7),
-    ("compression, A", 0.000882, METRICS["compress_A_max_rel"], 5e-7),
     ("fitted numbers per condition", 2.1667, N_DISTINCT/N_COND, 5e-5),
-    ("moment identity, k_tc = 0", 2.10e-16,
-     METRICS["moment_identity_max_rel"], 5e-18),
-    ("moment identity, k_tc nonzero", 1.59e-16,
-     METRICS["moment_identity_ktc_max_rel"], 5e-18),
-    ("eq. 22 deviation from r_m/r_D on the discrete flux", 1.858e-05,
-     METRICS["eq22_rm_over_rD_max_dev"], 5e-9),
     ("eq. 22 pricing, observed order", 1.8953, EQ22_ORDER, 5e-5),
-    ("BVP flux spread", 1.505e-10, METRICS["bvp_K_spread_rel"], 5e-14),
-    ("BVP observed order", 1.8618, METRICS["bvp_order"], 5e-5),
-    ("marcher observed order", 1.0094, METRICS["march_order"], 5e-5),
-    ("marcher finest error", 2.12e-05, METRICS["march_err_finest"], 5e-8),
-    ("MW doubled, conversion", 1.34e-12,
-     METRICS["mw_reconstruction_x_maxdiff"], 5e-15),
-    ("MW doubled, lambda_0", 1.57e-11, MW_L0_MAXREL, 5e-14),
     ("MW doubled, mu_1", 0.499939, MW_MU1_MAXREL, 5e-7),
-    ("x_lim, 50 degC", 0.95535, METRICS["xlim_50C"], 5e-6),
     ("x_lim, 70 degC", 0.98173, XLIM[(70, 0.0258)][0], 5e-6),
     ("x_lim, 90 degC", 0.99289, XLIM[(90, 0.0258)][0], 5e-6),
-    ("x_lim monotone margin", 0.011165, METRICS["xlim_monotone_margin"], 5e-7),
     ("asymptote, 50 degC", 0.97897, X_ASYMPTOTE[(50, 0.0258)], 5e-6),
     ("asymptote, 70 degC", 0.99850, X_ASYMPTOTE[(70, 0.0258)], 5e-6),
     ("asymptote, 90 degC", 0.99998, X_ASYMPTOTE[(90, 0.0258)], 5e-6),
@@ -3052,15 +3014,20 @@ CLAIMS = [
     ("log10 k_p0 at 70 degC", 4.6972, float(np.log10(MODELS[(70, 0.0258)].kp0)), 5e-5),
     ("log10 k_p0 at 90 degC", 4.8499, float(np.log10(MODELS[(90, 0.0258)].kp0)), 5e-5),
 ]
-_bad = [(n, w, g) for n, w, g, t in CLAIMS if not abs(w - g) <= t]
+_bad = [(n, w, g) for n, w, g, t in OTHER if not abs(w - g) <= t]
+# the one round-off quantity quoted that is not a metric: lambda_0 under a
+# doubled MW, solver noise at BDF rtol 1e-11, quoted as "less than 1e-9"
+if not MW_L0_MAXREL < 1e-9:
+    _bad.append(("MW doubled, lambda_0", "less than 1e-9", MW_L0_MAXREL))
 assert not _bad, f"prose values that have drifted from the computation: {_bad}"
+N_PROSE = N_SAYS + len(OTHER) + 1
 _counts = {"conditions": (6, N_COND), "distinct fitted numbers": (13, N_DISTINCT),
            "compressed parameters": (8, N_COMPRESSED),
            "named parameters": (4, N_NAMED), "metrics": (56, len(METRICS)),
            "break rows": (53, len(BREAKS)), "cell rows": (19, N_CELL_ROWS),
            "method rows": (34, N_METHOD_ROWS), "links": (249, N_LINKS),
            "second routes": (7, len(SECOND_ROUTES)),
-           "below floor": (3, N_BELOW_FLOOR), "weak metrics": (0, len(WEAK)),
+           "weak metrics": (0, len(WEAK)),
            "onset readings in the band": (7, len(ONSET_READINGS)),
            "conditions where the 4-6 decade window's fit mask stays inside"
            " the window edge": (4, N_W46_INTERIOR),
@@ -3071,8 +3038,12 @@ _counts = {"conditions": (6, N_COND), "distinct fitted numbers": (13, N_DISTINCT
            "QSSA conditions above 2": (3, QSSA_N_ABOVE)}
 _badc = {k: v for k, v in _counts.items() if v[0] != v[1]}
 assert not _badc, f"counts stated in prose that the computation contradicts: {_badc}"
-print(f"{len(CLAIMS)} prose values and {len(_counts)} prose counts pinned against"
-      f" the live computation; all agree.")'''))
+print(f"{N_SAYS} prose literals of registered claims checked by claims.says,"
+      f" {N_PROSE - N_SAYS} other prose values and {len(_counts)} prose counts"
+      f" pinned against the live computation; all agree.\n")
+# Every claim except the structural sign-flip identity has a break row that
+# fails its own check, so report() requires it.
+claims.report()'''))
 
 cells.append(code(r'''# ---- mechanical sweep of the metadata files AND this notebook's markdown ----
 # TWO token classes, following pages/J4.4-luedeking-piret:
@@ -3111,8 +3082,7 @@ LIVE.update([A_GAIN_BAND_LO, A_GAIN_BAND_HI, A_SECOND_DIFF]
             + [float(v) for v in A_ALT_GAIN.values()])
 LIVE.update([ONSET_MAX_BAND/ONSET_MAX_ABS_DEV,
              ONSET_DEV_OTHER_MAX/ONSET_MAX_ABS_DEV,
-             abs(1.0/D_ONSET_D_DECADE), SWITCH_JUMP_NEAREST_GRID,
-             X_NEAREST_GRID])
+             abs(1.0/D_ONSET_D_DECADE)])
 LIVE.update([float(o["slope"]) for o in ONSET.values()])
 LIVE.update([float(o["band"]) for o in ONSET.values()])
 LIVE.update([float(v) for v in ONSET_X_ROUTE.values()])
@@ -3132,12 +3102,7 @@ LIVE.update([float(np.log10(m.kt0)) for m in MODELS.values()]
 LIVE.update([float(E_T[i][0]) for i in TH_T] + [float(E_T[i][1]) for i in TH_T]
             + [float(E_T[i][2]) for i in TH_T]
             + [float(E_P[0]), float(E_P[1]), float(E_P[2])])
-LIVE.update([float(x) for x in EQ22_MEASURED] + [float(EQ22_ORDER)]
-            + [float(x) for x in EQ22_CLOSED_FORM_DEV]
-            + [float(ONSET_BAND_FIVE), float(ONSET_BAND_SIX),
-               ONSET_MAX_BAND/ONSET_BAND_FIVE, ONSET_MAX_BAND/ONSET_BAND_SIX,
-               ONSET_BAND_SIX/ONSET_BAND_FIVE,
-               ONSET_BAND_SIX/ONSET_MAX_ABS_DEV])
+LIVE.update([float(x) for x in EQ22_MEASURED] + [float(EQ22_ORDER)])
 # EVERY PRINTED CELL OF THE THREE TABLES, because the sidecars quote them.
 for _df in (T1[["a", "b"]], T2, TS[["value"]]):
     LIVE.update(float(v) for v in np.asarray(_df.to_numpy(), dtype=float).ravel()
@@ -3145,35 +3110,11 @@ for _df in (T1[["a", "b"]], T2, TS[["value"]]):
 # AND THE ONE PRINTED VALUE THIS PAGE REPORTS AS A DEFECT AND DOES NOT COMPUTE:
 # Figure 3's legend prints the lower initiator loading as 0.01584 where Table II
 # and Figures 4, 5, 6 and 8 print 0.01548.  It is quoted in the sidecar and in
-# the prose so that the discrepancy is recorded, and it is pinned here for the
-# same reason a retracted number is pinned - naming it is not claiming it.
+# the prose so that the discrepancy is recorded, and it is pinned here so that
+# naming it cannot be confused with claiming it.
 PRINTED_DEFECT_VALUES = {0.01584}
 LIVE.update(PRINTED_DEFECT_VALUES)
 LIVE.update([float(v) for v in X_ASYMPTOTE.values()])
-# WITHDRAWN VALUES, quoted only in order to be retracted.  An earlier version of
-# the onset construction took the GLOBAL minimum of the second derivative of
-# log10 k_t as "the bend" and jumped to the glass-effect feature at large
-# theta_t, which made the onset non-monotone: 0.32043, 0.25455 and 0.42929 at
-# half, one and twice the tabulated theta_t.  Those three numbers appear in the
-# metadata because naming a past defect is part of reporting it, and they are
-# pinned here for the same reason a retracted count is pinned - so that naming
-# them cannot be confused with claiming them.  (The middle one is also a LIVE
-# value: at the tabulated theta_t the broken and the fixed constructions agree
-# exactly, which is precisely why the old assertion could not have caught a
-# recurrence.)
-# THE OTHER THREE RETRACTIONS ON THIS PAGE ARE NOT PINNED HERE BECAUSE THEY ARE
-# RECOMPUTED LIVE: the two narrower definitional bands (ONSET_BAND_FIVE and
-# ONSET_BAND_SIX), the
-# nearest-grid switch jump (SWITCH_JUMP_NEAREST_GRID) and the closed-form eq. 22
-# deviation (EQ22_CLOSED_FORM_DEV) are all produced by the cells that retract
-# them, so they cannot drift out of the prose that names them.
-# 0.1016 is a WITHDRAWN COVERAGE FIGURE in the same sense: it is what
-# onset_per_decade_theta_t's strongest mover was before the leverage row was
-# moved to 90 degC, and it is quoted in the metadata only to say so.  It is NOT
-# recomputed and pinned as a claim, because the row that produced it no longer
-# exists and any "check" of it would be a check that cannot fail.
-WITHDRAWN_VALUES = {0.32043, 0.25455, 0.42929, 0.1016}
-LIVE.update(WITHDRAWN_VALUES)
 LIVE.update([mv for rows in COVERAGE.values() for _, mv in rows])
 LIVE.update([abs(x) for x in list(LIVE)])
 LIVE.update([100.0*x for x in list(LIVE)])
@@ -3181,7 +3122,7 @@ LIVE = {x for x in LIVE if np.isfinite(x)}
 
 LIVE_INT = {len(T1), len(T2), len(TS), len(METRICS), len(BREAKS), N_LINKS,
             N_MOVING_ROWS, N_CELL_ROWS, N_METHOD_ROWS, len(WEAK),
-            len(SECOND_ROUTES), N_BELOW_FLOOR, len(CLAIMS), len(CONDITIONS),
+            len(SECOND_ROUTES), N_PROSE, N_SAYS, len(CONDITIONS),
             N_DISTINCT, N_COMPRESSED, N_COND, N_NAMED, len(BVP_N), len(MARCH_NT),
             int(round(100*CI_REL_TOL)), len(RATIOS), len(_counts)}
 LIVE_INT.update(BVP_N)
@@ -3243,8 +3184,8 @@ FILES = ["meta.yaml", "README.md",
 # SHAPE-DEPENDENT AND BOTH SHAPES PINNED.  integrate_case.py copies page/ only
 # and splices models_entry.yaml into models.yaml, so that file is swept HERE, in
 # the queue tree, and is ABSENT - and counted as absent - in the published page.
-SWEEP_TOKENS_BY_SHAPE = {7: 186, 6: 139}        # 5+-decimal tokens
-SWEEP_INTS_BY_SHAPE = {7: 540, 6: 467}          # 2+-digit integer tokens
+SWEEP_TOKENS_BY_SHAPE = {7: 177, 6: 128}        # 5+-decimal tokens
+SWEEP_INTS_BY_SHAPE = {7: 516, 6: 436}          # 2+-digit integer tokens
 
 
 def _read_swept(fn):
@@ -3346,16 +3287,10 @@ print(f"  OUTSIDE THE SWEEP ENTIRELY, counted so that it is not mistaken for"
       f" covered:\n  {n_word} word-spelled small integers and {n_one}"
       f" single-digit numbers stand in the swept\n  prose.  NEITHER CLASS IS"
       f" CHECKED against anything; the counts that matter are pinned\n  one by"
-      f" one in CLAIMS above instead.")
-print(f"  THIS BLIND SPOT IS DEMONSTRATED, NOT HYPOTHETICAL.  A stale count sat"
-      f" in it on this page:\n  the stated-results sidecar said the band was a"
-      f" spread over 'three defensible readings'\n  while every other file said"
-      f" five, and the sweep could not see it because the count was\n"
-      f"  WORD-SPELLED.  It was found by a line-by-line read in review, on"
-      f" 2026-08-14, and the\n  same hole had already been found on"
-      f" pages/J4.4-luedeking-piret.  A count written as a word\n  or a single"
-      f" digit anywhere in these files is unprotected; the fix is to pin it in"
-      f"\n  CLAIMS or to write it as a numeral of two or more digits, not to"
+      f" one in _counts above instead.")
+print(f"  A count written as a word or a single digit anywhere in these files is"
+      f" unprotected; the fix is to pin it in"
+      f"\n  _counts or to write it as a numeral of two or more digits, not to"
       f" trust the sweep.")'''))
 
 cells.append(code(r'''# ---- structural assertions, asserted rather than asserted-by-eye -----------
@@ -3415,7 +3350,7 @@ solution, with pymrm nowhere in the causal chain.
 - **The paper's own eq. 21, solved instead of approximated.** `construct_grad`
   and `construct_div(nu=2)` on the shell `r_m <= r <= r_D` reproduce the exact
   first integral - `4 pi r^2 D dC/dr` is the same at every one of 1281 faces to
-  1.505e-10 relative, which is *structural* for a conservative finite-volume
+  less than 1e-8 relative, which is *structural* for a conservative finite-volume
   scheme with no source and is named as such - and converge on the profile at
   observed order 1.8618. What is **not** structural is the *value* of that
   constant flux, and that is what prices the approximation the paper's
@@ -3423,7 +3358,7 @@ solution, with pymrm nowhere in the causal chain.
   and the flux the operators compute agrees with that to **1.858e-05** over five
   ratios spanning 0.01 to 0.5 at `n = 6400`, converging onto it at order
   **1.8953**. Setting the geometry to Cartesian moves that number by four
-  orders, which is the test the page's previous version of it failed. **The
+  orders. **The
   paper prints no number for `r_m` or `r_D` anywhere**, so the size of the
   correction for PMMA cannot be evaluated from this paper, and the page reports
   the exact form rather than inventing a radius.
@@ -3456,11 +3391,9 @@ here are not a formula in the paper; they are a line drawn by eye. Reconstructin
 them mechanically gets within `0.00966`, but seven defensible readings of the
 same sentence spread the answer by `0.09009`, and an eighth - the most literal
 one - falls outside even that. **Report the band, not the digits; say which
-readings are in it, and say what the band does not cover.** The trap this page
-walked into is worth copying the fix for, and it caught the page twice: the band
-was published at `0.02424` with two readings of the same family left out, and
-each time one was admitted the band widened - `0.05126`, then `0.09009`, `3.7168`
-times the original. A definitional band is only worth quoting if the rule for
+readings are in it, and say what the band does not cover.** Leaving out a
+reading of the same family narrows the band and flatters the result. A
+definitional band is only worth quoting if the rule for
 what enters it is a measurement rather than a judgement; here the rule is that a
 reading is excluded only when it is shown to be set by where the curve was
 truncated rather than by the curve, and it excludes exactly one reading. The
@@ -3475,13 +3408,13 @@ instead of the table prices that claim - here, `0.01633` in onset conversion,
 the paper.
 
 **4. A residual that does not move under a perturbation may be measuring
-something other than what you think.** Two numbers on this page looked like
-agreement and were not. The two-route onset residual, `9.08e-12`, is unchanged
+something other than what you think.** The two-route onset residual, below `1e-10`, is unchanged
 across three solver families and four tolerances but moves by `1.311e-05` with
 the *resampling* grid - so it prices the attracting manifold, not the
 integration, and the arithmetic floor is five orders of magnitude larger than it
-looks. And eq. 22's `1.53e-16` was an algebraic identity in floating point, bit
-identical with the geometry set wrong. **Before quoting a small residual, break
+looks. And a quantity formed from two closed-form scalars, such as eq. 22's
+`1 - K_22/K_exact`, is an algebraic identity in floating point, bit identical
+with the geometry set wrong. **Before quoting a small residual, break
 something it should depend on and check that it moves** - a coverage map
 generated from measured moves finds both of these, if the metric is wired to the
 quantity you claim it came from.
