@@ -561,20 +561,18 @@ display(pd.DataFrame({
 # to another branch, and stops with a message instead of skipping. Here every
 # point converges with both, and the two branches agree to the Newton tolerance.
 #
-# The comparison found one trap in the library. The old sweep visited 0.1 twice
-# in a row, once as $1 - 0.9$ and once as $0.1$, which differ by
-# 3e-17. The page's loop does not care. `continuation`'s secant
-# predictor divides by the previous parameter step, so the next prediction
-# extrapolates the last change of the solution by a ratio of 2.4e14 (computed
-# below from the sweep's own values). Halving the step six times divides that
-# ratio by only 64, so the prediction can stay far off, and here the march stops
-# at 0.1 with the message that a fold is probably near, which is wrong: along
-# the centre value there is none.
-# How many values it reaches before stopping depends on round-off (the
-# converged states at the repeated value differ at round-off, and that
-# difference times the ratio is the error of the prediction), so the page
-# claims the ratio, which follows exactly from the sweep, and prints the count
-# only as this run's. The sweep above drops the repeated value.
+# The comparison found one trap in the library, fixed since. The old sweep
+# visited 0.1 twice in a row, once as $1 - 0.9$ and once as $0.1$, which differ
+# by 3e-17. The page's loop does not care. In pymrm 3.1.0, `continuation`'s
+# secant predictor divided by the previous parameter step, so the next
+# prediction extrapolated the last change of the solution by a ratio of 2.4e14
+# (computed below from the sweep's own values). Halving the step six times
+# divided that ratio by only 64, so the march stopped at 0.1, at a point that
+# depended on round-off, with the message that a fold was probably near, which
+# was wrong: along the centre value there is none. The refresh of this page
+# reported it, and pymrm 3.2.0 bounds the predictor and retries with a constant
+# one, so the library now traces the old sweep through, as printed below. The
+# sweep above still drops the repeated value; that changes no number.
 
 # %%
 own, own_failed = trace_branch_own(problem, YC)
@@ -612,12 +610,14 @@ def secant_ratio(yc, i=120):
 
 
 SECANT_RATIO = secant_ratio(YC_OLD)
+DUP_TRACED = dup_reached == len(YC_OLD)
 print(f"\nlibrary continuation on the old sweep (0.1 visited twice): "
-      f"secant ratio after the repeat {SECANT_RATIO:.2e}; stopped early "
-      f"(here {dup_reached} of {len(YC_OLD)} values)")
-# the reason after the colon (corrector failed, or refused as a branch jump)
-# depends on the BLAS kernel; where it stops does not
-print(f"   {cont_dup.message.split(':')[0]}")
+      f"secant ratio after the repeat {SECANT_RATIO:.2e}; "
+      + (f"traced through, {dup_reached} of {len(YC_OLD)} values" if DUP_TRACED else
+         f"stopped early (here {dup_reached} of {len(YC_OLD)} values)"))
+if not DUP_TRACED:
+    # the reason after the colon depends on the BLAS kernel
+    print(f"   {cont_dup.message.split(':')[0]}")
 
 # %% [markdown]
 # The folds read at the traced points are the extremes of a sampled curve, like
@@ -800,7 +800,10 @@ claims.bound("own_vs_library_fold_gap", own_fold_gap, max=1e-8, basis="tolerance
              note="the folds at the traced points, relative")
 claims.exact("own_loop_failed_points", own_failed)
 claims.value("secant_ratio_at_repeat", SECANT_RATIO, rtol=1e-6,
-             note="from the sweep's literal values; the count it stops at is round-off")
+             note="from the sweep's literal values; pymrm 3.1.0 stopped on it")
+claims.exact("library_traces_old_sweep", DUP_TRACED, structural=True,
+             note="a property of the installed pymrm: 3.2.0 bounds the secant predictor; "
+                  "3.1.0 stopped at a round-off-dependent point (learnings row 15)")
 claims.bound("repeated_value_gap", REPEAT_GAP, max=1e-15, basis="identity",
              structural=True,
              note="1 - 0.9 and 0.1 in floating point: a property of the literals, "

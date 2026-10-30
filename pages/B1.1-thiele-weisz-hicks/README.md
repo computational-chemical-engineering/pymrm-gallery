@@ -41,13 +41,14 @@ parameter. The folds are located on the shooting reference, refined from a scan.
 ## Refresh of 2026-10
 
 - New layout: `index.py`, `model.py`, `test_model.py`, bootstrap cell, pymrm
-  pin 3.1.0, every number registered with `Claims` (48 claims, 55 break rows,
+  pin 3.2.0, every number registered with `Claims` (49 claims, 55 break rows,
   each re-running its computation).
 - The page's own warm-start loop is replaced by `pymrm.continuation`; the old
   loop stays on the page as a comparison (same branch to 4e-12 in phi^2). The
-  library routine stopped on the old sweep, whose two segments both contained
-  0.1 (as 1 - 0.9 and as 0.1, 3e-17 apart): its secant predictor divides by
-  that step. The sweep now drops the repeated value.
+  library routine in pymrm 3.1.0 stopped on the old sweep, whose two segments
+  both contained 0.1 (as 1 - 0.9 and as 0.1, 3e-17 apart): its secant predictor
+  divided by that step. Reported from this page and fixed in pymrm 3.2.0, which
+  traces the old sweep through; the sweep still drops the repeated value.
 - The rate is no longer clipped at zero and the solves no longer pass
   `bounds=(0, inf)` (pymrm pitfall P9); no number changed.
 - The folds are refined instead of read off 900 samples (upper fold
@@ -65,9 +66,8 @@ parameter. The folds are located on the shooting reference, refined from a scan.
   interpolation gap above as a pymrm-vs-reference difference; and it printed
   one averaged order, 2.35, which hid the per-geometry orders (all second
   order; the slab's 2.96 at phi = 5 is pre-asymptotic).
-- The library continuation's stop on the old sweep is shown with the secant
-  ratio it hits, 2.4e14 (exact from the sweep's values); where it stops depends
-  on round-off and is printed only as this run's.
+- The secant ratio the old sweep produces, 2.4e14 (exact from the sweep's
+  values), is shown with the result that pymrm 3.2.0 traces through it.
 
 ## Data
 
