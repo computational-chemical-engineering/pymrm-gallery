@@ -1,12 +1,468 @@
 {
   "page": "D2.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "examples_mean_dev_pct": 0.05410363524065365,
-    "examples_worst_dev_pct": 0.40028833110981427,
-    "criterion_mean_dev_pct": 0.0511799892466505,
-    "integration_mean_dev_pct": 0.06872186521066936,
-    "cross_method_worst_pct": 0.1824557583090375,
-    "T_M_at_625K": 656.6183367689355,
-    "p0_critical_at_625K": 0.016510841514182858
+    "examples_mean_dev_pct": {
+      "kind": "value",
+      "value": 0.05410363524065365,
+      "rtol": 0.05
+    },
+    "examples_worst_dev_pct": {
+      "kind": "value",
+      "value": 0.40028833110981427,
+      "rtol": 0.05
+    },
+    "criterion_mean_dev_pct": {
+      "kind": "value",
+      "value": 0.0511799892466505,
+      "rtol": 0.05
+    },
+    "integration_mean_dev_pct": {
+      "kind": "value",
+      "value": 0.06872186521066936,
+      "rtol": 0.05
+    },
+    "n_examples": {
+      "kind": "exact",
+      "value": 30,
+      "structural": true,
+      "note": "rows of the examples CSV that the page recomputes; set by the data"
+    },
+    "n_examples_criterion": {
+      "kind": "exact",
+      "value": 25,
+      "structural": true,
+      "note": "rows of the examples CSV that the page recomputes; set by the data"
+    },
+    "n_examples_integration": {
+      "kind": "exact",
+      "value": 5,
+      "structural": true,
+      "note": "rows of the examples CSV that the page recomputes; set by the data"
+    },
+    "T_M_at_625K": {
+      "kind": "value",
+      "value": 656.6183367689355,
+      "rtol": 1e-09,
+      "unit": "K"
+    },
+    "tm_identity_rel": {
+      "kind": "bound",
+      "value": 2.4301139535451686e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "T_M^2 = a (T_M - T_w) follows from Eq. 8"
+    },
+    "p0_critical_at_625K": {
+      "kind": "value",
+      "value": 0.016510841514182858,
+      "rtol": 1e-06,
+      "unit": "atm",
+      "note": "back-integration, solve_ivp rtol 1e-11"
+    },
+    "p0_critical_reactor_625K": {
+      "kind": "value",
+      "value": 0.016516741837367437,
+      "rtol": 1e-06,
+      "unit": "atm",
+      "note": "brentq to 1e-12 atm on Newton solves at tol 1e-10 (scaled)"
+    },
+    "cross_method_worst_pct": {
+      "kind": "value",
+      "value": 0.18251599035359328,
+      "rtol": 0.05
+    },
+    "bisection_vs_root_atm": {
+      "kind": "bound",
+      "value": 2.986963953954813e-08,
+      "max": 1e-07,
+      "basis": "tolerance",
+      "unit": "atm",
+      "note": "bisection to a bracket narrower than 1e-7 atm"
+    },
+    "criterion1_brackets_exact": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.1206248904864614,
+      "min_margin": 0.01,
+      "note": "margin: smallest distance of the exact value to an end of its bracket, relative to the exact value"
+    },
+    "hotspot_grid_order": {
+      "kind": "bound",
+      "value": 0.9956935500307247,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind, n_z 800, 1600, 3200"
+    },
+    "hotspot_error_n1500_K": {
+      "kind": "value",
+      "value": 0.04040503943622298,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "Richardson estimate from n_z = 1600 and 3200"
+    },
+    "dT_hotspot_5pct_from_0164_K": {
+      "kind": "value",
+      "value": 7.433784621661857,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "1500 cells"
+    },
+    "dT_hotspot_5pct_converged_K": {
+      "kind": "value",
+      "value": 7.4667479661167135,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "Richardson from 12000 and 24000 cells"
+    },
+    "dT_hotspot_1pct_converged_K": {
+      "kind": "value",
+      "value": 303.696189130741,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "Richardson from 12000 and 24000 cells"
+    },
+    "hotspot_grid_err_0182_K": {
+      "kind": "value",
+      "value": 3.0580336738566984,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "1500 cells against converged"
+    },
+    "hotspot_grid_err_0190_K": {
+      "kind": "value",
+      "value": 2.6615969809124636,
+      "rtol": 0.05,
+      "unit": "K",
+      "note": "1500 cells against converged"
+    },
+    "hotspot_0190_converged_K": {
+      "kind": "value",
+      "value": 1167.336122817934,
+      "rtol": 0.05,
+      "unit": "K"
+    },
+    "steepest_sensitivity_above_crit_pct": {
+      "kind": "value",
+      "value": 10.796670313016122,
+      "rtol": 0.1,
+      "note": "argmax on the 1e-4 atm sweep: rtol covers one sample spacing"
+    },
+    "check_on_fine_steps_succeeds": {
+      "kind": "exact",
+      "value": true,
+      "note": "branch-jump check on, steps of 2e-5 atm"
+    },
+    "dT_hotspot_1pct_from_0182_K": {
+      "kind": "value",
+      "value": 304.41990613456005,
+      "rtol": 0.05,
+      "unit": "K"
+    },
+    "hotspot_p0190_K": {
+      "kind": "value",
+      "value": 1164.6745258370274,
+      "rtol": 0.05,
+      "unit": "K"
+    },
+    "trace_vs_independent_K": {
+      "kind": "bound",
+      "value": 2.935394149972126e-09,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "unit": "K",
+      "note": "newton tol 1e-10 on the scaled unknowns in both"
+    },
+    "default_branch_check_stops": {
+      "kind": "exact",
+      "value": true,
+      "note": "continuation with max_change = 0.2 over the same sweep"
+    },
+    "bracket_width_c1_min_pct": {
+      "kind": "value",
+      "value": 26.538795148193,
+      "rtol": 0.05
+    },
+    "bracket_width_c1_max_pct": {
+      "kind": "value",
+      "value": 65.96511331441681,
+      "rtol": 0.05
+    },
+    "bracket_width_c2_min_pct": {
+      "kind": "value",
+      "value": 20.552655391975748,
+      "rtol": 0.05
+    },
+    "bracket_width_c2_max_pct": {
+      "kind": "value",
+      "value": 36.666016106978304,
+      "rtol": 0.05
+    },
+    "mean_error_c1_min_pct": {
+      "kind": "value",
+      "value": 0.29351137098356794,
+      "rtol": 0.05
+    },
+    "mean_error_c1_max_pct": {
+      "kind": "value",
+      "value": 1.2069085254503564,
+      "rtol": 0.05
+    },
+    "mean_error_c2_min_pct": {
+      "kind": "value",
+      "value": 1.7280678911539837,
+      "rtol": 0.05
+    },
+    "mean_error_c2_max_pct": {
+      "kind": "value",
+      "value": 4.729799682540237,
+      "rtol": 0.05
+    },
+    "c2_below_c1_600K_pct": {
+      "kind": "value",
+      "value": 0.2809859395787928,
+      "rtol": 0.05
+    },
+    "c2_below_c1_700K_pct": {
+      "kind": "value",
+      "value": 14.831384320243258,
+      "rtol": 0.05
+    },
+    "mean_error_c1_625K_pct": {
+      "kind": "value",
+      "value": 0.8113833292385131,
+      "rtol": 0.05
+    },
+    "mean_error_c2_625K_pct": {
+      "kind": "value",
+      "value": 3.155425040398585,
+      "rtol": 0.05
+    },
+    "c2_below_c1_625K_pct": {
+      "kind": "value",
+      "value": 0.934272194590946,
+      "rtol": 0.05
+    },
+    "c2_bracket_narrower_everywhere": {
+      "kind": "exact",
+      "value": true,
+      "margin": 2.565065016600826,
+      "min_margin": 0.5,
+      "note": "margin in percentage points of the criterion's own exact p0"
+    },
+    "c2_more_conservative_everywhere": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.2809859395787928,
+      "min_margin": 0.05,
+      "note": "margin in percent"
+    },
+    "c1_mean_closer_everywhere": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.875856304983591,
+      "min_margin": 0.1,
+      "note": "margin in percentage points"
+    }
+  },
+  "quoted": {
+    "dT_hotspot_5pct_from_0164_K": [
+      "7.4"
+    ],
+    "dT_hotspot_5pct_converged_K": [
+      "7.47"
+    ],
+    "dT_hotspot_1pct_converged_K": [
+      "304"
+    ],
+    "steepest_sensitivity_above_crit_pct": [
+      "11"
+    ],
+    "hotspot_grid_err_0182_K": [
+      "3.1"
+    ],
+    "hotspot_grid_err_0190_K": [
+      "2.7"
+    ],
+    "dT_hotspot_1pct_from_0182_K": [
+      "304"
+    ],
+    "bracket_width_c1_min_pct": [
+      "27"
+    ],
+    "bracket_width_c1_max_pct": [
+      "66"
+    ],
+    "bracket_width_c2_min_pct": [
+      "21"
+    ],
+    "bracket_width_c2_max_pct": [
+      "37"
+    ],
+    "c2_below_c1_600K_pct": [
+      "0.3"
+    ],
+    "c2_below_c1_700K_pct": [
+      "15"
+    ],
+    "mean_error_c1_min_pct": [
+      "0.3"
+    ],
+    "mean_error_c1_max_pct": [
+      "1.2"
+    ],
+    "mean_error_c2_min_pct": [
+      "1.7"
+    ],
+    "mean_error_c2_max_pct": [
+      "4.7"
+    ],
+    "mean_error_c1_625K_pct": [
+      "0.8"
+    ],
+    "mean_error_c2_625K_pct": [
+      "3.2"
+    ],
+    "c2_below_c1_625K_pct": [
+      "0.9"
+    ],
+    "cross_method_worst_pct": [
+      "0.18"
+    ]
+  },
+  "breaks": {
+    "examples_mean_dev_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "examples_worst_dev_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "criterion_mean_dev_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "integration_mean_dev_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "p0_critical_at_625K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "p0_critical_reactor_625K": [
+      "c_p multiplied by rho_g (the units trap)",
+      "reactor on n_z = 1000"
+    ],
+    "dT_hotspot_5pct_from_0164_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "dT_hotspot_1pct_from_0182_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "dT_hotspot_5pct_converged_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "dT_hotspot_1pct_converged_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "hotspot_grid_err_0182_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "hotspot_grid_err_0190_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "hotspot_0190_converged_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "hotspot_error_n1500_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "c2_below_c1_600K_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "c2_below_c1_700K_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "mean_error_c1_625K_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "mean_error_c2_625K_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "c2_below_c1_625K_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "bracket_width_c1_min_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "bracket_width_c2_min_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "mean_error_c2_min_pct": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "c1_mean_closer_everywhere": [
+      "c_p multiplied by rho_g (the units trap)",
+      "Eq. 28 without the square"
+    ],
+    "hotspot_p0190_K": [
+      "c_p multiplied by rho_g (the units trap)"
+    ],
+    "steepest_sensitivity_above_crit_pct": [
+      "critical p0 taken as the Eq. 28 upper limit"
+    ],
+    "T_M_at_625K": [
+      "Eq. 8 with the other root of the quadratic"
+    ],
+    "tm_identity_rel": [
+      "Eq. 8 with 2 T_w under the root"
+    ],
+    "bracket_width_c1_max_pct": [
+      "Eq. 28 without the square"
+    ],
+    "bracket_width_c2_max_pct": [
+      "Eq. 28 without the square"
+    ],
+    "mean_error_c1_min_pct": [
+      "Eq. 28 without the square"
+    ],
+    "mean_error_c1_max_pct": [
+      "Eq. 28 without the square"
+    ],
+    "mean_error_c2_max_pct": [
+      "Eq. 28 without the square"
+    ],
+    "criterion1_brackets_exact": [
+      "Eq. 28 without the square"
+    ],
+    "c2_bracket_narrower_everywhere": [
+      "Eq. 20 with t_w = a/T_M instead of a/T_w"
+    ],
+    "c2_more_conservative_everywhere": [
+      "Eq. 20 with t_w = a/T_M instead of a/T_w"
+    ],
+    "cross_method_worst_pct": [
+      "reactor on n_z = 1000"
+    ],
+    "bisection_vs_root_atm": [
+      "bisection to 1e-4 atm"
+    ],
+    "hotspot_grid_order": [
+      "last grid 2400 cells, read as a doubling"
+    ],
+    "trace_vs_independent_K": [
+      "sweep on n_z = 1000, independent solves on 1500"
+    ],
+    "check_on_fine_steps_succeeds": [
+      "branch-jump check on, steps of 1e-4 atm"
+    ],
+    "default_branch_check_stops": [
+      "branch-jump check at 100 % of the largest unknown"
+    ]
   }
 }

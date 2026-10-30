@@ -14,45 +14,55 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 10
+pymrm_min_version: "3.2.0"
+runtime_seconds: 25
 datasets:
   - van-welsenaere-froment-1970-parameters.csv
   - van-welsenaere-froment-1970-examples.csv
 
 validation:
-  - parameter reading against four derived quantities printed in the paper (ln K, t_w, T_M, the Example 1 bracket)
+  - parameter reading against derived quantities printed in the paper (ln K, t_w, T_M, the Example 1 bracket)
   - the identity T_M^2 = a(T_M - T_w), exact from their Eq. 8
-  - grid independence of the plug-flow integration
+  - grid independence of the plug-flow solve, observed order and Richardson error
   - all 30 numbers printed in their Section 6, criterion values and integration values kept separate
-  - pymrm reactor bisection against an independent phase-plane back-integration
+  - pymrm reactor (hot spot root-found against T_M) against an independent phase-plane back-integration, and against bisection
+  - pymrm continuation of the hot spot over the inlet pressure against independent solves
+  - a defect-injection table in which every non-structural claim fails at least one row
 
 adds: >
   Their Figs. 6 and 7 exist only to solve one implicit equation without a
   computer; solving Eq. 20 directly turns both figures from inputs into checks.
   Their Fig. 8 was four curves through a handful of back-integrated points,
-  because each point was expensive; drawn continuously it shows what the paper
-  can only assert at one wall temperature - that the bracket is 27-66 % wide for
-  the first criterion and 21-37 % for the second, that the second criterion is
-  more conservative by 0.3 % at 600 K widening to 15 % at 700 K, and that
-  despite the narrower bracket it is the FIRST criterion whose midpoint is the
-  better estimate (+0.3 to +1.2 % against its own exact value, against +1.7 to
-  +4.7 %). The paper compares them only at 625 K, where they are
-  indistinguishable.
+  because each point was expensive; with the same back-integration at 21 wall
+  temperatures it shows what the paper can only assert at one wall
+  temperature: the bracket is 27-66 % wide for the first criterion and 21-37 %
+  for the second, the second criterion is more conservative by 0.3 % at 600 K
+  and 15 % at 700 K, and despite the narrower bracket it is the FIRST
+  criterion whose midpoint is the better estimate at every wall temperature
+  (+0.3 to +1.2 % against its own exact value, against +1.7 to +4.7 %). The
+  paper compares them only at 625 K, where the midpoints are already 0.8 % and
+  3.2 % off. The pymrm reactor confirms the criterion-1 values, and pymrm
+  continuation draws the hot spot through the runaway region (304 K for 1 %
+  more inlet pressure at 0.0182 atm, converged in the grid; steepest about 11 %
+  above criterion 1's critical inlet pressure).
 
 agreement: >
   0.054 % mean absolute deviation over all 30 values printed in Section 6, worst
   0.40 %, with nothing fitted. Separately: 0.051 % mean over the 25 closed-form
   criterion values and 0.069 % over the 5 numerical-integration values. The
   pymrm reactor and an independent phase-plane back-integration agree on the
-  critical inlet pressure to 0.18 % across 600-700 K.
+  critical inlet pressure to 0.18 % across 600-700 K, the first-order upwind
+  error at 1500 cells.
 
 caveats: >
   Provenance tier 6. The paper contains no experimental data at all - every
   number here is the authors' own computed value, so this page is validated
   against a published reference solution in the same sense as B1.1 and F3.1,
   not against experiment. The first-order upwind discretisation converges as
-  O(h) and leaves about 0.04 K of error in the hot spot at the default grid,
-  which is below the paper's own rounding but is not negligible if the criteria
-  are pushed further. The units trap in c_p (printed volumetric) moves the
+  O(h) and leaves about 0.04 K of error in the hot spot at the default 1500
+  cells in the controlled region (p0 = 0.0164 atm at 625 K), but 3.1 K at
+  0.0182 atm and 2.7 K at 0.019 atm, where the runaway stretch is
+  under-resolved. On 1500 cells some backward-Euler cells near the inlet also
+  have further, ignited roots in the runaway region; continuation follows the
+  low root, checked against independent solves. The units trap in c_p (printed volumetric) moves the
   runaway boundary silently if missed.
