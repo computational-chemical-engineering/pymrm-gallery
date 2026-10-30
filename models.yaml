@@ -5054,70 +5054,31 @@ models:
       near saturation, so the butane loading falls as the pressure rises, which no
       Langmuir isotherm can produce - and the exchange coefficients between the
       two sorbates are FINITE, so the fast species is dragged along by the slow
-      one. Removing the exchange alone takes the selectivity from 488 to 12.4.
-      This is where the review's experimental comparisons live, and unlike its
-      single-component half they are stated as numbers rather than plotted, so the
-      page is TIER 2 and the comparison is validation rather than reproduction.
-      Funke et al.'s measured 24 for a hexane-isomer mixture comes out at 25.0,
-      +4.3 %, from nothing but pure-component isotherm fits and one diffusivity
-      ratio - and inside a 1.6x band of three readings the review's one sentence
-      about that run leaves open (whether its "15 kPa" is a total or a
-      per-component pressure, what the feed composition was, and the diffusivity
-      ratio taken as exactly 5), all swept where the comparison is made, because
-      nothing fitted is not nothing chosen.
-      Bakker's two methane/butane values do not: 488 against 380 (1.28x)
-      and 203 against 60 (3.38x), the second quoted by the review one sentence
-      after the first and passed over without comment. With the exchange removed
-      the same model gives 12.4 and 5.4 - 31x and 11x too LOW - so the
-      measurements discriminate decisively between the two implementations while
-      agreeing quantitatively with neither, and the page says that in those words.
-      The review's own computations reproduce cleanly: all five printed
-      selectivities (487, 12.3, 202, 5.4, 43.2) to better than 0.75 %, and all
-      four printed mixture fluxes to 0.41 % using the ~40 um membrane thickness
-      A4.7 reconstructed from the SINGLE-component fluxes. That flux comparison is
-      NOT a test of the reconstruction and the page says so where it is made:
-      delta, rho_MFI, the unit-cell mass and Avogadro's number cancel identically
-      out of all four, and swinging the framework density over a factor of four
-      leaves every one of them bit-identical, so it is the delta-free flux-ratio
-      check rescaled by the stored 34 - kept, labelled and printed beside its own
-      twin, because it does test the mixture physics. The transient methane peak
-      TIME is the one quantity here that carries delta, as delta^2, and it had
-      never been refined in space: the steady profile is smooth but the transient
-      carries a self-sharpening butane front. Refined under the transient
-      (n_z = 30/60/120/240, order 2.5 then 2.0) it lands at 0.658 s against the
-      printed 0.73 s, -9.8 %, and both further grid and step refinement move it
-      further away. Closing that needs delta +5.3 %, which nothing else on the
-      page forbids precisely because nothing else contains delta, so it is
-      reported as an OPEN TENSION with its candidate homes named - the 1800 kg
-      m^-3 read off a figure caption, the hard-coded unit-cell mass, the
-      two-figure printed 34, or the review's transient not being the calculation
-      reproduced here. The two peak heights cross sign on the same refinement,
-      from 1.5 % and 3.5 % low to 1.2 % and 1.8 % high, and the earlier "backward
-      Euler damps a maximum" reading of that sign is withdrawn.
-      Two printed numbers do NOT reproduce and both are investigated
-      rather than explained away. The Henry-limit sorption selectivity of 2200
-      comes out at 2649.9 from Table 1 by two independent routes, and the obvious
-      explanation is EXCLUDED: every single-parameter change to the C1 or nC4 row
-      that would make the ratio 2200 moves A4.7's certifying flux-ratio check by
-      4.2 % to 24 % against an observed 0.17 %. Where 2200 does come from is left
-      open, because the review's Fig. 24 is drawn against CBMC fugacities rather
-      than against the fit. And the multicomponent-Langmuir counterfactual splits
-      in two: its structural claim reproduces exactly - S_P independent of
-      upstream composition to 1.02x over feeds from 95 % down to 5 % methane,
-      where IAST spans more than a factor of three over the same five feeds -
-      while its printed 800 does not (about 1680), because the review never says
-      which affinity it used once the dual-site fit is collapsed to a single site.
-      Every check on the coupled machinery has a second route sharing no code with
-      the first: [Gamma] by implicit differentiation of the IAST equations against
-      central differences, [B] assembled from eq. (44) against the raw friction
-      system of eq. (42) solved matrix-free by GMRES (A4.2's fix, reused - 6e-14,
-      and 687 % when a term is dropped from B_ii), and the closed-form surface
-      potential against adaptive quadrature. The three algebraic identities the
-      review uses - eq. (43) at i=j, eq. (55) from eq. (54), eq. (46) at n=1 - are
-      labelled as identities and left unscored. And the review's own
-      counter-example is carried rather than dropped: zeolite 4A goes the other
-      way, so the finding is that the exchange coefficient is a property of the
-      host topology and MFI and 4A sit at opposite limits of it.
+      one. Removing the exchange alone divides the selectivity by about 40.
+      The review states its experimental comparisons as numbers rather than
+      plots, so the page is TIER 2 and the comparison is validation. Funke et
+      al.'s hexane-isomer selectivity comes out 4.3 % high from nothing but
+      pure-component isotherm fits and one diffusivity ratio, inside a 1.57x band
+      of readings the review's one sentence about that run leaves open, all swept
+      where the comparison is made. Bakker's two methane/butane values come out
+      1.28x and 3.4x; both lie between the finite- and infinite-exchange models,
+      nearer the finite one, so the data favour finite exchange while agreeing
+      quantitatively with neither. The review's own computations reproduce: five
+      printed selectivities and four printed mixture fluxes, worst 0.74 %. The
+      fluxes do not test the membrane thickness A4.7 reconstructed, because it
+      cancels out of them identically; the transient methane peak time is the one
+      quantity that carries it, and refined in space and time it lands 9.8 %
+      before the printed 0.73 s, needing the thickness 5.3 % larger, an open
+      tension with its candidate causes named. Two printed numbers do not
+      reproduce and both are investigated: the Henry-limit sorption selectivity
+      (2649.9 from Table 1 against 2200, and no single-parameter slip in the two
+      Table 1 rows explains it without breaking A4.7's certifying check), and the
+      multicomponent-Langmuir counterfactual, whose structural claim holds and
+      whose value does not. Every check on the coupled machinery has a second
+      route sharing no code with the first, the steady membrane is solved by
+      pymrm.newton on the logarithm of the loadings with pymrm.continuation as
+      the comparison route, and the review's own counter-example, zeolite 4A,
+      is carried rather than dropped.
     section: H
     status: published
     page: pages/H1.9-zeolite-membrane-maxwell-stefan-mixture/
@@ -5136,7 +5097,10 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - construct_coefficient_matrix
       - NumJac
+      - newton
+      - continuation
     reference:
       authors: ["Krishna, R.", "Baur, R."]
       year: 2003
