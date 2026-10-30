@@ -109,7 +109,7 @@ pymrm. Modernising for its own sake is not a reason.
 | Outflow workaround to `{"outflow": True}` | `A2.4` | keep the old construction as an identity row: the page then proves the library bc equals its own derivation |
 | Own pseudo-time and continuation to `pseudo_transient` / `continuation` | the 9 and the 21 above | reported features stay located on deterministic references; `continuation` rejects a jumping corrector, which may move a branch |
 | Remove the obsolete `solver=` pin | `D1.1` | the 3.0.0 default is direct LU |
-| Hand indices to the coupling API | `A2.5`, `B3.2` | also `B3.2`'s `sp.diags` stencil |
+| Hand indices to the coupling API | `A2.5`, `B3.2` | also `B3.2`'s `sp.diags` stencil. **Wait** for the multi-domain layout object in `pymrm.coupling` (`BlockLayout`, released in pymrm 3.2.0 on 2026-10-30, maintainer's request via `pymrm_papers`), and use it in every new multi-domain or multi-phase model instead of a custom place helper or hand offsets. Both pages are multi-field on one grid; the design answered (computational-chemical-engineering/pymrm#34, in 3.2.0): `B3.2` becomes `BlockLayout.from_fields(["psi", "xi"], (n,))` with `place(Lop, "psi", "psi")` and `put(b, "psi", bvec)` once released (not a dict of `(n,)` shapes with `axis=-1`, which stacks to `(2n,)` and makes `NumJac` dense; placed blocks are summed with `+`); `A2.5` needs no layout, its per-cell exchange is `construct_coefficient_matrix(kappa*[[1,-1],[-1,1]], shape=((n,2,1),(n,1,2)))` (check it on the locked pymrm before relying on it). |
 | Exception handling around solves | 16 pages | breakdowns raise `NewtonBreakdown`, non-convergence is returned: check none now reads a returned failure as success |
 
 **Acceptance:** metrics unchanged, or every changed metric listed with its old and new
@@ -139,6 +139,12 @@ value, explained on the page, and re-checked by a verifier scoped to what change
    I) first, transport pages (A2, A3, B) next, closed-form pages last. Closed-form
    pages are lane A only and can be batched by section. `D1.1` (4500 s, a delicate
    continuation ladder) goes last and gets lane A only unless a finding forces more.
+3a. **Lock bump to pymrm 3.2.0, after the pilots.** 3.2.0 adds `BlockLayout` and the
+   `continuation` fix for nearly equal parameter values (found on `B1.1`, learnings row
+   15). Bump `requirements-lock.txt`, rerun every page with `run_pages.py`, and accept
+   the baselines only through `check_agreement.py` with every moved claim explained;
+   `B1.1`'s text about the library stopping on the repeated value then needs updating.
+   Pages that use `BlockLayout` pin `pymrm_min_version` 3.2.0.
 4. **One page per commit.** Lane B changes that alter a metric are verified one case
    at a time, the rule of 2026-08-07. Lane A edits are checked mechanically and can
    share a working session per section.
