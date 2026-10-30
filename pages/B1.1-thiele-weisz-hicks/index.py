@@ -37,7 +37,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.1.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "B1.1-thiele-weisz-hicks"  # equals the page directory
 
 import os, sys, urllib.request
@@ -213,23 +213,20 @@ ref.head()
 # adds one equation that pins the centre value, and `trace_branch` sweeps that
 # centre value with `pymrm.continuation`. The Results explain why.
 #
-# **Changed in the 2026-10 refresh** (all differences are computed and shown
-# below):
+# Three choices, each checked below:
 #
-# - The S-curve is traced by the library's `continuation` instead of the page's
-#   own warm-start loop. The old loop is kept as `trace_branch_own` and compared
-#   point by point. The sweep drops a repeated centre value (see the comparison),
-#   which shifts the points sampled by validation 3; that check prints the value
-#   before and after.
-# - The rate is written without clipping at $y = 0$ and the Newton solves no
-#   longer pass `bounds=(0, inf)`: the Weisz–Hicks rate is smooth and first order
-#   through zero, which is what pymrm's pitfall P9 asks for, and a bound is meant
-#   for unknowns the residual cannot accept, not for physical positivity. No
-#   solve on the page reached a negative value either way.
+# - The S-curve is traced by the library's `continuation`. The page's own
+#   warm-start loop, `trace_branch_own`, traces it a second way, and the two are
+#   compared point by point.
+# - The rate is written without clipping at $y = 0$ and the Newton solves pass
+#   no `bounds`: the Weisz–Hicks rate is smooth and first order through zero,
+#   which is what pymrm's pitfall P9 asks for, and a bound is meant for unknowns
+#   the residual cannot accept, not for physical positivity. No solve on the page
+#   reaches a negative value.
 # - The folds are located by refining the turning points of the reference curve,
-#   not read off its sampled points, and the steady states at the probe modulus
-#   are root-found on the reference and solved by Newton on the pymrm pellet,
-#   instead of interpolated linearly along both curves.
+#   and the steady states at the probe modulus are root-found on the reference
+#   and solved by Newton on the pymrm pellet. Reading them off the sampled curves
+#   instead is computed beside them in the Results.
 
 # %%
 # Show the model the page runs (model.py next to this notebook).
@@ -433,10 +430,8 @@ problem = CentrePinned(pellet, rate_m)
 
 # Sweep the centre concentration from ~1 (uniform pellet) down to 1e-7 (fully
 # ignited); the ignited branch lives at very small centre values. The two
-# segments meet at 0.1; the second starts one point later, so that no two
-# consecutive values are (nearly) equal: see the comparison below.
-YC_OLD = np.concatenate([1.0 - np.geomspace(1e-6, 0.9, 120),
-                         np.geomspace(0.1, 1e-7, 200)])
+# segments meet at 0.1; the second starts one point later, so that no value is
+# visited twice.
 YC = np.concatenate([1.0 - np.geomspace(1e-6, 0.9, 120),
                      np.geomspace(0.1, 1e-7, 200)[1:]])
 
@@ -478,8 +473,8 @@ states = pymrm_states(pellet, rate_m, phi_star, branch, branch_x, [r[1] for r in
 eta_ignited = roots[-1][0]
 probe_dev = max(abs(s[0] - r[0]) / r[0] for s, r in zip(states, roots))
 
-# the 900-point reference curve of the figure, and the method used before the
-# 2026-10 refresh: folds read off its samples, states interpolated linearly
+# the 900-point reference curve of the figure, and the sampled reading compared
+# below: folds read off its samples, states interpolated linearly
 ref_m = np.array([(q[0], q[1], v) for v in np.geomspace(1e-8, 0.9995, 900)
                   for q in [wh_reference(BETA_M, GAMMA, v)] if q])
 
@@ -502,10 +497,10 @@ def crossings(curve, phi_target):
     return sorted(out)
 
 
-old_lo, old_hi = sampled_folds(ref_m)
-old_star = float(np.sqrt(old_lo * old_hi))
-old_ref, old_pym = crossings(ref_m, old_star), crossings(branch, old_star)
-interp_dev = max(abs(a - b) / b for a, b in zip(old_ref, old_pym))
+smp_lo, smp_hi = sampled_folds(ref_m)
+smp_star = float(np.sqrt(smp_lo * smp_hi))
+smp_ref, smp_pym = crossings(ref_m, smp_star), crossings(branch, smp_star)
+interp_dev = max(abs(a - b) / b for a, b in zip(smp_ref, smp_pym))
 
 fig, ax = plt.subplots(figsize=(8, 5))
 ax.loglog(ref_m[:, 0], ref_m[:, 1], "-", color="0.7", lw=4,
@@ -533,48 +528,33 @@ print(f"\nratio of the ignited to the extinguished branch: "
       f"{eta_ignited/roots[0][0]:.0f}x")
 
 # %% [markdown]
-# **Before the 2026-10 refresh** the page read the folds off the 900 sample
-# points of the reference curve and interpolated both curves linearly at
-# $\phi^\ast$. The cell below repeats that method. The upper fold sits where the
-# samples are sparse, so its sampled value is off by about 1e-4, and the
-# interpolated states differ from each other by up to 3e-3, which made
-# the table look like a discretisation error of that size. It was interpolation:
-# at equal centre value, and at fixed $\phi^\ast$ above, pymrm and the reference
-# agree to about 1e-5.
+# **Why the folds are refined and the states root-found.** The cell below reads
+# the folds off the 900 sample points of the reference curve and interpolates
+# both curves linearly at $\phi^\ast$. The upper fold sits where the samples are
+# sparse, so its sampled value is off by about 1e-4, and the interpolated states
+# differ from each other by up to 3e-3 (6.207 on the reference against 6.225 on
+# pymrm, on the middle branch), which looks like a discretisation error of that
+# size. It is interpolation: at equal centre value, and at fixed $\phi^\ast$
+# above, pymrm and the reference agree to about 1e-5.
 
 # %%
 display(pd.DataFrame({
-    "before (sampled, interpolated)": [old_lo, old_hi, old_star, *old_ref, *old_pym],
-    "now (refined, root-found, Newton)": [phi_lo, phi_hi, phi_star,
+    "sampled, interpolated": [smp_lo, smp_hi, smp_star, *smp_ref, *smp_pym],
+    "refined, root-found, Newton": [phi_lo, phi_hi, phi_star,
                                           *[r[0] for r in roots], *[s[0] for s in states]],
 }, index=["lower fold", "upper fold", "probe phi*", "reference: extinguished",
           "reference: unstable", "reference: ignited", "pymrm: extinguished",
           "pymrm: unstable", "pymrm: ignited"]).round(6))
 
 # %% [markdown]
-# ### The library continuation against the page's own loop
+# ### A second route: the page's own warm-start loop
 #
-# Up to the 2026-10 refresh the page traced the branch with its own loop: each
-# centre value started Newton from the previous solution, and a solve that failed
-# was skipped while the march went on. `pymrm.continuation` adds a secant
-# predictor, halves the step when a solve fails, refuses a corrector that jumps
-# to another branch, and stops with a message instead of skipping. Here every
-# point converges with both, and the two branches agree to the Newton tolerance.
-#
-# The comparison found one trap in the library. The old sweep visited 0.1 twice
-# in a row, once as $1 - 0.9$ and once as $0.1$, which differ by
-# 3e-17. The page's loop does not care. `continuation`'s secant
-# predictor divides by the previous parameter step, so the next prediction
-# extrapolates the last change of the solution by a ratio of 2.4e14 (computed
-# below from the sweep's own values). Halving the step six times divides that
-# ratio by only 64, so the prediction can stay far off, and here the march stops
-# at 0.1 with the message that a fold is probably near, which is wrong: along
-# the centre value there is none.
-# How many values it reaches before stopping depends on round-off (the
-# converged states at the repeated value differ at round-off, and that
-# difference times the ratio is the error of the prediction), so the page
-# claims the ratio, which follows exactly from the sweep, and prints the count
-# only as this run's. The sweep above drops the repeated value.
+# `trace_branch_own` traces the branch with a plain loop: each centre value
+# starts Newton from the previous solution, and a solve that fails is skipped
+# while the march goes on. `pymrm.continuation` adds a secant predictor, halves
+# the step when a solve fails, refuses a corrector that jumps to another branch,
+# and stops with a message instead of skipping. Here every point converges with
+# both, and the two branches agree to the Newton tolerance.
 
 # %%
 own, own_failed = trace_branch_own(problem, YC)
@@ -598,30 +578,9 @@ print(f"folds at the traced points, library: {lib_lo:.6f}  {lib_hi:.6f}")
 print(f"folds at the traced points, own    : {own_lo:.6f}  {own_hi:.6f}")
 print(f"folds of the reference, refined    : {phi_lo:.6f}  {phi_hi:.6f}")
 
-REPEAT_GAP = float(abs(YC_OLD[120] - YC_OLD[119]))
-import warnings
-with warnings.catch_warnings(), np.errstate(all="ignore"):
-    warnings.simplefilter("ignore")     # the exploded prediction overflows
-    _, _, cont_dup = trace_branch(problem, YC_OLD)
-dup_reached = len(cont_dup.xs)
-
-
-def secant_ratio(yc, i=120):
-    """The ratio continuation's secant predictor applies at sweep index i + 1."""
-    return float(abs((yc[i + 1] - yc[i]) / (yc[i] - yc[i - 1])))
-
-
-SECANT_RATIO = secant_ratio(YC_OLD)
-print(f"\nlibrary continuation on the old sweep (0.1 visited twice): "
-      f"secant ratio after the repeat {SECANT_RATIO:.2e}; stopped early "
-      f"(here {dup_reached} of {len(YC_OLD)} values)")
-# the reason after the colon (corrector failed, or refused as a branch jump)
-# depends on the BLAS kernel; where it stops does not
-print(f"   {cont_dup.message.split(':')[0]}")
-
 # %% [markdown]
 # The folds read at the traced points are the extremes of a sampled curve, like
-# the old method above, so the upper one is again low by a similar amount: the
+# the sampled reading above, so the upper one is again low by a similar amount: the
 # sweep's points are sparse there too. The refined reference value is the one
 # the page reports.
 
@@ -680,10 +639,6 @@ med_eta, med_phi, n_cmp = vs_reference(branch)
 print(f"3. vs shooting at equal y_centre, median |d.eta|/eta : {med_eta:.3e}")
 print(f"                                 median |d.phi|/phi : "
       f"{med_phi:.3e}   ({n_cmp} points)")
-# before the refresh: the page's own loop on the old sweep, whose repeated 0.1
-# shifts every later point of the 1-in-7 sample by one
-med_eta_old = vs_reference(trace_branch_own(problem, YC_OLD)[0])[0]
-print(f"   before the 2026-10 refresh (own loop, old sweep)  : {med_eta_old:.3e}")
 
 # 4. Prater relation: the ignited branch should approach the bound beta.
 dT_max = BETA_M * (1.0 - y_min_ignited)
@@ -696,33 +651,9 @@ print(f"4. relative temperature rise on the ignited branch   : {dT_max:.4f}"
 # $h^3$ term dominates on every grid used here (an independent solve of the
 # same stencil in 34-digit arithmetic shows the observed order falling towards
 # 2 as the grid is refined further). The order depends on $\phi$: at
-# $\phi = 1$ the slab gives the second order printed above. Before the refresh
-# the page printed only the mean of the three geometries, 2.35 against an
-# expected 2; the mean is kept as a claim for continuity, with the range that
-# mixture implies.
-#
-# **Correction (2026-10-30).** The version of this page before the 2026-10
-# refresh stated five things that its own computations do not support:
-#
-# - "η exceeds 1000" and "a thousand times faster than its own surface
-#   conditions": the largest effectiveness factor on the diagram is 151, at
-#   $\beta = 0.8$ (printed with the diagram above). The page now says more than a
-#   hundred.
-# - The middle branch is "unreachable by Newton iteration on $\phi$ no matter how
-#   the initial guess is chosen": Newton at fixed $\phi^\ast$ converges to the
-#   unstable state from a guess close to it, taken off the traced branch (the
-#   table in the Results). What cannot reach it is continuation in $\phi$, which
-#   turns at the folds, and a pseudo-time march, for which it is unstable.
-# - The isothermal discretisation was said to be pinned "to $10^{-4}$": the
-#   worst error for $\phi \le 30$ is 2.2e-4.
-# - The pymrm and reference states at the probe modulus were quoted with a gap
-#   of three per mille (6.225 against 6.207 on the middle branch). That gap was
-#   the linear interpolation of both sampled curves, up to 3e-3; root-found and
-#   solved by Newton at the same $\phi^\ast$, the two agree to about 1e-5
-#   (both methods are computed side by side in the Results).
-# - The convergence order was printed as one mean, 2.35 "(expected 2)", which
-#   hid the per-geometry orders: second order for all three, with the slab's
-#   pre-asymptotic 2.96 at $\phi = 5$ explained above.
+# $\phi = 1$ the slab gives the second order printed above. The mean of the
+# three geometries, 2.35, mixes the two orders; it is registered as a claim with
+# the range that mixture implies.
 #
 # ### Claims: what each number is, and how it is checked
 #
@@ -762,7 +693,7 @@ for g, lo_, hi_ in (("slab", 2.7, 3.1), ("cylinder", 1.9, 2.2), ("sphere", 1.9, 
 claims.bound("convergence_order_slab_phi1", ORDER_SLAB_PHI1, min=1.9, max=2.2,
              basis="theory")
 claims.bound("convergence_order", order_mean, min=2.2, max=2.5, basis="chosen",
-             note="mean of the slab (about 3) and cylinder and sphere (2), kept from format 1")
+             note="mean of the slab (about 3) and cylinder and sphere (2)")
 claims.bound("convergence_finest_over_roundoff", min(ROUNDOFF.values()), min=1e3,
              basis="theory", note="claims-design section 3: the order is not fitted to noise")
 # --- the Weisz-Hicks diagram --------------------------------------------------
@@ -787,9 +718,9 @@ claims.value("eta_ignited", eta_ignited, rtol=1e-3)
 claims.value("ignited_over_extinguished", eta_ignited / roots[0][0])
 claims.value("probe_pymrm_vs_reference_max_rel", probe_dev)
 claims.value("interpolated_states_max_rel_gap", interp_dev)
-claims.value("eta_unstable_interpolated_ref", old_ref[1], rtol=1e-3)
-claims.value("eta_unstable_interpolated_pymrm", old_pym[1], rtol=1e-3)
-claims.value("fold_upper_sampled_rel_error", abs(old_hi - phi_hi) / phi_hi)
+claims.value("eta_unstable_interpolated_ref", smp_ref[1], rtol=1e-3)
+claims.value("eta_unstable_interpolated_pymrm", smp_pym[1], rtol=1e-3)
+claims.value("fold_upper_sampled_rel_error", abs(smp_hi - phi_hi) / phi_hi)
 # --- continuation: library and the page's own loop ----------------------------
 claims.exact("branch_points", len(branch))
 claims.value("branch_fold_lower", lib_lo, rtol=1e-6)
@@ -799,16 +730,9 @@ claims.bound("own_vs_library_psi_gap", own_gap_psi, max=1e-9, basis="tolerance",
 claims.bound("own_vs_library_fold_gap", own_fold_gap, max=1e-8, basis="tolerance",
              note="the folds at the traced points, relative")
 claims.exact("own_loop_failed_points", own_failed)
-claims.value("secant_ratio_at_repeat", SECANT_RATIO, rtol=1e-6,
-             note="from the sweep's literal values; the count it stops at is round-off")
-claims.bound("repeated_value_gap", REPEAT_GAP, max=1e-15, basis="identity",
-             structural=True,
-             note="1 - 0.9 and 0.1 in floating point: a property of the literals, "
-                  "no defect in the model moves it")
 # --- validation against the shooting reference ---------------------------------
 claims.value("nonisothermal_median_dev", med_eta)
 claims.value("nonisothermal_median_dev_phi", med_phi)
-claims.value("nonisothermal_median_dev_old_sweep", med_eta_old, rtol=1e-3)
 claims.exact("nonisothermal_points_compared", n_cmp)
 claims.bound("prater_rise_gap", BETA_M - dT_max, min=0.0, max=1e-5, basis="chosen",
              note="beta - rise = beta * y_min; the sweep ends at y_centre = 1e-7")
@@ -819,25 +743,18 @@ claims.says("151", "eta_max_beta08")                     # "reaches 151"
 claims.says("above 100", "eta_max_beta08")               # description: "eta exceeds 100"
 claims.says("2.35", "convergence_order")                 # "the mean ..., 2.35"
 claims.says("2.96", "convergence_order_slab")           # "the slab's 2.96"
-claims.says("151", "eta_max_beta08")                     # correction paragraph
-claims.says("2.2e-4", "isothermal_max_rel_error_phi_le_30")   # correction paragraph
-claims.says("3e-3", "interpolated_states_max_rel_gap")   # correction paragraph
-claims.says("1e-5", "probe_pymrm_vs_reference_max_rel")  # correction paragraph
-claims.says("6.225", "eta_unstable_interpolated_pymrm")  # correction paragraph
-claims.says("6.207", "eta_unstable_interpolated_ref")    # correction paragraph
+claims.says("6.225", "eta_unstable_interpolated_pymrm")  # "6.207 ... against 6.225"
+claims.says("6.207", "eta_unstable_interpolated_ref")    # "6.207 ... against 6.225"
 claims.says("2.2e-4", "isothermal_max_rel_error_phi_le_30")   # What pymrm adds
 claims.says("1e-4", "fold_upper_sampled_rel_error")      # "off by about 10^-4"
 claims.says("1e-5", "probe_pymrm_vs_reference_max_rel")  # "agree to about 10^-5"
 claims.says("1e-5", "nonisothermal_median_dev")          # "agree to about 10^-5"
-claims.says("3e-3", "interpolated_states_max_rel_gap")   # "up to three per mille"
-claims.says("3e-17", "repeated_value_gap")             # "differ by 3e-17"
-claims.says("2.4e14", "secant_ratio_at_repeat")         # "a ratio of 2.4e14"
+claims.says("3e-3", "interpolated_states_max_rel_gap")   # "up to 3e-3"
 print(f"{len(claims.metrics)} claims registered")
 
 # %% [markdown]
 # ### The defect-injection table
 #
-# Rebuilt for this physics in the 2026-10 refresh; the page had none before.
 # Each row breaks one thing on purpose, **re-runs** the computation behind one
 # claim with the defect in place, and hands the result to `claims.breaks`, which
 # records whether the claim's own check (its tolerance or its bound) catches it.
@@ -901,9 +818,9 @@ _f_bad = locate_folds(BETA_M * 1.02, GAMMA, Y_SCAN)
 brk("Prater number 2 % high", "phi_fold_lower", _f_bad[0][0])
 brk("Prater number 2 % high", "phi_fold_upper", _f_bad[1][0])
 brk("Prater number 2 % high", "phi_probe", np.sqrt(_f_bad[0][0] * _f_bad[1][0]))
-brk("fold read off the 900 samples, not refined", "phi_fold_lower", old_lo,
+brk("fold read off the 900 samples, not refined", "phi_fold_lower", smp_lo,
     "the lower fold sits where the samples are dense")
-brk("fold read off the 900 samples, not refined", "phi_fold_upper", old_hi)
+brk("fold read off the 900 samples, not refined", "phi_fold_upper", smp_hi)
 brk("probe at phi = 0.25, below the lower fold", "n_steady_states_at_probe",
     len(reference_states(BETA_M, GAMMA, 0.25, Y_SCAN)))
 _roots_bad = reference_states(BETA_M, GAMMA * 1.02, phi_star, Y_SCAN)
@@ -926,12 +843,12 @@ _br_25, _x_25, _ = trace_branch(CentrePinned(_pel_25, rate_m), YC)
 _states_25 = pymrm_states(_pel_25, rate_m, phi_star, _br_25, _x_25, [r[1] for r in roots])
 brk("pymrm pellet on n_r = 25", "probe_pymrm_vs_reference_max_rel",
     max(abs(s[0] - r[0]) / r[0] for s, r in zip(_states_25, roots)))
-_ll_ref = np.exp(crossings(np.log(ref_m[:, :2]), np.log(old_star)))
-_ll_pym = np.exp(crossings(np.log(branch[:, :2]), np.log(old_star)))
+_ll_ref = np.exp(crossings(np.log(ref_m[:, :2]), np.log(smp_star)))
+_ll_pym = np.exp(crossings(np.log(branch[:, :2]), np.log(smp_star)))
 brk("interpolation in log-log coordinates", "interpolated_states_max_rel_gap",
     max(abs(a - b) / b for a, b in zip(_ll_ref, _ll_pym)))
 brk("reference interpolated on every tenth sample", "eta_unstable_interpolated_ref",
-    min(crossings(ref_m[::10], old_star), key=lambda e: abs(e - old_ref[1])),
+    min(crossings(ref_m[::10], smp_star), key=lambda e: abs(e - smp_ref[1])),
     "the nearest crossing: so coarse a sample also loses one of the three")
 brk("interpolation in log-log coordinates", "eta_unstable_interpolated_pymrm", _ll_pym[1])
 brk("upper fold from a 300-point sample", "fold_upper_sampled_rel_error",
@@ -951,8 +868,6 @@ _br_b, _, _ = trace_branch(_problem_b, YC)
 _dev_b = vs_reference(_br_b)
 brk("Prater number 0.61 in the pymrm pellet only", "nonisothermal_median_dev", _dev_b[0])
 brk("Prater number 0.61 in the pymrm pellet only", "nonisothermal_median_dev_phi", _dev_b[1])
-brk("the new sweep instead of the old one", "nonisothermal_median_dev_old_sweep", med_eta,
-    "the 0.4 % the deduplicated sweep moved the published median")
 _bf_b = branch_folds(_br_b)
 brk("Prater number 0.61 in the pymrm pellet only", "branch_fold_lower", _bf_b[0])
 brk("Prater number 0.61 in the pymrm pellet only", "branch_fold_upper", _bf_b[1])
@@ -970,8 +885,6 @@ brk("own loop on every second centre value", "own_vs_library_fold_gap",
     "the folds at traced points depend on which points are traced")
 brk("own loop with maxfev = 2", "own_loop_failed_points",
     trace_branch_own(problem, YC, maxfev=2)[1])
-brk("the sweep without the repeated value (the fix)", "secant_ratio_at_repeat",
-    secant_ratio(YC))
 
 BT = pd.DataFrame(BREAK)
 

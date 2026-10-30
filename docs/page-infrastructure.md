@@ -56,7 +56,7 @@ with placeholders, is `templates/bootstrap_cell.py`; as built:
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.1.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "A2.4-tanks-in-series"  # equals the page directory
 
 import os, sys, urllib.request
@@ -142,7 +142,7 @@ imports `gallery_utils` without running the bootstrap.
 ## 6. The pymrm plugin's checkers
 
 `check_model.py` and `check_notebook_math.py` come from the pymrm repo at the tag that
-matches the lock (`v3.1.0`), never a branch. On migrated pages: `check_notebook_math.py`
+matches the lock (`v3.2.0`), never a branch. On migrated pages: `check_notebook_math.py`
 fails the job, with KaTeX installed in CI (`npm install --prefix ~/.cache/pymrm-katex
 katex@0.16`) so its parse step runs; `check_model.py` warns (`continue-on-error`) until
 the pilot measures its false-positive rate. `check_model.py` runs a script, and
@@ -178,7 +178,7 @@ The pilot pages are its first users and come after this PR.
 
 ## 9. Known risk outside this repo
 
-pymrm 3.1.0 declares `ipython`, `ipykernel`, `nbclient`, `pytest`, `pytest-cov`, `sphinx`,
+pymrm 3.1.0 and 3.2.0 declare `ipython`, `ipykernel`, `nbclient`, `pytest`, `pytest-cov`, `sphinx`,
 `sphinx_rtd_theme`, `myst-parser` and `pip` as runtime dependencies (its
 `requirements.txt` feeds `pyproject.toml`). Installing it on Colab can upgrade IPython
 or ipykernel under the live kernel. The fix belongs in pymrm (move them to extras); until

@@ -15,8 +15,7 @@ dispersion_exit
     reaction, TVD convection solved by Newton with the exact Jacobian
     (``ConvFluxTVD``, pitfalls P10).
 dispersion_exit_deferred
-    The same vessel by deferred correction, the construction the page used up
-    to pymrm 3.1.0. Superseded; kept only for the page's comparison row.
+    The same vessel by deferred correction, the page's second solver route.
 """
 
 from __future__ import annotations
@@ -294,12 +293,11 @@ def dispersion_exit(Pe, ktbar, n=1500, limiter=vanleer, tol=1e-10, return_info=F
 
 def dispersion_exit_deferred(Pe, ktbar, n=1500, limiter=vanleer, max_it=200, tol=1e-13,
                              return_info=False):
-    """The same vessel by deferred correction (superseded; kept for comparison).
+    """The same vessel by deferred correction (a second solver route).
 
     The limiter correction is lagged in the right-hand side and the upwind
     operator is factorised once; the iteration is a fixed point, not Newton,
     and for steady problems it can converge slowly or stall (pitfalls P10).
-    This is the routine the page used before it moved to ``ConvFluxTVD``.
 
     Parameters
     ----------

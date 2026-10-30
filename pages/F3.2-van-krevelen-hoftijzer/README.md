@@ -31,8 +31,7 @@ solver family cannot see it and only a convergence study can. It is the
 "extrapolation switched off" row of the break table, and what that row moves is
 **counted by the notebook** rather than asserted: **27 of the 42 reported
 metrics** move by more than the coverage tolerance, the headline error among
-them by more than a unit in its fourth decimal. An earlier version of this page said "nine reported numbers",
-counted by hand; it was an undercount.
+them by more than a unit in its fourth decimal.
 
 | the baseline, checked | |
 |---|---|
@@ -127,8 +126,7 @@ warm-started stored value to below 1e−9 relative. The warm start
 therefore contributes nothing to the residual, and what is left is the uniform
 400-cell discretisation. This page's extrapolated reference is the accurate
 side of it: it agrees with scipy's collocation to 4.37e−8. For scale, the
-single graded n_x = 800 grid this page used before the baseline was
-extrapolated lands 0.000214 points away, eighty times further. The stored
+single graded n_x = 800 grid, without the extrapolation, lands 0.000214 points away, eighty times further. The stored
 number is **loaded** from `F3.1`'s `agreement.json`, not retyped.
 
 The gap to this page's headline is 0.7186 points, and it splits: root-finding γ
@@ -147,8 +145,7 @@ is not what grading buys.** Split on this page's own three grids:
 | uniform 800 → graded 800 (grading, same n_x) | **124.8×** |
 | product | 893.9× |
 
-Crediting all 893.9× to grading, as an earlier version of this page did, is
-wrong by a factor of seven. And at the moderate γ where the headline lives
+Crediting all 893.9× to grading is wrong by a factor of seven. And at the moderate γ where the headline lives
 grading is a **liability**: at the grid-study point (γ, q) = (10, 4) a graded
 grid is **248.7× less accurate** than a uniform one of the same size, because
 its outer cells are nearly eight times wider. Hence the extrapolated baseline,
