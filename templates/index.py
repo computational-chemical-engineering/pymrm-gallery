@@ -148,4 +148,4 @@ claims = Claims(PAGE.split("-")[0])
 # %%
 # Claims: prints every registered number, writes agreement.json for CI, and
 # raises when a claim fails its own check or has no break row.
-claims.report()
+claims.report();   # the semicolon keeps the notebook from echoing the payload

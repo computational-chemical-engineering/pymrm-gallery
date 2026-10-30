@@ -225,8 +225,15 @@ Constraints:
   an `index.py` and no `build_page.py`. No `%pip` in
   `index.py`: jupytext comments magics out. Install any extra package with
   `subprocess` in the next cell.
-- The last code cell is `claims.report()`: every number the page states is a
-  `Claims` entry (`docs/claims-design.md`).
+- The last code cell is `claims.report();` (the semicolon stops the notebook
+  echoing the payload): every number the page states is a `Claims` entry
+  (`docs/claims-design.md`). A number written into prose by code
+  (`display(Markdown(f"..."))`, f-strings) cannot drift from the computation, so it
+  needs no `says`; but if it is round-off or a solver-tolerance effect, print the
+  bound and put this run's value in `(here ...)` on the same line.
+- Before committing a refreshed page, run `python scripts/run_kernels.py
+  pages/<id>`: it must report every claim passing and identical printed text
+  under the three BLAS kernels.
 - Load data with `gallery_utils.load_data(name, page=...)`, never a bare
   relative path — it must work on a fresh Colab VM with no checkout.
 - **No Quarto-specific Markdown inside `index.ipynb`.** No `::: {.callout-*}`,
