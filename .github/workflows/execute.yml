@@ -35,11 +35,68 @@ jobs:
         run: python -m pytest -q tests/
       - name: Claims of format 2 pages (admissible values, quoted precision, README)
         run: python scripts/check_claims.py
+
+      # Each page's model test in its own pytest process: the same file name in
+      # folders without __init__.py collides, and `import model` would reuse the
+      # first page's module (docs/page-infrastructure.md, section 5). Offline, so
+      # a file deleted in the PR cannot be replaced by main's copy.
+      - name: Model tests of migrated pages
+        env:
+          GALLERY_OFFLINE: "1"
+          PYTHONPATH: shared
+        run: |
+          shopt -s nullglob
+          status=0
+          for t in pages/*/test_model.py; do
+            echo "::group::$t"
+            python -m pytest -q -p no:cacheprovider "$t" || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
       - name: Refuse loosened claims (PRs)
         if: github.event_name == 'pull_request'
         run: |
           git fetch --no-tags origin "${{ github.base_ref }}"
           python scripts/check_agreement.py --base "origin/${{ github.base_ref }}"
+
+      # The pymrm plugin's checkers, at the tag that matches the lock, never a
+      # branch (docs/page-infrastructure.md, section 6). Migrated pages only.
+      # They come after every step that reads the tracked agreement.json files:
+      # check_model runs index.py, whose claims.report() rewrites agreement.json
+      # without the BLAS pin. Its step restores pages/ when it ends.
+      - name: Fetch the pymrm checkers (v3.1.0)
+        run: |
+          mkdir -p "$RUNNER_TEMP/pymrm-checks"
+          base=https://raw.githubusercontent.com/computational-chemical-engineering/pymrm/v3.1.0/plugins/pymrm/skills/conventions/scripts
+          for f in check_notebook_math.py check_model.py; do
+            curl -fsSL "$base/$f" -o "$RUNNER_TEMP/pymrm-checks/$f"
+          done
+          npm install --silent --prefix ~/.cache/pymrm-katex katex@0.16
+          python scripts/check_metadata.py --list-migrated | tee "$RUNNER_TEMP/migrated.txt"
+
+      - name: Notebook maths of migrated pages
+        run: |
+          status=0
+          while read -r page; do
+            python "$RUNNER_TEMP/pymrm-checks/check_notebook_math.py" "$page/index.ipynb" || status=1
+          done < "$RUNNER_TEMP/migrated.txt"
+          exit $status
+
+      # Warns only until the pilot measures its false-positive rate.
+      - name: pymrm pitfalls of migrated pages (warning)
+        continue-on-error: true
+        env:
+          GALLERY_OFFLINE: "1"
+          MPLBACKEND: Agg
+        run: |
+          status=0
+          while read -r page; do
+            [ -f "$page/index.py" ] || continue
+            (cd "$page" && python "$RUNNER_TEMP/pymrm-checks/check_model.py" index.py) || status=1
+          done < "$RUNNER_TEMP/migrated.txt"
+          git checkout -- pages
+          exit $status
 
   notebooks:
     runs-on: ubuntu-latest

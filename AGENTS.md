@@ -23,9 +23,14 @@ may. Reference models by catalog ID in anything you write.
    [`docs/taxonomy.md`](docs/taxonomy.md).
 2. Search `models.yaml` for entries sharing those structure codes, preferring
    `status: published`.
-3. **Copy that page's directory and substitute the physics.** Do not start from
-   a blank notebook and assemble operators from the API documentation — that is
-   how the common pymrm mistakes below get made.
+3. **Take the physics and the verification from that page, and build the new
+   page from `templates/index.py`.** Do not assemble operators from the API
+   documentation alone: copying a working page's discretisation is how the
+   common pymrm mistakes below are avoided. Do not copy the page's directory
+   as it stands: every published page still has the old layout
+   (`build_page.py`, no bootstrap). The bootstrap, `index.py` and `Claims`
+   rules of "Adding a page" apply to new and refreshed pages; unrefreshed pages
+   keep the old layout until the refresh sweep reaches them.
 4. If nothing shares the structure, say so, and pick the closest `status:
    planned` entry as a specification to implement.
 
@@ -175,9 +180,16 @@ that every deferred entry explains itself and has no page directory.
 
 ## Adding a page
 
+New pages, and old pages when they are refreshed, use this layout
+([`docs/page-infrastructure.md`](docs/page-infrastructure.md)):
+
 ```
 pages/<catalog-id>-<slug>/
-├── index.ipynb          # from templates/page-template.ipynb
+├── index.py             # the edited source, from templates/index.py (jupytext percent format)
+├── index.ipynb          # paired with index.py; executed and rendered
+├── model.py             # the model classes, when the page defines any
+├── test_model.py        # import, one fast solve, one stored value via load_claims
+├── agreement.json       # written by the Claims cell, checked by CI
 ├── meta.yaml            # must not contradict models.yaml
 ├── data/
 │   ├── <name>.csv
@@ -185,14 +197,36 @@ pages/<catalog-id>-<slug>/
 └── README.md
 ```
 
+Start from `templates/index.py` (its paired `templates/index.ipynb` shows the
+same page as a notebook). Edit `index.py`, never the notebook alone: create the
+pair with `jupytext --set-formats ipynb,py:percent index.py` and keep it in step
+with `jupytext --sync`; CI fails when the two differ in any cell. There is no
+`build_page.py`: content a generator used to compute goes into code cells or
+`model.py`. `model.py` holds classes and functions with NumPy-style docstrings,
+no plotting and no data loading; `test_model.py` runs in seconds in its own
+pytest process with `GALLERY_OFFLINE=1`. Pages that still have a `build_page.py`
+keep it until they are refreshed; `templates/page-skeleton/` is the old layout.
+
 Required in the notebook, in this order: Background · The published model ·
 Parameters and assumptions · The data · PyMRM implementation · Results ·
 Validation · What pymrm adds · Reuse.
 
 Constraints:
 
-- Cell 1 is the Colab environment cell (`try: import pymrm / except ImportError:
-  %pip install -q pymrm`).
+- The first code cell is the bootstrap (it is the Colab environment cell):
+  `templates/bootstrap_cell.py` verbatim apart from its three literals.
+  `GALLERY_REF = "main"` (the publish workflow rewrites it to the release tag),
+  `PYMRM = ">={pymrm_min_version},<{next major}"` from `meta.yaml`, and `PAGE`
+  the directory name. Migrating a page sets `meta.yaml` `pymrm_min_version` to
+  the `pymrm==` version of `requirements-lock.txt` (now `3.1.0`), the version
+  the page is checked with: the old value `"2.3"` would pin `>=2.3,<3`, and
+  Colab would install pymrm 2.5. `scripts/check_metadata.py` checks all of
+  this, that the locked pymrm satisfies the pin, and that a migrated page has
+  an `index.py` and no `build_page.py`. No `%pip` in
+  `index.py`: jupytext comments magics out. Install any extra package with
+  `subprocess` in the next cell.
+- The last code cell is `claims.report()`: every number the page states is a
+  `Claims` entry (`docs/claims-design.md`).
 - Load data with `gallery_utils.load_data(name, page=...)`, never a bare
   relative path — it must work on a fresh Colab VM with no checkout.
 - **No Quarto-specific Markdown inside `index.ipynb`.** No `::: {.callout-*}`,
@@ -200,7 +234,8 @@ Constraints:
   and VS Code. Quarto syntax belongs in `.qmd` pages and YAML front matter only.
 - Include at least one validation: analytical limit, conservation check, grid or
   time-step independence, or a physical bound.
-- Call `report_agreement(...)` so CI can detect regressions.
+- Report through `Claims` so CI can detect regressions (pages not yet refreshed
+  call `report_agreement(...)`).
 - **Every metric you report needs a break-table row — something that moves it.**
   This is the single strongest predictor of page quality measured in this repo.
   On the 2026-08-05 sweep of all 41 built pages, **nine of the ten findings that

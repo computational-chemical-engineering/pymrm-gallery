@@ -34,6 +34,11 @@ PINNED_ENV = {"OPENBLAS_CORETYPE": "Haswell", "OPENBLAS_NUM_THREADS": "1",
 for _k, _v in PINNED_ENV.items():
     os.environ.setdefault(_k, _v)
 
+# Every page runs from this checkout, so nothing may be fetched from GitHub: a
+# file deleted in a PR must fail here, not load main's copy (gallery_utils and
+# shared/gallery_bootstrap.py honour this; docs/page-infrastructure.md, section 2).
+os.environ.setdefault("GALLERY_OFFLINE", "1")
+
 
 def run(path: Path) -> tuple[bool, float, str]:
     nb = nbformat.read(path, as_version=4)
@@ -89,7 +94,8 @@ def main() -> int:
             print("--changed: nothing under pages/ has changed; running nothing\n")
             return 0
 
-    print("arithmetic: " + ", ".join(f"{k}={os.environ[k]}" for k in PINNED_ENV) + "\n")
+    print("arithmetic: " + ", ".join(f"{k}={os.environ[k]}" for k in PINNED_ENV)
+          + f"; GALLERY_OFFLINE={os.environ['GALLERY_OFFLINE']}\n")
     failures = []
     for nb_path in notebooks:
         page = nb_path.parent.name
