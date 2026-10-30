@@ -11,7 +11,9 @@ standard library only (``tests/test_gallery_bootstrap.py`` enforces that).
 3. puts ``shared/`` and the page folder on ``sys.path`` in a checkout, or downloads
    ``gallery_utils.py`` and the page's ``model.py`` at ``ref`` into the user's
    cache folder otherwise (never the working directory, never shared /tmp);
-4. with ``GALLERY_OFFLINE=1`` fetches nothing and raises instead.
+4. with ``GALLERY_OFFLINE=1`` fetches nothing and raises instead;
+5. on x86-64, before numpy is loaded, pins NumPy's SIMD dispatch to the AVX2 path
+   CI checks the page with (``NPY_PIN``; docs/claims-design.md, section 7).
 """
 
 from __future__ import annotations
@@ -155,6 +157,25 @@ def _ensure_pymrm(spec: str, checkout: bool = False) -> None:
     _pip_install(spec)
 
 
+# The same value as scripts/run_pages.py: an AVX-512 CPU (many Colab VMs) would
+# otherwise compute exp, log and pow with other code than CI checked.
+NPY_PIN = "X86_V4 AVX512_ICL AVX512_SPR"
+
+
+def _pin_numpy_simd() -> bool:
+    """Set ``NPY_DISABLE_CPU_FEATURES`` when it can still take effect.
+
+    Only on x86-64, only when the variable is unset, and only before numpy is
+    imported (it is read once, at import). Returns whether it was set.
+    """
+    import platform
+    if (platform.machine().lower() not in ("x86_64", "amd64")
+            or "NPY_DISABLE_CPU_FEATURES" in os.environ or "numpy" in sys.modules):
+        return False
+    os.environ["NPY_DISABLE_CPU_FEATURES"] = NPY_PIN
+    return True
+
+
 def _checkout_root(page: str) -> Path | None:
     """The gallery checkout this module lives in, when it holds ``pages/<page>``."""
     here = Path(__file__).resolve().parent
@@ -232,6 +253,7 @@ def setup(page: str, pymrm_spec: str, ref: str) -> Path:
     FileNotFoundError
         When there is no checkout and ``GALLERY_OFFLINE`` is set.
     """
+    _pin_numpy_simd()
     root = _checkout_root(page)
     _ensure_pymrm(pymrm_spec, checkout=root is not None)
     os.environ["GALLERY_REF"] = ref

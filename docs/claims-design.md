@@ -200,8 +200,18 @@ the check that a person read and agreed with each number.
 ## 7. Environment and CI
 
 - **The arithmetic is pinned in `scripts/run_pages.py`,** not only in CI:
-  `OPENBLAS_CORETYPE=Haswell`, `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`, unless
-  already set in the environment. A local run and CI then compute the same way.
+  `OPENBLAS_CORETYPE=Haswell`, `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`, and on
+  x86-64 `NPY_DISABLE_CPU_FEATURES="X86_V4 AVX512_ICL AVX512_SPR"`, unless already set
+  in the environment. A local run and CI then compute the same way.
+- **NumPy's SIMD dispatch is part of the arithmetic** (measured 2026-10-30). GitHub's
+  runners are a mix of AMD EPYC (AVX2) and Intel Xeon (AVX-512) machines. On an
+  AVX-512 runner NumPy computes `exp`, `log`, `pow` and other ufuncs with different
+  code. Without the NumPy pin, the locked job on such a runner showed 19 format-1
+  metrics drifting beyond 5 % and two format-2 pages failing (`D1.1`, `F3.2`), while
+  the same commit passed on an AMD runner. The AVX2 (X86_V3) and baseline (X86_V2)
+  paths differ only in `tanh` on the probe used, so this cannot be reproduced on an
+  AVX2 machine; the weekly portability run, with the NumPy dispatch left free,
+  is the only sample of it.
 - **A lock file** `requirements-lock.txt` pins pymrm (released), numpy, scipy and
   the rest. Without it, a new wheel brings a new OpenBLAS and a moved metric no longer
   means changed code. Baselines are produced in a venv built from the lock (the suite's
@@ -213,8 +223,8 @@ the check that a person read and agreed with each number.
   - `latest`: the newest pymrm, everything else from the lock.
   - `portability`: the lock, `OPENBLAS_CORETYPE=Sandybridge`. It runs on every PR for
     the pages the PR changes, and weekly for all pages. It is the gate, because bounds
-    and `says` raise on readers' machines (Colab included). The CI runner's default
-    kernel also gives the fourth spread sample (AVX-512 NumPy dispatch).
+    and `says` raise on readers' machines (Colab included). Weekly it leaves NumPy's
+    dispatch free, which on an AVX-512 runner gives the fourth spread sample.
 - The agreement check runs with `if: always()` (done, `8af9e04`).
 
 ## 8. Migration
