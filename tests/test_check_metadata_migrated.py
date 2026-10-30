@@ -68,8 +68,8 @@ def test_aligned_comments_still_match_the_template(tmp_path):
     (lambda t: t.replace('GALLERY_REF = "main"', 'GALLERY_REF = "dev"'), META, "expected 'main'"),
     (lambda t: t.replace("setup(PAGE, PYMRM, GALLERY_REF)",
                          "setup(PAGE, PYMRM, GALLERY_REF)\nimport numpy"), META, "templates/bootstrap_cell.py"),
-    (lambda t: t.replace("setup(PAGE, PYMRM, GALLERY_REF)",
-                         'setup(PAGE, PYMRM, GALLERY_REF)\nPAGE = "x"'), META, "PAGE 2 times"),
+    (lambda t: t.replace("from gallery_bootstrap import setup",
+                         'from gallery_bootstrap import setup\nPAGE = "x"'), META, "PAGE 2 times"),
     (lambda t: t.replace("# Bootstrap: the pymrm", "# %%\nx = 1\n\n# %%\n# Bootstrap: the pymrm"),
      META, "must be the first"),
 ])
