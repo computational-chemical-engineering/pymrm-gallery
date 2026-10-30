@@ -1,12 +1,475 @@
 {
   "page": "B1.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.1.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "isothermal_max_rel_error_phi_le_30": 0.00022482914519247557,
-    "isothermal_err_phi100_n1600": 1.9331467513438463e-05,
-    "convergence_order": 2.3494373643298445,
-    "nonisothermal_median_dev": 1.0030551885031743e-05,
-    "eta_ignited": 44.450209169206474,
-    "phi_fold_lower": 0.29732114260376263,
-    "phi_fold_upper": 0.5717892133676756
+    "isothermal_max_rel_error_phi_le_30": {
+      "kind": "value",
+      "value": 0.00022482914519247557,
+      "rtol": 0.05
+    },
+    "isothermal_max_rel_error_all_phi": {
+      "kind": "value",
+      "value": 0.006464029978328959,
+      "rtol": 0.05
+    },
+    "isothermal_err_phi100_n400": {
+      "kind": "value",
+      "value": 0.0009368588056153963,
+      "rtol": 0.05
+    },
+    "isothermal_err_phi100_n800": {
+      "kind": "value",
+      "value": 0.0001324140793684169,
+      "rtol": 0.05
+    },
+    "isothermal_err_phi100_n1600": {
+      "kind": "value",
+      "value": 1.9331467513438463e-05,
+      "rtol": 0.05
+    },
+    "aris_max_spread": {
+      "kind": "value",
+      "value": 0.15393778238665848,
+      "rtol": 0.05
+    },
+    "convergence_order_slab": {
+      "kind": "bound",
+      "value": 2.9594853187063648,
+      "min": 2.7,
+      "max": 3.1,
+      "basis": "chosen",
+      "note": "pre-asymptotic at phi = 5 (small h^2 coefficient, h^3 dominates on these grids); the scheme is second order"
+    },
+    "convergence_order_cylinder": {
+      "kind": "bound",
+      "value": 2.0618645664735307,
+      "min": 1.9,
+      "max": 2.2,
+      "basis": "theory"
+    },
+    "convergence_order_sphere": {
+      "kind": "bound",
+      "value": 2.0269622078096377,
+      "min": 1.9,
+      "max": 2.2,
+      "basis": "theory"
+    },
+    "convergence_order_slab_phi1": {
+      "kind": "bound",
+      "value": 2.0073401624235485,
+      "min": 1.9,
+      "max": 2.2,
+      "basis": "theory"
+    },
+    "convergence_order": {
+      "kind": "bound",
+      "value": 2.3494373643298445,
+      "min": 2.2,
+      "max": 2.5,
+      "basis": "chosen",
+      "note": "mean of the slab (about 3) and cylinder and sphere (2), kept from format 1"
+    },
+    "convergence_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 3585.951721943392,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "claims-design section 3: the order is not fitted to noise"
+    },
+    "eta_max_beta0": {
+      "kind": "bound",
+      "value": 0.9997999870630561,
+      "min": 0.99,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "isothermal first order: eta < 1, approached as phi -> 0"
+    },
+    "eta_max_beta02": {
+      "kind": "value",
+      "value": 2.3233628509613657,
+      "rtol": 0.05
+    },
+    "eta_max_beta04": {
+      "kind": "value",
+      "value": 10.73251401888831,
+      "rtol": 0.05
+    },
+    "eta_max_beta06": {
+      "kind": "value",
+      "value": 44.55499004591325,
+      "rtol": 0.05
+    },
+    "eta_max_beta08": {
+      "kind": "value",
+      "value": 151.22018182406035,
+      "rtol": 0.05
+    },
+    "n_multivalued_curves": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 1.0,
+      "min_margin": 0.5,
+      "note": "curves whose phi falls back by more than 0.1 %"
+    },
+    "phi_fold_lower": {
+      "kind": "value",
+      "value": 0.29732096765105964,
+      "rtol": 1e-05
+    },
+    "phi_fold_upper": {
+      "kind": "value",
+      "value": 0.5718585503657293,
+      "rtol": 1e-05
+    },
+    "phi_probe": {
+      "kind": "value",
+      "value": 0.41234153023224673,
+      "rtol": 1e-05
+    },
+    "n_steady_states_at_probe": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.2789448894861575,
+      "min_margin": 0.05
+    },
+    "n_pymrm_states_converged": {
+      "kind": "exact",
+      "value": 3
+    },
+    "eta_extinguished": {
+      "kind": "value",
+      "value": 1.1730731274420647,
+      "rtol": 0.001
+    },
+    "eta_extinguished_pymrm": {
+      "kind": "value",
+      "value": 1.1730744969749511,
+      "rtol": 0.05
+    },
+    "eta_unstable": {
+      "kind": "value",
+      "value": 6.205481875225062,
+      "rtol": 0.001
+    },
+    "eta_unstable_pymrm": {
+      "kind": "value",
+      "value": 6.205396751327855,
+      "rtol": 0.05
+    },
+    "eta_ignited_pymrm": {
+      "kind": "value",
+      "value": 44.45020793615218,
+      "rtol": 0.05
+    },
+    "eta_ignited": {
+      "kind": "value",
+      "value": 44.44991952996976,
+      "rtol": 0.001
+    },
+    "ignited_over_extinguished": {
+      "kind": "value",
+      "value": 37.89185728505663,
+      "rtol": 0.05
+    },
+    "probe_pymrm_vs_reference_max_rel": {
+      "kind": "value",
+      "value": 1.3717532162402743e-05,
+      "rtol": 0.05
+    },
+    "interpolated_states_max_rel_gap": {
+      "kind": "value",
+      "value": 0.002946629433267522,
+      "rtol": 0.05
+    },
+    "eta_unstable_interpolated_ref": {
+      "kind": "value",
+      "value": 6.206815764827133,
+      "rtol": 0.001
+    },
+    "eta_unstable_interpolated_pymrm": {
+      "kind": "value",
+      "value": 6.225159001567923,
+      "rtol": 0.001
+    },
+    "fold_upper_sampled_rel_error": {
+      "kind": "value",
+      "value": 0.00012124851155819307,
+      "rtol": 0.05
+    },
+    "branch_points": {
+      "kind": "exact",
+      "value": 319
+    },
+    "branch_fold_lower": {
+      "kind": "value",
+      "value": 0.29732110111241383,
+      "rtol": 1e-06
+    },
+    "branch_fold_upper": {
+      "kind": "value",
+      "value": 0.5717316633853555,
+      "rtol": 1e-06
+    },
+    "own_vs_library_psi_gap": {
+      "kind": "bound",
+      "value": 3.9507251636816676e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "both converge each point to a Newton step below 1e-11"
+    },
+    "own_vs_library_fold_gap": {
+      "kind": "bound",
+      "value": 2.070023089577815e-12,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "the folds at the traced points, relative"
+    },
+    "own_loop_failed_points": {
+      "kind": "exact",
+      "value": 0
+    },
+    "secant_ratio_at_repeat": {
+      "kind": "value",
+      "value": 241643690984254.5,
+      "rtol": 1e-06,
+      "note": "from the sweep's literal values; the count it stops at is round-off"
+    },
+    "repeated_value_gap": {
+      "kind": "bound",
+      "value": 2.7755575615628914e-17,
+      "max": 1e-15,
+      "basis": "identity",
+      "structural": true,
+      "note": "1 - 0.9 and 0.1 in floating point: a property of the literals, no defect in the model moves it"
+    },
+    "nonisothermal_median_dev": {
+      "kind": "value",
+      "value": 1.0071830881711695e-05,
+      "rtol": 0.05
+    },
+    "nonisothermal_median_dev_phi": {
+      "kind": "value",
+      "value": 7.623232491011816e-06,
+      "rtol": 0.05
+    },
+    "nonisothermal_median_dev_old_sweep": {
+      "kind": "value",
+      "value": 1.0030551990789983e-05,
+      "rtol": 0.001
+    },
+    "nonisothermal_points_compared": {
+      "kind": "exact",
+      "value": 46
+    },
+    "prater_rise_gap": {
+      "kind": "bound",
+      "value": 5.999999996841865e-08,
+      "min": 0.0,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "beta - rise = beta * y_min; the sweep ends at y_centre = 1e-7"
+    }
+  },
+  "quoted": {
+    "aris_max_spread": [
+      "15%"
+    ],
+    "eta_max_beta08": [
+      "151",
+      "above 100",
+      "151"
+    ],
+    "convergence_order": [
+      "2.35"
+    ],
+    "convergence_order_slab": [
+      "2.96"
+    ],
+    "isothermal_max_rel_error_phi_le_30": [
+      "2.2e-4",
+      "2.2e-4"
+    ],
+    "interpolated_states_max_rel_gap": [
+      "3e-3",
+      "3e-3"
+    ],
+    "probe_pymrm_vs_reference_max_rel": [
+      "1e-5",
+      "1e-5"
+    ],
+    "eta_unstable_interpolated_pymrm": [
+      "6.225"
+    ],
+    "eta_unstable_interpolated_ref": [
+      "6.207"
+    ],
+    "fold_upper_sampled_rel_error": [
+      "1e-4"
+    ],
+    "nonisothermal_median_dev": [
+      "1e-5"
+    ],
+    "repeated_value_gap": [
+      "3e-17"
+    ],
+    "secant_ratio_at_repeat": [
+      "2.4e14"
+    ]
+  },
+  "breaks": {
+    "isothermal_max_rel_error_phi_le_30": [
+      "cylinder assembled with nu = 2",
+      "n_r halved to 100"
+    ],
+    "isothermal_max_rel_error_all_phi": [
+      "cylinder assembled with nu = 2",
+      "n_r halved to 100"
+    ],
+    "isothermal_err_phi100_n400": [
+      "phi = 100 on n_r = 200 instead of 400"
+    ],
+    "isothermal_err_phi100_n800": [
+      "phi = 100 on n_r = 400 instead of 800"
+    ],
+    "isothermal_err_phi100_n1600": [
+      "phi = 100 on n_r = 800 instead of 1600",
+      "sphere assembled with nu = 1 at phi = 100"
+    ],
+    "aris_max_spread": [
+      "cylinder V/A taken as R/3 (the sphere's)",
+      "cylinder curve from nu = 2"
+    ],
+    "convergence_order_slab": [
+      "slab assembled with nu = 1"
+    ],
+    "convergence_order_cylinder": [
+      "cylinder assembled with nu = 2"
+    ],
+    "convergence_order_sphere": [
+      "sphere assembled with nu = 1"
+    ],
+    "convergence_order_slab_phi1": [
+      "slab assembled with nu = 1, at phi = 1"
+    ],
+    "convergence_order": [
+      "every geometry assembled with the wrong nu"
+    ],
+    "convergence_finest_over_roundoff": [
+      "orders fitted on n_r = 3200, 6400"
+    ],
+    "eta_max_beta0": [
+      "Prater number 0.1 instead of 0"
+    ],
+    "eta_max_beta02": [
+      "Arrhenius number 5 % low"
+    ],
+    "eta_max_beta04": [
+      "Arrhenius number 5 % low"
+    ],
+    "eta_max_beta06": [
+      "Arrhenius number 5 % low"
+    ],
+    "eta_max_beta08": [
+      "Arrhenius number 5 % low"
+    ],
+    "n_multivalued_curves": [
+      "Arrhenius number 12 for the beta = 0.4 curve"
+    ],
+    "phi_fold_lower": [
+      "Prater number 2 % high"
+    ],
+    "phi_fold_upper": [
+      "Prater number 2 % high",
+      "fold read off the 900 samples, not refined"
+    ],
+    "phi_probe": [
+      "Prater number 2 % high"
+    ],
+    "n_steady_states_at_probe": [
+      "probe at phi = 0.25, below the lower fold"
+    ],
+    "eta_extinguished": [
+      "Arrhenius number 2 % high in the reference"
+    ],
+    "eta_unstable": [
+      "Arrhenius number 2 % high in the reference"
+    ],
+    "eta_ignited": [
+      "Arrhenius number 2 % high in the reference"
+    ],
+    "ignited_over_extinguished": [
+      "Arrhenius number 2 % high in the reference"
+    ],
+    "probe_pymrm_vs_reference_max_rel": [
+      "Arrhenius number 2 % high in the reference",
+      "pymrm pellet on n_r = 25"
+    ],
+    "eta_extinguished_pymrm": [
+      "pymrm pellet assembled with nu = 1"
+    ],
+    "eta_unstable_pymrm": [
+      "pymrm pellet assembled with nu = 1"
+    ],
+    "eta_ignited_pymrm": [
+      "pymrm pellet assembled with nu = 1"
+    ],
+    "n_pymrm_states_converged": [
+      "Newton at fixed phi with maxfev = 2"
+    ],
+    "interpolated_states_max_rel_gap": [
+      "interpolation in log-log coordinates"
+    ],
+    "eta_unstable_interpolated_ref": [
+      "reference interpolated on every tenth sample"
+    ],
+    "eta_unstable_interpolated_pymrm": [
+      "interpolation in log-log coordinates"
+    ],
+    "fold_upper_sampled_rel_error": [
+      "upper fold from a 300-point sample"
+    ],
+    "branch_points": [
+      "continuation with max_change = 1e-3 (stops early)"
+    ],
+    "nonisothermal_points_compared": [
+      "continuation with max_change = 1e-3 (stops early)"
+    ],
+    "prater_rise_gap": [
+      "sweep stopped at y_centre = 1e-3"
+    ],
+    "nonisothermal_median_dev": [
+      "Prater number 0.61 in the pymrm pellet only"
+    ],
+    "nonisothermal_median_dev_phi": [
+      "Prater number 0.61 in the pymrm pellet only"
+    ],
+    "nonisothermal_median_dev_old_sweep": [
+      "the new sweep instead of the old one"
+    ],
+    "branch_fold_lower": [
+      "Prater number 0.61 in the pymrm pellet only"
+    ],
+    "branch_fold_upper": [
+      "Prater number 0.61 in the pymrm pellet only"
+    ],
+    "own_vs_library_psi_gap": [
+      "own loop with Newton tol = 1e-4"
+    ],
+    "own_vs_library_fold_gap": [
+      "own loop on every second centre value"
+    ],
+    "own_loop_failed_points": [
+      "own loop with maxfev = 2"
+    ],
+    "secant_ratio_at_repeat": [
+      "the sweep without the repeated value (the fix)"
+    ]
   }
 }
