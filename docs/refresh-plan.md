@@ -197,3 +197,45 @@ Unknown until the pilot measures it. What is known:
    (`run_kernels.py`, `check_agreement.py --base`, `check_claims.py`, the model test).
    Closed-form and correlation pages get the lighter lane: bootstrap, pin, Claims and
    maths, no `model.py`.
+
+## 8. State on 2026-10-31, and how to continue
+
+**Refreshed and on main** (new layout, pymrm 3.2.0, Claims format 2): the pilots
+`A2.4 B1.1 C2.10`; the reactor section `D2.2 D2.1 G1.7 G1.8 G1.1 H1.4 H1.1 H1.7 H1.9
+H1.8 I1.2 I1.3 D1.1` (PRs #10, #12); transport `A2.1 A2.3` (PR #13).
+Committed on `refresh/sweep-transport` and pushed for a PR: `A2.5` (`89c6b8a`) and
+`A2.8` (`a53f3f9`), each after an independent review whose findings were all fixed.
+
+**Next, in this order.** Transport: `A3.15 A3.1 A3.2 A3.3`, then `B1.2 B1.3 B1.4 B1.6
+B1.7 B2.2 B2.3 B3.1 B3.2 B3.3` (`B3.2` with `BlockLayout.from_fields(["psi", "xi"],
+(n,))`; `B1.3` and `F3.2` must stop using `clip_approach`, decision 3). After that the
+pages outside sections D, G, H, I, A2, A3, B: those that solve a model (most of `F`,
+`J3`, `J4`, `J5`, `E1.2`) in both lanes; closed-form and correlation pages (`A1.x`,
+`A2.6`, `A3.4`-`A3.8`, `A3.12`, `A4.x`, `B2.1`, `C1.x`, `J1.x`) in the lighter lane
+(bootstrap, pin, Claims and maths, no `model.py`). `A4.9` and `F3.1` have neither
+`build_page.py` nor `index.py` yet.
+
+**How a page is done:** [`playbooks/refresh-page-brief.md`](playbooks/refresh-page-brief.md)
+holds the refresh brief, the review brief, and the commit checklist. Every review so
+far found must-fix defects on any page whose published statements changed, so do not
+skip it. Pages go one per commit on a section branch, pushed as a PR of a few pages;
+the maintainer has authorised merging a case PR once its CI is green.
+
+**Environment.** A venv from `requirements-lock.txt` (`python3.13 -m venv ...; pip
+install -r requirements-lock.txt`) has pymrm 3.2.0 and jupytext. `scripts/run_pages.py`
+and `scripts/run_kernels.py` pin the arithmetic themselves, including
+`OPENBLAS_L2_SIZE=512` (OpenBLAS 0.3.34 overflows the forced Haswell kernel on AMD
+AVX-512 CPUs; `docs/claims-design.md` section 7). Drop that pin once the lock carries
+OpenBLAS with upstream commit a78196c5.
+
+**Open, outside the page sweep.**
+- PR #11 (`fix/j42-front-matter`, the site build fix for `J4.2`'s YAML front matter)
+  is green and waits for the maintainer to merge it; publishing is blocked until then.
+  After it merges, check that the publish workflow tags a release and deploys.
+- `refresh-learnings.md`: 67 rows are `open` and none has been flushed to pymrm yet,
+  although the rule is one PR per about ten pages. Flush them next.
+- pymrm library candidates found on the way: `continuation`'s step-halving budget and
+  its false fold message; `newton`'s rule for bounds; the `NumJac` docstring (the bare
+  1-D shape and `axes_diagonals` traps of AGENTS.md).
+- `publish.yml` TODO: the Colab badge and download-link filter (step 1).
+- pymrm: move the development dependencies to extras.
