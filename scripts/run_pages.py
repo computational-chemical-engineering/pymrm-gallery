@@ -34,9 +34,15 @@ TIMEOUT = int(ARGS[0]) if ARGS else 1800
 # exp, log and pow come from other code and differ in the last bits. Disabling the
 # AVX-512 targets gives every x86-64 machine the AVX2 (X86_V3) path the baselines
 # were made with (docs/claims-design.md, section 7). Names a CPU lacks are ignored.
+# OPENBLAS_L2_SIZE: OpenBLAS 0.3.34 enlarges the GEMM blocks on AMD CPUs that expose
+# AVX-512 and report a 1024 KB L2 (Zen 4, Zen 5), for every core table, including
+# the forced Haswell one, whose kernel then overflows its stack buffer: H1.7 and J1.3
+# segfaulted in numpy.linalg.solve on EPYC 9V74 and 9V45 runners (OpenBLAS #6013).
+# The Haswell, Sandybridge and Nehalem tables read L2 nowhere else, so 512 only
+# switches that override off and keeps the blocking of the baselines everywhere.
 NPY_PIN = "X86_V4 AVX512_ICL AVX512_SPR"
 PINNED_ENV = {"OPENBLAS_CORETYPE": "Haswell", "OPENBLAS_NUM_THREADS": "1",
-              "OMP_NUM_THREADS": "1"}
+              "OMP_NUM_THREADS": "1", "OPENBLAS_L2_SIZE": "512"}
 if platform.machine().lower() in ("x86_64", "amd64"):
     PINNED_ENV["NPY_DISABLE_CPU_FEATURES"] = NPY_PIN
 for _k, _v in PINNED_ENV.items():
@@ -46,13 +52,20 @@ for _k, _v in PINNED_ENV.items():
 # file deleted in a PR must fail here, not load main's copy (gallery_utils and
 # shared/gallery_bootstrap.py honour this; docs/page-infrastructure.md, section 2).
 os.environ.setdefault("GALLERY_OFFLINE", "1")
+# A kernel that dies in C code leaves only "Kernel died"; with the fault handler
+# on it prints the Python stack of every thread to the log first.
+os.environ.setdefault("PYTHONFAULTHANDLER", "1")
 
 
 def run(path: Path, retry: bool = True) -> tuple[bool, float, str]:
     nb = nbformat.read(path, as_version=4)
+    started = []                    # cells begun, to say where a kernel died
     client = NotebookClient(
         nb, timeout=TIMEOUT, kernel_name="python3",
         resources={"metadata": {"path": str(path.parent)}},
+        on_cell_start=lambda cell, cell_index: started.append(cell_index),
+        # leave the kernel's stderr on ours, so a fault-handler stack reaches the log
+        extra_arguments=["--IPKernelApp.capture_fd_output=False"],
     )
     t0 = time.perf_counter()
     try:
@@ -62,10 +75,11 @@ def run(path: Path, retry: bool = True) -> tuple[bool, float, str]:
     except (DeadKernelError, RuntimeError, TimeoutError) as exc:
         # the kernel, not the page: one retry, then report it as this page's
         # failure instead of aborting every page after it
+        where = f" in cell {started[-1]}" if started else ""
         if retry:
-            print(f"     {path.parent.name}: {type(exc).__name__}, retrying once")
+            print(f"     {path.parent.name}: {type(exc).__name__}{where}, retrying once")
             return run(path, retry=False)
-        return False, time.perf_counter() - t0, f"{type(exc).__name__}: {exc}"[:200]
+        return False, time.perf_counter() - t0, f"{type(exc).__name__}{where}: {exc}"[:200]
     nbformat.write(nb, path)
     return True, time.perf_counter() - t0, ""
 

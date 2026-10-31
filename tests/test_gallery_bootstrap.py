@@ -227,6 +227,12 @@ def test_numpy_simd_pin_matches_run_pages():
     assert f'NPY_PIN = "{gb.NPY_PIN}"' in (ROOT / "scripts" / "run_kernels.py").read_text()
 
 
+def test_openblas_l2_pin_matches_run_kernels():
+    # the two runners must switch OpenBLAS's AMD AVX-512 block override off alike
+    assert '"OPENBLAS_L2_SIZE": "512"' in (ROOT / "scripts" / "run_pages.py").read_text()
+    assert 'OPENBLAS_L2_SIZE = "512"' in (ROOT / "scripts" / "run_kernels.py").read_text()
+
+
 @pytest.mark.parametrize("machine, preset, loaded, expect", [
     ("x86_64", None, False, True),
     ("aarch64", None, False, False),     # the names exist on x86 only

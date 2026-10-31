@@ -6,7 +6,7 @@
 The page is first brought up to date from its source (``jupytext --to ipynb
 index.py`` for a refreshed page, ``build_page.py`` for an old-layout one), then
 executed with ``OPENBLAS_CORETYPE`` Sandybridge, Nehalem and Haswell, one thread,
-``GALLERY_OFFLINE=1``, NumPy's SIMD dispatch pinned as in ``run_pages.py``. Haswell runs last, so the files left in the page folder
+``GALLERY_OFFLINE=1``, NumPy's SIMD dispatch and ``OPENBLAS_L2_SIZE`` pinned as in ``run_pages.py``. Haswell runs last, so the files left in the page folder
 are the pinned baseline. Each run's notebook and ``agreement.json`` are kept in
 ``DIR/<page>/`` (default: a folder under the system temp directory).
 
@@ -45,6 +45,8 @@ KERNELS = ("Sandybridge", "Nehalem", "Haswell")     # the pinned one last
 # NumPy's SIMD dispatch, pinned as in scripts/run_pages.py (an AVX-512 CPU would
 # otherwise compute exp, log and pow differently in every run)
 NPY_PIN = "X86_V4 AVX512_ICL AVX512_SPR"
+# OpenBLAS's AMD AVX-512 block override off, as in scripts/run_pages.py
+OPENBLAS_L2_SIZE = "512"
 HERE = re.compile(r"\(here [^)]*\)")
 
 
@@ -60,7 +62,7 @@ def build(page: Path) -> None:
 def execute(page: Path, kernel: str, out: Path) -> tuple[bool, float, str]:
     env = {"OPENBLAS_CORETYPE": kernel, "OPENBLAS_NUM_THREADS": "1",
            "OMP_NUM_THREADS": "1", "GALLERY_OFFLINE": "1",
-           "NPY_DISABLE_CPU_FEATURES": NPY_PIN}
+           "NPY_DISABLE_CPU_FEATURES": NPY_PIN, "OPENBLAS_L2_SIZE": OPENBLAS_L2_SIZE}
     saved = {k: os.environ.get(k) for k in env}
     os.environ.update(env)          # the kernel subprocess inherits this
     nb = nbformat.read(page / "index.ipynb", as_version=4)

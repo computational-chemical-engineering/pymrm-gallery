@@ -15,8 +15,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 1150   # measured 2026-10-29: about 1140 s per execution, single-threaded BLAS (three kernels, 3445 s in all)
+pymrm_min_version: "3.2.0"
+runtime_seconds: 1120   # measured 2026-10-31: 1116 s per execution, single-threaded BLAS
 datasets:
   - froment-2011-ch11-printed.csv
 
@@ -158,11 +158,10 @@ units_the_page_is_in:
     ceiling the facing page states; read in the printed bar it is off by -1.105 %
     and the hot spot at 0.018 is 627.3 C, 212 K ABOVE that ceiling. Both are
     agreement.json metrics (p0_star_bar_reading_dev, T_hot_0018_bar_reading_C).
-  what_this_changes: >
-    Labels, not numbers. The ladder has always run on D2.2's CSV of Van Welsenaere
-    & Froment's atm parameter set; what was wrong was calling the result bar and
-    presenting the +0.028 % as a reproduction of section 11.5.2's own arithmetic
-    rather than of Van Welsenaere & Froment's 0.018 atm.
+  what_this_decides: >
+    Labels, not numbers. The ladder runs on D2.2's CSV of Van Welsenaere &
+    Froment's atm parameter set, so the +0.028 % is a reproduction of their
+    0.018 atm, not of section 11.5.2's own arithmetic in bar.
 
 printed_defects_reported_not_repaired:   # fifteen, none repaired anywhere
   - >
@@ -362,8 +361,7 @@ validation:
     fails on at least one, and where it survives it returns the bisection root to
     better than 1e-10 (asserted). WHICH rungs it survives is decided by round-off -
     its points above the threshold are cold-started fixed-inlet solves - and
-    differs between BLAS kernels (2 and 4 fail on Haswell, 1 to 4 on Sandybridge,
-    2 to 4 on Nehalem, in the 2026-10-29 runs), so the page does not name them.
+    differs between BLAS kernels, so the page names them only as this run's value.
     HOW EACH THRESHOLD SOLVE IS STARTED: one cold solve at the bottom of the
     bracket, where a single steady state exists, then every scan point and every
     bisection midpoint started from the converged state at the current lower end
@@ -431,7 +429,7 @@ validation:
     threshold. That gap is CONVERTED INTO AN ERROR BAR on the one number that
     depends on it: the tube-radius crossover. The (600, 10)-vs-(1200, 20) gap in the
     rung-5 shift, divided by the local slope of the swept shift-versus-radius curve,
-    gives R_t* = 10.028 +/- 0.030 mm, d_t/d_p = 6.69 +/- 0.02, factor 1.246 +/- 0.004 -
+    gives R_t* = 0.010029 m <!-- claim: crossover_R_t --> (+/- 0.030 mm), d_t/d_p = 6.69 +/- 0.02, factor 1.246 +/- 0.004 -
     three figures on R_t*, not the six the BISECTION TOLERANCE would suggest,
     which is not an accuracy. Like for like, axis against axis, the radial discretisation error at
     (1200, 20) is -0.003 K and the axial one at (1200, 40) is -0.029 K - both below
@@ -440,9 +438,7 @@ validation:
     it is reported as that.
   determinism: >
     TWO CONSECUTIVE EXECUTIONS GIVE A BYTE-IDENTICAL agreement.json AND IDENTICAL
-    STREAM OUTPUT, TABLE HTML AND FIGURE PNG BYTES (measured 2026-08-18: 2228 s
-    and 2219 s, run concurrently; 37 stream outputs, 54 table/text outputs and
-    both figure PNGs identical). One measure beyond the usual ones: a diverging
+    STREAM OUTPUT, TABLE HTML AND FIGURE PNG BYTES. One measure beyond the usual ones: a diverging
     Newton iterate far above the threshold overflows in Ladder.source, and the
     RuntimeWarning numpy stores in the notebook carries the KERNEL'S PID in its
     path (/tmp/ipykernel_<pid>/...), which would make two runs differ in stored
@@ -454,17 +450,18 @@ validation:
     (the rung-1 profile, with a FIXED four-fraction ramp as fallback); every
     threshold is followed along its branch from one such start, inside a single
     p0_critical call, so no state crosses from one call to the next and no result
-    depends on sweep order or direction. The 2026-10-29 run on three BLAS kernels
-    (Haswell, Sandybridge, Nehalem) gives the same claims on all three. Stylers are rendered
+    depends on sweep order or direction. scripts/run_kernels.py runs the page on three
+    BLAS kernels (Haswell, Sandybridge, Nehalem): every claim passes on all three
+    and the printed text is identical. Stylers are rendered
     through to_html() with pinned uuids and stdout's flush interval is disabled, so
     two executions give identical stream output and agreement.json.
   break_table: >
-    34 injected defects against 42 helper-computed metrics; agreement.json (format
-    2) registers those 42 plus one guard as 43 claims - 32 values, 8 bounds, 3
-    exact counts - and every break row is fed to the claims it touches. Every
-    non-structural claim has a row that fails its own check; the one structural
-    claim is rung1_finest_err_over_start_floor, a guard that the rung-1 order fit
-    is not fitted to the thresholds' 1e-8 start-dependence floor. Among the rows:
+    34 injected defects against 43 helper-computed metrics; agreement.json (format
+    2) registers them as 43 claims - 32 values, 8 bounds, 3 exact counts, none
+    structural - and every break row is fed to the claims it touches. Every claim
+    has a row that fails its own check, including rung1_finest_err_over_start_floor,
+    the guard that the rung-1 order fit is not fitted to the thresholds' 1e-8
+    start-dependence floor, which the no-Richardson row sends to zero. Among the rows:
     the rung-2 shift against rung 1's extrapolated threshold and the crossovers on
     300 cells; the rung-1 chain compared without its Richardson limit, and with the
     grid ratio misread as 3, which fail the two-route and order bounds; the ladder
@@ -476,7 +473,7 @@ validation:
     ONE helper function, and EVERY ONE of those helpers' default calls is asserted
     equal, to 1e-12, to a number printed earlier in the notebook - from ONE list,
     used both for the value check and for the completeness check, so a metric cannot
-    be added without an assertion. For the six
+    be added without an assertion. For the seven
     rung-1 metrics the assertion is an identity: the Validation cell displays the
     helper's own memoised return value. The four rung-to-rung shifts are the one
     place where the metric and the displayed number are DIFFERENT computations - the
@@ -515,16 +512,18 @@ validation:
     carries one". The escape count is quantified as AT LEAST rather than presented
     as complete. The claim it supports is a list of forms, not a category, and
     certainly not "rejects any row returning a metric as a typed constant".
-  structural_and_labelled_so:
+  caveats_in_the_coverage_map:
     - "cp_route_spread: a spread AMONG four routes to c_p. Two rows move it, but it cannot detect a c_p wrong the same way in all four places, which is what a shared source looks like - C2.10 warns that U = 82.7 is exactly such a shared source between it and D2.2. The notebook goes further and shows the four are NOT four determinations: route 2 reproduces route 1 by construction and route 4 is route 1 rounded, so the 0.94 % is route 3 against one printed number, not a consensus."
   bounds_not_values: >
     Registered as bounds with a stated basis, because their size is set by a
     tolerance, an identity or theory rather than by physics: U_from_2d_dev
-    (-1.1e-16; eq. (11.7.4-1) at R_t = 0.0125 m returns the printed 0.096 to
-    round-off; bound +/-1e-12), ode_vs_pymrm_p0 (below 1e-5) and ode_vs_pymrm_T
+    (eq. (11.7.4-1) at R_t = 0.0125 m returns the printed 0.096 to round-off, so
+    only the bound +/-1e-12 is stated), ode_vs_pymrm_p0 (below 1e-5) and ode_vs_pymrm_T
     (below 1e-4), the two-route gaps of rung 1; rung1_order_p0 in [0.9, 1.1] and
     rung1_order_T in [0.85, 1.15], first-order upwind; eta_grid_vs_11_9_1_11
-    (below 1e-4) and eta_vs_B11_worst (below 1e-5). Exact: ladder_controls_rejected,
+    (below 1e-4) and eta_vs_B11_worst (below 1e-5); rung1_finest_err_over_start_floor
+    (at least 1e3), the guard that the rung-1 order fit is not fitted to the
+    thresholds' 1e-8 start-dependence floor. Exact: ladder_controls_rejected,
     thresholds_rejected (each 0, with its margin in K) and scan_points_rejected (0).
 
 honesty:

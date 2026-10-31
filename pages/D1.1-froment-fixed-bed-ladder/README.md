@@ -31,7 +31,7 @@ root-findable threshold that tests the whole of rung 1 at once.
 - **Provenance:** tier 6. **Chapter 11 reports no experiment.** Everything here
   reproduces the book's own arithmetic, its transcription of a 1970 paper, and five
   claims it makes about its own models.
-- **Runtime:** about 19 minutes (measured 2026-10-29: about 1140 s per execution, single-threaded BLAS)
+- **Runtime:** about 19 minutes (1116 s per execution, single-threaded BLAS, measured 2026-10-31)
 
 ## The five rungs, and why not in the book's order
 
@@ -144,7 +144,7 @@ to move from the chapter's own value before its rung shifted the threshold by 1 
 answer is a controlled scan — swept outward from the chapter's value, every threshold
 checked as a genuine 415 °C crossing, then refined between two points that passed that
 check. **All four rows are roots and all four rungs order.** Rung 5 is closest to
-irrelevance: a tube 1.25× narrower than this one (R_t* = 10.03 ± 0.03 mm, d_t/d_p = 6.69)
+irrelevance: a tube 1.25× narrower than this one (R_t* = 0.01003 m <!-- claim: crossover_R_t -->, ± 0.03 mm, d_t/d_p = 6.69)
 already brings the two-dimensional rung inside 1 %, which is the opposite of "never
 avoidable". Then rung 2, at Pe_a* = 0.2488 ± 0.0002 — axial dispersion 4.02× stronger
 than the chapter's own lower limit. Then rung 3, at 4.93× the correlated film
@@ -242,12 +242,14 @@ range into a number**; the two are printed side by side.
 
 | file | what it is |
 |---|---|
-| `build_page.py` | generates `index.ipynb`; the physics lives here |
+| `index.py` | the edited source of the page (jupytext percent format), paired with `index.ipynb` |
 | `index.ipynb` | the executed page, nine sections in the required order |
+| `model.py` | the design case (`Reactor`), the five rungs (`Ladder`), the pellet, the threshold search with its crossing control, the crossover scan and the grid-free rung-1 route |
+| `test_model.py` | import, fast solves of rung 1 and the pellet, and one stored claim, run offline in seconds |
 | `data/froment-2011-ch11-printed.csv` | every constant, stated result and quantitative claim read out of Chapter 11, with the book page |
 | `data/froment-2011-ch11-printed.meta.yaml` | provenance, the render-not-text-layer procedure, the defect list, and the search behind each negative claim |
 | `meta.yaml` | page metadata |
-| `agreement.json` | the page's 43 claims in format 2 (values, bounds and exact counts), which CI checks by kind |
+| `agreement.json` | the page's claims in format 2 (values, bounds and exact counts), which CI checks by kind |
 
 ## Validation summary
 
@@ -301,14 +303,14 @@ range into a number**; the two are printed side by side.
 - **Group B = 257 × 10⁶ reproduced** from four other printed constants, which is what pins
   (−ΔH), ρ_B, p_B0 and the volumetric c_p together — and what convicts both the printed A
   and the ΔT_ad column of Table 11.5.3.A-2.
-- **34 injected defects against 42 helper-computed metrics**, with the coverage map
+- **34 injected defects against 43 helper-computed metrics**, with the coverage map
   generated from the measured moves, and **43 claims** registered with `Claims`: 32
-  values, 8 bounds and 3 exact counts. Every metric has exactly one helper that computes
+  values, 8 bounds and 3 exact counts, none structural. Every metric has exactly one helper that computes
   it, and **every** helper default is asserted equal, to 1e-12, to a number printed
   earlier in the notebook, from one list used both to check the numbers and to check
   that no metric escapes the check. Every break row is fed to the claims it touches, and
-  every non-structural claim has a row that fails its own check (the one structural
-  claim is a guard on the rung-1 order fit). Residuals, identities, two-route gaps and
+  every claim has a row that fails its own check, including the guard on the rung-1
+  order fit, which the row that drops the Richardson limit sends to zero. Residuals, identities, two-route gaps and
   convergence orders are bounds with a stated basis: the rung-1 ODE-versus-pymrm gaps
   below 1e-5 (threshold) and 1e-4 (hot spot), the orders in [0.9, 1.1] and [0.85, 1.15].
   The four rung-to-rung shifts are computed on (600, 10), because the break rows cannot
@@ -384,10 +386,10 @@ range into a number**; the two are printed side by side.
   lengths, rung 2's inlet condition is `{"a": d_p/Pe, "b": 1.0, "d": c_in}` with no unit
   bookkeeping, and the two fields differ only in their Péclet number.
 - **Scale an algebraic residual to the units of its own unknown.** Written in the units the
-  book writes them in, (11.8.1-3) is in bar/m and (11.8.1-4) in kcal/(m³ h) — 10⁷ apart —
-  and the solve converges to a residual of 1e-10 *and a 123 K interfacial temperature
-  difference*, with a smooth, plausible profile. Dividing each balance by its own transfer
-  coefficient fixes it.
+  book writes them in, (11.8.1-3) is in atm/h and (11.8.1-4) in kcal/(m³ h), so one absolute
+  residual threshold (the 1e-6 test in `Ladder.solve`) is strict for one row and loose for
+  the other. Dividing each balance by its own transfer coefficient puts both in the units of
+  the surface unknown they determine.
 - **The helper-plus-injection pattern**: one function per metric, *every* reported number
   asserted against its default call as a checked set, every break row perturbing one of
   its arguments. The failure mode it prevents: an unasserted helper running a coarser
@@ -406,10 +408,13 @@ range into a number**; the two are printed side by side.
 
 ## Regenerating
 
+From the repository root:
+
 ```bash
-python build_page.py                    # regenerate index.ipynb from the builder
-python ../../../scripts/run_pages.py    # execute it
-python ../../../scripts/check_agreement.py
+jupytext --sync pages/D1.1-froment-fixed-bed-ladder/index.py   # after editing index.py
+python scripts/run_kernels.py pages/D1.1-froment-fixed-bed-ladder  # three BLAS kernels
+python scripts/check_agreement.py
+GALLERY_OFFLINE=1 PYTHONPATH=shared python -m pytest pages/D1.1-froment-fixed-bed-ladder/test_model.py
 ```
 
 ## Corrections
@@ -424,3 +429,17 @@ python ../../../scripts/check_agreement.py
   crossings.
 - 2026-10-29: the largest validated rung-2 shift was stated as 1.19 %; the sweep
   reaches 2.52 %.
+- 2026-10-31: the notebook said that without scaling the film balances the solve converges
+  to a residual of 1e-10 and a 123 K interfacial temperature difference; with the rows
+  unscaled `pymrm.newton` reaches the same state as with them scaled (0.5229 K at
+  0.00924 atm on 1200 cells, gap 1e-13 K), as it must: multiplying a row by a constant
+  does not change the Newton step. What the scaling decides is the absolute residual test
+  after the solve.
+- 2026-10-31: the notebook's Reuse said the AST guard has five negative controls and eleven
+  escape forms; it runs six and sixteen.
+- 2026-10-31: The data said five borrowed datasets; the page loads six, from four pages.
+- 2026-10-31: `meta.yaml` gave R_t* = 10.028 mm; the located value is 10.029 mm
+  (± 0.030 mm).
+- 2026-10-31: The data said C2.10's `froment-1967-stated-results.csv` has 18 rows; it has 19.
+- 2026-10-31: this README's Reuse advice said (11.8.1-3) is in bar/m; as the book writes it, it is
+  in atm/h (rate of the surface reaction per unit bed volume, in partial-pressure units).

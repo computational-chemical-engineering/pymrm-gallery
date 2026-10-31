@@ -25,7 +25,7 @@
       "min": -1e-12,
       "max": 1e-12,
       "basis": "chosen",
-      "note": "eq. (11.7.4-1) at R_t = 0.0125 m returns the printed U = 0.096 to round-off; measured -1.1e-16"
+      "note": "eq. (11.7.4-1) at R_t = 0.0125 m returns the printed U = 0.096 to round-off, so only a bound is stated"
     },
     "U_from_2d_dev_at_printed_radius": {
       "kind": "value",
@@ -108,7 +108,7 @@
     },
     "film_dT_over_pellet_dT": {
       "kind": "value",
-      "value": 9.063840608558845,
+      "value": 9.063840607206581,
       "rtol": 0.05
     },
     "group_A_printed_dev": {
@@ -159,6 +159,13 @@
       "kind": "value",
       "value": 0.4533983223924736,
       "rtol": 0.05
+    },
+    "rung1_finest_err_over_start_floor": {
+      "kind": "bound",
+      "value": 26072.36898948262,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a threshold: the order fit is not fitted to that noise"
     },
     "rung1_order_T": {
       "kind": "bound",
@@ -220,14 +227,6 @@
       "kind": "value",
       "value": 0.8262374353412426,
       "rtol": 0.001
-    },
-    "rung1_finest_err_over_start_floor": {
-      "kind": "bound",
-      "value": 26072.36898948262,
-      "min": 1000.0,
-      "basis": "theory",
-      "structural": true,
-      "note": "|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a threshold; a guard on the order fit rather than a result, so no physics row moves it"
     },
     "ladder_controls_rejected": {
       "kind": "exact",
@@ -293,6 +292,9 @@
     "p0_star_vs_printed_0018": [
       "R_t = 0.0127 m, from the printed 2.54 cm diameter",
       "permissible ceiling read as 410 C"
+    ],
+    "rung1_finest_err_over_start_floor": [
+      "rung 1: finest grid against the ODE, no Richardson limit"
     ],
     "ladder_controls_rejected": [
       "ladder controls run at the neighbouring rung's threshold"

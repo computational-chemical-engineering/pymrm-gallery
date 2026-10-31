@@ -200,9 +200,31 @@ the check that a person read and agreed with each number.
 ## 7. Environment and CI
 
 - **The arithmetic is pinned in `scripts/run_pages.py`,** not only in CI:
-  `OPENBLAS_CORETYPE=Haswell`, `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`, and on
-  x86-64 `NPY_DISABLE_CPU_FEATURES="X86_V4 AVX512_ICL AVX512_SPR"`, unless already set
-  in the environment. A local run and CI then compute the same way.
+  `OPENBLAS_CORETYPE=Haswell`, `OPENBLAS_NUM_THREADS=1`, `OMP_NUM_THREADS=1`,
+  `OPENBLAS_L2_SIZE=512`, and on x86-64
+  `NPY_DISABLE_CPU_FEATURES="X86_V4 AVX512_ICL AVX512_SPR"`, unless already set in the
+  environment. A local run and CI then compute the same way.
+- **`OPENBLAS_L2_SIZE=512` keeps OpenBLAS's blocking fixed** (measured 2026-10-31).
+  OpenBLAS 0.3.34, bundled with numpy 2.5.4, raises the GEMM block sizes (DGEMM P and
+  Q to 512) on an AMD CPU that exposes AVX-512 and reports a 1024 KB L2, in every core
+  table of a `DYNAMIC_ARCH` build, the forced Haswell one included
+  (OpenMathLib/OpenBLAS#6013). The Haswell DGEMM kernel copies its B panel, 96 bytes
+  per unit of K, into a stack buffer of 28672 bytes plus 0 to 4095 bytes of
+  address-dependent slack: K up to 298 is always safe, 299 to 341 overflows in some
+  runs, and 342 or more always overwrites the return address. `getrf` blocks at
+  min(n/2 rounded to 8, Q), so `H1.7`'s 800 x 800 `numpy.linalg.solve` (K = 400)
+  dies whenever the override fires, and `J1.3`'s 600-row dipole ladder (K = 304)
+  in about one run in eight. On GitHub's EPYC 9V74 and 9V45 runners with AVX-512
+  exposed, the kernels died three times in 2 of the 7 Haswell runs of the last 16 CI
+  runs; where `H1.7` survived on such a runner the override cannot have fired (the
+  VM presumably reports other cache sizes; the job now records them). The
+  Sandybridge and Nehalem kernels have no such buffer and never died, but ran with
+  Q = 512 there. The Haswell, Sandybridge and Nehalem tables use the L2 size for
+  nothing else, so on a machine that reports 512 KB the pin changes no bit; scipy
+  1.18.1's own OpenBLAS (0.3.31) predates the override. Readers are not pinned to a
+  core: an unpinned Zen 4 or Zen 5 machine gets the SkylakeX or Cooperlake table,
+  for which the larger blocks are meant. The pin becomes redundant once the lock
+  carries an OpenBLAS with a78196c5 (no override when the core type is forced).
 - **NumPy's SIMD dispatch is part of the arithmetic** (measured 2026-10-30). GitHub's
   runners are a mix of AMD EPYC (AVX2) and Intel Xeon (AVX-512) machines. On an
   AVX-512 runner NumPy computes `exp`, `log`, `pow` and other ufuncs with different
