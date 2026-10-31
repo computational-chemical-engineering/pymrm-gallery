@@ -1,142 +1,154 @@
-#!/usr/bin/env python3
-"""Generate index.ipynb for page D1.1 (the Froment/De Wilde/Bischoff Ch. 11 ladder).
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     formats: ipynb,py:percent
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.6
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
 
-Run from the page directory:  python build_page.py
-"""
-from __future__ import annotations
+# %% [markdown]
+# ---
+# title: "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"
+# description: >
+#   Chapter 11 of Froment, De Wilde & Bischoff classifies fixed-bed reactor models in
+#   a 2x3 table and then works five of its six cells: basic one-dimensional plug flow
+#   (11.5, S2), plus axial dispersion with Danckwerts inlet conditions (11.6, S4),
+#   two-dimensional with radial dispersion and a wall coefficient (11.7, S6),
+#   heterogeneous with interfacial gradients (11.8, S7) and heterogeneous with
+#   intraparticle profiles as well (11.9, S8). This page builds all five on ONE
+#   reactor - the hydrocarbon-oxidation design case of section 11.5.2 - and measures
+#   what each rung buys, as the shift in the root-found inlet partial pressure at
+#   which the hot spot reaches the top of the book's own stated operating range.
+# categories: [sec:D, struct:S2, struct:S4, struct:S6, struct:S7, struct:S8, tier:T0, data:tier6, phase:gas-solid]
+# date: 2026-08-17
+# ---
+#
+# # Five fixed-bed models on one reactor: what each rung of Froment's ladder buys
+#
+# **Catalog ID:** `D1.1` (covering `D1.2`, `D1.3`, `D1.4`, `D1.5`) &middot;
+# **Structures:** `S2` `S4` `S6` `S7` `S8` &middot; **Tier:** T0
+#
+# ## Background
+#
+# Table 11.4-1 of Froment, De Wilde & Bischoff (2011), on book page 505, is not a
+# ladder. It is a **2 x 3 classification**: pseudohomogeneous models ($T = T_s$,
+# $C = C_s$) against heterogeneous ones, crossed with one-dimensional basic,
+# one-dimensional with mixing, and two-dimensional. Read from the book's own table:
+#
+# | | A - pseudohomogeneous, $T = T_s$; $C = C_s$ | B - heterogeneous, $T \ne T_s$; $C \ne C_s$ |
+# |---|---|---|
+# | one-dimensional | I sec. 11.5 &nbsp; basic, ideal | I sec. 11.8 &nbsp; + interfacial gradients |
+# | | II sec. 11.6 &nbsp; + axial mixing | II sec. 11.9 &nbsp; + intraparticle gradients |
+# | two-dimensional | III sec. 11.7 &nbsp; + radial mixing | III sec. 11.10 &nbsp; + radial mixing |
+#
+# **The ordering this page uses, and why.** The five cases the gallery catalogue
+# calls `D1.1`-`D1.5` are five of those six cells. The book presents them in the
+# order 11.5, 11.6, 11.7, 11.8, 11.9 - reading the table **down each column**, so
+# that the two-dimensional pseudohomogeneous model (11.7) sits between the two
+# one-dimensional heterogeneous ones. This page instead orders them by **how much
+# each one adds to the transport description of the previous**:
+#
+# 1. **11.5** basic one-dimensional plug flow (`S2`) - convection only,
+# 2. **11.6** + axial dispersion of heat and mass, Danckwerts inlet (`S4`),
+# 3. **11.8** + a solid phase separated from the gas by a film (`S7`),
+# 4. **11.9** + concentration profiles inside the particle (`S8`),
+# 5. **11.7** + a radial coordinate in the tube (`S6`).
+#
+# That puts 11.7 last rather than third, for one reason that is arithmetic rather
+# than taste: **rung 1's wall coefficient and rung 5's two radial parameters are
+# the same measurement.** Section 11.7.4's equation (11.7.4-1) collapses the
+# two-dimensional pair $(\alpha_w, \lambda_{er})$ into the single $\alpha_i$ that
+# rung 1 uses, and the notebook reproduces section 11.5.2's printed
+# $U = 0.096$ kJ/(m$^2$ s K) from section 11.7.3's printed $\alpha_w = 0.156$ and
+# $\lambda_{er} = 0.78 \times 10^{-3}$ **to both of the digits it prints**.
+#
+# That is a consistency check, and it is stated as one. It is **not** evidence that
+# the book derived the 0.096 that way: Van Welsenaere & Froment's own
+# $U = 82.7$ kcal/(m$^2$ h K), converted to kJ/(m$^2$ s K), also rounds to 0.096
+# at the two significant figures actually printed, and section 11.5.2 is otherwise
+# their parameter set throughout. What the identity *does* decide, discriminatingly,
+# is the tube radius: (11.7.4-1) returns 0.096 at $R_t = 0.0125$ m and a value that
+# rounds to 0.095 at the 0.0127 m the printed 2.54 cm diameter implies (both computed
+# in *Parameters and assumptions*).
+# Rung 1 and rung 5 are therefore entangled whichever way the number was obtained,
+# which is the reason for reading the table in this order rather than the book's.
+#
+# **The point of the page is the comparison.** Five restatements of five equation
+# sets would be five-sixths of a chapter retyped. What is worth measuring is
+# *where the simpler model already suffices and where it misleads*, and the
+# comparison is only meaningful if all five rungs run on the **same reactor with the
+# same chemistry**. Section 11.5.2's hydrocarbon-oxidation design case is the one
+# the book itself carries furthest: 11.5.2 designs it, 11.5.3 works its runaway
+# criteria, 11.7.3 puts a fuller kinetic scheme for it in two dimensions, and 11.8.2
+# runs its startup with a solid phase. So that is the reactor here, with the
+# pseudo-first-order rate of 11.5.2 held fixed across all five rungs.
+#
+# **What this page does not own.** The chapter overlaps six published pages, and
+# this page loads their numbers rather than restating them:
+#
+# | the chapter's content | the page that owns it | what is done here |
+# |---|---|---|
+# | Van Welsenaere & Froment's runaway criteria, which 11.5.3 applies | `D2.2` | both its CSVs are loaded; Example 11.5.3.A is checked *against the original*, and the criteria are not rebuilt |
+# | Froment (1967)'s o-xylene network and its 1-D/2-D runaway pair, which 11.7.3/11.7.4 restate | `C2.10` (which absorbed `D3.4`) | its parameter and stated-result CSVs are loaded and reconciled with the book's restatement; the 1967 case is **not** re-run |
+# | Danckwerts' inlet and outlet conditions, which 11.6 needs | `A2.1` | its boundary-condition dicts are used as published, with its outlet-sign blind spot cited, not rediscovered |
+# | the isothermal effectiveness factor, which 11.9.1 needs | `B1.1` | its exact-$\eta$ CSV is loaded as the reference for eq. (11.9.1-11) |
+# | the Ergun friction factor of eq. (11.5.1-13) | `A1.1` | its printed-constant CSV is loaded; Example 11.5.1.A's *equivalent particle diameter* is the part `A1.1` does not carry |
+# | Sh $= 2 + 1.1\,Sc^{1/3}Re^{0.6}$ for the film | `A3.4` | used as published for $k_g$, with the analogous Nu for $h_f$ |
+# | Mears' interphase temperature criterion, printed on book p. 588 | `B1.7` | evaluated here on this reactor; the criterion family is `B1.7`'s |
+# | Gunn's axial and radial dispersion correlations, cited by 11.6 and 11.7.1 | `A2.6` | the book's own "Pe$_a$ between 1 and 2" is used; Gunn's forms are `A2.6`'s |
+#
+# **Provenance.** Tier 6. Chapter 11 reports **no experiment**. Every comparison on
+# this page is against a number the book computed itself or a sentence it asserts,
+# so what follows is a reproduction of the book's arithmetic and of its claims about
+# its own models - never a validation against data. Said again in *Validation*.
 
+
+# %%
+# Bootstrap: the pymrm this page was checked with, and the gallery files it was
+# published with. Works in a checkout, in CI and on a fresh Colab VM.
+GALLERY_REF = "main"  # replaced by the release tag at publication
+PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PAGE = "D1.1-froment-fixed-bed-ladder"  # equals the page directory
+
+import os, sys, urllib.request
 from pathlib import Path
+_shared = next((p / "shared" for p in (Path.cwd(), *Path.cwd().parents)
+                if (p / "shared" / "gallery_bootstrap.py").is_file()), None)
+if _shared is None:
+    _shared = (Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+               / "pymrm-gallery" / GALLERY_REF)
+    _shared.mkdir(parents=True, exist_ok=True)
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/computational-chemical-engineering/"
+        f"pymrm-gallery/{GALLERY_REF}/shared/gallery_bootstrap.py",
+        _shared / "gallery_bootstrap.py")
+sys.path.insert(0, str(_shared))
+sys.modules.pop("gallery_bootstrap", None)
+from gallery_bootstrap import setup
+setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path
 
-import nbformat as nbf
-
-md, code = nbf.v4.new_markdown_cell, nbf.v4.new_code_cell
-cells = []
-
-TITLE = "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"
-
-cells.append(md(r"""---
-title: "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"
-description: >
-  Chapter 11 of Froment, De Wilde & Bischoff classifies fixed-bed reactor models in
-  a 2x3 table and then works five of its six cells: basic one-dimensional plug flow
-  (11.5, S2), plus axial dispersion with Danckwerts inlet conditions (11.6, S4),
-  two-dimensional with radial dispersion and a wall coefficient (11.7, S6),
-  heterogeneous with interfacial gradients (11.8, S7) and heterogeneous with
-  intraparticle profiles as well (11.9, S8). This page builds all five on ONE
-  reactor - the hydrocarbon-oxidation design case of section 11.5.2 - and measures
-  what each rung buys, as the shift in the root-found inlet partial pressure at
-  which the hot spot reaches the top of the book's own stated operating range.
-categories: [sec:D, struct:S2, struct:S4, struct:S6, struct:S7, struct:S8, tier:T0, data:tier6, phase:gas-solid]
-date: 2026-08-17
----
-
-# Five fixed-bed models on one reactor: what each rung of Froment's ladder buys
-
-**Catalog ID:** `D1.1` (covering `D1.2`, `D1.3`, `D1.4`, `D1.5`) &middot;
-**Structures:** `S2` `S4` `S6` `S7` `S8` &middot; **Tier:** T0
-
-## Background
-
-Table 11.4-1 of Froment, De Wilde & Bischoff (2011), on book page 505, is not a
-ladder. It is a **2 x 3 classification**: pseudohomogeneous models ($T = T_s$,
-$C = C_s$) against heterogeneous ones, crossed with one-dimensional basic,
-one-dimensional with mixing, and two-dimensional. Read from the book's own table:
-
-| | A - pseudohomogeneous, $T = T_s$; $C = C_s$ | B - heterogeneous, $T \ne T_s$; $C \ne C_s$ |
-|---|---|---|
-| one-dimensional | I sec. 11.5 &nbsp; basic, ideal | I sec. 11.8 &nbsp; + interfacial gradients |
-| | II sec. 11.6 &nbsp; + axial mixing | II sec. 11.9 &nbsp; + intraparticle gradients |
-| two-dimensional | III sec. 11.7 &nbsp; + radial mixing | III sec. 11.10 &nbsp; + radial mixing |
-
-**The ordering this page uses, and why.** The five cases the gallery catalogue
-calls `D1.1`-`D1.5` are five of those six cells. The book presents them in the
-order 11.5, 11.6, 11.7, 11.8, 11.9 - reading the table **down each column**, so
-that the two-dimensional pseudohomogeneous model (11.7) sits between the two
-one-dimensional heterogeneous ones. This page instead orders them by **how much
-each one adds to the transport description of the previous**:
-
-1. **11.5** basic one-dimensional plug flow (`S2`) - convection only,
-2. **11.6** + axial dispersion of heat and mass, Danckwerts inlet (`S4`),
-3. **11.8** + a solid phase separated from the gas by a film (`S7`),
-4. **11.9** + concentration profiles inside the particle (`S8`),
-5. **11.7** + a radial coordinate in the tube (`S6`).
-
-That puts 11.7 last rather than third, for one reason that is arithmetic rather
-than taste: **rung 1's wall coefficient and rung 5's two radial parameters are
-the same measurement.** Section 11.7.4's equation (11.7.4-1) collapses the
-two-dimensional pair $(\alpha_w, \lambda_{er})$ into the single $\alpha_i$ that
-rung 1 uses, and the notebook reproduces section 11.5.2's printed
-$U = 0.096$ kJ/(m$^2$ s K) from section 11.7.3's printed $\alpha_w = 0.156$ and
-$\lambda_{er} = 0.78 \times 10^{-3}$ **to both of the digits it prints**.
-
-That is a consistency check, and it is stated as one. It is **not** evidence that
-the book derived the 0.096 that way: Van Welsenaere & Froment's own
-$U = 82.7$ kcal/(m$^2$ h K) is 0.09618 kJ/(m$^2$ s K), which also rounds to 0.096
-at the two significant figures actually printed, and section 11.5.2 is otherwise
-their parameter set throughout. What the identity *does* decide, discriminatingly,
-is the tube radius: (11.7.4-1) returns 0.096 at $R_t = 0.0125$ m and 0.0954 - which
-rounds to 0.095, not 0.096 - at the 0.0127 m the printed 2.54 cm diameter implies.
-Rung 1 and rung 5 are therefore entangled whichever way the number was obtained,
-which is the reason for reading the table in this order rather than the book's.
-
-**The point of the page is the comparison.** Five restatements of five equation
-sets would be five-sixths of a chapter retyped. What is worth measuring is
-*where the simpler model already suffices and where it misleads*, and the
-comparison is only meaningful if all five rungs run on the **same reactor with the
-same chemistry**. Section 11.5.2's hydrocarbon-oxidation design case is the one
-the book itself carries furthest: 11.5.2 designs it, 11.5.3 works its runaway
-criteria, 11.7.3 puts a fuller kinetic scheme for it in two dimensions, and 11.8.2
-runs its startup with a solid phase. So that is the reactor here, with the
-pseudo-first-order rate of 11.5.2 held fixed across all five rungs.
-
-**What this page does not own.** The chapter overlaps six published pages, and
-this page loads their numbers rather than restating them:
-
-| the chapter's content | the page that owns it | what is done here |
-|---|---|---|
-| Van Welsenaere & Froment's runaway criteria, which 11.5.3 applies | `D2.2` | both its CSVs are loaded; Example 11.5.3.A is checked *against the original*, and the criteria are not rebuilt |
-| Froment (1967)'s o-xylene network and its 1-D/2-D runaway pair, which 11.7.3/11.7.4 restate | `C2.10` (which absorbed `D3.4`) | its parameter and stated-result CSVs are loaded and reconciled with the book's restatement; the 1967 case is **not** re-run |
-| Danckwerts' inlet and outlet conditions, which 11.6 needs | `A2.1` | its boundary-condition dicts are used as published, with its outlet-sign blind spot cited, not rediscovered |
-| the isothermal effectiveness factor, which 11.9.1 needs | `B1.1` | its exact-$\eta$ CSV is loaded as the reference for eq. (11.9.1-11) |
-| the Ergun friction factor of eq. (11.5.1-13) | `A1.1` | its printed-constant CSV is loaded; Example 11.5.1.A's *equivalent particle diameter* is the part `A1.1` does not carry |
-| Sh $= 2 + 1.1\,Sc^{1/3}Re^{0.6}$ for the film | `A3.4` | used as published for $k_g$, with the analogous Nu for $h_f$ |
-| Mears' interphase temperature criterion, printed on book p. 588 | `B1.7` | evaluated here on this reactor; the criterion family is `B1.7`'s |
-| Gunn's axial and radial dispersion correlations, cited by 11.6 and 11.7.1 | `A2.6` | the book's own "Pe$_a$ between 1 and 2" is used; Gunn's forms are `A2.6`'s |
-
-**Provenance.** Tier 6. Chapter 11 reports **no experiment**. Every comparison on
-this page is against a number the book computed itself or a sentence it asserts,
-so what follows is a reproduction of the book's arithmetic and of its claims about
-its own models - never a validation against data. Said again in *Validation*."""))
-
-cells.append(code(r'''try:
-    import pymrm  # noqa: F401
-except ImportError:
-    %pip install -q pymrm
-'''))
-
-cells.append(code(r'''import sys, urllib.request
-from pathlib import Path
-
-if not any("shared" in p for p in sys.path):
-    local = Path.cwd()
-    for _ in range(4):
-        if (local / "shared" / "gallery_utils.py").is_file():
-            sys.path.insert(0, str(local / "shared")); break
-        local = local.parent
-    else:
-        url = ("https://raw.githubusercontent.com/computational-chemical-engineering/"
-               "pymrm-gallery/main/shared/gallery_utils.py")
-        urllib.request.urlretrieve(url, "gallery_utils.py")
-        sys.path.insert(0, ".")
+# %%
+import inspect
+from dataclasses import replace
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
-from scipy.integrate import solve_ivp
-from pymrm import (construct_grad, construct_div, construct_convflux_upwind,
-                   construct_coefficient_matrix, newton, NumJac)
-from gallery_utils import load_data, load_meta, Claims
+from gallery_utils import load_data, load_meta, load_claims, Claims
+from model import (KCAL, Reactor, film, eta_sphere, phi_prime, Ladder, Pellet, hotspot,
+                   solve_robust, T_max_safe, CTL_JUMP, CTL_STATS, NotACrossing,
+                   crossing_control, p0_critical, cross_scan, ode_reference,
+                   p0_critical_ode, richardson)
+from model import _shift_or_none
 
 # DETERMINISM: nothing on this page is stochastic - no sampling, no bootstrap, no
 # random initial guess.  Every fixed-inlet solve starts from a guess that is a fixed
@@ -195,188 +207,198 @@ for nm, pg, df in ((load_meta("van-welsenaere-froment-1970-parameters.csv", page
                    (load_meta("isothermal-exact.csv", page=B11)["dataset_id"], B11, ETA_REF),
                    (load_meta("ergun-1952-parameters.csv", page=A11)["dataset_id"], A11, ERG_PAR)):
     print(f"   {nm:<34s} {len(df):5d} rows   from pages/{pg}/")
-'''))
 
-cells.append(md(r"""## The published model
+# what the four source pages establish about these rows, read from their own
+# committed claims rather than retyped; The data, below, says what each affects
+D22_C, C210_C, B11_C, A11_C = (load_claims(pg) for pg in (D22, C210, B11, A11))
+C210_U_WORST = max(abs(C210_C[k]) for k in ("u_ref_identity_rel", "u_lam075_identity_rel",
+                                             "u_aw150_identity_rel"))
 
-All five rungs are transcribed from **renders** of the book's own pages, not from
-its text layer. `docs/papers-inventory.yaml` records why: every Symbol-font
-operator in this file extracts as an unmappable Private-Use-Area glyph (U+F02D
-minus, U+F03D equals, U+F02B plus) in all three `pdftotext` modes, so an extracted
-equation *looks complete and has no operators at all*. Two things were caught on
-the render during this transcription that the text layer had silently dropped: the
-leading $\varepsilon$ of eq. (11.6-1), and the Haughey--Beveridge amplitude, which
-extracted as 0.0731 and is printed 0.073.
 
-**Rung 1 - section 11.5.1, basic one-dimensional pseudohomogeneous (`S2`).**
+# %% [markdown]
+# ## The published model
+#
+# All five rungs are transcribed from **renders** of the book's own pages, not from
+# its text layer. `docs/papers-inventory.yaml` records why: every Symbol-font
+# operator in this file extracts as an unmappable Private-Use-Area glyph (U+F02D
+# minus, U+F03D equals, U+F02B plus) in all three `pdftotext` modes, so an extracted
+# equation *looks complete and has no operators at all*. Two things were caught on
+# the render during this transcription that the text layer had silently dropped: the
+# leading $\varepsilon$ of eq. (11.6-1), and the Haughey--Beveridge amplitude, which
+# extracted as 0.0731 and is printed 0.073.
+#
+# **Rung 1 - section 11.5.1, basic one-dimensional pseudohomogeneous (`S2`).**
+#
+# $$-\frac{d(u_s C_A)}{dz} = r_A \rho_B \tag{11.5.1-1}$$
+# $$u_s \rho_g c_p \frac{dT}{dz} = (-\Delta H) r_A \rho_B - 4\frac{U}{d_t}(T - T_r) \tag{11.5.1-2}$$
+# $$-\frac{dp_t}{dz} = f\frac{\rho_g u_s^2}{d_p} \tag{11.5.1-3}$$
+#
+# with $C_A = C_{A0}$, $T = T_0$, $p_t = p_{t0}$ at $z = 0$. Note $r_A$ is the rate of
+# *disappearance*, positive. Section 11.5.2 writes the same pair in partial
+# pressures for the design case, which fixes the constant-density conversion the
+# whole page uses, $C_A = \rho_g p_A / (M_m p_t)$:
+#
+# $$u_s\frac{dp_A}{dz} + \frac{M_m p_t}{\rho_g}\rho_B\,k\,p_B^0 p_A = 0 \tag{11.5.2-1}$$
+# $$u_s\rho_g c_p\frac{dT}{dz} - (-\Delta H)\rho_B k p_B^0 p_A + \frac{4U}{d_t}(T - T_r) = 0 \tag{11.5.2-2}$$
+#
+# $$r_A = k\,p_B^0\,p_A, \qquad \ln k = 19.837 - \frac{13{,}636}{T}$$
+#
+# **Rung 2 - section 11.6, + axial mixing (`S4`).**
+#
+# $$\varepsilon D_{ea}\frac{d^2C_A}{dz^2} - u_s\frac{dC_A}{dz} - r_A\rho_B = 0 \tag{11.6-1}$$
+# $$\lambda_{ea}\frac{d^2T}{dz^2} - \rho_g u_s c_P\frac{dT}{dz} + (-\Delta H)r_A\rho_B - \frac{4U}{d_t}(T-T_r) = 0 \tag{11.6-2}$$
+#
+# with the conditions the book calls "those generally used", verbatim:
+#
+# $$u_s(C_{A0} - C_A) = -\varepsilon D_{ea}\frac{dC_A}{dz}, \qquad
+#   \rho_g u_s c_p (T_0 - T) = -\lambda_{ea}\frac{dT}{dz} \quad \text{for } z = 0$$
+# $$\frac{dC_A}{dz} = \frac{dT}{dz} = 0 \quad \text{for } z = L$$
+#
+# These are the Danckwerts conditions of published `A2.1`, and its dict form is used
+# unchanged. The notation list defines $\mathrm{Pe}_a = u_i d_p / D_{ea}$ on the
+# *interstitial* velocity, so $\varepsilon D_{ea} = u_s d_p / \mathrm{Pe}_a$ and the
+# dispersion coefficient of (11.6-1), divided by $u_s$, is simply the **length**
+# $d_p/\mathrm{Pe}_{ma}$. Section 11.6 says $\mathrm{Pe}_a$ "may be considered to lie
+# between 1 and 2", and of the thermal analogue that "little information is
+# available".
+#
+# **Rung 3 - section 11.8.1, + interfacial gradients (`S7`).**
+#
+# $$-u_s\frac{dC}{dz} = k_g a_v (C - C_s^s) \tag{11.8.1-1}$$
+# $$u_s\rho_g c_p\frac{dT}{dz} = h_f a_v (T_s^s - T) - 4\frac{U}{d_t}(T - T_r) \tag{11.8.1-2}$$
+# $$\rho_B r_A = k_g a_v (C - C_s^s) \tag{11.8.1-3}$$
+# $$(-\Delta H)\rho_B r_A = h_f a_v (T_s^s - T) \tag{11.8.1-4}$$
+#
+# with $r_A$ evaluated at $(C_s^s, T_s^s)$, and $C = C_0$, $T = T_0$ at $z = 0$.
+# Section 11.8.1 states that it carries "the restrictions already mentioned in
+# Section 11.5.1 for the basic case", which includes constant $u_s$, $\rho_g$, $c_p$.
+#
+# **Rung 4 - section 11.9.1, + intraparticle gradients (`S8`).** (11.9.1-1) and
+# (11.9.1-2) repeat (11.8.1-1) and (11.8.1-2); the particle adds
+#
+# $$\frac{D_e}{\xi'^2}\frac{d}{d\xi'}\!\left(\xi'^2\frac{dC_s}{d\xi'}\right) - \rho_s r_A(C_s, T_s) = 0 \tag{11.9.1-3}$$
+# $$\frac{\lambda_e}{\xi'^2}\frac{d}{d\xi'}\!\left(\xi'^2\frac{dT_s}{d\xi'}\right) + \rho_s(-\Delta H) r_A(C_s, T_s) = 0 \tag{11.9.1-4}$$
+#
+# $$\frac{dC_s}{d\xi'} = \frac{dT_s}{d\xi'} = 0 \ \text{ at } \xi' = 0; \qquad
+#   k_g(C_s^s - C) = -D_e\frac{dC_s}{d\xi'}, \quad
+#   h_f(T_s^s - T) = -\lambda_e\frac{dT_s}{d\xi'} \ \text{ at } \xi' = \tfrac{d_p}{2}$$
+#
+# The book's own footnote to (11.9.1-4) is worth quoting because it removes the
+# commonest sign trap in this equation: *"The signs in (11.9.1-3) and (11.9.1-4) are
+# those obtained when the rate is defined for first order as $r_A = kC_A$. Many books
+# define $r_A = -kC_A$."* It then offers the reduction this page uses for the ladder,
+# $\eta$ multiplying the surface rate,
+#
+# $$k_g a_v (C - C_s^s) = \eta\,\rho_B r_A(C_s^s, T_s^s) \tag{11.9.1-9}$$
+# $$h_f a_v (T_s^s - T) = \eta\,\rho_B(-\Delta H) r_A(C_s^s, T_s^s) \tag{11.9.1-10}$$
+# $$\eta = \frac{3}{\phi''^2}\left[\phi''\coth\phi'' - 1\right],\qquad
+#   \phi'' = \frac{d_p}{2}\sqrt{\frac{k(T_s^s)\rho_s}{D_e}} \tag{11.9.1-11}$$
+#
+# **Rung 5 - section 11.7.2, two-dimensional pseudohomogeneous (`S6`).**
+#
+# $$(D_{er})_s\!\left(\frac{\partial^2 C}{\partial r^2} + \frac{1}{r}\frac{\partial C}{\partial r}\right) - u_s\frac{\partial C}{\partial z} - \rho_B r_A = 0 \tag{11.7.2-1}$$
+# $$\lambda_{er}\!\left(\frac{\partial^2 T}{\partial r^2} + \frac{1}{r}\frac{\partial T}{\partial r}\right) - u_s\rho_g c_p\frac{\partial T}{\partial z} + \rho_B(-\Delta H) r_A = 0$$
+#
+# $$C = C_0,\ T = T_0 \ \text{ at } z=0; \qquad
+#   \frac{\partial C}{\partial r} = 0 \ \text{ at } r = 0 \text{ and } r = R_t; \qquad
+#   \frac{\partial T}{\partial r} = 0 \ \text{ at } r = 0$$
+# $$\frac{\partial T}{\partial r} = -\frac{\alpha_w}{\lambda_{er}}(T_R - T_w) \ \text{ at } r = R_t$$
+#
+# There is **no** $4U/d_t$ term here: the wall coefficient $\alpha_w$ of eq.
+# (11.7.1-1) replaces it, and eq. (11.7.4-1) is how the book converts between them,
+#
+# $$\frac{1}{\alpha_i} = \frac{1}{\alpha_w} + \frac{R_t}{4\lambda_{er}} \tag{11.7.4-1}$$
+#
+# **A printed inconsistency in rung 5's own groups, reported and not repaired.**
+# Book page 574 prints
+# $a_1 = (D_{er})_s/(u_i d_p) = 1/\mathrm{Pe}_{mr}$, and book page 572 prints, two
+# pages earlier, that $(D_{er})_s$ "equals $\varepsilon D_{er}$, with $D_{er}$ based
+# upon the interstitial flow velocity $u_i$". Those two statements are inconsistent
+# by a factor $\varepsilon$: with $(D_{er})_s = \varepsilon D_{er}$ and
+# $\mathrm{Pe}_{mr} = u_i d_p / D_{er}$,
+# $(D_{er})_s/(u_i d_p) = \varepsilon/\mathrm{Pe}_{mr}$, while
+# $(D_{er})_s/(u_s d_p) = 1/\mathrm{Pe}_{mr}$ exactly. The denominator should be
+# $u_s$, matching $a_2 = \lambda_{er}/(G c_p d_p)$ which is built on $G = \rho_g u_s$
+# in the very next line. Taken literally the printed group scales radial mass
+# dispersion by $1/\varepsilon$ on this reactor (printed in the crossover cell). The
+# page uses
+# $(D_{er})_s/u_s = d_p/\mathrm{Pe}_{mr}$, states that as the repair-by-inference it
+# is, and measures what the literal reading would cost - which is where the book's
+# own sentence that "the computed results are not very sensitive with respect to
+# $\mathrm{Pe}_{mr}$" gets tested rather than quoted.
 
-$$-\frac{d(u_s C_A)}{dz} = r_A \rho_B \tag{11.5.1-1}$$
-$$u_s \rho_g c_p \frac{dT}{dz} = (-\Delta H) r_A \rho_B - 4\frac{U}{d_t}(T - T_r) \tag{11.5.1-2}$$
-$$-\frac{dp_t}{dz} = f\frac{\rho_g u_s^2}{d_p} \tag{11.5.1-3}$$
+# %% [markdown]
+# ## Parameters and assumptions
+#
+# Section 11.5.2's parameters are **Van Welsenaere & Froment's (1970), restated in
+# SI**, and the restatement is a unit conversion. Published `D2.2` carries their
+# printed originals, so the conversion can be audited row by row rather than
+# assumed - which is what the next cell does. Two of its findings decide numbers the
+# rest of the page depends on:
+#
+# * **the tube radius.** Section 11.5.2 says the internal diameter is 2.54 cm, but
+#   the printed $U = 0.096$ kJ/(m$^2$ s K) is eq. (11.7.4-1) evaluated at
+#   $R_t = 0.0125$ m, and Example 11.5.3.A uses $R_t = 0.0125$ m throughout. At
+#   0.0127 m the hot spot at the book's own $p_{A0} = 0.018$ is far outside the
+#   operating range the same page states; at 0.0125 m it is just inside. Both
+#   numbers are computed and printed in *Validation* below - none is typed here.
+#   Arithmetic decides the radius, not the printed diameter.
+# * **the specific heat.** 0.992 kJ/(kg K) is printed. Groups later in the same
+#   chapter require more. The page uses the volumetric
+#   $\rho_g c_p = 0.323$ kcal/(m$^3$ K) that they agree on, and reports the
+#   printed value as a defect rather than repairing it. The deviation is computed
+#   below.
+#
+# **Which pressure unit this page is in, and why it is not the one printed.**
+# Section 11.5.2 prints *"the total pressure ... equal to 1 **bar**"* and
+# *"$p_B^0 = 0.211$ **bar**"*, and its design point as *"0.018 **bar**"*. The model
+# this page runs is in **atm**, and that is a deliberate reading with four reasons,
+# each of which the notebook either prints or transcribes:
+#
+# 1. the rate constant. $\ln k = 19.837 - 13{,}636/T$ is Van Welsenaere & Froment's,
+#    printed by them for $r_A = k\,p_B^0 p_A$ with the pressures in **atm**. Section
+#    11.5.2 restates it *unchanged* while relabelling the pressures bar. Converting
+#    the pressures without converting $k$ is a partial conversion, and the
+#    self-consistent model is the unconverted one;
+# 2. the book's own figure. Fig. 11.5.2-1's ordinate label reads **"$p_0$, atm"**
+#    (read on a 300 ppi crop of book page 512; that unit word is the only thing this
+#    page takes from any figure, and no curve, tick or point is read from any of
+#    them). Page 513's own text ties the design pressures to that figure - it
+#    discusses $p_{A0}$ = 0.0181, 0.0182 and 0.019 as "the upper part of the curves
+#    ... (Figs. 11.5.2-1 and 11.5.2-2)";
+# 3. Example 11.5.3.A's group $A$, printed in the same chapter, uses **0.208** -
+#    the same oxygen pressure in atm, unconverted - where 11.5.2 prints 0.211 bar,
+#    and the audit cell below shows 0.211 is 0.208 converted;
+# 4. it is measurable, and the measurement is one-sided. Both readings are solved
+#    in *Validation* below by the same grid-free Radau integration with one constant
+#    changed: in atm the sensitivity sentence reproduces and its design point
+#    sits just inside the ceiling the facing page states, while in the printed bar
+#    the same sentence misses by tens of times more and its design point lands
+#    hundreds of kelvin **above** that ceiling. Every one of those numbers is printed
+#    by the code, none is typed here.
+#
+# So **every pressure this page reports is in atm**, including $p_{A0}^*$, the
+# figure axes and section 11.7.3's 0.00924 - which book page 574 prints as a
+# *mole fraction*, "corresponding to 44 g/m$^3$", and which is a partial pressure of
+# 0.00924 atm only because $p_t = 1$ atm. It is Froment (1967)'s $N_{A0}$, and `C2.10`
+# has found that the 44 is g per *normal* m$^3$; the cell below prints its value
+# beside the printed one. The book's own strings are quoted verbatim with the unit it
+# prints; nothing in the CSV is repaired.
+#
+# **What the chapter does not print, per rung.** This is the asymmetry the ladder
+# turns out to have, and it is stated here before any of it is used:
+#
+# | rung | new coefficients it needs | printed for *this* reactor? |
+# |---|---|---|
+# | 1 `S2` | $U$ | **yes**, 0.096 kJ/(m$^2$ s K) - and reproduced by eq. (11.7.4-1) from rung 5's pair |
+# | 2 `S4` | $D_{ea}$, $\lambda_{ea}$ | $\mathrm{Pe}_a$ "between 1 and 2"; of $\lambda_{ea}$, "little information is available", and $\mathrm{Pe}_{ha}$ is used in (11.6-3)/(11.6-4) without being defined anywhere in the book |
+# | 3 `S7` | $k_g$, $h_f$ | **no** - the reader is sent to Chapter 3's correlation charts |
+# | 4 `S8` | $D_e$, $\lambda_e$ | **no** - the reader is sent to Satterfield [1970] and Weisz & Hicks [1962], neither on disk |
+# | 5 `S6` | $\lambda_{er}$, $\alpha_w$ | **yes**, both, to two figures |
+#
+# So the two ends of the ladder are pinned by the book and the middle is not.
 
-with $C_A = C_{A0}$, $T = T_0$, $p_t = p_{t0}$ at $z = 0$. Note $r_A$ is the rate of
-*disappearance*, positive. Section 11.5.2 writes the same pair in partial
-pressures for the design case, which fixes the constant-density conversion the
-whole page uses, $C_A = \rho_g p_A / (M_m p_t)$:
-
-$$u_s\frac{dp_A}{dz} + \frac{M_m p_t}{\rho_g}\rho_B\,k\,p_B^0 p_A = 0 \tag{11.5.2-1}$$
-$$u_s\rho_g c_p\frac{dT}{dz} - (-\Delta H)\rho_B k p_B^0 p_A + \frac{4U}{d_t}(T - T_r) = 0 \tag{11.5.2-2}$$
-
-$$r_A = k\,p_B^0\,p_A, \qquad \ln k = 19.837 - \frac{13{,}636}{T}$$
-
-**Rung 2 - section 11.6, + axial mixing (`S4`).**
-
-$$\varepsilon D_{ea}\frac{d^2C_A}{dz^2} - u_s\frac{dC_A}{dz} - r_A\rho_B = 0 \tag{11.6-1}$$
-$$\lambda_{ea}\frac{d^2T}{dz^2} - \rho_g u_s c_P\frac{dT}{dz} + (-\Delta H)r_A\rho_B - \frac{4U}{d_t}(T-T_r) = 0 \tag{11.6-2}$$
-
-with the conditions the book calls "those generally used", verbatim:
-
-$$u_s(C_{A0} - C_A) = -\varepsilon D_{ea}\frac{dC_A}{dz}, \qquad
-  \rho_g u_s c_p (T_0 - T) = -\lambda_{ea}\frac{dT}{dz} \quad \text{for } z = 0$$
-$$\frac{dC_A}{dz} = \frac{dT}{dz} = 0 \quad \text{for } z = L$$
-
-These are the Danckwerts conditions of published `A2.1`, and its dict form is used
-unchanged. The notation list defines $\mathrm{Pe}_a = u_i d_p / D_{ea}$ on the
-*interstitial* velocity, so $\varepsilon D_{ea} = u_s d_p / \mathrm{Pe}_a$ and the
-dispersion coefficient of (11.6-1), divided by $u_s$, is simply the **length**
-$d_p/\mathrm{Pe}_{ma}$. Section 11.6 says $\mathrm{Pe}_a$ "may be considered to lie
-between 1 and 2", and of the thermal analogue that "little information is
-available".
-
-**Rung 3 - section 11.8.1, + interfacial gradients (`S7`).**
-
-$$-u_s\frac{dC}{dz} = k_g a_v (C - C_s^s) \tag{11.8.1-1}$$
-$$u_s\rho_g c_p\frac{dT}{dz} = h_f a_v (T_s^s - T) - 4\frac{U}{d_t}(T - T_r) \tag{11.8.1-2}$$
-$$\rho_B r_A = k_g a_v (C - C_s^s) \tag{11.8.1-3}$$
-$$(-\Delta H)\rho_B r_A = h_f a_v (T_s^s - T) \tag{11.8.1-4}$$
-
-with $r_A$ evaluated at $(C_s^s, T_s^s)$, and $C = C_0$, $T = T_0$ at $z = 0$.
-Section 11.8.1 states that it carries "the restrictions already mentioned in
-Section 11.5.1 for the basic case", which includes constant $u_s$, $\rho_g$, $c_p$.
-
-**Rung 4 - section 11.9.1, + intraparticle gradients (`S8`).** (11.9.1-1) and
-(11.9.1-2) repeat (11.8.1-1) and (11.8.1-2); the particle adds
-
-$$\frac{D_e}{\xi'^2}\frac{d}{d\xi'}\!\left(\xi'^2\frac{dC_s}{d\xi'}\right) - \rho_s r_A(C_s, T_s) = 0 \tag{11.9.1-3}$$
-$$\frac{\lambda_e}{\xi'^2}\frac{d}{d\xi'}\!\left(\xi'^2\frac{dT_s}{d\xi'}\right) + \rho_s(-\Delta H) r_A(C_s, T_s) = 0 \tag{11.9.1-4}$$
-
-$$\frac{dC_s}{d\xi'} = \frac{dT_s}{d\xi'} = 0 \ \text{ at } \xi' = 0; \qquad
-  k_g(C_s^s - C) = -D_e\frac{dC_s}{d\xi'}, \quad
-  h_f(T_s^s - T) = -\lambda_e\frac{dT_s}{d\xi'} \ \text{ at } \xi' = \tfrac{d_p}{2}$$
-
-The book's own footnote to (11.9.1-4) is worth quoting because it removes the
-commonest sign trap in this equation: *"The signs in (11.9.1-3) and (11.9.1-4) are
-those obtained when the rate is defined for first order as $r_A = kC_A$. Many books
-define $r_A = -kC_A$."* It then offers the reduction this page uses for the ladder,
-$\eta$ multiplying the surface rate,
-
-$$k_g a_v (C - C_s^s) = \eta\,\rho_B r_A(C_s^s, T_s^s) \tag{11.9.1-9}$$
-$$h_f a_v (T_s^s - T) = \eta\,\rho_B(-\Delta H) r_A(C_s^s, T_s^s) \tag{11.9.1-10}$$
-$$\eta = \frac{3}{\phi''^2}\left[\phi''\coth\phi'' - 1\right],\qquad
-  \phi'' = \frac{d_p}{2}\sqrt{\frac{k(T_s^s)\rho_s}{D_e}} \tag{11.9.1-11}$$
-
-**Rung 5 - section 11.7.2, two-dimensional pseudohomogeneous (`S6`).**
-
-$$(D_{er})_s\!\left(\frac{\partial^2 C}{\partial r^2} + \frac{1}{r}\frac{\partial C}{\partial r}\right) - u_s\frac{\partial C}{\partial z} - \rho_B r_A = 0 \tag{11.7.2-1}$$
-$$\lambda_{er}\!\left(\frac{\partial^2 T}{\partial r^2} + \frac{1}{r}\frac{\partial T}{\partial r}\right) - u_s\rho_g c_p\frac{\partial T}{\partial z} + \rho_B(-\Delta H) r_A = 0$$
-
-$$C = C_0,\ T = T_0 \ \text{ at } z=0; \qquad
-  \frac{\partial C}{\partial r} = 0 \ \text{ at } r = 0 \text{ and } r = R_t; \qquad
-  \frac{\partial T}{\partial r} = 0 \ \text{ at } r = 0$$
-$$\frac{\partial T}{\partial r} = -\frac{\alpha_w}{\lambda_{er}}(T_R - T_w) \ \text{ at } r = R_t$$
-
-There is **no** $4U/d_t$ term here: the wall coefficient $\alpha_w$ of eq.
-(11.7.1-1) replaces it, and eq. (11.7.4-1) is how the book converts between them,
-
-$$\frac{1}{\alpha_i} = \frac{1}{\alpha_w} + \frac{R_t}{4\lambda_{er}} \tag{11.7.4-1}$$
-
-**A printed inconsistency in rung 5's own groups, reported and not repaired.**
-Book page 574 prints
-$a_1 = (D_{er})_s/(u_i d_p) = 1/\mathrm{Pe}_{mr}$, and book page 572 prints, two
-pages earlier, that $(D_{er})_s$ "equals $\varepsilon D_{er}$, with $D_{er}$ based
-upon the interstitial flow velocity $u_i$". Those two statements are inconsistent
-by a factor $\varepsilon$: with $(D_{er})_s = \varepsilon D_{er}$ and
-$\mathrm{Pe}_{mr} = u_i d_p / D_{er}$,
-$(D_{er})_s/(u_i d_p) = \varepsilon/\mathrm{Pe}_{mr}$, while
-$(D_{er})_s/(u_s d_p) = 1/\mathrm{Pe}_{mr}$ exactly. The denominator should be
-$u_s$, matching $a_2 = \lambda_{er}/(G c_p d_p)$ which is built on $G = \rho_g u_s$
-in the very next line. Taken literally the printed group scales radial mass
-dispersion by $1/\varepsilon = 2.02$ on this reactor. The page uses
-$(D_{er})_s/u_s = d_p/\mathrm{Pe}_{mr}$, states that as the repair-by-inference it
-is, and measures what the literal reading would cost - which is where the book's
-own sentence that "the computed results are not very sensitive with respect to
-$\mathrm{Pe}_{mr}$" gets tested rather than quoted."""))
-
-cells.append(md(r"""## Parameters and assumptions
-
-Section 11.5.2's parameters are **Van Welsenaere & Froment's (1970), restated in
-SI**, and the restatement is a unit conversion. Published `D2.2` carries their
-printed originals, so the conversion can be audited row by row rather than
-assumed - which is what the next cell does. Two of its findings decide numbers the
-rest of the page depends on:
-
-* **the tube radius.** Section 11.5.2 says the internal diameter is 2.54 cm, but
-  the printed $U = 0.096$ kJ/(m$^2$ s K) is eq. (11.7.4-1) evaluated at
-  $R_t = 0.0125$ m, and Example 11.5.3.A uses $R_t = 0.0125$ m throughout. At
-  0.0127 m the hot spot at the book's own $p_{A0} = 0.018$ is far outside the
-  operating range the same page states; at 0.0125 m it is just inside. Both
-  numbers are computed and printed in *Validation* below - none is typed here.
-  Arithmetic decides the radius, not the printed diameter.
-* **the specific heat.** 0.992 kJ/(kg K) is printed. Groups later in the same
-  chapter require more. The page uses the volumetric
-  $\rho_g c_p = 0.323$ kcal/(m$^3$ K) that they agree on, and reports the
-  printed value as a defect rather than repairing it. The deviation is computed
-  below.
-
-**Which pressure unit this page is in, and why it is not the one printed.**
-Section 11.5.2 prints *"the total pressure ... equal to 1 **bar**"* and
-*"$p_B^0 = 0.211$ **bar**"*, and its design point as *"0.018 **bar**"*. The model
-this page runs is in **atm**, and that is a deliberate reading with four reasons,
-each of which the notebook either prints or transcribes:
-
-1. the rate constant. $\ln k = 19.837 - 13{,}636/T$ is Van Welsenaere & Froment's,
-   printed by them for $r_A = k\,p_B^0 p_A$ with the pressures in **atm**. Section
-   11.5.2 restates it *unchanged* while relabelling the pressures bar. Converting
-   the pressures without converting $k$ is a partial conversion, and the
-   self-consistent model is the unconverted one;
-2. the book's own figure. Fig. 11.5.2-1's ordinate label reads **"$p_0$, atm"**
-   (read on a 300 ppi crop of book page 512; that unit word is the only thing this
-   page takes from any figure, and no curve, tick or point is read from any of
-   them). Page 513's own text ties the design pressures to that figure - it
-   discusses $p_{A0}$ = 0.0181, 0.0182 and 0.019 as "the upper part of the curves
-   ... (Figs. 11.5.2-1 and 11.5.2-2)";
-3. Example 11.5.3.A's group $A$, printed in the same chapter, uses **0.208** -
-   the same oxygen pressure in atm, unconverted - where 11.5.2 prints 0.211 bar,
-   and the audit cell below shows 0.211 is 0.208 converted;
-4. it is measurable, and the measurement is one-sided. Both readings are solved
-   in *Validation* below by the same grid-free Radau integration with one constant
-   changed: in atm the sensitivity sentence reproduces closely and its design point
-   sits just inside the ceiling the facing page states, while in the printed bar
-   the same sentence misses by tens of times more and its design point lands
-   hundreds of kelvin **above** that ceiling. Every one of those numbers is printed
-   by the code, none is typed here.
-
-So **every pressure this page reports is in atm**, including $p_{A0}^*$, the
-figure axes and section 11.7.3's 0.00924 - which book page 574 prints as a
-*mole fraction*, "corresponding to 44 g/m$^3$", and which is a partial pressure of
-0.00924 atm only because $p_t = 1$ atm. The book's own strings are quoted verbatim
-with the unit it prints; nothing in the CSV is repaired.
-
-**What the chapter does not print, per rung.** This is the asymmetry the ladder
-turns out to have, and it is stated here before any of it is used:
-
-| rung | new coefficients it needs | printed for *this* reactor? |
-|---|---|---|
-| 1 `S2` | $U$ | **yes**, 0.096 kJ/(m$^2$ s K) - and reproduced by eq. (11.7.4-1) from rung 5's pair |
-| 2 `S4` | $D_{ea}$, $\lambda_{ea}$ | $\mathrm{Pe}_a$ "between 1 and 2"; of $\lambda_{ea}$, "little information is available", and $\mathrm{Pe}_{ha}$ is used in (11.6-3)/(11.6-4) without being defined anywhere in the book |
-| 3 `S7` | $k_g$, $h_f$ | **no** - the reader is sent to Chapter 3's correlation charts |
-| 4 `S8` | $D_e$, $\lambda_e$ | **no** - the reader is sent to Satterfield [1970] and Weisz & Hicks [1962], neither on disk |
-| 5 `S6` | $\lambda_{er}$, $\alpha_w$ | **yes**, both, to two figures |
-
-So the two ends of the ladder are pinned by the book and the middle is not."""))
-
-cells.append(code(r'''KCAL = 4.1868                      # kJ per thermochemical kcal
-
+# %%
 # ---- Van Welsenaere & Froment's printed parameters, from D2.2's CSV -----------
 V = dict(zip(VWF_PAR.index, VWF_PAR.value))
 P = dict(M=V["M"], p_t=V["P"], rho_b=V["rho_b"], rho_g=V["rho_g"],
@@ -386,11 +408,6 @@ P = dict(M=V["M"], p_t=V["P"], rho_b=V["rho_b"], rho_g=V["rho_g"],
 # D2.2's own unit column is what says so.  It is not rediscovered here.
 assert VWF_PAR.loc["c_p", "unit"] == "kcal/(m3 degC)", VWF_PAR.loc["c_p", "unit"]
 
-A_G = P["M"] * P["p_t"] * P["rho_b"] / P["rho_g"] * P["p_B0"]
-B_G = P["minus_dH"] * P["rho_b"] / P["cp_vol"] * P["p_B0"]
-THETA = P["rho_g"] / (P["M"] * P["p_t"])           # kmol/(m3 atm), from (11.5.2-1)
-CP_MASS = P["cp_vol"] * KCAL / P["rho_g"]          # kJ/(kg K)
-
 L_BED = bk("tube_length")
 D_T_PRINTED = bk("tube_id")
 D_P = bk("particle_diameter")
@@ -399,18 +416,19 @@ T_PERM = bk("temp_range_high")                     # 415 C, the printed ceiling
 R_T = P["R"]                                       # 0.0125 m; justified below
 EPS = bk("voidage_a") + bk("voidage_b") * (
     1.0 + (D_T_PRINTED / D_P - 2.0) ** 2 / (D_T_PRINTED / D_P) ** 2)   # (11.5.1-16)
-RHO_S = P["rho_b"] / (1.0 - EPS)
-A_V = 6.0 * (1.0 - EPS) / D_P
 LAM_ER, ALPHA_W = bk("lam_er"), bk("alpha_w")
 PE_MR, PE_HR = bk("pe_mr"), bk("pe_hr")
 
-
-def C_G(R=R_T):
-    return 2.0 * P["U"] / (P["cp_vol"] * R)
-
-
-def kexp(T):
-    return np.exp(np.clip(P["b"] - P["a"] / np.maximum(T, 1.0), -700, 50))
+# the design case of model.py: every rung, pellet and reference solve reads it
+RX = Reactor(**P, length=L_BED, d_p=D_P, T_r=T_R0, T_perm=T_PERM, eps=EPS,
+             lam_er=LAM_ER, alpha_w=ALPHA_W, pe_mr=PE_MR, pe_hr=PE_HR,
+             re_film=bk("Re_1173"))
+A_G, B_G = RX.A, RX.B                              # the groups of (11.5.2-1/2)
+THETA = RX.theta                                   # kmol/(m3 atm), from (11.5.2-1)
+CP_MASS = RX.cp_mass                               # kJ/(kg K)
+RHO_S = RX.rho_s
+A_V = 6.0 * (1.0 - EPS) / D_P
+C_G, kexp = RX.C, RX.kexp
 
 
 # ================= the atm -> bar audit of section 11.5.2 =====================
@@ -509,7 +527,7 @@ print(f"\nBUT THE FOUR ARE NOT FOUR INDEPENDENT DETERMINATIONS, and the spread m
       f"\nfour trace to ONE printed determination plus route 3 evaluated exactly against the"
       f"\nsame number rounded. What survives is the CONCLUSION - the printed 0.992 is"
       f"\ninconsistent with the chapter's own groups - not an agreement among four witnesses."
-      f"\nThat is why cp_route_spread is labelled structural in the break table.")
+      f"\nThat is why cp_route_spread carries a caveat in the break table.")
 
 # the mean-density units error, provable from the same sentence
 RHO_FROM_SENTENCE = bk("mass_flux") / bk("superficial_velocity")
@@ -526,13 +544,15 @@ U_VWF_SI = P["U"] * KCAL / 3600.0
 ALPHA_I_PRINTED_R = 1.0 / (1.0 / ALPHA_W + (D_T_PRINTED / 2.0) / (4.0 * LAM_ER))
 print(f"\neq. (11.7.4-1) at R_t = {R_T} m, alpha_w = {ALPHA_W}, lambda_er = {LAM_ER}:"
       f"\n  alpha_i = {ALPHA_I:.6f} kJ/(m2 s K)   against the printed"
-      f" {bk('overall_U','as_printed')}  -> {ALPHA_I/bk('overall_U')-1:+.2e}"
+      f" {bk('overall_U','as_printed')}, equal to round-off (within"
+      f" 1e-12; here {ALPHA_I/bk('overall_U')-1:+.1e})"
       f"\n  Van Welsenaere & Froment's U = {P['U']} kcal/(m2 h K) ="
       f" {U_VWF_SI:.6f} kJ/(m2 s K)  -> {U_VWF_SI/ALPHA_I-1:+.3e}"
       f"\nAt R_t = {D_T_PRINTED/2} m (the printed 2.54 cm diameter) it would be"
       f" {ALPHA_I_PRINTED_R:.6f}, i.e. {ALPHA_I_PRINTED_R/bk('overall_U')-1:+.3e}"
-      f"\nfrom the printed 0.096 - and it ROUNDS TO 0.095, not to 0.096."
-      f"\nC2.10 already recomputes U from this pair for the 1967 case, to <=0.29 %;"
+      f"\nfrom the printed 0.096 - and it ROUNDS TO {ALPHA_I_PRINTED_R:.3f}, not to"
+      f" {bk('overall_U'):.3f}.\nC2.10 recomputes U from this pair for the 1967 case, to"
+      f" {100*C210_U_WORST:.2f} % at worst (its own claims);"
       f"\nthis is that check with the BOOK's SI values, and it is what fixes R_t = 0.0125 m."
       f"\nWHAT IT IS NOT: proof that the book DERIVED 0.096 from (11.7.4-1). VWF's own"
       f"\nU = {U_VWF_SI:.5f} rounds to the same 0.096 at the two significant figures printed,"
@@ -560,651 +580,163 @@ print(f"\nAnd section 11.7.3's {Y_A0} is a MOLE FRACTION, not a pressure: page 5
       f" {M_IMPLIED:.1f} kg/kmol - an aromatic C8,\nnot the {P['M']} kg/kmol mean. At p_t ="
       f" {P['p_t']} atm its partial pressure is numerically the\nsame number, which is why it can"
       f" be used as one.")
+# the same 0.00924 is Froment (1967)'s N_A0, which C2.10 has already audited
+NA0_F67 = float(F67_PAR.loc["N_A0", "value"])
+assert NA0_F67 == Y_A0, "11.7.3's inlet mole fraction is not C2.10's N_A0"
+NA0_C210 = NA0_F67 * (1.0 + C210_C["na0_from_44gnm3_rel"])     # C2.10's 44 g/Nm3 reading
+C_NORMAL = 101325.0 / (8.314462618 * 273.15) / 1000.0         # kmol/m3 at 0 C and 1 atm
+M_OXYLENE = 8 * 12.011 + 10 * 1.008                           # C8H10, kg/kmol
+M_NORMAL = bk("y_A0_mass_1173") / 1000.0 / (Y_A0 * C_NORMAL)
+print(f"\nC2.10 HAS READ THE SAME NUMBER, as Froment (1967)'s N_A0 = {NA0_F67}, and its CSV"
+      f" records\nthat the 44 is g per NORMAL m3 (the paper's Figure 11 axis is g/Nm3):"
+      f" 44 g/Nm3 of o-xylene\nis N_A0 = {NA0_C210:.5f}, {100*C210_C['na0_from_44gnm3_rel']:+.2f} %"
+      f" from the printed {NA0_F67} (C2.10's claim).\nThe {M_IMPLIED:.1f} kg/kmol above divides by"
+      f" rho_g/M = {P['rho_g']/P['M']:.5f} kmol/m3; the molar density at\n0 C and 1 atm is"
+      f" {C_NORMAL:.5f}, and with it the molar mass is {M_NORMAL:.2f} kg/kmol, against"
+      f" o-xylene's\n{M_OXYLENE:.2f}. The rest of the gap is the printed 0.00924 against"
+      f" {NA0_C210:.5f}:\n{M_NORMAL:.2f} x {Y_A0}/{NA0_C210:.5f} = {M_NORMAL*Y_A0/NA0_C210:.2f}."
+      f" The page uses the printed mole fraction, as the chapter does.")
 
 print(f"\nderived: eps = {EPS:.6f} from (11.5.1-16) at d_t/d_p ="
       f" {D_T_PRINTED/D_P:.4f};  rho_s = {RHO_S:.1f} kg/m3;"
       f"  a_v = {A_V:.2f} m2/m3\n         theta = {THETA:.6f} kmol/(m3 atm);"
       f"  A = {A_G:.4f};  B = {B_G:.6e};  C = {C_G():.2f} 1/h")
-'''))
 
-cells.append(md(r"""## The data
 
-There is no measurement anywhere on this page. Chapter 11 reports none, and the
-sources it draws on report none either, so the provenance tier is 6 throughout.
-
-**This page's own dataset.** `froment-2011-ch11-printed.csv` is every model
-constant, stated result and quantitative claim read out of Chapter 11 (the first
-code cell prints how many rows), each with the book page it came from and a `kind`
-of `parameter`, `stated_result` or `claim`. Its sidecar records that several rows are transcribed *because they are
-wrong* and lists them; none is repaired anywhere. `as_printed` keeps the character
-string, thousands separators and all, so that a defect can be quoted verbatim.
-
-**Five borrowed datasets, and what each source page already establishes about the
-rows used here.**
-
-* `D2.2`, `van-welsenaere-froment-1970-parameters.csv` (12 rows) and
-  `-examples.csv` (30 rows). `D2.2` establishes: **the printed `c_p` of
-  0.323 kcal/(m$^3$ $^\circ$C) is already volumetric**, and multiplying it by
-  $\rho_g$ shifts the wall group by 1.293 - that finding is the reason the audit
-  above can be run at all, and it is asserted against `D2.2`'s own unit column
-  rather than restated. `D2.2` also establishes that the Elsevier full-text API
-  drops the 1970 paper's mid-dot decimal separators, that its criterion brackets
-  are 27-66 % wide, and that its own first-order upwind leaves about 0.04 K of
-  hot-spot error at $n_z = 1500$ - the last of which **does** affect this page, and
-  is why every number reported here is Richardson-extrapolated. Its 30 Section-6
-  values are used here only as the *originals* against which the book's Example
-  11.5.3.A is checked; none of its criteria is rebuilt.
-* `C2.10`, `froment-1967-parameters.csv` (23 rows) and
-  `froment-1967-stated-results.csv` (18 rows). `C2.10` establishes: the 1967
-  paper's own gas constant is **1.98** cal/(mol K), not 1.987, which is what makes
-  27,000/1.98 = 13,636 the number section 11.5.2 prints; that $G$ = 4684 is printed
-  "4.684" on the paper's p. 24; that $-\Delta H_3$ is printed "1.090"; that the
-  1-D/2-D runaway pair for the 1967 case is 363.93 and 360.01 $^\circ$C located by
-  bisection; and that $U$ recomputed from $\lambda_R$ and $\alpha_w$ agrees to
-  $\le$ 0.29 %. All four matter here and all four are printed beside the book's
-  restatement below. `C2.10` also warns that $U$ = 82.7 is a **shared source** with
-  `D2.2`, not a second witness - so the audit above never treats it as one.
-* `B1.1`, `isothermal-exact.csv` (180 rows, `dataset_id: thiele-isothermal-exact`).
-  `B1.1` establishes the exact isothermal $\eta$ for slab, cylinder and sphere;
-  that its own pymrm pellet matches it to 2.2e-4 for $\phi \le 30$ and 6.5e-3 at
-  $\phi = 100$; and - load-bearing here - that **`NumJac` must be given
-  `(n_r, 1)`, never a bare `(n_r,)`**. Its 60 sphere rows are the reference for eq.
-  (11.9.1-11) below. Its fold at $\beta = 0.6$, $\gamma = 20$ is *not* touched: the
-  pellet here runs at a far smaller Prater number, computed and printed.
-* `A1.1`, `ergun-1952-parameters.csv` (7 rows). `A1.1` establishes that a refit of
-  Ergun's own 244 markers gives $k_1 = 151.9$, $k_2 = 1.697$ rather than 150 and
-  1.75, and that the line Ergun labels Kozeny-Carman measures 149.2. Neither
-  changes anything here, because Example 11.5.1.A is arithmetic *on the printed
-  constants*; both are printed beside them. `A1.1` carries **no** McDonald and no
-  Hicks constants and does not discuss the equivalent-diameter definition, so
-  those parts of Example 11.5.1.A are new here.
-
-No figure is digitised, no page image exists anywhere in this directory, and every
-figure-only content of Chapter 11 - Figs. 11.5.2-1/2, 11.6-1, 11.7.1-1/2/3, all six
-11.7.3 figures, 11.8.1-1..4, 11.8.2-1 and the whole of Fig. 11.5.3-1's runaway band
-- is **out of scope** and never traced or read off. The one exception, and it is a
-unit rather than a datum: `fig1152_1_ordinate_unit` is the *label* on Fig. 11.5.2-1's
-ordinate, read on a 300 ppi crop as "$p_0$, atm". It decides which unit the whole
-page is in, so it is transcribed as a row like everything else and named here."""))
-
-cells.append(md(r"""## PyMRM implementation
-
-One class, five configurations. The state is `(n_z, n_f)` with the axial index
-first and fields last, except for rung 5 which is `(n_z, n_r, 2)` - spatial axes
-first, fields last, one layout throughout. Every constant operator is assembled
-once per solve in `_ops`, never inside a Newton iteration.
-
-Three things are worth reading before the code:
-
-* **the divergence geometry differs between the two second axes.** Rung 5's radial
-  axis is a tube, so `construct_div(..., nu=1, axis=1)` is cylindrical; the pellet
-  of rung 4 is a sphere, so `nu=2`. Rung 1's and rung 2's axial axis is
-  `nu=0`, Cartesian. Getting these wrong is silent: the profile stays smooth.
-* **the two boundary conditions that carry physics** are written with the outward
-  normal spelt out in a comment, because the sign of `a` means opposite things at
-  the two ends. The Danckwerts inlet is `A2.1`'s published dict, scaled: the
-  dispersion coefficient divided by $u_s$ is a length, so `a` is
-  $d_p/\mathrm{Pe}$ and `b` is 1. The wall condition of rung 5 is
-  $\lambda_{er}\,\partial T/\partial n + \alpha_w T = \alpha_w T_w$ at $r = R_t$,
-  where the outward normal is $+r$.
-* **the film balances are scaled to the units of their own unknown.** Written as
-  the book writes them, (11.8.1-3) is in atm/h and (11.8.1-4) in
-  kcal/(m$^3$ h) - a factor $10^7$ apart - and a Newton tolerance that the first
-  row reaches is one the second never sees. Dividing each by its own transfer
-  coefficient puts all four residual components within an order of magnitude of
-  each other. Without it the solve converges to a 123 K interfacial temperature
-  difference and reports a residual of 1e-10 while doing so."""))
-
-cells.append(code(r'''class Ladder:
-    """Chapter 11's five model configurations, one assembly.
-
-    rung 1  sec. 11.5   S2  basic 1-D pseudohomogeneous plug flow
-    rung 2  sec. 11.6   S4  + axial dispersion, Danckwerts inlet
-    rung 3  sec. 11.8   S7  + a solid phase behind a film
-    rung 4  sec. 11.9   S8  + intraparticle profiles, via eq. (11.9.1-11)
-    rung 5  sec. 11.7   S6  2-D, radial dispersion and a wall coefficient
-    """
-
-    def __init__(self, rung=1, n_z=1200, n_r=20, R=R_T, T_r=T_R0, length=L_BED,
-                 pe_ma=1.5, pe_ha=1.5, film_scale=1.0, D_e=1.0e-6,
-                 pe_mr=PE_MR, pe_hr=PE_HR, alpha_w=ALPHA_W, lam_er=LAM_ER,
-                 eta_on=True):
-        self.rung, self.n_z, self.n_r = rung, n_z, n_r
-        self.R, self.T_r, self.L = R, T_r, length
-        self.C = C_G(R)
-        self.pe_ma, self.pe_ha, self.D_e, self.eta_on = pe_ma, pe_ha, D_e, eta_on
-        self.f = film(film_scale)
-        self.pe_mr, self.pe_hr = pe_mr, pe_hr
-        self.wall_ratio = alpha_w / lam_er                        # 1/m
-        self.z_f = np.linspace(0.0, self.L, n_z + 1)
-        self.z_c = 0.5 * (self.z_f[1:] + self.z_f[:-1])
-        self.nf = 4 if rung in (3, 4) else 2
-        if rung == 5:
-            self.r_f = np.linspace(0.0, self.R, n_r + 1)
-            self.r_c = 0.5 * (self.r_f[1:] + self.r_f[:-1])
-            self.shape = (n_z, n_r, 2)
-        else:
-            self.shape = (n_z, self.nf)
-
-    # ------------------- constant operators, assembled once -------------------
-    def _ops(self, p0, T0):
-        nf = self.shape[-1]
-        din = np.zeros(nf); din[0], din[1] = p0, T0
-        bin_ = np.zeros(nf); bin_[0] = bin_[1] = 1.0
-        if self.rung == 2:
-            # eps*D_ea/u_s = d_p/Pe_ma and lambda_ea/(rho_g c_p u_s) = d_p/Pe_ha
-            # are LENGTHS.  Danckwerts inlet, A2.1's published dict:
-            #   u_s(c_in - c) = -D dc/dz at z=0; n = -z so dc/dn = -dc/dz,
-            #   giving (D/u_s) dc/dn + c = c_in  ->  a = d_p/Pe, b = 1, d = c_in.
-            # Outlet dc/dz = 0 with n = +z  ->  a = 1, b = 0, d = 0.
-            Dv = np.array([D_P / self.pe_ma, D_P / self.pe_ha])
-            bc = ({"a": Dv, "b": bin_, "d": din},
-                  {"a": np.ones(nf), "b": np.zeros(nf), "d": np.zeros(nf)})
-            grad, dgrad = construct_grad(self.shape, self.z_f, self.z_c, bc, axis=0)
-            conv, dconv = construct_convflux_upwind(self.shape, self.z_f, self.z_c,
-                                                    bc, v=1.0, axis=0)
-            Dm = construct_coefficient_matrix(Dv, shape=(self.n_z + 1, 2))
-            div = construct_div(self.shape, self.z_f, nu=0, axis=0)     # Cartesian
-            return div @ (conv - Dm @ grad), div @ (dconv - Dm @ dgrad)
-        if self.rung == 5:
-            bcz = ({"a": np.zeros(2), "b": np.ones(2), "d": np.array([p0, T0])},
-                   {"a": np.ones(2), "b": np.zeros(2), "d": np.zeros(2)})
-            conv, dconv = construct_convflux_upwind(self.shape, self.z_f, self.z_c,
-                                                    bcz, v=1.0, axis=0)
-            divz = construct_div(self.shape, self.z_f, nu=0, axis=0)     # Cartesian
-            Dr = np.array([D_P / self.pe_mr, D_P / self.pe_hr])          # m
-            # r = 0: symmetry, dc/dn = 0 for both fields (n = -r there).
-            # r = R_t: p is impermeable; for T, eq. (11.7.1-1) with n = +r,
-            #   lambda_er dT/dn + alpha_w T = alpha_w T_w, scaled by 1/(rho_g c_p u_s)
-            #   so that a keeps the same units as the operator's diffusivity.
-            bcr = ({"a": np.ones(2), "b": np.zeros(2), "d": np.zeros(2)},
-                   {"a": np.array([1.0, Dr[1]]),
-                    "b": np.array([0.0, Dr[1] * self.wall_ratio]),
-                    "d": np.array([0.0, Dr[1] * self.wall_ratio * self.T_r])})
-            gradr, dgradr = construct_grad(self.shape, self.r_f, self.r_c, bcr, axis=1)
-            divr = construct_div(self.shape, self.r_f, nu=1, axis=1)     # cylindrical
-            Dm = construct_coefficient_matrix(Dr, shape=(self.n_z, self.n_r + 1, 2))
-            return (divz @ conv - divr @ (Dm @ gradr),
-                    divz @ dconv - divr @ (Dm @ dgradr))
-        bc = ({"a": np.zeros(nf), "b": bin_, "d": din},
-              {"a": np.ones(nf), "b": np.zeros(nf), "d": np.zeros(nf)})
-        conv, dconv = construct_convflux_upwind(self.shape, self.z_f, self.z_c,
-                                                bc, v=1.0, axis=0)
-        div = construct_div(self.shape, self.z_f, nu=0, axis=0)          # Cartesian
-        if nf == 2:
-            return div @ conv, div @ dconv
-        # rungs 3 and 4: fields 2 and 3 are ALGEBRAIC, so the divergence must not
-        # reach them.  A coefficient matrix is the mask.
-        mask = construct_coefficient_matrix(np.array([1.0, 1.0, 0.0, 0.0]),
-                                            shape=self.shape)
-        return mask @ (div @ conv), mask @ (div @ dconv)
-
-    # ------------------------------ source term ------------------------------
-    def source(self, c):
-        # DETERMINISM, and it is not cosmetic.  A diverging Newton iterate far above
-        # the threshold drives p*k(T) past the float range, numpy raises
-        # "overflow encountered in multiply", and the traceback line it stores in the
-        # notebook carries the KERNEL'S PID (/tmp/ipykernel_<pid>/...).  Two runs then
-        # differ in their stored output for no reason connected to the physics.  The
-        # iterate is rejected anyway - solve() raises unless the final residual is
-        # below 1e-6, and T_max_safe turns that into the NaN bisection needs - so the
-        # warning carries no information the page acts on.  Suppressed HERE and
-        # nowhere else, so a genuine overflow in any other cell is still loud.
-        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
-            return self._source(c)
-
-    def _source(self, c):
-        s = np.empty_like(c)
-        if self.rung in (1, 2, 5):
-            p, T = c[..., 0], c[..., 1]
-            q = A_G / P["u"] * p * kexp(T)                    # atm/m
-            s[..., 0] = -q
-            s[..., 1] = (B_G / A_G) * q
-            if self.rung != 5:                 # rung 5 cools through the wall bc
-                s[..., 1] -= self.C / P["u"] * (T - self.T_r)
-            return s
-        p, T, ps, Ts = c[..., 0], c[..., 1], c[..., 2], c[..., 3]
-        eta = eta_sphere(phi_prime(Ts, self.D_e)) if (self.rung == 4 and self.eta_on) else 1.0
-        rate = eta * A_G * ps * kexp(Ts)                      # atm/h at SURFACE cond.
-        s[..., 0] = -rate / P["u"]
-        s[..., 1] = (B_G / A_G) * rate / P["u"] - self.C / P["u"] * (T - self.T_r)
-        # (11.8.1-3) and (11.8.1-4), each divided by its own transfer coefficient
-        # so that all four residual components are the same size.
-        s[..., 2] = rate / self.f["kga"] - (p - ps)
-        s[..., 3] = P["cp_vol"] * (B_G / A_G) * rate / self.f["hfa"] - (Ts - T)
-        return s
-
-    def solve(self, p0, T0=None, tol=1e-10, guess=None):
-        T0 = self.T_r if T0 is None else T0
-        Amat, g = self._ops(p0, T0)
-        gv = (np.asarray(g.todense()).ravel() if hasattr(g, "todense")
-              else np.asarray(g).ravel())
-        jac = NumJac(self.shape)     # last axis in full: correct for a pointwise source
-        def fun(x):
-            cc = x.reshape(self.shape)
-            return (Amat @ x + gv - self.source(cc).reshape(-1),
-                    Amat - jac(self.source, cc)[1])
-        if guess is None:
-            x0 = np.empty(self.shape)
-            x0[..., 0] = p0; x0[..., 1] = T0
-            if self.nf == 4:
-                x0[..., 2] = p0; x0[..., 3] = T0
-        else:
-            x0 = guess
-        # pymrm's newton uses a direct sparse LU at every size by default, so
-        # no iterative tolerance enters the answer.
-        sol = newton(fun, np.asarray(x0).reshape(-1), tol=tol, maxfev=100)
-        x = sol.x if hasattr(sol, "x") else np.asarray(sol)
-        res = float(np.max(np.abs(fun(x)[0])))
-        if not np.isfinite(res) or res > 1e-6:
-            raise RuntimeError(f"rung {self.rung}: Newton residual {res:.3e}")
-        self.last_residual = res
-        return x.reshape(self.shape)
-
-    # ------------------------------ diagnostics ------------------------------
-    def bulk_T(self, c):
-        """Radial mean, the book's own definition on page 574: 2 int_0^1 z (r/Rt) d(r/Rt)."""
-        if self.rung != 5:
-            return c[..., 1]
-        w = 2.0 * self.r_c * (self.r_f[1:] - self.r_f[:-1])
-        return (c[..., 1] * w).sum(axis=1) / w.sum()
-
-    def axis_T(self, c):
-        return c[:, 0, 1] if self.rung == 5 else c[..., 1]
-
-
-def film(scale=1.0, d_p=D_P, eps=EPS, mu=None, lam=4.75e-5, Dm=1.0e-5):
-    """Wakao & Funazkri's Sh (published A3.4) and the analogous Nu.
-
-    mu is fixed by the chapter's OWN printed Re = 121 at d_p = 3 mm rather than
-    taken from a property table, so one fewer number is imported.  lam and Dm are
-    ordinary air values near 360 C and are NOT printed anywhere in the chapter;
-    the crossover section root-finds how far they can move before anything does.
-    """
-    mu = d_p * G_FLUX / bk("Re_1173") if mu is None else mu
-    Re = d_p * G_FLUX / mu
-    Sc = mu / (P["rho_g"] * Dm)
-    Pr = CP_MASS * mu / lam
-    Sh = 2.0 + 1.1 * Sc ** (1 / 3) * Re ** 0.6
-    Nu = 2.0 + 1.1 * Pr ** (1 / 3) * Re ** 0.6
-    a_v = 6.0 * (1.0 - eps) / d_p
-    k_g, h_f = scale * Sh * Dm / d_p, scale * Nu * lam / d_p
-    return dict(Re=Re, Sc=Sc, Pr=Pr, Sh=Sh, Nu=Nu, k_g=k_g, h_f=h_f, a_v=a_v,
-                kga=k_g * a_v * 3600.0,                   # 1/h
-                hfa=h_f * a_v * 3600.0 / KCAL)            # kcal/(m3 h K)
-
-
-def eta_sphere(phi):
-    """eq. (11.9.1-11), sphere, first order."""
-    phi = np.atleast_1d(np.asarray(phi, float))
-    out = np.empty_like(phi)
-    s = phi < 1e-6
-    out[s] = 1.0 - phi[s] ** 2 / 15.0
-    q = phi[~s]
-    out[~s] = 3.0 / q ** 2 * (q / np.tanh(q) - 1.0)
-    return out if out.size > 1 else float(out[0])
-
-
-def phi_prime(T_s, D_e):
-    """eq. (11.9.1-12), with k(T) in atm-kmol-kg-h converted to a first-order 1/s."""
-    k_v = kexp(T_s) * P["p_B0"] * RHO_S / (THETA * 3600.0)
-    return (D_P / 2.0) * np.sqrt(k_v / D_e)
-
-
-def hotspot(z_c, T):
-    """ROOT-FIND dT/dz = 0 on a local cubic.  Never return a grid maximum."""
-    i = int(np.argmax(T))
-    if i in (0, len(T) - 1):
-        return float(T[i]), float(z_c[i]), True
-    sl = slice(max(i - 3, 0), min(i + 4, len(T)))
-    co = np.polyfit(z_c[sl], T[sl], 3)
-    rt = [r.real for r in np.roots(np.polyder(co))
-          if abs(r.imag) < 1e-12 and z_c[i - 1] <= r.real <= z_c[i + 1]]
-    if not rt:
-        return float(T[i]), float(z_c[i]), False
-    zm = max(rt, key=lambda r: np.polyval(co, r))
-    return float(np.polyval(co, zm)), float(zm), False
-
-
-def guess_from_rung1(lad, p0):
-    """A DETERMINISTIC initial guess - the rung-1 profile - not a warm start:
-    it is a fixed function of (p0, grid) and carries no history from a sweep, so
-    two executions and two sweep directions give the same number."""
-    r1 = Ladder(rung=1, n_z=lad.n_z, R=lad.R, T_r=lad.T_r, length=lad.L)
-    try:
-        c1 = r1.solve(p0)
-    except RuntimeError:                       # rung 1 has itself run away
-        c1 = np.column_stack([np.full(lad.n_z, p0), np.full(lad.n_z, lad.T_r)])
-    g = np.empty(lad.shape)
-    if lad.rung == 5:
-        g[:, :, 0] = c1[:, [0]]; g[:, :, 1] = c1[:, [1]]
-        return g
-    g[..., 0] = c1[:, 0]; g[..., 1] = c1[:, 1]
-    if lad.nf == 4:
-        g[..., 2] = c1[:, 0]; g[..., 3] = c1[:, 1]
-    return g
-
-
-RAMP = (0.4, 0.6, 0.8, 1.0)      # a FIXED ladder, not a sweep
-
-
-def solve_robust(lad, p0):
-    """The direct cold start first; if it fails, a FIXED four-step ramp in p0.
-    The ramp is a deterministic function of p0 - the same four fractions every
-    time, in the same order, from the same rung-1 guess - so it is not a warm-start
-    continuation chain and it cannot depend on the direction a sweep was run in.
-    Only the steep two-dimensional runaway states need it."""
-    try:
-        return lad.solve(p0, guess=guess_from_rung1(lad, p0))
-    except RuntimeError:
-        pass
-    g = guess_from_rung1(lad, RAMP[0] * p0)
-    for frac in RAMP:
-        g = lad.solve(frac * p0, guess=g)     # a failure here propagates, by design
-    return g
-
-
-def T_max_safe(lad, p0):
-    try:
-        return hotspot(lad.z_c, lad.bulk_T(solve_robust(lad, p0)))[0]
-    except Exception:
-        return np.nan
-
-
-CTL_DELTA = 1.0e-5     # the fractional step either side of a returned threshold
-CTL_JUMP = 1.0         # K: the widest T(p0*(1+d)) - T(p0*(1-d)) a crossing may show
-CTL_STATS = {"checked": 0, "rejected": 0, "margin_K": np.inf}
-#   margin_K: the smallest distance, over every control on the page, of either
-#   control solve from the ceiling or of the jump from CTL_JUMP.  A verdict closer
-#   to its thresholds than round-off could flip it; this records that none is.
-
-
-class NotACrossing(RuntimeError):
-    """p0_critical's bisection converged on something that is not a crossing of the
-    415 C ceiling.  RAISED rather than returned, so that no sweep, no bisection and
-    no table can report the number by accident."""
-
-
-def _T_from(lad, q, guess):
-    """Hot spot of the steady state Newton reaches from `guess`, with that state;
-    (nan, None) if it does not converge."""
-    try:
-        c = lad.solve(q, guess=guess)
-        return hotspot(lad.z_c, lad.bulk_T(c))[0], c
-    except Exception:
-        return np.nan, None
-
-
-def crossing_control(lad, p0, ceiling=T_PERM, delta=CTL_DELTA, guess=None, jump=None):
-    """Solve just below and just above a returned threshold and report whether the
-    hot spot really crosses `ceiling` there, and crosses it CONTINUOUSLY.
-
-    Both solves start from the converged state at the lower end of the bisection's
-    final bracket - the branch the threshold was followed along - which
-    `p0_critical` stores on the ladder as `lad.branch`; a call with no `guess`
-    takes it from there, and asserts it belongs to this p0.  Three ways the check
-    can fail: one side does not converge (NaN); both sides land on the same side
-    of the ceiling, so the bisection tracked a Newton-convergence boundary and not
-    the ceiling; or T jumps across the ceiling by hundreds of kelvin between the
-    two, an ignition discontinuity, where the "threshold" is the edge of a jump.
-    A genuine crossing moves T by a few hundredths of a kelvin over these two
-    solves - the five reported rungs measure 0.01 to 0.10 K - so CTL_JUMP = 1 K is
-    a wide margin rather than a tuned cut.
-    """
-    if guess is None:
-        pb, guess = lad.branch                      # set by p0_critical on this lad
-        assert abs(pb / p0 - 1.0) < 1e-8, "crossing_control: no branch state at p0"
-    lo, _ = _T_from(lad, p0 * (1.0 - delta), guess)
-    hi, _ = _T_from(lad, p0 * (1.0 + delta), guess)
-    jump = CTL_JUMP if jump is None else jump
-    ok = bool(np.isfinite(lo) and np.isfinite(hi) and lo < ceiling < hi
-              and abs(hi - lo) < jump)
-    return lo, hi, ok
-
-
-def p0_critical(lad, ceiling=T_PERM, lo=0.004, hi=0.0200, n_scan=81, iters=90,
-                jump=None):
-    """The inlet partial pressure at which the hot spot reaches the top of the
-    book's own stated operating range, ROOT-FOUND by BISECTION ALONG THE START-UP
-    BRANCH and then CHECKED.
-
-    HOW EACH SOLVE IS STARTED, and why it matters more than anything else here.
-    One cold solve at the bottom of the bracket, `lo`, where only one steady state
-    exists (`solve_robust`, from the rung-1 profile).  Every later point - the
-    coarse scan and every bisection midpoint - starts from the CONVERGED state at
-    the current lower end `a` of the bracket, and `a` and its state move up only
-    when a solve lands below the ceiling.  So the bisection follows the branch the
-    reactor is on when the feed is raised from a safe value, and the threshold is
-    where that branch reaches 415 C.  The state at the final `a` is stored on the
-    ladder as `lad.branch` for `crossing_control`.  No state is carried from one
-    `p0_critical` call to the next, so a result is a function of its arguments
-    alone and cannot depend on the order or direction in which a sweep was run.
-
-    Cold-starting EVERY solve from the rung-1 profile at the same p0
-    (`T_max_safe`) is not neutral near a threshold: between rung 1's threshold
-    and a higher one (rung 2's, rung 4's) the rung-1 guess is already a runaway
-    profile, and Newton from it either converges on the ignited state (about
-    990 C, counted supercritical) or fails (and the ramp in `solve_robust` then
-    finds the lower state), decided by round-off.  Direct starts at p0 = 0.01817,
-    0.01818, 0.01819 and 0.01820 on rung 2 (n_z = 900, Pe_a = 0.24) gave 990.9 C,
-    411.5 C, a failure and 992.1 C.  A bisection on cold starts classifies noise
-    there, and its verdicts change between BLAS kernels.
-
-    NOT brentq, and the reason is the SOLVER, not the physics.  Well above the
-    threshold the profile steepens until this first-order upwind Newton stops
-    converging, and the solve returns NaN; an interpolating method needs a finite
-    value at every point it visits and dies on the first one.  Bisection needs only
-    the SIDE of the ceiling, and it treats a non-converged solve as supercritical.
-    The control cell below measures this on all five rungs.
-
-    WHAT THAT DOES AND DOES NOT LICENSE.  Treating NaN as supercritical makes the
-    returned number a Newton-convergence boundary IN GENERAL, so it has to be
-    checked rather than assumed - `crossing_control` above is that check, and it
-    runs on every call.  Nothing that reaches
-    a table, a sweep, a bisection or `agreement.json` skips it.
-
-    Sections 11.6 and 11.8.1 do NOT show that no bounded steady state exists
-    inside the bracket.  Section 11.6 (book p. 561)
-    describes THREE steady states in the adiabatic axial-mixing model - "the outer
-    two ... stable ... the middle one is unstable" - and 11.8.1 (p. 588) asks
-    whether its own multiple steady states are possible in practice and answers
-    that the limits within which they "could be experienced ... will probably be
-    extremely narrow": both are about several states EXISTING, not about none, and
-    11.6 argues that a cold start may MISS a state that exists ("Which steady-state
-    profile will be predicted by steady-state computations depends on the initial
-    guesses").  That sentence is exactly the defect described above, and following
-    the branch is the answer to it: the threshold reported is the one on the
-    start-up branch, by construction.  A bounded state does exist above the
-    threshold - the grid-free Radau route of `ode_reference` returns one at every
-    p0 in this bracket, at 800-1000 C.  A NaN here means "this discretisation and
-    this Newton did not reach a solution", and the page says only that.
-    """
-    def side(q, guess):
-        v, c = _T_from(lad, q, guess)
-        return bool(np.isfinite(v) and v < ceiling), c
-    qs = np.linspace(lo, hi, n_scan)
-    try:
-        c_a = solve_robust(lad, qs[0])              # the anchor: one cold state at lo
-    except Exception:
-        raise RuntimeError("no sub-ceiling point on this bracket")
-    if not hotspot(lad.z_c, lad.bulk_T(c_a))[0] < ceiling:
-        raise RuntimeError("no sub-ceiling point on this bracket")
-    a = qs[0]
-    for q in qs[1:]:
-        ok, c = side(q, c_a)
-        if ok:
-            a, c_a = q, c
-        else:
-            b = q
-            break
-    else:
-        raise RuntimeError("the hot spot never reaches the ceiling on this bracket")
-    for _ in range(iters):
-        m = 0.5 * (a + b)
-        ok, c = side(m, c_a)
-        if ok:
-            a, c_a = m, c
-        else:
-            b = m
-        if b - a < 1e-12 * max(1.0, b):
-            break
-    p = 0.5 * (a + b)
-    lad.branch = (p, c_a)
-    CTL_STATS["checked"] += 1
-    lo_, hi_, ok = crossing_control(lad, p, ceiling, guess=c_a, jump=jump)
-    if np.isfinite(lo_) and np.isfinite(hi_):
-        CTL_STATS["margin_K"] = min(CTL_STATS["margin_K"], abs(lo_ - ceiling),
-                                    abs(hi_ - ceiling),
-                                    abs((CTL_JUMP if jump is None else jump)
-                                        - abs(hi_ - lo_)))
-    if not ok:
-        CTL_STATS["rejected"] += 1
-        raise NotACrossing(
-            f"rung {lad.rung} at n_z = {lad.n_z}: p0* = {p:.8g} is not a "
-            f"ceiling crossing - T(p0*(1-{CTL_DELTA:g})) = {lo_-273.15:.2f} C, "
-            f"T(p0*(1+{CTL_DELTA:g})) = {hi_-273.15:.2f} C")
-    return p
-
-
-def _shift_or_none(quantity, x):
-    """`quantity(x)` with the crossing control ON.  A threshold that fails the
-    control is reported as a FAILED POINT, never as a value: nothing downstream can
-    mistake it for a shift."""
-    try:
-        return float(quantity(x)), True
-    except NotACrossing:
-        return np.nan, False
-    except RuntimeError:                       # no threshold inside the bracket
-        return np.nan, False
-
-
-def cross_scan(quantity, xs, target, levels=8, probes=3):
-    """The parameter value at which |shift| crosses `target`, located BETWEEN TWO
-    POINTS THE CROSSING CONTROL VALIDATES and reported as a ROOT.
-
-    `xs` is swept OUTWARD from the chapter's own value and every point is
-    evaluated, until the target is straddled by two CONSECUTIVE VALIDATED points.
-    A point the control rejects would be recorded, shown in the table, and used
-    for nothing; |shift| must be monotone over the validated points up to that
-    pair - checked here, not assumed by the caller.  If the sweep runs out without
-    straddling the target this raises: a scan that cannot reach the target says
-    so and the sweep is extended, and no number is reported in its place.
-
-    The refinement cuts the bracket into `probes` + 1 parts at each level, keeps
-    the interior points the control validates, and takes the innermost validated
-    straddling pair.  A level at which no interior point validates is retried once
-    at more than twice the subdivision; if that also finds nothing the refinement
-    ends and the surviving bracket is returned and printed.  `levels` counts the
-    levels that actually ran.
-
-    WHY THE SCAN IS BUILT TO SURVIVE REJECTIONS.  A threshold search on
-    cold-started solves depends on round-off near rung 2's threshold, and the
-    control then rejects points scattered along the sweep, different ones on
-    different BLAS kernels.  With the threshold followed along its branch, as
-    `p0_critical` does, no point of any of the four scans is rejected, on any of the three
-    BLAS kernels the page is run on; the counts are printed under the sweep tables
-    and registered as a claim.  The tolerance to rejections stays, because a
-    rejection is still possible in principle and the scan must not turn one into
-    a number.
-
-    The value returned is the endpoint of the final bracket whose |shift| is
-    nearest the target - a point the control itself validated, with its own
-    threshold and its own certificate, rather than an interpolated one.
-    """
-    rows, good, pair = [], [], None
-    for x in xs:
-        v, ok = _shift_or_none(quantity, float(x))
-        rows.append(dict(x=float(x), shift_pct=v, controlled=ok))
-        if not ok:
-            continue
-        good.append((float(x), float(v)))
-        if len(good) >= 2 and (abs(good[-2][1]) - target) * (abs(v) - target) <= 0.0:
-            mono = np.abs([g[1] for g in good])
-            assert np.all(np.diff(mono) >= 0) or np.all(np.diff(mono) <= 0), (
-                "cross_scan: |shift| is not monotone from the chapter's own value "
-                f"to the straddling pair: {mono}")
-            pair = (good[-2], good[-1])
-            break
-    tab = pd.DataFrame(rows)
-    assert len(good) >= 2, "cross_scan: fewer than two validated sweep points"
-    assert pair is not None, (
-        "cross_scan: the sweep ends without straddling the target between two "
-        f"VALIDATED points - it reaches |shift| = {max(abs(g[1]) for g in good):.4f}"
-        f" against a target of {target}. Extend the sweep; a bound is not an answer.")
-
-    (a, va), (b, vb) = pair
-    bracket0, done, tried, refused, mid_fail = abs(b - a), 0, 0, 0, None
-    for _ in range(levels):
-        pts = [(a, va), (b, vb)]
-        for k in (probes, 2 * probes + 1):     # ONE finer retry before giving up
-            pts = [(a, va), (b, vb)]
-            for j, xi in enumerate(a + (b - a) * np.arange(1, k + 1) / (k + 1)):
-                vi, oki = _shift_or_none(quantity, float(xi))
-                tried += 1
-                refused += 0 if oki else 1
-                # j == (k-1)//2 for odd k IS the bracket midpoint, i.e. the point a
-                # plain bisection would have taken: record where that one first fails
-                if k % 2 and j == (k - 1) // 2 and not oki and mid_fail is None:
-                    mid_fail = done + 1
-                if oki:
-                    pts.append((float(xi), float(vi)))
-            if len(pts) > 2:
-                break
-        if len(pts) == 2:                      # nothing inside validates: stop here
-            break
-        pts.sort(key=lambda t: t[0])
-        for (x0, v0), (x1, v1) in zip(pts, pts[1:]):
-            if (abs(v0) - target) * (abs(v1) - target) <= 0.0:
-                (a, va), (b, vb) = (x0, v0), (x1, v1)
-                break
-        done += 1
-    x_star, v_star = min(((a, va), (b, vb)), key=lambda t: abs(abs(t[1]) - target))
-    return dict(kind="root", value=x_star, shift_pct=v_star, sweep=tab,
-                n_controlled=len(good), n_evaluated=len(rows), levels=done,
-                probed=tried, refused=refused, mid_fail=mid_fail,
-                bracket=abs(b - a), bracket0=bracket0,
-                pair=(pair[0][0], pair[1][0]), pair_shift=(pair[0][1], pair[1][1]))
-
-
-def ode_reference(p0, T_r=T_R0, R=R_T, length=L_BED, rtol=1e-12, atol=1e-14):
-    """SECOND, INDEPENDENT ROUTE for rung 1: an adaptive stiff initial-value solve
-    with no grid, no pymrm operator and no Newton.  Shares only the constants."""
-    C = C_G(R)
-    def rhs(z, y):
-        p, T = y
-        q = A_G / P["u"] * p * kexp(T)
-        return [-q, (B_G / A_G) * q - C / P["u"] * (T - T_r)]
-    s = solve_ivp(rhs, (0.0, length), [p0, T_r], method="Radau", rtol=rtol,
-                  atol=atol, dense_output=True)
-    zg = np.linspace(0.0, length, 8001)
-    Tg = s.sol(zg)[1]
-    i = int(np.argmax(Tg))
-    if 0 < i < len(zg) - 1:
-        zm = brentq(lambda z: rhs(z, s.sol(z))[1], zg[i - 1], zg[i + 1],
-                    xtol=1e-14, rtol=8.9e-16)
-        return float(s.sol(zm)[1]), float(zm), s
-    return float(Tg[i]), float(zg[i]), s
-
-
-def p0_critical_ode(T_r=T_R0, R=R_T, ceiling=T_PERM, lo=0.010, hi=0.0195):
-    return brentq(lambda q: ode_reference(q, T_r=T_r, R=R)[0] - ceiling,
-                  lo, hi, xtol=1e-12, rtol=8.9e-16)
-
-
-def richardson(vals, ns):
-    """observed order and the h -> 0 limit, from the last three of a chain"""
-    v, n = np.asarray(vals, float), np.asarray(ns, float)
-    order = float(np.log(abs((v[-3] - v[-2]) / (v[-2] - v[-1]))) / np.log(n[-1] / n[-2]))
-    lim = float(v[-1] + (v[-1] - v[-2]) / ((n[-1] / n[-2]) ** order - 1.0))
-    return order, lim
-
-
+# %% [markdown]
+# ## The data
+#
+# There is no measurement anywhere on this page. Chapter 11 reports none, and the
+# sources it draws on report none either, so the provenance tier is 6 throughout.
+#
+# **This page's own dataset.** `froment-2011-ch11-printed.csv` is every model
+# constant, stated result and quantitative claim read out of Chapter 11 (the first
+# code cell prints how many rows), each with the book page it came from and a `kind`
+# of `parameter`, `stated_result` or `claim`. Its sidecar records that several rows are transcribed *because they are
+# wrong* and lists them; none is repaired anywhere. `as_printed` keeps the character
+# string, thousands separators and all, so that a defect can be quoted verbatim.
+#
+# **Six borrowed datasets from four pages, and what each source page already
+# establishes about the rows used here.** The first code cell lists the six with
+# their row counts; the cell below prints every number quoted here from the source
+# page's own committed claims, so none is retyped.
+#
+# * `D2.2`, `van-welsenaere-froment-1970-parameters.csv` and `-examples.csv`.
+#   `D2.2` establishes: **the printed `c_p` is already volumetric**, kcal/(m$^3$
+#   $^\circ$C), so multiplying it by $\rho_g$ would shift the wall group by the gas
+#   density - that finding is the reason the audit above can be run at all, and it
+#   is asserted against `D2.2`'s own unit column rather than restated. `D2.2` also
+#   establishes that the Elsevier full-text API drops the 1970 paper's mid-dot
+#   decimal separators, how wide its criterion brackets are, and how much hot-spot
+#   error its own first-order upwind leaves at $n_z = 1500$ - the last of which
+#   **does** affect this page, and is why every number reported here is
+#   Richardson-extrapolated. Its Section-6 values are used here only as the
+#   *originals* against which the book's Example 11.5.3.A is checked; none of its
+#   criteria is rebuilt.
+# * `C2.10`, `froment-1967-parameters.csv` and `froment-1967-stated-results.csv`.
+#   `C2.10` establishes: the 1967 paper's own gas constant is **1.98** cal/(mol K),
+#   not 1.987, which is what makes 27,000/1.98 = 13,636 the number section 11.5.2
+#   prints; that $G$ = 4684 is printed "4.684" on the paper's p. 24; that
+#   $-\Delta H_3$ is printed "1.090"; where the 1-D and 2-D runaway limits of the
+#   1967 case lie, located by bisection; and how closely $U$ recomputed from
+#   $\lambda_R$ and $\alpha_w$ agrees with the printed one; and that the inlet mole
+#   fraction $N_{A0}$ = 0.00924, the same number section 11.7.3 prints, is stated to
+#   correspond to 44 g per *normal* m$^3$, which gives a different mole fraction
+#   (affects this page only as a reading of the 44: the page uses the printed
+#   0.00924, and *Parameters and assumptions* prints C2.10's value beside it). All
+#   five matter here and all five are printed beside the book's restatement. `C2.10` also warns
+#   that $U$ = 82.7 is a **shared source** with `D2.2`, not a second witness - so the
+#   audit above never treats it as one.
+# * `B1.1`, `isothermal-exact.csv` (`dataset_id: thiele-isothermal-exact`). `B1.1`
+#   establishes the exact isothermal $\eta$ for slab, cylinder and sphere; how
+#   closely its own pymrm pellet matches it; and - load-bearing here - that
+#   **`NumJac` must be given `(n_r, 1)`, never a bare `(n_r,)`**. Its sphere rows are
+#   the reference for eq. (11.9.1-11) below. Its fold at $\beta = 0.6$,
+#   $\gamma = 20$ is *not* touched: the pellet here runs at a far smaller Prater
+#   number, computed and printed.
+# * `A1.1`, `ergun-1952-parameters.csv`. `A1.1` establishes that a refit of Ergun's
+#   own markers gives constants different from 150 and 1.75, and what the line Ergun
+#   labels Kozeny-Carman measures. Neither changes anything here, because Example
+#   11.5.1.A is arithmetic *on the printed constants*; the refit is printed beside
+#   them and is a break row. `A1.1` carries **no** McDonald and no Hicks constants and
+#   does not discuss the equivalent-diameter definition, so those parts of Example
+#   11.5.1.A are new here.
+#
+# No figure is digitised, no page image exists anywhere in this directory, and every
+# figure-only content of Chapter 11 - Figs. 11.5.2-1/2, 11.6-1, 11.7.1-1/2/3, all six
+# 11.7.3 figures, 11.8.1-1..4, 11.8.2-1 and the whole of Fig. 11.5.3-1's runaway band
+# - is **out of scope** and never traced or read off. The one exception, and it is a
+# unit rather than a datum: `fig1152_1_ordinate_unit` is the *label* on Fig. 11.5.2-1's
+# ordinate, read on a 300 ppi crop as "$p_0$, atm". It decides which unit the whole
+# page is in, so it is transcribed as a row like everything else and named here.
+
+# %%
+print("What the source pages establish about the rows used here, from their claims:")
+print(f"   D2.2 : criterion-1 brackets {D22_C['bracket_width_c1_min_pct']:.0f} to"
+      f" {D22_C['bracket_width_c1_max_pct']:.0f} % wide; first-order upwind leaves"
+      f" {D22_C['hotspot_error_n1500_K']:.2f} K of hot-spot error at n_z = 1500")
+print(f"   C2.10: runaway limits {C210_C['t0crit_1d_C']:.2f} C (1-D) and"
+      f" {C210_C['t0crit_2d_C']:.2f} C (2-D); U from lambda_R and alpha_w within"
+      f" {100*C210_U_WORST:.2f} %")
+print(f"   B1.1 : its pymrm pellet against the exact table, worst"
+      f" {B11_C['isothermal_max_rel_error_phi_le_30']:.1e} for phi <= 30 and"
+      f" {B11_C['isothermal_max_rel_error_all_phi']:.1e} over all phi")
+print(f"   A1.1 : refit k1 = {A11_C['k1_refit_all_points']:.1f},"
+      f" k2 = {A11_C['k2_refit_all_points']:.3f}; Kozeny-Carman line"
+      f" {bk('ergun_b')*A11_C['kozeny_carman_line_over_k1']:.1f}")
+
+# %% [markdown]
+# ## PyMRM implementation
+#
+# One class, five configurations: `Ladder` in this page's `model.py`, beside the
+# pellet (`Pellet`), the threshold search (`p0_critical` with its
+# `crossing_control`) and the grid-free rung-1 route (`ode_reference`). The state is
+# `(n_z, n_f)` with the axial index first and fields last, except for rung 5 which
+# is `(n_z, n_r, 2)` - spatial axes first, fields last, one layout throughout. Every
+# constant operator is assembled once per solve in `_ops`, printed below, never
+# inside a Newton iteration. Each solve is `pymrm.newton` with its default damping
+# and direct sparse LU, on a Jacobian whose source part is `NumJac`'s finite
+# differences.
+#
+# Three things are worth reading before the code:
+#
+# * **the divergence geometry differs between the two second axes.** Rung 5's radial
+#   axis is a tube, so `construct_div(..., nu=1, axis=1)` is cylindrical; the pellet
+#   of rung 4 is a sphere, so `nu=2`. Rung 1's and rung 2's axial axis is
+#   `nu=0`, Cartesian. Getting these wrong is silent: the profile stays smooth.
+# * **the two boundary conditions that carry physics** are written with the outward
+#   normal spelt out in a comment, because the sign of `a` means opposite things at
+#   the two ends. The Danckwerts inlet is `A2.1`'s published dict, scaled: the
+#   dispersion coefficient divided by $u_s$ is a length, so `a` is
+#   $d_p/\mathrm{Pe}$ and `b` is 1. The wall condition of rung 5 is
+#   $\lambda_{er}\,\partial T/\partial n + \alpha_w T = \alpha_w T_w$ at $r = R_t$,
+#   where the outward normal is $+r$.
+# * **the film balances are scaled to the units of their own unknown.** Written as
+#   the book writes them, (11.8.1-3) is in atm/h and (11.8.1-4) in
+#   kcal/(m$^3$ h), rows of very different size, so the absolute residual test in
+#   `Ladder.solve` would mean something different in each. Dividing each by its own
+#   transfer coefficient puts the two algebraic rows in atm and K, the units of the
+#   surface unknowns they determine.
+
+# %%
+# The five rungs are model.py's `Ladder`; its operator assembly, printed here, is
+# where the rungs differ.  The bisection, the crossing control and the
+# grid-free rung-1 route are `p0_critical`, `crossing_control` and
+# `ode_reference` in the same file.
+print(inspect.getsource(Ladder._ops))
+
+# %%
 P0_BOOK = bk("runaway_p0_safe")   # 0.018, section 11.5.2's own design point, in atm
 P0_REF = bk("y_A0_1173")          # 0.00924, section 11.7.3's own inlet mole fraction
 #                                 # for the SAME reactor, hence its partial pressure
 #                                 # in atm at p_t = 1 atm.
 NS_RUNG1 = (150, 300, 600, 1200, 2400, 4800)     # the ONE rung-1 refinement chain
 _RUNG1_CACHE = {}
+# The order fit is only meaningful if the finest grid's error is far above the
+# thresholds' own noise floor (claims-design section 3).  That floor is NOT the 1e-12
+# bisection bracket: a threshold moves by about 1e-8 relative when only its starting
+# guess changes, so 1e-8 is the floor used here.
+START_FLOOR = 1e-8
 
 
 def rung1_chain(R=None, ceiling=None, ns=NS_RUNG1):
@@ -1227,7 +759,7 @@ def rung1_chain(R=None, ceiling=None, ns=NS_RUNG1):
         return _RUNG1_CACHE[key]
     rows = []
     for n in ns:
-        lad = Ladder(rung=1, n_z=n, R=R)
+        lad = Ladder(RX, rung=1, n_z=n, R=R)
         Tm, zm, _edge = hotspot(lad.z_c, lad.solve(P0_BOOK)[:, 1])
         rows.append(dict(n_z=n, T_hot=Tm, z_hot=zm,
                          p0_star=p0_critical(lad, ceiling=ceiling)))
@@ -1235,15 +767,17 @@ def rung1_chain(R=None, ceiling=None, ns=NS_RUNG1):
     ordT, limT = richardson(tab.T_hot, tab.n_z)
     ordP, limP = richardson(tab.p0_star, tab.n_z)
     ordZ, limZ = richardson(tab.z_hot, tab.n_z)
-    T_ode, z_ode, _ = ode_reference(P0_BOOK, R=R)
-    p0_ode = p0_critical_ode(R=R, ceiling=ceiling)
+    T_ode, z_ode, _ = ode_reference(RX, P0_BOOK, R=R)
+    p0_ode = p0_critical_ode(RX, R=R, ceiling=ceiling)
     out = dict(table=tab, order_z=ordZ, limit_z=limZ, limit_T=limT, limit_p0=limP,
                T_ode=T_ode, z_ode=z_ode, p0_ode=p0_ode,
                metrics=dict(rung1_p0_star_extrapolated=limP, rung1_order_p0=ordP,
                             rung1_order_T=ordT,
                             ode_vs_pymrm_p0=abs(limP / p0_ode - 1.0),
                             ode_vs_pymrm_T=abs(limT / T_ode - 1.0),
-                            p0_star_vs_printed_0018=p0_ode / P0_BOOK - 1.0))
+                            p0_star_vs_printed_0018=p0_ode / P0_BOOK - 1.0,
+                            rung1_finest_err_over_start_floor=abs(
+                                float(tab.p0_star.iloc[-1]) / limP - 1.0) / START_FLOOR))
     _RUNG1_CACHE[key] = out
     return out
 
@@ -1253,8 +787,8 @@ _CROSS_R_CACHE = {}
 
 def shift_rung5(R, n_z=600, n_r=10):
     """rung 5 against rung 1 AT THE SAME RADIUS - both thresholds move with R_t."""
-    return 100.0 * (p0_critical(Ladder(rung=5, n_z=n_z, n_r=n_r, R=R), hi=0.09)
-                    / p0_critical(Ladder(rung=1, n_z=n_z, R=R), hi=0.09) - 1.0)
+    return 100.0 * (p0_critical(Ladder(RX, rung=5, n_z=n_z, n_r=n_r, R=R), hi=0.09)
+                    / p0_critical(Ladder(RX, rung=1, n_z=n_z, R=R), hi=0.09) - 1.0)
 
 
 R_SWEEP = (R_T, 0.0120, 0.0115, 0.0110, 0.0105, 0.0100, 0.0098, 0.0096, 0.0094,
@@ -1289,56 +823,38 @@ def cross_R(target, n_z=600, n_r=10, iters=4):
 
 def unit_reading(p_B0, p_t, R=R_T, ceiling=T_PERM):
     """Rung 1's threshold and its hot spot at the printed 0.018, on a stated
-    reading of section 11.5.2's pressure unit.  Grid-free (Radau) throughout, so
-    the comparison between the two readings carries no discretisation at all."""
-    A = P["M"] * p_t * P["rho_b"] / P["rho_g"] * p_B0
-    B = P["minus_dH"] * P["rho_b"] / P["cp_vol"] * p_B0
-    C = C_G(R)
-
-    def rhs(z, y):
-        p, T = y
-        q = A / P["u"] * p * kexp(T)
-        return [-q, (B / A) * q - C / P["u"] * (T - T_R0)]
-
-    def hot(p0):
-        s = solve_ivp(rhs, (0.0, L_BED), [p0, T_R0], method="Radau", rtol=1e-12,
-                      atol=1e-14, dense_output=True)
-        zg = np.linspace(0.0, L_BED, 8001)
-        Tg = s.sol(zg)[1]
-        i = int(np.argmax(Tg))
-        if 0 < i < len(zg) - 1:
-            zm = brentq(lambda z: rhs(z, s.sol(z))[1], zg[i - 1], zg[i + 1],
-                        xtol=1e-14, rtol=8.9e-16)
-            return float(s.sol(zm)[1])
-        return float(Tg[i])
-
-    return dict(p0_star=brentq(lambda q: hot(q) - ceiling, 0.010, 0.0195,
-                               xtol=1e-12, rtol=8.9e-16),
-                T_at_book_p0=hot(P0_BOOK))
+    reading of section 11.5.2's pressure unit: the design case with p_B0 and p_t
+    replaced.  Grid-free (Radau) throughout, so the comparison between the two
+    readings carries no discretisation at all."""
+    rx = replace(RX, p_B0=p_B0, p_t=p_t)
+    return dict(p0_star=p0_critical_ode(rx, R=R, ceiling=ceiling),
+                T_at_book_p0=ode_reference(rx, P0_BOOK, R=R)[0])
 
 
-G_FLUX = P["rho_g"] * P["u"] / 3600.0
-FILM = film()
+G_FLUX = RX.mass_flux
+FILM = film(RX)
 print("film coefficients from Wakao & Funazkri (page A3.4), at the chapter's printed Re:")
 for k in ("Re", "Sc", "Pr", "Sh", "Nu"):
     print(f"   {k:>3s} = {FILM[k]:10.4f}")
 print(f"   k_g = {FILM['k_g']:.6f} m/s      h_f = {FILM['h_f']:.6f} kJ/(m2 s K)"
       f"      a_v = {FILM['a_v']:.2f} m2/m3")
-'''))
 
-cells.append(md(r"""## Results
 
-The comparison metric is **the inlet partial pressure at which the hot spot
-reaches 415 $^\circ$C**, root-found on each rung. 415 $^\circ$C is not a choice:
-section 11.5.2 states the operating temperature range of this catalyst as
-"335$^\circ$ to 415$^\circ$C", so the ceiling is the book's own, and the quantity is
-a threshold rather than a sampled maximum. Call it $p_{A0}^*$.
+# %% [markdown]
+# ## Results
+#
+# The comparison metric is **the inlet partial pressure at which the hot spot
+# reaches 415 $^\circ$C**, root-found on each rung. 415 $^\circ$C is not a choice:
+# section 11.5.2 states the operating temperature range of this catalyst as
+# "335$^\circ$ to 415$^\circ$C", so the ceiling is the book's own, and the quantity is
+# a threshold rather than a sampled maximum. Call it $p_{A0}^*$.
+#
+# Reported alongside are the hot spot and its location at the book's own
+# $p_{A0} = 0.018$ atm, so that both a fixed-input and a fixed-output comparison are
+# on the page.
 
-Reported alongside are the hot spot and its location at the book's own
-$p_{A0} = 0.018$ atm, so that both a fixed-input and a fixed-output comparison are
-on the page."""))
-
-cells.append(code(r'''N_Z, N_R = 1200, 20
+# %%
+N_Z, N_R = 1200, 20
 RUNGS = [(1, "11.5", "S2", "basic 1-D plug flow"),
          (2, "11.6", "S4", "+ axial dispersion"),
          (3, "11.8", "S7", "+ film resistance"),
@@ -1353,7 +869,7 @@ HI = {1: 0.0200, 2: 0.0200, 3: 0.0200, 4: 0.0600, 5: 0.0200}
 
 SOL, LAD, ROWS = {}, {}, []
 for r, sec, st, what in RUNGS:
-    lad = Ladder(rung=r, n_z=N_Z, n_r=N_R)
+    lad = Ladder(RX, rung=r, n_z=N_Z, n_r=N_R)
     LAD[r] = lad
     c = solve_robust(lad, P0_REF)
     SOL[r] = c
@@ -1412,9 +928,10 @@ print(f"\nThe two heterogeneous rungs pull in OPPOSITE directions. Like for like
       f" rung 4"
       f" ({abs(P0S[4]-P0S[3]):.6f} atm)\nthan rung 1 was"
       f" ({abs(P0S[4]-P0S[1]):.6f} atm).")
-'''))
 
-cells.append(code(r'''fig, ax = plt.subplots(1, 2, figsize=(11.0, 4.0))
+
+# %%
+fig, ax = plt.subplots(1, 2, figsize=(11.0, 4.0))
 COL = {1: C_BLUE, 2: C_GREEN, 3: C_ORANGE, 4: C_PURPLE, 5: C_RED}
 for r, sec, st, what in RUNGS:
     lad, c = LAD[r], SOL[r]
@@ -1442,55 +959,58 @@ ax.set_xlabel("shift in the safe inlet partial pressure $p_{A0}^*$ [%] vs rung 1
               "\n($p_{A0}^*$ in atm; see Parameters)")
 ax.set_title("what each rung buys, on the same reactor")
 ax.invert_yaxis(); fig.tight_layout(); plt.show()
-'''))
 
-cells.append(md(r"""## Validation
 
-Ranked by strength, and the ranking is the honest one: the chapter reports no
-experiment, so nothing below is a validation against data.
+# %% [markdown]
+# ## Validation
+#
+# Ranked by strength, and the ranking is the honest one: the chapter reports no
+# experiment, so nothing below is a validation against data.
+#
+# 1. **Example 11.5.1.A's pressure drop is fully printed arithmetic** - three
+#    friction factors and three pressure drops from stated inputs. Reproducible to
+#    the digit, and the strongest check available in the chapter. It is also where a
+#    contradiction with eq. (11.5.1-9) shows up.
+# 2. **Section 11.5.2's parametric-sensitivity sentence** is a root-findable
+#    threshold with a printed ceiling, and it tests the whole of rung 1 - equations,
+#    constants, wall group - in one number.
+# 3. **Example 11.5.3.A** is Van Welsenaere & Froment's own worked example recopied,
+#    so the book's transcription can be checked against `D2.2`'s CSV of the
+#    originals. This checks the *transcription*, not the model - and, as the cell
+#    below shows, a row-by-row transcription check is not enough on its own: it is
+#    the **cross-column** test the table imposes on itself,
+#    $\Delta T_{ad} = (B/A)\,p_0$, that finds the larger defect.
+# 4. **Equation (11.9.1-11)** is an analytical solution of (11.9.1-3), so the pellet
+#    grid solve can be checked against it and against `B1.1`'s exact table.
+# 5. **Sections 11.8.2, 11.7.3 and 11.7.4 state results without arithmetic** - "of
+#    the order of 1 $^\circ$C", "about 30", "less than 360", "365". Checkable to a
+#    figure or two, no better.
+# 6. **Grid convergence and a second solver family** are internal, not validation of
+#    the book - but they are what makes the rung-to-rung differences meaningful,
+#    because two of them are smaller than the discretisation error of a single
+#    1200-cell solve.
+#
+# **Locating a threshold.** `p0_critical` makes one cold solve at the bottom of the
+# bracket and starts every later solve from the converged state at the current lower
+# end, so it follows the branch the reactor is on as the feed is raised. Cold-starting
+# every solve from the rung-1 profile at the same $p_{A0}$ would not be neutral:
+# between rung 1's threshold and a higher one that guess is already a runaway profile,
+# and whether Newton then reaches the ignited state or fails (and the fallback ramp
+# finds the lower state) is decided by round-off. Direct starts on rung 2 at
+# $n_z = 900$ and $\mathrm{Pe}_a = 0.24$, at four inlet pressures $10^{-5}$ atm apart
+# just below 0.0182 atm, reached the ignited state far above the ceiling, the lower
+# state or no convergence, in no monotone order; nothing on this page recomputes
+# them, because by this argument the outcome differs between machines. With the
+# branch followed, the rung-2 crossover is 0.24883, inside the grid-set error bar the
+# crossover cell prints, and every point of every scan passes the control, on three
+# BLAS kernels.
+# **What branch following does not cover:** a fixed-inlet solve *above* a threshold
+# starts cold from the rung-1 profile. The page therefore prints no hot spot at
+# 0.018 atm for a rung already past its threshold, states rung 5's coarse-grid state
+# at 0.018 atm only as a bound, and does not say which rungs brentq survives.
 
-1. **Example 11.5.1.A's pressure drop is fully printed arithmetic** - three
-   friction factors and three pressure drops from stated inputs. Reproducible to
-   the digit, and the strongest check available in the chapter. It is also where a
-   contradiction with eq. (11.5.1-9) shows up.
-2. **Section 11.5.2's parametric-sensitivity sentence** is a root-findable
-   threshold with a printed ceiling, and it tests the whole of rung 1 - equations,
-   constants, wall group - in one number.
-3. **Example 11.5.3.A** is Van Welsenaere & Froment's own worked example recopied,
-   so the book's transcription can be checked against `D2.2`'s CSV of the
-   originals. This checks the *transcription*, not the model - and, as the cell
-   below shows, a row-by-row transcription check is not enough on its own: it is
-   the **cross-column** test the table imposes on itself,
-   $\Delta T_{ad} = (B/A)\,p_0$, that finds the larger defect.
-4. **Equation (11.9.1-11)** is an analytical solution of (11.9.1-3), so the pellet
-   grid solve can be checked against it and against `B1.1`'s exact table.
-5. **Sections 11.8.2, 11.7.3 and 11.7.4 state results without arithmetic** - "of
-   the order of 1 $^\circ$C", "about 30", "less than 360", "365". Checkable to a
-   figure or two, no better.
-6. **Grid convergence and a second solver family** are internal, not validation of
-   the book - but they are what makes the rung-to-rung differences meaningful,
-   because two of them are smaller than the discretisation error of a single
-   1200-cell solve.
-
-**Locating a threshold.** `p0_critical` makes one cold solve at the bottom of the
-bracket and starts every later solve from the converged state at the current lower
-end, so it follows the branch the reactor is on as the feed is raised. Cold-starting
-every solve from the rung-1 profile at the same $p_{A0}$ would not be neutral:
-between rung 1's threshold and a higher one that guess is already a runaway profile,
-and whether Newton then reaches the ignited state or fails (and the fallback ramp
-finds the lower state) is decided by round-off. On one machine (Haswell kernel),
-direct starts on rung 2 at $n_z = 900$, $\mathrm{Pe}_a = 0.24$ and $p_{A0}$ =
-0.01817, 0.01818, 0.01819 and 0.01820 atm gave 990.9 $^\circ$C, 411.5 $^\circ$C,
-no convergence and 992.1 $^\circ$C; nothing on this page recomputes them, because
-by this argument they differ between machines. With the branch followed, the rung-2
-crossover is 0.24883, inside its stated $\pm 0.0002$, and every point of every scan
-passes the control, on three BLAS kernels.
-**What branch following does not cover:** a fixed-inlet solve *above* a threshold
-starts cold from the rung-1 profile. The page therefore prints no hot spot at
-0.018 atm for a rung already past its threshold, states rung 5's coarse-grid state
-at 0.018 atm only as a bound, and does not say which rungs brentq survives."""))
-
-cells.append(code(r'''# ============ 1. Example 11.5.1.A, and the two equivalent diameters ==========
+# %%
+# ============ 1. Example 11.5.1.A, and the two equivalent diameters ==========
 E = dict(L=bk("ex1151a_length"), d=bk("ex1151a_cylinder"), eps=bk("ex1151a_voidage"),
          G=bk("ex1151a_mass_flux"), mu=bk("ex1151a_viscosity"),
          rho=bk("ex1151a_density"))
@@ -1499,8 +1019,9 @@ ERG = dict(zip(ERG_PAR.quantity, ERG_PAR.value))
 print("Ergun's constants, loaded from A1.1 rather than retyped:")
 for q in ERG_PAR.quantity:
     print(f"   {q:<34s} {ERG[q]}")
-print(f"   and A1.1's own refit of Ergun's 244 markers gives k1 = 151.9, k2 = 1.697,"
-      f"\n   which is A1.1's finding and changes nothing here: Example 11.5.1.A is"
+print(f"   and A1.1's own refit of Ergun's markers gives"
+      f" k1 = {A11_C['k1_refit_all_points']:.1f}, k2 = {A11_C['k2_refit_all_points']:.3f}"
+      f" (its claims),\n   which is A1.1's finding and changes nothing here: Example 11.5.1.A is"
       f"\n   arithmetic ON the printed constants.")
 assert ERG["k1_viscous_constant"] == bk("ergun_b") and ERG["k2_kinetic_constant"] == bk("ergun_a"), \
     "A1.1's Ergun constants and the book's printed a, b disagree"
@@ -1582,12 +1103,12 @@ print(f"   the example prints  Re = {bk('ex1151a_Re'):.0f}, and d_p = 0.0037 m g
       f" {DP_ROUNDED*E['G']/E['mu']:.2f}."
       f"\nThe Ergun and Hicks branches were evaluated at Re ~= {implied['Ergun']:.1f} and the"
       f"\nMcDonald branch at Re ~= {implied['McDonald']:.2f}; the spread is"
-      f" {RE_IMPLIED_SPREAD:.2f}, about 3x what the\nprinted 4-figure precision of f allows."
-      f" A1.1 carries neither the McDonald nor the\nHicks constants, so this branch of the"
-      f" example is not covered anywhere else.")
-'''))
+      f" {RE_IMPLIED_SPREAD:.2f}.\nA1.1 carries neither the McDonald nor the"
+      f" Hicks constants, so this branch of the\nexample is not covered anywhere else.")
 
-cells.append(code(r'''# ===== 2. the parametric-sensitivity sentence, and every axis that carries error
+
+# %%
+# ===== 2. the parametric-sensitivity sentence, and every axis that carries error
 print("section 11.5.2, book page 513, verbatim:")
 print("   " + bk("runaway_claim", "as_printed"))
 print(f"   and the operating range on page 511 is {bk('temp_range_low','as_printed')}"
@@ -1604,6 +1125,10 @@ show(CONV1.style.set_uuid("d11conv1").hide(axis="index").format(
 print(f"observed orders  T_hot {ORD_T:.3f}   z_hot {ORD_Z:.3f}   p0* {ORD_P:.3f}"
       f"   (first-order upwind)\nRichardson limits  T_hot {LIM_T:.5f} K ="
       f" {LIM_T-273.15:.3f} C   z_hot {LIM_Z:.5f} m   p0* {LIM_P:.8f} atm")
+R1_FINEST_OVER_FLOOR = R1["metrics"]["rung1_finest_err_over_start_floor"]
+print(f"The finest grid's threshold error against that limit is"
+      f" {R1_FINEST_OVER_FLOOR:.0f} times the {START_FLOOR:.0e}\nby which a threshold moves"
+      f" when only its starting guess changes, so the order fit is not\nfitted to that noise.")
 
 T_ODE, Z_ODE = R1["T_ode"], R1["z_ode"]
 P0_ODE = R1["p0_ode"]
@@ -1627,10 +1152,11 @@ print(f"\nSo, on the book's own constants with R_t = {R_T} m, IN ATM:"
       f"\n   p_A0 = {P0_BOOK:.4f} atm          ->  hot spot {T_AT_BOOK_P0:.2f} C, "
       f"{T_PERM-273.15 - T_AT_BOOK_P0:.2f} C BELOW the printed ceiling"
       f"\n   p_A0 = {_p0_plus:.4f} atm (+{bk('runaway_p0_increment'):.4f})  ->  hot spot"
-      f" {ode_reference(_p0_plus)[0]-273.15:.1f} C, far above it"
+      f" {ode_reference(RX, _p0_plus)[0]-273.15:.1f} C, far above it"
       f"\n   the ceiling is crossed at p_A0 = {P0_ODE:.6f} atm,"
       f" {100*(P0_ODE/P0_BOOK-1):+.3f} % from the printed 0.018."
-      f"\nThe sentence is right, and right to about one part in three thousand.")
+      f"\nThe sentence is right, to one part in"
+      f" {1.0/abs(P0_ODE/P0_BOOK-1):.0f}.")
 
 # ---- WHAT THE SENTENCE IS AN AGREEMENT *WITH*: the two unit readings, measured ----
 UNIT_ATM = unit_reading(P["p_B0"], P["p_t"])
@@ -1664,9 +1190,9 @@ print(f"Both rows are the same grid-free Radau solve with one constant changed, 
 
 print(f"\nAt R_t = {D_T_PRINTED/2} m - the radius the printed 2.54 cm diameter implies -"
       f" the same\ninlet pressure gives a hot spot of"
-      f" {ode_reference(P0_BOOK, R=D_T_PRINTED/2)[0]-273.15:.0f} C, outside the operating range"
+      f" {ode_reference(RX, P0_BOOK, R=D_T_PRINTED/2)[0]-273.15:.0f} C, outside the operating range"
       f" the same page\nstates, and p0* falls to"
-      f" {p0_critical_ode(R=D_T_PRINTED/2):.6f} atm. The figures of section 11.5.2\ncannot have"
+      f" {p0_critical_ode(RX, R=D_T_PRINTED/2):.6f} atm. The figures of section 11.5.2\ncannot have"
       f" been computed at that radius; R_t = {R_T} m is what reproduces them, and\nit is also"
       f" what eq. (11.7.4-1) needs to return the printed U. Two independent\nconstraints, same"
       f" answer.")
@@ -1699,15 +1225,15 @@ print(f"All five cross the ceiling, and cross it CONTINUOUSLY: the widest jump b
       f" the threshold the Newton may give up - the situation bisection exists to\nsurvive -"
       f" and that is NOT an absence of a steady state: the grid-free Radau route\nreturns a"
       f" bounded one at the top of the bracket,"
-      f" {ode_reference(HI[1])[0]-273.15:.0f} C at p_A0 = {HI[1]}."
+      f" {ode_reference(RX, HI[1])[0]-273.15:.0f} C at p_A0 = {HI[1]}."
       f"\n\nBrentq on the identical bracket, on ALL FIVE rungs at the n_z = 600 the break"
       f" rows\nuse - this is what licenses bisection, so it is measured on every rung"
       f" rather than\non the two it is cheapest to show:")
 _BRENT_OK, _BRENT_FAIL = [], []
 for r in (1, 2, 3, 4, 5):
-    _bs = p0_critical(Ladder(rung=r, n_z=600, n_r=10), hi=HI[r])   # always, first
+    _bs = p0_critical(Ladder(RX, rung=r, n_z=600, n_r=10), hi=HI[r])   # always, first
     try:
-        _rt = brentq(lambda q: T_max_safe(Ladder(rung=r, n_z=600, n_r=10), q) - T_PERM,
+        _rt = brentq(lambda q: T_max_safe(Ladder(RX, rung=r, n_z=600, n_r=10), q) - T_PERM,
                      0.004, HI[r], xtol=1e-12)
         assert abs(_rt / _bs - 1.0) < 1e-10, f"rung {r}: brentq and bisection disagree"
         _BRENT_OK.append(r)
@@ -1722,7 +1248,7 @@ print(f"Brentq raises on a NaN on at least one rung, and on every rung where it 
       f" event the\nnote on locating thresholds describes (here it fails on rungs"
       f" {', '.join(map(str, _BRENT_FAIL))}). So brentq is not wrong\nwhere it survives;"
       f" it simply cannot be relied on.")
-_T5_COARSE = T_max_safe(Ladder(rung=5, n_z=600, n_r=10), P0_BOOK)
+_T5_COARSE = T_max_safe(Ladder(RX, rung=5, n_z=600, n_r=10), P0_BOOK)
 assert np.isfinite(_T5_COARSE) and _T5_COARSE - 273.15 > 900.0, (
     "rung 5 at 0.018 atm on (600, 10) is not the bounded runaway state the text says")
 print(f"\nAnd rung 5 at p_A0 = {P0_BOOK} atm, past its own threshold: on the coarser (600, 10)"
@@ -1731,13 +1257,14 @@ print(f"\nAnd rung 5 at p_A0 = {P0_BOOK} atm, past its own threshold: on the coa
       f" a steady\nstate there. Its exact temperature, and whether the (1200, 20) grid"
       f" converges at all,\nis decided by round-off: this is a fixed-inlet solve above a"
       f" threshold, started\ncold, which branch following does not cover.")
-'''))
 
-cells.append(code(r'''# ---- rung 5 carries error on TWO axes: refine both, separately ---------------
+
+# %%
+# ---- rung 5 carries error on TWO axes: refine both, separately ---------------
 r5 = []
 for n_z in (300, 600, 1200):
     for n_r in (5, 10, 20, 40):
-        lad = Ladder(rung=5, n_z=n_z, n_r=n_r)
+        lad = Ladder(RX, rung=5, n_z=n_z, n_r=n_r)
         c = solve_robust(lad, P0_REF)
         Tb, zb, _ = hotspot(lad.z_c, lad.bulk_T(c))
         Ta, za, _ = hotspot(lad.z_c, lad.axis_T(c))
@@ -1764,8 +1291,9 @@ print(f"axial axis (n_r = 40): observed order {ORD_Z5:.3f}, limit {LIM_Z5-273.15
       f"\nlimit, on the same axis that was refined:"
       f"\n   radial discretisation error at ({N_Z}, {N_R}) : {ERR_RADIAL:+.4f} K"
       f"\n   axial  discretisation error at ({N_Z}, 40) : {ERR_AXIAL:+.4f} K"
-      f"\ni.e. both below 0.03 K on a {LIM_R5-273.15:.0f} C hot spot, and the axial one is"
-      f" the larger by\nabout an order of magnitude.")
+      f"\ni.e. both below 0.03 K on a {LIM_R5-273.15:.0f} C hot spot (asserted), and the"
+      f" axial one is\n{abs(ERR_AXIAL/ERR_RADIAL):.0f} times the radial one.")
+assert max(abs(ERR_RADIAL), abs(ERR_AXIAL)) < 0.03, "a rung-5 axis error is not below 0.03 K"
 print(f"\nWHAT IS *NOT* A GRID ERROR:"
       f"\nthe axis-minus-bulk difference at the reported grid,"
       f" {AXIS_MINUS_BULK:+.3f} K"
@@ -1793,7 +1321,7 @@ print(f"\nRUNG 2 NEEDS THIS SAID OUT LOUD. First-order upwind adds a numerical"
       f" single grid is mostly scheme.")
 d2 = []
 for n in (300, 600, 1200, 2400, 4800):
-    l1, l2 = Ladder(rung=1, n_z=n), Ladder(rung=2, n_z=n)
+    l1, l2 = Ladder(RX, rung=1, n_z=n), Ladder(RX, rung=2, n_z=n)
     p1, p2 = p0_critical(l1), p0_critical(l2)
     d2.append(dict(n_z=n, numerical_mm=0.5 * L_BED / n * 1e3, p0_rung1=p1,
                    p0_rung2=p2, shift_pct=100.0 * (p2 / p1 - 1.0)))
@@ -1807,9 +1335,10 @@ print(f"The shift itself converges (observed order {ORD_S2:.2f}) to {LIM_S2:+.4f
       f" error of the rung-1 baseline at\nn_z = {N_Z}, so this rung is only resolvable if both"
       f" models are extrapolated -\nwhich is exactly why the ladder table above reports"
       f" root-found thresholds and\nthis cell reports their limit.")
-'''))
 
-cells.append(code(r'''# ===== 3. Example 11.5.3.A against Van Welsenaere & Froment's own numbers =====
+
+# %%
+# ===== 3. Example 11.5.3.A against Van Welsenaere & Froment's own numbers =====
 # D2.2 owns the criteria; this checks the BOOK'S TRANSCRIPTION of their example.
 tr = []
 for bkey, ex_q in (("vwf_TM_625", "T_cr"), ("vwf_dT_625", "dT_eff"), ("vwf_Q_625", "Q"),
@@ -1977,79 +1506,24 @@ print(f"The route is Van Welsenaere & Froment's own, and it is checked against t
       f" entries at ratio {ATM} exactly - and its dT_ad column is not."
       f"\nA CROSS-COLUMN TEST CAN ONLY SEE A TRANSPLANT THAT MOVED ONE COLUMN. That is a"
       f"\nlimit of the test: A-1's pass does not confine the defect to A-2.")
-'''))
 
-cells.append(code(r'''# ======== 4. eq. (11.9.1-11) against a pellet grid solve and B1.1's table =====
-class Pellet:
-    """(11.9.1-3) and (11.9.1-4) on a spherical pymrm grid, one node of the bed."""
 
-    def __init__(self, n_r=64, D_e=1.0e-6, lam_e=1.0e-3, isothermal=True):
-        self.n_r, self.D_e, self.lam_e, self.iso = n_r, D_e, lam_e, isothermal
-        self.nf = 1 if isothermal else 2
-        self.R_p = D_P / 2.0
-        self.xi_f = np.linspace(0.0, self.R_p, n_r + 1)
-        self.xi_c = 0.5 * (self.xi_f[1:] + self.xi_f[:-1])
-        # (n_r, nf) and NEVER a bare (n_r,): with a 1-D shape NumJac's last axis is
-        # SPACE and it builds a dense n_r x n_r Jacobian.  B1.1's finding.
-        self.shape = (n_r, self.nf)
-
-    def solve(self, C_surf, T_surf, tol=1e-12):
-        nf = self.nf
-        aD = np.array([self.D_e] + ([self.lam_e] if nf == 2 else []))
-        # xi = 0 symmetry: dc/dn = 0.  xi = R_p: surface conditions imposed, so the
-        # film sits outside this solve and eta is a pure intraparticle quantity.
-        bc = ({"a": np.ones(nf), "b": np.zeros(nf), "d": np.zeros(nf)},
-              {"a": np.zeros(nf), "b": np.ones(nf),
-               "d": np.array([C_surf] + ([T_surf] if nf == 2 else []))})
-        grad, dgrad = construct_grad(self.shape, self.xi_f, self.xi_c, bc, axis=0)
-        div = construct_div(self.shape, self.xi_f, nu=2, axis=0)          # spherical
-        Dm = construct_coefficient_matrix(aD, shape=(self.n_r + 1, nf))
-        Lin = -(div @ (Dm @ grad))
-        rhs = -(div @ (Dm @ dgrad))
-        rhs = (np.asarray(rhs.todense()).ravel() if hasattr(rhs, "todense")
-               else np.asarray(rhs).ravel())
-        Ts0 = np.full(self.n_r, T_surf)
-        def src(c):
-            Cs = c[..., 0]
-            Ts = c[..., 1] if nf == 2 else Ts0
-            r = kexp(Ts) * P["p_B0"] * (Cs / THETA) / 3600.0             # kmol/(kg s)
-            s = np.empty_like(c)
-            s[..., 0] = -RHO_S * r
-            if nf == 2:
-                s[..., 1] = RHO_S * r * P["minus_dH"] * KCAL
-            return s
-        jac = NumJac(self.shape)
-        def fun(x):
-            cc = x.reshape(self.shape)
-            return Lin @ x + rhs - src(cc).reshape(-1), Lin - jac(src, cc)[1]
-        x0 = np.empty(self.shape); x0[..., 0] = C_surf
-        if nf == 2:
-            x0[..., 1] = T_surf
-        sol = newton(fun, x0.reshape(-1), tol=tol, maxfev=60)
-        c = (sol.x if hasattr(sol, "x") else np.asarray(sol)).reshape(self.shape)
-        gf = (grad @ c.reshape(-1) + (np.asarray(dgrad.todense()).ravel()
-              if hasattr(dgrad, "todense") else np.asarray(dgrad).ravel())
-              ).reshape(self.n_r + 1, nf)
-        # eta from the SURFACE FLUX row of the gradient operator, never a volume mean
-        flux = -self.D_e * gf[-1, 0]
-        r_obs = -flux * (3.0 / self.R_p) / RHO_S
-        r_surf = kexp(T_surf) * P["p_B0"] * (C_surf / THETA) / 3600.0
-        return dict(eta=float(r_obs / r_surf), c=c,
-                    T_centre=float(c[0, 1]) if nf == 2 else T_surf,
-                    C_ratio=float(c[0, 0] / C_surf))
-
+# %%
+# ======== 4. eq. (11.9.1-11) against a pellet grid solve and B1.1's table =====
+# the pellet is model.py's `Pellet`: a spherical grid (`nu = 2`), surface values
+# imposed, eta from the surface-flux row of the gradient operator.
 
 # (a) the pellet grid solve against eq. (11.9.1-11), refined
 # the pellet is examined at the rung-1 hot spot of section 11.5.2's OWN design point,
 # which is the hottest state any rung reaches while still having a solution
-_c1hs = Ladder(rung=1, n_z=N_Z).solve(P0_BOOK)
+_c1hs = Ladder(RX, rung=1, n_z=N_Z).solve(P0_BOOK)
 _ihs = int(np.argmax(_c1hs[:, 1]))
 T_HS = float(_c1hs[_ihs, 1])
 P_HS = float(_c1hs[_ihs, 0])
-PHI_HS = phi_prime(T_HS, 1.0e-6)
+PHI_HS = phi_prime(RX, T_HS, 1.0e-6)
 pv = []
 for n in (16, 32, 64, 128, 256):
-    e = Pellet(n_r=n).solve(THETA * P_HS, T_HS)["eta"]
+    e = Pellet(RX, n_r=n).solve(THETA * P_HS, T_HS)["eta"]
     pv.append(dict(n_r=n, eta_numeric=e, eta_11_9_1_11=eta_sphere(PHI_HS),
                    rel_dev=e / eta_sphere(PHI_HS) - 1.0))
 PV = pd.DataFrame(pv)
@@ -2067,21 +1541,22 @@ print(f"phi'' = {PHI_HS:.6f} at the rung-1 hot spot ({T_HS-273.15:.2f} C,"
 #     transcription of it from Thiele (1939) rather than from Froment eq. (11.9.1-11)
 SPH = ETA_REF[ETA_REF.geometry == "sphere"]
 B11_DEV = float(np.abs(eta_sphere(SPH.phi.values) / SPH.eta.values - 1.0).max())
-print(f"\nEq. (11.9.1-11) against B1.1's 60 exact sphere rows, phi ="
+print(f"\nEq. (11.9.1-11) against B1.1's {len(SPH)} exact sphere rows, phi ="
       f" {SPH.phi.min():.2f} to {SPH.phi.max():.0f}:"
       f"\n   worst relative deviation {B11_DEV:.2e}. Same closed form, two independent"
       f"\n   transcriptions from two documents. B1.1's own pymrm pellet matches its table"
-      f"\n   to 2.2e-4 for phi <= 30 and 6.5e-3 at phi = 100 - that is B1.1's number, and"
+      f"\n   to {B11_C['isothermal_max_rel_error_phi_le_30']:.1e} for phi <= 30 and"
+      f" {B11_C['isothermal_max_rel_error_all_phi']:.1e} over all phi - B1.1's claims, and"
       f"\n   this page's {ETA_DEV:.1e} at phi = {PHI_HS:.2f} is consistent with it.")
 
 # (c) the book's claim that the particle is practically isothermal
 print(f"\nsection 11.9.1, book page 598, verbatim:\n   "
       + bk("isothermal_pellet_claim", "as_printed"))
-niso = Pellet(n_r=128, isothermal=False).solve(THETA * P_HS, T_HS)
+niso = Pellet(RX, n_r=128, isothermal=False).solve(THETA * P_HS, T_HS)
 PELLET_DT = niso["T_centre"] - T_HS
 BETA_PRATER = (P["minus_dH"] * KCAL) * 1.0e-6 * (THETA * P_HS) / (1.0e-3 * T_HS)
 GAMMA_ARRH = P["a"] / T_HS
-_c3hs = solve_robust(Ladder(rung=3, n_z=N_Z), P0S[3])
+_c3hs = solve_robust(Ladder(RX, rung=3, n_z=N_Z), P0S[3])
 FILM_DT_HS = float(np.max(_c3hs[:, 3] - _c3hs[:, 1]))
 print(f"   intraparticle rise, centre minus surface : {PELLET_DT:+.4f} K"
       f"\n   interfacial rise across the film, at rung 3's own threshold: {FILM_DT_HS:+.4f} K"
@@ -2094,9 +1569,10 @@ print(f"   intraparticle rise, centre minus surface : {PELLET_DT:+.4f} K"
       f"\nstronger: the film carries {FILM_DT_HS/PELLET_DT:.0f}x the temperature difference the"
       f" particle does. This\nsits far below B1.1's fold (beta = 0.6, gamma = 20), so none of"
       f" its multiplicity\nis in play here and none of it is borrowed.")
-'''))
 
-cells.append(code(r'''# ===== 5. the chapter's own criteria for deciding whether to climb a rung =====
+
+# %%
+# ===== 5. the chapter's own criteria for deciding whether to climb a rung =====
 print("Section 11.6 offers three yardsticks for whether rung 2 is needed. Two of them"
       "\ncannot be evaluated on the reactor section 11.5.2 designs.\n")
 print("(i) the rule of thumb, book page 560:\n   " + bk("axial_50dp_claim", "as_printed"))
@@ -2125,7 +1601,7 @@ print(f"      T_0 - T_w = {T_R0 - T_R0:.1f} K on this reactor, BY CONSTRUCTION: 
       f" design case.\n")
 
 print("(iii) criterion (11.6-4), for a rate with an interior maximum, book page 561:")
-lad1 = Ladder(rung=1, n_z=4800)
+lad1 = Ladder(RX, rung=1, n_z=4800)
 c1 = lad1.solve(P0_BOOK)
 dx_dzdp = float(np.max(np.abs(np.gradient(1.0 - c1[:, 0] / P0_BOOK, lad1.z_c))) * D_P)
 dT_dzdp = float(np.max(np.abs(np.gradient(c1[:, 1], lad1.z_c))) * D_P)
@@ -2168,12 +1644,13 @@ print("     Read that carefully, because the page's gloss on it is an INFERENCE 
       "\n     Pe_a' = u_i L / D_ea - never Pe_ha or Pe_ma.)")
 
 CRIT_HEAT_DENOM = T_R0 - T_R0
-'''))
 
-cells.append(code(r'''# ======== 6. rung 3's interfacial difference against the book's own claim =====
+
+# %%
+# ======== 6. rung 3's interfacial difference against the book's own claim =====
 print("section 11.8.2, book page 590, on this same reactor and kinetic scheme:\n   \""
       + bk("film_dT_claim", "as_printed") + "\"")
-lad3 = Ladder(rung=3, n_z=N_Z, T_r=bk("startup_T0_1182"))
+lad3 = Ladder(RX, rung=3, n_z=N_Z, T_r=bk("startup_T0_1182"))
 c3 = solve_robust(lad3, bk("y_A0_1173"))
 DT_FILM_1182 = float(np.max(c3[:, 3] - c3[:, 1]))
 DP_FILM_1182 = float(np.max(c3[:, 0] - c3[:, 2]))
@@ -2233,9 +1710,10 @@ print(f"That is section 11.5.2 stating, at exactly the operating points this pag
       f" point that the chapter's own\nyardsticks are rate criteria while its own warning is"
       f" about the threshold. The\nchapter noticed; it did not quantify, and it did not"
       f" reconcile the warning with\nthe criteria it prints three pages later.")
-'''))
 
-cells.append(code(r'''# ======== 7. the crossovers, root-found rather than sampled ==================
+
+# %%
+# ======== 7. the crossovers, root-found rather than sampled ==================
 print("Where does each rung stop mattering? Every row of the table below is a CONTROLLED"
       "\nSCAN: a sweep outward from the chapter's own value in which each threshold must"
       "\npass the crossing control before its shift is used for anything, run until two"
@@ -2243,7 +1721,7 @@ print("Where does each rung stop mattering? Every row of the table below is a CO
       "\niterate controlled too. All four rows are ROOTS.\n"
       "\nThe thresholds follow the start-up branch (see the note on locating thresholds"
       "\nat the top of Validation), and the scan meets no rejected point at all.\n")
-BASE600 = p0_critical(Ladder(rung=1, n_z=600))
+BASE600 = p0_critical(Ladder(RX, rung=1, n_z=600))
 # ONE definition of "shift" in this table, and it is the same-grid one: rung 1 at the
 # SAME n_z as the rung being moved.  Mixing two - some rows against the
 # Richardson-extrapolated rung-1 threshold and others against a same-grid one -
@@ -2274,7 +1752,7 @@ CTL_STATS["margin_K"] = np.inf
 # (a) rung 2: how small must Pe_ma = Pe_ha be before axial dispersion moves p0* 1 %?
 PE_SWEEP = (2.0, 1.5, 1.0, 0.6, 0.4, 0.32, 0.30, 0.25, 0.24, 0.23, 0.22, 0.21,
             0.20, 0.15, 0.10)
-S2 = cross_scan(lambda pe: shift_pct(Ladder(rung=2, n_z=600, pe_ma=pe, pe_ha=pe)),
+S2 = cross_scan(lambda pe: shift_pct(Ladder(RX, rung=2, n_z=600, pe_ma=pe, pe_ha=pe)),
                 PE_SWEEP, TARGET)
 _row("pe", "rung 2, sec. 11.6", "axial Peclet number Pe_a",
      f"{bk('pe_axial_low'):.0f} to {bk('pe_axial_high'):.0f} (page 560)",
@@ -2282,7 +1760,7 @@ _row("pe", "rung 2, sec. 11.6", "axial Peclet number Pe_a",
 
 # (b) rung 3: how large must the film coefficients be before the film moves p0* 1 %?
 FILM_SWEEP = (1.0, 2.0, 3.0, 4.0, 6.0, 10.0, 30.0, 100.0)
-S3 = cross_scan(lambda fs: shift_pct(Ladder(rung=3, n_z=600, film_scale=fs)),
+S3 = cross_scan(lambda fs: shift_pct(Ladder(RX, rung=3, n_z=600, film_scale=fs)),
                 FILM_SWEEP, TARGET)
 _row("film", "rung 3, sec. 11.8", "Wakao-Funazkri k_g and h_f, x",
      "1.0 (as correlated)", S3["value"] / 1.0, S3)
@@ -2292,9 +1770,9 @@ _row("film", "rung 3, sec. 11.8", "Wakao-Funazkri k_g and h_f, x",
 #     rung 3 (eta -> 1), not onto rung 1, so rung 1 is the wrong baseline for THIS
 #     rung's own contribution.  The other three rows each sit one rung above their
 #     own baseline already.
-BASE3 = p0_critical(Ladder(rung=3, n_z=600))
+BASE3 = p0_critical(Ladder(RX, rung=3, n_z=600))
 DE_SWEEP = (1.0e-6, 3.0e-6, 1.0e-5, 3.0e-5, 1.0e-4, 1.0e-3, 1.0e-2)
-S4 = cross_scan(lambda de: shift_pct(Ladder(rung=4, n_z=600, D_e=de), base=BASE3),
+S4 = cross_scan(lambda de: shift_pct(Ladder(RX, rung=4, n_z=600, D_e=de), base=BASE3),
                 DE_SWEEP, TARGET)
 _row("De", "rung 4, sec. 11.9", "effective diffusivity D_e [m2/s], vs rung 3",
      "NOT PRINTED for this catalyst", S4["value"] / 1.0e-6, S4)
@@ -2326,13 +1804,13 @@ CROSS = pd.DataFrame(cross, columns=["rung", "quantity", "kind", "crossover",
 # NOT asserted that list(CROSS.kind) == ["root"] * 4: cross_scan has a single
 # `return`, always kind="root", so that assert could never fail - a toothless
 # check on the one page that audits toothless checks.  The "kind" column stays,
-# printed rather than guarded, as a record that a "bound" kind existed here once.
+# printed rather than guarded.
 show(CROSS.style.set_uuid("d11cross").hide(axis="index").format(
     {"crossover": "{:.4g}", "factor away": "{:.3g}", "shift there, %": "{:+.4f}"}))
 
 # the certificate the located rung-2 crossover itself carries, printed rather than
 # asserted - it is the whole of the case that this row is a root and not an artefact
-_L2S = Ladder(rung=2, n_z=600, pe_ma=PE_STAR, pe_ha=PE_STAR)
+_L2S = Ladder(RX, rung=2, n_z=600, pe_ma=PE_STAR, pe_ha=PE_STAR)
 _P2S = p0_critical(_L2S, hi=0.09)
 _LO2, _HI2, _OK2 = crossing_control(_L2S, _P2S)
 assert _OK2, "the located rung-2 crossover does not pass the crossing control"
@@ -2366,7 +1844,7 @@ print(f"\nThe ordering is DECIDABLE, all four of it: rung 5 is closest to irrele
 _UNIFORM = []
 for _p in np.round(np.arange(0.316, 0.3075, -0.001), 4):
     _UNIFORM.append((float(_p), *_shift_or_none(
-        lambda p: shift_pct(Ladder(rung=2, n_z=600, pe_ma=p, pe_ha=p)), float(_p))))
+        lambda p: shift_pct(Ladder(RX, rung=2, n_z=600, pe_ma=p, pe_ha=p)), float(_p))))
 UNIFORM_OK = sum(1 for _, _, o in _UNIFORM if o)
 assert UNIFORM_OK == len(_UNIFORM), "the control rejects a point of the fine Pe_a grid"
 assert np.all(np.diff([v for _, v, _ in _UNIFORM]) > 0), (
@@ -2380,7 +1858,7 @@ print(f"\nTHE CONTROL'S VERDICT ALONG Pe_a, on a regular 0.001 grid:\n   "
 # scan above stops as soon as the target is bracketed, so "the largest shift the sweep
 # shows" would otherwise be an artefact of where it stopped.  The tail is measured.
 PE_TAIL = [(float(_p), *_shift_or_none(
-    lambda x: shift_pct(Ladder(rung=2, n_z=600, pe_ma=x, pe_ha=x)), float(_p)))
+    lambda x: shift_pct(Ladder(RX, rung=2, n_z=600, pe_ma=x, pe_ha=x)), float(_p)))
     for _p in PE_SWEEP[S2["n_evaluated"]:]]
 _ALL2 = ([(float(r.x), float(r.shift_pct)) for r in S2["sweep"].itertuples() if r.controlled]
          + [(p, v) for p, v, ok in PE_TAIL if ok])
@@ -2400,8 +1878,8 @@ print(f"\nWHAT THE WHOLE SWEEP REACHES, tail included:\n   "
 PE_ANCHOR = S2["pair"][1]
 PE_GRID = {}
 for _n in (600, 900, N_Z):
-    _b1 = BASE600 if _n == 600 else p0_critical(Ladder(rung=1, n_z=_n))
-    PE_GRID[_n] = 100.0 * (p0_critical(Ladder(rung=2, n_z=_n, pe_ma=PE_ANCHOR,
+    _b1 = BASE600 if _n == 600 else p0_critical(Ladder(RX, rung=1, n_z=_n))
+    PE_GRID[_n] = 100.0 * (p0_critical(Ladder(RX, rung=2, n_z=_n, pe_ma=PE_ANCHOR,
                                               pe_ha=PE_ANCHOR), hi=0.09) / _b1 - 1.0)
 PE_GAP = max(PE_GRID.values()) - min(PE_GRID.values())
 PE_SLOPE = abs(S2["pair_shift"][1] - S2["pair_shift"][0]) / abs(S2["pair"][1]
@@ -2482,7 +1960,7 @@ print(f"\nNone of that contradicts section 11.7.3's own sentence, which reads, v
 
 # THE CONTROL ON A COARSE GRID: rung 4's anchor at n_z = 300, the grid of the
 # coarse-grid break row.
-_L300 = Ladder(rung=4, n_z=300)
+_L300 = Ladder(RX, rung=4, n_z=300)
 _P300 = p0_critical(_L300, hi=0.09)
 _LO3, _HI3, _OK3 = crossing_control(_L300, _P300)
 print(f"\nAND ON A COARSE GRID. At n_z = 300, rung 4's own anchor point - its default"
@@ -2491,7 +1969,7 @@ print(f"\nAND ON A COARSE GRID. At n_z = 300, rung 4's own anchor point - its de
       f" crossing ({_OK3}), so the\ncoarse-grid break row runs at 300 cells.")
 
 # WHAT THE OTHER SHIFT DEFINITION WOULD COST, measured on the row where it is largest
-S3_EXTRAP = cross_scan(lambda fs: shift_pct(Ladder(rung=3, n_z=600, film_scale=fs),
+S3_EXTRAP = cross_scan(lambda fs: shift_pct(Ladder(RX, rung=3, n_z=600, film_scale=fs),
                                             base=LIM_P), FILM_SWEEP, TARGET)
 print(f"\nTHE COST OF THE SHIFT DEFINITION, on the row where it is largest. Rung 1's"
       f" 600-cell\nthreshold is {BASE600:.8f} atm and its Richardson limit is {LIM_P:.8f},"
@@ -2506,9 +1984,9 @@ print(f"\nTHE COST OF THE SHIFT DEFINITION, on the row where it is largest. Rung
 # insensitivity claim for Pe_mr
 print(f"\nAnd the printed a_1 = (D_er)_s/(u_i d_p) inconsistency of page 574, measured."
       f"\nThe chapter says: \"{bk('pe_mr_insensitive_claim','as_printed')}\"")
-S_PEMR_AS_IS = shift_pct(Ladder(rung=5, n_z=600, n_r=10))
-S_PEMR_LITERAL = shift_pct(Ladder(rung=5, n_z=600, n_r=10, pe_mr=PE_MR / EPS))
-S_LAMER_5PCT = shift_pct(Ladder(rung=5, n_z=600, n_r=10, lam_er=LAM_ER * 1.05,
+S_PEMR_AS_IS = shift_pct(Ladder(RX, rung=5, n_z=600, n_r=10))
+S_PEMR_LITERAL = shift_pct(Ladder(RX, rung=5, n_z=600, n_r=10, pe_mr=PE_MR / EPS))
+S_LAMER_5PCT = shift_pct(Ladder(RX, rung=5, n_z=600, n_r=10, lam_er=LAM_ER * 1.05,
                                 pe_hr=PE_HR / 1.05))
 print(f"   Pe_mr = {PE_MR:.0f} as this page reads the group : p0* shift"
       f" {S_PEMR_AS_IS:+.3f} %"
@@ -2524,9 +2002,10 @@ print(f"   Pe_mr = {PE_MR:.0f} as this page reads the group : p0* shift"
       f" {abs(S_LAMER_5PCT-S_PEMR_AS_IS):.3f} %.\nA printed group can be wrong by a void"
       f" fraction and never be found, if the quantity\nit multiplies is the one the model is"
       f" insensitive to.")
-'''))
 
-cells.append(code(r'''# ===== 8. the book's restatement of Froment (1967), against C2.10's reading ====
+
+# %%
+# ===== 8. the book's restatement of Froment (1967), against C2.10's reading ====
 # C2.10 owns the 1967 case. Nothing of it is re-run here; its numbers are printed
 # beside the book's restatement of them, and the two are reconciled.
 F67 = dict(zip(F67_PAR.index, F67_PAR.value))
@@ -2560,6 +2039,7 @@ def k_1967(T, i):
 
 
 K1_HS, K3_HS = k_1967(T_HS, 1), k_1967(T_HS, 3)
+assert P["minus_dH"] == F67["minus_dH1"], "11.5.2's heat of reaction is not C2.10's minus_dH1"
 K_1152_HS = kexp(T_HS)
 LUMP_DEFICIT = K_1152_HS / (K1_HS + K3_HS) - 1.0
 print(f"\nAnd what the 'first approximation ... pseudo-first order' rate of section 11.5.2"
@@ -2571,7 +2051,7 @@ print(f"\nAnd what the 'first approximation ... pseudo-first order' rate of sect
       f"\n   k_1 + k_3                = {K1_HS+K3_HS:.6f}     (total o-xylene consumption)"
       f"\nSection 11.5.2's single rate is k_1 alone to {abs(K_1152_HS/K1_HS-1):.1e}, not the"
       f" sum: it is the\nrate of the WANTED reaction used as the rate of total consumption,"
-      f" {100*LUMP_DEFICIT:+.1f} % low.\nIts heat of reaction, 307,000 kcal/kmol, is"
+      f" {100*LUMP_DEFICIT:+.1f} % low.\nIts heat of reaction, {P['minus_dH']:,.0f} kcal/kmol, is"
       f" C2.10's minus_dH1 = {F67['minus_dH1']:.0f} exactly, so the\nheat release is"
       f" understated by the same factor and the {F67['minus_dH3']:.0f} kcal/kmol of the"
       f"\ncombustion route is absent. The ladder's base case is therefore a consistent"
@@ -2591,9 +2071,10 @@ print(f"The book states {bk('runaway_1d_1174','as_printed')} C for the equivalen
       f" range into a number. This page does not re-run that\ncase, and its own rung-1/rung-5"
       f" pair - {SHIFT[5]:+.2f} % in p0* on the pseudo-first-order\nchemistry - is a different"
       f" measurement of the same effect, in the same direction.")
-'''))
 
-cells.append(code(r'''# ============== defect injection: every metric needs a row that moves it ======
+
+# %%
+# ============== defect injection: every metric needs a row that moves it ======
 # The helpers below are the ONLY route to each baseline metric, so a row that
 # perturbs a helper's argument provably reaches the code that produced the number.
 # Each helper's default call is asserted against the baseline computed above.
@@ -2702,68 +2183,37 @@ def h_tables(Q=None, dT=None, Q1=None, TM1=None, A=None, B=None, atm=None):
 def h_eta(n_r=None, nu=None, phi=None, eta_col=None):
     n_r = 256 if n_r is None else n_r
     phi = PHI_HS if phi is None else phi
-    pel = Pellet(n_r=n_r)
-    if nu is not None:                          # inject a wrong divergence geometry
-        e = _pellet_eta_with_nu(n_r, nu)
-    else:
-        e = pel.solve(THETA * P_HS, T_HS)["eta"]
+    nu = 2 if nu is None else nu                # another nu injects a wrong geometry
+    e = Pellet(RX, n_r=n_r, nu=nu).solve(THETA * P_HS, T_HS)["eta"]
     ana = eta_sphere(phi)
     col = SPH.eta.values if eta_col is None else eta_col
     return dict(eta_grid_vs_11_9_1_11=abs(e / ana - 1.0),
                 eta_vs_B11_worst=float(np.abs(eta_sphere(SPH.phi.values) / col - 1.0).max()))
 
 
-def _pellet_eta_with_nu(n_r, nu):
-    """the pellet solve with the divergence geometry forced - the injection route"""
-    p = Pellet(n_r=n_r)
-    aD = np.array([p.D_e])
-    bc = ({"a": np.ones(1), "b": np.zeros(1), "d": np.zeros(1)},
-          {"a": np.zeros(1), "b": np.ones(1), "d": np.array([THETA * P_HS])})
-    grad, dgrad = construct_grad(p.shape, p.xi_f, p.xi_c, bc, axis=0)
-    div = construct_div(p.shape, p.xi_f, nu=nu, axis=0)
-    Dm = construct_coefficient_matrix(aD, shape=(n_r + 1, 1))
-    Lin = -(div @ (Dm @ grad))
-    rhs = np.asarray((-(div @ (Dm @ dgrad))).todense()).ravel()
-    Ts0 = np.full(n_r, T_HS)
-    def src(c):
-        r = kexp(Ts0) * P["p_B0"] * (c[..., 0] / THETA) / 3600.0
-        s = np.empty_like(c); s[..., 0] = -RHO_S * r
-        return s
-    jac = NumJac(p.shape)
-    def fun(x):
-        cc = x.reshape(p.shape)
-        return Lin @ x + rhs - src(cc).reshape(-1), Lin - jac(src, cc)[1]
-    x0 = np.full(p.shape, THETA * P_HS)
-    sol = newton(fun, x0.reshape(-1), tol=1e-12, maxfev=60)
-    c = (sol.x if hasattr(sol, "x") else np.asarray(sol)).reshape(p.shape)
-    gf = (grad @ c.reshape(-1) + np.asarray(dgrad.todense()).ravel()).reshape(n_r + 1, 1)
-    r_obs = p.D_e * gf[-1, 0] * (3.0 / p.R_p) / RHO_S
-    r_surf = kexp(T_HS) * P["p_B0"] * (THETA * P_HS / THETA) / 3600.0
-    return float(r_obs / r_surf)
-
-
 def h_shifts(n_z=600, ceiling=None, **kw):
     """the four rung-to-rung shifts, on the coarse grid the break table uses"""
     ceiling = T_PERM if ceiling is None else ceiling
-    base = p0_critical(Ladder(rung=1, n_z=n_z, **{k: v for k, v in kw.items()
+    base = p0_critical(Ladder(RX, rung=1, n_z=n_z, **{k: v for k, v in kw.items()
                                                   if k in ("R", "T_r")}),
                        ceiling=ceiling)
     out = {}
     for r, key, hi in ((2, "shift_rung2_pct", 0.02), (3, "shift_rung3_pct", 0.02),
                        (4, "shift_rung4_pct", 0.09), (5, "shift_rung5_pct", 0.02)):
         allowed = {k: v for k, v in kw.items() if k in Ladder.__init__.__code__.co_varnames}
-        lad = Ladder(rung=r, n_z=n_z, n_r=10, **allowed)
+        lad = Ladder(RX, rung=r, n_z=n_z, n_r=10, **allowed)
         out[key] = 100.0 * (p0_critical(lad, ceiling=ceiling, hi=hi) / base - 1.0)
     return out
 
 
 
 def h_rung1(R=None, ceiling=None, ns=NS_RUNG1, extrapolate=True, ratio_read=None):
-    """rung 1's six metrics, from THE SAME `rung1_chain` call the Validation cell
+    """rung 1's seven metrics, from THE SAME `rung1_chain` call the Validation cell
     displayed - the default call is memoised, so these are the displayed numbers
     themselves rather than a second, coarser computation of them.  A row that
     perturbs R or the ceiling re-runs the full chain.  `extrapolate=False` compares
-    the finest grid with the ODE route instead of the Richardson limit, and
+    the finest grid with the ODE route instead of the Richardson limit (so the
+    finest grid is also the limit the order-fit guard measures against), and
     `ratio_read` fits the orders with the grid ratio misread; both reuse the chain."""
     out = rung1_chain(R=R, ceiling=ceiling, ns=ns)
     m = dict(out["metrics"])
@@ -2772,6 +2222,9 @@ def h_rung1(R=None, ceiling=None, ns=NS_RUNG1, extrapolate=True, ratio_read=None
         m["rung1_p0_star_extrapolated"] = float(tab.p0_star.iloc[-1])
         m["ode_vs_pymrm_p0"] = abs(float(tab.p0_star.iloc[-1]) / out["p0_ode"] - 1.0)
         m["ode_vs_pymrm_T"] = abs(float(tab.T_hot.iloc[-1]) / out["T_ode"] - 1.0)
+        # the guard measured against the limit in use, which is now the finest grid
+        m["rung1_finest_err_over_start_floor"] = abs(
+            float(tab.p0_star.iloc[-1]) / m["rung1_p0_star_extrapolated"] - 1.0) / START_FLOOR
     if ratio_read is not None:
         ns_read = [ns[0] * ratio_read ** i for i in range(len(ns))]
         m["rung1_order_p0"] = richardson(tab.p0_star, ns_read)[0]
@@ -2805,15 +2258,15 @@ def h_cross(target=None, n_z=600):
     a scan that cannot straddle its target between two validated points RAISES
     rather than falling back on a bound, so no row can report an edge as an answer."""
     target = TARGET if target is None else target
-    base = p0_critical(Ladder(rung=1, n_z=n_z))
+    base = p0_critical(Ladder(RX, rung=1, n_z=n_z))
     def sh(lad, b=None):
         return 100.0 * (p0_critical(lad, hi=0.09) / (base if b is None else b) - 1.0)
-    pe = cross_scan(lambda p: sh(Ladder(rung=2, n_z=n_z, pe_ma=p, pe_ha=p)),
+    pe = cross_scan(lambda p: sh(Ladder(RX, rung=2, n_z=n_z, pe_ma=p, pe_ha=p)),
                     PE_SWEEP, target)
-    fs = cross_scan(lambda f: sh(Ladder(rung=3, n_z=n_z, film_scale=f)),
+    fs = cross_scan(lambda f: sh(Ladder(RX, rung=3, n_z=n_z, film_scale=f)),
                     FILM_SWEEP, target)
-    b3 = p0_critical(Ladder(rung=3, n_z=n_z))       # rung 4's own baseline
-    de = cross_scan(lambda d: sh(Ladder(rung=4, n_z=n_z, D_e=d), b3), DE_SWEEP, target)
+    b3 = p0_critical(Ladder(RX, rung=3, n_z=n_z))       # rung 4's own baseline
+    de = cross_scan(lambda d: sh(Ladder(RX, rung=4, n_z=n_z, D_e=d), b3), DE_SWEEP, target)
     _H_CROSS_DIAG[(target, n_z)] = dict(pe=pe, fs=fs, de=de)
     return dict(crossover_pe_axial=pe["value"], crossover_film_scale=fs["value"],
                 crossover_D_e=de["value"])
@@ -2837,21 +2290,21 @@ def h_film_dt(film_scale=None, n_r_pellet=None):
     They are covered by the film-scale and coarse-pellet rows."""
     fs = 1.0 if film_scale is None else film_scale
     n_p = 128 if n_r_pellet is None else n_r_pellet
-    lad3 = Ladder(rung=3, n_z=N_Z, n_r=N_R, film_scale=fs)
+    lad3 = Ladder(RX, rung=3, n_z=N_Z, n_r=N_R, film_scale=fs)
     # AT RUNG 3'S OWN THRESHOLD, recomputed for the film coefficients in force -
     # which is what the displayed number means, and what makes the helper safe to
     # perturb: at HALVED film coefficients the unperturbed threshold is past this
     # model's own, and the Newton diverges there rather than returning a number.
     hot = solve_robust(lad3, p0_critical(lad3, hi=HI[3]))
     dt_hot = float(np.max(hot[:, 3] - hot[:, 1]))
-    start = solve_robust(Ladder(rung=3, n_z=N_Z, T_r=bk("startup_T0_1182"),
+    start = solve_robust(Ladder(RX, rung=3, n_z=N_Z, T_r=bk("startup_T0_1182"),
                                 film_scale=fs), P0_REF)
     dt_start = float(np.max(start[:, 3] - start[:, 1]))
-    pdt = Pellet(n_r=n_p, isothermal=False).solve(THETA * P_HS, T_HS)["T_centre"] - T_HS
+    pdt = Pellet(RX, n_r=n_p, isothermal=False).solve(THETA * P_HS, T_HS)["T_centre"] - T_HS
     i = int(np.argmax(start[:, 1]))
     r_obs = kexp(start[i, 3]) * P["p_B0"] * start[i, 2] / 3600.0
     chi = ((P["minus_dH"] * KCAL) * r_obs * P["rho_b"] * D_P
-           / (2.0 * film(fs)["h_f"] * start[i, 1]))
+           / (2.0 * film(RX, fs)["h_f"] * start[i, 1]))
     return dict(film_dT_at_hotspot_K=dt_hot, film_dT_at_startup_K=dt_start,
                 film_dT_over_pellet_dT=dt_hot / pdt,
                 mears_margin=(bk("mears_constant") / (P["a"] / start[i, 1])) / chi)
@@ -2887,7 +2340,7 @@ def h_rejections(jump=None):
                       if not crossing_control(LAD[r], P0S[r], guess=LAD[r].branch[1],
                                               jump=jump)[2])
         grid_rej = sum(1 for p in PE_FINE if not _shift_or_none(
-            lambda x: 100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=x, pe_ha=x),
+            lambda x: 100.0 * (p0_critical(Ladder(RX, rung=2, n_z=600, pe_ma=x, pe_ha=x),
                                            hi=0.09, jump=jump) / BASE600 - 1.0), p)[1])
     finally:
         CTL_STATS.clear()
@@ -2966,6 +2419,7 @@ _ASSERTED = (("ex1151a_worst_dev", EX1151A_WORST),
                 ("ode_vs_pymrm_p0", _R1M["ode_vs_pymrm_p0"]),
                 ("ode_vs_pymrm_T", _R1M["ode_vs_pymrm_T"]),
                 ("p0_star_vs_printed_0018", _R1M["p0_star_vs_printed_0018"]),
+                ("rung1_finest_err_over_start_floor", R1_FINEST_OVER_FLOOR),
                 ("shift_rung2_pct", SH.break_rows_n_z_600_n_r_10.iloc[0]),
                 ("shift_rung3_pct", SH.break_rows_n_z_600_n_r_10.iloc[1]),
                 ("shift_rung4_pct", SH.break_rows_n_z_600_n_r_10.iloc[2]),
@@ -2987,12 +2441,26 @@ assert not _MISMATCH, ("a helper does not reproduce the number reported above, s
 _UNASSERTED = sorted(set(BASE_M) - {k for k, _ in _ASSERTED})
 assert not _UNASSERTED, f"helper metrics not asserted against a printed number: {_UNASSERTED}"
 print(f"ALL {len(BASE_M)} helper metrics are asserted equal, to 1e-12, to a number"
-      f" printed earlier in\nthis notebook - none excepted. For the six rung-1 metrics the"
+      f" printed earlier in\nthis notebook - none excepted. For the seven rung-1 metrics the"
       f" assertion is an\nidentity: the Validation cell displayed this helper's own return"
       f" value.")
-'''))
 
-cells.append(code(r'''# ---------------------------- the break rows ---------------------------------
+
+# %%
+# ---------------------------- the break rows ---------------------------------
+def misread(key, swap=None, digit=None):
+    """A printed number misread: the characters at `swap` and `swap + 1` of its
+    printed string transposed, or one digit read as another."""
+    t = bk(key, "as_printed")
+    if swap is not None:
+        t = t[:swap] + t[swap + 1] + t[swap] + t[swap + 2:]
+    else:
+        assert t.count(digit[0]) == 1, t
+        t = t.replace(*digit)
+    assert float(t) != bk(key), (key, t)
+    return float(t)
+
+
 def brk_dp_definition():
     """Example 11.5.1.A's d_p read as eq. (11.5.1-9) defines it, 6 V/S = d."""
     return h_ex1151a(dp=DP_SV)
@@ -3000,7 +2468,7 @@ def brk_dp_definition():
 
 def brk_ergun_refit():
     """A1.1's refit of Ergun's own 244 markers, k1 = 151.9, k2 = 1.697."""
-    return h_ex1151a(a=1.697, b=151.9)
+    return h_ex1151a(a=A11_C["k2_refit_all_points"], b=A11_C["k1_refit_all_points"])
 
 
 def brk_atm_factor():
@@ -3026,7 +2494,7 @@ def brk_target_R_2pct():
 
 def brk_pB0_bar():
     """p_B0 read as the 0.211 bar of 11.5.2 rather than the 0.208 atm of 11.5.3.A."""
-    return h_units(p_B0_book=0.208)
+    return h_units(p_B0_book=V["p_B0"])
 
 
 def brk_cp_printed():
@@ -3059,12 +2527,12 @@ def brk_alpha_w_5pct():
 
 def brk_table_Q():
     """Table 11.5.3.A-2's Q read as 3.4657 - two digits transposed."""
-    return h_tables(Q=3.4657)
+    return h_tables(Q=misread("vwf_Q_625", swap=4))
 
 
 def brk_table_dT():
     """the permissible rise read as 31.9 K instead of 31.6 K."""
-    return h_tables(dT=31.9)
+    return h_tables(dT=misread("vwf_dT_625", digit=("6", "9")))
 
 
 def brk_pellet_nu():
@@ -3091,13 +2559,10 @@ def brk_eta_csv():
 
 
 def brk_pe_axial():
-    """Pe_ma = Pe_ha = 0.5, twice as strong as the chapter's own lower limit.
-
-    Not 0.15, ten times stronger: 0.15 is one of the values at which rung 2's
-    threshold is NOT a ceiling crossing (403 C below it, 950 C above), a number
-    the crossing control rejects.  0.5 is inside the validated region of the same sweep the
-    crossover row scans."""
-    return h_shifts(pe_ma=0.5, pe_ha=0.5)
+    """Pe_ma = Pe_ha at half the chapter's own lower limit, i.e. axial dispersion
+    twice as strong; inside the validated region of the sweep the crossover row
+    scans."""
+    return h_shifts(pe_ma=bk("pe_axial_low") / 2.0, pe_ha=bk("pe_axial_low") / 2.0)
 
 
 def brk_film_scale():
@@ -3106,8 +2571,8 @@ def brk_film_scale():
 
 
 def brk_De():
-    """D_e raised a decade, to 1e-5 m2/s."""
-    return h_shifts(D_e=1.0e-5)
+    """D_e raised a decade from the value rung 4 is evaluated at."""
+    return h_shifts(D_e=10.0 * DE_SWEEP[0])
 
 
 def brk_pe_mr_literal():
@@ -3117,7 +2582,7 @@ def brk_pe_mr_literal():
 
 def brk_ceiling():
     """the permissible ceiling read as 410 C instead of the printed 415 C."""
-    return dict(**h_shifts(ceiling=683.15), **h_rung1(ceiling=683.15))
+    return dict(**h_shifts(ceiling=T_PERM - 5.0), **h_rung1(ceiling=T_PERM - 5.0))
 
 
 def brk_pB0_group():
@@ -3127,7 +2592,7 @@ def brk_pB0_group():
 
 def brk_table1_Q():
     """Table 11.5.3.A-1's Q read as 2.9023 - two digits transposed."""
-    return h_tables(Q1=2.9023)
+    return h_tables(Q1=misread("vwf_Q_635", swap=3))
 
 
 def brk_eta_off():
@@ -3151,7 +2616,7 @@ def brk_pe_extrap_baseline():
     threshold instead of the same-grid one: the mixed-baseline defect the
     crossover cell measures.  Rung 1's own 600-cell discretisation error is a
     fifth of the target, so the crossover moves."""
-    sc = cross_scan(lambda p: 100.0 * (p0_critical(Ladder(rung=2, n_z=600, pe_ma=p,
+    sc = cross_scan(lambda p: 100.0 * (p0_critical(Ladder(RX, rung=2, n_z=600, pe_ma=p,
                                                           pe_ha=p), hi=0.09)
                                        / LIM_P - 1.0), PE_SWEEP, TARGET)
     return dict(crossover_pe_axial=sc["value"])
@@ -3176,8 +2641,8 @@ def brk_wrong_rung_threshold():
 
 def brk_jump_allowance():
     """the crossing control's jump allowance read as 0.005 K instead of 1 K - below
-    every jump the five rungs measure (0.012 to 0.095 K), so a correct threshold is
-    rejected and the rejection counts must leave zero."""
+    every jump the five rungs measure (the control table above), so a correct
+    threshold is rejected and the rejection counts must leave zero."""
     return h_rejections(jump=0.005)
 
 
@@ -3197,29 +2662,31 @@ BREAK_FNS = [
     ("ladder controls run at the neighbouring rung's threshold", brk_wrong_rung_threshold),
     ("crossing control's jump allowance read as 0.005 K", brk_jump_allowance),
     ("tube-radius crossover read as 2 %, not 1 %", brk_target_R_2pct),
-    ("Table 11.5.3.A-2 cross-checked against A = 6165", brk_table_A),
+    (f"Table 11.5.3.A-2 cross-checked against A = {A_G:.0f}", brk_table_A),
     ("11.5.2's pressures read in atm, not the printed bar", brk_unit_reading),
     ("Ex 11.5.1.A: d_p from eq. (11.5.1-9), 6V/S = d", brk_dp_definition),
-    ("Ergun constants: A1.1's refit 151.9 / 1.697", brk_ergun_refit),
+    (f"Ergun constants: A1.1's refit {A11_C['k1_refit_all_points']:.1f} /"
+     f" {A11_C['k2_refit_all_points']:.3f}", brk_ergun_refit),
     ("units: atm-to-bar factor set to 1", brk_atm_factor),
-    ("units: p_B0 read as 0.208 bar, not 0.208 atm converted", brk_pB0_bar),
-    ("c_p: the printed 0.992 kJ/(kg K) used instead", brk_cp_printed),
+    (f"units: p_B0 read as {V['p_B0']} bar, not {V['p_B0']} atm converted", brk_pB0_bar),
+    (f"c_p: the printed {bk('specific_heat', 'as_printed')} kJ/(kg K) used instead", brk_cp_printed),
     ("(-dH): the kJ/kmol value used in the kcal groups", brk_dH_kcal_kJ),
-    ("R_t = 0.0127 m, from the printed 2.54 cm diameter", brk_radius_printed),
+    (f"R_t = {D_T_PRINTED / 2.0} m, from the printed {bk('tube_id', 'as_printed')} diameter",
+     brk_radius_printed),
     ("lambda_er raised 5 %", brk_lam_er_5pct),
     ("alpha_w raised 5 %", brk_alpha_w_5pct),
-    ("Table 11.5.3.A-2: Q read 3.4657", brk_table_Q),
-    ("Table 11.5.3.A-2: dT read 31.9 K", brk_table_dT),
+    (f"Table 11.5.3.A-2: Q read {misread('vwf_Q_625', swap=4)}", brk_table_Q),
+    (f"Table 11.5.3.A-2: dT read {misread('vwf_dT_625', digit=('6', '9'))} K", brk_table_dT),
     ("pellet: construct_div nu = 1, not 2", brk_pellet_nu),
     ("pellet: 16 radial cells, not 256", brk_pellet_coarse),
     ("B1.1's exact eta column shifted 1e-4", brk_eta_csv),
-    ("Pe_ma = Pe_ha = 0.5 (2x the chapter's lower limit)", brk_pe_axial),
+    (f"Pe_ma = Pe_ha = {bk('pe_axial_low') / 2.0} (2x the chapter's lower limit)", brk_pe_axial),
     ("film coefficients halved", brk_film_scale),
     ("D_e raised to 1e-5 m2/s", brk_De),
     ("Pe_mr from page 574's a_1 read literally", brk_pe_mr_literal),
-    ("permissible ceiling read as 410 C", brk_ceiling),
-    ("p_B0 read as 0.211 bar in the kcal groups", brk_pB0_group),
-    ("Table 11.5.3.A-1: Q read 2.9023", brk_table1_Q),
+    (f"permissible ceiling read as {T_PERM - 5.0 - 273.15:.0f} C", brk_ceiling),
+    (f"p_B0 read as {bk('oxygen_pressure', 'as_printed')} bar in the kcal groups", brk_pB0_group),
+    (f"Table 11.5.3.A-1: Q read {misread('vwf_Q_635', swap=3)}", brk_table1_Q),
     ("11.5.2's E/R and 11.7.3's E_1/R swapped", brk_E_over_R_swap),
     ("rung 4 with eq. (11.9.1-11) switched off", brk_eta_off),
 ]
@@ -3255,13 +2722,13 @@ for _t, _n, _k, _d in _DIAG:
           f" {_d['probed']:3d} probed, {_d['refused'] + _d['n_evaluated'] - _d['n_controlled']}"
           f" rejected, bracket {_d['bracket']:.3g}"
           f" ({100.0 * _d['bracket'] / abs(_d['value']):.2g} % of the value)")
-'''))
 
-cells.append(code(r'''# ---- and the rows must COMPUTE what they return, parsed rather than trusted ----
+
+# %%
+# ---- and the rows must COMPUTE what they return, parsed rather than trusted ----
 # A row that returns a TYPED CONSTANT for a metric records a move of exactly 1
 # whatever the reported value is: a hand-written coverage claim wearing the
-# generator's clothes.  This guard is copied from published J4.2, which shipped
-# that defect once.  It parses each row's own source plus one level of the
+# generator's clothes.  This guard is copied from published J4.2.  It parses each row's own source plus one level of the
 # helpers that row names, and rejects any metric key bound to a numeric literal or
 # to a local that is only ever assigned one.  What it cannot say is whether the
 # expression is the RIGHT one; that is what the measured moves are for.
@@ -3576,14 +3043,14 @@ print(f"So the accurate claim is a LIST OF FORMS and not a category: a metric ke
       f" table above are for.")
 
 # ---------------- coverage map, GENERATED from the measured moves --------------
-STRUCTURAL = {
+CAVEATS = {
     "cp_route_spread": ("A SPREAD among four routes to c_p, not an agreement among "
                         "four witnesses - the Parameters cell shows route 2 reproduces "
                         "route 1 by construction and route 4 is route 1 rounded, so "
                         "the four trace to one printed determination plus route 3. "
                         "Perturbing any one of them moves this number, and "
-                        "brk_cp_printed and brk_dH_kcal_kJ both do; it is listed here "
-                        "because it cannot detect a c_p that is wrong in the same "
+                        "brk_cp_printed and brk_dH_kcal_kJ both do; the caveat is "
+                        "that it cannot detect a c_p that is wrong in the same "
                         "way in all four places, which is precisely what a shared "
                         "source looks like. C2.10 warns that U = 82.7 is such a "
                         "shared source between it and D2.2. The CONCLUSION it "
@@ -3599,12 +3066,12 @@ for k in METRICS:
 COV = pd.DataFrame(cov)
 show(COV.style.set_uuid("d11cov").hide(axis="index").format(
     {"value": "{:.6g}", "best_rel_move": "{:.2e}"}))
-uncovered = sorted(set(METRICS) - set(COVERAGE) - set(STRUCTURAL))
-assert not uncovered, f"metrics no row moves and none named structural: {uncovered}"
-print(f"{len(METRICS)} metrics, {len(COVERAGE)} moved by at least one row,"
-      f" {len(STRUCTURAL)} labelled structural.")
-for k, why in STRUCTURAL.items():
-    print(f"\nSTRUCTURAL - {k}:\n   {why}")
+uncovered = sorted(set(METRICS) - set(COVERAGE))
+assert not uncovered, f"metrics no row moves: {uncovered}"
+print(f"{len(METRICS)} metrics, {len(COVERAGE)} moved by at least one row; none is"
+      f" structural.")
+for k, why in CAVEATS.items():
+    print(f"\nCAVEAT - {k}:\n   {why}")
 print(f"\nTHE CROSSING CONTROL, COUNTED OVER THE WHOLE PAGE. Every threshold this"
       f" notebook\nhas computed up to this point - the ladder table, the six-grid rung-1"
       f" chain, the\nrung-2 grid chain, the four crossover scans and all"
@@ -3614,9 +3081,10 @@ print(f"\nTHE CROSSING CONTROL, COUNTED OVER THE WHOLE PAGE. Every threshold thi
       f" smallest distance of any control solve from the ceiling, or of any\njump from"
       f" the {CTL_JUMP:.0f} K allowance, is {CTL_STATS['margin_K']:.2e} K, so no verdict"
       f" sits near round-off.")
-'''))
 
-cells.append(code(r'''# ============ claims: every published number says what it is ===================
+
+# %%
+# ============ claims: every published number says what it is ===================
 # docs/claims-design.md.  One registration per metric.
 # VALUES are physical, data and discretisation results; CI holds them to rtol of the
 # committed baseline.  The default rtol is 0.05; it is tightened ONLY where a break
@@ -3636,7 +3104,7 @@ BOUNDS = {
     "U_from_2d_dev": dict(
         min=-1e-12, max=1e-12, basis="chosen",
         note="eq. (11.7.4-1) at R_t = 0.0125 m returns the printed U = 0.096 to "
-             "round-off; measured -1.1e-16"),
+             "round-off, so only a bound is stated"),
     "ode_vs_pymrm_p0": dict(
         max=1e-5, basis="chosen",
         note="two routes to rung 1's threshold: Richardson limit of the 150-4800 chain "
@@ -3656,6 +3124,10 @@ BOUNDS = {
     "eta_grid_vs_11_9_1_11": dict(
         max=1e-4, basis="theory",
         note="256-cell second-order pellet grid against the closed form; measured 4.6e-6"),
+    "rung1_finest_err_over_start_floor": dict(
+        min=1e3, basis="theory",
+        note="|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a "
+             "threshold: the order fit is not fitted to that noise"),
     "eta_vs_B11_worst": dict(
         max=1e-5, basis="chosen",
         note="the same closed form against B1.1's tabulated exact eta, whose phi column "
@@ -3670,19 +3142,6 @@ for k_ in METRICS:
         continue
     else:
         claims.value(k_, v_, rtol=RTOL.get(k_, 0.05))
-
-# the order fit is only meaningful if the finest grid's error is far above the
-# thresholds' own noise floor (claims-design section 3).  That floor is NOT the 1e-12
-# bisection bracket: a threshold moves by about 1e-8 relative when only its starting
-# guess changes (shift_rung4_pct moved 1.5e-8 when the search changed to branch
-# following), so 1e-8 is the measured floor used here.
-START_FLOOR = 1e-8
-R1_FINEST_OVER_FLOOR = abs(float(CONV1.p0_star.iloc[-1]) / LIM_P - 1.0) / START_FLOOR
-claims.bound("rung1_finest_err_over_start_floor", R1_FINEST_OVER_FLOOR, min=1e3,
-             basis="theory", structural=True,
-             note="|p0*(4800)/limit - 1| over the 1e-8 start-dependence floor of a "
-                  "threshold; a guard on the order fit rather than a result, so no "
-                  "physics row moves it")
 
 # THRESHOLDED RESULTS carry their margin.  The crossing control decides a verdict by
 # comparing two temperatures with the ceiling and their difference with CTL_JUMP; the
@@ -3719,7 +3178,7 @@ print(f"{len(claims.metrics)} claims: {len(_kinds['value'])} values,"
 for kd in ("bound", "exact"):
     for k_ in _kinds[kd]:
         c = claims.metrics[k_]
-        print(f"   {kd:<5s} {k_:<34s} = {c['value']:<10.2g}  {c.get('note', '')[:70]}")
+        print(f"   {kd:<5s} {k_:<34s} (here {c['value']:.2g})  {c.get('note', '')[:60]}")
 print(f"Values tightened below rtol 0.05, each because a break row needs it: {RTOL}")
 
 # PROSE: the numbers the Markdown cells quote, checked against their claims (one unit
@@ -3732,198 +3191,197 @@ SAYS = {
 for k_, lits in SAYS.items():
     for lit in lits:
         claims.says(lit, k_)
-PAYLOAD = claims.report()
-'''))
 
-cells.append(md(r"""## What pymrm adds
 
-**Honestly: not accuracy.** Every rung of this ladder is a system Froment, De Wilde
-& Bischoff solved in 1961-1967 with a Crank-Nicolson code, and section 11.7.4 says
-in as many words that "the possibilities of present-day computers are such that
-there is no longer any reason for not using the two-dimensional model". Nothing
-here is a numerical advance over the book.
+# %% [markdown]
+# ## What pymrm adds
+#
+# **Honestly: not accuracy.** Every rung of this ladder is a system Froment, De Wilde
+# & Bischoff solved in 1961-1967 with a Crank-Nicolson code, and section 11.7.4 says
+# in as many words that "the possibilities of present-day computers are such that
+# there is no longer any reason for not using the two-dimensional model". Nothing
+# here is a numerical advance over the book.
+#
+# What pymrm adds is that **the five models become five arguments to one assembly
+# rather than five programs**, and that is what makes the comparison possible at all.
+# Concretely:
+#
+# * the ladder's five configurations differ by *which operators are built*, not by
+#   which file is run: rung 2 adds a `construct_grad`/`construct_div` pair to the
+#   same convection matrix, rung 5 adds a second `construct_grad`/`construct_div`
+#   pair on a second axis with `nu=1`, and rungs 3 and 4 add two algebraic fields
+#   masked out of the divergence by a `construct_coefficient_matrix`. Because the
+#   five share the residual, the source term and the kinetics, a difference between
+#   two rungs is a difference between two *models*, not between two codebases;
+# * the effectiveness factor is read off **the surface-flux row of the gradient
+#   operator**, which is the same quantity the film balance uses, so eq. (11.9.1-11)
+#   can be checked against the equation it is a solution of rather than against a
+#   volume-averaged reaction rate that would hide a boundary-condition error;
+# * the geometry of a divergence is a parameter (`nu = 0, 1, 2`), so the pellet
+#   sphere and the tube annulus are the same code, and the break table can inject a
+#   wrong geometry into either;
+# * `NumJac` makes the four-field algebraic-plus-differential system of rung 3 a
+#   Newton solve of the same shape as rung 1's, and the film balances are two extra
+#   rows rather than an inner iteration.
+#
+# Two things this page adds that the chapter does not have, both consequences of the
+# above rather than of pymrm:
+#
+# * **the comparison is a threshold, not a profile.** The chapter compares its models
+#   by plotting them; every figure in sections 11.5.2, 11.7.3 and 11.7.4 is a profile
+#   or a sensitivity curve, and the one quantitative comparison it prints - "less
+#   than 360" against "365" - is read off two such plots. Root-finding the inlet
+#   partial pressure at which the hot spot reaches the chapter's own stated ceiling
+#   turns each rung into a single number with a sign, which is what "what does this
+#   rung buy" actually means to someone sizing a tube;
+# * **the crossovers are located rather than asserted, and the solver's own limits
+#   are located with them.** The chapter's yardsticks for climbing a rung are a rule
+#   of thumb (50 particle diameters), two criteria that cannot be evaluated on its
+#   own design case, and a sentence about sensitivity. Four root-found crossovers say
+#   how far each coefficient would have to move before its rung mattered, which is the
+#   same question with an answer - and they **rank** all four rungs, which is the part
+#   a rule of thumb cannot do. Each root is located between two points the crossing
+#   control validates, and each carries a grid-set error bar rather than its
+#   refinement tolerance.
 
-What pymrm adds is that **the five models become five arguments to one assembly
-rather than five programs**, and that is what makes the comparison possible at all.
-Concretely:
+# %% [markdown]
+# ## Reuse
+#
+# **What to lift.**
+#
+# * `Ladder` is the whole ladder. Substituting a different reaction means replacing
+#   `source`; the five configurations, the boundary conditions and the diagnostics
+#   carry over unchanged. `p0_critical` is the reusable part of the comparison.
+# * **Locate a threshold by following the branch, not by cold starts.** Near a
+#   runaway threshold there are several steady states, and Newton's damping does not
+#   choose between them: which one a cold start reaches is decided by the guess, and
+#   when the guess is itself a runaway profile, by round-off. The remedy is one cold solve at a
+#   safe parameter value, then every scan point and every bisection midpoint started
+#   from the converged state at the current lower end of the bracket. No state is
+#   carried from one search to the next, so the result still cannot depend on the
+#   direction a sweep was run in - the defect `B1.1` records for continuation chains.
+# * **Put the control inside the root-find, not beside it.** A bisection that treats a
+#   non-converged solve as "past the threshold" returns a *solver* boundary wherever
+#   the solver gives out, and it does it silently. Run the $\pm 10^{-5}$ control on
+#   **every** call and *raise* when it fails, so a bad threshold cannot become a
+#   number anywhere, and write the searches so that a rejected point is recorded and
+#   used for nothing and a scan that cannot straddle its target raises. On this page,
+#   with the branch followed, the control rejects nothing; it is there for the case
+#   where it would.
+# * The **Danckwerts inlet as a length**: because $\varepsilon D_{ea}/u_s$ and
+#   $\lambda_{ea}/(\rho_g c_p u_s)$ are both lengths, the inlet condition of rung 2
+#   is `{"a": d_p/Pe, "b": 1.0, "d": c_in}` with no unit bookkeeping at all, and the
+#   two fields differ only in their Péclet number. That is `A2.1`'s dict with the
+#   scaling done once.
+# * **Scale an algebraic residual to the units of its own unknown.** Written in the
+#   units the book writes them in, (11.8.1-3) is in atm/h and (11.8.1-4) in
+#   kcal/(m$^3$ h), so a residual test with one absolute threshold, like the one in
+#   `Ladder.solve`, is strict for one row and loose for the other. Dividing each
+#   balance by its own transfer coefficient puts both rows in the units of the
+#   surface unknown they determine.
+# * The **helper-plus-injection pattern** in the break table: each metric has exactly
+#   one function that computes it, *every* metric's helper default is asserted equal
+#   to a number printed earlier in the notebook to 1e-12, and every break row
+#   perturbs one of its arguments. That is what makes "the row reaches the code it
+#   perturbs" checkable rather than a claim: a row that reads a module constant
+#   instead of the configuration does not reach the code it names. Two further rules:
+#   * **an unasserted helper drifts.** A helper that runs its own coarser refinement
+#     while the notebook displays a finer one carries a different number into
+#     `agreement.json`, and nothing compares them. The remedy is structural rather
+#     than a tighter tolerance - the display and the metric are the *same call*,
+#     memoised - and the assertion list is checked against the metric set, so a
+#     metric cannot be added without one.
+#   * **the four shifts are the exception, and exceptions get printed.** The break
+#     rows cannot afford the displayed grid once per row, so those four
+#     metrics are computed on a coarser one. Both values and their gap are printed
+#     in a table; an exception you can see is a caveat, an exception you cannot is a
+#     discrepancy.
+# * **The AST guard, but only if you measure its teeth on the forms you care about
+#   AND publish the ones it misses.** This one parses each row plus one level of the
+#   helpers it names and rejects a metric key bound to a numeric literal - and it
+#   constant-folds, so `0.1656 + 0.0001`, `float("15.688")`, a subscript off a frozen
+#   tuple, a one-line laundering helper and tuple unpacking are all caught. A
+#   negative control that tests only the bare literal measures the guard's easiest
+#   case rather than its coverage, so there is one control per laundering form, each
+#   asserted to catch exactly its own keys - and a list of ESCAPE forms, printed and
+#   asserted to escape (the guard cell prints both counts), so the notebook states
+#   the guard's blind spots rather than implying it has none. A module-level
+#   constant is one of them, and it is the realistic accidental case. The
+#   false-positive control binds a *metric* key to a computed value; a non-metric
+#   key is filtered out before the guard looks at anything, and would measure
+#   nothing.
+#
+# **What not to lift.**
+#
+# * **The constants, without the audit.** Section 11.5.2's printed specific heat is
+#   several per cent from what its own downstream groups require, its printed mean
+#   density is out by $10^3$, group $A$ of Example 11.5.3.A misses its own printed
+#   formula, its tube radius is not the one its own figures were computed at, and its
+#   pressures are in a different unit from the one it prints. Every one of those was
+#   found by *loading `D2.2`'s and `C2.10`'s CSVs and printing them beside the
+#   book's*, which took an afternoon and is the single highest-yield thing on this
+#   page. If you retype a constant from a textbook restatement of a paper, check the
+#   restatement. (All the percentages are computed in *Parameters* and *Validation*;
+#   none is typed here.)
+# * **A row-by-row transcription check, on its own.** Every row of Table 11.5.3.A-2
+#   transcribes from the 1970 paper at a ratio of exactly 1.000000, and the table is
+#   still internally inconsistent by about a third, because one of those rows was
+#   copied correctly *from a different worked example at a different tube radius*.
+#   What caught it was a CROSS-COLUMN test the table imposes on itself -
+#   $\Delta T_{ad} = (B/A)p_0$ with the example's own printed $A$ and $B$. If a table
+#   has two columns computed from one quantity, check them against each other, not
+#   only against the source. **And then check what the cross-column test cannot
+#   see**: Table 11.5.3.A-1 *passes* it while carrying the same transplanted $Q$,
+#   because both of its columns descend from that $Q$. A consistency test between two
+#   numbers can only catch a defect that moved one of them.
+# * **The shifts, as advice about a real o-xylene reactor.** The base case is section
+#   11.5.2's deliberate simplification, and the notebook shows it is $k_1$ alone used
+#   as the total consumption rate, with the combustion route's heat of reaction
+#   (printed in the reconciliation cell) absent. The rung-to-rung *ordering* is what transfers; the magnitudes are for
+#   this pseudo-first-order reactor.
+# * **Any of it as validation.** Chapter 11 reports no experiment. Everything here is
+#   a reproduction of the book's own arithmetic, of its transcription of a 1970 paper,
+#   and of five claims it makes about its own models.
+#
+# **What the page cannot conclude.**
+#
+# * Whether rung 4 is needed on the real catalyst. The crossover $D_e$ is computed,
+#   but the chapter prints no $D_e$ for V$_2$O$_5$ on silica and sends the reader to
+#   two documents that are not on disk, so the sign of the rung-4 correction is
+#   established and its size is not.
+# * Whether $\lambda_{ea}$ makes rung 2 matter. The chapter says "little information
+#   is available" and never defines $\mathrm{Pe}_{ha}$; the page sweeps the two Péclet
+#   numbers together, so the crossover it root-finds is a crossover in *both* at once
+#   and not in $\lambda_{ea}$ alone. Nor is the shift below the swept range reported:
+#   the crossover cell prints the largest $|$shift$|$ on that sweep, and nothing is
+#   claimed about smaller Péclet numbers.
+# * Anything about section 11.10, the sixth cell of Table 11.4-1 - the
+#   two-dimensional heterogeneous model. It is out of scope, and the Papageorgiou &
+#   Froment [1995] kinetics it uses are a different reaction model.
+# * Anything read off a figure. Figures 11.5.2-1/2, 11.6-1/2, 11.7.1-1/2/3, all six
+#   11.7.3 figures, 11.7.4-1, 11.8.1-1..4, 11.8.2-1, 11.9.1.A-1..8 and the runaway
+#   band of Fig. 11.5.3-1 are not digitised, not traced and not read. The **one**
+#   thing taken from a figure anywhere on this page is the *unit word* on
+#   Fig. 11.5.2-1's ordinate label, "$p_0$, atm", read on a 300 ppi crop; no curve,
+#   tick or point is read from it or from any other.
+# * **How rung 5's threshold converges.** Its hot spot is refined on both axes, but
+#   the threshold - the quantity the ladder table actually reports for that rung - is
+#   refined on neither. The (600, 10)-versus-(1200, 20) gap is printed; no observed
+#   order and no Richardson limit is claimed for it, and the tube-radius crossover is
+#   located at (600, 10) with that gap, divided by the local slope of the sweep,
+#   as its error bar - three figures on $R_t^*$, not the six its bisection tolerance
+#   would suggest.
+# * **Whether a state exists that the Newton cannot reach.** `p0_critical` counts a
+#   non-converged solve as supercritical. A control shows that every threshold this
+#   page reports - not only the five default rungs - is a genuine 415 $^\circ$C crossing rather than
+#   a convergence boundary, and thresholds that fail it are raised on rather than
+#   returned. What the control cannot do is find a bounded state the Newton never
+#   reaches: section 11.6's own three-steady-state discussion is a warning that a
+#   computation can miss a state that exists. Each threshold here is, by
+#   construction, the one on the branch followed up from a safe feed; other branches
+#   are not searched for.
 
-* the ladder's five configurations differ by *which operators are built*, not by
-  which file is run: rung 2 adds a `construct_grad`/`construct_div` pair to the
-  same convection matrix, rung 5 adds a second `construct_grad`/`construct_div`
-  pair on a second axis with `nu=1`, and rungs 3 and 4 add two algebraic fields
-  masked out of the divergence by a `construct_coefficient_matrix`. Because the
-  five share the residual, the source term and the kinetics, a difference between
-  two rungs is a difference between two *models*, not between two codebases;
-* the effectiveness factor is read off **the surface-flux row of the gradient
-  operator**, which is the same quantity the film balance uses, so eq. (11.9.1-11)
-  can be checked against the equation it is a solution of rather than against a
-  volume-averaged reaction rate that would hide a boundary-condition error;
-* the geometry of a divergence is a parameter (`nu = 0, 1, 2`), so the pellet
-  sphere and the tube annulus are the same code, and the break table can inject a
-  wrong geometry into either;
-* `NumJac` makes the four-field algebraic-plus-differential system of rung 3 a
-  Newton solve of the same shape as rung 1's, and the film balances - which are
-  the part of section 11.8.1 that a hand-rolled code gets wrong - are two extra
-  rows rather than an inner iteration.
-
-Two things this page adds that the chapter does not have, both consequences of the
-above rather than of pymrm:
-
-* **the comparison is a threshold, not a profile.** The chapter compares its models
-  by plotting them; every figure in sections 11.5.2, 11.7.3 and 11.7.4 is a profile
-  or a sensitivity curve, and the one quantitative comparison it prints - "less
-  than 360" against "365" - is read off two such plots. Root-finding the inlet
-  partial pressure at which the hot spot reaches the chapter's own stated ceiling
-  turns each rung into a single number with a sign, which is what "what does this
-  rung buy" actually means to someone sizing a tube;
-* **the crossovers are located rather than asserted, and the solver's own limits
-  are located with them.** The chapter's yardsticks for climbing a rung are a rule
-  of thumb (50 particle diameters), two criteria that cannot be evaluated on its
-  own design case, and a sentence about sensitivity. Four root-found crossovers say
-  how far each coefficient would have to move before its rung mattered, which is the
-  same question with an answer - and they **rank** all four rungs, which is the part
-  a rule of thumb cannot do. Each root is located between two points the crossing
-  control validates, and each carries a grid-set error bar rather than its
-  refinement tolerance."""))
-
-cells.append(md(r"""## Reuse
-
-**What to lift.**
-
-* `Ladder` is the whole ladder. Substituting a different reaction means replacing
-  `source`; the five configurations, the boundary conditions and the diagnostics
-  carry over unchanged. `p0_critical` is the reusable part of the comparison.
-* **Locate a threshold by following the branch, not by cold starts.** Near a
-  runaway threshold there are several steady states, and Newton's damping does not
-  choose between them: which one a cold start reaches is decided by the guess, and
-  when the guess is itself a runaway profile, by round-off. The remedy is one cold solve at a
-  safe parameter value, then every scan point and every bisection midpoint started
-  from the converged state at the current lower end of the bracket. No state is
-  carried from one search to the next, so the result still cannot depend on the
-  direction a sweep was run in - the defect `B1.1` records for continuation chains.
-* **Put the control inside the root-find, not beside it.** A bisection that treats a
-  non-converged solve as "past the threshold" returns a *solver* boundary wherever
-  the solver gives out, and it does it silently. Run the $\pm 10^{-5}$ control on
-  **every** call and *raise* when it fails, so a bad threshold cannot become a
-  number anywhere, and write the searches so that a rejected point is recorded and
-  used for nothing and a scan that cannot straddle its target raises. On this page,
-  with the branch followed, the control rejects nothing; it is there for the case
-  where it would.
-* The **Danckwerts inlet as a length**: because $\varepsilon D_{ea}/u_s$ and
-  $\lambda_{ea}/(\rho_g c_p u_s)$ are both lengths, the inlet condition of rung 2
-  is `{"a": d_p/Pe, "b": 1.0, "d": c_in}` with no unit bookkeeping at all, and the
-  two fields differ only in their Péclet number. That is `A2.1`'s dict with the
-  scaling done once.
-* **Scale an algebraic residual to the units of its own unknown.** Rungs 3 and 4
-  converge to a residual of 1e-10 *and a 123 K interfacial temperature difference*
-  if (11.8.1-3) and (11.8.1-4) are written in the units the book writes them in,
-  because a kcal/(m$^3$ h) row is $10^7$ times an atm/m row and the Newton tolerance
-  never reaches it. Dividing each balance by its own transfer coefficient fixes it.
-  This failure is silent and produces a smooth, plausible profile.
-* The **helper-plus-injection pattern** in the break table: each metric has exactly
-  one function that computes it, *every* metric's helper default is asserted equal
-  to a number printed earlier in the notebook to 1e-12, and every break row
-  perturbs one of its arguments. That is what makes "the row reaches the code it
-  perturbs" checkable rather than a claim - `G1.1` shipped a row that read a module
-  constant instead of the configuration. Two further rules:
-  * **an unasserted helper drifts.** A helper that runs its own coarser refinement
-    while the notebook displays a finer one carries a different number into
-    `agreement.json`, and nothing compares them. The remedy is structural rather
-    than a tighter tolerance - the display and the metric are the *same call*,
-    memoised - and the assertion list is checked against the metric set, so a
-    metric cannot be added without one.
-  * **the four shifts are the exception, and exceptions get printed.** The break
-    rows cannot afford the displayed grid once per row, so those four
-    metrics are computed on a coarser one. Both values and their gap are printed
-    in a table; an exception you can see is a caveat, an exception you cannot is a
-    discrepancy.
-* **The AST guard, but only if you measure its teeth on the forms you care about
-  AND publish the ones it misses.** This one parses each row plus one level of the
-  helpers it names and rejects a metric key bound to a numeric literal - and it
-  constant-folds, so `0.1656 + 0.0001`, `float("15.688")`, a subscript off a frozen
-  tuple and a one-line laundering helper are all caught. A negative control that
-  tests only the bare literal measures the guard's easiest case rather than its
-  coverage, so there are five controls, one per laundering form, each asserted to catch exactly its own
-  keys - and eleven ESCAPE forms, printed and asserted to escape, so the notebook
-  states the guard's blind spots rather than implying it has none. A module-level
-  constant is one of them, and it is the realistic accidental case. The
-  false-positive control binds a *metric* key to a computed value; a non-metric
-  key is filtered out before the guard looks at anything, and would measure
-  nothing.
-
-**What not to lift.**
-
-* **The constants, without the audit.** Section 11.5.2's printed specific heat is
-  several per cent from what its own downstream groups require, its printed mean
-  density is out by $10^3$, group $A$ of Example 11.5.3.A misses its own printed
-  formula, its tube radius is not the one its own figures were computed at, and its
-  pressures are in a different unit from the one it prints. Every one of those was
-  found by *loading `D2.2`'s and `C2.10`'s CSVs and printing them beside the
-  book's*, which took an afternoon and is the single highest-yield thing on this
-  page. If you retype a constant from a textbook restatement of a paper, check the
-  restatement. (All the percentages are computed in *Parameters* and *Validation*;
-  none is typed here.)
-* **A row-by-row transcription check, on its own.** Every row of Table 11.5.3.A-2
-  transcribes from the 1970 paper at a ratio of exactly 1.000000, and the table is
-  still internally inconsistent by about a third, because one of those rows was
-  copied correctly *from a different worked example at a different tube radius*.
-  What caught it was a CROSS-COLUMN test the table imposes on itself -
-  $\Delta T_{ad} = (B/A)p_0$ with the example's own printed $A$ and $B$. If a table
-  has two columns computed from one quantity, check them against each other, not
-  only against the source. **And then check what the cross-column test cannot
-  see**: Table 11.5.3.A-1 *passes* it while carrying the same transplanted $Q$,
-  because both of its columns descend from that $Q$. A consistency test between two
-  numbers can only catch a defect that moved one of them.
-* **The shifts, as advice about a real o-xylene reactor.** The base case is section
-  11.5.2's deliberate simplification, and the notebook shows it is $k_1$ alone used
-  as the total consumption rate, with the combustion route's 1,090,000 kcal/kmol
-  absent. The rung-to-rung *ordering* is what transfers; the magnitudes are for
-  this pseudo-first-order reactor.
-* **Any of it as validation.** Chapter 11 reports no experiment. Everything here is
-  a reproduction of the book's own arithmetic, of its transcription of a 1970 paper,
-  and of five claims it makes about its own models.
-
-**What the page cannot conclude.**
-
-* Whether rung 4 is needed on the real catalyst. The crossover $D_e$ is computed,
-  but the chapter prints no $D_e$ for V$_2$O$_5$ on silica and sends the reader to
-  two documents that are not on disk, so the sign of the rung-4 correction is
-  established and its size is not.
-* Whether $\lambda_{ea}$ makes rung 2 matter. The chapter says "little information
-  is available" and never defines $\mathrm{Pe}_{ha}$; the page sweeps the two Péclet
-  numbers together, so the crossover it root-finds is a crossover in *both* at once
-  and not in $\lambda_{ea}$ alone. Nor is the shift below the swept range reported:
-  the crossover cell prints the largest $|$shift$|$ on that sweep, and nothing is
-  claimed about smaller Péclet numbers.
-* Anything about section 11.10, the sixth cell of Table 11.4-1 - the
-  two-dimensional heterogeneous model. It is out of scope, and the Papageorgiou &
-  Froment [1995] kinetics it uses are a different reaction model.
-* Anything read off a figure. Figures 11.5.2-1/2, 11.6-1/2, 11.7.1-1/2/3, all six
-  11.7.3 figures, 11.7.4-1, 11.8.1-1..4, 11.8.2-1, 11.9.1.A-1..8 and the runaway
-  band of Fig. 11.5.3-1 are not digitised, not traced and not read. The **one**
-  thing taken from a figure anywhere on this page is the *unit word* on
-  Fig. 11.5.2-1's ordinate label, "$p_0$, atm", read on a 300 ppi crop; no curve,
-  tick or point is read from it or from any other.
-* **How rung 5's threshold converges.** Its hot spot is refined on both axes, but
-  the threshold - the quantity the ladder table actually reports for that rung - is
-  refined on neither. The (600, 10)-versus-(1200, 20) gap is printed; no observed
-  order and no Richardson limit is claimed for it, and the tube-radius crossover is
-  located at (600, 10) with that gap, divided by the local slope of the sweep,
-  as its error bar - three figures on $R_t^*$, not the six its bisection tolerance
-  would suggest.
-* **Whether a state exists that the Newton cannot reach.** `p0_critical` counts a
-  non-converged solve as supercritical. A control shows that every threshold this
-  page reports - not only the five default rungs - is a genuine 415 $^\circ$C crossing rather than
-  a convergence boundary, and thresholds that fail it are raised on rather than
-  returned. What the control cannot do is find a bounded state the Newton never
-  reaches: section 11.6's own three-steady-state discussion is a warning that a
-  computation can miss a state that exists. Each threshold here is, by
-  construction, the one on the branch followed up from a safe feed; other branches
-  are not searched for."""))
-
-nb = nbf.v4.new_notebook(cells=cells)
-nb.metadata.kernelspec = {"display_name": "Python 3", "language": "python",
-                          "name": "python3"}
-nb.metadata.language_info = {"name": "python", "pygments_lexer": "ipython3"}
-Path("index.ipynb").write_text(nbf.writes(nb), encoding="utf-8")
-print(f"wrote index.ipynb  ({len(cells)} cells)")
+# %%
+# Claims: prints every registered number, writes agreement.json for CI, and
+# raises when a claim fails its own check or has no break row.
+claims.report();   # the semicolon keeps the notebook from echoing the payload
