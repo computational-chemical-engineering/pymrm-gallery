@@ -16,7 +16,7 @@ the lesson list whole: every item on it was a defect a review found on an earlie
 
 ```
 Refresh the gallery page pages/<PAGE> in /home/eajfpeters/Code/pymrm_suite/pymrm-gallery,
-branch <BRANCH>, onto the new page layout and pymrm 3.2.0, in both lanes. Do not
+branch <BRANCH>, onto the new page layout and pymrm 3.3.0, in both lanes. Do not
 commit, do not `git add`, do not `git rm` (delete files with plain `rm`): other agents
 may work in this checkout and share the git index. Touch only pages/<PAGE>/, the <ID>
 entry in models.yaml, and new rows appended at the end of docs/refresh-learnings.md
@@ -32,7 +32,7 @@ rules: ~/Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/references/pitf
 
 Lane A (infrastructure): index.py from templates/index.py, paired index.ipynb via
 jupytext; bootstrap cell verbatim with GALLERY_REF="main", PAGE the directory name,
-PYMRM from meta.yaml; meta.yaml pymrm_min_version "3.2.0" and realistic
+PYMRM from meta.yaml; meta.yaml pymrm_min_version "3.3.0" and realistic
 runtime_seconds; model.py with NumPy-style docstrings (classes and functions only, no
 plotting, no data loading); test_model.py (import, one fast solve, one stored value via
 load_claims, runs offline in seconds); every number the page states is a Claims entry,
@@ -40,7 +40,7 @@ last code cell `claims.report();`; agreement.json format 2; build_page.py remove
 README `## Corrections` list for any published statement that was wrong (dated today,
 keep existing dates).
 
-Lane B (pymrm 3.2.0): <what the page does now, and the candidate change: ConvFluxTVD
+Lane B (pymrm 3.3.0): <what the page does now, and the candidate change: ConvFluxTVD
 with pymrm.newton (damping="monotone", stagnation=True, raise when not sol.success)
 instead of deferred correction; construct_coefficient_matrix or BlockLayout instead of
 hand indices; {"outflow": True} and compute_boundary_values instead of reading the last
@@ -74,7 +74,7 @@ Lessons from earlier pages (apply all):
   meta.yaml or models.yaml.
 - Compare on the same basis. "What pymrm adds" must be truthful. No em dashes anywhere.
 
-Python: a venv from requirements-lock.txt (pymrm 3.2.0, jupytext included). Run long
+Python: a venv from requirements-lock.txt (pymrm 3.3.0, jupytext included). Run long
 commands in the background.
 
 Acceptance (report each):
@@ -129,5 +129,5 @@ While any agent works in the checkout:
 - Spot-check before committing: `git status`, the README Corrections, `grep -n '—'`,
   a grep for history words (earlier, previously, used to, old, version names),
   `scripts/check_metadata.py`.
-- Message: `<ID> on the new page layout and pymrm 3.2.0; published corrections`, with
+- Message: `<ID> on the new page layout and pymrm 3.3.0; published corrections`, with
   the moved metrics and the corrections listed in the body.
