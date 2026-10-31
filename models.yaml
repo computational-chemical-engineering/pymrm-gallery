@@ -1198,7 +1198,10 @@ models:
     - construct_grad
     - construct_div
     - construct_convflux_upwind
+    - construct_coefficient_matrix
     - interp_cntr_to_stagg_tvd
+    - ConvFluxTVD
+    - newton
     data:
       tier: 2
       method: digitised
@@ -1328,14 +1331,15 @@ models:
       other than one they bracket the achievable conversion. The page reproduces all
       44 conversions and all 8 degrees of segregation Zwietering printed, with zero
       fitted parameters, and then asks the question the bounds exist to answer: how
-      wide is the bracket? It is wide, and it widens with reaction rate - a factor
+      wide is the bracket? It is wide, and it widens with reaction rate: a factor
       2.12 between the two bounds at kc0*tau = 50 for a two-tank RTD, with both of
       Zwietering's intermediate reactors sitting well inside it. His eq. (31) is
       recast as a conservative convection-reaction problem in the life-expectation
-      coordinate, which turns a delicate backward integration into an ordinary pymrm
-      boundary-value problem, and it is checked against a gridless independent
-      integration to 8.6e-07. On the way, the conversion bodies of his Tables 1 and 2
-      turn out to be interchanged with respect to their captions - proved from three
+      coordinate, solved with van Leer fluxes and their exact Jacobian by Newton,
+      which makes the backward integration an ordinary pymrm boundary-value
+      problem, and it is checked against a gridless integration to 8.6e-07, the
+      grid error. On the way, the conversion bodies of his Tables 1 and
+      2 turn out to be interchanged with respect to their captions, proved from three
       closed forms he printed himself.
     section: A
     status: published
@@ -1358,8 +1362,10 @@ models:
     pymrm_api:
       - construct_convflux_upwind
       - construct_div
+      - ConvFluxTVD
+      - construct_coefficient_matrix
+      - compute_boundary_values
       - interp_cntr_to_stagg_tvd
-      - NumJac
       - newton
     reference:
       authors:
@@ -1393,63 +1399,73 @@ models:
       with respect to their captions. This is established from the paper's own printed
       closed forms and needs no model: eq. (42) is derived on the same page from
       eq. (41), whose 2/tau makes it unambiguously the TWO-vessel ideally mixed chain,
-      and its six values are Table 2's third row exactly - Table 2 being captioned
+      and its six values are Table 2's third row exactly, Table 2 being captioned
       three vessels. Eq. (38) (derived from eq. 32, the two-vessel frequency function)
       and eqs. (39)+(40) land on Table 2's other two algebraic rows the same way.
       Scored across all 44 values, the interchanged reading gives a worst deviation of
       4.5e-03 with 40 of 44 inside 0.001; the caption reading gives 3.5e-02 with 0 of
       44 inside 0.001. The physical ordering agrees (three tanks are the narrower RTD
       and must convert more for a second-order reaction, and Table 1 prints the
-      smaller values), and the J column does NOT move with the body, which is what
-      makes this an interchange rather than a relabelling. The page scores both
-      readings and says what it cannot know.
+      smaller value in all 22 paired cells), and the J column does NOT move with the
+      body, which is what makes this an interchange rather than a relabelling. The
+      page scores both readings and says what it cannot know.
 
       A SECOND, SMALLER DEFECT, unresolved. Seven of the eight printed J values
-      reproduce, four of them as exact rationals. The eighth - maximum mixedness with
-      a three-tank RTD - computes to 0.080296 against the printed 0.0831. The two-tank
-      companion reproduces to four decimals and Appendix I's variance identity closes
-      to 6.1e-16, so the printed value is probably a slip, but the page does not
+      reproduce, four of them as exact rationals. The eighth, maximum mixedness with
+      a three-tank RTD, computes to 0.080296 against the printed 0.0831. The two-tank
+      companion meets its closed form (2e E1(1) - 1)/7 and Appendix I's variance
+      identity closes, so the printed value is probably a slip, but the page does not
       adjust either number.
 
       ZWIETERING'S OWN INTEGRATION ERROR is measurable and is measured. Every
-      algebraic row in both tables is inside his three-decimal rounding. The only row
-      that is not is the maximum-mixedness row for the two-tank RTD - the one case he
-      had to integrate eq. (31) by hand - which carries a +1.10 % bias with all four printed
-      deviations of one sign. His three-tank maximum-mixedness row is exact to the
-      printed precision.
+      algebraic row in both tables is inside one unit of his last decimal (0.001),
+      though four algebraic cells miss by more than half a unit. The only row outside
+      0.001 is the maximum-mixedness row for the two-tank RTD, the one case he
+      had to integrate eq. (31) by hand, which carries a +1.10 % bias with all four
+      printed deviations of one sign. His three-tank maximum-mixedness row is exact to
+      the printed precision.
 
       THE HEADLINE IS A WIDTH, NOT AN AGREEMENT. Over the twelve tabulated cases the
       maximum-mixedness exit concentration runs from 1.12x to 2.12x the segregated
-      one, and the relative bracket WIDENS with K rather than closing - 13 % at K = 3,
+      one, and the relative bracket WIDENS with K rather than closing: 13 % at K = 3,
       112 % at K = 50 for two tanks. The bounds are not decoration: Zwietering's two
       intermediate reactors occupy mu = 0.23 to 0.85 of the band and come no closer
       than 0.15 of the bracket width to either edge, so a maximum-mixedness solve
       wrong by more than that in the wrong direction would put a real reactor outside
       its own bounds. The bracket closes only in the two places the theory says it
-      must: at reaction order one (to 3.5e-14 - the two routes share the RTD functions, so the anchor is the exact closed-form value, not route independence)
+      must: at reaction order one (to below 1e-12; the two routes share the RTD
+      functions, so the anchor is the exact closed-form value, not route independence)
       and in the plug-flow limit (4.0 % of the segregated value at 300 tanks).
 
-      TWO REFINEMENT AXES, both reported. Grid at observed order 2.00 with the van
-      Leer deferred correction and 1.00 with bare upwind; domain truncation decaying
-      at 8.44 per unit of X, hence 4.1e-15 at the production X = 6, a factor 2e8 below
-      the grid error. The truncation decay is predicted from the linearisation rather
-      than merely fitted and lands within 8 %.
+      THE SOLVE. Van Leer face fluxes with their exact Jacobian (ConvFluxTVD) and
+      newton with monotone damping converge in a handful of iterations; van Leer
+      deferred correction reaches the same discrete solution to below 1e-11 in tens
+      of sweeps and is kept as a second solver route. The discrete balance closes to
+      below 1e-12 with the exit read on the face. For this scalar equation the
+      gridless DOP853 route at a loose tolerance is as fast and more accurate; the
+      finite-volume form is there for the closed balance and the reusable operator
+      stack, not for speed.
 
-      WHAT THE PAGE SAYS IT CANNOT DO. The far-field boundary condition is untested -
+      TWO REFINEMENT AXES, both reported, with the ladder printed. Grid at observed
+      order 2.00 with van Leer and 1.00 with bare upwind, every rung of one sign;
+      domain truncation decaying at 8.44 per unit of X at K = 10; over all printed
+      cases the difference is 3.5e-10 at X = 4 and below 1e-13, the DOP853
+      tolerance floor, at the production X = 6. The
+      truncation decay is predicted from the linearisation rather than merely fitted
+      and lands within 8 %.
+
+      WHAT THE PAGE SAYS IT CANNOT DO. The far-field boundary condition is untested:
       replacing the root by gamma = 1 moves nothing at the production domain length,
       and the page measures that rather than claiming the condition as a check.
-      Appendix I's variance identity is structural. Six metrics sit below
-      check_agreement.py's ABS_FLOOR and are named explicitly as outside CI.
 
-      A2.4 (tanks in series) was published on 2026-08-07, after this page; it loads
-      none of this page's data and contradicts none of its findings, and the RTDs
-      used here remain analytic Erlang distributions verified in place. This
-      sentence previously said A2.4 was not built. No sibling page's CSV is loaded:
-      A2.1 publishes none and the dispersion
-      datasets on A2.3, A2.5 and A2.6 concern measured rather than analytic RTDs. The
-      one sibling finding that transfers is A2.6's outlet-face trap, which is live
-      here (5.0e-04 on a uniform grid, 585x the reported precision) and is measured in
-      the break table rather than assumed away.
+      A2.4 (tanks in series) loads none of this page's data and contradicts none of
+      its findings, and the RTDs used here remain analytic Erlang distributions
+      verified in place. No sibling page's CSV is loaded: A2.1 publishes none and the
+      dispersion datasets on A2.3, A2.5 and A2.6 concern measured rather than
+      analytic RTDs. The one sibling finding that transfers is A2.6's outlet-face
+      trap, which is live here (reading the first cell centre of a uniform 800-cell
+      grid moves the exit by 4.7e-04, 15 times that grid's face error) and is
+      measured on the page rather than assumed away.
 
   - id: A2.3
     slug: taylor-aris-dispersion

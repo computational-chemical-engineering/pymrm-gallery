@@ -1,44 +1,822 @@
 {
   "page": "A2.8",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "tables_max_dev_interchanged": 0.004525629336326664,
-    "tables_rms_dev_interchanged": 0.0008347838370796765,
-    "tables_max_dev_as_captioned": 0.03528609910071545,
-    "tables_algebraic_rows_max_dev": 0.0007703378046271525,
-    "tables_max_mixedness_row_max_dev": 0.004525629336326664,
-    "eq38_vs_table2_max_dev": 0.0005348989824186523,
-    "eq38_vs_table1_max_dev": 0.023780107526532868,
-    "eq42_vs_table2_max_dev": 0.0004065243382707223,
-    "eq42_vs_table1_max_dev": 0.03268935445028892,
-    "eq3940_vs_table2_max_dev": 0.0007703378046417797,
-    "eq3940_vs_table1_max_dev": 0.021410051623995063,
-    "mm_pymrm_vs_dop853_max": 8.626802704414516e-07,
-    "mm_grid_order_vanleer": 2.0039362142832586,
-    "mm_grid_order_upwind": 1.0006613165994067,
-    "mm_truncation_decay_rate": 8.43908088591866,
-    "mm_truncation_error_at_X6": 4.107825191113079e-15,
-    "mm_truncation_model_max_rel_err": 0.07711515301166538,
-    "mm_reference_tolerance_error": 2.6145752229922437e-14,
-    "limit_exponential_rtd_max_dev": 3.5083047578154947e-14,
-    "limit_first_order_bracket_width": 3.4638958368304884e-14,
-    "limit_first_order_vs_exact": 3.4638958368304884e-14,
-    "limit_plugflow_rel_width_n300": 0.03978545876615237,
-    "limit_plugflow_seg_gap_n300": 0.00010099568861465097,
-    "order_margin_p_1p1": 0.008330525152006406,
-    "order_margin_p_0p9": -0.007422962037162287,
-    "J_max_dev_seven_of_eight": 4.285714285715003e-05,
-    "J_max_dev_all_eight": 0.0028037282654395645,
-    "J_mm_3tank_computed": 0.08029627173456043,
-    "J_variance_identity_residual": 6.106226635438361e-16,
-    "bracket_max_ratio_hi_over_lo": 2.11860239630896,
-    "bracket_max_relative_width": 1.11860239630896,
-    "bracket_rel_width_K30_n2": 0.8272954871943172,
-    "bracket_min_margin_of_interior": 0.15062920836318194,
-    "break_min_physics_defect_shift": 0.02507076691052995,
-    "break_farfield_root_shift": 5.86673852415176e-07,
-    "break_farfield_root_shift_X0p5": 0.02070059302896346,
-    "break_exit_cell_uniform_grid": 0.0005049588570685548,
-    "break_first_order_collapse_sens": 0.01548829211551217,
-    "filled_dash_mm_K50_2tank": 0.07528465623151331
+    "n_printed_conversions": {
+      "kind": "exact",
+      "value": 44
+    },
+    "n_printed_J": {
+      "kind": "exact",
+      "value": 8
+    },
+    "printed_table1_below_table2": {
+      "kind": "exact",
+      "value": 22,
+      "margin": 0.007000000000000003,
+      "min_margin": 0.0005,
+      "note": "paired cells where Table 1 prints the smaller c_e/c0; margin in c_e/c0"
+    },
+    "eq38_vs_table1_max_dev": {
+      "kind": "value",
+      "value": 0.023780107526532868,
+      "rtol": 0.05
+    },
+    "eq38_vs_table2_max_dev": {
+      "kind": "value",
+      "value": 0.0005348989824186523,
+      "rtol": 0.05
+    },
+    "eq3940_vs_table1_max_dev": {
+      "kind": "value",
+      "value": 0.021410051623995063,
+      "rtol": 0.05
+    },
+    "eq3940_vs_table2_max_dev": {
+      "kind": "value",
+      "value": 0.0007703378046417797,
+      "rtol": 0.05
+    },
+    "eq42_vs_table1_max_dev": {
+      "kind": "value",
+      "value": 0.03268935445028892,
+      "rtol": 0.05
+    },
+    "eq42_vs_table2_max_dev": {
+      "kind": "value",
+      "value": 0.0004065243382707223,
+      "rtol": 0.05
+    },
+    "closed_forms_landing_on_table2": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 3.3247866668195134,
+      "min_margin": 1.0,
+      "note": "log of (deviation from Table 1)/(deviation from Table 2) per closed form"
+    },
+    "tables_max_dev_interchanged": {
+      "kind": "value",
+      "value": 0.004525629336326664,
+      "rtol": 0.05
+    },
+    "tables_rms_dev_interchanged": {
+      "kind": "value",
+      "value": 0.0008347838370796666,
+      "rtol": 0.05
+    },
+    "tables_max_dev_as_captioned": {
+      "kind": "value",
+      "value": 0.03528609910071512,
+      "rtol": 0.05
+    },
+    "tables_algebraic_rows_max_dev": {
+      "kind": "value",
+      "value": 0.0007703378046271525,
+      "rtol": 0.05
+    },
+    "tables_max_mixedness_row_max_dev": {
+      "kind": "value",
+      "value": 0.004525629336326664,
+      "rtol": 0.05
+    },
+    "tables_mm3_row_max_dev": {
+      "kind": "value",
+      "value": 0.00028609910071514255,
+      "rtol": 0.05
+    },
+    "tables_readings_max_ratio": {
+      "kind": "value",
+      "value": 7.796948551989883,
+      "rtol": 0.05
+    },
+    "tables_readings_rms_ratio": {
+      "kind": "value",
+      "value": 26.83542671587109,
+      "rtol": 0.05
+    },
+    "tables_within_0p001_interchanged": {
+      "kind": "exact",
+      "value": 40,
+      "margin": 0.1973151261621406,
+      "min_margin": 0.05,
+      "note": "relative distance of the nearest deviation to 0.001"
+    },
+    "tables_within_0p001_as_captioned": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 5.5367779967053785,
+      "min_margin": 0.05,
+      "note": "relative distance of the nearest deviation to 0.001"
+    },
+    "tables_outside_0p001_only_mm_2tank": {
+      "kind": "exact",
+      "value": true
+    },
+    "tables_algebraic_cells_outside_half_unit": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.008461337175801574,
+      "min_margin": 0.0001,
+      "note": "algebraic cells with |deviation| above 0.0005; relative distance of the nearest to 0.0005 (4e-6), against quadrature errors near 1e-12"
+    },
+    "mm_2tank_mean_bias": {
+      "kind": "value",
+      "value": 0.011013794330094494,
+      "rtol": 0.05,
+      "note": "printed over computed, minus 1"
+    },
+    "mm_3tank_mean_bias": {
+      "kind": "value",
+      "value": -4.3220834915094644e-05,
+      "rtol": 0.5,
+      "note": "printed over computed, minus 1; rounding-sized, so a loose tolerance"
+    },
+    "mm_2tank_deviations_positive": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.006741158926588442,
+      "min_margin": 0.001
+    },
+    "tables_round_to_printed_digits": {
+      "kind": "exact",
+      "value": 36,
+      "margin": 4.230668587894115e-06,
+      "min_margin": 1e-06,
+      "note": "distance of the nearest computed value to a rounding boundary, against a grid error below 1e-6"
+    },
+    "mm_pymrm_vs_dop853_max": {
+      "kind": "value",
+      "value": 8.626801856204125e-07,
+      "rtol": 0.05,
+      "note": "800 graded cells, 12 cases"
+    },
+    "mm_pymrm_vs_dop853_K10_n2": {
+      "kind": "value",
+      "value": 5.866738527204873e-07,
+      "rtol": 0.05,
+      "note": "the case the break rows inject into"
+    },
+    "mm_route_gap_over_table_dev": {
+      "kind": "value",
+      "value": 0.00019062104328690507,
+      "rtol": 0.05
+    },
+    "mm_richardson_vs_dop853_max": {
+      "kind": "bound",
+      "value": 7.340095198316021e-11,
+      "max": 1e-08,
+      "basis": "theory",
+      "note": "second-order Richardson on 1600 and 3200 cells, K = 10 n = 2 and K = 30 n = 3"
+    },
+    "mm_deferred_vs_newton_max": {
+      "kind": "bound",
+      "value": 4.579669976578771e-14,
+      "max": 1e-11,
+      "basis": "tolerance",
+      "note": "largest cell gap, 12 cases; Newton tol 1e-11, sweeps to 1e-13"
+    },
+    "mm_balance_gap_face": {
+      "kind": "bound",
+      "value": 9.992007221626409e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "conservative fluxes telescope; exit read on the face"
+    },
+    "mm_grid_order_vanleer": {
+      "kind": "bound",
+      "value": 2.0039362133957708,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "400 to 800 cells, smaller of the two cases"
+    },
+    "mm_grid_order_vanleer_min": {
+      "kind": "bound",
+      "value": 2.0009877201822484,
+      "min": 1.95,
+      "max": 2.25,
+      "basis": "theory",
+      "note": "successive orders from 200 cells, both cases; pre-asymptotic above 2"
+    },
+    "mm_grid_order_vanleer_max": {
+      "kind": "bound",
+      "value": 2.142734071597626,
+      "min": 1.95,
+      "max": 2.25,
+      "basis": "theory",
+      "note": "successive orders from 200 cells, both cases; pre-asymptotic above 2"
+    },
+    "mm_grid_order_upwind": {
+      "kind": "bound",
+      "value": 1.000661316620475,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "400 to 800 cells, first-order upwind"
+    },
+    "mm_grid_ladder_same_sign": {
+      "kind": "exact",
+      "value": true
+    },
+    "mm_grid_finest_over_ref_tolerance": {
+      "kind": "bound",
+      "value": 2517866.7574309977,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "800-cell error over the reference's tolerance error"
+    },
+    "mm_truncation_decay_rate": {
+      "kind": "value",
+      "value": 8.439080885918662,
+      "rtol": 0.05
+    },
+    "mm_truncation_error_at_X6": {
+      "kind": "bound",
+      "value": 4.107825191113079e-15,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "K = 10, n = 2: DOP853 tolerance floor, X = 6 against X = 20"
+    },
+    "mm_truncation_error_at_X6_all_cases": {
+      "kind": "bound",
+      "value": 9.159339953157541e-15,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "worst over the printed cases, X = 6 against X = 20"
+    },
+    "mm_truncation_error_at_X4_all_cases": {
+      "kind": "value",
+      "value": 3.510479129609223e-10,
+      "rtol": 0.05,
+      "note": "worst over the printed cases, X = 4 against X = 20"
+    },
+    "mm_truncation_model_max_rel_err": {
+      "kind": "value",
+      "value": 0.07711515301166538,
+      "rtol": 0.1
+    },
+    "mm_reference_tolerance_error": {
+      "kind": "bound",
+      "value": 2.6145752229922437e-14,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "DOP853 at rtol 1e-12 against 1e-13"
+    },
+    "limit_exponential_rtd_max_dev": {
+      "kind": "bound",
+      "value": 3.5083047578154947e-14,
+      "max": 1e-12,
+      "basis": "tolerance"
+    },
+    "limit_first_order_bracket_width": {
+      "kind": "bound",
+      "value": 3.4638958368304884e-14,
+      "max": 1e-12,
+      "basis": "tolerance"
+    },
+    "limit_first_order_vs_exact": {
+      "kind": "bound",
+      "value": 3.4638958368304884e-14,
+      "max": 1e-12,
+      "basis": "tolerance"
+    },
+    "limit_plugflow_rel_width_n300": {
+      "kind": "value",
+      "value": 0.03978545876615237,
+      "rtol": 0.05
+    },
+    "limit_plugflow_seg_gap_n300": {
+      "kind": "value",
+      "value": 0.00010099568861465097,
+      "rtol": 0.05
+    },
+    "order_margin_p_1p1": {
+      "kind": "value",
+      "value": 0.008330525152006406,
+      "rtol": 0.05
+    },
+    "order_margin_p_0p9": {
+      "kind": "value",
+      "value": -0.007422962037162287,
+      "rtol": 0.05
+    },
+    "limit_order_half_mm_exit": {
+      "kind": "bound",
+      "value": 2.4383396627604878e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "order 0.5 exhausts in finite time; DOP853 atol 1e-14"
+    },
+    "limit_order_half_seg": {
+      "kind": "value",
+      "value": 0.01139804348532972,
+      "rtol": 0.05
+    },
+    "J_max_dev_seven_of_eight": {
+      "kind": "value",
+      "value": 4.285714285715003e-05,
+      "rtol": 0.05
+    },
+    "J_reproduced_within_1e-4": {
+      "kind": "exact",
+      "value": 7,
+      "margin": 0.5714285714284997,
+      "min_margin": 0.05,
+      "note": "relative distance of the nearest deviation to 1e-4"
+    },
+    "J_max_dev_all_eight": {
+      "kind": "value",
+      "value": 0.0028037282654395645,
+      "rtol": 0.05
+    },
+    "J_mm_3tank_computed": {
+      "kind": "value",
+      "value": 0.08029627173456043,
+      "rtol": 0.0001
+    },
+    "J_mm_3tank_rel_discrepancy": {
+      "kind": "value",
+      "value": 0.03373920897039184,
+      "rtol": 0.05
+    },
+    "J_mm_2tank_vs_closed_form": {
+      "kind": "bound",
+      "value": 1.8041124150158794e-16,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "quadrature of eq. (28) against (2e E1(1) - 1)/7"
+    },
+    "J_variance_identity_residual": {
+      "kind": "bound",
+      "value": 6.106226635438361e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "Appendix I: var alpha = var between + var within, n = 2 and 3"
+    },
+    "bracket_max_ratio_hi_over_lo": {
+      "kind": "value",
+      "value": 2.11861179818644,
+      "rtol": 0.01
+    },
+    "bracket_max_relative_width": {
+      "kind": "value",
+      "value": 1.1186117981864403,
+      "rtol": 0.05
+    },
+    "bracket_rel_width_K30_n2": {
+      "kind": "value",
+      "value": 0.827302623721134,
+      "rtol": 0.05
+    },
+    "bracket_min_margin_of_interior": {
+      "kind": "value",
+      "value": 0.15064677998716913,
+      "rtol": 0.05
+    },
+    "bracket_mu_min": {
+      "kind": "value",
+      "value": 0.22588606596018043,
+      "rtol": 0.05
+    },
+    "bracket_mu_max": {
+      "kind": "value",
+      "value": 0.8493532200128309,
+      "rtol": 0.01
+    },
+    "bracket_mu_span": {
+      "kind": "value",
+      "value": 0.6234671540526504,
+      "rtol": 0.05
+    },
+    "break_exit_cell_uniform_grid": {
+      "kind": "value",
+      "value": 0.0004740485256644056,
+      "rtol": 0.05,
+      "note": "first cell minus face, uniform"
+    },
+    "exit_cell_shift_graded": {
+      "kind": "value",
+      "value": 3.861710048957967e-07,
+      "rtol": 0.05,
+      "note": "first cell minus face, graded"
+    },
+    "exit_cell_shift_order_uniform_min": {
+      "kind": "bound",
+      "value": 0.9013483630082105,
+      "min": 0.85,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first cell minus face, uniform grids 200 to 3200 cells; pre-asymptotic below 1"
+    },
+    "exit_cell_shift_order_uniform_max": {
+      "kind": "bound",
+      "value": 0.9869357761424835,
+      "min": 0.85,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first cell minus face, uniform grids 200 to 3200 cells; pre-asymptotic below 1"
+    },
+    "exit_face_order_uniform_min": {
+      "kind": "bound",
+      "value": 1.9456184799011023,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "face error, uniform grids 200 to 3200 cells"
+    },
+    "break_farfield_root_shift": {
+      "kind": "bound",
+      "value": 2.498001805406602e-16,
+      "max": 1e-12,
+      "basis": "chosen",
+      "note": "far-field value 1 against the root at X = 6: the contraction leaves round-off"
+    },
+    "break_farfield_root_shift_X0p5": {
+      "kind": "value",
+      "value": 0.016595958732359167,
+      "rtol": 0.05,
+      "note": "the same at X = 0.5"
+    },
+    "flip_blowup_x_dop853": {
+      "kind": "value",
+      "value": 5.760280302083044,
+      "rtol": 0.01
+    },
+    "flip_blowup_x_riccati": {
+      "kind": "value",
+      "value": 5.760287564799393,
+      "rtol": 0.01
+    },
+    "flip_farfield_discriminant": {
+      "kind": "exact",
+      "value": -76
+    },
+    "filled_dash_mm_K3_3tank": {
+      "kind": "value",
+      "value": 0.3338288487197058,
+      "rtol": 0.0001
+    },
+    "filled_dash_width_K3_3tank": {
+      "kind": "value",
+      "value": 0.11957852020743989,
+      "rtol": 0.0001,
+      "note": "computed segregation, same basis as the maximum-mixedness value"
+    },
+    "filled_dash_mm_K50_3tank": {
+      "kind": "value",
+      "value": 0.057218555575565565,
+      "rtol": 0.0001
+    },
+    "filled_dash_width_K50_3tank": {
+      "kind": "value",
+      "value": 1.0102627723924755,
+      "rtol": 0.0001,
+      "note": "computed segregation, same basis as the maximum-mixedness value"
+    },
+    "filled_dash_mm_K3_2tank": {
+      "kind": "value",
+      "value": 0.3634800337292572,
+      "rtol": 0.0001
+    },
+    "filled_dash_width_K3_2tank": {
+      "kind": "value",
+      "value": 0.12959137382128502,
+      "rtol": 0.0001,
+      "note": "computed segregation, same basis as the maximum-mixedness value"
+    },
+    "filled_dash_mm_K50_2tank": {
+      "kind": "value",
+      "value": 0.07528465623151327,
+      "rtol": 0.0001
+    },
+    "filled_dash_width_K50_2tank": {
+      "kind": "value",
+      "value": 1.1186117981864403,
+      "rtol": 0.0001,
+      "note": "computed segregation, same basis as the maximum-mixedness value"
+    }
+  },
+  "quoted": {
+    "bracket_max_ratio_hi_over_lo": [
+      "2.1"
+    ],
+    "J_mm_3tank_rel_discrepancy": [
+      "more than 3 %"
+    ],
+    "mm_richardson_vs_dop853_max": [
+      "below 1e-8"
+    ],
+    "mm_deferred_vs_newton_max": [
+      "below 1e-11"
+    ],
+    "mm_balance_gap_face": [
+      "below 1e-12"
+    ],
+    "mm_truncation_error_at_X6": [
+      "below 1e-13"
+    ],
+    "mm_truncation_error_at_X6_all_cases": [
+      "below 1e-13"
+    ],
+    "mm_reference_tolerance_error": [
+      "below 1e-12"
+    ],
+    "limit_exponential_rtd_max_dev": [
+      "below 1e-12"
+    ],
+    "limit_first_order_bracket_width": [
+      "below 1e-12"
+    ],
+    "limit_first_order_vs_exact": [
+      "below 1e-12"
+    ],
+    "limit_order_half_mm_exit": [
+      "below 1e-10"
+    ],
+    "J_mm_2tank_vs_closed_form": [
+      "below 1e-8"
+    ],
+    "J_variance_identity_residual": [
+      "below 1e-12"
+    ],
+    "break_farfield_root_shift": [
+      "below 1e-12"
+    ]
+  },
+  "breaks": {
+    "mm_pymrm_vs_dop853_K10_n2": [
+      "rxn_sign=-1.0",
+      "feed=False",
+      "v_const=True",
+      "p=1.0",
+      "X=0.5",
+      "X=1.0",
+      "n_cells=25",
+      "grade=1.0",
+      "limiter=None",
+      "n_cells=400",
+      "reference: eq. (31) integrated forward from x = 0",
+      "reference: E/w replaced by its far-field constant n"
+    ],
+    "flip_blowup_x_dop853": [
+      "integration started at X=4"
+    ],
+    "flip_blowup_x_riccati": [
+      "integration started at X=4"
+    ],
+    "flip_farfield_discriminant": [
+      "K=0.4"
+    ],
+    "mm_pymrm_vs_dop853_max": [
+      "n_cells=400 in every case"
+    ],
+    "mm_route_gap_over_table_dev": [
+      "n_cells=400 in every case"
+    ],
+    "mm_richardson_vs_dop853_max": [
+      "Richardson with order 1"
+    ],
+    "mm_deferred_vs_newton_max": [
+      "deferred correction stopped at sweep change 1e-6"
+    ],
+    "mm_balance_gap_face": [
+      "exit read at the first cell centre"
+    ],
+    "mm_grid_order_vanleer": [
+      "limiter=None in the van Leer ladder"
+    ],
+    "mm_grid_order_vanleer_min": [
+      "limiter=None in the van Leer ladder"
+    ],
+    "mm_grid_order_vanleer_max": [
+      "limiter=None in the van Leer ladder"
+    ],
+    "mm_grid_order_upwind": [
+      "limiter=vanleer in the upwind ladder"
+    ],
+    "mm_grid_ladder_same_sign": [
+      "reference shifted by 1e-6"
+    ],
+    "mm_grid_finest_over_ref_tolerance": [
+      "reference at rtol 1e-6"
+    ],
+    "mm_reference_tolerance_error": [
+      "reference at rtol 1e-6"
+    ],
+    "mm_truncation_decay_rate": [
+      "p=1 in the truncation sweep"
+    ],
+    "mm_truncation_error_at_X6": [
+      "production X=1.0"
+    ],
+    "mm_truncation_error_at_X6_all_cases": [
+      "production X=4.0"
+    ],
+    "mm_truncation_error_at_X4_all_cases": [
+      "X=3.0 instead of 4"
+    ],
+    "mm_truncation_model_max_rel_err": [
+      "prediction without the 1/X far-field factor"
+    ],
+    "limit_exponential_rtd_max_dev": [
+      "E/w doubled for one tank"
+    ],
+    "limit_first_order_bracket_width": [
+      "E/w replaced by its far-field constant n",
+      "E/w of n + 1 tanks with the n-tank RTD"
+    ],
+    "limit_first_order_vs_exact": [
+      "E/w replaced by its far-field constant n"
+    ],
+    "limit_plugflow_rel_width_n300": [
+      "max mixedness from X=1.0 at every n"
+    ],
+    "limit_plugflow_seg_gap_n300": [
+      "segregation with the 100-tank RTD at every n"
+    ],
+    "order_margin_p_1p1": [
+      "max mixedness at order 1 in the order sweep"
+    ],
+    "order_margin_p_0p9": [
+      "max mixedness at order 1 in the order sweep"
+    ],
+    "limit_order_half_mm_exit": [
+      "order 0.7 instead of 0.5"
+    ],
+    "limit_order_half_seg": [
+      "order 0.7 instead of 0.5"
+    ],
+    "eq38_vs_table1_max_dev": [
+      "closed form compared with Table 2"
+    ],
+    "eq38_vs_table2_max_dev": [
+      "closed form compared with Table 1"
+    ],
+    "eq3940_vs_table1_max_dev": [
+      "closed form compared with Table 2"
+    ],
+    "eq3940_vs_table2_max_dev": [
+      "closed form compared with Table 1"
+    ],
+    "eq42_vs_table1_max_dev": [
+      "closed form compared with Table 2"
+    ],
+    "eq42_vs_table2_max_dev": [
+      "closed form compared with Table 1"
+    ],
+    "closed_forms_landing_on_table2": [
+      "closed forms compared with the other table"
+    ],
+    "n_printed_conversions": [
+      "maximum-mixedness rows dropped on loading"
+    ],
+    "n_printed_J": [
+      "maximum-mixedness rows dropped on loading"
+    ],
+    "printed_table1_below_table2": [
+      "ordering taken within Table 1"
+    ],
+    "tables_max_dev_interchanged": [
+      "tables assigned as captioned"
+    ],
+    "tables_rms_dev_interchanged": [
+      "tables assigned as captioned"
+    ],
+    "tables_algebraic_rows_max_dev": [
+      "tables assigned as captioned"
+    ],
+    "tables_max_mixedness_row_max_dev": [
+      "tables assigned as captioned"
+    ],
+    "tables_mm3_row_max_dev": [
+      "tables assigned as captioned"
+    ],
+    "tables_max_dev_as_captioned": [
+      "tables assigned as interchanged"
+    ],
+    "tables_readings_max_ratio": [
+      "both readings assigned as interchanged"
+    ],
+    "tables_readings_rms_ratio": [
+      "both readings assigned as interchanged"
+    ],
+    "tables_within_0p001_interchanged": [
+      "tables assigned as captioned"
+    ],
+    "tables_within_0p001_as_captioned": [
+      "tables assigned as interchanged"
+    ],
+    "tables_outside_0p001_only_mm_2tank": [
+      "tables assigned as captioned"
+    ],
+    "tables_algebraic_cells_outside_half_unit": [
+      "tables assigned as captioned"
+    ],
+    "mm_2tank_mean_bias": [
+      "tables assigned as captioned"
+    ],
+    "mm_3tank_mean_bias": [
+      "tables assigned as captioned"
+    ],
+    "mm_2tank_deviations_positive": [
+      "tables assigned as captioned"
+    ],
+    "tables_round_to_printed_digits": [
+      "tables assigned as captioned"
+    ],
+    "J_max_dev_all_eight": [
+      "J column assigned as the conversion bodies"
+    ],
+    "J_max_dev_seven_of_eight": [
+      "J column assigned as the conversion bodies"
+    ],
+    "J_reproduced_within_1e-4": [
+      "J column assigned as the conversion bodies"
+    ],
+    "J_mm_3tank_computed": [
+      "mean age of two tanks in eq. (28)"
+    ],
+    "J_mm_3tank_rel_discrepancy": [
+      "mean age of two tanks in eq. (28)"
+    ],
+    "J_mm_2tank_vs_closed_form": [
+      "mean age of three tanks in eq. (28) for two tanks"
+    ],
+    "J_variance_identity_residual": [
+      "within-point ages from the 3-tank density, n = 2"
+    ],
+    "bracket_max_ratio_hi_over_lo": [
+      "v_const=True in every case"
+    ],
+    "bracket_max_relative_width": [
+      "v_const=True in every case"
+    ],
+    "bracket_rel_width_K30_n2": [
+      "v_const=True in every case"
+    ],
+    "bracket_min_margin_of_interior": [
+      "v_const=True in every case"
+    ],
+    "bracket_mu_min": [
+      "v_const=True in every case"
+    ],
+    "bracket_mu_max": [
+      "v_const=True in every case"
+    ],
+    "bracket_mu_span": [
+      "v_const=True in every case"
+    ],
+    "break_exit_cell_uniform_grid": [
+      "graded grid instead of uniform"
+    ],
+    "exit_cell_shift_graded": [
+      "uniform grid instead of graded"
+    ],
+    "exit_cell_shift_order_uniform_min": [
+      "grade=2.0 ladder instead of uniform"
+    ],
+    "exit_cell_shift_order_uniform_max": [
+      "grade=2.0 ladder instead of uniform"
+    ],
+    "exit_face_order_uniform_min": [
+      "limiter=None on the uniform ladder"
+    ],
+    "break_farfield_root_shift": [
+      "domain X=0.5 instead of 6"
+    ],
+    "break_farfield_root_shift_X0p5": [
+      "domain X=1.0 instead of 0.5"
+    ],
+    "filled_dash_mm_K3_3tank": [
+      "limiter=None"
+    ],
+    "filled_dash_width_K3_3tank": [
+      "segregation from the printed table"
+    ],
+    "filled_dash_mm_K50_3tank": [
+      "limiter=None"
+    ],
+    "filled_dash_width_K50_3tank": [
+      "segregation from the printed table"
+    ],
+    "filled_dash_mm_K3_2tank": [
+      "limiter=None"
+    ],
+    "filled_dash_width_K3_2tank": [
+      "segregation from the printed table"
+    ],
+    "filled_dash_mm_K50_2tank": [
+      "limiter=None"
+    ],
+    "filled_dash_width_K50_2tank": [
+      "segregation from the printed table"
+    ]
   }
 }
