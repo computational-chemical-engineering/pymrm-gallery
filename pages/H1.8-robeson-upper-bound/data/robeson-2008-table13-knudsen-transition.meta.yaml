@@ -18,7 +18,7 @@ acquisition:
   method: >
     transcribed from the two printed tables, read from a 300 dpi `pdftoppm` render of p. 398 cropped
     to digit scale, cross-checked against `pdftotext -layout`. The two readings agree on all 104
-    numerals.
+    numeric cells.
   date: "2026-08-08"
   digitised: false
 columns:
@@ -33,22 +33,23 @@ columns:
   sqrt_M_ratio: "(M_j/M_i)^(1/2), the Knudsen diffusion selectivity, dimensionless, as printed."
   ks_D_ratio: >
     the printed product column, headed "ks(Di/Dj) = ks(Mj/Mi)^(1/2)". This is the separation factor
-    at which solution-diffusion selectivity equals the Knudsen value.
+    at which solution-diffusion selectivity equals the Knudsen value. Load it a second time with
+    dtype=str for its rounding band: read as a float, "0.270" (13a N2/CH4) loses its trailing zero.
   P_transition_barrer: >
     P_i in barrers: the permeability the upper bound of Table 12 gives at that separation factor.
     Robeson computed it as k * ks_D_ratio^n; this page checks that identity rather than assuming it.
 notes: >
-  THIS TABLE IS THE PAGE'S SECOND, INDEPENDENT ROUTE TO TABLE 12. Robeson computed the last column
-  from Table 12's (k, n) by a chain that has nothing to do with how this page assembles Table 12, so
-  reproducing all 26 rows is a real check on the transcription of every present (k, n) pair plus the
-  prior pairs for He/H2 and H2/CO2. It shares Table 12 as an INPUT, so it cannot detect an error
-  Robeson himself made in Table 12.
+  THIS TABLE IS AN INDEPENDENT CHECK ON THIS PAGE'S TRANSCRIPTION OF TABLE 12, not a second route to
+  Robeson's numbers. Robeson computed the last column from Table 12's (k, n) by a chain that has
+  nothing to do with how this page assembles Table 12, so reproducing all 26 rows is a real check on
+  the transcription of every present (k, n) pair plus the prior pairs for He/H2 and H2/CO2. It
+  shares Table 12 as an INPUT, so it cannot detect an error Robeson himself made in Table 12.
   The two "(prior data)" rows in each table are the only place in the paper where the same
   separation factor is evaluated on both the 1991/1994 and the 2008 bound, which makes their ratio
   a printed measurement of the shift at a stated selectivity.
   ks is NOT checkable from this paper: eqs. (4) and (5) need critical temperatures and Lennard-Jones
   temperatures, and the 2008 paper prints neither. ks is taken as an input.
-  The (M_j/M_i)^(1/2) column IS checkable and reproduces exactly from INTEGER molecular weights
+  The (M_j/M_i)^(1/2) column IS checkable and reproduces, to its printed digits, from INTEGER molecular weights
   (He 4, H2 2, O2 32, N2 28, CO2 44, CH4 16); IUPAC standard atomic weights do not reproduce it
   (H2/N2 would be 3.728, not the printed 3.742).
 status: complete
