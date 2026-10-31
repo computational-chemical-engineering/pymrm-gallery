@@ -34,9 +34,15 @@ TIMEOUT = int(ARGS[0]) if ARGS else 1800
 # exp, log and pow come from other code and differ in the last bits. Disabling the
 # AVX-512 targets gives every x86-64 machine the AVX2 (X86_V3) path the baselines
 # were made with (docs/claims-design.md, section 7). Names a CPU lacks are ignored.
+# OPENBLAS_L2_SIZE: OpenBLAS 0.3.34 enlarges the GEMM blocks on AMD CPUs that expose
+# AVX-512 and report a 1024 KB L2 (Zen 4, Zen 5), for every core table, including
+# the forced Haswell one, whose kernel then overflows its stack buffer: H1.7 and J1.3
+# segfaulted in numpy.linalg.solve on EPYC 9V74 and 9V45 runners (OpenBLAS #6013).
+# The Haswell, Sandybridge and Nehalem tables read L2 nowhere else, so 512 only
+# switches that override off and keeps the blocking of the baselines everywhere.
 NPY_PIN = "X86_V4 AVX512_ICL AVX512_SPR"
 PINNED_ENV = {"OPENBLAS_CORETYPE": "Haswell", "OPENBLAS_NUM_THREADS": "1",
-              "OMP_NUM_THREADS": "1"}
+              "OMP_NUM_THREADS": "1", "OPENBLAS_L2_SIZE": "512"}
 if platform.machine().lower() in ("x86_64", "amd64"):
     PINNED_ENV["NPY_DISABLE_CPU_FEATURES"] = NPY_PIN
 for _k, _v in PINNED_ENV.items():

@@ -13,9 +13,12 @@ name: execute
 #                on one machine only. Changed pages on PRs, every page weekly;
 #                weekly it also leaves NumPy's SIMD dispatch free, so on an
 #                AVX-512 runner it reports what the NumPy pin hides.
-# scripts/run_pages.py pins OPENBLAS_CORETYPE=Haswell, one thread and NumPy's
-# SIMD dispatch (AVX2, NPY_DISABLE_CPU_FEATURES) unless set. Runners are a mix
-# of AVX2 and AVX-512 machines; without the NumPy pin a run depends on which.
+# scripts/run_pages.py pins OPENBLAS_CORETYPE=Haswell, one thread, NumPy's
+# SIMD dispatch (AVX2, NPY_DISABLE_CPU_FEATURES) and OPENBLAS_L2_SIZE=512 unless
+# set. Runners are a mix of AVX2 and AVX-512 machines; without the NumPy pin a run
+# depends on which, and without the L2 pin OpenBLAS 0.3.34 enlarges its blocks on
+# AMD AVX-512 runners and overflows the Haswell kernel's stack buffer
+# (docs/claims-design.md, section 7).
 
 on:
   push:
@@ -133,6 +136,7 @@ jobs:
         # The CPU and NumPy's SIMD dispatch are what the BLAS pin does not fix.
         run: |
           lscpu | grep -E 'Model name|^CPU\(s\)|Flags' | cut -c1-200 || true
+          lscpu -C || true
           python -c "import numpy; numpy.show_config()" | grep -iE 'openblas|version|found' | head -8 || true
           python -c "from numpy._core._multiarray_umath import __cpu_features__ as f, __cpu_dispatch__ as d; print('NumPy dispatch targets this CPU has:', [k for k in d if f.get(k)])" || true
 
