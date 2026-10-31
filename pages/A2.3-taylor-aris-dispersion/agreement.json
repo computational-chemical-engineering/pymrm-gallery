@@ -1,16 +1,528 @@
 {
   "page": "A2.3",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "closure_rel_err_n200": 9.998140401908131e-05,
-    "closure_worst_rel_err_pe_sweep": 0.00015620664296212006,
-    "direct_rel_err_n3200": 0.00698552117477802,
-    "direct_richardson_rel_err": 0.004114418527702668,
-    "taylor_D_rel_err": 0.003807923663871726,
-    "mass_conservation_err": 1.1235457009206584e-13,
-    "tau_settle_3pct_n3200": 0.21250000000000016,
-    "tau_settle_2pct_n3200": 0.23250000000000018,
-    "tau_settle_3pct_n1600_withdrawn": 0.19500000000000015,
-    "numerical_dispersion_floor_n3200": 0.011135661780970585,
-    "numerical_dispersion_order": 1.0004080742337047
+    "closure_rel_err_n200": {
+      "kind": "value",
+      "value": 1.8749507502136e-09,
+      "rtol": 0.05,
+      "note": "grid mean subtracted, n_r = 200"
+    },
+    "closure_order_grid_mean": {
+      "kind": "bound",
+      "value": 3.999945192230924,
+      "min": 3.8,
+      "max": 4.2,
+      "basis": "chosen",
+      "note": "measured fourth order, n_r 100 to 200; the scheme is formally second order"
+    },
+    "closure_pin_gap_grid_mean_n200": {
+      "kind": "bound",
+      "value": 1.095486368285492e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "a consistent pure-Neumann system: the pinned cell cannot change k"
+    },
+    "closure_u0half_rel_err_n200": {
+      "kind": "value",
+      "value": 9.99814040191227e-05,
+      "rtol": 0.05,
+      "note": "exact mean u0/2 subtracted"
+    },
+    "closure_u0half_pin_gap_n200": {
+      "kind": "value",
+      "value": 0.00014997795719750683,
+      "rtol": 0.05,
+      "note": "pin at the wall instead of the axis"
+    },
+    "closure_order_u0half": {
+      "kind": "bound",
+      "value": 1.999344874864486,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "the grid mean of u - u0/2 is a second-order quadrature error"
+    },
+    "closure_u0half_grid_mean_n200": {
+      "kind": "value",
+      "value": 6.249999999976552e-06,
+      "rtol": 0.05,
+      "note": "grid area average of u - u0/2, over u0"
+    },
+    "closure_pe_sweep_spread": {
+      "kind": "bound",
+      "value": 6.318279233141766e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "structural": true,
+      "note": "k is proportional to Pe^2 exactly (the closure is linear in u'), so the relative error is one number at every Pe; no defect of the closure changes that"
+    },
+    "direct_rel_err_n3200": {
+      "kind": "value",
+      "value": 0.0069854455987197195,
+      "rtol": 0.05,
+      "note": "window tau 0.2 to 1.0"
+    },
+    "direct_richardson_rel_err": {
+      "kind": "value",
+      "value": 0.004158550801895311,
+      "rtol": 0.05,
+      "note": "window 0.2 to 1.0, n_z 3200 and 6400"
+    },
+    "modal_window_deficit_early": {
+      "kind": "value",
+      "value": 0.004071917820072013,
+      "rtol": 1e-06,
+      "note": "window 0.2 to 1.0"
+    },
+    "direct_late_rel_err_n3200": {
+      "kind": "value",
+      "value": 0.011119498404970507,
+      "rtol": 0.05,
+      "note": "window tau 0.6 to 1.2"
+    },
+    "direct_late_richardson_rel_err": {
+      "kind": "value",
+      "value": -2.4497995690708763e-05,
+      "rtol": 0.2,
+      "note": "window 0.6 to 1.2, n_z 3200 and 6400; the modal start-up term is -1.5e-5"
+    },
+    "numerical_dispersion_floor_n3200": {
+      "kind": "value",
+      "value": 0.011135586533487452,
+      "rtol": 0.001
+    },
+    "floor_over_closed_form_n3200": {
+      "kind": "value",
+      "value": 0.9999859360030408,
+      "rtol": 0.0001,
+      "note": "floor over (Pe dz/8 + k_24 - k)/(D + k)"
+    },
+    "numerical_dispersion_order": {
+      "kind": "bound",
+      "value": 1.0010899702042408,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind; n_z 3200 to 6400"
+    },
+    "mass_conservation_err": {
+      "kind": "bound",
+      "value": 3.468336728928989e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "closed boundaries and a conservative scheme; worst over the five meshes"
+    },
+    "operator_column_sum_n3200": {
+      "kind": "bound",
+      "value": 3.9968028886505635e-15,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "V^T J = 0: no boundary passes flux, so dM0/dt = 0 for every state"
+    },
+    "taylor_k_rel_err": {
+      "kind": "value",
+      "value": 0.00040400951034491595,
+      "rtol": 0.05,
+      "note": "k from his erf fit against the k he prints"
+    },
+    "taylor_D_rel_err": {
+      "kind": "value",
+      "value": 0.003807923663871726,
+      "rtol": 0.05
+    },
+    "taylor_D_inside_range": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.37405803632569423,
+      "min_margin": 0.05,
+      "note": "relative distance to the nearer end of Furth & Ullmann's range"
+    },
+    "taylor_pe_experiment": {
+      "kind": "value",
+      "value": 2209.212512605271,
+      "rtol": 0.05
+    },
+    "taylor_k_over_D_experiment": {
+      "kind": "value",
+      "value": 25419.895447144245,
+      "rtol": 0.05
+    },
+    "tau_settle_10pct_modal": {
+      "kind": "value",
+      "value": 0.14977316646207467,
+      "rtol": 1e-06,
+      "note": "modal series, 40 modes"
+    },
+    "tau_settle_10pct_corrected": {
+      "kind": "value",
+      "value": 0.15064486768983265,
+      "rtol": 0.001,
+      "note": "floor-corrected, n_z = 3200"
+    },
+    "tau_settle_10pct_corrected_vs_modal": {
+      "kind": "value",
+      "value": 0.005820142875718082,
+      "rtol": 0.05
+    },
+    "tau_settle_10pct_n3200": {
+      "kind": "value",
+      "value": 0.14341208592110946,
+      "rtol": 0.001,
+      "note": "raw root, n_z = 3200"
+    },
+    "tau_settle_5pct_modal": {
+      "kind": "value",
+      "value": 0.19697569732808845,
+      "rtol": 1e-06,
+      "note": "modal series, 40 modes"
+    },
+    "tau_settle_5pct_corrected": {
+      "kind": "value",
+      "value": 0.19811833812302368,
+      "rtol": 0.001,
+      "note": "floor-corrected, n_z = 3200"
+    },
+    "tau_settle_5pct_corrected_vs_modal": {
+      "kind": "value",
+      "value": 0.005800922704855438,
+      "rtol": 0.05
+    },
+    "tau_settle_5pct_n3200": {
+      "kind": "value",
+      "value": 0.18434401592367933,
+      "rtol": 0.001,
+      "note": "raw root, n_z = 3200"
+    },
+    "tau_settle_3pct_modal": {
+      "kind": "value",
+      "value": 0.23176700850303975,
+      "rtol": 1e-06,
+      "note": "modal series, 40 modes"
+    },
+    "tau_settle_3pct_corrected": {
+      "kind": "value",
+      "value": 0.23311000143688243,
+      "rtol": 0.001,
+      "note": "floor-corrected, n_z = 3200"
+    },
+    "tau_settle_3pct_corrected_vs_modal": {
+      "kind": "value",
+      "value": 0.005794581992134784,
+      "rtol": 0.05
+    },
+    "tau_settle_3pct_n3200": {
+      "kind": "value",
+      "value": 0.21148468854004923,
+      "rtol": 0.001,
+      "note": "raw root, n_z = 3200"
+    },
+    "tau_settle_2pct_modal": {
+      "kind": "value",
+      "value": 0.25938316905794473,
+      "rtol": 1e-06,
+      "note": "modal series, 40 modes"
+    },
+    "tau_settle_2pct_corrected": {
+      "kind": "value",
+      "value": 0.2608858856288466,
+      "rtol": 0.001,
+      "note": "floor-corrected, n_z = 3200"
+    },
+    "tau_settle_2pct_corrected_vs_modal": {
+      "kind": "value",
+      "value": 0.005793423591667901,
+      "rtol": 0.05
+    },
+    "tau_settle_2pct_n3200": {
+      "kind": "value",
+      "value": 0.23056438168332555,
+      "rtol": 0.001,
+      "note": "raw root, n_z = 3200"
+    },
+    "tau_settle_1pct_modal": {
+      "kind": "value",
+      "value": 0.30659375479414586,
+      "rtol": 1e-06,
+      "note": "modal series, 40 modes"
+    },
+    "tau_settle_1pct_corrected": {
+      "kind": "value",
+      "value": 0.30836949469070307,
+      "rtol": 0.001,
+      "note": "floor-corrected, n_z = 6400"
+    },
+    "tau_settle_1pct_corrected_vs_modal": {
+      "kind": "value",
+      "value": 0.005791833228140808,
+      "rtol": 0.05
+    },
+    "tau_settle_3pct_mesh_spread": {
+      "kind": "value",
+      "value": 5.742348419435217e-06,
+      "rtol": 0.5,
+      "note": "corrected time, n_z 1600 against 6400; a discretisation residual"
+    },
+    "tau_settle_10pct_mesh_spread": {
+      "kind": "value",
+      "value": 0.00023950148222096068,
+      "rtol": 0.5,
+      "note": "corrected time, n_z 400 against 6400; a discretisation residual"
+    },
+    "relaxation_rate_vs_be_prediction": {
+      "kind": "value",
+      "value": 8.61934159757105e-06,
+      "rtol": 0.5,
+      "note": "fitted decay rate over ln(1 + lam_h dt)/dt, minus 1, n_z = 3200"
+    },
+    "relaxation_rate_vs_be_prediction_dt1e-3": {
+      "kind": "value",
+      "value": 9.413218211795638e-06,
+      "rtol": 0.5,
+      "note": "fitted decay rate over ln(1 + lam_h dt)/dt, minus 1, n_z = 3200, dt = 1e-3"
+    },
+    "relaxation_rate_vs_be_prediction_nr48": {
+      "kind": "value",
+      "value": 8.302418205152762e-06,
+      "rtol": 0.5,
+      "note": "fitted decay rate over ln(1 + lam_h dt)/dt, minus 1, n_z = 800, n_r = 48"
+    },
+    "relaxation_rate_shortfall_n24": {
+      "kind": "value",
+      "value": 0.005759683936334414,
+      "rtol": 1e-06,
+      "note": "1 - ln(1 + lam_h dt)/(dt j_1^2) at dt = 5e-4, n_r = 24"
+    },
+    "modal_alpha1": {
+      "kind": "value",
+      "value": 0.9706622892515141,
+      "rtol": 1e-06,
+      "note": "weight of the first radial mode"
+    },
+    "modal_amplitude": {
+      "kind": "value",
+      "value": 0.9014322894237686,
+      "rtol": 1e-06,
+      "note": "alpha_1 k/(D + k) at Pe = 50"
+    },
+    "relaxation_rate_n3200": {
+      "kind": "value",
+      "value": 14.597532951701227,
+      "rtol": 0.001,
+      "note": "fit on tau (0.2, 0.45)"
+    },
+    "relaxation_amplitude_vs_modal": {
+      "kind": "value",
+      "value": 3.5080081046690026e-05,
+      "rtol": 0.5,
+      "note": "fitted A over the series' alpha_1 k/(D + k), minus 1"
+    },
+    "bands_entered_n3200": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.0011355865334874513,
+      "min_margin": 0.0005,
+      "note": "bands wider than the n_z = 3200 floor; margin in absolute deviation"
+    },
+    "raw_time_smallest_rise": {
+      "kind": "value",
+      "value": 0.00352205887397547,
+      "rtol": 0.05,
+      "note": "smallest rise of a raw settling time per doubling of n_z, in a^2/D"
+    }
+  },
+  "quoted": {
+    "taylor_pe_experiment": [
+      "2.2e3"
+    ],
+    "taylor_k_over_D_experiment": [
+      "2.5e4"
+    ],
+    "modal_amplitude": [
+      "0.9"
+    ],
+    "tau_settle_3pct_mesh_spread": [
+      "5.7e-6"
+    ],
+    "tau_settle_10pct_mesh_spread": [
+      "2.4e-4"
+    ]
+  },
+  "breaks": {
+    "closure_rel_err_n200": [
+      "closure: nu = 0, a plane channel",
+      "closure: full u on the right, mean not subtracted"
+    ],
+    "closure_order_grid_mean": [
+      "closure: exact mean u0/2, not the grid's"
+    ],
+    "closure_pin_gap_grid_mean_n200": [
+      "closure: exact mean u0/2, not the grid's"
+    ],
+    "closure_u0half_rel_err_n200": [
+      "closure: exact mean u0/2, on 100 cells"
+    ],
+    "closure_u0half_pin_gap_n200": [
+      "closure: exact mean u0/2, on 100 cells"
+    ],
+    "closure_order_u0half": [
+      "closure: full u on the right, mean not subtracted"
+    ],
+    "closure_u0half_grid_mean_n200": [
+      "closure: Cartesian weights dr in the grid mean"
+    ],
+    "direct_rel_err_n3200": [
+      "2-D: n_z = 1600 instead of 3200"
+    ],
+    "direct_richardson_rel_err": [
+      "2-D: wall uptake b = 0.03 on both rungs"
+    ],
+    "modal_window_deficit_early": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "direct_late_rel_err_n3200": [
+      "2-D: n_z = 1600 instead of 3200",
+      "2-D: wall uptake b = 0.03"
+    ],
+    "direct_late_richardson_rel_err": [
+      "2-D: wall uptake b = 0.03 on both rungs"
+    ],
+    "numerical_dispersion_floor_n3200": [
+      "2-D: n_z = 1600 instead of 3200",
+      "2-D: wall uptake b = 0.03"
+    ],
+    "floor_over_closed_form_n3200": [
+      "2-D: wall uptake b = 0.03"
+    ],
+    "numerical_dispersion_order": [
+      "2-D: wall uptake b = 0.03 on both rungs"
+    ],
+    "operator_column_sum_n3200": [
+      "2-D: open ends, upwind carries u'C through the end faces"
+    ],
+    "mass_conservation_err": [
+      "2-D: wall uptake b = 0.03"
+    ],
+    "taylor_k_rel_err": [
+      "Taylor: elapsed time 240 s read as 420 s"
+    ],
+    "taylor_D_rel_err": [
+      "Taylor: tube radius 0.0252 read as 0.0522 cm",
+      "Taylor: Eq. 25 with the mean velocity, 192 -> 48"
+    ],
+    "taylor_D_inside_range": [
+      "Taylor: tube radius 0.0252 read as 0.0522 cm",
+      "Taylor: Eq. 25 with the mean velocity, 192 -> 48"
+    ],
+    "taylor_pe_experiment": [
+      "Taylor: tube radius 0.0252 read as 0.0522 cm"
+    ],
+    "taylor_k_over_D_experiment": [
+      "Taylor: tube radius 0.0252 read as 0.0522 cm"
+    ],
+    "tau_settle_10pct_modal": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "tau_settle_10pct_corrected": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_10pct_corrected_vs_modal": [
+      "floor shift with the slab eigenvalue pi^2",
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_10pct_n3200": [
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_5pct_modal": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "tau_settle_5pct_corrected": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_5pct_corrected_vs_modal": [
+      "floor shift with the slab eigenvalue pi^2",
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_5pct_n3200": [
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_3pct_modal": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "tau_settle_3pct_corrected": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_3pct_corrected_vs_modal": [
+      "floor shift with the slab eigenvalue pi^2",
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_3pct_n3200": [
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_2pct_modal": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "tau_settle_2pct_corrected": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_2pct_corrected_vs_modal": [
+      "floor shift with the slab eigenvalue pi^2",
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_2pct_n3200": [
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "tau_settle_1pct_modal": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "tau_settle_1pct_corrected": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_1pct_corrected_vs_modal": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "tau_settle_3pct_mesh_spread": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "modal_alpha1": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "modal_amplitude": [
+      "series: modes of an absorbing wall (J0 zeros)"
+    ],
+    "relaxation_rate_n3200": [
+      "2-D: dt = 1e-3 instead of 5e-4"
+    ],
+    "relaxation_amplitude_vs_modal": [
+      "2-D: wall uptake b = 0.03"
+    ],
+    "relaxation_rate_vs_be_prediction": [
+      "2-D: wall uptake b = 0.03"
+    ],
+    "relaxation_rate_vs_be_prediction_dt1e-3": [
+      "2-D: wall uptake b = 0.03 (n_z = 800, n_r = 24, dt = 0.001)"
+    ],
+    "relaxation_rate_vs_be_prediction_nr48": [
+      "2-D: wall uptake b = 0.03 (n_z = 800, n_r = 48, dt = 0.0005)"
+    ],
+    "relaxation_rate_shortfall_n24": [
+      "radial eigenvalue of the slab (nu = 0)"
+    ],
+    "tau_settle_10pct_mesh_spread": [
+      "floor shift with the slab eigenvalue pi^2"
+    ],
+    "bands_entered_n3200": [
+      "2-D: n_z = 1600 instead of 3200"
+    ],
+    "raw_time_smallest_rise": [
+      "2-D: dt = 1e-3 instead of 5e-4 on the n_z = 3200 rung"
+    ]
   }
 }
