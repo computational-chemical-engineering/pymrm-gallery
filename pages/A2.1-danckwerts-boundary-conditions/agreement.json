@@ -1,34 +1,778 @@
 {
   "page": "A2.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "transcription_D33_vs_W20": 1.1102230246251565e-16,
-    "transcription_D33_vs_D34": 8.326672684688674e-17,
-    "transcription_W21_vs_D34": 5.551115123125783e-17,
-    "closed_form_rel_err_n1600": 2.2169698343788014e-07,
-    "observed_order_vanleer": 2.003503627586648,
-    "observed_order_upwind": 1.0024912665991805,
-    "pe_sweep_worst_rel_err": 0.00018770341416529668,
-    "plug_flow_limit_eq35": 4.5461633568777415e-08,
-    "stirred_tank_limit_eq36": 2.2221787743248456e-09,
-    "eq37_residual_order_in_inv_pe": 1.998232127577705,
-    "three_section_vs_eq33": 8.020476677472743e-06,
-    "three_section_exit_spread": 5.0561985043273694e-08,
-    "three_section_fore_vs_eq19": 9.026014909929714e-07,
-    "three_section_grad_at_exit_n800": 5.878192200103882e-06,
-    "grad_at_exit_fit_bias_on_exact_n800": 4.963391313728138e-06,
-    "grad_at_exit_residual_n800": 9.14800886375744e-07,
-    "grad_at_exit_last_bed_vs_after_gap": 4.996003610813204e-16,
-    "face_average_order_arithmetic": 0.997735509523406,
-    "face_average_order_harmonic": 2.0017596048280253,
-    "face_average_arith_fore_n400": 0.0003134028461729832,
-    "face_average_ratio_n400": 347.22172442702475,
-    "inlet_cell_step_pe_a_1": 0.0029638959459246106,
-    "inlet_cell_step_pe_a_1000": 0.2663473881684768,
-    "defect_inlet_sign_flip": 1.9740999928809986,
-    "defect_naive_dirichlet_inlet": 0.49674239538845066,
-    "defect_outlet_sign_flip": 8.889441416304322e-07,
-    "defect_wrong_nu": 1.0,
-    "dirichlet_vs_hulburt_closed_form": 7.113005713832443e-05,
-    "dirichlet_inlet_error_at_ww_fig4": 0.49674135536850916
+    "transcription_D33_vs_W20": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "algebraically one formula; two floating-point arrangements of it"
+    },
+    "transcription_D33_vs_D34": {
+      "kind": "bound",
+      "value": 8.326672684688674e-17,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "algebraically one formula; two floating-point arrangements of it"
+    },
+    "transcription_W21_vs_D34": {
+      "kind": "bound",
+      "value": 5.551115123125783e-17,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "algebraically one formula; two floating-point arrangements of it"
+    },
+    "transcription_D33_vs_W22": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "algebraically one formula; two floating-point arrangements of it"
+    },
+    "transcription_one_digit_misread": {
+      "kind": "value",
+      "value": 0.029302145731888607,
+      "rtol": 0.05,
+      "note": "eq. 33's second numerator coefficient read as 1 instead of 2"
+    },
+    "closed_form_rel_err_n800": {
+      "kind": "value",
+      "value": 1.512586049745579e-07,
+      "rtol": 0.05,
+      "note": "outlet face, van Leer, n = 800"
+    },
+    "closed_form_rel_err_n1600": {
+      "kind": "value",
+      "value": 3.854667263158973e-08,
+      "rtol": 0.05,
+      "note": "outlet face, van Leer, n = 1600"
+    },
+    "closed_form_rel_err_n1600_last_cell": {
+      "kind": "value",
+      "value": 2.2170369584628702e-07,
+      "rtol": 0.05,
+      "note": "the same solve read at the last cell centre (pitfall P8)"
+    },
+    "observed_order_vanleer": {
+      "kind": "bound",
+      "value": 1.9723389819698744,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "van Leer TVD on a smooth profile is second order; face read, n 800 to 1600"
+    },
+    "observed_order_vanleer_last_cell": {
+      "kind": "bound",
+      "value": 2.0034670214623467,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "dc/dz = 0 at the outlet, so the half-cell offset is second order too"
+    },
+    "observed_order_upwind": {
+      "kind": "bound",
+      "value": 1.000368336304813,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "closed_newton_vs_deferred": {
+      "kind": "bound",
+      "value": 6.661338147750939e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "the same TVD equations by Newton with the correction-form residual (step 1e-12) and deferred correction (sweep change 1e-14); exit values over the ladder"
+    },
+    "closed_newton_full_residual_vs_deferred": {
+      "kind": "bound",
+      "value": 1.227323798147495e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "Newton with the residual written in full stops at its round-off floor, which depends on the BLAS kernel; n = 800 and 1600"
+    },
+    "closed_exit_factorisation_spread": {
+      "kind": "bound",
+      "value": 1.850741782050136e-13,
+      "max": 5e-13,
+      "basis": "tolerance",
+      "note": "exit with the upwind operator factorised under permc_spec MMD_ATA against the default ordering, n = 800 and 1600"
+    },
+    "closed_last_cell_over_face_n1600": {
+      "kind": "value",
+      "value": 5.7515650693179845,
+      "rtol": 0.05,
+      "note": "last-cell error over face error against eq. 34, n = 1600"
+    },
+    "closed_outlet_face_vs_last_cell": {
+      "kind": "value",
+      "value": 1.040207262851813e-06,
+      "rtol": 0.05,
+      "note": "closed vessel n = 800: outlet face value against c_N, relative"
+    },
+    "conversion_at_ww_fig4": {
+      "kind": "value",
+      "value": 0.7655718813853565,
+      "rtol": 1e-05,
+      "note": "1 - f(exit) at n = 800"
+    },
+    "closed_vessel_inlet_step": {
+      "kind": "value",
+      "value": 0.3318818936797585,
+      "rtol": 0.05,
+      "note": "1 - f(0+) from eq. 22"
+    },
+    "upwind_pe_eff_residual_n1600": {
+      "kind": "value",
+      "value": 1.1778471131762558e-07,
+      "rtol": 0.05
+    },
+    "upwind_pe_eff_residual_order": {
+      "kind": "bound",
+      "value": 1.9987329857384568,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "numerical diffusivity u dz/2 is the leading upwind error, so the rest is O(dz^2)"
+    },
+    "upwind_pe_eff_at_pe200_n200": {
+      "kind": "value",
+      "value": 133.33333333333334,
+      "rtol": 1e-06,
+      "note": "1/(1/Pe + dz/2), closed form"
+    },
+    "pe_sweep_worst_rel_err": {
+      "kind": "value",
+      "value": 3.6220819421561856e-07,
+      "rtol": 0.05,
+      "note": "outlet face, n = 1600"
+    },
+    "pe_sweep_worst_last_cell": {
+      "kind": "value",
+      "value": 0.00018770341417617686,
+      "rtol": 0.05,
+      "note": "last cell centre, n = 1600"
+    },
+    "pe_sweep_rel_err_at_pe1e4": {
+      "kind": "value",
+      "value": 6.1776041171413e-08,
+      "rtol": 0.05,
+      "note": "outlet face"
+    },
+    "pe_sweep_last_cell_at_pe1e4": {
+      "kind": "value",
+      "value": 0.00018770341417617686,
+      "rtol": 0.05,
+      "note": "last cell centre"
+    },
+    "plug_flow_limit_eq35": {
+      "kind": "value",
+      "value": 4.5461633568777415e-08,
+      "rtol": 0.05,
+      "note": "eq. 34 at Pe = 1e8 against eq. 35"
+    },
+    "stirred_tank_limit_eq36": {
+      "kind": "value",
+      "value": 2.2221787743248456e-09,
+      "rtol": 0.05,
+      "note": "eq. 34 at Pe = 1e-8 against eq. 36"
+    },
+    "eq37_residual_order_in_inv_pe": {
+      "kind": "bound",
+      "value": 1.9982321275777042,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "eq. 37 is the first-order term of an expansion in 1/Pe"
+    },
+    "eq37_residual_order_full_range": {
+      "kind": "value",
+      "value": 1.953060749375398,
+      "rtol": 0.05,
+      "note": "fit including the pre-asymptotic end Pe < 1e3"
+    },
+    "eq37_rel_err_pe100": {
+      "kind": "value",
+      "value": 0.001115726958586416,
+      "rtol": 0.05
+    },
+    "three_section_vs_eq33": {
+      "kind": "value",
+      "value": 7.828274189436435e-06,
+      "rtol": 0.05
+    },
+    "three_section_exit_spread": {
+      "kind": "value",
+      "value": 4.9616177166811326e-08,
+      "rtol": 0.05,
+      "note": "spread over Pe_a and Pe_c of f(exit) against eq. 21; end-section truncation and grid"
+    },
+    "three_section_newton_vs_deferred": {
+      "kind": "bound",
+      "value": 1.2438494678690404e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the same TVD equations by Newton (step 1e-12) and deferred correction (sweep change 1e-11) on the stretched grids; largest cell difference"
+    },
+    "three_section_fore_vs_eq19": {
+      "kind": "value",
+      "value": 9.02931768242965e-07,
+      "rtol": 0.05
+    },
+    "three_section_bed_vs_eq20": {
+      "kind": "value",
+      "value": 8.484259392815829e-07,
+      "rtol": 0.05
+    },
+    "three_section_exit_vs_eq21": {
+      "kind": "value",
+      "value": 8.075833624054951e-07,
+      "rtol": 0.05
+    },
+    "three_section_fore_flux_truncation": {
+      "kind": "bound",
+      "value": 1.1858558579547207e-09,
+      "max": 1e-08,
+      "basis": "chosen",
+      "note": "upstream section 20 decay lengths: the truncation estimate (1 - f(0)) exp(-20) is 6.8e-10, and the round-off floor of the long uniform grid is of that size"
+    },
+    "three_section_fore_flux_estimate": {
+      "kind": "value",
+      "value": 6.840595673798026e-10,
+      "rtol": 0.05,
+      "note": "(1 - f(0)) exp(-P), closed form"
+    },
+    "three_section_after_flat": {
+      "kind": "bound",
+      "value": 8.242101445787853e-11,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "no source and constant D downstream force c_i = c_(i+1) for any Pe_c"
+    },
+    "after_truncation_flat": {
+      "kind": "bound",
+      "value": 1.7226498005840085e-12,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "after section cut to 2 and 0.2 decay lengths; same identity"
+    },
+    "after_truncation_bed_change": {
+      "kind": "bound",
+      "value": 3.155531391740851e-13,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "the bed is independent of the after-section length"
+    },
+    "face_average_order_arithmetic": {
+      "kind": "bound",
+      "value": 0.9977326152574885,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "an O(1) flux error at the jump face gives a first-order error"
+    },
+    "face_average_order_harmonic": {
+      "kind": "bound",
+      "value": 2.0032454626723646,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "the harmonic mean is the series resistance of the two half cells"
+    },
+    "face_average_arith_fore_n400": {
+      "kind": "value",
+      "value": 0.00031340251600497915,
+      "rtol": 0.05
+    },
+    "face_average_ratio_n100": {
+      "kind": "value",
+      "value": 84.38959114736362,
+      "rtol": 0.05
+    },
+    "face_average_ratio_n200": {
+      "kind": "value",
+      "value": 172.0059809329613,
+      "rtol": 0.05
+    },
+    "face_average_ratio_n400": {
+      "kind": "value",
+      "value": 347.0943508996655,
+      "rtol": 0.05
+    },
+    "face_average_ratio_n800": {
+      "kind": "value",
+      "value": 696.84642045408,
+      "rtol": 0.05
+    },
+    "face_average_first_bed_cell_harmonic": {
+      "kind": "value",
+      "value": 0.6670117860632533,
+      "rtol": 1e-06
+    },
+    "face_average_first_bed_cell_shift": {
+      "kind": "value",
+      "value": 7.926886732567695e-07,
+      "rtol": 0.05
+    },
+    "face_average_exit_shift": {
+      "kind": "value",
+      "value": 9.332251638127786e-10,
+      "rtol": 0.1,
+      "note": "the arithmetic mean moves f(exit) by this; a difference of two solves, each at a residual floor about 1e-12"
+    },
+    "face_average_arith_bed_vs_eq33": {
+      "kind": "value",
+      "value": 1.6411146125383524e-06,
+      "rtol": 0.05
+    },
+    "three_section_grad_at_exit_n800": {
+      "kind": "value",
+      "value": 5.87819135811074e-06,
+      "rtol": 0.05
+    },
+    "grad_at_exit_fit_bias_on_exact_n800": {
+      "kind": "value",
+      "value": 4.963391313728138e-06,
+      "rtol": 0.05
+    },
+    "grad_at_exit_residual_n800": {
+      "kind": "value",
+      "value": 9.148000443826021e-07,
+      "rtol": 0.05
+    },
+    "grad_at_exit_estimator_share": {
+      "kind": "value",
+      "value": 0.8443738917889498,
+      "rtol": 0.05
+    },
+    "grad_at_exit_residual_order": {
+      "kind": "bound",
+      "value": 2.0043947989596465,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "the solve's own second-order error seen through the same fit"
+    },
+    "grad_at_exit_last_bed_vs_after_gap": {
+      "kind": "bound",
+      "value": 5.273559366969494e-16,
+      "max": 1e-13,
+      "basis": "identity",
+      "note": "flat after section: last bed cell equals first after cell"
+    },
+    "inlet_cell_step_pe_a_1": {
+      "kind": "value",
+      "value": 0.0029638959459254988,
+      "rtol": 0.05
+    },
+    "inlet_cell_step_pe_a_1000": {
+      "kind": "value",
+      "value": 0.26634835529183576,
+      "rtol": 0.05
+    },
+    "inlet_step_ratio_pe_a_1": {
+      "kind": "value",
+      "value": 111.97488027067897,
+      "rtol": 0.05
+    },
+    "inlet_first_bed_cell_spread": {
+      "kind": "value",
+      "value": 3.726738398712737e-05,
+      "rtol": 0.05,
+      "note": "over Pe_a = 0.3 to 1000, n_b = 200"
+    },
+    "defect_inlet_sign_flip": {
+      "kind": "value",
+      "value": 1.9740968992181327,
+      "rtol": 0.05
+    },
+    "defect_naive_dirichlet_inlet": {
+      "kind": "value",
+      "value": 0.4967408384727323,
+      "rtol": 0.05
+    },
+    "defect_inlet_a_one": {
+      "kind": "value",
+      "value": 0.3561874494271966,
+      "rtol": 0.05
+    },
+    "defect_outlet_sign_flip": {
+      "kind": "value",
+      "value": 1.512586049745579e-07,
+      "rtol": 0.05,
+      "note": "equal to the model's own deviation: the outlet sign is absent from the system"
+    },
+    "defect_outlet_dirichlet": {
+      "kind": "bound",
+      "value": 1.0,
+      "min": 0.5,
+      "basis": "chosen",
+      "note": "the defect drives f(exit) to zero; the claim is that the check sees it"
+    },
+    "defect_wrong_nu": {
+      "kind": "bound",
+      "value": 1.0,
+      "min": 0.5,
+      "basis": "chosen",
+      "note": "the defect drives f(exit) to zero; the claim is that the check sees it"
+    },
+    "defect_reaction_sign": {
+      "kind": "value",
+      "value": 26.0633395578427,
+      "rtol": 0.05
+    },
+    "defect_coarse_n10": {
+      "kind": "value",
+      "value": 6.290125666286173e-05,
+      "rtol": 0.05
+    },
+    "defect_upwind_n800": {
+      "kind": "value",
+      "value": 0.00035133113501606417,
+      "rtol": 0.05
+    },
+    "undergrid_pe200_vanleer": {
+      "kind": "value",
+      "value": 0.00318829485110661,
+      "rtol": 0.05
+    },
+    "undergrid_pe200_upwind": {
+      "kind": "value",
+      "value": 0.18034239413958697,
+      "rtol": 0.05
+    },
+    "outlet_sign_system_change": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.0,
+      "basis": "identity",
+      "note": "b = d = 0 at the outlet: a multiplies nothing in the assembled system"
+    },
+    "inlet_sign_system_change": {
+      "kind": "value",
+      "value": 1802.2530979745206,
+      "rtol": 0.05
+    },
+    "outlet_flux_exit_a_plus": {
+      "kind": "value",
+      "value": 0.246953760297912,
+      "rtol": 0.001
+    },
+    "outlet_flux_exit_a_minus": {
+      "kind": "value",
+      "value": 0.22190247503197907,
+      "rtol": 0.001
+    },
+    "dirichlet_vs_hulburt_closed_form": {
+      "kind": "value",
+      "value": 9.374531907413441e-07,
+      "rtol": 0.05,
+      "note": "outlet face, n = 1200"
+    },
+    "dirichlet_inlet_error_at_ww_fig4": {
+      "kind": "value",
+      "value": 0.49674135536850916,
+      "rtol": 0.05,
+      "note": "closed form"
+    },
+    "naive_f_error_pe0p1": {
+      "kind": "value",
+      "value": 1.7911421254459223,
+      "rtol": 0.05,
+      "note": "closed form"
+    },
+    "naive_f_error_pe200": {
+      "kind": "value",
+      "value": 0.009901951359278849,
+      "rtol": 0.05,
+      "note": "closed form"
+    },
+    "naive_conversion_error_at_ww_fig4": {
+      "kind": "value",
+      "value": 0.15210872710496726,
+      "rtol": 0.05,
+      "note": "closed form"
+    },
+    "naive_f_limit_pe_to_zero": {
+      "kind": "value",
+      "value": 0.9999990000012011,
+      "rtol": 0.0001,
+      "note": "at Pe = 1e-6"
+    }
+  },
+  "quoted": {
+    "dirichlet_inlet_error_at_ww_fig4": [
+      "50 %"
+    ],
+    "naive_f_error_pe0p1": [
+      "179 %"
+    ]
+  },
+  "breaks": {
+    "transcription_D33_vs_W20": [
+      "eq. 33 numerator 2(1-a) read as 1(1-a)"
+    ],
+    "transcription_D33_vs_D34": [
+      "eq. 33 numerator 2(1-a) read as 1(1-a)"
+    ],
+    "transcription_D33_vs_W22": [
+      "eq. 33 numerator 2(1-a) read as 1(1-a)"
+    ],
+    "transcription_W21_vs_D34": [
+      "eq. 21 leading 2 read as 1"
+    ],
+    "transcription_one_digit_misread": [
+      "Fig. 4 label Pe_b read as 2.0"
+    ],
+    "closed_form_rel_err_n1600": [
+      "upwind instead of van Leer"
+    ],
+    "closed_last_cell_over_face_n1600": [
+      "upwind instead of van Leer"
+    ],
+    "closed_exit_factorisation_spread": [
+      "Newton residual written in full, other ordering"
+    ],
+    "closed_outlet_face_vs_last_cell": [
+      "closed vessel on 400 cells"
+    ],
+    "closed_form_rel_err_n1600_last_cell": [
+      "upwind instead of van Leer"
+    ],
+    "observed_order_vanleer": [
+      "upwind instead of van Leer"
+    ],
+    "observed_order_vanleer_last_cell": [
+      "upwind instead of van Leer"
+    ],
+    "observed_order_upwind": [
+      "naive Dirichlet inlet"
+    ],
+    "closed_newton_vs_deferred": [
+      "deferred-correction route given minmod",
+      "Newton residual written in full"
+    ],
+    "closed_newton_full_residual_vs_deferred": [
+      "deferred-correction route given minmod"
+    ],
+    "conversion_at_ww_fig4": [
+      "upwind instead of van Leer"
+    ],
+    "closed_form_rel_err_n800": [
+      "upwind instead of van Leer"
+    ],
+    "closed_vessel_inlet_step": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "upwind_pe_eff_residual_n1600": [
+      "numerical diffusivity taken as u dz"
+    ],
+    "upwind_pe_eff_residual_order": [
+      "numerical diffusivity taken as u dz"
+    ],
+    "upwind_pe_eff_at_pe200_n200": [
+      "numerical diffusivity taken as u dz"
+    ],
+    "pe_sweep_worst_rel_err": [
+      "upwind instead of van Leer"
+    ],
+    "pe_sweep_rel_err_at_pe1e4": [
+      "upwind instead of van Leer"
+    ],
+    "pe_sweep_worst_last_cell": [
+      "sweep on 800 cells"
+    ],
+    "pe_sweep_last_cell_at_pe1e4": [
+      "sweep on 800 cells"
+    ],
+    "plug_flow_limit_eq35": [
+      "eq. 34 numerator 4a read as 2a"
+    ],
+    "stirred_tank_limit_eq36": [
+      "eq. 34 numerator 4a read as 2a"
+    ],
+    "eq37_residual_order_in_inv_pe": [
+      "eq. 37 correction R^2/Pe read as R/Pe"
+    ],
+    "eq37_residual_order_full_range": [
+      "eq. 37 correction R^2/Pe read as R/Pe"
+    ],
+    "eq37_rel_err_pe100": [
+      "eq. 37 correction R^2/Pe read as R/Pe"
+    ],
+    "three_section_vs_eq33": [
+      "bed on 200 cells"
+    ],
+    "three_section_exit_spread": [
+      "end sections cut to 3 decay lengths"
+    ],
+    "three_section_newton_vs_deferred": [
+      "deferred correction stopped at a sweep change of 1e-6"
+    ],
+    "three_section_fore_vs_eq19": [
+      "three sections solved upwind"
+    ],
+    "three_section_bed_vs_eq20": [
+      "three sections solved upwind"
+    ],
+    "three_section_exit_vs_eq21": [
+      "three sections solved upwind"
+    ],
+    "three_section_fore_flux_truncation": [
+      "upstream section cut to 10 decay lengths"
+    ],
+    "three_section_fore_flux_estimate": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "face_average_order_arithmetic": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_order_harmonic": [
+      "arithmetic mean in both runs"
+    ],
+    "face_average_arith_fore_n400": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_ratio_n100": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_ratio_n200": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_ratio_n400": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_ratio_n800": [
+      "harmonic mean in both runs"
+    ],
+    "face_average_first_bed_cell_harmonic": [
+      "bed on 100 cells"
+    ],
+    "face_average_first_bed_cell_shift": [
+      "bed on 100 cells"
+    ],
+    "face_average_exit_shift": [
+      "bed on 100 cells"
+    ],
+    "face_average_arith_bed_vs_eq33": [
+      "bed on 100 cells"
+    ],
+    "three_section_grad_at_exit_n800": [
+      "finest bed 400 cells, not 800"
+    ],
+    "grad_at_exit_fit_bias_on_exact_n800": [
+      "finest bed 400 cells, not 800"
+    ],
+    "grad_at_exit_residual_n800": [
+      "finest bed 400 cells, not 800"
+    ],
+    "grad_at_exit_estimator_share": [
+      "three sections solved upwind"
+    ],
+    "grad_at_exit_residual_order": [
+      "fit window one cell downstream, across z = 1"
+    ],
+    "inlet_cell_step_pe_a_1": [
+      "bed on 100 cells"
+    ],
+    "inlet_cell_step_pe_a_1000": [
+      "bed on 100 cells"
+    ],
+    "inlet_step_ratio_pe_a_1": [
+      "bed on 100 cells"
+    ],
+    "inlet_first_bed_cell_spread": [
+      "bed on 100 cells"
+    ],
+    "three_section_after_flat": [
+      "reaction runs on past z = 1"
+    ],
+    "after_truncation_flat": [
+      "reaction runs on past z = 1"
+    ],
+    "after_truncation_bed_change": [
+      "reaction runs on past z = 1"
+    ],
+    "grad_at_exit_last_bed_vs_after_gap": [
+      "reaction runs on past z = 1"
+    ],
+    "outlet_sign_system_change": [
+      "outlet d = 0.05 with a flipped"
+    ],
+    "defect_inlet_sign_flip": [
+      "eq. 34 numerator 4a read as 2a",
+      "inlet a = -D/(2u) instead of -D/u"
+    ],
+    "defect_naive_dirichlet_inlet": [
+      "eq. 34 numerator 4a read as 2a",
+      "naive Dirichlet inlet with d = 0.9"
+    ],
+    "defect_inlet_a_one": [
+      "eq. 34 numerator 4a read as 2a",
+      "inlet a = 2 instead of 1"
+    ],
+    "defect_outlet_sign_flip": [
+      "eq. 34 numerator 4a read as 2a",
+      "outlet a flipped with d = 0.05"
+    ],
+    "defect_reaction_sign": [
+      "eq. 34 numerator 4a read as 2a",
+      "reaction sign flipped at half strength"
+    ],
+    "defect_coarse_n10": [
+      "eq. 34 numerator 4a read as 2a",
+      "grid coarsened to n = 20"
+    ],
+    "defect_upwind_n800": [
+      "eq. 34 numerator 4a read as 2a",
+      "upwind on 400 cells"
+    ],
+    "defect_outlet_dirichlet": [
+      "defect undone: outlet c(L) = 0 replaced by dc/dz = 0"
+    ],
+    "defect_wrong_nu": [
+      "defect undone: nu = 0"
+    ],
+    "undergrid_pe200_vanleer": [
+      "eq. 34 numerator 4a read as 2a"
+    ],
+    "undergrid_pe200_upwind": [
+      "eq. 34 numerator 4a read as 2a"
+    ],
+    "inlet_sign_system_change": [
+      "inlet sign not flipped"
+    ],
+    "outlet_flux_exit_a_plus": [
+      "outlet d = 0"
+    ],
+    "outlet_flux_exit_a_minus": [
+      "outlet d = 0"
+    ],
+    "dirichlet_vs_hulburt_closed_form": [
+      "bed on 600 cells"
+    ],
+    "dirichlet_inlet_error_at_ww_fig4": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "naive_f_error_pe0p1": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "naive_f_error_pe200": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "naive_conversion_error_at_ww_fig4": [
+      "eq. 22 exponents a Pe/2 read as Pe/2"
+    ],
+    "naive_f_limit_pe_to_zero": [
+      "Hulburt's division by f(0) dropped"
+    ]
   }
 }
