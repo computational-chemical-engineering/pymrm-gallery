@@ -1,32 +1,881 @@
 {
   "page": "H1.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "conversion_measured": 0.997,
-    "conversion_model": 0.998344308213004,
-    "conversion_dev_frac": 0.001348353272822487,
-    "unconverted_measured": 0.0030000000000000027,
-    "unconverted_model": 0.001655691786995983,
-    "unconverted_dev_frac": -0.4481027376680061,
-    "sens_alphaH_x0.3_to_x10_maxabs_dX": 1.3752443628334277e-11,
-    "sens_kVr_x0.1_to_x10_maxabs_dX": 0.0,
-    "sens_Kp_vanthoff_dev_frac": 0.0003915221943714488,
-    "sens_Kp_div3_dev_frac": -0.0019088341945467532,
-    "sens_Kp_x10_dev_frac": 0.002841972047306015,
-    "alphaH_recomputed_dev_frac": -0.00032016322174940615,
-    "Kp_473_reconstructed_Pa3": 235662795818.55774,
-    "Kp_473_vanthoff_ratio": 1.582176467230362,
-    "Kp_needed_for_0.997_at_11.8e-6_ratio": 338.4191592093122,
-    "equilibrium_limit_X": 0.18699999999999994,
-    "ceiling_at_stated_run": 0.998344308213004,
-    "ceiling_at_1e-6_reading": 0.7157797805500917,
-    "stated_run_fv_vs_ceiling_absdiff": 0.0,
-    "fv_vs_ivp_absdiff_midmap_nz800": 4.617647395199764e-05,
-    "h_balance_rel_error_cocurrent": 7.413761735250176e-16,
-    "h_balance_rel_error_countercurrent_nz3200": 0.003517833089914697,
-    "cc_X_0p5e-6_nz3200": 0.19156699809853983,
-    "cc_X_8e-6_nz3200": 0.9339989602261756,
-    "cc_grid_shift_0p5e-6_nz400_to_nz6400": -0.008279888082657116,
-    "newton_iters_min": 5.0,
-    "newton_iters_max": 67.0
+    "conversion_measured": {
+      "kind": "value",
+      "value": 0.997,
+      "rtol": 1e-09
+    },
+    "unconverted_measured": {
+      "kind": "value",
+      "value": 0.0030000000000000027,
+      "rtol": 1e-09
+    },
+    "equilibrium_conversion_stated": {
+      "kind": "value",
+      "value": 0.187,
+      "rtol": 1e-09
+    },
+    "v_A0_stated": {
+      "kind": "value",
+      "value": 0.000118,
+      "rtol": 1e-09,
+      "unit": "mol/s"
+    },
+    "u_C0_stated": {
+      "kind": "value",
+      "value": 2.9e-07,
+      "rtol": 1e-09,
+      "unit": "mol/s"
+    },
+    "k_473": {
+      "kind": "value",
+      "value": 2.653418327739089e-05,
+      "rtol": 1e-06,
+      "unit": "mol m-3 Pa-1 s-1"
+    },
+    "K_B_473": {
+      "kind": "value",
+      "value": 0.00011599062566011041,
+      "rtol": 1e-06,
+      "unit": "1/Pa"
+    },
+    "V_r": {
+      "kind": "value",
+      "value": 3.1777209691060764e-05,
+      "rtol": 1e-06,
+      "unit": "m3"
+    },
+    "alphaH_recomputed_dev_frac": {
+      "kind": "value",
+      "value": -0.00032016322174940615,
+      "rtol": 0.001
+    },
+    "alphaH_od_reading_dev_frac": {
+      "kind": "value",
+      "value": -0.02357065229885042,
+      "rtol": 0.001
+    },
+    "V_r_od_reading_change_frac": {
+      "kind": "value",
+      "value": 0.04877340688053433,
+      "rtol": 0.001
+    },
+    "Kp_473_reconstructed_Pa3": {
+      "kind": "value",
+      "value": 235662795818.55774,
+      "rtol": 1e-06,
+      "unit": "Pa3"
+    },
+    "Kp_473_vanthoff_ratio": {
+      "kind": "value",
+      "value": 1.582176467230362,
+      "rtol": 0.001
+    },
+    "Kp_473_vanthoff_Pa3": {
+      "kind": "value",
+      "value": 148948490070.19498,
+      "rtol": 0.001,
+      "unit": "Pa3"
+    },
+    "dH298_kJ_per_mol": {
+      "kind": "value",
+      "value": 206.3,
+      "rtol": 0.0001
+    },
+    "Kp_printed_473_Pa3": {
+      "kind": "value",
+      "value": 4.1521367074844914e+38,
+      "rtol": 1e-06,
+      "unit": "Pa3"
+    },
+    "Kp_printed_unconverted_eq": {
+      "kind": "value",
+      "value": 1.2832420894530242e-25,
+      "rtol": 0.01
+    },
+    "Kp_atm3_factor": {
+      "kind": "value",
+      "value": 1039509197000000.0,
+      "rtol": 1e-06
+    },
+    "Kp_printed_atm3": {
+      "kind": "value",
+      "value": 3.994324167085259e+23,
+      "rtol": 1e-06,
+      "unit": "atm3"
+    },
+    "Kp_needed_atm3": {
+      "kind": "value",
+      "value": 0.0002267058305002738,
+      "rtol": 1e-06,
+      "unit": "atm3"
+    },
+    "Kp_printed_vs_needed_decades": {
+      "kind": "value",
+      "value": 27.245980618363326,
+      "rtol": 0.0001
+    },
+    "Kp_prefactor_vanthoff_Pa3": {
+      "kind": "value",
+      "value": 9.038848911014569e+33,
+      "rtol": 0.001,
+      "unit": "Pa3"
+    },
+    "Kp_prefactor_ratio": {
+      "kind": "value",
+      "value": 54.09980903697969,
+      "rtol": 0.001
+    },
+    "Kp_slope_repair_K": {
+      "kind": "value",
+      "value": -26484.217309896147,
+      "rtol": 1e-06,
+      "unit": "K"
+    },
+    "Kp_slope_vanthoff_K": {
+      "kind": "value",
+      "value": -24813.567476545584,
+      "rtol": 1e-06,
+      "unit": "K"
+    },
+    "Kp_slope_gap_pct": {
+      "kind": "value",
+      "value": 6.732807908132127,
+      "rtol": 0.001
+    },
+    "ceiling_at_stated_run": {
+      "kind": "value",
+      "value": 0.998344308213004,
+      "rtol": 1e-06
+    },
+    "ceiling_at_1e-6_reading": {
+      "kind": "value",
+      "value": 0.7157797805500917,
+      "rtol": 1e-06
+    },
+    "ceiling_at_1e-6_reading_vanthoff": {
+      "kind": "value",
+      "value": 0.6639069303895302,
+      "rtol": 1e-06
+    },
+    "Kp_needed_for_0.997_at_11.8e-6_ratio": {
+      "kind": "value",
+      "value": 338.4191592093122,
+      "rtol": 0.0001
+    },
+    "xeq_implied_by_Kp_needed": {
+      "kind": "value",
+      "value": 0.7344945963614181,
+      "rtol": 0.0001
+    },
+    "conversion_model": {
+      "kind": "value",
+      "value": 0.998344308213004,
+      "rtol": 1e-06
+    },
+    "conversion_dev_frac": {
+      "kind": "value",
+      "value": 0.001348353272822487,
+      "rtol": 0.001
+    },
+    "unconverted_model": {
+      "kind": "value",
+      "value": 0.001655691786995983,
+      "rtol": 0.0001
+    },
+    "unconverted_dev_frac": {
+      "kind": "value",
+      "value": -0.4481027376680061,
+      "rtol": 0.0001
+    },
+    "conversion_dev_band_lo_frac": {
+      "kind": "value",
+      "value": 0.0008464242736882955,
+      "rtol": 0.001
+    },
+    "conversion_dev_band_hi_frac": {
+      "kind": "value",
+      "value": 0.0018507859638775357,
+      "rtol": 0.001
+    },
+    "membrane_gain_over_equilibrium": {
+      "kind": "value",
+      "value": 5.338739616112321,
+      "rtol": 0.0001
+    },
+    "stated_run_fv_vs_ceiling_absdiff": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "newton tol 1e-10 on the scaled flows"
+    },
+    "stated_run_fv_vs_ivp_absdiff": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "newton tol 1e-10, Radau rtol 1e-10"
+    },
+    "stated_run_n100_vs_n800_absdiff": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "the outlet is an algebraic fixed point"
+    },
+    "sens_alphaH_x0.3_to_x10_maxabs_dX": {
+      "kind": "bound",
+      "value": 1.3682499577782892e-11,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "X is the ceiling, independent of alpha_H up to the newton tolerance"
+    },
+    "sens_kVr_x0.1_to_x10_maxabs_dX": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "X is the ceiling, independent of k*V_r up to the newton tolerance"
+    },
+    "sens_Kp_vanthoff_dev_frac": {
+      "kind": "value",
+      "value": 0.00039152219437133744,
+      "rtol": 0.001
+    },
+    "sens_Kp_div3_dev_frac": {
+      "kind": "value",
+      "value": -0.001908834194543858,
+      "rtol": 0.001
+    },
+    "sens_Kp_x10_dev_frac": {
+      "kind": "value",
+      "value": 0.002841972047306015,
+      "rtol": 0.001
+    },
+    "sens_Kp_div10_dev_frac": {
+      "kind": "value",
+      "value": -0.01269057213764093,
+      "rtol": 0.001
+    },
+    "equilibrium_limit_X": {
+      "kind": "value",
+      "value": 0.18699999999999972,
+      "rtol": 1e-06
+    },
+    "fv_vs_ivp_absdiff_midmap_nz800": {
+      "kind": "value",
+      "value": 4.433866402586695e-05,
+      "rtol": 0.01
+    },
+    "fv_profile_maxerr_midmap_nz800": {
+      "kind": "value",
+      "value": 0.005062578870350498,
+      "rtol": 0.01
+    },
+    "fv_observed_order_midmap": {
+      "kind": "bound",
+      "value": 1.0063579876930904,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind (backward Euler in L)"
+    },
+    "fv_profile_observed_order_midmap": {
+      "kind": "bound",
+      "value": 0.9710185749315575,
+      "min": 0.9,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind (backward Euler in L), approached from below"
+    },
+    "fv_finest_error_over_noise_midmap": {
+      "kind": "bound",
+      "value": 220718.46264459792,
+      "min": 1000.0,
+      "basis": "chosen",
+      "note": "the order is fitted to error, not to noise"
+    },
+    "h_balance_rel_error_cocurrent": {
+      "kind": "bound",
+      "value": 7.413761735250176e-16,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "h_balance_rel_error_cocurrent_midmap": {
+      "kind": "bound",
+      "value": 4.291085752654206e-16,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "ceiling_excess_over_map": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-16,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "X <= ceiling; the newton tolerance is the only slack"
+    },
+    "newton_iters_min": {
+      "kind": "bound",
+      "value": 8.0,
+      "min": 2.0,
+      "basis": "chosen",
+      "note": "every solve on the page starts cold, from the inlet state"
+    },
+    "newton_iters_max": {
+      "kind": "bound",
+      "value": 25.0,
+      "max": 40.0,
+      "basis": "chosen",
+      "note": "damped Newton from the inlet state converges in tens of iterations"
+    },
+    "cocurrent_vs_ceiling_low_purge_absdiff": {
+      "kind": "bound",
+      "value": 4.544851528454075e-08,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "co-current at these purge rates is on its ceiling to discretisation"
+    },
+    "cc_X_0p5e-6_nz3200": {
+      "kind": "value",
+      "value": 0.19170988709248604,
+      "rtol": 0.001
+    },
+    "cc_X_8e-6_nz3200": {
+      "kind": "value",
+      "value": 0.9341892995092714,
+      "rtol": 0.001
+    },
+    "co_X_0p5e-6_nz3200": {
+      "kind": "value",
+      "value": 0.2283170646661712,
+      "rtol": 0.001
+    },
+    "co_X_8e-6_nz3200": {
+      "kind": "value",
+      "value": 0.6066276308072217,
+      "rtol": 0.001
+    },
+    "cc_minus_co_8e-6": {
+      "kind": "value",
+      "value": 0.3275616687020497,
+      "rtol": 0.01
+    },
+    "cc_minus_co_0p5e-6": {
+      "kind": "value",
+      "value": -0.036607177573685146,
+      "rtol": 0.01
+    },
+    "cc_grid_shift_0p5e-6_nz400_to_nz6400": {
+      "kind": "value",
+      "value": -0.009378978691406803,
+      "rtol": 0.01
+    },
+    "cc_X_0p5e-6_nz400": {
+      "kind": "value",
+      "value": 0.20022581116490934,
+      "rtol": 0.001
+    },
+    "cc_X_0p5e-6_nz6400": {
+      "kind": "value",
+      "value": 0.19084683247350254,
+      "rtol": 0.001
+    },
+    "cc_observed_order": {
+      "kind": "bound",
+      "value": 0.868361744411808,
+      "min": 0.8,
+      "max": 1.0,
+      "basis": "chosen",
+      "note": "first-order upwind, approached from below: pre-asymptotic on this ladder"
+    },
+    "h_balance_rel_error_countercurrent_nz3200": {
+      "kind": "bound",
+      "value": 1.9992532194796727e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "face values: the discrete fluxes telescope"
+    },
+    "cc_unconverted_9e-6_nz400": {
+      "kind": "value",
+      "value": 0.009788491222848306,
+      "rtol": 0.01
+    },
+    "cc_past_edge_converged": {
+      "kind": "exact",
+      "value": false
+    },
+    "cc_continuation_reaches_past_edge": {
+      "kind": "exact",
+      "value": false
+    },
+    "cc_continuation_last_vA0": {
+      "kind": "bound",
+      "value": 9.453125000000001e-06,
+      "min": 9.2e-06,
+      "max": 9.7e-06,
+      "basis": "chosen",
+      "unit": "mol/s",
+      "note": "where continuation stops on 400 cells"
+    },
+    "cc_past_edge_iterate_unconverted": {
+      "kind": "bound",
+      "value": 5.210869228884823e-12,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the last iterate of a non-converged solve: what the solver approaches, not a result"
+    },
+    "cc_past_edge_converged_smoothed_sqrt": {
+      "kind": "exact",
+      "value": false
+    },
+    "cc_continuation_reaches_past_edge_smoothed_sqrt": {
+      "kind": "exact",
+      "value": false
+    },
+    "cc_continuation_last_vA0_smoothed_sqrt": {
+      "kind": "bound",
+      "value": 9.453125000000001e-06,
+      "min": 9.2e-06,
+      "max": 9.7e-06,
+      "basis": "chosen",
+      "unit": "mol/s",
+      "note": "where continuation stops on 400 cells"
+    },
+    "cc_past_edge_iterate_unconverted_smoothed_sqrt": {
+      "kind": "bound",
+      "value": 4.401967658392616e-09,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the last iterate of a non-converged solve: what the solver approaches, not a result"
+    }
+  },
+  "quoted": {
+    "equilibrium_conversion_stated": [
+      "18.7 %",
+      "0.187",
+      "18.7 %"
+    ],
+    "conversion_measured": [
+      "99.7 %",
+      "0.997",
+      "0.997",
+      "99.7 %"
+    ],
+    "u_C0_stated": [
+      "2.90e-7",
+      "2.90e-7"
+    ],
+    "v_A0_stated": [
+      "11.8e-5",
+      "11.8e-5"
+    ],
+    "Kp_printed_473_Pa3": [
+      "4.2e38"
+    ],
+    "Kp_printed_unconverted_eq": [
+      "1e-25"
+    ],
+    "Kp_atm3_factor": [
+      "1.04e15"
+    ],
+    "Kp_printed_atm3": [
+      "4e23"
+    ],
+    "Kp_needed_atm3": [
+      "2.3e-4"
+    ],
+    "Kp_printed_vs_needed_decades": [
+      "27"
+    ],
+    "dH298_kJ_per_mol": [
+      "+206"
+    ],
+    "Kp_prefactor_vanthoff_Pa3": [
+      "9.0e33"
+    ],
+    "Kp_prefactor_ratio": [
+      "54"
+    ],
+    "Kp_slope_repair_K": [
+      "-26484"
+    ],
+    "Kp_slope_gap_pct": [
+      "7"
+    ],
+    "Kp_slope_vanthoff_K": [
+      "-24814"
+    ],
+    "ceiling_at_1e-6_reading": [
+      "0.72",
+      "0.716"
+    ],
+    "alphaH_recomputed_dev_frac": [
+      "-0.03 %",
+      "-0.03 %"
+    ],
+    "k_473": [
+      "2.653e-5"
+    ],
+    "K_B_473": [
+      "1.160e-4"
+    ],
+    "Kp_473_reconstructed_Pa3": [
+      "2.357e11",
+      "2.36e11"
+    ],
+    "V_r": [
+      "3.18e-5"
+    ],
+    "alphaH_od_reading_dev_frac": [
+      "-2.4 %"
+    ],
+    "V_r_od_reading_change_frac": [
+      "4.9 %"
+    ],
+    "sens_kVr_x0.1_to_x10_maxabs_dX": [
+      "below 1e-8",
+      "below 1e-8"
+    ],
+    "sens_alphaH_x0.3_to_x10_maxabs_dX": [
+      "below 1e-8",
+      "below 1e-8"
+    ],
+    "sens_Kp_div3_dev_frac": [
+      "-0.19 %",
+      "-0.19 %"
+    ],
+    "sens_Kp_x10_dev_frac": [
+      "+0.28 %",
+      "+0.28 %"
+    ],
+    "unconverted_dev_frac": [
+      "-45 %",
+      "-45 %"
+    ],
+    "Kp_473_vanthoff_ratio": [
+      "1.6",
+      "1.58"
+    ],
+    "unconverted_measured": [
+      "0.3 %",
+      "0.0030"
+    ],
+    "cc_continuation_last_vA0": [
+      "9.4e-6",
+      "9.4e-6"
+    ],
+    "cc_past_edge_iterate_unconverted": [
+      "below 1e-6"
+    ],
+    "conversion_model": [
+      "0.9983"
+    ],
+    "conversion_dev_frac": [
+      "0.13 %"
+    ],
+    "unconverted_model": [
+      "0.00166"
+    ],
+    "fv_finest_error_over_noise_midmap": [
+      "at least 1e3"
+    ],
+    "conversion_dev_band_lo_frac": [
+      "0.08 %"
+    ],
+    "conversion_dev_band_hi_frac": [
+      "0.19 %"
+    ],
+    "fv_observed_order_midmap": [
+      "1.0"
+    ],
+    "cc_X_8e-6_nz3200": [
+      "0.93"
+    ],
+    "co_X_8e-6_nz3200": [
+      "0.61"
+    ],
+    "cc_X_0p5e-6_nz3200": [
+      "0.19"
+    ],
+    "co_X_0p5e-6_nz3200": [
+      "0.23"
+    ],
+    "h_balance_rel_error_countercurrent_nz3200": [
+      "below 1e-12"
+    ],
+    "h_balance_rel_error_cocurrent": [
+      "below 1e-12"
+    ],
+    "ceiling_at_1e-6_reading_vanthoff": [
+      "0.664"
+    ],
+    "Kp_needed_for_0.997_at_11.8e-6_ratio": [
+      "338"
+    ],
+    "xeq_implied_by_Kp_needed": [
+      "0.734"
+    ],
+    "fv_vs_ivp_absdiff_midmap_nz800": [
+      "4.4e-5"
+    ]
+  },
+  "breaks": {
+    "conversion_measured": [
+      "data file read one row off"
+    ],
+    "unconverted_measured": [
+      "data file read one row off"
+    ],
+    "equilibrium_conversion_stated": [
+      "data file read one row off"
+    ],
+    "u_C0_stated": [
+      "data file read one row off"
+    ],
+    "v_A0_stated": [
+      "the purge read with the exponent -6"
+    ],
+    "k_473": [
+      "Eq. 7 evaluated with T in degrees Celsius"
+    ],
+    "K_B_473": [
+      "Eq. 7 evaluated with T in degrees Celsius"
+    ],
+    "V_r": [
+      "radii read as an outer diameter of 17.0 mm"
+    ],
+    "alphaH_recomputed_dev_frac": [
+      "radii read as an outer diameter of 17.0 mm"
+    ],
+    "alphaH_od_reading_dev_frac": [
+      "the alpha_H identity with the radii swapped"
+    ],
+    "V_r_od_reading_change_frac": [
+      "V_r scaled with r_i instead of r_i squared"
+    ],
+    "Kp_473_reconstructed_Pa3": [
+      "argon dilution ignored in K_p (y_C0 = 1)"
+    ],
+    "Kp_473_vanthoff_ratio": [
+      "argon dilution ignored in K_p (y_C0 = 1)",
+      "standard state 1 atm instead of 1 bar",
+      "benzene formation enthalpy with the wrong sign",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_printed_unconverted_eq": [
+      "argon dilution ignored in K_p (y_C0 = 1)",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_needed_atm3": [
+      "argon dilution ignored in K_p (y_C0 = 1)"
+    ],
+    "Kp_printed_vs_needed_decades": [
+      "argon dilution ignored in K_p (y_C0 = 1)",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_slope_repair_K": [
+      "argon dilution ignored in K_p (y_C0 = 1)",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_slope_gap_pct": [
+      "argon dilution ignored in K_p (y_C0 = 1)",
+      "benzene formation enthalpy with the wrong sign",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_473_vanthoff_Pa3": [
+      "standard state 1 atm instead of 1 bar",
+      "benzene formation enthalpy with the wrong sign",
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_prefactor_vanthoff_Pa3": [
+      "standard state 1 atm instead of 1 bar"
+    ],
+    "Kp_prefactor_ratio": [
+      "standard state 1 atm instead of 1 bar"
+    ],
+    "dH298_kJ_per_mol": [
+      "benzene formation enthalpy with the wrong sign"
+    ],
+    "Kp_slope_vanthoff_K": [
+      "benzene formation enthalpy with the wrong sign"
+    ],
+    "Kp_printed_473_Pa3": [
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_printed_atm3": [
+      "printed K_P evaluated with T in degrees Celsius"
+    ],
+    "Kp_atm3_factor": [
+      "1 atm taken as 1 bar in the units conversion"
+    ],
+    "ceiling_at_stated_run": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "ceiling_at_1e-6_reading": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "ceiling_at_1e-6_reading_vanthoff": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "Kp_needed_for_0.997_at_11.8e-6_ratio": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "xeq_implied_by_Kp_needed": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "conversion_model": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "conversion_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "unconverted_model": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "unconverted_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "conversion_dev_band_lo_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "conversion_dev_band_hi_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "membrane_gain_over_equilibrium": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "sens_Kp_vanthoff_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "sens_Kp_div3_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "sens_Kp_x10_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "sens_Kp_div10_dev_frac": [
+      "argon dilution ignored (y_C0 = 1) in K_p and in the reactor"
+    ],
+    "equilibrium_limit_X": [
+      "argon dilution ignored in the reactor only (K_p as reconstructed)"
+    ],
+    "stated_run_fv_vs_ceiling_absdiff": [
+      "permeance alpha_H / 1000"
+    ],
+    "stated_run_fv_vs_ivp_absdiff": [
+      "permeance alpha_H / 1000"
+    ],
+    "stated_run_n100_vs_n800_absdiff": [
+      "permeance alpha_H / 1000"
+    ],
+    "sens_alphaH_x0.3_to_x10_maxabs_dX": [
+      "permeance alpha_H / 1000"
+    ],
+    "cocurrent_vs_ceiling_low_purge_absdiff": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_unconverted_9e-6_nz400": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_past_edge_converged": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_continuation_reaches_past_edge": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_continuation_last_vA0": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_past_edge_iterate_unconverted": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_past_edge_converged_smoothed_sqrt": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_continuation_reaches_past_edge_smoothed_sqrt": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_continuation_last_vA0_smoothed_sqrt": [
+      "permeance alpha_H / 1000"
+    ],
+    "cc_past_edge_iterate_unconverted_smoothed_sqrt": [
+      "permeance alpha_H / 1000"
+    ],
+    "sens_kVr_x0.1_to_x10_maxabs_dX": [
+      "rate constant k / 1e4: kinetics-limited"
+    ],
+    "fv_vs_ivp_absdiff_midmap_nz800": [
+      "zero-gradient outlet read at the last cell"
+    ],
+    "fv_profile_maxerr_midmap_nz800": [
+      "profile compared at cell centres instead of faces"
+    ],
+    "fv_observed_order_midmap": [
+      "grid ladder 800, 1200 read as a factor 2"
+    ],
+    "fv_finest_error_over_noise_midmap": [
+      "IVP reference at rtol 1e-5"
+    ],
+    "fv_profile_observed_order_midmap": [
+      "grid ladder 800, 1200 read as a factor 2"
+    ],
+    "cc_observed_order": [
+      "counter-current ladder 1600, 3200, 4800 read as factors 2"
+    ],
+    "h_balance_rel_error_cocurrent": [
+      "2.9 H2 per cyclohexane in the tube balance"
+    ],
+    "h_balance_rel_error_cocurrent_midmap": [
+      "2.9 H2 per cyclohexane in the tube balance"
+    ],
+    "h_balance_rel_error_countercurrent_nz3200": [
+      "zero-gradient outlet, outlets read at the last cells"
+    ],
+    "cc_X_0p5e-6_nz3200": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_X_8e-6_nz3200": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_X_0p5e-6_nz400": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_X_0p5e-6_nz6400": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_grid_shift_0p5e-6_nz400_to_nz6400": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_minus_co_8e-6": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "cc_minus_co_0p5e-6": [
+      "shell flow direction not reversed (counter-current run co-current)"
+    ],
+    "co_X_0p5e-6_nz3200": [
+      "co-current shell run counter-current"
+    ],
+    "co_X_8e-6_nz3200": [
+      "co-current shell run counter-current"
+    ],
+    "ceiling_excess_over_map": [
+      "co-current shell run counter-current"
+    ],
+    "newton_iters_max": [
+      "newton tol 1e-15, below the round-off floor"
+    ],
+    "newton_iters_min": [
+      "a warm start from the converged solution"
+    ]
   }
 }

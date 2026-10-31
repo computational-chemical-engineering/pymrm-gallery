@@ -1,13 +1,630 @@
 {
   "page": "H1.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "A_L_m2_h_psi": 0.04817161823209024,
-    "delta_pi_psi": 321.8048636096632,
-    "water_flux_r2": 0.9998124158368936,
-    "B_L_m2_h": 0.08574578255876258,
-    "B_spread_frac": 0.026951284584347583,
-    "rejection_predicted_min_pct": 99.38572844616893,
-    "rejection_predicted_max_pct": 99.69910732499076,
-    "film_first_order_ratio": 1.9970751186453837
+    "A_L_m2_h_psi": {
+      "kind": "value",
+      "value": 0.04817161823209024,
+      "rtol": 1e-06,
+      "unit": "L/(m2 h psi)"
+    },
+    "delta_pi_psi": {
+      "kind": "value",
+      "value": 321.8048636096632,
+      "rtol": 1e-06,
+      "unit": "psi"
+    },
+    "delta_pi_se_psi": {
+      "kind": "value",
+      "value": 7.352362320761463,
+      "rtol": 1e-06,
+      "unit": "psi"
+    },
+    "water_flux_r2": {
+      "kind": "value",
+      "value": 0.9998124158368936,
+      "rtol": 1e-09
+    },
+    "B_L_m2_h": {
+      "kind": "value",
+      "value": 0.08574578255876258,
+      "rtol": 1e-06,
+      "unit": "L/(m2 h)"
+    },
+    "B_spread_frac": {
+      "kind": "value",
+      "value": 0.026951284584347583,
+      "rtol": 1e-06
+    },
+    "B_trend_frac": {
+      "kind": "value",
+      "value": 0.024025291323864297,
+      "rtol": 1e-06,
+      "note": "linear trend across the salt pressures"
+    },
+    "B_trend_se_frac": {
+      "kind": "value",
+      "value": 0.007608611603493407,
+      "rtol": 1e-06
+    },
+    "B_convective_ratio": {
+      "kind": "value",
+      "value": 2.219666299314241,
+      "rtol": 1e-06,
+      "note": "rise of B if the salt flux scaled with the water flux"
+    },
+    "salt_pressure_ratio": {
+      "kind": "value",
+      "value": 1.5629914672912832,
+      "rtol": 1e-09
+    },
+    "pressure_spread_first3_max_psi": {
+      "kind": "value",
+      "value": 12.099999999999909,
+      "rtol": 1e-09
+    },
+    "pressure_spread_first3_min_psi": {
+      "kind": "value",
+      "value": 5.2000000000000455,
+      "rtol": 1e-09
+    },
+    "pressure_spread_fourth_psi": {
+      "kind": "value",
+      "value": 40.60000000000002,
+      "rtol": 1e-09
+    },
+    "rejection_markers_above_100": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.038167938931295,
+      "min_margin": 0.001,
+      "note": "readings more than half a printed pixel above 100 %"
+    },
+    "rejection_predicted_min_pct": {
+      "kind": "value",
+      "value": 99.38572844616893,
+      "rtol": 1e-09
+    },
+    "rejection_predicted_max_pct": {
+      "kind": "value",
+      "value": 99.69910732499076,
+      "rtol": 1e-09
+    },
+    "rejection_rise_pp": {
+      "kind": "value",
+      "value": 0.3133788788218368,
+      "rtol": 1e-06
+    },
+    "rejection_rise_px": {
+      "kind": "value",
+      "value": 4.105263312566062,
+      "rtol": 1e-06
+    },
+    "axis_over_rise": {
+      "kind": "value",
+      "value": 319.10255207994516,
+      "rtol": 1e-06,
+      "note": "the 0 to 100 % axis against the predicted rise"
+    },
+    "marker_gap_min_pp": {
+      "kind": "value",
+      "value": 0.3008926750092371,
+      "rtol": 1e-06
+    },
+    "marker_gap_max_pp": {
+      "kind": "value",
+      "value": 0.536909611656128,
+      "rtol": 1e-06
+    },
+    "marker_gap_min_px": {
+      "kind": "value",
+      "value": 3.941694042621006,
+      "rtol": 1e-06
+    },
+    "marker_gap_max_px": {
+      "kind": "value",
+      "value": 7.033515912695277,
+      "rtol": 1e-06
+    },
+    "line_width_pp": {
+      "kind": "value",
+      "value": 0.4580152671755725,
+      "rtol": 1e-09
+    },
+    "film_err_n400": {
+      "kind": "value",
+      "value": 8.096704118495487e-05,
+      "rtol": 0.001,
+      "note": "wall ratio on the face against the closed form, 50 um, highest flux"
+    },
+    "film_err_n800": {
+      "kind": "value",
+      "value": 4.053098808834215e-05,
+      "rtol": 0.001
+    },
+    "film_first_order_ratio": {
+      "kind": "bound",
+      "value": 1.9976577182988358,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "error ratio n = 400 to 800; upwind is first order"
+    },
+    "film_two_solver_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "sparse against dense LU at n = 800; the round-off floor of the solve"
+    },
+    "film_finest_err_over_noise": {
+      "kind": "bound",
+      "value": 40530988.08834215,
+      "min": 1000.0,
+      "basis": "chosen",
+      "note": "the finest error must stand 1e3 above the round-off bound for the order to mean anything"
+    },
+    "film_wall_50um_pct": {
+      "kind": "value",
+      "value": 28.913044297332924,
+      "rtol": 0.0001,
+      "note": "at the highest measured water flux"
+    },
+    "film_wall_100um_pct": {
+      "kind": "value",
+      "value": 66.0751007079108,
+      "rtol": 0.0001
+    },
+    "film_wall_200um_pct": {
+      "kind": "value",
+      "value": 174.90826016107297,
+      "rtol": 0.0001
+    },
+    "pol_delta_star_um": {
+      "kind": "value",
+      "value": 98.35201970507404,
+      "rtol": 0.0001
+    },
+    "pol_A_true_ratio": {
+      "kind": "value",
+      "value": 1.7863395954788377,
+      "rtol": 0.0001
+    },
+    "pol_wall_ratio": {
+      "kind": "value",
+      "value": 1.6414705483305934,
+      "rtol": 0.0001
+    },
+    "pol_k_m_s": {
+      "kind": "value",
+      "value": 1.5251339062461713e-05,
+      "rtol": 0.0001,
+      "unit": "m/s"
+    },
+    "pol_B_trend_pred": {
+      "kind": "value",
+      "value": 0.2901584028477385,
+      "rtol": 0.0001,
+      "note": "B computed from bulk under the matched film"
+    },
+    "pol_B_trend_gap_se": {
+      "kind": "value",
+      "value": 34.977881037018925,
+      "rtol": 0.0001
+    },
+    "pol_B_trend_p": {
+      "kind": "value",
+      "value": 0.0008163585467504121,
+      "rtol": 0.001
+    },
+    "pol_B_fall_needed": {
+      "kind": "value",
+      "value": 0.25172067633291006,
+      "rtol": 0.0001
+    },
+    "salt_delta_max_um": {
+      "kind": "value",
+      "value": 12.966577130202978,
+      "rtol": 0.0001,
+      "note": "predicted B trend equal to the measured trend plus two standard errors"
+    },
+    "salt_dpi_shift_psi": {
+      "kind": "value",
+      "value": 0.34299038503081647,
+      "rtol": 0.001
+    },
+    "pol_curvature": {
+      "kind": "value",
+      "value": -9.065580382957101e-06,
+      "rtol": 0.001,
+      "unit": "L/(m2 h psi2)"
+    },
+    "pol_line_dev_px": {
+      "kind": "value",
+      "value": 4.089463941826209,
+      "rtol": 0.001
+    },
+    "data_curvature": {
+      "kind": "value",
+      "value": 7.321762255627696e-06,
+      "rtol": 1e-06,
+      "unit": "L/(m2 h psi2)"
+    },
+    "data_curvature_se": {
+      "kind": "value",
+      "value": 2.3249117085911766e-06,
+      "rtol": 1e-06
+    },
+    "data_sigma_px": {
+      "kind": "value",
+      "value": 1.9088929552868685,
+      "rtol": 1e-06
+    },
+    "curvature_gap_p": {
+      "kind": "value",
+      "value": 0.08972002044554822,
+      "rtol": 0.001
+    },
+    "curvature_gap_se_1pct_min": {
+      "kind": "value",
+      "value": 1.1170668094629772,
+      "rtol": 0.0001
+    },
+    "curvature_gap_se_1pct_max": {
+      "kind": "value",
+      "value": 2.286271127442896,
+      "rtol": 0.0001
+    },
+    "intercept_gap_psi": {
+      "kind": "value",
+      "value": 28.195136390336813,
+      "rtol": 1e-06
+    },
+    "intercept_gap_se": {
+      "kind": "value",
+      "value": 3.8348404445085515,
+      "rtol": 1e-06
+    },
+    "intercept_extrapolation_psi": {
+      "kind": "value",
+      "value": 278.99513639033677,
+      "rtol": 1e-06
+    },
+    "eq37_linearisation_err": {
+      "kind": "value",
+      "value": 0.02940889307081196,
+      "rtol": 1e-06,
+      "note": "1 - (1 - exp(-x))/x at the paper's x = 0.06"
+    }
+  },
+  "quoted": {
+    "pressure_spread_first3_max_psi": [
+      "12"
+    ],
+    "pressure_spread_first3_min_psi": [
+      "5"
+    ],
+    "pressure_spread_fourth_psi": [
+      "41"
+    ],
+    "rejection_markers_above_100": [
+      "2"
+    ],
+    "eq37_linearisation_err": [
+      "2.9 %"
+    ],
+    "B_spread_frac": [
+      "2.7 %"
+    ],
+    "salt_pressure_ratio": [
+      "1.56"
+    ],
+    "B_trend_frac": [
+      "2.4 %"
+    ],
+    "B_trend_se_frac": [
+      "0.8 %"
+    ],
+    "B_convective_ratio": [
+      "2.22"
+    ],
+    "rejection_rise_pp": [
+      "0.31"
+    ],
+    "rejection_rise_px": [
+      "4"
+    ],
+    "axis_over_rise": [
+      "320"
+    ],
+    "marker_gap_min_pp": [
+      "0.30"
+    ],
+    "marker_gap_max_pp": [
+      "0.54"
+    ],
+    "marker_gap_min_px": [
+      "4"
+    ],
+    "marker_gap_max_px": [
+      "7"
+    ],
+    "line_width_pp": [
+      "0.46"
+    ],
+    "film_wall_50um_pct": [
+      "29"
+    ],
+    "film_wall_100um_pct": [
+      "66"
+    ],
+    "pol_delta_star_um": [
+      "98"
+    ],
+    "pol_A_true_ratio": [
+      "1.8"
+    ],
+    "pol_wall_ratio": [
+      "1.64"
+    ],
+    "pol_k_m_s": [
+      "1.5e-5"
+    ],
+    "pol_B_trend_pred": [
+      "29 %"
+    ],
+    "pol_B_trend_gap_se": [
+      "35"
+    ],
+    "pol_B_trend_p": [
+      "below 0.001"
+    ],
+    "pol_B_fall_needed": [
+      "25 %"
+    ],
+    "salt_delta_max_um": [
+      "13"
+    ],
+    "salt_dpi_shift_psi": [
+      "0.3"
+    ],
+    "curvature_gap_p": [
+      "0.09"
+    ],
+    "data_sigma_px": [
+      "2"
+    ],
+    "pol_line_dev_px": [
+      "4"
+    ],
+    "curvature_gap_se_1pct_min": [
+      "1.1"
+    ],
+    "curvature_gap_se_1pct_max": [
+      "2.3"
+    ],
+    "intercept_gap_psi": [
+      "28"
+    ],
+    "intercept_gap_se": [
+      "3.8"
+    ],
+    "intercept_extrapolation_psi": [
+      "279"
+    ],
+    "A_L_m2_h_psi": [
+      "0.0482"
+    ],
+    "delta_pi_psi": [
+      "322"
+    ],
+    "delta_pi_se_psi": [
+      "7"
+    ],
+    "water_flux_r2": [
+      "0.99981"
+    ],
+    "B_L_m2_h": [
+      "0.0857"
+    ],
+    "rejection_predicted_min_pct": [
+      "99.39"
+    ],
+    "rejection_predicted_max_pct": [
+      "99.70"
+    ],
+    "film_err_n400": [
+      "8.1e-5"
+    ],
+    "film_first_order_ratio": [
+      "2.00"
+    ]
+  },
+  "breaks": {
+    "B_L_m2_h": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "B_spread_frac": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "rejection_predicted_min_pct": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "rejection_predicted_max_pct": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "rejection_rise_pp": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "axis_over_rise": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "marker_gap_min_pp": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "marker_gap_max_pp": [
+      "feed 3.5 g/L (the percentage read as g/L)"
+    ],
+    "delta_pi_psi": [
+      "water-flux pressures read 12 psi high"
+    ],
+    "B_convective_ratio": [
+      "water-flux pressures read 12 psi high",
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "intercept_gap_psi": [
+      "water-flux pressures read 12 psi high"
+    ],
+    "intercept_gap_se": [
+      "water-flux pressures read 12 psi high"
+    ],
+    "intercept_extrapolation_psi": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "pressure_spread_first3_max_psi": [
+      "water-flux pressures read 12 psi high"
+    ],
+    "pressure_spread_first3_min_psi": [
+      "water-flux pressures read 12 psi high"
+    ],
+    "A_L_m2_h_psi": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "delta_pi_se_psi": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "water_flux_r2": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "B_trend_se_frac": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "data_curvature": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "data_curvature_se": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "data_sigma_px": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "pixel scale taken at 300 dpi"
+    ],
+    "pol_delta_star_um": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "salt diffusivity 1.5e-10 m2/s",
+      "A_true held at the measured slope"
+    ],
+    "pol_A_true_ratio": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "A_true held at the measured slope"
+    ],
+    "pol_wall_ratio": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "pol_k_m_s": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "pol_B_trend_pred": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "pol_B_trend_gap_se": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "pol_B_trend_p": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "pol_B_fall_needed": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "salt_delta_max_um": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "fourth salt triangle placed at the fourth circle's pressure",
+      "salt diffusivity 1.5e-10 m2/s"
+    ],
+    "salt_dpi_shift_psi": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "pol_curvature": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "A_true held at the measured slope"
+    ],
+    "pol_line_dev_px": [
+      "highest water-flux marker read 0.5 L/(m2 h) low",
+      "pixel scale taken at 300 dpi"
+    ],
+    "curvature_gap_p": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "curvature_gap_se_1pct_min": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "curvature_gap_se_1pct_max": [
+      "highest water-flux marker read 0.5 L/(m2 h) low"
+    ],
+    "B_trend_frac": [
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "salt_pressure_ratio": [
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "pressure_spread_fourth_psi": [
+      "fourth salt triangle placed at the fourth circle's pressure"
+    ],
+    "rejection_markers_above_100": [
+      "rejection axis calibrated 1 px high"
+    ],
+    "marker_gap_min_px": [
+      "rejection axis calibrated 1 px high",
+      "pixel scale taken at 300 dpi"
+    ],
+    "rejection_rise_px": [
+      "pixel scale taken at 300 dpi"
+    ],
+    "marker_gap_max_px": [
+      "pixel scale taken at 300 dpi"
+    ],
+    "line_width_pp": [
+      "pixel scale taken at 300 dpi"
+    ],
+    "film_err_n400": [
+      "film wall value read from the last cell centre (P8)"
+    ],
+    "film_err_n800": [
+      "film wall value read from the last cell centre (P8)"
+    ],
+    "film_wall_50um_pct": [
+      "film wall value read from the last cell centre (P8)",
+      "wall condition with the rejection sign flipped (R_int = -0.994)"
+    ],
+    "film_wall_100um_pct": [
+      "wall condition with the rejection sign flipped (R_int = -0.994)",
+      "salt diffusivity 1.5e-10 m2/s"
+    ],
+    "film_wall_200um_pct": [
+      "wall condition with the rejection sign flipped (R_int = -0.994)"
+    ],
+    "film_first_order_ratio": [
+      "finest grid 600 cells, read as a doubling"
+    ],
+    "film_two_solver_gap": [
+      "second solve on 799 cells"
+    ],
+    "film_finest_err_over_noise": [
+      "reference taken from the n = 800 solve"
+    ],
+    "eq37_linearisation_err": [
+      "Eq. 37 linearised at x = 0.08"
+    ]
   }
 }

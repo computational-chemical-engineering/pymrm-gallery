@@ -14,52 +14,60 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 4
+pymrm_min_version: "3.2.0"
+runtime_seconds: 37
 datasets:
   - wijmans-baker-1995-fig5.csv
 
 validation:
-  - eq. (40) is self-checking: the salt permeability B recovered independently from each of the four salt points agrees to 2.7 % with no trend in pressure
-  - rejection predicted from A and B alone, neither fitted to the rejection data, against the four rejection markers
-  - the pymrm concentration-polarisation film solve against its closed form, refined to show first-order convergence
-  - concentration polarisation tested as an explanation for the intercept gap, and ruled out
+  - eq. (40) is self-checking - the salt permeability B recovered independently from each of the four salt points agrees to 2.7 %, with a trend of 2.4 % across the range (standard error 0.8 %) where a salt leak carried by the water would make it rise 2.22-fold
+  - rejection predicted from A and B alone, neither fitted to the rejection data, against the four rejection markers, with the figure's resolving power measured in printed pixels
+  - the pymrm concentration-polarisation film solve, wall value read on the membrane face, against its closed form, refined to show first-order convergence above the round-off floor
+  - concentration polarisation tested as an explanation for the intercept gap, with the unknown true permeability matched to the measured slope - possible on the water flux alone, excluded by the flat salt permeability
 
 adds: >
   The rejection panel of Figure 5 looks like a validation of the model and is
   not one. Closing the model - A from the water flux, B from the salt flux,
   rejection then fixed - predicts a rise of 0.31 percentage points across the
-  measured pressure range, which is 4 px on a printed figure whose curve is
-  about 6 px thick. The markers agree, and would have agreed with any prediction
-  above 99 %. The evidence in that figure is in the first two panels, not the
-  third.
+  measured pressure range, which is 4 px on a printed figure whose line is
+  about 6 px (0.46 percentage points) thick. The markers sit 0.30 to 0.54
+  percentage points above the prediction, about one line width. The evidence in
+  that figure is in the first two panels, not the third.
 
-  Separately, the derivation assumes no concentration polarisation and never
-  examines it. A pymrm convection-diffusion solve of the feed-side film puts
-  numbers on it: at the highest measured flux a 50 um boundary layer raises the
-  wall concentration 23 % above bulk and a 200 um one raises it 70 %. It also
-  shows that polarisation cannot explain the gap between the fitted osmotic
-  pressure and the stated one, because a film thick enough to shift the
-  intercept that far would halve the apparent permeability.
+  Separately, the derivation as the page transcribes it assumes no
+  concentration polarisation. A pymrm convection-diffusion solve of the
+  feed-side film puts numbers on it: at the highest measured flux a 50 um
+  boundary layer raises the wall concentration 29 % above bulk. On the water
+  flux alone, a 98 um film with the true permeability matched to the measured
+  slope reproduces both the slope and the intercept. The salt data exclude it:
+  B computed from bulk would then rise 29 % across the range against a measured
+  2.4 %, 35 standard errors (p below 0.001, two degrees of freedom), and the
+  measured trend allows a film of at most 13 um, which moves the intercept by
+  0.3 psi. The curvature of the four water-flux points points the same way but
+  weakly (p = 0.09 on one degree of freedom).
 
 agreement: >
   Eq. 37 fits the four water-flux points with r^2 = 0.99981, giving
   A = 0.0482 L/(m2 h psi) and a zero-flux intercept of 322 +/- 7 psi against the
   ~350 psi the caption states. Eq. 40 gives B = 0.0857 L/(m2 h) with a 2.7 %
   spread across a 1.56-fold pressure range. Rejection predicted from those two
-  constants is 99.39 to 99.70 % over the measured range; the digitised markers
-  read 99.85 to 100.08 %, which is agreement only in the weak sense described
-  above. The film solve matches its closed form to 4.3e-4 at n = 400 and
-  converges first order, refinement ratio 2.00.
+  constants is 99.39 to 99.70 % at the rejection markers' pressures; the markers
+  sit 0.30 to 0.54 percentage points higher, which is agreement only in the weak
+  sense described above. The film solve matches its closed form to 8.1e-5 at
+  n = 400 and converges first order, refinement ratio 2.00.
 
 caveats: >
   One figure of a review article, four points per series, and a commercial
   membrane whose A and B are not independently known, so the fitted constants
   cannot be checked against anything external. The fitted osmotic pressure sits
-  28 psi - four standard errors - below the caption's stated value; polarisation
-  is ruled out as the cause but nothing is ruled in, and the discrepancy is left
-  open rather than explained away. The film thickness is a free parameter: the
-  polarisation figures are a sensitivity study, not a measurement, and only the
-  negative conclusion drawn from them is independent of it. The intrinsic
-  rejection fed to the film solve comes from the model itself, which is mildly
-  circular, though the wall ratio is insensitive to it.
+  28 psi - 3.8 standard errors with two degrees of freedom - below the caption's
+  stated value, and it is an extrapolation 279 psi beyond the nearest point.
+  Polarisation does not explain it unless the intrinsic B falls by 25 % across
+  the range in exact step with the wall; nothing is ruled in, and the
+  discrepancy is left open rather than explained away. The film thickness is a
+  free parameter, and the 98 um film implies a mass-transfer coefficient of
+  1.5e-5 m/s, plausible only in a poorly mixed cell; the page has no apparatus
+  details. The sidecar reads the three series as the same four experiments,
+  whose pressures agree to 5 to 12 psi on the first three and spread over
+  41 psi on the fourth. The intrinsic rejection fed to the film solve comes
+  from the model itself, which is mildly circular.

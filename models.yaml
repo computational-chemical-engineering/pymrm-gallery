@@ -4059,9 +4059,9 @@ models:
       are labels printed inside them. The tangency hot spot, at a step size
       Richardson-extrapolated to zero, matches their stated 1.275 to 1.575 % over
       the four S-curves Barkelew drew and 3.512 % over S = 3 to 200; Barkelew's
-      critical inlet pressure matches the criterion-1 back-integration to 1.774 %
+      critical inlet pressure matches the criterion-1 back-integration to 1.767 %
       mean over 600-700 K, and that disagreement factorises exactly into a
-      rate-law part (-5.06 to -7.69 %) and a criterion part (+2.81 to +12.76 %)
+      rate-law part (-5.05 to -7.70 %) and a criterion part (+2.82 to +12.73 %)
       with opposite signs that partly cancel. The page prints a deliberate-break
       table, a table of what each check is blind to, and one row printed because
       it cannot fail. Four Fig. 10 blow-up positions were measured to
@@ -4090,7 +4090,7 @@ models:
       container: "Chemical Engineering Science 25(10) 1503–1516"
       doi: 10.1016/0009-2509(70)85073-4
     predicts: [hot spot temperature, critical inlet partial pressure, runaway boundary]
-    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, continuation]
     data: {tier: 6, method: table, status: complete}
     note: >
       Tier 6: the paper contains no experimental data, only the authors' own
@@ -4684,222 +4684,27 @@ models:
     slug: larkins-two-phase-packed-bed
     title: "Larkins two-phase concurrent flow in packed beds"
     description: >
-      LARKINS, WHITE & JEFFREY PRINT A WORKED EXAMPLE, AND THIS PAGE REDOES IT.
-      Table 3 (book p. 234) is eight runs of measured two-phase data on 3/8-in.
-      Raschig rings; Table 4 (book p. 235) is the authors' own arithmetic on those
-      same eight rows - two Reynolds numbers, three friction losses, chi and the
-      two-phase parameter - and every constant that turns one into the other is
-      printed somewhere in the nine pages.  So the page reproduces the chain cell by
-      cell rather than admiring it: liquid Reynolds numbers to 0.174 % worst, delta_l
-      to 0.218 %, delta_g to 0.416 % and delta_lg - a MEASUREMENT corrected by two
-      densities, not a correlation - to 0.639 % worst and 0.260 % r.m.s.
-      SEVEN OF THE EIGHT ROWS CLOSE.  THE EIGHTH IS AN INCONSISTENCY BETWEEN THE
-      PAPER'S OWN TWO TABLES, AND IT IS REPORTED, NOT REPAIRED.  Run 5 has no gas, so
-      the liquid saturation is 100 %, so Eq. (21)'s mixture density equals the liquid
-      density and the manometer correction of book p. 236 cancels exactly: Eq. (20)
-      reduces to delta_lg = dP/dL.  Table 3 prints 2.321 and Table 4 prints 2.469.
-      What is NOT free is pinned first: the run's liquid rate is corroborated twice
-      inside Table 4 (it returns the printed N_Re = 2,739 and, through Eq. (17), the
-      printed delta_l = 2.467), and the procedure that fails here reproduces the other
-      seven to 0.639 % including run 160.  RUN 160 IS THE MIRROR SINGLE-PHASE ROW BUT
-      NOT THE SAME REDUCTION WITH THE PHASES SWAPPED: with R_l = 0 nothing cancels, the
-      manometer correction still applies in full and Eq. (21) still contributes rho_g,
-      and dropping the correction alone would move that row by +22.29 %.  It
-      corroborates the INGREDIENTS of run 5's reduction, not the reduction itself,
-      which is a property of R_l = 100 % and is tested nowhere else in the table.
-      Taking Table 3's cell makes the run's two-phase parameter 0.9408, -5.92 % off the
-      unity the paper says the parameter approaches as chi -> infinity; taking Table 4's
-      requires Table 3's cell to be wrong.  BOTH READINGS ARE WEIGHED ON THE PAPER'S OWN
-      SCALE rather than one being called a requirement and the other an observation:
-      book p. 238's sentence is asymptotic and about the Figure 7 cloud, whose scatter
-      book p. 237 puts at a 13 % standard deviation with 87 % of points inside +/- 20 %,
-      so -5.92 % is comfortably inside the paper's own band (and run 160 at chi -> 0 is
-      itself +0.90 % off unity); against that, run 5's 2.469 sits 0.081 % from
-      Ergun's delta_l, 11.5 times closer than run 160's 0.93 %.  WHAT THAT SECOND ARM
-      RESTS ON IS SAID RATHER THAN LEFT IMPLICIT, because it is the same statistic as
-      the first: run 5 has no gas, so |delta_lg/delta_l - 1| IS Table 4's own
-      two-phase parameter minus one - the quantity the chi -> infinity check reads,
-      asserted in the notebook - so this is one datum read in two directions and not
-      two independent weighings.  And against a 13 % scatter ALONE a 0.081 % residual
-      is the MORE probable of the two, not the less; it counts as evidence only under
-      a named alternative, that Table 4's cell was BACK-COMPUTED from Eq. (17) rather
-      than measured, with run 160 the only calibration for "too close".  The argument
-      turns on that hypothesis, not on the band.  The page still declines to choose, and
-      records that neither table carries a footnote and that neither section discussing
-      them mentions any individual run.
-      A CONSTANT THE PAPER NEVER PRINTS IS RECOVERED FROM ITS OWN TWO TABLES AND THEN
-      CHECKED OUT OF SAMPLE.  Table 4's air Reynolds column needs an air viscosity;
-      Table 2 gives one value at one temperature (0.0192 cP at 80 degF) and the runs
-      are at 59-79 degF.  Eq. (18) determines it row by row, and the seven recovered
-      values are LINEAR IN TEMPERATURE to a worst residual of 0.0259 % - structure,
-      not noise, from seven points and two parameters.  Extrapolated to 80 degF, a
-      temperature no Table 3 row uses and which therefore was not used to find the
-      line, it lands 0.819 % from Table 2's printed value, and 0.672 % once the
-      systematic offset measured on the LIQUID rows is removed; the plain figure is the
-      movable one and the offset-corrected one is invariant by construction.  Both
-      diagnostics are labelled
-      structural on the page, for a reason that is itself the finding: they are
-      SCALE-INVARIANT, so no error in the specific surface, the particle diameter, the
-      porosity or the centipoise conversion can move them - which is exactly what
-      makes the check a statement about the paper's air viscosity rather than about
-      this page's geometry.
-      THE 0.15 % SYSTEMATIC IS EXPLAINED RATHER THAN EXCUSED.  N_Re = 6G/(S mu) - the
-      porosity cancels out of Eq. (18) through Eq. (19) - so the liquid Reynolds column
-      has exactly three inputs.  Seven rows spanning a 28-fold range of mass rate agree
-      on +0.1454 % to within 0.0515 points, i.e. it is one constant and not scatter,
-      and that constant is exactly a specific surface of 148.22 sq.ft./cu.ft. against
-      a printed "148": inside the paper's own three-figure rounding.  Two break rows
-      at 147.5 and 148.5 price that rounding directly, and the implied specific
-      surface barely moves under either, which is the invariance that makes it
-      meaningful.
-      A UNITS INCONSISTENCY IN THE PRINTED NOTATION, PROVED FROM THE PAPER'S OWN
-      NUMBERS AND NOT REPAIRED.  The notation (book p. 239) gives mu in
-      lb-mass/(ft.-min.) and g_c as "32.17 pdl./lb.-mass in English units".  N_Re is
-      fine on those units; Eq. (17) is not, because its group g_c rho D_p^3/mu^2
-      carries mu^-2 and leaves a factor of 60^2 standing.  The page does not argue
-      from dimensions: it MEASURES the factor Table 4 requires and gets 3593.8, i.e.
-      3600 to a fifth of a percent, and states that the residual is the delta_l
-      residual restated rather than a second finding.  The "pdl./lb.-mass" label is
-      an acceleration rather than g_c, and that is recorded as a reading of the words
-      with the arithmetic named as the evidence.
-      THE TWO CORRELATIONS ARE TESTED AGAINST DATA INSIDE THEIR OWN FIT, AND EVERY
-      SURFACE SAYS SO.  Table 3 is "a sample of the processed data" and Figure 7
-      "summarizes all two-phase data", so these rows are part of the body Eqs. (22)
-      and (23) were fitted to.  Eq. (22) is 25.53 % worst here and Eq. (23) 33.90 %
-      worst and 19.55 % r.m.s. over the six rows inside its declared
-      0.05 < chi < 30, with two of them outside 20 % - consistent with the 13 %
-      and 16 % standard deviations the paper quotes for the whole body.  Eq. (22)'s
-      r.m.s. is deliberately NOT quoted against the 13 % here: the eight-row figure
-      flatters it, and the honest comparison is set out below.  NULL
-      BASELINES ARE PRINTED BESIDE BOTH: no interaction at all (the parameter equal to
-      1) is 0.3666 in r.m.s. log units and the best single constant 0.2151 against
-      Eq. (22)'s 0.0531, a gain of 4.05x on one extra free parameter; the best single
-      constant for the saturation is 117.9 % r.m.s. against Eq. (23)'s 19.55 %.
-      AND THE 4.05x IS PRINTED WITH THE NUMBER THAT DOES NOT FLATTER IT.  Two of those
-      eight rows are the chi -> 0 and chi -> infinity LIMITS, where Eq. (22) returns
-      exactly 1 for ANY values of 0.416 and 0.666 - the page already labels
-      eq22_argmax_chi structural for the same evenness - so on those rows the fit is
-      not free while the best-constant null is charged in full.  On the 6 rows that can
-      discriminate the gain is 2.48x and the r.m.s. 14.79 %, i.e. the eight-row
-      headline is 63 % larger than the comparison on the rows where the correlation is
-      actually free, and 14.79 % rather than 12.81 % is the figure to set beside the
-      paper's own 13 %.  The conclusion survives either way.  Eq. (23)'s null needs no
-      such split: all six of its rows are genuinely two-phase and nothing is pinned.
-      A SECOND PRINTED DEFECT, FOUND BY READING THE FIGURES FOR TEXT RATHER THAN FOR
-      CURVES, AND NOT REPAIRED.  Eq. (23) is printed TWICE on book p. 237 with two
-      different constant terms: "- 0.774" as the typeset equation and "-0.744" in the
-      annotation inside Figure 7 on the facing column, with 0.525, 0.109 and the whole
-      of Eq. (22) identical in both places and both read on 300 ppi crops enlarged to
-      digit scale.  The difference is a transposition worth 7.15 % in R_l everywhere.
-      THE PAPER'S OWN PRINTED DATA CANNOT SETTLE IT, and the page says so instead of
-      choosing: against the six Table 4 rows inside the declared range the Figure 7
-      reading is BETTER in r.m.s. (18.33 % against 19.55 %, a gain of 1.2232 points)
-      and WORSE on the "within 20 %" count the paper itself uses (3 rows outside
-      against 2), and six rows cannot separate a 7.15 % shift against a standard
-      deviation the paper puts at 16 %.  What does NOT depend on settling it is
-      reported as such: both readings put the ceiling below a full column and both give
-      a negative discriminant at R_l = 1.  Figures 3, 5 and 6 carry the same curves but
-      print only the labels "EQUATION (22)" and "EQUATION (23)" beside them, not the
-      coefficients - each was cropped and read - so Figure 7 is the only second
-      printing of either equation in the paper.
-      EQ. (23)'s CEILING, ROOT-FOUND AND CHECKED AGAINST A CLOSED FORM.  The fit is a
-      downward parabola in log chi with its maximum at chi = 256.010 (the closed form
-      10^(0.525/0.218), recovered to 1.2e-09), which is EIGHT TIMES the upper limit of
-      30 it is declared for, so inside its own range it is monotone rising - from
-      2.28 % at chi = 0.05 to 58.03 % at chi = 30 - and its ceiling is a liquid
-      saturation of 0.7214.  The discriminant of "Eq. (23) = 1" is -0.0618, so there
-      is NO real chi at which the fit returns a full column.  This QUANTIFIES A CAVEAT
-      THE PAPER PRINTS rather than contradicting one: book p. 238 says Eq. (23) "is a
-      power series fit which is only good within the limits given" and attributes the
-      R_l -> 1 and R_l -> 0 consistency checks to "the data of Figure 7", not to the
-      equation.
-      THE PYMRM CONTENT IS THE COLUMN, AND IT PRICES THE SHORTCUT THE PAPER'S DESIGN
-      PROCEDURE RESTS ON.  Book p. 236: densities for Eqs. (17) and (20) may be taken
-      at "the arithmetic average of terminal pressures", which "produces the correct
-      average friction loss for a section (4)"; reference 4 is Larkins's thesis, NOT
-      ON DISK, so what is shown there cannot be checked here.  FOR ONE PHASE IN
-      HORIZONTAL FLOW THE CLAIM IS EXACT AND THE PROOF IS TWO LINES: the Reynolds
-      number of Eq. (18) carries no density, so BOTH Ergun terms go as rho^-1 and
-      delta_g = K/P exactly for any alpha and beta; then P^2 is linear in z and
-      2K/(P_0+P_L) = (P_0-P_L)/L identically.  Measured at 1.16e-13, against 1.12e-05
-      for the GEOMETRIC mean of the same two terminals - eight orders, which is what
-      makes the claim about that mean and not about averaging in general.  With
-      Eqs. (22) and (23) in the loop the identity goes: one section over 4 ft is
-      0.332 % wrong and the error reaches 1 % at a bed length of 5.6012 ft,
-      ROOT-FOUND, inside the 7 ft column the paper describes on book p. 232.  THAT IS
-      THE WORST OF TABLE 3's TWO-PHASE ROWS AND IS REPORTED AS ONE.  The demonstration
-      column is run 63, which prints the largest delta_lg of the eight - exactly the
-      condition step 1 names, "if the bed is of great length OR THE FRICTION LOSS IS
-      LARGE".  The same root-find over every two-phase row spans 5.6012 ft to
-      466.9537 ft, a factor of 83: 1 of the 6 is inside the 7 ft column and 4 inside
-      the 40 ft commercial reactor, so on the mildest row the recipe is good well past
-      the commercial reactor.  Cfg.demo_run selects the row and a break row moves it,
-      so the evaluation point is a measured choice and not a hard-wired one.  Sectioning converges at observed order
-      1.9999 - an arithmetic mean of the terminals IS the midpoint rule once the
-      integrand stops being 1/P - so the paper's own advice to "break the bed into
-      smaller sections" acquires a number.  THREE INDEPENDENT ROUTES, sharing no
-      assembly: the paper's sectional march, pymrm finite volumes
-      (construct_convflux_upwind + construct_div + NumJac((n,1)) + newton, first-order
-      upwind, observed order 1.0001, Richardson-extrapolated) and z(P) by adaptive
-      quadrature inverted by bisection.  THE QUADRATURE IS THE REFERENCE and the
-      extrapolated pymrm pair is one of the things measured against it: they agree to
-      7.5e-10 - 6.6 orders below the 0.332 % recipe error they are used to measure,
-      and 4.1 orders below what 1600 cells alone achieve.
-      THE OUTLET READ IS MEASURED RATHER THAN ASSUMED, AND SO IS THE REASON.  What
-      leaves the domain is NOT v*P_N: construct_convflux_upwind folds the zero-gradient
-      outlet INTO the flux operator, so the outlet-face row of conv is
-      [..., -0.125, +1.125] and the flux transported out is (9 P_N - P_(N-1))/8, which
-      IS compute_boundary_values for this bc.  The notebook prints that row off the
-      operator it builds and ASSERTS the identity to 2e-16 rather than asserting a
-      sentence - this is the A3.7 lesson in docs/handoff.md ("the Neumann outflow
-      extrapolates the value to the face rather than taking the upwind cell"), and
-      J4.1 and J4.2 state it the same way.  The last cell value is reported anyway
-      because it is 3.84x closer here, and the mechanism is a CANCELLATION OF TWO O(h)
-      ERRORS, not a claim about which value is the outflow - stated in the direction
-      the operator actually works.  The last cell's balance is
-      (9 P_N - P_(N-1))/8 - P_(N-1) = h S(P_N), so the outlet reconstruction SHORTENS
-      THE LAST STEP from h to (8/9)h.  Face-locatedness is generic to first-order
-      upwind and owes nothing to the outlet condition - the FIRST cell shows it, where
-      no boundary condition can be responsible - and what the outlet condition does is
-      move P_N OFF that face by h S/9; compute_boundary_values adds the same h S/9
-      back.  Two predictions of that account are tested and hold: the term is h S/9 and
-      not h S/8, and compute_boundary_values therefore lands on a plain backward-Euler
-      march - which is WHY a genuine v*P_N march sits at 1.0002x the
-      compute_boundary_values error rather than at some unrelated multiple, and nowhere
-      near the last cell's.  The last-cell read wins here only because that shift points
-      against the accumulated march error.  Both reads are first order, and the
-      Richardson pair of EITHER lands on the quadrature at the same precision -
-      7.5e-10 from the last cell, 1.1e-09 from compute_boundary_values - so the choice
-      cannot reach a reported number on this page.  It is not switched because nothing
-      reported here is a flux or a mass balance; the moment one is, the standing lesson
-      is to read through compute_boundary_values.
-      NOTHING IS DIGITISED ANYWHERE ON THIS PAGE, and that is a scope decision stated
-      in the Background: the paper's nine figures carry the 600+ points behind the
-      correlations, none of them is tabulated, and the builder brief ranks a worked
-      example with printed intermediates above a digitised figure.  So the page says
-      nothing about the scatter behind Figure 7, the foaming deviations of Figure 8 or
-      the Lockhart-Martinelli comparison of Figure 9 beyond the words the paper
-      prints.  29 break rows move 61 of 68 metrics with the coverage map GENERATED
-      from measured moves and an AST guard that rejects any row returning a metric as
-      a typed constant.  BOTH DIRECTIONS ARE ASSERTED - every metric has a row or a
-      structural label, and every ROW moves at least one metric, which is what catches
-      a perturbation that has been silently neutered - and the structural labels are
-      themselves enforced against CI's 5 %.  Nine metrics are labelled structural with
-      what each cannot detect and a named companion; eight of them are enforced
-      directly, and the ninth - the two-unit-system algebra check, pinned at 5.6e-16 -
-      is excused on the ground that it sits below check_agreement.py's ABS_FLOOR, where
-      a relative move is the ratio of two machine-noise values.  THAT EXCUSE IS ITSELF
-      ASSERTED, by requiring every break row to leave it below the floor, and the guard
-      is there because it fired: the ft-lb-second route used to read the centipoise
-      conversion from the module rather than from Cfg, so the rounded-centipoise row
-      perturbed one side of the identity and not the other, lifted it above the floor
-      and into CI's comparison, and never reached the code it claims to perturb.  A live
-      negative control reruns that old path.  The two metrics below ABS_FLOOR are named
-      with above-floor companions from the same computation, and one class of claim is
-      named as
-      unprotected: no break row can check a PROSE EXPLANATION of a measured ratio,
-      which is why the outlet-read cell prints the operator row and asserts the
-      identity.
+      Larkins, White and Jeffrey print a worked example: Table 3 (book p. 234) is
+      eight runs of measured two-phase data on 3/8-in. Raschig rings and Table 4
+      (book p. 235) is the authors' own arithmetic on the same rows. The page
+      redoes the chain cell by cell - liquid Reynolds numbers to 0.174 % worst,
+      delta_l to 0.218 %, delta_g to 0.416 % and the measured delta_lg to 0.639 %
+      - and reports, without repairing it, that run 5 cannot close: with no gas
+      Eq. (20) reduces to delta_lg = dP/dL, and the two tables print 2.321 and
+      2.469. It recovers the air viscosity behind Table 4, which the paper never
+      prints, linear in temperature to 0.0259 % and 0.819 % from Table 2's value
+      out of sample; it reports a second printed defect (Eq. (23) printed with
+      constant terms -0.774 and -0.744 on the same page); and it labels the
+      comparison of Eqs. (22) and (23) with these rows a goodness of fit, beside
+      null baselines. The pymrm part is the column dP/dz = rho_m/144 - delta_lg(P),
+      solved with construct_convflux_upwind, construct_div, NumJac and newton
+      with an outflow outlet, against an adaptive quadrature and the paper's own
+      sectional recipe. It prices the shortcut the paper's design procedure rests
+      on: the arithmetic mean of the terminal pressures is exact for one phase in
+      horizontal flow (proved, and at round-off on the page), and with the
+      two-phase correlation in the loop a single section is 1 % wrong at
+      5.6012 ft on Table 3's largest-friction-loss row and 466.9537 ft on its
+      mildest; sectioning converges at second order.
     section: G
     status: published
     page: pages/G1.1-larkins-two-phase-packed-bed/
@@ -4973,7 +4778,7 @@ models:
       - total external liquid hold-up under trickle flow at elevated gas density
       - two-phase pressure gradient
       - gas-phase CO2 conversion of the chemically enhanced absorption experiment
-    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    pymrm_api: [construct_convflux_upwind, construct_div, compute_boundary_values, NumJac, newton]
     reference:
       authors: ["Wammes, W. J. A.", "Westerterp, K. R."]
       year: 1991
@@ -5006,7 +4811,7 @@ models:
       - overall effectiveness factor of a partially wetted catalyst pellet
       - fractional gain in effectiveness factor from partial wetting, vs Thiele modulus
       - wetting efficiency from the liquid mass velocity
-    pymrm_api: [construct_grad, construct_div, NumJac, newton, clip_approach]
+    pymrm_api: [construct_grad, construct_div, compute_boundary_values, NumJac, newton]
     reference:
       authors: ["Herskowitz, M.", "Smith, J. M."]
       year: 1983
@@ -5061,7 +4866,7 @@ models:
       - axial hydrogen depletion in a membrane channel, and the finite length at which it ends
       - the capacity ratio at which permeation stops being the limiting resistance
       - the apparent pressure exponent produced by a finite surface step in series with the wall
-    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac]
+    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, construct_convflux_upwind, NumJac, newton, compute_boundary_values, continuation]
     reference:
       authors: ["Itoh, N."]
       year: 1987
@@ -5116,7 +4921,7 @@ models:
       - conversion beyond the equilibrium limit
       - axial flow and hydrogen-fraction profiles in both channels
       - co-current vs counter-current purge (prediction)
-    pymrm_api: [construct_convflux_upwind, construct_div, NumJac]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, BlockLayout, compute_boundary_values, continuation]
     reference:
       authors: ["Itoh, N."]
       year: 1987
@@ -5129,8 +4934,9 @@ models:
     slug: solution-diffusion
     title: "Wijmans–Baker solution–diffusion model"
     description: >
-      Two constants fitted to two curves predict the third. The prediction is
-      right, and the figure it is checked against has no power to say so.
+      Two constants fitted to two curves predict the third. The prediction sits
+      within a printed line width of the markers, and the figure it is checked
+      against has no power to test it.
     section: H
     status: published
     page: pages/H1.7-solution-diffusion/
@@ -5138,6 +4944,7 @@ models:
     priority: P1
     structures: [S3]
     phases: [liquid, gas]
+    pymrm_api: [construct_grad, construct_convflux_upwind, construct_div, compute_boundary_values]
     reference:
       authors: ["Wijmans, J. G.", "Baker, R. W."]
       year: 1995
@@ -5247,70 +5054,31 @@ models:
       near saturation, so the butane loading falls as the pressure rises, which no
       Langmuir isotherm can produce - and the exchange coefficients between the
       two sorbates are FINITE, so the fast species is dragged along by the slow
-      one. Removing the exchange alone takes the selectivity from 488 to 12.4.
-      This is where the review's experimental comparisons live, and unlike its
-      single-component half they are stated as numbers rather than plotted, so the
-      page is TIER 2 and the comparison is validation rather than reproduction.
-      Funke et al.'s measured 24 for a hexane-isomer mixture comes out at 25.0,
-      +4.3 %, from nothing but pure-component isotherm fits and one diffusivity
-      ratio - and inside a 1.6x band of three readings the review's one sentence
-      about that run leaves open (whether its "15 kPa" is a total or a
-      per-component pressure, what the feed composition was, and the diffusivity
-      ratio taken as exactly 5), all swept where the comparison is made, because
-      nothing fitted is not nothing chosen.
-      Bakker's two methane/butane values do not: 488 against 380 (1.28x)
-      and 203 against 60 (3.38x), the second quoted by the review one sentence
-      after the first and passed over without comment. With the exchange removed
-      the same model gives 12.4 and 5.4 - 31x and 11x too LOW - so the
-      measurements discriminate decisively between the two implementations while
-      agreeing quantitatively with neither, and the page says that in those words.
-      The review's own computations reproduce cleanly: all five printed
-      selectivities (487, 12.3, 202, 5.4, 43.2) to better than 0.75 %, and all
-      four printed mixture fluxes to 0.41 % using the ~40 um membrane thickness
-      A4.7 reconstructed from the SINGLE-component fluxes. That flux comparison is
-      NOT a test of the reconstruction and the page says so where it is made:
-      delta, rho_MFI, the unit-cell mass and Avogadro's number cancel identically
-      out of all four, and swinging the framework density over a factor of four
-      leaves every one of them bit-identical, so it is the delta-free flux-ratio
-      check rescaled by the stored 34 - kept, labelled and printed beside its own
-      twin, because it does test the mixture physics. The transient methane peak
-      TIME is the one quantity here that carries delta, as delta^2, and it had
-      never been refined in space: the steady profile is smooth but the transient
-      carries a self-sharpening butane front. Refined under the transient
-      (n_z = 30/60/120/240, order 2.5 then 2.0) it lands at 0.658 s against the
-      printed 0.73 s, -9.8 %, and both further grid and step refinement move it
-      further away. Closing that needs delta +5.3 %, which nothing else on the
-      page forbids precisely because nothing else contains delta, so it is
-      reported as an OPEN TENSION with its candidate homes named - the 1800 kg
-      m^-3 read off a figure caption, the hard-coded unit-cell mass, the
-      two-figure printed 34, or the review's transient not being the calculation
-      reproduced here. The two peak heights cross sign on the same refinement,
-      from 1.5 % and 3.5 % low to 1.2 % and 1.8 % high, and the earlier "backward
-      Euler damps a maximum" reading of that sign is withdrawn.
-      Two printed numbers do NOT reproduce and both are investigated
-      rather than explained away. The Henry-limit sorption selectivity of 2200
-      comes out at 2649.9 from Table 1 by two independent routes, and the obvious
-      explanation is EXCLUDED: every single-parameter change to the C1 or nC4 row
-      that would make the ratio 2200 moves A4.7's certifying flux-ratio check by
-      4.2 % to 24 % against an observed 0.17 %. Where 2200 does come from is left
-      open, because the review's Fig. 24 is drawn against CBMC fugacities rather
-      than against the fit. And the multicomponent-Langmuir counterfactual splits
-      in two: its structural claim reproduces exactly - S_P independent of
-      upstream composition to 1.02x over feeds from 95 % down to 5 % methane,
-      where IAST spans more than a factor of three over the same five feeds -
-      while its printed 800 does not (about 1680), because the review never says
-      which affinity it used once the dual-site fit is collapsed to a single site.
-      Every check on the coupled machinery has a second route sharing no code with
-      the first: [Gamma] by implicit differentiation of the IAST equations against
-      central differences, [B] assembled from eq. (44) against the raw friction
-      system of eq. (42) solved matrix-free by GMRES (A4.2's fix, reused - 6e-14,
-      and 687 % when a term is dropped from B_ii), and the closed-form surface
-      potential against adaptive quadrature. The three algebraic identities the
-      review uses - eq. (43) at i=j, eq. (55) from eq. (54), eq. (46) at n=1 - are
-      labelled as identities and left unscored. And the review's own
-      counter-example is carried rather than dropped: zeolite 4A goes the other
-      way, so the finding is that the exchange coefficient is a property of the
-      host topology and MFI and 4A sit at opposite limits of it.
+      one. Removing the exchange alone divides the selectivity by about 40.
+      The review states its experimental comparisons as numbers rather than
+      plots, so the page is TIER 2 and the comparison is validation. Funke et
+      al.'s hexane-isomer selectivity comes out 4.3 % high from nothing but
+      pure-component isotherm fits and one diffusivity ratio, inside a 1.57x band
+      of readings the review's one sentence about that run leaves open, all swept
+      where the comparison is made. Bakker's two methane/butane values come out
+      1.28x and 3.4x; both lie between the finite- and infinite-exchange models,
+      nearer the finite one, so the data favour finite exchange while agreeing
+      quantitatively with neither. The review's own computations reproduce: five
+      printed selectivities and four printed mixture fluxes, worst 0.74 %. The
+      fluxes do not test the membrane thickness A4.7 reconstructed, because it
+      cancels out of them identically; the transient methane peak time is the one
+      quantity that carries it, and refined in space and time it lands 9.8 %
+      before the printed 0.73 s, needing the thickness 5.3 % larger, an open
+      tension with its candidate causes named. Two printed numbers do not
+      reproduce and both are investigated: the Henry-limit sorption selectivity
+      (2649.9 from Table 1 against 2200, and no single-parameter slip in the two
+      Table 1 rows explains it without breaking A4.7's certifying check), and the
+      multicomponent-Langmuir counterfactual, whose structural claim holds and
+      whose value does not. Every check on the coupled machinery has a second
+      route sharing no code with the first, the steady membrane is solved by
+      pymrm.newton on the logarithm of the loadings with pymrm.continuation as
+      the comparison route, and the review's own counter-example, zeolite 4A,
+      is carried rather than dropped.
     section: H
     status: published
     page: pages/H1.9-zeolite-membrane-maxwell-stefan-mixture/
@@ -5329,7 +5097,10 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - construct_coefficient_matrix
       - NumJac
+      - newton
+      - continuation
     reference:
       authors: ["Krishna, R.", "Baur, R."]
       year: 2003

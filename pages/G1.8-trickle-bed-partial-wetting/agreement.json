@@ -1,30 +1,776 @@
 {
   "page": "G1.8",
+  "format": 2,
+  "env": {
+    "pymrm": "3.2.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "L_rec_curve1": 0.5081764682243542,
-    "L_rec_curve2": 2.0459689497861895,
-    "L_rec_curve3": 7.060945645192768,
-    "L_rec_curve4": 10.1754669063059,
-    "chi10_dev_shifted_worst": 0.06423552381964402,
-    "chi10_dev_printed_worst": 3.1431416095587035,
-    "chi_dev_shifted_worst_2to30": 0.14593750692165158,
-    "chi_dev_shifted_worst_2to30_printed_Lm_only": 0.08166558304681863,
-    "chi_dev_printed_worst_2to30": 3.360805884265142,
-    "slope_model_fitted": 1.0766699441000585,
-    "slope_figure_mean": 1.1115,
-    "slope_gap": 0.03483005589994148,
-    "slope_gap_lo_over_abscissa_calibrations": 0.007,
-    "slope_gap_hi_over_abscissa_calibrations": 0.04563154914478629,
-    "model_straightline_fit_rms_decades": 0.01887446625829415,
-    "dlogg_forced_shifted_worst_rel_err": 0.054371118395233564,
-    "recon_check_best_unrejected_defect": 0.017185696101173598,
-    "eq21_first_term_resistance_share_at_Lm1": 0.8680904522613065,
-    "altb_best_powerlaw_worst_miss": 0.11814546766706324,
-    "figure_gap_drift_over_window_decades": 0.030781061998568726,
-    "pymrm_vs_table1_maxdev": 0.0003109249218966603,
-    "grid_order": 2.8409931919129905,
-    "curve4_dev_worst_at_reconstructed_Lm": 0.11432021596393804,
-    "eq20_max_abs_err_vs_printed": 0.004734433847054187,
-    "collapse_identity": 1.7763568394002505e-15
+    "L_rec_curve1": {
+      "kind": "value",
+      "value": 0.508176468224354,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-12"
+    },
+    "L_rec_curve2": {
+      "kind": "value",
+      "value": 2.0459689497861895,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-12"
+    },
+    "L_rec_curve3": {
+      "kind": "value",
+      "value": 7.060945645192764,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-12"
+    },
+    "L_rec_curve4": {
+      "kind": "value",
+      "value": 10.17546690630592,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-12"
+    },
+    "L_rec_tol_curve1_pct": {
+      "kind": "value",
+      "value": 11.438221157252478,
+      "rtol": 1e-06,
+      "note": "fit rms propagated through d log chi / d log L_m"
+    },
+    "L_rec_tol_curve2_pct": {
+      "kind": "value",
+      "value": 8.269401219639969,
+      "rtol": 1e-06,
+      "note": "fit rms propagated through d log chi / d log L_m"
+    },
+    "L_rec_tol_curve3_pct": {
+      "kind": "value",
+      "value": 3.8414323875983785,
+      "rtol": 1e-06,
+      "note": "fit rms propagated through d log chi / d log L_m"
+    },
+    "chi10_dev_printed_curve1_pct": {
+      "kind": "value",
+      "value": 0.9830319156951938,
+      "rtol": 1e-06,
+      "note": "closed form"
+    },
+    "chi10_dev_shifted_curve1_pct": {
+      "kind": "value",
+      "value": 0.9821490497910668,
+      "rtol": 0.0001,
+      "note": "finite volume, n_u = 800"
+    },
+    "chi10_dev_printed_curve2_pct": {
+      "kind": "value",
+      "value": 69.24897493550483,
+      "rtol": 1e-06,
+      "note": "closed form"
+    },
+    "chi10_dev_shifted_curve2_pct": {
+      "kind": "value",
+      "value": 1.8527781503593337,
+      "rtol": 0.0001,
+      "note": "finite volume, n_u = 800"
+    },
+    "chi10_dev_printed_curve3_pct": {
+      "kind": "value",
+      "value": 314.31416095587036,
+      "rtol": 1e-06,
+      "note": "closed form"
+    },
+    "chi10_dev_shifted_curve3_pct": {
+      "kind": "value",
+      "value": 1.5553343731576437,
+      "rtol": 0.0001,
+      "note": "finite volume, n_u = 800"
+    },
+    "chi10_dev_printed_curve4_pct": {
+      "kind": "value",
+      "value": 151.79404858839777,
+      "rtol": 1e-06,
+      "note": "closed form"
+    },
+    "chi10_dev_shifted_curve4_pct": {
+      "kind": "value",
+      "value": 6.423552381965957,
+      "rtol": 0.0001,
+      "note": "finite volume, n_u = 800"
+    },
+    "chi10_dev_shifted_worst": {
+      "kind": "value",
+      "value": 0.06423552381965957,
+      "rtol": 0.0001
+    },
+    "chi10_dev_printed_worst": {
+      "kind": "value",
+      "value": 3.1431416095587035,
+      "rtol": 1e-06
+    },
+    "chi_dev_shifted_worst_2to30": {
+      "kind": "value",
+      "value": 0.1459375069216819,
+      "rtol": 0.0001
+    },
+    "chi_dev_shifted_worst_2to30_printed_Lm_only": {
+      "kind": "value",
+      "value": 0.08166558304681716,
+      "rtol": 0.0001
+    },
+    "chi_dev_printed_worst_2to30": {
+      "kind": "value",
+      "value": 3.360805884264085,
+      "rtol": 0.0001
+    },
+    "curve4_dev_worst_at_reconstructed_Lm": {
+      "kind": "value",
+      "value": 0.11432021596394522,
+      "rtol": 0.0001
+    },
+    "gap_miss_shifted_decades": {
+      "kind": "value",
+      "value": 0.020335011008642878,
+      "rtol": 1e-06
+    },
+    "gap_miss_printed_decades": {
+      "kind": "value",
+      "value": 0.38880373038075666,
+      "rtol": 1e-06
+    },
+    "figure_gap_drift_over_window_decades": {
+      "kind": "value",
+      "value": 0.030781061998568726,
+      "rtol": 1e-06
+    },
+    "dlogg_forced_shifted_worst_rel_err": {
+      "kind": "value",
+      "value": 0.054371118395233564,
+      "rtol": 1e-06
+    },
+    "chi_top_curve_at_phi_max": {
+      "kind": "value",
+      "value": 20.01581808393643,
+      "rtol": 1e-06,
+      "note": "the top fitted line at the right edge of the window"
+    },
+    "slope_model_fitted": {
+      "kind": "value",
+      "value": 1.0766699441000591,
+      "rtol": 1e-06
+    },
+    "slope_figure_mean": {
+      "kind": "value",
+      "value": 1.1115,
+      "rtol": 1e-09
+    },
+    "slope_figure_min": {
+      "kind": "value",
+      "value": 1.0976,
+      "rtol": 1e-09
+    },
+    "slope_figure_max": {
+      "kind": "value",
+      "value": 1.1311,
+      "rtol": 1e-09
+    },
+    "slope_gap": {
+      "kind": "value",
+      "value": 0.034830055899940815,
+      "rtol": 1e-06
+    },
+    "slope_gap_e2e_pct": {
+      "kind": "value",
+      "value": 13.95284986940528,
+      "rtol": 1e-06
+    },
+    "slope_gap_lo_over_abscissa_calibrations": {
+      "kind": "value",
+      "value": 0.007,
+      "rtol": 1e-06,
+      "note": "the independent re-digitisation's refit slope (sidecar) minus the model's"
+    },
+    "retrace_rescale_gap": {
+      "kind": "bound",
+      "value": 6.115193173616973e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "|CSV mean slope x 418.6/421.9 - re-trace mean slope|; the re-trace's slope is recorded to 4 decimals"
+    },
+    "slope_gap_lo_e2e_pct": {
+      "kind": "value",
+      "value": 2.6597951522674856,
+      "rtol": 1e-06
+    },
+    "slope_gap_hi_over_abscissa_calibrations": {
+      "kind": "value",
+      "value": 0.04563154914478562,
+      "rtol": 1e-06
+    },
+    "slope_gap_hi_e2e_pct": {
+      "kind": "value",
+      "value": 18.663403672942792,
+      "rtol": 1e-06
+    },
+    "model_straightline_fit_rms_decades": {
+      "kind": "value",
+      "value": 0.018874466258294153,
+      "rtol": 1e-06
+    },
+    "eq20_max_abs_err_vs_printed": {
+      "kind": "value",
+      "value": 0.004734433847054187,
+      "rtol": 1e-06
+    },
+    "recon_check_baseline": {
+      "kind": "value",
+      "value": 0.022984474893094742,
+      "rtol": 1e-06
+    },
+    "recon_check_best_unrejected_defect": {
+      "kind": "value",
+      "value": 0.017185696101174264,
+      "rtol": 1e-06
+    },
+    "recon_check_n_unrejected": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.07780431054157866,
+      "min_margin": 0.05,
+      "note": "transcription defects below the tightest check-4 tolerance; margin relative"
+    },
+    "recon_check_chi_scale_up": {
+      "kind": "value",
+      "value": 0.06295301211868976,
+      "rtol": 1e-06
+    },
+    "recon_check_chi_scale_dn": {
+      "kind": "value",
+      "value": 0.10594715247717512,
+      "rtol": 1e-06
+    },
+    "eq21_first_term_resistance_share_at_Lm1": {
+      "kind": "value",
+      "value": 0.8680904522613065,
+      "rtol": 1e-09
+    },
+    "pymrm_vs_table1_maxdev": {
+      "kind": "value",
+      "value": 0.0003109249218955501,
+      "rtol": 0.05,
+      "note": "n_u = 800, Dirichlet at phi_max"
+    },
+    "pymrm_vs_table1_L2": {
+      "kind": "value",
+      "value": 7.726768072147117e-06,
+      "rtol": 0.05,
+      "note": "n_u = 800, Robin, L_m = 2"
+    },
+    "surface_flux_identity": {
+      "kind": "bound",
+      "value": 6.279421427279885e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "eta from the face gradient against the volume average, n_u = 800"
+    },
+    "collapse_identity": {
+      "kind": "bound",
+      "value": 1.3322676295501878e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "the same algebra written twice; a corrupted sphere term leaves it unmoved"
+    },
+    "grid_order": {
+      "kind": "value",
+      "value": 2.8414343313408397,
+      "rtol": 0.05,
+      "note": "largest observed rate at phi_max: pre-asymptotic"
+    },
+    "grid_order_coarsest_phimax": {
+      "kind": "value",
+      "value": 2.127543126796585,
+      "rtol": 0.05,
+      "note": "phi_max, n_u 50 -> 100"
+    },
+    "grid_order_finest_phi2": {
+      "kind": "bound",
+      "value": 2.0054174435653485,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "second-order scheme, n_u 1600 -> 3200"
+    },
+    "grid_order_finest_phi10": {
+      "kind": "bound",
+      "value": 2.1544616606388725,
+      "min": 2.0,
+      "max": 3.0,
+      "basis": "theory",
+      "note": "a h^2 + b h^3 with a, b of one sign: orders between 2 and 3"
+    },
+    "grid_order_finest_phimax": {
+      "kind": "bound",
+      "value": 2.6569232774771017,
+      "min": 2.0,
+      "max": 3.0,
+      "basis": "theory",
+      "note": "a h^2 + b h^3 with a, b of one sign: orders between 2 and 3"
+    },
+    "grid_two_solver_gap": {
+      "kind": "bound",
+      "value": 6.368239269249898e-13,
+      "max": 1e-11,
+      "basis": "tolerance",
+      "note": "newton against natural-ordering LU on each finest grid, three phi"
+    },
+    "grid_finest_err_over_noise": {
+      "kind": "bound",
+      "value": 2494.457218560342,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "smallest finest-grid error over the declared round-off bound 1e-11"
+    },
+    "m1_first_step_rel_dev": {
+      "kind": "bound",
+      "value": 2.5858104546472305e-09,
+      "max": 1e-07,
+      "basis": "tolerance",
+      "note": "m = 1 is linear: the first step is off only by NumJac's finite-difference Jacobian, relative accuracy about 1e-8"
+    },
+    "ags_1000_at_phi30_pct": {
+      "kind": "value",
+      "value": 2.9929439294421267,
+      "rtol": 1e-06
+    },
+    "alt_a_alpha_gs_curve1": {
+      "kind": "value",
+      "value": 1057.1566652468757,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-10"
+    },
+    "alt_a_alpha_gs_curve2": {
+      "kind": "value",
+      "value": 16.187044759391814,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-10"
+    },
+    "alt_a_alpha_gs_curve3": {
+      "kind": "value",
+      "value": 4.592250638974541,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-10"
+    },
+    "alt_a_alpha_gs_curve4": {
+      "kind": "value",
+      "value": 9.246845670733968,
+      "rtol": 1e-06,
+      "note": "brentq, xtol 1e-10"
+    },
+    "alt_a_spread": {
+      "kind": "value",
+      "value": 230.2044788833523,
+      "rtol": 1e-06
+    },
+    "altb_powerlaw_miss_curve2_pct": {
+      "kind": "value",
+      "value": -9.677562722164302,
+      "rtol": 1e-06
+    },
+    "altb_powerlaw_miss_curve3_pct": {
+      "kind": "value",
+      "value": -11.814546766706336,
+      "rtol": 1e-06
+    },
+    "altb_best_powerlaw_worst_miss": {
+      "kind": "value",
+      "value": 0.11814546766706335,
+      "rtol": 1e-06
+    },
+    "m2_over_m1_excess_phi2_pct": {
+      "kind": "value",
+      "value": 12.939571687194618,
+      "rtol": 0.001
+    },
+    "m2_over_m1_excess_phimax_pct": {
+      "kind": "value",
+      "value": -12.51819521008073,
+      "rtol": 0.001
+    },
+    "reuse_slab_vs_table1": {
+      "kind": "value",
+      "value": 1.1253277199418932e-05,
+      "rtol": 0.05,
+      "note": "nu = 0, n_scale = 1"
+    },
+    "reuse_cylinder_vs_table1": {
+      "kind": "value",
+      "value": 9.552702356641074e-05,
+      "rtol": 0.05,
+      "note": "nu = 1, n_scale = 2"
+    }
+  },
+  "quoted": {
+    "chi_top_curve_at_phi_max": [
+      "above 10"
+    ],
+    "chi10_dev_printed_curve1_pct": [
+      "+1.0"
+    ],
+    "chi10_dev_printed_curve2_pct": [
+      "+69"
+    ],
+    "chi10_dev_printed_curve3_pct": [
+      "+314"
+    ],
+    "chi10_dev_printed_curve4_pct": [
+      "+152"
+    ],
+    "chi10_dev_shifted_curve1_pct": [
+      "+1.0"
+    ],
+    "chi10_dev_shifted_curve2_pct": [
+      "+1.9"
+    ],
+    "chi10_dev_shifted_curve3_pct": [
+      "+1.6"
+    ],
+    "chi10_dev_shifted_curve4_pct": [
+      "+6.4"
+    ],
+    "chi_dev_shifted_worst_2to30_printed_Lm_only": [
+      "8 %"
+    ],
+    "chi_dev_shifted_worst_2to30": [
+      "15 %"
+    ],
+    "curve4_dev_worst_at_reconstructed_Lm": [
+      "11 %"
+    ],
+    "L_rec_curve1": [
+      "0.508"
+    ],
+    "L_rec_curve2": [
+      "2.046"
+    ],
+    "L_rec_curve3": [
+      "7.061"
+    ],
+    "L_rec_curve4": [
+      "10.18"
+    ],
+    "L_rec_tol_curve1_pct": [
+      "11"
+    ],
+    "L_rec_tol_curve2_pct": [
+      "8"
+    ],
+    "L_rec_tol_curve3_pct": [
+      "4",
+      "3.8"
+    ],
+    "slope_figure_min": [
+      "1.098"
+    ],
+    "slope_figure_max": [
+      "1.131"
+    ],
+    "slope_figure_mean": [
+      "1.111"
+    ],
+    "slope_model_fitted": [
+      "1.077"
+    ],
+    "slope_gap": [
+      "+0.035"
+    ],
+    "slope_gap_e2e_pct": [
+      "+14"
+    ],
+    "slope_gap_lo_over_abscissa_calibrations": [
+      "+0.007"
+    ],
+    "slope_gap_hi_over_abscissa_calibrations": [
+      "+0.046"
+    ],
+    "slope_gap_lo_e2e_pct": [
+      "+3"
+    ],
+    "slope_gap_hi_e2e_pct": [
+      "+19"
+    ],
+    "pymrm_vs_table1_maxdev": [
+      "3.1e-4"
+    ],
+    "eq20_max_abs_err_vs_printed": [
+      "0.005"
+    ],
+    "dlogg_forced_shifted_worst_rel_err": [
+      "5.4 %"
+    ],
+    "alt_a_alpha_gs_curve1": [
+      "1057"
+    ],
+    "alt_a_alpha_gs_curve2": [
+      "16.2"
+    ],
+    "alt_a_alpha_gs_curve3": [
+      "4.6"
+    ],
+    "alt_a_alpha_gs_curve4": [
+      "9.2"
+    ],
+    "alt_a_spread": [
+      "230"
+    ],
+    "altb_powerlaw_miss_curve2_pct": [
+      "-9.7"
+    ],
+    "altb_powerlaw_miss_curve3_pct": [
+      "-11.8"
+    ],
+    "recon_check_baseline": [
+      "2.30 %"
+    ],
+    "recon_check_best_unrejected_defect": [
+      "1.72 %"
+    ],
+    "recon_check_n_unrejected": [
+      "4"
+    ],
+    "eq21_first_term_resistance_share_at_Lm1": [
+      "87 %"
+    ],
+    "recon_check_chi_scale_up": [
+      "6.3 %"
+    ],
+    "recon_check_chi_scale_dn": [
+      "10.6 %"
+    ],
+    "ags_1000_at_phi30_pct": [
+      "3.0"
+    ],
+    "m2_over_m1_excess_phi2_pct": [
+      "13"
+    ],
+    "m2_over_m1_excess_phimax_pct": [
+      "-13"
+    ],
+    "grid_order_finest_phi2": [
+      "2.00"
+    ],
+    "grid_order": [
+      "2.84"
+    ]
+  },
+  "breaks": {
+    "L_rec_curve1": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "chi10_dev_printed_curve1_pct": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "L_rec_curve2": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "chi10_dev_printed_curve2_pct": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "L_rec_curve3": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "chi10_dev_printed_curve3_pct": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "L_rec_curve4": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "chi10_dev_printed_curve4_pct": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "chi10_dev_printed_worst": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "gap_miss_printed_decades": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "eq20_max_abs_err_vs_printed": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "recon_check_baseline": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "alt_a_alpha_gs_curve1": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "alt_a_alpha_gs_curve2": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "alt_a_alpha_gs_curve3": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "alt_a_alpha_gs_curve4": [
+      "Eq. 20 coefficient 0.77 -> 0.67"
+    ],
+    "L_rec_tol_curve1_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "L_rec_tol_curve2_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "L_rec_tol_curve3_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "gap_miss_shifted_decades": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "dlogg_forced_shifted_worst_rel_err": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "eq21_first_term_resistance_share_at_Lm1": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "recon_check_chi_scale_up": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "recon_check_chi_scale_dn": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "alt_a_spread": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "altb_powerlaw_miss_curve2_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "altb_powerlaw_miss_curve3_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "altb_best_powerlaw_worst_miss": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi10_dev_shifted_curve1_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi10_dev_shifted_curve2_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi10_dev_shifted_curve3_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi10_dev_shifted_curve4_pct": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi10_dev_shifted_worst": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi_dev_shifted_worst_2to30": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi_dev_shifted_worst_2to30_printed_Lm_only": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "chi_dev_printed_worst_2to30": [
+      "Eq. 21: 1.05 -> 1.95"
+    ],
+    "slope_model_fitted": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_gap": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_gap_e2e_pct": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_gap_hi_over_abscissa_calibrations": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_gap_hi_e2e_pct": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_gap_lo_over_abscissa_calibrations": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "model_straightline_fit_rms_decades": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "ags_1000_at_phi30_pct": [
+      "Thiele modulus on R instead of V/S (length ratio 1)"
+    ],
+    "slope_figure_mean": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "slope_figure_min": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "slope_figure_max": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "figure_gap_drift_over_window_decades": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "chi_top_curve_at_phi_max": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "retrace_rescale_gap": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "curve4_dev_worst_at_reconstructed_Lm": [
+      "phi axis read at the 4-point calibration (slopes x 418.6/421.9)"
+    ],
+    "slope_gap_lo_e2e_pct": [
+      "digitised window starting at phi = 2"
+    ],
+    "recon_check_best_unrejected_defect": [
+      "chi axis calibration x1.05 under every check-4 defect"
+    ],
+    "recon_check_n_unrejected": [
+      "chi axis calibration x1.05 under every check-4 defect"
+    ],
+    "pymrm_vs_table1_maxdev": [
+      "nu = 1 (cylinder) not sphere"
+    ],
+    "pymrm_vs_table1_L2": [
+      "nu = 1 (cylinder) not sphere"
+    ],
+    "reuse_cylinder_vs_table1": [
+      "nu = 1 (cylinder) not sphere"
+    ],
+    "reuse_slab_vs_table1": [
+      "nu = 0 slab with the sphere's n_scale = 3"
+    ],
+    "surface_flux_identity": [
+      "surface gradient from the last two cell centres (pitfall P8)"
+    ],
+    "m1_first_step_rel_dev": [
+      "reaction order 2 instead of 1"
+    ],
+    "m2_over_m1_excess_phi2_pct": [
+      "reaction order 1.5 instead of 2"
+    ],
+    "m2_over_m1_excess_phimax_pct": [
+      "reaction order 1.5 instead of 2"
+    ],
+    "grid_order": [
+      "grids refined by 1.5 instead of 2, read as doublings"
+    ],
+    "grid_order_coarsest_phimax": [
+      "n_u = 100 replaced by 75, read as a doubling"
+    ],
+    "grid_order_finest_phi2": [
+      "finest grid 1.5 times the one before, read as a doubling"
+    ],
+    "grid_order_finest_phi10": [
+      "finest grid 1.5 times the one before, read as a doubling"
+    ],
+    "grid_order_finest_phimax": [
+      "finest grid 1.5 times the one before, read as a doubling"
+    ],
+    "grid_two_solver_gap": [
+      "second solve on one cell fewer"
+    ],
+    "grid_finest_err_over_noise": [
+      "finest grid refined to 25600 cells, into the round-off"
+    ]
   }
 }

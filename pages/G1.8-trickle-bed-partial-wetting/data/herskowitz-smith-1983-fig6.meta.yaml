@@ -58,7 +58,8 @@ acquisition:
     in (log phi, log chi).
 
     Axes calibrated from the gridlines: 415.5 px per decade in chi (residuals
-    under 0.006 decades over 0.01 to 20) and 421.9 px per decade in phi.
+    under 0.006 decades over 0.01 to 20) and, in phi, phi_px_per_decade below.
+  phi_px_per_decade: 421.9
   operator: "Claude Opus 5 (assisted)"
   date: 2026-07-29
   estimated_error: "fit rms 0.023 to 0.029 decades, i.e. about 6 % in chi"
@@ -67,7 +68,7 @@ validation:
   eq_20_self_check: >
     The figure prints f_e = 0.72, 0.77, 0.83 and 0.94 alongside its four L_m
     values. Eq. 20 of the same paper, f_e = 0.77 * L_m^0.1, gives 0.718, 0.770,
-    0.825 and 0.936 - all four agree to the printed precision. This confirms the
+    0.825 and 0.935 - all four agree to the printed precision. This confirms the
     reading of Eq. 20 and the internal consistency of the legend block. It does
     NOT confirm which curve each legend row belongs to; that is a separate
     question and is what legend_misalignment below is about.
@@ -88,16 +89,40 @@ validation:
     decades). The ABSCISSA is the weak one: the four labelled verticals
     (phi = 1, 5, 10, 50) do not sit on a common logarithmic ruler, and a
     least-squares fit through them leaves about +0.013 decades at phi = 10, i.e.
-    that gridline is misplaced in the artwork by roughly 4 px. The 421.9 px/decade
-    recorded above is therefore about 1 % above the value the other three
-    verticals support. This matters only for the fitted SLOPES, which scale
-    linearly with it: an independent 600 dpi re-digitisation calibrating at
-    418.6 px/decade measures a mean slope of 1.1028 against these rows' 1.1115 -
-    exactly the ratio of the two calibrations, so the two traces agree and only
-    their rulers differ. The page quotes the slope residual as a range spanning
+    that gridline is misplaced in the artwork by roughly 4 px. The phi calibration
+    recorded under acquisition (phi_px_per_decade) is therefore about 1 % above
+    the value the other three verticals support. This matters only for the fitted
+    SLOPES, which scale linearly with it: an independent 600 dpi re-digitisation
+    (abscissa_calibrations.independent_retrace) measures a mean slope equal to
+    these rows' mean rescaled by the ratio of the two calibrations, so the two
+    traces agree and only their rulers differ (the page checks this). The page quotes the slope residual as a range spanning
     defensible calibrations, not as a single number. The chi_at_phi_10 positions,
     which carry the page's finding, are unaffected: the same re-digitisation
     reproduces them to within 0.9 %.
+
+abscissa_calibrations:
+  note: >
+    The readings behind the page's slope-gap range, in px per decade on the phi
+    axis, and the independent re-digitisation's results (adversarial
+    verification pass, 2026-08-02, its own gridline detection and calibration,
+    620-640 traced columns per curve). Recorded from the page source of
+    2026-08-02 on 2026-10-30, not re-measured. A log-log slope scales linearly
+    with the px per decade assumed on the phi axis.
+  # the calibration this CSV was traced with is acquisition.phi_px_per_decade
+  alternatives_px_per_decade:
+    "4-point least squares": 418.6
+    "3-point, phi = 10 dropped": 417.8
+    "phi = 1 -> 10 baseline only": 426.0
+  independent_retrace:
+    px_per_decade: 418.6
+    mean_slope: 1.1028
+    derived_smallest_gap_on_refit: 0.007
+    derived_note: >
+      DERIVED, not provenance: a model result recorded by the verification pass.
+      It is the re-digitisation's refit mean slope under a narrower baseline
+      minus the page's fitted model slope (1.0767); neither that refit slope nor
+      its fit window was recorded, so it cannot be recomputed. Re-fitting moves
+      the fit window, which rescaling this CSV's slopes cannot reproduce.
 
 legend_misalignment:
   resolved: 2026-08-02

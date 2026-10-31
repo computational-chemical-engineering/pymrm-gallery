@@ -87,10 +87,14 @@ def printed(path: Path) -> list[str]:
     nb = nbformat.read(path, as_version=4)
     lines = []
     for i, cell in enumerate(nb.cells):
+        # join a cell's outputs before splitting lines: a kernel may deliver one
+        # print in several stream chunks, and a lone "\n" chunk is not a line
+        parts = []
         for o in cell.get("outputs", []):
             text = o.get("text") or o.get("data", {}).get("text/plain", "")
-            text = "".join(text) if isinstance(text, list) else text
-            lines += [f"cell {i}: {HERE.sub('(here #)', ln)}" for ln in text.splitlines()]
+            parts.append("".join(text) if isinstance(text, list) else text)
+        text = "".join(parts)
+        lines += [f"cell {i}: {HERE.sub('(here #)', ln)}" for ln in text.splitlines()]
     return lines
 
 
