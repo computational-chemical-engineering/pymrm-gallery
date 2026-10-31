@@ -1503,9 +1503,9 @@ models:
       against the three runs Whitman published with it. His equilibrium curve is
       reconstructed from four equilibrium pairs hidden in Table 1's own columns
       rather than digitised from his figure; his worked example is reproduced end
-      to end with his five printed numbers held out; and the one prediction he
+      to end with his printed numbers held out; and the one prediction he
       holds out is shown to be 99.4 % gas-film controlled, so deleting the liquid
-      film entirely moves it from -0.558 % to +0.054 % of the observed rate -
+      film entirely moves it from -0.558 % to +0.054 % of the observed rate:
       closer, not further, and the limit is taken analytically rather than with a
       large-k_c constant.
       A single film of either kind misses the three runs by 42-59 %; two films fit
@@ -1529,6 +1529,8 @@ models:
     pymrm_api:
     - construct_grad
     - construct_div
+    - BlockLayout
+    - compute_boundary_values
     - newton
     reference:
       authors:
@@ -1578,18 +1580,18 @@ models:
       paper's own subtitle is "A Preliminary Experimental Confirmation". The
       two-film fit to those three rates (0.379 % rms against 41.7 % and 59.5 % for
       a single gas or liquid film) is the one genuine model test, and it has
-      exactly one degree of freedom, which comes out 0.934 % adrift - reported on
-      the page rather than smoothed over - and it is worse than the +0.319 % a
+      exactly one degree of freedom, which comes out 0.934 % adrift (reported on
+      the page rather than smoothed over), and it is worse than the +0.319 % a
       ONE-parameter gas film achieves on the same quantity, which the page also
       reports. The liquid-film coefficient k_c is
       identified by run 1 alone: remove that run and the remaining data admit
-      every k_c up to the top of the sweep. The equilibrium relation is a
+      every k_c above a lower edge, with no upper end. The equilibrium relation is a
       RECONSTRUCTION from Table 1's own printed (c, p) pairs, not a digitisation
       of Fig. 3 and not a thermodynamic correlation for HCl. k_p and k_c are
       per-apparatus conductances carrying no area and no film thickness. The page
       deliberately does NOT compare film theory with penetration (A3.2) or surface
-      renewal (A3.3) - Whitman's data cannot see the diffusivity exponent that
-      separates them - and it does not hand that comparison to either: the
+      renewal (A3.3), since Whitman's data cannot see the diffusivity exponent that
+      separates them, and it does not hand that comparison to either: the
       three-way comparison is TAKEN on A3.2, which holds all three sources at
       once and finds film and surface renewal fitting A3.2's one measured
       coefficient by construction while penetration alone predicts it with no
