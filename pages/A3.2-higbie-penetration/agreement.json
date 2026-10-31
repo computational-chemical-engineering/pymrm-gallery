@@ -1,48 +1,784 @@
 {
   "page": "A3.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "eq18518_vs_printed_18A4_rel": 0.0018783742108312573,
-    "pymrm_vs_printed_18A4_rel": 0.001873719898036752,
-    "pymrm_vs_eq18518_rel": -4.645586644258515e-06,
-    "eq18519_vs_printed_18A7a_rel": 0.002203281529417511,
-    "eq18520_vs_printed_18A7a_rel": -0.42137766562626455,
-    "eq18519_over_eq18520": 1.7320508075688774,
-    "hg_measured_vs_printed_18A7b_rel": 0.001879699248120481,
-    "higbie_kL_vs_hg_measured_rel": -0.12001663085221881,
-    "creeping_kL_vs_hg_measured_rel": -0.49194136494013474,
-    "film_thickness_implied_um": 4.492307692307692,
-    "renewal_rate_implied_s_inv": 72.3458904109589,
-    "higbie_texp_times_renewal_rate": 1.6442247820672478,
-    "renewal_over_higbie_kL_at_measured": 1.1363851125600801,
-    "froment_t6421_film_worst_rel": 0.009786991253343813,
-    "froment_t6421_renewal_worst_rel": 0.00498756211208895,
-    "froment_t6421_penetration_worst_rel": 0.06387493699764679,
-    "froment_t6421_pen_at_gamma_10_rel": -0.033756505469694664,
-    "froment_t6421_pen_bracket_violations": 2.0,
-    "bsl_t2011_phi_worst_rel": 9.962033240729085e-05,
-    "bsl_t2011_psi_worst_rel": 0.0004156240907895459,
-    "bsl_t2282_theta_pen_worst_rel": 0.00041562409078943485,
-    "bsl_t2282_theta_film_worst_rel": 0.00021238176038296253,
-    "bsl_t2282_theta_pen_minus_psi_dev": 1.1102230246251565e-16,
-    "bsl_t2282_pen_film_gap_at_0p75": 0.15390399911881203,
-    "profile_effect_at_lambda_0p1": 0.01917890799444466,
-    "wall_effect_series_at_lambda_0p1": 3.9873293770087415e-06,
-    "profile_over_wall_effect_at_lambda_0p1": 4809.9633065258595,
-    "wall_effect_solver_at_lambda_0p1": 1.0364505911186761e-05,
-    "lambda_star_1pct": 0.056425767187325074,
-    "pen_depth_over_delta_at_1pct": 0.47508217052347934,
-    "delta_star_18A4_um": 104.56490559310618,
-    "pen_profile_vs_eq18516_max_abs": 0.0001148167251929233,
-    "pen_uptake_vs_eq18518_rel": -2.8339979367686396e-06,
-    "pen_uptake_vs_eq18518_raw_rel": -0.00010695163781382355,
-    "mixing_cup_vs_flux_integral_rel": -3.411715354673106e-13,
-    "wall_series_vs_pymrm_worst_rel": 7.1527311386043735e-06,
-    "time_order": 0.9985629815743998,
-    "space_order": 2.069149807446411,
-    "time_err_n1600": 0.00010432551904548948,
-    "space_err_n400": 1.0500841853167131e-05,
-    "froment_eq6428_closed_vs_quadrature_worst": 1.2665424264923786e-12,
-    "froment_penetration_vs_renewal_at_gamma_1": -0.02510388923410689,
-    "froment_penetration_vs_film_at_gamma_1": 0.050018470162895845
+    "banded_vs_splu_cup_gap": {
+      "kind": "bound",
+      "value": 1.0325074129013956e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the same linear equations, two direct solvers"
+    },
+    "eq18518_vs_printed_18A4_rel": {
+      "kind": "value",
+      "value": 0.0018783742108314794,
+      "rtol": 0.05
+    },
+    "pymrm_vs_printed_18A4_rel": {
+      "kind": "value",
+      "value": 0.0018737198980374181,
+      "rtol": 0.05
+    },
+    "pymrm_vs_eq18518_rel": {
+      "kind": "value",
+      "value": -4.64558664403647e-06,
+      "rtol": 0.05
+    },
+    "wa_closed_gmol_per_hr": {
+      "kind": "value",
+      "value": 0.27351279615955704,
+      "rtol": 0.05
+    },
+    "pymrm_vs_eq18518_grid_ratio": {
+      "kind": "bound",
+      "value": 3.9167572558626693,
+      "min": 3.5,
+      "max": 4.5,
+      "basis": "theory",
+      "note": "error of the march falls 4x when n_x doubles: a second-order grid error"
+    },
+    "rounding_window_rel": {
+      "kind": "value",
+      "value": 0.0018315018315018315,
+      "rtol": 0.05
+    },
+    "wa_rho999_gmol_per_hr": {
+      "kind": "value",
+      "value": 0.2732392833633974,
+      "rtol": 0.05
+    },
+    "wa_mw71_gmol_per_hr": {
+      "kind": "value",
+      "value": 0.27314682833370973,
+      "rtol": 0.05
+    },
+    "D_half_unit_window_rel": {
+      "kind": "value",
+      "value": 0.0019860992793006016,
+      "rtol": 0.05
+    },
+    "wa_excess_over_window_gmol_per_hr": {
+      "kind": "value",
+      "value": 1.2796159557015852e-05,
+      "rtol": 0.05
+    },
+    "film_exposure_time_s": {
+      "kind": "value",
+      "value": 0.48964218455743885,
+      "rtol": 0.05
+    },
+    "film_penetration_depth_um": {
+      "kind": "value",
+      "value": 49.67692230975558,
+      "rtol": 0.05
+    },
+    "film_kL_cm_s": {
+      "kind": "value",
+      "value": 0.005724017046286059,
+      "rtol": 0.05
+    },
+    "eq18519_vs_printed_18A7a_rel": {
+      "kind": "value",
+      "value": 0.002203281529417511,
+      "rtol": 0.05
+    },
+    "eq18520_vs_printed_18A7a_rel": {
+      "kind": "value",
+      "value": -0.42137766562626455,
+      "rtol": 0.05
+    },
+    "eq18519_over_eq18520": {
+      "kind": "bound",
+      "value": 1.7320508075688774,
+      "min": 1.732050807567877,
+      "max": 1.7320508075698773,
+      "basis": "identity",
+      "note": "the two equations differ by sqrt(3)"
+    },
+    "hg_measured_vs_printed_18A7b_rel": {
+      "kind": "value",
+      "value": 0.001879699248120481,
+      "rtol": 0.05
+    },
+    "bubble_exposure_time_s": {
+      "kind": "value",
+      "value": 0.022727272727272728,
+      "rtol": 0.05
+    },
+    "kL_higbie_cm_per_hr": {
+      "kind": "value",
+      "value": 102.95805419029041,
+      "rtol": 0.05
+    },
+    "kL_creep_cm_per_hr": {
+      "kind": "value",
+      "value": 59.44286030200424,
+      "rtol": 0.05
+    },
+    "higbie_kL_vs_hg_measured_rel": {
+      "kind": "value",
+      "value": -0.12001663085221881,
+      "rtol": 0.05
+    },
+    "creeping_kL_vs_hg_measured_rel": {
+      "kind": "value",
+      "value": -0.49194136494013474,
+      "rtol": 0.05
+    },
+    "film_thickness_implied_um": {
+      "kind": "value",
+      "value": 4.492307692307692,
+      "rtol": 0.05
+    },
+    "renewal_rate_implied_s_inv": {
+      "kind": "value",
+      "value": 72.3458904109589,
+      "rtol": 0.05
+    },
+    "renewal_mean_age_ms": {
+      "kind": "value",
+      "value": 13.822485207100593,
+      "rtol": 0.05
+    },
+    "higbie_texp_times_renewal_rate": {
+      "kind": "value",
+      "value": 1.6442247820672478,
+      "rtol": 0.05
+    },
+    "renewal_over_higbie_kL_at_measured": {
+      "kind": "value",
+      "value": 1.1363851125600801,
+      "rtol": 0.05
+    },
+    "froment_t6421_film_worst_rel": {
+      "kind": "value",
+      "value": 0.009786991253343813,
+      "rtol": 0.05
+    },
+    "froment_t6421_renewal_worst_rel": {
+      "kind": "value",
+      "value": 0.00498756211208895,
+      "rtol": 0.05
+    },
+    "froment_t6421_penetration_worst_rel": {
+      "kind": "value",
+      "value": 0.06387493699764679,
+      "rtol": 0.05
+    },
+    "froment_t6421_pen_at_gamma_10_rel": {
+      "kind": "value",
+      "value": -0.033756505469694664,
+      "rtol": 0.05
+    },
+    "froment_t6421_pen_bracket_violations": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.004999999999999893,
+      "min_margin": 0.001,
+      "note": "distance of the nearest printed cell to a bracket edge"
+    },
+    "froment_t6421_film_cells_off_rounding": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.0181060117864682,
+      "min_margin": 0.001,
+      "note": "cells the closed form does not round to, of six"
+    },
+    "froment_t6421_renewal_cells_off_rounding": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.0024875775822099655,
+      "min_margin": 0.001,
+      "note": "cells the closed form does not round to, of six"
+    },
+    "froment_t6421_penetration_cells_off_rounding": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.5225243379828335,
+      "min_margin": 0.001,
+      "note": "cells the closed form does not round to, of six"
+    },
+    "bsl_t2011_phi_worst_rel": {
+      "kind": "value",
+      "value": 9.962033240729085e-05,
+      "rtol": 0.05
+    },
+    "bsl_t2011_psi_worst_rel": {
+      "kind": "value",
+      "value": 0.0004156240907895459,
+      "rtol": 0.05
+    },
+    "bsl_t2282_theta_pen_worst_rel": {
+      "kind": "value",
+      "value": 0.00041562409078943485,
+      "rtol": 0.05
+    },
+    "bsl_t2282_theta_film_worst_rel": {
+      "kind": "value",
+      "value": 0.00021238176038296253,
+      "rtol": 0.05
+    },
+    "bsl_t2282_theta_pen_minus_psi_dev": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "Eq. 22.8-41 makes the two deviation sets equal"
+    },
+    "bsl_t2282_pen_film_gap_at_0p75": {
+      "kind": "value",
+      "value": 0.15390399911881203,
+      "rtol": 0.05
+    },
+    "bsl_cells_off_rounding": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.019119056685500624,
+      "min_margin": 0.001,
+      "note": "of the twelve interior cells of the four columns"
+    },
+    "profile_effect_at_lambda_0p1": {
+      "kind": "value",
+      "value": 0.019178907994445438,
+      "rtol": 0.05
+    },
+    "wall_effect_series_at_lambda_0p1": {
+      "kind": "value",
+      "value": 3.9873293770087415e-06,
+      "rtol": 0.05
+    },
+    "profile_over_wall_effect_at_lambda_0p1": {
+      "kind": "value",
+      "value": 4809.963306526054,
+      "rtol": 0.05
+    },
+    "wall_effect_solver_at_lambda_0p1": {
+      "kind": "value",
+      "value": 1.0364505910298583e-05,
+      "rtol": 0.05
+    },
+    "lambda_star_roots_in_range": {
+      "kind": "exact",
+      "value": 1
+    },
+    "lambda_star_1pct": {
+      "kind": "value",
+      "value": 0.05642576718731992,
+      "rtol": 0.001
+    },
+    "pen_depth_over_delta_at_1pct": {
+      "kind": "value",
+      "value": 0.47508217052345764,
+      "rtol": 0.001
+    },
+    "delta_star_18A4_um": {
+      "kind": "value",
+      "value": 104.56490559311095,
+      "rtol": 0.001
+    },
+    "wall_ladder_grid_order": {
+      "kind": "bound",
+      "value": 1.9999298675773423,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences, n_x 1200/2400/4800"
+    },
+    "wall_effect_solver_refined_at_lambda_0p1": {
+      "kind": "value",
+      "value": 3.987744687239392e-06,
+      "rtol": 0.001
+    },
+    "wall_effect_refined_vs_series_rel": {
+      "kind": "bound",
+      "value": 0.00010415749274317321,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "grid limit at steps 6400/12800 against the series"
+    },
+    "wall_refined_gap_drop_steps_x4": {
+      "kind": "bound",
+      "value": 16.821203427515513,
+      "min": 8.0,
+      "max": 32.0,
+      "basis": "theory",
+      "note": "the remaining gap is the extrapolated step error, second order: 16 for 4x steps"
+    },
+    "profile_effect_grid_change_rel": {
+      "kind": "bound",
+      "value": 5.389461801619255e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "profile effect at 600 against 2400 cells, steps extrapolated"
+    },
+    "lambda_star_grid_shift_rel": {
+      "kind": "bound",
+      "value": 1.4414649220223836e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "r_full at Lambda* on 2400 cells and 1600/3200 steps"
+    },
+    "pen_profile_vs_eq18516_max_abs": {
+      "kind": "value",
+      "value": 0.0001148167251929233,
+      "rtol": 0.05
+    },
+    "pen_uptake_vs_eq18518_rel": {
+      "kind": "value",
+      "value": -2.833997936546595e-06,
+      "rtol": 0.05
+    },
+    "pen_uptake_vs_eq18518_raw_rel": {
+      "kind": "value",
+      "value": -0.00010695163781371253,
+      "rtol": 0.05
+    },
+    "mixing_cup_vs_flux_integral_rel": {
+      "kind": "bound",
+      "value": 3.405054016525355e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "backward Euler on a conservative scheme: inventory = flux integral"
+    },
+    "mixing_cup_vs_flux_integral_full_rel": {
+      "kind": "bound",
+      "value": 2.80242495875882e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "the same identity in the full model, cup weighted by 1 - xi^2; round-off accumulated over 1600 steps, 2.8e-12 on three BLAS kernels, bound 35x above"
+    },
+    "wall_series_vs_pymrm_worst_rel": {
+      "kind": "value",
+      "value": 7.152731139159485e-06,
+      "rtol": 0.05
+    },
+    "wall_series_err_ratio_grid_doubled_min": {
+      "kind": "bound",
+      "value": 3.941219877535824,
+      "min": 3.5,
+      "max": 4.5,
+      "basis": "theory",
+      "note": "second-order grid error: 4 when n_x doubles"
+    },
+    "time_order": {
+      "kind": "bound",
+      "value": 0.9998308102415864,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler, successive differences, n_t 1600/3200/6400"
+    },
+    "time_order_extrapolated": {
+      "kind": "bound",
+      "value": 2.0007720855092095,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "extrapolated values 2 Phi(2n) - Phi(n), n 400/800/1600 to 3200"
+    },
+    "time_order_min": {
+      "kind": "bound",
+      "value": 0.9986396220537027,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "all triples from n_t = 200"
+    },
+    "space_order": {
+      "kind": "bound",
+      "value": 1.9992766431827527,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences, n_x 400/800/1600"
+    },
+    "space_order_min": {
+      "kind": "bound",
+      "value": 1.9968945856829508,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "all triples from n_x = 100"
+    },
+    "time_ladder_finest_diff_over_roundoff": {
+      "kind": "bound",
+      "value": 260369490.67935538,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest step difference against round-off of the cup"
+    },
+    "space_ladder_finest_diff_over_roundoff": {
+      "kind": "bound",
+      "value": 10504573.83081822,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest grid difference against round-off of the cup"
+    },
+    "time_err_n1600": {
+      "kind": "value",
+      "value": 0.0001041505134371512,
+      "rtol": 0.05
+    },
+    "space_err_n400": {
+      "kind": "value",
+      "value": 1.1201126792093064e-05,
+      "rtol": 0.05
+    },
+    "space_err_n800": {
+      "kind": "value",
+      "value": 2.801686091014055e-06,
+      "rtol": 0.05
+    },
+    "time_err_extrapolated_n1600": {
+      "kind": "bound",
+      "value": 8.141112561865782e-09,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "2 Phi(3200) - Phi(1600) against the limit of the extrapolated ladder"
+    },
+    "time_err_extrapolated_n800": {
+      "kind": "bound",
+      "value": 3.258188230326198e-08,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "the production pair 800/1600, same reference"
+    },
+    "grid_ladder_limit_vs_exact": {
+      "kind": "bound",
+      "value": 7.871166385342576e-09,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "the grid ladder's limit against sqrt(4 Lam/pi): what neither axis removes"
+    },
+    "production_grid_over_step_err_min": {
+      "kind": "bound",
+      "value": 46.16938019871077,
+      "min": 10.0,
+      "basis": "chosen",
+      "note": "full film, 600 cells, steps 800/1600 extrapolated, Lambda 1e-4 to 0.2"
+    },
+    "bdf2_over_euler_extrap_cup_err": {
+      "kind": "value",
+      "value": 2.895538774317278,
+      "rtol": 0.05
+    },
+    "cn_over_euler_extrap_cup_err": {
+      "kind": "value",
+      "value": 0.7184210803766528,
+      "rtol": 0.05
+    },
+    "cn_profile_err_drop_4x_steps": {
+      "kind": "value",
+      "value": 2.398553782045323,
+      "rtol": 0.05
+    },
+    "euler_extrap_profile_err_drop_4x_steps": {
+      "kind": "value",
+      "value": 15.894521615908213,
+      "rtol": 0.05
+    },
+    "froment_eq6428_closed_vs_quadrature_worst": {
+      "kind": "bound",
+      "value": 1.8762769116165146e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "round-off: the same at quad epsrel 1e-10 and 1e-13"
+    },
+    "froment_penetration_vs_renewal_at_gamma_1": {
+      "kind": "value",
+      "value": -0.02510388923410689,
+      "rtol": 0.05
+    },
+    "froment_penetration_vs_film_at_gamma_1": {
+      "kind": "value",
+      "value": 0.050018470162895845,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "eq18518_vs_printed_18A4_rel": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)",
+      "the 4 of Eq. 18.5-18 replaced by 1",
+      "rho_water = 0.999 instead of the assumed 1.000 g/cm3"
+    ],
+    "pymrm_vs_eq18518_rel": [
+      "the 4 of Eq. 18.5-18 replaced by 1",
+      "solve for W_A truncated at 1 penetration depth instead of 10"
+    ],
+    "pymrm_vs_printed_18A4_rel": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)",
+      "solve for W_A truncated at 1 penetration depth instead of 10"
+    ],
+    "wa_closed_gmol_per_hr": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "wa_rho999_gmol_per_hr": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "wa_mw71_gmol_per_hr": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "film_exposure_time_s": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "film_penetration_depth_um": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "film_kL_cm_s": [
+      "v_max taken as the printed <v> (the 3/2 from Eq. 18.5-1 forgotten)"
+    ],
+    "wa_excess_over_window_gmol_per_hr": [
+      "rho_water = 0.999 instead of the assumed 1.000 g/cm3"
+    ],
+    "rounding_window_rel": [
+      "rounding window taken as a whole unit (0.001) of the printed answer"
+    ],
+    "D_half_unit_window_rel": [
+      "W_A taken proportional to D^1 (the film exponent) instead of D^0.5"
+    ],
+    "eq18519_vs_printed_18A7a_rel": [
+      "Eq. 18.5-20 used for 18A.7(a), as the problem statement instructs"
+    ],
+    "eq18520_vs_printed_18A7a_rel": [
+      "the 3 dropped from Eq. 18.5-20, making it Eq. 18.5-19"
+    ],
+    "eq18519_over_eq18520": [
+      "the 3 dropped from Eq. 18.5-20, making it Eq. 18.5-19"
+    ],
+    "kL_creep_cm_per_hr": [
+      "the 3 dropped from Eq. 18.5-20, making it Eq. 18.5-19"
+    ],
+    "creeping_kL_vs_hg_measured_rel": [
+      "the 3 dropped from Eq. 18.5-20, making it Eq. 18.5-19"
+    ],
+    "hg_measured_vs_printed_18A7b_rel": [
+      "k_c left in cm/hr (the /3600 forgotten)"
+    ],
+    "higbie_kL_vs_hg_measured_rel": [
+      "k_c left in cm/hr (the /3600 forgotten)",
+      "exposure time taken as 2 D/v_t instead of D/v_t"
+    ],
+    "film_thickness_implied_um": [
+      "k_c left in cm/hr (the /3600 forgotten)",
+      "film thickness inverted from the predicted k_L instead of the measured one"
+    ],
+    "renewal_rate_implied_s_inv": [
+      "k_c left in cm/hr (the /3600 forgotten)"
+    ],
+    "higbie_texp_times_renewal_rate": [
+      "k_c left in cm/hr (the /3600 forgotten)",
+      "exposure time taken as 2 D/v_t instead of D/v_t"
+    ],
+    "renewal_over_higbie_kL_at_measured": [
+      "k_c left in cm/hr (the /3600 forgotten)",
+      "exposure time taken as 2 D/v_t instead of D/v_t"
+    ],
+    "renewal_mean_age_ms": [
+      "k_c left in cm/hr (the /3600 forgotten)"
+    ],
+    "bubble_exposure_time_s": [
+      "exposure time taken as 2 D/v_t instead of D/v_t"
+    ],
+    "kL_higbie_cm_per_hr": [
+      "exposure time taken as 2 D/v_t instead of D/v_t"
+    ],
+    "bsl_t2011_phi_worst_rel": [
+      "the (1 + erf phi) factor dropped from Eq. 20.1-18"
+    ],
+    "bsl_cells_off_rounding": [
+      "the (1 + erf phi) factor dropped from Eq. 20.1-18"
+    ],
+    "bsl_t2011_psi_worst_rel": [
+      "psi taken as phi/x_A0 (the sqrt(pi) of the Table 20.1-1 head dropped)"
+    ],
+    "bsl_t2282_theta_pen_worst_rel": [
+      "psi taken as phi/x_A0 (the sqrt(pi) of the Table 20.1-1 head dropped)",
+      "Eq. 22.8-41 written as (1 - x)/psi instead of (1 - x) psi"
+    ],
+    "bsl_t2282_theta_pen_minus_psi_dev": [
+      "Eq. 22.8-41 written as (1 - x)/psi instead of (1 - x) psi"
+    ],
+    "bsl_t2282_theta_film_worst_rel": [
+      "Eq. 22.8-42 written without the (1 - x)/x prefactor"
+    ],
+    "bsl_t2282_pen_film_gap_at_0p75": [
+      "Eq. 22.8-42 written without the (1 - x)/x prefactor"
+    ],
+    "froment_t6421_film_worst_rel": [
+      "gamma/tanh(gamma) written upside down as tanh(gamma)/gamma"
+    ],
+    "froment_t6421_film_cells_off_rounding": [
+      "gamma/tanh(gamma) written upside down as tanh(gamma)/gamma"
+    ],
+    "froment_penetration_vs_film_at_gamma_1": [
+      "gamma/tanh(gamma) written upside down as tanh(gamma)/gamma"
+    ],
+    "froment_t6421_renewal_worst_rel": [
+      "sqrt(1 + gamma^2) written as 1 + gamma^2"
+    ],
+    "froment_t6421_renewal_cells_off_rounding": [
+      "sqrt(1 + gamma^2) written as 1 + gamma^2"
+    ],
+    "froment_penetration_vs_renewal_at_gamma_1": [
+      "sqrt(1 + gamma^2) written as 1 + gamma^2"
+    ],
+    "froment_t6421_penetration_worst_rel": [
+      "erf(1 gamma) for erf(2 gamma/sqrt(pi)) in Froment Eq. 6.4.2-8",
+      "the gamma = 0.01 and 10 penetration cells transcribed as 1.00 and 10.04"
+    ],
+    "froment_t6421_pen_at_gamma_10_rel": [
+      "the gamma = 0.01 and 10 penetration cells transcribed as 1.00 and 10.04"
+    ],
+    "froment_eq6428_closed_vs_quadrature_worst": [
+      "erf(1 gamma) for erf(2 gamma/sqrt(pi)) in Froment Eq. 6.4.2-8"
+    ],
+    "froment_t6421_pen_bracket_violations": [
+      "printed penetration column tested against a bracket widened by 0.1",
+      "the gamma = 0.01 and 10 penetration cells transcribed as 1.00 and 10.04"
+    ],
+    "froment_t6421_penetration_cells_off_rounding": [
+      "the gamma = 0.01 and 10 penetration cells transcribed as 1.00 and 10.04"
+    ],
+    "pen_profile_vs_eq18516_max_abs": [
+      "deep solve truncated at 1 penetration depth instead of 12",
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)",
+      "grid coarsened to n_x = 25"
+    ],
+    "pen_uptake_vs_eq18518_raw_rel": [
+      "deep solve truncated at 1 penetration depth instead of 12",
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)"
+    ],
+    "wall_series_vs_pymrm_worst_rel": [
+      "wall of the film a sink (u = 0) instead of no flux"
+    ],
+    "pen_uptake_vs_eq18518_rel": [
+      "deep solve truncated at 1 penetration depth instead of 12",
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)"
+    ],
+    "pymrm_vs_eq18518_grid_ratio": [
+      "W_A march read raw at n_t = 800 (no step extrapolation)"
+    ],
+    "time_err_n1600": [
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)"
+    ],
+    "time_err_extrapolated_n1600": [
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)"
+    ],
+    "time_err_extrapolated_n800": [
+      "marching step coarsened to n_t = 50 (extrapolated over 50/100)"
+    ],
+    "production_grid_over_step_err_min": [
+      "production budget at steps 50/100"
+    ],
+    "time_order_extrapolated": [
+      "extrapolated step ladder formed from Phi(2n) alone (the Richardson combination dropped)"
+    ],
+    "space_err_n400": [
+      "grid not stretched toward the interface (stretch = 0, uniform cells)"
+    ],
+    "space_err_n800": [
+      "grid not stretched toward the interface (stretch = 0, uniform cells)"
+    ],
+    "time_order": [
+      "orders from errors against the exact value: step ladder on n_x = 100"
+    ],
+    "time_order_min": [
+      "orders from errors against the exact value: step ladder on n_x = 100"
+    ],
+    "space_order": [
+      "orders from errors against the exact value: grid ladder at raw n_t = 800"
+    ],
+    "space_order_min": [
+      "orders from errors against the exact value: grid ladder at raw n_t = 800"
+    ],
+    "grid_ladder_limit_vs_exact": [
+      "grid ladder at raw n_t = 800 (step error left in)"
+    ],
+    "time_ladder_finest_diff_over_roundoff": [
+      "step ladder whose last rung repeats n_t = 3200 (no refinement)"
+    ],
+    "space_ladder_finest_diff_over_roundoff": [
+      "grid ladder whose last rung repeats n_x = 800 (no refinement)"
+    ],
+    "cn_over_euler_extrap_cup_err": [
+      "Crank-Nicolson with n_start = 0 (no backward-Euler start-up steps)"
+    ],
+    "cn_profile_err_drop_4x_steps": [
+      "Crank-Nicolson with n_start = 0 (no backward-Euler start-up steps)"
+    ],
+    "bdf2_over_euler_extrap_cup_err": [
+      "BDF2 at 200 steps, a third of the solves of the others"
+    ],
+    "euler_extrap_profile_err_drop_4x_steps": [
+      "backward-Euler profile compared raw (without the extrapolation)"
+    ],
+    "banded_vs_splu_cup_gap": [
+      "LU of the first step reused for every step (the step matrix changes with dz)"
+    ],
+    "mixing_cup_vs_flux_integral_full_rel": [
+      "mixing cup taken without the (1 - xi^2) weight in the full model"
+    ],
+    "mixing_cup_vs_flux_integral_rel": [
+      "interfacial flux read from the first cell centre, -Lam (u_1 - 1)/xi_1, instead of compute_boundary_values"
+    ],
+    "profile_effect_at_lambda_0p1": [
+      "velocity profile flattened to plug flow inside the full model"
+    ],
+    "profile_over_wall_effect_at_lambda_0p1": [
+      "velocity profile flattened to plug flow inside the full model"
+    ],
+    "lambda_star_1pct": [
+      "velocity profile flattened to plug flow inside the full model",
+      "threshold read off the 12-point sweep by interpolation",
+      "threshold read off a 5-point sweep by interpolation"
+    ],
+    "pen_depth_over_delta_at_1pct": [
+      "velocity profile flattened to plug flow inside the full model",
+      "threshold read off the 12-point sweep by interpolation",
+      "threshold read off a 5-point sweep by interpolation"
+    ],
+    "delta_star_18A4_um": [
+      "velocity profile flattened to plug flow inside the full model",
+      "threshold read off the 12-point sweep by interpolation",
+      "threshold read off a 5-point sweep by interpolation"
+    ],
+    "lambda_star_roots_in_range": [
+      "root search confined to [1e-3, 0.02]"
+    ],
+    "wall_effect_series_at_lambda_0p1": [
+      "wall series truncated after 2 terms"
+    ],
+    "wall_effect_solver_at_lambda_0p1": [
+      "solver wall effect at n_t = 100 (its marching error swamps the effect)"
+    ],
+    "wall_effect_solver_refined_at_lambda_0p1": [
+      "wall ladder at n_t = 100/200 (step error left in)"
+    ],
+    "wall_effect_refined_vs_series_rel": [
+      "wall ladder at n_t = 100/200 (step error left in)"
+    ],
+    "wall_refined_gap_drop_steps_x4": [
+      "second wall ladder at the same steps 1600/3200 (no step refinement)"
+    ],
+    "wall_ladder_grid_order": [
+      "wall ladder refining the steps with the grid (n_t = n_x/3), without extrapolation"
+    ],
+    "profile_effect_grid_change_rel": [
+      "the two solves of r_profile on different grids (parabolic 600, plug 2400 cells)"
+    ],
+    "lambda_star_grid_shift_rel": [
+      "r_full at Lambda* from raw backward Euler at n_t = 100 (no extrapolation)"
+    ],
+    "wall_series_err_ratio_grid_doubled_min": [
+      "wall branch compared raw (no step extrapolation)"
+    ]
   }
 }
