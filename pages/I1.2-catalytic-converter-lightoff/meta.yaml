@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 140
+pymrm_min_version: "3.2.0"
+runtime_seconds: 420
 datasets:
   - oh-cavendish-1982-parameters.csv
   - oh-cavendish-1982-cell-density.csv
@@ -23,12 +23,13 @@ datasets:
 
 validation:
   - Table II reproduced from the cell density and the stated wall thickness alone, worst 0.09 %
-  - the paper's own stated Lewis number for H2, which tests the Slattery-Bird diffusivities, the gas conductivity correlation and the assumed molecular weight together
-  - species balance closed to 3.7e-8 of the species fed and the energy balance to 1.3e-11 of the heat released, at every one of 3001 time levels
-  - steady-state outlet gas temperature against the adiabatic rise the achieved conversion pays for, and the H2 overshoot of the wall above it
+  - the paper's own stated Lewis number for H2, 3.89 against about 4, which tests the Slattery-Bird diffusivities, the gas conductivity correlation and the assumed molecular weight together
+  - species balance closed below 1e-7 of the smallest species flux fed at every time level, and the energy balance below 1e-10 of the heat released, net and without cancellation, with the outlet on the outflow face
+  - steady-state outlet gas temperature against the adiabatic rise the achieved conversion pays for, and the H2 overshoot of the wall above it (97.9 K on 80 cells; the inlet value is first order in the grid, and its Richardson estimate puts the overshoot at about 108 K)
   - all six numbers of Table III, three peak wall temperatures and three peak locations
   - the three tabulated square-duct Nusselt numbers and the two readings of eq 12 run against Table III, with what each gives printed
-  - grid and time-step independence of the light-off time and of the peak wall temperature
+  - grid and time-step refinement of the light-off time and of the peak wall temperature, with the time of the peak extrapolated in the step
+  - a defect-injection table in which every claim that is not structural fails at least one row
 
 adds: >
   The physics is entirely theirs. What changes is the shape of the calculation.
@@ -36,43 +37,43 @@ adds: >
   discretisation of the solid energy equation, a banded GEAR integrator for it,
   and inside every right-hand-side evaluation a march down the channel solving
   the gas temperature cell by cell and then a Newton solve for the two
-  concentration fields at each cell - two nested nonlinear solves inside a stiff
+  concentration fields at each cell: two nested nonlinear solves inside a stiff
   integrator, with a Jacobian they have to argue is "well approximated by a
   banded tridiagonal matrix" because strictly it is not banded. Here the
-  operators are assembled once, NumJac supplies the exact pointwise block
-  Jacobian, and one Newton call per step solves all twelve fields together. The
-  nesting disappears because there is nothing left to nest. Three consequences
-  are more than tidiness: the fifteen-run refinement study is affordable, which
-  in 1982 was the reason to fix N = 81 and not ask - and their own x_max/L values
-  still carry the fingerprint of that grid, being exact multiples of 1/80; two
-  modelling choices the paper leaves unstated become testable rather than
-  assumed, because a variant costs ten seconds; and the hot-spot trajectory that
-  is their Figure 2 falls out of a run that was happening anyway.
+  operators are assembled once, NumJac supplies the pointwise block Jacobian by
+  finite differences, and one bounded Newton call per step solves all twelve fields
+  together, every step's convergence checked. The nesting disappears because
+  there is nothing left to nest. Two consequences are more than tidiness: the
+  refinement study is affordable, and the paper's own x_max/L values still carry
+  the fingerprint of its fixed grid, being exact multiples of its spacing; and
+  two modelling choices the paper leaves unstated become testable rather than
+  assumed.
 
 agreement: >
   All six numbers of Table III with nothing fitted: 0.63 % mean absolute
   deviation in the peak wall temperature (990.4 / 986.1 / 966.9 K against
-  996 / 991 / 975) and at worst 1.25 cells of the paper's own 1/80 grid in its
-  location. Both trends reproduced - raising the solid conductivity lowers the
+  996 / 991 / 975) and at worst 1.25 cells of the paper's own grid in its
+  location. Both trends reproduced: raising the solid conductivity lowers the
   peak and moves it downstream. The transient temperature rise is 236 degC
-  against their 241, and the peak is reached at 9.75 s against 10.1 s. Table II
-  reproduces from geometry alone to 0.09 %, and the Lewis number of H2 comes out
-  3.89 against the ~4 they state. The light-off time, 47.1 s to 50 % CO
-  conversion, moves by 0.45 s (1.0 %) over a fourfold change in grid and a
-  fourfold change in time step.
+  against their 241, and the peak is reached at 9.73 s with a 0.05 s
+  step and at 9.76 s extrapolated in the step, 3.4 % before their 10.1 s.
+  Table II reproduces from geometry alone to 0.09 %, and the Lewis
+  number of H2 comes out 3.89 against the about 4 they state. The light-off
+  time, 47.12 s to 50 % CO conversion, moves by 0.45 s (1.0 %) over a fourfold
+  change in grid and a fourfold change in time step.
 
 caveats: >
-  Provenance tier 6. The paper contains no experimental data of any kind - its
+  Provenance tier 6. The paper contains no experimental data of any kind (its
   two experimental references are qualitative appeals to other people's work
-  with no numbers - so this page is validated against a published reference
+  with no numbers), so this page is validated against a published reference
   solution in the same sense as B1.1 and D2.2, and must not be described as
   validated against experiment. The two cases are asymmetric and the page says
-  so: case 2 has six published numbers to check against, case 1 has none,
+  so: case 2 has the published numbers to check against, case 1 has none,
   because the paper reports light-off entirely as figures. The light-off time is
   therefore a prediction of this reimplementation, not a comparison. The Table
-  III residual is a consistent 0.5-0.8 % low rather than scatter, and it is not
-  discretisation - the value is converged to 1.5 K between 80 and 320 cells
-  while the gap to the paper is 5 K - so something small and systematic
+  III residual is a consistent -0.5 % to -0.8 % rather than scatter, and it is
+  not discretisation: the value changes by 1.5 K over a fourfold grid refinement
+  while the gap to the paper is 4.9 K, so something small and systematic
   separates this reimplementation from theirs, most plausibly one of the four
   quantities the paper does not print. The page does not claim to have
   identified which. Four such quantities are needed: S follows from the channel
