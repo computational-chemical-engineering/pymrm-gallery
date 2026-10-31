@@ -47,6 +47,23 @@ def load_yaml(path: Path):
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
+def front_matter_error(nb_path: Path) -> str | None:
+    """The YAML error in a notebook's front-matter cell, or None.
+
+    Quarto reads the first cell's ``---`` block for the gallery listing; one bad
+    page stops the whole site build, which CI otherwise first sees in publish.
+    """
+    cells = json.loads(nb_path.read_text(encoding="utf-8")).get("cells", [])
+    src = "".join(cells[0].get("source", "")) if cells else ""
+    if not src.startswith("---"):
+        return None
+    try:
+        yaml.safe_load(src.split("---")[1])
+    except yaml.YAMLError as exc:
+        return str(exc).splitlines()[0]
+    return None
+
+
 def check_migrated(page: Path, meta: dict, gallery_ref: str = "main",
                    lock_version: str | None = None) -> list[str]:
     """Errors of a migrated page: bootstrap cell, pin, index.py pairing, layout.
@@ -179,6 +196,10 @@ def main() -> int:
         if not (page / "index.ipynb").is_file():
             errors.append(f"{rel}: missing index.ipynb")
             continue
+        fm_error = front_matter_error(page / "index.ipynb")
+        if fm_error:
+            errors.append(f"{rel}/index.ipynb: front matter is not valid YAML "
+                          f"(Quarto refuses to render the site): {fm_error}")
 
         meta = load_yaml(meta_path)
         pid = meta.get("id")
