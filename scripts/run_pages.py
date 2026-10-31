@@ -46,13 +46,20 @@ for _k, _v in PINNED_ENV.items():
 # file deleted in a PR must fail here, not load main's copy (gallery_utils and
 # shared/gallery_bootstrap.py honour this; docs/page-infrastructure.md, section 2).
 os.environ.setdefault("GALLERY_OFFLINE", "1")
+# A kernel that dies in C code leaves only "Kernel died"; with the fault handler
+# on it prints the Python stack of every thread to the log first.
+os.environ.setdefault("PYTHONFAULTHANDLER", "1")
 
 
 def run(path: Path, retry: bool = True) -> tuple[bool, float, str]:
     nb = nbformat.read(path, as_version=4)
+    started = []                    # cells begun, to say where a kernel died
     client = NotebookClient(
         nb, timeout=TIMEOUT, kernel_name="python3",
         resources={"metadata": {"path": str(path.parent)}},
+        on_cell_start=lambda cell, cell_index: started.append(cell_index),
+        # leave the kernel's stderr on ours, so a fault-handler stack reaches the log
+        extra_arguments=["--IPKernelApp.capture_fd_output=False"],
     )
     t0 = time.perf_counter()
     try:
@@ -62,10 +69,11 @@ def run(path: Path, retry: bool = True) -> tuple[bool, float, str]:
     except (DeadKernelError, RuntimeError, TimeoutError) as exc:
         # the kernel, not the page: one retry, then report it as this page's
         # failure instead of aborting every page after it
+        where = f" in cell {started[-1]}" if started else ""
         if retry:
-            print(f"     {path.parent.name}: {type(exc).__name__}, retrying once")
+            print(f"     {path.parent.name}: {type(exc).__name__}{where}, retrying once")
             return run(path, retry=False)
-        return False, time.perf_counter() - t0, f"{type(exc).__name__}: {exc}"[:200]
+        return False, time.perf_counter() - t0, f"{type(exc).__name__}{where}: {exc}"[:200]
     nbformat.write(nb, path)
     return True, time.perf_counter() - t0, ""
 
