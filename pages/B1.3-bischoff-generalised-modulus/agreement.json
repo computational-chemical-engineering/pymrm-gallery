@@ -1,49 +1,721 @@
 {
   "page": "B1.3",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "band_nhalf_to_3_max_relspread": 0.14609061189944073,
-    "band_nhalf_to_3_argmax_m": 1.2701547006373337,
-    "band_nhalf_to_3_frac_of_upper": 0.12746864024766905,
-    "band_incl_n0_at_kink_relspread": 0.4055291963076848,
-    "band_incl_n0_frac_of_upper": 0.2885242066639434,
-    "band_incl_n0_argmax_m": 0.9999999999975463,
-    "eta_n3_at_m1": 0.7114757933360566,
-    "band_second_route_gap": 4.819843986355145e-07,
-    "band_asprinted_nhalf_would_give": 0.41455736967869217,
-    "std_modulus_band_nhalf_to_3": 0.681518761617397,
-    "std_modulus_band_incl_n0": 1.2055450970605408,
-    "std_modulus_asympt_spread_incl_n0": 0.41421356237309515,
-    "routeB_vs_closed_forms_worst_rel": 2.2212618007343175e-12,
-    "eq20_vs_routeB_worst_rel": 2.682594473569608e-13,
-    "mstar_nhalf_extrapolated_rel_dev": 4.574118861455645e-14,
-    "asymptote_eta_m_dev_at_m30": 2.2539453236714024e-05,
-    "pymrm_slab_worst_rel": 1.983369293693412e-06,
-    "pymrm_slab_observed_order": 2.012006920768327,
-    "pymrm_deadzone_rel_dev": 4.346706449775972e-06,
-    "pymrm_cyl2d_vs_series_worst_rel": 6.334394478004134e-05,
-    "lhhw_band_max_relspread": 0.30157844851291427,
-    "lhhw_band_argmax_m": 1.0042414556725476,
-    "lhhw_std_modulus_band": 22.330001453588938,
-    "volchange_dev_from_n1_curve": 0.03180422188896066,
-    "volchange_min_margin_frac_of_band": 0.09778435109242106,
-    "table1_eq33_three_cells_worst_rel": 0.0027438948909993092,
-    "table1_eq33_defect_cell_rel": 0.006218383912121491,
-    "table1_eq34_worst_rel": 0.0019149900958079292,
-    "eq27_as_printed_worst_rel_m": 0.40837535843844314,
-    "eq27_amended_worst_rel_m": 1.0053014112536332e-15,
-    "eq14_as_printed_worst_rel_m": 0.75,
-    "pan_mu1_vs_table5_worst_abs": 5.116940974436712e-05,
-    "pan_mu2_z25_defect_abs": 0.10000000000000009,
-    "pan_table6_eta_a_reproduced_worst_abs": 0.00031171711792410406,
-    "pan_table6_eta_star_reproduced_worst_abs": 0.0005865998468005951,
-    "pan_printed_worst_pair_abs": 0.013000000000000012,
-    "pan_printed_worst_pair_rel": 0.03651685393258415,
-    "pan_zhu_n2_out_of_sample_max_abs": 0.0899192905243078,
-    "slab_curve_estimate_cyl_n2_max_abs": 0.09889293697335821,
-    "slab_curve_estimate_cyl_1st_max_abs": 0.10657097570400864,
-    "aris_bischoff_combined_cyl_n2_max_abs": 0.03042615002077842,
-    "aris_bischoff_combined_cyl_n2_max_rel": 0.04383738580560447,
-    "pan_zhu_cyl_1st_max_abs": 0.003675716462328227,
-    "b11_slab_reconciliation_worst_rel": 3.4255139531495544e-06
+    "routeB_vs_closed_forms_worst_rel": {
+      "kind": "bound",
+      "value": 2.2213342276700132e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "Route B's outer quadrature runs at epsrel 1e-10"
+    },
+    "eq20_vs_routeB_worst_rel": {
+      "kind": "bound",
+      "value": 2.682298827494378e-13,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "both are quadratures at epsrel 1e-10 or tighter"
+    },
+    "mstar_nhalf_extrapolated_rel_dev": {
+      "kind": "bound",
+      "value": 4.574118861455645e-14,
+      "max": 1e-10,
+      "basis": "theory",
+      "note": "two-point extrapolation removes the leading u^(1/4) term"
+    },
+    "asymptote_eta_m_dev_at_m30": {
+      "kind": "value",
+      "value": 2.2539453215508765e-05,
+      "rtol": 0.001
+    },
+    "pymrm_slab_worst_rel": {
+      "kind": "value",
+      "value": 1.9833693403192854e-06,
+      "rtol": 0.05
+    },
+    "pymrm_slab_observed_order": {
+      "kind": "bound",
+      "value": 1.9985317990063558,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volume; worst case of 24, 400 to 800 cells"
+    },
+    "pymrm_slab_case_orders_min": {
+      "kind": "bound",
+      "value": 1.7260611373708479,
+      "min": 1.6,
+      "max": 2.4,
+      "basis": "chosen",
+      "note": "per-case orders 400 to 800 cells; pre-asymptotic where two error terms compete"
+    },
+    "pymrm_slab_case_orders_max": {
+      "kind": "bound",
+      "value": 2.2113337503425083,
+      "min": 1.6,
+      "max": 2.4,
+      "basis": "chosen",
+      "note": "per-case orders 400 to 800 cells; pre-asymptotic where two error terms compete"
+    },
+    "eta_flux_vs_volume_worst": {
+      "kind": "bound",
+      "value": 1.1879153216654004e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "finite-volume conservation; the gap is the residual of the solve"
+    },
+    "deadzone_regularised_converged": {
+      "kind": "exact",
+      "value": 24
+    },
+    "pymrm_deadzone_rel_dev": {
+      "kind": "value",
+      "value": 4.346706387270416e-06,
+      "rtol": 0.05
+    },
+    "deadzone_eps_order_min": {
+      "kind": "bound",
+      "value": 0.4987816700126025,
+      "min": 0.45,
+      "max": 0.55,
+      "basis": "theory",
+      "note": "r_eps - r is O(sqrt(eps)) near c = 0; eps ratio 100 per rung"
+    },
+    "deadzone_eps_order_max": {
+      "kind": "bound",
+      "value": 0.49972655914338626,
+      "min": 0.45,
+      "max": 0.55,
+      "basis": "theory",
+      "note": "r_eps - r is O(sqrt(eps)) near c = 0; eps ratio 100 per rung"
+    },
+    "deadzone_grid_order": {
+      "kind": "bound",
+      "value": 1.932764007818702,
+      "min": 1.8,
+      "max": 2.1,
+      "basis": "chosen",
+      "note": "second order, pre-asymptotic: the free boundary sits inside a cell"
+    },
+    "deadzone_extrapolated_dev": {
+      "kind": "bound",
+      "value": 2.0019227160783574e-08,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "Richardson limit of the eps -> 0 limits on 100 to 800 cells against eta = 1/m"
+    },
+    "deadzone_plain_bounds_converged": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 12989.596994094589,
+      "min_margin": 10.0,
+      "note": "margin: smallest of the last 50 Newton steps over tol"
+    },
+    "deadzone_plain_monotone_converged": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 134.3563137929426,
+      "min_margin": 10.0,
+      "note": "margin: smallest of the last 50 Newton steps over tol"
+    },
+    "deadzone_plain_eta_gap": {
+      "kind": "bound",
+      "value": 1.4918936964638535e-06,
+      "max": 5e-06,
+      "basis": "chosen",
+      "note": "eta of the unconverged plain iterates against the eps -> 0 limit"
+    },
+    "deadzone_plain_default_tol_converged": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.2791940527383941,
+      "min_margin": 0.01,
+      "note": "margin: |log10| of the smallest late step over tol"
+    },
+    "deadzone_plain_default_tol_max_min_c": {
+      "kind": "bound",
+      "value": -3.590869618911308e-08,
+      "max": -1e-09,
+      "basis": "chosen",
+      "note": "largest over the grids of min c: every reported solution goes negative"
+    },
+    "band_nhalf_to_3_max_relspread": {
+      "kind": "value",
+      "value": 0.14609061189948802,
+      "rtol": 0.0001
+    },
+    "band_nhalf_to_3_argmax_m": {
+      "kind": "value",
+      "value": 1.2701555545153178,
+      "rtol": 0.0001
+    },
+    "band_nhalf_to_3_frac_of_upper": {
+      "kind": "value",
+      "value": 0.12746864024770513,
+      "rtol": 0.0001
+    },
+    "band_incl_n0_at_kink_relspread": {
+      "kind": "value",
+      "value": 0.405529196307564,
+      "rtol": 0.0001
+    },
+    "band_incl_n0_frac_of_upper": {
+      "kind": "value",
+      "value": 0.28852420666388234,
+      "rtol": 0.0001
+    },
+    "band_incl_n0_argmax_m": {
+      "kind": "value",
+      "value": 0.9999999999976301,
+      "rtol": 1e-06
+    },
+    "eta_n3_at_m1": {
+      "kind": "value",
+      "value": 0.7114757933361177,
+      "rtol": 1e-06
+    },
+    "band_second_route_gap": {
+      "kind": "bound",
+      "value": 1.0107470416187425e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "relative gap of the two band values between Route B and Route C"
+    },
+    "band_argmax_second_route_gap": {
+      "kind": "bound",
+      "value": 1.9027845343799754e-07,
+      "max": 1e-05,
+      "basis": "tolerance",
+      "note": "a flat maximum locates its abscissa only to about the square root of the function's accuracy"
+    },
+    "std_modulus_band_nhalf_to_3": {
+      "kind": "value",
+      "value": 0.6815187616175744,
+      "rtol": 0.0001
+    },
+    "std_modulus_band_incl_n0": {
+      "kind": "value",
+      "value": 1.2055450970599164,
+      "rtol": 0.0001
+    },
+    "std_modulus_asympt_spread_nhalf_to_3": {
+      "kind": "value",
+      "value": 0.6329931618554523,
+      "rtol": 1e-09
+    },
+    "std_modulus_asympt_spread_incl_n0": {
+      "kind": "value",
+      "value": 1.0,
+      "rtol": 1e-09
+    },
+    "std_modulus_spread_incl_n0_at_M1e3": {
+      "kind": "value",
+      "value": 1.000000000011767,
+      "rtol": 1e-06
+    },
+    "lhhw_band_max_relspread": {
+      "kind": "value",
+      "value": 0.3015784485129567,
+      "rtol": 0.0001
+    },
+    "lhhw_band_argmax_m": {
+      "kind": "value",
+      "value": 1.0042414194960425,
+      "rtol": 0.001
+    },
+    "lhhw_band_frac_of_upper": {
+      "kind": "value",
+      "value": 0.23170209130115202,
+      "rtol": 0.0001
+    },
+    "lhhw_std_modulus_band": {
+      "kind": "value",
+      "value": 22.330001453588938,
+      "rtol": 1e-06
+    },
+    "lhhw_nearer_zero_order_band_both_readings": {
+      "kind": "exact",
+      "value": true
+    },
+    "volchange_dev_from_n1_curve": {
+      "kind": "value",
+      "value": 0.03180422188890142,
+      "rtol": 0.001
+    },
+    "volchange_scan_points_outside_envelope": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 3.0515790090759845e-06,
+      "min_margin": 1e-06,
+      "note": "41 moduli from 0.2 to 8; margin: the smallest distance to an edge over the band width"
+    },
+    "volchange_margin_at_m8_frac_of_band": {
+      "kind": "value",
+      "value": 3.0515790090759845e-06,
+      "rtol": 0.001
+    },
+    "volchange_margin_at_kink_frac_of_band": {
+      "kind": "value",
+      "value": 0.09778435109115809,
+      "rtol": 0.001
+    },
+    "table1_cells_outside_rounding": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.05641815441859066,
+      "min_margin": 0.01,
+      "note": "cells whose gap to the equation exceeds half a unit of the printed digit"
+    },
+    "table1_eq33_three_cells_worst_rel": {
+      "kind": "value",
+      "value": 0.0027438948909993092,
+      "rtol": 0.001
+    },
+    "table1_eq33_defect_cell_rel": {
+      "kind": "value",
+      "value": 0.006218383912121491,
+      "rtol": 0.001
+    },
+    "table1_eq33_defect_cell_abs": {
+      "kind": "value",
+      "value": 0.005662851223414367,
+      "rtol": 0.001
+    },
+    "table1_eq34_worst_rel": {
+      "kind": "value",
+      "value": 0.0019149900958079292,
+      "rtol": 0.001
+    },
+    "table1_eq33_at_wco_minus_0p25": {
+      "kind": "value",
+      "value": 0.9106628512234144,
+      "rtol": 1e-06
+    },
+    "table1_eq33_defect_halfunit_multiple": {
+      "kind": "value",
+      "value": 11.325702446828734,
+      "rtol": 0.001
+    },
+    "eq27_as_printed_worst_rel_m": {
+      "kind": "value",
+      "value": 0.4083753584384431,
+      "rtol": 1e-06
+    },
+    "eq27_as_printed_min_rel_m": {
+      "kind": "value",
+      "value": 0.2900146267617132,
+      "rtol": 1e-06
+    },
+    "eq27_amended_worst_rel_m": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-15,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "eq. (20) is a quadrature at epsrel 1e-11; the closed form is exact"
+    },
+    "eq27_printed_ratio_limit_dev": {
+      "kind": "bound",
+      "value": 5.889954857174473e-08,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "m(as printed)/m(eq. 20) -> sqrt 2 as u -> 1; at u = 1 - 1e-6"
+    },
+    "band_asprinted_nhalf_would_give": {
+      "kind": "value",
+      "value": 0.4133797494799407,
+      "rtol": 0.0001
+    },
+    "eq14_as_printed_worst_rel_m": {
+      "kind": "value",
+      "value": 0.75,
+      "rtol": 1e-06
+    },
+    "pan_mu1_vs_table5_worst_abs": {
+      "kind": "value",
+      "value": 5.116940974436712e-05,
+      "rtol": 0.001
+    },
+    "mu1_series_truncation": {
+      "kind": "bound",
+      "value": 2.32899562135902e-09,
+      "max": 1e-08,
+      "basis": "chosen",
+      "note": "doubling both term counts; Table 5 prints 4 digits"
+    },
+    "pan_mu2_z25_defect_abs": {
+      "kind": "value",
+      "value": 0.10000000000000009,
+      "rtol": 1e-06
+    },
+    "pan_eq36_as_printed_eta_a_phi3": {
+      "kind": "value",
+      "value": -0.030619600623216003,
+      "rtol": 0.001
+    },
+    "pan_table6_eta_a_reproduced_worst_abs": {
+      "kind": "value",
+      "value": 0.00031171711792410406,
+      "rtol": 0.001
+    },
+    "pan_table6_eta_star_reproduced_worst_abs": {
+      "kind": "value",
+      "value": 0.0005865998468005951,
+      "rtol": 0.001
+    },
+    "eta_series_truncation_worst": {
+      "kind": "bound",
+      "value": 3.144381888198211e-07,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "doubling both term counts, phi up to 8"
+    },
+    "pan_printed_worst_pair_abs": {
+      "kind": "value",
+      "value": 0.013000000000000012,
+      "rtol": 1e-06
+    },
+    "pan_printed_worst_pair_rel": {
+      "kind": "value",
+      "value": 0.03651685393258415,
+      "rtol": 1e-06
+    },
+    "pymrm_cyl2d_vs_series_worst_rel": {
+      "kind": "value",
+      "value": 6.334394478002547e-05,
+      "rtol": 0.05
+    },
+    "pan_zhu_n2_out_of_sample_max_abs": {
+      "kind": "value",
+      "value": 0.08991929052430897,
+      "rtol": 0.001
+    },
+    "pan_zhu_n2_over_claimed_bound": {
+      "kind": "value",
+      "value": 5.994619368287265,
+      "rtol": 0.001
+    },
+    "slab_curve_estimate_cyl_n2_max_abs": {
+      "kind": "value",
+      "value": 0.09889293697336266,
+      "rtol": 0.001
+    },
+    "aris_bischoff_combined_cyl_n2_max_abs": {
+      "kind": "value",
+      "value": 0.030426150020783638,
+      "rtol": 0.001
+    },
+    "aris_bischoff_combined_cyl_n2_max_rel": {
+      "kind": "value",
+      "value": 0.04383738580560927,
+      "rtol": 0.001
+    },
+    "slab_curve_estimate_cyl_1st_max_abs": {
+      "kind": "value",
+      "value": 0.10779867502723928,
+      "rtol": 0.001
+    },
+    "pan_zhu_cyl_1st_max_abs": {
+      "kind": "value",
+      "value": 0.003712401776193197,
+      "rtol": 0.001
+    },
+    "cyl2d_n2_reference_grid_change": {
+      "kind": "bound",
+      "value": 1.89586251854168e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "|eta(200 x 200) - eta(100 x 100)| at the three maxima; the deviations it judges are 0.03 and above"
+    },
+    "b11_slab_reconciliation_worst_rel": {
+      "kind": "value",
+      "value": 3.4255256897708364e-06,
+      "rtol": 0.05
+    },
+    "b11_slab_gap_over_stored_rounding": {
+      "kind": "bound",
+      "value": 0.9821233951987568,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "|gap| <= |d eta/d phi| half-unit(phi) + half-unit(eta), per row"
+    },
+    "export_power_rows_vs_closed_forms": {
+      "kind": "bound",
+      "value": 1.3668399745370152e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "Route B against Route C on the exported grid, m = 0.1 to 20"
+    },
+    "export_integrals_vs_nested_quadrature": {
+      "kind": "bound",
+      "value": 6.661338147750939e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "LHHW and volume-change families at m = 20 or the end of their table, centre concentrations down to 1e-10"
+    }
+  },
+  "quoted": {
+    "eq27_as_printed_min_rel_m": [
+      "29%"
+    ],
+    "eq27_as_printed_worst_rel_m": [
+      "41%"
+    ],
+    "band_asprinted_nhalf_would_give": [
+      "41%"
+    ],
+    "band_nhalf_to_3_max_relspread": [
+      "14.6%"
+    ],
+    "band_incl_n0_at_kink_relspread": [
+      "40.6%"
+    ],
+    "band_incl_n0_frac_of_upper": [
+      "28.9%"
+    ]
+  },
+  "breaks": {
+    "routeB_vs_closed_forms_worst_rel": [
+      "eq. (23) with k^2 = 0.5 (sin 45 deg) for sin^2 15 deg",
+      "eq. (23) with phi from the printed sin phi (branch='sin', stops at pi/2)"
+    ],
+    "band_second_route_gap": [
+      "eq. (23) with k^2 = 0.5 (sin 45 deg) for sin^2 15 deg"
+    ],
+    "band_argmax_second_route_gap": [
+      "eq. (23) with k^2 = 0.5 (sin 45 deg) for sin^2 15 deg"
+    ],
+    "eq20_vs_routeB_worst_rel": [
+      "Route B with eq. (14)'s denominator exponent as printed (-1/2)"
+    ],
+    "mstar_nhalf_extrapolated_rel_dev": [
+      "dead-zone onset extrapolated in u^0.5 instead of u^0.25"
+    ],
+    "asymptote_eta_m_dev_at_m30": [
+      "eta m at m = 30 on the standard modulus (eta M at M = 30)"
+    ],
+    "eq27_amended_worst_rel_m": [
+      "eq. (27) as printed (printed=True) in place of the amended form"
+    ],
+    "eq27_as_printed_worst_rel_m": [
+      "eq. (27) amended (printed=False) in place of the printed form"
+    ],
+    "eq27_as_printed_min_rel_m": [
+      "eq. (27) amended (printed=False) in place of the printed form"
+    ],
+    "eq27_printed_ratio_limit_dev": [
+      "eq. (27) amended (printed=False) in place of the printed form"
+    ],
+    "band_asprinted_nhalf_would_give": [
+      "eq. (27) amended (printed=False) in place of the printed form"
+    ],
+    "eq14_as_printed_worst_rel_m": [
+      "eq. (14) with the denominator exponent read as -1"
+    ],
+    "pymrm_slab_worst_rel": [
+      "slab assembled with nu = 2 in construct_div (a sphere)"
+    ],
+    "pymrm_deadzone_rel_dev": [
+      "slab assembled with nu = 2 in construct_div (a sphere)"
+    ],
+    "pymrm_slab_observed_order": [
+      "eta read from a two-point surface gradient (read='cell')"
+    ],
+    "pymrm_slab_case_orders_min": [
+      "eta read from a two-point surface gradient (read='cell')"
+    ],
+    "pymrm_slab_case_orders_max": [
+      "eta read from a two-point surface gradient (read='cell')"
+    ],
+    "eta_flux_vs_volume_worst": [
+      "eta read from a two-point surface gradient (read='cell')"
+    ],
+    "deadzone_regularised_converged": [
+      "regularised dead-zone solve with the NumJac Jacobian (exact_jacobian=False)"
+    ],
+    "deadzone_eps_order_min": [
+      "eps rungs a factor 10 apart, read as 100 (rung=10)"
+    ],
+    "deadzone_eps_order_max": [
+      "eps rungs a factor 10 apart, read as 100 (rung=10)"
+    ],
+    "deadzone_extrapolated_dev": [
+      "grid ladder on eps = 1e-12 without the eps extrapolation (extrapolate=False)"
+    ],
+    "deadzone_grid_order": [
+      "dead-zone eta read from a two-point surface gradient (read='cell')"
+    ],
+    "deadzone_plain_bounds_converged": [
+      "plain dead-zone solve replaced by the regularised one (eps = 1e-12, exact Jacobian)"
+    ],
+    "deadzone_plain_default_tol_converged": [
+      "default-tol monotone solve with bounds=(0, inf)"
+    ],
+    "deadzone_plain_default_tol_max_min_c": [
+      "default-tol monotone solve with bounds=(0, inf)"
+    ],
+    "deadzone_plain_monotone_converged": [
+      "plain dead-zone solve at newton's default tol = 1.49e-8"
+    ],
+    "deadzone_plain_eta_gap": [
+      "plain dead-zone solve stopped at maxfev = 3"
+    ],
+    "band_nhalf_to_3_max_relspread": [
+      "standard modulus M_n as the abscissa",
+      "band maximum taken from a 15-point scan (refine=False, ngrid=15)"
+    ],
+    "band_nhalf_to_3_argmax_m": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "band_nhalf_to_3_frac_of_upper": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "band_incl_n0_at_kink_relspread": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "band_incl_n0_frac_of_upper": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "band_incl_n0_argmax_m": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "eta_n3_at_m1": [
+      "standard modulus M_n as the abscissa"
+    ],
+    "std_modulus_band_nhalf_to_3": [
+      "standard modulus as m ((n + 1)/2)^1 instead of ^(1/2) (p=1)"
+    ],
+    "std_modulus_band_incl_n0": [
+      "standard modulus as m ((n + 1)/2)^1 instead of ^(1/2) (p=1)"
+    ],
+    "std_modulus_asympt_spread_nhalf_to_3": [
+      "standard modulus as m ((n + 1)/2)^1 instead of ^(1/2) (p=1)"
+    ],
+    "std_modulus_asympt_spread_incl_n0": [
+      "standard modulus as m ((n + 1)/2)^1 instead of ^(1/2) (p=1)"
+    ],
+    "std_modulus_spread_incl_n0_at_M1e3": [
+      "standard modulus as m ((n + 1)/2)^1 instead of ^(1/2) (p=1)"
+    ],
+    "lhhw_band_max_relspread": [
+      "eq. (31) without its log bracket (log_bracket=False)"
+    ],
+    "lhhw_band_argmax_m": [
+      "eq. (31) without its log bracket (log_bracket=False)"
+    ],
+    "lhhw_band_frac_of_upper": [
+      "eq. (31) without its log bracket (log_bracket=False)"
+    ],
+    "lhhw_std_modulus_band": [
+      "eq. (31) without its log bracket (log_bracket=False)"
+    ],
+    "lhhw_nearer_zero_order_band_both_readings": [
+      "LHHW family restricted to zeta* >= 1 (7 of 13 curves), sampled on 20 moduli"
+    ],
+    "volchange_dev_from_n1_curve": [
+      "D(C) left out of eq. (13)'s rate integral (d_in_modulus=False)"
+    ],
+    "volchange_margin_at_m8_frac_of_band": [
+      "D(C) left out of eq. (13)'s rate integral (d_in_modulus=False)"
+    ],
+    "volchange_scan_points_outside_envelope": [
+      "D(C) left out of eq. (13)'s rate integral (d_in_modulus=False), sampled on 11 moduli"
+    ],
+    "volchange_margin_at_kink_frac_of_band": [
+      "D(C) left out of eq. (13)'s rate integral (d_in_modulus=False)"
+    ],
+    "table1_eq33_three_cells_worst_rel": [
+      "eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "table1_eq33_defect_cell_rel": [
+      "eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "table1_eq33_defect_cell_abs": [
+      "eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "table1_eq33_at_wco_minus_0p25": [
+      "eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "table1_eq33_defect_halfunit_multiple": [
+      "eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "table1_eq34_worst_rel": [
+      "eq. (34) with exponent 0.8 for 0.7"
+    ],
+    "pan_mu1_vs_table5_worst_abs": [
+      "alpha_m from the zeros of J1 instead of J0 (bessel_order=1)"
+    ],
+    "pan_table6_eta_star_reproduced_worst_abs": [
+      "alpha_m from the zeros of J1 instead of J0 (bessel_order=1)"
+    ],
+    "pan_zhu_cyl_1st_max_abs": [
+      "alpha_m from the zeros of J1 instead of J0 (bessel_order=1)"
+    ],
+    "mu1_series_truncation": [
+      "mu1 and the exact series on a quarter of the terms (M = 50, N = 100)"
+    ],
+    "eta_series_truncation_worst": [
+      "mu1 and the exact series on a quarter of the terms (M = 50, N = 100)"
+    ],
+    "pan_mu2_z25_defect_abs": [
+      "eq. (30) evaluated at Z = 2.0 for the Z = 2.5 cell"
+    ],
+    "pan_table6_eta_a_reproduced_worst_abs": [
+      "eq. (36) with the sign as printed (sign405=-1)"
+    ],
+    "pan_eq36_as_printed_eta_a_phi3": [
+      "eq. (36) with the sign amended (sign405=+1)"
+    ],
+    "table1_cells_outside_rounding": [
+      "Table 1 cell ratios with eq. (33) without the square root on its bracket (root=1)"
+    ],
+    "pan_printed_worst_pair_abs": [
+      "Table 6 gaps over the Z = 1 rows only (z_values=(1.0,))"
+    ],
+    "pan_printed_worst_pair_rel": [
+      "Table 6 gaps over the Z = 1 rows only (z_values=(1.0,))"
+    ],
+    "pan_zhu_n2_out_of_sample_max_abs": [
+      "Pan & Zhu at second order with the first-order Q1 = Q2 = 1, sampled on 14 moduli"
+    ],
+    "pan_zhu_n2_over_claimed_bound": [
+      "Pan & Zhu at second order with the first-order Q1 = Q2 = 1, sampled on 14 moduli"
+    ],
+    "pymrm_cyl2d_vs_series_worst_rel": [
+      "cylinder assembled with nu = 0 on the radial axis (nu_radial=0)"
+    ],
+    "cyl2d_n2_reference_grid_change": [
+      "2-D reference ladder on 25 x 25 and 50 x 50 cells"
+    ],
+    "slab_curve_estimate_cyl_n2_max_abs": [
+      "slab curve read with L = R_p instead of v_p/s_x"
+    ],
+    "slab_curve_estimate_cyl_1st_max_abs": [
+      "slab curve read with L = R_p instead of v_p/s_x"
+    ],
+    "aris_bischoff_combined_cyl_n2_max_abs": [
+      "cylinder's first-order curve read at the standard modulus, sampled on 14 moduli"
+    ],
+    "aris_bischoff_combined_cyl_n2_max_rel": [
+      "cylinder's first-order curve read at the standard modulus, sampled on 14 moduli"
+    ],
+    "b11_slab_reconciliation_worst_rel": [
+      "B1.1's phi read on the full thickness (m = 2 phi)"
+    ],
+    "b11_slab_gap_over_stored_rounding": [
+      "B1.1's phi read on the full thickness (m = 2 phi)"
+    ],
+    "export_integrals_vs_nested_quadrature": [
+      "rate integrals written in the cancelling form (stable=False)"
+    ],
+    "export_power_rows_vs_closed_forms": [
+      "Route B root-found in u instead of logit(u) (root_in='u')"
+    ]
   }
 }
