@@ -1798,54 +1798,48 @@ models:
       Danckwerts' objection to the stagnant liquid film is that the conditions
       for one are absent: turbulence reaches the surface, and liquid running over
       a packing does not keep its identity past the next discontinuity. His
-      replacement is one assumption - the chance of a surface element being
-      replaced does not depend on how long it has already been there - and that
+      replacement is one assumption, that the chance of a surface element being
+      replaced does not depend on how long it has already been there, and that
       forces the age distribution phi = s exp(-s theta), whose average over the
       penetration flux gives k_L = sqrt(Ds). Film theory gives k_L proportional
       to D, so the exponent on diffusivity is the falsifiable content, and this
       page is built around what that exponent can and cannot settle. All six
       numerical statements in the paper reproduce, three of them loosely enough
       to be worth reporting rather than rounding away. A pymrm transient element,
-      marched on an age grid uniform in sqrt(theta) and averaged by his own
-      eq. 7, recovers eqs. 8, 10/30 and 12/34 to about 4e-5 by a route that
-      shares no code with the closed forms, with observed orders 0.99 in the age
-      step and 1.98 in the grid; the time error is the larger, so every reported
-      agreement on the page - the closed forms, the second-order error and the
-      instantaneous-limit deviation alike - is Richardson-extrapolated in the age
-      step, with the raw value printed beside it and a pure-discretisation
-      control (the same solver where the answer is exactly sqrt(2)) saying what
-      the step is worth: +0.1006 % raw at n_t = 400, +0.0104 % extrapolated. The exponent is then mapped across every system
-      the paper treats: it is exactly 1/2 for ANY age distribution, for a
-      patchwork of renewal rates and for a first-order reaction at fixed r,
-      because sqrt(D) factors straight out of eqs. 21 and 22 - and it collapses
-      only when a resistance sits in SERIES with the liquid, which is the case
-      the paper spends least time on. Three things go beyond the paper. The
-      second-order reaction Danckwerts states "no solution has so far been found"
-      for is solved directly, turning his 10 % error bound into a measurement:
-      it holds, and it is conservative by a factor of 53 in the concentration
-      ratio eq. 36 demands (+0.22 % at his own illustrative point, extrapolated;
-      +0.31 % raw, of which a third is the age step). That solver, which never
-      forms beta, then reaches eq. 15 with beta from eq. 16 to 0.48 % - the only
-      test of the instantaneous-reaction result on the page that can fail, as
-      against the eq. 15 -> eq. 17 collapse, which is an identity and is labelled
-      one - and the deviation is shown to be the finite-rate residue by a printed
-      sweep in r'c0'/s (4.16 % at 300, 0.15 % at 10000). And a layer of finite depth over a
-      well-mixed bulk, still renewed at rate s, gives k_L = sqrt(Ds)
-      coth(d sqrt(s/D)), a closed form the paper does not contain whose two
-      limits are its own eq. 8 and the film eq. 1 with x_L = d: the exponent
-      n = 1/2 + z/sinh(2z) interpolates, and Danckwerts' own depth-of-penetration
-      rule reads as z > 3.6, where n = 0.5054. A printed defect in eq. 25 is
-      proved from the paper's own eqs. 9 and 29 and reported, not repaired - the
-      exponent needs H squared, which is settled parameter-independently (over a
-      15-point (H, kG/H) sweep the H^2 form reproduces eq. 9 everywhere, worst
-      4.1e-12, and the printed form nowhere, closest 4.2 % off); as printed the
-      integral also diverges, but only where k^2(H-1) > sD. The page's
-      main negative result is stated plainly: the paper contains NOTHING that
-      could test the sqrt(D) exponent, because its one physical number, s ~ 5
-      per second, comes from inverting k_L = sqrt(Ds) - an inference, flagged as
-      one, since the paper says only "calculated from published values of k_L" -
-      which film theory fits exactly as well by inverting k_L = D/x_L: one free
-      constant each, zero residual each.
+      marched by backward Euler on an age grid uniform in sqrt(theta), extrapolated
+      in the step and averaged by his own eq. 7, recovers eqs. 8, 10/30 and 12/34
+      to about 4e-5, which is the grid error of 400 cells: with orders 1.00 in the
+      step and 2.00 in the grid from successive differences, each deviation is the
+      grid error plus the extrapolated step error. The exponent is then mapped
+      across every system the paper treats: it is exactly 1/2 for ANY age
+      distribution, for a patchwork of renewal rates and for a first-order
+      reaction at fixed r, because sqrt(D) factors straight out of eqs. 21 and
+      22, and it collapses only when a resistance sits in SERIES with the liquid.
+      Three things go beyond the paper. The second-order reaction Danckwerts
+      states "no solution has so far been found" for is solved directly, with an
+      analytic source Jacobian and newton per age step, extrapolated in the step
+      and in the grid and checked against a case whose answer is known exactly:
+      his 10 % error bound holds, the substitution is in error by +0.210 % at his
+      own illustrative point, and the error reaches 10 % only at c0'/c* = 0.856,
+      so eq. 36's demand of 53 is conservative by a factor of 62. That solver,
+      which never forms beta, reaches eq. 15 with beta from eq. 16 to 0.48 % at
+      r'c0'/s = 3000, a residue that shrinks as the rate grows (4.15 % at 300,
+      0.146 % at 10000). And a layer of finite depth over a well-mixed bulk,
+      still renewed at rate s, gives k_L = sqrt(Ds) coth(d sqrt(s/D)), a closed
+      form the paper does not contain whose two limits are its own eq. 8 and the
+      film eq. 1 with x_L = d: the exponent n = 1/2 + z/sinh(2z) interpolates,
+      and Danckwerts' own depth-of-penetration rule reads as z > 3.6, where
+      n = 0.5054. A printed defect in eq. 25 is proved from the paper's own
+      eqs. 9 and 29 and reported, not repaired: the exponent needs H squared,
+      settled parameter-independently (over a 15-point (H, kG/H) sweep the H^2
+      form reproduces eq. 9 to round-off and the printed form nowhere, closest
+      4.2 % off); as printed the integral also diverges, but only where
+      k^2(H-1) > sD. The page's main negative result is stated plainly: the paper
+      contains NOTHING that could test the sqrt(D) exponent, because its one
+      physical number, s ~ 5 per second, comes from inverting k_L = sqrt(Ds) (an
+      inference, flagged as one, since the paper says only "calculated from
+      published values of k_L"), which film theory fits exactly as well by
+      inverting k_L = D/x_L: one free constant each, zero residual each.
     section: A
     status: published
     page: pages/A3.3-danckwerts-surface-renewal/
@@ -1864,8 +1858,11 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
-      - NumJac
+      - construct_coefficient_matrix
+      - compute_boundary_values
       - newton
+      - check_jacobian
+      - observed_orders
     reference:
       authors: ["Danckwerts, P. V."]
       year: 1951
