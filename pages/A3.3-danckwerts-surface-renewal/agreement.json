@@ -1,60 +1,704 @@
 {
   "page": "A3.3",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "R_vs_eq8_rel": -3.971543118375109e-05,
-    "R_vs_eq8_raw_rel": -0.0006819994160707221,
-    "R_vs_eq30_rel": -1.6448622952469627e-05,
-    "R_vs_eq34_rel": -3.9358180126680686e-05,
-    "eq13_vs_eq12": 0.0,
-    "n_eq8": 0.5000000000003335,
-    "n_eq21_uniform_phi": 0.49999999999987554,
-    "n_eq22_patchwork": 0.5000000000005,
-    "n_eq10_kS1": 0.2500000000005276,
-    "eq25_collapse_to_eq9": 3.1441516057384433e-13,
-    "eq25_printed_growth_rate": 0.9599999999999997,
-    "eq25_printed_ratio_T40_over_T20": 155539794.24741074,
-    "eq25_collapse_worst_over_Hk": 4.083067217663938e-12,
-    "eq25_printed_best_dev_over_Hk": 0.04152286950836426,
-    "n_eq25_uniform_phi_min": 0.033811472467393244,
-    "n_eq25_uniform_phi_max": 0.45481575219774584,
-    "layer_1h_mm": 2.1409489393833256,
-    "depth_coefficient": 3.6427727354368997,
-    "depth_coefficient_rel": 0.011881315399138836,
-    "depth_1h_mm": 6.8305197459637,
-    "L_falling_film": 0.05096839959225281,
-    "L_falling_film_rel": 0.019367991845056,
-    "erf_deficit_at_sthetac_1p5": 0.08326451666355039,
-    "sthetac_for_exactly_10pct": 1.3527717270477073,
-    "frac_R_from_ages_over_0p33s": 0.06927988322120204,
-    "eq36_ratio_at_printed_50": 0.9418629694294466,
-    "eq36_closed_vs_quadrature": 2.220446049250313e-16,
-    "eq36_threshold_c0p_over_cstar": 53.009362085019745,
-    "eq36_threshold_rel_to_printed": 0.0601872417003948,
-    "eq17_from_eq15_16": 6.217248937900877e-15,
-    "eq17_swapped_erf_dev": 0.6666666666666667,
-    "time_order": 0.99112284085668,
-    "space_order": 1.9750843658473984,
-    "space_err_n400": 4.1220282888110304e-05,
-    "time_err_n3200": 0.0003260062622763016,
-    "psi_massbalance_vs_gradient": 4.558098343210304e-10,
-    "psi_vs_eq3_resolved": 0.0520479409008614,
-    "psi_vs_eq3_above_0p1": 0.0053611841794389825,
-    "so_err_at_printed_50_pct": 0.22032859642411307,
-    "so_err_at_ratio_1_pct": 8.835502698426833,
-    "so_err_at_printed_50_raw_pct": 0.3132994664940769,
-    "so_newton_iters_max": 3.0,
-    "so_control_raw_n400_pct": 0.10058833719071014,
-    "so_control_extrap_pct": 0.010382699923039418,
-    "inst_vs_eq15_worst_pct": 0.4848483664298464,
-    "inst_vs_eq15_worst_raw_pct": 0.6489606463862985,
-    "inst_dev_at_ratio_300_pct": -4.155532596986699,
-    "inst_dev_at_ratio_10000_pct": -0.1513920827251214,
-    "kL_coth_worst_rel": 4.74872617317601e-06,
-    "z_at_n_0p75": 1.0886594924825606,
-    "z_at_n_0p55": 2.249956998513345,
-    "n_at_z_3p6": 0.5053754208165199,
-    "kL_implied_by_s5_cm_s": 0.007071067811865475,
-    "xL_film_equivalent_um": 14.142135623730953,
-    "D_ratio_needed_3sigma_5pct": 1.5284651603231783
+    "R_vs_eq8_rel": {
+      "kind": "value",
+      "value": -3.9715431183862115e-05,
+      "rtol": 0.05
+    },
+    "R_vs_eq8_raw_rel": {
+      "kind": "value",
+      "value": -0.0006819994160708331,
+      "rtol": 0.05
+    },
+    "R_vs_eq30_rel": {
+      "kind": "value",
+      "value": -1.6448622952469627e-05,
+      "rtol": 0.05
+    },
+    "R_vs_eq34_rel": {
+      "kind": "value",
+      "value": -3.935818012734682e-05,
+      "rtol": 0.05
+    },
+    "eq13_vs_eq12": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "structural": true,
+      "note": "eq. 13 is eq. 12 with k_L = sqrt(Ds) substituted"
+    },
+    "n_eq8": {
+      "kind": "bound",
+      "value": 0.5000000000003335,
+      "min": 0.499999999,
+      "max": 0.500000001,
+      "basis": "identity",
+      "structural": true,
+      "note": "sqrt(D) factors out of the closed form; the centred difference is exact for a power law up to round-off"
+    },
+    "n_eq21_uniform_phi": {
+      "kind": "bound",
+      "value": 0.49999999999987554,
+      "min": 0.499999999,
+      "max": 0.500000001,
+      "basis": "identity",
+      "structural": true,
+      "note": "sqrt(D) factors out of the closed form; the centred difference is exact for a power law up to round-off"
+    },
+    "n_eq22_patchwork": {
+      "kind": "bound",
+      "value": 0.5000000000005,
+      "min": 0.499999999,
+      "max": 0.500000001,
+      "basis": "identity",
+      "structural": true,
+      "note": "sqrt(D) factors out of the closed form; the centred difference is exact for a power law up to round-off"
+    },
+    "n_eq10_kS1": {
+      "kind": "bound",
+      "value": 0.2500000000005276,
+      "min": 0.249999999,
+      "max": 0.250000001,
+      "basis": "theory",
+      "note": "1/2 times the liquid share of the resistance, 1/2 at k_S = sqrt(Ds)"
+    },
+    "eq25_collapse_to_eq9": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "quad at epsrel 1e-12"
+    },
+    "eq25_printed_growth_rate": {
+      "kind": "value",
+      "value": 0.9600000000000002,
+      "rtol": 0.05
+    },
+    "eq25_printed_ratio_T40_over_T20": {
+      "kind": "value",
+      "value": 155539794.24695045,
+      "rtol": 0.05
+    },
+    "eq25_collapse_worst_over_Hk": {
+      "kind": "bound",
+      "value": 5.551115123125783e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "15 (H, k) points, quad at epsrel 1e-12"
+    },
+    "eq25_printed_best_dev_over_Hk": {
+      "kind": "value",
+      "value": 0.04152286950822215,
+      "rtol": 0.05
+    },
+    "eq25_printed_divergent_points": {
+      "kind": "exact",
+      "value": 7,
+      "margin": 0.020000000000000462,
+      "min_margin": 0.01,
+      "note": "points of the sweep where k^2(H-1) > sD"
+    },
+    "n_eq25_uniform_phi_min": {
+      "kind": "value",
+      "value": 0.033811472467393244,
+      "rtol": 0.05
+    },
+    "n_eq25_uniform_phi_max": {
+      "kind": "value",
+      "value": 0.4548157521810925,
+      "rtol": 0.05
+    },
+    "layer_1h_mm": {
+      "kind": "value",
+      "value": 2.1409489393833256,
+      "rtol": 0.05
+    },
+    "depth_coefficient": {
+      "kind": "value",
+      "value": 3.6427727354368997,
+      "rtol": 0.001
+    },
+    "depth_coefficient_rel": {
+      "kind": "value",
+      "value": 0.011881315399138836,
+      "rtol": 0.05
+    },
+    "depth_1h_mm": {
+      "kind": "value",
+      "value": 6.8305197459637,
+      "rtol": 0.05
+    },
+    "L_falling_film": {
+      "kind": "value",
+      "value": 0.05096839959225281,
+      "rtol": 0.05
+    },
+    "L_falling_film_rel": {
+      "kind": "value",
+      "value": 0.019367991845056,
+      "rtol": 0.05
+    },
+    "erf_deficit_at_sthetac_1p5": {
+      "kind": "value",
+      "value": 0.08326451666355039,
+      "rtol": 0.05
+    },
+    "sthetac_for_exactly_10pct": {
+      "kind": "value",
+      "value": 1.3527717270477078,
+      "rtol": 0.001
+    },
+    "frac_R_from_ages_over_0p33s": {
+      "kind": "value",
+      "value": 0.06927988322120204,
+      "rtol": 0.05
+    },
+    "eq36_ratio_at_printed_50": {
+      "kind": "value",
+      "value": 0.9418629694294466,
+      "rtol": 0.0001
+    },
+    "eq36_closed_vs_quadrature": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "note": "quad at epsrel 1e-13"
+    },
+    "eq36_threshold_c0p_over_cstar": {
+      "kind": "value",
+      "value": 53.00936208502032,
+      "rtol": 0.0001
+    },
+    "eq36_threshold_rel_to_printed": {
+      "kind": "value",
+      "value": 0.060187241700406346,
+      "rtol": 0.05
+    },
+    "eq17_from_eq15_16": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-13,
+      "basis": "identity",
+      "note": "eq. 16 solved by brentq at xtol 1e-15"
+    },
+    "eq17_swapped_erf_dev": {
+      "kind": "value",
+      "value": 0.6666666666666667,
+      "rtol": 0.05
+    },
+    "time_order": {
+      "kind": "bound",
+      "value": 0.9991710908849047,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler, successive differences, n_t 3200/6400/12800"
+    },
+    "time_order_min": {
+      "kind": "bound",
+      "value": 0.9857281684750006,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "every triple from n_t = 200"
+    },
+    "time_order_extrapolated": {
+      "kind": "bound",
+      "value": 2.009746267846103,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "2 R(2n) - R(n), n 1600/3200/6400"
+    },
+    "space_order": {
+      "kind": "bound",
+      "value": 1.999938058370738,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences, n_x 400/800/1600"
+    },
+    "space_order_min": {
+      "kind": "bound",
+      "value": 1.996055175651739,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "every triple from n_x = 50"
+    },
+    "time_ladder_finest_diff_over_roundoff": {
+      "kind": "bound",
+      "value": 176464.67900191413,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest step difference against round-off of R"
+    },
+    "space_ladder_finest_diff_over_roundoff": {
+      "kind": "bound",
+      "value": 16134.052045373997,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest grid difference against round-off of R"
+    },
+    "time_err_n1600": {
+      "kind": "value",
+      "value": 0.0006428041742969626,
+      "rtol": 0.05
+    },
+    "space_err_n400": {
+      "kind": "value",
+      "value": 3.922043238302475e-05,
+      "rtol": 0.05
+    },
+    "time_err_extrapolated_n1600": {
+      "kind": "bound",
+      "value": 4.949977379098414e-07,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "2 R(3200) - R(1600) against the limit of the extrapolated ladder"
+    },
+    "grid_ladder_limit_minus_step_err": {
+      "kind": "bound",
+      "value": 2.0453971849576646e-11,
+      "max": 1e-08,
+      "basis": "chosen",
+      "note": "grid limit against sqrt(Ds), less the step error of its 1600/3200 pair: what neither ladder sees (finite depth and age range)"
+    },
+    "closed_forms_dev_minus_budget_worst": {
+      "kind": "bound",
+      "value": 9.002143341922087e-09,
+      "max": 3e-08,
+      "basis": "chosen",
+      "note": "deviation from the closed form less the grid and step error estimates, over the three closed forms and the four finite layers"
+    },
+    "production_grid_over_step_err_min": {
+      "kind": "bound",
+      "value": 54.056189402911286,
+      "min": 10.0,
+      "basis": "chosen",
+      "note": "eqs. 8, 10/30, 12/34 at 400 cells, steps 1600/3200 extrapolated"
+    },
+    "coth_grid_over_step_err_min": {
+      "kind": "value",
+      "value": 1.9796634805411908,
+      "rtol": 0.05
+    },
+    "psi_massbalance_vs_gradient": {
+      "kind": "bound",
+      "value": 4.558098343210304e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "mass balance against compute_boundary_values at the surface; the gap is the volume-weighted residual of the banded solve"
+    },
+    "psi_vs_eq3_resolved": {
+      "kind": "value",
+      "value": 0.0520479409008614,
+      "rtol": 0.05
+    },
+    "psi_vs_eq3_above_0p1": {
+      "kind": "value",
+      "value": 0.0053611841794389825,
+      "rtol": 0.05
+    },
+    "psi_eq3_err_drop_steps_x2": {
+      "kind": "bound",
+      "value": 2.008215076017835,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "raw backward Euler, first order in the step"
+    },
+    "dirichlet_base_shift_depth45": {
+      "kind": "bound",
+      "value": 1.9984014443252818e-15,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "45 diffusion lengths: the base face is out of reach of the surface"
+    },
+    "dirichlet_base_shift_depth3": {
+      "kind": "value",
+      "value": -0.0023442155393739172,
+      "rtol": 0.05
+    },
+    "so_source_jacobian_vs_fd": {
+      "kind": "bound",
+      "value": 1.904087209880805e-08,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "note": "pymrm.checks.check_jacobian, central differences at eps^(1/3)"
+    },
+    "so_err_at_printed_50_pct": {
+      "kind": "value",
+      "value": 0.2102472396554811,
+      "rtol": 0.01
+    },
+    "so_err_at_ratio_1_pct": {
+      "kind": "value",
+      "value": 8.824458268347811,
+      "rtol": 0.01
+    },
+    "so_err_at_printed_50_raw_pct": {
+      "kind": "value",
+      "value": 0.3132994664964306,
+      "rtol": 0.05
+    },
+    "so_err_at_printed_50_step_only_pct": {
+      "kind": "value",
+      "value": 0.22032859646039515,
+      "rtol": 0.01
+    },
+    "so_sweep_points_below_1pct": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.036279254192318255,
+      "min_margin": 0.01,
+      "note": "sweep points c_o'/c* = 1 to 100 where eq. 12 is within 1 %"
+    },
+    "so_err_at_c0p_10_pct": {
+      "kind": "value",
+      "value": 1.0362792541923183,
+      "rtol": 0.01
+    },
+    "so_err_at_c0p_2_pct": {
+      "kind": "value",
+      "value": 4.832043107243367,
+      "rtol": 0.01
+    },
+    "so_newton_iters_max": {
+      "kind": "exact",
+      "value": 3
+    },
+    "so_control_raw_n400_pct": {
+      "kind": "value",
+      "value": 0.10058833719253091,
+      "rtol": 0.05
+    },
+    "so_control_extrap_pct": {
+      "kind": "value",
+      "value": 0.010382699921573924,
+      "rtol": 0.05
+    },
+    "so_control_full_pct": {
+      "kind": "bound",
+      "value": 0.000325343818263768,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "what is left of the discretisation after both extrapolations, in %"
+    },
+    "so_10pct_point_c0p_over_cstar": {
+      "kind": "value",
+      "value": 0.8559389094837101,
+      "rtol": 0.01
+    },
+    "eq36_conservative_factor": {
+      "kind": "value",
+      "value": 61.93124473917747,
+      "rtol": 0.01
+    },
+    "inst_vs_eq15_worst_pct": {
+      "kind": "value",
+      "value": 0.4797189815823111,
+      "rtol": 0.01
+    },
+    "inst_vs_eq15_worst_raw_pct": {
+      "kind": "value",
+      "value": 0.6489606463883524,
+      "rtol": 0.05
+    },
+    "inst_rows_below_eq15": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.0012789745875374514,
+      "min_margin": 0.0005,
+      "note": "dev. in %; the closest row is D'/D = 2, whose step error is about 2e-4 %"
+    },
+    "inst_dev_at_ratio_300_pct": {
+      "kind": "value",
+      "value": -4.150489995195672,
+      "rtol": 0.01
+    },
+    "inst_dev_at_ratio_10000_pct": {
+      "kind": "value",
+      "value": -0.14626527846168802,
+      "rtol": 0.01
+    },
+    "kL_coth_worst_rel": {
+      "kind": "value",
+      "value": 7.358051284600542e-06,
+      "rtol": 0.05
+    },
+    "z_at_n_0p75": {
+      "kind": "value",
+      "value": 1.0886594924826538,
+      "rtol": 0.0001
+    },
+    "z_at_n_0p55": {
+      "kind": "value",
+      "value": 2.249956998513644,
+      "rtol": 0.0001
+    },
+    "n_at_z_3p6": {
+      "kind": "value",
+      "value": 0.5053754208165199,
+      "rtol": 0.0001
+    },
+    "kL_implied_by_s5_cm_s": {
+      "kind": "value",
+      "value": 0.007071067811865475,
+      "rtol": 0.05
+    },
+    "xL_film_equivalent_um": {
+      "kind": "value",
+      "value": 14.142135623730953,
+      "rtol": 0.05
+    },
+    "D_ratio_needed_3sigma_5pct": {
+      "kind": "value",
+      "value": 1.5284651603231783,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "R_vs_eq30_rel": [
+      "surface Robin condition with the sign of b flipped"
+    ],
+    "R_vs_eq34_rel": [
+      "reacting element with a Dirichlet base, its outflow read from the last cell centre",
+      "surface flux read as accumulation only (reaction dropped from the balance)"
+    ],
+    "dirichlet_base_shift_depth45": [
+      "reacting element with a Dirichlet base, its outflow read from the last cell centre"
+    ],
+    "dirichlet_base_shift_depth3": [
+      "element 3 deep without reaction (r = 0)"
+    ],
+    "psi_massbalance_vs_gradient": [
+      "surface flux read as accumulation only (reaction dropped from the balance)",
+      "layer z = 1: base outflow read from the last cell centre, not the face",
+      "surface flux read from the first cell centre, -D (c_1 - c*)/x_1, not compute_boundary_values"
+    ],
+    "R_vs_eq8_rel": [
+      "age integral truncated at s theta_c = 1.5",
+      "element truncated at x sqrt(s/D) = 1.5 instead of 45",
+      "grid coarsened to n_x = 50"
+    ],
+    "closed_forms_dev_minus_budget_worst": [
+      "element truncated at x sqrt(s/D) = 3 (the budget refines neither depth nor age range)"
+    ],
+    "R_vs_eq8_raw_rel": [
+      "steps coarsened to n_t = 200 (raw)"
+    ],
+    "psi_vs_eq3_above_0p1": [
+      "steps coarsened to n_t = 200 (raw)"
+    ],
+    "psi_vs_eq3_resolved": [
+      "steps coarsened to n_t = 200 (raw)"
+    ],
+    "psi_eq3_err_drop_steps_x2": [
+      "pointwise flux error compared at the same step count (no refinement)"
+    ],
+    "production_grid_over_step_err_min": [
+      "closed forms at n_t = 100/200 steps"
+    ],
+    "coth_grid_over_step_err_min": [
+      "finite layers at n_t = 100/200 steps"
+    ],
+    "time_order": [
+      "step orders from errors against the exact value (grid error left in)"
+    ],
+    "time_order_min": [
+      "step orders from errors against the exact value (grid error left in)"
+    ],
+    "time_order_extrapolated": [
+      "extrapolated ladder formed from R(2n) alone (Richardson combination dropped)"
+    ],
+    "space_order": [
+      "grid ladder refining the steps with the grid (n_t = 4 n_x), raw"
+    ],
+    "space_order_min": [
+      "grid ladder refining the steps with the grid (n_t = 4 n_x), raw"
+    ],
+    "grid_ladder_limit_minus_step_err": [
+      "grid ladder at steps 50/100 (step error left in)",
+      "grid ladder on an element 4 deep"
+    ],
+    "time_ladder_finest_diff_over_roundoff": [
+      "step ladder whose last rung repeats n_t = 6400"
+    ],
+    "space_ladder_finest_diff_over_roundoff": [
+      "grid ladder whose last rung repeats n_x = 800"
+    ],
+    "time_err_n1600": [
+      "production steps n_t = 100"
+    ],
+    "time_err_extrapolated_n1600": [
+      "production steps n_t = 100"
+    ],
+    "space_err_n400": [
+      "grid not stretched toward the surface (stretch = 0)"
+    ],
+    "n_eq10_kS1": [
+      "k_S taken to scale as sqrt(D) (a surface resistance with the liquid's exponent)"
+    ],
+    "eq25_collapse_to_eq9": [
+      "eq. 25 exponent read as printed, k_G^2 theta/(H D)"
+    ],
+    "eq25_collapse_worst_over_Hk": [
+      "eq. 25 exponent read as printed, k_G^2 theta/(H D)"
+    ],
+    "n_eq25_uniform_phi_max": [
+      "eq. 25 exponent read as printed, k_G^2 theta/(H D)"
+    ],
+    "n_eq25_uniform_phi_min": [
+      "eq. 25 exponent read as printed, k_G^2 theta/(H D)"
+    ],
+    "eq25_printed_growth_rate": [
+      "eq. 25 with H squared, as eq. 29 requires"
+    ],
+    "eq25_printed_ratio_T40_over_T20": [
+      "eq. 25 with H squared, as eq. 29 requires"
+    ],
+    "eq25_printed_best_dev_over_Hk": [
+      "eq. 25 with H squared, as eq. 29 requires"
+    ],
+    "eq25_printed_divergent_points": [
+      "eq. 25 with H squared, as eq. 29 requires"
+    ],
+    "layer_1h_mm": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "depth_1h_mm": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "L_falling_film": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "L_falling_film_rel": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "kL_implied_by_s5_cm_s": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "xL_film_equivalent_um": [
+      "D read as 1e-3, as the PDF text layer gives it"
+    ],
+    "depth_coefficient": [
+      "depth-of-penetration fraction read as 1/10 not 1/100"
+    ],
+    "depth_coefficient_rel": [
+      "depth-of-penetration fraction read as 1/10 not 1/100"
+    ],
+    "erf_deficit_at_sthetac_1p5": [
+      "age deficit evaluated as 1 - erf(s theta_c) (the square root dropped)"
+    ],
+    "sthetac_for_exactly_10pct": [
+      "age deficit evaluated as 1 - erf(s theta_c) (the square root dropped)"
+    ],
+    "frac_R_from_ages_over_0p33s": [
+      "age deficit evaluated as 1 - erf(s theta_c) (the square root dropped)"
+    ],
+    "eq36_closed_vs_quadrature": [
+      "eq. 31 with its e^{-r theta}/sqrt(pi r theta) term dropped"
+    ],
+    "eq36_ratio_at_printed_50": [
+      "the 0.05 in eq. 36's theta_c read as 0.1"
+    ],
+    "eq36_threshold_c0p_over_cstar": [
+      "the 0.05 in eq. 36's theta_c read as 0.1"
+    ],
+    "eq36_threshold_rel_to_printed": [
+      "the 0.05 in eq. 36's theta_c read as 0.1"
+    ],
+    "eq36_conservative_factor": [
+      "the 0.05 in eq. 36's theta_c read as 0.1",
+      "10 % point root-found on the raw march (250 cells, n_t = 400)"
+    ],
+    "eq17_from_eq15_16": [
+      "eq. 16 with erf and erfc swapped"
+    ],
+    "eq17_swapped_erf_dev": [
+      "eq. 16 swap evaluated at c_o'/c* = 1, where eq. 16 is symmetric"
+    ],
+    "z_at_n_0p75": [
+      "exponent of the layer written z/sinh(z) instead of z/sinh(2z)"
+    ],
+    "z_at_n_0p55": [
+      "exponent of the layer written z/sinh(z) instead of z/sinh(2z)"
+    ],
+    "n_at_z_3p6": [
+      "exponent of the layer written z/sinh(z) instead of z/sinh(2z)"
+    ],
+    "D_ratio_needed_3sigma_5pct": [
+      "separation from one k_L scatter, not two (sqrt(2) dropped)"
+    ],
+    "kL_coth_worst_rel": [
+      "finite layer at z = 1 given a closed base instead of a well-mixed bulk"
+    ],
+    "so_err_at_printed_50_pct": [
+      "reagent frozen at c_o' (no depletion)"
+    ],
+    "so_err_at_printed_50_step_only_pct": [
+      "reagent frozen at c_o' (no depletion)"
+    ],
+    "so_err_at_printed_50_raw_pct": [
+      "reagent frozen at c_o' (no depletion)"
+    ],
+    "so_err_at_ratio_1_pct": [
+      "reagent frozen at c_o' (no depletion)"
+    ],
+    "so_sweep_points_below_1pct": [
+      "eq. 12 taken with r = 2 r' c_o'"
+    ],
+    "so_err_at_c0p_10_pct": [
+      "eq. 12 taken with r = 2 r' c_o'"
+    ],
+    "so_err_at_c0p_2_pct": [
+      "eq. 12 taken with r = 2 r' c_o'"
+    ],
+    "so_control_raw_n400_pct": [
+      "control raw at n_t = 100"
+    ],
+    "so_control_extrap_pct": [
+      "control extrapolated in the step on n_x = 125"
+    ],
+    "so_control_full_pct": [
+      "control read raw (no extrapolation)"
+    ],
+    "so_source_jacobian_vs_fd": [
+      "Jacobian of the frozen-reagent source given to newton for the depleting one"
+    ],
+    "so_newton_iters_max": [
+      "Jacobian of the frozen-reagent source given to newton for the depleting one"
+    ],
+    "so_10pct_point_c0p_over_cstar": [
+      "10 % point root-found on the raw march (250 cells, n_t = 400)"
+    ],
+    "inst_vs_eq15_worst_pct": [
+      "eq. 16 with erf and erfc swapped, as the instantaneous-limit target"
+    ],
+    "inst_rows_below_eq15": [
+      "eq. 16 with erf and erfc swapped, as the instantaneous-limit target"
+    ],
+    "inst_vs_eq15_worst_raw_pct": [
+      "instantaneous limit taken at r'c_o'/s = 30"
+    ],
+    "inst_dev_at_ratio_300_pct": [
+      "instantaneous limit taken at r'c_o'/s = 30"
+    ],
+    "inst_dev_at_ratio_10000_pct": [
+      "instantaneous limit taken at r'c_o'/s = 30"
+    ]
   }
 }
