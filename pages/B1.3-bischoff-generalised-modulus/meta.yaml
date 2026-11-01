@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 60
+pymrm_min_version: "3.3.0"
+runtime_seconds: 70
 datasets:
   - bischoff-table1.csv
   - pan-zhu-table5.csv
@@ -27,87 +27,90 @@ validation:
     native-resolution renders (Bischoff 300 ppi, Pan & Zhu 600 ppi, both
     CCITT-G4 bilevel; the Bischoff text layer is unreliable and was never
     used for a digit)
-  - three independent routes to eta(m) sharing no assembly - quadrature of the
-    paper's parametric eqs. (14)-(15) with closed-form inner integrals, the
-    printed closed forms eqs. (21)-(28) via scipy elliptic integrals, and
-    pymrm finite volume - agreeing to 2e-12 (routes B/C), 3e-13 (eq. 20)
-    and 2e-6 (pymrm at n_cell = 400, observed order 2.01)
-  - both headline band numbers recomputed on the second route with extrema
-    re-root-found (gap 5e-7); extrema root-found, never sampled, with a break
-    row showing what a 15-point sweep would have under-read
-  - the dead zone solved with a convergence-restoring sqrt(c+eps)
-    regularisation refined over four decades of eps (limit deviation 4e-6
-    against the exact eta = 1/m)
-  - Bischoff Table 1 recomputed from eqs. (33)-(34) - seven cells inside
-    printed rounding, one printed defect isolated by the paper's own arithmetic
-  - the n = 1/2 elliptic reduction as printed proven inconsistent with its own
-    source eq. (20) (29-41% in m) and amended with a labelled two-place fix
-    that agrees to 2e-13; the paper's printed 15% figure shows Figure 1 used
-    the correct reduction
+  - three routes to eta(m) sharing no assembly; quadrature of the paper's
+    parametric eqs. (14)-(15) with closed-form inner integrals against the
+    printed closed forms eqs. (21)-(28) via scipy elliptic integrals and
+    against eq. (20), both below 1e-10; pymrm finite volume against the
+    quadrature for eight rate forms at three moduli, 2.0e-6 on 400 cells, the
+    worst case converging at second order on 100 to 800 cells
+  - concentration-dependent diffusivity solved by one Newton solve on the
+    full residual, d(c) on the faces included (NumJac with axes_diagonals=[0])
+  - the dead zone (n = 1/2, m = 5) solved with a regularised rate and its exact
+    Jacobian, extrapolated in eps on four grids and then in the grid, to
+    within 1e-7 of the exact eta = 1/m; the unregularised solve does not
+    converge at tol 1e-12 with stagnation=True, reports success at newton's
+    default tol on profiles that go negative in the dead zone, and stands
+    behind no number
+  - both headline band values recomputed on the closed forms with the extrema
+    found again (below 1e-9); every extremum on the page is root-found, and a
+    break row shows what a 15-point scan under-reads
+  - Bischoff Table 1 recomputed from eqs. (33)-(34); seven cells inside printed
+    rounding, one printed defect isolated by the paper's own arithmetic
+  - the n = 1/2 elliptic reduction as printed is inconsistent with its own
+    source eq. (20) (29-41% in m) and agrees below 1e-12 once amended in two
+    labelled places; the paper's printed 15% figure shows Figure 1 used the
+    amended reduction
   - eq. (14) as printed (denominator bracket exponent -1/2, read at digit
-    scale; the numerator's inner bracket correctly prints -1/2) proven
-    inconsistent with its own parents eqs. (8)+(13) and with the printed
-    eq. (21) - m low by exactly the factor 1/(n+1), dimensionally
-    inconsistent in dimensional form; the forced +1/2 reading is used and
-    labelled, the fifth printed defect reported
-  - Pan & Zhu Tables 5 and 6 reproduced from their printed definitions
-    (mu1 series to 5e-5; both Table 6 columns to <= 6e-4), exposing a copied
-    mu2 cell and a sign misprint in their eq. (36), both proven from their own
-    numbers
-  - pymrm 2-D finite cylinder against the exact first-order double series
-    (the same series B1.2 validated) to 6e-5
-  - defect-injection table with twelve rows including a deliberate null;
-    a final cell maps every agreement metric to the break row that moves it
-    or labels it structural
-  - cross-page reconciliation against B1.1's published slab table at equal
-    modulus (identical closed form - labelled structural, tests loading and
-    conventions only)
+    scale; the numerator's inner bracket correctly prints -1/2) is inconsistent
+    with its own parents eqs. (8)+(13) and with the printed eq. (21), m low by
+    exactly the factor 1/(n+1); the forced +1/2 reading is used and labelled
+  - Pan & Zhu Tables 5 and 6 reproduced from their printed definitions (mu1
+    series to 5.1e-5, both Table 6 columns to 6e-4), exposing a copied mu2
+    cell and a sign misprint in their eq. (36), both shown from their own
+    numbers; every series truncation measured by doubling the terms
+  - the exported LHHW and volume-change rows checked by their closed-form rate integrals
+    against nested quadrature at m = 20 below 1e-12
+  - pymrm 2-D finite cylinder against the exact first-order double series (the
+    one B1.2 validates) to 6.3e-5; the second-order reference changes by less
+    than 1e-4 on a twice finer grid
+  - defect-injection table with one row per injected defect; every claim is
+    failed by at least one row
+  - B1.1's published slab table reconciled to 3.4e-6, every row within the
+    rounding of its stored digits
 
 adds: >
-  Nothing to the modulus itself - eq. (13) is one line and is used exactly as
+  Nothing to the modulus itself: eq. (13) is one line and is used exactly as
   printed. What is added is the measurement the 1965 claims never got: both
   headline spreads root-found on exact curves (14.61% at m = 1.270 for orders
   one-half to three, matching "about 15%" as eta_max/eta_min - 1; 40.55%
   max/min = 28.85% of the upper curve at the zero-order kink m = 1 exactly,
-  matching "about 30%" only in the fraction-of-upper reading - the page pins
-  which reading makes each printed claim true), against 68.2% / 120.6% peak
-  and 63.3% / 41.4% permanent spread on the standard modulus. The LHHW family
-  Bischoff only redrew from Chu & Hougen is computed: its collapse band is
-  30.16%, so his "again about the same" is right against the ~30% figure, not
-  the headline 15%; on Chu & Hougen's modulus the family never coincides (a
-  factor ~23 asymptotically). The volume-change family collapses to within
-  3.18% of the first-order curve and never leaves the Figure-1 envelope,
-  and Table 1's correction factors are recomputed exactly. Two things the
-  paper does not contain: a dead-zone onset formula, m* = (n+1)/(1-n),
-  derived here from its eq. (14); and the out-of-sample audit - on a finite
-  cylinder with second-order kinetics, the shape's own first-order curve read
-  at the generalised modulus (the Aris + Bischoff combination) predicts the
-  exact 2-D pymrm solution to 0.030 absolute (4.4% relative, inside the
-  advertised band), while reading Figure 1's slab curve costs 0.099 (the
-  B1.2 shape band) and Pan & Zhu's 1998 "arbitrary kinetics, < 1.5%"
-  polynomial misses by 0.090 - six times its claimed bound.
+  matching "about 30%" only in the fraction-of-upper reading), against 68.2% /
+  120.6% peak and 63.3% / 100% large-modulus spread on the standard modulus.
+  The LHHW family Bischoff only redrew from Chu & Hougen is computed: its band
+  is 30.16% as max/min and 23.17% as a fraction of the upper curve, between the
+  two simple-order bands in either reading and nearer the one with zero order;
+  on Chu & Hougen's modulus the family never coincides (a factor of about 23
+  at large modulus). The volume-change family stays within 3.18% of the
+  first-order curve and inside the Figure-1 envelope, and Table 1's
+  correction factors are recomputed exactly. Two things the paper does not
+  contain: a dead-zone onset formula, m* = (n+1)/(1-n), derived here from its
+  eq. (14); and the out-of-sample audit. On a finite cylinder with
+  second-order kinetics, the shape's own first-order curve read at the
+  generalised modulus (the Aris + Bischoff combination) predicts the 2-D
+  pymrm solution to 0.030 absolute (4.4% relative, inside the advertised
+  band), reading Figure 1's slab curve costs 0.099 (the B1.2 shape band), and
+  Pan & Zhu's 1998 "arbitrary kinetics, < 1.5%" polynomial misses by 0.090,
+  six times its claimed bound.
 
 agreement: >
-  Not applicable in the experimental sense - tier 6. The checks with
-  resolving power: three routes to eta(m) sharing no assembly agree to
-  2.2e-12 (parametric quadrature vs the printed closed forms), 2.7e-13
-  (vs eq. 20) and 2.0e-6 (pymrm finite volume at n_cell = 400, observed
-  order 2.01); both headline bands recomputed on the independent route agree
-  to 4.8e-7 with extrema re-root-found; the dead-zone onset m* = 3 is
-  recovered from the quadrature to 4.6e-14 by u^(1/4) extrapolation and the
-  regularised dead-zone solve reaches the exact eta = 1/m to 4.3e-6; the 2-D
-  cylinder solve matches the exact first-order series to 6.3e-5; Bischoff's
-  Table 1 is reproduced to 0.0027 worst (three eq.-33 cells) and 0.0019
-  (all four eq.-34 cells); Pan & Zhu's Table 5 mu1 row to 5.1e-5 and both
-  Table 6 columns to 3.1e-4 / 5.9e-4 - against which the printed defects
-  stand out at 0.0057 absolute (Table 1 cell, 11x its half-ULP rounding
-  radius), 29-41% (eq. 27 as printed), a constant factor 1/(n+1) in m
-  (eq. 14 as printed - 75% low at n = 3), 0.10 (their mu2 cell) and a sign
-  that sends their own eta_a negative (their eq. 36). Pan & Zhu's own
-  printed Table 6 caps their "< 1.5%" claim: the worst absolute gap is a
-  tie at 0.013 (Z = 2, phi = 4 and 6), and the phi = 6 member is 3.7%
-  relative, so the claim holds only in the absolute reading. B1.1's slab
-  table is reconciled to 3.4e-6, the stored precision of that CSV.
+  Not applicable in the experimental sense: tier 6. The checks with resolving
+  power: the parametric quadrature agrees with the printed closed forms and
+  with eq. (20) below 1e-10; pymrm finite volume agrees with it to 2.0e-6 on
+  400 cells over eight rate forms, at second order; both headline bands agree
+  between the two routes below 1e-9; the dead-zone onset m* = 3 is recovered
+  from the quadrature below 1e-10, and the regularised dead-zone solve
+  extrapolates to the exact eta = 1/m within 1e-7; the 2-D cylinder matches the
+  exact first-order series to 6.3e-5; Bischoff's Table 1 is reproduced to
+  0.0027 (three eq.-33 cells) and 0.0019 (all four eq.-34 cells); Pan & Zhu's
+  Table 5 mu1 row to 5.1e-5 and both Table 6 columns to 3.1e-4 and 5.9e-4.
+  Against these, the printed defects stand out at 0.0057 absolute (a Table 1
+  cell, 11 times its half-unit rounding radius), 29-41% (eq. 27 as printed), a
+  constant factor 1/(n+1) in m (eq. 14 as printed, 75% low at n = 3), 0.10
+  (their mu2 cell) and a sign that sends their own eta_a negative (their
+  eq. 36). Pan & Zhu's own printed Table 6 caps their "< 1.5%" claim: the worst
+  absolute gap is a tie at 0.013 (Z = 2, phi = 4 and 6), and the phi = 6 member
+  is 3.65% relative, so the claim holds only in the absolute reading. B1.1's
+  slab table is reconciled to 3.4e-6, within the rounding of its stored digits.
 
 caveats: >
   Provenance tier 6 and NOT experimental validation - neither source reports a
