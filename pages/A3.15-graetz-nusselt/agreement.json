@@ -1,27 +1,598 @@
 {
   "page": "A3.15",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "mu1_rel_err_2d": 5.453964100565756e-06,
-    "p1_rel_err_2d": 0.00042131823181379424,
-    "p1_area_rel_err_2d": 0.0004294634659807173,
-    "nu_infinity": 3.65679345776446,
-    "order_mu1_axial": 1.9437536526960735,
-    "order_mu1_radial": 2.1189725872230634,
-    "leveque_const_rel_err": 0.0002873124726283649,
-    "series_coeff_mu8_printed_err": 0.005791032974015842,
-    "series_coeff_mu10_printed_err": 0.6229906764222204,
-    "mu1_printed_rel_err": 2.3820710881361506e-05,
-    "mu2_printed_rel_err": 0.026805001699046427,
-    "calibration_logp1_abs_err": 2.284313347011846e-05,
-    "formula_reproduces_kc_mean_dev": 0.0070821908652992215,
-    "axial_conduction_rel_effect": 5.9116194097708075e-06,
-    "kc_spread_calibration_unfitted": 0.15582336714889092,
-    "kc_spread_out_of_sample_water": 0.16980813975194303,
-    "kc_spread_out_of_sample_cuso4": 0.20890205913870105,
-    "kc_spread_out_of_sample_alcohol": 0.17758505214863857,
-    "kc_spread_thermometry_sigma": 0.007655514716009398,
-    "kc_spread_thermometry_sigma_wide": 0.01945472697660702,
-    "water_k_shift_unfitted": -0.21612154756122826,
-    "head_I_over_III_amplification": 3.0982917217782218
+    "T_mean_rows_within_0p02": {
+      "kind": "exact",
+      "value": 44,
+      "margin": 0.009999999999998437,
+      "min_margin": 0.001,
+      "note": "rows with |(T_in+T_out)/2 - T| below 0.02 K; margin in K"
+    },
+    "newton_vs_deferred_field": {
+      "kind": "bound",
+      "value": 3.65241170641184e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "Newton tol 1e-11, sweeps to an unrelaxed change of 1e-11"
+    },
+    "deferred_omega1_change_after_120": {
+      "kind": "value",
+      "value": 0.00015341921804257197,
+      "rtol": 0.05
+    },
+    "deferred_omega1_period2_ratio": {
+      "kind": "bound",
+      "value": 0.00014631114835700966,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "change over two sweeps over the change per sweep; 0 for an exact cycle"
+    },
+    "p1_cup": {
+      "kind": "value",
+      "value": 0.8190504206324473,
+      "rtol": 1e-06
+    },
+    "p2_cup": {
+      "kind": "value",
+      "value": 0.097526927322372,
+      "rtol": 1e-06
+    },
+    "nu_infinity": {
+      "kind": "value",
+      "value": 3.65679345776446,
+      "rtol": 1e-06
+    },
+    "amplitude_quadrature_identity": {
+      "kind": "bound",
+      "value": 3.2343163036685496e-08,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "note": "trapezoid on 40001 points; the ODE makes it zero"
+    },
+    "series_coeffs_right_to_printed_digits": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.7938983050860262,
+      "min_margin": 0.5,
+      "note": "printed coefficients mu^2..mu^10 within 1e-4 relative; relative distance of the nearest to 1e-4"
+    },
+    "series_coeff_mu8_printed_err": {
+      "kind": "value",
+      "value": 0.005791032974015842,
+      "rtol": 0.001
+    },
+    "series_coeff_mu10_printed_err": {
+      "kind": "value",
+      "value": 0.6229906764222204,
+      "rtol": 0.001
+    },
+    "mu1_printed_rel_err": {
+      "kind": "value",
+      "value": 2.3820710881361506e-05,
+      "rtol": 0.01
+    },
+    "mu2_printed_rel_err": {
+      "kind": "value",
+      "value": 0.026805001699046427,
+      "rtol": 0.001
+    },
+    "bessel_zeros_printed_max_err": {
+      "kind": "value",
+      "value": 4.2598642508551166e-05,
+      "rtol": 0.01
+    },
+    "order_mu1_axial": {
+      "kind": "bound",
+      "value": 1.9421600405647865,
+      "min": 1.8,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences, n_z 300/600/1200 at n_r 256"
+    },
+    "order_mu1_axial_min": {
+      "kind": "bound",
+      "value": 1.8267663490940573,
+      "min": 1.75,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "all triples from n_z = 75; pre-asymptotic below 2"
+    },
+    "order_mu1_radial": {
+      "kind": "bound",
+      "value": 2.001797518701008,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences, n_r 32/64/128 at n_z 800"
+    },
+    "order_mu1_radial_min": {
+      "kind": "bound",
+      "value": 2.001797518701008,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "all triples from n_r = 16"
+    },
+    "ladder_axial_finest_diff_over_tol": {
+      "kind": "bound",
+      "value": 11851295.263465289,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "smallest successive mu_1 difference over Newton tol"
+    },
+    "ladder_radial_finest_diff_over_tol": {
+      "kind": "bound",
+      "value": 43210608.631394364,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "smallest successive mu_1 difference over Newton tol"
+    },
+    "upwind_cells_factor_n75": {
+      "kind": "value",
+      "value": 14.82841037704219,
+      "rtol": 0.05,
+      "note": "axial errors only"
+    },
+    "upwind_cells_factor_n300": {
+      "kind": "value",
+      "value": 51.752256183896094,
+      "rtol": 0.05,
+      "note": "axial errors only"
+    },
+    "mu1_rel_err_2d": {
+      "kind": "value",
+      "value": 5.4539643159490225e-06,
+      "rtol": 0.05,
+      "note": "a cancellation of the two components"
+    },
+    "mu1_err_axial_component_n600": {
+      "kind": "value",
+      "value": 5.92381998574254e-05,
+      "rtol": 0.05
+    },
+    "mu1_err_radial_component_n128": {
+      "kind": "value",
+      "value": -5.317195015319687e-05,
+      "rtol": 0.05
+    },
+    "mu1_rel_err_600x256": {
+      "kind": "value",
+      "value": 4.538956598110211e-05,
+      "rtol": 0.05
+    },
+    "mu1_rel_err_1200x128": {
+      "kind": "value",
+      "value": 3.8364146991543e-05,
+      "rtol": 0.05
+    },
+    "mu1_components_separability_gap": {
+      "kind": "bound",
+      "value": 6.122853882795098e-07,
+      "max": 2e-06,
+      "basis": "chosen",
+      "note": "components from the ladders reproduce two grids outside them; below 1/20 of either component"
+    },
+    "fit_window_bias_exact_series": {
+      "kind": "bound",
+      "value": 7.44549510933723e-09,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "decay() on the 10-term series at the published x points, x > 0.35"
+    },
+    "p1_rel_err_2d": {
+      "kind": "value",
+      "value": 0.00042131823261470913,
+      "rtol": 0.05
+    },
+    "p1_area_rel_err_2d": {
+      "kind": "value",
+      "value": 0.0004294634667818542,
+      "rtol": 0.05
+    },
+    "leveque_const_rel_err": {
+      "kind": "value",
+      "value": 0.0002873124723546949,
+      "rtol": 0.05
+    },
+    "leveque_order": {
+      "kind": "bound",
+      "value": 2.0437198433277137,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "successive differences, rungs 200 to 800"
+    },
+    "leveque_order_min": {
+      "kind": "bound",
+      "value": 2.0066902869608754,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "successive differences, every triple"
+    },
+    "leveque_richardson_rel_err": {
+      "kind": "value",
+      "value": 3.79307478406421e-05,
+      "rtol": 0.1,
+      "note": "Richardson on 400x160 and 800x320; the previous pair gives less"
+    },
+    "calibration_logp1_abs_err": {
+      "kind": "value",
+      "value": 2.284313347011846e-05,
+      "rtol": 0.01
+    },
+    "calibration_p2_rel_err": {
+      "kind": "value",
+      "value": 0.007938071626340193,
+      "rtol": 0.01
+    },
+    "p2_computed_over_fitted": {
+      "kind": "value",
+      "value": 7.808400906514973,
+      "rtol": 0.001
+    },
+    "formula_reproduces_kc_mean_dev": {
+      "kind": "value",
+      "value": 0.0070821908652992215,
+      "rtol": 0.01
+    },
+    "formula_misprint_kc_mean_dev": {
+      "kind": "value",
+      "value": 0.2631133657753228,
+      "rtol": 0.01
+    },
+    "axial_conduction_rel_effect": {
+      "kind": "value",
+      "value": 5.9116194097708075e-06,
+      "rtol": 0.01
+    },
+    "axial_pert_rel_gap": {
+      "kind": "bound",
+      "value": 6.7873186655464934e-06,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "C extrapolated to large Pe on 600x128, fit on 0.35 < x < 0.8, against the perturbation result; the residual is the grid's and the extrapolation's"
+    },
+    "axial_pert_C_predicted": {
+      "kind": "value",
+      "value": -4.575473021665926,
+      "rtol": 0.0001
+    },
+    "flow_vs_head_exponent_mean": {
+      "kind": "value",
+      "value": 0.9818018999809691,
+      "rtol": 0.01
+    },
+    "kc_spread_calibration_unfitted": {
+      "kind": "value",
+      "value": 0.15582336714889092,
+      "rtol": 0.01
+    },
+    "kc_spread_area_mean": {
+      "kind": "value",
+      "value": 1.1894412150894023,
+      "rtol": 0.01
+    },
+    "kc_10_vs_20_modes": {
+      "kind": "bound",
+      "value": 2.4424906541753444e-15,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "the 11th mode is damped below 1e-16 at the calibration runs"
+    },
+    "kc_spread_2d_route": {
+      "kind": "value",
+      "value": 0.15581193705865562,
+      "rtol": 0.01
+    },
+    "kc_spread_thermometry_sigma": {
+      "kind": "value",
+      "value": 0.007655514716009398,
+      "rtol": 0.01
+    },
+    "kc_spread_thermometry_sigma_wide": {
+      "kind": "value",
+      "value": 0.01945472697660702,
+      "rtol": 0.01
+    },
+    "kc_spread_significance": {
+      "kind": "value",
+      "value": 20.354394567752486,
+      "rtol": 0.01
+    },
+    "kc_spread_significance_wide": {
+      "kind": "value",
+      "value": 8.00953759650587,
+      "rtol": 0.01
+    },
+    "liquids_lowest_head_highest_kc": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.012345860890013771,
+      "min_margin": 0.001,
+      "note": "k/c at the lowest head over the next highest, minus 1, per multi-head liquid; computed constants"
+    },
+    "kc_spread_out_of_sample_water": {
+      "kind": "value",
+      "value": 0.16980813975194303,
+      "rtol": 0.01
+    },
+    "kc_spread_out_of_sample_water_fitted": {
+      "kind": "value",
+      "value": 0.03567797648679464,
+      "rtol": 0.01
+    },
+    "kc_spread_out_of_sample_cuso4": {
+      "kind": "value",
+      "value": 0.20890205913870125,
+      "rtol": 0.01
+    },
+    "kc_spread_out_of_sample_cuso4_fitted": {
+      "kind": "value",
+      "value": 0.04759464564257267,
+      "rtol": 0.01
+    },
+    "kc_spread_out_of_sample_alcohol": {
+      "kind": "value",
+      "value": 0.17758505214863857,
+      "rtol": 0.01
+    },
+    "kc_spread_out_of_sample_alcohol_fitted": {
+      "kind": "value",
+      "value": 0.07209514827512307,
+      "rtol": 0.01
+    },
+    "runs_never_fitted": {
+      "kind": "exact",
+      "value": 48,
+      "structural": true,
+      "note": "rows of the CSV minus the starred calibration rows"
+    },
+    "water_k_shift_unfitted": {
+      "kind": "value",
+      "value": -0.21612154756122814,
+      "rtol": 0.01
+    },
+    "k_drop_unfitted_least": {
+      "kind": "value",
+      "value": 0.16563844277779483,
+      "rtol": 0.01,
+      "note": "smallest fall of a liquid's mean k without the fit"
+    },
+    "k_drop_unfitted_most": {
+      "kind": "value",
+      "value": 0.24453805403968498,
+      "rtol": 0.01,
+      "note": "largest fall of a liquid's mean k without the fit"
+    },
+    "head_I_over_III_amplification": {
+      "kind": "value",
+      "value": 3.098291721762622,
+      "rtol": 0.01
+    }
+  },
+  "quoted": {
+    "newton_vs_deferred_field": [
+      "below 1e-10"
+    ],
+    "amplitude_quadrature_identity": [
+      "below 1e-6"
+    ],
+    "fit_window_bias_exact_series": [
+      "below 1e-7"
+    ],
+    "kc_10_vs_20_modes": [
+      "below 1e-12"
+    ]
+  },
+  "breaks": {
+    "mu1_rel_err_2d": [
+      "nu_r=0",
+      "plug=True",
+      "limiter=None",
+      "n_r=8"
+    ],
+    "p1_rel_err_2d": [
+      "nu_r=0",
+      "plug=True",
+      "limiter=None",
+      "n_r=8"
+    ],
+    "p1_area_rel_err_2d": [
+      "nu_r=0",
+      "plug=True",
+      "limiter=None",
+      "n_r=8"
+    ],
+    "newton_vs_deferred_field": [
+      "deferred correction stopped at a change of 1e-6"
+    ],
+    "deferred_omega1_change_after_120": [
+      "omega=0.8 instead of 1"
+    ],
+    "deferred_omega1_period2_ratio": [
+      "omega=0.9 instead of 1"
+    ],
+    "order_mu1_axial": [
+      "limiter=None in the ladder"
+    ],
+    "order_mu1_axial_min": [
+      "limiter=None in the ladder"
+    ],
+    "order_mu1_radial": [
+      "r_grade=0.5 (coarsest cells at the wall)"
+    ],
+    "order_mu1_radial_min": [
+      "r_grade=0.5 (coarsest cells at the wall)"
+    ],
+    "ladder_axial_finest_diff_over_tol": [
+      "guard evaluated for a Newton tol of 1e-6 (same differences)"
+    ],
+    "ladder_radial_finest_diff_over_tol": [
+      "guard evaluated for a Newton tol of 1e-6 (same differences)"
+    ],
+    "upwind_cells_factor_n75": [
+      "van Leer axial errors replaced by upwind"
+    ],
+    "upwind_cells_factor_n300": [
+      "van Leer axial errors replaced by upwind"
+    ],
+    "mu1_err_axial_component_n600": [
+      "Richardson limits taken with order 1"
+    ],
+    "mu1_err_radial_component_n128": [
+      "Richardson limits taken with order 1"
+    ],
+    "mu1_components_separability_gap": [
+      "Richardson limits taken with order 1"
+    ],
+    "mu1_rel_err_600x256": [
+      "limiter=None"
+    ],
+    "mu1_rel_err_1200x128": [
+      "limiter=None"
+    ],
+    "fit_window_bias_exact_series": [
+      "fit window from x = 0.05"
+    ],
+    "nu_infinity": [
+      "eigen(weight=1): plug flow"
+    ],
+    "mu1_printed_rel_err": [
+      "eigen(weight=1): plug flow"
+    ],
+    "mu2_printed_rel_err": [
+      "eigen(weight=1): plug flow"
+    ],
+    "p1_cup": [
+      "p_1 of the area mean"
+    ],
+    "p2_cup": [
+      "p_2 of the area mean"
+    ],
+    "amplitude_quadrature_identity": [
+      "amplitudes(n=401)"
+    ],
+    "bessel_zeros_printed_max_err": [
+      "jn_zeros(1, ...): J_1 instead of J_0"
+    ],
+    "leveque_const_rel_err": [
+      "plug=True",
+      "r_grade=1.0"
+    ],
+    "leveque_richardson_rel_err": [
+      "plug=True"
+    ],
+    "leveque_order": [
+      "limiter=None"
+    ],
+    "leveque_order_min": [
+      "limiter=None"
+    ],
+    "series_coeff_mu8_printed_err": [
+      "series_coeffs(weight_term=False)"
+    ],
+    "series_coeff_mu10_printed_err": [
+      "series_coeffs(weight_term=False)"
+    ],
+    "series_coeffs_right_to_printed_digits": [
+      "series_coeffs(weight_term=False)"
+    ],
+    "calibration_logp1_abs_err": [
+      "refit(mu2=true mu_2)"
+    ],
+    "calibration_p2_rel_err": [
+      "refit(mu2=true mu_2)"
+    ],
+    "p2_computed_over_fitted": [
+      "area-mean p_2 instead of the cup p_2"
+    ],
+    "formula_reproduces_kc_mean_dev": [
+      "mu_1 = 2.4013 (the printed exponent)"
+    ],
+    "formula_misprint_kc_mean_dev": [
+      "mu_1 = 2.7043 (his p. 87 root)"
+    ],
+    "T_mean_rows_within_0p02": [
+      "T_mean taken as T_in"
+    ],
+    "axial_conduction_rel_effect": [
+      "fastest water run instead of the slowest"
+    ],
+    "axial_pert_C_predicted": [
+      "perturbation projected against s ds (area weight)"
+    ],
+    "axial_pert_rel_gap": [
+      "perturbation projected against s ds (area weight)",
+      "Pe fits extended to the outlet x = X"
+    ],
+    "flow_vs_head_exponent_mean": [
+      "heads I and III interchanged"
+    ],
+    "kc_spread_calibration_unfitted": [
+      "his fitted constants"
+    ],
+    "kc_spread_area_mean": [
+      "cup amplitudes instead of area"
+    ],
+    "kc_10_vs_20_modes": [
+      "2 modes instead of 10"
+    ],
+    "kc_spread_2d_route": [
+      "theta_cup(x) from the nu_r=0 solve"
+    ],
+    "kc_spread_thermometry_sigma": [
+      "sigma_spread(coarsen=10)"
+    ],
+    "kc_spread_significance": [
+      "sigma_spread(coarsen=10)"
+    ],
+    "kc_spread_thermometry_sigma_wide": [
+      "widest budget with coarsen=10"
+    ],
+    "kc_spread_significance_wide": [
+      "widest budget with coarsen=10"
+    ],
+    "liquids_lowest_head_highest_kc": [
+      "his fitted constants"
+    ],
+    "kc_spread_out_of_sample_water": [
+      "his fitted constants"
+    ],
+    "kc_spread_out_of_sample_water_fitted": [
+      "computed constants"
+    ],
+    "kc_spread_out_of_sample_cuso4": [
+      "his fitted constants"
+    ],
+    "kc_spread_out_of_sample_cuso4_fitted": [
+      "computed constants"
+    ],
+    "kc_spread_out_of_sample_alcohol": [
+      "his fitted constants"
+    ],
+    "kc_spread_out_of_sample_alcohol_fitted": [
+      "computed constants"
+    ],
+    "water_k_shift_unfitted": [
+      "his fitted constants"
+    ],
+    "k_drop_unfitted_least": [
+      "his fitted constants"
+    ],
+    "k_drop_unfitted_most": [
+      "his fitted constants"
+    ],
+    "head_I_over_III_amplification": [
+      "plug-flow constants in the inversion"
+    ]
   }
 }

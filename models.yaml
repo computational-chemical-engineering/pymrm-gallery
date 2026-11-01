@@ -1503,9 +1503,9 @@ models:
       against the three runs Whitman published with it. His equilibrium curve is
       reconstructed from four equilibrium pairs hidden in Table 1's own columns
       rather than digitised from his figure; his worked example is reproduced end
-      to end with his five printed numbers held out; and the one prediction he
+      to end with his printed numbers held out; and the one prediction he
       holds out is shown to be 99.4 % gas-film controlled, so deleting the liquid
-      film entirely moves it from -0.558 % to +0.054 % of the observed rate -
+      film entirely moves it from -0.558 % to +0.054 % of the observed rate:
       closer, not further, and the limit is taken analytically rather than with a
       large-k_c constant.
       A single film of either kind misses the three runs by 42-59 %; two films fit
@@ -1529,6 +1529,8 @@ models:
     pymrm_api:
     - construct_grad
     - construct_div
+    - BlockLayout
+    - compute_boundary_values
     - newton
     reference:
       authors:
@@ -1578,18 +1580,18 @@ models:
       paper's own subtitle is "A Preliminary Experimental Confirmation". The
       two-film fit to those three rates (0.379 % rms against 41.7 % and 59.5 % for
       a single gas or liquid film) is the one genuine model test, and it has
-      exactly one degree of freedom, which comes out 0.934 % adrift - reported on
-      the page rather than smoothed over - and it is worse than the +0.319 % a
+      exactly one degree of freedom, which comes out 0.934 % adrift (reported on
+      the page rather than smoothed over), and it is worse than the +0.319 % a
       ONE-parameter gas film achieves on the same quantity, which the page also
       reports. The liquid-film coefficient k_c is
       identified by run 1 alone: remove that run and the remaining data admit
-      every k_c up to the top of the sweep. The equilibrium relation is a
+      every k_c above a lower edge, with no upper end. The equilibrium relation is a
       RECONSTRUCTION from Table 1's own printed (c, p) pairs, not a digitisation
       of Fig. 3 and not a thermodynamic correlation for HCl. k_p and k_c are
       per-apparatus conductances carrying no area and no film thickness. The page
       deliberately does NOT compare film theory with penetration (A3.2) or surface
-      renewal (A3.3) - Whitman's data cannot see the diffusivity exponent that
-      separates them - and it does not hand that comparison to either: the
+      renewal (A3.3), since Whitman's data cannot see the diffusivity exponent that
+      separates them, and it does not hand that comparison to either: the
       three-way comparison is TAKEN on A3.2, which holds all three sources at
       once and finds film and surface renewal fitting A3.2's one measured
       coefficient by construction while penetration alone predicts it with no
@@ -1602,58 +1604,56 @@ models:
     title: Higbie penetration theory
     description: >
       A surface element is exposed to the gas for a definite time, absorbs by
-      unsteady diffusion the whole while, and is then swept away - so nothing
+      unsteady diffusion the whole while, and is then swept away, so nothing
       reaches a steady state and no film thickness appears in the argument. The
       coefficient is k_L = 2 sqrt(D / pi t_exp), and the exposure time in the two
       examples BSL applies it to is not fitted: it is L/v_max for the wetted wall of
       section 18.5 and D/v_t for the rising bubble of Example 18.5-1, both set by the
       geometry. The origin (Trans. AIChE 31, 1935) is pre-DOI and was NOT consulted;
-      the model is read from Bird, Stewart &
-      Lightfoot section 18.5, which derives it, names the penetration model and
-      attributes it to Higbie in the same paragraph - one sentence and a footnote,
-      which is the whole of what the book says about the 1935 paper and, together
-      with what Froment prints about it where his cross-check is described, the whole
-      of what this page attributes to it - with Froment, De Wilde &
-      Bischoff section 6.4 as an independent cross-check on the constant. Both of
-      BSL's worked problems reproduce: 18A.4 to +0.188 % of the printed
-      0.273 g-mol/hr by closed form AND to +0.187 % by a pymrm march of
-      Eq. 18.5-11 that touches no error function, the two agreeing to 4.6e-4 % - an
-      agreement that tests the dimensionless Phi(Lambda) only, since the dimensional
-      prefactor is common to both routes and cancels, so it is the +0.188 % against
-      the printed answer that tests that prefactor; and
-      18A.7 to +0.220 % - but from Eq. 18.5-19, not the Eq. 18.5-20 the problem
-      statement names, which is low by exactly sqrt(3), a printed defect proved from
-      the problem's own inputs and reported rather than repaired. This page then
-      takes the film / penetration / surface-renewal comparison that A3.1 and A3.3
-      both declined, because two things make it possible for the first time: BSL
-      Problem 18A.7(b) quotes Hammerton & Garner's MEASURED k_c of 117 cm/hr, on
-      which penetration - alone of the three - predicts without a fitted constant,
-      and comes out 12.0 % low (creeping flow, 49.2 % low), while the film and
-      renewal pictures each fit the same single datum with zero residual by
-      construction, needing a 4.49 um film or s = 72.3 s^-1; and Froment's Table
-      6.4.2.1 puts all three enhancement factors side by side, where the surface
-      renewal column reproduces everywhere, the film column is high by one unit in
-      the last printed place at two of six gamma, and THE PENETRATION COLUMN
-      DISAGREES WITH THE CLOSED FORM PRINTED AT ITS OWN HEAD AT ALL SIX, two of its
-      cells being impossible on the printed digits alone (0.94, below the 1 that an
-      enhancement factor cannot go under and below the 1.00 the other two columns of
-      that row carry; and 10.39, above the same row's surface-renewal 10.05). That
-      closed form is itself re-derived here from Froment's own Eq. 6.4.2-4 by
-      quadrature to 1.3e-12, which is what makes the table wrong rather than the
-      reading. What pymrm adds is the equation BSL sets up and then declines to
-      solve - the full Eq. 18.5-7, whose analytic solution it attributes to Pigford's
-      1941 thesis without printing it - and what falls out is that BSL's two reasons
-      for replacing it are not one argument but two of very unequal weight: at
-      Lambda = D L/(v_max delta^2) = 0.1, where the front has crossed 0.63 of the
-      film, the parabolic velocity profile costs 1.92 % and the finite film 4.0e-6,
-      a factor 4810, the wall effect being smaller than the solver's own
-      discretisation error and therefore measured with an exact eigenfunction series
-      that the books do not contain. The penetration formula is within 1 % of the
-      full equation for Lambda below 0.0564, i.e. a penetration depth below
-      0.475 delta - root-found, with the sweep-read values in the break table. The
-      page's negative result is stated plainly: the sqrt(D) exponent is STILL not
-      tested, because one (k_L, D) pair cannot resolve an exponent, and the search
-      behind that claim is described rather than asserted.
+      the model is read from Bird, Stewart & Lightfoot section 18.5, which derives
+      it, names the penetration model and attributes it to Higbie in the same
+      paragraph (one sentence and a footnote, which is the whole of what the book
+      says about the 1935 paper and, together with what Froment prints about it where
+      his cross-check is described, the whole of what this page attributes to it),
+      with Froment, De Wilde & Bischoff section 6.4 as an independent cross-check on
+      the constant. Both of BSL's worked problems reproduce: 18A.4 to +0.188 % of the
+      printed 0.273 g-mol/hr by closed form AND to +0.187 % by a pymrm march of
+      Eq. 18.5-11 that touches no error function, the two agreeing to 4.6e-4 %, the
+      march's grid error; that agreement tests the dimensionless Phi(Lambda) only,
+      since the dimensional prefactor is common to both routes and cancels, so it is
+      the +0.188 % against the printed answer that tests that prefactor; and 18A.7
+      to +0.220 %, but from Eq. 18.5-19, not the Eq. 18.5-20 the problem statement
+      names, which is low by exactly sqrt(3), a printed defect proved from the
+      problem's own inputs and reported rather than repaired. The page then takes
+      the film / penetration / surface-renewal comparison that A3.1 and A3.3 cannot
+      take from their own sources, because two things make it possible: BSL Problem
+      18A.7(b) quotes Hammerton & Garner's MEASURED k_c of 117 cm/hr, on which
+      penetration, alone of the three, predicts without a fitted constant, and comes
+      out 12.0 % low (creeping flow, 49.2 % low), while the film and renewal pictures
+      each fit the same single datum with zero residual by construction, needing a
+      4.49 um film or s = 72.3 s^-1; and Froment's Table 6.4.2.1 puts all three
+      enhancement factors side by side, where the surface renewal column rounds
+      correctly everywhere, the film column is high by one unit in the last printed
+      place at two of six gamma, and THE PENETRATION COLUMN DISAGREES WITH THE CLOSED
+      FORM PRINTED AT ITS OWN HEAD AT ALL SIX, two of its cells being impossible on
+      the printed digits alone (0.94, below the 1 that an enhancement factor cannot
+      go under and below the 1.00 the other two columns of that row carry; and
+      10.39, above the same row's surface-renewal 10.05). That closed form is itself
+      re-derived from Froment's own Eq. 6.4.2-4 by quadrature to below 1e-12, which
+      is what makes the table wrong rather than the reading. What pymrm adds is the
+      equation BSL sets up and then declines to solve, the full Eq. 18.5-7, whose
+      analytic solution it attributes to Pigford's 1941 thesis without printing it,
+      and what falls out is that BSL's two reasons for replacing it are not one
+      argument but two of very unequal weight: at Lambda = D L/(v_max delta^2) = 0.1,
+      where the front has crossed 0.63 of the film, the parabolic velocity profile
+      costs 1.92 % and the finite film 4.0e-6, a factor 4810, the wall effect taken
+      from an exact eigenfunction series that the books do not contain and confirmed
+      by the solver refined to 4800 cells. The penetration formula is within 1 % of
+      the full equation for Lambda below 0.0564, i.e. a penetration depth below
+      0.475 delta, root-found with pymrm.checks.find_roots. The page's negative
+      result is stated plainly: the sqrt(D) exponent is STILL not tested, because one
+      (k_L, D) pair cannot resolve an exponent, and the search behind that claim is
+      described rather than asserted.
     section: A
     status: published
     page: pages/A3.2-higbie-penetration/
@@ -1674,6 +1674,10 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - compute_boundary_values
+      - construct_coefficient_matrix
+      - observed_orders
+      - find_roots
     reference:
       authors:
         - Higbie, R.
@@ -1691,10 +1695,10 @@ models:
       note: >
         Section 18.5, "Diffusion into a Falling Liquid Film (Gas Absorption)", book
         pp. 558-561 (book p. 562 is Fig. 18.6-1 and the start of section 18.6).
-        E1.1 PASSED: it STATES and ATTRIBUTES in one sentence - "This
+        E1.1 PASSED: it STATES and ATTRIBUTES in one sentence, "This
         approach for studying gas absorption was apparently first proposed by
         Higbie. The problem discussed in this section illustrates the 'penetration
-        model' of mass transfer" - with footnote 5 carrying R. Higbie, Trans. AIChE
+        model' of mass transfer", with footnote 5 carrying R. Higbie, Trans. AIChE
         31, 365-389 (1935) and a biographical note that credits him with having
         "provided the basis for the 'penetration model' of mass transfer"; and it CARRIES,
         deriving Eqs. 18.5-1 to 18.5-20 in full and applying them in Example 18.5-1
@@ -1711,11 +1715,11 @@ models:
     origin_not_consulted: >
       Trans. AIChE 31, 365-389 (1935) is pre-DOI and unreachable; it was not
       consulted, it has no DOI of its own and none is recorded here. Nothing on the
-      page is attributed to the 1935 paper beyond what BSL prints about it - one
+      page is attributed to the 1935 paper beyond what BSL prints about it, one
       sentence ("This approach for studying gas absorption was apparently first
       proposed by Higbie") and footnote 5, the citation plus a biographical note that
       also credits him with having "provided the basis for the 'penetration model' of
-      mass transfer" - and, where the Froment cross-check is being described, what
+      mass transfer", and, where the Froment cross-check is being described, what
       Froment prints about it: his "Higbie's uniform age tbar" above Eq. 6.4.1-10 and
       his opening of section 6.4, which calls "Higbie's [1935] so-called 'penetration
       theory'" the special case in which every surface element is exposed for the same
@@ -1727,12 +1731,12 @@ models:
       metadata. Two further sources are cited by
       the books and were NOT consulted: R. L. Pigford, PhD thesis, University of
       Illinois (1941), which BSL credits with the infinite-series solution of
-      Eq. 18.5-7 that it does not print - the page solves that equation numerically
+      Eq. 18.5-7 that it does not print; the page solves that equation numerically
       instead and claims nothing about Pigford's form; D. Hammerton and F. H.
       Garner, Trans. Inst. Chem. Engrs. (London) 32, S18-S24 (1954), the source of
       the one measured coefficient on the page, quoted exactly as BSL quotes it,
       with no error bar because BSL prints none; and Beek (1968), to whom Froment
-      credits Table 6.4.2.1 - every statement the page makes about those cells is a
+      credits Table 6.4.2.1; every statement the page makes about those cells is a
       statement about Froment's printing.
     data:
       tier: 6
@@ -1743,8 +1747,8 @@ models:
         fixes the tier at 6: the inputs and printed answers of BSL Problems 18A.4
         and 18A.7 (plus one molecular weight from BSL Table E.1), BSL Tables 20.1-1
         and 22.8-2, and Froment Table 6.4.2.1. Exactly ONE row anywhere is a
-        measurement - Hammerton & Garner's surface-averaged k_c of 117 cm/hr as BSL
-        quotes it - and it is flagged as such in the sidecar and used for the one
+        measurement, Hammerton & Garner's surface-averaged k_c of 117 cm/hr as BSL
+        quotes it, and it is flagged as such in the sidecar and used for the one
         comparison on the page that is a test rather than a reproduction. No other
         page's dataset is loaded; A3.1's and A3.3's data are about different systems
         and none of their numbers is retyped here.
@@ -1762,10 +1766,10 @@ models:
       otherwise; the E1.1 target is pinned to BSL section 18.5 and Froment section
       6.4 is a cross-check that the page does not adjudicate against it. Read the
       scope carefully. The page reproduces printed numbers to 0.2 % and finds two
-      PRINTED DEFECTS - Problem 18A.7(a) naming Eq. 18.5-20 while printing
+      PRINTED DEFECTS: Problem 18A.7(a) naming Eq. 18.5-20 while printing
       Eq. 18.5-19's answer, a factor sqrt(3); and Froment's Table 6.4.2.1
       penetration column disagreeing with the formula printed at its own head at all
-      six gamma, two cells impossible on the printed digits alone - both reported
+      six gamma, two cells impossible on the printed digits alone, both reported
       and neither repaired. THE ONE COMPARISON WITH A MEASUREMENT rests on a single
       quoted coefficient with no error bar, over a bubble at the top of the 0.3-0.5
       cm range BSL says the equation was "approximately confirmed" for; the 12 %
@@ -1774,21 +1778,18 @@ models:
       NOT TESTED and the page states that at length with the search behind it: one
       (k_L, D) pair cannot resolve an exponent, so the question stands exactly where
       A3.3 left it. The density of water (1.000 g/cm3) is an assumed input, flagged,
-      with break-table rows showing that a three-figure printed answer cannot
+      re-evaluated on the page to show that a three-figure printed answer cannot
       resolve it: the +0.188 % residual on 18A.4 is a hair OUTSIDE three-figure
       rounding (0.273513 rounds to 0.274, not the printed 0.273), and either
-      unprinted choice closes it - rho = 0.999 gives 0.273239, M(Cl2) = 71.0 gives
+      unprinted choice closes it, rho = 0.999 gives 0.273239, M(Cl2) = 71.0 gives
       0.273147, both rounding to 0.273. The excess is NOT attributed to those two
       specifically: only 1.28e-5 g-mol/hr (0.0047 %) lies outside the window, the
       printed inputs are three-figure too (half a unit in D's last place is
-      +/-0.199 % in W_A, the whole window), and truncation rather than rounding would
+      +/-0.199 % in W_A, more than the whole window), and truncation rather than rounding would
       put 0.273513 inside. The page prints that arithmetic and adopts neither
       unprinted value. The film thickness of Problem 18A.4's column is not printed and is
       NOT inferred, so the finite-thickness correction is reported as a threshold in
-      Lambda rather than as a number for that column. A3.1 and A3.3 both state in
-      prose and metadata that "A3.2 has no source" and that the three-way comparison
-      is open; both statements are now out of date and should be amended by whoever
-      integrates this entry.
+      Lambda rather than as a number for that column.
 
   - id: A3.3
     slug: danckwerts-surface-renewal
@@ -2528,28 +2529,30 @@ models:
     slug: graetz-nusselt
     title: "Graetz–Nusselt problem"
     description: >
-      The developing thermal boundary layer in a tube — and the two constants
+      The developing thermal boundary layer in a tube, and the two constants
       Graetz could not compute. He solved the eigenvalue problem in 1882 and then
       wrote that expressing the amplitudes in closed form "requires an exhaustive
       investigation of the function V(r,beta,R), which is probably not simple",
       so he fitted p_1, p_2 and k/c to three runs of copper sulfate at three
-      pressure heads instead. This page computes them — p_1 = 0.819050,
-      p_2 = 0.097527 — two independent ways, and supplies the two limits his
+      pressure heads instead. This page computes them (p_1 = 0.819050,
+      p_2 = 0.097527) by an eigenfunction projection, confirms p_1 and the
+      summed series independently with a 2-D finite-volume solve, and supplies the two limits his
       series cannot: the Levêque entrance law and Nu_inf = mu_1^2/2 = 3.65679,
       the 3.657 every heat-transfer text prints.
       What that establishes is not what the framing suggests. His calibration has
       three constants and three observations, so its exact fit is guaranteed and
       is not evidence; with the computed amplitudes and nothing fitted, those same
       three runs spread by 15.6 % in k/c, monotonically with flow rate, against
-      0.77 % propagated from the 1/10-degree thermometers he describes — twenty
-      sigma. Removing the fit moves every conductivity down by 16.6–24.5 % and
+      0.77 % propagated from the 1/10-degree thermometers he describes: twenty
+      sigma on his stated thermometry, eight on the widest budget the paper
+      supports. Removing the fit moves every conductivity down by 16.6–24.5 % and
       destroys the agreement he had with Lorberg's recomputation of Weber. The
       empirical calibration was absorbing a real systematic effect his own method
       could not see, and the page says so rather than claiming an improvement.
       Along the way: two of his six series coefficients are arithmetically wrong,
       his second eigenvalue 6.50 is 2.7 % low and his 10-term series cannot place
       it at all, and the exponent printed in his working formula for k is 2.4013
-      where it should be 2.7043 — settled by his own 51 observations, 0.71 %
+      where it should be 2.7043, settled by his own 51 observations, 0.71 %
       against 26.3 %.
     section: A
     status: published
@@ -2566,6 +2569,9 @@ models:
       - construct_grad
       - construct_div
       - construct_convflux_upwind
+      - ConvFluxTVD
+      - newton
+      - compute_boundary_values
       - interp_cntr_to_stagg_tvd
       - vanleer
     data: {tier: 1, method: table, status: complete}
@@ -2580,12 +2586,12 @@ models:
       Erste Abhandlung, signed München 15. Oct. 1882, and the publisher dates the
       issue 1882; 1883 is the volume's other dating. The Zweite Abhandlung
       (Ann. Phys. 261, 1885) is a different paper and was not consulted.
-      Data are measurements, so this is one of the few tier-1 pages — but the k/c
+      Data are measurements, so this is one of the few tier-1 pages, but the k/c
       and k columns of his tables are derived through his own two fitted
       constants, and the page inverts the raw temperature and mass columns
       instead. Every reference value used for comparison is one the paper itself
       prints; no modern conductivity is quoted anywhere.
-    related: [A2.3, A2.1, A3.4]
+    related: [A2.3, A2.1, A3.4, I1.3]
 
   - id: A3.4
     slug: wakao-funazkri
