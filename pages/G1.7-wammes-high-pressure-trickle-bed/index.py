@@ -43,7 +43,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.2.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.3.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "G1.7-wammes-high-pressure-trickle-bed"  # equals the page directory
 
 import os, sys, urllib.request

@@ -72,10 +72,10 @@ jobs:
       # They come after every step that reads the tracked agreement.json files:
       # check_model runs index.py, whose claims.report() rewrites agreement.json
       # without the BLAS pin. Its step restores pages/ when it ends.
-      - name: Fetch the pymrm checkers (v3.2.0)
+      - name: Fetch the pymrm checkers (v3.3.0)
         run: |
           mkdir -p "$RUNNER_TEMP/pymrm-checks"
-          base=https://raw.githubusercontent.com/computational-chemical-engineering/pymrm/v3.2.0/plugins/pymrm/skills/conventions/scripts
+          base=https://raw.githubusercontent.com/computational-chemical-engineering/pymrm/v3.3.0/plugins/pymrm/skills/conventions/scripts
           for f in check_notebook_math.py check_model.py; do
             curl -fsSL "$base/$f" -o "$RUNNER_TEMP/pymrm-checks/$f"
           done
