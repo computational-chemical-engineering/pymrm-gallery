@@ -1,27 +1,79 @@
-# B1.2 — Aris generalised shape modulus
+# B1.2: Aris generalised shape modulus
 
-From Aris, R., *On shape factors for irregular particles — I. The steady state
-problem. Diffusion and reaction*, Chemical Engineering Science **6**(6) 262–268
+From Aris, R., *On shape factors for irregular particles. I. The steady state
+problem. Diffusion and reaction*, Chemical Engineering Science **6**(6) 262-268
 (1957), doi:10.1016/0009-2509(57)85028-3.
 
-**Published.** `models.yaml` carries the `B1.2` entry with `status: published`
-and `page: pages/B1.2-aris-shape-factor/`. One review blocker is still open —
-see below and `meta.yaml`'s `blocker` block.
+- **Structures:** `S3` (1D steady BVP), `S13` (multi-dimensional geometry)
+- **Source:** `index.py` (paired with `index.ipynb`); the solver in `model.py`,
+  tested by `test_model.py`
+- **Runtime:** about 55 s
 
-## Contents
+One review blocker is open; see below and `meta.yaml`'s `blocker` block.
 
-| file | what it is |
-| --- | --- |
-| `index.ipynb` | the page; runs in about 34 s |
-| `build_page.py` | regenerates `index.ipynb`. Edit this, not the notebook |
-| `meta.yaml` | page metadata (`status: staged`) |
-| `data/aris1957-table1.csv` | his Table 1, 21 entries, + provenance sidecar |
-| `data/aris1957-spherical-shell.csv` | his section 3 shell table, 5 entries, + sidecar |
+## Results
 
-Both datasets are the author's own computed values, not measurements. Aris (1957)
-reports no experiments; this is provenance tier 6 and the page says so.
+- Eqs. 15-17 reproduce 19 of the 21 Table 1 entries to
+  0.00078 <!-- claim: table1_worst_19_entries -->, within one unit of the
+  printed third decimal. The other two are the cylinder column at Lambda = 5 and
+  10, printed 3.8 <!-- claim: cyl_printed_high_pct_Lambda5 --> % and
+  2.6 <!-- claim: cyl_printed_high_pct_Lambda10 --> % above eq. 16, while the
+  plate and sphere columns are right at those moduli to
+  0.0003 <!-- claim: table1_plate_sphere_worst_Lambda_5_10 -->. No single
+  rescaling of Lambda fits both cells (0.961 <!-- claim: cyl_printed_needs_Lambda_factor_5 -->x
+  and 0.974 <!-- claim: cyl_printed_needs_Lambda_factor_10 -->x), so they are
+  reported as slips, not corrected.
+- The spherical-shell expression reproduces his five printed values to
+  0.00041 <!-- claim: shell_formula_vs_printed -->, approaches eq. 17 as p^3 and
+  eq. 15 linearly in 1 - p, and gives 0.7227 <!-- claim: shell_formula_p075 -->
+  at p = 0.75, which decides between the two printings (1995: 0.723, 1957 OCR: 728).
+- Aris's case (iv) series is right with p read as radius:length (his
+  nomenclature): the 2-D solve matches it to
+  4.2e-4 <!-- claim: fincyl_series_p_as_nomenclature --> on 160 radial cells,
+  and that gap is grid error (the ladder's Richardson limit lies below
+  1e-5 <!-- claim: fincyl_extrapolated_vs_series --> from the series). Read as
+  in his running text, the series is off by
+  47 % <!-- claim: fincyl_series_p_as_running_text --> of the solved value.
+- Over fourteen shapes the band is
+  0.1165 <!-- claim: band_all_shapes --> wide at its widest, against
+  0.0918 <!-- claim: band_aris_plate_sphere_max --> for plate to sphere,
+  1.27 <!-- claim: band_ratio_all_over_aris -->x. The plate is its upper edge and
+  the cube its lower edge at all 28 <!-- claim: sweep_points_cube_lowest -->
+  swept moduli.
+- **The sphere is not the floor.** At the same v_p/s_x = a/3 the cube lies up to
+  0.0261 <!-- claim: cube_below_sphere --> below it (3.6 <!-- claim: cube_below_sphere_pct_there --> %
+  there), and up to 3.9 <!-- claim: cube_below_sphere_max_pct --> % in relative
+  terms; the cylinder of length 2a lies between them at all
+  28 <!-- claim: sweep_points_cyl2a_between_sphere_cube --> swept moduli. At equal volume the sphere
+  is still the worst case (Aris's Leva argument); both hold.
+- Eq. 18, eta Lambda -> 1, holds for five shapes including two with edges: the
+  references extrapolate to 1 within
+  1.2e-4 <!-- claim: eq18_reference_extrapolated_worst_dev --> (the line fit; the
+  cylinder reference, a closed-form axial sum, is truncated by
+  5e-8 <!-- claim: eq18_cyl_reference_truncation_Lambda50 --> at Lambda = 50),
+  the pymrm solves within 0.0011 <!-- claim: eq18_extrapolated_worst_dev -->,
+  mostly their grid error at Lambda = 50.
+- Eqs. 19-20 reproduce his worked mixture example (mean modulus and eta at it);
+  eq. 19 gives 0.4936 <!-- claim: mixture_eta_eq19 --> for the third number,
+  printed 0.397 in the 1995 reprint and 0.897 in the 1957 scan.
 
-## Getting the paper — read the 1995 reprint, not the 1957 scan
+pymrm against the references: 1-D to
+2.4e-4 <!-- claim: pymrm_1d_worst_rel --> (n = 400, Lambda up to 20), square rod
+8.2e-6 <!-- claim: square_rod_vs_series -->, cube on 32^3
+7.5e-5 <!-- claim: cube_vs_series_n32 -->, the sweep's rod and finite cylinders
+(graded grids) within 3.9e-3 <!-- claim: sweep_pymrm_vs_series_worst --> up to
+Lambda = 20. The cube's curve in the sweep is its eigenfunction series at every
+Lambda, checked against the 3-D solve at Lambda = 1 only: on 24^3 and 32^3
+uniform grids the 3-D solve differs by 11 % <!-- claim: cube_n24_n32_gap_Lambda20 -->
+at Lambda = 20.
+
+## Data
+
+Three small tables of the author's own computed values (Table 1, the section 3
+shell table, the section 4 mixture example), each with a provenance sidecar.
+**Provenance tier 6, not experimental**: Aris (1957) reports no measurements.
+
+## Getting the paper: read the 1995 reprint, not the 1957 scan
 
 Aris (1957) is closed access. It was retrieved through the Elsevier article
 retrieval API (PII `0009250957850283`) under an institutional subscription. That
@@ -29,108 +81,74 @@ scan's text layer is the publisher's OCR of a mid-dot-decimal typesetting and is
 useless for numbers: Table 1's 0.698 comes out as `898`, 0.432 as `482`.
 
 **Chemical Engineering Science reprinted the paper verbatim in 1995** for its
-Golden Jubilee — 50(24) 3899–3903, doi:`10.1016/0009-2509(96)81819-7`, PII
-`0009250996818197` — and that re-typesetting OCRs cleanly. Both were retrieved
-and every transcribed number is one on which the two agree. **This trick is worth
-trying for any pre-1970 CES classic**; the Golden Jubilee issue reprinted a dozen
-of them, and it is a cheaper route than page-image reading where it applies.
+Golden Jubilee, 50(24) 3899-3903, doi:`10.1016/0009-2509(96)81819-7`, PII
+`0009250996818197`, and that re-typesetting OCRs cleanly. Both were retrieved
+and every transcribed number is one on which the two agree, or the disagreement
+is stated. **This is worth trying for any pre-1970 CES classic.**
 
 ## What could NOT be obtained
 
 The entitlement returns a **one-page preview PDF only**, for both printings
-(journal pages 262 and 3899). Table 1 is on page 265 / 3901. So the gallery's
-usual discipline of reading numbers off a 600 dpi render was not available.
-
-What stands in for it: the paper's own algebra reproduces 19 of the 21 Table 1
-entries to ≤ 0.0008, and all five spherical-shell entries to ≤ 0.0004. No
-mis-transcription survives that. **Two entries are flagged rather than
-corrected** — see `meta.yaml`'s `blocker` block.
-
-**Retried 2026-08-02, still not obtainable.** A 1957 PDF is now in
-`~/papers/pymrm-gallery/` (`Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf`), but it is that
-same one-page preview — one page, journal page 262, the same byte size the
-Elsevier API returns for `application/pdf` on the PII. The 1995 reprint's PDF is
-a one-page preview too. `content/object/pii` holds no page images for either
-PII: the 1957 printing has no objects, the 1995 reprint has two 40 × 30 GIFs of
-the inline symbol *v*_p/*s*_x. There is no API route to page 265 / 3901, and the
-blocker needs a full PDF from the maintainer.
-
-What the retry *did* settle, from the equations rather than the print, is what
-the two cells cannot be. The plate and sphere columns are right at Λ = 5 and 10
-to 0.0003; the first five rows of the cylinder column reproduce eq. 16; and no
-single rescaling of Λ fits both cells — 0.197 would need 0.961× the stated
-modulus and 0.100 would need 0.974×. So the column is eq. 16 at the stated Λ,
-and a differently defined modulus is ruled out. Two arithmetic slips are what is
-left, but that remains an inference and the page says so.
-
-## The check the paper pays for
-
-The spherical-shell expression has six distinct terms and had to be read from a
-mangled scan. It is over-determined seven ways:
-
-1. it must collapse to eq. 17 (sphere) at *p* = 0 — the paper says so — and does,
-   to 1.1 × 10⁻¹⁶;
-2. it must collapse to eq. 15 (flat plate) at *p* = 1 — likewise — to
-   5.8 × 10⁻¹⁰;
-3. it must reproduce his five printed values at Λ = 1, and does, to 0.00041.
-
-A single mis-read coefficient breaks all seven at once. As a by-product it
-decides which of the two printings is right where they disagree: at *p* = 0.75
-the 1957 OCR gives `728`, the 1995 reprint 0.723, and the expression gives
-0.7227.
-
-## The ambiguity only a solver can settle
-
-Aris's case (iv), the finite cylinder with porous ends, is given as a double
-Fourier–Bessel series that **he never evaluates**. Its `p` is defined two
-incompatible ways in the same paper: the nomenclature says radius:length, the
-running text says "length = 2*a*/*p*". They differ by exactly the factor of 2 to
-which the axial eigenvalue is most sensitive, and since no number is printed,
-nothing on the page breaks the tie.
-
-A 2-D axisymmetric pymrm solve does: with `p` read as the nomenclature defines
-it, the printed series matches to 4.2 × 10⁻⁴; with the running text's reading it
-is out by 47 %. **The series is correct as printed and the running text is the
-error.**
-
-## What the page adds
-
-Aris wrote that estimating the divergence in the general case "would be an
-excessively difficult task, equivalent to solving the problem completely". The
-page solves it over fourteen shapes — his three, four spherical shells, five
-finite cylinders from long rod to flat disc, a square rod and a cube:
-
-- the band is **0.116** wide at Λ ≈ 1.1, against his plate-to-sphere **0.092** —
-  27 % wider;
-- **the sphere is not the floor.** At the same *v*_p/*s*_x = *a*/3 the cube lies
-  0.026 (3.7 %) below it, with the cylinder of length 2*a* between them. A corner
-  admits reactant from two directions at once.
-
-Both of Aris's own statements survive and are not in conflict: at *equal volume*
-the sphere is the worst case (his Leva shape-factor argument), while at *equal Λ*
-it is the best of the three shapes sharing *v*_p/*s*_x = *a*/3.
+(journal pages 262 and 3899). Table 1 is on page 265 / 3901, and the
+article-object endpoint holds no page images for either PII. The 1957 PDF in
+`~/papers/pymrm-gallery/` (`Aris1957-shape-generalised-modulus-CES6-262-PREVIEW1P.pdf`)
+is that same one-page preview. The blocker needs a full PDF from the maintainer.
 
 ## The sign trap
 
-The low end of every axis carries `{"a": 1, "b": 0, "d": 0}` — with the
-**outward** normal that is ∂χ/∂n = 0, i.e. symmetry for a solid shape and a
+The low end of every axis carries `{"a": 1, "b": 0, "d": 0}`: with the
+**outward** normal that is dchi/dn = 0, symmetry for a solid shape and a
 *sealed* face for the shell. Mark the shell's inner face exposed by mistake and
 you get a perfectly convergent solution to a different problem, with no warning.
-The *p* → 0 and *p* → 1 limits are what catch it.
-
-## Numerical limit worth knowing
-
-Everything except the cube is cheap. In 3-D a direct sparse solve runs out of
-resolution before it runs out of memory: the reacting layer is *O*(1/λ) thick, so
-at Λ = 20 the 24³ and 32³ solutions differ by 11 %. The sweep therefore takes the
-cube from its eigenfunction series beyond Λ ≈ 5, validated against the 3-D solve
-at Λ = 1 (7.5 × 10⁻⁵, converging second order). Grading the grid toward the
-exposed faces buys about a decade in Λ for free and is used for the eq. 18
-asymptote.
 
 ## Relationship to B1.1
 
-`B1.1` already plots the Aris collapse for Thiele's three geometries and reports
-the residual spread. This page deliberately does not repeat that. It is about the
-shapes that have no closed form, which is what needs a solver — and it
-cross-links to `B1.1` rather than restating it.
+`B1.1` plots the Aris collapse for Thiele's three geometries. This page is about
+the shapes that have no closed form, and cross-links to `B1.1` rather than
+restating it.
+
+## Corrections
+
+- 2026-11-01: the notebook said that reading p as in the running text puts the
+  case (iv) series out by up to 40 %; it is
+  47 % <!-- claim: fincyl_series_p_as_running_text --> of the solved value (as
+  this README already said).
+- 2026-11-01: said that every shape in the sweep other than the cube is solved
+  with pymrm on a uniform grid, within 3e-3 of an exact reference at
+  Lambda = 20. The plate, long cylinder, sphere and shells are closed forms, and
+  on the uniform grids the finite cylinders were off by up to
+  3.3 <!-- claim: sweep_disc_uniform_grid_worst_pct --> % at Lambda = 20 (the
+  flat disc, l/a = 0.25). On grids graded toward
+  the exposed faces they are within
+  3.9e-3 <!-- claim: sweep_pymrm_vs_series_worst -->, and the ordering is read
+  from the references.
+- 2026-11-01: said eqs. 15-17 reproduce 19 of the 21 Table 1 entries to the
+  printed rounding. Two of the nineteen (cylinder at Lambda = 0.5, sphere at
+  Lambda = 2) are one unit off in the third decimal; 17 round to the printed
+  digits.
+- 2026-11-01: said the cube converges at second order, quoting an error ratio of
+  2.29 for a 1.33x refinement. That ratio is order 2.9; from successive
+  differences on 8^3, 16^3 and 32^3 the order is between 2 and 3
+  (2.8 <!-- claim: cube_order_8_16_32 -->), the grids being pre-asymptotic.
+- 2026-11-01: said that beyond Lambda of about 5 the cube's curve is its
+  eigenfunction series rather than a pymrm solve. The sweep takes the cube from
+  its series at every Lambda; the 3-D solve checks that series at Lambda = 1
+  only.
+- 2026-11-01: said the p -> 0 and p -> 1 limits are what catch a shell whose
+  inner face is exposed by mistake. Those limits were checked on the formula,
+  not on the solver, and p -> 0 cannot catch it: the exposed shell also tends to
+  the sphere as p -> 0. The page's check is the solve against the shell
+  expression at the printed p, which the exposed inner face moves by
+  0.16 <!-- claim: shell_exposed_inner_face_dev --> (break table).
+
+## Files
+
+```
+index.py        the page source (jupytext percent format), paired with index.ipynb
+index.ipynb     the executed notebook
+model.py        Pellet and the shape catalogue
+test_model.py   fast checks of model.py and one stored claim
+meta.yaml       page metadata
+agreement.json  the claims, format 2, written by the last cell
+data/           Aris's printed tables, each with a provenance sidecar
+```

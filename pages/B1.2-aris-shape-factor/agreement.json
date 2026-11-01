@@ -1,22 +1,527 @@
 {
   "page": "B1.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "table1_worst_19_entries": 0.0007799317930690108,
-    "shell_formula_vs_printed": 0.0004076681717281039,
-    "shell_pymrm_vs_formula": 1.42401414238158e-06,
-    "shell_limit_to_sphere": 1.1102230246251565e-16,
-    "shell_limit_to_plate": 5.800255831189816e-10,
-    "pymrm_1d_worst_rel": 0.00023612619278303378,
-    "fincyl_series_p_as_nomenclature": 0.00041804917659597367,
-    "fincyl_series_p_as_running_text": 0.47361707649219803,
-    "square_rod_vs_series": 8.157829301015495e-06,
-    "cube_vs_series_n32": 7.513358367146977e-05,
-    "cube_refinement_ratio": 2.289469801818912,
-    "eq18_extrapolated_worst_dev": 0.0011082602590449797,
-    "mixture_mean_modulus_dev": 0.00021052631578966086,
-    "mixture_eta_at_mean_dev": 4.2918304564709686e-05,
-    "band_all_shapes": 0.11639971222167467,
-    "band_aris_plate_sphere_max": 0.09181928317524213,
-    "cube_below_sphere": 0.026059950522351216
+    "table1_entries_off_more_than_0p002": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.2664746055096529,
+      "min_margin": 0.1
+    },
+    "table1_entries_not_rounding_to_printed": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.03812217995535685,
+      "min_margin": 0.01
+    },
+    "table1_worst_19_entries": {
+      "kind": "value",
+      "value": 0.0007799317930690108,
+      "rtol": 0.05
+    },
+    "table1_plate_sphere_worst_Lambda_5_10": {
+      "kind": "value",
+      "value": 0.00033333333333333826,
+      "rtol": 0.05
+    },
+    "cyl_printed_high_pct_Lambda5": {
+      "kind": "value",
+      "value": 3.837252869882657,
+      "rtol": 0.05
+    },
+    "cyl_printed_needs_Lambda_factor_5": {
+      "kind": "value",
+      "value": 0.9608507638345836,
+      "rtol": 0.05
+    },
+    "cyl_printed_high_pct_Lambda10": {
+      "kind": "value",
+      "value": 2.5987748582884995,
+      "rtol": 0.05
+    },
+    "cyl_printed_needs_Lambda_factor_10": {
+      "kind": "value",
+      "value": 0.9739843853744574,
+      "rtol": 0.05
+    },
+    "shell_formula_vs_printed": {
+      "kind": "value",
+      "value": 0.0004076681717281039,
+      "rtol": 0.05
+    },
+    "shell_formula_p075": {
+      "kind": "value",
+      "value": 0.7227334072336182,
+      "rtol": 0.0001
+    },
+    "shell_pymrm_vs_formula": {
+      "kind": "value",
+      "value": 1.4240141422705577e-06,
+      "rtol": 0.05
+    },
+    "shell_exposed_inner_face_dev": {
+      "kind": "value",
+      "value": 0.15781636816078282,
+      "rtol": 0.05
+    },
+    "shell_sphere_limit_order": {
+      "kind": "value",
+      "value": 2.9999048949562384,
+      "rtol": 0.05
+    },
+    "shell_plate_limit_order": {
+      "kind": "value",
+      "value": 0.99999995511891,
+      "rtol": 0.05
+    },
+    "shell_plate_gap_1mp_1e-5": {
+      "kind": "value",
+      "value": 1.6005127508877948e-06,
+      "rtol": 0.05
+    },
+    "fincyl_series_p_as_nomenclature": {
+      "kind": "value",
+      "value": 0.00041804917659615803,
+      "rtol": 0.05
+    },
+    "fincyl_series_p_as_running_text": {
+      "kind": "value",
+      "value": 0.4736170764921981,
+      "rtol": 0.05
+    },
+    "square_rod_vs_series": {
+      "kind": "value",
+      "value": 8.15782930119191e-06,
+      "rtol": 0.05
+    },
+    "cube_vs_series_n32": {
+      "kind": "value",
+      "value": 7.513358367128298e-05,
+      "rtol": 0.05
+    },
+    "cube_order_8_16_32": {
+      "kind": "bound",
+      "value": 2.761035864605473,
+      "min": 2.0,
+      "max": 3.0,
+      "basis": "chosen",
+      "note": "second-order scheme; 8/16/32 is pre-asymptotic (1-D ladders: 2.0 at Lambda <= 1, up to 3.0 where the layer is thin)"
+    },
+    "cube_extrapolated_vs_series": {
+      "kind": "bound",
+      "value": 6.54172716463286e-06,
+      "max": 2e-05,
+      "basis": "chosen",
+      "note": "Richardson limit of 8/16/32 against the series, below the n = 32 error (7.5e-5)"
+    },
+    "cube_ladder_finest_diff": {
+      "kind": "bound",
+      "value": 0.0004720230375757639,
+      "min": 1e-07,
+      "basis": "chosen",
+      "note": "ten times the flux-identity bound (1e-8)"
+    },
+    "cube_n24_n32_gap_Lambda20": {
+      "kind": "value",
+      "value": 0.10939188361518848,
+      "rtol": 0.05
+    },
+    "order_at_va_a3_Lambda1": {
+      "kind": "exact",
+      "value": "sphere > cylinder l=2a > cube",
+      "margin": 0.009109506589181637,
+      "min_margin": 0.001
+    },
+    "sweep_pymrm_vs_series_worst": {
+      "kind": "value",
+      "value": 0.003925220349788372,
+      "rtol": 0.05
+    },
+    "sweep_disc_uniform_grid_worst_pct": {
+      "kind": "value",
+      "value": 3.344545996837822,
+      "rtol": 0.05
+    },
+    "sweep_points_cube_lowest": {
+      "kind": "exact",
+      "value": 28,
+      "margin": 6.446223675604656e-05,
+      "min_margin": 1e-06
+    },
+    "sweep_points_cyl2a_between_sphere_cube": {
+      "kind": "exact",
+      "value": 28,
+      "margin": 6.446223675604656e-05,
+      "min_margin": 1e-05
+    },
+    "sweep_others_minus_plate_max": {
+      "kind": "bound",
+      "value": -8.632574930644843e-05,
+      "max": 0.0,
+      "basis": "chosen",
+      "note": "the plate is the upper edge of the band at every swept Lambda (references)"
+    },
+    "band_all_shapes": {
+      "kind": "value",
+      "value": 0.11648722805733491,
+      "rtol": 0.05
+    },
+    "band_all_Lambda": {
+      "kind": "value",
+      "value": 1.0878073692554535,
+      "rtol": 0.05
+    },
+    "band_aris_plate_sphere_max": {
+      "kind": "value",
+      "value": 0.09181928318317456,
+      "rtol": 0.05
+    },
+    "band_aris_Lambda": {
+      "kind": "value",
+      "value": 1.1473276317476062,
+      "rtol": 0.05
+    },
+    "band_ratio_all_over_aris": {
+      "kind": "value",
+      "value": 1.268657563193443,
+      "rtol": 0.05
+    },
+    "cube_below_sphere": {
+      "kind": "value",
+      "value": 0.026061403361595903,
+      "rtol": 0.05
+    },
+    "cube_below_sphere_pct_there": {
+      "kind": "value",
+      "value": 3.649131963568405,
+      "rtol": 0.05
+    },
+    "cube_below_sphere_max_pct": {
+      "kind": "value",
+      "value": 3.9294548839927113,
+      "rtol": 0.05
+    },
+    "cube_below_sphere_max_pct_Lambda": {
+      "kind": "value",
+      "value": 1.2066833771181158,
+      "rtol": 0.05
+    },
+    "eq18_cyl_reference_truncation_Lambda50": {
+      "kind": "value",
+      "value": 5.179646023201201e-08,
+      "rtol": 0.05
+    },
+    "fincyl_axial_vs_double_series": {
+      "kind": "bound",
+      "value": 2.9341210572297882e-09,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the two forms of case (iv) at Lambda = 1, l = 2a; both truncated"
+    },
+    "eq18_reference_extrapolated_worst_dev": {
+      "kind": "value",
+      "value": 0.00012448894553551693,
+      "rtol": 0.05
+    },
+    "eq18_extrapolated_worst_dev": {
+      "kind": "value",
+      "value": 0.0011082602590452018,
+      "rtol": 0.05
+    },
+    "eq18_pymrm_worst_rel_err_Lambda50": {
+      "kind": "value",
+      "value": 0.000929974058260008,
+      "rtol": 0.05
+    },
+    "mixture_mean_modulus_dev": {
+      "kind": "value",
+      "value": 0.00021052631578966086,
+      "rtol": 0.05
+    },
+    "mixture_eta_at_mean_dev": {
+      "kind": "value",
+      "value": 4.2918304564709686e-05,
+      "rtol": 0.05
+    },
+    "mixture_eta_eq19": {
+      "kind": "value",
+      "value": 0.49356482019079617,
+      "rtol": 0.05
+    },
+    "pymrm_1d_worst_rel": {
+      "kind": "value",
+      "value": 0.00023612619278312597,
+      "rtol": 0.05
+    },
+    "sphere_order_Lambda1": {
+      "kind": "bound",
+      "value": 2.0047146817663286,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volumes, layer resolved at Lambda = 1"
+    },
+    "sphere_ladder_finest_diff": {
+      "kind": "bound",
+      "value": 3.9661328798956674e-07,
+      "min": 1e-07,
+      "basis": "chosen",
+      "note": "ten times the flux-identity bound (1e-8), which bounds what the solve residual does to eta"
+    },
+    "sphere_extrapolated_vs_eq17": {
+      "kind": "bound",
+      "value": 3.2650770975806154e-10,
+      "max": 1e-08,
+      "basis": "chosen",
+      "note": "Richardson limit of the ladder against eq. 17"
+    },
+    "fincyl_order_finest": {
+      "kind": "bound",
+      "value": 2.832089914892752,
+      "min": 2.0,
+      "max": 3.0,
+      "basis": "chosen",
+      "note": "second-order scheme, pre-asymptotic where the layer is thin (Lambda = 5)"
+    },
+    "fincyl_extrapolated_vs_series": {
+      "kind": "bound",
+      "value": 7.345230212951748e-07,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "Richardson limit against the printed series; the series truncation is measured separately"
+    },
+    "fincyl_ladder_finest_diff": {
+      "kind": "bound",
+      "value": 0.0003598451630281163,
+      "min": 1e-07,
+      "basis": "chosen",
+      "note": "ten times the flux-identity bound (1e-8)"
+    },
+    "fincyl_extrapolated_vs_series_all16": {
+      "kind": "bound",
+      "value": 1.5914599521549277e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "Richardson limits on 80/160/320 radial cells, all 16 cases of check 4"
+    },
+    "fincyl_series_truncation_worst": {
+      "kind": "value",
+      "value": 8.925438637064076e-07,
+      "rtol": 0.05
+    },
+    "cube_series_truncation_Lambda1": {
+      "kind": "value",
+      "value": 3.119675540119715e-08,
+      "rtol": 0.05
+    },
+    "rod_series_truncation_worst": {
+      "kind": "value",
+      "value": 1.2486820910595497e-08,
+      "rtol": 0.05
+    },
+    "sweep_series_truncation_Lambda20": {
+      "kind": "value",
+      "value": 0.00016368930760246592,
+      "rtol": 0.05
+    },
+    "eta_flux_vs_volume_worst": {
+      "kind": "bound",
+      "value": 8.100098369823172e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "finite-volume conservation; the gap is the residual of the direct solve"
+    }
+  },
+  "quoted": {
+    "shell_formula_p075": [
+      "0.7227"
+    ]
+  },
+  "breaks": {
+    "table1_worst_19_entries": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "table1_entries_off_more_than_0p002": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "table1_entries_not_rounding_to_printed": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "cyl_printed_high_pct_Lambda5": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "cyl_printed_needs_Lambda_factor_5": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "cyl_printed_high_pct_Lambda10": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "cyl_printed_needs_Lambda_factor_10": [
+      "cylinder column evaluated with the modulus on the radius (eq. 16 at 2 Lambda)"
+    ],
+    "table1_plate_sphere_worst_Lambda_5_10": [
+      "sphere column evaluated with the modulus on the radius (eq. 17 at Lambda / 3)"
+    ],
+    "shell_formula_vs_printed": [
+      "shell Lambda' built on the outer radius instead of the thickness",
+      "shell table with the 1957 OCR reading where it differs (p = 0.75)"
+    ],
+    "shell_formula_p075": [
+      "shell Lambda' built on the outer radius instead of the thickness"
+    ],
+    "shell_sphere_limit_order": [
+      "shell Lambda' built on the outer radius instead of the thickness"
+    ],
+    "shell_plate_limit_order": [
+      "shell Lambda' built on the outer radius instead of the thickness"
+    ],
+    "shell_plate_gap_1mp_1e-5": [
+      "shell Lambda' built on the outer radius instead of the thickness"
+    ],
+    "shell_pymrm_vs_formula": [
+      "shell's inner face exposed by mistake (EXPOSED at r = pa)"
+    ],
+    "shell_exposed_inner_face_dev": [
+      "shell Lambda' built on the outer radius instead of the thickness"
+    ],
+    "pymrm_1d_worst_rel": [
+      "sphere assembled with nu = 1 in construct_div"
+    ],
+    "sphere_order_Lambda1": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "sphere_extrapolated_vs_eq17": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "fincyl_order_finest": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "fincyl_extrapolated_vs_series": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "fincyl_extrapolated_vs_series_all16": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "cube_order_8_16_32": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "cube_extrapolated_vs_series": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "eta_flux_vs_volume_worst": [
+      "eta read from a two-point gradient at the last cell centre"
+    ],
+    "sphere_ladder_finest_diff": [
+      "finest ladder level built with the previous level's cells (refinement skipped)"
+    ],
+    "fincyl_ladder_finest_diff": [
+      "finest ladder level built with the previous level's cells (refinement skipped)"
+    ],
+    "cube_ladder_finest_diff": [
+      "finest ladder level built with the previous level's cells (refinement skipped)"
+    ],
+    "fincyl_series_p_as_nomenclature": [
+      "finite cylinder assembled with nu = 0 on the radial axis"
+    ],
+    "fincyl_series_p_as_running_text": [
+      "finite cylinder assembled with nu = 0 on the radial axis"
+    ],
+    "square_rod_vs_series": [
+      "square rod assembled with nu = 1 on axis 0"
+    ],
+    "cube_vs_series_n32": [
+      "cube grid coarsened to n = 16"
+    ],
+    "cube_n24_n32_gap_Lambda20": [
+      "cube at Lambda = 20 with the modulus on the half-width (lambda a = 20, not 60)"
+    ],
+    "order_at_va_a3_Lambda1": [
+      "cube taken at v_p/s_x = a/2 instead of a/3"
+    ],
+    "sweep_pymrm_vs_series_worst": [
+      "sweep grids uniform (q = 1) for the flat disc, l/a = 0.25"
+    ],
+    "sweep_disc_uniform_grid_worst_pct": [
+      "uniform disc grid with n_r halved to 60"
+    ],
+    "sweep_points_cube_lowest": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "sweep_points_cyl2a_between_sphere_cube": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "band_all_shapes": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "band_all_Lambda": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "band_ratio_all_over_aris": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "cube_below_sphere": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "cube_below_sphere_pct_there": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "cube_below_sphere_max_pct": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "cube_below_sphere_max_pct_Lambda": [
+      "cube series built on v_p/s_x = a/2 instead of a/3"
+    ],
+    "band_aris_plate_sphere_max": [
+      "sphere with the modulus on the radius (eq. 17 at Lambda / 3)"
+    ],
+    "band_aris_Lambda": [
+      "sphere with the modulus on the radius (eq. 17 at Lambda / 3)"
+    ],
+    "sweep_others_minus_plate_max": [
+      "plate with the modulus on the full thickness (eq. 15 at 2 Lambda)"
+    ],
+    "fincyl_series_truncation_worst": [
+      "series with half the terms"
+    ],
+    "cube_series_truncation_Lambda1": [
+      "series with half the terms"
+    ],
+    "rod_series_truncation_worst": [
+      "series with half the terms"
+    ],
+    "sweep_series_truncation_Lambda20": [
+      "series with half the terms"
+    ],
+    "eq18_cyl_reference_truncation_Lambda50": [
+      "series with half the terms"
+    ],
+    "fincyl_axial_vs_double_series": [
+      "closed-form axial sum with p doubled"
+    ],
+    "eq18_extrapolated_worst_dev": [
+      "eq. 18 grids uniform (q = 1)"
+    ],
+    "eq18_pymrm_worst_rel_err_Lambda50": [
+      "eq. 18 grids uniform (q = 1)"
+    ],
+    "eq18_reference_extrapolated_worst_dev": [
+      "eq. 18 straight line fitted through Lambda = 5, 10, 20"
+    ],
+    "mixture_mean_modulus_dev": [
+      "mean modulus as the arithmetic mean of the sizes"
+    ],
+    "mixture_eta_at_mean_dev": [
+      "mean modulus as the arithmetic mean of the sizes"
+    ],
+    "mixture_eta_eq19": [
+      "eq. 19 averaged on the sphere curve"
+    ]
   }
 }
