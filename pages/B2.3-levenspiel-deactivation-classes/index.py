@@ -1,309 +1,324 @@
-#!/usr/bin/env python3
-"""Generate index.ipynb for page B2.3 (Levenspiel deactivation classes).
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     formats: ipynb,py:percent
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.19.6
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
 
-Run from the page directory:  python build_page.py
-"""
-from __future__ import annotations
+# %% [markdown]
+# ---
+# title: "Levenspiel's four deactivation classes: which reactor can tell them apart"
+# description: "Levenspiel (1972) asks whether experiments can be devised that return the orders of an nth-order deactivating rate equation, for the four classes parallel, series, side-by-side and independent. The paper prints no data at all, so this page proves its printed structure (26 symbolic identities) and then measures the question it poses: all four classes solved in all four of its batch-solids contactings, and every class fitted to every other class's response - 64 fits. The answer is harder than the taxonomy suggests. FIVE exact degeneracy families reach ALL FOUR devices, the plug-flow bed included: in a well-mixed fluid series deactivation of order (n', d) IS parallel of order (n n', d+n') for any n; in the held-C_A device parallel, series and independent are literally the same equation; and at the base orders n = n' = d = 1, in a batch of fluid or a bed, side-by-side deactivation with poison group sigma IS parallel deactivation with n' -> lambda sigma / kappa, for EVERY sigma - the poison profile is a power of the reactant profile there, and it is NOT in the two well-mixed devices, where the same identity fails by more than 1e-1. What the bed and the batch keep - and the two well-mixed devices do not - is a distinction between parallel, series and independent; what the bed alone has is a spatial coordinate. At a 0.2-percentage-point conversion resolution NO device separates more than one of the twelve class pairs. What does discriminate is not the outlet history but the activity PROFILE: after the same run the bed's inlet sits at exactly a = 1 under series decay (no R has been made there) and at exactly a = e^(-lambda) = 0.0498 under parallel, a contrast of opposite sign that one spent-catalyst assay would see. Eq. (24) as printed is offset from the paper's own eq. (21) by exactly ln(k_d/k)."
+# categories: [sec:B, struct:S1, struct:S5, tier:T0, data:tier6, phase:gas-solid]
+# date: 2026-08-08
+# ---
+#
+# # Levenspiel's four deactivation classes: which reactor can tell them apart
+#
+# **Catalog ID:** `B2.3` · **Structures:** `S1`, `S5` · **Tier:** T0
+#
+# A deactivating catalyst has three things going on at once (temperature,
+# composition, and the activity of the pellet itself), and only two of them are
+# under the experimenter's control. Levenspiel's 1972 paper is about the third.
+# It writes the rate of a deactivating pellet as a product,
+#
+# $$-r'_{\rm A} = f_1(\text{fluid conditions})\cdot f_2(\text{present activity}), \tag{1}$$
+#
+# instantiates it as $n$th-order kinetics with $n'$-order, $d$-order decay in
+# **four broad classes**: parallel, series, side-by-side, independent (its
+# eqs. 4–7), and then asks the question this page is about:
+#
+# > *"We ask in particular whether experiments can be devised so as to give
+# > simply the orders and rate constants of these equations."* (p. 272)
+#
+# That is a question about **experimental design**, and the paper answers it in
+# words: one particular contacting, it says, "alone allows decoupling of
+# concentration and activity effects". This page answers it with numbers.
+# It solves all four classes in all four of the paper's own batch-solids
+# contactings, and then does the only thing that can settle a claim of
+# discriminability: **fits every class to every other class's response** and
+# reports the conversion resolution an experiment would need to tell them apart.
+#
+# The answer is harder than the taxonomy suggests, in two stages.
+#
+# **First, the four devices are not merely poor at separating the classes: every
+# one of them is *exactly* degenerate somewhere**, by algebraic identities the
+# page proves symbolically and then confirms by subtraction. In any well-mixed
+# fluid at constant flow, series deactivation of order $(n', d)$ **is** parallel
+# deactivation of order $(n n',\, d+n')$, for any reaction order $n$: same
+# observable, every time. In the held-$C_{\rm A}$ device Levenspiel recommends,
+# parallel, series and independent are literally the same equation: decoupling
+# concentration from activity is exactly what destroys the class distinction
+# inside one run. And in a **batch of fluid or a plug-flow bed**, the two
+# devices that do keep parallel, series and independent apart, side-by-side
+# deactivation with poison group $\sigma$ **is** parallel deactivation with
+# $n' \to \lambda\sigma/\kappa$, for *every* $\sigma$, at the base orders
+# $n = n' = d = 1$. The bed is not the
+# exception to the degeneracies; it is one of the two devices whose degeneracy is
+# narrower.
+#
+# **Second, the two devices that keep those three classes apart are still not
+# enough.** At a conversion resolution of 0.2 percentage points, the plug-flow
+# bed separates one of the twelve class pairs, and no other device separates any.
+# Parallel and series in a bed differ by 8.1e-4 in RMS conversion: real, but a
+# tenth of a percentage point.
+#
+# What *does* discriminate is not the outlet history at all, and it is the one
+# thing only the bed has: an **activity profile**. After the same run, a bed
+# decaying in parallel ends with its inlet at $a = e^{-\lambda}$ and its outlet
+# near 0.19, while the same bed decaying in series ends with its inlet at
+# **exactly 1** (no R has been made at the feed face, so nothing has decayed
+# there) and its outlet near 0.18. Both inlet values are exact, not computed;
+# the contrast reverses sign, and one assay of the spent catalyst reads it off.
+# That is `B2.2`'s finding (the profile names the mechanism), arrived at from
+# the opposite direction.
 
+# %% [markdown]
+# ## Background
+#
+# **The source, precisely.** Octave Levenspiel, *"Experimental Search for a
+# Simple Rate Equation to Describe Deactivating Porous Catalyst Particles"*,
+# **Journal of Catalysis 25**(2) 265–272 (1972),
+# [doi:10.1016/0021-9517(72)90227-8](https://doi.org/10.1016/0021-9517(72)90227-8),
+# Department of Chemical Engineering, Oregon State University, Corvallis,
+# Oregon 97331; received September 28, 1971. Identified from the document's own
+# first page, running head "JOURNAL OF CATALYSIS 25, 265–272 (1972)", display
+# title, the single-author by-line "OCTAVE LEVENSPIEL", the affiliation block,
+# the received date and the abstract, on a native-resolution render. The scan is
+# CCITT-G4 bilevel at **300 ppi native**, 8 pages, complete.
+#
+# **The text layer of this file is not usable and was not used.** Its OCR
+# mangles the abstract into "the experimental detrrmination of the ordrrs of
+# reaction and deactivation", "deactivation of catalyst particlrs", "parallrl",
+# "the various rractor types which may he usctf". Every symbol, subscript,
+# prime and exponent on this page was read from a cropped 300 ppi render at
+# glyph scale, which matters more here than usual, because the whole paper
+# turns on telling $n$ from $n'$, $k$ from $k'$ from $k_d$ from $k'_d$, and
+# $C_{\rm A}$ from $C_{\rm R}$ from $C_{\rm P}$.
+#
+# **This is Levenspiel the author, not Levenspiel the book.** *Chemical
+# Reaction Engineering* is a different work (this paper cites its 2nd edition,
+# Chap. 15, as its own ref. 3); it remains outstanding as a textbook-canonical
+# source and is what `A2.4` is catalogued to. Nothing on this page closes that.
+#
+# **Where it sits.** Third of a ladder. `B2.1` is
+# [Voorhies (1945)](../B2.1-voorhies-coking-law/): coke as a power of
+# time-on-stream, $C_c = A\theta^n$, activity correlated with the clock.
+# `B2.2` is [Froment & Bischoff (1961)](../B2.2-froment-bischoff-coking/):
+# activity correlated with the carbon actually deposited, which becomes a
+# *profile* along a bed whose direction names the fouling mechanism. This paper
+# takes the third step: activity as a state variable $a$ with its own $n'$-,
+# $d$-order rate law, and the question of what experiment could ever measure
+# those orders. The connection to `B2.2` turns out to be sharper than a shared
+# subject: the single device here that supports a spatial gradient is also the
+# one whose exact degeneracy is narrowest, and the measurement that actually
+# separates the classes in it is the shape of the deposit, which is `B2.2`'s
+# finding arrived at from the opposite direction.
+#
+# **What the paper contains, and what it does not.** It contains 32 numbered
+# equations, six figures and no measurements. There is **no table anywhere in
+# the eight pages**; Figs. 2–6 are schematic test plots with unlabelled axes,
+# no tick values, and open circles drawn to illustrate a straight line
+# ("A straight line on this plot indicates that the guessed order of
+# deactivation is correct", Fig. 6 caption). The paper's title word is
+# *Search*, and its Discussion states the subject plainly: whether experiments
+# *can be devised*. **No comparison against any measured order is attempted or
+# promised on this page, because the paper reports none.**
+
+# %% [markdown]
+# ## The published model
+#
+# All equation numbers are the paper's. Every symbol below was read from a
+# cropped native-resolution render.
+#
+# ### The four classes (eqs. 4–7, p. 266)
+#
+# Each class pairs the same $n$th-order reaction rate with a different driving
+# concentration for the decay. $a$ is the activity, defined in eq. (3) as the
+# ratio of the pellet's present rate to its rate when fresh, so $a(0) = 1$.
+#
+# | eq. | class | scheme | rate of reaction | rate of decay |
+# |---|---|---|---|---|
+# | (4) | *parallel* | A→R, A→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm A}^{\,n'} a^{\,d}$ |
+# | (5) | *series* | A→R→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm R}^{\,n'} a^{\,d}$ |
+# | (6) | *side-by-side* | A→R, P→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm P}^{\,n'} a^{\,d}$ |
+# | (7) | *independent* | - | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,a^{\,d}$ |
+#
+# A fifth scheme (eq. 8, A→R with both A and R poisoning) is dismissed by the
+# paper in one line: $-da/dt = k_d(C_{\rm A}+C_{\rm R})^{n'}a^d$ and
+# "since $C_{\rm A} + C_{\rm R}$ remains constant for a specific feed, this type
+# of deactivation reduces to the simple-to-treat independent deactivation of
+# Eq. 7". Verified below.
+#
+# The Nomenclature (p. 265) defines the shorthands that carry the rest of the
+# paper: $k' = k\,C_{\rm A}^{\,n}$, $k'_d = k_d\,C_{\rm A}^{\,n'}$,
+# $k'' = kW/V$, and the **weight-time**
+# $\tau' = W C_{\rm A0}/F_{\rm A0}$ (g cat·sec/liter of fluid), the capacity
+# factor that plays the role of space time for a fixed weight of catalyst.
+#
+# ### The four contactings (Fig. 1, p. 268)
+#
+# Fig. 1's top row is the batch-solids family this paper is "primarily concerned
+# with": **(a)** batch of both solid and fluid, **(b)** plug flow of fluid,
+# **(c)** mixed flow of fluid, **(d)** recycle flow of fluid. (The bottom row,
+# raining solids and a fluidised bed, is for deactivation "in the order of
+# seconds or less" and is out of scope here, as is (d), which the paper itself
+# says "offers no particular advantage".) On top of the contacting pattern the
+# paper adds a second axis: the flow rate may be held **constant**, or lowered
+# continually so as to hold a concentration constant.
+#
+# For the illustrative first-order, concentration-independent case (eq. 9,
+# $-r'_{\rm A} = kC_{\rm A}a$ with $-da/dt = k_d a$) the paper works each
+# contacting through to a straight-line test:
+#
+# | contacting | performance relation | test plot |
+# |---|---|---|
+# | (a) batch fluid | $\ln\ln\dfrac{C_{\rm A}}{C_{\rm A\infty}} = \ln\ln\dfrac{C_{\rm A0}}{C_{\rm A\infty}} - k_d t$ (15) | Fig. 2 |
+# | (c) mixed, constant flow | $\ln\!\left(\dfrac{C_{\rm A0}}{C_{\rm A}}-1\right) = \ln(k\tau') - k_d t$ (19) | Fig. 3 |
+# | (b) plug, constant flow | $\ln\ln\dfrac{C_{\rm A0}}{C_{\rm A}} = \ln(k\tau') - k_d t$ (22) | Fig. 4 |
+# | (c) mixed, $C_{\rm A}$ held | $\ln\tau' = k_d t + \ln\dfrac{C_{\rm A0}-C_{\rm A}}{k\,C_{\rm A}}$ (23) | Fig. 5 |
+# | (b) plug, $C_{\rm A,out}$ held | $\ln\tau' = k_d t + \ln\!\left(\dfrac{1}{k_d}\ln\dfrac{C_{\rm A0}}{C_{\rm A}}\right)$ (24) | Fig. 5, shifted |
+#
+# **Eq. (24) is transcribed exactly as printed, and it is wrong as printed.**
+# The paper derives it from its own eq. (21) one line above, and eq. (21) gives
+# $1/k$ where eq. (24) prints $1/k_d$. The discrepancy is settled symbolically
+# and dimensionally below; it is **reported, not repaired**, and the CSV carries
+# the printed form.
+#
+# ### The general-order analysis (eqs. 25–32, p. 271)
+#
+# The paper's recommendation. Hold $C_{\rm A}$ constant by lowering the flow
+# rate; then $k' = kC_{\rm A}^{\,n}$ and $k'_d = k_dC_{\rm A}^{\,n'}$ are
+# constants, eqs. (4) collapse to
+#
+# $$-r'_{\rm A} = k'a \tag{25}$$
+#
+# $$-\frac{da}{dt} = k'_d\,a^{\,d} \tag{26}$$
+#
+# the mixed-flow performance relation becomes $\tau' = (C_{\rm A0}-C_{\rm A})/(k'a)$
+# (27), and integrating (26) for each $d$ gives the four printed straight lines
+# (28)–(31) and their general form
+#
+# $$(\tau')^{\,d-1} = C_1 + C_2\,t, \qquad
+# C_1 = \left(\frac{C_{\rm A0}-C_{\rm A}}{k'}\right)^{d-1}, \quad
+# C_2 = C_1\,(d-1)\,k'_d \tag{32}$$
+#
+# with $C_1$, $C_2$ printed on Fig. 6 as its intercept and slope. All of
+# (28)–(32) are re-derived symbolically below.
+
+# %% [markdown]
+# ## Parameters and assumptions
+#
+# **Everything is dimensionless, and every group is a ratio the paper itself
+# defines.** Writing $c = C_{\rm A}/C_{\rm A0}$, $r = 1-c = C_{\rm R}/C_{\rm A0}$
+# (constant density, A→R one-for-one), $p = C_{\rm P}/C_{\rm P0}$,
+# $s = w/W$ the fraction of the catalyst weight passed, and $\theta = t/t_{\rm obs}$
+# the time in units of the observation window:
+#
+# | group | definition | meaning | base value |
+# |---|---|---|---|
+# | $\kappa$ | $k\,C_{\rm A0}^{\,n-1}\tau'$ | Damköhler number on fresh catalyst | 1.5 |
+# | $\lambda$ | $k_d\,C_{\rm ref}^{\,n'}\,t_{\rm obs}$ | decay rate × observation window | 3.0 |
+# | $n$ | - | reaction order (the paper's own worked case is $n=1$) | 1 |
+# | $n'$ | - | concentration order of the decay | 1 |
+# | $d$ | - | order of the decay in activity | 1 |
+# | $\sigma$ | see below | poison consumed per unit activity lost | 0.8 |
+# | $c_{\rm set}$ | - | the level $C_{\rm A}$ is held at in the constant-$C_{\rm A}$ device | 0.4 |
+#
+# The base point puts fresh-catalyst conversion at the values printed by the
+# imports cell below, and runs until the activity has fallen by roughly an order of magnitude:
+# i.e. a run an experimenter would actually design. **Every conclusion below is
+# stated with the $(n, n', d)$ it was computed at**, and the ones that depend on
+# those orders are mapped, not asserted.
+#
+# **$\sigma$ is not printed, and is declared here.** Eq. (6) reads
+# "P → P↓": the poison is *consumed* by depositing, so a poison mass balance is
+# unavoidable, but the paper never gives the stoichiometry. $\sigma$ is the
+# dimensionless group multiplying it: moles of P removed from the fluid per
+# unit of activity destroyed, scaled by $\tau'/C_{\rm P0}$. It is a
+# reconstruction, not a transcription; it is swept, and the $\sigma \to 0$ limit
+# (a poison in such excess that its concentration never moves) is reported
+# separately because it is exactly degenerate with independent deactivation.
+#
+# **Assumptions carried from the source.**
+#
+# - **Pseudo-steady fluid**, stated by the paper on p. 269: *"this and the
+#   following derivations for a batch of solids are based on the
+#   pseudo-steady-state assumption ... Since a batch of solids can only be used
+#   in experimentation if deactivation is not too rapid this assumption is
+#   reasonable."* Everything except the last section assumes it. The last
+#   section drops it and measures what it costs.
+# - **Isothermal, constant density, single reaction A→R** with no volume change
+#   ($\epsilon_{\rm A} = 0$), so $C_{\rm R} = C_{\rm A0} - C_{\rm A}$ everywhere.
+#   This is the paper's own setting: it prints $\epsilon_{\rm A}$ in the
+#   Nomenclature but never uses it.
+# - $a(0) = 1$ for the whole batch of solids ("The activity starts at unity",
+#   p. 266).
+#
+# **Measurement resolution.** A discriminability claim is meaningless without
+# one, so every separability number below is reported as a **raw RMS deviation
+# in fractional conversion**: the resolution an experiment must have to refute
+# the wrong class. For labelling only, `RES_X` = 2e-3 (0.2 conversion
+# percentage points, a good laboratory chromatograph) and `RES_TAU` = 0.01
+# (1 % in flow rate) are used; the raw numbers are printed beside every verdict
+# so a reader with a different instrument can rescale.
+#
+# **Direction of the separability claim, stated once.** $D(T\!\to\!C)$ is the
+# *minimum* misfit of class $C$ to a response generated by class $T$. An
+# optimiser returns an **upper bound** on that minimum. So a large $D$ means
+# "no fit this good was found": separation could be worse than reported, never
+# better. The claims that run the other way, $D = 0$, *not* separable, are
+# therefore the safe ones, and every one of them is backed here by an exact
+# algebraic identity rather than by an optimiser.
+
+# %%
+# Bootstrap: the pymrm this page was checked with, and the gallery files it was
+# published with. Works in a checkout, in CI and on a fresh Colab VM.
+GALLERY_REF = "main"  # replaced by the release tag at publication
+PYMRM = ">=3.3.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PAGE = "B2.3-levenspiel-deactivation-classes"  # equals the page directory
+
+import os, sys, urllib.request
 from pathlib import Path
+_shared = next((p / "shared" for p in (Path.cwd(), *Path.cwd().parents)
+                if (p / "shared" / "gallery_bootstrap.py").is_file()), None)
+if _shared is None:
+    _shared = (Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+               / "pymrm-gallery" / GALLERY_REF)
+    _shared.mkdir(parents=True, exist_ok=True)
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/computational-chemical-engineering/"
+        f"pymrm-gallery/{GALLERY_REF}/shared/gallery_bootstrap.py",
+        _shared / "gallery_bootstrap.py")
+sys.path.insert(0, str(_shared))
+sys.modules.pop("gallery_bootstrap", None)
+from gallery_bootstrap import setup
+setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path
 
-import nbformat as nbf
-
-md, code = nbf.v4.new_markdown_cell, nbf.v4.new_code_cell
-cells = []
-
-# --------------------------------------------------------------- front matter
-cells.append(md(r"""---
-title: "Levenspiel's four deactivation classes: which reactor can tell them apart"
-description: "Levenspiel (1972) asks whether experiments can be devised that return the orders of an nth-order deactivating rate equation, for the four classes parallel, series, side-by-side and independent. The paper prints no data at all, so this page proves its printed structure (26 symbolic identities) and then measures the question it poses: all four classes solved in all four of its batch-solids contactings, and every class fitted to every other class's response - 64 fits. The answer is harder than the taxonomy suggests. FIVE exact degeneracy families reach ALL FOUR devices, the plug-flow bed included: in a well-mixed fluid series deactivation of order (n', d) IS parallel of order (n n', d+n') for any n; in the held-C_A device parallel, series and independent are literally the same equation; and at the base orders n = n' = d = 1, in a batch of fluid or a bed, side-by-side deactivation with poison group sigma IS parallel deactivation with n' -> lambda sigma / kappa, for EVERY sigma - the poison profile is a power of the reactant profile there, and it is NOT in the two well-mixed devices, where the same identity fails by 1e-1. What the bed and the batch keep - and the two well-mixed devices do not - is a distinction between parallel, series and independent; what the bed alone has is a spatial coordinate. At a 0.2-percentage-point conversion resolution NO device separates more than one of the twelve class pairs. What does discriminate is not the outlet history but the activity PROFILE: after the same run the bed's inlet sits at exactly a = 1 under series decay (no R has been made there) and at exactly a = e^(-lambda) = 0.0498 under parallel, a contrast of opposite sign that one spent-catalyst assay would see. Eq. (24) as printed is offset from the paper's own eq. (21) by exactly ln(k_d/k)."
-categories: [sec:B, struct:S1, struct:S5, tier:T0, data:tier6, phase:gas-solid]
-date: 2026-08-08
----
-
-# Levenspiel's four deactivation classes: which reactor can tell them apart
-
-**Catalog ID:** `B2.3` · **Structures:** `S1`, `S5` · **Tier:** T0
-
-A deactivating catalyst has three things going on at once — temperature,
-composition, and the activity of the pellet itself — and only two of them are
-under the experimenter's control. Levenspiel's 1972 paper is about the third.
-It writes the rate of a deactivating pellet as a product,
-
-$$-r'_{\rm A} = f_1(\text{fluid conditions})\cdot f_2(\text{present activity}), \tag{1}$$
-
-instantiates it as $n$th-order kinetics with $n'$-order, $d$-order decay in
-**four broad classes** — parallel, series, side-by-side, independent (its
-eqs. 4–7) — and then asks the question this page is about:
-
-> *"We ask in particular whether experiments can be devised so as to give
-> simply the orders and rate constants of these equations."* (p. 272)
-
-That is a question about **experimental design**, and the paper answers it in
-words: one particular contacting, it says, "alone allows decoupling of
-concentration and activity effects". This page answers it with numbers.
-It solves all four classes in all four of the paper's own batch-solids
-contactings, and then does the only thing that can settle a claim of
-discriminability: **fits every class to every other class's response** and
-reports the conversion resolution an experiment would need to tell them apart.
-
-The answer is harder than the taxonomy suggests, in two stages.
-
-**First, the four devices are not merely poor at separating the classes — every
-one of them is *exactly* degenerate somewhere**, by algebraic identities the
-page proves symbolically and then confirms by subtraction. In any well-mixed
-fluid at constant flow, series deactivation of order $(n', d)$ **is** parallel
-deactivation of order $(n n',\, d+n')$, for any reaction order $n$: same
-observable, every time. In the held-$C_{\rm A}$ device Levenspiel recommends,
-parallel, series and independent are literally the same equation — decoupling
-concentration from activity is exactly what destroys the class distinction
-inside one run. And in a **batch of fluid or a plug-flow bed** — the two
-devices that do keep parallel, series and independent apart — side-by-side
-deactivation with poison group $\sigma$ **is** parallel deactivation with
-$n' \to \lambda\sigma/\kappa$, for *every* $\sigma$, at the base orders
-$n = n' = d = 1$. The bed is not the
-exception to the degeneracies; it is one of the two devices whose degeneracy is
-narrower.
-
-**Second, the two devices that keep those three classes apart are still not
-enough.** At a conversion resolution of 0.2 percentage points, the plug-flow
-bed separates one of the twelve class pairs, and no other device separates any.
-Parallel and series in a bed differ by 8.1e-4 in RMS conversion — real, but a
-tenth of a percentage point.
-
-What *does* discriminate is not the outlet history at all, and it is the one
-thing only the bed has: an **activity profile**. After the same run, a bed
-decaying in parallel ends with its inlet at $a = e^{-\lambda}$ and its outlet
-near 0.19, while the same bed decaying in series ends with its inlet at
-**exactly 1** — no R has been made at the feed face, so nothing has decayed
-there — and its outlet near 0.18. Both inlet values are exact, not computed;
-the contrast reverses sign, and one assay of the spent catalyst reads it off.
-That is `B2.2`'s finding — the profile names the mechanism — arrived at from
-the opposite direction."""))
-
-# ----------------------------------------------------------------- background
-cells.append(md(r"""## Background
-
-**The source, precisely.** Octave Levenspiel, *"Experimental Search for a
-Simple Rate Equation to Describe Deactivating Porous Catalyst Particles"*,
-**Journal of Catalysis 25**(2) 265–272 (1972),
-[doi:10.1016/0021-9517(72)90227-8](https://doi.org/10.1016/0021-9517(72)90227-8),
-Department of Chemical Engineering, Oregon State University, Corvallis,
-Oregon 97331; received September 28, 1971. Identified from the document's own
-first page — running head "JOURNAL OF CATALYSIS 25, 265–272 (1972)", display
-title, the single-author by-line "OCTAVE LEVENSPIEL", the affiliation block,
-the received date and the abstract — on a native-resolution render. The scan is
-CCITT-G4 bilevel at **300 ppi native**, 8 pages, complete.
-
-**The text layer of this file is not usable and was not used.** Its OCR
-mangles the abstract into "the experimental detrrmination of the ordrrs of
-reaction and deactivation", "deactivation of catalyst particlrs", "parallrl",
-"the various rractor types which may he usctf". Every symbol, subscript,
-prime and exponent on this page was read from a cropped 300 ppi render at
-glyph scale — which matters more here than usual, because the whole paper
-turns on telling $n$ from $n'$, $k$ from $k'$ from $k_d$ from $k'_d$, and
-$C_{\rm A}$ from $C_{\rm R}$ from $C_{\rm P}$.
-
-**This is Levenspiel the author, not Levenspiel the book.** *Chemical
-Reaction Engineering* is a different work (this paper cites its 2nd edition,
-Chap. 15, as its own ref. 3); it remains outstanding as a textbook-canonical
-source and is what `A2.4` is catalogued to. Nothing on this page closes that.
-
-**Where it sits.** Third of a ladder. `B2.1` is
-[Voorhies (1945)](../B2.1-voorhies-coking-law/) — coke as a power of
-time-on-stream, $C_c = A\theta^n$, activity correlated with the clock.
-`B2.2` is [Froment & Bischoff (1961)](../B2.2-froment-bischoff-coking/) —
-activity correlated with the carbon actually deposited, which becomes a
-*profile* along a bed whose direction names the fouling mechanism. This paper
-takes the third step: activity as a state variable $a$ with its own $n'$-,
-$d$-order rate law, and the question of what experiment could ever measure
-those orders. The connection to `B2.2` turns out to be sharper than a shared
-subject: the single device here that supports a spatial gradient is also the
-one whose exact degeneracy is narrowest, and the measurement that actually
-separates the classes in it is the shape of the deposit — which is `B2.2`'s
-finding arrived at from the opposite direction.
-
-**What the paper contains, and what it does not.** It contains 32 numbered
-equations, six figures and no measurements. There is **no table anywhere in
-the eight pages**; Figs. 2–6 are schematic test plots with unlabelled axes,
-no tick values, and open circles drawn to illustrate a straight line
-("A straight line on this plot indicates that the guessed order of
-deactivation is correct", Fig. 6 caption). The paper's title word is
-*Search*, and its Discussion states the subject plainly: whether experiments
-*can be devised*. **No comparison against any measured order is attempted or
-promised on this page, because the paper reports none.**"""))
-
-# ----------------------------------------------------------- published model
-cells.append(md(r"""## The published model
-
-All equation numbers are the paper's. Every symbol below was read from a
-cropped native-resolution render.
-
-### The four classes (eqs. 4–7, p. 266)
-
-Each class pairs the same $n$th-order reaction rate with a different driving
-concentration for the decay. $a$ is the activity, defined in eq. (3) as the
-ratio of the pellet's present rate to its rate when fresh, so $a(0) = 1$.
-
-| eq. | class | scheme | rate of reaction | rate of decay |
-|---|---|---|---|---|
-| (4) | *parallel* | A→R, A→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm A}^{\,n'} a^{\,d}$ |
-| (5) | *series* | A→R→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm R}^{\,n'} a^{\,d}$ |
-| (6) | *side-by-side* | A→R, P→P↓ | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,C_{\rm P}^{\,n'} a^{\,d}$ |
-| (7) | *independent* | — | $-r'_{\rm A} = k\,C_{\rm A}^{\,n} a$ | $-\dfrac{da}{dt} = k_d\,a^{\,d}$ |
-
-A fifth scheme (eq. 8, A→R with both A and R poisoning) is dismissed by the
-paper in one line — $-da/dt = k_d(C_{\rm A}+C_{\rm R})^{n'}a^d$ and
-"since $C_{\rm A} + C_{\rm R}$ remains constant for a specific feed, this type
-of deactivation reduces to the simple-to-treat independent deactivation of
-Eq. 7". Verified below.
-
-The Nomenclature (p. 265) defines the shorthands that carry the rest of the
-paper: $k' = k\,C_{\rm A}^{\,n}$, $k'_d = k_d\,C_{\rm A}^{\,n'}$,
-$k'' = kW/V$, and the **weight-time**
-$\tau' = W C_{\rm A0}/F_{\rm A0}$ (g cat·sec/liter of fluid), the capacity
-factor that plays the role of space time for a fixed weight of catalyst.
-
-### The four contactings (Fig. 1, p. 268)
-
-Fig. 1's top row is the batch-solids family this paper is "primarily concerned
-with": **(a)** batch of both solid and fluid, **(b)** plug flow of fluid,
-**(c)** mixed flow of fluid, **(d)** recycle flow of fluid. (The bottom row —
-raining solids and a fluidised bed — is for deactivation "in the order of
-seconds or less" and is out of scope here, as is (d), which the paper itself
-says "offers no particular advantage".) On top of the contacting pattern the
-paper adds a second axis: the flow rate may be held **constant**, or lowered
-continually so as to hold a concentration constant.
-
-For the illustrative first-order, concentration-independent case (eq. 9,
-$-r'_{\rm A} = kC_{\rm A}a$ with $-da/dt = k_d a$) the paper works each
-contacting through to a straight-line test:
-
-| contacting | performance relation | test plot |
-|---|---|---|
-| (a) batch fluid | $\ln\ln\dfrac{C_{\rm A}}{C_{\rm A\infty}} = \ln\ln\dfrac{C_{\rm A0}}{C_{\rm A\infty}} - k_d t$ (15) | Fig. 2 |
-| (c) mixed, constant flow | $\ln\!\left(\dfrac{C_{\rm A0}}{C_{\rm A}}-1\right) = \ln(k\tau') - k_d t$ (19) | Fig. 3 |
-| (b) plug, constant flow | $\ln\ln\dfrac{C_{\rm A0}}{C_{\rm A}} = \ln(k\tau') - k_d t$ (22) | Fig. 4 |
-| (c) mixed, $C_{\rm A}$ held | $\ln\tau' = k_d t + \ln\dfrac{C_{\rm A0}-C_{\rm A}}{k\,C_{\rm A}}$ (23) | Fig. 5 |
-| (b) plug, $C_{\rm A,out}$ held | $\ln\tau' = k_d t + \ln\!\left(\dfrac{1}{k_d}\ln\dfrac{C_{\rm A0}}{C_{\rm A}}\right)$ (24) | Fig. 5, shifted |
-
-**Eq. (24) is transcribed exactly as printed, and it is wrong as printed.**
-The paper derives it from its own eq. (21) one line above, and eq. (21) gives
-$1/k$ where eq. (24) prints $1/k_d$. The discrepancy is settled symbolically
-and dimensionally below; it is **reported, not repaired**, and the CSV carries
-the printed form.
-
-### The general-order analysis (eqs. 25–32, p. 271)
-
-The paper's recommendation. Hold $C_{\rm A}$ constant by lowering the flow
-rate; then $k' = kC_{\rm A}^{\,n}$ and $k'_d = k_dC_{\rm A}^{\,n'}$ are
-constants, eqs. (4) collapse to
-
-$$-r'_{\rm A} = k'a \tag{25}\qquad -\frac{da}{dt} = k'_d\,a^{\,d} \tag{26}$$
-
-the mixed-flow performance relation becomes $\tau' = (C_{\rm A0}-C_{\rm A})/(k'a)$
-(27), and integrating (26) for each $d$ gives the four printed straight lines
-(28)–(31) and their general form
-
-$$(\tau')^{\,d-1} = C_1 + C_2\,t, \qquad
-C_1 = \left(\frac{C_{\rm A0}-C_{\rm A}}{k'}\right)^{d-1}, \quad
-C_2 = C_1\,(d-1)\,k'_d \tag{32}$$
-
-with $C_1$, $C_2$ printed on Fig. 6 as its intercept and slope. All of
-(28)–(32) are re-derived symbolically below."""))
-
-# ------------------------------------------------- parameters and assumptions
-cells.append(md(r"""## Parameters and assumptions
-
-**Everything is dimensionless, and every group is a ratio the paper itself
-defines.** Writing $c = C_{\rm A}/C_{\rm A0}$, $r = 1-c = C_{\rm R}/C_{\rm A0}$
-(constant density, A→R one-for-one), $p = C_{\rm P}/C_{\rm P0}$,
-$s = w/W$ the fraction of the catalyst weight passed, and $\theta = t/t_{\rm obs}$
-the time in units of the observation window:
-
-| group | definition | meaning | base value |
-|---|---|---|---|
-| $\kappa$ | $k\,C_{\rm A0}^{\,n-1}\tau'$ | Damköhler number on fresh catalyst | 1.5 |
-| $\lambda$ | $k_d\,C_{\rm ref}^{\,n'}\,t_{\rm obs}$ | decay rate × observation window | 3.0 |
-| $n$ | — | reaction order (the paper's own worked case is $n=1$) | 1 |
-| $n'$ | — | concentration order of the decay | 1 |
-| $d$ | — | order of the decay in activity | 1 |
-| $\sigma$ | see below | poison consumed per unit activity lost | 0.8 |
-| $c_{\rm set}$ | — | the level $C_{\rm A}$ is held at in the constant-$C_{\rm A}$ device | 0.4 |
-
-The base point puts fresh-catalyst conversion at 60 % (mixed) / 78 % (plug)
-and runs until the activity has fallen by roughly an order of magnitude —
-i.e. a run an experimenter would actually design. **Every conclusion below is
-stated with the $(n, n', d)$ it was computed at**, and the ones that depend on
-those orders are mapped, not asserted.
-
-**$\sigma$ is not printed, and is declared here.** Eq. (6) reads
-"P → P↓": the poison is *consumed* by depositing, so a poison mass balance is
-unavoidable, but the paper never gives the stoichiometry. $\sigma$ is the
-dimensionless group multiplying it — moles of P removed from the fluid per
-unit of activity destroyed, scaled by $\tau'/C_{\rm P0}$. It is a
-reconstruction, not a transcription; it is swept, and the $\sigma \to 0$ limit
-(a poison in such excess that its concentration never moves) is reported
-separately because it is exactly degenerate with independent deactivation.
-
-**Assumptions carried from the source.**
-
-- **Pseudo-steady fluid**, stated by the paper on p. 269: *"this and the
-  following derivations for a batch of solids are based on the
-  pseudo-steady-state assumption ... Since a batch of solids can only be used
-  in experimentation if deactivation is not too rapid this assumption is
-  reasonable."* Everything except the last section assumes it. The last
-  section drops it and measures what it costs.
-- **Isothermal, constant density, single reaction A→R** with no volume change
-  ($\epsilon_{\rm A} = 0$), so $C_{\rm R} = C_{\rm A0} - C_{\rm A}$ everywhere.
-  This is the paper's own setting: it prints $\epsilon_{\rm A}$ in the
-  Nomenclature but never uses it.
-- $a(0) = 1$ for the whole batch of solids ("The activity starts at unity",
-  p. 266).
-
-**Measurement resolution.** A discriminability claim is meaningless without
-one, so every separability number below is reported as a **raw RMS deviation
-in fractional conversion** — the resolution an experiment must have to refute
-the wrong class. For labelling only, `RES_X` = 2e-3 (0.2 conversion
-percentage points, a good laboratory chromatograph) and `RES_TAU` = 0.01
-(1 % in flow rate) are used; the raw numbers are printed beside every verdict
-so a reader with a different instrument can rescale.
-
-**Direction of the separability claim, stated once.** $D(T\!\to\!C)$ is the
-*minimum* misfit of class $C$ to a response generated by class $T$. An
-optimiser returns an **upper bound** on that minimum. So a large $D$ means
-"no fit this good was found" — separation could be worse than reported, never
-better. The claims that run the other way — $D = 0$, *not* separable — are
-therefore the safe ones, and every one of them is backed here by an exact
-algebraic identity rather than by an optimiser."""))
-
-# ------------------------------------------------------------ colab cell ----
-cells.append(code(r'''try:
-    import pymrm  # noqa: F401
-except ImportError:
-    %pip install -q pymrm pyyaml
-'''))
-
-# ------------------------------------------------------------- imports ------
-cells.append(code(r'''"""Bootstrap, data, and the two ledgers (metrics M, break rows BREAKS)."""
-import sys, pathlib, time
-if "google.colab" in sys.modules:
-    import urllib.request
-    base = ("https://raw.githubusercontent.com/computational-chemical-engineering/"
-            "pymrm-gallery/main/shared/gallery_utils.py")
-    urllib.request.urlretrieve(base, "gallery_utils.py")
-else:
-    for p in (pathlib.Path.cwd(), *pathlib.Path.cwd().parents):
-        if (p / "shared" / "gallery_utils.py").is_file():
-            sys.path.insert(0, str(p / "shared")); break
-
+# %%
+"""Imports, data, and the two ledgers (metrics M, break rows BREAKS)."""
 import numpy as np
 import pandas as pd
 import sympy as sp
 import matplotlib.pyplot as plt
 from IPython.display import Markdown, display
-from gallery_utils import Claims, load_data, load_meta, cite_data
+from scipy.integrate import solve_ivp
+from scipy.optimize import brentq, least_squares, minimize_scalar
+from pymrm import interp_cntr_to_stagg
+from pymrm.checks import observed_orders
+from gallery_utils import Claims, cite_data, load_claims, load_data, load_meta
+from model import (TH, PLUG, Bed, PlugExact, _cascade, _mixed_p, _pow, respond,
+                   run_batch, run_const_c, run_mixed)
 
-PAGE = "B2.3-levenspiel-deactivation-classes"
 EQS    = load_data("levenspiel-1972-printed-equations.csv", page=PAGE)
 EQS["eq"] = EQS["eq"].astype(str)
 EQS = EQS.set_index("eq")
@@ -338,58 +353,61 @@ DEV = {"batch": "Fig. 1a  batch fluid",
 RES_X   = 2.0e-3     # illustrative conversion resolution (0.2 percentage points)
 RES_TAU = 1.0e-2     # illustrative resolution in ln(tau'), i.e. 1 % in flow rate
 BASE = dict(kappa=1.5, lam=3.0, d=1.0, nprime=1.0, n=1.0, sig=0.8, c_set=0.4)
-TH = np.linspace(0.0, 1.0, 41)         # observation times, theta = t/t_obs
+assert TH.size == 41 and TH[0] == 0.0 and TH[-1] == 1.0   # observation times, theta = t/t_obs
 print(f"{len(EQS)} printed equations and {len(CLAIMS)} printed claims loaded")
-'''))
+print(f"fresh-catalyst conversion at the base point: "
+      f"{1.0 - 1.0 / (1.0 + BASE['kappa']):.2f} (mixed flow), "
+      f"{1.0 - np.exp(-BASE['kappa']):.2f} (plug flow)")
 
-# -------------------------------------------------------------- the data ----
-cells.append(md(r"""## The data
+# %% [markdown]
+# ## The data
+#
+# **There are none.** This paper publishes no measurement of any kind, and that
+# is a claim about the source, so here is the search that establishes it.
+#
+# All eight pages (265–272) were rendered at the scan's native 300 ppi and read
+# as images. **There is no table in the document**: no `TABLE` head, no ruled
+# block, no column of numbers anywhere in the eight pages. (The two-column
+# Nomenclature on p. 265 is a list of symbol definitions, not data.) The numeral
+# density is 70–112 glyphs per page and is almost entirely equation numbers: the
+# only numerals in the body text that are not equation numbers, figure or
+# section cross-references, page numbers, dates or bibliographic detail are the
+# two timescales on p. 267 ("0.1–1 sec", "minutes") and the orders on p. 272,
+#
+# > $n = 1;\quad n' = 0,1;\quad d = 1,3$
+#
+# and those are attributed to the paper's refs. 3 and 4 (Levenspiel's own
+# monograph and Kunii & Levenspiel's *Fluidization Engineering*) as the orders
+# *those* books show how to test, not as anything measured here. **Neither was
+# consulted**, and no number from either appears on this page.
+#
+# Figs. 2–6 are **schematic**, not data. Their abscissa is an unlabelled $t$;
+# their ordinate is an algebraic expression, not a scale; there is not a single
+# tick value on any of the ten axes; and the open circles are drawn to
+# illustrate what a correct guess would look like. The Fig. 6 caption says so:
+# *"A straight line on this plot indicates that the guessed order of deactivation
+# is correct."* Nothing was digitised, and nothing could have been.
+#
+# The Discussion states the paper's own subject in the same terms
+# (p. 272): *"We ask in particular whether experiments can be devised so as to
+# give simply the orders and rate constants of these equations."* The abstract's
+# damaged phrase "the experimental detrrmination of the ordrrs" means *how to
+# determine* them; the title word is **Search**.
+#
+# **Consequence for this page.** Nothing here is fitted to measurement and
+# nothing here is validated against measurement. Every number is one of three
+# things, labelled wherever it appears: (i) exact reproduction of printed
+# algebra; (ii) an exact algebraic identity between the paper's own rate forms;
+# (iii) a computed property of those rate forms in a reactor. The two CSVs under
+# `data/` are transcriptions: the printed equations this page uses, and the
+# printed claims it tests, quoted verbatim; both counts are printed by the
+# bootstrap cell above rather than typed here.
+#
+# **Data tier 6** (model-defining constants transcribed from the source, no
+# experimental dataset).
 
-**There are none.** This paper publishes no measurement of any kind, and that
-is a claim about the source, so here is the search that establishes it.
-
-All eight pages (265–272) were rendered at the scan's native 300 ppi and read
-as images. **There is no table in the document** — no `TABLE` head, no ruled
-block, no column of numbers anywhere in the eight pages. (The two-column
-Nomenclature on p. 265 is a list of symbol definitions, not data.) The numeral
-density is 70–112 glyphs per page and is almost entirely equation numbers: the
-only numerals in the body text that are not equation numbers, figure or
-section cross-references, page numbers, dates or bibliographic detail are the
-two timescales on p. 267 ("0.1–1 sec", "minutes") and the orders on p. 272,
-
-> $n = 1;\quad n' = 0,1;\quad d = 1,3$
-
-— and those are attributed to the paper's refs. 3 and 4 (Levenspiel's own
-monograph and Kunii & Levenspiel's *Fluidization Engineering*) as the orders
-*those* books show how to test, not as anything measured here. **Neither was
-consulted**, and no number from either appears on this page.
-
-Figs. 2–6 are **schematic**, not data. Their abscissa is an unlabelled $t$;
-their ordinate is an algebraic expression, not a scale; there is not a single
-tick value on any of the ten axes; and the open circles are drawn to
-illustrate what a correct guess would look like. The Fig. 6 caption says so:
-*"A straight line on this plot indicates that the guessed order of deactivation
-is correct."* Nothing was digitised, and nothing could have been.
-
-The Discussion states the paper's own subject in the same terms
-(p. 272): *"We ask in particular whether experiments can be devised so as to
-give simply the orders and rate constants of these equations."* The abstract's
-damaged phrase "the experimental detrrmination of the ordrrs" means *how to
-determine* them; the title word is **Search**.
-
-**Consequence for this page.** Nothing here is fitted to measurement and
-nothing here is validated against measurement. Every number is one of three
-things, labelled wherever it appears: (i) exact reproduction of printed
-algebra; (ii) an exact algebraic identity between the paper's own rate forms;
-(iii) a computed property of those rate forms in a reactor. The two CSVs under
-`data/` are transcriptions — the printed equations this page uses, and the
-printed claims it tests, quoted verbatim; both counts are printed by the
-bootstrap cell above rather than typed here.
-
-**Data tier 6** (model-defining constants transcribed from the source, no
-experimental dataset)."""))
-
-cells.append(code(r'''"""The transcription, and the one thing it can be checked against: the paper's
+# %%
+"""The transcription, and the one thing it can be checked against: the paper's
 own cross-references.  Each of eqs. (12)-(32) is derived by the paper from a
 numbered predecessor, so the transcription is re-derived, line by line, in the
 symbolic section below rather than merely retyped."""
@@ -401,379 +419,101 @@ print(f"\nrows flagged as printed defects in the transcription: {n_defect} "
       f"-> {list(EQS.index[EQS['status'] != 'verified'])}")
 print(f"claims tested: {len(CLAIMS)};  of these, "
       f"{int(CLAIMS['tested_as'].str.startswith('not tested').sum())} explicitly out of scope")
-'''))
 
-# ------------------------------------------------- pymrm implementation -----
-cells.append(md(r"""## PyMRM implementation
 
-Three of the four contactings are lumped systems — a batch of fluid, or a
-well-mixed fluid over a batch of solids — and are ODEs in $\theta$ (`S1`).
-The fourth, plug flow of fluid over a batch of solids, is a one-dimensional
-convection problem in the catalyst-weight coordinate $s = w/W$ with a
-distributed activity $a(s,\theta)$ (`S5`), and that is the pymrm model:
+# %% [markdown]
+# ## PyMRM implementation
+#
+# Three of the four contactings are lumped systems (a batch of fluid, or a
+# well-mixed fluid over a batch of solids) and are ODEs in $\theta$ (`S1`).
+# The fourth, plug flow of fluid over a batch of solids, is a one-dimensional
+# convection problem in the catalyst-weight coordinate $s = w/W$ with a
+# distributed activity $a(s,\theta)$ (`S5`), and that is the pymrm model:
+#
+# $$\varepsilon\,\frac{\partial c}{\partial \theta} + \frac{\partial c}{\partial s}
+#    = -\kappa\,c^{\,n} a, \qquad
+#    \frac{\partial a}{\partial \theta} = -\lambda\,\phi^{\,n'} a^{\,d}$$
+#
+# with $\phi = c$, $1-c$, $p$ or $1$ for the four classes, $c(0,\theta) = 1$ at
+# the feed, and
+#
+# $$\varepsilon \;=\; \frac{\text{fluid residence time}}{\text{observation window}}$$
+#
+# the small parameter the paper's pseudo-steady assumption sets to zero. The
+# model code is in `model.py` next to this notebook (`Bed`, and the lumped
+# contactings `run_batch`, `run_mixed`, `run_const_c`).
+#
+# - **Transport assembled once** in `Bed.__init__`: `ConvFluxTVD` with the van
+#   Leer limiter for the second-order face fluxes and their exact Jacobian, and
+#   `construct_div` with `nu=0` (Cartesian: $s$ is a *weight* fraction, not a
+#   radius, so there is no area factor).
+# - **Boundary conditions on the outward normal.** Inlet `{a:0, b:1, d:1}` is
+#   $c = 1$ (the feed). Outlet `{"outflow": True}`: the face carries the last
+#   cell value, which sits half a cell upstream of the face, so a constant
+#   correction matrix moves the outlet face to the linear extrapolation of the
+#   last two cells (the last row of `interp_cntr_to_stagg`). The outlet
+#   concentration is read on that face, the value the operators transported.
+# - **Each fluid profile is one `newton` solve** (`damping="monotone"`,
+#   `stagnation=True`, step tolerance 1e-12, an error when it does not report
+#   success), with the Jacobian `div @ jac` of `ConvFluxTVD` plus the reaction
+#   on the diagonal by `construct_coefficient_matrix`. At frozen $a$ the
+#   continuous fluid equation is linear for $n = 1$, but the limited face
+#   values are not, so the discrete system is nonlinear for every $n$; it
+#   converges in a few iterations (the count for one profile is printed below). The activity is a pointwise ODE at
+#   each cell centre with no neighbour coupling and is marched with Heun's
+#   method (second order).
+# - **The pseudo-steady route ($\varepsilon = 0$)** and the **full transient
+#   ($\varepsilon > 0$)** use the same operators and the same boundary
+#   conditions; only the accumulation term differs. The transient is a method
+#   of lines in $(c, w)$, integrated by BDF with the exact Jacobian (the
+#   `ConvFluxTVD` Jacobian and coefficient matrices). That is what makes the
+#   cost of the paper's assumption measurable rather than arguable.
+#
+# **Validation routes.** For the pseudo-steady bed at frozen $a(s)$ the fluid
+# equation is a first-order cascade in $s$, so
+# $c(s) = [\,1-(1-n)\kappa\!\int_0^s a\,]^{1/(1-n)}$ exactly (and
+# $e^{-\kappa\int a}$ for $n = 1$). `PlugExact` evaluates it by cumulative
+# Simpson quadrature on its own nodes: no operator, no grid stencil and no
+# linear solve in common with the finite-volume bed. It is the reference the bed
+# is measured against, and, being much cheaper, the engine of the separability
+# sweep once the bed has been checked against it. A second solver for the same
+# discrete equations, van Leer deferred correction (the upwind operator implicit,
+# the limiter correction of the previous sweep explicit, swept to a change below
+# 1e-12), is `Bed(route="deferred")`; its agreement with the newton route is
+# measured below.
 
-$$\varepsilon\,\frac{\partial c}{\partial \theta} + \frac{\partial c}{\partial s}
-   = -\kappa\,c^{\,n} a, \qquad
-   \frac{\partial a}{\partial \theta} = -\lambda\,\phi^{\,n'} a^{\,d}$$
-
-with $\phi = c$, $1-c$, $p$ or $1$ for the four classes, $c(0,\theta) = 1$ at
-the feed, and
-
-$$\varepsilon \;=\; \frac{\text{fluid residence time}}{\text{observation window}}$$
-
-the small parameter the paper's pseudo-steady assumption sets to zero.
-
-- **Transport assembled once** in `__init__`: `construct_convflux_upwind` with
-  $v = 1$ on the weight coordinate, `construct_div` with `nu=0` (Cartesian —
-  $s$ is a *weight* fraction, not a radius, so there is no area factor), and a
-  van Leer deferred correction through `interp_cntr_to_stagg_tvd` for
-  second-order accuracy on a convection-only equation.
-- **Boundary conditions on the outward normal.** Inlet `{a:0, b:1, d:1}` is
-  $c = 1$ (the feed); outlet `{a:1, b:0, d:0}` is $\partial c/\partial n = 0$,
-  the standard outflow condition. The outlet reading is taken with
-  `compute_boundary_values`, which — with the outflow bc left as pymrm builds
-  it — is the **second-order** reading. (`B2.2` measured both configurations
-  of this on the same operator stack and found the pairing matters: correcting
-  the outflow face flux makes the *extrapolated* face second order and leaves
-  `compute_boundary_values` first order, and vice versa. This page uses the
-  uncorrected pairing, and the observed order is measured below, not assumed.)
-- **`NumJac` is not used**: at frozen $a$ the fluid equation is linear for
-  $n = 1$ and needs one sparse solve; for $n \ne 1$ the Newton Jacobian is the
-  operator plus a diagonal, written directly. The activity is a *pointwise*
-  ODE at each cell centre with no neighbour coupling, so it is marched with
-  Heun (RK2) rather than through a Jacobian at all.
-- **The pseudo-steady route ($\varepsilon = 0$)** and the **full transient
-  ($\varepsilon > 0$)** are the same class, the same operators and the same
-  boundary conditions — only the accumulation term differs. That is what makes
-  the cost of the paper's assumption measurable rather than arguable.
-
-**A second, independent route.** For the pseudo-steady bed at frozen $a(s)$
-the fluid equation is a first-order cascade in $s$, so
-$c(s) = [\,1-(1-n)\kappa\!\int_0^s a\,]^{1/(1-n)}$ exactly (and $e^{-\kappa\int a}$
-for $n = 1$). That quadrature shares **no** assembly, no operator and no
-solver with the finite-volume bed, and it is used as the reference the bed is
-measured against — and, because it is 60× cheaper, as the engine of the
-separability sweep once the bed has certified it."""))
-
-cells.append(code(r'''"""The four reactor models.  All dimensionless (see Parameters)."""
-import numpy as np
-from scipy.integrate import solve_ivp, cumulative_simpson
-from scipy.optimize import brentq, least_squares, minimize_scalar
-
-def _pow(x, e):
-    """x**e, safe at x = 0 for fractional e."""
-    return np.exp(e * np.log(np.clip(x, 1e-300, None)))
-
-def _cascade(I, g, order):
-    """Exact solution of dy/ds = -g y^order, y(0) = 1, given I(s) = int_0^s of
-    the (known) coefficient profile."""
-    if g == 0.0:
-        return np.ones_like(I)
-    if order == 1.0:
-        return np.exp(-g * I)
-    return _pow(np.clip(1.0 - (1.0 - order) * g * I, 0.0, None), 1.0 / (1.0 - order))
-
-# --------------- the activity carried in the paper's own linearising variable
-# Eq. (26) is -da/dt = k'_d a^d.  With  w = (a^(1-d) - 1)/(1-d)  (= ln a at
-# d = 1) it becomes  dw/dt = -k'_d  for EVERY d - which is the substitution
-# behind the paper's own eqs. (28)-(32).  Marching w instead of a removes a^d
-# from every right-hand side, so d < 1 (finite-time extinction; the paper's
-# printed d = 0 case) stops being a stiff kink: 6x fewer function evaluations
-# at d = 0 and 25x at d = 0.5, with identical answers where both work.
-TINY_D = 1e-8
-
-def a_of_w(w, d):
-    """Invert w -> a; a = 0 once the activity is used up (only possible d < 1)."""
-    w = np.asarray(w, float)
-    if abs(1.0 - d) < TINY_D:
-        return np.exp(w)
-    x = (1.0 - d) * w
-    ok = x > -1.0
-    return np.where(ok, np.exp(np.log1p(np.where(ok, x, 0.0)) / (1.0 - d)), 0.0)
-
-def _extinction_event(d, idx=0):
-    """Terminal event for the lumped reactors: with d < 1 the activity reaches
-    ZERO at a finite time (k'_d t = 1/(1-d) in w), and integrating past it is
-    both meaningless and where every stiff step of this page was being spent."""
-    def ev(_, y):
-        return 1.0 + (1.0 - d) * y[idx] if d < 1.0 - TINY_D else 1.0
-    ev.terminal, ev.direction = True, -1
-    return ev
-
-def w_of_a(a, d):
-    a = np.asarray(a, float)
-    if abs(1.0 - d) < TINY_D:
-        return np.log(a)
-    return (_pow(a, 1.0 - d) - 1.0) / (1.0 - d)
-
-# ---------------------------------------------------------- Fig. 1a ---------
-def run_batch(cls, kappa, lam, d, nprime, n=1.0, sig=0.0, theta=TH, rtol=1e-9):
-    """Batch of solids AND batch of fluid.  Observable: conversion X_A(theta)."""
-    def rhs(_, y):
-        c, a, p = max(y[0], 1e-300), float(a_of_w(y[1], d)), max(y[2], 1e-300)
-        f = {"parallel": c, "series": 1.0 - c, "side-by-side": p}.get(cls, 1.0)
-        dw = -lam * _pow(max(f, 0.0), nprime)
-        return [-kappa * _pow(c, n) * a, dw, sig * dw * _pow(a, d)]
-    s = solve_ivp(rhs, (0.0, theta[-1]), [1.0, 0.0, 1.0], t_eval=theta,
-                  rtol=rtol, atol=1e-13, method="LSODA",
-                  events=_extinction_event(d, idx=1))
-    c, a = np.empty(theta.size), np.zeros(theta.size)   # dead catalyst: a = 0,
-    k = s.y[0].size                                     # and c frozen
-    c[:k], a[:k] = s.y[0], a_of_w(s.y[1], d)
-    c[k:] = s.y[0][-1] if k else 1.0
-    return 1.0 - np.clip(c, 0.0, 1.0), a
-
-# ---------------------------------------------------------- Fig. 1c ---------
-def _mixed_c(kappa, a, n):
-    """Solve 1 - c = kappa c^n a (the mixed-flow performance relation, eq. 16)."""
-    if a <= 0.0:
-        return 1.0
-    if n == 1.0:
-        return 1.0 / (1.0 + kappa * a)
-    return brentq(lambda c: 1.0 - c - kappa * _pow(c, n) * a, 1e-14, 1.0,
-                  xtol=1e-15, rtol=8.9e-16)
-
-def _mixed_p(g, nprime):
-    """Solve 1 - p = g p^n' (the poison balance over a well-mixed reactor)."""
-    if g <= 0.0:
-        return 1.0
-    if nprime == 1.0:
-        return 1.0 / (1.0 + g)
-    if nprime == 0.0:
-        return max(1.0 - g, 0.0)
-    return brentq(lambda p: 1.0 - p - g * _pow(p, nprime), 1e-14, 1.0,
-                  xtol=1e-15, rtol=8.9e-16)
-
-def run_mixed(cls, kappa, lam, d, nprime, n=1.0, sig=0.0, theta=TH, rtol=1e-9):
-    """Batch of solids, mixed flow of fluid at CONSTANT flow rate."""
-    def rhs(_, y):
-        a = float(a_of_w(y[0], d))
-        c = _mixed_c(kappa, a, n)
-        f = (_mixed_p(sig * lam * _pow(a, d), nprime) if cls == "side-by-side"
-             else {"parallel": c, "series": 1.0 - c}.get(cls, 1.0))
-        return [-lam * _pow(max(f, 0.0), nprime)]
-    s = solve_ivp(rhs, (0.0, theta[-1]), [0.0], t_eval=theta, rtol=rtol,
-                  atol=1e-13, method="LSODA", events=_extinction_event(d))
-    a = np.zeros(theta.size)                            # dead catalyst: a = 0
-    a[:s.y[0].size] = a_of_w(s.y[0], d)
-    return 1.0 - np.array([_mixed_c(kappa, ai, n) for ai in a]), a
-
-# ------------------------------------------- Fig. 1c, flow rate changing ----
-def run_const_c(cls, kappa, lam, d, nprime, c_set, n=1.0, sig=0.0, theta=TH,
-                rtol=1e-11):
-    """Mixed flow with the flow rate lowered continually so that C_A stays at
-    c_set - the contacting the paper recommends.  Observable: tau'(theta),
-    relative to its value on fresh catalyst."""
-    r_set = 1.0 - c_set
-    def tau_rel(a):
-        return r_set / (kappa * _pow(c_set, n) * max(a, 1e-300))
-    def rhs(_, y):
-        a = float(a_of_w(y[0], d))
-        f = (_mixed_p(sig * lam * _pow(a, d) * tau_rel(a), nprime)
-             if cls == "side-by-side"
-             else {"parallel": c_set, "series": r_set}.get(cls, 1.0))
-        return [-lam * _pow(max(f, 0.0), nprime)]
-    s = solve_ivp(rhs, (0.0, theta[-1]), [0.0], t_eval=theta, rtol=rtol,
-                  atol=1e-14, method="LSODA", events=_extinction_event(d))
-    a = np.zeros(theta.size)          # past extinction the flow rate needed to
-    a[:s.y[0].size] = a_of_w(s.y[0], d)   # hold C_A is zero, i.e. tau' -> inf
-    return np.array([tau_rel(ai) for ai in a]), a
-
-# ---------------------------------------------------------- Fig. 1b ---------
-class PlugExact:
-    """Plug flow of fluid over a batch of solids, pseudo-steady, by quadrature.
-
-    Shares nothing with the pymrm bed below: no operator, no grid stencil, no
-    linear solve.  Cumulative Simpson is LINEAR in its integrand on a fixed
-    grid, so its matrix is built once and every quadrature is one matvec."""
-    def __init__(self, ns=21):
-        assert ns % 2 == 1, "Simpson needs an odd node count"
-        self.s = np.linspace(0.0, 1.0, ns); self.ns = ns
-        self.Q = np.column_stack([cumulative_simpson(np.eye(ns)[i], x=self.s,
-                                                     initial=0.0)
-                                  for i in range(ns)])
-
-    def profiles(self, a, kappa, lam, n, nprime, d, sig, cls):
-        c = _cascade(self.Q @ a, kappa, n)
-        p = (_cascade(self.Q @ _pow(a, d), sig * lam, nprime)
-             if (cls == "side-by-side" and sig > 0.0) else np.ones_like(a))
-        return c, p
-
-    def run(self, cls, kappa, lam, d, nprime, n=1.0, sig=0.0, theta=TH, rtol=1e-8):
-        def rhs(_, w):
-            a = a_of_w(w, d)
-            c, p = self.profiles(a, kappa, lam, n, nprime, d, sig, cls)
-            f = {"parallel": c, "series": 1.0 - c,
-                 "side-by-side": p}.get(cls, np.ones_like(a))
-            return -lam * _pow(np.clip(f, 0.0, None), nprime)
-        sol = solve_ivp(rhs, (0.0, theta[-1]), np.zeros(self.ns), t_eval=theta,
-                        rtol=rtol, atol=1e-12, method="LSODA")
-        A = a_of_w(sol.y, d)
-        X = np.array([1.0 - self.profiles(A[:, j], kappa, lam, n, nprime, d,
-                                          sig, cls)[0][-1]
-                      for j in range(theta.size)])
-        return X, A
-
-PLUG = PlugExact(21)
-
-def respond(config, cls, kappa, lam, d, nprime, sig, n=1.0, c_set=0.4, theta=TH):
-    """The observable of one device: conversion, or ln tau' for the held-C_A one."""
-    if config == "batch":
-        return run_batch(cls, kappa, lam, d, nprime, n=n, sig=sig, theta=theta)[0]
-    if config == "mixed":
-        return run_mixed(cls, kappa, lam, d, nprime, n=n, sig=sig, theta=theta)[0]
-    if config == "plug":
-        return PLUG.run(cls, kappa, lam, d, nprime, n=n, sig=sig, theta=theta)[0]
-    if config == "constC":
-        return np.log(run_const_c(cls, kappa, lam, d, nprime, c_set, n=n,
-                                  sig=sig, theta=theta)[0])
-    raise ValueError(config)
-'''))
-
-cells.append(code(r'''"""The pymrm bed: one class, pseudo-steady (eps = 0) or full transient."""
-from scipy.sparse import diags
-from scipy.sparse.linalg import splu
-from pymrm import (construct_convflux_upwind, construct_div, compute_boundary_values,
-                   interp_cntr_to_stagg_tvd, vanleer)
-
-class Bed:
-    """eps dc/dtheta + dc/ds = -kappa c^n a  on s in [0,1], s = w/W."""
-
-    def __init__(self, m=200, tvd=True):
-        self.m, self.tvd = m, tvd
-        self.s_f = np.linspace(0.0, 1.0, m + 1)
-        self.s_c = 0.5 * (self.s_f[:-1] + self.s_f[1:])
-        # bc on the OUTWARD normal: inlet  {a:0,b:1,d:1} -> c = 1 (feed)
-        #                           outlet {a:1,b:0,d:0} -> dc/dn = 0 (outflow)
-        self.bc = ({"a": 0.0, "b": 1.0, "d": 1.0}, {"a": 1.0, "b": 0.0, "d": 0.0})
-        conv, conv_bc = construct_convflux_upwind((m, 1), self.s_f, self.s_c,
-                                                 self.bc, v=1.0)
-        div = construct_div((m, 1), self.s_f, nu=0)   # nu=0: Cartesian weight coord
-        self.div = div
-        self.Lop = (div @ conv).tocsc()               # assembled ONCE
-        self.bvec = np.asarray((div @ conv_bc).todense()).ravel()
-
-    def _dcorr(self, c):
-        """van Leer deferred correction of the first-order upwind flux."""
-        if not self.tvd:
-            return np.zeros(self.m)
-        _, dg = interp_cntr_to_stagg_tvd(c.reshape(-1, 1), self.s_f, self.s_c,
-                                         self.bc, 1.0, tvd_limiter=vanleer, axis=0)
-        return np.asarray(self.div @ np.asarray(dg).reshape(-1, 1)).ravel()
-
-    def _cascade_solve(self, coef, order, tol=1e-13, it=80):
-        """Newton on  dy/ds + coef y^order = 0, y(0) = 1 (fluid or poison)."""
-        y = np.ones(self.m)
-        for _ in range(it):
-            J = (self.Lop + diags(coef * order * _pow(y, order - 1.0))).tocsc()
-            r = self.Lop @ y + self.bvec + coef * _pow(y, order) + self._dcorr(y)
-            dy = splu(J).solve(-r)
-            y = np.clip(y + dy, 1e-14, None)
-            if np.max(np.abs(dy)) < tol:
-                break
-        return y
-
-    def steady_c(self, kappa, a, n=1.0):
-        return self._cascade_solve(kappa * a, n)
-
-    def steady_p(self, g, a, d, nprime):
-        return np.ones(self.m) if g == 0.0 else self._cascade_solve(g * _pow(a, d),
-                                                                    nprime)
-
-    def outlet(self, c):
-        _, _, v_bc, _ = compute_boundary_values(c.reshape(-1, 1), self.s_f,
-                                                self.s_c, self.bc, axis=0)
-        return float(np.ravel(v_bc)[0])
-
-    def phi(self, cls, c, p):
-        return {"parallel": c, "series": 1.0 - c,
-                "side-by-side": p}.get(cls, np.ones_like(c))
-
-    def march(self, cls, kappa, lam, d, nprime, n=1.0, sig=0.0, nt=200, theta=TH,
-              scheme="heun"):
-        """Pseudo-steady (eps = 0): fluid solved at each instant, activity
-        marched with Heun (RK2; 'euler' for the break table).  The marched
-        variable is w = (a^(1-d)-1)/(1-d), the paper's own linearising
-        substitution, so no a^d appears in the increment."""
-        dt = float(theta[-1]) / nt
-        def rate(w):
-            a = a_of_w(w, d)
-            c = self.steady_c(kappa, a, n)
-            p = (self.steady_p(sig * lam, a, d, nprime) if cls == "side-by-side"
-                 else np.ones(self.m))
-            f = np.clip(self.phi(cls, c, p), 0.0, None)
-            return -lam * _pow(f, nprime), c, a
-        w = np.zeros(self.m)
-        f1, c, a = rate(w)
-        ts, Xs, Aall = [0.0], [1.0 - self.outlet(c)], [a.copy()]
-        for j in range(nt):
-            if scheme == "euler":
-                w = w + dt * f1
-            else:
-                f2, _, _ = rate(w + dt * f1)
-                w = w + 0.5 * dt * (f1 + f2)
-            f1, c, a = rate(w)
-            ts.append((j + 1) * dt); Xs.append(1.0 - self.outlet(c))
-            Aall.append(a.copy())
-        return np.interp(theta, ts, Xs), np.array(Aall).T, np.array(ts)
-
-    def jac_sparsity(self):
-        """Pattern of d(rhs)/dy for the transient state y = [c(0..m-1), a(0..m-1)].
-        The c row reads c_{i-2..i+1} (upwind + van Leer) and a_i; the a row reads
-        c_i and a_i.  Handing this to BDF turns a 2m x 2m dense numerical
-        Jacobian into a handful of coloured differences."""
-        from scipy.sparse import lil_matrix
-        S = lil_matrix((2 * self.m, 2 * self.m), dtype=bool)
-        for i in range(self.m):
-            for j in range(max(0, i - 2), min(self.m, i + 2)):
-                S[i, j] = True
-            S[i, self.m + i] = True
-            S[self.m + i, i] = True
-            S[self.m + i, self.m + i] = True
-        return S.tocsr()
-
-    def transient(self, cls, kappa, lam, d, nprime, eps, n=1.0, sig=0.0,
-                  theta=TH, rtol=1e-8):
-        """The paper's pseudo-steady assumption DROPPED: eps dc/dtheta retained."""
-        def rhs(_, y):
-            c = np.clip(y[:self.m], 1e-14, None)
-            a = a_of_w(y[self.m:], d)
-            rc = -(self.Lop @ c + self.bvec + kappa * a * _pow(c, n)
-                   + self._dcorr(c)) / eps
-            p = (self.steady_p(sig * lam, a, d, nprime) if cls == "side-by-side"
-                 else np.ones(self.m))
-            f = np.clip(self.phi(cls, c, p), 0.0, None)
-            return np.concatenate([rc, -lam * _pow(f, nprime)])
-        c0 = self.steady_c(kappa, np.ones(self.m), n)
-        sol = solve_ivp(rhs, (0.0, float(theta[-1])),
-                        np.concatenate([c0, np.zeros(self.m)]), t_eval=theta,
-                        rtol=rtol, atol=1e-11, method="BDF",
-                        jac_sparsity=self._SP)
-        return (np.array([1.0 - self.outlet(sol.y[:self.m, j])
-                          for j in range(theta.size)]),
-                a_of_w(sol.y[self.m:, :], d))
-
+# %%
+"""The pymrm bed: operators assembled once, and the two solvers of its fluid
+equation on one frozen activity profile."""
 BED = Bed(m=200)
-BED._SP = BED.jac_sparsity()
-print(f"pymrm bed assembled: {BED.m} cells, "
-      f"{BED.Lop.nnz} nonzeros in the convection-divergence operator")
-'''))
+print(f"pymrm bed assembled: {BED.m} cells, ConvFluxTVD (van Leer) with an "
+      f"extrapolated outlet face, construct_div(nu=0)")
+_a = 0.2 + 0.8 * BED.s_c ** 2                      # a frozen activity profile
+_cn = BED.steady_c(BASE["kappa"], _a)
+_nit = BED.last_nit
+_bd = Bed(m=200, route="deferred")
+_cd = _bd.steady_c(BASE["kappa"], _a)
+M["bed_route_gap_frozen"] = float(np.max(np.abs(_cn - _cd)))
+print(f"newton: {_nit} iterations; deferred correction: {_bd.last_nit} sweeps; "
+      f"the two profiles agree to below 1e-11 (here {M['bed_route_gap_frozen']:.1e})")
 
-# ------------------------------------------------------------------ results -
-cells.append(md(r"""## Results
 
-### 1. The printed structure, proved
+# %% [markdown]
+# ## Results
+#
+# ### 1. The printed structure, proved
+#
+# A symbolic identity per printed step: the count is printed by the cell below,
+# not typed here. Each equation is re-derived from the numbered
+# predecessor the paper derives it from, so the transcription is checked line by
+# line rather than retyped: a mis-read subscript or prime surfaces as a nonzero
+# residual instead of as a plausible wrong equation. These are **identities**:
+# once the transcription is right they cannot fail, and they are labelled that
+# way in the coverage map. What they protect against is the transcription
+# itself, which on this scan is the real risk.
 
-A symbolic identity per printed step — the count is printed by the cell below,
-not typed here. Each equation is re-derived from the numbered
-predecessor the paper derives it from, so the transcription is checked line by
-line rather than retyped — a mis-read subscript or prime surfaces as a nonzero
-residual instead of as a plausible wrong equation. These are **identities**:
-once the transcription is right they cannot fail, and they are labelled that
-way in the coverage map. What they protect against is the transcription
-itself, which on this scan is the real risk."""))
-
-cells.append(code(r'''"""Symbolic verification of eqs. (8), (12)-(15), (17), (19), (21)-(23),
+# %%
+"""Symbolic verification of eqs. (8), (12)-(15), (17), (19), (21)-(23),
 (25)-(32) and the slope/intercept printed on Fig. 6."""
 t = sp.Symbol("t", nonnegative=True)
 k, kd, kpp, kp, kdp = sp.symbols("k k_d k'' k' k_d'", positive=True)
@@ -860,18 +600,20 @@ assert not bad, bad
 # what the count is for: one mis-read rate constant in eq. (12) (k for k_d) is
 # caught as a nonzero residual
 SYM_TYPO_NONZERO = float(sp.simplify(a12 - sp.exp(-k * t)) != 0)
-'''))
 
-cells.append(md(r"""### 2. Eq. (24) is wrong as printed, by exactly $\ln(k_d/k)$
 
-The paper introduces eq. (24) with *"At any instant in the plug flow reactor
-Eq. 21 applies. Also noting that $\tau'$ and $t$ are the two variables we
-obtain on suitable rearrangement"*. Eq. (21) is
-$\tau' = \dfrac{1}{k\,e^{-k_dt}}\ln\dfrac{C_{\rm A0}}{C_{\rm A}}$, so the
-rearrangement is forced. Two independent arguments settle it, and the second
-does not use the first:"""))
+# %% [markdown]
+# ### 2. Eq. (24) is wrong as printed, by a constant offset
+#
+# The paper introduces eq. (24) with *"At any instant in the plug flow reactor
+# Eq. 21 applies. Also noting that $\tau'$ and $t$ are the two variables we
+# obtain on suitable rearrangement"*. Eq. (21) is
+# $\tau' = \dfrac{1}{k\,e^{-k_dt}}\ln\dfrac{C_{\rm A0}}{C_{\rm A}}$, so the
+# rearrangement is forced. Two independent arguments settle it, and the second
+# does not use the first:
 
-cells.append(code(r'''"""Eq. (24): printed vs required by the paper's own eq. (21) -- and the units."""
+# %%
+"""Eq. (24): printed vs required by the paper's own eq. (21) -- and the units."""
 printed_24  = kd * t + sp.log(sp.log(CA0 / CA) / kd)     # AS PRINTED, p. 270
 required_24 = kd * t + sp.log(sp.log(CA0 / CA) / k)      # from eq. (21)
 gap = sp.simplify(sp.log(tau21) - printed_24)
@@ -910,15 +652,17 @@ print("The slope of Fig. 5 is unaffected; only the intercept - i.e. only the "
       "above carry the printed form.")
 BREAKS.append(("eq24_numeric_offset", off, "read eq. (24) as if it printed 1/k",
                0.0, "the defect metric is exactly the printed-vs-required gap"))
-'''))
 
-cells.append(md(r"""### 3. The four classes in the four devices
 
-Every class solved in every contacting, at the base orders
-$(n, n', d) = (1, 1, 1)$. The curves differ — visibly. The rest of this page
-is about how much of that difference survives a fit."""))
+# %% [markdown]
+# ### 3. The four classes in the four devices
+#
+# Every class solved in every contacting, at the base orders
+# $(n, n', d) = (1, 1, 1)$. The curves differ visibly. The rest of this page
+# is about how much of that difference survives a fit.
 
-cells.append(code(r'''"""Figure 1: the observable of each device, for each class, at the base point."""
+# %%
+"""Figure 1: the observable of each device, for each class, at the base point."""
 RESP = {}
 for cfg in ("batch", "plug", "mixed", "constC"):
     for cls in CLASSES:
@@ -945,72 +689,74 @@ print("observable spans (the signal a fit has to reproduce):")
 print(pd.DataFrame({cfg: {cls: np.ptp(RESP[(cfg, cls)]) for cls in CLASSES}
                     for cfg in ("batch", "plug", "mixed", "constC")}).round(4)
       .to_string())
-'''))
 
-cells.append(md(r"""### 4. Five exact degeneracies — and they reach every device
 
-Before any optimiser runs: **every one of the four devices collapses some pair
-of classes onto another identically**, and each collapse is a one-line
-algebraic fact about the device, not a numerical coincidence. Each is stated,
-proved symbolically, and then confirmed by running the two "different" classes
-and subtracting.
+# %% [markdown]
+# ### 4. Five exact degeneracies, and they reach every device
+#
+# Before any optimiser runs: **every one of the four devices collapses some pair
+# of classes onto another identically**, and each collapse is a one-line
+# algebraic fact about the device, not a numerical coincidence. Each is stated,
+# proved symbolically, and then confirmed by running the two "different" classes
+# and subtracting.
+#
+# 1. **$n' = 0$ collapses all four, everywhere.** With no concentration in the
+#    decay law, eqs. (4)–(6) *are* eq. (7). This is the paper's own statement
+#    (p. 267, *"When concentration independent (or $n' = 0$) then any type of
+#    batch-solids system may be used"*), and it is why the taxonomy has a
+#    fourth member at all.
+# 2. **Mixed flow at constant rate: series *is* parallel, relabelled.** The
+#    performance relation (16) is algebraic, so
+#    $C_{\rm R}/C_{\rm A0} = \kappa\,(C_{\rm A}/C_{\rm A0})^{n} a$ *exactly* at
+#    every instant. Hence
+#    $C_{\rm R}^{\,n'} \propto C_{\rm A}^{\,n n'} a^{\,n'}$, and series with
+#    orders $(n', d)$ is **identical** to parallel with orders
+#    $(n\,n',\, d+n')$ and $k_d \to k_d \kappa^{n'}$. Every observable, at every
+#    time. A well-mixed fluid cannot tell the two apart, ever.
+# 3. **Held-$C_{\rm A}$ mixed flow: everything is independent deactivation.**
+#    That is what "decoupling" means. With $C_{\rm A}$ (hence $C_{\rm R}$) held
+#    fixed, $k'_d = k_dC_{\rm A}^{n'}$ or $k_dC_{\rm R}^{n'}$ or $k_d$ are all
+#    just *constants*, and eq. (26) is the same equation for all three classes.
+#    At $d = 1$ side-by-side joins them, because the poison consumed per unit
+#    time then goes as $a^{d-1}$ = const and $C_{\rm P}$ settles at a fixed
+#    value: **all four classes are one equation there.**
+#    **The device Levenspiel recommends is the one in which, within a single
+#    run, the classes are least distinguishable.**
+# 4. **Side-by-side *is* parallel wherever the poison profile equals the
+#    reactant profile.** The poison obeys the same first-order form as the
+#    reactant, $-dp/d(\cdot) = \sigma\lambda\,a^{\,d}p^{\,n'}$ against
+#    $-dc/d(\cdot) = \kappa\,a\,c^{\,n}$, so at $d = 1$, $n' = n$ and
+#    $\sigma = \kappa/\lambda$ the two are the *same* differential equation with
+#    the same initial value: $p \equiv c$, identically, and eq. (6) becomes
+#    eq. (4) with the same constants. This holds in the batch, in the
+#    **plug-flow bed** and in the constant-flow mixed reactor alike: it is a
+#    property of the rate forms, not of the contacting.
+# 5. **And with $\sigma$ free: side-by-side is parallel with a relabelled
+#    $n'$.** At $n = n' = d = 1$ the two profiles are powers of one another:
+#    $p = c^{\lambda\sigma/\kappa}$ in the bed (both are $\exp(-\text{const}
+#    \int a)$), and $c = p^{\kappa/(\lambda\sigma)}$ in a batch of fluid (where
+#    $p = 1-\sigma(1-a)$ is exactly affine in the activity). So the side-by-side
+#    driver is a *power of the parallel driver*, and side-by-side with **any**
+#    $\sigma$ is parallel with $n' \to \lambda\sigma/\kappa$, same
+#    $\kappa,\lambda,d$. Degeneracy 4 is the equal-parameter slice of this
+#    family ($\sigma = \kappa/\lambda$ makes the relabelled order 1 again).
+#    **This one holds in the batch and the bed and nowhere else**: in the two
+#    well-mixed devices the profiles are not powers of each other, and the
+#    measurement below shows the identity failing there by more than 1e-1.
+#
+# **So the plug-flow bed is not the one device without an exact degeneracy.** It
+# carries degeneracies 1, 4 and 5, exactly as the batch of fluid does. What
+# separates the bed and the batch from the two well-mixed devices is narrower and
+# still real: they are the two devices in which **parallel, series and
+# independent remain algebraically distinct**. What separates the bed from the
+# batch is narrower again, and is what §6 is about: it is the only contacting
+# with a spatial coordinate, so it is the only one whose activity carries a
+# *profile*.
+#
+# Each identity is checked **on** its condition and **off** it.
 
-1. **$n' = 0$ collapses all four, everywhere.** With no concentration in the
-   decay law, eqs. (4)–(6) *are* eq. (7). This is the paper's own statement
-   (p. 267, *"When concentration independent (or $n' = 0$) then any type of
-   batch-solids system may be used"*), and it is why the taxonomy has a
-   fourth member at all.
-2. **Mixed flow at constant rate: series *is* parallel, relabelled.** The
-   performance relation (16) is algebraic, so
-   $C_{\rm R}/C_{\rm A0} = \kappa\,(C_{\rm A}/C_{\rm A0})^{n} a$ *exactly* at
-   every instant. Hence
-   $C_{\rm R}^{\,n'} \propto C_{\rm A}^{\,n n'} a^{\,n'}$, and series with
-   orders $(n', d)$ is **identical** to parallel with orders
-   $(n\,n',\, d+n')$ and $k_d \to k_d \kappa^{n'}$. Every observable, at every
-   time. A well-mixed fluid cannot tell the two apart — ever.
-3. **Held-$C_{\rm A}$ mixed flow: everything is independent deactivation.**
-   That is what "decoupling" means. With $C_{\rm A}$ (hence $C_{\rm R}$) held
-   fixed, $k'_d = k_dC_{\rm A}^{n'}$ or $k_dC_{\rm R}^{n'}$ or $k_d$ are all
-   just *constants*, and eq. (26) is the same equation for all three classes.
-   At $d = 1$ side-by-side joins them, because the poison consumed per unit
-   time then goes as $a^{d-1}$ = const and $C_{\rm P}$ settles at a fixed
-   value: **all four classes are one equation there.**
-   **The device Levenspiel recommends is the one in which, within a single
-   run, the classes are least distinguishable.**
-4. **Side-by-side *is* parallel wherever the poison profile equals the
-   reactant profile.** The poison obeys the same first-order form as the
-   reactant — $-dp/d(\cdot) = \sigma\lambda\,a^{\,d}p^{\,n'}$ against
-   $-dc/d(\cdot) = \kappa\,a\,c^{\,n}$ — so at $d = 1$, $n' = n$ and
-   $\sigma = \kappa/\lambda$ the two are the *same* differential equation with
-   the same initial value: $p \equiv c$, identically, and eq. (6) becomes
-   eq. (4) with the same constants. This holds in the batch, in the
-   **plug-flow bed** and in the constant-flow mixed reactor alike — it is a
-   property of the rate forms, not of the contacting.
-5. **And with $\sigma$ free: side-by-side is parallel with a relabelled
-   $n'$.** At $n = n' = d = 1$ the two profiles are powers of one another —
-   $p = c^{\lambda\sigma/\kappa}$ in the bed (both are $\exp(-\text{const}
-   \int a)$), and $c = p^{\kappa/(\lambda\sigma)}$ in a batch of fluid (where
-   $p = 1-\sigma(1-a)$ is exactly affine in the activity). So the side-by-side
-   driver is a *power of the parallel driver*, and side-by-side with **any**
-   $\sigma$ is parallel with $n' \to \lambda\sigma/\kappa$, same
-   $\kappa,\lambda,d$. Degeneracy 4 is the equal-parameter slice of this
-   family ($\sigma = \kappa/\lambda$ makes the relabelled order 1 again).
-   **This one holds in the batch and the bed and nowhere else** — in the two
-   well-mixed devices the profiles are not powers of each other, and the
-   measurement below shows the identity failing there by 3e-2 and 1e-1.
-
-**So the plug-flow bed is not the one device without an exact degeneracy.** It
-carries degeneracies 1, 4 and 5, exactly as the batch of fluid does. What
-separates the bed and the batch from the two well-mixed devices is narrower and
-still real: they are the two devices in which **parallel, series and
-independent remain algebraically distinct**. What separates the bed from the
-batch is narrower again, and is what §6 is about: it is the only contacting
-with a spatial coordinate, so it is the only one whose activity carries a
-*profile*.
-
-Each identity is checked **on** its condition and **off** it."""))
-
-cells.append(code(r'''"""The degeneracies: predicted from algebra, then measured by subtraction."""
+# %%
+"""The degeneracies: predicted from algebra, then measured by subtraction."""
 def below(v, b):
     """A round-off or tolerance-sized number, printed as the bound it is checked
     against; its digits differ between machines and are given only as 'here'."""
@@ -1172,54 +918,56 @@ BREAKS.append(("degen_mixed_series_is_parallel", worst2,
                "tighten the integrator from rtol 1e-9 to 1e-13",
                M["degen_mixed_series_is_parallel_rtol1e-13"],
                "the metric measures the ODE tolerance; the identity itself is exact"))
-'''))
 
-cells.append(md(r"""### 5. Separability, measured
 
-The only honest test of a discriminability claim is to **inject the wrong
-class and see whether anything moves**. For every device and every pair
-$(T, C)$ of classes, the response generated by $T$ is handed to a fitter that
-is free to choose $C$'s parameters — $\kappa$, $\lambda$, $d$, $n'$ and, for
-side-by-side, $\sigma$ — and the residual it cannot remove is reported.
+# %% [markdown]
+# ### 5. Separability, measured
+#
+# The only honest test of a discriminability claim is to **inject the wrong
+# class and see whether anything moves**. For every device and every pair
+# $(T, C)$ of classes, the response generated by $T$ is handed to a fitter that
+# is free to choose $C$'s parameters ($\kappa$, $\lambda$, $d$, $n'$ and, for
+# side-by-side, $\sigma$), and the residual it cannot remove is reported.
+#
+# $D(T\!\to\!C)$ is therefore **the RMS conversion resolution an experiment
+# needs before it can refute $C$**. Read it against your own instrument: 2e-3
+# is a good laboratory chromatograph, 1e-4 is not achievable.
+#
+# **An optimiser bound is not a measurement, and where §4 supplies an exact twin
+# the twin is used instead.** Each of the five degeneracies names a *specific*
+# parameter vector at which some candidate reproduces some truth exactly: $n'=0$
+# for degeneracy 1, $(nn', d+n')$ with $\lambda\kappa^{n'}$ for degeneracy 2, and
+# so on. Those points are inside the fitter's own bounds and next to its own seed
+# grid, and yet the optimiser does not always find them: with the fit alone, an
+# entry whose exact minimum is **zero** can come out well above it. The count and
+# the size are printed below, not typed here.
+# So every entry is evaluated **both** ways (the multistart fit, and the
+# identity twin where §4 predicts one), and the matrix reports the smaller,
+# flagged as an identity. An entry with no predicted twin is the fit alone and is
+# an upper bound; the table below says which is which.
+#
+# **The diagonal's exact minimum is zero by construction**, since it is a class
+# fitted to its own response with every parameter free. Any non-zero diagonal is
+# therefore an **optimiser stall**, not a null and not a result, and the twin
+# (the truth itself) sets those entries to zero exactly. The fit alone is still
+# reported, with one caveat stated up front: for parallel, series and
+# independent the seed grid contains the truth (to the last bit of its log
+# transform), so those twelve diagonal fits only evaluate the truth and test
+# nothing about recovery. The side-by-side
+# column is the real test, because $\sigma$ is seeded at 1 and the truth is 0.8:
+# from that off-truth start the fit gets below $10^{-9}$, the integrator's own
+# tolerance, on all four devices, so the fitter's floor sits six orders below the
+# instrument resolution and no threshold on this page needs anything beyond the
+# instrument.
+#
+# **That the five constants of eq. (6) trade against each other is measured
+# with a profile, not read off where an optimiser stopped.** One constant is held
+# away from the truth, the other four are refitted, and the smallest residual
+# left is reported; it is compared with what a +1 % move of a single constant
+# costs when the other four are held at the truth. Both tables are printed below.
 
-$D(T\!\to\!C)$ is therefore **the RMS conversion resolution an experiment
-needs before it can refute $C$**. Read it against your own instrument: 2e-3
-is a good laboratory chromatograph, 1e-4 is not achievable.
-
-**An optimiser bound is not a measurement, and where §4 supplies an exact twin
-the twin is used instead.** Each of the five degeneracies names a *specific*
-parameter vector at which some candidate reproduces some truth exactly — $n'=0$
-for degeneracy 1, $(nn', d+n')$ with $\lambda\kappa^{n'}$ for degeneracy 2, and
-so on. Those points are inside the fitter's own bounds and next to its own seed
-grid, and yet the optimiser does not always find them: with the fit alone, an
-entry whose exact minimum is **zero** can come out well above it. The count and
-the size are printed below, not typed here.
-So every entry is evaluated **both** ways — the multistart fit, and the
-identity twin where §4 predicts one — and the matrix reports the smaller,
-flagged as an identity. An entry with no predicted twin is the fit alone and is
-an upper bound; the table below says which is which.
-
-**The diagonal's exact minimum is zero by construction**, since it is a class
-fitted to its own response with every parameter free. Any non-zero diagonal is
-therefore an **optimiser stall**, not a null and not a result, and the twin
-(the truth itself) sets those entries to zero exactly. The fit alone is still
-reported, with one caveat stated up front: for parallel, series and
-independent the seed grid contains the truth (to the last bit of its log
-transform), so those twelve diagonal fits only evaluate the truth and test
-nothing about recovery. The side-by-side
-column is the real test, because $\sigma$ is seeded at 1 and the truth is 0.8:
-from that off-truth start the fit gets below $10^{-9}$, the integrator's own
-tolerance, on all four devices, so the fitter's floor sits six orders below the
-instrument resolution and no threshold on this page needs anything beyond the
-instrument.
-
-**That the five constants of eq. (6) trade against each other is measured
-with a profile, not read off where an optimiser stopped.** One constant is held
-away from the truth, the other four are refitted, and the smallest residual
-left is reported; it is compared with what a +1 % move of a single constant
-costs when the other four are held at the truth. Both tables are printed below."""))
-
-cells.append(code(r'''"""The separability matrices.  Two-stage multistart: screen every seed cheaply,
+# %%
+"""The separability matrices.  Two-stage multistart: screen every seed cheaply,
 then polish the best two.  Deterministic - a fixed seed list, no randomness."""
 def _unpack(cls, x):
     kappa, lam, d = np.exp(x[0]), np.exp(x[1]), x[2]
@@ -1274,20 +1022,16 @@ def fit_class(config, target, cls, kappa0=1.5, lam0=3.0, n=1.0, c_set=0.4,
     The Jacobian is a CENTRAL difference with a relative step of 1e-4. The
     residual is an ODE solution, accurate to rtol 1e-9 and not smooth below
     that, so scipy's default (a one-sided step of about 1.5e-8) differentiates
-    the integrator's error rather than the model: measured outside this page
-    (docs/refresh-learnings.md row 11) its columns are wrong by up to 7e-2,
-    and on an ill-conditioned valley the trust region then stops at a point
-    set by round-off. With the step well above the integrator noise the
-    side-by-side diagonal (the fitter recovering the truth from off-truth
-    seeds) reaches below 1e-9 on every device.
+    the integrator's error rather than the model, and on an ill-conditioned
+    valley the trust region then stops at a point set by round-off. With the
+    step well above the integrator noise the side-by-side diagonal (the fitter
+    recovering the truth from off-truth seeds) is measured below.
 
     `budget` caps the residual evaluations of ONE fit, Jacobian evaluations
     included.  The best value seen is kept, so a capped fit can only report a
     residual that is too LARGE.  Capped entries are listed, and the summary
-    below refuses to call anything separable on one.  At 3500 two fits of the
-    sweep hit it (series truth, side-by-side candidate, plug and mixed flow)
-    with the central-difference Jacobian; at 10000 none does, and their
-    residuals are unchanged to seven digits."""
+    below refuses to call anything separable on one; the largest share of the
+    budget any fit used is a claim of its own."""
     lo, hi = _bounds(cls)
     state = {"n": 0, "best": np.inf, "capped": False, "bx": None}
     def res(x):
@@ -1700,9 +1444,10 @@ fit_class("batch", respond("batch", "side-by-side", *TRU, n=BASE["n"]), "side-by
 FITS_CAPPED_BROKEN = float(len(CAPPED)); del CAPPED[_n0:]
 print(f"\nfits whose evaluation budget bound: {len(CAPPED)} of 64"
       + (f" -> {CAPPED}" if CAPPED else ""))
-'''))
 
-cells.append(code(r'''"""Read the matrices: which pairs are separable, and at what resolution."""
+
+# %%
+"""Read the matrices: which pairs are separable, and at what resolution."""
 res_of = {"constC": RES_TAU}
 rows, SEP_OFF, N_SEP = [], {}, {}
 for cfg, D in SEP.items():
@@ -1738,72 +1483,72 @@ print(f"threshold = the instrument resolution: conversion {RES_X:g}, "
       f"ln tau' {RES_TAU:g}. Raw residuals are in the matrices above - rescale "
       f"at will.")
 
-'''))
 
-cells.append(md(r"""### 6. Why the bed is different: the profile
 
-The plug-flow bed is the only one of the four contactings in which $C_{\rm A}$
-and $C_{\rm R}$ vary *along* the catalyst, so it is the only one whose activity
-is a **field** rather than a number. And the two classes lay down opposite
-profiles: under **parallel** decay the inlet — richest in A — dies first; under
-**series** decay the inlet stays fresh, because no R has been made yet, and
-the damage starts at the outlet. That is `B2.2`'s "descending vs ascending"
-signature reappearing one level of abstraction up, and it is what a well-mixed
-fluid throws away.
+# %% [markdown]
+# ### 6. Why the bed is different: the profile
+#
+# The plug-flow bed is the only one of the four contactings in which $C_{\rm A}$
+# and $C_{\rm R}$ vary *along* the catalyst, so it is the only one whose activity
+# is a **field** rather than a number. And the two classes lay down opposite
+# profiles: under **parallel** decay the inlet, richest in A, dies first; under
+# **series** decay the inlet stays fresh, because no R has been made yet, and
+# the damage starts at the outlet. That is `B2.2`'s "descending vs ascending"
+# signature reappearing one level of abstraction up, and it is what a well-mixed
+# fluid throws away.
+#
+# **Both inlet values are exact, and neither needs the grid.** At $s = 0$ the
+# feed is imposed, so $c(0,\theta) = 1$ and $C_{\rm R}(0,\theta) = 0$ at every
+# time. Hence
+#
+# - **parallel:** $\partial a/\partial\theta = -\lambda\,c^{n'}a^{d} = -\lambda a$
+#   at the feed face, so $a(0,\theta) = e^{-\lambda\theta}$ exactly;
+# - **series:** $\partial a/\partial\theta = -\lambda(1-c)^{n'}a^{d} = 0$ at the
+#   feed face for any $n' > 0$, so $a(0,\theta) \equiv 1$ exactly, at every time.
+#
+# A finite-volume bed does not carry either number: its first unknown sits at
+# the cell *centre* $s = 1/2m$, and that value approaches the face value at
+# **first order** in $1/m$. The refinement is measured below, and the exact
+# values are what the page reports.
+#
+# **The outlet has no closed form in the bed, so it is read on the outlet face
+# and extrapolated twice.** The activity is read where the outlet concentration
+# is read, on the linear extrapolation of the last two cells to $s = 1$, which
+# is second order in $1/m$. It is Richardson-extrapolated in space from the two
+# finest grids, and then in **time**, because the space extrapolation is
+# performed at a fixed step count and Heun's temporal error there is larger
+# than what the space extrapolation leaves behind. Both refinements are printed
+# below with their observed orders, and the result is compared with the
+# quadrature route, which has a node at $s = 1$ and shares no operator with the
+# bed.
+#
+# **This, and not the conversion history, is where the bed's information is.**
+# The outlet histories of the two classes are a fitted RMS conversion apart that
+# §5 printed (`sep_plug_par_vs_ser`, a tenth of a percentage point), while the
+# inlet activities differ by more than an order of magnitude and the *sign* of
+# the gradient differs. An assay of the spent catalyst that resolves 10 % (coke
+# burn-off, a crushed-and-retested activity) reads that inlet contrast directly.
+#
+# **One caveat carried from `B2.2`.** `B2.2` measured its own *within-bed* coke
+# contrast at its operating point and found the descending (parallel) signature
+# too weak for 10 % carbon assays (its numbers are loaded below). That does not
+# contradict what is claimed here, because the two are different quantities:
+# `B2.2`'s discriminator is the *gradient* of the deposit along the bed, this
+# page's is the **inlet activity itself**, at one sampling point. But a reader
+# taking the "one assay is enough" advice to a real bed should size the
+# contrast they can actually reach, `B2.2`-style, before designing on it. The
+# recommendation this page ends on is therefore not about which reactor to run
+# but about **what to measure in it**.
 
-**Both inlet values are exact, and neither needs the grid.** At $s = 0$ the
-feed is imposed, so $c(0,\theta) = 1$ and $C_{\rm R}(0,\theta) = 0$ at every
-time. Hence
-
-- **parallel:** $\partial a/\partial\theta = -\lambda\,c^{n'}a^{d} = -\lambda a$
-  at the feed face, so $a(0,\theta) = e^{-\lambda\theta}$ exactly;
-- **series:** $\partial a/\partial\theta = -\lambda(1-c)^{n'}a^{d} = 0$ at the
-  feed face for any $n' > 0$, so $a(0,\theta) \equiv 1$ exactly, at every time.
-
-A finite-volume bed cannot print either number: its first unknown sits at the
-cell *centre* $s = 1/2m$, and that value approaches the face value at **first
-order** in $1/m$. The refinement is measured below, and the exact values are
-what the page reports.
-
-**The outlet has no closed form, so it is extrapolated — twice.** Once in
-space, from the two finest grids (the cell-centre offset is first order, ratio
-2, so the correction is the last change itself); and then once in **time**,
-because the space extrapolation is performed at a fixed step count and Heun's
-temporal error there turns out to be *larger* than what the space
-extrapolation leaves behind. Both refinements are printed below, with their
-observed orders, and the reported outlet is quoted only to the precision the
-two of them jointly resolve. This is the third time in this one section that a
-number has had to stop being a sample of whatever resolution the code was run
-at; the closing note says what the general rule is.
-
-**This, and not the conversion history, is where the bed's information
-actually is.** The outlet histories of the two classes are 8.1e-4 apart in RMS
-conversion after a full run — a tenth of a percentage point, and a hard
-measurement. The inlet activities are more than an order of magnitude apart and
-the *sign* of the gradient differs. Any assay of the spent catalyst — coke
-burn-off, a crushed-and-retested activity, anything that resolves 10 % — reads
-that inlet contrast straight off.
-
-**One caveat carried from `B2.2`, which this page cites as agreement.** `B2.2`
-measured its own *within-bed* coke contrast at its operating point and found
-the descending (parallel) signature "already below a 10 %-assay detection floor
-and fading as $1/t$". That is not a contradiction of what is claimed here,
-because the two are different quantities: `B2.2`'s discriminator is the
-*gradient* of the deposit along the bed, this page's is the **inlet activity
-itself**, at one sampling point. But a
-reader taking the "one assay is enough" advice to a real bed should size the
-contrast they can actually reach, `B2.2`-style, before designing on it. The
-recommendation this page ends on is therefore not about which reactor to run
-but about **what to measure in it**."""))
-
-cells.append(code(r'''"""Figure 2: activity profiles down the pymrm bed, parallel vs series."""
+# %%
+"""Figure 2: activity profiles down the pymrm bed, parallel vs series."""
+NT_PROF = 200                       # the march grid the profiles are recorded on
 prof = {}
 for cls in ("parallel", "series"):
     Xb, Ab, tsb = BED.march(cls, BASE["kappa"], BASE["lam"], BASE["d"],
-                            BASE["nprime"], n=BASE["n"], nt=200, theta=TH)
+                            BASE["nprime"], n=BASE["n"], nt=NT_PROF, theta=TH)
     prof[cls] = (Xb, Ab)
 fig, axes = plt.subplots(1, 2, figsize=(8.4, 3.2))
-NT_PROF = 200                       # the march grid the profiles are recorded on
 for ax, cls in zip(axes, ("parallel", "series")):
     for tt in (0.0, 0.25, 0.5, 1.0):
         j = int(round(tt * NT_PROF))
@@ -1822,29 +1567,30 @@ fig.tight_layout(); plt.show()
 #   parallel: da/dtheta = -lam c^n' a^d = -lam a  ->  a(0, theta) = exp(-lam t)
 #   series:   da/dtheta = -lam (1-c)^n' a^d = 0   ->  a(0, theta) = 1, exactly
 # The first finite-volume unknown sits at s = 1/2m, not at s = 0, and converges
-# to these at FIRST order.  The exact values are what is reported; the grid
-# study below is the evidence, and the outlet (no closed form) is extrapolated
-# TWICE - once in space and once in time (see the second table).
+# to these at FIRST order.  The exact values are what is reported.
 M["bed_a_inlet_end_par"] = float(np.exp(-BASE["lam"] * TH[-1]))
 M["bed_a_inlet_end_ser"] = 1.0
 GRIDS = (100, 200, 400, 800)
-NT_CONV = 100          # base step count of the refinement study.  NOTHING
-                       # reported below is left a function of it: the outlet is
+NT_CONV = 100          # base step count of the refinement study; the outlet is
                        # extrapolated in nt as well, and the break table halves
                        # NT_CONV to show what that is worth.
-INL, OUT = {}, {}      # (class, m, nt) -> end cell-centre activities, as FLOATS
-def bed_ends(cls, m, nt):
-    """a at the first and last cell centre at theta = 1.  Cached, and returned
-    as floats - never as formatted strings, which quantise the very differences
-    the refinement study exists to measure."""
-    if (cls, m, nt) not in OUT:
-        _, Ag, _ = Bed(m).march(cls, BASE["kappa"], BASE["lam"], BASE["d"],
-                                BASE["nprime"], n=BASE["n"], nt=nt, theta=TH)
-        INL[(cls, m, nt)] = float(Ag[0, -1])
-        OUT[(cls, m, nt)] = float(Ag[-1, -1])
-    return INL[(cls, m, nt)], OUT[(cls, m, nt)]
+INL, OUT, OUTC = {}, {}, {}   # (class, m, nt, scheme) -> floats at theta = 1
 
-gr, INLET_ERRS = [], {}
+def bed_ends(cls, m, nt, scheme="heun", limiter="vanleer"):
+    """a at theta = 1: first cell centre, outlet face (linear extrapolation of
+    the last two cells), last cell centre.  Cached, and returned as floats."""
+    key = (cls, m, nt, scheme, limiter)
+    if key not in OUT:
+        b = Bed(m) if limiter == "vanleer" else Bed(m, limiter=None)
+        _, Ag, _ = b.march(cls, BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"],
+                           n=BASE["n"], nt=nt, theta=TH[[0, -1]], scheme=scheme)
+        INL[key] = float(Ag[0, -1])
+        OUT[key] = float(interp_cntr_to_stagg(Ag[:, -1:], b.s_f, b.s_c, axis=0)[-1, 0])
+        OUTC[key] = float(Ag[-1, -1])
+    return INL[key], OUT[key]
+
+gr, INLET_ERRS, OUT_ORD = [], {}, {}
+FINEST6 = {"inlet": [], "space": [], "time": []}   # finest changes of the section-6 ladders
 for cls in ("parallel", "series"):
     ex = M[f"bed_a_inlet_end_{SHORT[cls]}"]
     errs, outs = [], []
@@ -1853,23 +1599,31 @@ for cls in ("parallel", "series"):
         errs.append(abs(ain - ex)); outs.append(aout)
         gr.append([cls, m, f"{ain:.6f}", f"{errs[-1]:.3e}",
                    "" if len(errs) == 1 else f"{np.log2(errs[-2]/errs[-1]):.2f}",
-                   f"{outs[-1]:.6f}",
+                   f"{outs[-1]:.8f}",
                    "" if len(outs) == 1 else f"{outs[-1]-outs[-2]:+.2e}"])
     M[f"bed_a_inlet_cellcentre_err_{SHORT[cls]}"] = float(errs[-1])
     INLET_ERRS[cls] = errs
     M[f"bed_a_inlet_cellcentre_order_{SHORT[cls]}"] = float(
         np.log2(errs[-2] / errs[-1]))
+    d_out = np.abs(np.diff(outs))
+    FINEST6["inlet"].append(float(abs(errs[-2] - errs[-1])))
+    FINEST6["space"].append(float(d_out[-1]))
+    OUT_ORD[cls] = np.log2(d_out[:-1] / d_out[1:])
+    M[f"bed_a_outlet_space_order_{SHORT[cls]}"] = float(OUT_ORD[cls][-1])
 display(Markdown(
-    "**The bed's first and last cell centres, refined in SPACE** (the inlet "
+    "**The bed's first cell centre and outlet face, refined in SPACE** (the inlet "
     "column is measured against the EXACT face value; the outlet, which has no "
-    "closed form, is Richardson-extrapolated from the last pair - and then "
-    "extrapolated again, in time, in the table below):\n\n"
+    f"closed form in the bed, is read on the outlet face at nt = {NT_CONV} and "
+    "Richardson-extrapolated from the last pair, then extrapolated again, in "
+    "time, in the table below):\n\n"
     + md_table(pd.DataFrame(gr, columns=[
         "class", "cells m", "a at s = 1/2m", "|error| vs the exact inlet",
-        "observed order", "a at s = 1-1/2m", "change in it"]))))
+        "observed order", "a at the outlet face", "change in it"]))))
+print("observed order of the outlet-face activity from the changes between grids: "
+      + "; ".join(f"{c} " + ", ".join(f"{o:.3f}" for o in OUT_ORD[c])
+                  for c in ("parallel", "series")))
 
 # --- the INLET study is spatial; the OUTLET reading is not -------------------
-# Both are checked on FLOATS, on BOTH classes, at the finest grid of the study.
 MF = GRIDS[-1]
 M["bed_inlet_time_sensitivity"] = float(max(
     abs(bed_ends(c, MF, 2 * NT_CONV)[0] - bed_ends(c, MF, NT_CONV)[0])
@@ -1879,75 +1633,81 @@ M["bed_profile_time_sensitivity"] = float(max(
     for c in ("parallel", "series")))
 print(f"observed order of the cell-centre error: "
       f"{M['bed_a_inlet_cellcentre_order_par']:.2f} (parallel), "
-      f"{M['bed_a_inlet_cellcentre_order_ser']:.2f} (series) - first order, "
+      f"{M['bed_a_inlet_cellcentre_order_ser']:.2f} (series): first order, "
       f"which is what a 1/2m offset from the face demands.")
 print(f"The INLET study is purely spatial: doubling nt at m = {MF} moves "
-      f"either inlet reading by at most {M['bed_inlet_time_sensitivity']:.1e}, "
-      f"{M['bed_a_inlet_cellcentre_err_par']/M['bed_inlet_time_sensitivity']:.0f}x "
-      f"below the parallel cell-centre error it is set against and "
-      f"{M['bed_a_inlet_cellcentre_err_ser']/M['bed_inlet_time_sensitivity']:.0f}x "
-      f"below the series one.")
+      f"either inlet reading by below 1e-7 (here "
+      f"{M['bed_inlet_time_sensitivity']:.1e}), against a parallel cell-centre "
+      f"error of {M['bed_a_inlet_cellcentre_err_par']:.2e} and a series one of "
+      f"{M['bed_a_inlet_cellcentre_err_ser']:.2e}.")
 print(f"The OUTLET reading is NOT: the same doubling moves it by "
-      f"{M['bed_profile_time_sensitivity']:.1e}, "
-      f"{M['bed_profile_time_sensitivity']/M['bed_inlet_time_sensitivity']:.0f}x "
-      f"more, and larger than what the space extrapolation leaves behind. So "
-      f"the outlet is extrapolated a SECOND time, in nt.")
+      f"{M['bed_profile_time_sensitivity']:.1e}. So the outlet is extrapolated a "
+      f"SECOND time, in nt.")
 
 # --- second extrapolation: in TIME ------------------------------------------
-# Richardson in space (first order, ratio 2) at each of three step counts, then
-# Richardson in time (Heun is second order, ratio 2, so the correction is the
-# last change over 3).  Reported to the precision the two extrapolations
-# actually support, which is five decimals, not six.
+# Richardson in space (the face reading is second order, ratio 2, so the
+# correction is the last change over 3) at each of three step counts, then
+# Richardson in time (Heun is second order: the last change over 3 again).
 def space_rich(cls, nt, pair=None):
     o = [bed_ends(cls, m, nt)[1] for m in (GRIDS[-2:] if pair is None else pair)]
-    return o[-1] + (o[-1] - o[-2])
+    return o[-1] + (o[-1] - o[-2]) / 3.0
 
 NT_SET = (NT_CONV // 2, NT_CONV, 2 * NT_CONV)
+QREF = {}                                  # the quadrature route, a(s = 1, theta = 1)
+for cls in ("parallel", "series"):
+    _q = [float(PlugExact(ns).run(cls, BASE["kappa"], BASE["lam"], BASE["d"],
+                                  BASE["nprime"], n=BASE["n"], rtol=1e-12)[1][-1, -1])
+          for ns in (161, 321)]
+    QREF[cls] = _q[1]
+    M[f"bed_a_outlet_quadrature_change_{SHORT[cls]}"] = abs(_q[1] - _q[0])
 RR, tr = {}, []
 for cls in ("parallel", "series"):
+    sh = SHORT[cls]
     R = [space_rich(cls, nt) for nt in NT_SET]
     RR[cls] = R
     dR = (R[1] - R[0], R[2] - R[1])
-    M[f"bed_a_outlet_time_order_{SHORT[cls]}"] = float(np.log2(dR[0] / dR[1]))
-    M[f"bed_a_outlet_spaceonly_{SHORT[cls]}"] = float(R[1])
-    M[f"bed_a_outlet_end_{SHORT[cls]}"] = float(R[2] + dR[1] / 3.0)
-    M[f"bed_a_outlet_altpair_{SHORT[cls]}"] = float(R[1] + dR[0] / 3.0)
-    M[f"bed_a_outlet_time_bias_{SHORT[cls]}"] = float(
-        M[f"bed_a_outlet_spaceonly_{SHORT[cls]}"]
-        - M[f"bed_a_outlet_end_{SHORT[cls]}"])
+    FINEST6["time"].append(float(abs(dR[1])))
+    M[f"bed_a_outlet_time_order_{sh}"] = float(np.log2(dR[0] / dR[1]))
+    M[f"bed_a_outlet_spaceonly_{sh}"] = float(R[1])
+    M[f"bed_a_outlet_end_{sh}"] = float(R[2] + dR[1] / 3.0)
+    M[f"bed_a_outlet_altpair_{sh}"] = float(R[1] + dR[0] / 3.0)
+    M[f"bed_a_outlet_time_bias_{sh}"] = float(
+        M[f"bed_a_outlet_spaceonly_{sh}"] - M[f"bed_a_outlet_end_{sh}"])
     # how far the SPACE extrapolation itself can still be off: the two grid
     # pairs available disagree by this much, at the base step count
-    M[f"bed_a_outlet_space_spread_{SHORT[cls]}"] = float(abs(
+    M[f"bed_a_outlet_space_spread_{sh}"] = float(abs(
         space_rich(cls, NT_CONV, GRIDS[-3:-1]) - space_rich(cls, NT_CONV)))
-    M[f"bed_a_outlet_residual_bound_{SHORT[cls]}"] = float(max(
-        abs(dR[1] / 3.0), M[f"bed_a_outlet_space_spread_{SHORT[cls]}"]))
-    M[f"bed_profile_contrast_{SHORT[cls]}"] = float(
-        M[f"bed_a_outlet_end_{SHORT[cls]}"] - M[f"bed_a_inlet_end_{SHORT[cls]}"])
+    M[f"bed_a_outlet_residual_bound_{sh}"] = float(max(
+        abs(dR[1] / 3.0), M[f"bed_a_outlet_space_spread_{sh}"]))
+    M[f"bed_a_outlet_vs_quadrature_{sh}"] = float(abs(M[f"bed_a_outlet_end_{sh}"] - QREF[cls]))
+    M[f"bed_profile_contrast_{sh}"] = float(
+        M[f"bed_a_outlet_end_{sh}"] - M[f"bed_a_inlet_end_{sh}"])
     for j, (nt, r) in enumerate(zip(NT_SET, R)):
-        tr.append([cls, nt, f"{r:.7f}", "" if j == 0 else f"{r - R[j-1]:+.2e}",
-                   "" if j < 2 else f"{M[f'bed_a_outlet_time_order_{SHORT[cls]}']:.2f}"])
-    tr.append([cls, "extrapolated", f"{M[f'bed_a_outlet_end_{SHORT[cls]}']:.7f}",
+        tr.append([cls, nt, f"{r:.9f}", "" if j == 0 else f"{r - R[j-1]:+.2e}",
+                   "" if j < 2 else f"{M[f'bed_a_outlet_time_order_{sh}']:.2f}"])
+    tr.append([cls, "extrapolated", f"{M[f'bed_a_outlet_end_{sh}']:.9f}",
                f"{dR[1]/3.0:+.2e}", ""])
+    tr.append([cls, "quadrature route", f"{QREF[cls]:.9f}",
+               f"{QREF[cls] - M[f'bed_a_outlet_end_{sh}']:+.1e}", ""])
 display(Markdown(
     "**The space-extrapolated outlet, refined in TIME** (each row repeats the "
     "Richardson of the two finest grids above at that step count; Heun is "
     "second order, so the change falls by 4 per doubling and the remaining "
-    "correction is that change over 3):\n\n"
+    "correction is that change over 3; the last row of each class is the "
+    "quadrature route, 321 Simpson nodes, LSODA at rtol 1e-12):\n\n"
     + md_table(pd.DataFrame(tr, columns=[
         "class", "steps nt", "space-Richardson outlet", "change in it",
         "observed order in nt"]))))
 print(f"observed temporal order of the space-extrapolated outlet: "
       f"{M['bed_a_outlet_time_order_par']:.2f} (parallel), "
-      f"{M['bed_a_outlet_time_order_ser']:.2f} (series) - second order, which "
-      f"is what Heun demands and what the validation section measures "
-      f"independently on the conversion history.")
+      f"{M['bed_a_outlet_time_order_ser']:.2f} (series), second order, as for "
+      f"Heun.")
 print(f"WHAT THE SECOND EXTRAPOLATION IS WORTH. The space-Richardson ALONE, at "
-      f"nt = {NT_CONV}, gives {M['bed_a_outlet_spaceonly_par']:.6f} for the "
-      f"parallel outlet - {abs(M['bed_a_outlet_time_bias_par']):.1e} above the "
-      f"limit, which is larger than what the space extrapolation itself leaves "
-      f"({M['bed_a_outlet_space_spread_par']:.1e}, the disagreement between the "
-      f"two grid pairs). A reading that is space-converged can still be "
-      f"time-limited, and this one was.")
+      f"nt = {NT_CONV}, gives {M['bed_a_outlet_spaceonly_par']:.7f} for the "
+      f"parallel outlet, {abs(M['bed_a_outlet_time_bias_par']):.1e} above the "
+      f"limit, while the two grid pairs of the space extrapolation disagree by "
+      f"{M['bed_a_outlet_space_spread_par']:.1e}. A reading that is "
+      f"space-converged can still be time-limited, and this one is.")
 print(f"\nat theta = 1:  parallel  a(inlet) = {M['bed_a_inlet_end_par']:.6f} "
       f"(EXACT, = exp(-lambda)), a(outlet) = {M['bed_a_outlet_end_par']:.5f} "
       f"(space + time extrapolated, residual bound "
@@ -1956,89 +1716,99 @@ print(f"               series    a(inlet) = {M['bed_a_inlet_end_ser']:.6f} "
       f"(EXACT, C_R = 0 at the feed face), a(outlet) = "
       f"{M['bed_a_outlet_end_ser']:.5f} (space + time extrapolated, residual "
       f"bound {M['bed_a_outlet_residual_bound_ser']:.1e})   -> ascending")
-print(f"The outlets are quoted to five decimals and not six: the residual "
-      f"bounds above are {max(M['bed_a_outlet_residual_bound_par'], M['bed_a_outlet_residual_bound_ser']):.1e} "
-      f"at worst, which resolves the fifth decimal and not the sixth.")
-# The defect this repairs becomes two rows per class - one that must move and
-# one that must not.  Both classes, because both outlets are reported.
+print(f"The doubly extrapolated outlets meet the quadrature route to below 1e-7 "
+      f"(here {M['bed_a_outlet_vs_quadrature_par']:.1e} parallel, "
+      f"{M['bed_a_outlet_vs_quadrature_ser']:.1e} series); the quadrature itself "
+      f"moves by below 1e-8 from 161 to 321 nodes (here "
+      f"{max(M['bed_a_outlet_quadrature_change_par'], M['bed_a_outlet_quadrature_change_ser']):.0e}). "
+      f"The outlets are quoted to five decimals.")
+# The reading rules, as rows: one that must move and one that must not.
 for cls in ("parallel", "series"):
     sh = SHORT[cls]
     BREAKS.append((f"bed_a_outlet_spaceonly_{sh}", M[f"bed_a_outlet_spaceonly_{sh}"],
-                   f"halve NT_CONV to {NT_SET[0]} and report the "
-                   f"space-Richardson alone, as the outlet was reported before",
+                   f"halve NT_CONV to {NT_SET[0]} and report the space-Richardson alone",
                    float(RR[cls][0]),
                    "the space-only reading IS a function of the step count, "
-                   "and nothing else on this page constrains that choice - "
-                   "which is exactly why it is not what is reported"))
+                   "which is why it is not what is reported"))
     BREAKS.append((f"bed_a_outlet_end_{sh}", M[f"bed_a_outlet_end_{sh}"],
                    f"read the time extrapolation off the nt = {NT_SET[0]}/"
                    f"{NT_SET[1]} pair instead of {NT_SET[1]}/{NT_SET[2]}",
                    M[f"bed_a_outlet_altpair_{sh}"],
                    "ROBUSTNESS (must NOT move): the reported outlet is the "
                    "limit of the march, so which pair the limit is read from "
-                   "cannot matter - and after the second extrapolation it "
-                   "does not"))
+                   "must not matter"))
 # break rows for the refinement study, every one on numbers already computed
-# except the Euler ladder: (1) the inlet error one grid coarser; (2) the inlet
-# order against a reference 1e-3 off the exact face value (a sampled inlet);
+# except the Euler and upwind ladders: (1) the inlet error one grid coarser;
+# (2) the inlet order against a reference 1e-3 off the exact face value;
 # (3) the space extrapolation read off the coarsest grid pair, and the time
-# extrapolation's residual off the coarser step pair; (4) the outlet's
-# temporal order with Euler in place of Heun on the activity march
-BED_BROKEN = {}
+# extrapolation's residual off the coarser step pair; (4) the outlet's temporal
+# order with Euler in place of Heun; (5) the outlet's spatial order with
+# first-order upwind; (6) the outlet read at the last cell centre
+BED_BROKEN, BED_BROKEN_LABEL = {}, {}
 for cls in ("parallel", "series"):
     sh, ex = SHORT[cls], M[f"bed_a_inlet_end_{SHORT[cls]}"]
     BED_BROKEN[f"bed_a_inlet_cellcentre_err_{sh}"] = float(INLET_ERRS[cls][-2])
+    BED_BROKEN_LABEL[f"bed_a_inlet_cellcentre_err_{sh}"] = f"the error read on {GRIDS[-2]} cells"
     e_off = [abs(bed_ends(cls, m, NT_CONV)[0] - (ex - 1e-3)) for m in GRIDS[-2:]]
     BED_BROKEN[f"bed_a_inlet_cellcentre_order_{sh}"] = float(np.log2(e_off[0] / e_off[1]))
+    BED_BROKEN_LABEL[f"bed_a_inlet_cellcentre_order_{sh}"] = "the exact inlet value off by 1e-3"
     coarse = float(abs(space_rich(cls, NT_CONV, GRIDS[:2]) - space_rich(cls, NT_CONV)))
     BED_BROKEN[f"bed_a_outlet_space_spread_{sh}"] = coarse
+    BED_BROKEN_LABEL[f"bed_a_outlet_space_spread_{sh}"] = f"the space extrapolation from {GRIDS[0]}/{GRIDS[1]} cells"
     BED_BROKEN[f"bed_a_outlet_residual_bound_{sh}"] = max(coarse, abs(RR[cls][1] - RR[cls][0]) / 3.0)
+    BED_BROKEN_LABEL[f"bed_a_outlet_residual_bound_{sh}"] = (
+        f"space pair {GRIDS[0]}/{GRIDS[1]}, time pair {NT_SET[0]}/{NT_SET[1]}")
     BED_BROKEN[f"bed_a_outlet_time_bias_{sh}"] = float(RR[cls][0] - M[f"bed_a_outlet_end_{sh}"])
-    Re = []
-    for nt in NT_SET:
-        o = [float(Bed(m).march(cls, BASE["kappa"], BASE["lam"], BASE["d"],
-                                BASE["nprime"], n=BASE["n"], nt=nt, theta=TH,
-                                scheme="euler")[1][-1, -1]) for m in GRIDS[-2:]]
-        Re.append(o[1] + (o[1] - o[0]))
-    BED_BROKEN[f"bed_a_outlet_time_order_{sh}"] = float(np.log2((Re[1] - Re[0])
-                                                                / (Re[2] - Re[1])))
+    BED_BROKEN_LABEL[f"bed_a_outlet_time_bias_{sh}"] = f"the space-only reading at nt = {NT_SET[0]}"
+    Re = [float(np.dot([-1.0 / 3.0, 4.0 / 3.0],
+                       [bed_ends(cls, m, nt, scheme="euler")[1] for m in GRIDS[-2:]]))
+          for nt in NT_SET]
+    BED_BROKEN[f"bed_a_outlet_time_order_{sh}"] = float(np.log2((Re[1] - Re[0]) / (Re[2] - Re[1])))
+    BED_BROKEN_LABEL[f"bed_a_outlet_time_order_{sh}"] = "forward Euler on the activity (march(..., scheme='euler'))"
+    up = [bed_ends(cls, m, NT_CONV, limiter=None)[1] for m in GRIDS[1:]]
+    BED_BROKEN[f"bed_a_outlet_space_order_{sh}"] = float(np.log2(abs(up[1] - up[0]) / abs(up[2] - up[1])))
+    BED_BROKEN_LABEL[f"bed_a_outlet_space_order_{sh}"] = "first-order upwind convection (Bed(..., limiter=None))"
+    cc = [OUTC[(cls, m, nt, "heun", "vanleer")] for nt in NT_SET for m in GRIDS[-2:]]
+    rc = [cc[2 * j + 1] + (cc[2 * j + 1] - cc[2 * j]) / 3.0 for j in range(3)]
+    BED_BROKEN[f"bed_a_outlet_vs_quadrature_{sh}"] = float(abs(rc[2] + (rc[2] - rc[1]) / 3.0 - QREF[cls]))
+    BED_BROKEN_LABEL[f"bed_a_outlet_vs_quadrature_{sh}"] = "the outlet read at the last cell centre, not the face"
+    BED_BROKEN[f"bed_a_outlet_quadrature_change_{sh}"] = abs(
+        float(PLUG.run(cls, BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"],
+                       n=BASE["n"], rtol=1e-6)[1][-1, -1]) - QREF[cls])
+    BED_BROKEN_LABEL[f"bed_a_outlet_quadrature_change_{sh}"] = (
+        f"the quadrature on {PLUG.ns} nodes at LSODA rtol 1e-6")
 print(f"the two contrasts have opposite sign: "
       f"{M['bed_profile_contrast_par']:+.4f} vs {M['bed_profile_contrast_ser']:+.4f}")
 print(f"For comparison, the production grid (m = {BED.m}) reads its first cell "
       f"centre at {prof['series'][1][0, -1]:.4f} (series) and "
       f"{prof['parallel'][1][0, -1]:.6f} (parallel). Neither is reported as the "
-      f"inlet activity: a sampled cell centre standing in for an exactly known "
-      f"limit is the wrong-baseline defect class this gallery keeps finding "
-      f"(`B1.7`), and here the exact statement is the stronger one - the series "
-      f"inlet does not merely stay high, it does not decay AT ALL.")
-print(f"\nONE DEFECT, THREE FORMS, ON THIS ONE SECTION: a sampled cell centre "
-      f"where an exact limit exists, a single-grid sample where a space "
-      f"extrapolation exists, and a space extrapolation at one step count where "
-      f"a TIME extrapolation exists. Each is a number read at whatever "
-      f"resolution the code happened to be run at, and printed as if it were "
-      f"the limit. The general rule this section follows is that a "
-      f"reported value must not be a function of any resolution the page "
-      f"chose - every such knob is either extrapolated away or shown, by "
-      f"halving it in the break table, not to matter - and that a value may "
-      f"not be printed to more digits than its own refinement resolves.")
-'''))
+      f"inlet activity: the exact statement is the stronger one, since the series "
+      f"inlet does not merely stay high, it does not decay at all.")
+_b22 = load_claims("B2.2-froment-bischoff-coking")
+print(f"B2.2, at its own operating point: the parallel half-bed coke contrast is "
+      f"{_b22['diag_halfcontrast_pe_base']:+.3f}, resolvable only with assays better "
+      f"than {100 * _b22['diag_sigma_max_pe_base']:.1f} %, and "
+      f"{_b22['diag_halfcontrast_pe_T20']:+.4f} at four times the coking time.")
 
-cells.append(md(r"""### 7. Where even the mixed reactor separates — and the boundary is analytic
 
-Degeneracy 2 is **one-way**. Series with orders $(n', d)$ always has an exact
-parallel twin at $(n n', d+n')$. Going the other way, a parallel truth
-$(n'_p, d_p)$ has a series twin only if the required series order
-$d_s = d_p - n'_p/n$ is **non-negative** — and $d$ is an *order* in the
-paper's own rate forms, so a negative one is not a member of the family.
+# %% [markdown]
+# ### 7. Where even the mixed reactor separates, and the boundary is analytic
+#
+# Degeneracy 2 is **one-way**. Series with orders $(n', d)$ always has an exact
+# parallel twin at $(n n', d+n')$. Going the other way, a parallel truth
+# $(n'_p, d_p)$ has a series twin only if the required series order
+# $d_s = d_p - n'_p/n$ is **non-negative**, and $d$ is an *order* in the
+# paper's own rate forms, so a negative one is not a member of the family.
+#
+# So there is a line, $d = n'/n$, below which the exact twin ceases to exist.
+# The prediction is sharp; what it buys is not. Below the line the best series
+# impersonation is no longer perfect, but it is not immediately *bad* either:
+# the residual grows smoothly with distance from the line, and only becomes
+# measurable at a realistic resolution well inside the region. Tested on both
+# sides:
 
-So there is a line, $d = n'/n$, below which the exact twin ceases to exist.
-The prediction is sharp; what it buys is not. Below the line the best series
-impersonation is no longer perfect, but it is not immediately *bad* either —
-the residual grows smoothly with distance from the line, and only becomes
-measurable at a realistic resolution well inside the region. Tested on both
-sides:"""))
-
-cells.append(code(r'''"""The predicted boundary d = n'/n in the constant-flow mixed reactor."""
+# %%
+"""The predicted boundary d = n'/n in the constant-flow mixed reactor."""
 rows = []
 for npv, dv in ((1.0, 1.5), (1.0, 1.0), (1.0, 0.75), (1.0, 0.5), (1.0, 0.25),
                 (2.0, 1.5)):
@@ -2074,7 +1844,8 @@ print(f"\nInside the region where the exact twin exists (d >= n'/n) the best "
       f"residual grows smoothly with distance from the line, from below 1e-3 at "
       f"d - n'/n = -0.25 (here {M['mixed_boundary_np1_d0.75']:.1e}) to "
       f"{M['mixed_boundary_np1_d0.25']:.1e} at -0.75, and only crosses the "
-      f"{RES_X:g} resolution around d - n'/n = -0.5.")
+      f"{RES_X:g} resolution between d - n'/n = -0.25 and -0.5 (here "
+      f"{M['mixed_boundary_np1_d0.5']:.1e} at -0.5).")
 print("The line is a prediction about EXACTNESS, and it holds. It is not a "
       "prediction about measurability, and the (n' = 2, d = 1.5) row shows why: "
       f"it lies half a unit below the line yet is still fitted to below 1e-4 "
@@ -2086,44 +1857,46 @@ BREAKS.append(("mixed_boundary_np1_d0.5", M["mixed_boundary_np1_d0.5"],
                M["mixed_boundary_np1_d1.5"],
                "the separability of the mixed reactor is switched by the "
                "analytic condition, in both directions"))
-'''))
 
-cells.append(md(r"""### 8. The recommended device, taken seriously
 
-Levenspiel's recommendation (Discussion, point 2, p. 272) is unambiguous:
+# %% [markdown]
+# ### 8. The recommended device, taken seriously
+#
+# Levenspiel's recommendation (Discussion, point 2, p. 272) is unambiguous:
+#
+# > *"the most useful reactor set up uses a batch of solids and mixed flow of
+# > fluid with changing flow rate so as to keep the concentration of the
+# > pertinent reaction component unchanged with time within the reactor. Thus by
+# > constantly lowering the flow rate in a basket or recycle reactor the activity
+# > and concentration dependencies can be decoupled and studied separately."*
+#
+# Everything about that is right, and the page confirms both halves: the decay
+# order $d$ comes straight out of the shape of $\tau'(t)$ through eqs. (28)–(32)
+# **whatever $n'$ is** (that is the decoupling), and, from degeneracy 3, the
+# class does not come out at all. The two facts are the same fact. So the
+# question the device leaves open is: *how many runs, over what span of held
+# concentration, does the class actually take?*
+#
+# The recipe is the paper's own: $k'_d = k_dC_{\rm A}^{\,n'}$ under parallel and
+# $k_dC_{\rm R}^{\,n'}$ under series, so a set of runs at different held levels
+# gives $k'_d$ as a function of the level, and a power law in $C_{\rm A}$ is not
+# a power law in $C_{\rm A0}-C_{\rm A}$. Below, the span required is
+# **root-found** against a stated precision on $k'_d$, not read off a sweep, and
+# then swept over the two design choices it hides, because root-finding a
+# function of an arbitrary parameter does not make that parameter less arbitrary.
+#
+# **The second half of this section prices a protocol the paper does not
+# prescribe, and says so.** For eq. (6) Levenspiel's own instruction is to hold
+# $C_{\rm P}$; holding $C_{\rm A}$ instead is the inverse of his priority. Both
+# sentences are in `data/levenspiel-1972-printed-claims.csv` and both are printed
+# below from it in full, hedge included. Under the author's own instruction, a
+# poison not consumed, so
+# $C_{\rm P}$ fixed, this page's own $\sigma = 0$ row shows **no bias at all**.
+# What is priced below is the cost of the *other* choice, and it is a real cost
+# only because one control knob cannot hold two concentrations.
 
-> *"the most useful reactor set up uses a batch of solids and mixed flow of
-> fluid with changing flow rate so as to keep the concentration of the
-> pertinent reaction component unchanged with time within the reactor. Thus by
-> constantly lowering the flow rate in a basket or recycle reactor the activity
-> and concentration dependencies can be decoupled and studied separately."*
-
-Everything about that is right, and the page confirms both halves: the decay
-order $d$ comes straight out of the shape of $\tau'(t)$ through eqs. (28)–(32)
-**whatever $n'$ is** (that is the decoupling), and — from degeneracy 3 — the
-class does not come out at all. The two facts are the same fact. So the
-question the device leaves open is: *how many runs, over what span of held
-concentration, does the class actually take?*
-
-The recipe is the paper's own: $k'_d = k_dC_{\rm A}^{\,n'}$ under parallel and
-$k_dC_{\rm R}^{\,n'}$ under series, so a set of runs at different held levels
-gives $k'_d$ as a function of the level, and a power law in $C_{\rm A}$ is not
-a power law in $C_{\rm A0}-C_{\rm A}$. Below, the span required is
-**root-found** against a stated precision on $k'_d$, not read off a sweep — and
-then swept over the two design choices it hides, because root-finding a
-function of an arbitrary parameter does not make that parameter less arbitrary.
-
-**The second half of this section prices a protocol the paper does not
-prescribe, and says so.** For eq. (6) Levenspiel's own instruction is to hold
-$C_{\rm P}$; holding $C_{\rm A}$ instead is the inverse of his priority. Both
-sentences are in `data/levenspiel-1972-printed-claims.csv` and both are printed
-below from it in full, hedge included. Under the author's own instruction — a
-poison not consumed, so
-$C_{\rm P}$ fixed — this page's own $\sigma = 0$ row shows **no bias at all**.
-What is priced below is the cost of the *other* choice, and it is a real cost
-only because one control knob cannot hold two concentrations."""))
-
-cells.append(code(r'''"""How wide a set of held-C_A runs does it take to name the class?
+# %%
+"""How wide a set of held-C_A runs does it take to name the class?
 
 At each held level c the device returns k'_d exactly (degeneracy 3 makes it
 the ONLY thing it returns).  Under a parallel truth k'_d = lam c^n'; a series
@@ -2198,9 +1971,10 @@ BREAKS.append(("constC_span_needed_prec5pct",
                "demand 2 % precision on k'_d instead of 5 %",
                M["constC_span_needed_prec2pct"],
                "the required span is set by the precision, and moves with it"))
-'''))
 
-cells.append(code(r'''"""One knob, two constraints: side-by-side in the recommended device.
+
+# %%
+"""One knob, two constraints: side-by-side in the recommended device.
 
 Holding C_A fixed sets the flow rate.  If the poison is CONSUMED (eq. 6 prints
 "P -> P(down)"), C_P then drifts as the flow rate falls, so k'_d is not constant
@@ -2284,118 +2058,146 @@ BREAKS.append(("constC_sbs_bias_at_d1_max", M["constC_sbs_bias_at_d1_max"],
                f"move off d = 1, where the a^(d-1) cancellation holds, to d = {D_TRUE:g}",
                M["constC_sbs_bias_max_scanned"],
                "the blind spot is exactly at d = 1 and nowhere else"))
-'''))
 
-# --------------------------------------------------------------- validation -
-cells.append(md(r"""## Validation
 
-Four layers, in order of what they can catch.
+# %% [markdown]
+# ## Validation
+#
+# Four layers, in order of what they can catch.
+#
+# 1. **The pymrm bed against an independent exact route.** The pseudo-steady bed
+#    at frozen $a(s)$ is a first-order cascade, so the outlet is a quadrature:
+#    no grid, no operator, no linear solve in common with the finite-volume bed.
+#    Both refinement axes are swept separately, each with the other axis's error
+#    cancelled, and the two solvers of the bed's fluid equation are compared.
+# 2. **Every reactor against the paper's own closed forms.** Eqs. (15), (19),
+#    (22) and (28)–(31) are exact solutions of the very systems solved here, for
+#    the illustrative first-order case; they are the strongest available check
+#    and they are the paper's, not this page's.
+# 3. **A defect-injection table**, with a row for every reported metric.
+# 4. **The pseudo-steady assumption itself**, dropped and costed.
 
-1. **The pymrm bed against an independent exact route.** The pseudo-steady bed
-   at frozen $a(s)$ is a first-order cascade, so the outlet is a quadrature —
-   no grid, no operator, no linear solve in common with the finite-volume bed.
-   Both refinement axes are swept separately.
-2. **Every reactor against the paper's own closed forms.** Eqs. (15), (19),
-   (22) and (28)–(31) are exact solutions of the very systems solved here, for
-   the illustrative first-order case; they are the strongest available check
-   and they are the paper's, not this page's.
-3. **A defect-injection table**, with a row for every reported metric.
-4. **The pseudo-steady assumption itself**, dropped and costed."""))
-
-cells.append(code(r'''"""(1a) SPATIAL order, isolated: frozen a(s), bed outlet vs exact quadrature."""
+# %%
+"""(1a) SPATIAL order, isolated: frozen a(s), bed outlet vs exact quadrature."""
 from scipy.integrate import cumulative_simpson as _csimp
 def exact_outlet(kappa, n, afun, ns=20001):
     s = np.linspace(0, 1, ns)
     return _cascade(np.concatenate(([0.0], _csimp(afun(s), x=s))), kappa, n)[-1]
 
-rows, SPATIAL_BROKEN = [], {}
-for label, afun in (("a = e^{-3s}", lambda s: np.exp(-3 * s)),
-                    ("a = 0.2 + 0.8 s^2", lambda s: 0.2 + 0.8 * s ** 2)):
+def frozen_outlet(m, kappa, n, afun, **kw):
+    """Outlet concentration of the bed at a frozen activity profile."""
+    b = Bed(m, **kw)
+    return b.outlet(b.steady_c(kappa, afun(b.s_c), n))
+
+FROZEN = (("a = e^{-3s}", "exp", lambda s: np.exp(-3 * s)),
+          ("a = 0.2 + 0.8 s^2", "quad", lambda s: 0.2 + 0.8 * s ** 2))
+rows, SPATIAL_BROKEN, SPATIAL_BROKEN_LABEL, FINEST = [], {}, {}, []
+for label, tag, afun in FROZEN:
     for n_ in (1.0, 2.0):
-        ref = exact_outlet(1.5, n_, afun); prev = None
+        ref = exact_outlet(1.5, n_, afun)
+        errs = []
         for m in (25, 50, 100, 200, 400):
-            b = Bed(m)
-            e = abs(b.outlet(b.steady_c(1.5, afun(b.s_c), n_)) - ref)
-            rows.append([label, n_, m, f"{e:.3e}",
-                         "" if prev is None else f"{np.log2(prev/e):.2f}"])
-            prev = e
-        key = f"n{n_:g}_{'exp' if 'e^' in label else 'quad'}"
-        M[f"bed_spatial_err_{key}"] = float(e)
-        M[f"bed_spatial_order_{key}"] = float(np.log2(float(rows[-2][3]) / e))
+            errs.append(abs(frozen_outlet(m, 1.5, n_, afun) - ref))
+            rows.append([label, n_, m, f"{errs[-1]:.3e}",
+                         "" if m == 25 else f"{np.log2(errs[-2] / errs[-1]):.2f}"])
+        key = f"n{n_:g}_{tag}"
+        M[f"bed_spatial_err_{key}"] = float(errs[-1])
+        M[f"bed_spatial_order_{key}"] = float(np.log2(errs[-2] / errs[-1]))
+        FINEST.append(errs[-1])
         # break rows: the error one grid coarser, and the observed order with
-        # the deferred correction removed (plain first-order upwind)
-        SPATIAL_BROKEN[f"bed_spatial_err_{key}"] = float(rows[-2][3])
-        e_up = []
-        for mm in (200, 400):
-            bu = Bed(mm, tvd=False)
-            e_up.append(abs(bu.outlet(bu.steady_c(1.5, afun(bu.s_c), n_)) - ref))
+        # first-order upwind convection
+        SPATIAL_BROKEN[f"bed_spatial_err_{key}"] = float(errs[-2])
+        SPATIAL_BROKEN_LABEL[f"bed_spatial_err_{key}"] = "the error read on 200 cells"
+        e_up = [abs(frozen_outlet(mm, 1.5, n_, afun, limiter=None) - ref) for mm in (200, 400)]
         SPATIAL_BROKEN[f"bed_spatial_order_{key}"] = float(np.log2(e_up[0] / e_up[1]))
+        SPATIAL_BROKEN_LABEL[f"bed_spatial_order_{key}"] = "first-order upwind convection (Bed(..., limiter=None))"
 display(Markdown("**Spatial convergence of the pymrm bed against the quadrature "
                  "(activity frozen, so no time error can leak in):**\n\n"
                  + md_table(pd.DataFrame(rows,
                                           columns=["frozen a(s)", "n", "cells m",
                                                    "|outlet error|",
                                                    "observed order"]))))
-print("compute_boundary_values with the outflow bc left as pymrm builds it: "
-      "second order, at both reaction orders.")
-'''))
+# the round-off of these errors: the newton/deferred gap of the fluid solve
+M["bed_spatial_finest_over_roundoff"] = float(min(FINEST) / max(M["bed_route_gap_frozen"], 1e-16))
+_bl = Bed(200, route="deferred", tol=1e-4)
+GAP_LOOSE = float(np.max(np.abs(_bl.steady_c(BASE["kappa"], 0.2 + 0.8 * _bl.s_c ** 2) - _cn)))
+print("Second order at both reaction orders, with the outlet read on the "
+      "extrapolated outlet face. The smallest of these errors is "
+      f"{M['bed_spatial_finest_over_roundoff']:.0e} times the newton/deferred gap "
+      "of the fluid solve (at least 1e3).")
 
-cells.append(code(r'''"""(1b) TEMPORAL order, and the joint production setting."""
-ref_par = PlugExact(161).run("parallel", BASE["kappa"], BASE["lam"], BASE["d"],
-                             BASE["nprime"], n=BASE["n"], rtol=1e-11)[0]
-NTS = (25, 50, 100, 200)
-b400 = Bed(400)
-rows, ERRT = [], {}
-for scheme in ("heun", "euler"):
-    prev = None; ERRT[scheme] = []
-    for nt in NTS:
-        X, _, _ = b400.march("parallel", BASE["kappa"], BASE["lam"], BASE["d"],
-                             BASE["nprime"], n=BASE["n"], nt=nt, scheme=scheme)
-        e = float(np.max(np.abs(X - ref_par))); ERRT[scheme].append(e)
-        rows.append([scheme, nt, f"{e:.3e}",
-                     "" if prev is None else f"{np.log2(prev/e):.2f}"])
-        prev = e
-M["bed_time_order"] = float(np.log2(ERRT["heun"][1] / ERRT["heun"][2]))
-M["bed_time_order_euler"] = float(np.log2(ERRT["euler"][1] / ERRT["euler"][2]))
-M["bed_time_order_euler_finest"] = float(np.log2(ERRT["euler"][2]
-                                                 / ERRT["euler"][3]))
-M["bed_time_order_heun_finest"] = float(np.log2(ERRT["heun"][2]
-                                                / ERRT["heun"][3]))
-display(Markdown("**Temporal convergence on the activity march (m = 400), "
-                 "second-order Heun against first-order Euler:**\n\n"
-                 + md_table(pd.DataFrame(rows, columns=["scheme", "steps nt",
-                                                        "max |X error|",
-                                                        "observed order"]))))
-print(f"Heun is second order ({M['bed_time_order']:.2f} at the 50->100 pair) "
-      f"and Euler is first ({M['bed_time_order_euler']:.2f} at the same pair, "
-      f"and {M['bed_time_order_euler_finest']:.2f} at 100->200). "
-      f"bed_time_order is read at 50->100 DELIBERATELY: at nt = 200 the Heun "
-      f"time error ({ERRT['heun'][3]:.1e}) has fallen onto the m = 400 SPATIAL "
-      f"floor (the frozen-a study above puts that at ~6e-7 to 2e-6), so the "
-      f"apparent order there is {M['bed_time_order_heun_finest']:.2f} - an "
-      f"artefact of the reference, not a super-convergence. Euler's error is "
-      f"still {ERRT['euler'][3]/ERRT['heun'][3]:.0f}x above that floor at "
-      f"nt = 200, which is why it keeps a clean order all the way down.")
-Xprod, _, _ = BED.march("parallel", BASE["kappa"], BASE["lam"], BASE["d"],
-                        BASE["nprime"], n=BASE["n"], nt=200)
-M["bed_vs_quadrature_production"] = float(np.max(np.abs(Xprod - ref_par)))
-M["bed_vs_quadrature_over_resolution"] = float(M["bed_vs_quadrature_production"]
-                                               / RES_X)
-print(f"production bed (m = {BED.m}, nt = 200) vs the quadrature: "
-      f"{M['bed_vs_quadrature_production']:.2e} in conversion, "
-      f"{1/M['bed_vs_quadrature_over_resolution']:.0f}x below the "
-      f"{RES_X:g} resolution the separability verdicts are read at. "
-      "That is what licenses the sweep to run on the quadrature.")
-# and the same comparison for the class whose profile is the opposite way up
-ref_ser = PlugExact(161).run("series", BASE["kappa"], BASE["lam"], BASE["d"],
-                             BASE["nprime"], n=BASE["n"], rtol=1e-11)[0]
-Xser, _, _ = BED.march("series", BASE["kappa"], BASE["lam"], BASE["d"],
-                       BASE["nprime"], n=BASE["n"], nt=200)
-M["bed_vs_quadrature_series"] = float(np.max(np.abs(Xser - ref_ser)))
+# %%
+"""(1b) TEMPORAL and SPATIAL order of the full march, each with the other axis's
+error cancelled, and the production setting against the quadrature."""
+args = (BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"])
+
+def x_history(nt, m=200, **kw):
+    """Outlet conversion at the 41 observation times (all on the step grid)."""
+    scheme = kw.pop("scheme", "heun")
+    on_grid = kw.pop("on_grid", True)
+    return Bed(m, **kw).march("parallel", *args, n=BASE["n"], nt=nt,
+                              scheme=scheme, on_grid=on_grid)[0]
+
+NTS = (40, 80, 160, 320, 640)        # multiples of 40: every observation time is a step
+OT = {s: observed_orders(lambda nt: x_history(nt, scheme=s), NTS) for s in ("heun", "euler")}
+OXM = observed_orders(lambda m: x_history(80, m=m), (50, 100, 200, 400, 800))
+for s in ("heun", "euler"):
+    M[f"bed_time_order_{s}_min"] = float(min(OT[s]["orders"]))
+    M[f"bed_time_order_{s}_max"] = float(max(OT[s]["orders"]))
+M["bed_space_order_march_min"] = float(min(OXM["orders"]))
+M["bed_space_order_march_max"] = float(max(OXM["orders"]))
+_dT = float(np.max(np.abs(OT["heun"]["values"][-1] - OT["heun"]["values"][-2])))
+_dX = float(np.max(np.abs(OXM["values"][-1] - OXM["values"][-2])))
+XN = BED.march("parallel", *args, n=BASE["n"], nt=200)[0]
+XD = Bed(200, route="deferred").march("parallel", *args, n=BASE["n"], nt=200)[0]
+M["bed_route_gap_march"] = float(np.max(np.abs(XN - XD)))
+M["bed_axes_finest_over_roundoff"] = float(min(_dT, _dX) / max(M["bed_route_gap_march"], 1e-16))
+# the round-off of the section-6 ladders: the same newton/deferred gap of the march
+for _lad in ("inlet", "space", "time"):
+    M[f"bed_a_{'inlet_cellcentre' if _lad == 'inlet' else 'outlet_' + _lad}_finest_over_roundoff"] = float(
+        min(FINEST6[_lad]) / max(M["bed_route_gap_march"], 1e-16))
+print("The finest changes of the section-6 ladders are at least 1e3 times the "
+      "newton/deferred gap of the march (here "
+      + ", ".join(f"{k} {min(v) / max(M['bed_route_gap_march'], 1e-16):.0e}" for k, v in FINEST6.items())
+      + " times).")
+print("time alone (m = 200, nt = 40..640), Heun:  orders "
+      + ", ".join(f"{o:.4f}" for o in OT["heun"]["orders"]))
+print("time alone (m = 200, nt = 40..640), Euler: orders "
+      + ", ".join(f"{o:.4f}" for o in OT["euler"]["orders"]))
+print("space alone (nt = 80, m = 50..800):        orders "
+      + ", ".join(f"{o:.4f}" for o in OXM["orders"]))
+print(f"the newton and deferred-correction routes give the same production "
+      f"conversion history to below 1e-10 (here {M['bed_route_gap_march']:.0e}); "
+      f"the finest differences of both ladders are at least 1e3 times that "
+      f"(here {M['bed_axes_finest_over_roundoff']:.0e} times).")
+# break rows of the ladders
+OT_OFFGRID = observed_orders(lambda nt: x_history(nt, on_grid=False), (25, 50, 100, 200, 400))
+print("for contrast, the conversion history interpolated between steps "
+      "(nt = 25..400, where 25, 50 and 100 steps miss observation times): orders "
+      + ", ".join(f"{o:.2f}" for o in OT_OFFGRID["orders"]))
+OXM_UP = observed_orders(lambda m: x_history(80, m=m, limiter=None), (50, 100, 200, 400, 800))
+XD_LOOSE = Bed(200, route="deferred", tol=1e-4).march("parallel", *args, n=BASE["n"], nt=200)[0]
+GAP_MARCH_LOOSE = float(np.max(np.abs(XN - XD_LOOSE)))
+XD_LOOSER = Bed(200, route="deferred", tol=1e-2).march("parallel", *args, n=BASE["n"], nt=200)[0]
+GAP_MARCH_LOOSER = float(np.max(np.abs(XN - XD_LOOSER)))   # the inlet ladder's finest change is only 1.8e3 times the 1e-4 gap
+
+ref_par = PlugExact(161).run("parallel", *args, n=BASE["n"], rtol=1e-11)[0]
+ref_ser = PlugExact(161).run("series", *args, n=BASE["n"], rtol=1e-11)[0]
+M["bed_vs_quadrature_production"] = float(np.max(np.abs(XN[1:] - ref_par[1:])))
+M["bed_vs_quadrature_over_resolution"] = float(M["bed_vs_quadrature_production"] / RES_X)
+print(f"production bed (m = {BED.m}, nt = 200) vs the quadrature over theta > 0 "
+      f"(at theta = 0 the bed is fresh and both classes share one profile): "
+      f"{M['bed_vs_quadrature_production']:.2e} in conversion, a fraction "
+      f"{M['bed_vs_quadrature_over_resolution']:.1e} of the {RES_X:g} resolution "
+      f"the separability verdicts are read at. That is what licenses the sweep "
+      f"to run on the quadrature.")
+Xser, _, _ = BED.march("series", *args, n=BASE["n"], nt=200)
+M["bed_vs_quadrature_series"] = float(np.max(np.abs(Xser[1:] - ref_ser[1:])))
 print(f"same, series (ascending profile): {M['bed_vs_quadrature_series']:.2e}")
-'''))
 
-cells.append(code(r'''"""(2) Every device against the PAPER'S OWN closed forms, eqs. (15), (19), (22),
+
+# %%
+"""(2) Every device against the PAPER'S OWN closed forms, eqs. (15), (19), (22),
 (28)-(31).  These are exact solutions of the systems being solved, printed in
 1972; they share no code with anything above."""
 kap, lam = 1.2, 2.5          # first-order reaction, first-order decay, n' = 0
@@ -2467,21 +2269,20 @@ print("All four printed branches of the deactivation order (d = 0, 1, 2, 3) are 
       + ", ".join(f"{M[f'a_end_d{j}_branch']:.3f}" for j in range(4))
       + " for d = 0, 1, 2, 3.  d = 0 is the branch on which the activity reaches "
         "zero in finite time (at k'_d t = 1); the window stops short of it.")
-'''))
 
-cells.append(code(r'''"""(4) The paper's pseudo-steady assumption (p. 269), dropped and costed.
+
+# %%
+"""(4) The paper's pseudo-steady assumption (p. 269), dropped and costed.
 
 eps = (fluid residence time)/(observation window).  The bed is re-solved with
 eps dc/dtheta retained, on the same operators; the deviation from the
 pseudo-steady answer is root-found against the conversion resolution."""
 BEDT = Bed(m=80)                     # eps study: the O(eps) term, not the grid
-BEDT._SP = BEDT.jac_sparsity()
-X_PS, _, _ = BEDT.march("parallel", BASE["kappa"], BASE["lam"], BASE["d"],
-                        BASE["nprime"], n=BASE["n"], nt=200)   # eps = 0 reference
-def pseudo_steady_cost(eps, cls="parallel"):
-    Xt, _ = BEDT.transient(cls, BASE["kappa"], BASE["lam"], BASE["d"],
-                           BASE["nprime"], eps, n=BASE["n"])
-    return float(np.max(np.abs(Xt - X_PS)))
+NT_PS = 1600                         # eps = 0 reference: its time error is far below the cost
+X_PS, _, _ = BEDT.march("parallel", *args, n=BASE["n"], nt=NT_PS)
+def pseudo_steady_cost(eps, cls="parallel", ref=None):
+    Xt, _ = BEDT.transient(cls, *args, eps, n=BASE["n"])
+    return float(np.max(np.abs(Xt - (X_PS if ref is None else ref))))
 
 eps_grid = np.array([1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 3e-2])
 cost = np.array([pseudo_steady_cost(e) for e in eps_grid])
@@ -2493,10 +2294,15 @@ eps_star = brentq(lambda e: pseudo_steady_cost(np.exp(e)) - RES_X,
                   np.log(1e-4), np.log(3e-2), xtol=1e-3)
 M["pseudo_steady_eps_star"] = float(np.exp(eps_star))
 # break rows: the slope with the accumulation term scaled by sqrt(eps) instead
-# of eps (a wrong time scale), and eps* read at half the resolution off the grid
+# of eps (a wrong time scale); the slope against an eps = 0 reference marched in
+# 200 steps; and eps* read at half the resolution off the grid
 PS_SLOPE_SQRT = float(np.polyfit(np.log(eps_grid[:4]),
                                  np.log([pseudo_steady_cost(np.sqrt(e))
                                          for e in eps_grid[:4]]), 1)[0])
+_X200 = BEDT.march("parallel", *args, n=BASE["n"], nt=200)[0]
+PS_SLOPE_REF200 = float(np.polyfit(np.log(eps_grid[:4]),
+                                   np.log([pseudo_steady_cost(e, ref=_X200)
+                                           for e in eps_grid[:4]]), 1)[0])
 PS_EPS_HALF = float(np.exp(np.interp(np.log(RES_X / 2), np.log(cost),
                                      np.log(eps_grid))))
 fig, ax = plt.subplots(figsize=(5.0, 3.1))
@@ -2509,83 +2315,66 @@ ax.set_xlabel(r"$\varepsilon$ = fluid residence time / observation window")
 ax.set_ylabel("max error in $X_A$ from the\npseudo-steady assumption")
 ax.grid(alpha=0.25, which="both", lw=0.5); ax.legend(fontsize=8, frameon=False)
 fig.tight_layout(); plt.show()
-print(f"cost is first order in eps (slope {M['pseudo_steady_cost_slope']:.2f}), "
-      f"and crosses the {RES_X:g} conversion resolution at "
+print(f"cost is first order in eps (slope {M['pseudo_steady_cost_slope']:.3f} over "
+      f"eps = 1e-4 to 3e-3, against an eps = 0 reference marched in {NT_PS} steps; "
+      f"against one marched in 200 steps the slope reads {PS_SLOPE_REF200:.3f}, "
+      f"because that reference's time error is part of the smallest costs), and "
+      f"crosses the {RES_X:g} conversion resolution at "
       f"eps* = {M['pseudo_steady_eps_star']:.2e}.")
 print(f"Read as the paper reads it (p. 267): with a fluid residence time of 1 s, "
       f"the assumption is worth its own error bar once the run lasts longer than "
       f"{1.0/M['pseudo_steady_eps_star']:.0f} s = "
-      f"{1.0/M['pseudo_steady_eps_star']/60:.0f} min - which is exactly the "
-      f"boundary the paper draws in words: \"Deactivation in the order of "
-      f"minutes or longer can use the fixed batch of solids.\"")
+      f"{1.0/M['pseudo_steady_eps_star']/60:.0f} min, the boundary the paper "
+      f"draws in words: \"Deactivation in the order of minutes or longer can use "
+      f"the fixed batch of solids.\"")
 BREAKS.append(("pseudo_steady_cost_eps1e-3", M["pseudo_steady_cost_eps1e-3"],
                "raise eps 30x, to 3e-2", M["pseudo_steady_cost_eps3e-2"],
                "the assumption's cost is first order in eps and does move"))
-'''))
 
-cells.append(md(r"""### The break table
 
-Every reported number needs something that moves it. The table below holds the
-defects injected into the model and the solver; the claims cell after it wires
-those rows, and the breaks computed beside each result above, to the claim each
-one must fail. A claim that no row can move is an identity, and it is named as
-structural there."""))
+# %% [markdown]
+# ### The break table
+#
+# Every reported number needs something that moves it. The table below holds the
+# defects injected into the model and the solver; the claims cell after it wires
+# those rows, and the breaks computed beside each result above, to the claim each
+# one must fail. A claim that no row can move is an identity, and it is named as
+# structural there.
 
-cells.append(code(r'''"""Defect injection: break something on purpose, watch the number move."""
+# %%
+"""Defect injection: break something on purpose, watch the number move."""
 kap, lam, dv, npv = BASE["kappa"], BASE["lam"], BASE["d"], BASE["nprime"]
 
 # (a) wrong nu in construct_div: cylindrical instead of Cartesian weight coord
-class BedNu(Bed):
-    def __init__(self, m=200):
-        super().__init__(m)
-        conv, conv_bc = construct_convflux_upwind((m, 1), self.s_f, self.s_c,
-                                                  self.bc, v=1.0)
-        div = construct_div((m, 1), self.s_f, nu=1)      # WRONG: cylindrical
-        self.div = div
-        self.Lop = (div @ conv).tocsc()
-        self.bvec = np.asarray((div @ conv_bc).todense()).ravel()
-Xnu, _, _ = BedNu(200).march("parallel", kap, lam, dv, npv, n=BASE["n"], nt=200)
+Xnu, _, _ = Bed(200, nu=1).march("parallel", kap, lam, dv, npv, n=BASE["n"], nt=200)
 BREAKS.append(("bed_vs_quadrature_production", M["bed_vs_quadrature_production"],
-               "construct_div(nu=1) - cylindrical, not the Cartesian weight coord",
-               float(np.max(np.abs(Xnu - ref_par))), "wrong geometry flag"))
+               "Bed(200, nu=1): cylindrical, not the Cartesian weight coordinate",
+               float(np.max(np.abs(Xnu[1:] - ref_par[1:]))), "wrong geometry flag nu = 1 (inlet face area zero, feed cut off)"))
 
-# (b) first-order upwind: drop the van Leer deferred correction
-Xtvd, _, _ = Bed(200, tvd=False).march("parallel", kap, lam, dv, npv,
-                                       n=BASE["n"], nt=200)
+# (b) first-order upwind: no limiter
+Xtvd, _, _ = Bed(200, limiter=None).march("parallel", kap, lam, dv, npv,
+                                          n=BASE["n"], nt=200)
 BREAKS.append(("bed_vs_quadrature_production", M["bed_vs_quadrature_production"],
-               "tvd=False - plain first-order upwind",
-               float(np.max(np.abs(Xtvd - ref_par))), "deferred correction removed"))
+               "Bed(200, limiter=None): first-order upwind",
+               float(np.max(np.abs(Xtvd[1:] - ref_par[1:]))), "van Leer limiter removed"))
 
-# (c) Euler instead of Heun on the activity - ORDER against ORDER, both
-# observed on the same refinement pair.  Setting an order against an ERROR (the
-# obvious way to write this row) cannot fail, because they are different
-# quantities: "moves? yes" would be automatic and nothing would be tested.
-BREAKS.append(("bed_time_order", M["bed_time_order"],
-               "scheme='euler' on the activity march (same 50->100 pair, m=400)",
-               M["bed_time_order_euler"],
+# (c) Euler instead of Heun on the activity: ORDER against ORDER, on the same
+# ladder.  Setting an order against an ERROR cannot fail, because they are
+# different quantities.
+BREAKS.append(("bed_time_order_heun_min", M["bed_time_order_heun_min"],
+               "march(..., scheme='euler') on the same ladder (m = 200, nt = 40..640)",
+               M["bed_time_order_euler_min"],
                "observed order against observed order: 2 -> 1"))
 
 # (d) the inlet boundary condition flipped to zero-gradient
-class BedBC(Bed):
-    def __init__(self, m=200):
-        super().__init__(m)
-        self.bc = ({"a": 1.0, "b": 0.0, "d": 0.0},   # WRONG: no feed imposed
-                   {"a": 1.0, "b": 0.0, "d": 0.0})
-        conv, conv_bc = construct_convflux_upwind((m, 1), self.s_f, self.s_c,
-                                                  self.bc, v=1.0)
-        self.Lop = (self.div @ conv).tocsc()
-        self.bvec = np.asarray((self.div @ conv_bc).todense()).ravel()
-try:
-    Xbc, _, _ = BedBC(200).march("parallel", kap, lam, dv, npv, n=BASE["n"], nt=40)
-    dbc = float(np.max(np.abs(Xbc - ref_par)))
-except Exception:
-    dbc = float("inf")
+Xbc, _, _ = Bed(200, feed=False).march("parallel", kap, lam, dv, npv, n=BASE["n"], nt=200)
 BREAKS.append(("bed_vs_quadrature_production", M["bed_vs_quadrature_production"],
-               "inlet bc {a:1,b:0,d:0} - feed concentration not imposed",
-               dbc, "boundary condition on the outward normal. NOT independent "
-                    "evidence from row (a): an un-fed bed and a bed with the "
-                    "wrong nu both collapse to the same degenerate answer, so "
-                    "the two rows return the same number"))
+               "Bed(200, feed=False): inlet {a:1,b:0,d:0}, feed not imposed",
+               float(np.max(np.abs(Xbc[1:] - ref_par[1:]))),
+               "boundary condition on the outward normal. Not independent "
+               "evidence from row (a): with nu = 1 the inlet face has zero "
+               "area, so an un-fed bed and a bed with the wrong nu reach the "
+               "same answer"))
 
 # (e) the four rate forms, swapped one for another (the wrong-class injection)
 for cfg in ("plug", "mixed"):
@@ -2696,9 +2485,10 @@ print(f"{len(movers)} injected defects, every one of which moves its metric; "
       f"(worst change {max((abs(b/a - 1) for a, b in zip(rob['as built'], rob['with the defect'])), default=0.0):.1e}).")
 M["break_rows"] = float(len(movers))
 M["break_robustness_rows"] = float(len(rob))
-'''))
 
-cells.append(code(r'''"""Claims: every published number, registered once with how it is checked.
+
+# %%
+"""Claims: every published number, registered once with how it is checked.
 
 docs/claims-design.md.  A VALUE (a physical, data or discretisation result
 above round-off) is held to the committed baseline within its rtol; a BOUND (a
@@ -2776,7 +2566,8 @@ for name, (cfg, q, vals, bnd) in PROFILES.items():
                         f"four refitted (ODE rtol 1e-12, central differences). A "
                         f"nonzero physical minimum, not a tolerance; the bound is a "
                         f"tenth of the 2e-3 conversion resolution, and below the "
-                        f"3.9e-4 a +1 % move of one constant costs. Optimiser upper "
+                        f"{min(M['sep_stall_1pct_cheapest_batch'], M['sep_stall_1pct_cheapest_mixed']):.1e} "
+                        f"a +1 % move of one constant costs. Optimiser upper "
                         f"bounds, safe in the direction of a non-identifiability "
                         f"claim; a point whose free constant ends on the box edge is "
                         f"limited by the box (printed)")
@@ -2798,15 +2589,17 @@ for nm in ("mixed_boundary_np2_d1.5", "mixed_boundary_best_outside"):
 B["constC_sbs_bias_at_d1_max"] = dict(
     max=1e-7, basis="tolerance",
     note="|recovered d - 1| over 21 sigma at d = 1; minimize_scalar xatol 1e-10 on "
-         "an expm1 transform (5.5e-7 and 1.0e-6 before, from cancellation)")
+         "an expm1 transform")
 B["constC_sbs_bias_sig0"] = dict(
     max=1e-7, basis="tolerance",
     note="|recovered d / 2 - 1| at sigma = 0, the author's own protocol")
 # -- the paper's closed forms ------------------------------------------------------
-for nm in ("eq15_maxdev", "eq19_maxdev", "eq28_reldev", "eq29_reldev",
-           "eq30_reldev", "eq31_reldev"):
-    B[nm] = dict(max=1e-7, basis="tolerance",
-                 note="ODE solution against the printed closed form, LSODA at rtol 1e-9")
+B["eq15_maxdev"] = dict(max=1e-7, basis="tolerance",
+                        note="batch fluid against eq. (15), LSODA at rtol 1e-9, atol 1e-13")
+for nm in ("eq19_maxdev", "eq28_reldev", "eq29_reldev", "eq30_reldev", "eq31_reldev"):
+    B[nm] = dict(max=1e-12, basis="identity",
+                 note="independent decay: dw/dtheta = -lam is constant, so every "
+                      "integrator step is exact and what is left is round-off")
 # -- the bed: tolerance effects and observed orders --------------------------------
 B["bed_inlet_time_sensitivity"] = dict(
     max=1e-7, basis="chosen",
@@ -2818,29 +2611,60 @@ for sh in ("par", "ser"):
         note="first order: the first cell centre sits 1/2m from the face")
     B[f"bed_a_outlet_time_order_{sh}"] = dict(
         min=1.8, max=2.2, basis="theory", note="Heun on the activity march")
+    B[f"bed_a_outlet_space_order_{sh}"] = dict(
+        min=1.9, max=2.1, basis="theory",
+        note="outlet-face activity (linear extrapolation of the last two cells), "
+             "changes between 200/400 and 400/800 cells at nt = 100")
+    B[f"bed_a_outlet_vs_quadrature_{sh}"] = dict(
+        max=1e-7, basis="chosen",
+        note="doubly extrapolated outlet activity against the quadrature route; "
+             "the bound is chosen above the measured Richardson error (the "
+             "quadrature itself converges to 1e-8)")
+    B[f"bed_a_outlet_quadrature_change_{sh}"] = dict(
+        max=1e-8, basis="tolerance",
+        note="quadrature route, 161 against 321 Simpson nodes, LSODA rtol 1e-12")
 for key in ("n1_exp", "n2_exp", "n1_quad", "n2_quad"):
     B[f"bed_spatial_order_{key}"] = dict(
-        min=1.8, max=2.2, basis="theory",
-        note="upwind with the van Leer deferred correction, outlet from "
-             "compute_boundary_values, m = 200 to 400")
-B["bed_time_order"] = dict(min=1.8, max=2.2, basis="theory",
-                           note="Heun, nt = 50 to 100 at m = 400")
-B["bed_time_order_euler"] = dict(min=0.9, max=1.1, basis="theory",
-                                 note="Euler, nt = 50 to 100 at m = 400")
-B["bed_time_order_euler_finest"] = dict(min=0.9, max=1.1, basis="theory",
-                                        note="Euler, nt = 100 to 200 at m = 400")
-B["bed_time_order_heun_finest"] = dict(
-    min=2.5, max=4.0, basis="chosen",
-    note="the apparent Heun order where its error meets the m = 400 spatial floor: "
-         "an artefact of the reference, printed as one")
-B["pseudo_steady_cost_slope"] = dict(min=0.9, max=1.1, basis="theory",
-                                     note="the cost of the pseudo-steady assumption "
-                                          "is first order in eps")
+        min=1.9, max=2.1, basis="theory",
+        note="ConvFluxTVD (van Leer), outlet on the extrapolated face, m = 200 to 400")
+B["bed_spatial_finest_over_roundoff"] = dict(
+    min=1e3, basis="theory",
+    note="smallest 400-cell frozen-profile error over the newton/deferred gap")
+B["bed_route_gap_frozen"] = dict(
+    max=1e-11, basis="tolerance",
+    note="newton step tol 1e-12 against deferred sweeps to a change below 1e-12, "
+         "same discrete equations, 200 cells")
+B["bed_route_gap_march"] = dict(
+    max=1e-11, basis="tolerance",
+    note="production conversion history (200 cells, 200 steps) by the two routes")
+for _nm, _what in (("bed_a_inlet_cellcentre", "inlet cell-centre error ladder (last two grids)"),
+                   ("bed_a_outlet_space", "outlet-face activity, last two grids at nt = 100"),
+                   ("bed_a_outlet_time", "doubly extrapolated outlet, last two step counts")):
+    B[f"{_nm}_finest_over_roundoff"] = dict(
+        min=1e3, basis="theory",
+        note=f"finest change of the {_what} over the newton/deferred gap of the march")
+B["bed_axes_finest_over_roundoff"] = dict(
+    min=1e3, basis="theory",
+    note="finest differences of the time and space ladders over the route gap")
+for s_, lo, hi in (("heun", 1.95, 2.05), ("euler", 0.95, 1.05)):
+    for e_ in ("min", "max"):
+        B[f"bed_time_order_{s_}_{e_}"] = dict(
+            min=lo, max=hi, basis="theory",
+            note=f"{s_} on the activity, m = 200, nt = 40..640 (observation times "
+                 f"on the step grid), space error cancelled")
+for e_ in ("min", "max"):
+    B[f"bed_space_order_march_{e_}"] = dict(
+        min=1.95, max=2.05, basis="theory",
+        note="conversion history at nt = 80, m = 50..800, time error cancelled")
+B["pseudo_steady_cost_slope"] = dict(
+    min=0.995, max=1.005, basis="theory",
+    note="the cost of the pseudo-steady assumption is first order in eps; fitted "
+         "over eps = 1e-4 to 3e-3 against an eps = 0 reference of 1600 steps")
 # -- value claims held tighter than 5 %, so that their break rows fail them --------
-RTOL.update({"bed_a_inlet_end_par": 1e-4,       # cell centre at m = 800: 8.9e-4
-             "bed_a_inlet_end_ser": 1e-4,       # production cell centre: 1.1e-2
-             "bed_a_outlet_spaceonly_par": 2e-6,  # nt halved: 1.5e-4
-             "bed_a_outlet_spaceonly_ser": 2e-6})  # nt halved: 1.7e-5
+# exact inlet values and the space-only outlet reading: held tight enough that
+# their break rows (a cell centre for the exact value, nt halved) fail them
+RTOL.update({"bed_a_inlet_end_par": 1e-4, "bed_a_inlet_end_ser": 1e-4,
+             "bed_a_outlet_spaceonly_par": 2e-6, "bed_a_outlet_spaceonly_ser": 2e-6})
 EXACT = {   # name -> structural note, or None when a break row moves it
     "printed_chain_identities": "the number of symbolic identities checked",
     "printed_chain_nonzero": None,
@@ -2986,9 +2810,12 @@ claims.breaks("d = 1 instead of 2", "constC_sbs_bias_max_scanned",
               M["constC_sbs_bias_at_d1_max"])
 claims.breaks("read off the sigma scan, not root-found", "constC_sbs_sigma_for_bias",
               SIG_SCAN_READ)
-for nm, v in {**BED_BROKEN, **SPATIAL_BROKEN, **CF_BROKEN}.items():
-    claims.breaks("refinement, scheme or closed-form defect (see the cell that "
-                  "computes it)", nm, v)
+for nm, v in {**BED_BROKEN, **SPATIAL_BROKEN}.items():
+    claims.breaks({**BED_BROKEN_LABEL, **SPATIAL_BROKEN_LABEL}[nm], nm, v)
+for nm, v in CF_BROKEN.items():
+    claims.breaks("k_d 1 % high in the closed form" if nm.startswith(("eq15", "eq19", "eq22"))
+                  else "k'_d 1 % high in the run" if nm.endswith("reldev")
+                  else "k'_d 25 % high in the run", nm, v)
 for cls in ("parallel", "series"):
     sh, other = SHORT[cls], SHORT[SWAP[cls]]
     claims.breaks("the production cell centre in place of the exact inlet",
@@ -3000,14 +2827,33 @@ claims.breaks("read at the outlet cell", "bed_inlet_time_sensitivity",
               M["bed_profile_time_sensitivity"])
 claims.breaks("read at the inlet cell", "bed_profile_time_sensitivity",
               M["bed_inlet_time_sensitivity"])
-claims.breaks("Heun for Euler", "bed_time_order_euler", M["bed_time_order"])
-claims.breaks("Heun for Euler", "bed_time_order_euler_finest", M["bed_time_order_heun_finest"])
-claims.breaks("Euler for Heun", "bed_time_order_heun_finest", M["bed_time_order_euler_finest"])
-_nu = [r for r in BREAKS if r[2].startswith("construct_div(nu=1)")]
+claims.breaks("Heun for Euler", "bed_time_order_euler_min", M["bed_time_order_heun_min"])
+claims.breaks("Heun for Euler", "bed_time_order_euler_max", M["bed_time_order_heun_max"])
+claims.breaks("Euler for Heun", "bed_time_order_heun_max", M["bed_time_order_euler_max"])
+claims.breaks("conversion interpolated between steps, nt = 25..400 (march(..., on_grid=False))",
+              "bed_time_order_heun_max", max(OT_OFFGRID["orders"]))
+for e_, f_ in (("min", min), ("max", max)):
+    claims.breaks("first-order upwind convection (Bed(..., limiter=None))",
+                  f"bed_space_order_march_{e_}", f_(OXM_UP["orders"]))
+claims.breaks("deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))",
+              "bed_route_gap_frozen", GAP_LOOSE)
+claims.breaks("deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))",
+              "bed_spatial_finest_over_roundoff", min(FINEST) / GAP_LOOSE)
+claims.breaks("deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))",
+              "bed_route_gap_march", GAP_MARCH_LOOSE)
+claims.breaks("deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))",
+              "bed_axes_finest_over_roundoff", min(_dT, _dX) / GAP_MARCH_LOOSE)
+for _lad, _nm in (("inlet", "bed_a_inlet_cellcentre"), ("space", "bed_a_outlet_space"),
+                ("time", "bed_a_outlet_time")):
+    claims.breaks("deferred sweeps stopped at a change of 1e-2 (Bed(..., tol=1e-2))",
+                  f"{_nm}_finest_over_roundoff", min(FINEST6[_lad]) / GAP_MARCH_LOOSER)
+claims.breaks("eps = 0 reference marched in 200 steps", "pseudo_steady_cost_slope",
+              PS_SLOPE_REF200)
+_nu = [r for r in BREAKS if r[2].startswith("Bed(200, nu=1)")]
 assert len(_nu) == 1
-claims.breaks("construct_div(nu=1)", "bed_vs_quadrature_over_resolution", _nu[0][3] / RES_X)
+claims.breaks("Bed(200, nu=1)", "bed_vs_quadrature_over_resolution", _nu[0][3] / RES_X)
 claims.breaks("series bed against the parallel quadrature", "bed_vs_quadrature_series",
-              float(np.max(np.abs(Xser - ref_par))))
+              float(np.max(np.abs(Xser[1:] - ref_par[1:]))))
 claims.breaks("eps = 1e-3 instead of 3e-2", "pseudo_steady_cost_eps3e-2",
               M["pseudo_steady_cost_eps1e-3"])
 claims.breaks("accumulation scaled by sqrt(eps)", "pseudo_steady_cost_slope", PS_SLOPE_SQRT)
@@ -3023,7 +2869,8 @@ for k_ in _kinds["bound"]:
     if c.get("max") == 0.0:
         continue
     lo, hi = c.get("min"), c.get("max")
-    rng = f"[{lo:g}, {hi:g}]" if lo is not None else f"<= {hi:g}"
+    rng = (f"[{lo:g}, {hi:g}]" if lo is not None and hi is not None
+           else f">= {lo:g}" if lo is not None else f"<= {hi:g}")
     print(f"  {k_:44s} {rng:14s} [{c['basis']}]  (here {c['value']:.3g})")
 
 # -- numbers written in the prose of this page, checked against their claims -------
@@ -3038,163 +2885,167 @@ SAYS = {
     "mixed_boundary_np2_d1.5": ["below 1e-4"],
     "constC_sbs_bias_at_d1_max": ["below 1e-7"],
     "sep_optimiser_worst_overstatement": ["1.3e-3"],
+    "sep_plug_par_vs_ser": ["8.1e-4"],
+    "bed_a_inlet_end_par": ["0.0498"],
+    "bed_a_outlet_end_par": ["0.19"],
+    "bed_a_outlet_end_ser": ["0.18"],
+    "degen_sbs_is_parallel_famB_mixed": ["more than 1e-1"],
+    "degen_sbs_is_parallel_famB_constC": ["more than 1e-1"],
+    "printed_chain_identities": ["26"],
+    "constC_span_prec5pct_min": ["0.07"],
+    "constC_span_prec5pct_max": ["0.4"],
 }
 for k_, lits in SAYS.items():
     for lit in lits:
         claims.says(lit, k_)
 # wall clock is deliberately neither printed nor reported: it is machine
 # dependent, and two executions of this page must give identical content.
-claims.report()
-'''))
 
-# ------------------------------------------------------------ what pymrm adds
-cells.append(md(r"""## What pymrm adds
+# %%
+# Claims: prints every registered number, writes agreement.json for CI, and
+# raises when a claim fails its own check or has no break row.
+claims.report();   # the semicolon keeps the notebook from echoing the payload
 
-**To the four rate equations, nothing** — eqs. (4)–(7) are four lines of
-algebra, and three of the paper's four contactings are lumped systems that
-need no discretisation at all. This page says so rather than dressing them up.
-What the reimplementation adds is in three places, and only one of them is the
-solver:
 
-- **The question the paper asks becomes measurable.** "Which reactor can tell
-  the classes apart" is answered by 64 fits, not by an argument, and it comes
-  out the opposite way round from the taxonomy: **every one of the four devices
-  is exactly degenerate somewhere**, and the reason in each case is a one-line
-  identity the paper does not state. Two of the four collapse parallel onto
-  series or onto independent, which destroys the taxonomy outright; the other
-  two — the batch of fluid and the plug-flow bed — collapse only side-by-side
-  onto parallel, and do so for *every* value of the poison group $\sigma$. The
-  identity for the mixed reactor — series$(n',d) \equiv$ parallel$(nn',\,d+n')$
-  — is the sharp form of the whole result, and it carries an analytic boundary,
-  $d < n'/n$, below which the exact twin ceases to exist; the boundary is
-  *predicted*, and the measurement then shows what it is and is not worth
-  (necessary for the mixed reactor to separate the two classes, nowhere near
-  sufficient).
-- **And the identities are used, not just admired.** Each one names a parameter
-  vector at which some candidate reproduces some truth exactly. Those vectors
-  are evaluated directly and reported beside the fits, because on one entry of
-  the matrix the multistart, seeded next to the twin and free to reach it, fell
-  into a wrong basin 1.3e-3 short and would have printed an exactly-zero
-  separation as a measured one. That is the asymmetry this page is built on: a non-separability result
-  is a proof, a separability result is only "no better fit was found".
-- **And the honest negative.** At a 0.2-percentage-point conversion resolution,
-  one of the twelve class pairs is separable in one of the four devices. A page
-  that only reported where separation is easy would have reported nothing at
-  all here — which is why the measurement was worth making.
-- **The bed is where pymrm is load-bearing, and it changes the
-  recommendation.** The plug-flow contacting is the only one with a spatial
-  coordinate; it is *not* the only one free of exact degeneracy, as §4 shows —
-  and its outlet history is still a hard measurement. Its
-  *profile* is not: descending for parallel, ascending for series, contrasts of
-  opposite sign, with both inlet values known in closed form
-  ($a(0,\theta) = e^{-\lambda\theta}$ under parallel decay, and identically 1
-  under series, because no R has been made at the feed face). The page's
-  practical advice is therefore about what to
-  measure, not which vessel to buy, and it is the same signature `B2.2` found
-  in the coke. And because the finite-volume bed keeps the fluid accumulation
-  term, the **pseudo-steady assumption the paper states on p. 269 can be
-  dropped and priced**: first order in $\varepsilon$, crossing a 0.2 %
-  conversion resolution at a run length that lands on the "minutes or longer"
-  the paper writes in words on p. 267.
-- **One printed defect, settled two ways.** Eq. (24)'s $1/k_d$ should be
-  $1/k$: symbolically the gap is exactly $\ln(k_d/k)$, and dimensionally the
-  printed argument is in seconds where $\tau'$ is in g cat·sec/liter. Reported,
-  not repaired.
+# %% [markdown]
+# ## What pymrm adds
+#
+# **To the four rate equations, nothing**: eqs. (4)–(7) are four lines of
+# algebra, and three of the paper's four contactings are lumped systems that
+# need no discretisation at all. This page says so rather than dressing them up.
+# What the reimplementation adds is below, and only the bed is the solver's
+# part:
+#
+# - **The question the paper asks becomes measurable.** "Which reactor can tell
+#   the classes apart" is answered by 64 fits, not by an argument, and it comes
+#   out the opposite way round from the taxonomy: **every one of the four devices
+#   is exactly degenerate somewhere**, and the reason in each case is a one-line
+#   identity the paper does not state. Two of the four collapse parallel onto
+#   series or onto independent, which destroys the taxonomy outright; the other
+#   two, the batch of fluid and the plug-flow bed, collapse only side-by-side
+#   onto parallel, and do so for *every* value of the poison group $\sigma$. The
+#   identity for the mixed reactor, series$(n',d) \equiv$ parallel$(nn',\,d+n')$,
+#   is the sharp form of the whole result, and it carries an analytic boundary,
+#   $d < n'/n$, below which the exact twin ceases to exist; the boundary is
+#   *predicted*, and the measurement then shows what it is and is not worth
+#   (necessary for the mixed reactor to separate the two classes, nowhere near
+#   sufficient).
+# - **And the identities are used, not just admired.** Each one names a parameter
+#   vector at which some candidate reproduces some truth exactly. Those vectors
+#   are evaluated directly and reported beside the fits, because on one entry of
+#   the matrix the multistart, seeded next to the twin and free to reach it, fell
+#   into a wrong basin 1.3e-3 short and would have printed an exactly-zero
+#   separation as a measured one. That is the asymmetry this page is built on: a non-separability result
+#   is a proof, a separability result is only "no better fit was found".
+# - **And the honest negative.** At a 0.2-percentage-point conversion resolution,
+#   one of the twelve class pairs is separable in one of the four devices. A page
+#   that only reported where separation is easy would have reported nothing at
+#   all here, which is why the measurement was worth making.
+# - **The bed is where pymrm is load-bearing, and it changes the
+#   recommendation.** The plug-flow contacting is the only one with a spatial
+#   coordinate; it is *not* the only one free of exact degeneracy, as §4 shows,
+#   and its outlet history is still a hard measurement. Its
+#   *profile* is not: descending for parallel, ascending for series, contrasts of
+#   opposite sign, with both inlet values known in closed form
+#   ($a(0,\theta) = e^{-\lambda\theta}$ under parallel decay, and identically 1
+#   under series, because no R has been made at the feed face). The page's
+#   practical advice is therefore about what to
+#   measure, not which vessel to buy, and it is the same signature `B2.2` found
+#   in the coke. Each fluid profile of the bed is one `newton` solve with the
+#   exact Jacobian of `ConvFluxTVD`, which converges in a few iterations where
+#   van Leer deferred correction needs several times as many sweeps to the same
+#   profile (both counts are printed in the implementation section). And
+#   because the finite-volume bed keeps the fluid accumulation
+#   term, the **pseudo-steady assumption the paper states on p. 269 can be
+#   dropped and priced**: first order in $\varepsilon$, crossing a 0.2 %
+#   conversion resolution at a run length that lands on the "minutes or longer"
+#   the paper writes in words on p. 267.
+# - **One printed defect, settled two ways.** Eq. (24)'s $1/k_d$ should be
+#   $1/k$: symbolically the gap is exactly $\ln(k_d/k)$, and dimensionally the
+#   printed argument is in seconds where $\tau'$ is in g cat·sec/liter. Reported,
+#   not repaired.
+#
+# **What it cannot add.** There is no measurement in this paper, so nothing here
+# is validated in the sense of agreeing with an experiment: every number is
+# reproduction of printed algebra, an exact identity, or a computed property of
+# the printed rate forms. And a separability number is an upper bound produced
+# by an optimiser: the *non*-separability results are proofs, the separability
+# results are "no better fit was found".
 
-**What it cannot add.** There is no measurement in this paper, so nothing here
-is validated in the sense of agreeing with an experiment — every number is
-reproduction of printed algebra, an exact identity, or a computed property of
-the printed rate forms. And a separability number is an upper bound produced
-by an optimiser: the *non*-separability results are proofs, the separability
-results are "no better fit was found"."""))
-
-# ------------------------------------------------------------------- reuse --
-cells.append(md(r"""## Reuse
-
-**If you are designing an experiment to find a deactivation mechanism**, the
-short version of this page is:
-
-1. **Check $n'$ first.** If the decay has no concentration dependence, there
-   is only one class and no experiment can find another. Everything below is
-   about $n' > 0$.
-2. **A well-mixed fluid throws the class away.** In any constant-flow mixed
-   reactor, series deactivation of order $(n', d)$ is *exactly* parallel
-   deactivation of order $(nn', d+n')$ — same conversion history, at every
-   time, for any $n$. Only below $d = n'/n$ does the exact twin cease to exist,
-   and even there the impersonation stays good until you are roughly half an
-   order below the line.
-3. **Side-by-side is not a separate class in a batch or in a bed.** The poison
-   profile is a *power* of the reactant profile there, so eq. (6) with poison
-   group $\sigma$ is eq. (4) with $n' \to \lambda\sigma/\kappa$ — exactly, for
-   every $\sigma$, at $n = n' = d = 1$. No experiment in either device can
-   distinguish them, and the plug-flow bed is no exception. (It fails in the
-   two well-mixed devices, where the profiles are not powers of one another.)
-4. **Levenspiel's recommended device does what he says and no more.** Holding
-   $C_{\rm A}$ constant by lowering the flow rate gives you $d$ cleanly from
-   the shape of $\tau'(t)$ — that is real, and eqs. (28)–(32) reproduce
-   exactly. It does *not* give you the class: within one run parallel, series
-   and independent are the same equation. Recovering the class needs a **set**
-   of runs at different held levels, and the span matters: with $k'_d$ known
-   to 5 % you need a span of order 0.1–0.4 in $C_{\rm A}/C_{\rm A0}$, and
-   *where the set starts matters as much as how wide it is* — the swept range
-   over plausible starting levels and level counts is a factor of five. A
-   narrow bracket of levels tells you nothing.
-5. **Run a bed, and assay the bed.** The gradient is the information — but it
-   is in the *solid*, not in the effluent. Judged on conversion history alone
-   the bed separates one class pair in twelve at a 0.2-percentage-point
-   resolution; judged on the spent catalyst it separates parallel from series
-   at a glance, because the profile's gradient reverses sign — and the inlet
-   activity is exactly $e^{-\lambda\theta}$ under parallel decay against
-   exactly 1 under series. One sample beats a whole campaign of outlet
-   analyses. Before designing on it, size the contrast your assay can actually
-   reach: `B2.2` measured its own *within-bed* signature below a 10 % detection
-   floor at its operating point, and that is the same family of measurement.
-6. **Hold $C_{\rm P}$, not $C_{\rm A}$, if the poison is consumed.** That is
-   the paper's own instruction for eq. (6) and this page confirms it: with the
-   poison in excess the deactivation order comes back exactly. Holding
-   $C_{\rm A}$ instead — one knob, two constraints — bends the Fig.-6 line and
-   biases $d$, except at $d = 1$ where the $a^{d-1}$ consumption rate makes the
-   drift cancel exactly. The paper hedges the failure of the $C_{\rm A}$
-   condition, not of the $C_{\rm P}$ one; this page sizes what that hedge
-   costs.
-
-**Structure reuse.** The `Bed` class is a one-dimensional convection problem
-with a distributed, slowly-evolving source parameter: identical machinery to
-[`B2.2`](../B2.2-froment-bischoff-coking/) (coke profile), and the same
-`construct_convflux_upwind` + `construct_div` + `interp_cntr_to_stagg_tvd`
-stack as `J1.5` (breakthrough) and `A2.1` (dispersion). The activity is
-marched in $w = (a^{1-d}-1)/(1-d)$ — the paper's own linearising substitution,
-eqs. (28)–(32) — which is worth copying: it removes $a^d$ from every
-right-hand side and makes the finite-time extinction of $d < 1$ ordinary
-rather than stiff.
-
-**Where this sits in the ladder.** [`B2.1`](../B2.1-voorhies-coking-law/)
-(coke keeps time), [`B2.2`](../B2.2-froment-bischoff-coking/) (coke keeps
-place), this page (what an experiment can actually recover). `B2.4`
-(Beeckman–Froment) is the next rung.
-
-**Cite the source, not this page:** Levenspiel, O., *Experimental Search for a
-Simple Rate Equation to Describe Deactivating Porous Catalyst Particles*,
-Journal of Catalysis **25**(2) 265–272 (1972),
-[doi:10.1016/0021-9517(72)90227-8](https://doi.org/10.1016/0021-9517(72)90227-8).
-Note that this is Levenspiel the author; *Chemical Reaction Engineering* is a
-different work and is not reproduced anywhere here.
-
-**Fit/test, one line:** nothing on this page is fitted to any measurement and
-nothing is validated against one — the paper reports no data. Every number is
-exact reproduction of printed algebra, an exact algebraic identity between the
-printed rate forms, or a computed property of those rate forms in a reactor."""))
-
-nb = nbf.v4.new_notebook(cells=cells)
-nb.metadata = {
-    "kernelspec": {"display_name": "Python 3", "language": "python",
-                   "name": "python3"},
-    "language_info": {
-        "codemirror_mode": {"name": "ipython", "version": 3},
-        "file_extension": ".py", "mimetype": "text/x-python", "name": "python",
-        "nbconvert_exporter": "python", "pygments_lexer": "ipython3",
-        "version": "3.13.5"},
-}
-out = Path(__file__).with_name("index.ipynb")
-nbf.write(nb, out)
-print(f"wrote {out}  ({len(cells)} cells)")
+# %% [markdown]
+# ## Reuse
+#
+# **If you are designing an experiment to find a deactivation mechanism**, the
+# short version of this page is:
+#
+# 1. **Check $n'$ first.** If the decay has no concentration dependence, there
+#    is only one class and no experiment can find another. Everything below is
+#    about $n' > 0$.
+# 2. **A well-mixed fluid throws the class away.** In any constant-flow mixed
+#    reactor, series deactivation of order $(n', d)$ is *exactly* parallel
+#    deactivation of order $(nn', d+n')$: same conversion history, at every
+#    time, for any $n$. Only below $d = n'/n$ does the exact twin cease to exist,
+#    and even there the impersonation stays good until you are roughly half an
+#    order below the line.
+# 3. **Side-by-side is not a separate class in a batch or in a bed.** The poison
+#    profile is a *power* of the reactant profile there, so eq. (6) with poison
+#    group $\sigma$ is eq. (4) with $n' \to \lambda\sigma/\kappa$: exactly, for
+#    every $\sigma$, at $n = n' = d = 1$. No experiment in either device can
+#    distinguish them, and the plug-flow bed is no exception. (It fails in the
+#    two well-mixed devices, where the profiles are not powers of one another.)
+# 4. **Levenspiel's recommended device does what he says and no more.** Holding
+#    $C_{\rm A}$ constant by lowering the flow rate gives you $d$ cleanly from
+#    the shape of $\tau'(t)$: that is real, and eqs. (28)–(31) reproduce
+#    to round-off. It does *not* give you the class: within one run parallel, series
+#    and independent are the same equation. Recovering the class needs a **set**
+#    of runs at different held levels, and the span matters: with $k'_d$ known
+#    to 5 % you need a span of a few hundredths to a few tenths in $C_{\rm A}/C_{\rm A0}$ (the measured range is printed in §8),
+#    and *where the set starts matters as much as how wide it is*: the range
+#    is swept over plausible starting levels and level counts in §8. A narrow
+#    bracket of levels tells you nothing.
+# 5. **Run a bed, and assay the bed.** The gradient is the information, but it
+#    is in the *solid*, not in the effluent. Judged on conversion history alone
+#    the bed separates one class pair in twelve at a 0.2-percentage-point
+#    resolution; judged on the spent catalyst it separates parallel from series
+#    at a glance, because the profile's gradient reverses sign, and the inlet
+#    activity is exactly $e^{-\lambda\theta}$ under parallel decay against
+#    exactly 1 under series. One sample beats a whole campaign of outlet
+#    analyses. Before designing on it, size the contrast your assay can actually
+#    reach: `B2.2`'s own *within-bed* parallel signature at its operating point
+#    needs carbon assays better than 10 % (its numbers are printed in §6), and
+#    that is the same family of measurement.
+# 6. **Hold $C_{\rm P}$, not $C_{\rm A}$, if the poison is consumed.** That is
+#    the paper's own instruction for eq. (6) and this page confirms it: with the
+#    poison in excess the deactivation order comes back exactly. Holding
+#    $C_{\rm A}$ instead, one knob, two constraints, bends the Fig.-6 line and
+#    biases $d$, except at $d = 1$ where the $a^{d-1}$ consumption rate makes the
+#    drift cancel exactly. The paper hedges the failure of the $C_{\rm A}$
+#    condition, not of the $C_{\rm P}$ one; this page sizes what that hedge
+#    costs.
+#
+# **Structure reuse.** The `Bed` class is a one-dimensional convection problem
+# with a distributed, slowly-evolving source parameter: the machinery of
+# [`B2.2`](../B2.2-froment-bischoff-coking/) (coke profile), `ConvFluxTVD` +
+# `construct_div` + one `newton` solve per fluid profile, with the outlet face
+# moved to the linear extrapolation of the last two cells. The activity is
+# marched in $w = (a^{1-d}-1)/(1-d)$, the paper's own linearising substitution
+# (eqs. 28–32), which is worth copying: it removes $a^d$ from every
+# right-hand side and makes the finite-time extinction of $d < 1$ ordinary
+# rather than stiff.
+#
+# **Where this sits in the ladder.** [`B2.1`](../B2.1-voorhies-coking-law/)
+# (coke keeps time), [`B2.2`](../B2.2-froment-bischoff-coking/) (coke keeps
+# place), this page (what an experiment can actually recover). `B2.4`
+# (Beeckman–Froment) is the next rung.
+#
+# **Cite the source, not this page:** Levenspiel, O., *Experimental Search for a
+# Simple Rate Equation to Describe Deactivating Porous Catalyst Particles*,
+# Journal of Catalysis **25**(2) 265–272 (1972),
+# [doi:10.1016/0021-9517(72)90227-8](https://doi.org/10.1016/0021-9517(72)90227-8).
+# Note that this is Levenspiel the author; *Chemical Reaction Engineering* is a
+# different work and is not reproduced anywhere here.
+#
+# **Fit/test, one line:** nothing on this page is fitted to any measurement and
+# nothing is validated against one: the paper reports no data. Every number is
+# exact reproduction of printed algebra, an exact algebraic identity between the
+# printed rate forms, or a computed property of those rate forms in a reactor.

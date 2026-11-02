@@ -9,6 +9,13 @@
     "threads": "1"
   },
   "metrics": {
+    "bed_route_gap_frozen": {
+      "kind": "bound",
+      "value": 1.546540673302843e-13,
+      "max": 1e-11,
+      "basis": "tolerance",
+      "note": "newton step tol 1e-12 against deferred sweeps to a change below 1e-12, same discrete equations, 200 cells"
+    },
     "printed_chain_identities": {
       "kind": "exact",
       "value": 26.0,
@@ -731,21 +738,21 @@
       "value": 3.8618119800115265e-05,
       "max": 0.0002,
       "basis": "chosen",
-      "note": "profile of the side-by-side self-fit in Fig. 1a  batch fluid: d held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-4 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
+      "note": "profile of the side-by-side self-fit in Fig. 1a  batch fluid: d held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-04 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
     },
     "sep_profile_d_mixed": {
       "kind": "bound",
       "value": 0.00015571007299742008,
       "max": 0.0002,
       "basis": "chosen",
-      "note": "profile of the side-by-side self-fit in Fig. 1c  mixed flow, constant rate: d held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-4 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
+      "note": "profile of the side-by-side self-fit in Fig. 1c  mixed flow, constant rate: d held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-04 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
     },
     "sep_profile_nprime_mixed": {
       "kind": "bound",
       "value": 1.2701930245975281e-05,
       "max": 0.0002,
       "basis": "chosen",
-      "note": "profile of the side-by-side self-fit in Fig. 1c  mixed flow, constant rate: n' held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-4 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
+      "note": "profile of the side-by-side self-fit in Fig. 1c  mixed flow, constant rate: n' held at 0.5 to 1.5, the other four refitted (ODE rtol 1e-12, central differences). A nonzero physical minimum, not a tolerance; the bound is a tenth of the 2e-3 conversion resolution, and below the 3.9e-04 a +1 % move of one constant costs. Optimiser upper bounds, safe in the direction of a non-identifiability claim; a point whose free constant ends on the box edge is limited by the box (printed)"
     },
     "sep_stall_1pct_cheapest_batch": {
       "kind": "value",
@@ -819,45 +826,75 @@
     },
     "bed_a_inlet_cellcentre_err_par": {
       "kind": "value",
-      "value": 4.4373011876923385e-05,
+      "value": 4.437301187683318e-05,
       "rtol": 0.05
     },
     "bed_a_inlet_cellcentre_order_par": {
       "kind": "bound",
-      "value": 1.0005900360349063,
+      "value": 1.0005900360403197,
       "min": 0.9,
       "max": 1.1,
       "basis": "theory",
       "note": "first order: the first cell centre sits 1/2m from the face"
     },
+    "bed_a_outlet_space_order_par": {
+      "kind": "bound",
+      "value": 1.9985406816235265,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "outlet-face activity (linear extrapolation of the last two cells), changes between 200/400 and 400/800 cells at nt = 100"
+    },
     "bed_a_inlet_cellcentre_err_ser": {
       "kind": "value",
-      "value": 0.0028034093867347343,
+      "value": 0.0028034093867147503,
       "rtol": 0.05
     },
     "bed_a_inlet_cellcentre_order_ser": {
       "kind": "bound",
-      "value": 0.9953437944269444,
+      "value": 0.9953437944392922,
       "min": 0.9,
       "max": 1.1,
       "basis": "theory",
       "note": "first order: the first cell centre sits 1/2m from the face"
     },
+    "bed_a_outlet_space_order_ser": {
+      "kind": "bound",
+      "value": 2.0017216884435993,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "outlet-face activity (linear extrapolation of the last two cells), changes between 200/400 and 400/800 cells at nt = 100"
+    },
     "bed_inlet_time_sensitivity": {
       "kind": "bound",
-      "value": 2.494795391105864e-09,
+      "value": 2.4947955645782116e-09,
       "max": 1e-07,
       "basis": "chosen",
       "note": "inlet cell centre, nt doubled at m = 800; the bound is 400x below the parallel cell-centre error the spatial study measures"
     },
     "bed_profile_time_sensitivity": {
       "kind": "value",
-      "value": 7.319909231973121e-06,
+      "value": 7.322279845928259e-06,
       "rtol": 0.05
+    },
+    "bed_a_outlet_quadrature_change_par": {
+      "kind": "bound",
+      "value": 7.785161404427754e-13,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "quadrature route, 161 against 321 Simpson nodes, LSODA rtol 1e-12"
+    },
+    "bed_a_outlet_quadrature_change_ser": {
+      "kind": "bound",
+      "value": 1.873507182725831e-10,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "quadrature route, 161 against 321 Simpson nodes, LSODA rtol 1e-12"
     },
     "bed_a_outlet_time_order_par": {
       "kind": "bound",
-      "value": 1.9933392288065703,
+      "value": 1.9933392309606646,
       "min": 1.8,
       "max": 2.2,
       "basis": "theory",
@@ -865,42 +902,49 @@
     },
     "bed_a_outlet_spaceonly_par": {
       "kind": "value",
-      "value": 0.1901759979948029,
+      "value": 0.1901759379603969,
       "rtol": 2e-06
     },
     "bed_a_outlet_end_par": {
       "kind": "value",
-      "value": 0.19016623492548668,
+      "value": 0.19016617490801602,
       "rtol": 0.05
     },
     "bed_a_outlet_altpair_par": {
       "kind": "value",
-      "value": 0.1901662798966569,
+      "value": 0.19016621987909374,
       "rtol": 0.05
     },
     "bed_a_outlet_time_bias_par": {
       "kind": "value",
-      "value": 9.7630693162154e-06,
+      "value": 9.763052380873383e-06,
       "rtol": 0.05
     },
     "bed_a_outlet_space_spread_par": {
       "kind": "value",
-      "value": 1.790449837557606e-07,
+      "value": 6.479683178906015e-10,
       "rtol": 0.05
     },
     "bed_a_outlet_residual_bound_par": {
       "kind": "value",
-      "value": 2.44076732905385e-06,
+      "value": 2.4407630952183457e-06,
       "rtol": 0.05
+    },
+    "bed_a_outlet_vs_quadrature_par": {
+      "kind": "bound",
+      "value": 6.367201876855688e-09,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "doubly extrapolated outlet activity against the quadrature route; the bound is chosen above the measured Richardson error (the quadrature itself converges to 1e-8)"
     },
     "bed_profile_contrast_par": {
       "kind": "value",
-      "value": 0.14037916655762273,
+      "value": 0.14037910654015207,
       "rtol": 0.05
     },
     "bed_a_outlet_time_order_ser": {
       "kind": "bound",
-      "value": 2.002009683043136,
+      "value": 2.0020097548999187,
       "min": 1.8,
       "max": 2.2,
       "basis": "theory",
@@ -908,37 +952,44 @@
     },
     "bed_a_outlet_spaceonly_ser": {
       "kind": "value",
-      "value": 0.17711339776317309,
+      "value": 0.17711350296150624,
       "rtol": 2e-06
     },
     "bed_a_outlet_end_ser": {
       "kind": "value",
-      "value": 0.17711240240010098,
+      "value": 0.1771125075973656,
       "rtol": 0.05
     },
     "bed_a_outlet_altpair_ser": {
       "kind": "value",
-      "value": 0.17711240101258793,
+      "value": 0.17711250620980143,
       "rtol": 0.05
     },
     "bed_a_outlet_time_bias_ser": {
       "kind": "value",
-      "value": 9.953630721037943e-07,
+      "value": 9.953641406379443e-07,
       "rtol": 0.05
     },
     "bed_a_outlet_space_spread_ser": {
       "kind": "value",
-      "value": 3.191454659157156e-07,
+      "value": 4.4470907512028646e-10,
       "rtol": 0.05
     },
     "bed_a_outlet_residual_bound_ser": {
       "kind": "value",
-      "value": 3.191454659157156e-07,
+      "value": 2.488410351571731e-07,
       "rtol": 0.05
+    },
+    "bed_a_outlet_vs_quadrature_ser": {
+      "kind": "bound",
+      "value": 1.3966350298488805e-10,
+      "max": 1e-07,
+      "basis": "chosen",
+      "note": "doubly extrapolated outlet activity against the quadrature route; the bound is chosen above the measured Richardson error (the quadrature itself converges to 1e-8)"
     },
     "bed_profile_contrast_ser": {
       "kind": "value",
-      "value": -0.822887597599899,
+      "value": -0.8228874924026344,
       "rtol": 0.05
     },
     "mixed_boundary_np1_d1.5": {
@@ -1028,7 +1079,7 @@
       "value": 8.35384472708256e-09,
       "max": 1e-07,
       "basis": "tolerance",
-      "note": "|recovered d - 1| over 21 sigma at d = 1; minimize_scalar xatol 1e-10 on an expm1 transform (5.5e-7 and 1.0e-6 before, from cancellation)"
+      "note": "|recovered d - 1| over 21 sigma at d = 1; minimize_scalar xatol 1e-10 on an expm1 transform"
     },
     "constC_sbs_recovered_d_sig0": {
       "kind": "value",
@@ -1065,101 +1116,159 @@
     },
     "bed_spatial_err_n1_exp": {
       "kind": "value",
-      "value": 5.826811553255595e-07,
+      "value": 5.765136723567821e-07,
       "rtol": 0.05
     },
     "bed_spatial_order_n1_exp": {
       "kind": "bound",
-      "value": 2.013722762663757,
-      "min": 1.8,
-      "max": 2.2,
+      "value": 2.0135303391036685,
+      "min": 1.9,
+      "max": 2.1,
       "basis": "theory",
-      "note": "upwind with the van Leer deferred correction, outlet from compute_boundary_values, m = 200 to 400"
+      "note": "ConvFluxTVD (van Leer), outlet on the extrapolated face, m = 200 to 400"
     },
     "bed_spatial_err_n2_exp": {
       "kind": "value",
-      "value": 3.09956699195979e-07,
+      "value": 3.03776408139278e-07,
       "rtol": 0.05
     },
     "bed_spatial_order_n2_exp": {
       "kind": "bound",
-      "value": 2.0414897382278223,
-      "min": 1.8,
-      "max": 2.2,
+      "value": 2.042126716810682,
+      "min": 1.9,
+      "max": 2.1,
       "basis": "theory",
-      "note": "upwind with the van Leer deferred correction, outlet from compute_boundary_values, m = 200 to 400"
+      "note": "ConvFluxTVD (van Leer), outlet on the extrapolated face, m = 200 to 400"
     },
     "bed_spatial_err_n1_quad": {
       "kind": "value",
-      "value": 2.1110147019887116e-06,
+      "value": 1.4611827720001358e-07,
       "rtol": 0.05
     },
     "bed_spatial_order_n1_quad": {
       "kind": "bound",
-      "value": 1.9951980783789003,
-      "min": 1.8,
-      "max": 2.2,
+      "value": 2.015381898958109,
+      "min": 1.9,
+      "max": 2.1,
       "basis": "theory",
-      "note": "upwind with the van Leer deferred correction, outlet from compute_boundary_values, m = 200 to 400"
+      "note": "ConvFluxTVD (van Leer), outlet on the extrapolated face, m = 200 to 400"
     },
     "bed_spatial_err_n2_quad": {
       "kind": "value",
-      "value": 1.6666321853708865e-06,
+      "value": 5.541057235269875e-08,
       "rtol": 0.05
     },
     "bed_spatial_order_n2_quad": {
       "kind": "bound",
-      "value": 1.9951163270394976,
-      "min": 1.8,
-      "max": 2.2,
+      "value": 2.018717322632355,
+      "min": 1.9,
+      "max": 2.1,
       "basis": "theory",
-      "note": "upwind with the van Leer deferred correction, outlet from compute_boundary_values, m = 200 to 400"
+      "note": "ConvFluxTVD (van Leer), outlet on the extrapolated face, m = 200 to 400"
     },
-    "bed_time_order": {
+    "bed_spatial_finest_over_roundoff": {
       "kind": "bound",
-      "value": 1.9695536978666175,
-      "min": 1.8,
-      "max": 2.2,
+      "value": 358287.19741564966,
+      "min": 1000.0,
       "basis": "theory",
-      "note": "Heun, nt = 50 to 100 at m = 400"
+      "note": "smallest 400-cell frozen-profile error over the newton/deferred gap"
     },
-    "bed_time_order_euler": {
+    "bed_time_order_heun_min": {
       "kind": "bound",
-      "value": 1.0083208818214004,
-      "min": 0.9,
-      "max": 1.1,
+      "value": 1.9910675957574893,
+      "min": 1.95,
+      "max": 2.05,
       "basis": "theory",
-      "note": "Euler, nt = 50 to 100 at m = 400"
+      "note": "heun on the activity, m = 200, nt = 40..640 (observation times on the step grid), space error cancelled"
     },
-    "bed_time_order_euler_finest": {
+    "bed_time_order_heun_max": {
       "kind": "bound",
-      "value": 1.006730063038108,
-      "min": 0.9,
-      "max": 1.1,
+      "value": 1.9977820093557106,
+      "min": 1.95,
+      "max": 2.05,
       "basis": "theory",
-      "note": "Euler, nt = 100 to 200 at m = 400"
+      "note": "heun on the activity, m = 200, nt = 40..640 (observation times on the step grid), space error cancelled"
     },
-    "bed_time_order_heun_finest": {
+    "bed_time_order_euler_min": {
       "kind": "bound",
-      "value": 3.156871614956547,
-      "min": 2.5,
-      "max": 4.0,
-      "basis": "chosen",
-      "note": "the apparent Heun order where its error meets the m = 400 spatial floor: an artefact of the reference, printed as one"
+      "value": 1.0007298958590385,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "euler on the activity, m = 200, nt = 40..640 (observation times on the step grid), space error cancelled"
+    },
+    "bed_time_order_euler_max": {
+      "kind": "bound",
+      "value": 1.0035278555815559,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "euler on the activity, m = 200, nt = 40..640 (observation times on the step grid), space error cancelled"
+    },
+    "bed_space_order_march_min": {
+      "kind": "bound",
+      "value": 2.0027406347457357,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "conversion history at nt = 80, m = 50..800, time error cancelled"
+    },
+    "bed_space_order_march_max": {
+      "kind": "bound",
+      "value": 2.0110544701219237,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "conversion history at nt = 80, m = 50..800, time error cancelled"
+    },
+    "bed_route_gap_march": {
+      "kind": "bound",
+      "value": 8.881784197001252e-16,
+      "max": 1e-11,
+      "basis": "tolerance",
+      "note": "production conversion history (200 cells, 200 steps) by the two routes"
+    },
+    "bed_axes_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 331829851.875,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest differences of the time and space ladders over the route gap"
+    },
+    "bed_a_inlet_cellcentre_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 50000443407.59375,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest change of the inlet cell-centre error ladder (last two grids) over the newton/deferred gap of the march"
+    },
+    "bed_a_outlet_space_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 314483474.84375,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest change of the outlet-face activity, last two grids at nt = 100 over the newton/deferred gap of the march"
+    },
+    "bed_a_outlet_time_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 840510294.90625,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest change of the doubly extrapolated outlet, last two step counts over the newton/deferred gap of the march"
     },
     "bed_vs_quadrature_production": {
       "kind": "value",
-      "value": 2.811250700562873e-06,
+      "value": 1.529473215633459e-06,
       "rtol": 0.05
     },
     "bed_vs_quadrature_over_resolution": {
       "kind": "value",
-      "value": 0.0014056253502814364,
+      "value": 0.0007647366078167295,
       "rtol": 0.05
     },
     "bed_vs_quadrature_series": {
       "kind": "value",
-      "value": 1.9683959600058643e-06,
+      "value": 1.5293059829613043e-06,
       "rtol": 0.05
     },
     "eq15_maxdev": {
@@ -1167,26 +1276,26 @@
       "value": 8.632289993926179e-09,
       "max": 1e-07,
       "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "note": "batch fluid against eq. (15), LSODA at rtol 1e-9, atol 1e-13"
     },
     "eq19_maxdev": {
       "kind": "bound",
       "value": 2.6645352591003757e-15,
-      "max": 1e-07,
-      "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "independent decay: dw/dtheta = -lam is constant, so every integrator step is exact and what is left is round-off"
     },
     "eq22_maxdev_pymrm": {
       "kind": "value",
-      "value": 5.459488622572284e-06,
+      "value": 3.0097706469334184e-06,
       "rtol": 0.05
     },
     "eq28_reldev": {
       "kind": "bound",
       "value": 1.3877787807814457e-16,
-      "max": 1e-07,
-      "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "independent decay: dw/dtheta = -lam is constant, so every integrator step is exact and what is left is round-off"
     },
     "a_end_d0_branch": {
       "kind": "value",
@@ -1196,9 +1305,9 @@
     "eq29_reldev": {
       "kind": "bound",
       "value": 3.2553291955926263e-16,
-      "max": 1e-07,
-      "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "independent decay: dw/dtheta = -lam is constant, so every integrator step is exact and what is left is round-off"
     },
     "a_end_d1_branch": {
       "kind": "value",
@@ -1208,9 +1317,9 @@
     "eq30_reldev": {
       "kind": "bound",
       "value": 1.9737298215558337e-16,
-      "max": 1e-07,
-      "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "independent decay: dw/dtheta = -lam is constant, so every integrator step is exact and what is left is round-off"
     },
     "a_end_d2_branch": {
       "kind": "value",
@@ -1220,9 +1329,9 @@
     "eq31_reldev": {
       "kind": "bound",
       "value": 2.1862853408003084e-16,
-      "max": 1e-07,
-      "basis": "tolerance",
-      "note": "ODE solution against the printed closed form, LSODA at rtol 1e-9"
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "independent decay: dw/dtheta = -lam is constant, so every integrator step is exact and what is left is round-off"
     },
     "a_end_d3_branch": {
       "kind": "value",
@@ -1231,25 +1340,25 @@
     },
     "pseudo_steady_cost_eps1e-3": {
       "kind": "value",
-      "value": 0.00046380570514942265,
+      "value": 0.0004653136792563406,
       "rtol": 0.05
     },
     "pseudo_steady_cost_eps3e-2": {
       "kind": "value",
-      "value": 0.013975576939491419,
+      "value": 0.01397804692004162,
       "rtol": 0.05
     },
     "pseudo_steady_cost_slope": {
       "kind": "bound",
-      "value": 1.0086995387073312,
-      "min": 0.9,
-      "max": 1.1,
+      "value": 1.0001894562761664,
+      "min": 0.995,
+      "max": 1.005,
       "basis": "theory",
-      "note": "the cost of the pseudo-steady assumption is first order in eps"
+      "note": "the cost of the pseudo-steady assumption is first order in eps; fitted over eps = 1e-4 to 3e-3 against an eps = 0 reference of 1600 steps"
     },
     "pseudo_steady_eps_star": {
       "kind": "value",
-      "value": 0.004300652780876614,
+      "value": 0.0042971938484976345,
       "rtol": 0.05
     },
     "sep_plug_par_vs_ind_wideseed": {
@@ -1342,6 +1451,33 @@
     ],
     "sep_optimiser_worst_overstatement": [
       "1.3e-3"
+    ],
+    "sep_plug_par_vs_ser": [
+      "8.1e-4"
+    ],
+    "bed_a_inlet_end_par": [
+      "0.0498"
+    ],
+    "bed_a_outlet_end_par": [
+      "0.19"
+    ],
+    "bed_a_outlet_end_ser": [
+      "0.18"
+    ],
+    "degen_sbs_is_parallel_famB_mixed": [
+      "more than 1e-1"
+    ],
+    "degen_sbs_is_parallel_famB_constC": [
+      "more than 1e-1"
+    ],
+    "printed_chain_identities": [
+      "26"
+    ],
+    "constC_span_prec5pct_min": [
+      "0.07"
+    ],
+    "constC_span_prec5pct_max": [
+      "0.4"
     ]
   },
   "breaks": {
@@ -1358,13 +1494,13 @@
       "degeneracy 2 without relabelling the orders and lam"
     ],
     "bed_a_outlet_spaceonly_par": [
-      "halve NT_CONV to 50 and report the space-Richardson alone, as the outlet was reported before"
+      "halve NT_CONV to 50 and report the space-Richardson alone"
     ],
     "bed_a_outlet_end_par": [
       "the other class's profile (eq. 5 for eq. 4)"
     ],
     "bed_a_outlet_spaceonly_ser": [
-      "halve NT_CONV to 50 and report the space-Richardson alone, as the outlet was reported before"
+      "halve NT_CONV to 50 and report the space-Richardson alone"
     ],
     "bed_a_outlet_end_ser": [
       "the other class's profile (eq. 5 for eq. 4)"
@@ -1388,12 +1524,12 @@
       "raise eps 30x, to 3e-2"
     ],
     "bed_vs_quadrature_production": [
-      "construct_div(nu=1) - cylindrical, not the Cartesian weight coord",
-      "tvd=False - plain first-order upwind",
-      "inlet bc {a:1,b:0,d:0} - feed concentration not imposed"
+      "Bed(200, nu=1): cylindrical, not the Cartesian weight coordinate",
+      "Bed(200, limiter=None): first-order upwind",
+      "Bed(200, feed=False): inlet {a:1,b:0,d:0}, feed not imposed"
     ],
-    "bed_time_order": [
-      "scheme='euler' on the activity march (same 50->100 pair, m=400)"
+    "bed_time_order_heun_min": [
+      "march(..., scheme='euler') on the same ladder (m = 200, nt = 40..640)"
     ],
     "sep_plug_par_vs_ser": [
       "use eq. (5) where eq. (4) is true, WITHOUT refitting",
@@ -1768,97 +1904,115 @@
       "read off the sigma scan, not root-found"
     ],
     "bed_a_inlet_cellcentre_err_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 400 cells"
     ],
     "bed_a_inlet_cellcentre_order_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the exact inlet value off by 1e-3"
     ],
     "bed_a_outlet_space_spread_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the space extrapolation from 100/200 cells"
     ],
     "bed_a_outlet_residual_bound_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "space pair 100/200, time pair 50/100"
     ],
     "bed_a_outlet_time_bias_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the space-only reading at nt = 50"
     ],
     "bed_a_outlet_time_order_par": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "forward Euler on the activity (march(..., scheme='euler'))"
+    ],
+    "bed_a_outlet_space_order_par": [
+      "first-order upwind convection (Bed(..., limiter=None))"
+    ],
+    "bed_a_outlet_vs_quadrature_par": [
+      "the outlet read at the last cell centre, not the face"
+    ],
+    "bed_a_outlet_quadrature_change_par": [
+      "the quadrature on 21 nodes at LSODA rtol 1e-6"
     ],
     "bed_a_inlet_cellcentre_err_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 400 cells"
     ],
     "bed_a_inlet_cellcentre_order_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the exact inlet value off by 1e-3"
     ],
     "bed_a_outlet_space_spread_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the space extrapolation from 100/200 cells"
     ],
     "bed_a_outlet_residual_bound_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "space pair 100/200, time pair 50/100"
     ],
     "bed_a_outlet_time_bias_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the space-only reading at nt = 50"
     ],
     "bed_a_outlet_time_order_ser": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "forward Euler on the activity (march(..., scheme='euler'))"
+    ],
+    "bed_a_outlet_space_order_ser": [
+      "first-order upwind convection (Bed(..., limiter=None))"
+    ],
+    "bed_a_outlet_vs_quadrature_ser": [
+      "the outlet read at the last cell centre, not the face"
+    ],
+    "bed_a_outlet_quadrature_change_ser": [
+      "the quadrature on 21 nodes at LSODA rtol 1e-6"
     ],
     "bed_spatial_err_n1_exp": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 200 cells"
     ],
     "bed_spatial_order_n1_exp": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "first-order upwind convection (Bed(..., limiter=None))"
     ],
     "bed_spatial_err_n2_exp": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 200 cells"
     ],
     "bed_spatial_order_n2_exp": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "first-order upwind convection (Bed(..., limiter=None))"
     ],
     "bed_spatial_err_n1_quad": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 200 cells"
     ],
     "bed_spatial_order_n1_quad": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "first-order upwind convection (Bed(..., limiter=None))"
     ],
     "bed_spatial_err_n2_quad": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "the error read on 200 cells"
     ],
     "bed_spatial_order_n2_quad": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "first-order upwind convection (Bed(..., limiter=None))"
     ],
     "eq15_maxdev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k_d 1 % high in the closed form"
     ],
     "eq19_maxdev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k_d 1 % high in the closed form"
     ],
     "eq22_maxdev_pymrm": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k_d 1 % high in the closed form"
     ],
     "eq28_reldev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 1 % high in the run"
     ],
     "a_end_d0_branch": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 25 % high in the run"
     ],
     "eq29_reldev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 1 % high in the run"
     ],
     "a_end_d1_branch": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 25 % high in the run"
     ],
     "eq30_reldev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 1 % high in the run"
     ],
     "a_end_d2_branch": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 25 % high in the run"
     ],
     "eq31_reldev": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 1 % high in the run"
     ],
     "a_end_d3_branch": [
-      "refinement, scheme or closed-form defect (see the cell that computes it)"
+      "k'_d 25 % high in the run"
     ],
     "bed_a_inlet_end_par": [
       "the production cell centre in place of the exact inlet"
@@ -1884,26 +2038,55 @@
     "bed_profile_time_sensitivity": [
       "read at the inlet cell"
     ],
-    "bed_time_order_euler": [
+    "bed_time_order_euler_min": [
       "Heun for Euler"
     ],
-    "bed_time_order_euler_finest": [
+    "bed_time_order_euler_max": [
       "Heun for Euler"
     ],
-    "bed_time_order_heun_finest": [
-      "Euler for Heun"
+    "bed_time_order_heun_max": [
+      "Euler for Heun",
+      "conversion interpolated between steps, nt = 25..400 (march(..., on_grid=False))"
+    ],
+    "bed_space_order_march_min": [
+      "first-order upwind convection (Bed(..., limiter=None))"
+    ],
+    "bed_space_order_march_max": [
+      "first-order upwind convection (Bed(..., limiter=None))"
+    ],
+    "bed_route_gap_frozen": [
+      "deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))"
+    ],
+    "bed_spatial_finest_over_roundoff": [
+      "deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))"
+    ],
+    "bed_route_gap_march": [
+      "deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))"
+    ],
+    "bed_axes_finest_over_roundoff": [
+      "deferred sweeps stopped at a change of 1e-4 (Bed(..., tol=1e-4))"
+    ],
+    "bed_a_inlet_cellcentre_finest_over_roundoff": [
+      "deferred sweeps stopped at a change of 1e-2 (Bed(..., tol=1e-2))"
+    ],
+    "bed_a_outlet_space_finest_over_roundoff": [
+      "deferred sweeps stopped at a change of 1e-2 (Bed(..., tol=1e-2))"
+    ],
+    "bed_a_outlet_time_finest_over_roundoff": [
+      "deferred sweeps stopped at a change of 1e-2 (Bed(..., tol=1e-2))"
+    ],
+    "pseudo_steady_cost_slope": [
+      "eps = 0 reference marched in 200 steps",
+      "accumulation scaled by sqrt(eps)"
     ],
     "bed_vs_quadrature_over_resolution": [
-      "construct_div(nu=1)"
+      "Bed(200, nu=1)"
     ],
     "bed_vs_quadrature_series": [
       "series bed against the parallel quadrature"
     ],
     "pseudo_steady_cost_eps3e-2": [
       "eps = 1e-3 instead of 3e-2"
-    ],
-    "pseudo_steady_cost_slope": [
-      "accumulation scaled by sqrt(eps)"
     ],
     "pseudo_steady_eps_star": [
       "eps* read at half the resolution"
