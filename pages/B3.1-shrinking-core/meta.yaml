@@ -14,34 +14,39 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 4
+pymrm_min_version: "3.3.0"
+runtime_seconds: 27
 datasets: []
 
 validation:
   - eq. (6) is exactly 0 at r/R = 1 and exactly 1 at r/R = 0 for any (omega, gamma), which only holds for the printed coefficients
-  - eq. (6) reproduces all three classical conversion-time laws in their respective limits, to 2.4e-8
-  - eq. (6) is shown to BE the integral of eq. (5)'s three resistances, agreeing to 6.9e-16 over six decades of resistance ratio, which recovers the factor 3 on the film term and the 12 in k_d1 independently
-  - the pymrm spherical shell solve reproduces the analytic series resistance to 2.1e-6, converging second order
+  - eq. (6) reproduces all three classical conversion-time laws in their respective limits; each gap is proportional to its small parameter and is 8.2e-10, 2.3e-8 and 3.8e-10 at the page's limit parameters
+  - eq. (6) is shown to BE the integral of eq. (5)'s three resistances, agreeing to 6.9e-16 over twelve decades of k_c/k_f, which recovers the factor 3 on the film term and the 12 in k_d1 independently (dropping either moves the gap to 6e-2 or more)
+  - the pymrm spherical shell solve, with the flow read as the discrete gradient on the core face by compute_boundary_values, reproduces the analytic series resistance to 2.1e-6 on 400 cells over six cases, observed orders 1.9 to 2.0 on the finest triple of a 25 to 400 cell ladder, and conserves the flow to round-off (3.3e-12), the finest ladder difference at least 1e3 times that round-off
+  - a break table of one injected defect per row (cubic coefficient, film factor, k_d1 coefficient, limit parameters, geometry index, normal of the core condition, film resistance, read radius of the flow, surface value of the film flow, laws of the map, grid ladder); every claim is failed by at least one row
 
 adds: >
   Textbooks give the three limiting conversion-time laws and leave the reader to
   pick one. That choice has a quantitative answer, and this page maps it: for
   every (omega, gamma) the full eq. (6) is compared with the closest
-  single-resistance law. Over six decades in each group, some single law is within
-  5 % on 71 % of the plane and within 2 % on 52 %, and the worst case anywhere is
-  20 %, at omega = 11, gamma = 0.8 - the middle of the map, where no resistance
-  dominates and all three must be kept. The map is derived from eq. (6) and does
-  not appear in the paper.
+  single-resistance law, on a ladder of grids. Over six decades in each group, some
+  single law is within 5 % on 71 % of the plane and within 2 % on 51 %, and the
+  worst error on the grid is 20 %; the worst case lies on a crest in gamma near 0.855,
+  where the film and reaction laws tie, and rises with omega to about 20.49 % in the
+  limit omega to infinity, where the reaction resistance is under 0.1 % of the total
+  and only film and ash layer matter. The map is derived from eq. (6) and does not appear in
+  the paper. The pymrm part is the ash shell, solved with a Robin condition on each
+  face and its flow read on the face the solve conserves.
 
 agreement: >
   Not applicable in the experimental sense; this is a tier 6 analytic page. The
   numbers that matter are internal consistency checks. Eq. (6) as read off the
-  600 dpi render is identical to the independent moving-boundary integration to
-  6.9e-16 worst case, reduces to the film, ash-layer and reaction-control laws to
-  8.2e-10, 2.3e-8 and 3.8e-10, and is exact at both endpoints. The pymrm shell
-  solve matches the closed-form series resistance to 2.1e-6 at n = 400 with
-  refinement ratios approaching 4.
+  600 dpi render equals the independent moving-boundary integration to round-off
+  (6.9e-16 worst case), reduces to the film, ash-layer and reaction-control laws
+  with gaps proportional to the small parameter (8.2e-10, 2.3e-8 and 3.8e-10 at the
+  page's parameters), and is exact at both endpoints. The pymrm shell solve matches
+  the closed-form series resistance to 2.1e-6 at 400 cells, second order in the
+  grid on the finest triple.
 
 caveats: >
   No experimental comparison, by construction: the source paper's measurements are
