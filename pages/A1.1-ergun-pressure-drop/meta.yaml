@@ -20,8 +20,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 6
+pymrm_min_version: "3.3.0"
+runtime_seconds: 4
 datasets:
   - ergun-1952-fig7-markers
   - ergun-1952-fig5-present-markers
@@ -36,8 +36,8 @@ validation:
   - "Figures 5 and 7 are the same runs on two ordinates (stated by Ergun, journal page 93); digitised independently with separate calibrations they agree on binned median f_v to 2.9 % with no trend"
   - "the grid ladder fit reproduces the printed graph-paper lines to 1.3 % or better, and the four independently calibrated panels agree on the decade width to 1.7 %"
   - "the line Ergun labels Kozeny-Carman on Fig. 6 measures f_v = 149.2 +/- 0.5, i.e. his own k1 = 150 (-0.5 %) and not Carman's 180 (-17.1 %)"
-  - "both analytic limits are exact by construction: f_v -> k1 as Re -> 0 (Kozeny-Carman form) and f_k -> k2 as Re -> infinity (Burke-Plummer form); Eisfeld's eq. (3) reduces to 154 + 1.321178 x as D/dp -> infinity, against K1 = 154 and 1/k2^2 = 1.321178"
-  - "the compressible-bed integration is done two independent ways - the closed form p = sqrt(p_in^2 - 2Kz) and a direct solve_ivp of dp/dz = -K/p - agreeing to 1.7e-14"
+  - "both analytic limits hold at the rates the equation implies: f_v - k1 = k2 x as Re -> 0 (Kozeny-Carman form) and f_k - k2 = k1/x as Re -> infinity (Burke-Plummer form), measured below 1e-5 and below 1e-6 at x = 1e-6 and 1e9; Eisfeld's eq. (3) reduces to 154 + 1.321178 x as D/dp -> infinity, against K1 = 154 and 1/k2^2 = 1.321178, to within 1e-8 in relative terms"
+  - "the compressible-bed integration is done two independent ways - the closed form p = sqrt(p_in^2 - 2Kz) and a direct solve_ivp of dp/dz = -K/p - agreeing below 1e-9 (a bound set by the solve_ivp tolerance)"
 
 adds: >
   Ergun's 150 and 1.75 are quoted everywhere and the 640 experiments behind them
@@ -47,14 +47,18 @@ adds: >
   3.0 %, from three sources fitted separately.
 
   On top of that it makes the four-correlation comparison quantitative instead of
-  qualitative. Kozeny-Carman is 7.5 % high at N_Re/(1-eps) = 10, 45 % low at 100
-  and a factor of ten low at 1000. Eisfeld & Schnitzlein's refitted infinite-bed
-  form sits 2.7 % above Ergun's viscous constant and 25 % below his inertial one -
-  the disagreement between the two most-used correlations in the field is about
-  the turbulent constant, not the famous 150. And the wall correction exceeds the
-  gap between any two of them once D/dp < 10, which is where Morcom's packings
-  sit: 3.7 to 10.6 for his spheres, tablets and nodules, a range Ergun explicitly
-  discarded from Burke & Plummer's data and kept in Morcom's.
+  qualitative. Kozeny-Carman is 7.5 % high at N_Re/(1-eps) = 10, 44.6 % low at 100 and a
+  factor of ten low at 1000, and 20 % high against Ergun's viscous constant as
+  Re -> 0, because its constant is Carman's 180 and not Ergun's 150. Eisfeld &
+  Schnitzlein's refitted infinite-bed form sits 2.7 % above Ergun's viscous
+  constant and 24.5 % below his inertial one - the disagreement between the two
+  most-used correlations in the field is about the turbulent constant, not the
+  famous 150. The wall correction at D/dp = 5 (46 % at x = 10, 14 % at 1000) beats
+  the Ergun-to-Eisfeld gap only up to x = 378 and the Kozeny-Carman gap only up to
+  x = 71. Below D/dp = 10 is where Morcom's packings sit: 3.7 to 10.6 for his
+  spheres, tablets and nodules, a range Ergun explicitly discarded from Burke &
+  Plummer's data and kept in Morcom's, and the panel with the largest scatter
+  about Ergun's line (10.2 % rms against 5.1 % and 3.9 %).
 
   One small correction to the folklore, possible only because the figure was
   measured rather than read about: the line labelled "Kozeny-Carman" on Ergun's
