@@ -47,3 +47,75 @@
   metric: volchange_min_margin_frac_of_band
   date: 2026-11-01
   reason: "renamed to volchange_margin_at_m8_frac_of_band, value unchanged (3.05e-6): it is the margin at the window edge m = 8, where it shrinks with m, not a minimum; the published 0.098 was the local minimum at the kink, now volchange_margin_at_kink_frac_of_band (README Corrections)"
+- page: B1.4
+  metric: pymrm_vs_exact_observed_order
+  date: 2026-11-01
+  reason: "replaced by pymrm_vs_exact_order_min and pymrm_vs_exact_order_max, the order of every (geometry, phi_0) case with phi_0 > 0.1 from 100 to 200 cells against the closed form (bound [1.9, 3.1], basis chosen: the upper end is observed, 2.97 to 3.00 for the slab at phi_0 = 10); phi_0 = 0.1 is excluded because its error on 200 cells is only about 1e2 times the round-off of eta, and each order carries a bound that the finest-grid error is at least 1e3 times that round-off. The new band is looser than the old single value: the old 2.12 sat at 5 % relative tolerance, the new range spans 2.00 to 2.97; the single order 2.12 was taken from the worst errors of different cases at 200 and 400 cells"
+- page: B1.4
+  metric: pymrm_vs_shooting_observed_order
+  date: 2026-11-01
+  reason: "replaced by pymrm_vs_shooting_order_min and pymrm_vs_shooting_order_max, the observed order of every branch state with |eta - 1| > 0.1 from 200, 400 and 800 cells (bound [1.9, 2.1]), with a bound that the finest difference (400 to 800 cells) is at least 1e3 times the round-off of eta; the single order 2.00 came from the worst gaps of possibly different states"
+- page: B1.4
+  metric: Q_ratio_min_over_phi_range
+  date: 2026-11-01
+  reason: "renamed to Q_ratio_at_phi0_1e3, value unchanged (0.5005): it is the window-edge value of a monotone curve, not a minimum"
+- page: B1.4
+  metric: Q_ratio_max_over_phi_range
+  date: 2026-11-01
+  reason: "renamed to Q_ratio_at_phi0_1e-3 (itself replaced by one_minus_Q_ratio_at_phi0_1e-3): the window-edge value of a monotone curve, not a maximum; it moves from 1.0000116 to 0.99999993 because the 1.2e-5 overshoot was cancellation round-off in the closed form (README Corrections); strict monotonicity is now its own claim, Q_ratio_monotone_decreasing"
+- page: B1.4
+  metric: fig7d_printed_stroke_px_at_600dpi
+  date: 2026-11-01
+  reason: "an input measured off the render (6 px), not a computed result; it stays a stated parameter of the page and enters fig7d_fold_in_line_widths, which is still a claim"
+- page: B1.4
+  metric: Phi_identity_under_1pct_rate_error
+  date: 2026-11-01
+  reason: "now a break row of Phi_flux_minus_Phi_volume ('rate 1 % too large in the model'), which fails that claim's bound; the value is printed in the break table"
+- page: B1.4
+  metric: Phi_identity_catches_unconverged
+  date: 2026-11-01
+  reason: "now a break row of Phi_flux_minus_Phi_volume ('newton stopped after one iteration'), which fails that claim's bound"
+- page: B1.4
+  metric: Phi_identity_blind_wrong_nu
+  date: 2026-11-01
+  reason: "now a break row of Phi_flux_minus_Phi_volume ('sphere assembled with nu = 0') that the claim does not catch, printed as such: the blindness is shown by the row, not by a round-off value (4.2e-12) held as a metric"
+- page: B1.4
+  metric: Phi_identity_blind_three_cells
+  date: 2026-11-01
+  reason: "now a break row of Phi_flux_minus_Phi_volume ('sphere on 3 cells') that the claim does not catch, printed as such; the published 2.1e-15 was round-off"
+- page: B1.4
+  metric: Q_ratio_at_phi0_1e-3
+  date: 2026-11-01
+  reason: "replaced by one_minus_Q_ratio_at_phi0_1e-3 (1 - Q'/Q at phi_0 = 1e-3, rtol 1e-4): at rtol 1e-7 the value 0.99999993 could not resolve the sign of 1 - Q'/Q = 6.7e-8, which is the point of the claim; the claim on 1 - Q'/Q does"
+- page: B1.6
+  metric: sweep_worst_newton_residual
+  date: 2026-11-01
+  reason: "replaced by sweep_worst_backward_error (bound 1e-12, the componentwise backward error as newton forms it): the largest absolute residual of the sweep was a round-off value (4.4e-11) whose size depends on the operator scaling, and the backward error is scale-free"
+- page: B1.6
+  metric: defect_heat_source_sign_flip
+  date: 2026-11-01
+  reason: "now a break row ('heat source with -beta') of baseline_identity_violation, baseline_eta and baseline_backward_error; the value is printed in the defect table"
+- page: B1.6
+  metric: defect_heat_source_1pct_scale
+  date: 2026-11-01
+  reason: "now a break row ('heat source 1 % too large') of the baseline claims, and the exact response eps = delta (1 - y_min) is the identity bound heat_scale_response"
+- page: B1.6
+  metric: defect_bc_type_mismatch
+  date: 2026-11-01
+  reason: "now a break row ('film on theta only, Bi_h = 50') of the baseline claims; the value is printed in the defect table"
+- page: B1.6
+  metric: defect_rate_at_inconsistent_state
+  date: 2026-11-01
+  reason: "now a break row ('rate at theta = 1 in the energy equation') of the baseline claims; the value is printed in the defect table"
+- page: B1.6
+  metric: blind_eps_newton_not_converged
+  date: 2026-11-01
+  reason: "now a break row ('newton stopped after 1 iteration') that baseline_identity_violation does not catch, printed as such, and that baseline_backward_error does catch; the published value was round-off"
+- page: B1.6
+  metric: blind_eps_wrong_geometry_index
+  date: 2026-11-01
+  reason: "now a break row ('sphere assembled with nu = 0') that baseline_identity_violation does not catch, printed as such, and that baseline_eta does catch; the published value was round-off"
+- page: B1.6
+  metric: blind_eps_three_cell_grid
+  date: 2026-11-01
+  reason: "now a break row ('3 cells') that baseline_identity_violation does not catch, printed as such, and that baseline_eta does catch; the published value was round-off"

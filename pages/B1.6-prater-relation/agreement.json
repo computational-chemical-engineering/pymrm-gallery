@@ -1,22 +1,465 @@
 {
   "page": "B1.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "sweep_worst_identity_violation": 1.1165179024386074e-11,
-    "sweep_worst_newton_residual": 4.420465035681609e-11,
-    "defect_heat_source_sign_flip": 0.42325278874977973,
-    "defect_heat_source_1pct_scale": 0.009999996324859262,
-    "defect_bc_type_mismatch": 0.1553658078772689,
-    "defect_rate_at_inconsistent_state": 0.544039052497507,
-    "blind_eps_newton_not_converged": 1.1455281168082365e-11,
-    "blind_eps_wrong_geometry_index": 2.9939014230725056e-12,
-    "blind_eps_three_cell_grid": 2.4054832200211726e-15,
-    "pymrm_vs_collocation_profile_n800": 1.001572599634848e-06,
-    "vs_shooting_reference_n800": 3.944417976320123e-05,
-    "collocation_worst_identity_violation": 2.596447362668286e-13,
-    "two_field_vs_reduced_max_dy": 6.2574945225435386e-12,
-    "film_surface_referenced_residual": 1.3661450443125389e-11,
-    "film_bulk_error_vs_closed_form": 1.9404711302208657e-11,
-    "transient_control_Le1": 3.5116007324198506e-13,
-    "transient_worst_violation": 0.2519255222338197
+    "identity_symbolic": {
+      "kind": "exact",
+      "value": true
+    },
+    "eq7_from_eqs4_5": {
+      "kind": "exact",
+      "value": true
+    },
+    "eq8_beta_reading": {
+      "kind": "exact",
+      "value": "+"
+    },
+    "beta_table_max_dT_K": {
+      "kind": "value",
+      "value": 320.0,
+      "rtol": 1e-09,
+      "unit": "K"
+    },
+    "sweep_worst_identity_violation": {
+      "kind": "bound",
+      "value": 1.1527861998317235e-11,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "round-off: w = theta + beta y is a closed linear subsystem at any root"
+    },
+    "sweep_worst_backward_error": {
+      "kind": "bound",
+      "value": 1.1224482970861635e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12 with stagnation=True; backward error as newton forms it"
+    },
+    "sweep_largest_eta": {
+      "kind": "value",
+      "value": 161.64511020684688,
+      "rtol": 0.001
+    },
+    "baseline_identity_violation": {
+      "kind": "bound",
+      "value": 1.404432126150823e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "round-off, as in the sweep"
+    },
+    "baseline_eta": {
+      "kind": "value",
+      "value": 3.85604387875793,
+      "rtol": 1e-06
+    },
+    "baseline_backward_error": {
+      "kind": "bound",
+      "value": 7.192459663830271e-17,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12 with stagnation=True"
+    },
+    "heat_scale_response": {
+      "kind": "bound",
+      "value": 3.1145086509809516e-12,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "eps = delta (1 - y_min) for a heat source scaled by 1 + delta"
+    },
+    "blind_rows_max_identity_violation": {
+      "kind": "bound",
+      "value": 4.113191269065434e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "the three defects eps is blind to: round-off, as in the sweep"
+    },
+    "pymrm_vs_collocation_profile_n800": {
+      "kind": "value",
+      "value": 1.0004081291148381e-06,
+      "rtol": 0.001
+    },
+    "collocation_profile_order_min": {
+      "kind": "bound",
+      "value": 1.9826268044062536,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volume, orders from 200 and 400 cells"
+    },
+    "collocation_profile_order_max": {
+      "kind": "bound",
+      "value": 1.998408122922985,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volume, orders from 200 and 400 cells"
+    },
+    "collocation_profile_over_roundoff": {
+      "kind": "bound",
+      "value": 8272.0470125,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "gap on 400 cells over n^2 eps, the operator's condition number times eps"
+    },
+    "collocation_reference_change": {
+      "kind": "bound",
+      "value": 2.104982854689297e-12,
+      "max": 1e-10,
+      "basis": "chosen",
+      "note": "the reference must move far less than the n = 800 gap it judges"
+    },
+    "collocation_worst_identity_violation": {
+      "kind": "bound",
+      "value": 1.295260195396016e-15,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "inherited by the collocation equations"
+    },
+    "beta_recovered_vs_0p6": {
+      "kind": "bound",
+      "value": 2.993353342972682e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "round-off divided by 1 - y, which is small near the surface"
+    },
+    "two_field_vs_reduced_max_dy": {
+      "kind": "bound",
+      "value": 5.290268223490102e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "the two-field y is a root of the reduced discrete system"
+    },
+    "sweep_cases_several_states": {
+      "kind": "exact",
+      "value": 27,
+      "margin": 0.999997139510377,
+      "min_margin": 0.5,
+      "note": "beta > 0 cases whose root from the hot seed differs from the page's"
+    },
+    "sweep_several_states_page_lowest": {
+      "kind": "exact",
+      "value": 27,
+      "note": "of those cases, the ones in which the page's state has the smaller eta"
+    },
+    "phi04_eta_page": {
+      "kind": "value",
+      "value": 1.1588274966939591,
+      "rtol": 0.001
+    },
+    "phi04_eta_upper": {
+      "kind": "value",
+      "value": 44.54759941450276,
+      "rtol": 0.001
+    },
+    "phi04_state_vs_startup": {
+      "kind": "bound",
+      "value": 4.75175454539567e-13,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "solve_ivp BDF rtol 1e-8, atol 1e-11, at tau = 1e3"
+    },
+    "vs_shooting_reference_n800": {
+      "kind": "value",
+      "value": 1.975646803042963e-06,
+      "rtol": 0.001
+    },
+    "shooting_order_min": {
+      "kind": "bound",
+      "value": 1.9986894122861842,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volume, orders from 200 and 400 cells"
+    },
+    "shooting_order_max": {
+      "kind": "bound",
+      "value": 1.9995615472385022,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second-order finite volume, orders from 200 and 400 cells"
+    },
+    "shooting_over_roundoff": {
+      "kind": "bound",
+      "value": 5717.03771875,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "error on 400 cells over n^2 eps"
+    },
+    "shooting_reference_tol_change": {
+      "kind": "bound",
+      "value": 8.733680445516256e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "solve_ivp rtol 1e-11 against 1e-12"
+    },
+    "film_surface_referenced_residual": {
+      "kind": "bound",
+      "value": 9.90965989822179e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "the interior relation referenced to the surface values"
+    },
+    "film_bulk_error_vs_closed_form": {
+      "kind": "bound",
+      "value": 3.624109290211547e-11,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "relative; the discrete system satisfies both steps of the derivation"
+    },
+    "film_bulk_eps_bim100_bih10": {
+      "kind": "value",
+      "value": 0.2579451986110093,
+      "rtol": 0.0001
+    },
+    "film_external_share_bih3": {
+      "kind": "value",
+      "value": 0.9963422498573382,
+      "rtol": 0.0001
+    },
+    "film_external_share_bih10": {
+      "kind": "value",
+      "value": 0.24221016947533228,
+      "rtol": 0.0001
+    },
+    "film_closed_form_match_8_cells": {
+      "kind": "bound",
+      "value": 1.067409395048241e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "the match does not depend on resolution"
+    },
+    "transient_worst_violation": {
+      "kind": "value",
+      "value": 0.2519390484109045,
+      "rtol": 0.001,
+      "note": "Le = 10"
+    },
+    "transient_peak_Le0p1": {
+      "kind": "value",
+      "value": 0.12397058655289182,
+      "rtol": 0.001
+    },
+    "transient_peak_Le0p01": {
+      "kind": "value",
+      "value": 0.14589813337843552,
+      "rtol": 0.001
+    },
+    "transient_step_order_min": {
+      "kind": "bound",
+      "value": 1.9918495533585325,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "BDF2, orders from 50, 100 and 200 steps per decade"
+    },
+    "transient_step_order_max": {
+      "kind": "bound",
+      "value": 2.0853915319402185,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "BDF2, orders from 50, 100 and 200 steps per decade"
+    },
+    "transient_step_over_roundoff": {
+      "kind": "bound",
+      "value": 12544322.725947991,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest step difference over n^2 eps"
+    },
+    "transient_peak_vs_ivp": {
+      "kind": "bound",
+      "value": 2.674063154239903e-07,
+      "max": 2e-06,
+      "basis": "tolerance",
+      "note": "BDF2 limit in the step against solve_ivp BDF at rtol 1e-9, same semi-discrete system"
+    },
+    "transient_grid_change": {
+      "kind": "bound",
+      "value": 6.832794013567067e-05,
+      "max": 0.0002,
+      "basis": "chosen",
+      "note": "peak on 200 cells against 100 at 100 steps per decade, relative"
+    },
+    "transient_control_Le1": {
+      "kind": "bound",
+      "value": 3.567285355998706e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "a linear invariant of the semi-discrete system at Le = 1"
+    },
+    "transient_end_violation": {
+      "kind": "bound",
+      "value": 3.3362201889985954e-13,
+      "max": 1e-10,
+      "basis": "chosen",
+      "note": "steady state reached by the end of the window"
+    }
+  },
+  "quoted": {
+    "transient_worst_violation": [
+      "0.252"
+    ],
+    "transient_peak_Le0p1": [
+      "0.124"
+    ]
+  },
+  "breaks": {
+    "baseline_identity_violation": [
+      "heat source with -beta (heat_factor = -1)",
+      "heat source 1 % too large (heat_factor = 1.01)",
+      "film on theta only, Bi_h = 50 (y Dirichlet)",
+      "rate at theta = 1 in the energy equation"
+    ],
+    "baseline_eta": [
+      "heat source with -beta (heat_factor = -1)",
+      "heat source 1 % too large (heat_factor = 1.01)",
+      "film on theta only, Bi_h = 50 (y Dirichlet)",
+      "rate at theta = 1 in the energy equation",
+      "sphere assembled with nu = 0",
+      "3 cells",
+      "newton stopped after 1 iteration"
+    ],
+    "baseline_backward_error": [
+      "newton stopped after 1 iteration"
+    ],
+    "heat_scale_response": [
+      "film on theta only, Bi_h = 50, under the 1 % heat-source probe"
+    ],
+    "blind_rows_max_identity_violation": [
+      "heat source 1 % too large (the defect eps is not blind to)"
+    ],
+    "sweep_worst_identity_violation": [
+      "heat source 1 % too large in every sweep case",
+      "newton stopped after 1 iteration in every sweep case"
+    ],
+    "sweep_worst_backward_error": [
+      "newton stopped after 1 iteration in every sweep case"
+    ],
+    "sweep_largest_eta": [
+      "heat source 1 % too large in every sweep case",
+      "newton stopped after 1 iteration in every sweep case"
+    ],
+    "beta_recovered_vs_0p6": [
+      "heat source 1 % too large in the two-field solves"
+    ],
+    "two_field_vs_reduced_max_dy": [
+      "reduced equation solved with beta 1 % too large"
+    ],
+    "sweep_cases_several_states": [
+      "second state sought from the surface state instead of the hot state"
+    ],
+    "sweep_several_states_page_lowest": [
+      "second state sought from the surface state instead of the hot state"
+    ],
+    "phi04_eta_page": [
+      "page state replaced by the root found from the hot seed"
+    ],
+    "phi04_eta_upper": [
+      "upper state sought from the surface state with the page's solve"
+    ],
+    "phi04_state_vs_startup": [
+      "start-up seeded on the upper state"
+    ],
+    "identity_symbolic": [
+      "species balance with the source's sign flipped"
+    ],
+    "eq7_from_eqs4_5": [
+      "eq. (5) transcribed with +H as -H"
+    ],
+    "eq8_beta_reading": [
+      "eq. (8)'s denominator transcribed as 1 - beta(1 - y)"
+    ],
+    "beta_table_max_dT_K": [
+      "dH handed over in J/mol where kJ/mol is expected"
+    ],
+    "pymrm_vs_collocation_profile_n800": [
+      "pymrm pellets assembled with nu = 0"
+    ],
+    "collocation_profile_order_min": [
+      "collocation read at the cells' outer faces"
+    ],
+    "collocation_profile_order_max": [
+      "collocation read at the cells' outer faces"
+    ],
+    "collocation_profile_over_roundoff": [
+      "orders fitted on 3200 and 6400 cells"
+    ],
+    "collocation_reference_change": [
+      "collocation started at u0 = 1e-2 instead of 1e-4"
+    ],
+    "collocation_worst_identity_violation": [
+      "collocation with the heat source 1 % too large"
+    ],
+    "vs_shooting_reference_n800": [
+      "reference read at the pymrm first-cell value (compare='centre')"
+    ],
+    "shooting_order_min": [
+      "eta from a two-point surface gradient (read='cell')"
+    ],
+    "shooting_order_max": [
+      "eta from a two-point surface gradient (read='cell')"
+    ],
+    "shooting_over_roundoff": [
+      "orders fitted on 3200 and 6400 cells"
+    ],
+    "shooting_reference_tol_change": [
+      "shooting reference at rtol 1e-7"
+    ],
+    "film_surface_referenced_residual": [
+      "heat source 1 % too large in the film solves"
+    ],
+    "film_bulk_error_vs_closed_form": [
+      "closed form written with Bi_h/Bi_m"
+    ],
+    "film_closed_form_match_8_cells": [
+      "closed form written with Bi_h/Bi_m"
+    ],
+    "film_bulk_eps_bim100_bih10": [
+      "sphere assembled with nu = 0"
+    ],
+    "film_external_share_bih3": [
+      "Bi_m and Bi_h swapped"
+    ],
+    "film_external_share_bih10": [
+      "Bi_m and Bi_h swapped"
+    ],
+    "transient_worst_violation": [
+      "Thiele modulus 5 % low"
+    ],
+    "transient_peak_Le0p1": [
+      "Thiele modulus 5 % low"
+    ],
+    "transient_peak_Le0p01": [
+      "Thiele modulus 5 % low"
+    ],
+    "transient_step_order_min": [
+      "backward Euler in place of BDF2 (order=1)"
+    ],
+    "transient_step_order_max": [
+      "backward Euler in place of BDF2 (order=1)"
+    ],
+    "transient_peak_vs_ivp": [
+      "backward Euler in place of BDF2 (order=1)"
+    ],
+    "transient_step_over_roundoff": [
+      "step ladder whose last rung repeats 100 per decade"
+    ],
+    "transient_grid_change": [
+      "grid change read on 25 and 50 cells"
+    ],
+    "transient_control_Le1": [
+      "heat source 1 % too large at Le = 1"
+    ],
+    "transient_end_violation": [
+      "heat source 1 % too large at Le = 10"
+    ]
   }
 }

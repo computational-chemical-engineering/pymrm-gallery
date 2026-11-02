@@ -1,36 +1,547 @@
 {
   "page": "B1.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "shooting_vs_exact_isothermal_eta": 7.128128021298045e-11,
-    "pymrm_vs_exact_isothermal_eta_n400": 8.310588618069876e-06,
-    "pymrm_vs_exact_observed_order": 2.1192276404303585,
-    "pymrm_vs_shooting_nonisothermal_n800": 5.0156711517735415e-05,
-    "pymrm_vs_shooting_observed_order": 1.9972606565970783,
-    "threshold_eta_pymrm_vs_closed_form": 1.1127436692308113e-07,
-    "eq10_worked_case_phi0": 0.09949058049485845,
-    "multiplicity_onset_betagamma_min": 4.860000000000009,
-    "multiplicity_onset_betagamma_max": 5.613125000000006,
-    "Q_ratio_min_over_phi_range": 0.5005005004969748,
-    "Q_ratio_max_over_phi_range": 1.0000115938243772,
-    "eta_at_Phi1_sphere_first_order": 0.93527785300601,
-    "eta_at_Phi1_slab_first_order": 0.6948165380537972,
-    "eta_at_Phi1_worst_exothermic": 3135.9562819663174,
-    "eta_at_Phi1_worst_endothermic": 0.4838417220984387,
-    "eq10a_worst_eta_deviation_exothermic": 0.013377923613131282,
-    "observable_fold_depth_worst": 0.7213722478919056,
-    "observable_fold_onset_betagamma_min": 10.940000000000008,
-    "observable_fold_turning_point_Phi_max": 0.8055029199818049,
-    "ambiguous_measurement_Phi_max": 0.5623413251903491,
-    "ambiguous_measurement_worst_eta_spread": 99.16951576112794,
-    "fig7d_fold_width_decades_beta03_gamma40": 0.01941569690830943,
-    "fig7d_fold_width_px_at_600dpi": 6.949363315906653,
-    "fig7d_printed_stroke_px_at_600dpi": 6.0,
-    "fig7d_fold_in_line_widths": 1.1582272193177754,
-    "Phi_flux_minus_Phi_volume": 2.0801138589376933e-12,
-    "Phi_identity_under_1pct_rate_error": 0.009900990099549478,
-    "Phi_identity_blind_wrong_nu": 4.226174965538121e-12,
-    "Phi_identity_blind_three_cells": 2.1094237467877974e-15,
-    "Phi_identity_catches_unconverged": 0.0020293725009694064,
-    "threshold_eta_pymrm_vs_shooting_kinetics": 1.9880020402219216e-07
+    "surface_gradient_cbv_vs_operator_row": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the same arithmetic: the face gradient the operator transports"
+    },
+    "cold_scan_failed_solves_exact_jacobian": {
+      "kind": "exact",
+      "value": 13
+    },
+    "eq10_worked_case_phi0": {
+      "kind": "value",
+      "value": 0.09949058049485845,
+      "rtol": 1e-06
+    },
+    "shooting_vs_exact_isothermal_eta": {
+      "kind": "bound",
+      "value": 8.364664516591347e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "DOP853 rtol 1e-12"
+    },
+    "pymrm_vs_exact_isothermal_eta_n400": {
+      "kind": "value",
+      "value": 8.3105886431456e-06,
+      "rtol": 0.001
+    },
+    "pymrm_vs_exact_order_min": {
+      "kind": "bound",
+      "value": 2.0003115006626455,
+      "min": 1.9,
+      "max": 3.1,
+      "basis": "chosen",
+      "note": "second order from theory; the upper end 3.1 is observed (phi_0 = 10 gives 2.97 to 3.00 from 100 to 3200 cells on the slab), pre-asymptotic where the reacting layer is thin"
+    },
+    "pymrm_vs_exact_order_max": {
+      "kind": "bound",
+      "value": 2.9721303017791336,
+      "min": 1.9,
+      "max": 3.1,
+      "basis": "chosen",
+      "note": "second order from theory; the upper end 3.1 is observed (phi_0 = 10 gives 2.97 to 3.00 from 100 to 3200 cells on the slab), pre-asymptotic where the reacting layer is thin"
+    },
+    "pymrm_vs_exact_finest_over_roundoff_min": {
+      "kind": "bound",
+      "value": 101641.7860383199,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest-grid error (200 cells) over the round-off of eta, 12 cases with phi_0 > 0.1"
+    },
+    "pymrm_vs_shooting_nonisothermal_n800": {
+      "kind": "value",
+      "value": 5.015669168706438e-05,
+      "rtol": 0.001
+    },
+    "pymrm_vs_shooting_order_min": {
+      "kind": "bound",
+      "value": 1.9838938602766056,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory"
+    },
+    "pymrm_vs_shooting_order_max": {
+      "kind": "bound",
+      "value": 2.028505589876711,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory"
+    },
+    "pymrm_vs_shooting_finest_over_roundoff_min": {
+      "kind": "bound",
+      "value": 297286.47411546006,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest difference (400 to 800 cells) over the round-off of eta, 10 states with |eta - 1| > 0.1"
+    },
+    "pymrm_vs_shooting_excluded_worst_n800": {
+      "kind": "value",
+      "value": 0.9446635893687003,
+      "rtol": 0.001
+    },
+    "threshold_eta_pymrm_vs_closed_form": {
+      "kind": "value",
+      "value": 1.1127413612754822e-07,
+      "rtol": 0.05
+    },
+    "eta_at_Phi1_slab_first_order": {
+      "kind": "value",
+      "value": 0.6948165380537966,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_cylinder_first_order": {
+      "kind": "value",
+      "value": 0.8805247011025553,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_sphere_first_order": {
+      "kind": "value",
+      "value": 0.9352778530060105,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_spread_on_R": {
+      "kind": "value",
+      "value": 0.2404613149522139,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_spread_on_VS": {
+      "kind": "value",
+      "value": 0.1315571521705594,
+      "rtol": 1e-06
+    },
+    "threshold_eta_pymrm_vs_shooting_kinetics": {
+      "kind": "bound",
+      "value": 1.9905698989131082e-07,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "discretisation error on 800 cells; the gap moves by about 1e-9 between BLAS kernels"
+    },
+    "eta_at_Phi1_second_order": {
+      "kind": "value",
+      "value": 0.8796090191852586,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_inhibited_LH": {
+      "kind": "value",
+      "value": 1.0483253452710626,
+      "rtol": 1e-06
+    },
+    "eta_at_Phi1_zero_order_dev": {
+      "kind": "bound",
+      "value": 2.886579864025407e-15,
+      "max": 1e-08,
+      "basis": "identity",
+      "structural": true,
+      "note": "a rate independent of y gives eta = 1 until a dead core forms"
+    },
+    "zero_order_dead_core_Phi": {
+      "kind": "value",
+      "value": 5.999999999993991,
+      "rtol": 1e-06
+    },
+    "q_ratio_at_threshold_sphere": {
+      "kind": "value",
+      "value": 0.9371348078541777,
+      "rtol": 1e-06
+    },
+    "q_ratio_at_threshold_slab": {
+      "kind": "value",
+      "value": 0.7196144198814693,
+      "rtol": 1e-06
+    },
+    "one_minus_Q_ratio_at_phi0_1e-3": {
+      "kind": "value",
+      "value": 6.66666766235835e-08,
+      "rtol": 0.0001
+    },
+    "Q_ratio_at_phi0_1e3": {
+      "kind": "value",
+      "value": 0.5005005004999887,
+      "rtol": 1e-06
+    },
+    "Q_ratio_monotone_decreasing": {
+      "kind": "exact",
+      "value": true
+    },
+    "eta_at_Phi1_worst_exothermic": {
+      "kind": "value",
+      "value": 3135.956281907218,
+      "rtol": 0.001
+    },
+    "eta_at_Phi1_worst_endothermic": {
+      "kind": "value",
+      "value": 0.4838417216963497,
+      "rtol": 0.0001
+    },
+    "eta_at_Phi1_beta03_gamma20": {
+      "kind": "value",
+      "value": 1.499570943290503,
+      "rtol": 1e-06
+    },
+    "eq10a_worst_eta_deviation_exothermic": {
+      "kind": "value",
+      "value": 0.013377922887425342,
+      "rtol": 0.001
+    },
+    "eq10a_max_conservatism": {
+      "kind": "value",
+      "value": 101005.58619255075,
+      "rtol": 0.001
+    },
+    "eq10a_endothermic_eta_at_threshold_max": {
+      "kind": "value",
+      "value": 0.2898492230207413,
+      "rtol": 0.0001
+    },
+    "endothermic_cases_beyond_ladder": {
+      "kind": "exact",
+      "value": 5
+    },
+    "endothermic_beyond_ladder_eta_below_half": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.032316556607300595,
+      "min_margin": 0.01
+    },
+    "fn_eq1_exothermic": {
+      "kind": "exact",
+      "value": 252,
+      "margin": 3.031476630184493e-05,
+      "min_margin": 3e-06
+    },
+    "fn_eq10a_exothermic": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 3.031476630184493e-05,
+      "min_margin": 3e-06
+    },
+    "fp_eq10a_exothermic": {
+      "kind": "exact",
+      "value": 406,
+      "margin": 3.031476630184493e-05,
+      "min_margin": 3e-06
+    },
+    "fn_eq10a_endothermic": {
+      "kind": "exact",
+      "value": 369,
+      "margin": 0.0007885345378366299,
+      "min_margin": 3e-06
+    },
+    "not_clean_endothermic": {
+      "kind": "exact",
+      "value": 384,
+      "margin": 0.0007885345378366299,
+      "min_margin": 3e-06
+    },
+    "interpolated_class_flips": {
+      "kind": "exact",
+      "value": 14,
+      "margin": 3.031476630184493e-05,
+      "min_margin": 3e-06
+    },
+    "phi0_multivalued_cases": {
+      "kind": "exact",
+      "value": 11,
+      "margin": 1.0,
+      "min_margin": 0.5
+    },
+    "Phi_multivalued_cases": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 1.0,
+      "min_margin": 0.5
+    },
+    "observable_fold_turning_point_Phi_max": {
+      "kind": "value",
+      "value": 0.8055029159840799,
+      "rtol": 0.0001
+    },
+    "observable_fold_depth_worst": {
+      "kind": "value",
+      "value": 0.7272145115131965,
+      "rtol": 0.0001
+    },
+    "Phi1_unique_root_cases": {
+      "kind": "exact",
+      "value": 32
+    },
+    "ambiguous_measurements": {
+      "kind": "exact",
+      "value": 14
+    },
+    "ambiguous_measurement_Phi_max": {
+      "kind": "value",
+      "value": 0.5623413251903491,
+      "rtol": 1e-09
+    },
+    "ambiguous_measurement_worst_eta_spread": {
+      "kind": "value",
+      "value": 100.72017766045458,
+      "rtol": 0.0001
+    },
+    "ambiguous_measurement_worst_eta_min": {
+      "kind": "value",
+      "value": 2.1855236235147424,
+      "rtol": 0.001
+    },
+    "multiplicity_onset_betagamma_min": {
+      "kind": "value",
+      "value": 4.9114691283519125,
+      "rtol": 0.0001
+    },
+    "multiplicity_onset_betagamma_max": {
+      "kind": "value",
+      "value": 5.564510337449117,
+      "rtol": 0.0001
+    },
+    "observable_fold_onset_betagamma_min": {
+      "kind": "value",
+      "value": 10.841541078793602,
+      "rtol": 0.0001
+    },
+    "observable_fold_onset_betagamma_max": {
+      "kind": "value",
+      "value": 21.737375608484033,
+      "rtol": 0.0001
+    },
+    "fig7_panels_with_folded_curve": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.031895373522258796,
+      "min_margin": 0.01
+    },
+    "fig7d_fold_width_decades_beta03_gamma40": {
+      "kind": "value",
+      "value": 0.019415697207690437,
+      "rtol": 0.0001
+    },
+    "fig7d_fold_width_px_at_600dpi": {
+      "kind": "value",
+      "value": 6.9493634230626,
+      "rtol": 0.0001
+    },
+    "fig7d_fold_in_line_widths": {
+      "kind": "value",
+      "value": 1.1582272371771,
+      "rtol": 0.0001
+    },
+    "Phi_flux_minus_Phi_volume": {
+      "kind": "bound",
+      "value": 8.451461752656542e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the volume-weighted residual of a newton solve, tol 1e-12, first order and the non-isothermal rate beta = 0.3, gamma = 20, both on the sphere at PH_REF"
+    },
+    "ignited_state_eta_pymrm_vs_shooting": {
+      "kind": "value",
+      "value": 1.663785971217635e-06,
+      "rtol": 0.001
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "surface_gradient_cbv_vs_operator_row": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "cold_scan_failed_solves_exact_jacobian": [
+      "Jacobian by NumJac differencing (jacobian='numjac')"
+    ],
+    "eq10_worked_case_phi0": [
+      "eq. (10) exponent without its 1 + beta (denominator=False)"
+    ],
+    "shooting_vs_exact_isothermal_eta": [
+      "shooting integrated at rtol 1e-6"
+    ],
+    "pymrm_vs_exact_isothermal_eta_n400": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)",
+      "sphere assembled with nu = 0"
+    ],
+    "pymrm_vs_exact_order_min": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "pymrm_vs_exact_order_max": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "pymrm_vs_exact_finest_over_roundoff_min": [
+      "orders read at 1600 cells instead of 200 (finest grid moved up three factors of 2)"
+    ],
+    "pymrm_vs_shooting_nonisothermal_n800": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "pymrm_vs_shooting_order_min": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "pymrm_vs_shooting_order_max": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "pymrm_vs_shooting_finest_over_roundoff_min": [
+      "orders taken over all 18 states, those near eta = 1 included (no |eta - 1| > 0.1 selection)"
+    ],
+    "pymrm_vs_shooting_excluded_worst_n800": [
+      "Phi read by a two-point gradient from the last cell centre (two_point=True)"
+    ],
+    "eta_at_Phi1_slab_first_order": [
+      "closed form of the slab evaluated with nu = 2"
+    ],
+    "eta_at_Phi1_cylinder_first_order": [
+      "closed form of the cylinder evaluated with nu = 2"
+    ],
+    "eta_at_Phi1_sphere_first_order": [
+      "closed form of the sphere evaluated with nu = 0"
+    ],
+    "threshold_eta_pymrm_vs_closed_form": [
+      "sphere assembled with nu = 0",
+      "sphere on 3 cells",
+      "rate 1 % too large in the model (scale=1.01)"
+    ],
+    "eta_at_Phi1_spread_on_R": [
+      "sphere closed form evaluated with nu = 1"
+    ],
+    "eta_at_Phi1_spread_on_VS": [
+      "V/S observable divided by nu + 1 instead of (nu + 1)^2"
+    ],
+    "threshold_eta_pymrm_vs_shooting_kinetics": [
+      "pymrm pellet assembled with nu = 1"
+    ],
+    "eta_at_Phi1_second_order": [
+      "branch traced with nu = 1"
+    ],
+    "eta_at_Phi1_inhibited_LH": [
+      "branch traced with nu = 1"
+    ],
+    "zero_order_dead_core_Phi": [
+      "branch traced with nu = 1"
+    ],
+    "q_ratio_at_threshold_sphere": [
+      "relation with factor 1 instead of 1/2"
+    ],
+    "q_ratio_at_threshold_slab": [
+      "relation with factor 1 instead of 1/2"
+    ],
+    "one_minus_Q_ratio_at_phi0_1e-3": [
+      "sphere closed form without its small-phi series (stable=False)"
+    ],
+    "Q_ratio_monotone_decreasing": [
+      "sphere closed form without its small-phi series (stable=False)"
+    ],
+    "Q_ratio_at_phi0_1e3": [
+      "relation with factor 1 instead of 1/2"
+    ],
+    "eta_at_Phi1_worst_exothermic": [
+      "branch traced with nu = 1 at beta = 0.6, gamma = 40"
+    ],
+    "eta_at_Phi1_worst_endothermic": [
+      "branch traced with nu = 1 at beta = -0.4, gamma = 40"
+    ],
+    "eta_at_Phi1_beta03_gamma20": [
+      "sign of the exponent flipped (sign=-1)"
+    ],
+    "eq10a_worst_eta_deviation_exothermic": [
+      "eq. (10a) exponent without its 1 + beta (denominator=False)"
+    ],
+    "eq10a_max_conservatism": [
+      "eq. (10a) exponent without its 1 + beta (denominator=False)"
+    ],
+    "eq10a_endothermic_eta_at_threshold_max": [
+      "eq. (10a) exponent without its 1 + beta (denominator=False)"
+    ],
+    "endothermic_cases_beyond_ladder": [
+      "eq. (10a) exponent without its 1 + beta (denominator=False)"
+    ],
+    "endothermic_beyond_ladder_eta_below_half": [
+      "eq. (1) threshold read as 0.3"
+    ],
+    "fn_eq10a_exothermic": [
+      "eq. (10a) without its exponential factor (eq. (1) applied)"
+    ],
+    "fp_eq10a_exothermic": [
+      "eq. (10a) exponent without its 1 + beta (denominator=False)",
+      "class read from etas interpolated along the traced ladder"
+    ],
+    "not_clean_endothermic": [
+      "truth tolerance 10 % for 5 %",
+      "class read from etas interpolated along the traced ladder"
+    ],
+    "fn_eq1_exothermic": [
+      "truth tolerance 10 % for 5 %",
+      "class read from etas interpolated along the traced ladder"
+    ],
+    "fn_eq10a_endothermic": [
+      "truth tolerance 10 % for 5 %",
+      "class read from etas interpolated along the traced ladder"
+    ],
+    "interpolated_class_flips": [
+      "truth tolerance 10 % for 5 %"
+    ],
+    "phi0_multivalued_cases": [
+      "branches traced on 12 states instead of 110 (n=12)"
+    ],
+    "Phi_multivalued_cases": [
+      "branches traced on 12 states instead of 110 (n=12)"
+    ],
+    "observable_fold_turning_point_Phi_max": [
+      "turning points read off the traced ladder (refine=False)"
+    ],
+    "observable_fold_depth_worst": [
+      "turning points read off the traced ladder (refine=False)"
+    ],
+    "Phi1_unique_root_cases": [
+      "eq. (1) threshold read as 0.3"
+    ],
+    "ambiguous_measurements": [
+      "branches traced on 12 states instead of 110 (n=12)"
+    ],
+    "ambiguous_measurement_Phi_max": [
+      "branches traced on 12 states instead of 110 (n=12)"
+    ],
+    "ambiguous_measurement_worst_eta_min": [
+      "etas interpolated along the traced ladder, not root-found"
+    ],
+    "ambiguous_measurement_worst_eta_spread": [
+      "etas interpolated along the traced ladder, not root-found"
+    ],
+    "multiplicity_onset_betagamma_min": [
+      "exponent without its 1 + beta (1 - y) (denominator=False), gamma = 40"
+    ],
+    "multiplicity_onset_betagamma_max": [
+      "exponent without its 1 + beta (1 - y) (denominator=False), gamma = 20"
+    ],
+    "observable_fold_onset_betagamma_min": [
+      "exponent without its 1 + beta (1 - y) (denominator=False), gamma = 40"
+    ],
+    "observable_fold_onset_betagamma_max": [
+      "exponent without its 1 + beta (1 - y) (denominator=False), gamma = 20"
+    ],
+    "fig7_panels_with_folded_curve": [
+      "largest beta drawn at gamma = 30 read as 0.45 for 0.4"
+    ],
+    "fig7d_fold_width_decades_beta03_gamma40": [
+      "turning points read off the traced ladder (refine=False)"
+    ],
+    "fig7d_fold_width_px_at_600dpi": [
+      "turning points read off the traced ladder (refine=False)"
+    ],
+    "fig7d_fold_in_line_widths": [
+      "turning points read off the traced ladder (refine=False)"
+    ],
+    "Phi_flux_minus_Phi_volume": [
+      "rate 1 % too large in the model (scale=1.01)",
+      "newton stopped after one iteration (maxfev=1)"
+    ],
+    "ignited_state_eta_pymrm_vs_shooting": [
+      "newton started from y = 1 instead of the shooting profile"
+    ]
   }
 }
