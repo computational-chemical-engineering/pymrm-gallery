@@ -1,13 +1,233 @@
 {
   "page": "B3.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "eq6_endpoint_x1": 0.0,
-    "eq6_vs_integrated_worst": 6.869504964868156e-16,
-    "eq6_to_film_limit": 8.205277568507086e-10,
-    "eq6_to_ash_limit": 2.3473231247628235e-08,
-    "eq6_to_reaction_limit": 3.84898779515197e-10,
-    "shell_solve_worst_rel_err": 2.0545910755899603e-06,
-    "frac_within_5pct": 0.7120987654320987,
-    "worst_single_law_error": 0.20308587888994767
+    "eq6_endpoint_x1": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "the numerator at x = 1 equals the denominator term by term; round-off only"
+    },
+    "eq6_vs_integrated_worst": {
+      "kind": "bound",
+      "value": 6.869504964868156e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "two closed forms of one function; round-off only"
+    },
+    "eq6_to_film_limit": {
+      "kind": "bound",
+      "value": 8.205277568507086e-10,
+      "max": 1e-09,
+      "basis": "theory",
+      "note": "the gap is proportional to gamma, with coefficient below 1"
+    },
+    "eq6_to_ash_limit": {
+      "kind": "bound",
+      "value": 2.3473231247628235e-08,
+      "max": 3e-08,
+      "basis": "theory",
+      "note": "the gap is proportional to 1/omega, with coefficient below 0.3"
+    },
+    "eq6_to_reaction_limit": {
+      "kind": "bound",
+      "value": 3.84898779515197e-10,
+      "max": 5e-10,
+      "basis": "theory",
+      "note": "the gap is proportional to omega, with coefficient below 0.5"
+    },
+    "limit_gap_scaling_dev": {
+      "kind": "bound",
+      "value": 8.720764749003962e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "log10 of the gap ratio against log10 of the parameter ratio, 1e-5 against 1e-9"
+    },
+    "shell_solve_worst_rel_err": {
+      "kind": "value",
+      "value": 2.0545910754954377e-06,
+      "rtol": 0.05
+    },
+    "shell_order_finest_min": {
+      "kind": "bound",
+      "value": 1.9042741115874091,
+      "min": 1.85,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "second-order scheme, approached from below on the thick shell (pre-asymptotic rungs)"
+    },
+    "shell_order_finest_max": {
+      "kind": "bound",
+      "value": 1.9733094049876618,
+      "min": 1.85,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "as shell_order_finest_min"
+    },
+    "shell_conservation_gap": {
+      "kind": "bound",
+      "value": 3.2614824436462845e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "flow to the core against flow delivered by the film; round-off of the sparse solve, which grows with the grid"
+    },
+    "shell_interior_face_gap": {
+      "kind": "bound",
+      "value": 2.8069131303425135e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the flow through the first interior face equals the core-face flow; round-off only"
+    },
+    "shell_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 3135.1826028303603,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest difference of the ladder over the conservation gap, which is the round-off of the same solve"
+    },
+    "frac_within_5pct": {
+      "kind": "value",
+      "value": 0.7083198302469136,
+      "rtol": 0.05
+    },
+    "frac_within_2pct": {
+      "kind": "value",
+      "value": 0.5129706790123457,
+      "rtol": 0.05
+    },
+    "worst_single_law_error": {
+      "kind": "value",
+      "value": 0.20470968827993619,
+      "rtol": 0.05
+    },
+    "map_fraction_change_finest": {
+      "kind": "bound",
+      "value": 0.0005015432098764983,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "last doubling of the grid changes the fractions by less than a tenth of a percentage point"
+    },
+    "map_cells_within_5pct": {
+      "kind": "exact",
+      "value": 367193,
+      "margin": 1.1732954025012177e-07,
+      "min_margin": 1e-08,
+      "note": "no cell lies within a relative 1e-8 of the 5 % threshold, so the count is not decided by round-off"
+    },
+    "map_cells_within_2pct": {
+      "kind": "exact",
+      "value": 265924,
+      "margin": 1.4283341247776915e-05,
+      "min_margin": 1e-08,
+      "note": "no cell lies within a relative 1e-8 of the 2 % threshold, so the count is not decided by round-off"
+    },
+    "crest_error_omega1e3": {
+      "kind": "value",
+      "value": 0.2048647363743601,
+      "rtol": 0.001
+    },
+    "crest_error_omega1e6": {
+      "kind": "value",
+      "value": 0.2048866355783907,
+      "rtol": 0.001
+    },
+    "crest_gamma_omega1e6": {
+      "kind": "value",
+      "value": 0.8552695316423337,
+      "rtol": 0.005
+    },
+    "crest_reaction_share_omega1e3": {
+      "kind": "bound",
+      "value": 0.00046056184680054674,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "reaction resistance over the sum of the three at the crest, at the edge of the map; it falls as 1/omega"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "eq6_endpoint_x1": [
+      "cubic coefficient read as omega (1 - gamma) (eq6(..., cubic='misread'))"
+    ],
+    "eq6_vs_integrated_worst": [
+      "film term without the factor 3 (groups(..., film_factor=1))",
+      "k_d1 = 6 D/D_p instead of 12 D/D_p (groups(..., kd_coef=6))"
+    ],
+    "eq6_to_film_limit": [
+      "limit parameters 1e-5 instead of 1e-9 (ash: omega = 1e5 instead of 1e7)"
+    ],
+    "eq6_to_ash_limit": [
+      "limit parameters 1e-5 instead of 1e-9 (ash: omega = 1e5 instead of 1e7)"
+    ],
+    "eq6_to_reaction_limit": [
+      "limit parameters 1e-5 instead of 1e-9 (ash: omega = 1e5 instead of 1e7)"
+    ],
+    "limit_gap_scaling_dev": [
+      "ladder 1e-1 and 1e-5: outside the linear range"
+    ],
+    "shell_solve_worst_rel_err": [
+      "spherical geometry replaced by cylindrical (Shell(..., nu=1))",
+      "reaction condition written with the inward normal (Shell(..., inner_normal='inward'))",
+      "film resistance dropped, bulk value at the surface (Shell(..., film=False))",
+      "flow read from the first two cells at the core radius (read='cells_at_core')"
+    ],
+    "shell_order_finest_min": [
+      "flow read from the first two cells at the core radius (read='cells_at_core')"
+    ],
+    "shell_order_finest_max": [
+      "flow read from the first two cells at the core radius (read='cells_at_core')"
+    ],
+    "shell_conservation_gap": [
+      "film flow from the last cell value instead of the surface value (flow_outer(read='cell'))"
+    ],
+    "shell_interior_face_gap": [
+      "flow read from the first two cells at the core radius (read='cells_at_core')"
+    ],
+    "shell_finest_over_roundoff": [
+      "ladder 200 to 3200 cells, where the differences approach round-off"
+    ],
+    "frac_within_5pct": [
+      "ash law with (1-X) in place of 2(1-X), on the 90 x 90 grid (regime_map(..., laws=...))",
+      "cubic coefficient read as omega (1 - gamma), on the 90 x 90 grid (regime_map(..., cubic='misread'))"
+    ],
+    "frac_within_2pct": [
+      "ash law with (1-X) in place of 2(1-X), on the 90 x 90 grid (regime_map(..., laws=...))",
+      "cubic coefficient read as omega (1 - gamma), on the 90 x 90 grid (regime_map(..., cubic='misread'))"
+    ],
+    "worst_single_law_error": [
+      "cubic coefficient read as omega (1 - gamma), on the 90 x 90 grid (regime_map(..., cubic='misread'))"
+    ],
+    "map_fraction_change_finest": [
+      "ladder stopped at 90 and 180 per decade pair"
+    ],
+    "map_cells_within_5pct": [
+      "5 % threshold applied as 5e-3 (a factor ten off)"
+    ],
+    "map_cells_within_2pct": [
+      "2 % threshold applied as 2e-3 (a factor ten off)"
+    ],
+    "crest_error_omega1e3": [
+      "gamma scan of 90 points in place of the bounded maximum (crest(..., method='grid', n_scan=90))",
+      "reaction law with exponent 1/2 in place of 1/3 (crest(..., laws=...))"
+    ],
+    "crest_error_omega1e6": [
+      "gamma scan of 90 points in place of the bounded maximum (crest(..., method='grid', n_scan=90))",
+      "reaction law with exponent 1/2 in place of 1/3 (crest(..., laws=...))"
+    ],
+    "crest_gamma_omega1e6": [
+      "gamma scan of 90 points in place of the bounded maximum (crest(..., method='grid', n_scan=90))",
+      "reaction law with exponent 1/2 in place of 1/3 (crest(..., laws=...))"
+    ],
+    "crest_reaction_share_omega1e3": [
+      "crest taken at omega = 10 in place of the map edge omega = 1e3"
+    ]
   }
 }
