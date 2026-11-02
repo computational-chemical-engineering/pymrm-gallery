@@ -2755,12 +2755,12 @@ models:
     slug: mears-criteria
     title: "The Mears criteria: what each transport-limit test actually guarantees"
     description: >
-      Mears' 1971 review collects the diagnostic inequalities in observables -
-      intraparticle, interphase, interparticle - that decide whether a measured
+      Mears' 1971 review collects the diagnostic inequalities in observables
+      (intraparticle, interphase, interparticle) that decide whether a measured
       rate is chemistry or transport, almost all claiming a 5 % tolerance. This
       page solves the pellet, film and dispersion problems exactly at every
       criterion's own boundary and reports what each actually admits: eq. 17 is
-      exact at first order, the intraparticle family is liberal by exactly its
+      exact at first order, the intraparticle family is liberal by its
       admitted 0.75-to-1 rounding, eq. 9 has a measured window of no power
       around the compensation point, the combined criterion fails structurally
       at low Biot number and tolerances stack to 11 %, and Mears' own axial
@@ -2777,15 +2777,7 @@ models:
       - eq. 9 compensation window of no power
       - stacked-tolerance worst case for combined criteria
       - axial-dispersion length penalty at the eq. 30 boundary
-    pymrm_api:
-      - construct_grad
-      - construct_div
-      - construct_convflux_upwind
-      - interp_cntr_to_stagg_tvd
-      - compute_boundary_values
-      - NumJac
-      - newton
-      - clip_approach
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, ConvFluxTVD, interp_cntr_to_stagg_tvd, construct_coefficient_matrix, compute_boundary_values, NumJac, newton, find_roots, observed_orders]
     reference:
       authors: ["Mears, D. E."]
       year: 1971
@@ -2795,7 +2787,7 @@ models:
     note: >
       The paper is a review; its three "derived by the author" criteria come
       from two companion papers (Mears 1971a Chem. Eng. Sci. in press; Mears
-      1971b J. Catal. 20, 127), neither consulted - the page audits the criteria
+      1971b J. Catal. 20, 127), neither consulted; the page audits the criteria
       as the review states them, which is how the literature cites them. The
       scan's text layer destroys the criteria's symbols; everything was read
       from 300 dpi native renders, and the PDF opens with the tail of the

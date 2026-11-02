@@ -1,58 +1,993 @@
 {
   "page": "B1.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "eq1_dev_at_bound_n1": 0.06472214711672575,
-    "eq3_dev_at_bound_n05": 0.06787602557899919,
-    "eq3_dev_at_bound_n2": 0.06330577315358421,
-    "eq3_dev_at_bound_n3": 0.0628542566414323,
-    "eq3_dev_at_unrounded_075_n1": 0.04891151289450846,
-    "weisz_06_dev_n1": 0.039305466370728404,
-    "weisz_03_dev_n2": 0.038771439755778125,
-    "neg_order_eta_at_bound": 1.076633551434861,
-    "hudgins_LH_eta_at_bound": 1.0759196423714854,
-    "LH_eta_at_Phi1_vs_B14": 1.0483253453058243,
-    "eq17_dev_at_bound_n1": 0.05,
-    "eq17_dev_at_bound_n05": 0.05131670194948623,
-    "eq17_dev_at_bound_n2": 0.04937500000000006,
-    "eq14_dev_exo_gamma30": 0.051183639856264396,
-    "eq14_dev_endo_gamma30": 0.048849973639926936,
-    "eq16_carberry_dev": 0.09999999999999999,
-    "eq16_carberry_dev_surface": 0.09090909090909091,
-    "eq9_dev_at_bound_gb05": 0.07372041838187182,
-    "eq9_dev_at_bound_gb08": 0.14041507721873547,
-    "eq9_nopower_window_lo": 0.22221249009869254,
-    "eq9_nopower_window_hi": 1.158597225281419,
-    "eq9_Phi5_gb2_kinetic": 0.7462348539406826,
-    "eq9_second_regime_onset": 1.954413102093019,
-    "eq9_outside_window_dev_gb2": 0.05025155326981401,
-    "petersen13_dev_gamma30": 0.3781618459069296,
-    "compensation_Phi5_gamma30": 3.56917746452647,
-    "compensation_centre_y": 0.4498430509695806,
-    "eq12_dev_endo_gb_m1": 0.2763055868241703,
-    "eq6_worst_devT": 0.06112571510450637,
-    "eq21_ratio_Bim100": 0.7307611777920865,
-    "eq21_ratio_Bim03": 0.044438645733459355,
-    "joint_pass_worst_dev": 0.11147879530622762,
-    "joint_pass_worst_bim": 6.3343662337528475,
-    "eq30_dev_X0632": 0.047513033987119035,
-    "eq30_dev_X099": 0.049458269134948774,
-    "axial_dev_covarying_X0632": 0.045545878671315876,
-    "eq32_dev_n2_worst": 0.048120433745550306,
-    "eq28_petersen_dev_X09": 0.5072580927138919,
-    "eq1_fold_worst_certified_dev": 3134.95628512387,
-    "eq9_fold_worst_certified_dev": 0.07199184475370735,
-    "eq9_fold_ignited_margin": 2.3111547488183417,
-    "headline_three_route_spread": 1.0407772543796767e-07,
-    "pymrm_vs_shooting_iso": 8.52328558608699e-08,
-    "pymrm_vs_shooting_iso_order": 1.9528490566529213,
-    "pymrm_vs_shooting_wh": 8.206923175929931e-08,
-    "pymrm_vs_shooting_robin": 3.024897174844534e-08,
-    "pymrm_axial_vs_closed_form": 7.107184174515169e-08,
-    "film_mass_dimensional_xcheck": 0.0,
-    "film_heat_dimensional_xcheck": 1.7763568394002505e-15,
-    "zero_order_profile_err": 6.722400414105323e-14,
-    "alpha_star_identity": 0.22360679774997896,
-    "bi_star_identity": 10.0,
-    "film_closed_form_collapse_rel": 2.1486386003743974e-09
+    "alpha_star_identity": {
+      "kind": "bound",
+      "value": 0.22360679774997896,
+      "min": 0.2236,
+      "max": 0.2237,
+      "basis": "identity",
+      "structural": true,
+      "note": "1/sqrt(20) from eq. 30's 20, against eq. 29's printed 0.22"
+    },
+    "perturbation_slope_rel_err": {
+      "kind": "bound",
+      "value": 3.22355702253585e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "linear extrapolation to Phi = 0 from Phi of about 1e-3; the next term of the expansion is O(Phi)"
+    },
+    "bi_star_identity": {
+      "kind": "bound",
+      "value": 10.0,
+      "min": 9.999999999,
+      "max": 10.000000001,
+      "basis": "identity",
+      "structural": true,
+      "note": "2 x 0.75/0.15 against eq. 15's printed 10"
+    },
+    "symbolic_reductions_hold": {
+      "kind": "exact",
+      "value": true,
+      "structural": true,
+      "note": "eq. 2 -> eq. 3 for a power law; eq. 21 -> eq. 3 at omega = chi = beta_b = 0"
+    },
+    "iso_Phi5_n1": {
+      "kind": "value",
+      "value": 0.767085460455992,
+      "rtol": 1e-05
+    },
+    "eq1_dev_at_bound_n1": {
+      "kind": "value",
+      "value": 0.06472214711672575,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_bound_n05": {
+      "kind": "value",
+      "value": 0.06787602557899919,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_bound_n2": {
+      "kind": "value",
+      "value": 0.06330577315358421,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_bound_n3": {
+      "kind": "value",
+      "value": 0.0628542566414323,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_unrounded_075_n05": {
+      "kind": "value",
+      "value": 0.050690885384765405,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_unrounded_075_n1": {
+      "kind": "value",
+      "value": 0.04891151289450846,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_unrounded_075_n2": {
+      "kind": "value",
+      "value": 0.048091357278954194,
+      "rtol": 1e-05
+    },
+    "eq3_dev_at_unrounded_075_n3": {
+      "kind": "value",
+      "value": 0.04782720595025225,
+      "rtol": 1e-05
+    },
+    "weisz_06_dev_n1": {
+      "kind": "value",
+      "value": 0.039305466370728404,
+      "rtol": 1e-05
+    },
+    "weisz_03_dev_n2": {
+      "kind": "value",
+      "value": 0.038771439755778125,
+      "rtol": 1e-05
+    },
+    "headline_shooting_vs_closed": {
+      "kind": "bound",
+      "value": 1.2273537741691598e-10,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "DOP853 rtol 1e-10 and a Brent root on the integrated branch"
+    },
+    "headline_three_route_spread": {
+      "kind": "value",
+      "value": 1.0407829820202608e-07,
+      "rtol": 0.05,
+      "note": "set by the 800-cell discretisation error of the pymrm route"
+    },
+    "zero_order_profile_err": {
+      "kind": "bound",
+      "value": 6.722400414105323e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12 on 400 cells; the parabola is exact on the grid"
+    },
+    "zero_order_eta_dev": {
+      "kind": "bound",
+      "value": 4.0678571622265736e-13,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12"
+    },
+    "neg_order_Phi5": {
+      "kind": "value",
+      "value": 0.6843898533998193,
+      "rtol": 1e-05
+    },
+    "neg_order_eta_at_bound": {
+      "kind": "value",
+      "value": 1.076633551434861,
+      "rtol": 1e-05
+    },
+    "hudgins_LH_eta_at_bound": {
+      "kind": "value",
+      "value": 1.0759196423714854,
+      "rtol": 1e-05
+    },
+    "LH_Phi5": {
+      "kind": "value",
+      "value": 1.0317199980687357,
+      "rtol": 1e-05
+    },
+    "LH_eta_at_Phi1_vs_B14": {
+      "kind": "value",
+      "value": 1.0483253453058243,
+      "rtol": 1e-05
+    },
+    "LH_bound_over_Phi5": {
+      "kind": "value",
+      "value": 1.4538828391499943,
+      "rtol": 1e-05
+    },
+    "LH_eta_at_Phi1_gap_to_B14": {
+      "kind": "bound",
+      "value": 3.3159253121084475e-11,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "B1.4 traces the same rate law with the same shooting construction at DOP853 rtol 1e-9; this page at 1e-10"
+    },
+    "eq17_dev_at_bound_n1": {
+      "kind": "bound",
+      "value": 0.050000000000000044,
+      "min": 0.0499999999999995,
+      "max": 0.0500000000000005,
+      "basis": "identity",
+      "note": "dev = omega/3 at first order: the film balance is linear"
+    },
+    "eq17_dev_at_bound_n05": {
+      "kind": "value",
+      "value": 0.05131670194948623,
+      "rtol": 1e-09
+    },
+    "eq17_dev_at_bound_n2": {
+      "kind": "value",
+      "value": 0.04937500000000006,
+      "rtol": 1e-09
+    },
+    "eq17_dev_at_bound_n3": {
+      "kind": "value",
+      "value": 0.04917129629629646,
+      "rtol": 1e-09
+    },
+    "eq16_carberry_dev": {
+      "kind": "value",
+      "value": 0.09999999999999998,
+      "rtol": 1e-09
+    },
+    "eq16_carberry_dev_surface": {
+      "kind": "value",
+      "value": 0.09090909090909094,
+      "rtol": 1e-09
+    },
+    "carberry_over_eq17": {
+      "kind": "value",
+      "value": 1.9999999999999978,
+      "rtol": 1e-09
+    },
+    "carberry_surface_over_eq17": {
+      "kind": "value",
+      "value": 1.8181818181818172,
+      "rtol": 1e-09
+    },
+    "eq14_dev_exo_gamma10": {
+      "kind": "value",
+      "value": 0.051009618676495214,
+      "rtol": 1e-09
+    },
+    "eq14_dev_exo_gamma30": {
+      "kind": "value",
+      "value": 0.051183639856264486,
+      "rtol": 1e-09
+    },
+    "eq14_dev_exo_gamma40": {
+      "kind": "value",
+      "value": 0.05120547600861761,
+      "rtol": 1e-09
+    },
+    "eq14_dev_endo_gamma30": {
+      "kind": "value",
+      "value": 0.0488499736399269,
+      "rtol": 1e-09
+    },
+    "film_mass_dimensional_xcheck": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "Brent roots to 1e-15 in C_s"
+    },
+    "film_heat_dimensional_xcheck": {
+      "kind": "bound",
+      "value": 1.8665624601510444e-15,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "the observable is evaluated at the solved T_s, so only round-off separates the routes"
+    },
+    "film_steady_states": {
+      "kind": "exact",
+      "value": 3
+    },
+    "film_closed_form_collapse_rel": {
+      "kind": "bound",
+      "value": 2.1249467605084062e-14,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "the gap is the scaled root residual of the film balance, Brent roots to a relative 1e-15 in R"
+    },
+    "film_states_passing_eq17": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.9999999968807921,
+      "min_margin": 0.05
+    },
+    "film_states_failing_eq14": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.9999988770851809,
+      "min_margin": 0.05
+    },
+    "eq9_dev_at_bound_gbm2": {
+      "kind": "value",
+      "value": 0.06234789113951189,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gbm1": {
+      "kind": "value",
+      "value": 0.06268675741866536,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gbm05": {
+      "kind": "value",
+      "value": 0.06319245073006907,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gbm02": {
+      "kind": "value",
+      "value": 0.06386949320278668,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gb02": {
+      "kind": "value",
+      "value": 0.06633896472008127,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gb05": {
+      "kind": "value",
+      "value": 0.07372041838187182,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gb08": {
+      "kind": "value",
+      "value": 0.14041507721873547,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gb12": {
+      "kind": "value",
+      "value": 0.04858181436310005,
+      "rtol": 1e-05
+    },
+    "eq9_dev_at_bound_gb2": {
+      "kind": "value",
+      "value": 0.06686663327717723,
+      "rtol": 1e-05
+    },
+    "eq12_dev_endo_gb_m1": {
+      "kind": "value",
+      "value": 0.2763055868241703,
+      "rtol": 1e-05
+    },
+    "eq12_exo_conservative_cases": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.12057283109222905,
+      "min_margin": 0.01
+    },
+    "eq9_unrounded_holds_endothermic": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.03166761955270575,
+      "min_margin": 0.01
+    },
+    "eq9_nopower_window_lo": {
+      "kind": "value",
+      "value": 0.22221146509902057,
+      "rtol": 2e-05
+    },
+    "eq9_nopower_window_hi": {
+      "kind": "value",
+      "value": 1.1585973156048,
+      "rtol": 2e-05
+    },
+    "eq9_window_inside_dev_gb095": {
+      "kind": "value",
+      "value": 0.4391394098040504,
+      "rtol": 1e-05
+    },
+    "petersen13_dev_gamma20": {
+      "kind": "value",
+      "value": 0.3798303601668698,
+      "rtol": 1e-05
+    },
+    "petersen13_dev_gamma30": {
+      "kind": "value",
+      "value": 0.3781618459069296,
+      "rtol": 1e-05
+    },
+    "petersen13_dev_gamma40": {
+      "kind": "value",
+      "value": 0.37731126668297366,
+      "rtol": 1e-05
+    },
+    "compensation_Phi5_gamma30": {
+      "kind": "value",
+      "value": 3.5691774615757015,
+      "rtol": 1e-05
+    },
+    "compensation_centre_y": {
+      "kind": "value",
+      "value": 0.4498430509695806,
+      "rtol": 1e-05
+    },
+    "eq9_crossings_gb12": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.03678647921217098,
+      "min_margin": 0.001
+    },
+    "eq9_crossings_gb15": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.009907496486991312,
+      "min_margin": 0.001
+    },
+    "eq9_crossings_gb2": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.143992601725878,
+      "min_margin": 0.001
+    },
+    "eq9_Phi5_gb2_kinetic": {
+      "kind": "value",
+      "value": 0.7462348539406826,
+      "rtol": 1e-05
+    },
+    "eq9_Phi5_gb2_deep": {
+      "kind": "value",
+      "value": 11.308887973131517,
+      "rtol": 1e-05
+    },
+    "eq9_three_crossing_onset": {
+      "kind": "value",
+      "value": 1.4494886567550713,
+      "rtol": 1e-05
+    },
+    "eq9_second_regime_onset": {
+      "kind": "value",
+      "value": 1.9544080734060698,
+      "rtol": 1e-05
+    },
+    "eq9_outside_window_dev_gb2": {
+      "kind": "value",
+      "value": 0.0502515533916581,
+      "rtol": 1e-05
+    },
+    "eq9_outside_window_dev_gb25": {
+      "kind": "value",
+      "value": 0.05168209396852075,
+      "rtol": 1e-05
+    },
+    "eq9_outside_window_dev_gb3": {
+      "kind": "value",
+      "value": 0.05218876435979758,
+      "rtol": 1e-05
+    },
+    "eq6_worst_devT": {
+      "kind": "value",
+      "value": 0.06112571510450637,
+      "rtol": 1e-05
+    },
+    "eq9_fold_worst_certified_dev": {
+      "kind": "value",
+      "value": 0.07199184475370735,
+      "rtol": 1e-06
+    },
+    "eq1_fold_worst_certified_dev": {
+      "kind": "value",
+      "value": 3134.95628512387,
+      "rtol": 1e-06
+    },
+    "eq9_fold_worst_grid_shift": {
+      "kind": "bound",
+      "value": 2.8167690402369772e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "edge states root-found to 1e-13 in t on two traces"
+    },
+    "eq9_fold_edge_centre_y": {
+      "kind": "value",
+      "value": 0.9923645066666582,
+      "rtol": 1e-06
+    },
+    "eq9_fold_ignited_margin": {
+      "kind": "value",
+      "value": 2.311154749225903,
+      "rtol": 1e-06
+    },
+    "fold_Phi_turning_max": {
+      "kind": "value",
+      "value": 0.36836632693217775,
+      "rtol": 1e-06
+    },
+    "eq21_ratio_Bim100": {
+      "kind": "value",
+      "value": 0.7307611777920865,
+      "rtol": 1e-05
+    },
+    "eq21_ratio_Bim03": {
+      "kind": "value",
+      "value": 0.044438645733459355,
+      "rtol": 1e-05
+    },
+    "joint_pass_worst_dev": {
+      "kind": "value",
+      "value": 0.11148602125589524,
+      "rtol": 1e-05
+    },
+    "joint_pass_worst_bim": {
+      "kind": "value",
+      "value": 6.333331385058136,
+      "rtol": 0.001
+    },
+    "joint_eq17_slack": {
+      "kind": "bound",
+      "value": 2.4014124022642136e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the worst state is a root-found edge of the passing set, Brent to 1e-13 in t"
+    },
+    "joint_eq1_slack": {
+      "kind": "bound",
+      "value": 3.0763925173982187e-07,
+      "max": 1e-05,
+      "basis": "tolerance",
+      "note": "the optimum in Bi_m is where eq. 1 starts to bind; minimize_scalar to 1e-6 in log10 Bi_m"
+    },
+    "joint_worst_scan_density_shift": {
+      "kind": "bound",
+      "value": 4.5513259827600905e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the edge is root-found, so the scan only brackets it"
+    },
+    "joint_worst_pymrm_vs_shooting": {
+      "kind": "bound",
+      "value": 8.807237827923586e-08,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "pymrm film-surface pellet on 800 cells; the film-surface ladder of the Validation section shows second order"
+    },
+    "eq30_dev_X02": {
+      "kind": "value",
+      "value": 0.039105898338720246,
+      "rtol": 0.0001
+    },
+    "eq30_dev_X0632": {
+      "kind": "value",
+      "value": 0.04751303398711659,
+      "rtol": 0.0001
+    },
+    "eq30_dev_X099": {
+      "kind": "value",
+      "value": 0.049458269134947885,
+      "rtol": 0.0001
+    },
+    "eq30_cases_below_5pc": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 0.010834617301042349,
+      "min_margin": 0.005
+    },
+    "axial_dev_covarying_X02": {
+      "kind": "value",
+      "value": 0.0380320499251241,
+      "rtol": 0.0001
+    },
+    "axial_dev_covarying_X0632": {
+      "kind": "value",
+      "value": 0.045545878671315876,
+      "rtol": 0.0001
+    },
+    "axial_dev_covarying_X099": {
+      "kind": "value",
+      "value": 0.047250052573230894,
+      "rtol": 0.0001
+    },
+    "eq32_dev_n2_X05": {
+      "kind": "value",
+      "value": 0.04803283876635489,
+      "rtol": 0.0001
+    },
+    "eq32_dev_n2_worst": {
+      "kind": "value",
+      "value": 0.04812043374582253,
+      "rtol": 0.0001
+    },
+    "eq28_petersen_dev_X0393": {
+      "kind": "value",
+      "value": 0.22908907907368814,
+      "rtol": 0.0001
+    },
+    "eq28_petersen_dev_X0632": {
+      "kind": "value",
+      "value": 0.37376902218487906,
+      "rtol": 0.0001
+    },
+    "eq28_petersen_dev_X09": {
+      "kind": "value",
+      "value": 0.5072580927138919,
+      "rtol": 0.0001
+    },
+    "pymrm_vs_shooting_iso_n800": {
+      "kind": "value",
+      "value": 8.2e-08,
+      "rtol": 0.05
+    },
+    "pymrm_vs_shooting_wh_n800": {
+      "kind": "value",
+      "value": 8.2e-08,
+      "rtol": 0.05
+    },
+    "pymrm_vs_shooting_robin_n800": {
+      "kind": "value",
+      "value": 3e-08,
+      "rtol": 0.05
+    },
+    "pymrm_vs_shooting_iso_order": {
+      "kind": "bound",
+      "value": 1.9976393039667257,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "smallest observed order over the eight states, 100 to 800 cells; second order expected"
+    },
+    "pymrm_vs_shooting_order_max": {
+      "kind": "bound",
+      "value": 2.0012443327353773,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "largest observed order over the eight states, 100 to 800 cells"
+    },
+    "pymrm_vs_shooting_finest_over_roundoff_min": {
+      "kind": "bound",
+      "value": 6318.253631823697,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "|eta(400) - eta(800)| over the round-off of eta on 800 cells, per state"
+    },
+    "reference_tol_shift_frac_of_err_n800": {
+      "kind": "bound",
+      "value": 2.8894277050295616e-05,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "reference states recomputed at DOP853 rtol 1e-13: the change in eta over the 800-cell error, worst of the eight states"
+    },
+    "pellet_exact_vs_numjac": {
+      "kind": "bound",
+      "value": 1.048061637476394e-11,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12, both Jacobians, eight states on 800 cells"
+    },
+    "pymrm_axial_vs_closed_form": {
+      "kind": "value",
+      "value": 7.107941812911633e-08,
+      "rtol": 0.05
+    },
+    "axial_order_min": {
+      "kind": "bound",
+      "value": 1.8128151765619642,
+      "min": 1.75,
+      "max": 2.05,
+      "basis": "chosen",
+      "note": "van Leer: second order where the limiter is inactive; the observed orders rise towards 2 with refinement, pre-asymptotic on this ladder"
+    },
+    "axial_order_max": {
+      "kind": "bound",
+      "value": 1.8936171434106301,
+      "min": 1.75,
+      "max": 2.05,
+      "basis": "chosen",
+      "note": "as axial_order_min"
+    },
+    "axial_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 26628.82854230377,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "|dev(800) - dev(1600)| over the spread of dev on 1600 cells under newton tol and solver route"
+    },
+    "axial_newton_vs_deferred": {
+      "kind": "bound",
+      "value": 3.691338346101247e-10,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "newton tol 1e-12 against sweeps to a change below 1e-13; three conversions on 200 to 1600 cells, and second order at two conversions on 800 cells"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "perturbation_slope_rel_err": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "iso_Phi5_n1": [
+      "pellet traced as a slab (nu = 0)",
+      "source exponent 2 where 1 is claimed"
+    ],
+    "eq1_dev_at_bound_n1": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_bound_n05": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_bound_n2": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_bound_n3": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_unrounded_075_n05": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_unrounded_075_n1": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_unrounded_075_n2": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq3_dev_at_unrounded_075_n3": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "weisz_06_dev_n1": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "weisz_03_dev_n2": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "headline_shooting_vs_closed": [
+      "shooting branch traced as a cylinder (nu = 1)"
+    ],
+    "headline_three_route_spread": [
+      "pymrm route only assembled as a slab (nu = 0)"
+    ],
+    "zero_order_profile_err": [
+      "source exponent 1 where 0 is claimed"
+    ],
+    "zero_order_eta_dev": [
+      "source exponent 1 where 0 is claimed"
+    ],
+    "neg_order_Phi5": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "neg_order_eta_at_bound": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "hudgins_LH_eta_at_bound": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "LH_Phi5": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "LH_eta_at_Phi1_vs_B14": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "LH_bound_over_Phi5": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "LH_eta_at_Phi1_gap_to_B14": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq17_dev_at_bound_n1": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "eq17_dev_at_bound_n05": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "eq17_dev_at_bound_n2": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "eq17_dev_at_bound_n3": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "eq16_carberry_dev": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "eq16_carberry_dev_surface": [
+      "film area a = 2/r_p instead of 3/r_p"
+    ],
+    "carberry_over_eq17": [
+      "film area a = 2/r_p in Carberry's deviation only"
+    ],
+    "carberry_surface_over_eq17": [
+      "film area a = 2/r_p in Carberry's deviation only"
+    ],
+    "eq14_dev_exo_gamma10": [
+      "sign of the heat of reaction flipped in the film balance"
+    ],
+    "eq14_dev_exo_gamma30": [
+      "sign of the heat of reaction flipped in the film balance"
+    ],
+    "eq14_dev_exo_gamma40": [
+      "sign of the heat of reaction flipped in the film balance"
+    ],
+    "eq14_dev_endo_gamma30": [
+      "sign of the heat of reaction flipped in the film balance"
+    ],
+    "film_mass_dimensional_xcheck": [
+      "closed form with a = 2/r_p"
+    ],
+    "film_heat_dimensional_xcheck": [
+      "closed form with a = 2/r_p"
+    ],
+    "film_steady_states": [
+      "film heat transfer coefficient ten times larger"
+    ],
+    "film_closed_form_collapse_rel": [
+      "closed form with a = 2/r_p"
+    ],
+    "film_states_passing_eq17": [
+      "film mass transfer coefficient ten times larger"
+    ],
+    "film_states_failing_eq14": [
+      "film heat transfer coefficient ten times larger"
+    ],
+    "eq9_dev_at_bound_gbm2": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gbm1": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gbm05": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gbm02": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gb02": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gb05": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gb08": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gb12": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_dev_at_bound_gb2": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq12_dev_endo_gb_m1": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq12_exo_conservative_cases": [
+      "eq. 12's exponent with the wrong sign"
+    ],
+    "eq9_unrounded_holds_endothermic": [
+      "printed constant 1 in place of the unrounded 0.75"
+    ],
+    "eq9_nopower_window_lo": [
+      "window edge read off the 10-point scan (no Brent refinement)"
+    ],
+    "eq9_nopower_window_hi": [
+      "window edge read off the 10-point scan (no Brent refinement)"
+    ],
+    "eq9_window_inside_dev_gb095": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "petersen13_dev_gamma20": [
+      "sign of beta flipped (gamma beta = -1)"
+    ],
+    "petersen13_dev_gamma30": [
+      "sign of beta flipped (gamma beta = -1)"
+    ],
+    "petersen13_dev_gamma40": [
+      "sign of beta flipped (gamma beta = -1)"
+    ],
+    "compensation_Phi5_gamma30": [
+      "sign of beta flipped (gamma beta = -1)"
+    ],
+    "compensation_centre_y": [
+      "sign of beta flipped (gamma beta = -1)"
+    ],
+    "eq9_crossings_gb12": [
+      "band of +-1 % instead of +-5 %"
+    ],
+    "eq9_crossings_gb15": [
+      "sign of beta flipped"
+    ],
+    "eq9_crossings_gb2": [
+      "sign of beta flipped"
+    ],
+    "eq9_Phi5_gb2_kinetic": [
+      "deep-side crossing selected where the kinetic-side one is meant"
+    ],
+    "eq9_Phi5_gb2_deep": [
+      "kinetic-side crossing selected where the deep-side one is meant"
+    ],
+    "eq9_three_crossing_onset": [
+      "eta peak read off a 40-state ladder (no Brent search)"
+    ],
+    "eq9_second_regime_onset": [
+      "onset read off the 3-point scan (no Brent refinement)"
+    ],
+    "eq9_outside_window_dev_gb2": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_outside_window_dev_gb25": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_outside_window_dev_gb3": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq6_worst_devT": [
+      "pellet traced as a cylinder (nu = 1)"
+    ],
+    "eq9_fold_worst_certified_dev": [
+      "band maximum read off the 400-state trace (edges not root-found)"
+    ],
+    "eq1_fold_worst_certified_dev": [
+      "band maximum read off the 400-state trace (edges not root-found)"
+    ],
+    "eq9_fold_worst_grid_shift": [
+      "band maxima read off the traces (edges not root-found)"
+    ],
+    "eq9_fold_edge_centre_y": [
+      "band maximum read off the 400-state trace (edges not root-found)"
+    ],
+    "eq9_fold_ignited_margin": [
+      "turning point read off the 400-state trace"
+    ],
+    "fold_Phi_turning_max": [
+      "turning point read off the 400-state trace"
+    ],
+    "eq21_ratio_Bim100": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "eq21_ratio_Bim03": [
+      "pellet traced as a slab (nu = 0)"
+    ],
+    "joint_pass_worst_dev": [
+      "worst read off a coarse Bi_m x t grid (edges not root-found)"
+    ],
+    "joint_pass_worst_bim": [
+      "worst read off a coarse Bi_m x t grid (edges not root-found)"
+    ],
+    "joint_eq17_slack": [
+      "passing state read off the scan (edges not root-found)"
+    ],
+    "joint_eq1_slack": [
+      "passing state read off the scan (edges not root-found)"
+    ],
+    "joint_worst_scan_density_shift": [
+      "passing states read off the scan (edges not root-found)"
+    ],
+    "joint_worst_pymrm_vs_shooting": [
+      "pymrm pellet with a Dirichlet surface instead of the film"
+    ],
+    "eq30_dev_X02": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq30_dev_X0632": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq30_dev_X099": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq30_cases_below_5pc": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "axial_dev_covarying_X02": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "axial_dev_covarying_X0632": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "axial_dev_covarying_X099": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq32_dev_n2_X05": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq32_dev_n2_worst": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq28_petersen_dev_X0393": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq28_petersen_dev_X0632": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "eq28_petersen_dev_X09": [
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "reference_tol_shift_frac_of_err_n800": [
+      "shooting reference at rtol 1e-8 instead of 1e-12"
+    ],
+    "pymrm_vs_shooting_iso_n800": [
+      "eta read by a two-point gradient from the last cell centre",
+      "pymrm pellet assembled as a slab (nu = 0)"
+    ],
+    "pymrm_vs_shooting_wh_n800": [
+      "eta read by a two-point gradient from the last cell centre",
+      "pymrm pellet assembled as a slab (nu = 0)"
+    ],
+    "pymrm_vs_shooting_robin_n800": [
+      "eta read by a two-point gradient from the last cell centre",
+      "pymrm pellet assembled as a slab (nu = 0)"
+    ],
+    "pymrm_vs_shooting_iso_order": [
+      "eta read by a two-point gradient from the last cell centre"
+    ],
+    "pymrm_vs_shooting_order_max": [
+      "eta read by a two-point gradient from the last cell centre"
+    ],
+    "pymrm_vs_shooting_finest_over_roundoff_min": [
+      "orders read at 3200 cells instead of 800 (finest grid two factors of 2 up)"
+    ],
+    "pellet_exact_vs_numjac": [
+      "NumJac route stopped after one newton iteration from y = 1 (maxfev=1)"
+    ],
+    "pymrm_axial_vs_closed_form": [
+      "first-order upwind convection (no TVD limiter)",
+      "outlet read at the last cell centre",
+      "Dirichlet inlet instead of Danckwerts"
+    ],
+    "axial_order_min": [
+      "first-order upwind convection (no TVD limiter)"
+    ],
+    "axial_order_max": [
+      "first-order upwind convection (no TVD limiter)"
+    ],
+    "axial_finest_over_roundoff": [
+      "orders read at 12800 cells instead of 1600 (finest grid three factors of 2 up)"
+    ],
+    "axial_newton_vs_deferred": [
+      "deferred-correction route only with a Dirichlet inlet"
+    ]
   }
 }
