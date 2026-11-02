@@ -1,4 +1,4 @@
-# Page metadata. Staged in queue_cases/, not yet in pages/.
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
 # models.yaml is canonical; this file must not contradict it.
 id: B3.2
 slug: grain-model
@@ -14,50 +14,52 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 37
+pymrm_min_version: "3.3.0"
+runtime_seconds: 95
 datasets: []
 
 fit_vs_test: >
   Fitted: nothing. No constant on this page is adjusted to make any comparison
-  work; the only least-squares operation is a diagnostic straight-line fit to
-  the page's OWN computed late-time asymptote, on the stated window
-  12 <= theta <= 20. Every check is a test.
+  work; the only averaging is a diagnostic mean of the page's OWN computed
+  late-time asymptote, on the stated window 12 <= theta <= 20. Every check is a
+  test.
 
 validation:
-  - the pymrm finite-volume march against the exact closed-form penetration law E = sqrt(6 X(theta)) derived on the page from the paper's Eqs. 21 + 27 (the two routes share no code); 3.4e-5 and 4.3e-5 max relative over 0.1 <= theta <= 20 at g = 0.5 and g = 5
-  - the simulated surface-grain history against B3.1's independently published Yagi-Kunii eq. 6 (no film, omega = g/6), converging onto it at observed order ~1.9, 4.3e-4 at n = 600; the underlying algebraic identity between the two printed functions is recorded separately and labelled STRUCTURAL (4.4e-13, below the CI floor)
+  - the pymrm finite-volume march (two interleaved fields via BlockLayout, exact Jacobian, newton per step) against the exact closed-form penetration law E = sqrt(6 X(theta)) derived on the page from the paper's Eqs. 21 + 27 (the two routes share no code); 3.4e-5 and 6.2e-5 max relative over every step with 0.1 <= theta <= 20 at g = 0.5 and g = 5
+  - the gas and grain profiles at the cell centres against the exact profiles at theta = 0.25, 1 and 2, 2.9e-5 and 1.7e-5 on 600 cells
+  - the same march with NumJac((n, 2)) for the pointwise terms reaches the same state (below 1e-10) at theta = 2, and the analytic Jacobian itself agrees with NumJac mid-march to below 1e-5, a measurement that a Jacobian missing a term fails
+  - the simulated surface-grain history against B3.1's Yagi-Kunii eq. 6 (no film, omega = g/6), converging onto it at observed order 1.94 on 300 and 600 cells, 4.3e-4 at n = 600; the algebraic identity between the two printed functions is checked separately (4.4e-13, the film term at gamma = 1e12)
   - the theta = 0 gas profile against the exact sinh solution (the grain-model twin of the paper's printed Eq. 18), 4.8e-5 at n = 600
-  - both axes refined with observed orders, grid 2.00 (vs the exact solution) and time step 2.02 (vs a same-grid small-step reference, so the temporal order is not hidden under the spatial floor); the time window crosses the surface burnout so the orders INCLUDE the complementarity clamp firing
-  - mass balance split into its two parts - the spatial telescoping identity labelled structural (4.6e-15, cannot fail), and the temporal closure gas-in vs solid-consumed, which converges at order 2.00 to 1.0e-6 and is the check that catches Eqs. 21 and 27 being transcribed with inconsistent resistance denominators
-  - a dimensional run in cgs on the printed Fig. 7 base case against ell * E_exact(t/tau), closing the ell/tau/g reduction algebra end to end, 2.3e-4 with its own observed-order sweep; this check FIRED during the build - a first draft truncated the domain at 6 ell and it returned 48%
-  - the late-time lag fitted from the page's own computed curves against the closed form Delta = 1/4 + g/30, 2.2e-4 and 1.2e-4 relative
-  - a break table with the four transient-route metrics recomputed under every one of six injected defects; the exact-route results (the 0.295 cm zone width, the departure windows, the lag fits) carry no break row and are instead confirmed by an independent implementation in verification - an observable-definition slip there (5/95 % thresholds on xi instead of x = 1-xi^3 moves 0.295 to 0.287 cm) is invisible to the table and is named as its blind spot (wrong nu, wrong sink area exponent, dropped shell shielding, Eq.21-vs-Eq.27 denominator mismatch, mis-scaled surface concentration, wrong far boundary condition), including the no-move cells stated as blindness findings rather than hidden
+  - both axes refined with observed orders, grid 2.00 (against the exact solution) and time step 2.00 (successive differences, no reference needed); the time window crosses the surface burnout so the orders include the complementarity clamp firing; each finest difference is at least 1e3 times n^2 eps
+  - mass balance split into its two parts - the spatial telescoping identity labelled structural (round-off), and the temporal closure gas-in vs solid-consumed, which closes to 1.0e-6 and catches Eqs. 21 and 27 transcribed with inconsistent resistance denominators (the break row moves it by orders of magnitude)
+  - a dimensional run in cgs on the printed Fig. 7 base case against ell * E_exact(t/tau), closing the ell/tau/g reduction algebra end to end, 2.3e-4 with its own step ladder; on a domain of 6 ell instead of 30 ell the check fails
+  - the late-time lag from the page's own computed curves against Delta = 1/4 + g/30, which the exact route satisfies exactly beyond theta*, 2.2e-4 and 1.2e-4 relative
+  - a break table of one injected defect per row (shell resistance, sink area exponent, Eq. 21 vs Eq. 27 denominators, surface concentration, surface read-off, geometry index, far boundary, time scheme, ladder rungs, domain length, conversion levels of the zone width, band width of the departure map, eq. 6 cubic coefficient); every claim except the structural spatial identity is failed by at least one row, and the far-boundary row fails none, which is the domain-truncation statement
 
 adds: >
   The exact closed form E.P. = ell * sqrt(6 X(theta)) for the semi-infinite
   grain model, derived from the paper's own equations via an exposure
-  transformation - Szekely and Evans solved this numerically in 1969, and for
-  their exact formulation the computer was avoidable. From it: the diffuse
-  reaction zone the paper could only plot becomes a number (a travelling zone
-  of constant width w(g)*ell, 0.295 cm for the printed Fig. 7 base case, from
-  printed constants alone with no C0 required); the lag Delta = 1/4 + g/30
-  separating the grain model from the specimen-scale shrinking core; and a 5%
-  departure map showing the window where neither textbook limit works growing
-  from a factor ~4 in time at g = 0.5 to more than four orders of magnitude at
-  the paper's base case g = 500. The pymrm march is validated against the exact
-  law at second order in both axes, and is what survives every generalisation
-  (gas holdup, non-first-order kinetics, evolving structure, finite pellet)
-  that kills the closed form.
+  transformation - for their exact formulation the numerical integration
+  Szekely and Evans ran was avoidable. From it: the diffuse reaction zone the
+  paper could only plot becomes a number (a travelling zone of exactly constant
+  width w(g)*ell, 0.295 cm for the printed Fig. 7 base case, from printed
+  constants alone with no C0 required); the lag Delta = 1/4 + g/30 separating
+  the grain model from the specimen-scale shrinking core, exact once the surface
+  grains are consumed; and a 5 % departure map showing the window where neither
+  textbook limit works growing with g over many orders of magnitude in time,
+  up to the paper's base case g = 500. The pymrm
+  march is validated against the exact law at second order in both axes, and is
+  what survives every generalisation (gas holdup, non-first-order kinetics,
+  evolving structure, finite pellet) that kills the closed form.
 
 agreement: >
   Not applicable in the experimental sense; tier 6 by necessity - the source
   contains no measurements and its results exist only as figures. The numbers
-  that matter: pymrm vs the exact law 3.4e-5 / 4.3e-5 (g = 0.5 / 5); surface
-  reduction onto B3.1's published eq. 6 at 4.3e-4, order ~1.9; observed orders
-  2.00 (grid) and 2.02 (time) including grain-exhaustion events; temporal mass
-  balance 1.0e-6 at order 2.00; dimensional closure on the printed Fig. 7
-  constants 2.3e-4; fitted late-time lag vs 1/4 + g/30 to 2.2e-4.
+  that matter: pymrm vs the exact law 3.4e-5 / 6.2e-5 (g = 0.5 / 5); profiles at
+  the cell centres 2.9e-5 (gas) and 1.7e-5 (grain); surface reduction onto
+  B3.1's eq. 6 at 4.3e-4, order 1.94; observed orders 2.00 (grid) and 2.00
+  (time) including grain-exhaustion events; temporal mass balance 1.0e-6; dimensional closure on the printed Fig. 7 constants 2.3e-4;
+  late-time lag vs 1/4 + g/30 to 2.2e-4.
 
 caveats: >
   No experimental comparison, by construction: the paper prints no
@@ -72,6 +74,6 @@ caveats: >
   to; what no check on the page can catch is a model mis-statement shared by
   both routes AND by B3.1's closed form, bounded by B3.1's own independent
   validation and the native-render transcription. The far boundary of the
-  truncated domain is demonstrated to be invisible to every interior check
-  once L is adequate - and the dimensional check fired on exactly that hazard
-  during the build (48% at L = 6 ell).
+  truncated domain is invisible to every interior check once L is adequate;
+  the domain length itself is tested by the dimensional check, which fails on
+  a domain of 6 ell.

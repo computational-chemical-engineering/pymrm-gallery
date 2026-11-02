@@ -1,14 +1,605 @@
 {
   "page": "C2.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "mad_conversion": 0.00171506048270981,
-    "max_dev_conversion": 0.005817026457248034,
-    "bias_conversion": 0.0012962066836339431,
-    "mad_x_ch4": 0.00221876941408929,
-    "mad_x_co2": 0.0012276002265361199,
-    "param_round_trip_worst_pct": 1.4431861787504043,
-    "param_round_trip_worst_ratio_to_precision": 2.320298736401065,
-    "param_round_trip_ratio_sum": 10.437739807906137,
-    "equilibrium_vs_table7_worst_pct": 1.926005361930283
+    "W_F_measured_max": {
+      "kind": "value",
+      "value": 0.4046,
+      "rtol": 0.05,
+      "unit": "g_cat h/mol_CH4",
+      "note": "the last measured space time; the computed bed ends at TAU_MAX"
+    },
+    "digitisation_error_conversion": {
+      "kind": "value",
+      "value": 0.0006,
+      "rtol": 0.05,
+      "note": "read from the data sidecar's estimated_error"
+    },
+    "param_round_trip_worst_pct": {
+      "kind": "value",
+      "value": 1.4431861787504043,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "param_round_trip_worst_ratio_to_precision": {
+      "kind": "value",
+      "value": 2.320298736401065,
+      "rtol": 0.05
+    },
+    "param_round_trip_ratio_sum": {
+      "kind": "value",
+      "value": 10.437739807906137,
+      "rtol": 0.05
+    },
+    "e_precision_share_pct": {
+      "kind": "value",
+      "value": 0.9280790693668571,
+      "rtol": 0.05,
+      "unit": "%",
+      "note": "half a unit of k1's printed E at 648 K, as a share of A"
+    },
+    "tref_slip_factor_K_CH4": {
+      "kind": "value",
+      "value": 0.2210291230411396,
+      "rtol": 0.05
+    },
+    "tref_slip_factor_K_H2O": {
+      "kind": "value",
+      "value": 33.03311078641281,
+      "rtol": 0.05
+    },
+    "equilibrium_vs_table7_worst_pct": {
+      "kind": "value",
+      "value": 1.926005361930283,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "atom_balance_worst": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "atoms of STOICH @ (x_CH4, x_CO2), every cell of the four reactors"
+    },
+    "min_partial_pressure_rel": {
+      "kind": "bound",
+      "value": 2.5280204122428423e-06,
+      "min": 0.0,
+      "basis": "theory",
+      "structural": true,
+      "note": "every rate vanishes as one of its reactants does, so no pressure crosses zero; the stoichiometry row below does not make one negative"
+    },
+    "disc_error_max_n1000": {
+      "kind": "value",
+      "value": 4.14042889268218e-05,
+      "rtol": 0.05,
+      "note": "max over the measured points of |finite volumes - Radau|, centre read"
+    },
+    "disc_error_share_of_mad_pct": {
+      "kind": "value",
+      "value": 2.4141591124181483,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "radau_reference_tolerance_gap": {
+      "kind": "bound",
+      "value": 1.057529064318885e-12,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "Radau at rtol 1e-10 against 1e-12, at the measured points"
+    },
+    "grid_order_observed": {
+      "kind": "bound",
+      "value": 0.99654882213871,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind, successive differences of all measured-point values, 1000 to 4000 cells"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 11666358.5396875,
+      "min": 10000.0,
+      "basis": "theory",
+      "note": "finest ladder change over n eps (the upwind operator's condition grows as n)"
+    },
+    "newton_backward_error_worst": {
+      "kind": "bound",
+      "value": 1.3390766422026877e-15,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "pymrm.checks.residual_check over the four reactors; newton backward_tol 1e-8"
+    },
+    "mad_conversion": {
+      "kind": "value",
+      "value": 0.0017150604827098196,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "max_dev_conversion": {
+      "kind": "value",
+      "value": 0.005817026457248062,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_conversion": {
+      "kind": "value",
+      "value": 0.0012962066836339691,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "mad_x_ch4": {
+      "kind": "value",
+      "value": 0.0022187694140893073,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "mad_x_co2": {
+      "kind": "value",
+      "value": 0.0012276002265361216,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "mad_rel_mean_pct": {
+      "kind": "value",
+      "value": 2.7300686947670587,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "bias_x_ch4_bin1": {
+      "kind": "value",
+      "value": 0.0011627747768293564,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_x_ch4_bin2": {
+      "kind": "value",
+      "value": 0.0017359679432750223,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_x_ch4_bin3": {
+      "kind": "value",
+      "value": 0.0032073577103868063,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_short_over_long": {
+      "kind": "value",
+      "value": 0.36253354998845017,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_long_773K": {
+      "kind": "value",
+      "value": 0.0027918484657259764,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_long_798K": {
+      "kind": "value",
+      "value": 0.0038697655096225914,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_long_823K": {
+      "kind": "value",
+      "value": 0.0035401676344057353,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "bias_long_848K": {
+      "kind": "value",
+      "value": 0.0022932332833729557,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "mad_activity_1p225": {
+      "kind": "value",
+      "value": 0.00628498053047186,
+      "rtol": 0.05,
+      "note": "exercised, not validated: these data are the reference-level runs"
+    },
+    "mad_activity_2p246": {
+      "kind": "value",
+      "value": 0.016945436857942076,
+      "rtol": 0.05,
+      "note": "exercised, not validated: these data are the reference-level runs"
+    },
+    "beta_I_long_min": {
+      "kind": "value",
+      "value": 0.5694029477259157,
+      "rtol": 0.05
+    },
+    "beta_I_long_max": {
+      "kind": "value",
+      "value": 0.9023342683378801,
+      "rtol": 0.05
+    },
+    "beta_III_long_min": {
+      "kind": "value",
+      "value": 0.4465424851121036,
+      "rtol": 0.05
+    },
+    "beta_III_long_max": {
+      "kind": "value",
+      "value": 0.8823566362427843,
+      "rtol": 0.05
+    },
+    "k_halfspan_long_773K": {
+      "kind": "value",
+      "value": 0.0005169534999961058,
+      "rtol": 0.05
+    },
+    "k_halfspan_long_798K": {
+      "kind": "value",
+      "value": 0.0013961537379813364,
+      "rtol": 0.05
+    },
+    "k_halfspan_long_823K": {
+      "kind": "value",
+      "value": 0.0025058583183709023,
+      "rtol": 0.05
+    },
+    "k_halfspan_long_848K": {
+      "kind": "value",
+      "value": 0.003539167570855692,
+      "rtol": 0.05
+    },
+    "k_halfspan_bias_ratio_773K": {
+      "kind": "value",
+      "value": 0.1851653147878426,
+      "rtol": 0.05,
+      "note": "half-span of a 5 % shift in every K_i over the observed bias, W/F >= LONG"
+    },
+    "k_halfspan_bias_ratio_798K": {
+      "kind": "value",
+      "value": 0.3607851004174927,
+      "rtol": 0.05,
+      "note": "half-span of a 5 % shift in every K_i over the observed bias, W/F >= LONG"
+    },
+    "k_halfspan_bias_ratio_823K": {
+      "kind": "value",
+      "value": 0.7078360623427213,
+      "rtol": 0.05,
+      "note": "half-span of a 5 % shift in every K_i over the observed bias, W/F >= LONG"
+    },
+    "k_halfspan_bias_ratio_848K": {
+      "kind": "value",
+      "value": 1.5433090024099856,
+      "rtol": 0.05,
+      "note": "half-span of a 5 % shift in every K_i over the observed bias, W/F >= LONG"
+    },
+    "k_halfspan_ratio_hot_min": {
+      "kind": "bound",
+      "value": 0.7078360623427213,
+      "min": 0.5,
+      "basis": "chosen",
+      "note": "'the same size' at 823 and 848 K: ratio within a factor of two of 1"
+    },
+    "k_halfspan_ratio_hot_max": {
+      "kind": "bound",
+      "value": 1.5433090024099856,
+      "max": 2.0,
+      "basis": "chosen",
+      "note": "'the same size' at 823 and 848 K: ratio within a factor of two of 1"
+    },
+    "k_halfspan_ratio_cold_max": {
+      "kind": "bound",
+      "value": 0.3607851004174927,
+      "max": 0.5,
+      "basis": "chosen",
+      "note": "at 773 and 798 K the shift is under half the bias, so the argument fails"
+    },
+    "tau90_crossings_in_bed": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.00876467946036562,
+      "min_margin": 0.005,
+      "note": "(T, reaction) pairs with beta > 0.90 at the outlet"
+    },
+    "beta_gap_outlet_min": {
+      "kind": "value",
+      "value": 0.02537677392933213,
+      "rtol": 0.05
+    },
+    "beta_gap_outlet_max": {
+      "kind": "value",
+      "value": 0.17713021956787867,
+      "rtol": 0.05
+    },
+    "tau90_ratio_II_I_823K": {
+      "kind": "value",
+      "value": 0.558701937831002,
+      "rtol": 0.001
+    },
+    "tau90_ratio_II_I_848K": {
+      "kind": "value",
+      "value": 0.5503780265239019,
+      "rtol": 0.001
+    },
+    "tau90_II_798K": {
+      "kind": "value",
+      "value": 0.3431002362253449,
+      "rtol": 0.001
+    },
+    "tau90_I_823K": {
+      "kind": "value",
+      "value": 0.42962925066058827,
+      "rtol": 0.001
+    },
+    "tau90_II_823K": {
+      "kind": "value",
+      "value": 0.24003469489295193,
+      "rtol": 0.001
+    },
+    "tau90_I_848K": {
+      "kind": "value",
+      "value": 0.32559421892936286,
+      "rtol": 0.001
+    },
+    "tau90_II_848K": {
+      "kind": "value",
+      "value": 0.179199903661934,
+      "rtol": 0.001
+    },
+    "tau90_III_848K": {
+      "kind": "value",
+      "value": 0.34646999397672273,
+      "rtol": 0.001
+    },
+    "beta90_fv_vs_radau_max": {
+      "kind": "bound",
+      "value": 0.0004914553067323357,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "max over the in-bed crossings of |finite volumes - Radau|, first-order grid error"
+    }
+  },
+  "quoted": {
+    "e_precision_share_pct": [
+      "0.93"
+    ]
+  },
+  "breaks": {
+    "W_F_measured_max": [
+      "the bed outlet TAU_MAX read as the last measurement"
+    ],
+    "digitisation_error_conversion": [
+      "regular expression matching the W/F error instead of the conversion error"
+    ],
+    "param_round_trip_worst_pct": [
+      "k3 A 1.020e15 -> 1.002e15 (rows_with('k3', 'A', '1.002e15'))",
+      "K_H2O A 1.77e5 -> 1.71e5 (rows_with('K_H2O', 'A', '1.71e5'))",
+      "K_CH4 val 0.1791 -> 0.1719 (rows_with('K_CH4', 'val', '0.1719'))",
+      "k1 E 240.1 -> 241.1 (rows_with('k1', 'E', '241.1'))",
+      "k1 A 4.225e15 -> 4.225e14 (rows_with('k1', 'A', '4.225e14'))",
+      "K_CH4 T_ref 823.0 -> 648.0 (rows_with('K_CH4', 'T_ref', 648.0))"
+    ],
+    "param_round_trip_worst_ratio_to_precision": [
+      "K_CO A 8.23e-5 -> 8.32e-5 (rows_with('K_CO', 'A', '8.32e-5'))",
+      "K_H2O A 1.77e5 -> 1.71e5 (rows_with('K_H2O', 'A', '1.71e5'))",
+      "k2 A 1.955e6 -> 1.965e6 (rows_with('k2', 'A', '1.965e6'))",
+      "K_CH4 val 0.1791 -> 0.1719 (rows_with('K_CH4', 'val', '0.1719'))",
+      "k1 E 240.1 -> 241.1 (rows_with('k1', 'E', '241.1'))",
+      "k1 A 4.225e15 -> 4.225e14 (rows_with('k1', 'A', '4.225e14'))",
+      "K_CH4 T_ref 823.0 -> 648.0 (rows_with('K_CH4', 'T_ref', 648.0))"
+    ],
+    "param_round_trip_ratio_sum": [
+      "K_CO A 8.23e-5 -> 8.32e-5 (rows_with('K_CO', 'A', '8.32e-5'))",
+      "k3 A 1.020e15 -> 1.002e15 (rows_with('k3', 'A', '1.002e15'))",
+      "K_H2O A 1.77e5 -> 1.71e5 (rows_with('K_H2O', 'A', '1.71e5'))",
+      "k2 A 1.955e6 -> 1.965e6 (rows_with('k2', 'A', '1.965e6'))",
+      "k1 E 240.1 -> 240.2 (rows_with('k1', 'E', '240.2'))",
+      "K_CH4 val 0.1791 -> 0.1719 (rows_with('K_CH4', 'val', '0.1719'))",
+      "k1 E 240.1 -> 241.1 (rows_with('k1', 'E', '241.1'))",
+      "k1 A 4.225e15 -> 4.225e14 (rows_with('k1', 'A', '4.225e14'))",
+      "K_CH4 T_ref 823.0 -> 648.0 (rows_with('K_CH4', 'T_ref', 648.0))"
+    ],
+    "e_precision_share_pct": [
+      "k1 E printed as 240.10 (one more digit)"
+    ],
+    "tref_slip_factor_K_CH4": [
+      "K_CH4 E -38.28 -> -38.82 (rows_with('K_CH4', 'E', '-38.82'))"
+    ],
+    "tref_slip_factor_K_H2O": [
+      "K_H2O E 88.68 -> 89.68 (rows_with('K_H2O', 'E', '89.68'))"
+    ],
+    "equilibrium_vs_table7_worst_pct": [
+      "K1 slope a1 26830 -> 26380 (transposition) (XuFroment(eq=...))",
+      "K2 slope a2 4400 -> 4040 (transposition) (XuFroment(eq=...))"
+    ],
+    "atom_balance_worst": [
+      "H2 formed as 3 x_CH4, no x_CO2 term (stoich row H2 = (3, 0))"
+    ],
+    "min_partial_pressure_rel": [],
+    "disc_error_max_n1000": [
+      "face read instead of centre read (at(..., read='face'))",
+      "a quarter of the cells (n_tau = 250)"
+    ],
+    "disc_error_share_of_mad_pct": [
+      "face read instead of centre read (at(..., read='face'))",
+      "a quarter of the cells (n_tau = 250)"
+    ],
+    "radau_reference_tolerance_gap": [
+      "Radau reference at rtol 1e-5 (reference_profile(..., rtol=1e-5))"
+    ],
+    "grid_order_observed": [
+      "nearest cell value instead of interpolation (at(..., read='nearest'))"
+    ],
+    "grid_finest_over_roundoff": [
+      "ladder whose last rung is 4001 cells after 4000"
+    ],
+    "newton_backward_error_worst": [
+      "Newton stopped after one iteration (solve(maxfev=1, strict=False))"
+    ],
+    "mad_conversion": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "max_dev_conversion": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_conversion": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))",
+      "k1 A 4.225e+15 -> 4.255e+15 (kin.edited('k1', A=4.255e15))",
+      "k3 A 1.02e+15 -> 1.002e+15 (kin.edited('k3', A=1.002e15))"
+    ],
+    "mad_x_ch4": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "mad_x_co2": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "mad_rel_mean_pct": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_x_ch4_bin1": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))",
+      "k1 A 4.225e+15 -> 4.255e+15 (kin.edited('k1', A=4.255e15))",
+      "k3 A 1.02e+15 -> 1.002e+15 (kin.edited('k3', A=1.002e15))"
+    ],
+    "bias_x_ch4_bin2": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))",
+      "k1 A 4.225e+15 -> 4.255e+15 (kin.edited('k1', A=4.255e15))",
+      "k3 A 1.02e+15 -> 1.002e+15 (kin.edited('k3', A=1.002e15))"
+    ],
+    "bias_x_ch4_bin3": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_short_over_long": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))",
+      "k1 A 4.225e+15 -> 4.255e+15 (kin.edited('k1', A=4.255e15))",
+      "k3 A 1.02e+15 -> 1.002e+15 (kin.edited('k3', A=1.002e15))"
+    ],
+    "bias_long_773K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_long_798K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_long_823K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "bias_long_848K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))",
+      "k1 A 4.225e+15 -> 4.255e+15 (kin.edited('k1', A=4.255e15))"
+    ],
+    "mad_activity_1p225": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "mad_activity_2p246": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "beta_I_long_min": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "beta_I_long_max": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "beta_III_long_min": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "beta_III_long_max": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_long_773K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_long_798K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_long_823K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_long_848K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_bias_ratio_773K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_bias_ratio_798K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_bias_ratio_823K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_bias_ratio_848K": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_ratio_hot_min": [
+      "K1 intercept b1 30.114 -> 31.114 (XuFroment(eq=...))",
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "k_halfspan_ratio_hot_max": [
+      "a 25 % shift in every K_i instead of 5 % (k_halfspan(k, shift=0.25))"
+    ],
+    "k_halfspan_ratio_cold_max": [
+      "a 25 % shift in every K_i instead of 5 % (k_halfspan(k, shift=0.25))"
+    ],
+    "beta90_fv_vs_radau_max": [
+      "a tenth of the cells (n_tau = 100), crossings root-found on the finite-volume profile"
+    ],
+    "beta_gap_outlet_min": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "beta_gap_outlet_max": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_crossings_in_bed": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_ratio_II_I_823K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_ratio_II_I_848K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_II_798K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_I_823K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_II_823K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_I_848K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_II_848K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ],
+    "tau90_III_848K": [
+      "K2 intercept b2 -4.036 -> -3.036 (XuFroment(eq=...))"
+    ]
   }
 }

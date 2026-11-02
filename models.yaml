@@ -3326,13 +3326,14 @@ models:
     title: "Szekely–Evans grain model for gas–solid reactions with a moving boundary"
     description: >
       The porous solid as a packing of shrinking-core grains fed by intergrain
-      diffusion — the model that took the structure out of the shrinking core's
+      diffusion: the model that took the structure out of the shrinking core's
       empirical rate constant. The page rebuilds Part I's semi-infinite grain
-      model with pymrm (coupled gas BVP + grain complementarity ODEs, newton +
-      NumJac), derives the exact closed-form penetration law the quasi-steady
+      model with pymrm (coupled gas BVP + grain complementarity ODEs on one grid
+      via BlockLayout, newton with the exact Jacobian), derives the exact
+      closed-form penetration law the quasi-steady
       equations imply, shows the model collapsing onto the published B3.1
       shrinking core at the exposed face, and quantifies the diffuse reaction
-      zone the paper could only plot — 0.295 cm wide for the paper's own printed
+      zone the paper could only plot, 0.295 cm wide for the paper's own printed
       base case, from printed constants alone.
     section: B
     status: published
@@ -3349,6 +3350,9 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - BlockLayout
+      - construct_coefficient_matrix
+      - compute_boundary_values
       - NumJac
       - newton
     reference:
@@ -3361,8 +3365,8 @@ models:
       method: none
       status: final
       note: >
-        Fitted: nothing (the page's only fit is a labelled diagnostic line on its
-        own computed asymptote). The paper prints parameter sets, ranges and
+        Fitted: nothing (the page's only averaging is a labelled diagnostic mean
+        of its own computed asymptote). The paper prints parameter sets, ranges and
         closed forms but no measurements; every E.P.-time result exists only as
         figures, none digitised. C0 is not printed, so the figures' absolute time
         axes are unreconstructable; validation is the exact closed form derived
@@ -3396,57 +3400,51 @@ models:
   # ---------------------------------------------------------------- section C
   - id: B3.3
     slug: random-pore-model
-    title: "The random pore model, 1980: eight figures, no table — and what the printed numbers still decide"
+    title: "The random pore model, 1980: eight figures, no table, and what the printed numbers still decide"
     description: >
       Bhatia and Perlmutter stop describing the solid and describe its PORES: a set
       of cylindrical surfaces of arbitrary size distribution that grow at the
       chemical rate and overlap each other as they grow, with Avrami's
       dV = (1-V)dV_E doing the book-keeping. Growth adds surface, overlap destroys
-      it, and one group decides which wins - psi = 4 pi L_o (1-eps_o)/S_o^2. A
+      it, and one group decides which wins, psi = 4 pi L_o (1-eps_o)/S_o^2. A
       reaction-rate maximum exists if and only if psi >= 2, which is the first
       model in the family that can represent both the gasification data that show
       one and the data that do not.
 
-      THE PAPER CONTAINS NO TABLE - eight figures, a NOTATION list and a reference
-      list - and its only comparison with experiment is Figure 8. That figure is
-      NOT digitised here and the page states repeatedly that it therefore does not
-      establish empirical adequacy. What it does instead is hold the paper to what
-      it prints, which turns out to be a great deal. Fifteen symbolic identities
-      close the derivation chain from eqs. (17)-(30) to (31)-(34) and (37),
-      including the observation that eq. (37)'s radical is a perfect square (so
-      S/S_o IS dX/dtau) and that Petersen's surface maximum sits at eps = 1/2 for
-      every structure (which is all eq. 34 says). The printed structural claims
-      become numbers: the best-fit grain shape factor from the paper's own
-      squared-deviation integral is 1.0000000 at psi = 0 and 0.4905224 at psi = 2
-      against the printed 0.49 <= m <= 1, and 0.6638850 at psi = 1 against the
-      printed "very close to two-thirds". And both special-case reductions the
-      abstract claims are checked against already-published pages: Bhatia's
-      eq. (40) IS B3.1's Yagi-Kunii shrinking core in its reaction-control limit
-      to 1.1e-16, and the approach to Petersen (1957) is measured at 2.2
-      conversion points up to X = 0.75, the printed "about 75 %" landing at
-      X = 0.7423 under the convention p. 384 prints for curve B and the page
-      quotes ("If eps_o = 0.3 and L_o = 3.14 x 10^6 are chosen, the results are
-      the same as the prior curve B"), with the over-determined triple's other two
-      pairings printed beside it (0.7599 and 0.7687 against the sourced 0.7423, so
-      the dependence is second-digit) - with the structural reason for
-      the eventual divergence
-      computed: the two models use different overlap laws, 1-exp(-V_E) against
-      3u^2-2u^3, which differ at order V_E^(3/2) and can never coincide.
+      THE PAPER CONTAINS NO TABLE (eight figures, a NOTATION list and a reference
+      list), and its only comparison with experiment is Figure 8. That figure is
+      NOT digitised here and the page states that it therefore does not establish
+      empirical adequacy. What it does instead is hold the paper to what it
+      prints. Fifteen symbolic identities close the derivation chain from
+      eqs. (17)-(30) to (31)-(37), including that eq. (37)'s radical is a perfect
+      square (so S/S_o IS dX/dtau) and that Petersen's surface maximum sits at
+      eps = 1/2 for every structure (which is all eq. 34 says). The printed
+      structural claims become numbers: the best-fit grain shape factor from the
+      paper's own squared-deviation integral is 1.0000000 at psi = 0 and 0.4905224
+      at psi = 2 against the printed 0.49 <= m <= 1, and 0.6638850 at psi = 1
+      against the printed "very close to two-thirds"; the printed X_M < 0.393 is a
+      truncation of 1 - exp(-1/2) = 0.39347. Both special-case reductions the
+      abstract claims are checked: Bhatia's eq. (40) is B3.1's Yagi-Kunii
+      shrinking core at omega = 0 to round-off, and the approach to Petersen (1957)
+      is measured at 2.2 conversion points up to X = 0.75, the printed "about 75 %"
+      landing at X = 0.7423 under the convention p. 384 prints for curve B, with
+      the over-determined triple's other two pairings at 0.7599 and 0.7687. The
+      two models use different overlap laws, 1-exp(-V_E) against 3u^2-2u^3, which
+      differ at order V_E^(3/2) and can never coincide.
 
       Three printed defects, none repaired: "This match at m = 1" [sic] where the
-      paper's own Figure 6, its own preceding sentence and this page's least
-      squares all give m = 0.664 at psi = 1 (m = 1 misfits 5.34x worse, and IS the
-      optimum - at psi = 0); the optimal-porosity worked example whose printed
-      answer 0.1 is not a root of the paper's own eq. (35), the root being 0.08529
-      (a defect of precision only - it costs 0.0028 % of the surface); and Park &
-      Levenspiel dated 1976 in the text against 1975 in the reference list. And one
-      thing the paper's own numbers say that it does not: Figure 7's curve C is
-      called "no longer consistent" with Petersen's model when it is INFEASIBLE -
-      no Petersen structure of length 3.14e6 cm/cm3 can have a surface above
-      2720 cm2/cm3 and curve C asks for 12 500, a factor 4.60 beyond it, which is
-      why a parameter had to be freed; the same arithmetic reconstructs the curve-D
-      length the paper says it computed internally and never prints, 7.747e7
-      cm/cm3.
+      paper's own Figure 6, its preceding sentence and this page's least squares
+      give m = 0.664 at psi = 1 (m = 1 misfits 5.34 times worse); the
+      optimal-porosity worked example whose printed answer 0.1 is not a root of
+      the paper's own eq. (35), the root being 0.08529 (a defect of precision
+      only); and Park & Levenspiel dated 1976 in the text against 1975 in the
+      reference list. And one thing the paper's own numbers say that it does not:
+      Figure 7's curve C is INFEASIBLE for Petersen's eq. (3), asking for 4.60
+      times the largest surface any structure of its length can have, which is
+      why a parameter had to be freed; the curve-D length the paper never prints
+      is reconstructed, 7.747e7 cm/cm3. Every root and extremum on the page is
+      located by a scan and refined (pymrm.checks.find_roots), and the scalar
+      inversions are pymrm newton blocks with NumJac((K, 1)).
     section: B
     status: published
     page: pages/B3.3-random-pore-model/
@@ -3460,9 +3458,7 @@ models:
       - the grain shape factor / order of reaction equivalent to a given pore structure, and how badly that equivalence misfits
       - the initial porosity that maximises the surface at a specified final porosity, eq. (35), and when no such porosity exists, ineq. (36)
       - time to a given conversion against particle size, and where the external surface stops mattering
-    pymrm_api:
-      - newton
-      - NumJac
+    pymrm_api: [newton, NumJac, find_roots, observed_orders]
     reference:
       authors: ["Bhatia, S. K.", "Perlmutter, D. D."]
       year: 1980
@@ -3822,7 +3818,7 @@ models:
       container: "AIChE Journal 35(1) 88–96"
       doi: 10.1002/aic.690350109
     predicts: [reaction rate, conversion, selectivity, approach to equilibrium]
-    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, observed_orders, residual_check]
     data: {tier: 4, method: digitised, status: complete}
     note: >
       Two datasets. The kinetic parameters are tier 2 (Tables 5 and 6) but had

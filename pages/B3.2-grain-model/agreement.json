@@ -1,20 +1,276 @@
 {
   "page": "B3.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "ep_vs_exact_g05_relmax": 3.384687988297895e-05,
-    "ep_vs_exact_g5_relmax": 4.303108400143363e-05,
-    "surface_b31_relmax_n600": 0.00043240851799565875,
-    "init_profile_relmax_n600": 4.7862945818710756e-05,
-    "grid_order_observed": 1.9983677572354828,
-    "dt_order_observed": 2.0174614816909653,
-    "mass_balance_rel_dt5e3": 1.0255286171990598e-06,
-    "dimensional_closure_relmax": 0.00023011648990398155,
-    "lag_fit_rel_g05": 0.00021550722654500865,
-    "lag_fit_rel_g5": 0.00012041633690866861,
-    "zone_width_ell_g500": 32.82464238453879,
-    "zone_width_cm_fig7base": 0.29507159174748215,
-    "theta_early5_g05": 0.12683019623163724,
-    "theta_late5_g05": 0.4926866090245805,
-    "b31_identity_structural": 4.3826053897078054e-13
+    "numjac_route_gap": {
+      "kind": "bound",
+      "value": 5.717648576819556e-15,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "agreement of the converged states of the two routes at theta = 2 (any converging Jacobian reaches the same state; see the Jacobian gap below); newton tol 1e-12, 200 steps"
+    },
+    "jacobian_gap_vs_numjac": {
+      "kind": "bound",
+      "value": 8.956148971270932e-07,
+      "max": 1e-05,
+      "basis": "tolerance",
+      "note": "max |J_exact - J_numjac| / max |J_exact| of the pointwise block at theta = 1.05, 300 cells; set by NumJac's finite-difference step"
+    },
+    "ep_vs_exact_g05_relmax": {
+      "kind": "value",
+      "value": 3.3896838985072695e-05,
+      "rtol": 0.05
+    },
+    "ep_vs_exact_g5_relmax": {
+      "kind": "value",
+      "value": 6.172898100502837e-05,
+      "rtol": 0.05
+    },
+    "profile_psi_dev_n600": {
+      "kind": "value",
+      "value": 2.9228221140542576e-05,
+      "rtol": 0.05
+    },
+    "profile_xi_dev_n600": {
+      "kind": "value",
+      "value": 1.7005440936412874e-05,
+      "rtol": 0.05
+    },
+    "zone_width_ell_g500": {
+      "kind": "value",
+      "value": 32.82464241942644,
+      "rtol": 1e-06
+    },
+    "zone_width_cm_fig7base": {
+      "kind": "value",
+      "value": 0.2950715920610988,
+      "rtol": 1e-06
+    },
+    "theta_early5_g05": {
+      "kind": "value",
+      "value": 0.12683019623164576,
+      "rtol": 1e-06
+    },
+    "theta_late5_g05": {
+      "kind": "value",
+      "value": 0.49268660902456685,
+      "rtol": 1e-06
+    },
+    "window_ratio_g0125": {
+      "kind": "value",
+      "value": 3.203771173780106,
+      "rtol": 1e-06
+    },
+    "window_ratio_g05": {
+      "kind": "value",
+      "value": 3.8846159957421498,
+      "rtol": 1e-06
+    },
+    "window_ratio_g500": {
+      "kind": "value",
+      "value": 52662.623242533205,
+      "rtol": 1e-06
+    },
+    "b31_identity_structural": {
+      "kind": "bound",
+      "value": 4.3826053897078054e-13,
+      "max": 1e-11,
+      "basis": "theory",
+      "note": "eq. 6 at gamma = 1e12 differs from its no-film limit in proportion to 1/gamma"
+    },
+    "surface_b31_relmax_n600": {
+      "kind": "value",
+      "value": 0.0004324085180051896,
+      "rtol": 0.05
+    },
+    "surface_b31_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 5409430.112666667,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest error of the surface ladder over n^2 eps at 600 cells"
+    },
+    "surface_b31_order_n600": {
+      "kind": "bound",
+      "value": 1.9420452777766757,
+      "min": 1.85,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "second-order scheme and extrapolation, approached from below; 300 and 600 cells"
+    },
+    "init_profile_relmax_n600": {
+      "kind": "value",
+      "value": 4.7862945818710756e-05,
+      "rtol": 0.05
+    },
+    "grid_order_observed": {
+      "kind": "bound",
+      "value": 1.99836775719594,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "error against the exact E at theta = 2, 300 and 600 cells"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 376540.161888815,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative difference of the ladder over n^2 eps at 600 cells"
+    },
+    "dt_order_observed": {
+      "kind": "bound",
+      "value": 1.997918591256312,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "trapezoidal rule, successive differences of E(theta = 2) at 100, 200, 400 steps"
+    },
+    "dt_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 29425.53072951772,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative difference of the ladder over n^2 eps at 300 cells"
+    },
+    "spatial_balance_gap": {
+      "kind": "bound",
+      "value": 4.551914400963142e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "(influx - outflux) - sum(sink dx) at theta = 0; round-off only"
+    },
+    "mass_balance_rel_dt5e3": {
+      "kind": "value",
+      "value": 1.0255286182318151e-06,
+      "rtol": 0.05
+    },
+    "dimensional_closure_relmax": {
+      "kind": "value",
+      "value": 0.0002301164916655849,
+      "rtol": 0.05
+    },
+    "dimensional_order_observed": {
+      "kind": "bound",
+      "value": 1.9986221925034684,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "successive differences of E.P. at the common step time t = 0.2 tau, dt = 0.004, 0.002, 0.001 tau"
+    },
+    "dimensional_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 891625.3649225754,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative difference of the ladder at t = 0.2 tau over n^2 eps at 600 cells"
+    },
+    "lag_fit_rel_g05": {
+      "kind": "value",
+      "value": 0.00021545010148719962,
+      "rtol": 0.05
+    },
+    "lag_fit_rel_g5": {
+      "kind": "value",
+      "value": 0.00012039401707588651,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "numjac_route_gap": [
+      "NumJac route with the sink area xi^3 (GrainModel(..., area_exponent=3))"
+    ],
+    "jacobian_gap_vs_numjac": [
+      "d(sink)/d(xi) dropped from the analytic Jacobian (GrainModel(..., jac_defect='drop_dsink_dxi'))"
+    ],
+    "ep_vs_exact_g05_relmax": [
+      "shell resistance g xi for g xi (1 - xi) (shield_sink=False, shield_rate=False)"
+    ],
+    "ep_vs_exact_g5_relmax": [
+      "sink area xi^3 instead of xi^2 (area_exponent=3)"
+    ],
+    "profile_psi_dev_n600": [
+      "shell resistance g xi for g xi (1 - xi) (shield_sink=False, shield_rate=False)"
+    ],
+    "profile_xi_dev_n600": [
+      "shell resistance g xi for g xi (1 - xi) (shield_sink=False, shield_rate=False)"
+    ],
+    "zone_width_ell_g500": [
+      "5 % and 95 % levels read on 1 - xi instead of 1 - xi^3 (zone_width(..., xi_exponent=1))"
+    ],
+    "zone_width_cm_fig7base": [
+      "5 % and 95 % levels read on 1 - xi instead of 1 - xi^3 (zone_width(..., xi_exponent=1))"
+    ],
+    "theta_early5_g05": [
+      "10 % bands instead of 5 % (departure_thetas(..., frac=0.9))"
+    ],
+    "theta_late5_g05": [
+      "10 % bands instead of 5 % (departure_thetas(..., frac=0.9))"
+    ],
+    "window_ratio_g0125": [
+      "10 % bands instead of 5 % (departure_thetas(..., frac=0.9))"
+    ],
+    "window_ratio_g05": [
+      "10 % bands instead of 5 % (departure_thetas(..., frac=0.9))"
+    ],
+    "window_ratio_g500": [
+      "10 % bands instead of 5 % (departure_thetas(..., frac=0.9))"
+    ],
+    "b31_identity_structural": [
+      "eq. 6 cubic coefficient read as omega (1 - gamma) (yagi_kunii_eq6(..., cubic='misread'))"
+    ],
+    "surface_b31_relmax_n600": [
+      "surface xi read as the first cell's value (xi_surface(read='cell'))",
+      "surface concentration 10 % low (GrainModel(..., c_surf=0.9))"
+    ],
+    "surface_b31_order_n600": [
+      "surface xi read as the first cell's value (xi_surface(read='cell'))"
+    ],
+    "surface_b31_finest_over_roundoff": [
+      "surface history compared with itself instead of eq. 6 (zero error)"
+    ],
+    "init_profile_relmax_n600": [
+      "spherical divergence for the slab (GrainModel(..., nu=2))",
+      "surface concentration 10 % low (GrainModel(..., c_surf=0.9))"
+    ],
+    "grid_order_observed": [
+      "exact E taken one step late (E_exact(2 + 2e-3))"
+    ],
+    "grid_finest_over_roundoff": [
+      "grid ladder whose last rung is 601 cells after 600"
+    ],
+    "dt_order_observed": [
+      "backward Euler for the grain equation (theta_scheme=1)"
+    ],
+    "dt_finest_over_roundoff": [
+      "step ladder whose last rung is 401 steps after 400"
+    ],
+    "mass_balance_rel_dt5e3": [
+      "Eq. 21 without the (1 - xi) that Eq. 27 keeps (shield_rate=False)"
+    ],
+    "dimensional_closure_relmax": [
+      "domain truncated at 6 ell instead of 30 ell (L = 6 ell)"
+    ],
+    "dimensional_order_observed": [
+      "backward Euler for the grain equation in the dimensional run (theta_scheme=1)"
+    ],
+    "dimensional_finest_over_roundoff": [
+      "finest rung differenced with itself (zero difference)"
+    ],
+    "lag_fit_rel_g05": [
+      "shell resistance g xi for g xi (1 - xi) (shield_sink=False, shield_rate=False)"
+    ],
+    "lag_fit_rel_g5": [
+      "sink area xi^3 instead of xi^2 (area_exponent=3)"
+    ]
   }
 }

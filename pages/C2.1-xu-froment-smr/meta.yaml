@@ -14,34 +14,64 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
+pymrm_min_version: "3.3.0"
 runtime_seconds: 10
 datasets:
   - xu-froment-1989-parameters.csv
   - xu-froment-1989-conversion.csv
 
 validation:
-  # PRIMARY - external references, and the checks the injection table shows have power
-  - mean/max deviation against 61 digitised measurements at four temperatures (0.0017 MAD); the only check that sees the equilibrium correlation's intercepts, each of which multiplies it by about nine
-  - Table 5 to Table 6 parameter round trip, each row scored against its OWN printed precision. The published headline used to be the worst per-row percentage (1.4432 %) and that number is BLIND to a single-digit transposition - its baseline scatter is set by the 0.1 kJ/mol precision of E, worth 0.93 % on A by itself. The sum of the seven precision ratios (10.438) moves for every injected slip except a 0.024 % change in a four-figure number, which is undetectable in principle
-  - van 't Hoff slopes of the equilibrium correlation against the paper's own Table 7 reaction enthalpies, worst 1.93 %; SLOPES ONLY, so both intercepts are invisible to it by construction
-  - grid independence of the plug-flow integration, first order, Richardson-extrapolated
-  # STRUCTURAL - true by construction
-  - carbon, hydrogen and oxygen atom balance along the reactor: the conversions are defined so these balance identically, so this checks the mole bookkeeping and nothing else
-  # DEFECT INJECTION - section 6 of the notebook
-  - a defect-injection table covering every published metric: 10 transcription slips against the round trip, 4 against the equilibrium correlation, and 6 re-solved against the data, each printed beside the undamaged value and each miss labelled
+  - >-
+    Mean and worst deviation against the 61 digitised measurements at four
+    temperatures (MAD 0.0017, worst 0.0058). It is the only check that sees the
+    equilibrium correlation's intercepts: a +1 slip in either fails every
+    deviation claim (MAD 0.016 and 0.015).
+  - >-
+    Table 5 to Table 6 parameter round trip, each row scored against its own
+    printed precision (read from the CSV as text). The worst per-row deviation
+    (1.4432 %) is blind to single-digit slips below its baseline scatter, set by
+    the 0.1 kJ/mol precision of E (0.93 % on A by itself); the sum of the seven
+    precision ratios (10.438) fails its check for every injected slip but a
+    one-unit change in the fourth figure of k1's A, below the printed precision.
+  - >-
+    van 't Hoff slopes of the equilibrium correlation against the paper's own
+    Table 7 reaction enthalpies, worst 1.93 %; slopes only, so both intercepts
+    are invisible to it by construction (shown by two break rows).
+  - >-
+    Discretisation against an independent route: the same ODEs by solve_ivp
+    (Radau, rtol 1e-12) at every measured point; first-order upwind on 1000
+    cells is within 4.1e-5 (2.4 % of the MAD), observed order 1.00 from
+    successive differences at 500 to 4000 cells, finest difference 1e7 times
+    n eps. Reading between cell centres is 2.7 times closer than reading between
+    upwind face values.
+  - >-
+    Carbon, hydrogen and oxygen balance along every reactor to round-off (a
+    stoichiometry defect breaks it); Newton backward error below 1e-8 at every
+    temperature.
+  - >-
+    Claims format 2: 50 claims (one structural, the positivity of every partial
+    pressure), 49 failed by at least one of 156 break rows that inject the
+    defect through an argument or a parameter (transcription slips, equilibrium
+    slopes and intercepts, stoichiometry, read-off, grid, reference tolerance,
+    Newton iterations); rows that do not fail are kept where they show a
+    check's blind spot.
 
 adds: >
-  Two things the paper does not give. First, the residual is decomposed: the
-  bias in methane conversion grows from 0.0012 at short space time to 0.0032 at
-  long space time, tracking the approach to equilibrium, and a 5 % shift in the
-  equilibrium constants - which Xu & Froment do not tabulate, so they must come
-  from elsewhere - moves the long-space-time predictions by 0.0026 to 0.0039,
-  the same size as that bias. The residual there therefore cannot be charged to
-  the kinetics. Second, the reversibility of each of the three reactions is
-  plotted along the reactor: the water-gas shift runs 0.03 to 0.18 in beta ahead
-  of reforming and equilibrates at roughly half the space time, which is the
-  regime split the paper asserts from its V(II) plot but never shows.
+  The pymrm form adds reuse, not new physics: the same ODEs integrate with
+  solve_ivp (the page's validation route). Two things the paper does not give,
+  computed from the model. First, the residual is decomposed: the bias in
+  methane conversion grows from 0.0012 at short space time to 0.0032 at long
+  space time. A 5 % shift in the equilibrium constants, which Xu and Froment do
+  not tabulate, moves the long-space-time predictions at 823 and 848 K by 0.0025
+  and 0.0035, the size of the bias there (0.0035 and 0.0023), so at those
+  temperatures the residual cannot be charged to the kinetics; at 773 and 798 K
+  the same shift covers only 0.19 and 0.36 of the bias, and the argument fails
+  there. Second, the
+  approach to equilibrium of each reaction is plotted along the reactor: the
+  water-gas shift runs 0.03 to 0.18 in beta ahead of reforming at the outlet and
+  reaches beta = 0.90 at 0.55 to 0.56 of the space time reforming needs (823 and
+  848 K), the regime split the paper asserts from its V(II) plot but never
+  shows.
 
 agreement: >
   0.0017 mean absolute deviation in conversion over all 61 digitised points
@@ -51,19 +81,19 @@ agreement: >
   as printed.
 
 caveats: >
-  The equilibrium constants are not from this paper - Xu & Froment do not
-  tabulate them - and the model is biased high by about 0.003 in conversion at
-  the longest space times, where reactions I and III are 85-97 % of the way to
-  equilibrium.
+  The equilibrium constants are not from this paper (Xu and Froment do not
+  tabulate them), and the model is biased high by about 0.003 in methane
+  conversion at the measured space times above 0.28, where beta is 0.57 to 0.90
+  for reaction I and 0.45 to 0.88 for reaction III. Only at 823 and 848 K is that
+  bias the size of a 5 % uncertainty in the equilibrium constants.
   The parameters are for the partially deactivated catalyst at the
   steam-reforming reference activity level; using them for fresh catalyst needs
   the paper's factor of 2.246, and reproducing the paper's Figures 4 and 5
-  needs its factor of 1.225. NEITHER FACTOR IS VALIDATED HERE - both are
+  needs its factor of 1.225. Neither factor is validated here: both are
   transcriptions from the paper's text, and the runs they belong to are
-  chemistry this page does not model. Section 6d executes them and says so.
-  The parameter round trip has a resolution floor and the page now measures it
-  rather than assuming it: its old headline, the worst per-row percentage,
-  cannot see a transposed digit in any preexponential, and one injected slip
-  (0.024 % in a four-figure number) is below the printed precision and cannot
-  be seen by any round trip built from these digits. One marker in Figure 2 is
-  a merged pair and is recorded once rather than guessed.
+  chemistry this page does not model. The page executes them and says so.
+  The parameter round trip has a resolution floor, measured on the page: the
+  worst per-row percentage cannot see a transposed digit in several
+  preexponentials, and a one-unit change in a four-figure number is below the
+  printed precision for any round trip built from these digits. One marker in
+  Figure 2 is a merged pair and is recorded once rather than guessed.
