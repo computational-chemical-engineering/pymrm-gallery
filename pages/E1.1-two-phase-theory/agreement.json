@@ -1,29 +1,621 @@
 {
   "page": "E1.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "bedweight_worst_row": 0.004884036006170822,
-    "bedweight_worst_bead_mean": 0.002793924092078348,
-    "table3_worst_dev_beads34": 0.007940066906888976,
-    "table3_bead2_offset": 0.03962699159868849,
-    "umf_exponent": 1.5064671555222882,
-    "umf_exponent_gap": 1.0064671555222882,
-    "Y_at_2umf": 0.7654320987654322,
-    "Y_lowest_robust_run": 0.6455065252857188,
-    "fig5_null_gain": 1.5503924257776829,
-    "excess_velocity_spread": 0.25830541827193815,
-    "Lf_over_Lmf": 1.1845319103563505,
-    "eq1_overprediction": 0.04230787666320546,
-    "partial_bubbling_fraction_at_1p30": 0.46667706920742025,
-    "pymrm_vs_closed_form": 2.492120725687676e-05,
-    "upwind_order": 0.9997654493453751,
-    "eq1_overshoot": 11.784476519864729,
-    "up_over_ub_eq4": 4.55262650635685,
-    "dPke_cross_check_rms": 0.09412267434318417,
-    "eps3_recovered": 0.4192876245878048,
-    "table1_unit_consistency": 0.007090909090909148,
-    "table3_bead2_spread": 0.0008873880696846914,
-    "fig5_n_interval_width": 0.29564323641111595,
-    "partial_bubbling_window_width": 0.10005347778929186,
-    "closed_form_vs_ivp": 6.565387510505555e-13
+    "table1_unit_consistency": {
+      "kind": "value",
+      "value": 0.007090909090909148,
+      "rtol": 0.05,
+      "note": "one measurement in two units: detects an inconsistent pair, not a wrong diameter"
+    },
+    "bedweight_worst_row": {
+      "kind": "value",
+      "value": 0.004884036006170822,
+      "rtol": 0.05
+    },
+    "bedweight_worst_bead_mean": {
+      "kind": "value",
+      "value": 0.002793924092078348,
+      "rtol": 0.05
+    },
+    "eps3_recovered": {
+      "kind": "value",
+      "value": 0.4192876245878048,
+      "rtol": 0.05
+    },
+    "bead3_pin_13p8_dev": {
+      "kind": "value",
+      "value": 0.05413540842975573,
+      "rtol": 0.05
+    },
+    "bead3_others_worst_dev": {
+      "kind": "value",
+      "value": 0.0035439512565246245,
+      "rtol": 0.05
+    },
+    "table3_worst_dev_beads34": {
+      "kind": "value",
+      "value": 0.007940066906888976,
+      "rtol": 0.05
+    },
+    "table3_bead2_offset": {
+      "kind": "value",
+      "value": 0.03962699159868849,
+      "rtol": 0.05
+    },
+    "table3_bead2_spread": {
+      "kind": "value",
+      "value": 0.0008873880696846914,
+      "rtol": 0.05
+    },
+    "table3_bead4_offset": {
+      "kind": "value",
+      "value": 0.006901577831743921,
+      "rtol": 0.05
+    },
+    "table3_bead2_dp_implied_in": {
+      "kind": "value",
+      "value": 0.015996200987169095,
+      "rtol": 0.01,
+      "unit": "in",
+      "note": "mean over the four bead-2 rows"
+    },
+    "umf_exponent": {
+      "kind": "value",
+      "value": 1.5064671555222882,
+      "rtol": 0.05
+    },
+    "umf_exponent_gap": {
+      "kind": "value",
+      "value": 1.0064671555222882,
+      "rtol": 0.05
+    },
+    "umf_exponent_gap_in_se": {
+      "kind": "value",
+      "value": 7.926418918474168,
+      "rtol": 0.05
+    },
+    "umf_exponent_two_point": {
+      "kind": "value",
+      "value": 1.4748735028235633,
+      "rtol": 0.05
+    },
+    "umf_power_law_worst_factor": {
+      "kind": "value",
+      "value": 1.3888007141466672,
+      "rtol": 0.05
+    },
+    "local_exponent_beads3to2": {
+      "kind": "value",
+      "value": 2.0630415474647186,
+      "rtol": 0.05
+    },
+    "local_exponent_beads2to1": {
+      "kind": "value",
+      "value": 0.7750654852267469,
+      "rtol": 0.05
+    },
+    "dp_range_ratio": {
+      "kind": "value",
+      "value": 15.418181818181818,
+      "rtol": 0.05
+    },
+    "Y_at_2umf": {
+      "kind": "value",
+      "value": 0.7654320987654322,
+      "rtol": 0.05
+    },
+    "postulate_excess_at_2umf": {
+      "kind": "value",
+      "value": 0.30645161290322576,
+      "rtol": 0.05
+    },
+    "ue_excess_min": {
+      "kind": "value",
+      "value": 0.14942528735632177,
+      "rtol": 0.05
+    },
+    "ue_excess_max": {
+      "kind": "value",
+      "value": 0.4492753623188408,
+      "rtol": 0.05
+    },
+    "printed_ratio_spread": {
+      "kind": "value",
+      "value": 1.2608695652173914,
+      "rtol": 0.05
+    },
+    "Y_at_10umf_excess": {
+      "kind": "value",
+      "value": 0.026760563380281654,
+      "rtol": 0.05
+    },
+    "own_bead_ratio_spread": {
+      "kind": "value",
+      "value": 4.4037967415267305,
+      "rtol": 0.05
+    },
+    "Y_lowest_robust_run": {
+      "kind": "value",
+      "value": 0.6455065252857188,
+      "rtol": 0.05
+    },
+    "Y_lowest_robust_run_70F": {
+      "kind": "value",
+      "value": 0.7556095311601074,
+      "rtol": 0.05
+    },
+    "lowest_robust_bead": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.057185116175756945,
+      "min_margin": 0.01,
+      "note": "margin: smallest relative distance of a lowest run to the threshold 1/r"
+    },
+    "fig5_null_gain": {
+      "kind": "value",
+      "value": 1.5503924257776829,
+      "rtol": 0.05
+    },
+    "fig5_n_best": {
+      "kind": "value",
+      "value": 0.6172543397297804,
+      "rtol": 0.05
+    },
+    "fig5_half_cost": {
+      "kind": "value",
+      "value": 0.03142833640883591,
+      "rtol": 0.05
+    },
+    "fig5_n_interval_lo": {
+      "kind": "value",
+      "value": 0.4704217175298389,
+      "rtol": 0.05
+    },
+    "fig5_n_interval_hi": {
+      "kind": "value",
+      "value": 0.7660649539410174,
+      "rtol": 0.05
+    },
+    "fig5_n_interval_width": {
+      "kind": "value",
+      "value": 0.29564323641117846,
+      "rtol": 0.05
+    },
+    "dPke_cross_check_rms": {
+      "kind": "value",
+      "value": 0.09412267434318417,
+      "rtol": 0.05
+    },
+    "dPke_cross_check_worst": {
+      "kind": "value",
+      "value": 0.2453606932234943,
+      "rtol": 0.05
+    },
+    "Lf_over_Lmf": {
+      "kind": "value",
+      "value": 1.184531906633474,
+      "rtol": 0.05
+    },
+    "eq1_overprediction": {
+      "kind": "value",
+      "value": 0.0423078799390848,
+      "rtol": 0.05
+    },
+    "excess_velocity_spread": {
+      "kind": "value",
+      "value": 0.25847200527243086,
+      "rtol": 0.05
+    },
+    "pymrm_vs_closed_form": {
+      "kind": "value",
+      "value": 2.492435008792838e-05,
+      "rtol": 0.05,
+      "note": "first-order upwind at n = 1600"
+    },
+    "closed_form_vs_ivp": {
+      "kind": "bound",
+      "value": 6.565387510505555e-13,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "solve_ivp rtol 1e-12"
+    },
+    "distributor_face_identity": {
+      "kind": "bound",
+      "value": 1.866013180243371e-14,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "summing the upwind equations gives P_bottom - P_inlet = w L_f (1 - mean delta), which the inventory root sets to w L_mf; Newton and root tolerances"
+    },
+    "excess_velocity_spread_70F": {
+      "kind": "value",
+      "value": 0.20515899261843665,
+      "rtol": 0.05
+    },
+    "Lf_over_Lmf_70F": {
+      "kind": "value",
+      "value": 1.2378047421024936,
+      "rtol": 0.05
+    },
+    "spreads_above_additive_shortfall": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.07978417167598266,
+      "min_margin": 0.02
+    },
+    "spreads_above_multiplicative_shortfall": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.10190696984562662,
+      "min_margin": 0.02
+    },
+    "partial_bubbling_fraction_at_1p30": {
+      "kind": "value",
+      "value": 0.46667706920742025,
+      "rtol": 0.05
+    },
+    "partial_bubbling_window_width": {
+      "kind": "value",
+      "value": 0.10005347778929186,
+      "rtol": 0.05
+    },
+    "shortfall_additive": {
+      "kind": "value",
+      "value": 0.18999999999999995,
+      "rtol": 0.05,
+      "note": "1 - u_mf/u_e at the mean printed ratio"
+    },
+    "shortfall_multiplicative": {
+      "kind": "value",
+      "value": 0.23456790123456783,
+      "rtol": 0.05,
+      "note": "u_e/u_mf - 1 at the mean printed ratio"
+    },
+    "window_lower_switch": {
+      "kind": "value",
+      "value": 1.2345679012345678,
+      "rtol": 0.05,
+      "note": "u_f/u_mf at the surface where bubbling starts"
+    },
+    "window_upper_switch": {
+      "kind": "value",
+      "value": 1.3580907133201132,
+      "rtol": 0.05,
+      "note": "u_f/u_mf at the surface where the bottom bubbles too"
+    },
+    "branch_worst_pymrm_vs_exact": {
+      "kind": "value",
+      "value": 2.4877543233217523e-05,
+      "rtol": 0.05,
+      "note": "first-order upwind at n = 1600"
+    },
+    "eq1_overshoot": {
+      "kind": "value",
+      "value": 11.784476519864729,
+      "rtol": 0.05
+    },
+    "up_over_ub_eq4": {
+      "kind": "value",
+      "value": 4.55262650635685,
+      "rtol": 0.05,
+      "note": "exactly linear in eq. (1)'s coefficient, so its break row only rescales it"
+    },
+    "upwind_order": {
+      "kind": "bound",
+      "value": 0.999842180359339,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind on a first-order equation"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 70150692.52241334,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest-rung difference against max(n eps, root tolerance / L_f)"
+    },
+    "richardson_vs_closed_form": {
+      "kind": "bound",
+      "value": 3.6359603524827214e-09,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "second-order remainder of a first-order Richardson extrapolation"
+    },
+    "excess_spread_vs_quadrature": {
+      "kind": "bound",
+      "value": 2.622665812301861e-08,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "face values and the trapezoidal depth average against quadrature of the closed form; the cell-value reading is 1.5e-04 off"
+    },
+    "datum_plus10_spread_change": {
+      "kind": "value",
+      "value": -0.09345559677749804,
+      "rtol": 0.05,
+      "note": "relative change of the excess-velocity spread for a 10 % higher datum"
+    },
+    "datum_plus10_Lf_change": {
+      "kind": "value",
+      "value": 0.0034563925497039794,
+      "rtol": 0.05,
+      "note": "relative change of L_f/L_mf for a 10 % higher datum"
+    }
+  },
+  "quoted": {
+    "ue_excess_min": [
+      "15 %"
+    ],
+    "ue_excess_max": [
+      "45 %"
+    ],
+    "table3_worst_dev_beads34": [
+      "0.79 %"
+    ],
+    "table3_bead2_dp_implied_in": [
+      "0.0160"
+    ],
+    "table1_unit_consistency": [
+      "0.71 %"
+    ],
+    "umf_exponent": [
+      "1.51"
+    ],
+    "umf_power_law_worst_factor": [
+      "1.39"
+    ],
+    "local_exponent_beads3to2": [
+      "2.1"
+    ],
+    "local_exponent_beads2to1": [
+      "0.8"
+    ],
+    "dp_range_ratio": [
+      "15"
+    ],
+    "printed_ratio_spread": [
+      "1.26"
+    ],
+    "fig5_n_interval_lo": [
+      "0.47"
+    ],
+    "fig5_n_interval_hi": [
+      "0.77"
+    ],
+    "fig5_half_cost": [
+      "3 %"
+    ],
+    "postulate_excess_at_2umf": [
+      "31 %"
+    ],
+    "Y_at_10umf_excess": [
+      "under 3 %"
+    ],
+    "bead3_pin_13p8_dev": [
+      "5.4 %"
+    ],
+    "bead3_others_worst_dev": [
+      "0.35 %"
+    ],
+    "partial_bubbling_window_width": [
+      "10 %"
+    ],
+    "excess_velocity_spread_70F": [
+      "20.5 %"
+    ],
+    "excess_velocity_spread": [
+      "25.8 %"
+    ]
+  },
+  "breaks": {
+    "table1_unit_consistency": [
+      "Table 1 inch diameter of bead 5 read 0.00225 for 0.00215"
+    ],
+    "bedweight_worst_row": [
+      "Table 1 eps of bead 2: 0.404 -> 0.38",
+      "Table 1 rho_s of bead 4: 173 -> 160 lb/ft3",
+      "in.H2O taken as 5.0 lbf/ft2 instead of 5.2023"
+    ],
+    "bedweight_worst_bead_mean": [
+      "Table 1 eps of bead 2: 0.404 -> 0.38",
+      "Table 1 rho_s of bead 4: 173 -> 160 lb/ft3",
+      "in.H2O taken as 5.0 lbf/ft2 instead of 5.2023"
+    ],
+    "eps3_recovered": [
+      "Table 1 rho_s of bead 3: 178 -> 170 lb/ft3"
+    ],
+    "bead3_pin_13p8_dev": [
+      "L_mf of bead 3 at G = 988 taken as 13.0 instead of 13.8 in the pin"
+    ],
+    "bead3_others_worst_dev": [
+      "L_mf of bead 3 at G = 1520 read 10.3 for 9.4"
+    ],
+    "table3_bead2_offset": [
+      "Table 3 bead 2 D_p set to the implied 0.016 in"
+    ],
+    "table3_worst_dev_beads34": [
+      "Table 3 bead 4 D_p 0.00418 -> 0.00410 in (-2%)",
+      "Table 3 bead 4 D_p 0.00418 -> 0.00426 in (+2%)"
+    ],
+    "table3_bead2_spread": [
+      "Table 3 u_p of bead 2 at G = 270 read 1.40 for 1.38"
+    ],
+    "table3_bead2_dp_implied_in": [
+      "Table 3 printed u_p/D_p^0.5 of bead 2 at G = 737 read 68.3 for 65.7"
+    ],
+    "table3_bead4_offset": [
+      "Table 3 bead 4 D_p set to the implied 0.00424 in"
+    ],
+    "dp_range_ratio": [
+      "smallest bead (55 um) dropped from the bead range"
+    ],
+    "umf_exponent": [
+      "Re_mf list assigned to beads 1..5 instead of 5..1",
+      "smallest bead (55 um) dropped from the Re_mf fit"
+    ],
+    "umf_exponent_gap": [
+      "Re_mf list assigned to beads 1..5 instead of 5..1",
+      "smallest bead (55 um) dropped from the Re_mf fit"
+    ],
+    "umf_exponent_gap_in_se": [
+      "Re_mf list assigned to beads 1..5 instead of 5..1",
+      "smallest bead (55 um) dropped from the Re_mf fit"
+    ],
+    "umf_exponent_two_point": [
+      "Re_mf list assigned to beads 1..5 instead of 5..1",
+      "smallest bead (55 um) dropped from the Re_mf fit"
+    ],
+    "umf_power_law_worst_factor": [
+      "Re_mf of bead 2 read 28.8 for 2.88 (decimal slip)"
+    ],
+    "local_exponent_beads3to2": [
+      "Re_mf of bead 2 read 28.8 for 2.88 (decimal slip)"
+    ],
+    "local_exponent_beads2to1": [
+      "Re_mf of bead 2 read 28.8 for 2.88 (decimal slip)"
+    ],
+    "postulate_excess_at_2umf": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "ue_excess_min": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "ue_excess_max": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "printed_ratio_spread": [
+      "printed ratio 0.69 read 0.89"
+    ],
+    "Y_at_2umf": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "Y_at_10umf_excess": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "own_bead_ratio_spread": [
+      "Table 2 dPke/dPmf of bead 4 at G = 201 raised 30 %"
+    ],
+    "Y_lowest_robust_run": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "Y_lowest_robust_run_70F": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "lowest_robust_bead": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "fig5_null_gain": [
+      "Figure 5 exponent moved 0.5 -> 1.5"
+    ],
+    "fig5_n_best": [
+      "Table 3 dPke/L of bead 2 at G = 737 raised 30 % (31.5 -> 40.950)"
+    ],
+    "fig5_half_cost": [
+      "Table 3 dPke/L of bead 3 at G = 66 raised 30 % (5.88 -> 7.644)"
+    ],
+    "fig5_n_interval_lo": [
+      "Table 3 dPke/L of bead 3 at G = 66 raised 30 % (5.88 -> 7.644)"
+    ],
+    "fig5_n_interval_hi": [
+      "Table 3 dPke/L of bead 3 at G = 66 raised 30 % (5.88 -> 7.644)"
+    ],
+    "fig5_n_interval_width": [
+      "Table 3 dPke/L of bead 3 at G = 66 raised 30 % (5.88 -> 7.644)"
+    ],
+    "dPke_cross_check_rms": [
+      "Table 3 dPke/L of bead 4 at G = 103 raised 30 %",
+      "Table 3 dPke/L of bead 3 at G = 272 raised 30 %"
+    ],
+    "dPke_cross_check_worst": [
+      "Table 3 dPke/L of bead 2 at G = 270 raised 30 %"
+    ],
+    "shortfall_additive": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "shortfall_multiplicative": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "window_lower_switch": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "window_upper_switch": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)"
+    ],
+    "partial_bubbling_fraction_at_1p30": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)",
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010)"
+    ],
+    "partial_bubbling_window_width": [
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010)"
+    ],
+    "branch_worst_pymrm_vs_exact": [
+      "branch table on n = 50"
+    ],
+    "eq1_overshoot": [
+      "eq. (1) coefficient 0.065 -> 0.078 (+20 %)"
+    ],
+    "up_over_ub_eq4": [
+      "eq. (1) coefficient 0.065 -> 0.078 (+20 %)"
+    ],
+    "upwind_order": [
+      "finest rung solved on n = 800 again (refinement not passed)"
+    ],
+    "grid_finest_over_roundoff": [
+      "root tolerance xtol = 1e-4 m on every rung"
+    ],
+    "richardson_vs_closed_form": [
+      "Richardson extrapolation from the ladder 25, 50, 100"
+    ],
+    "excess_spread_vs_quadrature": [
+      "spread read at the first and last cell values with a cell mean (at='cells')"
+    ],
+    "Lf_over_Lmf": [
+      "u_mf/u_e forced to 1.0 (the postulate itself)",
+      "inlet Dirichlet set to P_bot = 111463 Pa instead of P_top",
+      "upwind direction reversed, v = -1 [solve fails: ValueError]"
+    ],
+    "excess_velocity_spread": [
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010)",
+      "inlet Dirichlet set to P_bot = 111463 Pa instead of P_top",
+      "upwind direction reversed, v = -1 [solve fails: ValueError]"
+    ],
+    "distributor_face_identity": [
+      "inlet Dirichlet set to P_bot = 111463 Pa instead of P_top",
+      "zero-gradient outlet, distributor pressure read as the last cell value instead of compute_boundary_values"
+    ],
+    "eq1_overprediction": [
+      "eq. (1) coefficient 0.065 -> 0.078 (+20 %)"
+    ],
+    "excess_velocity_spread_70F": [
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010) at 70 F"
+    ],
+    "Lf_over_Lmf_70F": [
+      "eq. (1) coefficient 0.065 -> 0.078 (+20 %) at 70 F"
+    ],
+    "spreads_above_additive_shortfall": [
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010)"
+    ],
+    "spreads_above_multiplicative_shortfall": [
+      "atmospheric datum x10 (bed pressure ratio 1.100 -> 1.010)"
+    ],
+    "pymrm_vs_closed_form": [
+      "grid coarsened to n = 50"
+    ],
+    "closed_form_vs_ivp": [
+      "solve_ivp rtol 1e-6 instead of 1e-12"
+    ],
+    "datum_plus10_spread_change": [
+      "atmospheric datum x10 instead of +10 % (relative change of the spread)"
+    ],
+    "datum_plus10_Lf_change": [
+      "atmospheric datum x10 instead of +10 % (relative change of L_f/L_mf)"
+    ]
   }
 }

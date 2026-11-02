@@ -4195,9 +4195,9 @@ models:
     slug: two-phase-theory
     title: "Two-phase theory of fluidisation"
     description: >
-      The postulate the whole bubbling-bed literature is built on — gas beyond
+      The postulate the whole bubbling-bed literature is built on, gas beyond
       what minimum fluidisation needs passes through as bubbles, so the dense
-      phase sees the same flow however hard the bed is blown — tested against the
+      phase sees the same flow however hard the bed is blown, tested against the
       intercepts printed four columns after it in the paper that states it. Those
       intercepts are read off Lewis, Gilliland and Bauer's particles rather than
       the authors' own, and the paper says so; the page tests the postulate, not
@@ -4210,7 +4210,7 @@ models:
     phases: [gas-solid]
     page: pages/E1.1-two-phase-theory/
     predicts: [bubble fraction, bed expansion, dense-phase gas flow, visible bubble flow factor]
-    pymrm_api: [construct_convflux_upwind, construct_div, newton, NumJac]
+    pymrm_api: [construct_convflux_upwind, construct_div, compute_boundary_values, NumJac, newton, find_roots, observed_orders]
     reference:
       authors: ["Toomey, R. D.", "Johnstone, H. F."]
       year: 1952
@@ -4241,20 +4241,20 @@ models:
 
       What the page finds. The postulate has two testable halves and those printed
       intercepts separate them: they support "the dense-phase flow is constant,
-      independent of u_f" and refute "that constant is u_mf" — the ratios put the
+      independent of u_f" and refute "that constant is u_mf", the ratios put the
       dense phase at 1.23 u_mf, so the visible bubble flow factor is Y = 0.765 at
       u_f = 2 u_mf and 0.646 (200 F) / 0.756 (70 F) at the lowest of Toomey and
       Johnstone's own robustly bubbling runs. E2.1's delta = (u_0-u_mf)/u_b
       inherits the half that fails. The page also RUNS the refit on the authors'
       own beads, which it declines to rely on: u_mf/u_e = 2.05, 0.93, 0.47 for
-      beads 2, 3, 4 — a factor 4.4 spread straddling 1, so their own apparatus
+      beads 2, 3, 4, a factor 4.4 spread straddling 1, so their own apparatus
       cannot fix even the sign. That is why the borrowed ratios are load-bearing.
 
       Four further results. The bed-weight identity Toomey claims in the printed
       Discussion but never quantifies holds to 0.49 % over 25 runs, which is
       essentially the rounding floor of Table 2's own printed digits. Table 3's own
       derived column u_p/D_p^0.5 was evaluated with a wrong particle diameter for
-      bead size 2 — the printed column is LOW by 3.81 %, uniform across all four
+      bead size 2, the printed column is LOW by 3.81 %, uniform across all four
       rows to 0.089 %, against a diameter that Table 1's two columns AND Figure 3's
       own curve label all print as 0.0148 in.; bead 4 carries the same signature six
       times weaker and is reported as such. Reported, not repaired. The paper's
@@ -4267,7 +4267,7 @@ models:
 
       The pymrm content is the one transport problem in the paper: the authors say
       the gas expands as the pressure changes through the bed and that this would
-      curve Figure 3 near the abscissa, and never compute it. It does — the excess
+      curve Figure 3 near the abscissa, and never compute it. It does, the excess
       velocity u_f - u_mf varies by 25.8 % (200 F) or 20.5 % (70 F) across a deep
       bed near the threshold, and there is a band of superficial velocities exactly
       as wide as the bed's pressure ratio in which the top bubbles and the bottom
