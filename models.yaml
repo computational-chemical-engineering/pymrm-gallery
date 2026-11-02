@@ -4148,11 +4148,12 @@ models:
       A single bubble in an incipiently fluidised bed is a Laplace problem with a
       uniform-pressure hole in it, and one pymrm solve of it produces both the
       cloud that Kunii and Levenspiel's equation 9 gives and the 4.5 that opens
-      their equation 10 — two consecutive equations, stated and never derived,
+      their equation 10: two consecutive equations, stated and never derived,
       that turn out to be one flow field read twice. The through-flow coefficient
-      comes out to 1.1e-6 without ever being an input. The cloud, unlike the
-      through-flow, has a pole rather than a limit at u_br = u_f, and the source
-      paper's own appendix B bed sits on the wrong side of it.
+      comes out of the solve, never an input, at the discretisation error. The
+      cloud, unlike the through-flow, has a pole rather than a limit at
+      u_br = u_f, and the source paper's own appendix B bed sits on the wrong side
+      of it.
     section: E
     status: published
     page: pages/E1.2-davidson-bubble/
@@ -4167,7 +4168,7 @@ models:
       - the threshold in bubble velocity below which no cloud exists
       - gas and solids streamline patterns around a bubble in the bubble frame
       - the two-dimensional (slab-bed) counterparts of all of the above
-    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix]
+    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, compute_boundary_values, find_roots, observed_orders]
     reference:
       authors: ["Kunii, D.", "Levenspiel, O."]
       year: 1968
