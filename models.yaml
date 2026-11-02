@@ -3326,13 +3326,14 @@ models:
     title: "Szekely–Evans grain model for gas–solid reactions with a moving boundary"
     description: >
       The porous solid as a packing of shrinking-core grains fed by intergrain
-      diffusion — the model that took the structure out of the shrinking core's
+      diffusion: the model that took the structure out of the shrinking core's
       empirical rate constant. The page rebuilds Part I's semi-infinite grain
-      model with pymrm (coupled gas BVP + grain complementarity ODEs, newton +
-      NumJac), derives the exact closed-form penetration law the quasi-steady
+      model with pymrm (coupled gas BVP + grain complementarity ODEs on one grid
+      via BlockLayout, newton with the exact Jacobian), derives the exact
+      closed-form penetration law the quasi-steady
       equations imply, shows the model collapsing onto the published B3.1
       shrinking core at the exposed face, and quantifies the diffuse reaction
-      zone the paper could only plot — 0.295 cm wide for the paper's own printed
+      zone the paper could only plot, 0.295 cm wide for the paper's own printed
       base case, from printed constants alone.
     section: B
     status: published
@@ -3349,6 +3350,9 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - BlockLayout
+      - construct_coefficient_matrix
+      - compute_boundary_values
       - NumJac
       - newton
     reference:
@@ -3361,8 +3365,8 @@ models:
       method: none
       status: final
       note: >
-        Fitted: nothing (the page's only fit is a labelled diagnostic line on its
-        own computed asymptote). The paper prints parameter sets, ranges and
+        Fitted: nothing (the page's only averaging is a labelled diagnostic mean
+        of its own computed asymptote). The paper prints parameter sets, ranges and
         closed forms but no measurements; every E.P.-time result exists only as
         figures, none digitised. C0 is not printed, so the figures' absolute time
         axes are unreconstructable; validation is the exact closed form derived
