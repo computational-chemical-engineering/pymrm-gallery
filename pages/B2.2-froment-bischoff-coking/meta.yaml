@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 90
+pymrm_min_version: "3.3.0"
+runtime_seconds: 180
 datasets:
   - froment-bischoff-1961-appendix2-conditions.csv
   - froment-bischoff-1961-printed-claims.csv
@@ -37,21 +37,24 @@ fit_or_test: >
   paper only) and enter only the comparison the paper itself makes.
 
 validation:
-  # analytic references cross-validated against each other before judging pymrm
-  - "the printed closed forms (32)-(33) and (36)-(37) verified symbolically against the PDE systems (structural: tests the transcription), and (32)-(33) additionally met by the paper's own eq.-29 ODE route - a second, algebra-free computation of the same baseline - to 3.0e-13"
-  - "the consecutive case given an exact scalar-ODE reduction derived on the page (not in the paper), whose Picard series reproduces the printed series (44) coefficient-by-coefficient through eta^2"
+  # analytic references cross-checked against each other before judging pymrm
+  - "the printed closed forms (32)-(33) and (36)-(37) verified symbolically against the PDE systems (structural: tests the transcription), and (32)-(33) additionally met by the paper's own eq.-29 ODE route, a second, algebra-free computation of the same baseline, to below 1e-10"
+  - "the consecutive case given an exact scalar-ODE reduction derived on the page (not in the paper), whose Picard series reproduces the printed series (44) coefficient by coefficient through eta^2; its DOP853 integration changes by below 1e-10 from rtol 1e-12 to 1e-13"
   # the pymrm bed against the three references
-  - "one pymrm finite-volume bed meets all three references at joint observed order 2.00/2.00/1.81 (PE/PH/CE), max error 1.6e-6/6.6e-7/1.7e-5 in y at (n,m)=(400,480), through the passage of the activity ridge; both refinement axes swept independently (orders 1.93 and 1.99)"
+  - "one pymrm finite-volume bed (van Leer by ConvFluxTVD, each gas profile by newton, Heun in coking time) meets all three references through the passage of the activity ridge: max error in y 1.6e-6 (PE), 6.6e-7 (PH), 1.7e-5 (CE) at 400 cells and 480 steps; observed orders 1.99-2.01 for PE and PH, and for CE 1.73 rising to 1.93 on 800 cells, the error peaking in the first cells where the consecutive coke rises from zero (not the limiter: unlimited second-order upwind gives lower orders still; not the time step: refining n alone gives the same errors)"
+  - "each refinement axis on its own with the other axis's error cancelled: orders 2.002-2.008 in x (differences of outlet values between successive grids at 240 steps) and 1.984-1.996 in T (coke on a fixed grid)"
+  - "a second route to the same discrete equations: van Leer deferred correction, swept to a change below 1e-13 (at most 34 sweeps, geometric), agrees with newton to below 1e-11 on frozen coke and to below 1e-10 over the finest marches, so each finest error is at least 1e3 times its round-off"
+  - "the outlet face: {'outflow': True} and the zero-gradient dict both leave the scheme first order; the bed adds one constant matrix that extrapolates the outlet face linearly from the last two cells, and is second order (1.94-1.98 on the fresh bed)"
   # the paper's four approximations, measured
-  - "gamma=0 closure: 0.29 % at the paper's own gamma = 1e-3, 5.9 % at its printed 0.02 bound (printed claim: 'within 5 per cent'); pymrm at full gamma vs the eq.-29 route agree to 1.1e-6, so the deviation belongs to the approximation, not a solver"
-  - "the four-term series (44): 0.9 % of exact along the bed at ab_eta = 1 but 22 % at the claimed (az, ab_eta) = (2,2) corner - the printed window is optimistic at its far corner"
-  - "the large-eta patch (46)+(49): the printed claim that it 'improves as eta increases' is FALSE in carbon - the deficit grows like ln(eta) to 1.16 in alpha*c (29 % relative) by ab_eta = 10 - and the paper states Fig. 3(b) was computed from these equations, so the printed figure inherits the bias (the recomputed exact Fig. 3(b) tops at 4.0 where the paper's drawing tops near 2.9)"
-  - "eta ~= t: costs 2.2e-5 in y for the paper's own reactor (eps_s = 4.5e-5, computed from printed conditions); the full-transient pymrm solve with the eps_s term retained lands on the exact characteristic solution to 2.7e-4"
+  - "gamma=0 closure: 0.29 % at the paper's own gamma = 1e-3, 5.88 % at its printed 0.02 bound (largest over the window, root-found in T; printed claim: 'within 5 per cent'); pymrm at full gamma against the eq.-29 route agree to 1.3e-6, the bed's discretisation error, so the deviation belongs to the approximation, not a solver"
+  - "the four-term series (44): 0.87 % of exact along the bed at ab_eta = 1 but 21.6 % at the claimed (az, ab_eta) = (2,2) corner - the printed window is optimistic at its far corner"
+  - "the large-eta patch (46)+(49): the printed claim that it 'improves as eta increases' is FALSE in carbon - the deficit is 1.16 in alpha*c (29 % relative) at ab_eta = 10 and keeps growing, by 0.89 to 0.99 per unit of ln(eta) between ab_eta = 10 and 100 - and the paper states Fig. 3(b) was computed from these equations, so the printed figure inherits the bias"
+  - "eta ~= t: costs 2.2e-5 in y for the paper's own reactor (eps_s = 4.5e-5, computed from printed conditions); the full-transient pymrm solve with the eps_s term retained lands on the exact characteristic solution to 2.7e-4 at 3000 steps, first order in the step (observed 1.000)"
   # printed arithmetic and printed claims
   - "Appendix 2's printed intermediates recomputed: prefactor 0.1993 vs printed 0.2, aL = 1.993 vs 2.0, alpha*b*t = 5.00, K*b*t = 10.00"
-  - "Fig. 4's slope claims: the 1.0 low-T limits and 'PE always ~1.0' reproduce (PE never drops below 1); the two printed onset values do NOT - CE is 0.710 at ab_eta=4 (0.5 first reached near 13, no plateau), PH is 0.726 at 10 (0.5 is its true asymptote, reached only far beyond the window)"
+  - "Fig. 4's slope claims, with the exponent computed exactly as T cbar'(T)/cbar: the 1.0 low-T limits and 'PE always ~1.0' reproduce (PE never drops below 1); the two printed onset values do NOT - CE is 0.710 at ab_eta = 4 and crosses 0.5 once, at 12.97, with no plateau; PH is 0.726 at 10 (0.5 is its true asymptote, reached only far beyond the window)"
   - "eq. (49) misprints alpha*z for az: adjudicated numerically (az reading 12 % from exact - the patch's own error - alpha*z reading 99 %) and provable from eq. (48) one line above"
-  - "the 11-row break table moves every non-structural metric; the notebook's coverage note is the precise accounting (the cbar/slope estimator family is confirmed by an independent estimator rather than a break row); structural checks that cannot fail are named as such and sit below check_agreement.py's ABS_FLOOR, i.e. outside CI while both sides stay under it"
+  - "a break table of one injected defect per row, each built from the call that injects it; every claim except five structural identities (the symbolic transcription checks, the PE swap symmetry, the PH inlet value, the CE inlet anchor, the flat profile of the equal-weight mixed source) fails at least one row"
 
 figures_digitised: none - all six solution figures are recomputed from the
   printed equations; the paper contains no data figure

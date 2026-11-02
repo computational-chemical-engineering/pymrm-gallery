@@ -3003,8 +3003,9 @@ models:
       of maximum rate travelling down the bed as the catalyst ages. The page
       re-derives all three printed solutions independently (including an exact
       scalar-ODE reduction of the consecutive case the paper does not contain),
-      meets them with one pymrm finite-volume bed at second order in both
-      refinement axes (worst 1.7e-5 in y, 5.0e-5 in C), and measures the paper's four hand-era
+      meets them with one pymrm finite-volume bed (worst 1.7e-5 in y, 5.0e-5 in C
+      on 400 cells; second order for the parallel cases, orders rising towards 2
+      for the consecutive one), and measures the paper's four hand-era
       approximations one by one: gamma = 0 costs 0.29 % at the paper's own gamma
       and 5.9 % at its printed 0.02 bound; the four-term series is 22 % off at its
       claimed corner; the large-eta patch under-counts carbon by an amount that
@@ -3019,7 +3020,7 @@ models:
       exponent is reachable by the consecutive mechanism and none by
       parallel-exponential. The profile diagnostic is then given an amplitude: the
       ascending signature's half-bed contrast decays only logarithmically (below a
-      20 % assay floor by t' ~ 20, though the inlet anchor is exact at every t), the descending
+      20 % assay floor from ab_eta = 7.8, though the inlet anchor is exact at every t), the descending
       one is already invisible to 10 % assays at the paper's own operating point,
       and equal-weight mixed mechanisms cancel the profile identically while
       producing a perfectly smooth Voorhies curve.
@@ -3042,11 +3043,17 @@ models:
       - the detectability of the profile diagnostic as a function of assay precision, bed length group aL and time group ab_eta
       - the cost of each of the paper's four approximations (gamma = 0, series window, large-eta patch, eta ~= t)
     pymrm_api:
-      - construct_convflux_upwind
+      - ConvFluxTVD
+      - newton
       - construct_div
+      - construct_coefficient_matrix
+      - construct_convflux_upwind
+      - interp_cntr_to_stagg
       - interp_cntr_to_stagg_tvd
       - vanleer
       - compute_boundary_values
+      - observed_orders
+      - find_roots
     reference:
       authors:
         - Froment, G. F.
@@ -3083,37 +3090,35 @@ models:
       authors' own order-of-magnitude constants fix only the computed ranges.
 
       HEADLINE SECOND ROUTE: the closed-form baselines are themselves computed a
-      second, independent way (the paper's eq.-29 ODE route, 3.0e-13; the CE
+      second, independent way (the paper's eq.-29 ODE route, below 1e-10; the CE
       reduction cross-checked symbolically against the printed series (44)), so a
       wrong baseline cannot hide behind a matching solver.
 
       THREE QUANTIFIED FINDINGS against printed claims, all stated on the page:
       (1) eq. (49) prints alpha*z where eq. (48) requires az - a one-character
       typo worth a factor alpha/a; (2) the large-eta patch does NOT improve as eta
-      increases in carbon - its deficit grows like ln(eta), and the printed
-      Fig. 3(b), which the text says was computed from it, tops near 2.9 where the
-      exact solution tops at 4.0; (3) the two printed slope-onset readings (CE 0.5
+      increases in carbon - its deficit grows logarithmically in eta, and the
+      printed Fig. 3(b), which the text says was computed from it, inherits the
+      bias; (3) the two printed slope-onset readings (CE 0.5
       at ~4, PH 0.5 at ~10) are graphical-chord values that exact computation puts
-      at 0.710 and 0.726, with the CE slope crossing 0.5 only near 13 and
+      at 0.710 and 0.726, with the CE slope crossing 0.5 once, near 13, and
       possessing no plateau.
 
-      PYMRM TRAP RECORDED (measured in the fresh-bed table and break table):
-      pymrm's zero-gradient outflow bc reconstructs the outlet face with zero
-      slope; where the physical outlet gradient is nonzero this leaves the outlet
-      cell first-order even under TVD deferred correction. IN THAT CONFIGURATION
-      every outlet reading - including compute_boundary_values, which faithfully
-      evaluates the bc it is given - inherits an O(h) bias (5.1e-4 at n=200 vs
-      2.3e-6 for a linear upwind face extrapolation), and correcting the single
-      outflow face flux restores clean second order. The scope matters: with
-      pymrm's outflow left AS-IS, compute_boundary_values is second order
-      (1.56e-6) and the upwind extrapolation is the O(h) reading (7.05e-4, 450x
-      worse) - so this refines the A3.7 handoff lesson for corrected-flux beds
-      and does NOT overturn it for uncorrected ones.
+      OUTLET FACE (measured in the fresh-bed table and break table): with a
+      physical gradient at the outlet, both {"outflow": True} (face = last cell
+      value) and the zero-gradient dict leave the van Leer scheme first order on
+      the whole profile. The bed adds one constant matrix that moves the outlet
+      face to the linear extrapolation of the last two cells (second order), and
+      reads the outlet from that face; the last cell centre is then an O(h)
+      reading (6.8e-4 at n = 200 against 2.3e-6). Each gas profile is a newton
+      solve with the exact ConvFluxTVD Jacobian; van Leer deferred correction,
+      which converges here in at most 34 sweeps, solves the same discrete
+      equations to below 1e-10 and is kept as the check.
 
       STRUCTURAL CHECKS NAMED: the sympy PDE residuals, the series-coefficient
-      matches, the w=0.5 flat-profile zero and the (A.2a)/(A.2b) products are
-      identities that cannot fail once transcription is right; all sit at or below
-      ABS_FLOOR and are labelled as documentation, not protection. The
+      matches, the PE swap symmetry, the PH inlet value, the CE inlet anchor and
+      the w=0.5 flat-profile zero are identities that cannot fail once
+      transcription is right, and are labelled structural. The
       perturbation-blind spot is also named: a systematic mis-reading of the
       dimensionless groups would move all routes together and is guarded only by
       the Appendix-2 printed arithmetic (which pins a and b but not alpha and K).
