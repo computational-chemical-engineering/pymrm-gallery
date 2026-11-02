@@ -3144,17 +3144,19 @@ models:
       the paper does not state: in any well-mixed fluid at constant flow the
       performance relation makes C_R = kappa C_A^n a at every instant, so series
       deactivation of order (n', d) IS parallel deactivation of order
-      (n n', d + n') for any n (the printed 1.3e-9 over nine order combinations is
-      the integrator tolerance - at rtol 1e-13 it is 1.1e-13); in the held-C_A
+      (n n', d + n') for any n (below 1e-8 over nine order combinations at
+      integrator rtol 1e-9, below 1e-11 at rtol 1e-13: the residual is the
+      integrator's); in the held-C_A
       device Levenspiel recommends, parallel, series and independent are literally
-      the same equation (8.9e-16) and at d = 1 side-by-side joins them -
+      the same equation (below 1e-12, round-off) and at d = 1 side-by-side joins them -
       decoupling concentration from activity is exactly what destroys the class
       distinction inside one run; wherever the poison profile equals the reactant
       profile (d = 1, n' = n, sigma = kappa/lambda) side-by-side IS parallel with
       the same constants, in the batch, the mixed reactor AND the plug-flow bed;
       and with sigma free, at n = n' = d = 1 the poison profile is a POWER of the
       reactant profile, so side-by-side with ANY sigma is parallel with
-      n' -> lambda sigma / kappa - 2.5e-9 in the batch and 1.9e-11 in the bed,
+      n' -> lambda sigma / kappa (below 1e-7 in the batch and 1e-8 in the bed,
+      integrator tolerances),
       against 1.2e-1 and 3.5e-1 in the two well-mixed devices where it correctly
       fails. So the bed is NOT the only device free of exact degeneracy; what it
       and the batch keep is a distinction between parallel, series and
@@ -3170,11 +3172,11 @@ models:
       at the feed face C_R = 0, so the series inlet never decays at all (a = 1
       identically) while the parallel inlet is exp(-lambda theta) = 0.049787; the
       finite-volume first cell centre approaches each at first order, so the
-      m = 200 reading 0.9889 is not what is reported. Outlets are extrapolated
-      TWICE - in space and then in time, the space extrapolation at a fixed step
-      count still being time-limited by 9.8e-6 against its own spatial residual of
-      1.8e-7 - giving 0.19017 and 0.17711, quoted to the five decimals the two
-      refinements resolve, with gradients of opposite sign
+      cell-centre reading is not what is reported. The outlet activity is read
+      on the outlet face and extrapolated TWICE, in space and then in time (the
+      space extrapolation at a fixed step count is still time-limited by
+      9.8e-6), giving 0.19017 and 0.17711, which meet the quadrature route to
+      below 1e-7, with gradients of opposite sign
       (+0.1404 vs -0.8229) that one spent-catalyst assay reads off, which is B2.2's
       "the coke profile names the mechanism" reached from the other direction. The
       recommended device is then priced: it gives d cleanly whatever n' is, but
@@ -3188,12 +3190,12 @@ models:
       at d = 2 it biases the order by -30.8 % - though holding C_A rather than
       C_P is the inverse of the paper's own instruction for eq. (6), and under
       that instruction (sigma = 0) the order comes back unbiased to 5.4e-9. The
-      pymrm bed meets an independent
-      quadrature at observed order 2.01 in space and 1.97 in time against Euler's
-      1.01 on the same pair (2.8e-6 in
-      conversion at production settings), and with the fluid accumulation term
+      pymrm bed (ConvFluxTVD, one newton solve per fluid profile, outlet on the
+      extrapolated face) meets an independent quadrature at second order in
+      space and in time, each axis refined with the other's error cancelled
+      (1.6e-6 in conversion at production settings), and with the fluid accumulation term
       retained it prices the pseudo-steady assumption the paper states on p. 269:
-      first order in eps, crossing the stated resolution at eps* = 4.3e-3, i.e.
+      first order in eps (slope 1.000), crossing the stated resolution at eps* = 4.3e-3, i.e.
       about four minutes of run for a 1 s fluid residence time - which is where
       the paper draws the line in words. One printed defect, reported not
       repaired: eq. (24) prints 1/k_d where the paper's own eq. (21) requires 1/k,
@@ -3225,11 +3227,13 @@ models:
       - the bias in the recovered deactivation order when the poison of eq. (6) is
         consumed, and the cost of the paper's pseudo-steady-state assumption
     pymrm_api:
-      - construct_convflux_upwind
+      - ConvFluxTVD
       - construct_div
-      - interp_cntr_to_stagg_tvd
+      - construct_coefficient_matrix
+      - newton
+      - interp_cntr_to_stagg
       - vanleer
-      - compute_boundary_values
+      - observed_orders
     reference:
       authors:
         - Levenspiel, O.
