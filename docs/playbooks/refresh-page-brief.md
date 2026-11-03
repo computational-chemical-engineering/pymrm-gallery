@@ -1,5 +1,10 @@
 # Briefs for the refresh sweep
 
+The current templates, the refresh checklist and the review and fix agents are in
+`.claude/skills/gallery-refresh/` and `.claude/agents/gallery-reviewer.md`,
+`gallery-fixer.md`; brief A below stays as the reference the skill's templates were
+derived from.
+
 The sweep (`docs/refresh-plan.md`) refreshes one page per cycle:
 
 1. an `implement` agent on Opus refreshes the page in both lanes from brief A;

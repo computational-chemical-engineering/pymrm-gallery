@@ -1,53 +1,842 @@
 {
   "page": "A1.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "C1_recovered": 33.673469387755105,
-    "C1_deviation_pct": -0.07872585235874661,
-    "C2_recovered": 0.04081632653061224,
-    "C2_deviation_pct": 0.04001600640254586,
-    "implied_eps_mf": 0.47442459166048556,
-    "implied_phi_s": 0.6689141560684729,
-    "dev_vs_exact_ergun_viscous_eps042_pct": -28.916028569730663,
-    "dev_vs_exact_ergun_turbulent_eps042_pct": -1.875996928214666,
-    "dev_vs_exact_ergun_viscous_eps040_pct": -14.873883040127394,
-    "ergun_constant_share_pct": 1.5535258552454603,
-    "voidage_approximation_share_pct": 28.916028569730663,
-    "ergun_constant_share_viscous_pct": -1.2745711875677554,
-    "ergun_constant_share_turbulent_pct": 1.5535258552454603,
-    "voidage_over_ergun_ratio_viscous": 22.686868220291935,
-    "voidage_over_ergun_ratio_turbulent": 1.2075736762799192,
-    "table1_narsimhan_pooled": 46.237154912278314,
-    "table1_narsimhan_printed": 46.0,
-    "table1_eq1_pooled": 36.46511030646859,
-    "table1_eq1_printed": 34.0,
-    "measured_rows": 21.0,
-    "wenyu_bias_all_pct": -17.409754275313336,
-    "wenyu_mad_all_pct": 33.28590755353936,
-    "wenyu_rms_all_pct": 38.126529611845996,
-    "wenyu_bias_diakon_pct": -25.213928241481806,
-    "wenyu_mad_diakon_pct": 25.213928241481806,
-    "davies_richardson_bias_diakon_pct": -0.7494106389773423,
-    "davies_richardson_mad_diakon_pct": 15.81217589856317,
-    "refit_one_parameter_mad_diakon_pct": 14.708253274016185,
-    "inverted_eps_mf_median_diakon": 0.4089501558247607,
-    "inverted_viscous_constant_median_diakon": 1302.4128057428281,
-    "residual_size_rank_correlation": 0.8333333333333335,
-    "residual_size_rank_pvalue": 0.010175540123456752,
-    "max_inertial_share_on_measured_rows_pct": 1.2220583309200594,
-    "eps_mf_forced_by_eq2_at_sphere": 0.3828285955570516,
-    "eps_mf_forced_by_eq3_at_sphere": 0.41491326668312173,
-    "exact_ergun_bias_diakon_eps042_pct": 4.818535883486532,
-    "rows_below_stated_dp_range": 3.0,
-    "exact_ergun_bias_diakon_at_reported_eps_MB_pct": 58.434859461087655,
-    "exact_ergun_bias_diakon_at_settled_eps_0_pct": 42.06011363036994,
-    "geldart_reported_eps_MB_no_inference_rows": 2.0,
-    "geldart_reported_eps_MB_no_inference_value": 0.444,
-    "wenyu_dev_diakon_min_pct": -54.507112685385344,
-    "wenyu_dev_diakon_max_pct": -5.469022283387409,
-    "wenyu_rms_diakon_pct": 29.034557473207517,
-    "diakon_bias_at_phi_s_095_pct": -17.191451019094636,
-    "diakon_bias_at_phi_s_090_pct": -7.812748998036714,
-    "phi_s_that_erases_diakon_bias": 0.8638103661083932,
-    "wenyu_sd_about_mean_all_pct": 33.91950347980021
+    "C1_recovered": {
+      "kind": "value",
+      "value": 33.673469387755105,
+      "rtol": 0.05
+    },
+    "C2_recovered": {
+      "kind": "value",
+      "value": 0.04081632653061224,
+      "rtol": 0.05
+    },
+    "C1_deviation_pct": {
+      "kind": "value",
+      "value": -0.07872585235874661,
+      "rtol": 0.05
+    },
+    "C2_deviation_pct": {
+      "kind": "value",
+      "value": 0.04001600640254586,
+      "rtol": 0.05
+    },
+    "quartic_roots_in_unit_interval": {
+      "kind": "exact",
+      "value": 2
+    },
+    "implied_eps_mf": {
+      "kind": "value",
+      "value": 0.4744245916604855,
+      "rtol": 0.05
+    },
+    "implied_phi_s": {
+      "kind": "value",
+      "value": 0.668914156068473,
+      "rtol": 0.05
+    },
+    "second_root_phi_s": {
+      "kind": "value",
+      "value": 0.08871825354881085,
+      "rtol": 0.05
+    },
+    "eps_mf_forced_by_eq2_at_sphere": {
+      "kind": "value",
+      "value": 0.3828285955570517,
+      "rtol": 0.05
+    },
+    "eps_mf_forced_by_eq3_at_sphere": {
+      "kind": "value",
+      "value": 0.41491326668312173,
+      "rtol": 0.05
+    },
+    "eps_mf_eq2_eq3_gap_pct": {
+      "kind": "value",
+      "value": 8.38094946365849,
+      "rtol": 0.05
+    },
+    "dev_vs_exact_ergun_viscous_eps042_pct": {
+      "kind": "value",
+      "value": -28.91603440867655,
+      "rtol": 0.05
+    },
+    "dev_vs_exact_ergun_turbulent_eps042_pct": {
+      "kind": "value",
+      "value": -1.8308184376747305,
+      "rtol": 0.05
+    },
+    "dev_vs_exact_ergun_viscous_eps040_pct": {
+      "kind": "value",
+      "value": -14.873887240356098,
+      "rtol": 0.05
+    },
+    "voidages_with_viscous_end_worse": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 8.360158087908886,
+      "min_margin": 1.0,
+      "note": "of the five voidages, margin in percentage points"
+    },
+    "viscous_turbulent_flip_eps": {
+      "kind": "value",
+      "value": 0.39241373166399046,
+      "rtol": 0.05
+    },
+    "ergun_constant_share_viscous_pct": {
+      "kind": "value",
+      "value": -1.2745720652053372,
+      "rtol": 0.05
+    },
+    "ergun_constant_share_turbulent_pct": {
+      "kind": "value",
+      "value": 1.5583843559708876,
+      "rtol": 0.05
+    },
+    "voidage_over_ergun_ratio_viscous": {
+      "kind": "value",
+      "value": 22.68685717980026,
+      "rtol": 0.05
+    },
+    "voidage_over_ergun_ratio_turbulent": {
+      "kind": "value",
+      "value": 1.1748182857842628,
+      "rtol": 0.05
+    },
+    "ergun_constant_share_pct": {
+      "kind": "value",
+      "value": 1.5583843559708876,
+      "rtol": 0.05
+    },
+    "voidage_approximation_share_pct": {
+      "kind": "value",
+      "value": 28.91603440867655,
+      "rtol": 0.05
+    },
+    "voidage_over_ergun_ratio_viscous_vs_printed": {
+      "kind": "value",
+      "value": 24.98682397494805,
+      "rtol": 0.05
+    },
+    "voidage_over_ergun_ratio_turbulent_vs_printed": {
+      "kind": "value",
+      "value": 1.1596984667125978,
+      "rtol": 0.05
+    },
+    "table1_narsimhan_pooled": {
+      "kind": "value",
+      "value": 46.237154912278314,
+      "rtol": 0.05
+    },
+    "table1_narsimhan_printed": {
+      "kind": "exact",
+      "value": 46.0
+    },
+    "table1_narsimhan_closure_pct": {
+      "kind": "value",
+      "value": 0.5155541571267688,
+      "rtol": 0.05
+    },
+    "table1_eq1_pooled": {
+      "kind": "value",
+      "value": 36.46511030646859,
+      "rtol": 0.05
+    },
+    "table1_eq1_printed": {
+      "kind": "exact",
+      "value": 34.0
+    },
+    "table1_eq1_closure_pct": {
+      "kind": "value",
+      "value": 7.250324430789966,
+      "rtol": 0.05
+    },
+    "table1_eq1_extra_points_variance": {
+      "kind": "value",
+      "value": -1572.1788235294173,
+      "rtol": 0.05
+    },
+    "table1_eq1_printed_reachable": {
+      "kind": "exact",
+      "value": true
+    },
+    "measured_rows": {
+      "kind": "exact",
+      "value": 21
+    },
+    "wenyu_bias_all_pct": {
+      "kind": "value",
+      "value": -17.409754275313336,
+      "rtol": 0.05
+    },
+    "wenyu_mad_all_pct": {
+      "kind": "value",
+      "value": 33.28590755353936,
+      "rtol": 0.05
+    },
+    "wenyu_rms_all_pct": {
+      "kind": "value",
+      "value": 38.126529611845996,
+      "rtol": 0.05
+    },
+    "wenyu_sd_about_mean_all_pct": {
+      "kind": "value",
+      "value": 33.919503479800206,
+      "rtol": 0.05
+    },
+    "wenyu_bias_diakon_pct": {
+      "kind": "value",
+      "value": -25.213928241481806,
+      "rtol": 0.05
+    },
+    "wenyu_mad_diakon_pct": {
+      "kind": "value",
+      "value": 25.213928241481806,
+      "rtol": 0.05
+    },
+    "wenyu_rms_diakon_pct": {
+      "kind": "value",
+      "value": 29.034557473207517,
+      "rtol": 0.05
+    },
+    "wenyu_dev_diakon_min_pct": {
+      "kind": "value",
+      "value": -54.507112685385344,
+      "rtol": 0.05
+    },
+    "wenyu_dev_diakon_max_pct": {
+      "kind": "value",
+      "value": -5.469022283387409,
+      "rtol": 0.05
+    },
+    "davies_richardson_bias_diakon_pct": {
+      "kind": "value",
+      "value": -0.7494106389773423,
+      "rtol": 0.05
+    },
+    "davies_richardson_mad_diakon_pct": {
+      "kind": "value",
+      "value": 15.81217589856317,
+      "rtol": 0.05
+    },
+    "refit_one_parameter_mad_diakon_pct": {
+      "kind": "value",
+      "value": 14.708253274016185,
+      "rtol": 0.05
+    },
+    "inverted_eps_mf_median_diakon": {
+      "kind": "value",
+      "value": 0.4089501558247715,
+      "rtol": 0.05
+    },
+    "inverted_viscous_constant_median_diakon": {
+      "kind": "value",
+      "value": 1302.4128057428281,
+      "rtol": 0.05
+    },
+    "residual_size_rank_correlation": {
+      "kind": "value",
+      "value": 0.8333333333333335,
+      "rtol": 0.05
+    },
+    "residual_size_rank_pvalue": {
+      "kind": "value",
+      "value": 0.010175540123456752,
+      "rtol": 0.05
+    },
+    "demanded_constant_decreases": {
+      "kind": "exact",
+      "value": 2
+    },
+    "max_inertial_share_on_measured_rows_pct": {
+      "kind": "value",
+      "value": 1.2220583309200594,
+      "rtol": 0.05
+    },
+    "max_measured_re_mf": {
+      "kind": "value",
+      "value": 0.8236673150403888,
+      "rtol": 0.05
+    },
+    "wenyu_mad_fresh_pct": {
+      "kind": "value",
+      "value": 43.94469885474466,
+      "rtol": 0.05
+    },
+    "wenyu_mad_spent_pct": {
+      "kind": "value",
+      "value": 31.613290118209907,
+      "rtol": 0.05
+    },
+    "constant_mean_velocity_mad_diakon_pct": {
+      "kind": "value",
+      "value": 81.07111917080158,
+      "rtol": 0.05
+    },
+    "eq1_error_surviving_refit_pct": {
+      "kind": "value",
+      "value": 58.333842839364685,
+      "rtol": 0.05
+    },
+    "exact_ergun_bias_diakon_eps042_pct": {
+      "kind": "value",
+      "value": 4.818535883486532,
+      "rtol": 0.05
+    },
+    "exact_ergun_bias_diakon_at_reported_eps_MB_pct": {
+      "kind": "value",
+      "value": 58.434859461087655,
+      "rtol": 0.05
+    },
+    "exact_ergun_bias_diakon_at_settled_eps_0_pct": {
+      "kind": "value",
+      "value": 42.06011363036994,
+      "rtol": 0.05
+    },
+    "diakon_bias_at_phi_s_095_pct": {
+      "kind": "value",
+      "value": -17.191451019094636,
+      "rtol": 0.05
+    },
+    "diakon_bias_at_phi_s_090_pct": {
+      "kind": "value",
+      "value": -7.812748998036714,
+      "rtol": 0.05
+    },
+    "phi_s_that_erases_diakon_bias": {
+      "kind": "value",
+      "value": 0.8638103661082821,
+      "rtol": 0.05
+    },
+    "a17_eq3_constant_ratio_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the same formula on the same rows in two codes: round-off only"
+    },
+    "geldart_reported_eps_MB_no_inference_rows": {
+      "kind": "exact",
+      "value": 2
+    },
+    "geldart_reported_eps_MB_no_inference_value": {
+      "kind": "exact",
+      "value": 0.444
+    },
+    "a17_eps0_range_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the same solids balance on the same 22 rows in two codes: round-off only"
+    },
+    "rows_below_stated_dp_range": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.08267716535433067,
+      "min_margin": 0.05
+    },
+    "rows_below_stated_dp_over_D_range": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.03345724907063184,
+      "min_margin": 0.02
+    },
+    "ergun_phi_s_independence_spread": {
+      "kind": "bound",
+      "value": 6.250555628639631e-14,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "phi_s cancels analytically; what remains is round-off"
+    },
+    "rho_f_dropped_bias_shift_pts": {
+      "kind": "value",
+      "value": 0.0758156417119551,
+      "rtol": 0.05
+    },
+    "rho_f_decade_bias_shift_pts": {
+      "kind": "value",
+      "value": 0.3513582632343102,
+      "rtol": 0.05
+    },
+    "inertial_constant_scaled_max_shift_pts": {
+      "kind": "value",
+      "value": 0.8877487257904555,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "C1_recovered": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4",
+      "Kozeny-Carman k1 = 180 instead of 150",
+      "Eisfeld-Schnitzlein infinite bed, 154 / 1.32",
+      "eq. (2) mis-read as 12"
+    ],
+    "C2_recovered": [
+      "eqs. (2) and (3) swapped",
+      "eq. (3) mis-read as 4",
+      "Eisfeld-Schnitzlein infinite bed, 154 / 1.32"
+    ],
+    "C1_deviation_pct": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4",
+      "Kozeny-Carman k1 = 180 instead of 150",
+      "Eisfeld-Schnitzlein infinite bed, 154 / 1.32",
+      "eq. (2) mis-read as 12"
+    ],
+    "C2_deviation_pct": [
+      "eqs. (2) and (3) swapped",
+      "eq. (3) mis-read as 4",
+      "Eisfeld-Schnitzlein infinite bed, 154 / 1.32"
+    ],
+    "quartic_roots_in_unit_interval": [
+      "eqs. (2) and (3) swapped",
+      "eq. (3) mis-read as 4"
+    ],
+    "implied_eps_mf": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4"
+    ],
+    "implied_phi_s": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4",
+      "eq. (2) mis-read as 12"
+    ],
+    "second_root_phi_s": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4"
+    ],
+    "eps_mf_forced_by_eq2_at_sphere": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1"
+    ],
+    "eps_mf_forced_by_eq3_at_sphere": [
+      "eqs. (2) and (3) swapped",
+      "eq. (3) mis-read as 4"
+    ],
+    "eps_mf_eq2_eq3_gap_pct": [
+      "eqs. (2) and (3) swapped",
+      "eq. (2) mis-read as 1.1",
+      "eq. (3) mis-read as 4",
+      "eq. (2) mis-read as 12"
+    ],
+    "dev_vs_exact_ergun_viscous_eps042_pct": [
+      "C1 and C2 swapped in eq. (1)",
+      "Kozeny-Carman k1 = 180 in the reference balance",
+      "reference balance for phi_s = 0.9 instead of a sphere",
+      "every voidage of the table read 0.05 high"
+    ],
+    "dev_vs_exact_ergun_turbulent_eps042_pct": [
+      "C1 and C2 swapped in eq. (1)",
+      "Eisfeld-Schnitzlein k2 (1.32) in the reference balance",
+      "Ergun k2 = 3.5 (twice the printed 1.75) in the reference balance",
+      "reference balance for phi_s = 0.9 instead of a sphere",
+      "every voidage of the table read 0.05 high"
+    ],
+    "dev_vs_exact_ergun_viscous_eps040_pct": [
+      "C1 and C2 swapped in eq. (1)",
+      "Kozeny-Carman k1 = 180 in the reference balance",
+      "reference balance for phi_s = 0.9 instead of a sphere",
+      "every voidage of the table read 0.05 high"
+    ],
+    "voidages_with_viscous_end_worse": [
+      "C1 and C2 swapped in eq. (1)",
+      "Kozeny-Carman k1 = 180 in the reference balance",
+      "Ergun k2 = 3.5 (twice the printed 1.75) in the reference balance",
+      "reference balance for phi_s = 0.9 instead of a sphere",
+      "every voidage of the table read 0.05 high"
+    ],
+    "viscous_turbulent_flip_eps": [
+      "Ergun k2 = 3.5 (twice the printed 1.75) in the reference balance",
+      "reference balance for phi_s = 0.9 instead of a sphere"
+    ],
+    "ergun_constant_share_viscous_pct": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "Kozeny-Carman k1 = 180 as the refit"
+    ],
+    "ergun_constant_share_turbulent_pct": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)"
+    ],
+    "voidage_over_ergun_ratio_viscous": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "Kozeny-Carman k1 = 180 as the refit",
+      "voidage of the approximation read 0.40 instead of 0.42"
+    ],
+    "voidage_over_ergun_ratio_turbulent": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "voidage of the approximation read 0.40 instead of 0.42"
+    ],
+    "ergun_constant_share_pct": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "Kozeny-Carman k1 = 180 as the refit"
+    ],
+    "voidage_approximation_share_pct": [
+      "voidage of the approximation read 0.40 instead of 0.42"
+    ],
+    "voidage_over_ergun_ratio_viscous_vs_printed": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "Kozeny-Carman k1 = 180 as the refit",
+      "voidage of the approximation read 0.40 instead of 0.42"
+    ],
+    "voidage_over_ergun_ratio_turbulent_vs_printed": [
+      "the refit of the present-investigation panel alone used (k1 = 146.6, k2 = 1.884)",
+      "refit constants swapped (k1 and k2 exchanged)",
+      "voidage of the approximation read 0.40 instead of 0.42"
+    ],
+    "table1_narsimhan_pooled": [
+      "135.3 mis-read as 35.3",
+      "equal weights instead of counts",
+      "the 9-point row dropped",
+      "count 203 mis-read as 20"
+    ],
+    "table1_narsimhan_printed": [
+      "overall Narsimhan 46 mis-read as 40"
+    ],
+    "table1_narsimhan_closure_pct": [
+      "135.3 mis-read as 35.3",
+      "43.4 and 38.6 swapped",
+      "equal weights instead of counts",
+      "the 9-point row dropped",
+      "count 203 mis-read as 20",
+      "overall Narsimhan 46 mis-read as 40"
+    ],
+    "table1_eq1_pooled": [
+      "equal weights instead of counts",
+      "count 203 mis-read as 20",
+      "Equation (1) entry 21.3 mis-read as 71.3"
+    ],
+    "table1_eq1_printed": [
+      "overall Equation (1) 34 mis-read as 38"
+    ],
+    "table1_eq1_closure_pct": [
+      "equal weights instead of counts",
+      "the 9-point row dropped",
+      "count 203 mis-read as 20",
+      "Equation (1) entry 21.3 mis-read as 71.3",
+      "overall Equation (1) 34 mis-read as 38"
+    ],
+    "table1_eq1_extra_points_variance": [
+      "equal weights instead of counts",
+      "the 9-point row dropped",
+      "count 203 mis-read as 20",
+      "Equation (1) entry 21.3 mis-read as 71.3",
+      "overall Equation (1) 34 mis-read as 38"
+    ],
+    "table1_eq1_printed_reachable": [
+      "the 9-point row dropped",
+      "Equation (1) entry 21.3 mis-read as 71.3",
+      "overall Equation (1) 34 mis-read as 38"
+    ],
+    "measured_rows": [
+      "the blank U_0 row kept instead of dropped"
+    ],
+    "wenyu_bias_all_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "the blank U_0 row kept instead of dropped",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_mad_all_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "the blank U_0 row kept instead of dropped",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root"
+    ],
+    "wenyu_rms_all_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "the blank U_0 row kept instead of dropped",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_sd_about_mean_all_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "the blank U_0 row kept instead of dropped",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_bias_diakon_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_mad_diakon_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_rms_diakon_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_dev_diakon_min_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_dev_diakon_max_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "davies_richardson_bias_diakon_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f dropped from the density difference",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "Davies-Richardson constant 8e-3, a decade high"
+    ],
+    "davies_richardson_mad_diakon_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "Davies-Richardson constant 8e-3, a decade high"
+    ],
+    "refit_one_parameter_mad_diakon_pct": [
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row"
+    ],
+    "inverted_eps_mf_median_diakon": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "U_0 column shifted down by one row"
+    ],
+    "inverted_viscous_constant_median_diakon": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row"
+    ],
+    "residual_size_rank_correlation": [
+      "measured U_MB used in place of U_0"
+    ],
+    "residual_size_rank_pvalue": [
+      "measured U_MB used in place of U_0"
+    ],
+    "demanded_constant_decreases": [
+      "measured U_MB used in place of U_0"
+    ],
+    "max_inertial_share_on_measured_rows_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "max_measured_re_mf": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_mad_fresh_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "the blank U_0 row kept instead of dropped",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "wenyu_mad_spent_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "constant_mean_velocity_mad_diakon_pct": [
+      "measured U_MB used in place of U_0"
+    ],
+    "eq1_error_surviving_refit_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root",
+      "phi_s = 0.95 instead of 1 (d_p = d_sv/phi_s)",
+      "phi_s = 0.90 instead of 1 (d_p = d_sv/phi_s)"
+    ],
+    "exact_ergun_bias_diakon_eps042_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row"
+    ],
+    "exact_ergun_bias_diakon_at_reported_eps_MB_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row"
+    ],
+    "exact_ergun_bias_diakon_at_settled_eps_0_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row"
+    ],
+    "diakon_bias_at_phi_s_095_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root"
+    ],
+    "diakon_bias_at_phi_s_090_pct": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root"
+    ],
+    "phi_s_that_erases_diakon_bias": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "eq. (1) replaced by exact Ergun, eps=0.42",
+      "eq. (1) with C1 and C2 swapped in the root"
+    ],
+    "a17_eq3_constant_ratio_gap": [
+      "d_sv taken in mm instead of um",
+      "mu = 1.8e-5 Pa s instead of 1.8e-4 poise",
+      "g = 9.81 (SI) instead of 981 cm/s2",
+      "rho_f dropped from the density difference",
+      "rho_f = 1.2e-4 (a decade wrong)",
+      "measured U_MB used in place of U_0",
+      "U_0 column shifted down by one row",
+      "Davies-Richardson constant 8e-3, a decade high"
+    ],
+    "rho_f_dropped_bias_shift_pts": [
+      "gas density 0.1 g/cm3 (a dense gas) in the sensitivity run"
+    ],
+    "rho_f_decade_bias_shift_pts": [
+      "gas density 0.1 g/cm3 (a dense gas) in the sensitivity run"
+    ],
+    "inertial_constant_scaled_max_shift_pts": [
+      "C2 scaled with C1 held, so the viscous limit moves too"
+    ],
+    "rows_below_stated_dp_range": [
+      "stated d_p bound mis-read as 0.02 in."
+    ],
+    "rows_below_stated_dp_over_D_range": [
+      "column diameter read as 2.5 cm (a radius)"
+    ],
+    "geldart_reported_eps_MB_no_inference_rows": [
+      "no-inference test loosened to 1 % in H and 5 % in U"
+    ],
+    "geldart_reported_eps_MB_no_inference_value": [
+      "no-inference test loosened to 1 % in H and 5 % in U"
+    ],
+    "a17_eps0_range_gap": [
+      "settled voidage taken as eps_MB (height ratio ignored)"
+    ],
+    "ergun_phi_s_independence_spread": [
+      "phi_s left out of the inertial group of the exact balance"
+    ]
   }
 }
