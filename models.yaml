@@ -4122,8 +4122,9 @@ models:
     title: "Kunii–Levenspiel bubbling bed model"
     description: >
       Three regions, one bubble size, and a conversion ceiling the paper never
-      states — the bed cannot beat it however fast the reaction goes, and it does
-      not depend on gas velocity at all.
+      states: the bed cannot beat it however fast the reaction goes, and at a
+      fixed bubble size it does not depend on gas velocity. The cloud and emulsion
+      transport the paper leaves out is solved with pymrm and checked against its exact eigenmode solution.
     section: E
     status: published
     page: pages/E2.1-kunii-levenspiel-bubbling-bed/
@@ -4132,7 +4133,7 @@ models:
     structures: [S7]
     phases: [gas-solid]
     predicts: [bubble and cloud exchange coefficients, overall rate constant, conversion]
-    pymrm_api: [construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_div, construct_convflux_upwind, compute_boundary_values, find_roots, observed_orders]
     reference:
       authors: ["Kunii, D.", "Levenspiel, O."]
       year: 1968

@@ -14,96 +14,124 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 11
+pymrm_min_version: "3.3.0"
+runtime_seconds: 5
 datasets:
   - kunii_levenspiel_1968_appendix_values.csv
 
-# Ranked by measured power, not by how small the residual looks. The ranking is a
-# claim, so the page measures it: every entry below has a row in the notebook's
-# defect-injection table. See PRIMARY vs STRUCTURAL.
+# Ranked by measured power: the notebook's break table re-evaluates every claim
+# with one defect injected.
 validation:
-  # --- PRIMARY: the only checks on this page that can see a wrong NUMBER -------
-  - PRIMARY - all eight printed intermediates of appendix C (u_br, u_b, delta, K_bc, K_ce, gamma_c, gamma_e, K_r/K_m) recomputed from eqs. 2, 3, 10, 12, 15, 17, 45 and 51 to 0.46 % worst case. Measured power - a 22 % error in eq. 10's 4.5 moves it 0.46 % -> 10.5 % (23x), a transposed 6.78 -> 8.76 in eq. 12 moves it to 29.4 %, and a transposed 0.711 -> 0.171 in eq. 51 to 217 %
-  - PRIMARY - appendix A's nine printed quantities, ending in (Sh)_over-all = 0.045 Re - 0.0101, reproduced to 0.57 % - the same flow model driving gas-solid mass transfer through eq. 27. Independent of appendix C in every input; moves to 7.3 % on the same 4.5 injection
-  - PRIMARY - appendix B's (Nu)_apparent = 0.070 + 0.051 Re reproduced to 1.8 % using its printed 8.70, which localises the slip - its own stated eps_mf = 0.50 gives 7.87 and would move the slope by 10.6 %. Moves to 16.6 % on the 4.5 injection
-  - PRIMARY - two grid ladders, one per branch. convect=False reproduces eq. 54 at observed order 0.999, 4.8e-7 after Richardson extrapolation; convect=True, the branch the reported 7-15 % extension is taken on, refines separately at observed order 1.02 with the reported n = 1600 value 0.34 % above the Richardson limit
-  # --- STRUCTURAL: algebraic identities. A wrong formula, never a wrong number --
-  - STRUCTURAL - the K_r -> 0 limit of eq. 49 is K_m u_0/(u_0-u_mf) to 6e-9, not the K_m of eq. 57. This is an identity - gamma_e is DEFINED by eq. 15's closure, so every coefficient cancels. It cannot detect any value of 0.711, 4.5, 5.85 or 6.78 (worst injected movement 1.2x), nor gamma_c and gamma_e being swapped. It does detect gamma_e off eq. 15's closure (7.9e-2) and a missing 1/(1-eps_mf) in eq. 50
-  - STRUCTURAL - global mass balance on the extended solve closes to 8e-6. This is an identity - the exchange block's columns sum to -delta*gamma_k*K_r and the three velocities sum to u_0 by construction, so the residual is first-order upwind truncation (observed order 0.91, halving on every refinement). It cannot detect any coefficient value (1.8x on the rows that leave the flow pattern intact). It does detect an asymmetric exchange block (0.58) and a velocity set that misses u_0 (5.5e-2)
-  - STRUCTURAL - the ceiling K_f = K_bc L_f/u_b is independent of u_0 to 3.7e-16. K_bc(d_b) and u_br(d_b) contain no u_0 at all, so this is forced for any coefficient values; it confirms the u_0-independence claim and nothing else. It also sits below check_agreement.py's ABS_FLOOR = 1e-12 and is therefore not compared by CI
+  - >-
+    PRIMARY - all eight printed intermediates of appendix C (u_br, u_b, delta, K_bc,
+    K_ce, gamma_c, gamma_e, K_r/K_m) recomputed from eqs. 2, 3, 10, 12, 15, 17, 45
+    and 51 to 0.46 % <!-- claim: appendixC_max_dev --> worst case; each of the four
+    printed coefficients perturbed by one digit or a transposition moves it beyond
+    its tolerance
+  - >-
+    PRIMARY - appendix A's nine printed quantities, ending in (Sh)_over-all = 0.045
+    Re - 0.0101, reproduced to 0.57 % <!-- claim: appendixA_max_dev -->, the same
+    flow model driving gas-solid mass transfer through eq. 27
+  - >-
+    PRIMARY - appendix B's (Nu)_apparent = 0.070 + 0.051 Re reproduced to 1.8 %
+    <!-- claim: appendixB_max_dev --> with its printed 8.70, which localises the
+    slip - its stated eps_mf = 0.50 would move the line by 10.6 % <!-- claim:
+    appendixB_own_emf_shift -->
+  - >-
+    the distributed three-region model is solved two ways, by finite volumes with
+    pymrm operators and exactly by its eigenmodes; on six nested grids the pymrm exit
+    converges at first order (every observed order within 0.02 of 1) and is 8.4e-4
+    <!-- claim: extension_pymrm_vs_exact_n1600 --> off the exact exit at n = 1600,
+    with the finest difference far above round-off
+  - >-
+    the frozen distributed solve (cloud and emulsion carry no gas) equals the
+    backward-Euler product (1 + K_f/n)^-n to round-off, an identity of the scheme,
+    and approaches eq. 54 at first order
+  - >-
+    STRUCTURAL - the K_r -> 0 limit of eq. 49 is K_m u_0/(u_0 - u_mf), evaluated
+    exactly; an identity of eq. 15's closure, blind to every printed coefficient and
+    to gamma_c and gamma_e being swapped, caught by gamma_e off the closure
+  - >-
+    STRUCTURAL - the reactant balance of the distributed model closes to round-off on
+    every grid and K_m, because the outlets carry the face values the operator
+    transports; caught by an exchange block that does not conserve the reactant, by
+    the emulsion velocity of eqs. 5 and 7 and by zero-gradient outlets
+  - >-
+    STRUCTURAL - the ceiling K_f = K_bc L_f/u_b is independent of u_0 at fixed d_b to
+    round-off; forced for any coefficient values, caught by a spurious u_0 dependence
+    in K_bc
 
 adds: >
   The published model is a continued fraction and an exponential, and the page
-  says so rather than inventing a PDE. What the reimplementation adds is three
-  things.
+  says so rather than inventing a PDE.
 
-  A conversion ceiling the paper never states. As K_r -> infinity eq. 49's
-  bracket collapses to K_bc/K_r and K_f -> K_bc L_f/u_b, which contains no rate
-  constant at all. For the authors' own appendix C bed that is 99.13 % conversion
-  and no more, falling to 94.5 % at d_b = 5 cm and 81.4 % at 7 cm. Substituting
-  eq. 4 shows the ceiling is exactly independent of u_0, confirmed numerically to
-  3.7e-16.
+  A conversion ceiling the paper never states. As K_r -> infinity eq. 49's bracket
+  collapses to K_bc/K_r and K_f -> K_bc L_f/u_b, which contains no rate constant.
+  For the authors' own appendix C bed that is 99.13 % <!-- claim:
+  ceiling_conversion_db37 --> conversion and no more, falling to 94.53 % <!--
+  claim: ceiling_conversion_db50 --> at d_b = 5 cm and 81.40 % <!-- claim:
+  ceiling_conversion_db70 --> at 7 cm, and at fixed bubble size it does not depend
+  on u_0. Every bed crosses backmix flow somewhere, since its ceiling is finite, but for d_b = 3
+  and 2 cm only at K_m = 634.6 <!-- claim: backmix_crossing_db30 --> and 4.4e5 <!--
+  claim: backmix_crossing_db20 -->: eq. 54 at its ceiling, two to five orders of
+  magnitude beyond the K_m = 8 of figure 9 and outside any physical range.
 
-  The extension the paper explicitly defers. Eqs. 48b and 48c freeze the cloud
-  and the emulsion - they exchange gas sideways but carry none - and the paper
-  flags the cost, saying that for u_0/u_mf < 6~11 "the conversion of emulsion gas
-  will have to be found by an extension of the present analysis". Kobayashi's
-  runs sit at u_0/u_mf = 3.1 to 9.6. The pymrm model puts the convection back
-  (bubble up at u_0-u_mf, cloud+wake up with the bubble at u_b, emulsion taking
-  the remainder, which is downward, with the two ends coupled by the
-  recirculation loop of the paper's own figure 6). It raises the unconverted
-  fraction by 7 to 15 % - comparable to moving d_b from 3.7 to 4.2 cm, which is
-  the one parameter the authors fitted. The honest conclusion is that the fitted
-  bubble size absorbs it.
+  The extension the paper defers. Eqs. 48b and 48c freeze the cloud and the
+  emulsion; the paper says that for u_0/u_mf < 6~11 "the conversion of emulsion gas
+  will have to be found by an extension of the present analysis". The distributed
+  model puts the convection back (bubble up at u_0 - u_mf, cloud and wake up with
+  the bubble, emulsion taking the remainder, downward here, with the two ends
+  coupled by the recirculation loop of the paper's figure 6). It raises the
+  unconverted fraction by 7.2 % <!-- claim: extension_min_change --> to 14.6 %
+  <!-- claim: extension_max_change --> over the K_m range of figure 9. Eq. 54
+  matches it at d_b = 4.20 <!-- claim: equivalent_db_Km2 --> cm for K_m = 2, but
+  needs 5.00 <!-- claim: equivalent_db_max --> cm at K_m = 0.5 and 3.85 <!--
+  claim: equivalent_db_min --> cm at K_m = 8, so one fitted bubble size absorbs the
+  extension at one rate constant only. These numbers come from the exact eigenmode
+  solution; the pymrm finite-volume solve reproduces them at first order and is the
+  part that carries over to rate laws with no closed form.
 
-  Two claims the paper makes in passing, tested. gamma_b between 0 and 0.01 is
-  said to change the outlet concentration by under 1 %; true to K_m = 1.94, and
-  4.7 % at K_m = 8, the right-hand edge of the paper's own figure 9. The
-  cloud-wake contribution to the exit gas is said to change the fraction
-  unconverted by 10 % at most; true to K_m near 4.9, and 12.1 % at K_m = 8.
+  Two claims the paper makes in passing, tested. gamma_b between 0 and 0.01 is said
+  to change the outlet concentration by under 1 %; true to K_m = 1.94 <!-- claim:
+  gamma_b_claim_Km_limit -->, and 4.7 % <!-- claim: gamma_b_claim_worst --> at K_m
+  = 8, the right-hand edge of figure 9. The cloud-wake contribution to the exit gas
+  is said to change the fraction unconverted by 10 % at most; true to K_m = 4.9
+  <!-- claim: cloud_wake_claim_Km_limit -->, and 12.1 % <!-- claim:
+  cloud_wake_claim_worst --> at K_m = 8.
 
 agreement: >
-  Tier 6. Nothing on this page is compared with a measurement. The numbers are
-  the paper's own printed results: appendix C's eight intermediates to 0.46 %,
-  appendix A's nine quantities to 0.57 %, appendix B to 1.8 % with its printed
-  8.70. Those three appendix comparisons are the page's real evidence, and this
-  entry used to say the opposite - that "the internal checks are stronger" because
-  their residuals are smaller. They are not. The mass balance (8e-6), the K_r -> 0
-  limit (6e-9) and the ceiling's u_0-independence (3.7e-16) are algebraic
-  identities of the model as implemented: they are forced for any values of the
-  four printed coefficients, and the page now measures that. Under a 22 % error in
-  eq. 10's 4.5 the appendix C comparison moves 23x while the mass balance goes
-  8.1e-6 -> 9.3e-6 and still prints "closure 0.001 %". The identities are kept and
-  labelled STRUCTURAL, with what each cannot detect stated beside it; they catch a
-  wrong formula, never a wrong number. The one internal check that does carry
-  weight is the pair of grid ladders, one per branch - eq. 54 reproduced to 4.8e-7
-  after Richardson extrapolation at observed order 0.999 on the frozen branch, and
-  the convect=True branch refined separately at order 1.02 because that is where
-  the reported extension number is taken.
+  Tier 6. Nothing on this page is compared with a measurement. The numbers are the
+  paper's own printed results: appendix C's eight intermediates to 0.46 % <!--
+  claim: appendixC_max_dev -->, appendix A's nine quantities to 0.57 % <!-- claim:
+  appendixA_max_dev -->, appendix B to 1.8 % <!-- claim: appendixB_max_dev --> with
+  its printed 8.70. Those three comparisons are the page's real evidence. The K_r ->
+  0 limit, the reactant balance and the ceiling's u_0-independence are algebraic
+  identities of the model as implemented, forced for any values of the four printed
+  coefficients; the page labels them as such and measures what each catches. The
+  distributed model's numbers are checked against its exact eigenmode solution.
 
 caveats: >
   No experimental comparison. The paper's data is figures 3, 5, 7, 8 and 9, all
-  scatter plots; on figure 9, the sharpest of them, the markers below K_m about
-  1.8 overlap into a solid mass in which centres cannot be located, so the
-  extraction is staged for maintainer review and is not on this page. Every
-  number here is the authors' own arithmetic, reproduced.
+  scatter plots; on figure 9, the sharpest of them, the markers at low K_m overlap
+  into a solid mass in which centres cannot be located, so the extraction is staged
+  for maintainer review and is not on this page. Every number here is the authors'
+  own arithmetic, reproduced, or a consequence of their equations.
 
-  d_b is fitted, not predicted. The paper is explicit that relating its
-  "effective bubble size" to observed bubbles is unfinished business, so d_b =
-  3.7 cm should not be read as a physical diameter, and the ceiling map is a
-  statement about eq. 49 rather than about any real bed. First order only: eqs.
-  48a-c are linear in C_A and the continued fraction does not survive any other
+  d_b is fitted, not predicted. The paper is explicit that relating its "effective
+  bubble size" to observed bubbles is unfinished business, so d_b = 3.7 cm should
+  not be read as a physical diameter, and the ceiling map is a statement about eq.
+  49 rather than about any real bed. First order only: eqs. 48a-c are linear in C_A
+  and neither the continued fraction nor the eigenmode solution survives another
   rate law.
 
   The distributed model's emulsion velocity is a stated closure, not the paper's.
-  The three superficial velocities are required to sum to u_0; the paper's own
-  eqs. 5 and 7 give an emulsion velocity that overshoots u_0 by 9.7 % for this
-  bed, and both are run so the reader can see the spread (7-15 % versus 0-11 %).
-  The top and bottom mixing conditions on the recirculation loop are likewise a
-  choice, consistent with the paper's figure 6 but not written down by it.
+  The three superficial velocities are required to sum to u_0; the paper's own eqs.
+  5 and 7 give an emulsion velocity that overshoots u_0 by 9.7 % <!-- claim:
+  paper_ve_sum_excess --> for this bed, and both are run. The top and bottom mixing
+  conditions on the recirculation loop are likewise a choice, consistent with the
+  paper's figure 6 but not written down by it.
 
   Appendix C's u_0 = (6.6 + 9.9 + 13.2 + 20)/5 = 13.2 has four terms over five; a
-  term was dropped in typesetting. 13.2 is used throughout and is confirmed by
-  the paper's own u_b = 53.9, so nothing is repaired by inference. alpha = 0.47
-  in appendix C is outside the 0.25-0.40 range of the paper's own eq. 6.
+  term was dropped in typesetting. 13.2 is used throughout and is confirmed by the
+  paper's own u_b = 53.9, so nothing is repaired by inference. alpha = 0.47 in
+  appendix C is outside the 0.25-0.40 range of the paper's own eq. 6.
