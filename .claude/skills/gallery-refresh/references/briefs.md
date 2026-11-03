@@ -29,7 +29,11 @@ rule; the review will check against it), AGENTS.md (whole file), docs/page-infra
 docs/claims-design.md, templates/index.py, templates/bootstrap_cell.py, and a refreshed
 page of the same lane as worked example (<two recent pages, e.g. F2.3, J1.5>). The pymrm
 rules: ~/Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/references/pitfalls.md
-(complete) and style-guide.md. Search docs/refresh-learnings.md for rows on this page's
+(complete), style-guide.md and api-map.md (the current API: which call does what), and the
+plugin exemplar closest to this page's structure (conventions/exemplars/: dispersion_reactor,
+steady_pellet, steady_tvd_channel for ConvFluxTVD and {"outflow": True}, assembly_styles;
+model-patterns/exemplars/: membrane_reactor, darcy_gas_reactor, nested_particle_bed for
+BlockLayout, construct_coefficient_matrix and coupled domains). Search docs/refresh-learnings.md for rows on this page's
 section or structure; do not read all of it.
 
 Lane A (infrastructure): index.py from templates/index.py, paired index.ipynb via
