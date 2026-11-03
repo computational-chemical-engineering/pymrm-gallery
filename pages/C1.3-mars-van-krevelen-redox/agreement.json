@@ -1,35 +1,887 @@
 {
   "page": "C1.3",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "eq16_corrected_max_residual": 1e-09,
-    "eq16_printed_rhs_max_error": 4.814371103275132,
-    "vantHoff_dH_kcal_per_mol_SO3": 22.60273440917145,
-    "vantHoff_vs_printed_23": 0.01727241699254567,
-    "kavg_checksum_worst_block": 0.0037499999999999756,
-    "table4_arithmetic_max_abs_dev": 0.048838031976963237,
-    "table4_nu_bestfit": 1.3858534628284367,
-    "table4_rms_pyrite": 0.12967124467833338,
-    "table4_rms_sulphur": 2.815771906346716,
-    "neumann_fitted_scale_inverse": 1429.0016246764674,
-    "neumann_fitted_SO2_pct": 6.390450781034997,
-    "neumann_fit_mean_dev": 0.02645779426523706,
-    "neumann_test_mean_dev": 0.038016531171709625,
-    "neumann_test_max_dev": 0.1023023279591837,
-    "neumann_test_mean_dev_power2": 0.019977899817193265,
-    "alpha_eq_550C_fitted_gas": 0.8988919370585032,
-    "bracketed_row_alpha_prime": 0.9678582754306952,
-    "kuster_fitted_alpha_eq": 0.9706778283693664,
-    "kuster_max_abs_dev": 0.022420390382574817,
-    "discrimination_rms_mvk": 1.0090309678296803,
-    "discrimination_rms_first_order": 2.8476369216247517,
-    "discrimination_rms_boreskov": 3.8006127085465025,
-    "Eapp_kcal_per_mol": 8.58217733481576,
-    "Eapp_vs_paper_about_9": 0.046424740576026635,
-    "ratio_22_over_Eapp": 2.563452040399057,
-    "split_converter1_pct_quad": 23.618845038060506,
-    "alpha_eq_570C_pyrite_gas": 0.8099456642937505,
-    "split_converter1_pct_pymrm_n2000": 23.718589516930113,
-    "split_routes_gap_points": 0.09974447886960647,
-    "split_scale_invariance_gap_points": 0.001
+    "eq16_corrected_max_residual": {
+      "kind": "bound",
+      "value": 4.440892098500626e-16,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "quad epsrel 1e-10 on integrals of size up to 2.4"
+    },
+    "eq16_printed_rhs_max_error": {
+      "kind": "value",
+      "value": 4.814371103279916,
+      "rtol": 0.05
+    },
+    "vantHoff_dH_kcal_per_mol_SO3": {
+      "kind": "value",
+      "value": 22.60273440917145,
+      "rtol": 0.05,
+      "unit": "kcal/mol"
+    },
+    "vantHoff_vs_printed_23": {
+      "kind": "value",
+      "value": 0.01727241699254567,
+      "rtol": 0.05
+    },
+    "neumann_fit_rows": {
+      "kind": "exact",
+      "value": 19,
+      "structural": true,
+      "note": "row count of the 325-465 C blocks in the CSV"
+    },
+    "neumann_test_rows": {
+      "kind": "exact",
+      "value": 13,
+      "structural": true,
+      "note": "unbracketed row count of the 475-550 C blocks in the CSV"
+    },
+    "discrimination_rows": {
+      "kind": "exact",
+      "value": 32,
+      "structural": true,
+      "note": "unbracketed rows of Table 2"
+    },
+    "kavg_checksum_worst_block": {
+      "kind": "value",
+      "value": 0.00375,
+      "rtol": 0.05
+    },
+    "kavg_blocks_within_half_unit": {
+      "kind": "exact",
+      "value": 4,
+      "note": "exact rational arithmetic on the printed digits"
+    },
+    "kavg_blocks_rounding_tie": {
+      "kind": "exact",
+      "value": 1,
+      "note": "exact rational arithmetic on the printed digits"
+    },
+    "kavg_blocks_within_one_unit": {
+      "kind": "exact",
+      "value": 2,
+      "note": "exact rational arithmetic on the printed digits"
+    },
+    "kavg_blocks_beyond_one_unit": {
+      "kind": "exact",
+      "value": 2,
+      "note": "exact rational arithmetic on the printed digits"
+    },
+    "kavg_425_three_row_mean_is_printed": {
+      "kind": "exact",
+      "value": true,
+      "note": "exact rational arithmetic on the printed digits"
+    },
+    "table4_arithmetic_max_abs_dev": {
+      "kind": "bound",
+      "value": 0.048838031976963237,
+      "max": 0.05,
+      "basis": "theory",
+      "note": "the printed groups have one decimal: half a unit is 0.05"
+    },
+    "table4_max_row_n1_pct_SO2": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 0.008883800579005145,
+      "min_margin": 0.001,
+      "note": "the Table 4 row (by its %SO2) with the largest recomputed group; margin: relative gap to the runner-up"
+    },
+    "table4_max_row_nhalf_pct_SO2": {
+      "kind": "exact",
+      "value": 11,
+      "margin": 0.005874247478438003,
+      "min_margin": 0.001,
+      "note": "the Table 4 row (by its %SO2) with the largest recomputed group; margin: relative gap to the runner-up"
+    },
+    "table4_nu_bestfit": {
+      "kind": "value",
+      "value": 1.3858534564268181,
+      "rtol": 0.001,
+      "note": "a fitted parameter, closed form: held to a tenth of a per cent"
+    },
+    "table4_rms_pyrite": {
+      "kind": "value",
+      "value": 0.1296712446783331,
+      "rtol": 0.05
+    },
+    "table4_rms_sulphur": {
+      "kind": "value",
+      "value": 2.815771906346716,
+      "rtol": 0.05
+    },
+    "table4_sulphur_over_pyrite": {
+      "kind": "value",
+      "value": 21.71469791418765,
+      "rtol": 0.05
+    },
+    "neumann_fitted_scale_inverse": {
+      "kind": "value",
+      "value": 1429.0016252346882,
+      "rtol": 0.05
+    },
+    "neumann_fitted_SO2_pct": {
+      "kind": "value",
+      "value": 6.39045099359566,
+      "rtol": 0.05
+    },
+    "neumann_fit_mean_dev": {
+      "kind": "value",
+      "value": 0.026457794301095235,
+      "rtol": 0.05
+    },
+    "neumann_fit_max_dev": {
+      "kind": "value",
+      "value": 0.10000853715842095,
+      "rtol": 0.05
+    },
+    "neumann_test_mean_dev": {
+      "kind": "value",
+      "value": 0.03801653070324894,
+      "rtol": 0.05
+    },
+    "neumann_test_max_dev": {
+      "kind": "value",
+      "value": 0.10230232929540861,
+      "rtol": 0.05
+    },
+    "neumann_fitted_SO2_pct_power2": {
+      "kind": "value",
+      "value": 7.949315842068974,
+      "rtol": 0.05
+    },
+    "neumann_test_mean_dev_power2": {
+      "kind": "value",
+      "value": 0.019977899804281704,
+      "rtol": 0.05
+    },
+    "neumann_test_max_dev_power2": {
+      "kind": "value",
+      "value": 0.06500259733386315,
+      "rtol": 0.05
+    },
+    "alpha_eq_325C_fitted_gas": {
+      "kind": "value",
+      "value": 0.9993736127421967,
+      "rtol": 0.001
+    },
+    "alpha_eq_475C_fitted_gas": {
+      "kind": "value",
+      "value": 0.9724647985731928,
+      "rtol": 0.001
+    },
+    "alpha_eq_500C_fitted_gas": {
+      "kind": "value",
+      "value": 0.9558111329346417,
+      "rtol": 0.001
+    },
+    "alpha_eq_525C_fitted_gas": {
+      "kind": "value",
+      "value": 0.931832434373242,
+      "rtol": 0.001
+    },
+    "alpha_eq_550C_fitted_gas": {
+      "kind": "value",
+      "value": 0.8988919367245823,
+      "rtol": 0.001
+    },
+    "table2_rows_more_sensitive_than_bracketed": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.050724757251042044,
+      "min_margin": 0.01,
+      "note": "unbracketed rows whose k' moves more for a +/-0.5-point conversion error than the bracketed row's"
+    },
+    "table2_rows_further_from_block_than_bracketed": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.0551413915845585,
+      "min_margin": 0.01,
+      "note": "unbracketed rows whose |ln(k' / mean of the other rows of the block)| exceeds the bracketed row's"
+    },
+    "bracketed_row_alpha_prime": {
+      "kind": "value",
+      "value": 0.9678582757902358,
+      "rtol": 0.05
+    },
+    "bracketed_row_from_equilibrium_pct": {
+      "kind": "value",
+      "value": 3.2141724209764244,
+      "rtol": 0.05
+    },
+    "bracketed_row_sensitivity_pct": {
+      "kind": "value",
+      "value": 13.706342503315646,
+      "rtol": 0.05
+    },
+    "table2_max_sensitivity_pct": {
+      "kind": "value",
+      "value": 62.7773777444785,
+      "rtol": 0.05
+    },
+    "bracketed_row_recomputed_dev": {
+      "kind": "value",
+      "value": 0.04969863750269643,
+      "rtol": 0.05
+    },
+    "bracketed_kprime_over_block_mean": {
+      "kind": "value",
+      "value": 0.8283582089552238,
+      "rtol": 0.001,
+      "note": "a ratio of printed values"
+    },
+    "kuster_fitted_alpha_eq": {
+      "kind": "value",
+      "value": 0.9706778164623721,
+      "rtol": 0.001
+    },
+    "kuster_scale": {
+      "kind": "value",
+      "value": 114.94619859541646,
+      "rtol": 0.05
+    },
+    "kuster_max_abs_dev": {
+      "kind": "value",
+      "value": 0.022420399770512134,
+      "rtol": 0.05
+    },
+    "discrimination_rms_mvk": {
+      "kind": "value",
+      "value": 1.0090309651322742,
+      "rtol": 0.05
+    },
+    "discrimination_rms_first_order": {
+      "kind": "value",
+      "value": 2.8476369169588605,
+      "rtol": 0.05
+    },
+    "discrimination_rms_boreskov": {
+      "kind": "value",
+      "value": 2.4732944816584035,
+      "rtol": 0.05
+    },
+    "discrimination_first_order_over_mvk": {
+      "kind": "value",
+      "value": 2.8221501771113267,
+      "rtol": 0.05
+    },
+    "discrimination_boreskov_over_mvk": {
+      "kind": "value",
+      "value": 2.4511581578016077,
+      "rtol": 0.05
+    },
+    "discrimination_boreskov_worst_block_C": {
+      "kind": "exact",
+      "value": 325,
+      "margin": 0.04371805311218429,
+      "min_margin": 0.01,
+      "note": "block with the largest Boreskov rms; margin: relative gap to the runner-up"
+    },
+    "discrimination_fits_at_window_edge": {
+      "kind": "exact",
+      "value": 0,
+      "note": "fits whose sum of squares still falls at the end of the k window"
+    },
+    "discrimination_fits_with_several_stationary_points": {
+      "kind": "exact",
+      "value": 0,
+      "note": "fits whose sum of squares has more than one stationary point in the window"
+    },
+    "Eapp_kcal_per_mol": {
+      "kind": "value",
+      "value": 8.58217733481576,
+      "rtol": 0.05
+    },
+    "Eapp_vs_paper_about_9": {
+      "kind": "value",
+      "value": 0.046424740576026635,
+      "rtol": 0.05
+    },
+    "ratio_22_over_Eapp": {
+      "kind": "value",
+      "value": 2.563452040399057,
+      "rtol": 0.05
+    },
+    "split_converter1_pct_quad": {
+      "kind": "value",
+      "value": 23.61890510016899,
+      "rtol": 0.05
+    },
+    "split_vs_paper_points": {
+      "kind": "value",
+      "value": 0.6189051001689911,
+      "rtol": 0.05
+    },
+    "plant_minus_split_points": {
+      "kind": "value",
+      "value": 3.381094899831009,
+      "rtol": 0.05
+    },
+    "alpha_eq_570C_pyrite_gas": {
+      "kind": "value",
+      "value": 0.8099456642937506,
+      "rtol": 0.05
+    },
+    "T_opt_040_C": {
+      "kind": "value",
+      "value": 591.3729239341061,
+      "rtol": 0.002,
+      "unit": "degC"
+    },
+    "T_opt_081_C": {
+      "kind": "value",
+      "value": 492.19154557994636,
+      "rtol": 0.002,
+      "unit": "degC"
+    },
+    "T_opt_090_C": {
+      "kind": "value",
+      "value": 456.3034155972516,
+      "rtol": 0.002,
+      "unit": "degC"
+    },
+    "T_opt_097_C": {
+      "kind": "value",
+      "value": 401.4283480713541,
+      "rtol": 0.002,
+      "unit": "degC"
+    },
+    "optimum_curve_nodes_at_ceiling": {
+      "kind": "exact",
+      "value": 0,
+      "note": "conversion nodes whose optimum lands on the window's upper end"
+    },
+    "split_quad_tolerance_gap": {
+      "kind": "bound",
+      "value": 2.2776447394790011e-10,
+      "max": 1e-07,
+      "basis": "tolerance",
+      "note": "quad epsrel 1e-8 against 1e-10, split-points"
+    },
+    "split_interpolant_gap": {
+      "kind": "bound",
+      "value": 1.7434782506597912e-07,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "splines on twice the nodes in T and in alpha; a thousandth of a split-point is far below every comparison on the page"
+    },
+    "split_scale_invariance_gap_points": {
+      "kind": "bound",
+      "value": 1.0658141036401503e-14,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "every rate times 10: the split is a ratio of two integrals of 1/r"
+    },
+    "split_converter1_pct_pymrm_n2000": {
+      "kind": "value",
+      "value": 23.70174437808855,
+      "rtol": 0.05
+    },
+    "split_routes_gap_points": {
+      "kind": "bound",
+      "value": 0.08283927791955747,
+      "max": 0.15,
+      "basis": "theory",
+      "note": "first-order upwind on 2000 cells against the quadrature, split-points"
+    },
+    "split_order_min": {
+      "kind": "bound",
+      "value": 0.8963665937779249,
+      "min": 0.85,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind; successive differences, 1000 to 16000 cells"
+    },
+    "split_order_spread": {
+      "kind": "bound",
+      "value": 0.019627281109203976,
+      "max": 0.05,
+      "basis": "theory",
+      "note": "the orders of a ladder in the asymptotic range agree"
+    },
+    "split_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 3094288675.281,
+      "min": 1000000.0,
+      "basis": "theory",
+      "note": "finest ladder change over n eps; the crossings are root-found to 1e-12"
+    },
+    "newton_backward_error_worst": {
+      "kind": "bound",
+      "value": 2.23111507996989e-16,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "pymrm.checks.residual_check over the ladder; newton backward_tol 1e-8"
+    },
+    "split_order_floored_max_dev_from_one": {
+      "kind": "bound",
+      "value": 0.006666368284601432,
+      "max": 0.02,
+      "basis": "theory",
+      "note": "first-order upwind with r held at its alpha = 0.2 value below 0.2: orders near 1"
+    },
+    "pymrm_outlet_beyond_target": {
+      "kind": "bound",
+      "value": 0.002274892716593646,
+      "min": 0.0,
+      "basis": "chosen",
+      "note": "the bed must hold the 97 % crossing"
+    },
+    "feed_rows_reaching_target": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.10652920962199307,
+      "min_margin": 0.01,
+      "note": "Table 4 rows with 2 %O2/%SO2 above the 97 % target; margin relative to it"
+    },
+    "feed_split_min_pct": {
+      "kind": "value",
+      "value": 22.46933817680845,
+      "rtol": 0.05
+    },
+    "feed_split_max_pct": {
+      "kind": "value",
+      "value": 23.728514849848537,
+      "rtol": 0.05
+    },
+    "feed_split_range_points": {
+      "kind": "value",
+      "value": 1.2591766730400877,
+      "rtol": 0.05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "eq16_corrected_max_residual": [
+      "eq. (16) RHS as printed (terms transposed)"
+    ],
+    "eq16_printed_rhs_max_error": [
+      "eq. (16) RHS in the corrected order"
+    ],
+    "kavg_checksum_worst_block": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572"
+    ],
+    "kavg_blocks_within_one_unit": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572"
+    ],
+    "kavg_blocks_beyond_one_unit": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572"
+    ],
+    "neumann_fitted_SO2_pct": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_test_mean_dev": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572",
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_test_max_dev": [
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_fitted_scale_inverse": [
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_fit_mean_dev": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_fit_max_dev": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_fitted_SO2_pct_power2": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_test_mean_dev_power2": [
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572",
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "neumann_test_max_dev_power2": [
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572",
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "alpha_eq_325C_fitted_gas": [
+      "eq. (8) slope 9880 read as 8880"
+    ],
+    "alpha_eq_475C_fitted_gas": [
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "alpha_eq_500C_fitted_gas": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "alpha_eq_525C_fitted_gas": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "alpha_eq_550C_fitted_gas": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "bracketed_row_alpha_prime": [
+      "Table 2: 550 C, V = 300 conversion 87.0 read as 78.0",
+      "eq. (8) slope 9880 read as 8880",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "bracketed_row_from_equilibrium_pct": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 300 conversion 87.0 read as 78.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "bracketed_row_sensitivity_pct": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 300 conversion 87.0 read as 78.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "table2_max_sensitivity_pct": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "bracketed_row_recomputed_dev": [
+      "Table 2: 465 C, V = 500 k' 0.363 read as 0.393",
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 300 conversion 87.0 read as 78.0",
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "table2_rows_more_sensitive_than_bracketed": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102",
+      "Table 2: 550 C, V = 300 conversion 87.0 read as 78.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "table2_rows_further_from_block_than_bracketed": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219",
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572"
+    ],
+    "discrimination_rms_mvk": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "SO2 made trace in Neumann's gas (s fixed at 1e-6)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "discrimination_rms_first_order": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "discrimination_rms_boreskov": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)",
+      "Boreskov exponent 0.8 read as 0.5"
+    ],
+    "discrimination_first_order_over_mvk": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "discrimination_boreskov_over_mvk": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)",
+      "Boreskov exponent 0.8 read as 0.5"
+    ],
+    "kavg_blocks_rounding_tie": [
+      "Table 2: 500 C, V = 750 k' 0.495 read as 0.459"
+    ],
+    "kavg_425_three_row_mean_is_printed": [
+      "Table 2: 425 C, V = 150 k' 0.291 read as 0.219"
+    ],
+    "kavg_blocks_within_half_unit": [
+      "Table 2: 325 C, V = 300 k' 0.120 read as 0.102"
+    ],
+    "bracketed_kprime_over_block_mean": [
+      "Table 2: 550 C, V = 500 k' 0.527 read as 0.572"
+    ],
+    "discrimination_boreskov_worst_block_C": [
+      "Table 2: 525 C, V = 300 conversion 90.0 read as 80.0",
+      "eq. (8) slope 9880 read as 8880",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "kuster_fitted_alpha_eq": [
+      "Table 1: 52.1 s conversion 87.9 read as 78.9",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "kuster_scale": [
+      "Table 1: 52.1 s conversion 87.9 read as 78.9",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "kuster_max_abs_dev": [
+      "Table 1: 52.1 s conversion 87.9 read as 78.9",
+      "retardation term -a' dropped from eq. (14) (first-order form)",
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "table4_arithmetic_max_abs_dev": [
+      "Table 4: %O2 11.9 read as 11.6",
+      "Table 4: %SO2 12 read as 10",
+      "n = 1 group computed with sqrt(%O2)",
+      "n = 1/2 group computed with %O2"
+    ],
+    "table4_nu_bestfit": [
+      "Table 4: %O2 11.9 read as 11.6",
+      "Table 4: %SO2 12 read as 10",
+      "O2 content of air 20.9 % taken as 21.0 %"
+    ],
+    "table4_rms_pyrite": [
+      "Table 4: %O2 11.9 read as 11.6",
+      "Table 4: %SO2 12 read as 10",
+      "O2 content of air 20.9 % taken as 21.0 %"
+    ],
+    "table4_rms_sulphur": [
+      "Table 4: %SO2 12 read as 10"
+    ],
+    "table4_sulphur_over_pyrite": [
+      "Table 4: %O2 11.9 read as 11.6",
+      "Table 4: %SO2 12 read as 10",
+      "O2 content of air 20.9 % taken as 21.0 %"
+    ],
+    "feed_rows_reaching_target": [
+      "Table 4: %SO2 12 read as 10"
+    ],
+    "table4_max_row_n1_pct_SO2": [
+      "n = 1 group computed with sqrt(%O2)"
+    ],
+    "table4_max_row_nhalf_pct_SO2": [
+      "n = 1/2 group computed with %O2"
+    ],
+    "vantHoff_dH_kcal_per_mol_SO3": [
+      "eq. (8) slope 9880 read as 8880"
+    ],
+    "vantHoff_vs_printed_23": [
+      "eq. (8) slope 9880 read as 8880"
+    ],
+    "discrimination_fits_at_window_edge": [
+      "eq. (8) slope 9880 read as 8880"
+    ],
+    "split_converter1_pct_quad": [
+      "eq. (8) slope 9880 read as 8880",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "split_vs_paper_points": [
+      "eq. (8) slope 9880 read as 8880",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)",
+      "optimum curve capped at 600 C"
+    ],
+    "plant_minus_split_points": [
+      "eq. (8) slope 9880 read as 8880",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "alpha_eq_570C_pyrite_gas": [
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00"
+    ],
+    "T_opt_040_C": [
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "T_opt_081_C": [
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "T_opt_090_C": [
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "T_opt_097_C": [
+      "eq. (8) slope 9880 read as 8880",
+      "eq. (8) intercept 9.34 read as 9.00",
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled"
+    ],
+    "discrimination_fits_with_several_stationary_points": [
+      "alpha_eq forced to exactly 1 (equilibrium machinery removed)"
+    ],
+    "Eapp_kcal_per_mol": [
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled"
+    ],
+    "Eapp_vs_paper_about_9": [
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled"
+    ],
+    "ratio_22_over_Eapp": [
+      "Table 3 '400' read as 300",
+      "Table 3 '445 C' read as 455 C",
+      "activation energy doubled"
+    ],
+    "split_converter1_pct_pymrm_n2000": [
+      "Table 3 '400' read as 300"
+    ],
+    "optimum_curve_nodes_at_ceiling": [
+      "activation energy doubled",
+      "optimum curve capped at 600 C"
+    ],
+    "feed_split_min_pct": [
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "feed_split_max_pct": [
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "feed_split_range_points": [
+      "activation energy doubled",
+      "chemical-regime rate (13a) instead of (15)"
+    ],
+    "split_quad_tolerance_gap": [
+      "quadrature at epsrel 1e-2 against 1e-10"
+    ],
+    "split_interpolant_gap": [
+      "rate spline on 40 conversions (n_alpha = 40)"
+    ],
+    "split_scale_invariance_gap_points": [
+      "rates scaled by (1 + alpha) instead of uniformly"
+    ],
+    "split_routes_gap_points": [
+      "200 cells instead of 2000"
+    ],
+    "split_order_min": [
+      "crossings read on the cell step, no interpolation (read='step')"
+    ],
+    "split_order_spread": [
+      "crossings read on the cell step, no interpolation (read='step')"
+    ],
+    "split_order_floored_max_dev_from_one": [
+      "rate not held below alpha = 0.2 (floor 0)"
+    ],
+    "split_finest_over_roundoff": [
+      "ladder whose last rung is 16001 cells after 16000"
+    ],
+    "newton_backward_error_worst": [
+      "Newton stopped after one iteration (solve(maxfev=1, strict=False))"
+    ],
+    "pymrm_outlet_beyond_target": [
+      "bed of 0.95 times the quadrature contact time"
+    ]
   }
 }
