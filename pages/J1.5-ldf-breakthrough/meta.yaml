@@ -14,36 +14,60 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 3
+pymrm_min_version: "3.3.0"
+runtime_seconds: 12
 datasets: []
 
 validation:
-  - pymrm sphere against the exact series solution, refined in space and in time
-  - volume weights sum to one
-  - the LDF error quantified separately at early, intermediate and late times
-  - the long-time decay constant of the exact solution recovered as pi^2
+  - >-
+    pymrm sphere against the Crank series, summed to a measured tail bound (relative
+    tail below 1e-15 <!-- claim: series_tail_bound -->, not a fixed term count); the
+    production march is off by 2.6e-3 <!-- claim: solver_worst_rel_err --> at worst
+    (tau = 0.001), 97 % <!-- claim: time_error_share_tau1e3 --> of it the backward-Euler
+    step, and by 6.5e-5 <!-- claim: solver_rel_err_n400 --> at tau = 0.05 on 400 cells
+  - >-
+    refinement in space (exact in time, successive differences, all ten times) is
+    second order (the observed order departs from 2 by below 0.2 <!-- claim: grid_order_worst_dev
+    -->) and in time (backward Euler) first order (it departs from 1 by below 0.1 <!-- claim:
+    time_order_worst_dev -->), each with its
+    finest difference above 1e3 times round-off
+  - >-
+    the mean loading equals the integral of the surface flux read with
+    compute_boundary_values to below 1e-12 <!-- claim: flux_balance_gap -->, which a
+    midpoint weighting, a wrong geometry index or a last-cell flux each break
+  - >-
+    the Crank series is checked against the spatial limit of the discretisation
+    (below 1e-6 <!-- claim: series_vs_pymrm_limit -->); separately, the lowest eigenvalue
+    of the sphere, cylinder and slab operators (nu = 2, 1, 0) is checked against its
+    exact value, and the parabola argument gives its own constant for each geometry
+  - >-
+    the LDF error is located by root-finding: its two extrema and its one crossing,
+    tau = 0.094 <!-- claim: ldf_crossing_tau -->
 
 adds: >
-  Glueckauf compared candidate rate expressions at a handful of tabulated
-  points. With the exact solution in closed form the question can be asked
-  continuously: what coefficient would the LDF need at each instant? That
-  k_eff(tau) is computed analytically - both the deficit and its rate come from
-  the series, so nothing is differentiated numerically - and it is not flat. It
-  diverges as tau^-1/2 at short time, where uptake grows as a square root and no
-  exponential can follow it; it passes through Glueckauf's 15 at tau = 0.022,
-  with the particle 44 % loaded; and it settles onto pi^2 = 9.8696 to five
-  figures. So 15 is exactly right at one instant, and the paper's own domain of
-  validity - near equilibrium, mildly curved isotherms - is precisely the region
-  where the particle stays there.
+  Nothing to the answer: the coefficient the LDF would need at each instant,
+  k_eff(tau), is computed from the closed-form series (no pymrm). It diverges as
+  3/sqrt(pi tau) at short time, passes through Glueckauf's 15 at tau = 0.0217
+  <!-- claim: k_eff_equals_15_tau --> with the particle 43 %
+  <!-- claim: uptake_at_k_eff_15 --> loaded, and settles onto pi^2 = 9.87
+  <!-- claim: long_time_decay_constant -->. 15 is the coefficient the particle needs at one
+  instant because the surface gradient equals that of the same-mean parabola there; the
+  profile itself is not parabolic at that instant (the largest gap to the parabola, at the centre, is 0.42
+  <!-- claim: profile_gap_at_k_eff_15 -->). What the pymrm solve is for is the inner
+  problem of a coupled column, which has no closed form once the isotherm is nonlinear or the diffusivity
+  varies: it shows that the discretisation
+  (operators from construct_grad and construct_div, a geometry index nu, the face flux)
+  is second order in space and first order in time with an exact flux balance, and
+  that the plain backward-Euler step dominates the error at early times.
 
 agreement: >
-  The pymrm solution matches the exact series to 6.6e-5 relative at n_r = 400
-  and to 2.6e-3 at worst across tau = 0.001 to 0.5, the worst case being the
-  earliest time where the internal profile is steepest. Spatial refinement runs
-  into the backward-Euler time-error floor, which the time-step study then
-  measures directly. The recovered long-time decay constant is 9.8696 against
-  pi^2 = 9.8696.
+  The pymrm solution matches the series to 2.6e-3 <!-- claim: solver_worst_rel_err -->
+  relative at worst across tau = 0.001 to 0.5, at tau = 0.001 and 97 %
+  <!-- claim: time_error_share_tau1e3 --> of it from the backward-Euler step (the
+  spatial part is 7.5e-5 <!-- claim: spatial_err_tau1e3 -->), and to 6.5e-5 <!-- claim: solver_rel_err_n400 --> at tau = 0.05
+  on 400 cells. The lowest eigenvalue of the pymrm operator matches the exact
+  slowest-mode constant to 2.5e-5 <!-- claim: lambda1_worst_rel_err --> at worst over
+  the sphere, cylinder and slab.
 
 caveats: >
   Provenance tier 6: the reference is the analytic series, not measurement.

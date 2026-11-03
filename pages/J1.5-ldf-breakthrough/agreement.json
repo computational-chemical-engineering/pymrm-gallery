@@ -1,10 +1,316 @@
 {
   "page": "J1.5",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "solver_worst_rel_err": 0.0026464700842623954,
-    "solver_rel_err_n400": 6.590068082348053e-05,
-    "ldf_worst_abs_err": 0.17009997913329455,
-    "ldf_max_rel_err_early": 0.955325957230834,
-    "long_time_decay_constant": 9.869615716446221
+    "weights_sum_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "telescoping sum of r^3 differences"
+    },
+    "ldf_worst_abs_err": {
+      "kind": "value",
+      "value": 0.17010006886448703,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_worst_abs_err_tau": {
+      "kind": "value",
+      "value": 0.01183116388480195,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_crossing_tau": {
+      "kind": "value",
+      "value": 0.09400776083204004,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_over_prediction_tau": {
+      "kind": "value",
+      "value": 0.177588382933558,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_over_prediction_max": {
+      "kind": "value",
+      "value": 0.035810154199726774,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_max_rel_err_early": {
+      "kind": "value",
+      "value": 0.955325957230833,
+      "rtol": 0.05,
+      "unit": "-",
+      "note": "relative shortfall at tau = 1e-4, the smallest tau of the scan"
+    },
+    "k_eff_equals_15_tau": {
+      "kind": "value",
+      "value": 0.021651603771287404,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "uptake_at_k_eff_15": {
+      "kind": "value",
+      "value": 0.43315070276609746,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "profile_gap_at_k_eff_15": {
+      "kind": "value",
+      "value": 0.41719739692751046,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "k_eff_thin_shell_ratio": {
+      "kind": "bound",
+      "value": 1.0016151462972422,
+      "min": 1.0,
+      "max": 1.01,
+      "basis": "theory",
+      "note": "k_eff sqrt(pi tau)/3 tends to 1 from above (qbar ~ 6 sqrt(tau/pi))"
+    },
+    "k_eff_gap_pi2": {
+      "kind": "value",
+      "value": 2.789903157385254e-07,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "long_time_decay_constant": {
+      "kind": "value",
+      "value": 9.869607154613405,
+      "rtol": 0.001,
+      "unit": "-"
+    },
+    "series_tail_bound": {
+      "kind": "bound",
+      "value": 9.86451992202647e-16,
+      "max": 1e-15,
+      "basis": "tolerance",
+      "note": "relative tail bound of both sums at the requested rtol 1e-15"
+    },
+    "series_vs_pymrm_limit": {
+      "kind": "bound",
+      "value": 1.985298017093129e-07,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "Richardson-extrapolated spatial limit against the series, ten times; set an order of magnitude above the measured gap"
+    },
+    "grid_order_worst_dev": {
+      "kind": "bound",
+      "value": 0.09078758836926815,
+      "max": 0.2,
+      "basis": "theory",
+      "note": "|observed order - 2| at the finest triple, worst of ten times, midpoint scheme with a Dirichlet face value"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 323169.90267082717,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative difference over cond(V) eps, smallest of ten times"
+    },
+    "time_order_worst_dev": {
+      "kind": "bound",
+      "value": 0.0035733897578587026,
+      "max": 0.1,
+      "basis": "theory",
+      "note": "|observed order - 1| at the finest triple, backward Euler, worst of ten times"
+    },
+    "dt_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 150545.76900042934,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative difference over n_steps eps, smallest of ten times"
+    },
+    "time_error_share_tau1e3": {
+      "kind": "value",
+      "value": 0.9715559974140185,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "spatial_err_tau1e3": {
+      "kind": "value",
+      "value": 7.54073104910491e-05,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "solver_worst_rel_err": {
+      "kind": "value",
+      "value": 0.002644268672419292,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "solver_rel_err_n400": {
+      "kind": "value",
+      "value": 6.502836685284841e-05,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "flux_balance_gap": {
+      "kind": "bound",
+      "value": 1.887379141862766e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "exact for backward Euler with cell-volume weights and the face flux"
+    },
+    "lambda1_worst_rel_err": {
+      "kind": "value",
+      "value": 2.4666897908365293e-05,
+      "rtol": 0.05,
+      "unit": "-"
+    },
+    "ldf_constant_sphere": {
+      "kind": "exact",
+      "value": 15.0,
+      "note": "(nu + 1)(nu + 3) at nu = 2"
+    },
+    "ldf_constant_cylinder": {
+      "kind": "exact",
+      "value": 8.0
+    },
+    "ldf_constant_slab": {
+      "kind": "exact",
+      "value": 3.0
+    }
+  },
+  "quoted": {
+    "k_eff_equals_15_tau": [
+      "0.0217"
+    ],
+    "uptake_at_k_eff_15": [
+      "43 %"
+    ],
+    "profile_gap_at_k_eff_15": [
+      "0.417",
+      "0.42"
+    ],
+    "ldf_worst_abs_err": [
+      "0.170"
+    ],
+    "ldf_worst_abs_err_tau": [
+      "0.0118"
+    ],
+    "ldf_crossing_tau": [
+      "0.094"
+    ],
+    "ldf_over_prediction_max": [
+      "0.036"
+    ],
+    "ldf_over_prediction_tau": [
+      "0.178"
+    ],
+    "ldf_max_rel_err_early": [
+      "96 %"
+    ],
+    "long_time_decay_constant": [
+      "9.87"
+    ],
+    "k_eff_gap_pi2": [
+      "3e-7"
+    ],
+    "time_error_share_tau1e3": [
+      "97 %"
+    ]
+  },
+  "breaks": {
+    "weights_sum_gap": [
+      "midpoint weights 3 r_c^2 dr (Particle(weights='midpoint'))"
+    ],
+    "ldf_worst_abs_err": [
+      "LDF constant 12 instead of 15"
+    ],
+    "ldf_worst_abs_err_tau": [
+      "LDF constant 12 instead of 15"
+    ],
+    "ldf_over_prediction_max": [
+      "LDF constant 12 instead of 15"
+    ],
+    "ldf_crossing_tau": [
+      "LDF constant 12 instead of 15"
+    ],
+    "ldf_over_prediction_tau": [
+      "LDF constant 12 instead of 15"
+    ],
+    "ldf_max_rel_err_early": [
+      "LDF constant 60 instead of 15"
+    ],
+    "k_eff_equals_15_tau": [
+      "coefficient 12 instead of 15 (k_effective_crossing(12))"
+    ],
+    "uptake_at_k_eff_15": [
+      "coefficient 12 instead of 15 (k_effective_crossing(12))"
+    ],
+    "profile_gap_at_k_eff_15": [
+      "coefficient 12 instead of 15 (k_effective_crossing(12))"
+    ],
+    "k_eff_thin_shell_ratio": [
+      "series cut at three terms"
+    ],
+    "k_eff_gap_pi2": [
+      "series cut at one term (only the slowest mode)"
+    ],
+    "long_time_decay_constant": [
+      "decay constant read early, at tau = 0.05"
+    ],
+    "series_tail_bound": [
+      "series cut at 20 terms"
+    ],
+    "series_vs_pymrm_limit": [
+      "geometry index 1 in construct_div for a sphere (nu_div=1)"
+    ],
+    "grid_order_worst_dev": [
+      "ladder 100, 200, 300 read as a ratio of 2"
+    ],
+    "grid_finest_over_roundoff": [
+      "ladders read at tau = 4, mean 1 to round-off"
+    ],
+    "time_order_worst_dev": [
+      "ladder 10, 20, 30 read as a ratio of 2"
+    ],
+    "dt_finest_over_roundoff": [
+      "ladders read at tau = 4, mean 1 to round-off"
+    ],
+    "time_error_share_tau1e3": [
+      "25 cells instead of 200 (spatial error comparable to the step's)"
+    ],
+    "spatial_err_tau1e3": [
+      "25 cells instead of 200 (spatial error comparable to the step's)"
+    ],
+    "solver_worst_rel_err": [
+      "geometry index 1 in construct_div for a sphere (nu_div=1)"
+    ],
+    "solver_rel_err_n400": [
+      "geometry index 1 in construct_div for a sphere (nu_div=1)"
+    ],
+    "flux_balance_gap": [
+      "midpoint weights (Particle(weights='midpoint'))",
+      "geometry index 1 in construct_div (nu_div=1)",
+      "flux from the last cell centre (Particle(flux_from='cell'))"
+    ],
+    "lambda1_worst_rel_err": [
+      "geometry index 1 in construct_div for the sphere",
+      "geometry index 2 in construct_div for the cylinder",
+      "geometry index 1 in construct_div for the slab"
+    ],
+    "ldf_constant_sphere": [
+      "parabola of geometry 1 for the sphere"
+    ],
+    "ldf_constant_cylinder": [
+      "parabola of geometry 2 for the cylinder"
+    ],
+    "ldf_constant_slab": [
+      "parabola of geometry 1 for the slab"
+    ]
   }
 }
