@@ -162,27 +162,34 @@ residual is continuous and strictly increasing, negative at `w = 0` and positive
 at `w_{i-1}`, so a unique non-negative root exists at every cell and every `Pi`;
 past the front it decays quadratically per cell, underflows to exactly 0 within
 9 <!-- claim: tail_cells_to_zero --> cells of falling below 1e-3, and `w = 0`
-satisfies the equation thereafter. What fails is the iteration in `w`: the
-sink's slope grows like `w^(-1/2)`, every tail cell's Newton step overshoots past
-the bound `w = 0`, and `newton`'s bound rule holds the step length at 0.5, so the
-error only halves per iteration. The page solves for `s = sqrt(w)` instead, in
-which the sink is linear near zero: `newton` then converges from the flat state
-at every swept `Pi`, and an independent cell-by-cell march of the same equations
-(`Permeator.march_guess`) agrees below 1e-9 <!-- claim: s_form_vs_march_maxabs -->.
-The solve in `w` stays on the page, stalling at the
+satisfies the equation thereafter. What fails is the iteration in `w` with
+the default `NumJac`: the sink's slope grows like `w^(-1/2)`, and in the tail `w` falls far below
+`NumJac`'s absolute step `eps_jac`, so the difference quotient does not follow
+that slope. With `eps_jac = 1e-10` the same `newton` call in `w` converges
+(`w_form_small_eps_converges`). The page solves for `s = sqrt(w)`, in which the
+sink is linear near zero: `newton` with the default `NumJac` then converges from
+the flat state at every swept `Pi`, and an independent cell-by-cell march of the
+same equations (`Permeator.march_guess`) agrees below
+1e-9 <!-- claim: s_form_vs_march_maxabs -->. The solve in `w` with the default
+`NumJac` stays on the page, stalling at the
 16 <!-- claim: sweep_points_w_form_stalls --> sweep points above `Pi_crit` and
 only there, because the difference between "no solution" and "an unknown in
 which Newton cannot reach the solution" is what a later reader needs.
 
 ## Corrections
 
-- 2026-10-30: stated that the flat-start Newton stall above `Pi_crit` comes from
-  `NumJac`'s absolute perturbation floor, with the line search parking on a
-  slightly negative `w` where a `max(w, 0)` clip is non-smooth. The cause is the
-  unknown: every tail cell's Newton step in `w` crosses `w = 0`, and the bound
-  rule holds the step length at 0.5 (`w_form_step_at_half_fraction_min`). Solved
-  for `s = sqrt(w)`, the same `newton` converges from the flat state
+- 2026-10-30: stated that the flat-start Newton stall above `Pi_crit` comes with
+  the line search parking on a slightly negative `w` where a `max(w, 0)` clip is
+  non-smooth. The page measures no such clip effect. Solved for `s = sqrt(w)`, the
+  same `newton` converges from the flat state
   (`s_form_flat_converges_everywhere`).
+- 2026-11-03: stated that in `w` "every tail cell's Newton step overshoots past
+  the bound `w = 0`, and `newton`'s bound rule holds the step length at 0.5, so
+  the error only halves per iteration". The stall comes from `NumJac`'s absolute
+  step `eps_jac = 1e-6`, far above the tail values of `w`: with
+  `eps_jac = 1e-10` the same call in `w` converges at every ratio tried and at
+  12800 cells (`w_form_small_eps_converges`), and `continuation` in `w` reaches
+  every value (`continuation_w_small_eps_reaches_60`).
 - 2026-10-30: the Reuse section said continuation in the capacity ratio works
   too. In `w`, `pymrm.continuation` stops just above `Pi_crit`
   (`continuation_last_pi_over_crit`) and names a fold the branch does not have;

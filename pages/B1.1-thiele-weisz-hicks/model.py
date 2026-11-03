@@ -249,8 +249,7 @@ def trace_branch(problem, y_centres, psi_init=0.005, **kwargs):
     problem : CentrePinned
         Residual in ``(x, y_c)``.
     y_centres : array_like
-        Centre values in the order to visit them. Consecutive values must be
-        distinct (see the Notes).
+        Centre values in the order to visit them.
     psi_init : float, optional
         Guess of ``phi^2`` at the first centre value.
     **kwargs

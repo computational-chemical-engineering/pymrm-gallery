@@ -902,17 +902,13 @@ print(f"worst counter-current hydrogen closure over the sweep at n_z = {N_CC}: b
 # $9.4\times10^{-6}$ mol/s of purge, the last value continuation in $v_A^0$
 # reaches. That is a limit of the solver, not of the reactor. As the purge rises
 # toward it the outlet cyclohexane falls steeply (Eq. 7 is zero order far from
-# equilibrium, so cyclohexane can be used up inside the reactor), and past it the
-# Newton iterates have converted the cyclohexane completely (unconverted
-# fraction at the outlet below 1e-6) while the residual stays of order 100:
+# equilibrium, so cyclohexane can be used up inside the reactor), and past it
 # bounded Newton does not settle onto a state in which the cyclohexane runs out
 # inside the reactor. The square root of Eq. 1, whose slope is infinite at zero
 # hydrogen, is not the cause: with $\sqrt{y}$ replaced by $y/\sqrt{y + 10^{-8}}$,
 # smooth and linear at zero, continuation stops at the same purge and the cold
-# solve past it fails the same way. What the model predicts past the edge,
-# complete conversion inside the reactor, is what the iterates approach; no
-# independent route confirms it here, and the page reports no result from that
-# region. Every published counter-current point stays well below the edge: the
+# solve past it does not converge either, and where its last iterate stops depends
+# on the iteration cap, so the page reports no result from that region. Every published counter-current point stays well below the edge: the
 # sweep ends at $8\times10^{-6}$ mol/s, and the cold solve below is at
 # $9.0\times10^{-6}$ mol/s.
 
@@ -945,7 +941,6 @@ def cc_edge(case=CASE, n_z=400):
                                                    bounds=trace.BOUNDS))
             g, _ = past.residual(r.x.reshape(past.shape))
         out.update({f"past_success{tag}": bool(r.success),
-                    f"past_iterate_unconverted{tag}": float(r.x.reshape(past.shape)[-1, 0]),
                     f"past_residual{tag}": float(np.abs(g).max()),
                     f"path_reached{tag}": bool(path.success),
                     f"path_last{tag}": float(path.last_param)})
@@ -960,8 +955,7 @@ for tag, label in (("", "Eq. 1 as printed"), ("_smooth", f"sqrt(y) -> y/sqrt(y +
     print(f"   continuation from {VA0_SAFE:.1e}: reached {VA0_PAST:.1e}: {EDGE['path_reached' + tag]}; "
           f"last converged (here {EDGE['path_last' + tag]:.2e}) mol/s")
     print(f"   cold start at {VA0_PAST:.1e}: converged {EDGE['past_success' + tag]}; not a result. "
-          f"Its last iterate: unconverted below 1e-6 (here {EDGE['past_iterate_unconverted' + tag]:.1e}), "
-          f"residual (here {EDGE['past_residual' + tag]:.0e})")
+          + f"Its last iterate: residual (here {EDGE['past_residual' + tag]:.0e})")
 
 # %% [markdown]
 # **What this page does not establish.** The comparison with measurement is a
@@ -1109,9 +1103,6 @@ for tag in ("", "_smooth"):
     C.exact("cc_continuation_reaches_past_edge" + sfx, EDGE["path_reached" + tag])
     C.bound("cc_continuation_last_vA0" + sfx, EDGE["path_last" + tag], min=9.2e-6, max=9.7e-6,
             basis="chosen", unit="mol/s", note="where continuation stops on 400 cells")
-    C.bound("cc_past_edge_iterate_unconverted" + sfx, EDGE["past_iterate_unconverted" + tag],
-            max=1e-6, basis="chosen",
-            note="the last iterate of a non-converged solve: what the solver approaches, not a result")
 print(f"{len(C.metrics)} claims registered")
 
 # %% [markdown]
@@ -1218,7 +1209,6 @@ for tag in ("", "_smooth"):
     brk(row, "cc_past_edge_converged" + sfx, EDGE_A["past_success" + tag])
     brk(row, "cc_continuation_reaches_past_edge" + sfx, EDGE_A["path_reached" + tag])
     brk(row, "cc_continuation_last_vA0" + sfx, EDGE_A["path_last" + tag])
-    brk(row, "cc_past_edge_iterate_unconverted" + sfx, EDGE_A["past_iterate_unconverted" + tag])
 row = "rate constant k / 1e4: kinetics-limited"
 SK = sensitivity(replace(CASE, k_rate=CASE.k_rate * 1e-4),
                  labels=("baseline", "k (== k*V_r) x 0.1", "k (== k*V_r) x 10"))
@@ -1360,7 +1350,7 @@ for lit, name in [
     ("-45 %", "unconverted_dev_frac"), ("1.6", "Kp_473_vanthoff_ratio"),
     ("0.3 %", "unconverted_measured"),
     # where the counter-current solve stops
-    ("9.4e-6", "cc_continuation_last_vA0"), ("below 1e-6", "cc_past_edge_iterate_unconverted"),
+    ("9.4e-6", "cc_continuation_last_vA0"),
     # where the counter-current solve stops
 ]:
     claims.says(lit, name)

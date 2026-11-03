@@ -14,7 +14,7 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "3.3.0"
+pymrm_min_version: "3.4.0"
 runtime_seconds: 15
 datasets:
   - itoh-1987-permeation.csv
@@ -28,7 +28,7 @@ validation:
   - the channel solve against the exact inverted antiderivative G for the half-power law, six-level grid ladder, first order, max deviation 2.4e-4 at n_z = 3200; the extinction-length invariant L + G(w)/Pi = L_ext holds to 1.4e-4 relative at every cell
   - the same ladder ABOVE Pi_crit, at Itoh's own Pi = 51.4, from a marched initial guess. First order, 4.9e-3 at n_z = 3200, every value non-negative (the march leaves 3014 of 3200 cells at exactly zero, the front position plus the float64 underflow width), and the front placed to O(h), so the fixed grid does resolve the extinction point
   - the same channel with a loaded permeate against an independent quadrature reference (2e-4), confirming that the half-power law strips only to the pressure-matched floor beta y'/(1 - y') when the permeate side is not clean
-  - the channel solved by pymrm.newton in s = sqrt(w) from the flat state at every Pi (30 of 30 sweep points, and at 12800 cells), and by an independent cell-by-cell march of the same equations, the two agreeing below 1e-9; iterated in w instead, newton stalls at the 16 sweep points above Pi_crit and only there, its step length held at the bound rule's floor 0.5
+  - the channel solved by pymrm.newton in s = sqrt(w) from the flat state at every Pi (30 of 30 sweep points, and at 12800 cells), and by an independent cell-by-cell march of the same equations, the two agreeing below 1e-9; iterated in w with the default NumJac instead, newton stalls at the 16 sweep points above Pi_crit and only there, and with eps_jac = 1e-10 it converges
   - a defect-injection table in which every claim fails at least one row; on the channel the four defects that converge to a wrong answer move the error by 217x (w for the mole fraction), 340x (exponent 1), 1028x (nu = 1) and 2898x (sink sign), and one gives a singular Jacobian
   - the series surface-resistance construction of section 5 recovered at both analytic limits (1.2e-6, 8.4e-7), labelled as the algebraic identity it is
 
@@ -112,14 +112,16 @@ caveats: >
 
   Finally, the channel model has a trap in the choice of unknown, named as one.
   Above Pi_crit the extinction point falls inside the domain and, iterated in w
-  from the flat state, pymrm.newton stops without converging, but the discrete
+  from the flat state with the default NumJac, pymrm.newton stops without
+  converging, but the discrete
   problem is perfectly well posed: the cell residual is continuous and strictly
   increasing, negative at w = 0 and positive at w_(i-1), so a unique
   non-negative root exists at every cell and every Pi, and past the front it
   decays quadratically per cell, underflowing to exactly 0 within 9 cells of
-  falling below 1e-3. What fails is the iteration in w: the sink's slope grows
-  like w^(-1/2), every tail cell's Newton step overshoots past the bound w = 0,
-  and newton's bound rule holds the step length at 0.5. The page therefore
-  solves for s = sqrt(w), in which the sink is linear near zero; newton then
+  falling below 1e-3. What fails is the iteration in w with the default NumJac: the sink's
+  slope grows like w^(-1/2), and in the tail w falls far below NumJac's absolute
+  step eps_jac, so the difference quotient does not follow it; with
+  eps_jac = 1e-10 the solve in w converges. The page solves for s = sqrt(w), in
+  which the sink is linear near zero; newton with the default NumJac then
   converges from the flat state everywhere, the march agrees, and the page does
   NOT tell the next builder to reach for a free-boundary method.

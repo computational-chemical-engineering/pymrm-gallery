@@ -571,9 +571,11 @@ for (k, (n_ok, ratio, gap, _)), name in zip(PLAIN_RES.items(),
                  note="margin: smallest of the last 50 Newton steps over tol")
     print(f"  {k:<32} converged on {n_ok} of {len(DZ_NS)}; the last 50 steps stay at least "
           f"10 tol (here {ratio:.0f})")
-claims.bound("deadzone_plain_eta_gap", max(r[2] for r in PLAIN_RES.values()), max=5e-6,
-             basis="chosen", note="eta of the unconverged plain iterates against the eps -> 0 limit")
-print(f"their eta m - 1 lies within 5e-6 of the regularised eps -> 0 limit of the same grid "
+claims.bound("deadzone_plain_eta_gap", max(r[2] for r in PLAIN_RES.values()), max=1e-5,
+             basis="chosen", note="eta of the unconverged plain iterates against the eps -> 0 "
+             "limit; where an unconverged iterate stops depends on the step history, "
+             "measured 6e-8 to 5.4e-6 over the grids and both options")
+print(f"their eta m - 1 lies within 1e-5 of the regularised eps -> 0 limit of the same grid "
       f"(here {claims['deadzone_plain_eta_gap']:.0e})")
 DEFAULT_TOL = 1.49012e-08                 # newton's default tol
 PLAIN_DEFAULT = {**PLAIN["damping='monotone', no bounds"], "tol": DEFAULT_TOL}
@@ -605,7 +607,7 @@ display(Markdown(
     f"runs out of iterations (converged {_n_monotone} of {len(DZ_NS)}); in both, the "
     f"steps stay above "
     f"ten times the tolerance (`tol=1e-12`, `stagnation=True`). The unconverged iterates "
-    f"are not far off: their $\\eta$ lies within 5e-6 of the regularised limit. At newton's "
+    f"are not far off: their $\\eta$ lies within 1e-5 of the regularised limit. At newton's "
     f"default `tol` ({DEFAULT_TOL:g}) the monotone solve reports success on "
     f"{claims['deadzone_plain_default_tol_converged']} of {len(DZ_NS)} grids, but the "
     f"reported profiles go negative in the dead zone, where the discrete solution is not, "
@@ -1534,10 +1536,10 @@ brk("dead-zone eta read from a two-point surface gradient (read='cell')", "deadz
     deadzone_study(read="cell")[3]["orders"][-1])
 brk("plain dead-zone solve replaced by the regularised one (eps = 1e-12, exact Jacobian)",
     "deadzone_plain_bounds_converged", plain_runs(PLAIN["bounds=(0, inf)"], eps=1e-12)[0])
-_lab = "default-tol monotone solve with bounds=(0, inf)"
-_bd = plain_runs({**PLAIN_DEFAULT, "bounds": (0.0, np.inf)})
-brk(_lab, "deadzone_plain_default_tol_converged", _bd[0])
-brk(_lab, "deadzone_plain_default_tol_max_min_c", _bd[3])
+brk("default-tol monotone solve with bounds=(0, inf)", "deadzone_plain_default_tol_max_min_c",
+    plain_runs({**PLAIN_DEFAULT, "bounds": (0.0, np.inf)})[3])
+brk("default-tol monotone solve stopped at maxfev = 30", "deadzone_plain_default_tol_converged",
+    plain_runs({**PLAIN_DEFAULT, "maxfev": 30})[0])
 brk("plain dead-zone solve at newton's default tol = 1.49e-8",
     "deadzone_plain_monotone_converged",
     plain_runs({**PLAIN["damping='monotone', no bounds"], "tol": 1.49012e-08})[0])

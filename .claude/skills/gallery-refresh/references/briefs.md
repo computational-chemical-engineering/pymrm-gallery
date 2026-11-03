@@ -10,7 +10,7 @@ report it asks for." Placeholders:
 | `<ID>` | catalog ID, e.g. `F2.3` |
 | `<WT>` | the checkout the agent works in (a worktree of the sweep branch) |
 | `<BRANCH>` | the branch checked out there |
-| `<VENV>` | venv built from requirements-lock.txt (pymrm 3.3.0, jupytext) |
+| `<VENV>` | venv built from requirements-lock.txt (pymrm 3.4.0, jupytext) |
 | `<SCRATCH>` | the coordinator's scratchpad directory |
 | `<id>` | lower-case short ID for file names, e.g. `f23` |
 | `<ROWS>` | the learnings row numbers the page added |
@@ -19,7 +19,7 @@ report it asks for." Placeholders:
 
 ```
 Refresh the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, onto
-the new page layout and pymrm 3.3.0, in both lanes. Do not commit, do not `git add`, do
+the new page layout and pymrm 3.4.0, in both lanes. Do not commit, do not `git add`, do
 not `git rm` (delete files with plain `rm`): other agents may share the git index. Touch
 only pages/<PAGE>/, the <ID> entry in models.yaml, and new rows appended at the end of
 docs/refresh-learnings.md (re-read each shared file right before editing it).
@@ -38,7 +38,7 @@ section or structure; do not read all of it.
 
 Lane A (infrastructure): index.py from templates/index.py, paired index.ipynb via
 jupytext; bootstrap cell verbatim with GALLERY_REF="main", PAGE the directory name,
-PYMRM from meta.yaml; meta.yaml pymrm_min_version "3.3.0" and realistic runtime_seconds;
+PYMRM from meta.yaml; meta.yaml pymrm_min_version "3.4.0" and realistic runtime_seconds;
 model.py with NumPy-style docstrings (classes and functions only, no plotting, no data
 loading); test_model.py (import, one fast solve, one stored value via load_claims, runs
 offline in seconds); every number the page states is a Claims entry, last code cell
@@ -46,7 +46,7 @@ offline in seconds); every number the page states is a Claims entry, last code c
 `## Corrections` list for any published statement that was wrong (dated today, keep
 existing dates).
 
-Lane B (pymrm 3.3.0): <what the old page computes, with build_page.py line numbers of
+Lane B (pymrm 3.4.0): <what the old page computes, with build_page.py line numbers of
 the solver, root finds and outlet reads; the candidate changes>. Whichever route you
 choose, another may stay only as an independent validation route described by what it
 computes, with its measured agreement. Use the operators, assemble constant operators
