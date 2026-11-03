@@ -4373,10 +4373,12 @@ models:
     slug: slurry-bubble-column-ft
     title: "Slurry bubble column for Fischer–Tropsch synthesis"
     description: >
-      Plug-flow large bubbles over a well-mixed slurry. The hydrodynamics
-      reproduce measured holdup to 5 %, and the reactor reproduces the published
-      conversions — but only after two printed constants are corrected against
-      the paper's own results.
+      Plug-flow large bubbles over a well-mixed slurry, solved as one Newton
+      system on pymrm operators with the large-bubble balance written for the
+      molar flux of a contracting gas. The hydrodynamics are tested against
+      measured holdup; the reactor approaches the published conversions only
+      after two printed constants are corrected against the paper's own results,
+      and the gas contraction of eq. 21 is read as a molar conversion.
     section: F
     status: published
     page: pages/F2.3-slurry-bubble-column-ft/
@@ -4385,7 +4387,7 @@ models:
     structures: [S7, S8]
     phases: [gas-liquid-solid]
     predicts: [gas holdup, two-bubble-class split, syngas conversion]
-    pymrm_api: [construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_div, construct_convflux_upwind, compute_boundary_values, newton, find_roots, observed_orders]
     reference:
       authors: ["Maretto, C.", "Krishna, R."]
       year: 1999

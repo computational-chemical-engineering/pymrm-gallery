@@ -14,61 +14,93 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 85
+pymrm_min_version: "3.3.0"
+runtime_seconds: 20
 datasets:
   - maretto-krishna-1999-fig2.csv
 
+# Ranked by measured power: the notebook's break table re-evaluates every claim
+# with one defect injected.
 validation:
-  - the convection operator on its own, against the analytic exp(-kz/U), refined to show first-order convergence, plus an exactly flat profile with no sink
-  - the hydrodynamic model against 79 digitised Figure 2 markers at three slurry concentrations, restricted to the churn-turbulent range the model claims
-  - eq. 9's coefficient 0.3 compared with F1.4's 0.268 on the same points
-  - the paper's own kLa sensitivity test reproduced, establishing that the reactor is chemically controlled and so that the conversion check isolates the kinetics
-  - reactor conversions against the two values the paper reports for eps_s = 0.30
-  # DEFECT INJECTION - section 5 of the notebook, and it found one dead constant
-  - "NOTHING ON THIS PAGE PINS EQ. 9's -0.18 DIAMETER EXPONENT, and section 5 measures that rather than asserting it. Eq. 9's diameter dependence is capped at D_T = 1 m, so at this reactor's 7 m the base of the power is exactly 1 and 1**x = 1 for every x: deleting the exponent leaves every conversion bit-identical (dt_exponent_reactor_conversion_shift_structural_zero = 0.0, which also puts it below check_agreement.py's ABS_FLOOR, so CI never compares it). On the figure path the term is live - the 0.10 m column gives a factor 1.5136 - but all 79 markers are at that one diameter, so the data constrain only the product C*D_T^n = 0.454: rescaling C to hold the product fixed reproduces the figure to the last bit at any exponent"
-  - a defect-injection table covering every other published metric: the exponent on both code paths, C = 0.300 vs 0.268, two transposed digits in the rate prefactor (both BELOW CI's 5 % tolerance, stated as such), and the missing-outflow-condition failure the Reuse section warns about
+  - >-
+    PRIMARY - the hydrodynamic model against the digitised Figure 2 markers above
+    2 U_df, one set of constants, nothing fitted: 5.9 % <!-- claim: holdup_mad_eps_s_0 -->,
+    6.3 % <!-- claim: holdup_mad_eps_s_016 --> and 4.9 % <!-- claim: holdup_mad_eps_s_035 -->
+    mean deviation at eps_s = 0, 0.16, 0.35; eq. 9 with F1.4's 0.268 on the same
+    markers for comparison
+  - >-
+    PRIMARY - the two printed-constant diagnoses against the paper's own results: of
+    four decades of eq. 2's prefactor and two readings of eq. 1, only 8.8533e-3 read as
+    the CO rate comes near both reported conversions, 93.3 % <!-- claim: conversion_U012 -->
+    and 65.7 % <!-- claim: conversion_U040 --> against 96 % and 63 %; the paper's
+    productivities imply 96.3 % <!-- claim: paper_implied_conversion_U012 --> and
+    63.5 % <!-- claim: paper_implied_conversion_U040 --> for the page's feed basis
+  - >-
+    the paper's sensitivity test: doubling a adds 56.9 % <!-- claim: a_double_change -->
+    to the productivity (paper +60 %); a 3-fold kLa reduction changes it by -6.8 %
+    <!-- claim: kla_third_change -->, a 10-fold increase by 0.12 % <!-- claim:
+    kla_tenfold_change -->
+  - >-
+    the pymrm finite-volume solve against an independent ODE route (solve_ivp DOP853
+    and scipy root): first order on six nested grids, 3.9e-6 <!-- claim:
+    pymrm_vs_ode_n1600 --> worst at 1600 cells, the Richardson limit within 1e-7, the
+    finest differences far above round-off
+  - >-
+    the syngas balance (feed minus face exit equals the liquid uptake) and the
+    equality of CO and H2 conversion hold to round-off on every solve; identities of
+    the conservative scheme, blind to the contraction law, caught by the advective form,
+    a last-cell exit read and an H2 coefficient off 2
+  - >-
+    STRUCTURAL - with C rescaled to hold C*D_T^n fixed, any eq. 9 exponent reproduces
+    the figure exactly, because every marker is at one diameter
 
 adds: >
-  Two constants in the printed model are wrong, and the page localises both
-  against the paper's own reported results rather than fitting round them.
-  Eq. 2's prefactor is printed as 8.8533e3 mol/(s kg_cat bar^2), which gives an
-  intrinsic rate 1e6 larger than the paper's own 96 % conversion requires; the
-  exponent is used as -3. And eq. 1's rate, labelled R_CO+H2, behaves as a CO
-  rate: read as syngas it gives 71.5 % and 24.1 % where the paper reports 96 %
-  and 63 %, read as CO it gives 93.1 % and 63.7 %. What makes the diagnosis safe
-  is that the reactor is chemically controlled - the paper's kLa sensitivity
-  result is reproduced first - so nothing else is free to absorb the error.
+  The reactor as one Newton system: gas profiles and liquid concentrations solved
+  together with an exact Jacobian, the large-bubble balance written for the molar
+  flux so the scheme is conservative for the contracting gas, the exit read on the
+  outlet face, and an independent ODE route that the finite-volume conversion
+  approaches at first order.
 
-  The page also separates what is validated from what is only reproduced: the
-  hydrodynamics are tested against measurement, the conversions only against the
-  authors' simulation output.
+  Two printed constants are localised against the paper's own numbers rather than
+  fitted round. Eq. 2's prefactor is printed as 8.8533e3 mol/(s kg_cat bar^2),
+  which makes the rate at the feed 1.6e4 <!-- claim: rate_feed_printed --> mol
+  CO/(s kg_cat) and the conversion 99.6 % <!-- claim: conversion_a+3_CO_U012 -->
+  whatever the throughput; it is used as 8.8533e-3. Eq. 1's rate, labelled
+  R_CO+H2, enters eqs. 19 and 20 as the CO rate; read as syngas it gives 72.8 %
+  <!-- claim: conversion_a-3_syngas_U012 --> and 24.3 % <!-- claim:
+  conversion_a-3_syngas_U040 -->.
+
+  The contraction of eq. 21 is read as a molar conversion, the only reading under
+  which the exit conversion is the one eq. 21 was evaluated at; read as a
+  concentration ratio it gives 63.6 % <!-- claim: conversion_concentration_reading_U040 -->
+  at U = 0.40 and is inconsistent with its own exit by 16.2 points. The dropped
+  liquid outflow term cannot close the 3-point gap at low velocity: a liquid
+  flowing out at 0.1 m/s adds 0.36 percentage points.
 
 agreement: >
-  Hydrodynamics: 5.9 %, 6.3 % and 4.9 % mean absolute deviation at eps_s = 0,
-  0.16 and 0.35 over 79 markers, one set of constants, nothing fitted. Reactor:
-  93.1 % conversion at U = 0.12 m/s and 63.8 % at 0.40 against the 96 % and 63 %
-  the paper reports for eps_s = 0.30. The convection operator reproduces
-  exp(-kz/U) with refinement ratios 3.43, 3.85, 3.96 (first order, as upwind
-  must be) and is flat to 4e-14 with no sink.
+  Hydrodynamics: 5.9 % <!-- claim: holdup_mad_eps_s_0 -->, 6.3 % <!-- claim:
+  holdup_mad_eps_s_016 --> and 4.9 % <!-- claim: holdup_mad_eps_s_035 --> mean
+  absolute deviation at eps_s = 0, 0.16 and 0.35 over 79 markers, one set of
+  constants, nothing fitted. Reactor: 93.3 % <!-- claim: conversion_U012 -->
+  conversion at U = 0.12 m/s and 65.7 % <!-- claim: conversion_U040 --> at 0.40
+  against the 96 % and 63 % the paper reports for eps_s = 0.30 (96.3 % and 63.5 %
+  implied by its productivities). The pymrm conversion is 3.9e-6 <!-- claim:
+  pymrm_vs_ode_n1600 --> from the independent ODE route at 1600 cells.
 
 caveats: >
-  The reactor is never compared with a measurement - no commercial FT slurry
-  column data is public and the paper reports none - so every conversion number
-  is a check against the authors' own simulation, not against reality. The
-  digitised holdup is from a 0.10 m column at ambient pressure while the reactor
-  runs at 7 m and 30 bar, so eq. 11's pressure factor and the D_T cap at 1 m are
-  used well outside anything validated here. The -0.18 diameter exponent in
-  particular is untestable from this page in both directions and section 5 says
-  so with numbers: inert at 7 m because the cap makes the base exactly 1, and
-  inseparable from the coefficient C at 0.10 m because every marker is at that
-  one diameter. A reader who follows the Reuse advice down to a sub-metre column
-  moves into a branch where the exponent is worth 51 % of eps_b and nothing on
-  this page has ever exercised it. 20 of the 99 digitised markers lie
-  in an unresolvable cluster at the origin and are carried in the CSV flagged
-  `resolved = no`, excluded from every metric. Points below U_df are excluded
-  because the churn-turbulent model does not apply there. The liquid outflow term
-  of eqs. 19-20 is dropped because U_Lo is not in Table 1, which is the most
-  likely cause of the residual 3-point gap at low velocity. Axial dispersion in
-  the slurry is assumed away. Both constant corrections rest on the authors'
-  reported conversions being correct.
+  The reactor is never compared with a measurement: no commercial FT slurry column
+  data are public and the paper reports none, so every conversion is a check
+  against the authors' own simulation. The model sits 3.0 percentage points below
+  the paper at U = 0.12, and the page does not identify why; the dropped liquid
+  outflow is not the cause. At U = 0.40 the concentration reading of eq. 21 matches
+  the paper's 63.5 % and the molar reading, used here, gives 65.7 %; which one the
+  authors' Fortran code used is not stated in the paper. The digitised holdup is from
+  a 0.10 m column at ambient pressure while the reactor runs at 7 m and 30 bar, so
+  eq. 11's pressure factor and the D_T cap at 1 m are used outside anything tested
+  here; the -0.18 diameter exponent is untestable from this page in both
+  directions, inert at 7 m because of the cap and inseparable from C at 0.10 m. 20
+  detections in a merged cluster at the origin are carried in the CSV flagged
+  resolved = no and excluded. Markers at U <= 2 U_df are excluded, a cut this page
+  chose. Eq. 9 is stated for eps_s above 0.16 and is also used at eps_s = 0. Axial
+  dispersion in the slurry is assumed away. Both constant corrections rest on the
+  authors' reported conversions being right.
