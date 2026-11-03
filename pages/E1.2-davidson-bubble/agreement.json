@@ -1,18 +1,331 @@
 {
   "page": "E1.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "grid_order_observed": 1.9999511757242392,
-    "f_field_rel_error_n1600": 1.988754958855863e-06,
-    "Rc_rel_error_n1600": 7.22850850647743e-08,
-    "Rc_two_routes_rel": 1.223502996060572e-14,
-    "throughflow_coefficient_rel": 1.1068242020684238e-06,
-    "Kbc_Hbc_worst_pct": 0.43046588877058906,
-    "appendix_worst_pct": 1.0576566438272068,
-    "gamma_c_from_pymrm_cloud_pct": 0.4614776656693409,
-    "limit_worst_rel": 5.32314603588234e-07,
-    "cloud_2d_rel_error": 3.898713179039532e-08,
-    "defect_min_throughflow_shift": 0.3333340712161339,
-    "defect_identity_worst_blind": 1.9962175461539053e-12,
-    "defect_identity_mismatch_detected": 0.41566864702081485
+    "Rc_over_R_C": {
+      "kind": "value",
+      "value": 1.098705965542194,
+      "rtol": 1e-06,
+      "note": "appendix C, n = 1600"
+    },
+    "cloud_shell_C": {
+      "kind": "value",
+      "value": 0.09870596554219402,
+      "rtol": 1e-06,
+      "note": "cloud thickness over R, appendix C"
+    },
+    "ubr_over_uf_B": {
+      "kind": "value",
+      "value": 0.7869327957329011,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "Vc_over_Vb_eq9_B": {
+      "kind": "value",
+      "value": -14.08006459895738,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "db_threshold_B": {
+      "kind": "value",
+      "value": 0.8074110972761219,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "emf_implied_B": {
+      "kind": "value",
+      "value": 0.44722090328581676,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "ubr_over_uf_B_implied": {
+      "kind": "value",
+      "value": 0.7038655914658023,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "emf_needed_B": {
+      "kind": "value",
+      "value": 0.6353782720852682,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on appendix B"
+    },
+    "grid_order_observed": {
+      "kind": "bound",
+      "value": 1.9999511757242392,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "field error against the closed form, n = 800 to 1600"
+    },
+    "Rc_order_observed": {
+      "kind": "bound",
+      "value": 2.016813610105704,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "observed_orders on R_c/R, nested ladder 400, 800, 1600"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 614514.302027027,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest R_c difference against n eps"
+    },
+    "f_field_rel_error_n1600": {
+      "kind": "value",
+      "value": 1.988754958855863e-06,
+      "rtol": 0.05
+    },
+    "Rc_rel_error_n1600": {
+      "kind": "value",
+      "value": 7.228240300599503e-08,
+      "rtol": 0.05
+    },
+    "far_field_robin_shift_Rc": {
+      "kind": "bound",
+      "value": 9.569762399936537e-12,
+      "max": 1e-09,
+      "basis": "theory",
+      "note": "no truncation by the Robin condition; nested extension 20 R to 400 R"
+    },
+    "far_field_robin_shift_coef": {
+      "kind": "value",
+      "value": 5.83503150784913e-07,
+      "rtol": 0.05,
+      "note": "discretisation error of the added outer cells"
+    },
+    "far_field_shift_order": {
+      "kind": "bound",
+      "value": 1.9999876284373312,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "order of the fall of the Robin coefficient shift, n = 800 to 1600"
+    },
+    "Rc_two_routes_rel": {
+      "kind": "bound",
+      "value": 2.438485167678341e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "45 bisection halvings; cubic spline against linear-in-r^-(nu+1) interpolant"
+    },
+    "throughflow_coefficient_rel": {
+      "kind": "value",
+      "value": 1.1068242020684238e-06,
+      "rtol": 0.05,
+      "note": "|coefficient - 4.5| / 4.5, worst of the three beds, n = 1600"
+    },
+    "Kbc_Hbc_worst_pct": {
+      "kind": "value",
+      "value": 0.4304658887705505,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "appendix_worst_pct": {
+      "kind": "value",
+      "value": 1.0576566438272068,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "gamma_c_from_pymrm_cloud_pct": {
+      "kind": "value",
+      "value": 0.461477664455201,
+      "rtol": 0.05,
+      "unit": "%"
+    },
+    "gamma_c_pymrm_vs_eq9": {
+      "kind": "value",
+      "value": 3.2872710268839493e-07,
+      "rtol": 0.05,
+      "note": "discretisation error of the cloud radius, carried into eq. 17"
+    },
+    "limit_worst_rel": {
+      "kind": "value",
+      "value": 5.323169385646905e-07,
+      "rtol": 0.05
+    },
+    "Rc_over_R_x1001": {
+      "kind": "value",
+      "value": 14.424090346382936,
+      "rtol": 0.0001,
+      "note": "R_c/R at u_br/u_f = 1.001"
+    },
+    "integral_identity_gap": {
+      "kind": "bound",
+      "value": 1.9602527427779307e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "telescoping sum; detects a nu mismatch between construct_div and the sink"
+    },
+    "Rc2_over_R_C": {
+      "kind": "value",
+      "value": 1.1034214359751842,
+      "rtol": 1e-06
+    },
+    "cloud_2d_rel_error": {
+      "kind": "value",
+      "value": 3.8985260923521245e-08,
+      "rtol": 0.05
+    },
+    "throughflow_2d_coefficient": {
+      "kind": "value",
+      "value": 2.5464779748154562,
+      "rtol": 0.0001,
+      "note": "closed form 8/pi; discretisation error about 1e-6"
+    },
+    "defect_identity_worst_blind": {
+      "kind": "bound",
+      "value": 1.9962175461539053e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "structural": true,
+      "note": "consistent defects: the identity telescopes whatever the nu and the bc"
+    }
+  },
+  "quoted": {
+    "cloud_shell_C": [
+      "10 %"
+    ],
+    "Rc_over_R_C": [
+      "1.099"
+    ],
+    "ubr_over_uf_B": [
+      "0.787"
+    ],
+    "Vc_over_Vb_eq9_B": [
+      "-14.1"
+    ],
+    "db_threshold_B": [
+      "0.81"
+    ],
+    "emf_implied_B": [
+      "0.447"
+    ],
+    "ubr_over_uf_B_implied": [
+      "0.704"
+    ],
+    "emf_needed_B": [
+      "0.635"
+    ],
+    "Rc_rel_error_n1600": [
+      "7.2e-8"
+    ],
+    "throughflow_coefficient_rel": [
+      "1.1e-6"
+    ],
+    "Rc2_over_R_C": [
+      "1.103"
+    ],
+    "throughflow_2d_coefficient": [
+      "2.55"
+    ],
+    "Rc_over_R_x1001": [
+      "14.4"
+    ]
+  },
+  "breaks": {
+    "ubr_over_uf_B": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "Vc_over_Vb_eq9_B": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "db_threshold_B": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "emf_implied_B": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "ubr_over_uf_B_implied": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "emf_needed_B": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ],
+    "grid_order_observed": [
+      "finest rung solved on n = 800 again (refinement not passed)"
+    ],
+    "Rc_order_observed": [
+      "finest rung solved on n = 800 again (refinement not passed)"
+    ],
+    "grid_finest_over_roundoff": [
+      "finest rung solved on n = 800 again (refinement not passed)"
+    ],
+    "far_field_shift_order": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "far_field_robin_shift_Rc": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "far_field_robin_shift_coef": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "Rc_two_routes_rel": [
+      "trajectory bisection stopped after 20 halvings (n_halvings=20)"
+    ],
+    "limit_worst_rel": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "Rc_over_R_x1001": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "Rc2_over_R_C": [
+      "2-D model with the 3-D sink coefficient (nu=1, sink_coeff=2)"
+    ],
+    "cloud_2d_rel_error": [
+      "2-D model with the 3-D sink coefficient (nu=1, sink_coeff=2)"
+    ],
+    "throughflow_2d_coefficient": [
+      "2-D model with the 3-D sink coefficient (nu=1, sink_coeff=2)"
+    ],
+    "throughflow_coefficient_rel": [
+      "far-field factor nu for nu + 1 (far_factor=2)",
+      "geometry index 1 in construct_div only (nu_div=1)",
+      "sink coefficient 1 (sink_coeff=1)",
+      "sink coefficient 6, the l = 2 harmonic (sink_coeff=6)",
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)",
+      "outer bc a = -1, outward normal flipped (outer_a=-1)",
+      "outer bc datum sign flipped (outer_d_sign=-1)",
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "integral_identity_gap": [
+      "geometry index 1 in construct_div only (nu_div=1)",
+      "sink coefficient 1 (sink_coeff=1)",
+      "sink coefficient 6, the l = 2 harmonic (sink_coeff=6)",
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)"
+    ],
+    "f_field_rel_error_n1600": [
+      "far-field factor nu for nu + 1 (far_factor=2)"
+    ],
+    "Kbc_Hbc_worst_pct": [
+      "far-field factor nu for nu + 1 (far_factor=2)"
+    ],
+    "Rc_rel_error_n1600": [
+      "Dirichlet far field h = A r_out (far_field='dirichlet')"
+    ],
+    "Rc_over_R_C": [
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)"
+    ],
+    "cloud_shell_C": [
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)"
+    ],
+    "gamma_c_from_pymrm_cloud_pct": [
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)"
+    ],
+    "gamma_c_pymrm_vs_eq9": [
+      "2-D operator in the 3-D model (nu_div=1, sink_coeff=1)"
+    ],
+    "appendix_worst_pct": [
+      "rise-velocity coefficient 0.72 for 0.711 (c_ubr=0.72)"
+    ]
   }
 }
