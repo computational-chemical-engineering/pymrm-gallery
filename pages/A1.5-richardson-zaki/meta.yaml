@@ -1,6 +1,5 @@
 # Page metadata. Validated against models.yaml by scripts/check_metadata.py.
 # models.yaml is canonical; this file must not contradict it.
-# A1.5 is NOT YET IN models.yaml - see queue_cases/A1.5/models_entry.yaml.
 id: A1.5
 slug: richardson-zaki
 title: "Richardson-Zaki: the exponent, the wall term, and what the paper's own tables say about both"
@@ -15,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 15
+pymrm_min_version: "3.3.0"
+runtime_seconds: 25
 datasets:
   - rz1954_sedimentation.csv
   - rz1954_fluidisation_spheres.csv
@@ -45,20 +44,19 @@ validation:
   - >
     THE eq. (37) WINDOW IS NOT ADJUDICATED AND THE PAGE SAYS SO. The 0.021
     percentage points by which the fitted constant beats eq. (37) on those five
-    rows reverses under every sensitivity the page prints. (a) Two of the five
+    rows reverses under two of the three sensitivities the page prints and splits
+    under the third. (a) Two of the five
     are Table I runs N and O, whose printed Re = 0.302 is above the title of the
     table they are printed in ("Reynolds Number < 0.2") and which are the two
     largest residuals in the window (-2.65 %, -1.86 %); placed with eq. (33), as
     the paper's own table placement implies, they deviate by +0.49 % and +1.26 %
     and the remaining three rows give RZ 0.746 % against the null's 1.071 % - the
-    correlation wins. (b) 2 of the 5 leave-one-outs put the correlation ahead.
+    correlation wins. (b) leave-one-out splits: the correlation is ahead in 2 of the 5 deletions and the constant in the other 3.
     (c) The null is fitted in-sample with one free parameter and eq. (37) is not;
     charging it that degree of freedom gives 1.538 x sqrt(5/4) = 1.719 % and the
-    correlation wins. An earlier draft of this page said eq. (37) was marginally
-    WORSE than a constant. It survives none of the three checks and the claim is
-    withdrawn: five rows over half a decade of Re, two of them of disputed
-    branch, cannot separate an exponent of -0.03 from a constant in either
-    direction
+    correlation wins. Nothing on the page says eq. (37) is worse than a constant:
+    five rows over half a decade of Re, two of them of disputed branch, cannot
+    separate an exponent of -0.03 from a constant in either direction
   - >
     THE ONE GENUINELY TWO-SIDED TEST ON THE PAGE is the wall coefficient. Both
     eq. (40) (V_i = V_0) and eq. (41) (log V_0 = log V_i + d/D) are the single
@@ -178,10 +176,10 @@ validation:
     abscissa cannot be reconstructed for those points
   - >
     four transcription identities, all built from columns the paper prints side
-    by side, certify the reading and locate five printed errors. d/D x D = d
+    by side, certify the reading and locate the printed errors listed in the next entry. d/D x D = d
     reproduces to 0.78 % on 34 of 37 sedimentation rows and 0.21 % on all 29
     fluidisation rows (which is also what fixes the two column diameters in cm,
-    never printed); Re = V_0 d rho / mu to 0.44 % and 3.80 %; the log10 V_0
+    never printed); Re = V_0 d rho / mu to 0.44 % and 3.80 % (all sedimentation rows and all but 4 fluidisation rows agree to better than 0.5 %); the log10 V_0
     column to 0.0061 and 0.0107 decades. Stokes' law reproduces Table I's V_0
     column - which is headed "Stokes' law" - to 0.67 % on all 22 rows AND
     OVER-PREDICTS TABLE II'S BY 19 TO 66 % on its settling rows, returning the
@@ -189,7 +187,7 @@ validation:
     outcome for a table headed Re > 0.2, and is why the pair is quoted rather
     than the Table I half alone
   - >
-    the five printed errors found: Table I runs H and N print d/D = 5.8e-3 where
+    the printed errors found: Table I runs H and N print d/D = 5.8e-3 where
     the printed d and D give 5.05e-3 (+14.8 %); run S prints 6.97e-3 against
     7.19e-3 (-3.0 %); Table II run 12's intercept is printed WITHOUT ITS MINUS
     SIGN (0.45 against the -0.457 of its two sister tubes, giving a -0.907-decade
@@ -202,7 +200,7 @@ validation:
     TWICE, once in the glycerol-water block (Re = 267) and once in the Oil R.O. I
     block (Re = 78.25), affecting four (row, column) entries, all four of which
     carry the reconstruction flag. Recorded as a labelled reconstruction with
-    three corroborations in each block. NONE WAS REPAIRED BY INFERENCE
+    three corroborations in each block. Table IV's lead shot (d = 0.2466 cm) in Oil R.O. I prints Re = 80.35, which is 3.8 % from V_0 d rho / mu with its own printed V_0, d, rho and mu; which cell is off cannot be told from the row, and it is recorded as printed. NONE WAS REPAIRED BY INFERENCE
   - >
     a residual-structure test on the variables the correlation does not contain.
     Eqs. (33)-(39) hold no fluid property and no density ratio, and the 58 rows
@@ -210,23 +208,22 @@ validation:
     bootstrap over the 23 particle/liquid groups: every correlation between the
     residual and log mu, log rho, log rho_s, rho_s/rho, log Re and d/D is
     consistent with zero. A NULL RESULT, reported as one - with 23 clusters the
-    intervals exclude a large omitted-variable effect, not a small one, and the
-    individual-row bootstrap would have been about half as wide
+    intervals exclude a large omitted-variable effect, not a small one, and the individual-row bootstrap gives intervals 0.75 times as wide on average, understating the uncertainty
   - >
     the pymrm solve integrates F(phi) = phi V_0 (1-phi)^n as a 1-D conservation
     law with one constant construct_div (nu = 0) and an exact Godunov face flux.
-    The L1 error against the exact shock solution converges at mean order 1.000
-    (2.27e-4 at nx = 400), which is right for first-order upwind on a shock. THE
+    The L1 error against the exact shock solution converges with successive orders
+    0.88 to 1.12, mean 1.000 (2.27e-4 at nx = 400), which is right for first-order
+    upwind on a shock. THE
     SOLIDS BALANCE IS A CHECK THAT CANNOT FAIL and the break table proves it:
-    exactly 0 for a wrong n, a wrong V_0, an unstable CFL and a 25-cell grid, and
-    1e-15 for a flipped flux sign and a reversed upwind direction; the ONLY
-    defect it catches is nu = 1
+    below 1e-12 for a wrong n, a wrong V_0, an unstable CFL, a 25-cell grid, a flipped
+    flux sign and a reversed upwind direction; the ONLY defect it catches is
+    nu = 1
   - >
     the L1 check is a check on the discretisation and on nothing else, which the
-    break table also measures. It moves x111 for nu = 1, x187 for a reversed
-    upwind direction and x6000 for a flipped sign - but only x1.5 when n is
-    changed from 4.65 to 3.00 and judged against the shock speed that value of n
-    implies, and x1.2 for a 1 % error in V_0. The solve has no opinion about the
+    break table also measures. It moves x111 for nu = 1 and x187 for a reversed
+    upwind direction - but only x1.5 when n is changed from 4.65 to 3.00 and
+    judged against the shock speed that value of n implies. The solve has no opinion about the
     correlation
   - >
     the Rankine-Hugoniot speed of the interface, F(phi_0)/phi_0, is
@@ -243,16 +240,16 @@ adds: >
   Zaki is cited thousands of times a year and what is cited is one line of it.
   The 66 measured exponents, the 18 n0 values and the two intercept columns have
   not been available in any usable form; they are now four CSVs, and four
-  identities the paper itself prints say how far they can be trusted - including
-  the five places the printing is wrong.
+  identities the paper itself prints say how far they can be trusted - including the places where the printing is wrong.
 
   THE CORRELATION COSTED AGAINST A NULL MODEL, WINDOW BY WINDOW. The whole-table
   1.2 % is not the useful number. Eq. (38) beats a constant by a factor of seven
   and a half on 23 rows; eq. (33) beats it modestly; eq. (34) IS a constant; and
   eq. (37) is not distinguishable from a constant IN EITHER DIRECTION on the five
   rows in its window - the 0.021-point gap reverses if the two rows of disputed
-  branch are re-placed, under 2 of 5 leave-one-outs, and if the in-sample null is
-  charged for the parameter it fits. That last statement is not in the paper and
+  branch are re-placed and if the in-sample null is charged for the parameter it
+  fits, and splits under leave-one-out (the correlation is ahead in 2 of 5
+  deletions). That last statement is not in the paper and
   it is what a reader needs before trusting the 0.2 < Re < 1 branch.
 
   THE TWO WALL LAWS DECIDED ON THE AUTHORS' OWN NUMBERS, ON THE ROWS THAT COULD
@@ -261,7 +258,7 @@ adds: >
   and that pick, in each case, the equation the authors applied there. This is
   the page's strongest result and its limits are stated: Table II's intercept
   column reproduces its own log10 V_0 column on all 15 rows, so 14 of the 36
-  sedimentation rows carry an identically zero residual and cannot detect a wall
+  sedimentation rows carry a residual of zero to the printed digits and cannot detect a wall
   effect of any size - the sedimentation fit is quoted on Table I alone, at an
   interval 4.0x wider than the pooled one and with the same verdict. The
   fluidisation number is a refit of the data Fig. 21 was drawn from; the
@@ -280,11 +277,10 @@ adds: >
 
   THE FLUX FUNCTION INTEGRATED, WITH THE HONEST ACCOUNTING OF WHAT THAT SHOWS.
   F(phi) = phi V_0 (1-phi)^n is what the correlation becomes downstream, in every
-  thickener and batch-settling model. The pymrm solve converges at order 1 and
-  its global solids balance is exactly zero - and the break table shows that the
-  balance is exactly zero for a wrong n, a wrong V_0, an unstable step and a
+  thickener and batch-settling model. The pymrm solve converges at order 1 and its global solids balance is at round-off - and the break table shows that the
+  balance is at round-off for a wrong n, a wrong V_0, an unstable step and a
   16-fold-too-coarse grid as well. The solve tests the integration, not the
-  physics, and the page states that rather than banking the 1e-16.
+  physics, and the page states that rather than banking the round-off.
 
 agreement: >
   Data tier 2 - printed tables of the authors' own measurements - BUT THE PAGE IS
@@ -305,18 +301,18 @@ agreement: >
   identically zero, so they are excluded from the headline fit); eq. (39) meeting
   eq. (34) at Re = 500 to -0.015 % (the two share Table VI's last row, so this is
   a transcription check); the eq. (37)-vs-null comparison on five rows (it
-  reverses under all three sensitivities the page prints); and the solids balance
+  reverses under two of the three sensitivities the page prints and splits under the third); and the solids balance
   in the pymrm section.
 
-  The numbers that can fail and do: three of the four transcription identities
-  locate printed errors, on five named cells; K recomputed from the paper's own
+  The numbers that can fail and do: the transcription identities locate printed
+  errors, on named cells; K recomputed from the paper's own
   printed d_s, d_p and definition misses on 4 of 7 rows, worst -45.6 %; and
   Stokes' law, which reproduces Table I to 0.67 %, over-predicts Table II by 19 to
   66 % on its settling rows and returns the WRONG SIGN on the three rows where the
   particles rise - which is what a table headed Re > 0.2 should do.
 
-  The pymrm numbers are discretisation numbers: L1 order 1.000, 2.27e-4 at
-  nx = 400, and a solids balance of exactly zero that the break table shows to be
+  The pymrm numbers are discretisation numbers: L1 mean order 1.000, 2.27e-4 at
+  nx = 400, and a solids balance at round-off that the break table shows to be
   blind to almost everything.
 
 caveats: >
@@ -376,7 +372,7 @@ caveats: >
 
   Three quantities used are not printed in the paper: water at 20 C (mu = 1 cP,
   rho = 1), used only to re-check Table III's Re column; the two column diameters
-  in cm, fixed to 0.3 % by the printed d/D column; and g = 981 cm/s2, used only
+  in cm, fixed to below 0.3 % by the printed d/D column; and g = 981 cm/s2, used only
   for the Stokes check. None enters a result.
 
   The batch-settling balance is NOT Richardson and Zaki's. They write no

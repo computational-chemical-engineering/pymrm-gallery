@@ -1,29 +1,527 @@
 {
   "page": "E2.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.3.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "appendixC_max_dev": 0.004614449434343915,
-    "appendixA_max_dev": 0.005730408076425979,
-    "appendixB_max_dev": 0.017773115560517992,
-    "distributed_vs_eq54_n1600": 0.0014146470100544876,
-    "distributed_vs_eq54_richardson": 4.781170027003597e-07,
-    "upwind_order": 0.9993270924442675,
-    "eq57_limit_dev": 6.3421228470936985e-09,
-    "mass_balance_dev": 8.106057127982915e-06,
-    "injection_appendixC_worst_ratio": 470.4233398749825,
-    "injection_eq57_worst_ratio": 1.1984462968286358,
-    "injection_mass_balance_worst_ratio_same_flow": 1.8029650049493497,
-    "mass_balance_truncation_order": 0.9138185496144123,
-    "identity_break_mass_balance_asymmetric_S": 0.5796060002277197,
-    "identity_break_eq57_gamma_e_off_closure": 0.07935471149338894,
-    "identity_break_ceiling_u0_dependence": 0.37338804868810005,
-    "extension_observed_order": 1.015449605201168,
-    "extension_max_change_n6400": 0.14648534521285492,
-    "extension_richardson": 0.146361474586198,
-    "gamma_b_claim_worst": 0.04747506705778516,
-    "cloud_wake_claim_worst": 0.12113836710809721,
-    "ceiling_u0_spread": 3.7415172783438725e-16,
-    "ceiling_conversion_db37": 0.9913283060764155,
-    "backmix_crossing_db37": 2.266685366426807,
-    "extension_max_change": 0.1468577880858756
+    "paper_ve_sum_excess": {
+      "kind": "value",
+      "value": 0.09739883948533601,
+      "rtol": 0.0001,
+      "note": "eqs. 5 and 7: (v_b + v_c + v_e)/u_0 - 1"
+    },
+    "cloud_wake_share_upflow": {
+      "kind": "value",
+      "value": 0.2847713181181325,
+      "rtol": 0.0001
+    },
+    "ceiling_conversion_db37": {
+      "kind": "value",
+      "value": 0.9913283060764155,
+      "rtol": 1e-06
+    },
+    "ceiling_conversion_db50": {
+      "kind": "value",
+      "value": 0.9453104421822834,
+      "rtol": 1e-06
+    },
+    "ceiling_conversion_db70": {
+      "kind": "value",
+      "value": 0.8139953538495857,
+      "rtol": 1e-06
+    },
+    "backmix_crossing_db37": {
+      "kind": "value",
+      "value": 2.266685366426803,
+      "rtol": 1e-06,
+      "note": "find_roots, xtol 1e-12"
+    },
+    "backmix_crossing_db30": {
+      "kind": "value",
+      "value": 634.623623374827,
+      "rtol": 1e-06,
+      "note": "find_roots, xtol 1e-12"
+    },
+    "backmix_crossing_db20": {
+      "kind": "value",
+      "value": 441657.92265241494,
+      "rtol": 1e-06,
+      "note": "find_roots, xtol 1e-12"
+    },
+    "backmix_crossings_found": {
+      "kind": "exact",
+      "value": 6,
+      "note": "of the 6 bubble sizes in the table"
+    },
+    "ceiling_u0_spread": {
+      "kind": "bound",
+      "value": 3.7415172783438725e-16,
+      "max": 1e-14,
+      "basis": "identity"
+    },
+    "extension_min_change": {
+      "kind": "value",
+      "value": 0.07200158149609037,
+      "rtol": 1e-06,
+      "note": "exact eigenmode route"
+    },
+    "extension_max_change": {
+      "kind": "value",
+      "value": 0.1463617566567914,
+      "rtol": 1e-06,
+      "note": "exact eigenmode route"
+    },
+    "extension_paper_ve_min_change": {
+      "kind": "value",
+      "value": 0.002502180466962045,
+      "rtol": 1e-06
+    },
+    "extension_paper_ve_max_change": {
+      "kind": "value",
+      "value": 0.10829158355491186,
+      "rtol": 1e-06
+    },
+    "extension_exact_change_Km4": {
+      "kind": "value",
+      "value": 0.1463617566567914,
+      "rtol": 1e-06
+    },
+    "extension_exact_change_Km8": {
+      "kind": "value",
+      "value": 0.10626469381448267,
+      "rtol": 1e-06
+    },
+    "extension_paper_exact_change_Km8": {
+      "kind": "value",
+      "value": 0.08114286508715551,
+      "rtol": 1e-06
+    },
+    "extension_pymrm_change_Km4_n1600": {
+      "kind": "value",
+      "value": 0.14684004229736702,
+      "rtol": 0.0001
+    },
+    "extension_pymrm_change_Km8_n1600": {
+      "kind": "value",
+      "value": 0.10719175681293791,
+      "rtol": 0.0001
+    },
+    "extension_paper_pymrm_change_Km8_n1600": {
+      "kind": "value",
+      "value": 0.08210392586193138,
+      "rtol": 0.0001
+    },
+    "exact_route_condition": {
+      "kind": "bound",
+      "value": 27.983867171361098,
+      "max": 1000.0,
+      "basis": "chosen",
+      "note": "well below 1/eps: the scaled modes keep the route exact to round-off"
+    },
+    "equivalent_db_min": {
+      "kind": "value",
+      "value": 3.8507973672454314,
+      "rtol": 1e-06
+    },
+    "equivalent_db_max": {
+      "kind": "value",
+      "value": 5.001970134490546,
+      "rtol": 1e-06
+    },
+    "equivalent_db_Km2": {
+      "kind": "value",
+      "value": 4.20030181515182,
+      "rtol": 1e-06
+    },
+    "appendixC_max_dev": {
+      "kind": "value",
+      "value": 0.004614449434343915,
+      "rtol": 0.0001
+    },
+    "appendixA_max_dev": {
+      "kind": "value",
+      "value": 0.005730408076425979,
+      "rtol": 0.0001
+    },
+    "appendixB_max_dev": {
+      "kind": "value",
+      "value": 0.01777311556051797,
+      "rtol": 0.0001
+    },
+    "appendixB_emf_implied": {
+      "kind": "value",
+      "value": 0.44722090328581676,
+      "rtol": 0.0001
+    },
+    "appendixB_own_emf_shift": {
+      "kind": "value",
+      "value": 0.10555819342836648,
+      "rtol": 0.0001
+    },
+    "frozen_vs_backward_euler": {
+      "kind": "bound",
+      "value": 1.4555023852835802e-13,
+      "max": 1e-11,
+      "basis": "identity"
+    },
+    "distributed_vs_eq54_n1600": {
+      "kind": "value",
+      "value": 0.0012743748358645668,
+      "rtol": 0.001
+    },
+    "distributed_vs_eq54_richardson": {
+      "kind": "value",
+      "value": 5.20567358774926e-07,
+      "rtol": 0.001
+    },
+    "frozen_order_worst_dev": {
+      "kind": "bound",
+      "value": 0.0015549237094113488,
+      "max": 0.02,
+      "basis": "theory",
+      "note": "first-order upwind; every consecutive pair at every K_m"
+    },
+    "frozen_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 115317937.443125,
+      "min": 1000.0,
+      "basis": "theory"
+    },
+    "eq57_limit_dev": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-14,
+      "basis": "identity"
+    },
+    "eq57_optimism": {
+      "kind": "value",
+      "value": 0.18918918918918948,
+      "rtol": 1e-06
+    },
+    "mass_balance_dev": {
+      "kind": "bound",
+      "value": 1.720969581271019e-12,
+      "max": 1e-10,
+      "basis": "identity"
+    },
+    "mass_balance_zero_gradient_n2000": {
+      "kind": "value",
+      "value": -8.106057031096332e-06,
+      "rtol": 0.001,
+      "note": "signed gap of the retired zero-gradient construction"
+    },
+    "extension_order_worst_dev": {
+      "kind": "bound",
+      "value": 0.006697275694006466,
+      "max": 0.02,
+      "basis": "theory",
+      "note": "observed_orders, every triple at every K_m"
+    },
+    "extension_pymrm_vs_exact_n1600": {
+      "kind": "value",
+      "value": 0.0008380119185207313,
+      "rtol": 0.001
+    },
+    "extension_richardson_vs_exact": {
+      "kind": "value",
+      "value": 1.8222161646264112e-07,
+      "rtol": 0.05
+    },
+    "extension_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 3457255.638984375,
+      "min": 1000.0,
+      "basis": "theory"
+    },
+    "gamma_b_claim_worst": {
+      "kind": "value",
+      "value": 0.04747506705778515,
+      "rtol": 0.0001
+    },
+    "gamma_b_claim_Km_limit": {
+      "kind": "value",
+      "value": 1.9370932507856338,
+      "rtol": 1e-06
+    },
+    "cloud_wake_claim_worst": {
+      "kind": "value",
+      "value": 0.12113836710809722,
+      "rtol": 0.0001
+    },
+    "cloud_wake_claim_Km_limit": {
+      "kind": "value",
+      "value": 4.882266133468893,
+      "rtol": 1e-06
+    },
+    "cloud_wake_change_Km05": {
+      "kind": "value",
+      "value": -0.027266682787275398,
+      "rtol": 0.0001
+    },
+    "identities_blind_to_coefficients": {
+      "kind": "exact",
+      "value": 4,
+      "structural": true,
+      "note": "the identities hold for any coefficient values; that is what this counts"
+    }
+  },
+  "quoted": {
+    "ceiling_conversion_db37": [
+      "99.1 %",
+      "99.13 %"
+    ],
+    "equivalent_db_Km2": [
+      "4.20"
+    ],
+    "equivalent_db_max": [
+      "5.00"
+    ],
+    "equivalent_db_min": [
+      "3.85"
+    ],
+    "appendixC_max_dev": [
+      "0.46 %"
+    ],
+    "appendixA_max_dev": [
+      "0.57 %"
+    ],
+    "ceiling_conversion_db50": [
+      "94.53 %"
+    ],
+    "ceiling_conversion_db70": [
+      "81.40 %"
+    ],
+    "cloud_wake_change_Km05": [
+      "-2.7 %"
+    ],
+    "extension_min_change": [
+      "7.2 %"
+    ],
+    "extension_max_change": [
+      "14.6 %"
+    ],
+    "extension_paper_ve_min_change": [
+      "0.25 %"
+    ],
+    "extension_paper_ve_max_change": [
+      "10.8 %"
+    ]
+  },
+  "breaks": {
+    "appendixC_max_dev": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "appendixA_max_dev": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "appendixB_max_dev": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "appendixB_emf_implied": [
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "appendixB_own_emf_shift": [
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "ceiling_conversion_db37": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "ceiling_conversion_db50": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "ceiling_conversion_db70": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "backmix_crossing_db37": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "backmix_crossing_db30": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "backmix_crossing_db20": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "eq57_optimism": [
+      "gamma_e x 1.10, off eq. 15's closure (parameter set)"
+    ],
+    "cloud_wake_share_upflow": [
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "paper_ve_sum_excess": [
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "cloud_wake_change_Km05": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "gamma_b_claim_worst": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "gamma_b_claim_Km_limit": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "cloud_wake_claim_worst": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "cloud_wake_claim_Km_limit": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_min_change": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_max_change": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_exact_change_Km4": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_exact_change_Km8": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_paper_ve_min_change": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_paper_ve_max_change": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "extension_paper_exact_change_Km8": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "equivalent_db_min": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "equivalent_db_max": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "equivalent_db_Km2": [
+      "c_kbc_visc 4.5 -> 3.5 (coef)",
+      "c_kbc_diff 5.85 -> 5.58 (coef)",
+      "c_kce 6.78 -> 8.76 (coef)",
+      "c_ubr 0.711 -> 0.171 (coef)"
+    ],
+    "mass_balance_dev": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)",
+      "emulsion velocity from eqs. 5 and 7, sum != u_0 (ve_mode)",
+      "zero-gradient outlets, exit read from the last cells (outlet)"
+    ],
+    "distributed_vs_eq54_n1600": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "distributed_vs_eq54_richardson": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "extension_pymrm_vs_exact_n1600": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "extension_pymrm_change_Km4_n1600": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "extension_pymrm_change_Km8_n1600": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "extension_paper_pymrm_change_Km8_n1600": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "extension_richardson_vs_exact": [
+      "K_bc x 1.1 in the cloud row only (kbc_asym)"
+    ],
+    "frozen_vs_backward_euler": [
+      "zero-gradient outlets, exit read from the last cells (outlet)"
+    ],
+    "mass_balance_zero_gradient_n2000": [
+      "K_bc x 1.1 in the cloud row only, zero-gradient outlets (kbc_asym, outlet)",
+      "emulsion velocity from eqs. 5 and 7, zero-gradient outlets (ve_mode, outlet)"
+    ],
+    "eq57_limit_dev": [
+      "gamma_e x 1.10, off eq. 15's closure (parameter set)"
+    ],
+    "ceiling_u0_spread": [
+      "K_bc x (u_0/13.2)^0.1 (parameter set)"
+    ],
+    "backmix_crossings_found": [
+      "backmix scan stopped at K_m = 50 (hi)"
+    ],
+    "extension_order_worst_dev": [
+      "finest rung solved on n = 3200 again (cap)"
+    ],
+    "extension_finest_over_roundoff": [
+      "finest rung solved on n = 3200 again (cap)"
+    ],
+    "frozen_order_worst_dev": [
+      "frozen ladder with its finest rung on n = 800 again (cap)"
+    ],
+    "frozen_finest_over_roundoff": [
+      "frozen ladder with its finest rung on n = 800 again (cap)"
+    ],
+    "exact_route_condition": [
+      "eigenmodes left unscaled, exp(lam z) for every mode (scaled)"
+    ]
   }
 }

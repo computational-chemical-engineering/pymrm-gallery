@@ -494,8 +494,8 @@ models:
       Zaki is a data paper - eight printed tables, 66 measured exponents, two
       wall laws and a piecewise n(Re, d/D) in five expressions - and this page
       transcribes all eight off 600 dpi renders, certifies the transcription
-      against four identities the tables themselves carry, and finds five printed
-      errors doing it.
+      against identities the tables themselves carry, and lists the printed
+      errors it finds doing it.
       The correlation reproduces its own 58 non-oil rows to 1.20 % mean, but that
       is a FIT RESIDUAL and the page refuses to call it anything else: eqs.
       (33)-(39) were fitted to these very slopes. What is informative is the null
@@ -504,20 +504,20 @@ models:
       eq. (33) earns it modestly; eq. (34) IS a constant, and the mean of the six
       measured slopes above Re = 500 is 2.3900 against its printed 2.39; and eq.
       (37) cannot be separated from a constant in either direction on the five
-      rows in its window - the 0.02-point gap between them reverses under all
-      three sensitivities the page prints.
+      rows in its window - the 0.02-point gap between them reverses under two of
+      the three sensitivities the page prints and splits under the third.
       The one genuinely two-sided test is the wall term, and the page reports
       what half of that data can and cannot do. Table II's intercept column
       reproduces its own log10 V_0 column on all 15 rows, so 14 of the 36
-      sedimentation rows carry an identically zero residual and cannot detect a
-      wall effect of any size; the sedimentation fit is therefore made on Table I
+      sedimentation rows carry a residual of zero to the printed digits and
+      cannot detect a wall effect of any size; the sedimentation fit is therefore made on Table I
       alone. Fitting the single coefficient alpha in log V_0 - log V_i =
-      alpha (d/D) gives -0.235 (95 % CI -1.78 to +0.17) on the 22 Table I rows
-      and +1.095 (+0.83 to +1.51) on the fluidisation tables: each interval
+      alpha (d/D) gives -0.235 (95 % CI -1.78 to +0.16) on the 22 Table I rows
+      and +1.095 (+0.83 to +1.50) on the fluidisation tables: each interval
       excludes the other law, and the two data sets pick exactly the equations
       the authors applied to them. The COEFFICIENT 1, though, does not survive
       its own range: on the d/D range the two data sets share the fluidisation
-      alpha is +2.267 (+1.20 to +3.47), excluding 1, and it falls from +2.16
+      alpha is +2.267 (+1.20 to +3.4), excluding 1, and it falls from +2.16
       below d/D = 0.05 to +1.03 above it. Three arithmetic findings on top: the
       17.5 and 18 of eqs. (37) and (38) are 17.4 and 17.8 rounded up from the
       division displayed on the line above them, the branch boundary at Re = 200
@@ -4122,8 +4122,9 @@ models:
     title: "Kunii–Levenspiel bubbling bed model"
     description: >
       Three regions, one bubble size, and a conversion ceiling the paper never
-      states — the bed cannot beat it however fast the reaction goes, and it does
-      not depend on gas velocity at all.
+      states: the bed cannot beat it however fast the reaction goes, and at a
+      fixed bubble size it does not depend on gas velocity. The cloud and emulsion
+      transport the paper leaves out is solved with pymrm and checked against its exact eigenmode solution.
     section: E
     status: published
     page: pages/E2.1-kunii-levenspiel-bubbling-bed/
@@ -4132,7 +4133,7 @@ models:
     structures: [S7]
     phases: [gas-solid]
     predicts: [bubble and cloud exchange coefficients, overall rate constant, conversion]
-    pymrm_api: [construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_div, construct_convflux_upwind, compute_boundary_values, find_roots, observed_orders]
     reference:
       authors: ["Kunii, D.", "Levenspiel, O."]
       year: 1968
@@ -4329,7 +4330,10 @@ models:
       other half being the rise-velocity pair, eqs. 3 and 4 jointly. The gap does
       not close with density: Reilly's transition closure exceeds Wilkinson's at
       every density up to 1000 kg/m3, so the two never cross, and above 6.7 kg/m3
-      neither has support in this source.
+      neither has support in this source. Run end to end from a physical velocity,
+      rather than at the plotted abscissa, the bias on the Figure 11 markers rises
+      from +64 % to +106 %, so the abscissa convention matters at small excess
+      velocity.
     section: F
     status: published
     page: pages/F1.3-wilkinson-high-pressure-holdup/
@@ -4343,7 +4347,7 @@ models:
       - large-bubble holdup above the transition
       - total gas holdup
       - the gas-density (hence pressure) dependence of all of the above
-    pymrm_api: []
+    pymrm_api: [find_roots]
     reference:
       authors: ["Wilkinson, P. M.", "Spek, A. P.", "van Dierendonck, L. L."]
       year: 1992
