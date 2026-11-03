@@ -104,9 +104,12 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
 21. A first-order convection-only outlet is `{"outflow": True}`; an outlet bc of `None`
     is a Dirichlet zero. Read outlet, wall and boundary fluxes with
     `compute_boundary_values` under the same bc, never from the last cell. A van Leer
-    profile with an outlet gradient is first order under outflow and zero gradient
-    alike: read it on an extrapolated face. (P6, P8; rows 32, 35, 87, 121, 141, 148,
-    149, 166, 187)
+    profile with an outlet gradient, under outflow or zero gradient, has a first-order
+    layer of 2 to 3 cells at the outlet while the last cell is a second-order outlet
+    value and the interior stays second order: measure an order on the outlet value or
+    at a fixed x, never as a maximum over all cells; an extrapolated outlet face
+    removes the layer. (P6, P8; rows 32, 35, 87, 121, 141, 148, 149, 166, 187; pymrm
+    #41)
 22. Field shapes `(n, 1)`, `NumJac((n, 1))`, spatial axes first. A rate whose
     derivative is unbounded or varies fast gets its exact Jacobian through
     `construct_coefficient_matrix`; a state-dependent velocity is convected as a molar
