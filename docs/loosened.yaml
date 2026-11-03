@@ -331,3 +331,15 @@
   metric: deadzone_plain_eta_gap
   date: 2026-11-03
   reason: "bound 5e-6 -> 1e-5: newton's new bound rule moves where the stuck bounded iterate stops on 100 cells (1.39e-6 -> 5.37e-6); within a version it does not move with maxfev 100 to 800"
+- page: B1.1
+  metric: branch_points
+  date: 2026-11-03
+  reason: "break row replaced, not removed: the old row (continuation with max_change = 1e-3) relied on the march stopping, which on pymrm 3.4.0 (#36) it no longer does: it reaches all 319 points; the new row 'sweep stopped at y_centre = 1e-3' fails the same claim"
+- page: B1.1
+  metric: nonisothermal_points_compared
+  date: 2026-11-03
+  reason: "break row replaced, not removed: same as branch_points; the stopped-sweep row fails this claim"
+- page: B1.3
+  metric: deadzone_plain_default_tol_converged
+  date: 2026-11-03
+  reason: "break row replaced, not removed: on pymrm 3.4.0 the default-tolerance bounded newton converges on 4 of 4 grids, so the old row no longer fails it; the new row caps the solve at maxfev = 30"
