@@ -14,60 +14,52 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 6
+pymrm_min_version: "3.3.0"
+runtime_seconds: 3
 datasets:
   - krishna-ellenberger-1996-fig11.csv
   - krishna-ellenberger-1996-parameters.csv
 
 validation:
-  - eq. (19) against all 63 digitised Figure 11 markers, gas labels not used, since the correlation has no gas-density term
-  - the same points against Wilkinson et al. (1992), and the ratio of the two deviations checked against the ratio the authors report in Table 3
-  - the gas-independence claim tested by extrapolation: a free power law fitted on the three lighter gases alone, used to predict the 37x-denser SF6 points it never saw
-  - Wilkinson's required helium-to-SF6 spread computed and compared with that extrapolation bias
-  - the transcribed properties checked by feeding them through Reilly eq. (8) and comparing with the paper's own Figure 6
+  - eq. (19) against all 63 digitised Figure 11 markers, gas labels not used since the correlation has no gas-density term, and split at the excess velocity above which a marker is certainly inside the fitted window
+  - the scatter checked against the sidecar's digitisation error, which explains about 0.1 percentage points of it
+  - the same points against Wilkinson et al. (1992) at air density and, for the span, at each other gas, and the ratio of the two deviations compared with the ratio of Table 3's
+  - the gas-independence claim tested by extrapolation, a free power law on the unlabelled markers used to predict the SF6 markers, with a standard error, against what Wilkinson implies for each possible light gas
+  - every number the page states is a registered claim with a break row that moves it
 
 adds: >
-  The paper states that the Wilkinson correlation "predicts an exaggerated
-  influence of gas density" on the large-bubble holdup, and leaves it there.
-  Point-by-point evaluation makes it a number: over the helium-to-SF6 range
-  Wilkinson predicts a 20-27 % spread in eps_b and eq. (19) predicts exactly
-  zero, because it contains no gas term. A power law fitted on helium, air and
-  argon alone extrapolates onto the SF6 points with a bias of 7.7 %, itself an
-  upper bound because part of it is extrapolation error - so Wilkinson's
-  dependence is 2.6-3.5x larger than the data will bear. Tracing it
-  shows where it comes from - two small exponents, 0.03 and 0.077, acting on a
-  density ratio spanning 37x and entering in the denominator of eps_b, where
-  they survive into the answer.
+  Nothing to the correlation itself; the page is algebra and calls no pymrm
+  operator. What it adds to the paper's argument is a measurement of what Figure 11
+  can and cannot show. Eq. (19) describes the markers with a mean absolute deviation
+  of 13.8 % and a bias of +2.8 %, 11.1 % and -2.1 % for the 33 markers certainly
+  inside the fitted window. Wilkinson is biased high by 47 to 79 % whichever gas the
+  markers are assumed to be, so its error is a level error. The SF6 markers sit
+  11.7 % above a free power law fitted on the other markers, with a standard error of
+  about 8 % in logs, and Wilkinson implies 6 to 17 % depending on which light gas the
+  unlabelled markers are: the figure cannot separate gas independence from
+  Wilkinson's weak dependence.
 
 agreement: >
   Deviation is (model - measured)/measured throughout. Eq. (19) reproduces all 63
   digitised Figure 11 markers with a mean absolute deviation of 13.8 % (median
   11.0 %, worst 40 %) and a bias of +2.8 %, against the delta of 0.16 the authors
-  report over their own 1,735-point set. Wilkinson evaluated at the same points
-  is biased high by 64 % and deviates 4.6 times as far as eq. (19); the paper's
-  Table 3 gives 7.8 times, and the gap is expected, because its 1,735 points span
-  six column diameters up to 0.63 m and Wilkinson carries no diameter term
-  either, whereas this figure is one 0.10 m column. The SF6 group differs from
-  gas-independence claim cannot be tested by comparing group biases on this
-  figure, because the SF6 points and the rest occupy disjoint velocity windows
-  (all SF6 below 0.044 m/s, everything else above 0.051) and a group difference
-  would be confounded with velocity. Tested instead by extrapolation: a free
-  power law fitted on the 51 helium/air/argon points predicts the 12 SF6 points
-  with a bias of -7.7 % and a scatter of 13.5 %, the same scatter as the
-  correlation itself, where Wilkinson would require 20-27 %.
+  report over their own larger set. Wilkinson evaluated at the same points, all at
+  air density, is biased high by 64 % and deviates 4.6 times as far as eq. (19);
+  Table 3 gives 7.8 times. The SF6 group cannot be compared with the rest by group
+  bias, because the two occupy disjoint velocity windows. Tested instead by
+  extrapolation of a free power law fitted on the 51 unlabelled markers, the 12 SF6
+  markers sit 11.7 % above the extrapolation, 1.2 standard errors from zero, inside
+  the 5.9 to 17.5 % that Wilkinson requires for the possible light gases.
 
 caveats: >
-  This is an algebraic correlation, not a discretised model - pymrm's operators
-  play no part, and the page says so rather than inventing a PDE to justify
-  them. The comparison rests on one figure of eleven, so it tests the
-  gas-density claim and not the column-diameter or liquid-property claims, which
-  are Figures 7 and 9. The 14 % scatter mixes real experimental spread with
-  digitisation error and this page cannot separate the two. Marker shapes could
-  not be read reliably in the dense band, so gas labels are carried only for the
-  SF6 group, which the reviewer confirmed; see the dataset sidecar for the review
-  findings. Wilkinson is evaluated at the plotted abscissa, which is what the
-  figure caption prescribes but is not the same as running it end to end from
-  operating conditions. The gas-independence result is an upper bound rather
-  than a measurement: the SF6 window sits about half a decade below the fitted
-  range, so part of the 7.7 % is extrapolation error and the page says so.
+  This is an algebraic correlation, not a discretised model; pymrm's operators play
+  no part, and the page says so rather than inventing a PDE to justify them. The
+  comparison rests on one figure of eleven, so it tests the shape of eq. (19) in one
+  column and one liquid, and not the column-diameter or liquid-property claims, which
+  are Figures 7 and 9. Marker shapes could not be read reliably in the dense band, so
+  gas labels are carried only for the SF6 group, which the reviewer confirmed; see
+  the dataset sidecar for the review findings. The SF6 markers all lie below the
+  velocity window eq. (19) was fitted over, and the independence test cannot
+  distinguish zero gas dependence from Wilkinson's. Wilkinson is evaluated at the
+  plotted abscissa, which is what the figure caption prescribes but is not the same
+  as running it end to end from operating conditions; F1.3 does that.
