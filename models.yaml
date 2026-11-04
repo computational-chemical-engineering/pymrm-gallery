@@ -5713,8 +5713,8 @@ models:
     title: "Doyle–Fuller–Newman lithium-ion battery model"
     description: >
       The P2D battery model, rebuilt from a paper that does not print one of the
-      properties it needs — and an open-circuit expression that checks against
-      the figure's own dashed curve to 3 mV.
+      properties it needs, with an open-circuit expression that checks against
+      the figure's own dashed curve to 3.25 <!-- claim: ocp_eq16_mad_mV --> mV.
     section: J
     status: published
     page: pages/J3.4-doyle-fuller-newman/
@@ -5728,7 +5728,7 @@ models:
       container: "Journal of the Electrochemical Society 140(6) 1526–1533"
       doi: 10.1149/1.2221597
     predicts: [galvanostatic discharge and charge curves, electrolyte profiles, porosity optimum]
-    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, NumJac, newton]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, interp_cntr_to_stagg, NumJac, newton]
     data: {tier: 6, method: digitised, status: complete}
     note: >
       Structurally identical to D1.4 (reactor-particle coupling). Demonstrating
