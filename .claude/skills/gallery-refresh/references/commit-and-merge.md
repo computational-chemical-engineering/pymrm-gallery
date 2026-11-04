@@ -36,7 +36,7 @@ git diff --cached --stat                                # nothing you did not me
 ## Commit message
 
 ```
-<ID> on the new page layout and pymrm 3.3.0; published corrections
+<ID> on the new page layout and pymrm 3.4.0; published corrections
 
 <lane>: index.py/ipynb pair, Claims format 2 (<n> claims, <m> break rows, none open),
 build_page.py removed, <model.py and test_model.py | no model.py>. <solver in one

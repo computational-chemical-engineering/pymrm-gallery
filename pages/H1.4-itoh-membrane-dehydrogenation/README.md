@@ -122,10 +122,9 @@ GALLERY_OFFLINE=1 python -m pytest -q pages/H1.4-itoh-membrane-dehydrogenation/t
   9.4e-6 <!-- claim: cc_continuation_last_vA0 --> mol/s (at 9.0e-6 mol/s the
   outlet unconverted fraction is 9.8e-3 <!-- claim: cc_unconverted_9e-6_nz400 -->,
   n_z = 400). The stop is a solver limit, not a reactor limit: past it the
-  Newton iterates convert the cyclohexane completely inside the reactor
-  (unconverted below 1e-6 <!-- claim: cc_past_edge_iterate_unconverted --> at the
-  outlet) with a residual of order 100, and with the square root replaced by a
-  smooth `y/sqrt(y + 1e-8)` continuation stops at the same purge
+  solve does not converge, and where its last iterate stops depends on the
+  iteration cap, so the page reports no result from that region. With the
+  square root replaced by a smooth `y/sqrt(y + 1e-8)` continuation stops at the same purge
   (9.4e-6 <!-- claim: cc_continuation_last_vA0_smoothed_sqrt --> mol/s), so the
   square root is not the cause.
 - 2026-10-30: stated that the counter-current solution converges first order

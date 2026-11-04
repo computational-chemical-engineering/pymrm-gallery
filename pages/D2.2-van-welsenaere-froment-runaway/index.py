@@ -35,7 +35,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.3.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.4.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "D2.2-van-welsenaere-froment-runaway"  # equals the page directory
 
 import os, sys, urllib.request
@@ -278,17 +278,12 @@ print(f"provenance tier {ex_meta['provenance_tier']['tier']}: "
 # a second route (Validation).
 #
 # *The hot spot against $p^0$ is a continuation.* Sweeping the inlet pressure is
-# what `pymrm.continuation` is for (`RunawayTube.trace_inlet`). Its branch-jump
-# check, which rejects a correction that moves the state by more than 20 % of its
-# largest value away from the secant prediction, is switched off. Past the
-# critical pressure the hot spot moves upstream, and a secant prediction over a
-# step of 1e-4 atm is hundreds of kelvin off in the cells it passes, so the check
-# rejects corrections that are the solution. Each rejection halves the step, and
-# `continuation` counts the halvings over all sub-steps on the way to one
-# requested value, so a long stretch of short accepted sub-steps uses up its
-# budget and the march stops with "probably a turning point (fold)". **There is
-# no fold**: with the check on and steps of 2e-5 atm the same stretch is traced
-# to the end (Results).
+# what `pymrm.continuation` is for (`RunawayTube.trace_inlet`), with its
+# branch-jump check at its default: a correction that moves the state by more
+# than 20 % of its largest value away from the secant prediction is rejected and
+# the sub-step is halved. Past the critical pressure the hot spot moves upstream,
+# and the march reaches every requested value; every traced state is
+# checked against an independent solve (Validation).
 
 # %% [markdown]
 # ## Results
@@ -427,19 +422,12 @@ ERR_0182, ERR_0190 = HS_CONV[2] - HS_1500[2], HS_CONV[4] - HS_1500[4]
 STEEP_PCT = steepest_over_critical_pct(HS_SWEEP)
 HS_019 = HS_SWEEP[-1]
 T_AD_019 = TW + CASE.B / CASE.A * P_SWEEP[-1]
-# continuation with its branch-jump check on: steps of 1e-4 atm, and of 2e-5 atm
-P_FINE = np.round(np.arange(0.0180, 0.0190 + 1e-9, 2e-5), 6)
-TRACE_DEFAULT = RunawayTube(CASE, P_SWEEP[0], TW).trace_inlet(P_SWEEP, max_change=0.2)
-TRACE_FINE = RunawayTube(CASE, P_FINE[0], TW).trace_inlet(P_FINE, max_change=0.2)
 
 fig, ax = plt.subplots(figsize=(6.6, 4.3))
 ax.plot(P_SWEEP * 1000, HS_SWEEP, "k-", lw=1.6, label="hot spot, pymrm continuation")
 ax.plot(P_SWEEP * 1000, TW + CASE.B / CASE.A * P_SWEEP, ":", color="tab:gray",
         label=r"adiabatic limit $T_w + (B/A)\,p^0$")
 ax.axvline(P_CRIT * 1000, color="tab:red", lw=1.0, ls="--", label="critical (criterion 1)")
-if not TRACE_DEFAULT.success:
-    ax.axvline(TRACE_DEFAULT.last_param * 1000, color="tab:orange", lw=1.0, ls="-.",
-               label="branch-jump check on: stops (no fold)")
 ax.set(xlabel=r"$p^0$ (10$^{-3}$ atm)", ylabel=r"$T_{\max}$ (K)", ylim=(620, 1450),
        title=f"Hot spot against inlet pressure, $T_w$ = {TW:.0f} K")
 ax.legend(fontsize=8, loc="upper left")
@@ -456,10 +444,6 @@ print(f"at p0 = {P_SWEEP[-1]:.4f} atm the hot spot is {HS_019:.0f} K on 1500 cel
       f"({HS_CONV[4]:.0f} K converged), below the adiabatic {T_AD_019:.0f} K")
 print(f"steepest d ln T_max / d ln p0 at {STEEP_PCT:.0f} % above criterion 1's critical "
       f"p0 (sampled every 1e-4 atm)")
-print(f"branch-jump check on, steps of 1e-4 atm: success = {TRACE_DEFAULT.success}; "
-      f"{TRACE_DEFAULT.message}")
-print(f"   (that fold does not exist) steps of 2e-5 atm from 0.018 to 0.019 atm: "
-      f"success = {TRACE_FINE.success}")
 
 # %% [markdown]
 # ### The runaway boundary across wall temperatures (their Fig. 8)
@@ -825,14 +809,10 @@ claims.value("hotspot_grid_err_0190_K", ERR_0190, unit="K", note="1500 cells aga
 claims.value("hotspot_0190_converged_K", HS_CONV[4], unit="K")
 claims.value("steepest_sensitivity_above_crit_pct", STEEP_PCT, rtol=0.1,
              note="argmax on the 1e-4 atm sweep: rtol covers one sample spacing")
-claims.exact("check_on_fine_steps_succeeds", TRACE_FINE.success,
-             note="branch-jump check on, steps of 2e-5 atm")
 claims.value("dT_hotspot_1pct_from_0182_K", DT_1PCT, unit="K")
 claims.value("hotspot_p0190_K", HS_019, unit="K")
 claims.bound("trace_vs_independent_K", TRACE_GAP, max=1e-6, basis="tolerance", unit="K",
              note="newton tol 1e-10 on the scaled unknowns in both")
-claims.exact("default_branch_check_stops", not TRACE_DEFAULT.success,
-             note="continuation with max_change = 0.2 over the same sweep")
 # --- the Fig. 8 sweep --------------------------------------------------------------------
 claims.value("bracket_width_c1_min_pct", SW["w1"].min())
 claims.value("bracket_width_c1_max_pct", SW["w1"].max())
@@ -898,7 +878,7 @@ def brk(name, metric, value, note=""):
     caught = claims.breaks(name, metric, value)
     clean = claims[metric]
     if claims.metrics[metric]["kind"] == "bound":
-        clean = f"(here {clean:.3g})"      # a bound's own value is not published: masked
+        clean = f"(here {clean:.2e})"      # a bound's own value is not published: masked
     BREAK.append(dict(defect=name, metric=metric, clean=clean, broken=value,
                       caught=caught, note=note))
 
@@ -997,10 +977,6 @@ brk("last grid 2400 cells, read as a doubling", "hotspot_grid_order",
 _trace_1000 = RunawayTube(CASE, P_SWEEP[0], TW, n_z=1000).trace_inlet(P_SWEEP)
 brk("sweep on n_z = 1000, independent solves on 1500", "trace_vs_independent_K",
     max(abs(x[:, 1].max() - h) for x, h in zip(_trace_1000.xs, HS_SWEEP)))
-brk("branch-jump check on, steps of 1e-4 atm", "check_on_fine_steps_succeeds",
-    RunawayTube(CASE, P_FINE[0], TW).trace_inlet(P_FINE[::5], max_change=0.2).success)
-brk("branch-jump check at 100 % of the largest unknown", "default_branch_check_stops",
-    not RunawayTube(CASE, P_SWEEP[0], TW).trace_inlet(P_SWEEP, max_change=1.0).success)
 
 pd.set_option("display.width", 200)
 print(pd.DataFrame(BREAK).to_string(index=False, formatters={

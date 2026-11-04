@@ -307,3 +307,39 @@
   metric: bed_vs_quadrature_over_resolution
   date: 2026-11-02
   reason: "break row relabelled or replaced by a specific run: 'construct_div(nu=1)' -> 'Bed(200, nu=1)'"
+- page: D2.2
+  metric: check_on_fine_steps_succeeds
+  date: 2026-11-03
+  reason: "history of pymrm (a finer max_change as workaround for the branch-jump check), removed under the current-capabilities rule (AGENTS.md); at the default 0.2 continuation reaches all 111 values"
+- page: D2.2
+  metric: default_branch_check_stops
+  date: 2026-11-03
+  reason: "history of pymrm (continuation stopping on the default branch-jump check), removed under the current-capabilities rule (AGENTS.md)"
+- page: H1.1
+  metric: w_form_step_at_half_fraction_min
+  date: 2026-11-03
+  reason: "measured the bound-rule cause, which is wrong (README Corrections 2026-11-03); replaced by w_form_small_eps_converges and continuation_w_small_eps_reaches_60"
+- page: H1.4
+  metric: cc_past_edge_iterate_unconverted_smoothed_sqrt
+  date: 2026-11-03
+  reason: "last iterate of a non-converged solve, jumps with the iteration cap (1.7e-6, 9.4e-16, 4.4e-3 at maxfev 100, 200, 400); the non-convergence stays as cc_past_edge_converged_smoothed_sqrt"
+- page: H1.4
+  metric: cc_past_edge_iterate_unconverted
+  date: 2026-11-03
+  reason: "last iterate of a non-converged solve, jumps with the iteration cap (5.2e-12, 1e-29, 9.8e-7 at maxfev 100, 200, 400); the non-convergence stays as cc_past_edge_converged"
+- page: B1.3
+  metric: deadzone_plain_eta_gap
+  date: 2026-11-03
+  reason: "bound 5e-6 -> 1e-5: newton's new bound rule moves where the stuck bounded iterate stops on 100 cells (1.39e-6 -> 5.37e-6); within a version it does not move with maxfev 100 to 800"
+- page: B1.1
+  metric: branch_points
+  date: 2026-11-03
+  reason: "break row replaced, not removed: the old row (continuation with max_change = 1e-3) relied on the march stopping, which on pymrm 3.4.0 (#36) it no longer does: it reaches all 319 points; the new row 'sweep stopped at y_centre = 1e-3' fails the same claim"
+- page: B1.1
+  metric: nonisothermal_points_compared
+  date: 2026-11-03
+  reason: "break row replaced, not removed: same as branch_points; the stopped-sweep row fails this claim"
+- page: B1.3
+  metric: deadzone_plain_default_tol_converged
+  date: 2026-11-03
+  reason: "break row replaced, not removed: on pymrm 3.4.0 the default-tolerance bounded newton converges on 4 of 4 grids, so the old row no longer fails it; the new row caps the solve at maxfev = 30"

@@ -60,7 +60,7 @@
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
 GALLERY_REF = "main"  # replaced by the release tag at publication
-PYMRM = ">=3.3.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
+PYMRM = ">=3.4.0,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "H1.1-sieverts-permeation"  # equals the page directory
 
 import os, sys, urllib.request
@@ -597,6 +597,7 @@ def itoh_numbers(nu_H2=3.0, y_C0=None, n=None):
 
 IT = itoh_numbers()
 BETA, PI_ITOH, PI_CRIT = IT["beta"], IT["Pi"], IT["Pi_crit"]
+EPS_SMALL = 1e-10    # NumJac step of the comparison solve in w (the default is 1e-6)
 print("Itoh's membrane, USED AS A SEPARATOR ON A CLEAN PERMEATE (y' = 0), for the")
 print("duty his reaction sets. This is a hypothetical duty placed on his tube, NOT")
 print("a description of his reactor: see the loaded-permeate block below.")
@@ -712,15 +713,17 @@ print("w + beta ln w = 1 - Pi L, whose logarithm sends w -> 0 only as L -> inf."
 # positive at $w_i = w_{i-1}$, so a **unique non-negative root exists at every cell
 # and every $\Pi$**. Past the front it decays *quadratically per cell*, underflows
 # to exactly 0 within a handful of cells, and $w = 0$ satisfies the cell equation
-# thereafter. Iterating on $w$ itself, `pymrm.newton` from the flat state stops
-# without converging (`success` is False, "stopped on a bound") as soon as the
-# extinction point enters the domain. The cause is the bound, not the problem:
-# near $w = 0$ the sink's slope grows like $w^{-1/2}$, the linearised step of every
-# tail cell overshoots past $w = 0$, and `newton`'s bound rule then holds the step
-# length at its floor of 0.5, so the remaining error only halves per iteration.
-# In $s = \sqrt{w}$ the sink is linear near zero, no tail step overshoots, and the
-# same `newton` call converges from the flat state at every $\Pi$ (section 4a
-# measures both).
+# thereafter. Iterating on $w$ itself with the default `NumJac`, `pymrm.newton`
+# from the flat state stops without converging (`success` is False, "stopped on a
+# bound") as soon as the extinction point enters the domain. The cause is the
+# default `NumJac`, not the problem: its step is absolute
+# (`eps_jac = 1e-6`) for unknowns below 1, in the tail $w$ falls far below that
+# step, and the sink's slope grows like $w^{-1/2}$ there, so the difference
+# quotient is a secant over a step much longer than the values it linearises.
+# With `eps_jac = 1e-10` the same call in $w$ converges. In $s = \sqrt{w}$ the
+# sink is linear near zero and the default `NumJac` serves: the same `newton`
+# call converges from the flat state at every $\Pi$ (section 4a measures all
+# three).
 #
 # The sweep below solves every point in $s$ from the flat state, and compares each
 # with the **march** (`Permeator.march_guess`), which solves the same bidiagonal
@@ -819,7 +822,8 @@ print(f"  both routes is {SW['min_w']:.1e}; the s solutions satisfy the cell equ
 print(f"  to below 1e-10 (here {SW['max_resid']:.0e}).")
 print(f"  the comparison solve in w stalls at the {int(W_FAIL.sum())} points above Pi_crit, and only there.")
 print(f"  worst |pymrm - exact| outlet fraction over the swept range: {SW['maxdev']:.2e}")
-print("  So the fixed grid does place the front; the solve in w could not find it.")
+print("  So the fixed grid does place the front; the solve in w with the default NumJac")
+print("  could not find it.")
 print()
 print(f"Pi_crit = {PI_CRIT:.3f} at beta = {BETA:.3f}, for a clean permeate side.")
 print(f"At Itoh's Pi = {PI_ITOH:.1f} the same tube run as a clean-permeate separator")
@@ -837,42 +841,43 @@ print("operating point, not of the measurement technique.")
 # no solution" are very different statements and only one of them is true here.
 # The table runs the *same* `Permeator` and the *same* `pymrm.newton` call (monotone
 # damping, lower bound 0, tolerance 1e-10) from the flat state at five capacity
-# ratios from just below $\Pi_\mathrm{crit}$ up to Itoh's own point, once in $w$
-# and once in $s = \sqrt{w}$, and compares the solution in $s$ with the march. For
-# the solve in $w$ it also reports the fraction of iterations whose step length
-# was held at 0.5, the floor of `newton`'s bound rule. Two more rows: both forms at
-# 12800 cells, and `pymrm.continuation` in $\Pi$ from $0.5\,\Pi_\mathrm{crit}$ to
-# 60 in each form.
+# ratios from just below $\Pi_\mathrm{crit}$ up to Itoh's own point: in $w$ with
+# the default `NumJac`, in $w$ with `eps_jac = 1e-10`, and in $s = \sqrt{w}$ with
+# the default, and compares the solution in $s$ with the march. Two more rows:
+# the three solves at 12800 cells, and `pymrm.continuation` in $\Pi$ from
+# $0.5\,\Pi_\mathrm{crit}$ to 60 in each.
 
 # %%
-def failure_mode(main="s", cmp="w", n=None):
-    """Section 4a's runs. ``main`` and ``cmp`` are the unknowns of the two solves."""
+def failure_mode(main="s", cmp="w", n=None, eps_small=EPS_SMALL):
+    """Section 4a's runs. ``main`` and ``cmp`` are the unknowns of the two solves;
+    ``cmp`` is solved with the default ``NumJac`` and with ``eps_jac=eps_small``."""
     n = N_EXP if n is None else n
     rows = {}
     for ratio in (0.95, 1.05, 3.0, 10.0, PI_ITOH / PI_CRIT):
         pi = ratio * PI_CRIT
         a = Permeator(pi, BETA, n=n, n_z=800)
         ra = a.solve(variable=cmp, require=False)
-        lam = np.array([h["damping"] for h in ra.history])
+        rc = Permeator(pi, BETA, n=n, n_z=800, eps_jac=eps_small).solve(variable=cmp,
+                                                                     require=False)
         b = Permeator(pi, BETA, n=n, n_z=800)
         rb = b.solve(variable=main, require=False)
         wm = b.march_guess()
         res_m, _ = b.residual(wm)
         rows[ratio] = dict(cmp_ok=ra.success, cmp_nit=ra.nit,
-                           lam_half=float(np.mean(np.isclose(lam, 0.5))),
+                           small_ok=rc.success, small_nit=rc.nit,
                            ok=rb.success, nit=rb.nit,
                            dev=float(np.max(np.abs(b.w - wm))) if rb.success else np.nan,
                            march_resid=float(np.abs(res_m).max()), march_min=float(wm.min()))
         if rb.success:
             NEWTON_ITERS.append(rb.nit)
     fine = {}
-    for var in (main, cmp):
-        q = Permeator(1.05 * PI_CRIT, BETA, n=n, n_z=12800)
+    for key, var, eps in ((main, main, 1e-6), (cmp, cmp, 1e-6), ("small", cmp, eps_small)):
+        q = Permeator(1.05 * PI_CRIT, BETA, n=n, n_z=12800, eps_jac=eps)
         rq = q.solve(variable=var, require=False)
-        fine[var] = (rq.success, rq.nit)
+        fine[key] = (rq.success, rq.nit)
     routes = {}
-    for var in (main, cmp):
-        p = Permeator(0.5 * PI_CRIT, BETA, n=n, n_z=800)
+    for key, var, eps in ((main, main, 1e-6), (cmp, cmp, 1e-6), ("small", cmp, eps_small)):
+        p = Permeator(0.5 * PI_CRIT, BETA, n=n, n_z=800, eps_jac=eps)
         res_fun = p.residual_s if var == "s" else p.residual
 
         def fun(x, pi, p=p, res_fun=res_fun):
@@ -887,37 +892,43 @@ def failure_mode(main="s", cmp="w", n=None):
                                 np.logspace(np.log10(0.5 * PI_CRIT), np.log10(60.0), 40),
                                 newton_kwargs=dict(tol=1e-10, damping="monotone",
                                                    bounds=Permeator.BOUNDS))
-        routes[var] = dict(ok=cont.success, last=cont.last_param / PI_CRIT, msg=cont.message)
+        routes[key] = dict(ok=cont.success, last=cont.last_param / PI_CRIT, msg=cont.message)
     return rows, fine, routes
 
 
 FM, FINE, ROUTES = failure_mode()
+
+
+def conv(ok, nit):
+    """'converged, N its' or 'not converged'."""
+    return f"converged, {nit} its" if ok else "not converged"
+
+
 print("the same pymrm.newton call from the flat state (n_z = 800), in w and in s = sqrt(w)")
-out = [f"   {'Pi/Pi_crit':>10}   {'in w':<42}{'in s':<22}{'s vs march'}"]
+out = [f"   {'Pi/Pi_crit':>10}   {'in w':<18}{f'in w, eps_jac {EPS_SMALL:.0e}':<24}"
+       f"{'in s':<22}{'s vs march'}"]
 for ratio, r in FM.items():
-    sw = (f"converged, {r['cmp_nit']} its" if r["cmp_ok"] else
-          f"not converged, lam = 0.5 in {r['lam_half'] * 100:.0f} % of its")
-    ss = f"converged, {r['nit']} its" if r["ok"] else "not converged"
-    out.append(f"   {ratio:>10.2f}   {sw:<42}{ss:<22}max |w_s - w_march| < 1e-9 "
-               f"(here {r['dev']:.0e})")
+    out.append(f"   {ratio:>10.2f}   {conv(r['cmp_ok'], r['cmp_nit']):<18}"
+               f"{conv(r['small_ok'], r['small_nit']):<24}{conv(r['ok'], r['nit']):<22}"
+               f"max |w_s - w_march| < 1e-9 (here {r['dev']:.0e})")
 print("\n".join(out))
-print(f"   12800 cells, 1.05 Pi_crit: in s {'converged' if FINE['s'][0] else 'not converged'}"
-      f" ({FINE['s'][1]} its), in w {'converged' if FINE['w'][0] else 'not converged'}.")
+print(f"   12800 cells, 1.05 Pi_crit: in s {conv(*FINE['s'])}; in w {conv(*FINE['w'])};")
+print(f"   in w with eps_jac {EPS_SMALL:.0e} {conv(*FINE['small'])}.")
 MARCH_WORST_RESID = max(r["march_resid"] for r in FM.values())
 MARCH_MIN_W = min(r["march_min"] for r in FM.values())
-LAM_HALF_MIN = min(r["lam_half"] for k, r in FM.items() if k > 1.0)
 print(f"   the march itself satisfies the assembled cell equations to below 1e-11 "
       f"(here {MARCH_WORST_RESID:.0e}),")
 print(f"   with min w = {MARCH_MIN_W:.1e}.")
 print()
-for var in ("w", "s"):
-    r = ROUTES[var]
-    print(f"   continuation in Pi, solved in {var}: "
+for key, label in (("w", "w"), ("small", f"w with eps_jac {EPS_SMALL:.0e}"), ("s", "s")):
+    r = ROUTES[key]
+    print(f"   continuation in Pi, solved in {label}: "
           + ("reaches every value up to 60" if r["ok"] else
              f"stops at {r['last']:.4f} Pi_crit, with the message\n"
              f"      '{r['msg']}'"))
-print("   In w the continuation message names a fold; the branch has none (w is single")
-print("   valued in Pi, and the same call in s follows it through).")
+print("   Of the two causes the message offers, it is the inexact Jacobian: the branch")
+print("   has no fold (w is single valued in Pi, and the same call with the smaller")
+print("   eps_jac, or in s, follows it through).")
 
 # %%
 def tail_numbers(n=None, l_ext=None):
@@ -942,8 +953,8 @@ print("   " + "  ".join(f"{x:.2e}" for x in TL["wm"][TL["i0"] - 1:TL["iz"]]))
 print(f"   Each cell squares the one before it, so {TL['tail']} cells after w drops")
 print(f"   below 1e-3 it has underflowed to exactly 0, and stays 0 for the")
 print(f"   remaining {TL['n_zero']} of {TL['wm'].size} cells. A Newton step in w linearises")
-print("   the sink at each of these cells, where its slope grows like w^(-1/2); the")
-print("   step overshoots past 0, which is where the bound rule takes over.")
+print("   the sink at each of these cells, where its slope grows like w^(-1/2); a")
+print("   difference quotient over NumJac's absolute step of 1e-6 does not follow it.")
 print()
 print("   the front itself is placed to O(h), and refining shows it:")
 print(f"   {'n_z':>7}{'first face with w = 0':>24}{'L - L_ext':>13}")
@@ -1432,8 +1443,10 @@ C.bound("marched_worst_residual", MARCH_WORST_RESID, max=1e-11, basis="tolerance
 C.bound("marched_min_w", MARCH_MIN_W, min=0.0, basis="chosen",
         note="the implicit cell equation has its root in [0, w_(i-1)]")
 C.exact("w_form_flat_converges_at_itoh_pi", FM[PI_ITOH / PI_CRIT]["cmp_ok"])
-C.bound("w_form_step_at_half_fraction_min", LAM_HALF_MIN, min=0.4, basis="chosen",
-        note="share of iterations at the bound rule's floor 0.5, above Pi_crit")
+C.exact("w_form_small_eps_converges",
+        all(r["small_ok"] for r in FM.values()) and FINE["small"][0],
+        note=f"the solve in w with eps_jac = {EPS_SMALL:g}, 800 and 12800 cells")
+C.exact("continuation_w_small_eps_reaches_60", ROUTES["small"]["ok"])
 C.exact("s_form_flat_converges_everywhere",
         all(r["ok"] for r in FM.values()) and FINE["s"][0] and SW["n_marched"] == 0)
 C.exact("w_form_flat_converges_n12800", FINE["w"][0])
@@ -1570,14 +1583,17 @@ brk(row, "sweep_points_needing_march", SWx["n_marched"])
 brk(row, "sweep_points_w_form_stalls", int((~SWx["w_ok"]).sum()))
 FMx, FINEx, ROUTESx = failure_mode(main="w", cmp="s")
 brk(row, "w_form_flat_converges_at_itoh_pi", FMx[PI_ITOH / PI_CRIT]["cmp_ok"])
-brk(row, "w_form_step_at_half_fraction_min",
-    min(r["lam_half"] for k, r in FMx.items() if k > 1.0))
 brk(row, "w_form_flat_converges_n12800", FINEx["s"][0])
 brk(row, "s_form_flat_converges_everywhere",
     all(r["ok"] for r in FMx.values()) and FINEx["w"][0] and SWx["n_marched"] == 0)
 brk(row, "continuation_reaches_60", ROUTESx["s"]["ok"])
 brk(row, "continuation_last_pi_over_crit", ROUTESx["s"]["last"])
 brk(row, "continuation_s_reaches_60", ROUTESx["w"]["ok"])
+row = "the comparison in w with the default eps_jac = 1e-6 instead of a smaller one"
+FMe, FINEe, ROUTESe = failure_mode(eps_small=1e-6)
+brk(row, "w_form_small_eps_converges",
+    all(r["small_ok"] for r in FMe.values()) and FINEe["small"][0])
+brk(row, "continuation_w_small_eps_reaches_60", ROUTESe["small"]["ok"])
 row = "Pi_crit taken from the undiluted feed (y_C0 = 1)"
 brk(row, "sweep_points_above_pi_crit",
     int(np.sum(SW["pis"] > itoh_numbers(y_C0=1.0)["Pi_crit"])))
@@ -1690,15 +1706,17 @@ print("\n".join(out))
 # For the channel, what the solve buys is a **lesson in choosing the unknown,
 # with a number on it**. The finite-volume/Newton form reproduces the exact
 # solution at first order and breaks under every defect the break table injects.
-# Iterated in $w$, `pymrm.newton` stops converging exactly where the physics gets
-# interesting, at $\Pi > \Pi_\mathrm{crit}$, where the hydrogen runs out inside the
-# domain, and the tempting conclusion, that a free boundary needs a
-# front-tracking method (`S12`), is **wrong here**. The discrete cell equation has
-# a unique non-negative root at every cell and every $\Pi$; what fails is the
-# iteration in $w$, whose tail steps all cross the bound $w = 0$. Iterated in
-# $s = \sqrt{w}$, the same `newton` call converges from the flat state over the
-# whole range, including Itoh's own operating point, and `continuation` in $\Pi$
-# follows the branch through $\Pi_\mathrm{crit}$. A cell-by-cell march of the same
+# Iterated in $w$ with the default `NumJac`, `pymrm.newton` stops converging
+# exactly where the physics gets interesting, at $\Pi > \Pi_\mathrm{crit}$, where
+# the hydrogen runs out inside the domain, and the tempting conclusion, that a free
+# boundary needs a front-tracking method (`S12`), is **wrong here**. The discrete
+# cell equation has a unique non-negative root at every cell and every $\Pi$; what
+# fails is the iteration in $w$ with the default `NumJac`, where in the tail $w$
+# falls far below `NumJac`'s absolute step: with `eps_jac = 1e-10` the solve in $w$ converges.
+# Iterated in $s = \sqrt{w}$, the same `newton` call with the default `NumJac`
+# converges from the flat state over the whole range, including Itoh's own
+# operating point, and `continuation` in $\Pi$ follows the branch through
+# $\Pi_\mathrm{crit}$. A cell-by-cell march of the same
 # equations agrees to below 1e-9, and the front is resolved at first order
 # (section 4a, check 5a). The page keeps the stalled form visible because the
 # difference between "no solution" and "an unknown in which Newton cannot reach
@@ -1752,12 +1770,14 @@ print("\n".join(out))
 #   load-bearing, go and find a second, independent reading of the source**: here
 #   Figure 1's dimension arrows, which turn a confession into a corroboration.
 # - A sink with an exponent below 1 drives its variable to zero in *finite* space.
-#   Iterated in that variable, `newton` from a flat start (and `continuation`)
-#   stops once the zero is inside your domain, and `continuation`'s message then
-#   names a fold that does not exist. **Do not read that as the discrete problem
-#   having no solution**: it has one, uniquely, at every cell. The sink's slope
-#   grows without bound toward zero, every tail cell's Newton step overshoots past
-#   the bound, and the bound rule holds the step length at 0.5. Solve for
+#   Iterated in that variable with the default `NumJac`, `newton` from a flat
+#   start (and `continuation`) stops once the zero is inside your domain, and
+#   `continuation`'s message then offers a fold or an inexact Jacobian. **Do not
+#   read that as the discrete problem having no solution**: it has one, uniquely,
+#   at every cell. The sink's slope grows without bound toward zero, and the
+#   differenced slope over `NumJac`'s absolute step `eps_jac` does not follow it
+#   where the variable falls far below that step; a smaller `eps_jac` (1e-10
+#   here) restores convergence. Solve for
 #   $s = \sqrt{w}$ instead: the sink becomes linear near zero, the bound
 #   $s \ge 0$ keeps $w = s^2$ non-negative by construction, and the operators stay
 #   the same, multiplied by $\mathrm{diag}(2s)$ in the Jacobian

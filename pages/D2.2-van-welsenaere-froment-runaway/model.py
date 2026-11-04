@@ -332,15 +332,14 @@ class RunawayTube:
         self.u, self.result = result.x.reshape(self.shape), result
         return self
 
-    def trace_inlet(self, p0s, max_change=None, tol=1e-10, maxfev=50):
+    def trace_inlet(self, p0s, max_change=0.2, tol=1e-10, maxfev=50):
         """Follow the solution over the inlet pressures ``p0s`` with ``pymrm.continuation``.
 
-        Each point starts from a secant prediction of the two before it. The
-        branch-jump check of ``continuation`` is off by default. Past the
-        critical inlet pressure the hot spot moves upstream, and a secant
-        prediction can be hundreds of kelvin off in the cells it passes, so the
-        check rejects corrections that are the solution. Pass ``max_change``
-        to switch it on.
+        Each point starts from a secant prediction of the two before it.
+        ``max_change`` is the branch-jump check of ``continuation`` (its
+        default): a correction that moves the state by more than this fraction
+        of its largest value away from the prediction is rejected, and the
+        sub-step is halved. ``None`` switches the check off.
 
         Uniqueness is a property of the differential equations (an
         initial-value problem in ``z``), not of the discrete system: on a

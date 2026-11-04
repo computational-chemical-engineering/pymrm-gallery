@@ -855,14 +855,12 @@ brk("upper fold from a 300-point sample", "fold_upper_sampled_rel_error",
     abs(sampled_folds(ref_m[::3])[1] - phi_hi) / phi_hi)
 
 # --- continuation ----------------------------------------------------------------
-_br_strict, _, _cont_strict = trace_branch(problem, YC, max_change=1e-3)
-brk("continuation with max_change = 1e-3 (stops early)", "branch_points", len(_br_strict),
-    "the branch-jump check refuses a correct point")
-brk("continuation with max_change = 1e-3 (stops early)", "nonisothermal_points_compared",
-    vs_reference(_br_strict)[2])
-_x_strict = trace_branch(problem, YC[YC >= 1e-3])[1]
+_br_short, _x_short, _ = trace_branch(problem, YC[YC >= 1e-3])
+brk("sweep stopped at y_centre = 1e-3", "branch_points", len(_br_short))
+brk("sweep stopped at y_centre = 1e-3", "nonisothermal_points_compared",
+    vs_reference(_br_short)[2])
 brk("sweep stopped at y_centre = 1e-3", "prater_rise_gap",
-    BETA_M * float(_x_strict[-1][:-1].min()))
+    BETA_M * float(_x_short[-1][:-1].min()))
 _problem_b = CentrePinned(pellet, wh_rate(BETA_M + 0.01, GAMMA))
 _br_b, _, _ = trace_branch(_problem_b, YC)
 _dev_b = vs_reference(_br_b)
@@ -959,7 +957,7 @@ print("claims with no failing row:", ", ".join(_open) or "none")
 # | Non-first-order kinetics | replace `wh_rate`; keep the rate smooth and first order through zero (pymrm pitfall P9); `NumJac` picks up the new derivative automatically |
 # | External film resistance | change the surface boundary condition from `{"a":0,"b":1,"d":1}` to a Robin condition |
 # | Multiple reactants | give the field shape `(n_r, n_c)`; `NumJac` couples the last (field) axis in full by default |
-# | Another multiplicity problem | pin a quantity along which the branch is single-valued, make the parameter an unknown (`CentrePinned`), and sweep with `pymrm.continuation`; keep consecutive parameter values distinct |
+# | Another multiplicity problem | pin a quantity along which the branch is single-valued, make the parameter an unknown (`CentrePinned`), and sweep with `pymrm.continuation` |
 # | Couple to a reactor | this is the inner problem of `D1.4`; export `eta` or the surface flux |
 #
 # **Related pages:** `B1.2` Aris generalised modulus · `B1.4` Weisz–Prater

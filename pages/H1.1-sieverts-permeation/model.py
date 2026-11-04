@@ -271,9 +271,11 @@ class Permeator:
         ``variable="s"`` (the model) solves for ``s = sqrt(w)`` with the lower
         bound ``s >= 0``; ``w = s^2`` is then non-negative by construction.
         ``variable="w"`` solves for ``w`` itself with the bound ``w >= 0``, kept
-        as a comparison: in ``w`` every tail cell's Newton step crosses the bound,
-        the bound rule then caps the step length, and the iteration stalls above
-        ``Pi_crit``. ``tol`` is on the order-one unknown, above its round-off floor.
+        as a comparison: in ``w`` the tail values fall far below ``NumJac``'s
+        absolute step ``eps_jac``, the differenced slope of the sink misses its
+        ``w**(-1/2)`` growth there, and with the default ``eps_jac`` the iteration
+        stalls above ``Pi_crit``. ``tol`` is on the order-one unknown, above its
+        round-off floor.
 
         Parameters
         ----------
