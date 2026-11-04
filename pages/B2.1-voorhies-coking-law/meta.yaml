@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 5
+pymrm_min_version: "3.4.0"
+runtime_seconds: 12
 datasets:
   - voorhies-1945-tableI
   - voorhies-1945-tableII
@@ -50,42 +50,47 @@ data:
   status: complete
 
 fit_or_test: >
-  Nothing on this page is fitted by this page, and nothing is validation
-  against held-out measurement. Three labels, used throughout: (i) the
-  feed-rate slope tests and the temperature-doubling test are CONSISTENCY
-  CHECKS OF THE PAPER'S PRINTED CLAIMS AGAINST THE PAPER'S OWN PRINTED TABLES
-  - the doubling claim in particular was derived by the author FROM Table I
-  (via Fig. 2), so that comparison is a goodness-of-fit check; (ii) the
-  eq.-(5) chain and the eq.-(8)/nomenclature check are exact reproduction of
-  printed algebra; (iii) eqs. (1), (2), (3), (6), (7) are the author's fits
-  to figure-only data, transcribed and never refit.
+  Nothing on this page fits a model. Its least-squares fits (feed-rate
+  exponents, temperature coefficients, the power-law form of the numeric
+  route of eq. 5) are the statistics of the comparisons, each stated in the
+  notebook where it is made, with standard errors. Three labels, used
+  throughout: (i) the feed-rate slope tests and the temperature-doubling test
+  are CONSISTENCY CHECKS OF THE PAPER'S PRINTED CLAIMS AGAINST THE PAPER'S OWN
+  PRINTED TABLES - the doubling claim in particular was derived by the author
+  FROM Table I (via Fig. 2), so that comparison is a goodness-of-fit check;
+  (ii) the eq.-(5) chain and the eq.-(8)/nomenclature check are reproduction of
+  printed algebra; (iii) eqs. (1), (2), (3), (6), (7) are the author's fits to
+  figure-only data, transcribed and never refit.
 
 caveats:
-  - "the time exponent n is never tested against data on this page: Tables I and II sit at a single theta = 120 min and the carbon-vs-time evidence is figure-only (Figs. 1 and 5, deliberately not digitised). Every n on the page is a transcription of the author's fit"
-  - "the two carbon columns of each table are linked by the run's feed-to-catalyst mass ratio at the printed rounding (implied W/U constant within groups to CV <= 2.9 %, against a half-digit allowance of comparable size), so m_feed ~ -1 and m_cat ~ 0 are ONE fact, not two: the feed-rate claim gets one test per group. The linkage identity doubles as a per-row transcription check on all four columns"
-  - "the feed-rate verdict is 'consistent with 0, incompatible with +1' (the throughput hypothesis), quantified against a computed rounding floor: worst group |m_cat| = 0.12 raw, mostly the within-block temperature confound (bounded with the paper's own doubling rule; corrected blocks sit within 3.1 floors of zero with both signs occurring); a true residual |m_cat| of a few hundredths cannot be excluded, which is what the paper's own 'within limits' hedge covers"
-  - "the printed doubling band 190-200 F sits BETWEEN the two catalysts: Table I gives ~206 F (natural) and ~176 F (synthetic), two estimator routes each. Fair as a pooled summary of Fig. 2, outside its own table's support as a statement about either catalyst; goodness of fit, not validation"
-  - "the implied W/U ratio drifts down ~8 % across the temperature blocks in both catalysts - larger than within-block scatter, unexplained, reported not resolved; it does not touch the feed-rate verdict, which lives within blocks"
-  - "PRINTED DEFECT, REPORTED NOT REPAIRED: the Nomenclature prints 'K = constant (= A^2)' where integrating the paper's own eq. (8) (dC_c/dtheta = K/C_c with C_c = A theta^0.5) requires K = A^2/2 - off by exactly 2, shown symbolically and by an independent ODE integration. K appears nowhere else in the paper, so the defect is consequence-free"
-  - "eq. (2) and Table I disagree by a factor 1.82 at the same nominal conditions (East Texas gas oil, synthetic catalyst, ~850 F, 120 min) because they are different campaigns - one repeatedly regenerated batch vs a fresh batch per run. Not a defect: the paper's own nomenclature says A depends on catalyst; it is the measured demonstration that A is local while n is the portable part"
-  - "the 'faulty point' remark (36 % measured, 41 % predicted) is made quantitative as a labelled INFERENCE: via eq. (3) it implies the flagged run's C_f was 1.89 wt%, a factor 1.46 above the correlation at the measured conversion; not checkable further without the (undigitised) figure"
-  - "cross-page: B2.2's printed-claims CSV is loaded ONLY to reconcile the quoted Voorhies exponent range (0.38-0.53) against the four exponents printed here (min/max match exactly, asserted in the notebook); no borrowed number reaches any reported result, so data.tier stays this page's own"
+  - "the time exponent n is never tested against data on this page: Tables I and II sit at a single theta and the carbon-vs-time evidence is figure-only (Figs. 1 and 5, deliberately not digitised). Every n on the page is a transcription of the author's fit"
+  - "the two carbon columns of each table are linked by the run's feed-to-catalyst mass ratio at the printed rounding (implied W/U constant within groups to a worst-group CV of 2.9 <!-- claim: WU_within_group_cv_max_pct --> %, against a half-digit allowance of up to 5.9 <!-- claim: WU_half_digit_allowance_max_pct --> %), so m_feed ~ -1 and m_cat ~ 0 are ONE fact, not two: the feed-rate claim gets one test per group. The linkage identity doubles as a per-row transcription check on all four columns"
+  - "the feed-rate verdict is a feed-rate exponent of carbon on catalyst of -0.042 <!-- claim: m_cat_tableII_pooled --> +- 0.029 <!-- claim: m_cat_tableII_pooled_se --> on Table II (4-fold range) and -0.050 <!-- claim: m_cat_tableI_pooled --> +- 0.018 <!-- claim: m_cat_tableI_pooled_se --> on Table I, which is not exactly zero (2.9 <!-- claim: m_cat_tableI_pooled_over_se --> standard errors), and +0.022 <!-- claim: m_cat_tableI_withT --> +- 0.022 <!-- claim: m_cat_tableI_withT_se --> once a temperature coefficient inside the blocks is allowed for; every fit is at least 35 <!-- claim: m_cat_pooled_from_one_se_min --> standard errors from +1 (the throughput hypothesis). The worst single group is -0.12 <!-- claim: m_cat_tableI_worst_block -->. A true residual of a few hundredths cannot be excluded, which is what the paper's own 'within limits' hedge covers"
+  - "the printed doubling band sits BETWEEN the two catalysts: Table I gives 205.6 <!-- claim: doubling_dT_natural_F --> +- 7.1 <!-- claim: doubling_dT_natural_se_F --> F (natural), 0.8 <!-- claim: doubling_natural_vs_band_high_se --> standard errors from the band's upper end, so the table does not contradict the band for it, and 175.8 <!-- claim: doubling_dT_synthetic_F --> +- 4.8 <!-- claim: doubling_dT_synthetic_se_F --> F (synthetic), -3.0 <!-- claim: doubling_synthetic_vs_band_low_se --> standard errors from the band's lower end (below it) on a straight line through its rows, which the rows reject (quadratic term -3.6 <!-- claim: doubling_quadratic_t_synthetic --> standard errors); on its four block means it is -1.5 <!-- claim: doubling_synthetic_vs_band_low_blockmean_se --> standard errors (2 degrees of freedom), and the two catalysts differ by 1.8 <!-- claim: doubling_dT_split_over_se_blockmean --> standard errors of the difference on the block means. Goodness of fit, not validation"
+  - "the implied W/U ratio drifts down across the temperature blocks, 7.9 <!-- claim: WU_block_drift_natural_pct --> % and 8.7 <!-- claim: WU_block_drift_synthetic_pct --> % (4.6 <!-- claim: WU_block_drift_natural_over_se --> and 9.1 <!-- claim: WU_block_drift_synthetic_over_se --> standard errors of the within-block scatter, block means of four rows each, about six degrees of freedom), unexplained, reported not resolved; it does not touch the feed-rate verdict, which lives within blocks"
+  - "PRINTED DEFECT, REPORTED NOT REPAIRED: the Nomenclature prints 'K = constant (= A^2)' where integrating the paper's own eq. (8) (dC_c/dtheta = K/C_c with C_c = A theta^0.5) requires K = A^2/2, shown symbolically and by an independent ODE integration (the printed K overshoots by a factor 1.4142 <!-- claim: K_printed_numeric_overshoot -->). K appears nowhere else in the paper, so the defect is consequence-free"
+  - "eq. (2) and Table I disagree by a factor 1.82 <!-- claim: A_campaign_gap_ratio --> at the same nominal conditions (East Texas gas oil, synthetic catalyst, 850 F, same residence time) because they are different campaigns - one repeatedly regenerated batch vs a fresh batch per run. Not a defect: the paper's own nomenclature says A depends on catalyst; it is the measured demonstration that A is local while n is the portable part"
+  - "the 'faulty point' remark is made quantitative as a labelled INFERENCE: via eq. (3) it implies the flagged run's C_f was 1.89 <!-- claim: faulty_point_implied_Cf_wtpct --> wt%, a factor 1.46 <!-- claim: faulty_point_excess_ratio --> above the correlation at the measured conversion; not checkable further without the (undigitised) figure"
+  - "cross-page: B2.2's printed-claims CSV is loaded ONLY to reconcile the quoted Voorhies exponent range (0.38 <!-- claim: n_printed_min -->-0.53 <!-- claim: n_printed_max -->) against the four exponents printed here (min and max match exactly, checked in the notebook); no borrowed number reaches any reported result, so data.tier stays this page's own"
 
 agreement: >
-  Two kinds, kept apart. Exact reproduction: the printed eq.-(5) triple
-  (96, 0.34, 0.19) is re-derived from eqs. (2)+(3)+(4) as 95.7145 / 0.34130 /
-  0.19113 by two routes with independent solvers (symbolic isolation with
-  exact rationals; the same isolation root-found numerically plus regression -
-  their agreement checks the solvers, the printed 96 checks the shared step),
-  agreeing to 1.5e-15; every leading-digit or exponent-scale misreading of the
-  five input constants misses the printed triple, while six of the ten
-  last-digit +-1 alternatives still round to it - those final digits rest on
-  the digit-scale crops, read independently twice (transcription and
+  Two kinds, kept apart. Reproduction of printed algebra: the printed eq.-(5)
+  triple is re-derived from eqs. (2)+(3)+(4) as 95.7145 <!-- claim: eq5_coeff_symbolic --> /
+  0.34130 <!-- claim: eq5_expU_symbolic --> / 0.19113 <!-- claim: eq5_expTheta_symbolic --> by two routes with independent
+  solvers (symbolic isolation with exact rationals; the same isolation root-found
+  numerically with pymrm.checks.find_roots plus regression - their agreement, below
+  1e-9 <!-- claim: eq5_route_gap_max -->, checks the solvers, the printed digits check the shared
+  step); none of the six <!-- claim: eq5_misreadings_total --> leading-digit or exponent-scale
+  misreadings of the five input constants tried hits the printed triple, while 6 <!-- claim: eq5_last_digit_alternatives_matching -->
+  of the 10 <!-- claim: eq5_last_digit_alternatives_total --> last-digit +-1 alternatives still round to it - those
+  final digits rest on the digit-scale crops, read independently twice (transcription and
   verification) in agreement.
-  Consistency of claims with the paper's own tables: feed-rate exponents
-  m_cat between -0.116 and +0.034 across all ten groups (m_feed -0.95 to
-  -1.18), doubling intervals 206/176 F against the printed 190-200, the
-  implied-W/U identity constant to <= 2.9 % CV within every group. Plus one
+  Consistency of claims with the paper's own tables: feed-rate exponents m_cat between
+  -0.12 <!-- claim: m_cat_tableI_worst_block --> and +0.034 <!-- claim: m_cat_group_max --> across all ten groups
+  (m_feed -0.95 <!-- claim: m_feed_group_max --> to -1.18 <!-- claim: m_feed_group_min -->), pooled per table
+  with standard errors as above, doubling intervals 205.6 <!-- claim: doubling_dT_natural_F --> /
+  175.8 <!-- claim: doubling_dT_synthetic_F --> F against the printed band, the implied-W/U identity
+  constant to a worst-group CV of 2.9 <!-- claim: WU_within_group_cv_max_pct --> % within every group. Plus one
   factor-2 printed defect (K = A^2) settled from the paper's own two lines.
 
 related: [B2.2, B2.3, B2.4, B1.7, C2.10]

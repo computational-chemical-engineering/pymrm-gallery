@@ -2926,31 +2926,47 @@ models:
       Voorhies (1945) - the origin of C_c = A theta^n, carbon on catalyst as a
       power of the time since the last regeneration, and of the sharper claim
       that the deposit at a given residence time is independent of feed rate.
-      The page quantifies that claim from the paper's own printed tables: across
-      ten groups spanning up to a fourfold feed-rate range, the feed-rate
-      exponent of carbon-on-catalyst is -0.116 to +0.034 - at least 9.6x closer
-      to 0 than to the throughput hypothesis' +1 in every group - while
-      carbon-on-feed sits at ~ -1, with the resolving power of a
-      2-significant-figure table computed rather than assumed. It shows the two
-      carbon columns are linked by the run's mass ratio at the rounding floor
-      (so the claim gets one test per table, not two; the linkage identity
-      doubles as a per-row transcription guard and surfaces an unexplained ~8 %
-      cross-block drift, reported not resolved), re-derives the printed
-      conversion-feed-rate-time equation V = 96/(U^0.34 theta^0.19) exactly by
-      symbolic and numeric routes with independent solvers (95.7145 / 0.34130 /
-      0.19113 - every printed digit the correct rounding; every leading-digit or
-      exponent-scale misreading of the five inputs misses the triple, their last
-      digits resting on twice-read digit-scale crops), measures the printed "doubles per 190-200 F"
-      claim per catalyst (natural ~206 F, synthetic ~176 F - the band is a fair
-      pooled summary that fits neither catalyst individually), settles a
+      The page quantifies that claim from the paper's own printed tables, with
+      standard errors: across ten groups spanning up to a fourfold feed-rate
+      range, the feed-rate exponent of carbon on catalyst is
+      -0.116 <!-- claim: m_cat_tableI_worst_block --> to
+      +0.034 <!-- claim: m_cat_group_max -->, closer to 0 than to the throughput
+      hypothesis' +1 by a factor of 9.6 <!-- claim: m_cat_closer_to_zero_ratio_min -->
+      in the least favourable group, pooled to
+      -0.042 <!-- claim: m_cat_tableII_pooled --> +-
+      0.029 <!-- claim: m_cat_tableII_pooled_se --> on Table II and
+      -0.050 <!-- claim: m_cat_tableI_pooled --> +-
+      0.018 <!-- claim: m_cat_tableI_pooled_se --> on Table I (not exactly zero;
+      +0.022 <!-- claim: m_cat_tableI_withT --> +-
+      0.022 <!-- claim: m_cat_tableI_withT_se --> once a temperature coefficient
+      inside the blocks is allowed for), while carbon on feed sits near -1, with
+      the resolving power of a two-significant-figure table computed. It shows the
+      two carbon columns are linked by the run's mass ratio at the rounding floor
+      (so the claim gets one test per table, not two; the linkage identity doubles
+      as a per-row transcription guard and surfaces a cross-block drift of
+      7.9 <!-- claim: WU_block_drift_natural_pct --> % and
+      8.7 <!-- claim: WU_block_drift_synthetic_pct --> %, reported not resolved),
+      re-derives the printed conversion-feed-rate-time equation exactly by a
+      symbolic and a root-found route (95.7145 <!-- claim: eq5_coeff_symbolic --> /
+      0.34130 <!-- claim: eq5_expU_symbolic --> /
+      0.19113 <!-- claim: eq5_expTheta_symbolic -->, every printed digit the correct
+      rounding; no leading-digit or exponent-scale misreading of the five inputs
+      tried reproduces the triple, their last digits resting on twice-read
+      digit-scale crops), measures the printed temperature-doubling claim per
+      catalyst with standard errors (natural 205.6 <!-- claim: doubling_dT_natural_F -->
+      +- 7.1 <!-- claim: doubling_dT_natural_se_F --> F, consistent with the printed
+      band; synthetic 175.8 <!-- claim: doubling_dT_synthetic_F -->
+      +- 4.8 <!-- claim: doubling_dT_synthetic_se_F --> F, outside it on a straight line through its rows and -1.5 <!-- claim: doubling_synthetic_vs_band_low_blockmean_se -->
+       standard errors from it on its four block means), settles a
       factor-2 defect in the printed nomenclature (K = A^2 where the paper's own
       eq. 8 requires A^2/2; consequence-free, reported not repaired), and
       demonstrates from the paper's own two campaigns that A is local (factor
-      1.82 between units at identical nominal conditions) while n is the
-      portable part (0.38-0.53 across modes and feeds - exactly the range
-      Froment & Bischoff quote, reconciled against B2.2's transcription).
-      Deliberately scoped to printed tables and printed equations: no figure
-      digitised, so the time exponent n is transcribed, never tested.
+      1.82 <!-- claim: A_campaign_gap_ratio --> between units at identical nominal
+      conditions) while n is the portable part (0.38 <!-- claim: n_printed_min -->-0.53 <!-- claim: n_printed_max -->
+      across modes and feeds - exactly the range Froment & Bischoff quote,
+      reconciled against B2.2's transcription). Deliberately scoped to printed
+      tables and printed equations: no figure digitised, so the time exponent n is
+      transcribed, never tested.
     section: B
     status: published
     page: pages/B2.1-voorhies-coking-law/
@@ -2963,10 +2979,10 @@ models:
     predicts:
       - carbon on catalyst C_c = A theta^n vs catalyst residence time, with the four printed (A, n) pairs for fixed-bed and fluid cracking
       - the feed-rate exponent of carbon-on-catalyst and carbon-on-feed at fixed residence time, against the throughput (+1) and time (0) hypotheses
-      - conversion vs feed rate and cracking-period length, V = 96/(U^0.34 theta^0.19), re-derived exactly from the printed chain
+      - conversion vs feed rate and cracking-period length, the printed eq. (5), re-derived from the printed chain by two routes
       - the temperature-doubling interval of carbon formation per catalyst from Table I
       - the implied catalyst-to-oil weight ratio linking the two printed carbon columns, per unit and feed
-    pymrm_api: []
+    pymrm_api: [find_roots]
     reference:
       authors:
         - Voorhies, A. Jr.
