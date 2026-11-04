@@ -1,98 +1,71 @@
-# J3.4 — Doyle–Fuller–Newman lithium/polymer/insertion cell (P2D)
+# J3.4: Doyle–Fuller–Newman lithium/polymer/insertion cell (P2D)
 
 The 1993 pseudo-two-dimensional cell model that every physics-based lithium-ion
-battery model descends from, rebuilt in pymrm from the paper — including the one
+battery model descends from, rebuilt in pymrm from the paper, including the one
 transport property the paper never prints.
 
 - **Structures:** `S8` (coupled multi-phase transport with electroneutrality),
   `S10` (porous electrode with a distributed interfacial reaction)
 - **Reference:** Doyle, Fuller & Newman (1993), *J. Electrochem. Soc.* **140**(6)
   1526–1533, doi:10.1149/1.2221597
-- **Runtime:** ~1 min
+- **Runtime:** about 4 minutes
 
 ## Provenance: tier 6, not experimental
 
-**Figure 2 contains no measured points.** Every curve on it — charge,
-open-circuit and four discharges — is the authors' own simulation; the text
-cites measured discharge curves by reference only and plots none. This was
-confirmed by the gallery maintainer on review of the original figure. The page
-is a reference-solution reproduction in the sense of `D2.2`. Do **not** describe
-it as validated against experiment.
+**Figure 2 contains no measured points.** Every curve on it (charge,
+open-circuit and four discharges) is the authors' own simulation; the text cites
+measured discharge curves by reference only and plots none. This was confirmed
+by the gallery maintainer on review of the original figure. The page is a
+reference-solution reproduction in the sense of `D2.2`. Do **not** describe it as
+validated against experiment.
 
 ## Agreement
 
 | what | pymrm | paper |
 |---|---|---|
-| Eq. 16 vs the plotted open-circuit curve, 237 points | 3.3 mV mean abs. dev. | digitisation good to ~3 mV |
-| four discharge curves, 884 points | 25.5 mV pooled, bias −23.8 mV | — |
-| *u* at the 1.9 V crossing, all four currents | short by 0.023 in *u*, same sign each time | — |
-| *S*_c (Eq. 26) at *I* = 10 | 1.02e−4 | 1.0e−4 |
-| *S*_s (Eq. 27) at *I* = 10 | 0.153 | 0.15 |
-| σ/κ | 2.1e5 | O(1e5) |
-| *u* at the 1.7 V cutoff, *I* = 10 | 0.831 | 0.84 stated; 0.821 digitised |
-| optimum cathode porosity | 0.60 | 0.60 |
-| utilisation at that optimum | 0.928 | 0.97 |
-| short-time anode concentration vs the semi-infinite solution | 7.7 mol/m³ | Fig. 4 to ±5 |
-| grid spread over a 4× refinement | 0.14 mV | — |
-| time-step spread (added 2026-08-05) | 0.27 mV, observed order 0.95 | — |
-| total salt conservation — **structural, see below** | 3e−16 | — |
+| Eq. 16 against the plotted open-circuit curve | 3.25 <!-- claim: ocp_eq16_mad_mV --> mV mean abs. dev. | digitisation good to about `3 mV` |
+| four discharge curves, every digitised point in range | 25.5 <!-- claim: discharge_pooled_mad_mV --> mV pooled, bias -23.8 <!-- claim: discharge_pooled_bias_mV --> mV | |
+| *u* at the `1.9 V` crossing, all four currents | short by 0.023 <!-- claim: u19_shortfall_mean --> on average, 0.014 <!-- claim: u19_shortfall_min --> to 0.031 <!-- claim: u19_shortfall_max --> | |
+| charge curve | 65.1 <!-- claim: mad_charge_mV --> mV mean abs. dev., bias 64.9 <!-- claim: charge_bias_mV --> mV | |
+| *S*_c (Eq. 26) at *I* = 10 | 1.02e-4 <!-- claim: S_c_at_I10 --> | `1.0e-4` |
+| *S*_s (Eq. 27) at *I* = 10 | 0.153 <!-- claim: S_s_at_I10 --> | `0.15` |
+| σ/κ | 2.1e5 <!-- claim: sigma_over_kappa --> | of order `1e5` |
+| *u* at the `1.7 V` cutoff, *I* = 10 | 0.831 <!-- claim: u_at_cutoff_I10 --> | `0.84` stated; 0.821 <!-- claim: u17_I10_digitised --> digitised |
+| optimum cathode porosity | 0.591 <!-- claim: porosity_optimum --> | `0.60` |
+| utilisation at that optimum | 0.928 <!-- claim: u_at_optimum --> | `0.97` |
+| short-time salt at the lithium face against the semi-infinite solution | 0.83 <!-- claim: short_time_face_dev_mean --> mol/m³ mean | |
 
-## The check that was ranked first and catches nothing it claimed
+Numerically: the spatial error of the production grid in the cell potential at
+`u = 0.5` is 0.028 <!-- claim: grid_error_mV --> mV (second order), the step
+error 0.27 <!-- claim: dt_spread_mV --> mV (first order), each from its own nested
+ladder with the other axis fixed. On the headline itself the step dominates: the
+production steps leave the pooled deviation 0.8 <!-- claim: headline_dt_error_pooled_mV -->
+mV below its zero-step limit, and the `I = 20` deviation 1.9 <!-- claim: headline_dt_error_I20_mV --> mV. Both are small against the model-figure
+deviation.
 
-`salt_conservation_drift` was **first of six** in the Validation section, under
-the claim that *"any sign error in the migration term, the transference number or
-the reaction coupling breaks it"*. It breaks on none of the three.
+## What the identities test
 
-It is a telescoping identity. With `r_c = eps*(c-c_o)/dt + div @ n_salt` and
-`n_salt[0] = n_salt[-1] = 0`, `sum(dx * div(n)) = n[N] - n[0] = 0` exactly, so
-`sum(eps*dx*c)` is constant for **any** interior flux expression and **any**
-parameters. Measured on the page's own residual:
+Three numbers on the page are identities of the scheme, each exact for the
+interior physics and each testing one thing:
 
-| injected defect | salt drift | short-time check | pore-wall check | *V*(*u* = 0.5) |
-| --- | --- | --- | --- | --- |
-| as published | 3.33e−16 | 7.7 mol/m³ | 1.1e−12 | 1.9850 V |
-| migration sign flipped in `n_salt` | **4.44e−16** | **169.8** | 4.4e−12 | **2.1643 V** (+179 mV) |
-| `(1−t⁰₊)` written as `t⁰₊` | **3.33e−16** | **72.7** | 4.8e−12 | **2.0911 V** (+106 mV) |
-| reaction coupling sign wrong in the solid | **3.33e−16** | 6.7 | — | **cell does not discharge** |
-| reaction coupling ×1.1 in the charge eq. | **2.22e−16** | 7.7 | **9.1e−02** | 1.9849 V |
-| no-anion BC on `n_salt` dropped at the Li | **8.67e−01** | 88.2 | — | cell dies |
+- **Total salt** is constant to below 1e-12 <!-- claim: salt_conservation_drift -->.
+  With the salt flux zero at both ends, `sum(dx * div N)` telescopes to zero for
+  any interior flux, so the migration term, the transference number and the
+  reaction coupling cannot move it (structural, measured under all three). What
+  it tests is the two salt-flux boundary conditions.
+- **Faraday's law**: the utilisation computed from the state equals the charge
+  passed, to below 1e-12 <!-- claim: faraday_gap -->. It is the only check that
+  sees the pore-wall current entering the solid balance differently from the
+  charge balance.
+- **The mean pore-wall flux** equals `-I/(F a δ_c)` at any time. It sees the
+  current in the charge balance differing from the one reported.
 
-It is now ranked **last** and labelled `STRUCTURAL`. It is kept, because the last
-row is a real error class — the salt-flux boundary conditions — and nothing else
-on the page sees it. It is also 3.3e−16, below `check_agreement.py`'s
-`ABS_FLOOR = 1e-12`, so CI never compared it either.
-
-**The coverage the old ranking claimed does exist — it is just elsewhere.** The
-short-time semi-infinite comparison moves 22× on the migration sign and 9.4× on
-the transference number, so it is now ranked first; the Figure 2 comparison
-catches the reaction-coupling sign error, because the cell stops discharging.
-One gap is left stated rather than papered over: a coupling error in the *solid*
-balance alone (`ai` scaled, not sign-flipped) moves nothing here by more than a
-millivolt, and no check is constructible from the paper's published results.
-
-Note the pore-wall check is partly structural too: `r_p = div@i2 - ai` with
-`i2[0] = I` and `i2[-1] = 0` forces `sum(dx*ai) = -I` identically, so the *mean*
-flux is guaranteed. What it does catch is the same `ai` failing to appear in both
-balances.
-
-## The grid study was refining the wrong knob alone
-
-`Cell.march` fixes `dt, dt_max = 2e-5*t_ref, 6e-3*t_ref` growing ×1.3 — a schedule
-that is a function of the **current alone** and completely decoupled from `n_s`
-and `n_c`. So the grid-independence study held the temporal error *constant by
-construction*, and the page had no bound on it anywhere.
-
-`J3.5` had already implemented the correct fix — a `dt_scale` that multiplies
-`dt0` **and** `dt_max`, since on a growing schedule the step reached at a given
-time is set by the ceiling, not by the starting value. It was never inherited
-back. It is ported here. Measured: observed order 0.95, and the temporal error at
-the production schedule is **0.273 mV, 2.0× the 0.138 mV grid spread**. Both are
-far below the 25.5 mV model-vs-figure gap, so no conclusion moves — but the
-larger of the two numbers was the one nobody had.
-
-**`J3.1` shares this `march` and still does not have `dt_scale`.** Its
-`grid_V_spread_mV`, `grid_mean_eta_spread_frac` and `grid_peak_eta_ratio` are all
-in `agreement.json` and all hold `dt` constant. Not fixed here.
+The check that sees the electrolyte physics is the short-time comparison at the
+lithium face: no conductivity in it and nothing fitted. A control run with the
+transference number held constant, where the semi-infinite solution is exact,
+agrees to below 0.2 <!-- claim: short_time_control_dev_max_10s --> mol/m³ up to
+`10 s`; what remains in the page's own run is the concentration dependence of
+`t0+`.
 
 ## The gap in the paper, and how it is closed
 
@@ -103,44 +76,67 @@ coefficients appear nowhere in the article and there is no figure of κ against
 are all printed. The conductivity is not.
 
 It is recovered by inverting the paper's own Eqs. 28 and 29, which contain
-(1/κ + 1/σ) and whose values the paper prints (δ = 1.95, ν = 68). The two routes
-give κ_eff = 7.97e−3 and 6.72e−3 S/m — 19 % apart — and both put σ/κ at O(1e5)
-as the paper states. What cannot be recovered is the *concentration dependence*,
-and the residual +64 mV bias on charge against −24 mV on discharge is where that
-shows.
+(1/κ + 1/σ) and whose values the paper prints. The two routes give
+κ_eff = 7.97e-3 <!-- claim: kappa_eff_from_eq28 --> and 6.72e-3 <!-- claim: kappa_eff_from_eq29 --> S/m, 18.7 <!-- claim: kappa_route_spread_pct -->
+% apart, and both put σ/κ at the paper's order of magnitude. What cannot be
+recovered is the *concentration dependence*, and the opposite biases on charge and
+discharge are where that most likely shows.
 
 ## Two ambiguities in the printed model
 
 1. **The Bruggeman exponent in the cathode salt flux.** Table I writes the flux
-   as ∇·(εD∇c) while the text defines D_eff = Dε^0.5. Read together they give
-   Dε^1.5, which drives the electrolyte concentration to zero before half of the
-   discharge — contradicting the paper's own Figure 3 — and the 1.9 V crossing
-   comes out at a third to a half of the published utilisation at every current
-   (mean |Δu| 0.294 against 0.023). Dropping the correction entirely overshoots
-   *I* = 13 and 20 (mean |Δu| 0.086). The page uses Dε^0.5 and prints the table.
+   as `∇·(εD∇c)` while the text defines `D_eff = Dε^0.5`. Read together they give
+   `Dε^1.5`, which exhausts the electrolyte at `u` = 0.193 <!-- claim: brug_eps15_u_salt_out_I10 --> at `I = 10`, contradicting the
+   paper's own Figure 3, and puts the `1.9 V` crossing at 0.38 <!-- claim: brug_eps15_ratio_min --> to 0.62 <!-- claim: brug_eps15_ratio_max -->
+   of the published utilisation (mean |Δu| 0.294 <!-- claim: brug_mean_du_eps15 -->
+   against 0.023 <!-- claim: u19_shortfall_mean -->). Dropping the correction
+   entirely overshoots at `I = 10`, 13 and 20 (mean |Δu| 0.086 <!-- claim: brug_mean_du_eps0 -->). The page uses `Dε^0.5`.
 2. **A missing factor ν = 2 in Eq. 5.** As printed, the coefficient of ∇ln c is
    half what a 1:1 salt requires: at zero current the equation must reproduce the
    emf of a lithium concentration cell, which is (2RT/F)∫(1−t⁰₊)dln c. The page
-   uses the corrected form. **Figure 2 does not settle this one** — the printed
-   version gives a smaller mean deviation (18.2 vs 25.5 mV) but overshoots every
-   transport-limited crossing by +0.026 in *u* where the corrected form
-   undershoots by −0.023. The two bracket the published curves. The page says so
-   instead of choosing by fit.
+   uses the corrected form. **Figure 2 does not settle this one**: the printed
+   version gives a smaller mean deviation (18.2 <!-- claim: nu1_mad_mV --> against
+   25.5 <!-- claim: discharge_pooled_mad_mV --> mV) but puts every
+   transport-limited crossing late, by 0.026 <!-- claim: nu1_u19_bias --> on
+   average, where the corrected form puts them early. The two bracket the
+   published curves at every current.
 
 ## What the page adds
 
-The porosity optimisation the paper reports in one sentence, swept
-continuously. Holding the theoretical capacity fixed, utilisation at the 1.7 V
-cutoff peaks at a porosity of 0.60 — exactly where the paper puts it — and the
-curve shows that the penalty for being below the optimum is far steeper than for
-being above it. No new physics: the model is theirs, unchanged.
+The porosity optimisation the paper reports in one sentence, swept over the
+window it discusses and refined by a bounded maximisation: the maximum lies at a
+porosity of 0.591 <!-- claim: porosity_optimum -->, just below the paper's, and
+it is flat, with the loss above the optimum the larger at equal distance,
+0.0216 <!-- claim: loss_above_015 --> against 0.0163 <!-- claim: loss_below_015 --> at `0.15`. No new physics: the model is theirs, unchanged.
 
-## Rebuilding the page
+## Corrections
 
-```bash
-python build_page.py                    # regenerate index.ipynb from the builder
-python ../../scripts/run_pages.py       # execute it
-python ../../scripts/check_agreement.py # metric regression check
-```
-
-No PDF is needed to rebuild: all three datasets are committed CSVs.
+- 2026-11-04: said of the short-time check "Mean 7.7 mol/m3 over five times, no
+  conductivity in it and nothing fitted". The model value was read at the centre
+  of the first cell, which sits 5.8 <!-- claim: short_time_first_cell_offset_mean -->
+  mol/m³ below the lithium face at the page's grid, and the steps were the
+  production ones. Read at the face under the boundary condition, with the steps
+  refined 16-fold, the mean deviation is 0.83 <!-- claim: short_time_face_dev_mean --> mol/m³, nearly all of it the
+  concentration dependence of `t0+`.
+- 2026-11-04: listed the paper's side of the short-time comparison as "Fig. 4 to ±5",
+  a hand read's precision, as if model and figure agreed to it. The model's face
+  value differs from that read by up to 15.7 <!-- claim: fig4_dev_max --> mol/m³,
+  beyond the reading at 4 <!-- claim: fig4_beyond_reading_count --> of the five times.
+- 2026-11-04: said "The porosity optimum is found at 0.60, exactly where the paper
+  puts it". That was the largest node of a scan in steps of `0.05`; the maximum,
+  refined by a bounded maximisation, is at 0.591 <!-- claim: porosity_optimum -->.
+- 2026-11-04: said "the penalty for being below the optimum is far steeper than for
+  being above it". At equal distance from the optimum the loss is larger above it,
+  0.0216 <!-- claim: loss_above_015 --> against 0.0163 <!-- claim: loss_below_015 --> at `0.15`.
+- 2026-11-04: said "every transport-limited crossing arrives 2–3 percentage points
+  of utilisation early, at every current". The shortfalls in utilisation are 0.014 <!-- claim: u19_shortfall_min --> to 0.031 <!-- claim: u19_shortfall_max -->.
+- 2026-11-04: said "the 1.9 V crossing comes out at a third to a half of the
+  published utilisation at every current" for `Dε^1.5`. It is 0.38 <!-- claim: brug_eps15_ratio_min --> to 0.62 <!-- claim: brug_eps15_ratio_max -->
+  of it.
+- 2026-11-04: said "the charge curve is over-polarised by 64 mV in the opposite
+  direction". With the face values and the march ending at the exhausted-solid
+  state, the mean absolute deviation is 65.1 <!-- claim: mad_charge_mV --> mV and
+  the bias 64.9 <!-- claim: charge_bias_mV --> mV.
+- 2026-11-04: called total salt conservation "the cleanest check on the page". It is an
+  identity of the scheme for any interior flux and tests only the two salt-flux
+  boundary conditions.

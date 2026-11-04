@@ -14,108 +14,128 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 61
+pymrm_min_version: "3.4.0"
+runtime_seconds: 240
 datasets:
   - doyle-fuller-newman-1993-fig2.csv
   - doyle-fuller-newman-1993-parameters.csv
   - doyle-fuller-newman-1993-stated-results.csv
 
-# Ranked by measured power, not by how small the residual looks. The ranking is a
-# claim, so the notebook measures it: every entry has a defect-injection row.
-# Salt conservation used to be listed first; it is now last, and labelled.
+# Ranked by what each check can catch; every non-structural claim has a break row.
 validation:
-  # --- PRIMARY ---------------------------------------------------------------
-  - PRIMARY - the short-time concentration rise at the anode against the semi-infinite analytical solution c(0,t)-c_0 = 2J sqrt(t/pi D), and against the paper's Figure 4. Mean 7.7 mol/m3 over five times, no conductivity in it and nothing fitted. Measured power - this is the check that catches two of the three error classes the old ranking wrongly credited to salt conservation - a flipped migration sign moves it 7.7 -> 169.8 mol/m3 (22x) and writing t0+ where (1-t0+) belongs moves it to 72.7 (9.4x)
-  - PRIMARY - the five digitised Figure 2 curves, pooled 25.5 mV. The headline, and what catches the third named class - a reaction-coupling sign error stops the cell discharging at all (u_end 0.87 -> 0.00 in 63 steps)
-  - PRIMARY - Eq. 16 (open-circuit potential, read from a page image) against the paper's own plotted dashed curve, 237 digitised points, 3.25 mV against a ~3 mV digitisation accuracy
-  - PRIMARY - Eq. 26 and Eq. 27 recomputed against the S_c and S_s values the paper prints, which independently confirm D_s and the salt diffusivity
-  - PRIMARY - the conductivity recovered twice, from Eq. 28 and from Eq. 29, and both checked against the paper's stated sigma/kappa = O(1e5)
-  # --- Numerical error bounds ------------------------------------------------
-  - grid independence over a 4x refinement, spread 0.138 mV
-  - time-step independence, NEW - Cell.march sets dt and dt_max from the current alone, completely decoupled from n_s and n_c, so the grid study above holds the temporal error constant by construction and the page had no bound on it. Ported J3.5's dt_scale, which multiplies both. Observed order 0.95 (implicit Euler); total temporal error at the production schedule 0.273 mV, 2.0x the grid spread. Both far below the 25.5 mV model-vs-figure gap, so no conclusion moves. J3.1 shares this march and still does not have dt_scale
-  # --- Partly structural -----------------------------------------------------
-  - PARTLY STRUCTURAL - the long-time pore-wall flux against the charge-balance value and the paper's Figure 5. r_p = div@i2 - ai with i2[0] = I and i2[-1] = 0 forces sum(dx*ai) = -I identically, so the MEAN is guaranteed for any coupling. It does detect the same ai failing to appear in the charge and solid balances (9.1e-2 when scaled in one only)
-  - the Bruggeman exponent in the salt flux, which the paper leaves ambiguous, discriminated by its own results
-  - the utilisation at the 1.7 V cutoff against the 84 % the paper states
-  - the porosity optimisation the paper reports as a single sentence
-  # --- STRUCTURAL ------------------------------------------------------------
-  - STRUCTURAL, DEMOTED FROM FIRST TO LAST - conservation of total salt, 3.3e-16. The old prose claimed "any sign error in the migration term, the transference number or the reaction coupling breaks it". It breaks on NONE of them - measured, the worst of the three moves it 3.33e-16 -> 4.44e-16 while the cell potential moves 179 mV. It is a telescoping identity - with n_salt = 0 at both ends, sum(dx*div(n)) = n[N] - n[0] = 0 for any interior flux and any parameters. What it DOES test is exactly those two boundary values - dropping the no-anion condition at the lithium moves it to 8.7e-01. It also sits below check_agreement.py's ABS_FLOOR = 1e-12, so CI does not compare it
-  # One gap is stated rather than papered over - a coupling error in the SOLID
-  # balance alone (ai scaled, not sign-flipped) moves nothing on this page by
-  # more than a millivolt, and no check is constructible from published results.
+  - >-
+    the short-time salt rise at the lithium face against the semi-infinite solution
+    c(0,t) - c_0 = 2J sqrt(t / pi D), with no conductivity in it and nothing fitted:
+    mean deviation 0.83 <!-- claim: short_time_face_dev_mean --> mol/m3 with the face
+    value read under the boundary condition; a control with t0+ held constant, where
+    the solution is exact, agrees to below 0.2 <!-- claim: short_time_control_dev_max_10s -->
+    mol/m3 up to 10 s, so what remains is the concentration dependence of t0+. It
+    catches the migration sign and the transference factor
+  - >-
+    the four digitised Figure 2 discharge curves, pooled mean absolute deviation
+    25.5 <!-- claim: discharge_pooled_mad_mV --> mV, and the charge curve,
+    65.1 <!-- claim: mad_charge_mV --> mV
+  - >-
+    Eq. 16 (open-circuit potential, read from a page image) against the paper's own
+    plotted dashed curve, 3.25 <!-- claim: ocp_eq16_mad_mV --> mV mean absolute deviation
+  - >-
+    Eq. 26 and Eq. 27 recomputed against the S_c and S_s values the paper prints, and
+    the conductivity recovered twice, from Eq. 28 and from Eq. 29, both at the order
+    of sigma/kappa the paper states
+  - >-
+    refinement in space and in time on separate nested ladders: the cell potential at
+    u = 0.5 converges at second order in space (production-grid error
+    0.028 <!-- claim: grid_error_mV --> mV) and first order in time (step error
+    0.27 <!-- claim: dt_spread_mV --> mV); the headline deviation itself carries a step
+    error of 0.8 <!-- claim: headline_dt_error_pooled_mV --> mV
+  - >-
+    identities of the scheme, each testing one coupling: Faraday's law for the
+    utilisation (below 1e-12 <!-- claim: faraday_gap -->, the only check that sees the
+    pore-wall current entering the solid balance differently), the mean pore-wall
+    flux against the charge balance, and total salt (below 1e-12
+    <!-- claim: salt_conservation_drift -->), which no interior defect can move and
+    which tests only the two salt-flux boundary conditions
+  - >-
+    the Bruggeman exponent in the salt flux and the factor in Eq. 5, which the paper
+    leaves ambiguous, confronted with its own results
+  - >-
+    the utilisation at the 1.7 V cutoff, 0.831 <!-- claim: u_at_cutoff_I10 -->,
+    between the digitised curve and the value the paper states
 
 adds: >
   The paper never prints the conductivity of its own electrolyte: Appendix A
   says the PEO-LiCF3SO3 conductivity "was fit to a third-order polynomial" and
   gives no coefficients and no figure. The page recovers a value by inverting
-  the paper's own Eqs. 28 and 29 - two independent routes that agree to 19 % and
-  both reproduce its stated sigma/kappa = O(1e5). It also confronts two
-  ambiguities in the printed model with the paper's own results: the Bruggeman
-  exponent in the cathode salt flux, where eps^1.5 is decisively ruled out
-  because it drives the electrolyte to zero before half of the discharge,
-  contradicting their Figure 3; and the factor nu = 2 missing from Eq. 5's
-  concentration term, which thermodynamics requires for a 1:1 salt but which
-  Figure 2 cannot decide either way - the page shows both and says so. Finally
-  it sweeps the porosity optimisation that the paper reports as one sentence: it
-  finds the same optimum, 0.60, and shows that the penalty for being below the
-  optimum is far steeper than for being above it. No new physics: the model is
-  theirs, unchanged.
+  the paper's own Eqs. 28 and 29, two independent routes that agree to 18.7
+  <!-- claim: kappa_route_spread_pct --> % and both reproduce the order of
+  sigma/kappa the paper states. It confronts two ambiguities in the printed model
+  with the paper's own results: the Bruggeman exponent in the cathode salt flux,
+  where eps^1.5 is ruled out because it exhausts the electrolyte early in the
+  discharge, contradicting their Figure 3; and the factor nu = 2 missing from
+  Eq. 5's concentration term, which thermodynamics requires for a 1:1 salt but
+  which Figure 2 cannot decide. It sweeps and refines the porosity optimisation
+  the paper reports as one sentence: the maximum is at 0.591
+  <!-- claim: porosity_optimum -->, just below the paper's, flat, with the loss
+  above the optimum the larger at equal distance, 0.0216 <!-- claim: loss_above_015 -->
+  against 0.0163 <!-- claim: loss_below_015 --> at 0.15. The cell is one Newton system per backward-Euler step on pymrm
+  operators, with the flux boundary conditions as Neumann data computed from the
+  state. No new physics: the model is theirs, unchanged.
 
 agreement: >
-  Eq. 16 reproduces the paper's own open-circuit curve to 3.3 mV mean absolute
-  deviation over 237 digitised points, against a digitisation accurate to about
-  3 mV. The four discharge curves are reproduced to a pooled mean absolute
-  deviation of 25.5 mV on a 3 V scale with nothing fitted (16.8, 24.1, 25.9 and
-  34.0 mV at I = 5, 10, 13 and 20 A/m2, over 884 points), and every
-  transport-limited 1.9 V crossing arrives short by 0.023 in utilisation, the
-  same sign at all four currents. The 1.7 V cutoff utilisation at I = 10 comes
-  out at 0.831, between the 0.821 the digitised curve gives and the 0.84 the
-  paper states. The porosity optimum is found at 0.60, exactly where the paper
-  puts it, at 0.928 utilisation against their 0.97.
+  Eq. 16 reproduces the paper's own open-circuit curve to 3.25
+  <!-- claim: ocp_eq16_mad_mV --> mV mean absolute deviation, against a
+  digitisation accurate to about 3 mV. The four discharge curves are reproduced
+  to a pooled mean absolute deviation of 25.5 <!-- claim: discharge_pooled_mad_mV -->
+  mV on a 3 V scale with nothing fitted (16.8 <!-- claim: mad_I5_mV -->, 24.1
+  <!-- claim: mad_I10_mV -->, 25.9 <!-- claim: mad_I13_mV --> and 34.0
+  <!-- claim: mad_I20_mV --> mV at I = 5, 10, 13 and 20 A/m2), and every
+  transport-limited 1.9 V crossing arrives early, by 0.014
+  <!-- claim: u19_shortfall_min --> to 0.031 <!-- claim: u19_shortfall_max --> in
+  utilisation. The 1.7 V cutoff utilisation at I = 10 comes out at 0.831
+  <!-- claim: u_at_cutoff_I10 -->, between the 0.821
+  <!-- claim: u17_I10_digitised --> the digitised curve gives and the 0.84 the
+  paper states. The porosity optimum is at 0.591 <!-- claim: porosity_optimum -->
+  against the paper's 0.60, at 0.928 <!-- claim: u_at_optimum --> utilisation
+  against their 0.97.
 
-  Numerically: the cell potential moves 0.14 mV over a fourfold grid refinement
-  and 0.27 mV over the time-step refinement that was added on 2026-08-05 - the
-  step schedule is a function of current alone, so the grid study had been
-  holding the temporal error constant by construction. Both are far below the
-  25.5 mV model-vs-figure gap.
+  Numerically: the step is the error that matters, 0.8
+  <!-- claim: headline_dt_error_pooled_mV --> mV in the pooled deviation and 1.9
+  <!-- claim: headline_dt_error_I20_mV --> mV at I = 20, against 0.028
+  <!-- claim: grid_error_mV --> mV for the grid in the cell potential at u = 0.5.
+  All are small against the model-figure deviation.
 
-  Salt is conserved to 3e-16, and that number is NOT evidence for the model. It
-  is a telescoping identity of the discretisation, forced for any interior flux
-  and any parameters; it used to be ranked first of six on the claim that it
-  catches a sign error in the migration term, the transference number or the
-  reaction coupling, and it catches none of the three. It is now ranked last and
-  labelled. What it does test is the two salt-flux boundary conditions.
+  Total salt is conserved to below 1e-12 <!-- claim: salt_conservation_drift -->,
+  and that number is not evidence for the model: it is an identity of the
+  discretisation for any interior flux, and tests only the two salt-flux boundary
+  conditions.
 
 caveats: >
-  Provenance tier 6. Figure 2 contains no experimental data at all - every curve
-  on it is the authors' own simulation - so this page is validated against a
+  Provenance tier 6. Figure 2 contains no experimental data at all: every curve
+  on it is the authors' own simulation, so this page is validated against a
   published reference solution in the sense of D2.2 and must NOT be described as
   validated against experiment.
 
   The electrolyte conductivity is a reconstruction, not a reading: a single
   constant recovered from the paper's own dimensionless groups, whose two routes
-  differ by 19 %. It therefore carries no concentration dependence, which the
-  paper is explicit about mattering. The consequence is a model that is
-  uniformly slightly too polarised - the discharge bias is -23.8 mV against a
-  25.5 mV mean absolute deviation, so nearly all the deviation IS the bias - and
-  the charge curve is over-polarised by 64 mV in the opposite direction. A
-  deviation that follows the sign of the current is the signature of a series
-  resistance, not of the kinetics or the open-circuit potential.
-
-  Changed 2026-08-02: delta = 1.95 and nu = 68, the two printed groups the
-  conductivity is reconstructed from, were retyped as default arguments of
-  kappa_from_delta / kappa_from_nu although both are rows of the
-  stated-results CSV this page loads. They are now read from it, so a correction
-  to either transcription reaches kappa instead of only reaching the page that
-  happened to read the CSV. The values are unchanged and every metric is
-  bit-identical; the same fix was applied to J3.5.
+  differ by 18.7 <!-- claim: kappa_route_spread_pct --> %. It therefore carries no
+  concentration dependence, which the paper is explicit about mattering. The
+  model is uniformly slightly too polarised on discharge (bias -23.8
+  <!-- claim: discharge_pooled_bias_mV --> mV against a 25.5
+  <!-- claim: discharge_pooled_mad_mV --> mV mean absolute deviation) and the
+  charge curve is over-polarised by 64.9 <!-- claim: charge_bias_mV --> mV in the
+  opposite direction. A deviation that follows the sign of the current is the
+  signature of a series resistance, not of the kinetics or the open-circuit
+  potential; that it is the constant conductivity is the likely reading, not a
+  measured one.
 
   The factor nu = 2 in Eq. 5 is settled by thermodynamics and NOT by Figure 2:
-  the printed form gives a smaller mean deviation (18.2 mV) and the corrected
-  one better transport limits, and the two bracket the published curves. The
-  page prints both rather than choosing by fit.
+  the printed form gives a smaller mean deviation (18.2 <!-- claim: nu1_mad_mV -->
+  mV) and puts the transport-limited crossings late where the corrected one puts
+  them early; the two bracket the published curves. The page prints both rather
+  than choosing by fit.
 
   The 1.9 V and 1.7 V crossings are used as endpoint markers instead of "where
-  the curve stops", because where a curve stops is a solver property and is not
-  deterministic across machines.
+  the curve stops", because where a published curve stops is the authors' choice.
+  Marches that end where the electrolyte is exhausted (newton cannot follow the
+  potential with steps 64 times shorter) are reported as such, with the smallest
+  salt concentration at the last converged step.

@@ -1,29 +1,752 @@
 {
   "page": "J3.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "ocp_eq16_mad_mV": 3.250422798023613,
-    "discharge_pooled_mad_mV": 25.53449260891569,
-    "discharge_pooled_bias_mV": -23.800249023548965,
-    "mad_I5_mV": 16.823093499352627,
-    "mad_I10_mV": 24.137367422124363,
-    "mad_I13_mV": 25.94951188434928,
-    "mad_I20_mV": 33.957637918115864,
-    "mad_charge_mV": 64.44400696192564,
-    "S_c_at_I10": 0.00010210926600234718,
-    "S_s_at_I10": 0.1531638990035208,
-    "kappa_eff_from_eq28": 0.007974352068606404,
-    "kappa_eff_from_eq29": 0.00671950454592849,
-    "kappa_route_spread_pct": 18.674703084147115,
-    "salt_conservation_drift": 3.3306690738754696e-16,
-    "salt_drift_break_leaky_boundary": 0.8670166311253308,
-    "salt_drift_blind_named_classes_ratio": 1.3333333333333333,
-    "short_time_break_named_classes_ratio": 22.095396542496726,
-    "grid_spread_mV": 0.13842460089152908,
-    "dt_spread_mV": 0.2733709017654906,
-    "dt_observed_order": 0.9469523555733974,
-    "u_at_cutoff_I10": 0.8311504583302436,
-    "u19_shortfall_mean": 0.022697937924827716,
-    "porosity_optimum": 0.6,
-    "u_at_optimum": 0.9281761364342754
+    "ocp_eq16_mad_mV": {
+      "kind": "value",
+      "value": 3.250422798023613,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "ocp_eq16_max_mV": {
+      "kind": "value",
+      "value": 26.500320452394366,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "S_c_at_I10": {
+      "kind": "value",
+      "value": 0.00010210926600234718,
+      "rtol": 0.05
+    },
+    "S_c_at_I20": {
+      "kind": "value",
+      "value": 0.00020421853200469436,
+      "rtol": 0.05
+    },
+    "S_s_at_I10": {
+      "kind": "value",
+      "value": 0.1531638990035208,
+      "rtol": 0.05
+    },
+    "i0_initial": {
+      "kind": "value",
+      "value": 47.57467436325898,
+      "rtol": 0.05
+    },
+    "kappa_eff_from_eq28": {
+      "kind": "value",
+      "value": 0.007974352068606404,
+      "rtol": 0.05
+    },
+    "kappa_eff_from_eq29": {
+      "kind": "value",
+      "value": 0.00671950454592849,
+      "rtol": 0.05
+    },
+    "kappa_route_spread_pct": {
+      "kind": "value",
+      "value": 18.674703084147115,
+      "rtol": 0.05
+    },
+    "kappa_bulk": {
+      "kind": "value",
+      "value": 0.048530361216263466,
+      "rtol": 0.05
+    },
+    "sigma_over_kappa": {
+      "kind": "value",
+      "value": 206056.57467574763,
+      "rtol": 0.05
+    },
+    "sigma_over_kappa_eq29": {
+      "kind": "value",
+      "value": 244537.02818180743,
+      "rtol": 0.05
+    },
+    "sigma_over_kappa_if_bulk": {
+      "kind": "value",
+      "value": 1254020.3785794973,
+      "rtol": 0.05
+    },
+    "u19_below_figure_count": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.014412267217644048,
+      "min_margin": 0.005,
+      "note": "discharge curves whose 1.9 V crossing comes before the figure's; margin = smallest shortfall in u"
+    },
+    "mad_I5_mV": {
+      "kind": "value",
+      "value": 16.81091586547963,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "mad_I10_mV": {
+      "kind": "value",
+      "value": 24.117210013408943,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "mad_I13_mV": {
+      "kind": "value",
+      "value": 25.930794731902914,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "mad_I20_mV": {
+      "kind": "value",
+      "value": 33.957999135388874,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "mad_charge_mV": {
+      "kind": "value",
+      "value": 65.10147289586509,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "discharge_pooled_mad_mV": {
+      "kind": "value",
+      "value": 25.522125873874984,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "discharge_pooled_bias_mV": {
+      "kind": "value",
+      "value": -23.78534280733781,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "charge_bias_mV": {
+      "kind": "value",
+      "value": 64.90587603817427,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "u19_shortfall_mean": {
+      "kind": "value",
+      "value": 0.022683174389780708,
+      "rtol": 0.05
+    },
+    "u19_shortfall_min": {
+      "kind": "value",
+      "value": 0.014412267217644048,
+      "rtol": 0.05
+    },
+    "u19_shortfall_max": {
+      "kind": "value",
+      "value": 0.030914498817739444,
+      "rtol": 0.05
+    },
+    "u_at_cutoff_I10": {
+      "kind": "value",
+      "value": 0.8311614795270346,
+      "rtol": 0.05
+    },
+    "u19_I20": {
+      "kind": "value",
+      "value": 0.2638422782369014,
+      "rtol": 0.05
+    },
+    "u19_I20_digitised": {
+      "kind": "value",
+      "value": 0.2782545454545454,
+      "rtol": 0.005
+    },
+    "u17_I10_digitised": {
+      "kind": "value",
+      "value": 0.8214614678899083,
+      "rtol": 0.005
+    },
+    "porosity_optimum": {
+      "kind": "value",
+      "value": 0.590734099755955,
+      "rtol": 0.01
+    },
+    "u_at_optimum": {
+      "kind": "value",
+      "value": 0.9282348906401269,
+      "rtol": 0.05
+    },
+    "loss_below_005": {
+      "kind": "value",
+      "value": 0.0016326956272905147,
+      "rtol": 0.05
+    },
+    "loss_above_005": {
+      "kind": "value",
+      "value": 0.0017664009798672442,
+      "rtol": 0.05
+    },
+    "loss_below_010": {
+      "kind": "value",
+      "value": 0.006779909121439998,
+      "rtol": 0.05
+    },
+    "loss_above_010": {
+      "kind": "value",
+      "value": 0.008020582702995549,
+      "rtol": 0.05
+    },
+    "loss_below_015": {
+      "kind": "value",
+      "value": 0.01629291259529908,
+      "rtol": 0.05
+    },
+    "loss_above_015": {
+      "kind": "value",
+      "value": 0.021566709409688745,
+      "rtol": 0.05
+    },
+    "loss_above_exceeds_below_count": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.00013370535257672955,
+      "min_margin": 5e-05,
+      "note": "distances 0.05, 0.10, 0.15 at which the loss above the optimum is the larger; margin = smallest difference of the two losses"
+    },
+    "faraday_gap": {
+      "kind": "bound",
+      "value": 3.3306690738754696e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "state utilisation against u0 + I t / (F (1-eps) c_T delta_c), I = 10 march"
+    },
+    "salt_conservation_drift": {
+      "kind": "bound",
+      "value": 9.992007221626409e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "relative drift of sum(eps dx c) over the I = 10 discharge"
+    },
+    "wall_flux_identity_gap": {
+      "kind": "bound",
+      "value": 1.1730616478189404e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "mean j_n over the cathode at 7000 s against -I/(F a delta_c); newton tolerance"
+    },
+    "fig4_beyond_reading_count": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.06228022237573896,
+      "min_margin": 0.05,
+      "note": "times at which the model differs from the Fig. 4 read by more than its 5 mol/m3 resolution"
+    },
+    "short_time_face_dev_mean": {
+      "kind": "value",
+      "value": 0.8267612159736473,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "short_time_face_dev_20s": {
+      "kind": "value",
+      "value": -2.092499922549223,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "short_time_first_cell_offset_mean": {
+      "kind": "value",
+      "value": 5.7889687598711586,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "fig4_dev_max": {
+      "kind": "value",
+      "value": 15.685945113143589,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "short_time_face_dev_mean_production_steps": {
+      "kind": "value",
+      "value": 2.595794436593633,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "short_time_first_cell_dev_mean_production_steps": {
+      "kind": "value",
+      "value": 8.368594781475485,
+      "rtol": 0.05,
+      "unit": "mol/m3"
+    },
+    "short_time_control_dev_max_10s": {
+      "kind": "bound",
+      "value": 0.1294735789169863,
+      "max": 0.2,
+      "basis": "theory",
+      "note": "constant t0+: the semi-infinite solution is exact up to 10 s apart from the first-order step error (about 0.1 mol/m3 at refine 16)"
+    },
+    "grid_order_min": {
+      "kind": "bound",
+      "value": 2.0007006558967926,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "cell-centred scheme, harmonic face means at the porosity jump: order 2"
+    },
+    "grid_order_max": {
+      "kind": "bound",
+      "value": 2.0014918021334878,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "as grid_order_min"
+    },
+    "dt_order_min": {
+      "kind": "bound",
+      "value": 1.0017448869655152,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "backward Euler on a nested time grid: order 1"
+    },
+    "dt_order_max": {
+      "kind": "bound",
+      "value": 1.0032134795504786,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "as dt_order_min"
+    },
+    "grid_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 162617.04879492463,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest spatial difference over n_steps eps V + 1e-9 RT/F"
+    },
+    "dt_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 1050625.482817767,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest temporal difference over n_steps eps V + 1e-9 RT/F"
+    },
+    "grid_error_mV": {
+      "kind": "value",
+      "value": 0.02793486869889783,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "dt_spread_mV": {
+      "kind": "value",
+      "value": 0.27372134545977644,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "headline_dt_order_pooled": {
+      "kind": "bound",
+      "value": 1.0037524841463419,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "steps split into 1, 2, 4: backward Euler, order 1"
+    },
+    "headline_dt_error_pooled_mV": {
+      "kind": "value",
+      "value": 0.8011448999873139,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "headline_dt_order_I20": {
+      "kind": "bound",
+      "value": 0.9962134591857501,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "steps split into 1, 2, 4: backward Euler, order 1"
+    },
+    "headline_dt_error_I20_mV": {
+      "kind": "value",
+      "value": 1.8802788048193761,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "headline_change_grid_mV": {
+      "kind": "bound",
+      "value": 0.04256558723724879,
+      "max": 0.05,
+      "basis": "chosen",
+      "note": "pooled and charge MAD, 24+48 against 48+96 cells; half the 0.1 mV printed resolution"
+    },
+    "brug_mean_du_eps15": {
+      "kind": "value",
+      "value": 0.2939520407116269,
+      "rtol": 0.05
+    },
+    "brug_mad_eps15_mV": {
+      "kind": "value",
+      "value": 189.70215476069137,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "brug_mean_du_eps0": {
+      "kind": "value",
+      "value": 0.08632293481290094,
+      "rtol": 0.05
+    },
+    "brug_mad_eps0_mV": {
+      "kind": "value",
+      "value": 37.51122643422705,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "brug_eps15_ratio_min": {
+      "kind": "value",
+      "value": 0.38260252733787825,
+      "rtol": 0.05
+    },
+    "brug_eps15_ratio_max": {
+      "kind": "value",
+      "value": 0.6198420610018557,
+      "rtol": 0.05
+    },
+    "brug_eps15_u_salt_out_I10": {
+      "kind": "value",
+      "value": 0.19334559251969904,
+      "rtol": 0.05
+    },
+    "brug_newton_ends_salt_exhausted": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.5577145537758499,
+      "min_margin": 0.05,
+      "note": "marches of the three readings that end on a failed solve, with c_min at the last converged step below 1e-2 mol/m3; margin in decades"
+    },
+    "nu_bracket_count": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 3.477690132387485e-05,
+      "min_margin": 1e-05,
+      "note": "currents at which the two readings of Eq. 5 put the 1.9 V crossing on opposite sides of the figure's; margin = smallest product of the two distances"
+    },
+    "nu1_mad_mV": {
+      "kind": "value",
+      "value": 18.19461265286858,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "nu1_u19_bias": {
+      "kind": "value",
+      "value": 0.02642136829162156,
+      "rtol": 0.05
+    },
+    "u_cutoff_between_figure_and_text": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.008838520472965405,
+      "min_margin": 0.001,
+      "note": "model between the digitised crossing and the stated 0.84; margin to the nearer end"
+    },
+    "u_cutoff_rel_to_stated_pct": {
+      "kind": "value",
+      "value": 1.0522048182101673,
+      "rtol": 0.05
+    },
+    "salt_drift_named_defects_max": {
+      "kind": "bound",
+      "value": 3.186340080674199e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "salt drift under the migration-sign, t0+ and charge-coupling defects: sum(dx div N) telescopes, so no interior defect moves it"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "ocp_eq16_mad_mV": [
+      "zeta 8.10 -> 8.01 (P)"
+    ],
+    "ocp_eq16_max_mV": [
+      "zeta 8.10 -> 8.01 (P)"
+    ],
+    "S_c_at_I10": [
+      "D_s 5.0e-13 -> 5.0e-12 (P)"
+    ],
+    "S_c_at_I20": [
+      "D_s 5.0e-13 -> 5.0e-12 (P)"
+    ],
+    "S_s_at_I10": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "i0_initial": [
+      "k_2 1.0e-10 -> 1.0e-11 (P)"
+    ],
+    "kappa_eff_from_eq28": [
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "kappa_eff_from_eq29": [
+      "k_2 1.0e-10 -> 1.0e-11 (P)",
+      "nu 68 -> 86 (stated results)"
+    ],
+    "kappa_route_spread_pct": [
+      "k_2 1.0e-10 -> 1.0e-11 (P)",
+      "nu 68 -> 86 (stated results)",
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "kappa_bulk": [
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "sigma_over_kappa": [
+      "sigma 1.0e4 -> 1.0e5 (P)",
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "sigma_over_kappa_eq29": [
+      "k_2 1.0e-10 -> 1.0e-11 (P)",
+      "sigma 1.0e4 -> 1.0e5 (P)",
+      "nu 68 -> 86 (stated results)"
+    ],
+    "sigma_over_kappa_if_bulk": [
+      "sigma 1.0e4 -> 1.0e5 (P)",
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "mad_I5_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "mad_I10_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "mad_I13_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "mad_I20_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "discharge_pooled_mad_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "discharge_pooled_bias_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u19_shortfall_mean": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)",
+      "Eq. 5 as printed, nu_factor = 1 (a reading)"
+    ],
+    "u19_shortfall_min": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u19_shortfall_max": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u_at_cutoff_I10": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u19_I20": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u19_below_figure_count": [
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)",
+      "Eq. 5 as printed, nu_factor = 1 (a reading)"
+    ],
+    "faraday_gap": [
+      "pore-wall current x1.1 in the charge balance (ai_charge)",
+      "pore-wall current x1.1 in the solid balance (ai_solid)"
+    ],
+    "salt_conservation_drift": [
+      "zero gradient instead of zero salt flux at the lithium (anion_blocking)"
+    ],
+    "u_cutoff_between_figure_and_text": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "u_cutoff_rel_to_stated_pct": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "delta 1.95 -> 1.59 (stated results)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "short_time_face_dev_mean": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "short_time_face_dev_20s": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "short_time_first_cell_offset_mean": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "fig4_dev_max": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "fig4_beyond_reading_count": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "short_time_face_dev_mean_production_steps": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "short_time_first_cell_dev_mean_production_steps": [
+      "D 7.5e-12 -> 5.7e-12 (P)",
+      "migration sign flipped in N (mig_sign)",
+      "(1 - t0+) written as t0+ in i2 and N (t0_form)"
+    ],
+    "nu1_mad_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "nu1_u19_bias": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "nu_bracket_count": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_newton_ends_salt_exhausted": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_eps15_ratio_min": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_eps15_ratio_max": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_eps15_u_salt_out_I10": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_mean_du_eps15": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_mad_eps15_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_mean_du_eps0": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "brug_mad_eps0_mV": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "porosity_optimum": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "u_at_optimum": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_below_005": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_above_005": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_below_010": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_above_010": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_below_015": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_above_015": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "loss_above_exceeds_below_count": [
+      "D 7.5e-12 -> 5.7e-12 (P)"
+    ],
+    "mad_charge_mV": [
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "charge_bias_mV": [
+      "delta 1.95 -> 1.59 (stated results)"
+    ],
+    "wall_flux_identity_gap": [
+      "pore-wall current x1.1 in the charge balance (ai_charge)"
+    ],
+    "short_time_control_dev_max_10s": [
+      "control run with t0+ varying (t0_b kept)"
+    ],
+    "u19_I20_digitised": [
+      "digitised utilisation read 2 % short (data)"
+    ],
+    "u17_I10_digitised": [
+      "digitised utilisation read 2 % short (data)"
+    ],
+    "grid_order_min": [
+      "arithmetic face mean at the porosity jump (face_mean)"
+    ],
+    "grid_order_max": [
+      "arithmetic face mean at the porosity jump (face_mean)"
+    ],
+    "grid_error_mV": [
+      "arithmetic face mean at the porosity jump (face_mean)"
+    ],
+    "dt_order_min": [
+      "time ladder 1, 2, 4 read with ratio 3 (levels)"
+    ],
+    "dt_order_max": [
+      "time ladder 1, 2, 4 read with ratio 3 (levels)"
+    ],
+    "headline_dt_order_pooled": [
+      "time ladder 1, 2, 4 read with ratio 3 (levels)"
+    ],
+    "headline_dt_error_pooled_mV": [
+      "finest time level taken as the zero-step limit (limit)"
+    ],
+    "headline_dt_order_I20": [
+      "time ladder 1, 2, 4 read with ratio 3 (levels)"
+    ],
+    "headline_dt_error_I20_mV": [
+      "finest time level taken as the zero-step limit (limit)"
+    ],
+    "grid_finest_over_roundoff": [
+      "finest rung repeats the one before (levels)"
+    ],
+    "dt_finest_over_roundoff": [
+      "finest rung repeats the one before (levels)"
+    ],
+    "dt_spread_mV": [
+      "step ceiling 6e-3 -> 1.2e-2 of t_full/I (dt_max)"
+    ],
+    "headline_change_grid_mV": [
+      "production grid 6 + 12 cells (n_s, n_c)"
+    ]
   }
 }
