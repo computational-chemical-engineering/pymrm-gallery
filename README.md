@@ -39,6 +39,12 @@ export QUARTO_PYTHON=$(which python) # so Quarto uses the same interpreter
 quarto render                        # build the site into _site/
 ```
 
+Quarto skips a page notebook that has a paired `index.py` beside it, so a
+`quarto render` in the checkout leaves out every page on the new layout. The
+publish workflow renders with those scripts removed; to preview the whole site,
+render a copy: `git archive HEAD | tar -x -C /tmp/site && cd /tmp/site && rm
+pages/*/index.py && quarto render`.
+
 ## Goal
 
 For each catalogued model, one page that shows:
