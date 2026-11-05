@@ -101,8 +101,18 @@ jobs:
       # Quarto renders the committed notebook outputs as they are: _quarto.yml has
       # no `execute: enabled`, so .ipynb pages are not executed, and _freeze/ is
       # not committed (.gitignore). Executing the pages is execute.yml's job.
+      # Quarto silently skips an index.ipynb that has a jupytext-paired index.py
+      # beside it (an exclusion in _quarto.yml does not help), so the paired
+      # scripts are removed from this checkout first. The count check fails the
+      # build when a page is still missing from the site.
       - name: Render site
-        run: quarto render
+        run: |
+          rm -f pages/*/index.py
+          quarto render
+          want=$(ls pages/*/index.ipynb | wc -l)
+          got=$(ls _site/pages/*/index.html | wc -l)
+          echo "rendered $got of $want pages"
+          test "$got" -eq "$want"
 
       - uses: actions/upload-pages-artifact@v3
         with: {path: _site}
