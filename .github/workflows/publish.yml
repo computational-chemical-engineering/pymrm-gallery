@@ -82,9 +82,10 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     steps:
-      # Render the tag, so the site shows the tag in every bootstrap.
+      # Render the tag, so the site shows the tag in every bootstrap. The full
+      # history gives each page its modified date (scripts/prepare_site.py).
       - uses: actions/checkout@v4
-        with: {ref: "${{ needs.release.outputs.tag }}"}
+        with: {ref: "${{ needs.release.outputs.tag }}", fetch-depth: 0}
 
       - uses: quarto-dev/quarto-actions/setup@v2
         with:
@@ -101,13 +102,12 @@ jobs:
       # Quarto renders the committed notebook outputs as they are: _quarto.yml has
       # no `execute: enabled`, so .ipynb pages are not executed, and _freeze/ is
       # not committed (.gitignore). Executing the pages is execute.yml's job.
-      # Quarto silently skips an index.ipynb that has a jupytext-paired index.py
-      # beside it (an exclusion in _quarto.yml does not help), so the paired
-      # scripts are removed from this checkout first. The count check fails the
-      # build when a page is still missing from the site.
+      # prepare_site.py removes the paired index.py scripts, which make Quarto
+      # skip a page silently, and writes each page's modified date and catalog
+      # ID. The count check fails the build when a page is missing from the site.
       - name: Render site
         run: |
-          rm -f pages/*/index.py
+          python scripts/prepare_site.py --copy
           quarto render
           want=$(ls pages/*/index.ipynb | wc -l)
           got=$(ls _site/pages/*/index.html | wc -l)
