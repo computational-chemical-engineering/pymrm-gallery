@@ -41,9 +41,15 @@ quarto render                        # build the site into _site/
 
 Quarto skips a page notebook that has a paired `index.py` beside it, so a
 `quarto render` in the checkout leaves out every page on the new layout. The
-publish workflow renders with those scripts removed; to preview the whole site,
-render a copy: `git archive HEAD | tar -x -C /tmp/site && cd /tmp/site && rm
-pages/*/index.py && quarto render`.
+publish workflow first runs `scripts/prepare_site.py`, which removes those
+scripts and writes each page's modified date. To preview the whole site, render
+a copy:
+
+```bash
+mkdir /tmp/site && git archive HEAD | tar -x -C /tmp/site
+cd /tmp/site && python "$OLDPWD/scripts/prepare_site.py" --copy --repo "$OLDPWD"
+quarto render
+```
 
 ## Goal
 
