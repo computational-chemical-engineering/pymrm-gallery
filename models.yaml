@@ -5802,12 +5802,14 @@ models:
     slug: single-particle-model
     title: "Single particle models with electrolyte (SPM / SPMe)"
     description: >
-      Marquis et al.'s asymptotic reduction of the Doyle-Fuller-Newman model -
-      the SPM at leading order, the SPMe at first order - applied to the
+      Marquis et al.'s asymptotic reduction of the Doyle-Fuller-Newman model,
+      the SPM at leading order and the SPMe at first order, applied to the
       gallery's own 1993 cell, with the promised O(C_e) and O(C_e^2) error
-      scalings measured against the J3.4 full model on a converged sweep: slope
-      1.00 for the SPM, and for the SPMe a local exponent of 2.07 at the bottom
-      of the sweep drifting to 2.70 at the top.
+      scalings measured against the J3.4 full model on a current ladder with the
+      reference's own discretisation error removed: order 1.00 <!-- claim: spm_order_min -->
+      to 1.04 <!-- claim: spm_order_max --> for the SPM, and for the SPMe
+      2.08 <!-- claim: spme_order_I05_I0125 --> on the lowest triple, rising with
+      current to 2.78 <!-- claim: spme_order_I4_I1 -->.
     section: J
     status: published
     page: pages/J3.5-single-particle-model/
@@ -5821,18 +5823,19 @@ models:
       container: "Journal of the Electrochemical Society 166(15) A3693-A3706"
       doi: 10.1149/2.0341915jes
     predicts: [terminal voltage of reduced-order battery models, electrolyte correction profiles, a-priori applicability of the reduction]
-    pymrm_api: [construct_grad, construct_div, NumJac, newton]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, construct_coefficient_matrix, NumJac, newton, observed_orders, find_roots]
     data: {tier: 6, method: table, status: complete}
     note: >
       The catalogue phrase "various reductions of J3.4" made citable: the SPM and
       SPMe as the leading- and first-order terms of Marquis et al.'s asymptotic
       expansion, re-derived for the 1993 half-cell geometry and tested against
-      the gallery's own J3.4 solve. Model-vs-model throughout - the J3.4
-      reference is itself a reproduction of a published simulation, so nothing
-      here touches a measurement. The page also measures what its own slope test
-      resolves: the ohmic and concentration corrections sharply, the
-      electrode-averaged exchange-current term not at all (0.01 %), and no
-      parameter of the shared set at all. Their own Table IV is context only: the
+      the gallery's own J3.4 model, copied unchanged. Model against model
+      throughout: the J3.4 reference is itself a reproduction of a published
+      simulation, so nothing here touches a measurement. The page also measures
+      what its own scaling test resolves: the ohmic and concentration
+      corrections sharply, the electrode-averaged exchange-current term not at
+      all (error ratio 1.0001 <!-- claim: mut_exchange_avg_error_ratio_I1 -->),
+      and no parameter of the shared set. Their own Table IV is context only: the
       property functions of their cell live in cited codes, not the printed
       paper.
     related: [J3.4, J1.5, B1.1]

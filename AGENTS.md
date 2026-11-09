@@ -50,6 +50,15 @@ repository. The errors agents actually make:
   ends: `{a:1, b:0, d:q}` at the left boundary gives `dc/dx = −q`, and the same
   dict at the right gives `dc/dx = +q`. Write the physical equation in a comment
   next to every `bc`.
+- **Outlets and face values.** A first-order convective outlet is
+  `{"outflow": True}`; a `bc` of `None` is a Dirichlet zero (the outlet face
+  carries nothing, and with an exchange sink `newton` converges silently to a wrong
+  state). Read outlet, wall and boundary values and fluxes with
+  `compute_boundary_values` under the same `bc`, never from the last cell. Under an
+  outflow or zero-gradient outlet a van Leer profile has a first-order layer of two
+  to three cells at the outlet while the interior stays second order: measure an
+  order on the outlet value or at a fixed position, never as a maximum over all
+  cells (checklist rule 21; pymrm PRs #38, #41).
 - **Assemble constant operators once**, in `__init__` or `_build_operators` —
   never inside a Newton iteration or time step. If a boundary value changes
   every step, that is what `shapes_d` is for: it makes the boundary value an
@@ -243,7 +252,17 @@ Constraints:
   time-step independence, or a physical bound.
 - Report through `Claims` so CI can detect regressions (pages not yet refreshed
   call `report_agreement(...)`).
-- **Every metric you report needs a break-table row — something that moves it.**
+- **Crossings, thresholds and extrema are roots, never read-offs.** Use
+  `pymrm.checks.find_roots` on the physical range and raise unless it returns
+  exactly one root; an extremum is a root of an analytic derivative, or a bounded
+  maximisation refined from a scan of the whole window; a limit is taken in closed
+  form, not at the end of a grid. A nearest grid node, an `argmax` over a sweep or
+  `np.interp` on a coarse trace is the grid, not the answer (checklist rules 12,
+  13 in `.claude/skills/gallery-refresh/references/refresh-checklist.md`).
+- **Every metric you report needs a break-table row that makes its own check
+  fail**: a defect injected through a call argument or physical parameter (never
+  by editing a result after the solve), sized so the claim fails, not merely moves
+  within its tolerance (checklist rules 8 to 11).
   This is the single strongest predictor of page quality measured in this repo.
   On the 2026-08-05 sweep of all 41 built pages, **nine of the ten findings that
   reached a published headline were on a page with no defect-injection table**,
@@ -278,7 +297,12 @@ entry:
 - a statement an earlier version of the page published wrongly is corrected in
   place. The record of it goes only in the README, as a short dated
   `## Corrections` list (what was stated, what is true); details belong in the
-  commit message and `docs/refresh-learnings.md`.
+  commit message and `docs/refresh-learnings.md`. Only a statement that was wrong
+  when published gets a Correction: a change of definition, a fair rounding, a gain
+  in precision or a true statement made more precise is not one, and goes in the
+  commit message. Each entry is dated, quotes the old wording character for
+  character (old numbers appear only inside the quote) and states what is true
+  with claim markers (checklist rules 26, 27).
 
 ## Honesty requirements
 
