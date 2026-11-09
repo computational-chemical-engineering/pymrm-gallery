@@ -1234,12 +1234,13 @@ models:
       to (5) for spheres, solid cylinders and hollow cylinders. Its
       high-Reynolds-number limit is Ud/D -> 2p/(1-p), and eq. (3)'s two constants sum
       to exactly a half - so the "widely quoted value of 2" is a sphere fact, and the
-      paper's own cylinder constants give 1.70 and 1.17. The axial and radial
+      paper's own cylinder constants give 1.7037 <!-- claim: pe_limit_solid_cylinders -->
+      and 1.1746 <!-- claim: pe_limit_hollow_cylinders -->. The axial and radial
       correlations are then used together in a 2-D axisymmetric pymrm bed, checked
       against Gunn's own printed closed form and against a Bessel-mode generalisation
       of it, and used to put a number on his wall-channel argument and on the cost of
       the wrong downstream boundary condition. The axial correlation is compared with
-      the 55 measured points A2.5 digitised, with the resolving power of that
+      the 55 <!-- claim: n_fig9_markers_used --> measured points A2.5 digitised, with the resolving power of that
       comparison measured and the overlap question settled from printed text rather
       than assumed.
     section: A
@@ -1278,7 +1279,13 @@ models:
       - construct_grad
       - construct_div
       - construct_convflux_upwind
+      - ConvFluxTVD
+      - newton
+      - compute_boundary_values
       - interp_cntr_to_stagg_tvd
+      - describe_bc
+      - find_roots
+      - observed_orders
     data:
       tier: 2
       method: "transcribed from page renders; the measured points are borrowed from A2.5"
@@ -1290,34 +1297,35 @@ models:
       - A3.4
     note: >
       The headline is structural and comes from printed constants only: eq. (3) gives
-      p_inf = 0.17 + 0.33 = 0.50 exactly, so Pe -> 2.0000 for spheres, while eqs (4)
-      and (5) - fitted to cylinder data that never see a sphere - give 1.7037 and
-      1.1746. Two printed digits fix that limit only to about 4 %, and the page says
-      so; the 1.70-fold spread between shapes is what is outside rounding.
+      p_inf = 0.17 + 0.33 = 0.50 exactly, so Pe -> 2 for spheres, while eqs (4)
+      and (5), fitted to cylinder data that never see a sphere, give
+      1.7037 <!-- claim: pe_limit_solid_cylinders --> and
+      1.1746 <!-- claim: pe_limit_hollow_cylinders -->. Two printed digits fix the
+      sphere limit only to 4.1 % <!-- claim: pe_limit_rounding_width -->; the order
+      of the shapes survives the rounding.
 
-      The comparison against measurement is 20.3 % mean absolute deviation with a
-      +15.8 % bias against the 55 markers A2.5 digitised, where E&R's own eq. (18)
-      gives 11.75 %. Whether those markers are inside Gunn's fit set is decided from
-      printed text and not assumed: his criterion was experiments in which molecular
-      diffusion is very small (ReSc >> 1, which his 1993 note glosses as liquid-phase
-      measurements), and these gas-phase points run ReSc = 0.0066 to 37.8 with 47 of
-      55 below 10, so the comparison is probably OUT of sample - though nothing
-      printed says they were held out either. Two things bound what those markers
-      resolve, both measured: against the strongest null, a free constant p at 23.0 %,
-      deleting p(Re) costs 2.7 percentage points at eps = 0.37 and 4.6 at each model's
-      preferred eps, while the porosity the paper never prints moves the headline
-      9.1 points over eps = 0.34 to 0.40 and has an interior optimum at eps = 0.443.
-      No new digitisation was done; A2.5's file is loaded, its findings are listed on
-      the page, and its published headline is recomputed rather than quoted.
+      Against the markers A2.5 digitised eq. (1) gives a mean absolute deviation of
+      20.30 % <!-- claim: eq1_vs_fig9_mean_abs_dev --> with a bias of
+      15.77 % <!-- claim: eq1_vs_fig9_bias -->, where E&R's own eq. (18) gives
+      11.75 % <!-- claim: eq18_vs_fig9_mean_abs_dev_recomputed -->. The markers fail
+      Gunn's stated fit criterion (ReSc >> 1; 47 <!-- claim: n_resc_below_10 --> of
+      them lie below ReSc = 10), so the comparison is probably out of sample. At the
+      assumed porosity they do not distinguish p(Re) from a free constant p
+      (0.89 <!-- claim: p_cost_vs_free_constant_over_se --> standard errors of the
+      paired difference); at each model's preferred porosity they do
+      (2.59 <!-- claim: p_cost_at_preferred_eps_over_se -->), and the porosity is
+      not printed.
 
-      Two reactor numbers are computed a SECOND time by scipy solve_bvp collocation,
-      which is what a defect-injection table cannot do. The wall-channel cost agrees
-      to 1.4e-04; the outlet-condition error did not, and the disagreement was a
-      first-order lambda h/2 bias from reading the outlet at the last cell centre. It
-      is fixed, and the metric moved from 0.92 % to 1.03 %.
+      The 2-D bed (ConvFluxTVD with newton, outlet values from
+      compute_boundary_values) puts Gunn's wall argument at
+      1.142 % <!-- claim: wall_channel_cost_with_radial --> more unconverted
+      reactant for the uncorrected velocity ratio with radial mixing, and the
+      zero-gradient outlet at 1.035 % <!-- claim: zerograd_outlet_error_long_bed -->
+      whatever the bed length. Both reactor numbers are recomputed by solve_bvp
+      collocation.
 
-      The Schmidt-group dependence over a 1000-fold range - the thing Gunn's Figure 1
-      exists to show - is NOT tested, because the gallery has no liquid-phase
+      The Schmidt-group dependence over a 1000-fold range, the thing Gunn's Figure 1
+      exists to show, is NOT tested, because the gallery has no liquid-phase
       dispersion dataset. That is the single most valuable extension.
 
   - id: A2.8

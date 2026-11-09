@@ -1,56 +1,1491 @@
 {
   "page": "A2.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "pe_limit_spheres": 2.0,
-    "pe_limit_solid_cylinders": 1.7037037037037035,
-    "pe_limit_hollow_cylinders": 1.1746031746031746,
-    "pe_limit_vs_eq1_worst_rel_dev": 7.205713903335464e-08,
-    "pe_at_Re_1000": 1.9862390966242638,
-    "fraction_of_p_excursion_1_to_200": 0.8869204367128888,
-    "wall_velocity_ratio_rel_dev": -0.002450980392157076,
-    "liquid_gas_max_ratio": 10.890948681659433,
-    "liquid_gas_max_reynolds": 3.166227497545721,
-    "liquid_gas_crossover_reynolds": 0.17714316047999148,
-    "table1_mean_vs_stated_rel_dev": -0.030000000000000027,
-    "table1_worst_row_spread": 0.15999999999999992,
-    "tau_inverse_vs_er_gamma_rel_dev": -0.021526418786692703,
-    "eq1_vs_eq42_identity": 8.696643405414761e-11,
-    "expm1_vs_naive_exp_worst": 1.6828244067124132e-06,
-    "eq17_satisfies_eq16_residual": 9.381543324074381e-07,
-    "eq1_vs_fig9_mean_abs_dev": 0.2030377074154931,
-    "eq1_vs_fig9_bias": 0.1577219837487796,
-    "eq18_vs_fig9_mean_abs_dev_recomputed": 0.11749472960042173,
-    "null_p_frozen_low_mean_abs_dev": 0.24877066545038562,
-    "null_p_frozen_high_mean_abs_dev": 0.6762627345421665,
-    "null_eq15_mean_abs_dev": 0.2991314100228333,
-    "null_free_constant_p_mean_abs_dev": 0.22957268931276212,
-    "null_free_constant_p_value": 0.07928833737519686,
-    "eq1_vs_fig9_best_eps": 0.44285821241632434,
-    "eq1_vs_fig9_mad_at_best_eps": 0.16383640567119168,
-    "null_free_constant_p_best_eps_mean_abs_dev": 0.2100600430383161,
-    "fraction_of_p_excursion_sampled": 0.6135033777194119,
-    "eq1_peclet_maximum": 4.5274016284236485,
-    "eq1_peclet_maximum_reynolds": 3.151312455525898,
-    "eq17_flat_sup_error": 7.454003005379224e-07,
-    "bessel_mode_sup_error": 2.895618342744585e-05,
-    "bessel_break_nu0_factor": 2646.033152182525,
-    "bessel_break_n_r_5_factor": 251.53792268183145,
-    "bessel_break_D_operator_only_factor": 53.73694395281881,
-    "bessel_break_DR_operator_only_factor": 445.33954236275497,
-    "eq17_break_D_operator_only_factor": 1369.1896771573076,
-    "zerograd_outlet_error_short_bed": 0.010339374509897414,
-    "zerograd_outlet_error_long_bed": 0.010339367550332268,
-    "zerograd_error_interior_10d_bed": 9.361563901855163e-08,
-    "zerograd_error_over_lambda_D_U_min": 0.910657950409756,
-    "zerograd_error_over_lambda_D_U_max": 0.9984595712717109,
-    "D_axial_over_D_radial_high_Re": 5.5001164911435545,
-    "eq1_vs_fig9_mad_eps_034": 0.26618508496482324,
-    "eq1_vs_fig9_mad_eps_040": 0.1754755089262217,
-    "wall_channel_cost_with_radial": 0.01156908089058084,
-    "wall_channel_cost_without_radial": 0.054606824721408875,
-    "outlet_error_collocation": 0.010352884211668245,
-    "outlet_error_fv_vs_collocation": -0.0013055937901256254,
-    "wall_cost_no_radial_collocation": 0.05461426501161326,
-    "wall_cost_fv_vs_collocation": -0.00013623345847102453
+    "pe_limit_spheres": {
+      "kind": "value",
+      "value": 2.0,
+      "rtol": 0.0001
+    },
+    "pe_limit_solid_cylinders": {
+      "kind": "value",
+      "value": 1.7037037037037035,
+      "rtol": 0.0001
+    },
+    "pe_limit_hollow_cylinders": {
+      "kind": "value",
+      "value": 1.1746031746031746,
+      "rtol": 0.0001
+    },
+    "pe_limit_spread_spheres_over_hollow": {
+      "kind": "value",
+      "value": 1.7027027027027026,
+      "rtol": 0.0001
+    },
+    "pe_limit_rounding_width": {
+      "kind": "value",
+      "value": 0.04081632653061229,
+      "rtol": 0.0001
+    },
+    "D_axial_over_D_radial_high_Re": {
+      "kind": "value",
+      "value": 5.5,
+      "rtol": 0.0001
+    },
+    "pe_at_Re_1000": {
+      "kind": "value",
+      "value": 1.9862390966242638,
+      "rtol": 0.0001
+    },
+    "p_at_Re_1000_rel_dev": {
+      "kind": "value",
+      "value": -0.01565143155977977,
+      "rtol": 0.0001
+    },
+    "fraction_of_p_excursion_1_to_200": {
+      "kind": "value",
+      "value": 0.8869204367128888,
+      "rtol": 0.0001
+    },
+    "liquid_gas_max_ratio": {
+      "kind": "value",
+      "value": 10.8909486816592,
+      "rtol": 0.0001
+    },
+    "liquid_gas_max_reynolds": {
+      "kind": "value",
+      "value": 3.1662275091286887,
+      "rtol": 0.0001
+    },
+    "liquid_gas_crossover_reynolds": {
+      "kind": "value",
+      "value": 0.17714316047995754,
+      "rtol": 0.0001
+    },
+    "liquid_gas_ratio_at_Re_300": {
+      "kind": "value",
+      "value": 1.0835650433345156,
+      "rtol": 0.0001
+    },
+    "liquid_gas_ratio_at_Re_1000": {
+      "kind": "value",
+      "value": 1.0246770949091082,
+      "rtol": 0.0001
+    },
+    "eq1_peclet_maximum": {
+      "kind": "value",
+      "value": 4.5274016284236485,
+      "rtol": 0.0001
+    },
+    "eq1_peclet_maximum_reynolds": {
+      "kind": "value",
+      "value": 3.1513124640023733,
+      "rtol": 0.0001
+    },
+    "eq1_peclet_minimum": {
+      "kind": "value",
+      "value": 1.8886288686655746,
+      "rtol": 0.0001
+    },
+    "eq1_peclet_minimum_reynolds": {
+      "kind": "value",
+      "value": 59.65659637491978,
+      "rtol": 0.0001
+    },
+    "reynolds_pe_within_5e-4_of_2": {
+      "kind": "value",
+      "value": 28487.698758767696,
+      "rtol": 0.0001
+    },
+    "wall_velocity_ratio_rel_dev": {
+      "kind": "value",
+      "value": -0.002450980392157076,
+      "rtol": 0.0001
+    },
+    "tau_inverse_vs_er_gamma_rel_dev": {
+      "kind": "value",
+      "value": -0.021526418786692703,
+      "rtol": 0.0001
+    },
+    "low_re_slope_gunn_over_er": {
+      "kind": "value",
+      "value": 1.107135135135135,
+      "rtol": 0.0001
+    },
+    "p_at_Re_1_rel_dev": {
+      "kind": "value",
+      "value": 7.328204709722286e-11,
+      "rtol": 0.01,
+      "note": "(0.33/0.17) exp(-24): the plateau below Re = 1"
+    },
+    "pe_limit_vs_eq1_worst_rel_dev": {
+      "kind": "bound",
+      "value": 7.205713903335464e-08,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "eq. (1) at Re = 1e8 approaches its limit as 1/Re"
+    },
+    "pe_limit_spheres_over_solid_worst_rounding": {
+      "kind": "bound",
+      "value": 1.0834376303712974,
+      "min": 1.0,
+      "basis": "theory",
+      "note": "the order of two shapes' limits survives the rounding of both"
+    },
+    "pe_limit_solid_over_hollow_worst_rounding": {
+      "kind": "bound",
+      "value": 1.3349282296650715,
+      "min": 1.0,
+      "basis": "theory",
+      "note": "the order of two shapes' limits survives the rounding of both"
+    },
+    "eq1_vs_eq42_identity": {
+      "kind": "bound",
+      "value": 1.1604783800578389e-10,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "algebraically identical forms; the gap is round-off in their cancellation"
+    },
+    "expm1_vs_naive_exp_worst": {
+      "kind": "bound",
+      "value": 1.6828824291881261e-06,
+      "min": 1e-07,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "exp(x) - 1 at |x| near 1e-10 loses about 1e-16/|x|"
+    },
+    "liquid_gas_crossings": {
+      "kind": "exact",
+      "value": 1,
+      "note": "sign changes of the liquid/gas ratio minus one on Re = 1e-3 to 1e6"
+    },
+    "stated_numbers_within_half_unit": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.39999999999999947,
+      "min_margin": 0.1,
+      "note": "half-units of the last printed digit; margin to 1 half-unit"
+    },
+    "stated_numbers_worst_rel_dev": {
+      "kind": "value",
+      "value": 0.11428419760021236,
+      "rtol": 0.0001
+    },
+    "pe_axial_operating_point": {
+      "kind": "value",
+      "value": 1.892035868553851,
+      "rtol": 0.0001
+    },
+    "pe_radial_operating_point": {
+      "kind": "value",
+      "value": 13.222570523081918,
+      "rtol": 0.0001
+    },
+    "table1_worst_row_spread": {
+      "kind": "value",
+      "value": 0.15999999999999992,
+      "rtol": 0.0001
+    },
+    "table1_mean_row_spread": {
+      "kind": "value",
+      "value": 0.1055511781978074,
+      "rtol": 0.0001
+    },
+    "table1_mean_vs_stated_rel_dev": {
+      "kind": "value",
+      "value": -0.030000000000000027,
+      "rtol": 0.0001
+    },
+    "table1_rows_counterdiffusion_largest": {
+      "kind": "exact",
+      "value": 4
+    },
+    "eq1_vs_fig9_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.2030377074154931,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_bias": {
+      "kind": "value",
+      "value": 0.1577219837487796,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_bias_over_se": {
+      "kind": "value",
+      "value": 4.7499453344061235,
+      "rtol": 0.0001
+    },
+    "eq18_vs_fig9_mean_abs_dev_recomputed": {
+      "kind": "value",
+      "value": 0.11749472960042173,
+      "rtol": 0.0001
+    },
+    "null_p_frozen_low_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.24877066545038562,
+      "rtol": 0.0001
+    },
+    "null_p_frozen_high_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.6762627345421665,
+      "rtol": 0.0001
+    },
+    "null_eq15_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.2991314100228333,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_value": {
+      "kind": "value",
+      "value": 0.07928833726351582,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.2295726893111086,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_sensitivity": {
+      "kind": "value",
+      "value": 0.0005420566233955426,
+      "rtol": 0.0001
+    },
+    "p_cost_vs_free_constant": {
+      "kind": "value",
+      "value": 0.02653498189561561,
+      "rtol": 0.0001
+    },
+    "p_cost_vs_free_constant_over_se": {
+      "kind": "value",
+      "value": 0.8880313018808842,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_eps_034": {
+      "kind": "value",
+      "value": 0.26618508496482324,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_eps_040": {
+      "kind": "value",
+      "value": 0.1754755089262217,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_best_eps": {
+      "kind": "value",
+      "value": 0.4428582101519787,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_at_best_eps": {
+      "kind": "value",
+      "value": 0.16383640576584996,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_best_eps": {
+      "kind": "value",
+      "value": 0.43286213317382943,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_best_p": {
+      "kind": "value",
+      "value": 0.15996940709280558,
+      "rtol": 0.0001
+    },
+    "null_free_constant_p_best_eps_mean_abs_dev": {
+      "kind": "value",
+      "value": 0.21006004267305656,
+      "rtol": 0.0001
+    },
+    "p_cost_at_preferred_eps": {
+      "kind": "value",
+      "value": 0.04622363690720662,
+      "rtol": 0.0001
+    },
+    "p_cost_at_preferred_eps_over_se": {
+      "kind": "value",
+      "value": 2.589109469710533,
+      "rtol": 0.0001
+    },
+    "fraction_of_p_excursion_sampled": {
+      "kind": "value",
+      "value": 0.6135033777194118,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_shift_minus5px": {
+      "kind": "value",
+      "value": 0.21590439752517343,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_shift_plus5px": {
+      "kind": "value",
+      "value": 0.1927372721134043,
+      "rtol": 0.0001
+    },
+    "eq1_vs_fig9_mad_fused_included": {
+      "kind": "value",
+      "value": 0.20651894744475952,
+      "rtol": 0.0001
+    },
+    "resc_min": {
+      "kind": "value",
+      "value": 0.0065988999999999996,
+      "rtol": 0.0001
+    },
+    "resc_max": {
+      "kind": "value",
+      "value": 37.824709999999996,
+      "rtol": 0.0001
+    },
+    "resc_median": {
+      "kind": "value",
+      "value": 1.3967800000000001,
+      "rtol": 0.0001
+    },
+    "n_fig9_markers_used": {
+      "kind": "exact",
+      "value": 55
+    },
+    "n_resc_below_1": {
+      "kind": "exact",
+      "value": 26,
+      "margin": 0.010548000000000002,
+      "min_margin": 0.01
+    },
+    "n_resc_below_10": {
+      "kind": "exact",
+      "value": 47,
+      "margin": 0.01786499999999993,
+      "min_margin": 0.01
+    },
+    "null_free_constant_p_local_minima": {
+      "kind": "exact",
+      "value": 2,
+      "note": "local minima of the mean absolute deviation on the scan of p"
+    },
+    "eq1_vs_fig9_eps_local_minima": {
+      "kind": "exact",
+      "value": 1,
+      "note": "local minima of the mean absolute deviation on the scan of eps"
+    },
+    "bias_resolved": {
+      "kind": "exact",
+      "value": true,
+      "margin": 2.7499453344061235,
+      "min_margin": 0.2,
+      "note": "mean bias beyond two standard errors of the mean"
+    },
+    "p_cost_resolved_at_assumed_eps": {
+      "kind": "exact",
+      "value": false,
+      "margin": 1.111968698119116,
+      "min_margin": 0.2,
+      "note": "p(Re) against a free constant p, two standard errors of the paired difference"
+    },
+    "p_cost_resolved_at_preferred_eps": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.5891094697105328,
+      "min_margin": 0.2,
+      "note": "the same, each model at the porosity it prefers"
+    },
+    "eq18_recompute_vs_A25_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the same arithmetic on the same file as A2.5's committed claims"
+    },
+    "eq18_peak_vs_A25_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "closed-form maximum against A2.5's committed root"
+    },
+    "derivative_vs_mpmath": {
+      "kind": "bound",
+      "value": 1.2786739100625247e-09,
+      "max": 1e-07,
+      "basis": "tolerance",
+      "note": "analytic d(D/Ud)/dRe against mpmath, scaled by D/(Ud)/Re"
+    },
+    "eq17_identities_worst": {
+      "kind": "bound",
+      "value": 1.338583107204916e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "eq. (17) in eq. (16) and in the Danckwerts inlet, algebraically"
+    },
+    "eq17_flat_sup_error": {
+      "kind": "value",
+      "value": 7.454003148028915e-07,
+      "rtol": 0.001
+    },
+    "bessel_mode_sup_error": {
+      "kind": "value",
+      "value": 2.89561834273328e-05,
+      "rtol": 0.001
+    },
+    "eq17_flat_outlet_rel_err": {
+      "kind": "value",
+      "value": 9.701232702719054e-07,
+      "rtol": 0.001
+    },
+    "bessel_outlet_rel_err": {
+      "kind": "value",
+      "value": 0.0002021189608090168,
+      "rtol": 0.001
+    },
+    "v5_order_min": {
+      "kind": "bound",
+      "value": 1.9872735178903949,
+      "min": 1.9,
+      "basis": "theory",
+      "note": "second order; successive differences of the outlet amplitude, four ladders"
+    },
+    "v5_order_max": {
+      "kind": "bound",
+      "value": 2.0049141128671244,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second order; successive differences of the outlet amplitude, four ladders"
+    },
+    "newton_vs_deferred_gap": {
+      "kind": "bound",
+      "value": 2.4091839634365897e-14,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "two solvers of the same limited equations, step tolerance 1e-12"
+    },
+    "ladder_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 16494148.986175114,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "last-step difference of every ladder over the two-route gap"
+    },
+    "newton_iterations_worst": {
+      "kind": "bound",
+      "value": 5.0,
+      "max": 8.0,
+      "basis": "chosen",
+      "note": "Newton from the upwind solution with the exact ConvFluxTVD Jacobian"
+    },
+    "bessel_break_nu0_factor": {
+      "kind": "value",
+      "value": 2646.0331521928656,
+      "rtol": 0.001
+    },
+    "eq17_break_nu0_factor": {
+      "kind": "bound",
+      "value": 1.0000000046713158,
+      "min": 0.999999,
+      "max": 1.000001,
+      "basis": "identity",
+      "note": "a flat feed has no radial gradient, so the radial operator is idle"
+    },
+    "bessel_break_zerograd_factor": {
+      "kind": "value",
+      "value": 23.268286713251417,
+      "rtol": 0.001
+    },
+    "eq17_break_dirichlet_factor": {
+      "kind": "value",
+      "value": 14034.404314011575,
+      "rtol": 0.001
+    },
+    "bessel_break_upwind_factor": {
+      "kind": "value",
+      "value": 63.64927403766831,
+      "rtol": 0.001
+    },
+    "bessel_break_n_r_5_factor": {
+      "kind": "value",
+      "value": 251.53792268280944,
+      "rtol": 0.001
+    },
+    "bessel_consistent_DR_move": {
+      "kind": "value",
+      "value": 0.06332131851141654,
+      "rtol": 0.001
+    },
+    "bessel_consistent_D_move": {
+      "kind": "bound",
+      "value": 5.814479211130319e-05,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "a D wrong in operator and closed form alike barely moves the 2-D check"
+    },
+    "bessel_break_DR_operator_only_factor": {
+      "kind": "value",
+      "value": 445.3395423644975,
+      "rtol": 0.001
+    },
+    "eq17_break_DR_operator_only_factor": {
+      "kind": "bound",
+      "value": 1.000000003465815,
+      "min": 0.999999,
+      "max": 1.000001,
+      "basis": "identity",
+      "note": "a flat feed has no radial gradient, so the radial operator is idle"
+    },
+    "bessel_break_D_operator_only_factor": {
+      "kind": "value",
+      "value": 53.73694395277483,
+      "rtol": 0.001
+    },
+    "eq17_break_D_operator_only_factor": {
+      "kind": "value",
+      "value": 1369.1896509481983,
+      "rtol": 0.001
+    },
+    "wall_channel_cost_with_radial": {
+      "kind": "value",
+      "value": 0.011423588141056928,
+      "rtol": 0.001
+    },
+    "wall_channel_cost_without_radial": {
+      "kind": "value",
+      "value": 0.05461434927651321,
+      "rtol": 0.001
+    },
+    "wall_cost_gunn_ratio_with_radial": {
+      "kind": "value",
+      "value": 9.32394192032504e-06,
+      "rtol": 0.001
+    },
+    "wall_cost_gunn_ratio_without_radial": {
+      "kind": "value",
+      "value": 5.2095848294575475e-05,
+      "rtol": 0.001
+    },
+    "radial_erosion_fraction": {
+      "kind": "value",
+      "value": 0.7908317449097646,
+      "rtol": 0.001
+    },
+    "wall_cost_local_inlet_with_radial": {
+      "kind": "value",
+      "value": 0.011303787355437578,
+      "rtol": 0.001
+    },
+    "wall_cost_local_inlet_without_radial": {
+      "kind": "value",
+      "value": 0.05482139044857748,
+      "rtol": 0.001
+    },
+    "local_inlet_effect": {
+      "kind": "value",
+      "value": 0.010487141530320154,
+      "rtol": 0.001
+    },
+    "wall_cost_n_r_40": {
+      "kind": "value",
+      "value": 0.011569782837713039,
+      "rtol": 0.001
+    },
+    "wall_cost_richardson_estimate": {
+      "kind": "value",
+      "value": 0.011413558001976775,
+      "rtol": 0.001
+    },
+    "wall_cost_grid_error": {
+      "kind": "value",
+      "value": 0.0008787916159374021,
+      "rtol": 0.05
+    },
+    "wall_cost_r_order_min": {
+      "kind": "bound",
+      "value": 1.9649398857501579,
+      "min": 1.8,
+      "basis": "theory",
+      "note": "second order in the radial grid, the annulus edge on a cell face"
+    },
+    "wall_cost_r_order_max": {
+      "kind": "bound",
+      "value": 1.9806051536173632,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "second order in the radial grid, the annulus edge on a cell face"
+    },
+    "zerograd_outlet_error_short_bed": {
+      "kind": "value",
+      "value": 0.010352855105457248,
+      "rtol": 0.001
+    },
+    "zerograd_outlet_error_long_bed": {
+      "kind": "value",
+      "value": 0.010352848145797067,
+      "rtol": 0.001
+    },
+    "zerograd_outlet_error_length_spread": {
+      "kind": "bound",
+      "value": 6.722459446883988e-07,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "the length dependence the page calls none, over L/d = 5 to 200"
+    },
+    "zerograd_error_at_probe_5d_bed": {
+      "kind": "value",
+      "value": 0.0015024032091357498,
+      "rtol": 0.001
+    },
+    "zerograd_error_interior_10d_bed": {
+      "kind": "value",
+      "value": 9.65255528839748e-08,
+      "rtol": 0.001
+    },
+    "zerograd_error_interior_long_beds": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-14,
+      "basis": "theory",
+      "note": "the outlet perturbation decays over a few dispersion lengths; round-off"
+    },
+    "zerograd_error_over_lambda_D_U_min": {
+      "kind": "value",
+      "value": 0.912041063805819,
+      "rtol": 0.001
+    },
+    "zerograd_error_over_lambda_D_U_max": {
+      "kind": "value",
+      "value": 0.9997357845024021,
+      "rtol": 0.001
+    },
+    "eq18_vs_eq17_outlet_worst": {
+      "kind": "value",
+      "value": 1.2181934183619347e-07,
+      "rtol": 0.001
+    },
+    "one_vs_twenty_radial_cells": {
+      "kind": "bound",
+      "value": 4.0745185003743245e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "flat feed and uniform velocity: no radial gradient"
+    },
+    "outlet_error_collocation": {
+      "kind": "value",
+      "value": 0.010352884211668245,
+      "rtol": 0.0001
+    },
+    "outlet_error_fv_vs_collocation": {
+      "kind": "value",
+      "value": -3.4836544737792963e-06,
+      "rtol": 0.05
+    },
+    "outlet_error_centre_vs_collocation_h8": {
+      "kind": "value",
+      "value": -0.11421788861033699,
+      "rtol": 0.001
+    },
+    "outlet_error_centre_vs_collocation_h32": {
+      "kind": "value",
+      "value": -0.02974183737129965,
+      "rtol": 0.001
+    },
+    "wall_cost_no_radial_collocation": {
+      "kind": "value",
+      "value": 0.05461426501161304,
+      "rtol": 0.0001
+    },
+    "wall_cost_fv_vs_collocation": {
+      "kind": "value",
+      "value": 1.5429100830299802e-06,
+      "rtol": 0.05
+    },
+    "collocation_rms_worst": {
+      "kind": "bound",
+      "value": 9.962926604923424e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "solve_bvp tol 1e-10"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "pe_limit_spheres": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')"
+    ],
+    "pe_limit_solid_cylinders": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (4)'s 0.29 read as 0.33"
+    ],
+    "pe_limit_hollow_cylinders": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (5)'s 0.20 read as 0.29"
+    ],
+    "pe_limit_spread_spheres_over_hollow": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (5)'s 0.20 read as 0.29"
+    ],
+    "pe_limit_rounding_width": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')"
+    ],
+    "D_axial_over_D_radial_high_Re": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (10)'s 29 read as 2.9"
+    ],
+    "pe_at_Re_1000": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "'approaching 1000' read as 100",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "p_at_Re_1000_rel_dev": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4"
+    ],
+    "fraction_of_p_excursion_1_to_200": [
+      "eq. (3)'s 24 read as 2.4",
+      "'Re = 1 to 200' read as 1 to 20"
+    ],
+    "liquid_gas_max_ratio": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "liquid_gas_max_reynolds": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "liquid_gas_crossover_reynolds": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "liquid_gas_ratio_at_Re_300": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "'Re < 300' read as 30",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "liquid_gas_ratio_at_Re_1000": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "eq1_peclet_maximum": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "eq1_peclet_maximum_reynolds": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "eq1_peclet_minimum": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "eq1_peclet_minimum_reynolds": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "reynolds_pe_within_5e-4_of_2": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "wall_velocity_ratio_rel_dev": [
+      "wall porosity 0.6 read as 0.5",
+      "Price's 1.65 read as 1.56"
+    ],
+    "tau_inverse_vs_er_gamma_rel_dev": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "E&R's gamma 0.73 read as 0.78"
+    ],
+    "low_re_slope_gunn_over_er": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "porosity 0.37 taken as 0.50",
+      "E&R's 0.38 read as 0.83"
+    ],
+    "p_at_Re_1_rel_dev": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4"
+    ],
+    "pe_limit_vs_eq1_worst_rel_dev": [
+      "eq. (3)'s 24 read as 2.4",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "pe_limit_spheres_over_solid_worst_rounding": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "eq. (4)'s 0.29 read as 0.33"
+    ],
+    "pe_limit_solid_over_hollow_worst_rounding": [
+      "eq. (5)'s 0.20 read as 0.29"
+    ],
+    "eq1_vs_eq42_identity": [
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere",
+      "eq. (42) read with alpha_1 of J_1 (one reading differs)"
+    ],
+    "expm1_vs_naive_exp_worst": [
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere"
+    ],
+    "liquid_gas_crossings": [
+      "liquid Sc taken as the gas value",
+      "exp(x) - 1 written literally everywhere"
+    ],
+    "stated_numbers_within_half_unit": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "'Re ~ 3' read as 8",
+      "'about 10 %' read as 1 %",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere",
+      "SA201's 0.075 read as 0.0075",
+      "the two printed em dashes read as zeros",
+      "LA623's 0.139 read as 0.119"
+    ],
+    "stated_numbers_worst_rel_dev": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "liquid Sc 800 read as 80",
+      "liquid Sc taken as the gas value",
+      "'Re ~ 3' read as 8",
+      "'about 10 %' read as 1 %",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "exp(x) - 1 written literally everywhere",
+      "porosity 0.37 taken as 0.50",
+      "the two printed em dashes read as zeros"
+    ],
+    "pe_axial_operating_point": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "pe_radial_operating_point": [
+      "eq. (10)'s 29 read as 2.9",
+      "Sc 0.77 read as 7.7",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "table1_worst_row_spread": [
+      "SA201's 0.075 read as 0.0075",
+      "the two printed em dashes read as zeros"
+    ],
+    "table1_mean_row_spread": [
+      "SA201's 0.075 read as 0.0075",
+      "the two printed em dashes read as zeros",
+      "LA623's 0.139 read as 0.119"
+    ],
+    "table1_mean_vs_stated_rel_dev": [
+      "'about 10 %' read as 1 %",
+      "SA201's 0.075 read as 0.0075",
+      "the two printed em dashes read as zeros",
+      "LA623's 0.139 read as 0.119"
+    ],
+    "table1_rows_counterdiffusion_largest": [
+      "LA623's 0.139 read as 0.119"
+    ],
+    "eq1_vs_fig9_mean_abs_dev": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_bias": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_bias_over_se": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq18_vs_fig9_mean_abs_dev_recomputed": [
+      "E&R's eq. (18) 5.0 read as 0.5",
+      "E&R's 0.38 read as 0.83",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_p_frozen_low_mean_abs_dev": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_p_frozen_high_mean_abs_dev": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_eq15_mean_abs_dev": [
+      "E&R's 0.38 read as 0.83",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_value": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_mean_abs_dev": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_sensitivity": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "p_cost_vs_free_constant": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "p_cost_vs_free_constant_over_se": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_mad_eps_034": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_mad_eps_040": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_best_eps": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq1_vs_fig9_mad_at_best_eps": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_best_eps": [
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_best_p": [
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "null_free_constant_p_best_eps_mean_abs_dev": [
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "p_cost_at_preferred_eps": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "p_cost_at_preferred_eps_over_se": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "fraction_of_p_excursion_sampled": [
+      "eq. (3)'s 24 read as 2.4"
+    ],
+    "eq1_vs_fig9_mad_shift_minus5px": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)",
+      "Pe-axis calibration read as the Re axis's 597.78 px per decade"
+    ],
+    "eq1_vs_fig9_mad_shift_plus5px": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)",
+      "Pe-axis calibration read as the Re axis's 597.78 px per decade"
+    ],
+    "eq1_vs_fig9_mad_fused_included": [
+      "eq. (3)'s 0.33 read as eq. (4)'s 0.29",
+      "eq. (3)'s 0.33 read as 0.30",
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "resc_min": [
+      "Sc 0.77 read as 7.7"
+    ],
+    "resc_max": [
+      "Sc 0.77 read as 7.7"
+    ],
+    "resc_median": [
+      "Sc 0.77 read as 7.7",
+      "the fused glyph at Re = 1.76 included"
+    ],
+    "n_fig9_markers_used": [
+      "the fused glyph at Re = 1.76 included"
+    ],
+    "n_resc_below_1": [
+      "Sc 0.77 read as 7.7"
+    ],
+    "n_resc_below_10": [
+      "Sc 0.77 read as 7.7",
+      "the fused glyph at Re = 1.76 included"
+    ],
+    "null_free_constant_p_local_minima": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "porosity 0.37 taken as 0.50",
+      "the fused glyph at Re = 1.76 included"
+    ],
+    "eq1_vs_fig9_eps_local_minima": [
+      "eq. (3)'s 24 read as 2.4",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0"
+    ],
+    "bias_resolved": [
+      "the radial tortuosity 1.2 used for the axial branch",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "p_cost_resolved_at_assumed_eps": [
+      "p_offset 0.17 read as 0.11 (the text layer renders it 'O.i7')",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "porosity 0.37 taken as 0.50"
+    ],
+    "p_cost_resolved_at_preferred_eps": [
+      "eq. (3)'s 24 read as 2.4",
+      "the radial tortuosity 1.2 used for the axial branch",
+      "Sc 0.77 read as 7.7",
+      "alpha_1 taken as the first root of J_1, not J_0",
+      "eq. (1)'s second term dropped"
+    ],
+    "eq18_recompute_vs_A25_gap": [
+      "E&R's eq. (18) 5.0 read as 0.5",
+      "E&R's 0.38 read as 0.83",
+      "the fused glyph at Re = 1.76 included",
+      "every marker 5 px higher (ink centroid against box)"
+    ],
+    "eq18_peak_vs_A25_gap": [
+      "E&R's eq. (18) 5.0 read as 0.5",
+      "E&R's 0.38 read as 0.83"
+    ],
+    "bessel_break_nu0_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "eq17_break_nu0_factor": [
+      "eq. (17)'s check run with the 1.65 wall channel in the flat bed"
+    ],
+    "bessel_break_zerograd_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "eq17_break_dirichlet_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "bessel_break_upwind_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "bessel_break_n_r_5_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "bessel_consistent_DR_move": [
+      "closed form built with the unperturbed coefficient (operator only)"
+    ],
+    "bessel_consistent_D_move": [
+      "closed form built with the unperturbed coefficient (operator only)"
+    ],
+    "bessel_break_DR_operator_only_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "eq17_break_DR_operator_only_factor": [
+      "eq. (17)'s check run with the 1.65 wall channel in the flat bed"
+    ],
+    "bessel_break_D_operator_only_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "eq17_break_D_operator_only_factor": [
+      "reference grid (400, 20) and (800, 40) instead of (800, 20) and (800, 80)"
+    ],
+    "eq17_flat_sup_error": [
+      "bare first-order upwind"
+    ],
+    "eq17_flat_outlet_rel_err": [
+      "bare first-order upwind"
+    ],
+    "bessel_mode_sup_error": [
+      "nu = 0 on the radial divergence"
+    ],
+    "bessel_outlet_rel_err": [
+      "nu = 0 on the radial divergence"
+    ],
+    "v5_order_min": [
+      "bare first-order upwind on the four ladders"
+    ],
+    "v5_order_max": [
+      "ladder refinement ratio stated as 1.5 instead of 2"
+    ],
+    "newton_vs_deferred_gap": [
+      "deferred correction stopped at a change of 1e-6"
+    ],
+    "ladder_finest_over_roundoff": [
+      "deferred correction stopped at a change of 1e-6"
+    ],
+    "newton_iterations_worst": [
+      "Newton with the upwind Jacobian (no limiter derivative)"
+    ],
+    "eq17_identities_worst": [
+      "lambda of eq. (17) with the sign of U/2D flipped"
+    ],
+    "derivative_vs_mpmath": [
+      "analytic derivative with alpha_1 of J_1, mpmath with J_0"
+    ],
+    "wall_channel_cost_with_radial": [
+      "radial dispersion switched off",
+      "Danckwerts inlet written with the local u(r)",
+      "wall region 0.5d read as 1.0d"
+    ],
+    "wall_cost_gunn_ratio_with_radial": [
+      "radial dispersion switched off",
+      "wall porosity 0.6 read as 0.5 in the wall runs"
+    ],
+    "wall_cost_local_inlet_with_radial": [
+      "radial dispersion switched off"
+    ],
+    "local_inlet_effect": [
+      "radial dispersion switched off"
+    ],
+    "radial_erosion_fraction": [
+      "radial dispersion switched off",
+      "Danckwerts inlet written with the local u(r)",
+      "wall region 0.5d read as 1.0d"
+    ],
+    "wall_channel_cost_without_radial": [
+      "Danckwerts inlet written with the local u(r)",
+      "wall region 0.5d read as 1.0d"
+    ],
+    "wall_cost_no_radial_collocation": [
+      "wall region 0.5d read as 1.0d"
+    ],
+    "wall_cost_gunn_ratio_without_radial": [
+      "wall porosity 0.6 read as 0.5 in the wall runs"
+    ],
+    "wall_cost_richardson_estimate": [
+      "radial ladder with the annulus edge inside a cell (n_r = 21 to 168)"
+    ],
+    "wall_cost_n_r_40": [
+      "radial ladder with the annulus edge inside a cell (n_r = 21 to 168)"
+    ],
+    "wall_cost_r_order_min": [
+      "radial ladder refinement ratio stated as 2.5 instead of 2"
+    ],
+    "wall_cost_r_order_max": [
+      "radial ladder refinement ratio stated as 1.5 instead of 2"
+    ],
+    "wall_cost_grid_error": [
+      "wall numbers on 80 radial cells instead of 160"
+    ],
+    "wall_cost_local_inlet_without_radial": [
+      "wall region 0.5d read as 1.0d, local inlet"
+    ],
+    "wall_cost_fv_vs_collocation": [
+      "pymrm cup read at the last cell centre"
+    ],
+    "zerograd_outlet_error_short_bed": [
+      "eq. (18) written with 1.1 lambda"
+    ],
+    "zerograd_outlet_error_long_bed": [
+      "eq. (18) written with 1.1 lambda"
+    ],
+    "eq18_vs_eq17_outlet_worst": [
+      "eq. (18) written with 1.1 lambda"
+    ],
+    "zerograd_error_over_lambda_D_U_min": [
+      "eq. (18) written with 1.1 lambda"
+    ],
+    "zerograd_error_over_lambda_D_U_max": [
+      "eq. (18) written with 1.1 lambda"
+    ],
+    "outlet_error_fv_vs_collocation": [
+      "eq. (18) written with 1.1 lambda",
+      "outlet values read at the last cell centre"
+    ],
+    "zerograd_outlet_error_length_spread": [
+      "bed length swept at fixed kL/U instead of fixed k"
+    ],
+    "zerograd_error_interior_10d_bed": [
+      "probe one diameter from the outlet instead of at z = 4"
+    ],
+    "zerograd_error_at_probe_5d_bed": [
+      "probe one diameter from the outlet instead of at z = 4"
+    ],
+    "zerograd_error_interior_long_beds": [
+      "probe one diameter from the outlet instead of at z = 4"
+    ],
+    "one_vs_twenty_radial_cells": [
+      "flat check run with the 1.65 wall channel"
+    ],
+    "outlet_error_centre_vs_collocation_h8": [
+      "the 'centre' read taken on the face"
+    ],
+    "outlet_error_centre_vs_collocation_h32": [
+      "the 'centre' read taken on the face"
+    ],
+    "outlet_error_collocation": [
+      "eq. (18) in the collocation reference with its sign flipped"
+    ],
+    "collocation_rms_worst": [
+      "collocation tolerance 1e-6"
+    ]
   }
 }
