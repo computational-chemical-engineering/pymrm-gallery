@@ -2555,12 +2555,16 @@ models:
     slug: wakao-funazkri
     title: "Wakao–Funazkri particle–fluid mass and heat transfer"
     description: >
-      Sh = 2 + 1.1 Sc^(1/3) Re^0.6, rebuilt from the re-analysis that produced it.
-      The bed model the paper inverts by hand — steady 1-D convection–diffusion–
-      reaction with Danckwerts boundary conditions — is solved with pymrm, so the
-      paper's own closed form becomes a validation target and the inversion becomes
-      a root find. Both figures the correlation rests on are digitised, including
-      the liquid-phase Figure 3 the two constants were actually fitted on.
+      `Sh = 2 + 1.1 Sc^(1/3) Re^0.6`, rebuilt from the re-analysis that produced it.
+      The bed model the paper inverts by hand, steady 1-D convection-diffusion-
+      reaction with Danckwerts boundary conditions, is solved with pymrm on a grid
+      ladder, which shows the paper's closed form to be its solution; the
+      inversions are root finds on that closed form, and the re-analysis is
+      repeated on the pymrm solve. Eq. (11) re-analysed with eq. (2) returns
+      eq. (12) to 1.67 % <!-- claim: eq11_reanalysed_vs_eq12_mean_abs_dev_logRe -->
+      on average. Both figures the correlation rests on are digitised; with beta
+      held at the printed value the liquid-phase Figure 3 returns
+      alpha = 1.1000 <!-- claim: refit_liquid_alpha_beta_fixed -->.
     section: A
     status: published
     page: pages/A3.4-wakao-funazkri/
@@ -2576,7 +2580,9 @@ models:
       - construct_grad
       - construct_div
       - construct_convflux_upwind
-      - construct_boundary_value_matrices
+      - compute_boundary_values
+      - pymrm.checks.find_roots
+      - pymrm.checks.observed_orders
     reference:
       authors: ["Wakao, N.", "Funazkri, T."]
       year: 1978
@@ -2588,11 +2594,12 @@ models:
       status: provisional
       note: >
         Two digitised figures, both pending maintainer confirmation. Figure 2
-        (79 gas markers) was reviewed on 2026-08-02 and re-extracted by shape fit
-        in response; Figure 3 (182 liquid markers at the shipped erasure band,
-        plus five further marker sets shipped as a systematic-uncertainty sweep,
-        plus the drawn correlation traced as a calibration control) is new. The
-        three results that carry the page use no data at all.
+        (79 <!-- claim: n_fig2_markers --> gas markers) was reviewed on 2026-08-02
+        and re-extracted by shape fit in response; Figure 3
+        (182 <!-- claim: n_fig3_markers --> liquid markers at the shipped erasure
+        band, plus five further marker sets shipped as a systematic-uncertainty
+        sweep, plus the drawn correlation traced as a calibration control) is not
+        yet reviewed. The three results that carry the page use no data at all.
     related: [A3.5, D1.3, B1.1, A2.3]
 
   - id: B1.1
