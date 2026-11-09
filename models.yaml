@@ -1930,20 +1930,22 @@ models:
       Nu = 2 + 0.6 Re^(1/2) Pr^(1/3) taken apart constant by constant. The 0.60 is
       FITTED to the very tables any comparison would use, the 1/2 and 1/3 are
       Froessling's assumptions and cannot be identified from the transcribed tables, and
-      the 2.0 is the one piece of theory - so it is the only constant these rows can
-      decide. Extrapolated to Re = 0, the paper's heat-transfer runs give 2.058 and its
-      benzene mass-transfer runs 2.052 - the same answer within the noise - while its
-      water mass-transfer runs give 1.732, thirteen per cent low and about twenty times
-      the run-to-run scatter. The authors saw that gap and named its likeliest cause
-      ("inaccurate values of diffusivity"); what this page adds is the size, per species,
-      and the tension with the two conclusions they drew from it - the abstract's claim
-      to have verified the zero-Reynolds Nusselt number, and the claim that their water
-      vapour diffusivity may be the most accurate in the literature. pymrm recomputes the
-      2.0 from the spherical BVP it comes from and measures the solve against the exact
-      answer, then puts a number on the radial-convection factor Ranz said in 1993 the
+      the 2.0 is the one piece of theory, so it is the only constant these rows can
+      decide. Extrapolated to Re = 0, the paper's heat-transfer runs give
+      2.0582 <!-- claim: t1_heat_intercept_free --> and its benzene mass-transfer runs
+      2.0523 <!-- claim: t4_benzene_intercept_free -->, both consistent with 2.0, while
+      its water mass-transfer runs give 1.7322 <!-- claim: t1_mass_intercept_free -->,
+      -3.08 <!-- claim: mass_intercept_t_water --> standard errors from it. The authors
+      saw that gap and named its likeliest cause ("inaccurate values of diffusivity");
+      what this page adds is the size, per species, with its standard error, and the
+      tension with the two conclusions they drew from it: the abstract's claim to have
+      verified the zero-Reynolds Nusselt number, and the claim that their water vapour
+      diffusivity may be the most accurate in the literature. pymrm recomputes the 2.0
+      from the spherical BVP it comes from and measures the solve against the exact
+      answer, then confirms the closed form that sizes the radial-convection factor Ranz said in 1993 the
       papers had underplayed. Along the way the Reynolds column, over-determined by the
       columns printed beside it, gives up a convention neither part states for the
-      tables - the air properties were evaluated at the film temperature - confirmed
+      tables: the air properties were evaluated at the film temperature, confirmed
       against the one reference temperature Part II does print and tested out of sample
       on Table 3.
     section: A
@@ -1982,7 +1984,7 @@ models:
       - the stagnant-medium limit Nu = 2, computed from the spherical BVP rather than quoted
       - the radial-convection (Stefan) enhancement of Sh at a spherical boundary, and the
         log-mean film factor that removes it
-    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, compute_boundary_values]
     data: {tier: 3, method: table, status: complete}
     related: [A3.4, A3.1, A3.8, A2.3, B1.1, B3.1]
 
