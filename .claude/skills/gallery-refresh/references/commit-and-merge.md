@@ -16,12 +16,12 @@ git diff --cached --stat                                # nothing you did not me
 - Read the README `## Corrections` yourself. Each entry: old wording in quotes and
   exact, what is true stated, every number with a `<!-- claim: name -->` marker. A
   phrase like "under those assumptions" must have its assumptions inside the same entry.
-- `grep -n '—'` over the page files, the models.yaml entry and the new learnings rows.
-- After any edit to index.py: `jupytext --sync`, then `scripts/check_claims.py`.
-- `scripts/check_agreement.py --base origin/main` after staging: 0 regressions, or the
-  known pre-commit cases below.
-- Printed break-table counts, from the executed notebook outputs (the fixer may not
-  report them).
+- `python scripts/accept_page.py pages/<PAGE> --only sync,agreement,claims,stable,dashes,lint`
+  (seconds): every step PASS, agreement PASS or LOOK with only the known pre-commit
+  cases below, every LOOK line accounted for. Run it again after any edit of yours to
+  index.py.
+- The claim count and break-table line: `--only outputs` prints them from the
+  executed notebook without running it.
 
 ## Known checker behaviour
 
