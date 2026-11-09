@@ -1,44 +1,824 @@
 {
   "page": "A3.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "chu_identity_resid": 0.0,
-    "eq6_prefactor_rel_dev": -0.002834951204526037,
-    "eq9_prefactor_rel_dev": -0.00014009045767771067,
-    "eq7_from_printed_eq6_rel_dev": -0.47968372045572405,
-    "eq7_from_sigma_inverse_rel_dev": -0.05721750603194342,
-    "fallat_dev_sigma_inverse": 0.06383384972419015,
-    "fallat_dev_printed_eq7": 0.04618404113823993,
-    "pipe_cross_Re": 4479.881018930382,
-    "pipe_dev_at_claimed_Re": -0.08454012704540514,
-    "pipe_maxdev_over_range": 0.15174581058059688,
-    "eq10_implied_const": 32.335037288610344,
-    "eq10_exponent_resid": 0.0,
-    "ra_form_resid": 0.0,
-    "c28_rel_dev": -0.014285714285714346,
-    "c34_rel_dev": -0.0011807099289555811,
-    "froessling_implied_by_paper": 0.56,
-    "allen_quarter_from_drag_law": 0.26099117607792427,
-    "crossover_Sc": 6.184798848175141,
-    "eq2_window_hi_over_printed": 0.8963509142916364,
-    "eq2_window_lo_over_printed": 0.818415092152637,
-    "eq1_window_hi_over_printed": 0.9832362454385379,
-    "eq1_window_hi_printed_exponent": 21.18318275669489,
-    "baird_cross_d_water_cm": 0.13566410854775485,
-    "baird_ratio_at_5cm": 2.4639180536801306,
-    "sh_stagnant_extrap": 2.00001930268625,
-    "sh_stagnant_rel_dev": 9.651343124916778e-06,
-    "leveque_rel_err_raw": -0.0001427478381614833,
-    "leveque_rel_err_extrap": 7.715518844708669e-06,
-    "leveque_observed_order": 1.1068387110540685,
-    "higbie_rel_err_raw": -0.000160000559216944,
-    "higbie_rel_err_extrap": 7.498565241625954e-06,
-    "higbie_observed_order": 1.0936972951583683,
-    "exp_rigid": 0.6666666666673131,
-    "exp_mobile": 0.5000000369671027,
-    "exp_split_gap": 0.1666666297002104,
-    "exp_mobile_rel_dev": 7.393420542456397e-08,
-    "lambda_half": 0.27205293116283846,
-    "lambda_within_10pct_mobile": 1.5067893947326176,
-    "bl_domain_sensitivity": 8.36011135652015e-07
+    "c28_value": {
+      "kind": "value",
+      "value": 0.276,
+      "rtol": 1e-06
+    },
+    "c28_rel_dev": {
+      "kind": "value",
+      "value": -0.014285714285714346,
+      "rtol": 1e-06
+    },
+    "froessling_implied_by_paper": {
+      "kind": "value",
+      "value": 0.56,
+      "rtol": 1e-06
+    },
+    "froessling_implied_rel_dev": {
+      "kind": "value",
+      "value": 0.01449275362318847,
+      "rtol": 1e-06
+    },
+    "allen_quarter_from_drag_law": {
+      "kind": "value",
+      "value": 0.26099117607792427,
+      "rtol": 1e-06
+    },
+    "allen_quarter_rel_dev": {
+      "kind": "value",
+      "value": 0.04396470431169708,
+      "rtol": 1e-06
+    },
+    "c34_value": {
+      "kind": "value",
+      "value": 0.3395985586241551,
+      "rtol": 1e-06
+    },
+    "c34_rel_dev": {
+      "kind": "value",
+      "value": -0.0011807099289555811,
+      "rtol": 1e-06
+    },
+    "theory_brackets_fitted": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.0871574919047663,
+      "min_margin": 0.01,
+      "note": "0.276 < 0.31 < 0.340; margin the smaller relative gap"
+    },
+    "crossover_Sc": {
+      "kind": "value",
+      "value": 6.184798848175144,
+      "rtol": 1e-06
+    },
+    "data_sc_min_over_crossover": {
+      "kind": "value",
+      "value": 17.12124351126758,
+      "rtol": 1e-06
+    },
+    "data_sc_windows_above_crossover": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 16.12124351126758,
+      "min_margin": 1.0,
+      "note": "data sets whose lowest Schmidt number exceeds N_Sc*; margin relative"
+    },
+    "eq2_over_eq1_large_row_sc_min": {
+      "kind": "value",
+      "value": 2.9468932940702968,
+      "rtol": 1e-06
+    },
+    "eq2_over_eq1_large_row_sc_max": {
+      "kind": "value",
+      "value": 11.89456430348344,
+      "rtol": 1e-06
+    },
+    "eq2_window_lo_over_printed": {
+      "kind": "value",
+      "value": 0.818415092152637,
+      "rtol": 1e-06
+    },
+    "eq2_window_hi_over_printed": {
+      "kind": "value",
+      "value": 0.8963509142916364,
+      "rtol": 1e-06
+    },
+    "eq1_window_hi_over_printed": {
+      "kind": "value",
+      "value": 0.9832362454385379,
+      "rtol": 1e-06
+    },
+    "eq1_window_hi_printed_exponent": {
+      "kind": "value",
+      "value": 21.18318275669489,
+      "rtol": 1e-06
+    },
+    "eq1_window_hi_exponent_5": {
+      "kind": "value",
+      "value": 4.563778377630872,
+      "rtol": 1e-06
+    },
+    "small_row_exponent_selected": {
+      "kind": "exact",
+      "value": -6,
+      "margin": 1.50124501537633,
+      "min_margin": 0.5,
+      "note": "log distance of the window top to the printed ceiling; margin to the runner-up"
+    },
+    "eq6_prefactor_derived": {
+      "kind": "value",
+      "value": 0.31709848551696074,
+      "rtol": 1e-06
+    },
+    "eq6_prefactor_rel_dev": {
+      "kind": "value",
+      "value": -0.002834951204526037,
+      "rtol": 1e-06
+    },
+    "eq7_from_printed_eq6_rel_dev": {
+      "kind": "value",
+      "value": -0.47968372045572405,
+      "rtol": 1e-06
+    },
+    "eq7_from_sigma_inverse_rel_dev": {
+      "kind": "value",
+      "value": -0.05721750603194342,
+      "rtol": 1e-06
+    },
+    "fallat_dev_printed_eq7": {
+      "kind": "value",
+      "value": 0.04618404113823993,
+      "rtol": 1e-06
+    },
+    "fallat_dev_sigma_inverse": {
+      "kind": "value",
+      "value": 0.06383384972419015,
+      "rtol": 1e-06
+    },
+    "fallat_dev_chain": {
+      "kind": "value",
+      "value": 0.2799830802609288,
+      "rtol": 1e-06
+    },
+    "fallat_dev_eq8": {
+      "kind": "value",
+      "value": 0.03579997999625806,
+      "rtol": 1e-06
+    },
+    "eq9_prefactor_derived": {
+      "kind": "value",
+      "value": 0.05799187475345469,
+      "rtol": 1e-06
+    },
+    "eq9_prefactor_rel_dev": {
+      "kind": "value",
+      "value": -0.00014009045767771067,
+      "rtol": 1e-06
+    },
+    "pipe_cross_Re": {
+      "kind": "value",
+      "value": 4479.881018930379,
+      "rtol": 1e-06
+    },
+    "pipe_cross_Re_exact_exponent": {
+      "kind": "value",
+      "value": 3716.4408462585748,
+      "rtol": 1e-06
+    },
+    "pipe_claim_over_cross": {
+      "kind": "value",
+      "value": 2.232202140579977,
+      "rtol": 1e-06
+    },
+    "pipe_dev_at_claimed_Re": {
+      "kind": "value",
+      "value": -0.08454012704540514,
+      "rtol": 1e-06
+    },
+    "pipe_maxdev_over_range": {
+      "kind": "value",
+      "value": 0.15174581058059688,
+      "rtol": 1e-06
+    },
+    "pipe_maxdev_over_range_exact_exponent": {
+      "kind": "value",
+      "value": 0.1724896426004351,
+      "rtol": 1e-06
+    },
+    "pipe_maxdev_paper_direction": {
+      "kind": "value",
+      "value": 0.178891908196128,
+      "rtol": 1e-06
+    },
+    "eq10_implied_const": {
+      "kind": "value",
+      "value": 32.335037288610344,
+      "rtol": 1e-06
+    },
+    "pipe_deviation_changes_sign_in_range": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.35023648406894625,
+      "min_margin": 0.05,
+      "note": "crossing inside 2000-20,000; margin its log distance to the nearer end over the log width"
+    },
+    "pipe_maxdev_exceeds_claim": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.26454842150497404,
+      "min_margin": 0.05,
+      "note": "largest |deviation| over the stated range against 12 %; margin relative"
+    },
+    "chu_identity_resid": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "exact rational arithmetic at two points; nonzero only for a transcription error"
+    },
+    "eq10_exponent_resid": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "exact rational arithmetic at two points; nonzero only for a transcription error"
+    },
+    "ra_form_resid": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "exact rational arithmetic at two points; nonzero only for a transcription error"
+    },
+    "baird_cross_d_water_cm": {
+      "kind": "value",
+      "value": 0.13566410854775485,
+      "rtol": 1e-06
+    },
+    "baird_cross_d_spread": {
+      "kind": "value",
+      "value": 22.18460059543726,
+      "rtol": 1e-06
+    },
+    "baird_ratio_at_5cm": {
+      "kind": "value",
+      "value": 2.4639180536801306,
+      "rtol": 1e-06
+    },
+    "n_baird_crossings_inside_row": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.38813532586468136,
+      "min_margin": 0.05,
+      "note": "crossing diameters inside 0.20-0.80 cm; margin the smallest log distance to an edge"
+    },
+    "sh_stagnant_rel_dev": {
+      "kind": "value",
+      "value": -3.342093212899133e-05,
+      "rtol": 0.0001
+    },
+    "sh_richardson_rel_dev": {
+      "kind": "bound",
+      "value": 6.007166819532728e-08,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "Richardson limit of a second-order ladder; the next-order terms"
+    },
+    "sh_order_min": {
+      "kind": "bound",
+      "value": 2.013980309977513,
+      "min": 1.95,
+      "basis": "theory",
+      "note": "second order on nested geometric cells"
+    },
+    "sh_order_max": {
+      "kind": "bound",
+      "value": 2.0495606476907438,
+      "max": 2.15,
+      "basis": "theory",
+      "note": "second order on nested geometric cells"
+    },
+    "sh_surface_vs_shell_flux": {
+      "kind": "bound",
+      "value": 3.745892485085278e-13,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "the discrete divergence telescopes; the gap is the solve's residual"
+    },
+    "leveque_rel_err_raw": {
+      "kind": "value",
+      "value": -0.00014274783537848723,
+      "rtol": 0.0001
+    },
+    "leveque_rel_err_xy_extrap": {
+      "kind": "bound",
+      "value": 1.923639270096089e-08,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "two-axis Richardson limit against the closed form; next-order terms of both ladders"
+    },
+    "leveque_x_order_min": {
+      "kind": "bound",
+      "value": 0.9993972834718349,
+      "min": 0.99,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "leveque_x_order_max": {
+      "kind": "bound",
+      "value": 0.9996987503632334,
+      "max": 1.01,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "leveque_y_order_min": {
+      "kind": "bound",
+      "value": 1.999918063809287,
+      "min": 1.99,
+      "basis": "theory",
+      "note": "second-order cells"
+    },
+    "leveque_y_order_max": {
+      "kind": "bound",
+      "value": 1.9999828470299281,
+      "max": 2.01,
+      "basis": "theory",
+      "note": "second-order cells"
+    },
+    "leveque_balance_gap": {
+      "kind": "bound",
+      "value": 2.7833291227352674e-12,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "backward Euler telescopes onto the boundary faces; the gap is the solves' residual"
+    },
+    "higbie_rel_err_raw": {
+      "kind": "value",
+      "value": -0.00016000056599685397,
+      "rtol": 0.0001
+    },
+    "higbie_rel_err_xy_extrap": {
+      "kind": "bound",
+      "value": 1.2033830154578595e-08,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "two-axis Richardson limit against the closed form; next-order terms of both ladders"
+    },
+    "higbie_x_order_min": {
+      "kind": "bound",
+      "value": 0.9996598092654039,
+      "min": 0.99,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "higbie_x_order_max": {
+      "kind": "bound",
+      "value": 0.9998314056741354,
+      "max": 1.01,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "higbie_y_order_min": {
+      "kind": "bound",
+      "value": 1.9998812707271008,
+      "min": 1.99,
+      "basis": "theory",
+      "note": "second-order cells"
+    },
+    "higbie_y_order_max": {
+      "kind": "bound",
+      "value": 1.999940132343764,
+      "max": 2.01,
+      "basis": "theory",
+      "note": "second-order cells"
+    },
+    "higbie_balance_gap": {
+      "kind": "bound",
+      "value": 6.781131212107994e-12,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "backward Euler telescopes onto the boundary faces; the gap is the solves' residual"
+    },
+    "ladder_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 416238.6465511299,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "every ladder difference far above the solves' round-off"
+    },
+    "bl_domain_effect": {
+      "kind": "bound",
+      "value": 8.399037021433742e-11,
+      "max": 1e-08,
+      "basis": "theory",
+      "note": "profiles of order exp(-16^3) and erfc(8) at the far field; the rest is extrapolation residue"
+    },
+    "exp_rigid": {
+      "kind": "bound",
+      "value": 0.666666666658301,
+      "min": 0.6666666656666667,
+      "max": 0.6666666676666666,
+      "basis": "identity",
+      "note": "the grid scales with the one layer thickness: self-similar discrete problem"
+    },
+    "exp_mobile": {
+      "kind": "bound",
+      "value": 0.500000000014999,
+      "min": 0.499999999,
+      "max": 0.500000001,
+      "basis": "identity",
+      "note": "the grid scales with the one layer thickness: self-similar discrete problem"
+    },
+    "transition_steps_decreasing": {
+      "kind": "exact",
+      "value": 12,
+      "margin": 0.0001874946669808697,
+      "min_margin": 1e-05,
+      "note": "the exponent falls between every pair of neighbouring Lambda in the scan"
+    },
+    "lambda_half": {
+      "kind": "value",
+      "value": 0.27205112884642946,
+      "rtol": 0.0001
+    },
+    "lambda_within_10pct_mobile": {
+      "kind": "value",
+      "value": 1.5067422854484718,
+      "rtol": 0.0001
+    },
+    "lambda_half_grid_effect": {
+      "kind": "bound",
+      "value": 2.5757449486518702e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "keeps the four printed digits: 400 to 800 cells and steps"
+    },
+    "lambda_half_fd_effect": {
+      "kind": "bound",
+      "value": 3.795310445238916e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "keeps the four printed digits: Richardson estimate of the difference truncation"
+    },
+    "printed_rows_unread": {
+      "kind": "exact",
+      "value": "d_split,fig6_span,sd_eq4",
+      "note": "printed-number rows no check reads"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "c28_value": [
+      "Allen's 1/4 read as 1/2",
+      "Froessling's 0.552 read as 0.525"
+    ],
+    "c28_rel_dev": [
+      "Allen's 1/4 read as 1/2",
+      "Froessling's 0.552 read as 0.525",
+      "printed 0.28 read as 0.38"
+    ],
+    "froessling_implied_by_paper": [
+      "Allen's 1/4 read as 1/2",
+      "printed 0.28 read as 0.38"
+    ],
+    "froessling_implied_rel_dev": [
+      "Allen's 1/4 read as 1/2",
+      "Froessling's 0.552 read as 0.525",
+      "printed 0.28 read as 0.38"
+    ],
+    "allen_quarter_from_drag_law": [
+      "Allen's drag law 10 Re^-1/2 read as 24 Re^-1/2"
+    ],
+    "allen_quarter_rel_dev": [
+      "Allen's 1/4 read as 1/2",
+      "Allen's drag law 10 Re^-1/2 read as 24 Re^-1/2"
+    ],
+    "c34_value": [
+      "Stokes' 18 read as 24",
+      "Friedlander's 0.89 read as 0.98"
+    ],
+    "c34_rel_dev": [
+      "Stokes' 18 read as 24",
+      "Friedlander's 0.89 read as 0.98",
+      "printed 0.34 read as 0.43"
+    ],
+    "theory_brackets_fitted": [
+      "eqs (1) and (2) constants swapped",
+      "Allen's 1/4 read as 1/2",
+      "Stokes' 18 read as 24"
+    ],
+    "crossover_Sc": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped"
+    ],
+    "data_sc_min_over_crossover": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped",
+      "small-bubble D exponent left at the printed -4"
+    ],
+    "data_sc_windows_above_crossover": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "small-bubble D exponent left at the printed -4"
+    ],
+    "eq2_over_eq1_large_row_sc_min": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped"
+    ],
+    "eq2_over_eq1_large_row_sc_max": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped"
+    ],
+    "eq2_window_lo_over_printed": [
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "eq2_window_hi_over_printed": [
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "eq1_window_hi_over_printed": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas",
+      "small-bubble D exponent left at the printed -4"
+    ],
+    "eq1_window_hi_printed_exponent": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "eq1_window_hi_exponent_5": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "small_row_exponent_selected": [
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "eq6_prefactor_derived": [
+      "Chu's constant 35.4 read as 354",
+      "eq. (4) constant 0.13 read as 0.18"
+    ],
+    "eq6_prefactor_rel_dev": [
+      "Chu's constant 35.4 read as 354",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (6) constant 0.318 read as 0.618"
+    ],
+    "eq7_from_printed_eq6_rel_dev": [
+      "Fallat's voidage 0.41 read as 0.30",
+      "eq. (6) constant 0.318 read as 0.618",
+      "eq. (7) constant 0.69 read as 0.96"
+    ],
+    "eq7_from_sigma_inverse_rel_dev": [
+      "Fallat's voidage 0.41 read as 0.30",
+      "eq. (6) constant 0.318 read as 0.618",
+      "eq. (7) constant 0.69 read as 0.96"
+    ],
+    "fallat_dev_printed_eq7": [
+      "eq. (7) constant 0.69 read as 0.96",
+      "Fallat's constant 0.626 read as 0.662",
+      "Fallat's exponent -0.322 read as -0.222"
+    ],
+    "fallat_dev_sigma_inverse": [
+      "Fallat's voidage 0.41 read as 0.30",
+      "eq. (6) constant 0.318 read as 0.618",
+      "Fallat's constant 0.626 read as 0.662",
+      "Fallat's exponent -0.322 read as -0.222"
+    ],
+    "fallat_dev_chain": [
+      "Chu's constant 35.4 read as 354",
+      "Chu's exponent 0.44 read as 0.50",
+      "eq. (4) constant 0.13 read as 0.18",
+      "Fallat's voidage 0.41 read as 0.30",
+      "Fallat's constant 0.626 read as 0.662",
+      "Fallat's exponent -0.322 read as -0.222"
+    ],
+    "fallat_dev_eq8": [
+      "Fallat's constant 0.626 read as 0.662",
+      "Fallat's exponent -0.322 read as -0.222"
+    ],
+    "eq9_prefactor_derived": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18"
+    ],
+    "eq9_prefactor_rel_dev": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) constant 0.058 read as 0.085"
+    ],
+    "pipe_cross_Re": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31"
+    ],
+    "pipe_cross_Re_exact_exponent": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31"
+    ],
+    "pipe_claim_over_cross": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31",
+      "claimed agreement at 10,000 read as 1,000"
+    ],
+    "pipe_dev_at_claimed_Re": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31",
+      "claimed agreement at 10,000 read as 1,000"
+    ],
+    "pipe_maxdev_over_range": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31",
+      "stated range 2000-20,000 read as 200-20,000"
+    ],
+    "pipe_maxdev_over_range_exact_exponent": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31",
+      "stated range 2000-20,000 read as 200-20,000"
+    ],
+    "pipe_maxdev_paper_direction": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31",
+      "stated range 2000-20,000 read as 200-20,000"
+    ],
+    "eq10_implied_const": [
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (4) power 1/4 read as 1/3",
+      "eqs (1) and (2) constants swapped"
+    ],
+    "pipe_deviation_changes_sign_in_range": [
+      "Blasius 0.0396 read as 0.396",
+      "eq. (4) constant 0.13 read as 0.18",
+      "eq. (9) exponent -0.31 read as -0.25",
+      "Chilton-Colburn 0.023 read as 0.032",
+      "Chilton-Colburn exponent -0.20 read as -0.31"
+    ],
+    "pipe_maxdev_exceeds_claim": [
+      "claimed +/- 12 % read as 21 %"
+    ],
+    "chu_identity_resid": [
+      "Chu's constant 35.4 read as 354",
+      "Chu's exponent 0.44 read as 0.50"
+    ],
+    "eq10_exponent_resid": [
+      "eq. (4) power 1/4 read as 1/3"
+    ],
+    "ra_form_resid": [
+      "eq. (1) Schmidt exponent 2/3 read as 1/2",
+      "eqs (1) and (2) constants swapped",
+      "page 44's 0.31 read as 0.13"
+    ],
+    "baird_cross_d_water_cm": [
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped",
+      "Baird's 0.975 read as 0.75",
+      "gravity in SI (9.81) in CGS formulas",
+      "water viscosity 1 cP entered as 1 poise"
+    ],
+    "baird_cross_d_spread": [
+      "eq. (2) Schmidt exponent 1/2 read as 2/3"
+    ],
+    "baird_ratio_at_5cm": [
+      "eq. (2) Schmidt exponent 1/2 read as 2/3",
+      "eqs (1) and (2) constants swapped",
+      "Baird's 0.975 read as 0.75",
+      "Baird's largest bubble 5 cm read as 15 cm",
+      "gravity in SI (9.81) in CGS formulas",
+      "water viscosity 1 cP entered as 1 poise"
+    ],
+    "n_baird_crossings_inside_row": [
+      "eqs (1) and (2) constants swapped",
+      "gravity in SI (9.81) in CGS formulas"
+    ],
+    "printed_rows_unread": [
+      "Baird check left out of the study"
+    ],
+    "sh_stagnant_rel_dev": [
+      "sphere solved with nu = 0 (slab)",
+      "sphere solved with nu = 1 (cylinder)",
+      "sphere outer boundary closed (no flux)",
+      "printed floor 2.0 read as 2.2"
+    ],
+    "sh_richardson_rel_dev": [
+      "sphere solved with nu = 0 (slab)",
+      "sphere solved with nu = 1 (cylinder)",
+      "sphere outer boundary closed (no flux)"
+    ],
+    "sh_order_min": [
+      "sphere solved with nu = 0 (slab)",
+      "sphere outer boundary closed (no flux)"
+    ],
+    "sh_order_max": [
+      "sphere solved with nu = 0 (slab)",
+      "sphere outer boundary closed (no flux)"
+    ],
+    "sh_surface_vs_shell_flux": [
+      "sphere solved with nu = 0 (slab)",
+      "sphere solved with nu = 1 (cylinder)",
+      "sphere outer boundary closed (no flux)"
+    ],
+    "leveque_rel_err_raw": [
+      "leveque branch run with the other branch's velocity profile",
+      "leveque branch with a zero-flux interface",
+      "leveque branch, flux read two-point to the first cell centre",
+      "leveque branch, far field at 2 layer thicknesses"
+    ],
+    "leveque_rel_err_xy_extrap": [
+      "leveque branch run with the other branch's velocity profile",
+      "leveque branch with a zero-flux interface",
+      "leveque ladders started at 4 cells and 4 steps"
+    ],
+    "leveque_x_order_min": [
+      "leveque branch with a zero-flux interface",
+      "leveque ladders started at 4 cells and 4 steps"
+    ],
+    "leveque_x_order_max": [
+      "leveque branch with a zero-flux interface"
+    ],
+    "leveque_y_order_min": [
+      "leveque branch with a zero-flux interface",
+      "leveque ladders started at 4 cells and 4 steps"
+    ],
+    "leveque_y_order_max": [
+      "leveque branch with a zero-flux interface"
+    ],
+    "leveque_balance_gap": [
+      "leveque branch with a zero-flux interface",
+      "leveque branch, flux read two-point to the first cell centre"
+    ],
+    "higbie_rel_err_raw": [
+      "higbie branch run with the other branch's velocity profile",
+      "higbie branch with a zero-flux interface",
+      "higbie branch, flux read two-point to the first cell centre",
+      "higbie branch, far field at 2 layer thicknesses"
+    ],
+    "higbie_rel_err_xy_extrap": [
+      "higbie branch run with the other branch's velocity profile",
+      "higbie branch with a zero-flux interface",
+      "higbie branch, flux read two-point to the first cell centre",
+      "higbie branch, far field at 2 layer thicknesses",
+      "higbie ladders started at 4 cells and 4 steps"
+    ],
+    "higbie_x_order_min": [
+      "higbie branch with a zero-flux interface",
+      "higbie ladders started at 4 cells and 4 steps"
+    ],
+    "higbie_x_order_max": [
+      "higbie branch with a zero-flux interface"
+    ],
+    "higbie_y_order_min": [
+      "higbie branch with a zero-flux interface",
+      "higbie branch, flux read two-point to the first cell centre",
+      "higbie ladders started at 4 cells and 4 steps"
+    ],
+    "higbie_y_order_max": [
+      "higbie branch with a zero-flux interface",
+      "higbie ladders started at 4 cells and 4 steps"
+    ],
+    "higbie_balance_gap": [
+      "higbie branch with a zero-flux interface",
+      "higbie branch, flux read two-point to the first cell centre"
+    ],
+    "ladder_finest_over_roundoff": [
+      "flux read two-point to the first cell centre"
+    ],
+    "bl_domain_effect": [
+      "far field at 2 and 4 layer thicknesses"
+    ],
+    "exp_rigid": [
+      "rigid exponent from the mobile profile"
+    ],
+    "exp_mobile": [
+      "mobile exponent from the rigid profile"
+    ],
+    "transition_steps_decreasing": [
+      "transition scanned with the far field at half a layer thickness"
+    ],
+    "lambda_half": [
+      "transition read from the local k at x = L, not the mean"
+    ],
+    "lambda_within_10pct_mobile": [
+      "transition read from the local k at x = L, not the mean"
+    ],
+    "lambda_half_grid_effect": [
+      "grid effect measured from 50 to 100 cells"
+    ],
+    "lambda_half_fd_effect": [
+      "difference step ln 2 instead of ln 1.15"
+    ]
   }
 }

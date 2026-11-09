@@ -1991,68 +1991,23 @@ models:
     title: "Calderbank-Moo-Young continuous-phase transfer"
     description: >
       Calderbank & Moo-Young's claim is that in a dispersion whose particles move
-      freely under gravity the continuous-phase mass-transfer coefficient depends
-      on nothing but the physical properties - not bubble size, not slip velocity,
-      not agitator power - and that it does so in TWO regimes: below about 2 1/2 mm
-      bubbles move as rigid spheres under hindered flow and k_L Sc^(2/3) = 0.31
-      (drho mu g / rho^2)^(1/3); above it, form drag dominates, Higbie's unhindered
-      flow obtains, and k_L Sc^(1/2) = 0.42 (drho mu g / rho^2)^(1/3). The whole
-      content of the split is the exponent on the Schmidt group, i.e. D^(2/3)
-      against D^(1/2), which makes a single evaluation point useless - it sits on
-      one branch and says nothing about the other. This page therefore works both
-      sides and the transition. The highest-ranked validation is the paper's own:
-      in the note added in proof the authors derive eq. (1)'s constant TWICE
-      without fitting anything, and print both answers. Recomputed from scratch,
-      Froessling with Allen's free-rise velocity gives 0.276000 against their
-      printed 0.28 (-1.4 %) and Friedlander with Stokes' law gives 0.339599 against
-      their 0.34 (-0.12 %); the two predictions bracket the fitted 0.31. Because
-      Froessling's coefficient is not printed in this article the first is done in
-      both directions, so that the paper's own 0.28 and 1/4 are shown to imply
-      0.5600 against Froessling's published 0.552. The exponent split is then
-      rebuilt in pymrm as what it physically is: a concentration boundary layer,
-      u(y) dc/dx = D d2c/dy2 with u = u_s + gdot*y and v = 0, marched in x with
-      construct_coefficient_matrix carrying u(y). The rigid limit reproduces the
-      Leveque similarity result to 7.7e-6 and the mobile limit reproduces
-      2 sqrt(D u_s / pi L) to 7.5e-6, both Richardson-extrapolated in the march
-      step at observed orders 1.11 and 1.09; the exponents come back as 0.666667
-      and 0.500000, and the page states that dimensional analysis fixes both, so
-      those two numbers test the implementation and not the physics. What is NOT
-      fixed by dimensional analysis is the transition, which the paper describes
-      three times - Fig. 3's intermediate bubbles, the decline of large-bubble
-      coefficients in deep pools, and the effect of surface-active agents - and
-      models nowhere. All three are the same statement, that the interface stops
-      moving, and one group Lambda = u_s / (gdot delta_Leveque) carries it: the
-      exponent interpolates monotonically, is halfway at Lambda = 0.2721 and within
-      10 % of the mobile value by Lambda = 1.507. The paper's two correlations are
-      the two ends of one curve. The paper's own algebra is then re-run in full.
-      Eq. (5) applied to Chu's pressure drop reproduces the printed P/v as an exact
-      symbolic identity, and eq. (4) plus that P/v reproduces eq. (6)'s prefactor
-      (0.13 x 35.4^(1/4) = 0.317098 against 0.318). But the voidage group does not:
-      the chain forces Sigma^(-1) because P/v carries Sigma^(-4) and eq. (4) takes
-      its fourth root, while eq. (6) prints the same 1/3 exponent on both parts, and
-      NEITHER reading reaches eq. (7)'s printed 0.69 - the printed form gives 0.359
-      (-48 %) and the corrected one 0.651 (-5.7 %). What licenses calling that
-      wrong is that the SAME machinery reproduces the pipe branch exactly:
-      0.13 x 0.0396^(1/4) = 0.0579919 against the printed 0.058, exponent
-      -(1/16+1/4) = -0.3125 against -0.31. That branch then contradicts its own
-      summary claim: eq. (9) and Chilton-Colburn cross at N_Re = 4480, not 10,000,
-      and differ by up to 15.2 % over 2000-20,000 - more than the +/- 12 % claimed,
-      though the +/- itself is right, the deviation taking both signs. Both
-      findings are reported with every alternative printed and neither is repaired.
-      A third defect is proved from the paper's own correlation: the small-bubble
-      row of the Range of Variables table prints D_L x 10^-4, which puts eq. (1)
-      21.2x above that row's own printed k_L ceiling, while 10^-6 lands 1.7 % below
-      it and 10^-5 is ruled out at 4.6x - and the test has a control, the
-      large-bubble row, which reproduces with no adjustment. The stagnant floor 2.0
-      of the paper's more precise form is recovered from construct_div(nu=2) as
-      2.0000193. Twenty-nine injected defects cover all 39 metrics, including the
-      A2.6 failure mode on purpose (reading the transition from the local
-      coefficient instead of the mean moves Lambda_1/2 by +77 %). NOTHING here
-      judges the three fitted constants: they are regression lines through Figs 1,
-      2 and 6, no figure is digitised, and the corner evaluations against the
-      paper's own property ranges are labelled a goodness of fit rather than a
-      validation, because 0.42 was fitted to the very runs whose k_L range it is
-      compared against.
+      freely under gravity the continuous-phase mass-transfer coefficient depends on
+      nothing but the physical properties, in two regimes: rigid small bubbles with
+      `k_L Sc^(2/3) = 0.31 (drho mu g / rho^2)^(1/3)`, and mobile large ones with
+      `k_L Sc^(1/2) = 0.42 (drho mu g / rho^2)^(1/3)`. The content of the split is the exponent,
+      D^(2/3) against D^(1/2). The page reproduces the paper's own two theoretical
+      derivations of eq. (1)'s constant, 0.276000 <!-- claim: c28_value --> and
+      0.339599 <!-- claim: c34_value --> against the printed `0.28` and `0.34`; rebuilds
+      the split in pymrm as a linear boundary-layer march checked against the
+      Leveque and Higbie closed forms on separate step and cell ladders; and maps the
+      transition the paper describes and never models, halfway at
+      Lambda = 0.2721 <!-- claim: lambda_half -->. It re-runs the paper's algebra and
+      reports two steps that do not close: eq. (6) cannot produce eq. (7)
+      (-48.0 % <!-- claim: eq7_from_printed_eq6_rel_dev --> as printed), and eq. (9)
+      meets Chilton-Colburn at Re = 4480 <!-- claim: pipe_cross_Re -->, not 10,000,
+      while the pipe chain itself reproduces. A printed table exponent is corrected
+      from the paper's own correlation, with a control that passes. Nothing here
+      judges the three fitted constants: no figure is digitised.
     section: A
     status: published
     page: pages/A3.6-calderbank-moo-young/
@@ -2600,12 +2555,16 @@ models:
     slug: wakao-funazkri
     title: "Wakao–Funazkri particle–fluid mass and heat transfer"
     description: >
-      Sh = 2 + 1.1 Sc^(1/3) Re^0.6, rebuilt from the re-analysis that produced it.
-      The bed model the paper inverts by hand — steady 1-D convection–diffusion–
-      reaction with Danckwerts boundary conditions — is solved with pymrm, so the
-      paper's own closed form becomes a validation target and the inversion becomes
-      a root find. Both figures the correlation rests on are digitised, including
-      the liquid-phase Figure 3 the two constants were actually fitted on.
+      `Sh = 2 + 1.1 Sc^(1/3) Re^0.6`, rebuilt from the re-analysis that produced it.
+      The bed model the paper inverts by hand, steady 1-D convection-diffusion-
+      reaction with Danckwerts boundary conditions, is solved with pymrm on a grid
+      ladder, which shows the paper's closed form to be its solution; the
+      inversions are root finds on that closed form, and the re-analysis is
+      repeated on the pymrm solve. Eq. (11) re-analysed with eq. (2) returns
+      eq. (12) to 1.67 % <!-- claim: eq11_reanalysed_vs_eq12_mean_abs_dev_logRe -->
+      on average. Both figures the correlation rests on are digitised; with beta
+      held at the printed value the liquid-phase Figure 3 returns
+      alpha = 1.1000 <!-- claim: refit_liquid_alpha_beta_fixed -->.
     section: A
     status: published
     page: pages/A3.4-wakao-funazkri/
@@ -2621,7 +2580,9 @@ models:
       - construct_grad
       - construct_div
       - construct_convflux_upwind
-      - construct_boundary_value_matrices
+      - compute_boundary_values
+      - pymrm.checks.find_roots
+      - pymrm.checks.observed_orders
     reference:
       authors: ["Wakao, N.", "Funazkri, T."]
       year: 1978
@@ -2633,11 +2594,12 @@ models:
       status: provisional
       note: >
         Two digitised figures, both pending maintainer confirmation. Figure 2
-        (79 gas markers) was reviewed on 2026-08-02 and re-extracted by shape fit
-        in response; Figure 3 (182 liquid markers at the shipped erasure band,
-        plus five further marker sets shipped as a systematic-uncertainty sweep,
-        plus the drawn correlation traced as a calibration control) is new. The
-        three results that carry the page use no data at all.
+        (79 <!-- claim: n_fig2_markers --> gas markers) was reviewed on 2026-08-02
+        and re-extracted by shape fit in response; Figure 3
+        (182 <!-- claim: n_fig3_markers --> liquid markers at the shipped erasure
+        band, plus five further marker sets shipped as a systematic-uncertainty
+        sweep, plus the drawn correlation traced as a calibration control) is not
+        yet reviewed. The three results that carry the page use no data at all.
     related: [A3.5, D1.3, B1.1, A2.3]
 
   - id: B1.1

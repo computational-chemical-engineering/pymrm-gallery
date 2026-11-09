@@ -1,4 +1,4 @@
-# Page metadata. Staged in queue_cases/, not yet in pages/.
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
 # models.yaml is canonical; this file must not contradict it.
 id: A3.4
 slug: wakao-funazkri
@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 6
+pymrm_min_version: "3.4.0"
+runtime_seconds: 75
 datasets:
   - wakao-funazkri-1978-fig2.csv
   - wakao-funazkri-1978-fig3.csv
@@ -23,129 +23,73 @@ datasets:
   - wakao-funazkri-1978-parameters.csv
 
 validation:
-  - the pymrm discretisation of eq. (4) with Danckwerts boundary conditions against eq. (7), the paper's own closed form; first-order convergence confirmed (error ratios 2.00 over four grid doublings) and one Richardson step lands within 2.0e-6
-  - eq. (7) collapsing onto eq. (8) as the bed Peclet number grows, which is the reason the liquid-phase data survive the re-analysis untouched
-  - the liquid-phase correction computed over the paper's whole accepted range, 1.33 % at worst, against conclusion 1's "not appreciably different"
-  - the stagnant-sphere limit, Sh -> 2 exactly for eqs. (9) and (12) and Sh -> 0 for eq. (11), which crosses Sh = 2 at Re = 4.6. Labelled on the page as an identity of the chosen FORM that cannot fail
-  - Petrovic and Thodos' eq. (11) re-analysed with eq. (2) and compared with eq. (12); reproduces it to 1.8 % mean and 4.5 % worst over 100 <= Re <= 900, nothing fitted, and moves by under half a per cent when L/d_p is changed fourfold
-  - the axis calibration of Figure 2 checked against three curves whose equations the paper prints (two of which are known in advance; eq. 11's voidage is fitted to the third), and of Figure 3 against the correlation printed inside it, which is a control with a known answer and is shipped as a dataset so the page runs it
-  - Figure 3's ordinate re-calibrated with a column-dependent row origin, after the drawn-line control showed the 5.6 px left/right decade-tick skew feeding straight into beta; the control returns to alpha = 1.107, beta = 0.598 against the printed 1.1 and 0.6
-  - the Figure 3 erasure band swept from 0 to 14 px and every marker set shipped, as the dominant systematic on the refit: n 210 to 126, free alpha 1.296 to 1.440, alpha at beta = 0.6 moving only 1.098 to 1.118 over both calibrations (1.007 to 1.118 once the estimator is varied too)
-  - the free refit's error model tested rather than assumed - a 5.0-sigma quadratic term, autocorrelated residuals, Newey-West and cluster-bootstrap standard errors 1.4x to 2.5x the ordinary ones
-  - eq. (12) refitted freely on both digitised figures - the 79 gas markers of Figure 2 (alpha = 1.18 +/- 0.20, beta = 0.547 +/- 0.033) and the 182 liquid markers of Figure 3, which are the data alpha and beta were actually fitted on and give standard errors 3.6-3.9x smaller
-  - a deliberate-break table: nine injected defects with EVERY metric recomputed under every one of them, so the off-diagonal is measured rather than copied from the baseline, and with the free-fit alpha and beta in it as well as the beta-fixed alpha - which turns out to be the MOST axis-sensitive of the three, not the least
-  - the effect of the 2026-08-02 re-centring measured on a paired sample, reported on the 65 markers that actually moved as well as on all 81 rows (16 of which have zero displacement by construction)
-  - a count of how many Figure 2 markers the erased Ranz-Marshall dashed band could have destroyed
+  - "THE BED MODEL AGAINST THE PAPER'S CLOSED FORM: eq. (4) with Danckwerts conditions, one sparse solve per grid, on a ladder of 200 to 3200 cells; observed orders 1.00 <!-- claim: pymrm_order_min --> to 1.03 <!-- claim: pymrm_order_max --> from successive differences, the extrapolated value below 1e-5 <!-- claim: pymrm_vs_eq7_richardson --> from eq. (7), the finest difference far above the solve residual."
+  - "EQ. (7) COLLAPSES ONTO EQ. (8): ln(theta_7/theta_8) Pe_L/N^2 = 0.99995 <!-- claim: eq7_eq8_rate --> at `Pe_L = 1e5`, against the limit `1`; this is why the liquid data survive the re-analysis."
+  - "THE LIQUID CORRECTION OVER THE WHOLE ACCEPTED RANGE: at most 1.33 % <!-- claim: liquid_correction_max --> at L/d_p = 10 and 1.39 % <!-- claim: liquid_correction_max_all_Ldp --> for L/d_p up to 100, against conclusion 1's 'not appreciably different'."
+  - "THE STAGNANT-SPHERE LIMIT: eqs. (9) and (12) tend to 2 for any constants, an identity of the form; eq. (11) crosses Sh = 2 at Re = 4.59 <!-- claim: eq11_crosses_sh2_Re -->, a root over 1e-6 <= Re <= 1e6."
+  - "PETROVIC AND THODOS' EQ. (11) RE-ANALYSED with eq. (2) returns eq. (12) to 1.67 % <!-- claim: eq11_reanalysed_vs_eq12_mean_abs_dev_logRe --> mean and 4.48 % <!-- claim: eq11_reanalysed_vs_eq12_worst --> worst over 100 <= Re <= 900, nothing fitted; the same re-analysis on the pymrm solve agrees below 1e-3 <!-- claim: reanalysis_route_gap -->."
+  - "THE CALIBRATION CONTROL: Figure 3's drawn correlation refitted from its own ink returns 1.107 <!-- claim: fig3_drawn_line_alpha_skew --> / 0.598 <!-- claim: fig3_drawn_line_beta_skew --> against the printed `1.1` / `0.6` with the column-dependent ordinate origin that corrects a 5.64 <!-- claim: fig3_tick_skew_px --> px decade-tick skew."
+  - "THE ERASURE BAND SWEPT as the dominant systematic on the Figure 3 refit: free alpha 1.296 <!-- claim: refit_liquid_alpha_band_lo --> to 1.440 <!-- claim: refit_liquid_alpha_band_hi -->, alpha at the printed beta 1.098 <!-- claim: refit_liquid_alpha_beta_fixed_logmetric_lo --> to 1.118 <!-- claim: refit_liquid_alpha_beta_fixed_logmetric_hi --> over both calibrations."
+  - "THE FREE REFIT'S ERROR MODEL TESTED: a quadratic term at t = 5.0 <!-- claim: refit_liquid_quadratic_term_z -->, Newey-West standard errors 1.4 <!-- claim: hac_inflation_alpha_min --> to 1.9 <!-- claim: hac_inflation_alpha_max --> times the ordinary ones, and a bootstrap of whole Re bins 2.5 <!-- claim: refit_liquid_cluster_se_inflation_alpha --> times."
+  - "A DEFECT-INJECTION TABLE: every printed constant, the solver's boundary condition, geometry, sign and sink, both figures' axis calibrations and the data choices are injected one at a time through the functions that compute the claims; every claim fails under at least one row."
 
 adds: >
-  The correlation itself is three constants and pymrm adds nothing to it. What
-  pymrm adds is the operation the paper had to do by chart and by hand: eq. (7)
-  exists because in 1978 the alternative was solving a boundary-value problem
-  for every one of several hundred literature points. With eq. (4) discretised,
-  the closed form becomes a check on the solver rather than the method, and the
-  inversion - the actual scientific step - becomes a root find on the forward
-  solve. Three things follow that the paper could not easily print: the
-  correction factor as a continuous map over (Re, Sc, L/d_p) instead of two
-  scatter plots; the conditioning limit, below which a gas-phase bed is
-  saturated and the outlet contains no transfer coefficient at all whatever
-  dispersion coefficient is assumed; and a reproduction of the paper's own
-  recalculation from published algebra alone, pushing eq. (11) through eq. (7)
-  twice and recovering eq. (12) to 1.8 %.
+  The bed model as a solved boundary-value problem. pymrm discretises eq. (4)
+  with Danckwerts conditions on the outward normal, reads the outlet through the
+  same condition, and on a grid ladder shows that the paper's eq. (7) is its
+  solution. The inversions run on eq. (7), which is exact; the re-analysis also
+  runs on the pymrm solve with the same root finder and agrees to the
+  discretisation error, the route a bed model with no closed form would need. The
+  correlation and the figure statistics owe pymrm nothing.
 
 agreement: >
   Deviation is (model - measured)/measured throughout. The data-free results are
-  the strong ones. The pymrm solve reproduces eq. (7) to 2.0e-6 after one
-  Richardson step, with clean first-order convergence. Re-analysing Petrovic and
-  Thodos' eq. (11) with the eq. (2) dispersion coefficient returns eq. (12) to
-  1.8 % on average and 4.5 % at worst over 100 <= Re <= 900, with nothing
-  fitted. The liquid-phase correction is at most 1.33 % over 3 <= Re <= 1e4,
-  which is conclusion 1 of the paper made quantitative. Against the 79 digitised
-  Figure 2 markers eq. (12) has a mean absolute deviation of 27.2 % and a bias of
-  +9.7 %; against the 182 Figure 3 markers - the liquid data it was FITTED on -
-  17.6 % and +2.3 %.
+  the strong ones: eq. (11) re-analysed with eq. (2) returns eq. (12) to
+  1.67 % <!-- claim: eq11_reanalysed_vs_eq12_mean_abs_dev_logRe --> on average
+  over 100 <= Re <= 900 with nothing fitted, and the liquid correction stays
+  below 1.39 % <!-- claim: liquid_correction_max_all_Ldp -->. Against the
+  79 <!-- claim: n_fig2_markers --> Figure 2 markers eq. (12) has a mean absolute
+  deviation of 27.2 % <!-- claim: eq12_vs_fig2_mean_abs_dev --> and a bias of
+  +9.7 % <!-- claim: eq12_vs_fig2_bias -->, standard error
+  3.6 % <!-- claim: eq12_vs_fig2_bias_se -->; against the
+  182 <!-- claim: n_fig3_markers --> Figure 3 markers it was fitted on,
+  17.6 % <!-- claim: eq12_vs_fig3_mean_abs_dev --> and
+  +2.3 % <!-- claim: eq12_vs_fig3_bias -->, standard error
+  1.6 % <!-- claim: eq12_vs_fig3_bias_se -->.
 
-  On alpha and beta the page's finding is that the printed pair is NOT rejected
-  by the figure it was fitted on, and that the strongest statement the data
-  support is a positive one: with beta held at the printed 0.6, the whole liquid
-  sample returns alpha = 1.1000 against the printed 1.1 in the same log metric the
-  free fits use. Vary the erasure band and the axis calibration and it stays
-  between 1.0976 and 1.1179 (-0.2 % to +1.6 %); vary the estimator as well and it
-  stays between 1.0067 and 1.1179, i.e. within 9 % of the printed value and never
-  more than 2 % above it. The free alpha over the same choices runs 1.05 to 1.47,
-  up to a third high. That contrast is the result. The beta-fixed alpha is not a
-  fixed point either - least squares in linear y gives 1.047 where the log metric
-  gives 1.100, and restricting to Re >= 50 gives 1.0199 - and the page prints
-  both of those columns rather than claiming a stability it does not have.
-
-  The free fit, by contrast, is whatever the estimator makes it. Least squares in
-  log y gives 1.344 / 0.5496; the same 182 points fitted unweighted in LINEAR y
-  give 1.157 / 0.5844; Theil-Sen gives 1.190 / 0.5558; and the erasure band alone
-  spans 1.296 to 1.440. The paper gives no reason to prefer one loss function
-  over another - its own Figure 4, where it says the data are well correlated by
-  eqn (12), is log-log like every other figure in it, and the abscissa is squared
-  there only "to enlarge the plot in the x-axis direction". The free fit's ordinary standard errors (+/-0.052, +/-0.0090) are not
-  usable as a rejection statistic: the residuals carry a 5.0-sigma quadratic
-  term and positive autocorrelation, Newey-West errors are 1.4-1.9x larger and a
-  cluster bootstrap over the Reynolds bins is 2.5x larger, giving a 95 %
-  interval of alpha 1.04 to 1.53 - which contains 1.1 - and beta 0.508 to 0.598.
-  An earlier version of this page quoted the log-metric fit and its iid errors
-  as a five-to-six-sigma rejection of the printed constants; that claim is
-  withdrawn. What survives is the beta-fixed alpha and a qualitative excess in
-  the markers below Re ~ 10, which sit 10-25 % above the drawn line on the
-  printed figure and which the paper half anticipates by rejecting liquid data
-  below Re = 3 for natural convection.
-
-  The Figure 3 axis calibration was corrected in this pass. The drawn
-  correlation is printed inside the figure, so fitting its own ink is a control
-  with a known answer; it came back alpha 2.4 % high and beta 0.9 % low, in the
-  same direction as the marker disagreement, and the cause is a 5.6 px skew
-  between the left- and right-hand decade ticks - the render is rotated by 0.2
-  degrees. With a column-dependent row origin the control returns 1.107 / 0.598,
-  i.e. the line was drawn from the printed constants, and the marker fit moves
-  from 1.367 / 0.5460 to 1.344 / 0.5496.
-
-  On Figure 2 the number that matters is the trend: eq. (11)'s binned bias swings
-  3.5x as far from the lowest Reynolds band to the highest as eq. (12)'s does,
-  which is the claim the paper makes about its own figure; Ranz-Marshall is
-  negative in every band.
+  With beta held at the printed value the Figure 3 markers return
+  alpha = 1.1000 <!-- claim: refit_liquid_alpha_beta_fixed -->, and between
+  1.007 <!-- claim: refit_liquid_alpha_beta_fixed_grid_lo --> and
+  1.118 <!-- claim: refit_liquid_alpha_beta_fixed_grid_hi --> over every erasure
+  band, both calibrations and three estimators; the free alpha over the same
+  choices runs from 1.05 <!-- claim: refit_liquid_alpha_free_grid_lo --> to
+  1.46 <!-- claim: refit_liquid_alpha_free_grid_hi -->. The free log-log fit gives
+  1.344 <!-- claim: refit_liquid_alpha --> / 0.5496 <!-- claim: refit_liquid_beta -->,
+  the same points in linear y 1.157 <!-- claim: refit_liquid_alpha_linear_metric -->
+  / 0.584 <!-- claim: refit_liquid_beta_linear_metric -->; the bin-bootstrap 95 %
+  interval of alpha, 1.04 <!-- claim: refit_liquid_alpha_cluster_ci_lo --> to
+  1.53 <!-- claim: refit_liquid_alpha_cluster_ci_hi -->, contains the printed
+  value. The page does not claim the printed constants are wrong.
 
 caveats: >
-  NEITHER figure extraction has been confirmed by a maintainer. The Figure 2
-  marker identifications were confirmed on 2026-08-02 with the note that the
-  markers were often off centre; the re-centred positions, the 9 markers added
-  on the same pass, the 11 crosshairs the shape fit merged as double counts, and
-  the whole of Figure 3 are all pending. The page ships with that disclosed and
-  the review request is batched in queue_cases/A3.4.yaml.
+  NEITHER figure extraction has been confirmed by a maintainer beyond Figure 2's
+  marker identifications; the sidecars carry the review questions.
 
-  Recall is still short on both figures. Figure 2 yields 79 distinct glyphs
-  against an estimated 100-110 drawn, in the dense band above Re = 100. Figure 3
-  yields 182 at the shipped erasure band against an estimated 200-245, and there
-  the loss is DIRECTIONAL: markers lying on the drawn correlation are the ones
-  the line removal is most likely to destroy, and losing them biases a refit
-  away from the printed alpha and beta. The page no longer describes that in
-  prose - the whole band sweep is shipped as data and the uncertainty is
-  computed from it - but the sweep bounds the bias from one side only. Switching
-  the band off gains 35 centres that sit a median 3.6 px from the drawn line and
-  score a median 0.684 against 0.793; whether those are rescued markers or
-  surviving line fragments is the review question, and the shipped setting is a
-  judgement that they are mostly the latter.
+  Recall is short on both figures, and on Figure 3 the loss is DIRECTIONAL:
+  markers lying on the drawn correlation are the ones the line removal is most
+  likely to destroy, which biases a refit away from the printed alpha and beta.
+  The band sweep is shipped as data and bounds that from one side only.
 
-  Figure 2's ordinate is about 4 px low: all three curves whose equations the
-  paper prints sit above their computed positions by 2 to 5 px, all in the same
-  direction, which makes the extracted Sh roughly 2.7 % high and the eq. (12)
-  bias nearer +12.7 % than +9.7 %. It is deliberately NOT corrected, because the
-  only evidence for it is those three curves and one of them supplied the
-  voidage - correcting on it would make validation check 4 circular. Figure 3's
-  analogous skew IS corrected, because there it is measured on eight printed
-  decade ticks and the drawn line is an independent control.
+  Figure 2's three drawn curves all sit slightly above their computed rows (the
+  sidecar's residual_offset); the ordinate is NOT corrected, because one of the
+  three supplied the voidage. One pixel of ordinate origin is
+  0.68 % <!-- claim: fig2_sh_per_px --> in every Sh.
 
-  Series identity is not carried on either figure. Eleven liquid sources and
-  eight gas sources are distinguished only by marker shape; the fitted shape is
-  recorded in both CSVs but is advisory, and nothing on the page reads it -
-  neither correlation contains a term that distinguishes a source.
+  Series identity is not carried on either figure; the fitted marker shape is
+  advisory and nothing on the page reads it.
 
-  The bed voidage 0.40 is inferred from the eq. (11) line drawn in Figure 2, not
-  stated in the paper. L/d_p is swept rather than known, because bed heights are
-  not tabulated per source; the results quoted were chosen to be the ones that
-  barely depend on it. Below Re ~ 50 for a gas the inversion is ill conditioned
-  and the page prints the outlet fraction instead of reporting a coefficient.
+  The bed voidage is inferred from the eq. (11) line drawn in Figure 2, not
+  stated in the paper. L/d_p is swept rather than known. Where a gas bed
+  saturates depends on its length: with an outlet resolution of `1e-3`, below
+  Re = 85.0 <!-- claim: gas_saturation_Re_Ldp10 --> at L/d_p = 10, nowhere in the
+  range at L/d_p = 5.
