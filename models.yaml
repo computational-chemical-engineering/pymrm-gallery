@@ -657,23 +657,23 @@ models:
     description: >
       The four letters everyone quotes come from two inequalities, and both are
       quantitative predictions that can be checked. Recomputed from the
-      expressions Geldart derives them from, they are 229.4 and 1.016e6 against
-      the printed 225 and 1e6 — his own roundings, and harmless. The A/B
-      criterion sorts 20 of the 21 fractions of his own measured Table 1 the same
-      way their measured U_MB/U_0 does, the two routes sharing no input column —
-      but a null model that calls every powder group A already scores 19, so the
-      page reports the score on the three rows that can discriminate, 2 of 3, and
-      states the tie-break on the two rows that print U_MB = U_0 exactly. On the
+      expressions Geldart derives them from, they are 229.4 <!-- claim: eq6_constant_recomputed --> and 1.016e6 <!-- claim: eq8_constant_recomputed --> against
+      the printed 225 and 1e6: his own roundings, and harmless. The A/B
+      criterion sorts 20 <!-- claim: AB_rows_agreeing --> of the 21 <!-- claim: AB_rows_compared --> fractions of his own measured Table 1 the same
+      way their measured U_MB/U_0 does, the two routes sharing no input column,
+      but a null model that calls every powder group A already scores 19 <!-- claim: AB_rows_null_baseline -->, so
+      the page reports the score on the 3 <!-- claim: AB_discriminating_rows --> rows that can discriminate, 2 <!-- claim: AB_discriminating_rows_agreeing --> of 3 <!-- claim: AB_discriminating_rows -->,
+      and states the tie-break on the 2 <!-- claim: AB_tie_rows --> rows that print U_MB = U_0 exactly. On the
       single row where the criterion and the strict ratio part company, Geldart's
       own prose sides with the criterion.
       The correlation underneath it, Davies and Richardson's minimum
       fluidization velocity, is the sloppy half: the constant each measured row
-      implies spans a factor 6.4 about a median of 0.98. And the B/D boundary
-      turns out to be the Davidson cloud-existence condition written in other
-      symbols — Geldart's 1/sqrt(2) against Davies-Taylor's 0.711, 0.55 % apart,
-      less than the rounding he applied to his own answer — which makes the whole
-      diagram a contour map of the smallest bubble a powder can wrap a cloud
-      around.
+      implies spans a factor 6.4 <!-- claim: eq3_K0eff_spread_factor --> with a geometric mean of 0.998 <!-- claim: eq3_K0eff_geomean --> (standard
+      error 9.6 <!-- claim: eq3_K0eff_geomean_se_pct --> %). And the B/D boundary turns out to be the Davidson
+      cloud-existence condition written in other symbols: Geldart's 1/sqrt(2)
+      against Davies-Taylor's 0.711, 0.55 <!-- claim: eq8_davies_taylor_vs_geldart_pct --> % apart, less than the rounding he applied
+      to his own answer, which makes the whole diagram a contour map of the
+      smallest bubble a powder can wrap a cloud around.
     section: A
     status: published          # staged; integrator flips to published on merge
     page: pages/A1.7-geldart-classification/
@@ -687,10 +687,7 @@ models:
       - minimum fluidization velocity, eq. (3)
       - the A/B and B/D boundary constants, recomputed from eqs. (5) and (7)
       - smallest bubble diameter that carries a Davidson cloud, across the (density, size) plane
-    pymrm_api:
-      - construct_grad
-      - construct_div
-      - construct_coefficient_matrix
+    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, compute_boundary_values, find_roots]
     reference:
       authors: ["Geldart, D."]
       year: 1973

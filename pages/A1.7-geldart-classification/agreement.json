@@ -1,39 +1,980 @@
 {
   "page": "A1.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "default",
+    "threads": "default"
+  },
   "metrics": {
-    "eq6_constant_recomputed": 229.3577981651376,
-    "eq6_constant_dev_pct": 1.936799184505604,
-    "eq8_constant_recomputed": 1015928.1922178945,
-    "eq8_constant_dev_pct": 1.5928192217894481,
-    "worked_U0_dev_pct": 1.3953488372093037,
-    "worked_ratio_dev_pct": -1.5631767531598244,
-    "worked_sand_U0_dev_pct": -1.9435999999999714,
-    "AB_rows_agreeing": 20.0,
-    "AB_rows_compared": 21.0,
-    "AB_rows_null_baseline": 19.0,
-    "AB_rows_agreeing_diakon": 7.0,
-    "AB_rows_compared_diakon": 8.0,
-    "AB_rows_null_baseline_diakon": 6.0,
-    "AB_discriminating_rows": 3.0,
-    "AB_discriminating_rows_agreeing": 2.0,
-    "AB_tiebreak_is_strict": 1.0,
-    "AB_rows_agreeing_nonstrict": 18.0,
-    "AB_rows_agreeing_diakon_nonstrict": 5.0,
-    "AB_discriminating_rows_agreeing_nonstrict": 0.0,
-    "AB_rows_null_baseline_nonstrict": 21.0,
-    "AB_rows_in_225_to_229_gap": 0.0,
-    "BD_rows_in_1e6_gap": 0.0,
-    "BD_max_prod8_in_table1": 119204.97119999999,
-    "BD_eq8_onset_um_at_rho_s_1p5": 816.8233756500075,
-    "eq3_K0eff_ratio_min": 0.4628434657798327,
-    "eq3_K0eff_ratio_max": 2.9393069848956364,
-    "eq3_K0eff_ratio_min_diakon": 0.7907896298025494,
-    "eq3_K0eff_ratio_max_diakon": 1.6629818978965833,
-    "eps0_inferred_min": 0.441442,
-    "eps0_inferred_max": 0.57045,
-    "eps0_identity_residual": 5.551115123125783e-17,
-    "eq2_fit_residual_mean_abs_pct": 9.645304209022987,
-    "eq8_davies_taylor_vs_geldart_pct": 0.5505842847270807,
-    "cloud_pymrm_vs_closed_form": 1.8822141195789197e-06
+    "eq6_constant_recomputed": {
+      "kind": "value",
+      "value": 229.3577981651376,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq6_constant_dev_pct": {
+      "kind": "value",
+      "value": 1.936799184505604,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq8_constant_recomputed": {
+      "kind": "value",
+      "value": 1015928.1922178945,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq8_constant_dev_pct": {
+      "kind": "value",
+      "value": 1.5928192217894481,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq8_davies_taylor_vs_geldart_pct": {
+      "kind": "value",
+      "value": 0.5505842847270807,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "constants_slip_min_shift_pct": {
+      "kind": "value",
+      "value": 90.0,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq8_constant_shift_eps0_pct": {
+      "kind": "value",
+      "value": 24.999999999999996,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq8_constant_shift_dB_pct": {
+      "kind": "value",
+      "value": 41.42135623730952,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "AB_rows_agreeing": {
+      "kind": "exact",
+      "value": 20,
+      "margin": 0.004568888888888978,
+      "min_margin": 0.002,
+      "note": "decided against 225; margin is the nearest row's relative distance"
+    },
+    "AB_discriminating_rows": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.004568888888888978,
+      "min_margin": 0.002,
+      "note": "decided against 225; margin is the nearest row's relative distance"
+    },
+    "AB_discriminating_rows_agreeing": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.004568888888888978,
+      "min_margin": 0.002,
+      "note": "decided against 225; margin is the nearest row's relative distance"
+    },
+    "AB_rows_compared": {
+      "kind": "exact",
+      "value": 21
+    },
+    "AB_rows_null_baseline": {
+      "kind": "exact",
+      "value": 19
+    },
+    "AB_rows_agreeing_diakon": {
+      "kind": "exact",
+      "value": 7
+    },
+    "AB_rows_compared_diakon": {
+      "kind": "exact",
+      "value": 8
+    },
+    "rows_density_exact": {
+      "kind": "exact",
+      "value": 8
+    },
+    "table1_rows": {
+      "kind": "exact",
+      "value": 22
+    },
+    "AB_rows_null_baseline_diakon": {
+      "kind": "exact",
+      "value": 6
+    },
+    "AB_tie_rows": {
+      "kind": "exact",
+      "value": 2
+    },
+    "AB_rows_agreeing_nonstrict": {
+      "kind": "exact",
+      "value": 18
+    },
+    "AB_rows_agreeing_diakon_nonstrict": {
+      "kind": "exact",
+      "value": 5
+    },
+    "AB_discriminating_rows_agreeing_nonstrict": {
+      "kind": "exact",
+      "value": 0
+    },
+    "AB_rows_null_baseline_nonstrict": {
+      "kind": "exact",
+      "value": 21
+    },
+    "AB_disagree_row_prod6": {
+      "kind": "value",
+      "value": 259.33599999999996,
+      "rtol": 1e-06
+    },
+    "AB_disagree_row_ratio": {
+      "kind": "value",
+      "value": 1.0286885245901638,
+      "rtol": 1e-06
+    },
+    "AB_last_A_row_inside_pct": {
+      "kind": "value",
+      "value": 0.4568888888888978,
+      "rtol": 1e-06
+    },
+    "AB_last_A_row_ratio": {
+      "kind": "value",
+      "value": 1.0538922155688624,
+      "rtol": 1e-06
+    },
+    "AB_last_A_row_rounding_pct": {
+      "kind": "value",
+      "value": 0.6884342685692602,
+      "rtol": 1e-06,
+      "note": "half a unit in the last printed digit of rho_s and d', read from the strings"
+    },
+    "AB_rows_agreeing_upper_rounding": {
+      "kind": "exact",
+      "value": 19,
+      "margin": 0.002283999999999651,
+      "min_margin": 0.002,
+      "note": "the last group A row at the upper edge of its printed digits; margin is its distance past 225"
+    },
+    "AB_rows_in_225_to_229_gap": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.004568888888888978,
+      "min_margin": 0.002,
+      "note": "rows between the printed and the recomputed eq. (6) constant"
+    },
+    "BD_rows_in_1e6_gap": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.004568888888888978,
+      "min_margin": 0.002,
+      "note": "rows between the printed and the recomputed eq. (8) constant"
+    },
+    "BD_max_prod8_in_table1": {
+      "kind": "value",
+      "value": 119204.97119999999,
+      "rtol": 1e-06
+    },
+    "BD_eq8_onset_um_at_rho_s_1p5": {
+      "kind": "value",
+      "value": 816.8233756500075,
+      "rtol": 1e-06
+    },
+    "AB_rows_at_most_150_comparable": {
+      "kind": "exact",
+      "value": 14,
+      "margin": 0.05076000000000003,
+      "min_margin": 0.02,
+      "note": "rows with a product of at most 150; margin is the nearest row's relative distance"
+    },
+    "AB_rows_at_most_150": {
+      "kind": "exact",
+      "value": 15,
+      "margin": 0.05076000000000003,
+      "min_margin": 0.02,
+      "note": "rows with a product of at most 150; margin is the nearest row's relative distance"
+    },
+    "eq3_diakon_rows_above_100um": {
+      "kind": "exact",
+      "value": 7
+    },
+    "eq3_K0eff_ratio_min": {
+      "kind": "value",
+      "value": 0.4628434657798327,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_max": {
+      "kind": "value",
+      "value": 2.9393069848956364,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_median": {
+      "kind": "value",
+      "value": 0.9808844467180095,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_spread_factor": {
+      "kind": "value",
+      "value": 6.35054225070084,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_min_diakon": {
+      "kind": "value",
+      "value": 0.7907896298025494,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_max_diakon": {
+      "kind": "value",
+      "value": 1.6629818978965833,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_min_diakon_gt100": {
+      "kind": "value",
+      "value": 0.7907896298025494,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_ratio_max_diakon_gt100": {
+      "kind": "value",
+      "value": 1.158099901507086,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_diakon_gt100_worst_pct": {
+      "kind": "value",
+      "value": 20.921037019745057,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_geomean": {
+      "kind": "value",
+      "value": 0.9977436689985454,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_geomean_se_pct": {
+      "kind": "value",
+      "value": 9.578876067366787,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_exponent1_spread_factor": {
+      "kind": "value",
+      "value": 5.688364541835614,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_exponent1_median_factor": {
+      "kind": "value",
+      "value": 0.009984037740177316,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_exponent3_spread_factor": {
+      "kind": "value",
+      "value": 47.27930594791413,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_exponent3_median_factor": {
+      "kind": "value",
+      "value": 81.7708550093621,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eq3_K0eff_catalyst_rows_beyond_band": {
+      "kind": "exact",
+      "value": 10,
+      "margin": 0.35475815342908057,
+      "min_margin": 0.05,
+      "note": "catalyst rows deviating from the printed constant by more than the Diakon band"
+    },
+    "eps0_inferred_min": {
+      "kind": "value",
+      "value": 0.441442,
+      "rtol": 1e-06
+    },
+    "eps0_inferred_max": {
+      "kind": "value",
+      "value": 0.57045,
+      "rtol": 1e-06
+    },
+    "eps0_identity_residual": {
+      "kind": "bound",
+      "value": 5.551115123125783e-17,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "eps_0 = eps_MB algebraically where H_MB/H_0 = 1.000: a transcription check only"
+    },
+    "eps0_rows_outside_range": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.1223846153846154,
+      "min_margin": 0.05,
+      "note": "rows with eps_0 outside 0.35 to 0.65"
+    },
+    "cloud_RcR_sand_100um": {
+      "kind": "value",
+      "value": 1.0254513050441978,
+      "rtol": 1e-06,
+      "note": "E1.2's model, n = 1600, r_out = 20 R"
+    },
+    "cloud_RcR_sand_600um": {
+      "kind": "value",
+      "value": 3.228573003156812,
+      "rtol": 1e-06,
+      "note": "E1.2's model, n = 1600, r_out = 20 R"
+    },
+    "cloud_absent_sand_700um": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.1978073607062304,
+      "min_margin": 0.05,
+      "note": "no zero of W and u_br/u_f below 1"
+    },
+    "cloud_pymrm_vs_closed_form": {
+      "kind": "value",
+      "value": 3.6309401644385195e-07,
+      "rtol": 0.05,
+      "note": "discretisation error against E1.2's closed form, n = 1600"
+    },
+    "cloud_beds_groups": {
+      "kind": "exact",
+      "value": "B,B,D",
+      "margin": 0.06443199999999993,
+      "min_margin": 0.02,
+      "note": "groups of the three sands from eqs. (6) and (8) as printed"
+    },
+    "worked_U0_dev_pct": {
+      "kind": "value",
+      "value": 1.3953488372093037,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "worked_ratio_dev_pct": {
+      "kind": "value",
+      "value": -1.5631767531598244,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "worked_sand_U0_dev_pct": {
+      "kind": "value",
+      "value": -1.9435999999999714,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "worked_crossover_dev_pct": {
+      "kind": "value",
+      "value": -8.256880733944955,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq10_crosses_XY_um": {
+      "kind": "value",
+      "value": 104.38328236493375,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq10_crosses_XY_drho": {
+      "kind": "value",
+      "value": 2.155517578125,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_crosses_XY_um": {
+      "kind": "value",
+      "value": 16309.887869520895,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_crosses_XY_drho": {
+      "kind": "value",
+      "value": 0.013795312500000002,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_cross_size_over_axis_max": {
+      "kind": "value",
+      "value": 16.309887869520896,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_cross_axis_min_over_drho": {
+      "kind": "value",
+      "value": 14.497678106240796,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_over_XY_size_ratio_top": {
+      "kind": "value",
+      "value": 7.976067715227283,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_over_XY_size_ratio_bottom": {
+      "kind": "value",
+      "value": 2.4383693141235745,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq9_size_at_drho1_um": {
+      "kind": "value",
+      "value": 938.1493971598203,
+      "rtol": 1e-06,
+      "note": "closed-form arithmetic on the printed inputs"
+    },
+    "eq10_cross_inside_fig3_axes": {
+      "kind": "exact",
+      "value": true,
+      "margin": 1.1778792788730745,
+      "min_margin": 0.1,
+      "note": "smallest log distance of the crossing to a labelled axis end"
+    },
+    "cloud_copy_vs_E12_Rc_over_R": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "E1.2's claim Rc_over_R_C, relative gap, held to that claim's own rtol"
+    },
+    "cloud_copy_vs_E12_Rc_error": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 0.05,
+      "basis": "chosen",
+      "note": "E1.2's claim Rc_rel_error_n1600, relative gap, held to that claim's own rtol"
+    },
+    "eq2_fit_residual_mean_abs_pct": {
+      "kind": "value",
+      "value": 9.645304209022987,
+      "rtol": 1e-06
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "eq6_constant_recomputed": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "K_MB: 100 -> 10",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "eq6_constant_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "K_MB: 100 -> 10",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "eq8_constant_recomputed": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "eps_0: 0.4 -> 0.5",
+      "d_B: 25 -> 50"
+    ],
+    "eq8_constant_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "eps_0: 0.4 -> 0.5",
+      "d_B: 25 -> 50"
+    ],
+    "eq8_davies_taylor_vs_geldart_pct": [
+      "c_ubr: 0.711 -> 0.5",
+      "d_ubr: 25 -> 12.5"
+    ],
+    "worked_U0_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "worked_ratio_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "K_MB: 100 -> 10",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "worked_sand_U0_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "rho_f: 0.0012 -> 0"
+    ],
+    "worked_crossover_dev_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "K_MB: 100 -> 10",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "eq10_crosses_XY_um": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K10: 400 -> 4000",
+      "xy: 225 -> 22.5"
+    ],
+    "eq10_crosses_XY_drho": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K10: 400 -> 4000",
+      "xy: 225 -> 22.5"
+    ],
+    "eq10_cross_inside_fig3_axes": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K10: 400 -> 4000",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_crosses_XY_um": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_crosses_XY_drho": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_cross_size_over_axis_max": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_cross_axis_min_over_drho": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_over_XY_size_ratio_top": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_over_XY_size_ratio_bottom": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500",
+      "xy: 225 -> 22.5"
+    ],
+    "eq9_size_at_drho1_um": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "g: 981 -> 9.81",
+      "K9: 5000 -> 500"
+    ],
+    "constants_slip_min_shift_pct": [
+      "mu: 0.00018 -> 0.0018",
+      "mu: 0.00018 -> 1.8e-05",
+      "K_MB: 100 -> 10",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81"
+    ],
+    "eq8_constant_shift_eps0_pct": [
+      "eps_0: 0.4 -> 0.5"
+    ],
+    "eq8_constant_shift_dB_pct": [
+      "d_B: 25 -> 50"
+    ],
+    "AB_rows_agreeing": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_compared": [
+      "U_0 of the em-dash row: missing -> 0",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_null_baseline": [
+      "U_0 and U_MB columns swapped",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_agreeing_diakon": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "rho_s_exact of the 78 um diakon row: 1 -> 0"
+    ],
+    "AB_rows_compared_diakon": [
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "rho_s_exact of the 78 um diakon row: 1 -> 0"
+    ],
+    "rows_density_exact": [
+      "rho_s_exact of the 78 um diakon row: 1 -> 0"
+    ],
+    "table1_rows": [
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_null_baseline_diakon": [
+      "U_0 and U_MB columns swapped",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "rho_s_exact of the 78 um diakon row: 1 -> 0"
+    ],
+    "AB_discriminating_rows": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm"
+    ],
+    "AB_discriminating_rows_agreeing": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped"
+    ],
+    "AB_tie_rows": [
+      "U_MB of the 263 um diakon row: 3.11 -> 3.1"
+    ],
+    "AB_rows_agreeing_nonstrict": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_MB of the 263 um diakon row: 3.11 -> 3.1",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_agreeing_diakon_nonstrict": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped",
+      "U_MB of the 263 um diakon row: 3.11 -> 3.1",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "rho_s_exact of the 78 um diakon row: 1 -> 0"
+    ],
+    "AB_discriminating_rows_agreeing_nonstrict": [
+      "U_0 and U_MB columns swapped",
+      "U_MB of the 263 um diakon row: 3.11 -> 3.1"
+    ],
+    "AB_rows_null_baseline_nonstrict": [
+      "U_0 and U_MB columns swapped",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_MB of the 263 um diakon row: 3.11 -> 3.1",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_rows_in_225_to_229_gap": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)"
+    ],
+    "BD_rows_in_1e6_gap": [
+      "thr8: 1e6 -> 1e5"
+    ],
+    "BD_max_prod8_in_table1": [
+      "size: d' in um -> d' left in cm"
+    ],
+    "BD_eq8_onset_um_at_rho_s_1p5": [
+      "thr8: 1e6 -> 1e5"
+    ],
+    "AB_last_A_row_inside_pct": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 229.4 (the recomputed constant)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "dens: rho_s - rho_f -> rho_s",
+      "size: d' in um -> d' left in cm"
+    ],
+    "AB_last_A_row_ratio": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped"
+    ],
+    "AB_last_A_row_rounding_pct": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "dens: rho_s - rho_f -> rho_s",
+      "size: d' in um -> d' left in cm"
+    ],
+    "AB_rows_agreeing_upper_rounding": [
+      "thr6: 225 -> 229.4 (the recomputed constant)",
+      "thr6: 225 -> 150",
+      "criterion inverted (A when the product exceeds 225)",
+      "U_0 and U_MB columns swapped",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_0 of the 78 um diakon row: 0.52 -> nan",
+      "Table 1 transcribed without its last row"
+    ],
+    "AB_disagree_row_prod6": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "dens: rho_s - rho_f -> rho_s",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped"
+    ],
+    "AB_disagree_row_ratio": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 500",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "U_0 and U_MB columns swapped"
+    ],
+    "AB_rows_at_most_150_comparable": [
+      "size: d' in um -> d' left in cm",
+      "U_0 of the em-dash row: missing -> 0",
+      "U_0 of the 78 um diakon row: 0.52 -> nan"
+    ],
+    "AB_rows_at_most_150": [
+      "size: d' in um -> d' left in cm"
+    ],
+    "eq3_diakon_rows_above_100um": [
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_min": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_max": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_median": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_spread_factor": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column"
+    ],
+    "eq3_K0eff_ratio_min_diakon": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_max_diakon": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_min_diakon_gt100": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_max_diakon_gt100": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_diakon_gt100_worst_pct": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_catalyst_rows_beyond_band": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_geomean": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "mu: 0.00018 -> 0.0018",
+      "C3: 0.0008 -> 0.008",
+      "g: 981 -> 9.81",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_geomean_se_pct": [
+      "exponent: 2 -> 1",
+      "exponent: 2 -> 3",
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column"
+    ],
+    "eq3_exponent1_spread_factor": [
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column"
+    ],
+    "eq3_exponent1_median_factor": [
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_exponent3_spread_factor": [
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column"
+    ],
+    "eq3_exponent3_median_factor": [
+      "dens: rho_s - rho_f -> rho_s",
+      "U_0 column: measured -> the U_MB column",
+      "d_sv_um column: um -> cm"
+    ],
+    "eps0_inferred_min": [
+      "eps_MB of the 190 um diakon row: 0.452 -> 0.0452",
+      "H_MB_over_H_0 of the 25 um fresh catalyst row: 1.43 -> 4.29",
+      "H_MB/H_0 of the 2 rows printing 1.000: 1 -> 1.05"
+    ],
+    "eps0_inferred_max": [
+      "eps_MB of the 68 um fresh catalyst row: 0.645 -> 0.745"
+    ],
+    "eps0_identity_residual": [
+      "H_MB/H_0 of the 2 rows printing 1.000: 1 -> 1.05"
+    ],
+    "eps0_rows_outside_range": [
+      "eps_MB of the 68 um fresh catalyst row: 0.645 -> 0.745",
+      "eps_MB of the 190 um diakon row: 0.452 -> 0.0452",
+      "H_MB_over_H_0 of the 25 um fresh catalyst row: 1.43 -> 4.29"
+    ],
+    "eq2_fit_residual_mean_abs_pct": [
+      "K_MB: 100 -> 10",
+      "K_MB: 100 -> 1000"
+    ],
+    "cloud_RcR_sand_100um": [
+      "d_ubr: 25 -> 12.5",
+      "eps_0: 0.4 -> 0.8",
+      "far_field: robin -> dirichlet",
+      "nu_div: 2 -> 1",
+      "sink_coeff: 2 -> 1",
+      "n: 1600 -> 100",
+      "c_ubr: 0.711 -> 0.5"
+    ],
+    "cloud_RcR_sand_600um": [
+      "d_ubr: 25 -> 12.5",
+      "eps_0: 0.4 -> 0.8",
+      "far_field: robin -> dirichlet",
+      "nu_div: 2 -> 1",
+      "sink_coeff: 2 -> 1",
+      "n: 1600 -> 100",
+      "c_ubr: 0.711 -> 0.5"
+    ],
+    "cloud_absent_sand_700um": [
+      "eps_0: 0.4 -> 0.8"
+    ],
+    "cloud_pymrm_vs_closed_form": [
+      "d_ubr: 25 -> 12.5",
+      "eps_0: 0.4 -> 0.8",
+      "far_field: robin -> dirichlet",
+      "nu_div: 2 -> 1",
+      "sink_coeff: 2 -> 1",
+      "n: 1600 -> 100",
+      "c_ubr: 0.711 -> 0.5"
+    ],
+    "cloud_beds_groups": [
+      "thr8: 1e+06 -> 500000"
+    ],
+    "cloud_copy_vs_E12_Rc_over_R": [
+      "n: 1600 -> 200",
+      "c_ubr: 0.711 -> 0.7",
+      "far_field: robin -> dirichlet"
+    ],
+    "cloud_copy_vs_E12_Rc_error": [
+      "n: 1600 -> 200",
+      "far_field: robin -> dirichlet"
+    ]
   }
 }
