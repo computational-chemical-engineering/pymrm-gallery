@@ -1,39 +1,640 @@
 {
   "page": "J3.5",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "marquis_tables_checked": 21.0,
-    "marquis_tables_max_rel_dev": 0.0012305457294596867,
-    "ce_text_vs_recomputed_rel": 0.17742039478305183,
-    "Ce_doyle_at_I10": 0.1531638990035208,
-    "S_s_printed_1993": 0.15,
-    "C_r_doyle_at_I10": 9.959154693557974e-05,
-    "spme_steady_op_rel_err": 3.53165997159315e-05,
-    "spme_steady_op_refine_ratio": 4.015067847395778,
-    "rms_spm_I1_mV": 12.138691226494496,
-    "rms_spme_I1_mV": 0.04521113697449786,
-    "rms_spm_I4_mV": 49.23958506065582,
-    "rms_spme_I4_mV": 1.510669180748151,
-    "slope_spm": 1.0036208691844102,
-    "slope_spme_local_lowest": 2.0663710396304538,
-    "slope_spme_fit_I025_I1": 2.1131524585602697,
-    "slope_spme_fit_I05_I2": 2.2602755317897536,
-    "slope_spme_fit_I1_I4": 2.5311828760048947,
-    "slope_spme_all": 2.309789240184018,
-    "ratio_spm_over_spme_I1": 268.4889617649195,
-    "mut_ohm_error_ratio_I1": 9.82319255712509,
-    "mut_conc_error_ratio_I1": 14.927594552826745,
-    "mut_exchange_avg_error_ratio_I1": 1.0001264116506856,
-    "mut_anode_error_ratio_I1": 1.096577247743552,
-    "kappa_plus19pc_error_ratio_I1": 0.9082987001914198,
-    "I_depletion_Am2": 10.241498231563304,
-    "salt_conservation_spme": 4.451259781775018e-13,
-    "coulomb_identity_dev": 6.661338147750939e-16,
-    "profile_dev_I1_frac": 0.0005730550095852323,
-    "profile_dev_I5_frac": 0.01362893561642403,
-    "spme_dt_spread_mV": 9.171560140540146e-06,
-    "spme_grid_spread_mV": 0.00038272685873368085,
-    "dfn_dt_convergence_I025": 0.008348656940451948,
-    "bv_invert_symmetric_max_current_dev": 5.5067062021407764e-14,
-    "bv_invert_asymmetric_max_current_dev": 1891.384332083473
+    "marquis_tables_checked": {
+      "kind": "exact",
+      "value": 21
+    },
+    "marquis_tables_max_rel_dev": {
+      "kind": "value",
+      "value": 0.0012305457294596867,
+      "rtol": 0.05
+    },
+    "marquis_C_e_recomputed": {
+      "kind": "value",
+      "value": 0.004195155986606436,
+      "rtol": 0.05
+    },
+    "ce_text_vs_recomputed_rel": {
+      "kind": "value",
+      "value": 0.17742039478305183,
+      "rtol": 0.05
+    },
+    "marquis_above_half_unit_count": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.011268513153015358,
+      "min_margin": 0.001,
+      "note": "printed values more than half a unit of their last digit below the recomputed value; margin in units"
+    },
+    "marquis_below_half_unit_count": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.17688510400876112,
+      "min_margin": 0.001,
+      "note": "printed values more than half a unit above the recomputed value"
+    },
+    "marquis_within_one_unit_count": {
+      "kind": "exact",
+      "value": 21,
+      "margin": 0.3557217611458987,
+      "min_margin": 0.001,
+      "note": "printed values less than one unit below the recomputed value"
+    },
+    "j34_copy_max_rel_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "the copied DFN against J3.4's stored S_c, S_s, kappa and 1.7 V utilisation at I = 10; newton tolerance 1e-9 on the root of the trace"
+    },
+    "Ce_doyle_at_I10": {
+      "kind": "value",
+      "value": 0.1531638990035208,
+      "rtol": 0.05
+    },
+    "Ce_at_I1": {
+      "kind": "value",
+      "value": 0.015316389900352079,
+      "rtol": 0.05
+    },
+    "Ce_at_I20": {
+      "kind": "value",
+      "value": 0.3063277980070416,
+      "rtol": 0.05
+    },
+    "kappa_hat_at_I1": {
+      "kind": "value",
+      "value": 10.40309580775721,
+      "rtol": 0.05
+    },
+    "kappa_hat_at_I10": {
+      "kind": "value",
+      "value": 1.0403095807757212,
+      "rtol": 0.05
+    },
+    "kappa_hat_at_I20": {
+      "kind": "value",
+      "value": 0.5201547903878606,
+      "rtol": 0.05
+    },
+    "C_r_doyle_at_I10": {
+      "kind": "value",
+      "value": 9.959154693557974e-05,
+      "rtol": 0.05
+    },
+    "table6_conditions_245_min_orders": {
+      "kind": "bound",
+      "value": 4.203718440935299,
+      "min": 4.0,
+      "basis": "chosen",
+      "note": "smallest margin of sigma_bar >> 1, S_c << 1/C_e and C_r << 1/C_e over the five currents, in decades; four decades is the page's reading of 'much'"
+    },
+    "Ce_equals_S_s_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "identity",
+      "structural": true,
+      "note": "Marquis's C_e with the half-cell capacity is Doyle's S_s, algebraically"
+    },
+    "Ce_I10_within_printed_S_s": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.0018361009964792075,
+      "min_margin": 0.0005,
+      "note": "|C_e(10) - 0.15| below half a unit of the printed digit"
+    },
+    "I_depletion_Am2": {
+      "kind": "value",
+      "value": 10.240291850804779,
+      "rtol": 0.05,
+      "unit": "A/m2"
+    },
+    "spme_salt_exhausted_u_I20": {
+      "kind": "value",
+      "value": 0.029828849174215855,
+      "rtol": 0.05
+    },
+    "profile_dev_I1_frac": {
+      "kind": "value",
+      "value": 0.0005696048161605631,
+      "rtol": 0.05
+    },
+    "profile_dev_I5_frac": {
+      "kind": "value",
+      "value": 0.013648330332256193,
+      "rtol": 0.05
+    },
+    "spme_steady_op_rel_err": {
+      "kind": "value",
+      "value": 3.531659972773901e-05,
+      "rtol": 0.05
+    },
+    "spme_steady_op_order_min": {
+      "kind": "bound",
+      "value": 2.0000000008222445,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "cell-centred diffusion with harmonic face means: order 2"
+    },
+    "spme_steady_op_order_max": {
+      "kind": "bound",
+      "value": 2.0000001259127367,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "as spme_steady_op_order_min"
+    },
+    "spme_steady_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 518058840.05339736,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest difference over n eps |c~|"
+    },
+    "spme_march_order_min": {
+      "kind": "bound",
+      "value": 0.9908937015488433,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "backward Euler with equal steps: order 1"
+    },
+    "spme_march_order_max": {
+      "kind": "bound",
+      "value": 0.9953846255752788,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "as spme_march_order_min"
+    },
+    "spme_march_extrap_vs_exact": {
+      "kind": "bound",
+      "value": 2.7333574536417207e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "Richardson remainder of a first-order march at 400 steps, second order in the step"
+    },
+    "salt_conservation_spme": {
+      "kind": "bound",
+      "value": 9.039345877717706e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "note": "largest |sum(eps dx c~)| over the I = 1 discharge, relative to the cell's salt; the forcing of the constant mode is round-off, and it acts for the whole discharge"
+    },
+    "rms_spm_I1_mV": {
+      "kind": "value",
+      "value": 12.137852231138263,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "rms_spme_I1_mV": {
+      "kind": "value",
+      "value": 0.04514150135085982,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "rms_spm_I4_mV": {
+      "kind": "value",
+      "value": 49.23453763207493,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "rms_spme_I4_mV": {
+      "kind": "value",
+      "value": 1.5075194743512113,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "rms_spme_I0125_mV": {
+      "kind": "value",
+      "value": 0.0005932621433510264,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "ratio_spm_over_spme_I1": {
+      "kind": "value",
+      "value": 268.88454898292986,
+      "rtol": 0.05
+    },
+    "spm_order_min": {
+      "kind": "bound",
+      "value": 0.9985517065688456,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "SPM error O(C_e): order 1 along the current ladder"
+    },
+    "spm_order_max": {
+      "kind": "bound",
+      "value": 1.0361639479000913,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "as spm_order_min"
+    },
+    "spme_order_I05_I0125": {
+      "kind": "bound",
+      "value": 2.076821216744094,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "SPMe error O(C_e^2): order 2 as C_e -> 0, the lowest triple of the ladder"
+    },
+    "spme_order_I1_I025": {
+      "kind": "value",
+      "value": 2.1843347524469507,
+      "rtol": 0.05
+    },
+    "spme_order_I2_I05": {
+      "kind": "value",
+      "value": 2.4122905542002333,
+      "rtol": 0.05
+    },
+    "spme_order_I4_I1": {
+      "kind": "value",
+      "value": 2.7750799941443614,
+      "rtol": 0.05
+    },
+    "spme_order_rises_with_current_count": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.10751353570285671,
+      "min_margin": 0.01,
+      "note": "successive SPMe triples (high to low current) whose order falls; margin = smallest step"
+    },
+    "spm_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 46020549.84083722,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "smallest error difference over n_steps eps V + 1e-9 RT/F"
+    },
+    "spme_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 55331.31818872455,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "as spm_finest_over_roundoff"
+    },
+    "dfn_ref_error_over_spme_error_max": {
+      "kind": "bound",
+      "value": 0.0003923206634687064,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "time and space remainders of the extrapolated DFN reference over the SPMe error it is compared with, largest over the rungs; a hundredth moves an order by at most about 0.03"
+    },
+    "spme_error_space_uncertainty_max": {
+      "kind": "bound",
+      "value": 3.669052105503259e-09,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "space remainder of the extrapolated SPMe over its error, largest over the rungs"
+    },
+    "dfn_time_order_min": {
+      "kind": "bound",
+      "value": 0.9851066893428418,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "backward Euler on a nested time grid: order 1; the coarsest level is pre-asymptotic at the middle currents, and the remainder estimate covers it"
+    },
+    "dfn_time_order_max": {
+      "kind": "bound",
+      "value": 1.1872290636485061,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "as dfn_time_order_min"
+    },
+    "dfn_failed_solves_sweep": {
+      "kind": "exact",
+      "value": 0
+    },
+    "mut_ohm_error_ratio_I1": {
+      "kind": "value",
+      "value": 9.838593477415714,
+      "rtol": 0.05
+    },
+    "mut_conc_error_ratio_I1": {
+      "kind": "value",
+      "value": 14.949084464595195,
+      "rtol": 0.05
+    },
+    "mut_exchange_avg_error_ratio_I1": {
+      "kind": "value",
+      "value": 1.0001267699681484,
+      "rtol": 0.05
+    },
+    "mut_anode_error_ratio_I1": {
+      "kind": "value",
+      "value": 1.0972126646408233,
+      "rtol": 0.05
+    },
+    "mut_ohm_order_lowest": {
+      "kind": "bound",
+      "value": 0.9780738281170769,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "an uncancelled O(C_e) remainder: order 1 as C_e -> 0"
+    },
+    "mut_conc_order_lowest": {
+      "kind": "bound",
+      "value": 0.9850635049645722,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "as mut_ohm_order_lowest"
+    },
+    "mut_anode_order_lowest": {
+      "kind": "value",
+      "value": 1.901816913178091,
+      "rtol": 0.05
+    },
+    "kappa_plus19pc_error_ratio_I1": {
+      "kind": "value",
+      "value": 0.9102040983698533,
+      "rtol": 0.05
+    },
+    "kappa_shift_mV": {
+      "kind": "value",
+      "value": 0.8180682479955123,
+      "rtol": 0.05,
+      "unit": "mV"
+    },
+    "coulomb_identity_dev": {
+      "kind": "bound",
+      "value": 3.3306690738754696e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "state utilisation against coulomb counting over the I = 1 sweep march"
+    },
+    "bv_invert_symmetric_max_current_dev": {
+      "kind": "bound",
+      "value": 5.5067062021407764e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "closed form fed back through Eq. 17 at alpha_a = alpha_c"
+    },
+    "bv_invert_asymmetric_max_current_dev": {
+      "kind": "value",
+      "value": 1891.384332083473,
+      "rtol": 0.05
+    },
+    "bv_invert_refuses_asymmetric": {
+      "kind": "exact",
+      "value": true
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "marquis_tables_checked": [
+      "Table III gamma_n row counted (data)"
+    ],
+    "marquis_tables_max_rel_dev": [
+      "Table I L_p 10 % high (data)",
+      "Table I D_e_typ 10 % high (data)",
+      "printed values rounded instead of truncated (data)"
+    ],
+    "marquis_C_e_recomputed": [
+      "Table I D_e_typ 10 % high (data)"
+    ],
+    "ce_text_vs_recomputed_rel": [
+      "Table I L_p 10 % high (data)",
+      "Table I D_e_typ 10 % high (data)"
+    ],
+    "marquis_above_half_unit_count": [
+      "Table I L_p 10 % high (data)",
+      "Table I D_e_typ 10 % high (data)",
+      "printed values rounded instead of truncated (data)"
+    ],
+    "marquis_below_half_unit_count": [
+      "Table I L_p 10 % high (data)",
+      "Table I D_e_typ 10 % high (data)"
+    ],
+    "marquis_within_one_unit_count": [
+      "Table I L_p 10 % high (data)"
+    ],
+    "Ce_doyle_at_I10": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)"
+    ],
+    "Ce_at_I1": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)"
+    ],
+    "Ce_at_I20": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)"
+    ],
+    "kappa_hat_at_I1": [
+      "kappa from the Eq. 29 route (kappa)"
+    ],
+    "kappa_hat_at_I10": [
+      "kappa from the Eq. 29 route (kappa)"
+    ],
+    "kappa_hat_at_I20": [
+      "kappa from the Eq. 29 route (kappa)"
+    ],
+    "C_r_doyle_at_I10": [
+      "k_2 x10 (P)"
+    ],
+    "table6_conditions_245_min_orders": [
+      "sigma 1.0e4 -> 1.0e2 (P)"
+    ],
+    "Ce_equals_S_s_gap": [],
+    "I_depletion_Am2": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)"
+    ],
+    "Ce_I10_within_printed_S_s": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)"
+    ],
+    "spme_salt_exhausted_u_I20": [
+      "SPMe salt Bruggeman eps^1.5 (p_D)"
+    ],
+    "rms_spm_I1_mV": [
+      "SPM open-circuit potential 5 mV high (U_theta in v_spm)"
+    ],
+    "rms_spme_I1_mV": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)"
+    ],
+    "rms_spm_I4_mV": [
+      "SPM open-circuit potential 5 mV high (U_theta in v_spm)"
+    ],
+    "rms_spme_I4_mV": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)"
+    ],
+    "rms_spme_I0125_mV": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)"
+    ],
+    "ratio_spm_over_spme_I1": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)",
+      "SPM open-circuit potential 5 mV high (U_theta in v_spm)"
+    ],
+    "spm_order_min": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "spm_order_max": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "spme_order_I05_I0125": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "orders read with ratio 3 (levels)"
+    ],
+    "spme_order_I1_I025": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)",
+      "orders read with ratio 3 (levels)"
+    ],
+    "spme_order_I2_I05": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)",
+      "orders read with ratio 3 (levels)"
+    ],
+    "spme_order_I4_I1": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "orders read with ratio 3 (levels)"
+    ],
+    "spm_finest_over_roundoff": [
+      "finest rung repeats the one before (levels)"
+    ],
+    "spme_finest_over_roundoff": [
+      "finest rung repeats the one before (levels)"
+    ],
+    "spme_order_rises_with_current_count": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "lithium-face datum x1.1 in the SPMe (datum_factor)",
+      "ohmic delta_c/3 -> delta_c/2.7  (10 %) (voltage)",
+      "concentration factor 2 -> 2.2  (10 %) (voltage)",
+      "anode overpotential at c_0, not c(0) (voltage)"
+    ],
+    "profile_dev_I1_frac": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "SPMe salt Bruggeman eps^1.5 (p_D)"
+    ],
+    "profile_dev_I5_frac": [
+      "D 7.5e-12 -> 5.7e-12 in the reductions (P)",
+      "SPMe salt Bruggeman eps^1.5 (p_D)"
+    ],
+    "spme_steady_op_rel_err": [
+      "arithmetic face mean in the SPMe (face_mean)"
+    ],
+    "spme_steady_op_order_min": [
+      "arithmetic face mean in the SPMe (face_mean)"
+    ],
+    "spme_steady_op_order_max": [
+      "arithmetic face mean in the SPMe (face_mean)"
+    ],
+    "spme_steady_finest_over_roundoff": [
+      "finest rung repeats the one before (levels)"
+    ],
+    "spme_march_order_min": [
+      "march ladder 50, 100, 200, 400 read with ratio 3 (levels)"
+    ],
+    "spme_march_order_max": [
+      "march ladder 50, 100, 200, 400 read with ratio 3 (levels)"
+    ],
+    "spme_march_extrap_vs_exact": [
+      "march extrapolated as if second order (order)"
+    ],
+    "salt_conservation_spme": [
+      "lithium-face datum x1.1 in the SPMe (datum_factor)"
+    ],
+    "mut_ohm_error_ratio_I1": [
+      "mutations sized 20 % instead of 10 % (study), prefactor at a hundredth"
+    ],
+    "mut_conc_error_ratio_I1": [
+      "mutations sized 20 % instead of 10 % (study), prefactor at a hundredth"
+    ],
+    "mut_exchange_avg_error_ratio_I1": [
+      "mutations sized 20 % instead of 10 % (study), prefactor at a hundredth"
+    ],
+    "mut_anode_error_ratio_I1": [
+      "mutations sized 20 % instead of 10 % (study), prefactor at a hundredth"
+    ],
+    "mut_ohm_order_lowest": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "mut_conc_order_lowest": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "mut_anode_order_lowest": [
+      "mutations sized 20 % instead of 10 % (study), prefactor at a hundredth",
+      "orders read with ratio 3 (levels)"
+    ],
+    "dfn_ref_error_over_spme_error_max": [
+      "both models read on 48 + 96 without space extrapolation (study)"
+    ],
+    "spme_error_space_uncertainty_max": [
+      "both models read on 48 + 96 without space extrapolation (study)"
+    ],
+    "dfn_time_order_min": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "dfn_time_order_max": [
+      "orders read with ratio 3 (levels)"
+    ],
+    "dfn_failed_solves_sweep": [
+      "newton tol 1e-9 -> 1e-16, below round-off (tol)"
+    ],
+    "kappa_plus19pc_error_ratio_I1": [
+      "kappa raised in the SPMe's ohmic term only (kappa)",
+      "kappa raised by twice the route gap in both models (kappa)"
+    ],
+    "kappa_shift_mV": [
+      "kappa raised in the SPMe's ohmic term only (kappa)",
+      "kappa raised by twice the route gap in both models (kappa)"
+    ],
+    "j34_copy_max_rel_gap": [
+      "arithmetic face mean in the DFN copy (face_mean)"
+    ],
+    "coulomb_identity_dev": [
+      "pore-wall current x1.1 in the solid balance (ai_solid)"
+    ],
+    "bv_invert_symmetric_max_current_dev": [
+      "feedback with the prefactor 1 % high (pre)"
+    ],
+    "bv_invert_asymmetric_max_current_dev": [
+      "asymmetric pairs 0.45/0.55 and 0.4/0.6 (study)"
+    ],
+    "bv_invert_refuses_asymmetric": [
+      "bv_invert called with check=False (check)"
+    ]
   }
 }

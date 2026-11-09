@@ -14,76 +14,101 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 150
+pymrm_min_version: "3.4.0"
+runtime_seconds: 190
 datasets:
   - marquis-2019-table1-parameters.csv
   - marquis-2019-stated-results.csv
 
+# Ranked by what each check can catch; every non-structural claim has a break row.
 validation:
-  - Marquis et al.'s Tables II and III (six timescales, fifteen dimensionless parameters) recomputed from their Table I, 21/21 at the printed precision (which is truncation, not rounding - all nine deviations above 1e-4 are one-sided); the recomputation also shows the in-text C_e = 5.1e-3 C on page A3701 is inconsistent with the paper's own Table III value 4.19e-3 C, which is confirmed
-  - the pymrm steady SPMe solve against the closed-form piecewise-quadratic quasi-steady solution, 3.5e-5 relative, refining at a clean O(h^2) ratio of 4.02
-  - the paper's central asymptotic claim measured against the gallery's own J3.4 DFN solve on a converged sweep (DFN time step 16x tighter than default, SPMe 3200 steps) - SPM voltage error slope 1.00, SPMe local exponent 2.07 at the bottom of the sweep drifting to 2.70 at the top, three-point window fits 2.11 / 2.26 / 2.53
-  - a mutation table that measures what that slope test resolves - a 10 % error in the ohmic or concentration coefficient multiplies the I = 1 error by 9.8x / 14.9x and collapses the exponent to ~1, while deleting the electrode-averaged exchange-current correction changes it by 0.01 % (unresolved) and moving the anode overpotential to c_0 by 10 % (exponent 1.83, weakly resolved)
-  - a shared-parameter test - moving the reconstructed kappa by its published 19 % uncertainty shifts both models together (0.8 mV) and the measured SPMe error by only 9 %, which is why no comparison here can test the parameter set
-  - salt conservation in the SPMe integrator to 4e-13 of the cell inventory (structural)
-  - the coulomb-counting identity on the DFN to 7e-16, which is Marquis et al.'s Eq. 32 holding exactly at constant current
-  - numerical independence at the sweep's lowest current, where the signal is smallest - SPMe time step 0.4 %, SPMe grid 2.1 %, DFN time step converged to 0.8 % under a further 4x refinement (the untightened default is 220 % off), and I = 0.125 shown to be below the DFN integrator's floor at every step tried
-  - the one restriction bv_invert carries, measured (item 6, added 2026-08-02) - fed back through Eq. 17 the closed form reproduces the requested current to 5.5e-14 at alpha_a = alpha_c, and delivers up to 1892 times it at alpha_a = 0.3 / alpha_c = 0.7 and 838 times at 0.4 / 0.6, silently. This page's cell is symmetric, so no result is affected; the restriction is on the function the Reuse section offers
+  - >-
+    the paper's central asymptotic claim measured against the J3.4 DFN (copied
+    unchanged, reproducing J3.4's stored claims to below 1e-8 <!-- claim: j34_copy_max_rel_gap -->)
+    on a ladder of currents halving from `4` to `0.125` A/m2, both models extrapolated
+    in time and space so that what is left of the reference's discretisation error is
+    below 0.01 <!-- claim: dfn_ref_error_over_spme_error_max --> of the error measured:
+    SPM order 1.00 <!-- claim: spm_order_min --> to 1.04 <!-- claim: spm_order_max -->,
+    SPMe order 2.08 <!-- claim: spme_order_I05_I0125 --> on the lowest triple, rising
+    with current to 2.78 <!-- claim: spme_order_I4_I1 --> on the highest
+  - >-
+    a mutation table that measures what that scaling resolves: a `10 %` error in the
+    ohmic or concentration coefficient multiplies the `I = 1` error by
+    9.8 <!-- claim: mut_ohm_error_ratio_I1 --> and 14.9 <!-- claim: mut_conc_error_ratio_I1 -->
+    and takes the lowest order to about 1, while deleting the electrode-averaged
+    exchange-current correction multiplies it by 1.0001 <!-- claim: mut_exchange_avg_error_ratio_I1 -->
+    (unresolved) and moving the anode overpotential to c_0 by
+    1.10 <!-- claim: mut_anode_error_ratio_I1 --> (weakly resolved)
+  - >-
+    a shared-parameter test: raising the reconstructed kappa by the gap between its two
+    published routes moves the DFN by 0.82 <!-- claim: kappa_shift_mV --> mV and
+    multiplies the measured SPMe error by 0.91 <!-- claim: kappa_plus19pc_error_ratio_I1 -->,
+    which is why no comparison here can test the parameter set
+  - >-
+    the SPMe operator against the closed-form piecewise-quadratic quasi-steady
+    solution, 3.5e-5 <!-- claim: spme_steady_op_rel_err --> relative on 24 + 48 cells,
+    order 2.00 <!-- claim: spme_steady_op_order_min -->; the backward-Euler march
+    against the exact-in-time modal solution at order 0.99 <!-- claim: spme_march_order_min -->
+  - >-
+    Marquis et al.'s Tables II and III recomputed from their Table I, 21 <!-- claim: marquis_tables_checked -->
+    values, the worst 1.2e-3 <!-- claim: marquis_tables_max_rel_dev -->, every
+    deviation the truncation of the printed digit; the recomputation also shows the
+    in-text `C_e = 5.1e-3 C` on page A3701 is inconsistent with Table III's `4.19e-3 C`,
+    which is confirmed
+  - >-
+    identities: salt in the SPMe to below 1e-11 <!-- claim: salt_conservation_spme -->
+    of the inventory, coulomb counting on the DFN to below 1e-12 <!-- claim: coulomb_identity_dev -->
+    (Marquis et al.'s Eq. 32 at constant current)
+  - >-
+    the one restriction bv_invert carries: fed back through Eq. 17 the closed form
+    reproduces the requested current to below 1e-12 <!-- claim: bv_invert_symmetric_max_current_dev -->
+    at alpha_a = alpha_c, and the formula would deliver up to
+    1892 <!-- claim: bv_invert_asymmetric_max_current_dev --> times it at
+    `alpha_a = 0.3, alpha_c = 0.7`; the function raises for an asymmetric pair
 
 adds: >
   The SPM and SPMe are re-derived by Marquis et al.'s asymptotic method for the
-  half-cell geometry of Doyle, Fuller & Newman (1993) - the foil anode needs no
-  electrode averaging; the delta_c/3 electrode-averaged ohmic factor survives -
-  and tested against a full P2D solution the gallery has already validated
-  (J3.4), with the same reviewed parameter set, grid and operators, so the
-  measured error is the reduction's error and nothing else's. The a-priori
-  applicability conditions of their Table VI, all five evaluated for the 1993
-  cell, say before any simulation that the reduction holds at a few A/m2, is
-  marginal at I = 10 (C_e = 0.15, kappa_hat = 1.04) and fails at I = 20
-  (0.31, 0.52), where the first-order profile itself predicts negative
-  electrolyte concentration above I = 10.2 A/m2 - exactly the transport-limited
-  collapse Doyle et al. describe at I = 20 ("drops sharply when about 30 % of
-  the cathode material is utilized", their text, journal page 1529). Two of
-  their five conditions turn out to be groups Doyle, Fuller & Newman had
-  already printed in 1993: C_e is exactly their S_s (Eq. 27; 0.153 recomputed
-  vs 0.15 printed) and the solid-diffusion condition is their S_c (Eq. 26).
-  The quasi-steady correction has a closed form (piecewise quadratic), giving
-  an entirely algebraic SPMe(S) for the half-cell and an exact solution to
-  test the pymrm operators against.
+  half-cell geometry of Doyle, Fuller & Newman (1993): the foil anode needs no
+  electrode averaging; the delta_c/3 electrode-averaged ohmic factor survives.
+  They are tested against J3.4's full model, copied unchanged, on the same grid with
+  the same operators and parameter set, so the measured error is the reduction's
+  error and nothing else's. The a-priori applicability conditions of their Table
+  VI, all five evaluated for the 1993 cell, say before any simulation that the
+  reduction holds at a few A/m2, is marginal at `I = 10` (C_e = 0.15 <!-- claim: Ce_doyle_at_I10 -->,
+  kappa_hat = 1.04 <!-- claim: kappa_hat_at_I10 -->) and fails at `I = 20`
+  (0.31 <!-- claim: Ce_at_I20 -->, 0.52 <!-- claim: kappa_hat_at_I20 -->), where
+  the first-order profile itself predicts zero salt at the collector above
+  I = 10.2 <!-- claim: I_depletion_Am2 --> A/m2: the transport-limited collapse
+  Doyle et al. describe at `I = 20` ("drops sharply when about 30 % of the cathode
+  material is utilized", their text, journal page 1529). Two of their five
+  conditions are groups Doyle, Fuller & Newman had already printed: C_e is exactly
+  their S_s (Eq. 27; 0.153 <!-- claim: Ce_doyle_at_I10 --> recomputed against `0.15`
+  printed) and the solid-diffusion condition is their S_c (Eq. 26). The
+  quasi-steady correction has a closed form (piecewise quadratic), giving an
+  algebraic SPMe(S) for the half-cell and an exact solution for the operators; the
+  transient correction is solved exactly in time by one eigendecomposition.
 
 agreement: >
-  Marquis et al.'s Tables II and III are reproduced from their Table I to at
-  worst 1.2e-3 relative, which is their own truncation to the printed digits.
-  On the J3.4 cell, the RMS voltage error of the SPM against the full DFN
-  scales with slope 1.00 over I = 0.25-4 A/m2 (structural on this cell: with
-  constant kappa and D every term the SPM omits is exactly proportional to I),
-  and the SPMe error scales as C_e^2 with an exponent that drifts upward with
-  current - local slopes 2.07, 2.16, 2.36, 2.70, so three-point window fits of
-  2.11, 2.26 and 2.53 depending on the window chosen. The O(C_e) and O(C_e^2)
-  the paper derives are reproduced; the exponent is resolved to about +-0.03
-  and there is no single converged number to quote. At I = 1 A/m2 the errors
-  are 12.14 mV (SPM) and 0.0452 mV (SPMe), a factor 268. The SPMe electrolyte
-  profile matches the DFN to 0.06 % of c_0 at I = 1 and 1.4 % at I = 5 at
-  mid-discharge. The steady pymrm operator lands on the closed-form quadratic
-  to 3.5e-5 with an O(h^2) refinement ratio of 4.02.
+  Marquis et al.'s Tables II and III are reproduced from their Table I, the worst
+  at 1.2e-3 <!-- claim: marquis_tables_max_rel_dev --> relative, which is their
+  own truncation to the printed digits. On the J3.4 cell the RMS voltage error of
+  the SPM against the full DFN falls with order 1.00 <!-- claim: spm_order_min -->
+  to 1.04 <!-- claim: spm_order_max --> along a current ladder from `4` to
+  `0.125` A/m2, and the SPMe error with order 2.08 <!-- claim: spme_order_I05_I0125 -->
+  on the lowest triple, rising with current to 2.18 <!-- claim: spme_order_I1_I025 -->,
+  2.41 <!-- claim: spme_order_I2_I05 --> and 2.78 <!-- claim: spme_order_I4_I1 -->.
+  The O(C_e) and O(C_e^2) the paper derives are reproduced. At `I = 1` A/m2 the
+  errors are 12.14 <!-- claim: rms_spm_I1_mV --> mV (SPM) and
+  0.0451 <!-- claim: rms_spme_I1_mV --> mV (SPMe), a factor
+  269 <!-- claim: ratio_spm_over_spme_I1 -->. The SPMe electrolyte profile matches
+  the DFN to 0.057 % <!-- claim: profile_dev_I1_frac --> of c_0 at `I = 1` and
+  1.4 % <!-- claim: profile_dev_I5_frac --> at `I = 5` at mid-discharge.
 
 caveats: >
   Provenance tier 6, twice over: the J3.4 reference is itself a reproduction of
   a published simulation (no measurements exist anywhere in this chain), and
-  every number on this page is reduced-model against full-model. Nothing here
+  every number on this page is reduced model against full model. Nothing here
   is validated against experiment.
-
-  Corrected 2026-08-02: the Reuse section offered bv_invert to "any model with
-  that kinetics" without the condition that makes it exact. The closed form is a
-  quadratic in exp(alpha f eta') only when Eq. 17's two exponents share one
-  alpha, i.e. alpha_a = alpha_c; Doyle's cell has 0.5/0.5, which hid the
-  restriction. It is now stated in the docstring and in Reuse, and measured in
-  Validation item 6. J3.1 had already derived the same condition for the
-  Eq. 17 -> Eq. 16/30 collapse. Separately, delta = 1.95 is now read from the
-  J3.4 stated-results CSV the page loads instead of being retyped as a default
-  argument of kappa_from_delta; the value is unchanged, so every existing metric
-  is bit-identical.
 
   Marquis et al.'s own Table IV (RMS errors for their graphite/LCO cell) is NOT
   reproduced: the OCP and electrolyte property functions their cell needs are
@@ -93,25 +118,18 @@ caveats: >
 
   Because this cell's kappa and D are constants (kappa is J3.4's
   reconstruction), the SPMe's ohmic and diffusive corrections have exactly the
-  right functional form, so its absolute accuracy here (0.045 mV at I = 1)
-  flatters the method compared with a cell whose properties vary with
-  concentration - Marquis et al. report 3.04 mV at 1C on theirs. The scaling
-  exponents, not the absolute mV values, are the transferable result - and the
-  SPM's exponent of 1 is structural on this cell rather than evidence.
+  right functional form, so its absolute accuracy here flatters the method
+  compared with a cell whose properties vary with concentration. The orders,
+  not the absolute mV values, are the transferable result, and the SPM's order 1
+  is close to structural on this cell rather than evidence: its ohmic and quasi-steady
+  concentration corrections are exactly proportional to I.
 
-  The SPMe exponent drifts upward with current (local slopes 2.07, 2.16, 2.36,
-  2.70) because electrolyte depletion becomes nonlinear, so no single fitted
-  slope is quoted: all three three-point windows are reported (2.11 / 2.26 /
-  2.53) and the local slopes are printed on the page.
+  The SPMe order rises with current, so the asymptotic statement is the lowest
+  triple; the higher triples are pre-asymptotic and are reported as such.
 
-  The slope test does not resolve all four correction terms. Deleting the
-  electrode-averaged exchange-current correction changes the measured error by
-  0.01 % on this cell, so that term is NOT tested here; moving the anode
-  overpotential to c_0 changes it by 10 %, which is visible but not sharp. Only
-  the ohmic and concentration coefficients are resolved sharply. Nor can any
-  comparison on this page test the parameter set: kappa, U_ocp, k_2, sigma and
-  i_0_1 enter both models identically and cancel (a 19 % change in kappa moves
-  the measured error by 9 %).
-
-  I = 0.25 A/m2 is the bottom of the sweep because the DFN integrator does not
-  run at I = 0.125 at any time step tried, not because the SPMe fails there.
+  The scaling does not resolve all four correction terms. Deleting the
+  electrode-averaged exchange-current correction is invisible on this cell, so
+  that term is NOT tested here; moving the anode overpotential to c_0 is visible
+  but not sharp. Only the ohmic and concentration coefficients are resolved
+  sharply. Nor can any comparison on this page test the parameter set: kappa,
+  U_ocp, k_2, sigma and i_0_1 enter both models identically and cancel.
