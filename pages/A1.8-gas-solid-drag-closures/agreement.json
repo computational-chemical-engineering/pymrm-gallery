@@ -1,31 +1,2006 @@
 {
   "page": "A1.8",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "check1_Vrm_unity_identity": 2.220446049250313e-16,
-    "check2_force_balance_identity": 9.253827884002643e-15,
-    "check3_index_bias_pct_eps050": 5.351084325626925,
-    "check3_index_bias_pct_eps095": 29.20422714139682,
-    "check3_viscous_index_vs_RZ_pct": 10.537634408602138,
-    "check3_alt_reading_bias_pct_eps050": -24.15940161211433,
-    "check3_alt_reading_bias_pct_eps095": -0.3062587963444225,
-    "check3_alt_reading_viscous_index_vs_RZ_pct": -10.967741935483888,
-    "check3_break_dilute_exponent_2p65_to_1p65_pts_at_eps095": -15.338224089081592,
-    "check3_break_switch_0p85_to_0p55_pts_at_eps060": 17.48693481663176,
-    "check4_ergun_bias_pct": 42.060113630370665,
-    "check4_syamlal_obrien_bias_pct": 101.21544733475527,
-    "check4_richardson_zaki_bias_pct": 111.09282046332393,
-    "check4_ergun_bias_pct_at_epsMB": 58.43485946108713,
-    "check4_ergun_bias_pct_at_eps042": 4.818535883485609,
-    "check4_eps_erasing_ergun_bias": 0.4146674839342593,
-    "check4_eps_erasing_syamlal_obrien_bias": 0.3538479562092386,
-    "check4_eps_erasing_richardson_zaki_bias": 0.3708313807838093,
-    "check4_vt_cancels_out_of_SO_over_RZ": 2.220446049250313e-16,
-    "ratio_SO_over_Ergun_max_diakon": 1.681166904755036,
-    "ratio_SO_over_Ergun_last_cut_diakon": 1.6716923886771464,
-    "check5_tableVI_logRe_residual": 0.0008039199714863221,
-    "check5_tableVI_logn0_residual": 0.0005401804339550953,
-    "worst_ratio_SO_over_Ergun_at_eps044": 0.5785511844711416,
-    "B_branch_jump_pct_at_switch": 0.04927392583835566,
-    "dalla_valle_vs_stokes_pct": -4.0000000000000036
+    "refit_vs_A11_k1_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "the same weighted least-squares problem as A1.1's refit, solved by different code: round-off between two solves"
+    },
+    "refit_vs_A11_k2_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "the same weighted least-squares problem as A1.1's refit, solved by different code: round-off between two solves"
+    },
+    "ergun_refit_k1_shift_pct": {
+      "kind": "value",
+      "value": 1.2910271364406478,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed constants and the marker file"
+    },
+    "ergun_refit_k2_shift_pct": {
+      "kind": "value",
+      "value": -3.0453967630608036,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed constants and the marker file"
+    },
+    "ergun_markers_rows": {
+      "kind": "exact",
+      "value": 244,
+      "note": "rows of A1.1's marker file"
+    },
+    "geldart_rows": {
+      "kind": "exact",
+      "value": 22,
+      "note": "rows of A1.7's Geldart table"
+    },
+    "geldart_rows_with_U0": {
+      "kind": "exact",
+      "value": 21,
+      "note": "rows of A1.7's Geldart table"
+    },
+    "geldart_diakon_rows": {
+      "kind": "exact",
+      "value": 8,
+      "note": "rows of A1.7's Geldart table"
+    },
+    "eps0_all_min": {
+      "kind": "value",
+      "value": 0.441442,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eps0_all_max": {
+      "kind": "value",
+      "value": 0.57045,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eps0_diakon_min": {
+      "kind": "value",
+      "value": 0.441442,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eps0_diakon_max": {
+      "kind": "value",
+      "value": 0.4984900000000001,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eps0_two_coarsest_diakon": {
+      "kind": "value",
+      "value": 0.44399999999999995,
+      "rtol": 1e-06,
+      "note": "arithmetic on the printed columns"
+    },
+    "eps0_all_min_vs_A17_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "chosen",
+      "note": "A1.7's stored range of the same quantity, same arithmetic"
+    },
+    "eps0_all_max_vs_A17_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "chosen",
+      "note": "A1.7's stored range of the same quantity, same arithmetic"
+    },
+    "limit_closed_form_gap": {
+      "kind": "bound",
+      "value": 0.00473802290396641,
+      "max": 0.01,
+      "basis": "theory",
+      "note": "the first correction to the limits, of order Re^(1/2) and Re^(-1/2), at the probe Reynolds numbers 1e-9 and 1e7; not agreement between two routes"
+    },
+    "dalla_valle_vs_stokes_pct": {
+      "kind": "value",
+      "value": -4.0000000000000036,
+      "rtol": 1e-06,
+      "note": "closed form: cd1^2 / 24 - 1"
+    },
+    "cross_viscous_lower_eps": {
+      "kind": "value",
+      "value": 0.5068829691617414,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "cross_viscous_upper_eps": {
+      "kind": "value",
+      "value": 0.8270399562027806,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "cross_inertial_eps": {
+      "kind": "value",
+      "value": 0.42766661177787146,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "viscous_ratio_minimum_eps": {
+      "kind": "value",
+      "value": 0.6815286624203821,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "viscous_ratio_minimum": {
+      "kind": "value",
+      "value": 0.8217242412813722,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "inertial_ratio_at_eps099": {
+      "kind": "value",
+      "value": 0.17761227489542394,
+      "rtol": 1e-06,
+      "note": "root or closed form on the printed constants"
+    },
+    "inertial_ratio_falls_beyond_crossing": {
+      "kind": "exact",
+      "value": true,
+      "note": "both exponents of eq. (14) exceed 1/2, so the inertial ratio falls with voidage"
+    },
+    "dip_derivative_vs_finite_difference": {
+      "kind": "bound",
+      "value": 2.506741647208266e-07,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "note": "central difference of the ratio, step 1e-4 in ln Re: truncation of order 1e-8"
+    },
+    "dip_abscissa_ergun_eps044": {
+      "kind": "value",
+      "value": 7.331217474292818,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "ratio_viscous_limit_eps044": {
+      "kind": "value",
+      "value": 1.191998542564989,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "ratio_inertial_limit_eps044": {
+      "kind": "value",
+      "value": 0.9566171539174129,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "limit_gap_viscous_pct_eps044": {
+      "kind": "value",
+      "value": 19.199854256498906,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "limit_gap_inertial_pct_eps044": {
+      "kind": "value",
+      "value": 4.338284608258713,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "worst_ratio_SO_over_Ergun_at_eps044": {
+      "kind": "value",
+      "value": 0.5785505140236723,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_Re_m_eps044": {
+      "kind": "value",
+      "value": 4.1054817856039785,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "disagreement_factor_eps044": {
+      "kind": "value",
+      "value": 1.7284575430505684,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_slip_velocity_300um_air": {
+      "kind": "value",
+      "value": 0.20527408928019894,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_abscissa_ergun_eps050": {
+      "kind": "value",
+      "value": 9.489180796893402,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "ergun_markers_abscissa_min": {
+      "kind": "value",
+      "value": 7.4496,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "ergun_markers_abscissa_max": {
+      "kind": "value",
+      "value": 1820.2095,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_below_markers_pct_eps044": {
+      "kind": "value",
+      "value": 1.6147730731259191,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_stops_being_lowest_eps": {
+      "kind": "value",
+      "value": 0.5282119007263733,
+      "rtol": 1e-06,
+      "note": "root of an analytic derivative, or arithmetic on the marker file"
+    },
+    "dip_voidages_with_interior_minimum": {
+      "kind": "exact",
+      "value": 4,
+      "note": "of the six tabulated voidages: those at which the ratio has an interior minimum"
+    },
+    "dip_voidages_where_minimum_is_lowest": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.11070414886050162,
+      "min_margin": 0.02,
+      "note": "the interior minimum lies below the inertial limit; voidages with no interior minimum count as no"
+    },
+    "dip_inside_markers_eps050": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.21493749993267347,
+      "min_margin": 0.05,
+      "note": "margin: distance of the abscissa to the nearer end of the marker span, relative to the abscissa"
+    },
+    "ergun_isolated_Re1_pct": {
+      "kind": "value",
+      "value": 7.913655238217982,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "ergun_isolated_Re0p01_pct": {
+      "kind": "value",
+      "value": 0.09866616454046015,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "ergun_isolated_Re1e6_ratio": {
+      "kind": "value",
+      "value": 5.790325114512778,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "ergun_isolated_crossover_Re": {
+      "kind": "value",
+      "value": 28.60152183247551,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "dilute_viscous_share_Re1em3_pct": {
+      "kind": "value",
+      "value": 89.55317443614979,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "dilute_full_over_closed_Re1em3": {
+      "kind": "value",
+      "value": 9.569264132359423,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "dilute_full_over_closed_Re1": {
+      "kind": "value",
+      "value": 1.008216687339744,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants, or a root"
+    },
+    "B_branch_jump_pct_at_switch": {
+      "kind": "value",
+      "value": 0.04927392583835566,
+      "rtol": 1e-06,
+      "note": "closed form on the printed constants"
+    },
+    "B_half_unit_effect_pct": {
+      "kind": "value",
+      "value": 0.081292489196505,
+      "rtol": 1e-06,
+      "note": "B above the switch moves this much per half-unit of the dilute exponent"
+    },
+    "B_jump_in_half_units_of_dilute_exponent": {
+      "kind": "value",
+      "value": 0.6061313452863747,
+      "rtol": 1e-06,
+      "note": "the half-unit is read from the CSV column as a string"
+    },
+    "Vrm_branch_jump_max_pct": {
+      "kind": "value",
+      "value": 0.04927391032596429,
+      "rtol": 1e-06,
+      "note": "largest jump of V_rm over Re_m from 1e-6 to 1e8, both one-sided limits exact"
+    },
+    "Vrm_branch_jump_falls_with_Re": {
+      "kind": "exact",
+      "value": 0,
+      "note": "number of decreases of |jump| along the Re_m scan"
+    },
+    "Vrm_branch_jump_gap_to_B_jump": {
+      "kind": "bound",
+      "value": 3.1481947312904097e-07,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "V_rm tends to B as Re_m grows, so the largest jump of V_rm is the jump of B up to the first correction of order 1/Re_m"
+    },
+    "check1_Vrm_unity_identity": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "the radicand is a perfect square; what is left is double-precision cancellation at the top of the Reynolds range"
+    },
+    "check1_readings_seen": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.9708961695432663,
+      "min_margin": 0.5,
+      "note": "mis-readings of eqs. (12)-(14) whose residual exceeds the identity's bound"
+    },
+    "check1_voidage_constants_seen": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.9708961695432663,
+      "min_margin": 0.5,
+      "note": "of the five voidage constants (three exponents, the 0.8, the switch), those seen"
+    },
+    "check2_force_balance_identity": {
+      "kind": "bound",
+      "value": 1.1331217817146087e-15,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the identity is exact; what is left is the tolerance of the two root finds"
+    },
+    "check2_structural_readings_seen": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.9999994967245792,
+      "min_margin": 0.5,
+      "note": "of five mis-readings of eq. (11), those whose residual exceeds the bound"
+    },
+    "check2_constant_readings_seen": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.9999994967245792,
+      "min_margin": 0.5,
+      "note": "of four mis-read constants of eqs. (12) and (16), those seen"
+    },
+    "check2_smallest_structural_residual": {
+      "kind": "value",
+      "value": 0.2752211053921621,
+      "rtol": 0.001,
+      "note": "relative gap of the slip velocity, smallest of the five structural mis-readings"
+    },
+    "check2_largest_structural_residual": {
+      "kind": "value",
+      "value": 23.0877624395005,
+      "rtol": 0.001,
+      "note": "relative gap of the slip velocity, largest of the five structural mis-readings"
+    },
+    "check3_index_bias_pct_eps045": {
+      "kind": "value",
+      "value": 3.212511617019133,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_index_bias_se_pct_eps045": {
+      "kind": "value",
+      "value": 1.2145147356288726,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_bias_over_se_eps045": {
+      "kind": "value",
+      "value": 2.6450989212211597,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_alt_reading_bias_pct_eps045": {
+      "kind": "value",
+      "value": -26.297974320722123,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_index_bias_pct_eps050": {
+      "kind": "value",
+      "value": 5.351084325626922,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_index_bias_se_pct_eps050": {
+      "kind": "value",
+      "value": 1.1012106898472382,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_bias_over_se_eps050": {
+      "kind": "value",
+      "value": 4.859273865539058,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_alt_reading_bias_pct_eps050": {
+      "kind": "value",
+      "value": -24.159401612114326,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_index_bias_pct_eps095": {
+      "kind": "value",
+      "value": 29.20422714139684,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_index_bias_se_pct_eps095": {
+      "kind": "value",
+      "value": 2.943113605524175,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_bias_over_se_eps095": {
+      "kind": "value",
+      "value": 9.922901748196534,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_alt_reading_bias_pct_eps095": {
+      "kind": "value",
+      "value": -0.3062587963444099,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_alt_reading_bias_pct_eps085": {
+      "kind": "value",
+      "value": -0.742773832093039,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_viscous_index_vs_RZ_pct": {
+      "kind": "value",
+      "value": 10.537634408602138,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_alt_reading_viscous_index_vs_RZ_pct": {
+      "kind": "value",
+      "value": -10.967741935483888,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_row_spread_pts_eps045": {
+      "kind": "value",
+      "value": 14.562675139648256,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_all_rows_above_from_eps": {
+      "kind": "value",
+      "value": 0.5273965617803913,
+      "rtol": 1e-06,
+      "note": "mean of the 18 row deviations, or a closed-form index"
+    },
+    "check3_rows_above_eps045": {
+      "kind": "exact",
+      "value": 12,
+      "margin": 0.9144922469757492,
+      "min_margin": 0.05,
+      "note": "rows of Table VI below the implied index; margin: smallest |deviation| in points"
+    },
+    "check3_rows_above_eps095": {
+      "kind": "exact",
+      "value": 18,
+      "margin": 0.9144922469757492,
+      "min_margin": 0.05,
+      "note": "rows of Table VI below the implied index; margin: smallest |deviation| in points"
+    },
+    "check3_bias_falls_between_voidages": {
+      "kind": "exact",
+      "value": 0,
+      "note": "decreases of the mean bias along the six voidages (it grows with voidage)"
+    },
+    "check3_readings_one_unit_apart": {
+      "kind": "bound",
+      "value": 1.3322676295501878e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the slip and superficial indices differ by exactly one: ln(eps V)/ln eps - ln V/ln eps = 1"
+    },
+    "check3_readings_invisible_at_eps050": {
+      "kind": "exact",
+      "value": 7,
+      "margin": 1.0,
+      "min_margin": 0.2,
+      "note": "readings of the sweep, decided against a threshold of 0.01 points"
+    },
+    "check3_readings_never_seen": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 1.0,
+      "min_margin": 0.2,
+      "note": "readings of the sweep, decided against a threshold of 0.01 points"
+    },
+    "check3_break_dilute_exponent_2p65_to_1p65_pts_at_eps095": {
+      "kind": "value",
+      "value": -15.338224089081606,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_dilute_branch_deleted_pts_at_eps095": {
+      "kind": "value",
+      "value": -41.0857473398214,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_switch_0p85_to_0p55_pts_at_eps060": {
+      "kind": "value",
+      "value": 17.486934816631766,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_switch_0p85_to_0p95_pts_at_eps095": {
+      "kind": "value",
+      "value": 44.51505747441858,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_switch_small_displacement_max_pts": {
+      "kind": "value",
+      "value": 0.048150146061257004,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_joint_max_pts": {
+      "kind": "value",
+      "value": 27.116276496057882,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_aexp_one_unit_pts_eps050": {
+      "kind": "value",
+      "value": 7.030922826191973,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_break_aexp_4p00_pts_eps050": {
+      "kind": "value",
+      "value": 1.1609964721766461,
+      "rtol": 0.0001,
+      "note": "difference of two evaluations of the mean bias"
+    },
+    "check3_eq16_constants_max_pts": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "identity",
+      "structural": true,
+      "note": "the single-sphere drag curve cancels out of an index that compares two hindered velocities to the same terminal velocity: the tabulated Re_t is an input"
+    },
+    "reconcile_A16_ergun_at_eps_MB_gap": {
+      "kind": "bound",
+      "value": 8.992806499463768e-15,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "A1.6 computes the same quantity by different code; the gap is round-off between two implementations of one formula"
+    },
+    "reconcile_A16_ergun_at_eps_0_gap": {
+      "kind": "bound",
+      "value": 1.7319479184152442e-14,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "A1.6 computes the same quantity by different code; the gap is round-off between two implementations of one formula"
+    },
+    "reconcile_A16_ergun_at_eps042_gap": {
+      "kind": "bound",
+      "value": 1.915134717478395e-13,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "A1.6 computes the same quantity by different code; the gap is round-off between two implementations of one formula"
+    },
+    "reconcile_A16_wen_yu_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "A1.6 computes the same quantity by different code; the gap is round-off between two implementations of one formula"
+    },
+    "check4_wen_yu_bias_pct": {
+      "kind": "value",
+      "value": -25.213928241481806,
+      "rtol": 0.0001,
+      "note": "Wen and Yu's eq. (1) on the eight Diakon rows"
+    },
+    "check4_ergun_bias_pct": {
+      "kind": "value",
+      "value": 42.060113630370665,
+      "rtol": 0.0001,
+      "note": "mean over the eight Diakon rows at the settled voidage, no fitting"
+    },
+    "check4_ergun_bias_se_pct": {
+      "kind": "value",
+      "value": 5.311237919027751,
+      "rtol": 0.0001,
+      "note": "standard deviation of the eight row deviations over the square root of eight"
+    },
+    "check4_rows_overpredicted_ergun": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 23.67538024421653,
+      "min_margin": 1.0,
+      "note": "rows with a predicted velocity above the measured one; margin: smallest |deviation| in %"
+    },
+    "check4_syamlal_obrien_bias_pct": {
+      "kind": "value",
+      "value": 101.21544733475527,
+      "rtol": 0.0001,
+      "note": "mean over the eight Diakon rows at the settled voidage, no fitting"
+    },
+    "check4_syamlal_obrien_bias_se_pct": {
+      "kind": "value",
+      "value": 17.722477677565333,
+      "rtol": 0.0001,
+      "note": "standard deviation of the eight row deviations over the square root of eight"
+    },
+    "check4_rows_overpredicted_syamlal_obrien": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 20.243965952261725,
+      "min_margin": 1.0,
+      "note": "rows with a predicted velocity above the measured one; margin: smallest |deviation| in %"
+    },
+    "check4_richardson_zaki_bias_pct": {
+      "kind": "value",
+      "value": 111.09282046332392,
+      "rtol": 0.0001,
+      "note": "mean over the eight Diakon rows at the settled voidage, no fitting"
+    },
+    "check4_richardson_zaki_bias_se_pct": {
+      "kind": "value",
+      "value": 10.107438861948745,
+      "rtol": 0.0001,
+      "note": "standard deviation of the eight row deviations over the square root of eight"
+    },
+    "check4_rows_overpredicted_richardson_zaki": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 62.17596304738318,
+      "min_margin": 1.0,
+      "note": "rows with a predicted velocity above the measured one; margin: smallest |deviation| in %"
+    },
+    "check4_ergun_bias_pct_at_epsMB": {
+      "kind": "value",
+      "value": 58.43485946108713,
+      "rtol": 0.0001,
+      "note": "mean over the eight Diakon rows at the stated voidage"
+    },
+    "check4_ergun_bias_pct_at_eps042": {
+      "kind": "value",
+      "value": 4.818535883485609,
+      "rtol": 0.0001,
+      "note": "mean over the eight Diakon rows at the stated voidage"
+    },
+    "check4_ergun_least_abs_bias_voidages": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.5076437600584544,
+      "min_margin": 0.05,
+      "note": "of the five voidage readings, those at which Ergun has the smallest |mean bias|; margin: smallest relative gap between Ergun and the better of the others"
+    },
+    "check4_ergun_lead_min_over_se": {
+      "kind": "value",
+      "value": 3.983478371187026,
+      "rtol": 0.0001,
+      "note": "over the voidage readings where Ergun has the smallest |mean bias|: the smallest lead over either other closure, in standard errors of the paired difference over the eight rows"
+    },
+    "check4_rz_lead_pts_eps0383": {
+      "kind": "value",
+      "value": 12.736546684980814,
+      "rtol": 0.0001,
+      "note": "at 0.383 for every row: |mean bias| of Ergun minus that of Richardson-Zaki, paired over the eight rows, in points of per cent"
+    },
+    "check4_rz_lead_se_pts_eps0383": {
+      "kind": "value",
+      "value": 16.866553840159522,
+      "rtol": 0.0001,
+      "note": "standard error of that paired difference"
+    },
+    "check4_so_rz_order_resolved_voidages": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.11891920957411806,
+      "min_margin": 0.05,
+      "note": "of the five voidage readings, those at which the paired difference of Syamlal-O'Brien and Richardson-Zaki biases exceeds two standard errors; margin: relative distance of the nearest from two"
+    },
+    "check4_eps_erasing_ergun_bias": {
+      "kind": "value",
+      "value": 0.41466748393713393,
+      "rtol": 1e-06,
+      "note": "root of the mean bias on 0.2 to 0.9"
+    },
+    "check4_eps_erasing_syamlal_obrien_bias": {
+      "kind": "value",
+      "value": 0.353847956209325,
+      "rtol": 1e-06,
+      "note": "root of the mean bias on 0.2 to 0.9"
+    },
+    "check4_eps_erasing_richardson_zaki_bias": {
+      "kind": "value",
+      "value": 0.3708313807837834,
+      "rtol": 1e-06,
+      "note": "root of the mean bias on 0.2 to 0.9"
+    },
+    "check4_closures_needing_voidage_below_table": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.060652398418968,
+      "min_margin": 0.02,
+      "note": "closures whose bias-erasing voidage is below the lowest settled voidage of the rows; margin: relative distance of the nearest"
+    },
+    "check4_ergun_needs_smallest_voidage_correction": {
+      "kind": "exact",
+      "value": true,
+      "margin": 1.0223921711634016,
+      "min_margin": 0.1,
+      "note": "the voidage change that erases the bias, from the mean settled voidage, is smallest for Ergun; margin: relative gap to the next"
+    },
+    "ratio_SO_over_Ergun_min_diakon": {
+      "kind": "value",
+      "value": 0.9722546695617273,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_Ergun_max_diakon": {
+      "kind": "value",
+      "value": 1.6811669047550364,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_Ergun_last_cut_diakon": {
+      "kind": "value",
+      "value": 1.6716923886771464,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_Ergun_max_row_d_sv_um": {
+      "kind": "value",
+      "value": 263.0,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_Ergun_last_row_d_sv_um": {
+      "kind": "value",
+      "value": 318.0,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_RZ_min_diakon": {
+      "kind": "value",
+      "value": 0.7414413559987917,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_RZ_max_diakon": {
+      "kind": "value",
+      "value": 1.1197975396602475,
+      "rtol": 0.0001,
+      "note": "ratio of two predictions on the Diakon rows, or a row's size"
+    },
+    "ratio_SO_over_Ergun_turns_over": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.005635678439238903,
+      "min_margin": 0.001,
+      "note": "the largest ratio is not on the last of the eight cuts; margin: relative gap between the largest and the last"
+    },
+    "check4_vt_cancels_out_of_SO_over_RZ": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the terminal velocity cancels identically out of the quotient of the Syamlal-O'Brien and Richardson-Zaki predictions"
+    },
+    "check4_diakon_rows_clipped": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.1084081297936495,
+      "min_margin": 0.01,
+      "note": "rows whose Re_t lies outside Table VI's range; margin in decades"
+    },
+    "check4_context_rows_clipped": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.1084081297936495,
+      "min_margin": 0.01,
+      "note": "rows whose Re_t lies outside Table VI's range; margin in decades"
+    },
+    "check4_Re_t_max_diakon": {
+      "kind": "value",
+      "value": 27.828394228741608,
+      "rtol": 0.0001,
+      "note": "largest of the eight Diakon rows"
+    },
+    "check4_Re_mf_max_diakon": {
+      "kind": "value",
+      "value": 1.9624324324324325,
+      "rtol": 0.0001,
+      "note": "largest of the eight Diakon rows"
+    },
+    "check4_rho_f_decade_points_so": {
+      "kind": "value",
+      "value": 7.020367524585495,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_dalla_valle_slope_points_so": {
+      "kind": "value",
+      "value": 62.81165171090588,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_dalla_valle_slope_points_rz": {
+      "kind": "value",
+      "value": 60.6207303070906,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_dalla_valle_slope_points_ergun": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "identity",
+      "structural": true,
+      "note": "Ergun's closure shares no constant with the Dalla Valle drag curve"
+    },
+    "check4_ergun_refit_points": {
+      "kind": "value",
+      "value": 1.7391432216751284,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_route_gap_points": {
+      "kind": "value",
+      "value": 59.1553337043846,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_route_gap_over_refit": {
+      "kind": "value",
+      "value": 34.01406679284681,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_flat_eps050_points_so": {
+      "kind": "value",
+      "value": 65.41439731294442,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_flat_eps0383_points_so": {
+      "kind": "value",
+      "value": 77.6082137122533,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check4_unit_slip_points_so": {
+      "kind": "value",
+      "value": 5029.398644384032,
+      "rtol": 0.0001,
+      "note": "difference of two predictions of the mean bias, in points"
+    },
+    "check5_tableVI_logRe_residual": {
+      "kind": "bound",
+      "value": 0.0008039199714863221,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "the table prints Re, n_0 and their logarithms to a few digits; a one-digit slip moves the residual to order one, so 2e-3 separates the two"
+    },
+    "check5_tableVI_logn0_residual": {
+      "kind": "bound",
+      "value": 0.0005401804339550953,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "the table prints Re, n_0 and their logarithms to a few digits; a one-digit slip moves the residual to order one, so 2e-3 separates the two"
+    },
+    "check5_slip_residual_n0": {
+      "kind": "value",
+      "value": 1.0001360549737575,
+      "rtol": 0.001,
+      "note": "residual with one printed digit mis-read"
+    },
+    "check5_slip_residual_Re": {
+      "kind": "value",
+      "value": 0.9999286120149252,
+      "rtol": 0.001,
+      "note": "residual with one printed digit mis-read"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "refit_vs_A11_k1_gap": [
+      "unweighted fit (the top decade dominates)",
+      "first marker dropped",
+      "A1.1's refit claims read for a different fit (k1 off by 1 %)"
+    ],
+    "refit_vs_A11_k2_gap": [
+      "unweighted fit (the top decade dominates)",
+      "first marker dropped"
+    ],
+    "ergun_refit_k1_shift_pct": [
+      "unweighted fit (the top decade dominates)",
+      "first marker dropped"
+    ],
+    "ergun_refit_k2_shift_pct": [
+      "unweighted fit (the top decade dominates)",
+      "first marker dropped"
+    ],
+    "ergun_markers_rows": [
+      "one marker row dropped from the file"
+    ],
+    "geldart_rows": [
+      "last Geldart row dropped",
+      "first Geldart row dropped"
+    ],
+    "geldart_rows_with_U0": [
+      "last Geldart row dropped",
+      "first Geldart row dropped",
+      "U_0 column shifted one row"
+    ],
+    "geldart_diakon_rows": [
+      "first Geldart row dropped"
+    ],
+    "eps0_all_min": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_all_max": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_diakon_min": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_diakon_max": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "first Geldart row dropped",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_two_coarsest_diakon": [
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_all_min_vs_A17_gap": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "eps0_all_max_vs_A17_gap": [
+      "H_MB/H_0 column ignored (eps_0 := eps_MB)",
+      "eps_0 from H_0/H_MB instead of H_MB/H_0",
+      "H_MB/H_0 column read 0.05 high"
+    ],
+    "limit_closed_form_gap": [
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "outer 0.5 -> 0.55",
+      "closed forms derived with the exponent of A one too high",
+      "closed forms derived with 3/4 read as 1",
+      "closed forms derived with C_D offset 0.44"
+    ],
+    "dalla_valle_vs_stokes_pct": [
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D slope 4.8 -> 4.0"
+    ],
+    "cross_viscous_lower_eps": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180"
+    ],
+    "cross_viscous_upper_eps": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180"
+    ],
+    "cross_inertial_eps": [
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "viscous_ratio_minimum_eps": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)"
+    ],
+    "viscous_ratio_minimum": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180"
+    ],
+    "inertial_ratio_falls_beyond_crossing": [
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "dilute B exponent 2.65 -> 0.45",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)"
+    ],
+    "inertial_ratio_at_eps099": [
+      "dense B exponent 1.28 -> 0.40 (no admissible root on the whole range: expected one root on [0.001, 1]: no sign change in the scanned range)",
+      "dilute B exponent 2.65 -> 0.45",
+      "switch voidage 0.85 -> 0.995",
+      "3/4 -> 1 (no admissible root on the whole range: expected 2 roots on [0.001, 1]: no sign change in the scanned range)",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dip_derivative_vs_finite_difference": [
+      "derivative built for a different drag constant (C_D slope 4.0)",
+      "derivative built with the exponent of A read as 4.65"
+    ],
+    "dip_abscissa_ergun_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ratio_viscous_limit_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "3/4 -> 1",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180"
+    ],
+    "ratio_inertial_limit_eps044": [
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "limit_gap_viscous_pct_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "3/4 -> 1",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180"
+    ],
+    "limit_gap_inertial_pct_eps044": [
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "worst_ratio_SO_over_Ergun_at_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "outer 0.5 -> 0.55",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dip_Re_m_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "disagreement_factor_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "outer 0.5 -> 0.55",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dip_slip_velocity_300um_air": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dip_abscissa_ergun_eps050": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ergun_markers_abscissa_min": [
+      "marker file without its lowest-abscissa marker",
+      "marker abscissa mis-scaled by 2 (a different Reynolds number definition)",
+      "marker abscissa mis-scaled by 0.5"
+    ],
+    "ergun_markers_abscissa_max": [
+      "marker abscissa mis-scaled by 2 (a different Reynolds number definition)",
+      "marker abscissa mis-scaled by 0.5"
+    ],
+    "dip_below_markers_pct_eps044": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40",
+      "marker file without its lowest-abscissa marker",
+      "marker abscissa mis-scaled by 2 (a different Reynolds number definition)",
+      "marker abscissa mis-scaled by 0.5"
+    ],
+    "dip_inside_markers_eps050": [
+      "C_D slope 4.8 -> 4.0",
+      "0.06 and 0.12 a decimal place out",
+      "marker abscissa mis-scaled by 2 (a different Reynolds number definition)"
+    ],
+    "dip_voidages_with_interior_minimum": [
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "0.06 and 0.12 a decimal place out"
+    ],
+    "dip_voidages_where_minimum_is_lowest": [
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "0.06 and 0.12 a decimal place out"
+    ],
+    "dip_stops_being_lowest_eps": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "outer 0.5 -> 0.55",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ergun_isolated_Re1_pct": [
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ergun_isolated_Re0p01_pct": [
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ergun_isolated_Re1e6_ratio": [
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "ergun_isolated_crossover_Re": [
+      "3/4 -> 1",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dilute_viscous_share_Re1em3_pct": [
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dilute_full_over_closed_Re1em3": [
+      "A exponent 4.14 -> 4.65",
+      "outer 0.5 -> 0.55",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "dilute_full_over_closed_Re1": [
+      "A exponent 4.14 -> 4.65",
+      "dilute B exponent 2.65 -> 0.45",
+      "C_D offset 0.63 -> 0.44",
+      "C_D slope 4.8 -> 4.0",
+      "outer 0.5 -> 0.55",
+      "0.06 and 0.12 a decimal place out",
+      "Ergun on A1.1's refitted constants",
+      "Ergun k1 150 -> 180",
+      "Ergun k2 1.75 -> 1.40"
+    ],
+    "B_branch_jump_pct_at_switch": [
+      "dense B exponent 1.28 -> 0.40",
+      "dense B exponent 1.28 -> 1.39",
+      "dilute B exponent 2.65 -> 0.45",
+      "B prefactor 0.8 -> 1.0",
+      "switch voidage 0.85 -> 0.995"
+    ],
+    "B_half_unit_effect_pct": [
+      "switch voidage 0.85 -> 0.995",
+      "dilute exponent read with one digit fewer"
+    ],
+    "B_jump_in_half_units_of_dilute_exponent": [
+      "dense B exponent 1.28 -> 0.40",
+      "dense B exponent 1.28 -> 1.39",
+      "dilute B exponent 2.65 -> 0.45",
+      "B prefactor 0.8 -> 1.0",
+      "switch voidage 0.85 -> 0.995",
+      "dilute exponent read with one digit fewer"
+    ],
+    "Vrm_branch_jump_max_pct": [
+      "A exponent 4.14 -> 4.65",
+      "dense B exponent 1.28 -> 0.40",
+      "dense B exponent 1.28 -> 1.39",
+      "dilute B exponent 2.65 -> 0.45",
+      "B prefactor 0.8 -> 1.0",
+      "switch voidage 0.85 -> 0.995",
+      "0.06 and 0.12 a decimal place out",
+      "scan to Re_m = 1e14, where the radicand cancels",
+      "scan cut at Re_m = 1e2"
+    ],
+    "Vrm_branch_jump_falls_with_Re": [
+      "scan to Re_m = 1e14, where the radicand cancels"
+    ],
+    "Vrm_branch_jump_gap_to_B_jump": [
+      "scan to Re_m = 1e14, where the radicand cancels",
+      "scan cut at Re_m = 1e2"
+    ],
+    "check1_Vrm_unity_identity": [
+      "outer 0.5 -> 0.55",
+      "0.12 -> 0.10 in the cross term",
+      "0.06 read as 0.05 in the linear term only",
+      "the 0.8 prefactor put on the dilute branch too",
+      "identity evaluated at eps_g = 0.9999",
+      "Reynolds range extended to 1e10"
+    ],
+    "check1_readings_seen": [
+      "identity evaluated at eps_g = 0.9999",
+      "Reynolds range extended to 1e10"
+    ],
+    "check1_voidage_constants_seen": [
+      "identity evaluated at eps_g = 0.9999",
+      "Reynolds range extended to 1e10"
+    ],
+    "check2_force_balance_identity": [
+      "V_rm^2 -> V_rm in eq. (11)",
+      "V_rm^2 -> V_rm^3",
+      "C_Ds argument Re_m/V_rm -> Re_m",
+      "3/4 -> 1",
+      "eps_g dropped from eq. (11)",
+      "A exponent 4.14 -> 4.65 (right-hand side from the printed constants)",
+      "C_D slope 4.8 -> 4.0 (right-hand side from the printed constants)",
+      "C_D offset 0.63 -> 0.44 (right-hand side from the printed constants)",
+      "outer 0.5 -> 0.55 (right-hand side from the printed constants)"
+    ],
+    "check2_structural_readings_seen": [
+      "bound on the identity read as 1e3"
+    ],
+    "check2_smallest_structural_residual": [
+      "3/4 in eq. (11) read as 0.9 where the table has 1 in its place"
+    ],
+    "check2_largest_structural_residual": [
+      "exponent of V_rm in eq. (11) read as 1.5 where the table has 1"
+    ],
+    "check2_constant_readings_seen": [
+      "constants read differently on the two sides"
+    ],
+    "check3_readings_one_unit_apart": [
+      "alternative bridge with a wrong power of eps_g (eps^2 V)",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)"
+    ],
+    "check3_index_bias_pct_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_index_bias_se_pct_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_bias_over_se_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_alt_reading_bias_pct_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_index_bias_pct_eps050": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_index_bias_se_pct_eps050": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_bias_over_se_eps050": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_alt_reading_bias_pct_eps050": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_index_bias_pct_eps095": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute B exponent 2.65 -> 2.39",
+      "dilute B exponent 2.65 -> 1.65",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "switch voidage 0.85 -> 0.95",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_index_bias_se_pct_eps095": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute B exponent 2.65 -> 2.39",
+      "dilute B exponent 2.65 -> 1.65",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "switch voidage 0.85 -> 0.95",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_bias_over_se_eps095": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute B exponent 2.65 -> 2.39",
+      "dilute B exponent 2.65 -> 1.65",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "switch voidage 0.85 -> 0.95",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_alt_reading_bias_pct_eps095": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute B exponent 2.65 -> 2.39",
+      "dilute B exponent 2.65 -> 1.65",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "switch voidage 0.85 -> 0.95",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_alt_reading_bias_pct_eps085": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "switch voidage 0.85 -> 0.80",
+      "switch voidage 0.85 -> 0.55",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_viscous_index_vs_RZ_pct": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Richardson-Zaki viscous asymptote read as 4.50"
+    ],
+    "check3_alt_reading_viscous_index_vs_RZ_pct": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Richardson-Zaki viscous asymptote read as 4.50"
+    ],
+    "check3_row_spread_pts_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_rows_above_eps045": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: Re column of the eleventh row read 1.82 instead of 18.2",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_rows_above_eps095": [
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)"
+    ],
+    "check3_bias_falls_between_voidages": [
+      "dense B exponent 1.28 -> 1.39",
+      "dilute B exponent 2.65 -> 2.39",
+      "dilute B exponent 2.65 -> 1.65",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)"
+    ],
+    "check3_all_rows_above_from_eps": [
+      "A exponent 4.14 -> 4.65",
+      "A exponent 4.14 -> 4.00",
+      "dense B exponent 1.28 -> 1.39",
+      "B prefactor 0.8 -> 1.0",
+      "dilute branch deleted (B = 1 above the switch) (no admissible root on the whole range: 3 crossings of n_0 = 3.76)",
+      "outer 0.5 -> 0.55 (no admissible root on the whole range: the implied index is below n_0 = 4.52 at eps_g = 0.99)",
+      "0.06 and 0.12 a decimal place out",
+      "Table VI: n_0 of the fifth row read 41.7 instead of 4.17 (no admissible root on the whole range: the implied index is below n_0 = 41.7 at eps_g = 0.99)",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check3_readings_invisible_at_eps050": [
+      "effects measured against a baseline with the dilute exponent 2.39"
+    ],
+    "check3_readings_never_seen": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39"
+    ],
+    "check3_break_dilute_exponent_2p65_to_1p65_pts_at_eps095": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_dilute_branch_deleted_pts_at_eps095": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_switch_0p85_to_0p55_pts_at_eps060": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_switch_0p85_to_0p95_pts_at_eps095": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_switch_small_displacement_max_pts": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured against a baseline with the dilute exponent 2.39",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_joint_max_pts": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_aexp_one_unit_pts_eps050": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_break_aexp_4p00_pts_eps050": [
+      "effects measured against a baseline with the A exponent 4.65",
+      "effects measured against a baseline with the outer 0.5 -> 0.55",
+      "effects measured on a Table VI with its n_0 column read one row low"
+    ],
+    "check3_eq16_constants_max_pts": [],
+    "reconcile_A16_ergun_at_eps_MB_gap": [
+      "A1.6's claims read for different rows (Ergun at eps_MB off by 1 %)",
+      "Ergun on A1.1's refitted constants",
+      "gas density a decimal place out",
+      "gas viscosity a decimal place out",
+      "Diakon rows replaced by the whole table"
+    ],
+    "reconcile_A16_ergun_at_eps_0_gap": [
+      "Ergun on A1.1's refitted constants",
+      "gas density a decimal place out",
+      "gas viscosity a decimal place out",
+      "Diakon rows replaced by the whole table"
+    ],
+    "reconcile_A16_ergun_at_eps042_gap": [
+      "Ergun on A1.1's refitted constants",
+      "gas density a decimal place out",
+      "gas viscosity a decimal place out",
+      "Diakon rows replaced by the whole table"
+    ],
+    "reconcile_A16_wen_yu_gap": [
+      "gas density a decimal place out",
+      "gas viscosity a decimal place out",
+      "Diakon rows replaced by the whole table"
+    ],
+    "check4_wen_yu_bias_pct": [
+      "gas density a decimal place out",
+      "gas viscosity a decimal place out",
+      "Diakon rows replaced by the whole table"
+    ],
+    "check4_ergun_bias_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_ergun_bias_se_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_rows_overpredicted_ergun": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses"
+    ],
+    "check4_syamlal_obrien_bias_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "check4_syamlal_obrien_bias_se_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "check4_rows_overpredicted_syamlal_obrien": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "A exponent 4.14 -> 4.65"
+    ],
+    "check4_richardson_zaki_bias_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_richardson_zaki_bias_se_pct": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_rows_overpredicted_richardson_zaki": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses"
+    ],
+    "check4_ergun_bias_pct_at_epsMB": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_ergun_bias_pct_at_eps042": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_ergun_least_abs_bias_voidages": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "check4_ergun_lead_min_over_se": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_rz_lead_pts_eps0383": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_rz_lead_se_pts_eps0383": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_so_rz_order_resolved_voidages": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_eps_erasing_ergun_bias": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "check4_eps_erasing_syamlal_obrien_bias": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "check4_eps_erasing_richardson_zaki_bias": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_closures_needing_voidage_below_table": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)"
+    ],
+    "check4_ergun_needs_smallest_voidage_correction": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)"
+    ],
+    "ratio_SO_over_Ergun_min_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "ratio_SO_over_Ergun_max_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "ratio_SO_over_Ergun_last_cut_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Ergun on A1.1's refitted constants"
+    ],
+    "ratio_SO_over_Ergun_max_row_d_sv_um": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "ratio_SO_over_Ergun_last_row_d_sv_um": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)"
+    ],
+    "ratio_SO_over_Ergun_turns_over": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "A exponent 4.14 -> 4.65",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "ratio_SO_over_RZ_min_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = eps_MB, not the settled eps_0",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "ratio_SO_over_RZ_max_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = 0.50 for every row",
+      "A exponent 4.14 -> 4.65",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44",
+      "Table VI: the n_0 column read one row low"
+    ],
+    "check4_vt_cancels_out_of_SO_over_RZ": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "no-velocity route of the ratio built with the A exponent 4.65"
+    ],
+    "check4_Re_t_max_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "C_D slope 4.8 -> 4.0",
+      "C_D offset 0.63 -> 0.44"
+    ],
+    "check4_Re_mf_max_diakon": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "headline at eps_mf = 0.383 for every row",
+      "headline at eps_mf = 0.42, the textbook value A1.6 uses",
+      "headline at eps_mf = 0.50 for every row"
+    ],
+    "check4_diakon_rows_clipped": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)"
+    ],
+    "check4_context_rows_clipped": [
+      "d_sv taken as mm, not um -> cm (x10) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "mu a decimal place out (1.8e-5 poise) (no admissible root on the whole range: expected one root on [0.2, 0.9]: no sign change in the scanned range)",
+      "rho_f a decimal place out (1.2e-2)",
+      "C_D slope 4.8 -> 4.0"
+    ],
+    "check4_rho_f_decade_points_so": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_dalla_valle_slope_points_so": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_dalla_valle_slope_points_rz": [
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on Table VI read one row low",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_dalla_valle_slope_points_ergun": [],
+    "check4_ergun_refit_points": [
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_route_gap_points": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_route_gap_over_refit": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_flat_eps050_points_so": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_flat_eps0383_points_so": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check4_unit_slip_points_so": [
+      "effects measured with the A exponent 4.65",
+      "effects measured with the gas viscosity a decimal place out",
+      "effects measured on the eight rows without the coarsest cut"
+    ],
+    "check5_tableVI_logn0_residual": [
+      "n_0 of the fifth row read 41.7 instead of 4.17",
+      "n_0 of the eighth row read 37.6 instead of 3.76",
+      "log n_0 column read one row low"
+    ],
+    "check5_tableVI_logRe_residual": [
+      "Re of the eleventh row read 1.82 instead of 18.2",
+      "Re of the third row read 7.6 instead of 0.76",
+      "log Re column read one row low"
+    ],
+    "check5_slip_residual_n0": [
+      "transposed digits instead of a slipped decimal point (4.17 as 4.71, 18.2 as 12.8)"
+    ],
+    "check5_slip_residual_Re": [
+      "transposed digits instead of a slipped decimal point (4.17 as 4.71, 18.2 as 12.8)"
+    ]
   }
 }
