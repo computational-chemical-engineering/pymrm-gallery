@@ -1,56 +1,1364 @@
 {
   "page": "A3.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "fig5_crossing_pv": 826.5411694276017,
-    "fig5_crossings_in_window": 1.0,
-    "ion_ratio_min": 1.3035558758999346,
-    "ion_ratio_max": 5.975381613197948,
-    "ion_ratio_frac_in_2_10": 0.83595,
-    "null_single_branch_worst": 0.8326466718391208,
-    "null_pure_alpha0_cost": 0.8205642030260802,
-    "null_pure_beta0_cost": 0.736408202519683,
-    "null_ion_alpha0_cost": 1.8533858187665557,
-    "null_ion_beta0_cost": 0.26441178316800085,
-    "null_ion_beta0_cost_dataspan": 0.3521877656243182,
-    "purewater_alpha_range_cost": 0.16158634964154217,
-    "purewater_beta_range_cost": 0.24698357041071084,
-    "electrode_ceiling_from_linek": 0.1,
-    "frac_window_above_ceiling_pure": 0.2329125,
-    "frac_window_above_ceiling_ionic": 0.80470625,
-    "pv_where_ionic_passes_ceiling": 1214.890532903065,
-    "kLA_pure_worked": 0.04020243431242893,
-    "NG_times_H_pure": 10.784980022532334,
-    "phi_pure": 0.8399856552860836,
-    "phi_pure_H20": 0.7729526417262497,
-    "phi_pure_H40": 0.8765294058008819,
-    "kLA_ionic_worked": 0.15327223773978235,
-    "NG_times_H_ionic": 41.11785891336755,
-    "phi_ionic": 0.5443213369710079,
-    "phi_ionic_H20": 0.42415705309466384,
-    "phi_ionic_H40": 0.6247982552127599,
-    "pymrm_vs_closed_n1600_pure": 9.33321058960157e-05,
-    "pymrm_vs_closed_richardson_pure": 5.010681303208031e-08,
-    "grid_order_pure": 0.9985479668653627,
-    "pymrm_vs_closed_n1600_ionic": 0.00019974737265127107,
-    "pymrm_vs_closed_richardson_ionic": 1.6630294608077634e-07,
-    "grid_order_ionic": 0.9977494042138422,
-    "kapp_over_k_pure": 0.8082197714164681,
-    "kapp_over_k_pure_richardson": 0.8087377218422487,
-    "lagrangian_gap_pure": 0.00015520562466386778,
-    "kapp_over_k_pure_inert_start": 0.7540139431009085,
-    "o2_balance_pure": 1.3954129073526092e-10,
-    "kapp_over_k_ionic": 0.5459170151238292,
-    "kapp_over_k_ionic_richardson": 0.5462616480985509,
-    "lagrangian_gap_ionic": 0.00012119178649605544,
-    "kapp_over_k_ionic_inert_start": 0.2836532241573117,
-    "o2_balance_ionic": 1.453610464512562e-10,
-    "kapp_over_k_pure_w19": 0.8051995664627705,
-    "kapp_over_k_pure_w37": 0.808238676648546,
-    "kapp_over_k_ionic_w19": 0.4346049511292304,
-    "kapp_over_k_ionic_w37": 0.6585548816222815,
-    "phi_ionic_2p5L": 0.9353099917593776,
-    "phi_ionic_5100L": 0.4780334667356731,
-    "break_rows": 17.0,
-    "break_rows_that_move_nothing": 1.0
+    "fig5_crossing_pv": {
+      "kind": "value",
+      "value": 826.5411694276017,
+      "rtol": 1e-06,
+      "unit": "W/m3"
+    },
+    "fig5_next_crossing_pv": {
+      "kind": "value",
+      "value": 328.0130804611,
+      "rtol": 1e-06,
+      "unit": "W/m3"
+    },
+    "fig5_crossings_in_window": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.19841106006442943,
+      "min_margin": 0.1,
+      "note": "crossings inside 400..1e4 W/m3; margin the smallest |ln(x/edge)|"
+    },
+    "fig5_crossing_pair": {
+      "kind": "exact",
+      "value": "c x d",
+      "note": "the pair whose crossing is inside"
+    },
+    "fig5_crossings_from_500": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.42155461137863914,
+      "min_margin": 0.1,
+      "note": "left edge at the printed validity bound; margin the smallest |ln(x/edge)|"
+    },
+    "fig5_crossings_from_300": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.08927101238735148,
+      "min_margin": 0.05,
+      "note": "left edge moved to 300 W/m3; margin the smallest |ln(x/edge)|"
+    },
+    "null_pure_alpha0_cost": {
+      "kind": "value",
+      "value": 0.8205642030260802,
+      "rtol": 1e-06
+    },
+    "null_pure_beta0_cost": {
+      "kind": "value",
+      "value": 0.736408202519683,
+      "rtol": 1e-06
+    },
+    "null_ion_alpha0_cost": {
+      "kind": "value",
+      "value": 1.8533858187665557,
+      "rtol": 1e-06
+    },
+    "null_ion_beta0_cost": {
+      "kind": "value",
+      "value": 0.26441178316800085,
+      "rtol": 1e-06
+    },
+    "null_ion_beta0_cost_dataspan": {
+      "kind": "value",
+      "value": 0.3521877656243182,
+      "rtol": 1e-06
+    },
+    "purewater_alpha_range_cost": {
+      "kind": "value",
+      "value": 0.16158634964154217,
+      "rtol": 1e-06
+    },
+    "purewater_beta_range_cost": {
+      "kind": "value",
+      "value": 0.24698357041071084,
+      "rtol": 1e-06
+    },
+    "null_single_branch_worst": {
+      "kind": "value",
+      "value": 0.8326466718391208,
+      "rtol": 1e-06
+    },
+    "load_bearing_terms": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.8410205062992073,
+      "min_margin": 0.5,
+      "note": "costs of deleting (P/V)^0.4, v_s^0.5, (P/V)^0.7 above the 40 % accuracy"
+    },
+    "ion_beta_null_inside_accuracy": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.11953058593920457,
+      "min_margin": 0.05,
+      "note": "deleting v_s^0.2 over the two ionic spans, below the 40 % accuracy"
+    },
+    "purewater_range_inside_accuracy": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.38254107397322296,
+      "min_margin": 0.05,
+      "note": "the pure-water literature exponent ranges, below the 40 % accuracy"
+    },
+    "ion_ratio_min": {
+      "kind": "value",
+      "value": 1.3035558758999346,
+      "rtol": 1e-06
+    },
+    "ion_ratio_max": {
+      "kind": "value",
+      "value": 5.975381613197949,
+      "rtol": 1e-06
+    },
+    "ion_ratio_frac_in_2_10": {
+      "kind": "value",
+      "value": 0.8365934181431981,
+      "rtol": 1e-06
+    },
+    "ratio_rises_with_pv": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.29999999999999993,
+      "min_margin": 0.05,
+      "note": "sign of alpha_9 - alpha_8; margin its size"
+    },
+    "ratio_falls_with_vs": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.3,
+      "min_margin": 0.05,
+      "note": "sign of beta_9 - beta_8; margin its size"
+    },
+    "ratio_min_below_floor": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.3482220620500327,
+      "min_margin": 0.05,
+      "note": "minimum ratio against the review's 2x; margin relative"
+    },
+    "electrode_ceiling_from_linek": {
+      "kind": "value",
+      "value": 0.1,
+      "rtol": 1e-06,
+      "unit": "1/s"
+    },
+    "ceiling_closure_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "1/(5 x 2 s) against the printed 0.1; nonzero only for a transcription error"
+    },
+    "frac_window_above_ceiling_pure": {
+      "kind": "value",
+      "value": 0.23237892690309417,
+      "rtol": 1e-06
+    },
+    "frac_window_above_ceiling_ionic": {
+      "kind": "value",
+      "value": 0.8054728454486809,
+      "rtol": 1e-06
+    },
+    "pv_where_ionic_passes_ceiling": {
+      "kind": "value",
+      "value": 1214.890532903065,
+      "rtol": 1e-06,
+      "unit": "W/m3"
+    },
+    "kLA_pure_worked": {
+      "kind": "value",
+      "value": 0.04020243431242893,
+      "rtol": 1e-06
+    },
+    "kLA_ionic_worked": {
+      "kind": "value",
+      "value": 0.15327223773978235,
+      "rtol": 1e-06
+    },
+    "NG_times_H_pure": {
+      "kind": "value",
+      "value": 10.784980022532336,
+      "rtol": 1e-06
+    },
+    "NG_times_H_ionic": {
+      "kind": "value",
+      "value": 41.11785891336755,
+      "rtol": 1e-06
+    },
+    "phi_pure": {
+      "kind": "value",
+      "value": 0.8399856552860836,
+      "rtol": 1e-06
+    },
+    "phi_ionic": {
+      "kind": "value",
+      "value": 0.5443213369710079,
+      "rtol": 1e-06
+    },
+    "bias_pure_quasisteady": {
+      "kind": "value",
+      "value": 0.1600143447139164,
+      "rtol": 1e-06
+    },
+    "bias_ionic_quasisteady": {
+      "kind": "value",
+      "value": 0.45567866302899207,
+      "rtol": 1e-06
+    },
+    "phi_pure_H20": {
+      "kind": "value",
+      "value": 0.7729526417262497,
+      "rtol": 1e-06
+    },
+    "phi_pure_H40": {
+      "kind": "value",
+      "value": 0.8765294058008819,
+      "rtol": 1e-06
+    },
+    "phi_ionic_H20": {
+      "kind": "value",
+      "value": 0.42415705309466384,
+      "rtol": 1e-06
+    },
+    "phi_ionic_H40": {
+      "kind": "value",
+      "value": 0.6247982552127599,
+      "rtol": 1e-06
+    },
+    "liquid_time_pure": {
+      "kind": "value",
+      "value": 29.612548120383078,
+      "rtol": 1e-06
+    },
+    "liquid_time_ionic": {
+      "kind": "value",
+      "value": 11.986189603377957,
+      "rtol": 1e-06
+    },
+    "k_ratio_worked": {
+      "kind": "value",
+      "value": 3.812511365571634,
+      "rtol": 1e-06
+    },
+    "tau_G_worked": {
+      "kind": "value",
+      "value": 29.80742669217495,
+      "rtol": 1e-06
+    },
+    "criterion_factor": {
+      "kind": "value",
+      "value": 0.3,
+      "rtol": 1e-06
+    },
+    "dispersion_height_NG_effect": {
+      "kind": "value",
+      "value": 0.03574416865128627,
+      "rtol": 1e-06
+    },
+    "phi_ionic_2p5L": {
+      "kind": "value",
+      "value": 0.9353099917593776,
+      "rtol": 1e-06
+    },
+    "phi_ionic_5100L": {
+      "kind": "value",
+      "value": 0.4780334667356731,
+      "rtol": 1e-06
+    },
+    "bias_ionic_2p5L": {
+      "kind": "value",
+      "value": 0.06469000824062243,
+      "rtol": 1e-06
+    },
+    "bias_ionic_5100L": {
+      "kind": "value",
+      "value": 0.5219665332643268,
+      "rtol": 1e-06
+    },
+    "phi_ionic_TH05": {
+      "kind": "value",
+      "value": 0.4074440062681126,
+      "rtol": 1e-06
+    },
+    "phi_ionic_TH15": {
+      "kind": "value",
+      "value": 0.6201438395328849,
+      "rtol": 1e-06
+    },
+    "bias_ionic_TH05": {
+      "kind": "value",
+      "value": 0.5925559937318874,
+      "rtol": 1e-06
+    },
+    "bias_ionic_TH15": {
+      "kind": "value",
+      "value": 0.3798561604671151,
+      "rtol": 1e-06
+    },
+    "eq3_forms_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "eq. 3's two forms agree when V = pi T^2 H_t/4 holds for the vessel built"
+    },
+    "pymrm_vs_closed_n1600_pure": {
+      "kind": "value",
+      "value": 9.334507010338999e-05,
+      "rtol": 0.0001
+    },
+    "pymrm_vs_closed_richardson_pure": {
+      "kind": "bound",
+      "value": 4.838694001030319e-08,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "Richardson limit of a first-order ladder; the next-order terms"
+    },
+    "grid_order_pure_min": {
+      "kind": "bound",
+      "value": 0.9977605528997862,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "grid_order_pure_max": {
+      "kind": "bound",
+      "value": 0.9994393509058441,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "pymrm_vs_closed_n1600_ionic": {
+      "kind": "value",
+      "value": 0.000199775122055601,
+      "rtol": 0.0001
+    },
+    "pymrm_vs_closed_richardson_ionic": {
+      "kind": "bound",
+      "value": 2.217740997512152e-07,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "Richardson limit of a first-order ladder; the next-order terms"
+    },
+    "grid_order_ionic_min": {
+      "kind": "bound",
+      "value": 0.9952138681314021,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "grid_order_ionic_max": {
+      "kind": "bound",
+      "value": 0.998799890066581,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "top_feed_mirror_gap": {
+      "kind": "bound",
+      "value": 2.0898315757650005e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "a uniform sink makes the reflected problem identical; round-off only"
+    },
+    "phi_top_feed_gap": {
+      "kind": "bound",
+      "value": 2.8199664825478976e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "the column mean is invariant under the reflection; phi cannot see the feed end"
+    },
+    "kapp_over_k_pure": {
+      "kind": "value",
+      "value": 0.808913793268397,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_pure_richardson": {
+      "kind": "value",
+      "value": 0.8087376727422293,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_pure_production": {
+      "kind": "value",
+      "value": 0.8082197224531377,
+      "rtol": 0.0001
+    },
+    "bias_pure_transient": {
+      "kind": "value",
+      "value": 0.19108620673160304,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_pure_inert_start": {
+      "kind": "value",
+      "value": 0.755625827013104,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_pure_w19": {
+      "kind": "value",
+      "value": 0.8059782653151968,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_pure_w37": {
+      "kind": "value",
+      "value": 0.8087831175956057,
+      "rtol": 0.0001
+    },
+    "kapp_disc_effect_pure": {
+      "kind": "bound",
+      "value": 0.0022777317765674265,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "production run against the two-axis limit, every window and start; the page quotes limits"
+    },
+    "time_order_pure_min": {
+      "kind": "bound",
+      "value": 0.9883118330292652,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "time_order_pure_max": {
+      "kind": "bound",
+      "value": 0.9933683250103632,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "o2_balance_pure": {
+      "kind": "bound",
+      "value": 1.3963262055607672e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "backward Euler telescopes onto the face fluxes; the gap is the solves' round-off"
+    },
+    "lagrangian_order_pure_min": {
+      "kind": "bound",
+      "value": 1.0009681063527476,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "linear interpolation in age, first order with h <= da"
+    },
+    "lagrangian_order_pure_max": {
+      "kind": "bound",
+      "value": 1.0198121175266148,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "linear interpolation in age, first order with h <= da"
+    },
+    "lagrangian_limit_gap_pure": {
+      "kind": "bound",
+      "value": 1.2107379376846694e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "two independent first-order limits; the next-order terms of both ladders"
+    },
+    "kapp_over_k_ionic": {
+      "kind": "value",
+      "value": 0.5462616480967337,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_richardson": {
+      "kind": "value",
+      "value": 0.5462616480976155,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_production": {
+      "kind": "value",
+      "value": 0.5459170151236286,
+      "rtol": 0.0001
+    },
+    "bias_ionic_transient": {
+      "kind": "value",
+      "value": 0.4537383519032663,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_inert_start": {
+      "kind": "value",
+      "value": 0.28418493057941113,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_w19": {
+      "kind": "value",
+      "value": 0.4349603794345825,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_w37": {
+      "kind": "value",
+      "value": 0.6593667419478265,
+      "rtol": 0.0001
+    },
+    "kapp_disc_effect_ionic": {
+      "kind": "bound",
+      "value": 0.0008118603255446999,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "production run against the two-axis limit, every window and start; the page quotes limits"
+    },
+    "time_order_ionic_min": {
+      "kind": "bound",
+      "value": 0.9889844601067181,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "time_order_ionic_max": {
+      "kind": "bound",
+      "value": 0.9993595085873088,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "o2_balance_ionic": {
+      "kind": "bound",
+      "value": 1.454172413563233e-10,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "backward Euler telescopes onto the face fluxes; the gap is the solves' round-off"
+    },
+    "lagrangian_order_ionic_min": {
+      "kind": "bound",
+      "value": 0.9928375888194957,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "linear interpolation in age, first order with h <= da"
+    },
+    "lagrangian_order_ionic_max": {
+      "kind": "bound",
+      "value": 0.9989137241005942,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "linear interpolation in age, first order with h <= da"
+    },
+    "lagrangian_limit_gap_ionic": {
+      "kind": "bound",
+      "value": 1.388544253577706e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "two independent first-order limits; the next-order terms of both ladders"
+    },
+    "space_order_pure_min": {
+      "kind": "bound",
+      "value": 0.9943243312458585,
+      "min": 0.95,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "space_order_pure_max": {
+      "kind": "bound",
+      "value": 0.9985795103667051,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind"
+    },
+    "kapp_space_effect_ionic": {
+      "kind": "bound",
+      "value": 8.817391261572993e-13,
+      "max": 1e-08,
+      "basis": "theory",
+      "note": "t_2 < tau_G: the outlet still carries uniform initial gas, the mean balance is closed"
+    },
+    "ionic_fit_before_tau_G": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.39341896401724263,
+      "min_margin": 0.1,
+      "note": "t_2 of the (0.2, 0.8) window against tau_G; margin relative"
+    },
+    "kapp_over_k_ionic_inert_start_w19": {
+      "kind": "value",
+      "value": 0.2804170655625652,
+      "rtol": 0.0001
+    },
+    "kapp_over_k_ionic_inert_start_w37": {
+      "kind": "value",
+      "value": 0.29154926397336905,
+      "rtol": 0.0001
+    },
+    "bias_ionic_window_min": {
+      "kind": "value",
+      "value": 0.3406332580521735,
+      "rtol": 0.0001
+    },
+    "bias_ionic_window_max": {
+      "kind": "value",
+      "value": 0.5650396205654176,
+      "rtol": 0.0001
+    },
+    "phi_ionic_inside_window_range": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.17447862874758358,
+      "min_margin": 0.05,
+      "note": "quasi-steady phi between the end windows' k_app/k; margin relative"
+    },
+    "ladder_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 47561.67635217086,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "every ladder's finest difference far above the solves' round-off"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "fig5_crossing_pv": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "fig5_next_crossing_pv": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Figure 5 left edge 4.10^2 read as 3.10^2"
+    ],
+    "fig5_crossings_in_window": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Figure 5 left edge 4.10^2 read as 3.10^2"
+    ],
+    "fig5_crossing_pair": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Figure 5 left edge 4.10^2 read as 3.10^2"
+    ],
+    "fig5_crossings_from_500": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "fig5_crossings_from_300": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "null_pure_alpha0_cost": [
+      "alphas swapped, 0.4 <-> 0.7"
+    ],
+    "null_pure_beta0_cost": [
+      "betas swapped, 0.5 <-> 0.2"
+    ],
+    "null_ion_alpha0_cost": [
+      "alphas swapped, 0.4 <-> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "null_ion_beta0_cost": [
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "null_ion_beta0_cost_dataspan": [
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "branching deleted: eq. 8 used for both",
+      "Figure 4 data span 0.0023 read as 0.023"
+    ],
+    "purewater_alpha_range_cost": [
+      "alphas swapped, 0.4 <-> 0.7",
+      "pure-water alpha range 0.35-0.5 read as 0.25-0.5"
+    ],
+    "purewater_beta_range_cost": [
+      "betas swapped, 0.5 <-> 0.2",
+      "pure-water beta range 0.3-0.6 read as 0.3-0.9"
+    ],
+    "null_single_branch_worst": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "load_bearing_terms": [
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "accuracy ceiling 40 % read as 90 %"
+    ],
+    "ion_beta_null_inside_accuracy": [
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "branching deleted: eq. 8 used for both",
+      "accuracy ceiling 40 % read as 30 %"
+    ],
+    "purewater_range_inside_accuracy": [
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "pure-water beta range 0.3-0.6 read as 0.3-0.9"
+    ],
+    "ion_ratio_min": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "ion_ratio_max": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "ion_ratio_frac_in_2_10": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "ion enhancement floor 2 read as 1.2"
+    ],
+    "ratio_rises_with_pv": [
+      "alphas swapped, 0.4 <-> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "ratio_falls_with_vs": [
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "ratio_min_below_floor": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "ion enhancement floor 2 read as 1.2"
+    ],
+    "electrode_ceiling_from_linek": [
+      "Linek's margin 5 read as 3",
+      "probe tau_p 2 s read as 3 s"
+    ],
+    "ceiling_closure_gap": [
+      "Linek's margin 5 read as 3",
+      "probe tau_p 2 s read as 3 s",
+      "electrode ceiling 0.1 read as 0.2"
+    ],
+    "frac_window_above_ceiling_pure": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "electrode ceiling 0.1 read as 0.2"
+    ],
+    "frac_window_above_ceiling_ionic": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "electrode ceiling 0.1 read as 0.2"
+    ],
+    "pv_where_ionic_passes_ceiling": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "electrode ceiling 0.1 read as 0.2"
+    ],
+    "kLA_pure_worked": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3"
+    ],
+    "kLA_ionic_worked": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "NG_times_H_pure": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "NG_times_H_ionic": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_pure": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_pure_quasisteady": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_ionic_quasisteady": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_pure_H20": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_pure_H40": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic_H20": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic_H40": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "liquid_time_pure": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "liquid_time_ionic": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "k_ratio_worked": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 8 prefactor mis-read 2.6e-2 -> 2.6e-3",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both"
+    ],
+    "tau_G_worked": [
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "criterion_factor": [
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10"
+    ],
+    "dispersion_height_NG_effect": [
+      "holdup eps = 0.20 instead of 0.10"
+    ],
+    "phi_ionic_2p5L": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic_5100L": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "legend volume 5100 L read as 510 L",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_ionic_2p5L": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_ionic_5100L": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "legend volume 5100 L read as 510 L",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "vessel at T/H = 0.5 instead of 1.0",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic_TH05": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "printed T/H window 0.5-1.5 read as 0.25-1.5",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "phi_ionic_TH15": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_ionic_TH05": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "printed T/H window 0.5-1.5 read as 0.25-1.5",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "bias_ionic_TH15": [
+      "prefactors swapped, 2.6e-2 <-> 2.0e-3",
+      "alphas swapped, 0.4 <-> 0.7",
+      "betas swapped, 0.5 <-> 0.2",
+      "eq. 9 beta mis-read 0.2 -> 0.7",
+      "eq. 9 alpha mis-read 0.7 -> 0.1",
+      "branching deleted: eq. 8 used for both",
+      "Henry constant halved, H = 15",
+      "holdup eps = 0.20 instead of 0.10",
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "eq3_forms_gap": [
+      "tank diameter written where the height belongs, T/H = 0.5"
+    ],
+    "pymrm_vs_closed_n1600_pure": [
+      "column: nu = 1 (cylindrical) instead of 0",
+      "column: transfer sign flipped",
+      "column: eps written where (1-eps) belongs",
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells",
+      "column: cells refined by 3, read as refined by 2"
+    ],
+    "pymrm_vs_closed_richardson_pure": [
+      "column: nu = 1 (cylindrical) instead of 0",
+      "column: transfer sign flipped",
+      "column: eps written where (1-eps) belongs",
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells"
+    ],
+    "grid_order_pure_min": [
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells"
+    ],
+    "grid_order_pure_max": [
+      "column: cells refined by 3, read as refined by 2"
+    ],
+    "pymrm_vs_closed_n1600_ionic": [
+      "column: nu = 1 (cylindrical) instead of 0",
+      "column: transfer sign flipped",
+      "column: eps written where (1-eps) belongs",
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells",
+      "column: cells refined by 3, read as refined by 2"
+    ],
+    "pymrm_vs_closed_richardson_ionic": [
+      "column: nu = 1 (cylindrical) instead of 0",
+      "column: transfer sign flipped",
+      "column: eps written where (1-eps) belongs",
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells"
+    ],
+    "grid_order_ionic_min": [
+      "column: C_in imposed at the outlet face too",
+      "column: cell ladder 3 to 48 cells"
+    ],
+    "grid_order_ionic_max": [
+      "column: cells refined by 3, read as refined by 2"
+    ],
+    "ladder_finest_over_roundoff": [
+      "column: balance read from the end cells, not the faces"
+    ],
+    "kapp_over_k_pure": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_pure_richardson": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_pure_production": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells"
+    ],
+    "bias_pure_transient": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2",
+      "transient: cells refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_pure_inert_start": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2",
+      "transient: cells refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_pure_w19": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_pure_w37": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_disc_effect_pure": [
+      "transient: transfer sign flipped",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells"
+    ],
+    "time_order_pure_min": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps"
+    ],
+    "time_order_pure_max": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "o2_balance_pure": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: balance read from the end cells, not the faces"
+    ],
+    "lagrangian_order_pure_min": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: Lagrangian refined by 2, read as refined by 3"
+    ],
+    "lagrangian_order_pure_max": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: Lagrangian ladder 5 to 40 ages",
+      "transient: Lagrangian refined by 3, read as refined by 2"
+    ],
+    "lagrangian_limit_gap_pure": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "space_order_pure_min": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells"
+    ],
+    "space_order_pure_max": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cells refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_richardson": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_production": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)"
+    ],
+    "bias_ionic_transient": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_inert_start": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_w19": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_w37": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_disc_effect_ionic": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells"
+    ],
+    "time_order_ionic_min": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells"
+    ],
+    "time_order_ionic_max": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "o2_balance_ionic": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: balance read from the end cells, not the faces"
+    ],
+    "lagrangian_order_ionic_min": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: Lagrangian ladder 5 to 40 ages"
+    ],
+    "lagrangian_order_ionic_max": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)"
+    ],
+    "lagrangian_limit_gap_ionic": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_space_effect_ionic": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)"
+    ],
+    "ionic_fit_before_tau_G": [
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)"
+    ],
+    "kapp_over_k_ionic_inert_start_w19": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "kapp_over_k_ionic_inert_start_w37": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "bias_ionic_window_min": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "bias_ionic_window_max": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: time ladder 8 to 64 steps",
+      "transient: cell ladder 2 to 16 cells",
+      "transient: ionic fit window (0.2, 0.9)",
+      "transient: steps refined by 3, read as refined by 2"
+    ],
+    "phi_ionic_inside_window_range": [
+      "transient: transfer sign flipped",
+      "transient: eps written where (1-eps) belongs",
+      "transient: nu = 1 (cylindrical) instead of 0",
+      "transient: cell ladder 2 to 16 cells"
+    ]
   }
 }

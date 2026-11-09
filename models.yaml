@@ -2143,76 +2143,23 @@ models:
       Two numbers predict volumetric oxygen transfer in a stirred vessel: power
       per unit volume and superficial gas velocity. van 't Riet's 1979 review
       correlates the whole published body of data with them, and insists the
-      constants be BRANCHED - one set for water, one for strong ionic solutions,
-      because ions suppress coalescence. This page implements both branches and
-      asks what the review's own printed numbers can and cannot decide about the
-      four exponents in them.
-
-      Everything here is reproduction, not validation: eqs. 8 and 9 were FITTED
-      to the literature data the review compiles in Figures 1-5, those figures
-      are deliberately not digitised (no maintainer review available), and no
-      measurement is compared against anywhere on the page. The figure LEGENDS
-      are used, and the sidecar is explicit that they are typeset tables inside
-      plot frames rather than extracted curve data.
-
-      Four results. (1) Figure 5's topology reproduces from the printed
-      constants: of nine candidate pure-vs-ionic crossings exactly one falls
-      inside the plotted window, pure-water 4 cm/s meeting ionic 0.5 cm/s at
-      P/V = 826.5 W/m3, which is what the printed figure shows - a check that
-      reads all six constants at once without measuring a figure coordinate.
-      (2) The review asks how far alpha and beta can be varied "without
-      affecting the outcome significantly" and never answers; with the prefactor
-      re-fitted at the window centre, the whole pure-water literature spread it
-      quotes costs at most 16.2 % and 24.7 %, and the IONIC v_s exponent 0.2 can
-      be deleted outright for 26.4 % over the span of Figure 4's two drawn
-      correlation lines and 35.2 % over the wider span its data occupy - both
-      inside the review's own 20-40 % accuracy.
-      The review says in the very sentence introducing eq. 9 that the 0.2 was
-      imported from Zlokarnik rather than fitted, so this quantifies the
-      review's own position rather than contradicting it. The other three
-      exponents cost 82.1 %, 185.3 % and 73.6 % and are load-bearing; dropping
-      the branching altogether under-predicts by up to 83.3 %.
-      (3) The review expects ions to raise k_L*A by 2-10x, argued
-      mechanistically and independently of eqs. 8 and 9; the ratio of the two
-      fitted correlations spans 1.30x to 5.98x and lands inside 2-10x on 83.6 %
-      of the printed box, falling BELOW the 2x floor at high v_s and low P/V. An
-      internal inconsistency, reported unresolved because the evidence that would
-      settle it is in the undigitised figures.
-      (4) The pymrm part. Eq. 2 - the dynamic gassing-out method most of the
-      data come from - assumes a uniform gas composition; the review warns about
-      this four times and never computes anything. A plug-flow gas column
-      exchanging with a well-mixed liquid gives the correct governing group,
-      N_G = (1-eps) k H_t/(v_s H), which is NOT the review's tau_G vs 1/k_L*A -
-      it carries an extra factor (1-eps)/(eps H), 0.300 for the worked case, so
-      the review's rule of thumb is conservative by roughly threefold and by a
-      factor depending on a quantity (H) it never prints. The resulting bias in
-      a measured k_L*A, in the page's own full transient, is 19.1 % on eq. 8's
-      branch (16.0 % in the quasi-steady closed form, the optimistic one since
-      it assumes tau_G << 1/k_L*A - exactly the condition being violated) and
-      45.4 % on eq. 9's at the reported fit window (45.6 % quasi-steady;
-      34.1-56.5 % across eq. 2 fit windows, the ionic response being genuinely
-      non-exponential, which the page reports as a finding rather than hiding
-      in a default window), at the centre of the printed window in a 2600 L
-      vessel - the same size as the whole accuracy the review claims. The
-      quasi-steady bias runs 6.5 % to 52.2 % across the vessel volumes its own
-      legends print, which is its sentence about larger vessel diameters with
-      numbers on it, and 59.3 % to 38.0 % across the printed aspect-ratio
-      window 0.5 < T/H < 1.5 at constant volume, the tall vessel worst - its
-      H_t/T >> 1 warning with numbers on it. Validated against a closed form
-      (5.0e-8 after Richardson, observed order 1.00) and against an independent
-      Lagrangian route along the gas characteristics that forms no spatial
-      operator (1.6e-4), with the route's claimed sensitivities measured rather
-      than asserted. Seventeen break rows, the table's eight metrics recomputed
-      under every one (the page counts which reported metrics sit outside the
-      table); the single row that moves nothing - feeding the gas at the top -
-      is proved structural on the page, the profile being exactly mirrored to
-      1.8e-15 so the column mean cannot see it, an invariance confirmed in the
-      transient and Lagrangian routes too. One row injects the geometry defect
-      found in adversarial review (the tank diameter written where the height
-      belongs), which the original T/H row shared and could not see. Two
-      printed defects recorded and not repaired, including an off-by-one
-      equation number in the four figure legends that cite one (Figure 5's
-      cites none).
+      constants be BRANCHED, one set for water and one for strong ionic
+      solutions. The page implements both branches and asks what the review's own
+      printed numbers can and cannot decide. Reproduction, not validation: eqs. 8
+      and 9 were fitted to the data compiled in Figures 1-5, which are not
+      digitised. Figure 5's crossing topology reproduces from the printed
+      constants (one crossing, at P/V = 826.5 <!-- claim: fig5_crossing_pv --> W/m3).
+      With the prefactor re-fitted, the ionic v_s exponent 0.2 can be deleted for
+      26.4 % <!-- claim: null_ion_beta0_cost --> over Figure 4's drawn lines,
+      inside the review's own 20-40 % accuracy, while the other three exponents
+      are load-bearing. The ion enhancement implied by the two fits falls to
+      1.30 <!-- claim: ion_ratio_min --> times in one corner, short of the 2x the
+      review argues for. With pymrm, a plug-flow gas column exchanging with a
+      well-mixed liquid, solved as the full gassing-out transient on separate step
+      and cell ladders and checked against a closed form and an operator-free
+      Lagrangian route, shows eq. 2 under-reporting k_L*A by 19.1 % <!-- claim: bias_pure_transient --> on the pure-water branch and 45.4 % <!-- claim: bias_ionic_transient --> on the ionic one at the centre of the
+      printed window in a 2600 L vessel, and gives the governing group
+      N_G = (1-eps) k H_t/(v_s H), not the review's tau_G k_L*A.
     section: A
     status: published
     page: pages/A3.7-vant-riet-kla/
@@ -2230,6 +2177,9 @@ models:
     pymrm_api:
       - construct_convflux_upwind
       - construct_div
+      - compute_boundary_values
+      - pymrm.checks.find_roots
+      - pymrm.checks.observed_orders
     reference:
       authors: ["van 't Riet, K."]
       year: 1979
