@@ -23,29 +23,35 @@ Rules:
   exact quote of old wording, or removed. A new claim gets a break row built from a call
   that moves it (inject the defect through an argument, never by editing a result after
   the solve). Values printed on the page come from computed variables, never typed.
-- Read `.claude/skills/gallery-refresh/references/refresh-checklist.md` once; do not
-  introduce a defect it lists while fixing another.
+- Read `.claude/skills/gallery-refresh/references/refresh-checklist.md` in the checkout
+  (or `~/.claude/skills/gallery-refresh/references/refresh-checklist.md` when the
+  checkout has no `.claude/`) once; do not introduce a defect it lists while fixing
+  another.
+- Work lean: every call pays again for everything read so far. Read a file by line
+  range around the item (grep for it first), never a whole long file and never twice;
+  change files with Edit, never by rewriting a whole file; read only the tail or a
+  grep of a long command's log.
 - If an item cannot be done as written (the claim it names does not exist, a measured
   value contradicts the brief), do the closest honest thing, and say so in the report.
 - No em dashes, no history narration ("earlier", "previously", version names) in page
   text, comments, meta.yaml or models.yaml.
 
-Standard acceptance (run all, report each; the brief may add or drop items):
-1. `jupytext --sync pages/<PAGE>/index.py`.
-2. `python scripts/run_kernels.py pages/<PAGE>`: all claims pass on three kernels, printed
-   text identical. Report the claim count and the printed break-table line
-   ("<r> rows; <c> of <n> claims are failed by at least one row; open: ...").
-3. `jupytext --sync` again leaves index.py unchanged.
-4. `python scripts/check_claims.py`: 0 problems. `python -m pytest -q tests/`: all pass.
-   If the page has test_model.py: `GALLERY_OFFLINE=1 python -m pytest -q pages/<PAGE>/test_model.py`.
-5. `python ~/Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/scripts/check_notebook_math.py pages/<PAGE>/index.ipynb`:
-   0 errors. If the page has model.py: check_model.py (same folder) on it, with
-   agreement.json copied aside first and restored afterwards.
-6. `python scripts/check_metadata.py`: OK.
-7. `python scripts/check_agreement.py --base origin/main`: every line for this page that
-   is not OK or NEW, with old and new value.
-8. `grep -n '—'` over the page's .py/.md/.yaml files, its models.yaml entry and its
-   learnings rows: none.
+Standard acceptance (the brief may add or drop items): after the last item, once,
+in the background:
+
+    python scripts/accept_page.py pages/<PAGE> --log <the brief's scratch directory>/accept.log
+
+It runs jupytext --sync, run_kernels.py (three kernels), check_agreement against
+origin/main, check_claims, pytest tests/, test_model.py offline, check_notebook_math,
+check_model (agreement.json restored), check_metadata, the jupytext stability check,
+the em-dash and history-word scan, and the checklist's Correction-quote and
+untagged-number scans, and prints about 30 lines. Every step must be PASS, except
+agreement, which may be LOOK before the commit of a page with a format-1 baseline;
+report every agreement line for this page with old and new value, and
+say for each LOOK line under lint whether the number is tagged, quoted or an
+identifier. Open the log only at a FAIL, by line range. While working through the
+items, `--quick --only <steps>` checks a single edit in seconds.
 
 Report (the brief sets the word limit; default 250 words): one line per item, the
-acceptance results, new claim names and values.
+accept_page summary as printed (it carries the claim count and the break-table
+line), new claim names and values.

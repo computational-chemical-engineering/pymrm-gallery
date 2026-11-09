@@ -169,45 +169,18 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
 
 From the checkout, with `P=pages/<PAGE>`:
 
-1. Untagged README numbers outside quotes (each hit is tagged, quoted or an identifier;
-   rules 1, 27):
-   ```
-   python3 - $P/README.md <<'EOF'
-   import re, sys
-   t = re.sub(r'"[^"]*"|“[^”]*”|`[^`]*`|\]\([^)]*\)|doi\S*',
-              lambda m: "\n" * m.group().count("\n"), open(sys.argv[1]).read())
-   num = (r'(?<![\w.\-])\d+(?:\.\d+)?(?:e-?\d+)?(?:\s*%|x)?(?![\w.]*\d)'
-          r'(?!\s*%?\s*x?\s*<!--\s*claim)')
-   for i, line in enumerate(t.splitlines(), 1):
-       hits = [h for h in re.findall(num, line) if re.search(r'[.e%x]', h.rstrip('.'))]
-       if hits: print(i, hits)
-   EOF
-   ```
-2. Correction quotes against the old page, every line `ok` (rule 27):
-   ```
-   python3 - <PAGE> <<'EOF'
-   import json, re, subprocess, sys
-   p = f"pages/{sys.argv[1]}"
-   old = lambda f: subprocess.run(["git", "show", f"origin/main:{f}"],
-                                  capture_output=True, text=True).stdout
-   nb = old(f"{p}/index.ipynb")
-   t = " ".join("".join(c["source"]) for c in json.loads(nb)["cells"]) if nb else ""
-   t += " ".join(old(f"{p}/{f}") for f in ("README.md", "build_page.py", "meta.yaml"))
-   norm = lambda s: re.sub(r"\s+", " ", s.replace("*", ""))
-   t = norm(t + old("models.yaml"))
-   new = open(f"{p}/README.md").read().split("## Corrections", 1)[-1].split("\n## ")[0]
-   for q in re.findall(r'"([^"]+)"|“([^”]+)”', new):
-       q = norm("".join(q)); print("ok  " if q in t else "MISS", q)
-   EOF
-   ```
-3. `grep -nE 'argmax|argmin|np\.interp|brentq|fsolve|minimize_scalar|\[-1\]' $P/*.py`:
+1. `python scripts/accept_page.py $P --only dashes,lint` runs three scans:
+   Correction quotes against the old page, every quote found (rule 27); em dashes in
+   the page, its models.yaml entry and its learnings rows, and pymrm version names
+   in `$P/*.py` and `$P/meta.yaml` (rule 31); history words there, printed as LOOK
+   lines: each is about the computation, never the page's history (rule 31); README numbers
+   outside quotes without a claim marker, printed as LOOK lines: each hit is tagged,
+   quoted or an identifier (rules 1, 27).
+2. `grep -nE 'argmax|argmin|np\.interp|brentq|fsolve|minimize_scalar|\[-1\]' $P/*.py`:
    each hit is a checked `find_roots` result, a named data row, or an outlet read for
    `compute_boundary_values` (rules 12, 13, 21).
-4. `grep -nE 'claims.breaks|newton\(|solve_ivp\(' $P/*.py`: each defect enters
+3. `grep -nE 'claims.breaks|newton\(|solve_ivp\(' $P/*.py`: each defect enters
    through an argument, each solve's `success` or `status` is checked, and each order
    claim has its round-off companion (rules 9, 14, 23).
-5. `grep -nP '\x{2014}|earlier|previous|used to|before the refresh|pymrm [0-9]'` over
-   `$P/*.py` and `$P/meta.yaml`, and the dash alone over the README, the models.yaml
-   entry and the new learnings rows: no hits (rule 31).
-6. Reread "What pymrm adds", the Corrections and the new learnings rows against the
+4. Reread "What pymrm adds", the Corrections and the new learnings rows against the
    printed claims (rules 26 to 32).

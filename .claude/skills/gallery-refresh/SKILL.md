@@ -16,20 +16,47 @@ recurring defects condensed into one checklist.
 | file | what it is |
 | --- | --- |
 | `references/refresh-checklist.md` | the rules every refreshed page must meet, distilled from the learnings rows; the refresh agent applies it up front, the reviewer checks against it |
-| `references/briefs.md` | templates: A refresh (model-solving lane), A-light (light lane), B review, C fix round |
+| `references/briefs.md` | templates: A1 port (model-solving pages, Sonnet), A2 numerics and claims (Opus), A-light (light pages, Sonnet), B review, C fix round; the working-style block every brief carries |
 | `references/commit-and-merge.md` | staging with shared files, spot-checks, commit and PR text, CI and merge rules, known checker behaviour |
 | `.claude/agents/gallery-reviewer.md` | the review agent (Opus, xhigh, advice only, time-boxed) |
 | `.claude/agents/gallery-fixer.md` | the fix-round agent (Sonnet, numbered list plus standard acceptance) |
+| `scripts/page_facts.py` | the facts a brief needs about one page, from the old version (solver lines, metrics, sibling pages, learnings rows) |
+| `scripts/accept_page.py` | every acceptance step in one command, about 30 lines of output, full log to a file |
+| `scripts/agent_tokens.py` | tokens per agent and per page, from the session transcripts |
+| `docs/refresh-cost-log.md` | tokens and must-fix count per page; the quality criterion for the lean cycle |
+
+## Why the cycle is lean
+
+Cost is roughly calls times context: whatever an agent reads early is paid again on
+every later call. Measured on the Team account (31 Oct to 9 Nov), refresh agents made
+about 90 % of the tokens: 80 to 120 calls ending at 400 to 500k context, 25 to 40 M
+prompt tokens per page, while review and fix rounds took 1 to 3 M each. The context
+grew from shell reads of whole files (42 %), script and notebook output (24 %), the
+read-first list (16 %) and whole-file writes (10 %). Hence: page facts instead of
+discovery, the checklist and the pitfalls in full and everything else by grep, one
+worked page, Edit instead of Write, one quiet check command, two smaller refresh
+agents instead of one large one, and fewer coordinator check-ins. The review and the
+fix round are unchanged.
 
 ## The cycle, per page
 
-1. **Pick the page and the lane.** Model-solving pages (a pymrm solve, a model.py)
-   get the refresh on Opus (`implement` with `model: opus`) early in a usage window;
-   light pages (closed forms, no pymrm operator) get it on Sonnet (`implement`),
-   which also fits near the top of a window. Read the old `build_page.py` briefly
-   for the solver calls and root finds, and write the page-specific lane B notes.
-2. **Refresh** from brief A or A-light, written to the scratchpad. The agent writes a
-   progress file after every checkpoint, so a usage-limit stop is recoverable.
+1. **Page facts and lane.** `<VENV>/bin/python scripts/page_facts.py <ID> > <SCRATCH>/<id>_facts.md`.
+   Read it (not build_page.py) and decide the lane: model-solving (a pymrm solve, a
+   model.py) or light (closed forms, no pymrm operator). Pick ONE worked page of the
+   same lane from its list (prefer a recent one with the same structure code) and the
+   matching plugin exemplar, and write the lane B notes from the solver lines.
+2. **Refresh**, briefs written to the scratchpad:
+   - model-solving: first a reference run of the old page,
+     `python scripts/accept_page.py pages/<PAGE> --make-ref <SCRATCH>/<id>_old`; then
+     **A1 port** (`implement`, Sonnet) moves the page onto the new layout without
+     changing what it computes, checked exactly against that run; then
+     **A2 numerics and claims** (`implement`, `model: opus`) does lane B, the Claims,
+     break rows, Corrections and wording on the ported page. A2 starts fresh, with
+     the port's progress file as the handover. When a port cannot reproduce the old
+     metrics, A2 gets the port's report and starts from there.
+   - light: **A-light** (`implement`, Sonnet), one agent.
+   Each agent writes a progress file after every checkpoint, so a usage-limit stop
+   is recoverable.
 3. **Review** with `gallery-reviewer` from brief B. Restate the implementer's
    findings as facts to verify and put the riskiest judgement call first (a
    reversed conclusion, a changed reading of an equation, a cited page).
@@ -38,35 +65,57 @@ recurring defects condensed into one checklist.
    Drop review items that are themselves wrong (a change of definition or a fair
    rounding proposed as a correction) and say why in the commit message.
 5. **Spot-check and commit** (`references/commit-and-merge.md`): read the README
-   Corrections yourself; fix small wording defects directly, then re-run
-   `jupytext --sync` and `scripts/check_claims.py`.
-6. **Batch pages into one PR** so one CI run (about 2.5 h) covers several pages.
+   Corrections yourself; fix small wording defects directly, then the acceptance
+   subset in `references/commit-and-merge.md`.
+6. **Log the cost**: one row in `docs/refresh-cost-log.md` from
+   `scripts/agent_tokens.py <session dir> --page <ID>` and the review's must-fix count.
+7. **Batch pages into one PR** so one CI run (about 2.5 h) covers several pages.
    Do not push to a branch whose PR CI is still running unless the new commit
    should be in that PR; merge when CI is green (standing authorisation for this
    sweep).
 
+## Coordinator
+
+- **Read little yourself.** The page facts file, the agents' reports and the
+  acceptance summaries are what you need; open a page file only for the spot-check.
+  Never paste a long output into the conversation when a file path will do.
+- **Check-ins.** The harness notifies you when an agent finishes; do not poll. Ask
+  `hub-tue` for the usage figure before starting each agent. Set a one-shot
+  CronCreate check-in only for an agent expected to run longer than about 45
+  minutes, and only one per agent: each check-in is a full-context call.
+
 ## Pacing (Team account)
 
-- Ask `hub-tue` for the 5-hour figure before each agent. Work up to about 90 % of
-  the window; hub-tue warns at 80 % and sends the pause at 90 %. All development
-  stops at 96 % weekly until the weekly reset (hub-tue sends the stop).
-- One agent at a time. For an agent expected to run longer than about 20 minutes,
-  set a one-shot CronCreate check-in that asks hub-tue for the figure and sends
-  "pause" to the agent near the limit.
-- Measured costs (points of the 5-hour window): Opus model-solving refresh 18 to 31
-  (long pages more), Opus review 5 to 10, Sonnet fix round 2 to 6, Sonnet light
-  refresh 6 to 15. A full window is about 16 weekly points.
+- Work up to about 90 % of the 5-hour window; hub-tue warns at 80 % and sends the
+  pause at 90 %. All development stops at 96 % weekly until the weekly reset
+  (hub-tue sends the stop).
+- One agent at a time.
+- Measured costs before the lean cycle (points of the 5-hour window): Opus
+  model-solving refresh 18 to 31 (long pages more), Opus review 5 to 10, Sonnet fix
+  round 2 to 6, Sonnet light refresh 6 to 15. A full window is about 16 weekly
+  points. Replace these with the lean cycle's figures once the cost log has them.
 
 ## What the review keeps finding
 
-Every refresh so far has needed a review: each found 2 to 8 must-fix items, almost
-all of the same classes. The checklist exists to move them into the refresh itself:
-numbers without claim markers, corrections that misquote the old wording or are a
-change of definition, grid read-offs where a root is needed, orders without a
-round-off companion, effects attributed to one unmeasured cause, overstated "What
-pymrm adds", learnings rows that say more than was measured. Keep the review step
-anyway; it is the cheapest point of the cycle at which a wrong published
-statement is caught.
+Every refresh so far has needed a review: each found 0 to 8 must-fix items (34
+reviews, 31 Oct to 9 Nov), almost all of the same classes. The checklist exists to
+move them into the refresh itself: numbers without claim markers, corrections that
+misquote the old wording or are a change of definition, grid read-offs where a root
+is needed, orders without a round-off companion, effects attributed to one
+unmeasured cause, overstated "What pymrm adds", learnings rows that say more than
+was measured. Keep the review step anyway; it is the cheapest point of the cycle at
+which a wrong published statement is caught.
+
+## Trial of the lean cycle
+
+The lean cycle is on trial for its first three pages. After each, compare the row in
+`docs/refresh-cost-log.md` with the baseline there. The quality criterion is the
+review's must-fix count and classes: no worse than the baseline (0 to 8, median
+about 2 to 3, the classes above). If a page's review finds a must-fix class the
+baseline did not have, or more must-fix items than the baseline's worst, find which
+change let it through (the reading list, the split, the quiet checks) and revert
+that one change, then tell the maintainer. The reviewer works as before the trial
+(its reading is not trimmed), so its must-fix count stays a fair measure.
 
 ## Learnings rows
 

@@ -13,8 +13,9 @@ the implementer's findings. Assume the page is wrong somewhere and find where.
 
 Read, in this order and no more than needed:
 1. The brief.
-2. `.claude/skills/gallery-refresh/references/refresh-checklist.md` (the rules the page
-   must meet).
+2. `.claude/skills/gallery-refresh/references/refresh-checklist.md` in the checkout (or
+   `~/.claude/skills/gallery-refresh/references/refresh-checklist.md` when the checkout
+   has no `.claude/`): the rules the page must meet.
 3. The page: README.md (Corrections first), index.py, model.py if any, meta.yaml, the
    page's models.yaml entry and its new learnings rows.
 4. The old version on origin/main, only to check quotes and reproduce an old number.
@@ -22,7 +23,9 @@ Read, in this order and no more than needed:
 
 How to work:
 - Time box: about 12 to 15 minutes and at most about 20 tool calls. Write notes to the
-  scratch directory the brief gives as you go, so the work survives a stop.
+  scratch directory the brief gives as you go, so the work survives a stop. The
+  checklist's mechanical scans run in seconds and change no file:
+  `python scripts/accept_page.py pages/<PAGE> --only dashes,lint,outputs`.
 - Advice only. Scratch scripts go in that scratch directory, never in the page.
 - Measure before you assert. A finding that a number is wrong comes with your number
   and the script that produced it. A finding you could not check is marked as such.
