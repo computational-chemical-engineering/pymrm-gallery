@@ -3571,26 +3571,26 @@ models:
       that the mechanism universally called Eley-Rideal was proposed by Langmuir
       in 1922 and should be called Langmuir-Rideal, while Eley and Rideal
       actually studied a chemisorbed + physisorbed pair. The page reports that
-      naming finding plainly, derives all eleven printed limiting-order claims
+      naming finding plainly, derives all 11 <!-- claim: printed_limits_agree --> printed limiting-order claims
       symbolically (all hold), and reports one printed defect: the maximum
       condition "c_A = K_A" [sic] is dimensionally inconsistent with the paper's
       own Eq. (3a) - the derived, unit-invariant condition is K_A c_A = 1 +
-      K_B c_B, root-found by two routes sharing no algebra. The paper's
-      discrimination paragraph is turned into a number: the chemisorbing species
-      must span a root-found factor w* = 11.8 centred on the L-H maximum before
-      the impact law can be rejected at the 1947 fit's own +-8.44 % precision,
-      and placement matters as much as width (off the maximum the misfit
-      collapses by three orders). A numerical experiment on C1.1's fitted
-      constants then answers the question on the formalism's founding dataset:
-      Hougen & Watson's own mechanism (o) is exactly Prins's Eq. (3b) (with the
-      product's adsorption term retained), and fit quality alone (27.4 % mean
-      |Delta| at the least-squares-optimal fit - the declared protocol;
-      directly minimising mean |Delta| instead gives a smaller number,
-      conclusion unchanged - vs a 16.8 % noise floor) could have rejected it -
-      but only because the 1947 design spans a decade in hydrogen pressure (the
-      design also straddles the L-H turnover at p_U* = 2.50 atm, an
-      observation, not a second necessary condition: collapsing the hydrogen
-      span alone already drops the misfit below the noise floor), while the
+      K_B c_B, root-found by pymrm's find_roots against a closed form that
+      shares no algebra with it. The paper's discrimination paragraph is turned
+      into a number: the chemisorbing species must span a root-found factor
+      w* = 11.8 <!-- claim: wstar_tol844 --> centred on the L-H maximum before the impact law can be
+      rejected at the 1947 fit's own average deviation, and placement matters as
+      much as width (off the maximum the misfit at w* is only 5.3e-05 <!-- claim: dev_at_wstar_center001 -->). A numerical
+      experiment on C1.1's fitted constants then answers the question on the
+      formalism's founding dataset: Hougen & Watson's own mechanism (o) is
+      exactly Prins's Eq. (3b) (with the product's adsorption term retained),
+      and fit quality alone (27.4 <!-- claim: lr_o_on_exact_d_mean_pct --> % mean |Delta| at the least-squares-optimal
+      fit - the declared protocol; directly minimising mean |Delta| instead
+      gives 22.8 <!-- claim: lr_o_direct_mean_pct --> % - vs a 16.8 <!-- claim: codimer_d_scatter_pct --> % noise floor) separates the two laws on noiseless rates, but
+      only because the 1947 design spans a decade in hydrogen pressure (the
+      design also straddles the L-H turnover at p_U* = 2.50 <!-- claim: codimer_pUstar_atm --> atm, an
+      observation, not a second necessary condition: collapsing the hydrogen span
+      alone already drops the misfit to 3.2 <!-- claim: lr_o_collapsedpH_mean_pct --> %, below the noise floor), while the
       denominator exponent (1 vs 2) is indistinguishable there at the design's
       noise floor even when the rates carry no noise. The source prints no
       measurement, no table and no figure, and the page claims no experimental
@@ -3613,6 +3613,7 @@ models:
       - the exact (3c)-(3b) degeneracy along a c_A sweep and its K_B c_B-sized signal in the c_B direction
       - which feature of the 1947 codimer design rejects the impact mechanism (the decade-wide p_H span), via a labelled numerical experiment
     pymrm_api:
+      - find_roots
       - NumJac
       - newton
     reference:
@@ -3661,10 +3662,10 @@ models:
       repaired: p. 719's "The rate of the L-H reaction should even reach a
       maximum for c_A = K_A." [sic] equates a concentration to an inverse
       concentration; the derived condition is K_A c_A = 1 + K_B c_B (the
-      reduced-form reading K_A c_A = 1 is labelled an inference). Two metrics
-      (the thermodynamic-consistency identity and the (3c)-(3b) proportionality)
-      are exact identities below check_agreement.py's ABS_FLOOR - named
-      structural on the page, each with an above-floor companion. Runtime ~15 s.
+      reduced-form reading K_A c_A = 1 is labelled an inference). The two
+      exact identities (thermodynamic consistency and the (3c)-(3b)
+      proportionality) are bounds on the page, each with a break row that moves
+      them. Runtime about 30 s.
 
   - id: C1.3
     slug: mars-van-krevelen-redox
