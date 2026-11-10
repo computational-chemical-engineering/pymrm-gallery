@@ -19,6 +19,10 @@ How to fill a row:
 
 | page | date | lane | port M | numerics or light M | refresh last ctx k | review M | fix round M | total M | must-fix | classes | notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| A3.7 | 2026-11-09 | model-solving | 1.8 | 17.2 | 324 | 1.5 | 0.5 | 20.9 | 4 | break rows that silently record nothing (an exception swallowed); a statement resting on such a row; a share stated without its measure; learnings rows with missing columns | lean cycle, trial page 2. The numerics brief added a call budget ("well under 100"): 78 calls against 127 on A3.5. Runtime 6 s -> 127 s (nine transient break rows) |
+| A3.5 | 2026-11-09 | model-solving | 1.6 | 31.2 | 369 | 1.6 | 0.0 | 34.4 | 2 | an old number outside a Correction quote; overstated "What pymrm adds" (closed-form roots credited to the solve) | lean cycle, trial page 1. Fix round done by the coordinator (README and meta text). The numerics agent made 127 calls and ended at 369k context, about the old single-agent size; the port was cheap |
+| A3.6 | 2026-11-09 | model-solving | - | 14.9 | 291 | 1.7 | 0.0 | 16.7 | 1 | a published wrong order statement not corrected | not the lean cycle: one Opus refresh agent on a hand-trimmed brief (checklist plus one worked page, the rest by grep, Edit and ranged reads); fix by the coordinator |
+| A3.4 | 2026-11-09 | model-solving | - | 20.1 | 341 | 1.6 | 1.9 | 23.6 | 3 | a wrong published statement in a data sidecar not corrected; a verdict stated on a side its margin does not support; a computed number without a claim marker | not the lean cycle: one Opus refresh agent on a hand-trimmed brief |
 
 ## Baseline: before the lean cycle
 
