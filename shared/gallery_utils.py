@@ -267,12 +267,15 @@ class Claims:
 
     Every claim that is not ``structural`` needs at least one break-table row
     (:meth:`breaks`) that fails the claim's own check, and :meth:`report`
-    raises otherwise.
+    raises otherwise. A page declares its rows with :meth:`define_rows` before
+    running them; :meth:`report` then raises for a declared row that recorded
+    nothing, so a study that fails silently cannot shrink the table.
 
     Examples
     --------
     >>> claims = Claims("B1.6")
     >>> claims.value("vs_shooting_reference_n800", 3.944e-5)
+    >>> claims.define_rows(["reference off by 1 %"])
     >>> claims.breaks("reference off by 1 %", "vs_shooting_reference_n800", 1.2e-2)
     >>> claims.says("3.94e-5", "vs_shooting_reference_n800")
     >>> payload = claims.report(write=False)  # doctest: +SKIP
@@ -283,6 +286,7 @@ class Claims:
         self.metrics: dict[str, dict] = {}
         self.quoted: dict[str, list[str]] = {}
         self._rows: dict[str, list[tuple[str, bool]]] = {}
+        self._defined: list[str] | None = None
         self._problems: list[str] = []
 
     # -- registration ---------------------------------------------------------
@@ -355,6 +359,22 @@ class Claims:
 
     # -- break table and prose ------------------------------------------------
 
+    def define_rows(self, rows) -> None:
+        """Declare break-table rows by label, before they run; repeated calls add.
+
+        :meth:`report` raises for a declared row that called :meth:`breaks` for no
+        claim (a study that raised and was caught, an empty result) and for a
+        recorded row that was never declared. A row whose study cannot run records
+        ``nan`` for the claims it targets, which fails their checks; that is right
+        only when the failed solve is itself the detection, otherwise fix the study.
+        """
+        rows = [rows] if isinstance(rows, str) else list(rows)
+        known = self._defined or []
+        twice = sorted({r for r in rows if rows.count(r) > 1 or r in known})
+        if twice:
+            raise ValueError(f"break row(s) defined twice: {twice}")
+        self._defined = known + rows
+
     def breaks(self, row: str, name: str, broken) -> bool:
         """Record a break-table row: the value claim ``name`` takes with the
         defect injected. Returns whether the claim's own check catches it."""
@@ -404,6 +424,17 @@ class Claims:
         if require_breaks:
             problems += [f"{name}: no break row fails its check (add one, or mark the "
                          "claim structural and say why)" for name in unbroken]
+        recorded = {r for rows in self._rows.values() for r, _ in rows}
+        # only declared rows count, so a missing row and a mistyped label never
+        # balance each other in the file's counts
+        n_recorded = sum(r in recorded for r in (self._defined or []))
+        if self._defined is not None:
+            problems += [f"break row {r!r} is defined but recorded no claim (a row whose "
+                         "study fails records nan for its claims, when the failure is "
+                         "itself the detection; otherwise fix the study)"
+                         for r in self._defined if r not in recorded]
+            problems += [f"break row {r!r} is recorded but not defined"
+                         for r in sorted(recorded - set(self._defined))]
         payload = {
             "page": self.page,
             "format": 2,
@@ -412,6 +443,8 @@ class Claims:
             "quoted": self.quoted,
             "breaks": {n: [r for r, caught in rows if caught] for n, rows in self._rows.items()},
         }
+        if self._defined is not None:
+            payload["rows"] = {"defined": len(self._defined), "recorded": n_recorded}
         if not require_breaks:
             # A page migrated before its break table: visible in the file and
             # listed by scripts/check_claims.py until the table exists.
@@ -430,6 +463,8 @@ class Claims:
                     "bound": lambda: _bound_text(c) + f" [{c['basis']}]",
                     "exact": lambda: "exact" + (f", margin {c['margin']:.3g}" if "margin" in c else "")}[c["kind"]]()
             print(f"  {k:<{width}} = {shown:<16} {c['kind']:<5}  {rule}")
+        if self._defined is not None:
+            print(f"break rows: {len(self._defined)} defined, {n_recorded} recorded")
         if write is None:
             here = Path.cwd()
             write = (here / "meta.yaml").is_file() and (

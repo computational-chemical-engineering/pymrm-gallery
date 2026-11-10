@@ -19,7 +19,9 @@ acceptance steps):
 sync      ``jupytext --sync index.py``
 kernels   ``scripts/run_kernels.py`` (three kernels); with ``--quick`` one pinned run
           instead, for iterating. The final acceptance is never ``--quick``.
-          Prints the page's claim count and its break-table line.
+          Prints the page's claim count and its break-table line, and checks the
+          break-row count: FAIL when a row the page declares
+          (``claims.define_rows``) recorded nothing, LOOK when it declares none.
 agreement ``scripts/check_agreement.py --base <base>``: this page's lines that are
           not OK or NEW
 claims    ``scripts/check_claims.py``, ``pytest tests/`` and the page's
@@ -35,8 +37,9 @@ dashes    em dashes in the page files, its models.yaml entry and the learnings r
 lint      the refresh checklist's "Before you report" scans: Correction quotes
           against the old page (FAIL on a miss) and untagged README numbers (LOOK:
           each hit must be tagged, quoted or an identifier)
-outputs   only with ``--only``: the claim count and break-table line from the
-          executed index.ipynb as it stands, without running anything
+outputs   only with ``--only``: the claim count, break-table line and break-row
+          count from the executed index.ipynb and agreement.json as they stand,
+          without running anything
 port      only with ``--only`` and ``--ref``: a port onto the new layout must compute
           exactly what the old page computed. FAIL unless every metric of the
           page's agreement.json equals the reference run's value exactly (the same
@@ -152,6 +155,34 @@ def summary_of_outputs(page: Path, nb_path: Path | None = None) -> list[str]:
     if m:
         out.append(m.group(0).strip())
     return out
+
+
+def check_rows(r: Runner, agreement: Path) -> None:
+    """Report the break-row count a run recorded in ``agreement.json``.
+
+    ``Claims.report`` raises for a declared row that recorded no claim, so a
+    mismatch here means the file is left by a run that failed; a page that declares no rows cannot
+    show a row that silently dropped out of its table.
+    """
+    try:
+        data = json.loads(agreement.read_text())
+    except (OSError, ValueError):
+        r.report("rows", "FAIL", f"no readable {agreement.name}")
+        return
+    if not isinstance(data, dict):
+        r.report("rows", "FAIL", f"{agreement.name} is not a JSON object")
+        return
+    if data.get("format") != 2:
+        r.report("rows", "SKIP", "agreement.json is format 1 (report_agreement)")
+        return
+    rows = data.get("rows")
+    if not rows:
+        r.report("rows", "LOOK", "break rows not declared: call claims.define_rows(labels) "
+                 "before running them, so a row that records nothing fails the report")
+        return
+    ok = rows["defined"] == rows["recorded"]
+    r.report("rows", "PASS" if ok else "FAIL",
+             f"break rows: {rows['defined']} defined, {rows['recorded']} recorded")
 
 
 def git_show(path: str, base: str) -> str:
@@ -322,6 +353,8 @@ def main() -> int:
                      (summary_of_outputs(page, out_dir / "Haswell.ipynb") if ok
                       else [msg]))
             executed = out_dir / "Haswell.ipynb"
+            if ok:
+                check_rows(r, out_dir / "Haswell.json")
         else:
             code, out = r.run([py, "scripts/run_kernels.py", rel])
             executed = page / "index.ipynb"
@@ -329,6 +362,8 @@ def main() -> int:
             r.report("kernels", "PASS" if code == 0 else "FAIL",
                      "three kernels, claims and printed text agree" if code == 0 else "",
                      details)
+            if code == 0:
+                check_rows(r, page / "agreement.json")
 
     if "port" in steps:
         port_check(r, page, args.ref, executed)
@@ -450,6 +485,7 @@ def main() -> int:
         r.report("outputs", "PASS" if len(found) == 2 else "LOOK",
                  "from the executed index.ipynb" if found else
                  "no claims.report() or break-table line in the notebook outputs", found)
+        check_rows(r, page / "agreement.json")
 
     print(f"{'FAIL' if r.failed else 'PASS'} overall in {time.time() - t0:.0f} s; "
           f"full output in {log}")

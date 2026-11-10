@@ -20,8 +20,10 @@ git diff --cached --stat                                # nothing you did not me
   (seconds): every step PASS, agreement PASS or LOOK with only the known pre-commit
   cases below, every LOOK line accounted for. Run it again after any edit of yours to
   index.py.
-- The claim count and break-table line: `--only outputs` prints them from the
-  executed notebook without running it.
+- The claim count, break-table line and break-row count: `--only outputs` prints
+  them from the executed notebook and agreement.json without running anything. The
+  rows line must read PASS (as many recorded as defined); LOOK means the page does
+  not declare its rows with `claims.define_rows`, which a refreshed page must.
 
 ## Known checker behaviour
 

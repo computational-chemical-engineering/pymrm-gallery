@@ -14,7 +14,6 @@ report it asks for." Placeholders:
 | `<SCRATCH>` | the coordinator's scratchpad directory |
 | `<id>` | lower-case short ID for file names, e.g. `f23` |
 | `<FACTS>` | `<SCRATCH>/<id>_facts.md`, written by `scripts/page_facts.py <ID>` |
-| `<REF>` | `<SCRATCH>/<id>_old`, the reference run of the old page (`accept_page.py --make-ref`) |
 | `<WORKED>` | ONE refreshed page of the same lane, from the facts file |
 | `<EXEMPLAR>` | the plugin exemplar closest to the page, and the part of it that matters |
 | `<ROWS>` | the learnings row numbers the page added |
@@ -51,82 +50,28 @@ Working style. Every call pays again for everything read so far, so:
 - Keep the progress file short: measurements, decisions, what is left.
 ```
 
-## A1. Port, model-solving lane (`implement`, Sonnet)
+## A. Refresh, model-solving lane (`implement`, `model: opus`)
+
+One agent moves the page onto the new layout (lane A) and does the numerics, the
+Claims and the wording (lane B). A three-page trial of a Sonnet port followed by an
+Opus numerics agent (A3.5, A3.7, A3.8, 9 Nov) cost more than this brief: the numerics
+agent read and rewrote the whole page anyway (see SKILL.md).
 
 ```
-Port the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, onto the
-new page layout WITHOUT changing what it computes. A second agent does the numerics,
-the claims and the wording afterwards, starting from your progress file. Do not
-commit, do not `git add`, do not `git rm` (delete files with plain `rm`): other agents
-may share the git index. Touch only pages/<PAGE>/.
-
-Read: <FACTS> (the old page's definitions, solver lines and metrics);
-templates/index.py and templates/bootstrap_cell.py; AGENTS.md section "Adding a page"
-only; pages/<WORKED>/index.py and model.py for the layout only, by line range. The
-old page is pages/<PAGE>/build_page.py: its notebook cells are the strings passed to
-`cells.append(...)`; read it in ranges.
-
-<the working-style block>
-
-Do:
-1. index.py from templates/index.py, carrying the old cells in order: prose as
-   Markdown cells, code as code cells. Bootstrap cell verbatim from
-   templates/bootstrap_cell.py with GALLERY_REF = "main", PAGE = "<PAGE>",
-   PYMRM = ">=3.4.0,<4". Pair it: `jupytext --set-formats ipynb,py:percent index.py`.
-2. model.py: the classes and functions the old cells define that solve or evaluate
-   the model, moved unchanged apart from a NumPy-style docstring each; no plotting,
-   no data loading. index.py imports them.
-3. meta.yaml: pymrm_min_version "3.4.0"; runtime_seconds measured.
-4. test_model.py: import, one fast solve, compare one value with the page's
-   agreement.json metric of the same name at rtol 1e-9; offline, seconds. (A2 moves
-   it to `load_claims`.)
-5. Keep the old last cell's `report_agreement("<ID>", {...})` call unchanged, so every
-   old metric can be compared exactly with the reference run of the old page.
-   Remove build_page.py with plain `rm`.
-
-Do not change any solver call, grid, tolerance, bc, parameter, number or sentence; do
-not add Claims, break rows, Corrections or README text. If a cell cannot move without
-a change (a path, an import), make the smallest change and list it.
-
-Acceptance (report each):
-1. `python scripts/accept_page.py pages/<PAGE> --quick --only sync,kernels,port,stable --ref <REF>`:
-   every line PASS. A port FAIL means a metric differs from the old page's run on the
-   same kernel: find the cell that changed. Each LOOK line under port (a printed line
-   of the old page missing or new) is a moved cell or the bootstrap, never a changed
-   result; say which.
-2. `python scripts/accept_page.py pages/<PAGE> --only claims`: PASS (test_model.py).
-3. `python scripts/accept_page.py pages/<PAGE> --only plugin,dashes,metadata`: do NOT
-   fix what these find (old em dashes, history words, pitfalls in the old code, the
-   missing Claims): copy every FAIL line into the progress file for A2.
-
-Progress file (required): <SCRATCH>/<id>_port_progress.md, after every step: what
-moved where (old build_page.py lines to index.py cells and model.py functions), any
-smallest change made, the acceptance lines, runtime. If you receive "pause", finish
-the command in hand, update the progress file and stop.
-
-Report at most 200 words: files, the mapping in one line per model.py function, the
-acceptance lines as printed, runtime.
-```
-
-## A2. Numerics and claims, model-solving lane (`implement`, `model: opus`)
-
-```
-Refresh the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, in
-lane B (pymrm 3.4.0) and the Claims. A port agent has already moved the page onto the
-new layout without changing what it computes; its notes are
-<SCRATCH>/<id>_port_progress.md and the page reproduces the old metrics through
-`report_agreement`. Do not commit, do not `git add`, do not `git rm` (delete files
-with plain `rm`): other agents may share the git index. Touch only pages/<PAGE>/, the
-<ID> entry in models.yaml, and new rows appended at the end of
-docs/refresh-learnings.md (re-read each shared file's end right before editing it).
+Refresh the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, onto
+the new page layout and pymrm 3.4.0, in both lanes. Do not commit, do not `git add`,
+do not `git rm` (delete files with plain `rm`): other agents may share the git index.
+Touch only pages/<PAGE>/, the <ID> entry in models.yaml, and new rows appended at the
+end of docs/refresh-learnings.md (re-read each shared file's end right before editing
+it).
 
 Read first, and nothing else up front:
 1. .claude/skills/gallery-refresh/references/refresh-checklist.md, all of it. Apply
    every rule; the review checks against it.
-2. <FACTS>, and the port notes.
-3. pages/<PAGE>/index.py and model.py, by range as you work on them.
-4. pages/<WORKED>/: its Claims cell and break table in index.py, and its README
-   Corrections, as the worked example.
+2. <FACTS>: the old page's definitions, solver lines, metrics and learnings rows.
+3. templates/index.py and templates/bootstrap_cell.py.
+4. pages/<WORKED>/: its Claims cell and break table in index.py, by line range, and
+   its README Corrections, as the worked example. Do not read its notebook.
 5. <EXEMPLAR>.
 6. ~/Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/references/pitfalls.md,
    complete (you rewrite solver code).
@@ -134,9 +79,21 @@ Read first, and nothing else up front:
    AGENTS.md section "Data rules", and the source page's README findings on the rows
    you use.
 Everything else (AGENTS.md, claims-design, page-infrastructure, api-map,
-style-guide, numerics, learnings rows) by grep when a question needs it.
+style-guide, numerics, learnings rows) by grep when a question needs it. The old page
+is pages/<PAGE>/build_page.py: its cells are the strings passed to
+`cells.append(...)`; read it by the line ranges the facts file gives, never whole.
 
 <the working-style block>
+
+Lane A (infrastructure): index.py from templates/index.py, carrying the old cells in
+order; paired index.ipynb via `jupytext --set-formats ipynb,py:percent index.py`;
+bootstrap cell verbatim from templates/bootstrap_cell.py with GALLERY_REF = "main",
+PAGE = "<PAGE>", PYMRM = ">=3.4.0,<4"; meta.yaml pymrm_min_version "3.4.0" and a
+measured runtime_seconds; model.py with NumPy-style docstrings (classes and functions
+only, no plotting, no data loading); test_model.py (import, one fast solve, one stored
+value via load_claims, offline in seconds); build_page.py removed with plain `rm`.
+Build index.py cell by cell with Edit; do not write a cell to a separate file and
+splice it in.
 
 Lane B: <what the page computes, with old build_page.py line numbers from the facts
 file for the solver, root finds and outlet reads; the candidate changes:
@@ -152,12 +109,15 @@ and verify why; reproduce every old published value you change first (the old co
 is in `git show origin/main:pages/<PAGE>/build_page.py`). If the problem is linear,
 say so and do not add newton for show.
 
-Claims: replace `report_agreement` by Claims format 2. Every number the page states
-is a Claims entry, metric names kept from the old agreement.json where the quantity
-is the same, the last code cell `claims.report();`, every non-structural claim with a
-break row (checklist rules 1 to 11); test_model.py's stored value through
-`load_claims`. README `## Corrections` for any published statement that was wrong
-(dated today, keep existing dates); "What pymrm adds"; the models.yaml entry.
+Claims: Claims format 2. Every number the page states is a Claims entry, metric names
+kept from the old agreement.json where the quantity is the same, the last code cell
+`claims.report();`, every non-structural claim with a break row (checklist rules 1 to
+11). Declare the break rows with `claims.define_rows(labels)` before running them; a
+row whose study raises records nan for the claims it targets and stays in the table
+(report() fails for a declared row that recorded nothing). A row must fail its target
+claim, not crash the whole study. README `## Corrections` for any published statement
+that was wrong (dated today, keep existing dates); "What pymrm adds"; the models.yaml
+entry.
 
 Python: <VENV>. check_model.py rewrites agreement.json; accept_page.py restores it.
 A format-1 baseline on main shows drift FAILs for moved metrics before the commit;
@@ -169,22 +129,24 @@ Progress file (required): <SCRATCH>/<id>_progress.md after every checkpoint
 finish the command in hand, update the progress file and stop.
 
 Acceptance: `python scripts/accept_page.py pages/<PAGE>` (full, in the background),
-once after the last edit. Every step PASS, except agreement, which is LOOK before the
-commit when the baseline is format 1 (each of this page's lines explained: moved or
-replaced metrics); every LOOK line under lint checked (tagged, quoted or an
-identifier). Then the checklist's
+once after the last edit. Every step PASS (rows included: as many recorded as
+defined), except agreement, which is LOOK before the commit when the baseline is
+format 1 (each of this page's lines explained: moved or replaced metrics); every LOOK
+line under lint checked (tagged, quoted or an identifier). Then the checklist's
 "Before you report" items 2 to 4.
 
 Report at most 400 words: files changed, lane B choice and its measured justification,
 moved metrics, changed published statements (each with evidence), the accept_page
 summary as printed, runtime.
+
+Budget: aim for well under 100 tool calls. Plan the edits from the facts file before
+running anything, use `accept_page.py --quick --only <steps>` while iterating, and
+run the full notebook only when a change needs it.
 ```
 
-When the port was not run (a page whose cells cannot be ported without numerics),
-give A2 with this paragraph in place of the port sentence: "No port was run: first
-move the page onto the new layout as brief A1 describes (<the A1 Do list>), check
-that the old metrics are reproduced, then continue." This is the old single-agent
-refresh; use it only when the split does not fit, and say so in the cost log.
+`accept_page.py --make-ref` and the `port` step stay available: when a page's
+restructuring is risky, a reference run of the old page and `--only port` on an
+intermediate state show that the layout move changed nothing it computes.
 
 ## A-light. Refresh, light lane (`implement`, Sonnet)
 
@@ -208,8 +170,9 @@ question needs it.
 Layout: index.py from templates/index.py, paired index.ipynb via jupytext; bootstrap
 cell verbatim with GALLERY_REF="main", PAGE the directory name, PYMRM ">=3.4.0,<4";
 meta.yaml pymrm_min_version "3.4.0" and measured runtime_seconds; every number the
-page states is a Claims entry, last code cell `claims.report();`; agreement.json
-format 2; build_page.py removed; README `## Corrections` for any published statement
+page states is a Claims entry, last code cell `claims.report();`; break rows declared
+with `claims.define_rows(labels)` before they run, a row that cannot run recording nan
+for its claims; agreement.json format 2; build_page.py removed; README `## Corrections` for any published statement
 that was wrong (dated today, keep existing dates). No model.py and no test_model.py
 unless a check script requires them; if one does, stop and report which check and
 why instead of inventing a model.
@@ -222,10 +185,10 @@ not add other pymrm calls. Keep "What pymrm adds" honest: say plainly that pymrm
 contributes nothing to the correlation, if so. Sibling pages whose claims it may
 load (never retype another page's claims): <...>.
 
-Progress file, pause rule and acceptance as in A2 (accept_page.py full, once at the
+Progress file, pause rule, acceptance and budget as in A (accept_page.py full, once at the
 end; it skips test_model.py and check_model.py when the page has none).
 
-Report at most 400 words, as in A2.
+Report at most 400 words, as in A.
 ```
 
 ## B. Review (`gallery-reviewer`)
