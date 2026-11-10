@@ -54,6 +54,12 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
 11. Convergence is a precondition, not a detector. A defect that leaves no solution
     records nan, with the non-existence shown by an independent route or a root scan
     over the whole physical range. (rows 61, 72, 156, 192)
+    The row stays in the table: declare the rows with `claims.define_rows(labels)`
+    before they run, and a study that raises returns nan for every claim the row
+    targets, never an empty result. `claims.report()` fails for a declared row that
+    recorded nothing, and accept_page.py prints "break rows: N defined, N recorded".
+    A summary such as "rows that fail no claim: none" cannot see a row that recorded
+    nothing. (A3.7 review, 9 Nov: 42 rows defined, 40 printed)
 
 ## Numerics and evidence
 

@@ -146,6 +146,7 @@ claims.bound("sweep_worst_newton_residual", res, max=1e-8, basis="tolerance",
 claims.bound("flux_identity", gap, max=1e-12, basis="identity", structural=True)
 claims.count("rows_caught", row_metrics, threshold=1e-6, min_margin=0.05)
 
+claims.define_rows(["closed-form reference off by 1 %"])
 claims.breaks("closed-form reference off by 1 %", "vs_shooting_reference_n800", err_b)
 claims.says("3.9e-5", "vs_shooting_reference_n800")   # prose check, section 6
 claims.report()
@@ -155,6 +156,13 @@ claims.report()
 - `report()` prints the table and writes `agreement.json` (format 2). It raises,
   listing everything at once, on any violated bound or margin, any failing `says`, and
   any non-structural claim with no break row that fails its check.
+- `define_rows(labels)` declares the break-table rows before they run. `report()` then
+  also raises for a declared row that recorded no claim (a study that raised and was
+  caught, an empty result) and for a recorded row never declared, and the file gets
+  `"rows": {"defined": n, "recorded": n}` (declared rows that recorded a claim). A
+  row whose study cannot run records nan for the claims it targets, which fails their
+  checks: right only when the failed solve is itself the detection, otherwise fix the
+  study. Without the declaration such a row drops out of the table unseen.
 - `load_claims(page)` returns `{name: float}` from either format. Pages reading another
   page's file switch to it first, before any page writes format 2. A comparison of a
   live number with another page's committed number is a `bound` with a measured basis,
