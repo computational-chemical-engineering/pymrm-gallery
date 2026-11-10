@@ -134,6 +134,50 @@ def test_says_exact_integer():
     assert c.says("between 9 and 11", "n")
 
 
+def test_defined_row_that_records_nothing_raises():
+    # a study that raised inside a try/except and returned {} never calls breaks()
+    c = _one()
+    c.define_rows(["sign flip", "solver fails"])
+    c.breaks("sign flip", "m", -0.7186)
+    with pytest.raises(ClaimsFailed, match="'solver fails' is defined but recorded no claim"):
+        c.report(write=False)
+    c.breaks("solver fails", "m", float("nan"))           # nan fails the claim's check
+    payload = c.report(write=False)
+    assert payload["rows"] == {"defined": 2, "recorded": 2}
+    assert payload["breaks"]["m"] == ["sign flip", "solver fails"]
+
+
+def test_undefined_and_twice_defined_rows():
+    c = _one()
+    c.define_rows("sign flip")
+    with pytest.raises(ValueError, match="defined twice"):
+        c.define_rows(["sign flip"])
+    c.breaks("sign flip", "m", -0.7186)
+    c.breaks("typo in label", "m", -0.7186)
+    with pytest.raises(ClaimsFailed, match="'typo in label' is recorded but not defined"):
+        c.report(write=False)
+
+
+def test_missing_row_and_mistyped_label_do_not_balance(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    c = _one()
+    c.define_rows(["sign flip", "solver fails"])
+    c.breaks("sign flip", "m", -0.7186)
+    c.breaks("solver fail", "m", float("nan"))           # label typo, row missing
+    with pytest.raises(ClaimsFailed) as err:
+        c.report(write=True)
+    assert "'solver fails' is defined but recorded no claim" in str(err.value)
+    assert "'solver fail' is recorded but not defined" in str(err.value)
+    payload = json.loads((tmp_path / "agreement.json").read_text())
+    assert payload["rows"] == {"defined": 2, "recorded": 1}
+
+
+def test_no_rows_key_without_define_rows():
+    c = _one()
+    c.breaks("sign flip", "m", -0.7186)
+    assert "rows" not in c.report(write=False)
+
+
 def test_unbroken_recorded_when_breaks_not_required():
     c = _one()
     payload = c.report(write=False, require_breaks=False)
