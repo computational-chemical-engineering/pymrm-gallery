@@ -1,27 +1,799 @@
 {
   "page": "A4.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "sample_calc_max_reldev": 0.002881294840145876,
-    "table1_method1_repro_max_reldev": 0.019245017808931175,
-    "table1_method2_repro_max_reldev": 0.05800682092097542,
-    "table1_method3_repro_max_reldev": 0.10419728907220693,
-    "table1_exampleVI_method1_NA_dev": 0.8523298937164041,
-    "eq25_DppB_exampleIV_reldev": 0.0010085850253436224,
-    "path_average_DppB_exampleIV_reldev": 0.0032959191009658273,
-    "pf_A_exampleVI_method1_reldev": 0.0021163323561800285,
-    "eq23_max_resid_consistent_rows": 0.004125400222200426,
-    "taylor_krishna_851_max_reldev": 9.800309836149879e-05,
-    "wilke_rule_max_err_vs_exact": 0.8664673963657779,
-    "wilke_rule_median_err_vs_exact": 0.2160210993538204,
-    "wilke_rule_max_err_majority_flux": 0.3049671670906573,
-    "wilke_rule_max_err_minority_flux": 0.8664673963657779,
-    "method2_max_err_vs_exact": 0.12148135700346008,
-    "method2_max_dev_on_printed_columns": 0.09070294784580502,
-    "arithmetic_null_max_err_vs_exact": 2.1270320603016444,
-    "arithmetic_null_median_err_vs_exact": 0.22238009963003258,
-    "stagnant_frozen_composition_worst_err": 0.31007376632107064,
-    "pymrm_vs_closed_form_reldiff_n320": 5.503684377683449e-06,
-    "pymrm_observed_grid_order": 1.9847493876860114,
-    "exact_two_routes_reldiff": 1.176836406102666e-13
+    "pp_sum_resid": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "check 1; a mis-read digit of a three-decimal pressure leaves at least 1e-3 mm"
+    },
+    "pair_consistent": {
+      "kind": "exact",
+      "value": true,
+      "note": "check 2: every gas pair carries one diffusivity in all rows"
+    },
+    "examples_with_one_root_each_method": {
+      "kind": "exact",
+      "value": 32,
+      "note": "find_roots scans of both signs; one root expected per problem"
+    },
+    "table1_method1_repro_max_reldev": {
+      "kind": "value",
+      "value": 0.01924501780893162,
+      "rtol": 1e-06
+    },
+    "table1_exampleVI_method1_NA_dev": {
+      "kind": "value",
+      "value": 0.8523298937164041,
+      "rtol": 1e-06
+    },
+    "table1_method2_repro_max_reldev": {
+      "kind": "value",
+      "value": 0.05800682092097109,
+      "rtol": 1e-06
+    },
+    "table1_method3_repro_max_reldev": {
+      "kind": "value",
+      "value": 0.10419728907220627,
+      "rtol": 1e-06
+    },
+    "table1_method3_repro_second_max": {
+      "kind": "value",
+      "value": 0.023107361852358288,
+      "rtol": 1e-06
+    },
+    "table1_method3_worst_cell": {
+      "kind": "exact",
+      "value": "VI-A",
+      "note": "example-species of the largest Method-3 miss"
+    },
+    "table1_m1_cells_within_print": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.33312312606577166,
+      "min_margin": 0.0001
+    },
+    "table1_m2_cells_within_print": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.33431464258379306,
+      "min_margin": 0.0001
+    },
+    "table1_m3_cells_within_print": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.0028050956815675043,
+      "min_margin": 0.0001
+    },
+    "method1_sign_defect_rows": {
+      "kind": "exact",
+      "value": "I,II",
+      "note": "rows whose printed Method-1 N_B sign contradicts Method 1"
+    },
+    "method1_sign_defect_magnitude_dev": {
+      "kind": "value",
+      "value": 0.0005946884227460147,
+      "rtol": 1e-06
+    },
+    "pf_A_exampleVI_method1": {
+      "kind": "value",
+      "value": 287.39049628142027,
+      "rtol": 1e-06
+    },
+    "pf_A_from_printed_cell": {
+      "kind": "value",
+      "value": 379.92480302422706,
+      "rtol": 1e-06
+    },
+    "pf_A_exampleVI_method1_reldev": {
+      "kind": "value",
+      "value": 0.0021163323561795844,
+      "rtol": 1e-06
+    },
+    "pf_A_exampleVI_half_units": {
+      "kind": "value",
+      "value": 1.219007437159462,
+      "rtol": 1e-06
+    },
+    "pf_paragraph_within_print": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.9999999999997158,
+      "min_margin": 0.0001
+    },
+    "wilke_rule_max_err_vs_exact": {
+      "kind": "value",
+      "value": 0.8664673963657792,
+      "rtol": 1e-06
+    },
+    "wilke_rule_median_err_vs_exact": {
+      "kind": "value",
+      "value": 0.2160210993538182,
+      "rtol": 1e-06
+    },
+    "wilke_rule_max_err_majority_flux": {
+      "kind": "value",
+      "value": 0.3049671670906664,
+      "rtol": 1e-06
+    },
+    "wilke_rule_median_err_majority_flux": {
+      "kind": "value",
+      "value": 0.07689000154292702,
+      "rtol": 1e-06
+    },
+    "wilke_rule_max_err_minority_flux": {
+      "kind": "value",
+      "value": 0.8664673963657792,
+      "rtol": 1e-06
+    },
+    "wilke_rule_median_err_minority_flux": {
+      "kind": "value",
+      "value": 0.6615587402636847,
+      "rtol": 1e-06
+    },
+    "wilke_rule_min_err_minority_flux": {
+      "kind": "value",
+      "value": 0.2419183535664351,
+      "rtol": 1e-06
+    },
+    "wilke_rule_err_IV_B": {
+      "kind": "value",
+      "value": 0.8664673963657792,
+      "rtol": 1e-06
+    },
+    "wilke_rule_err_VII_B": {
+      "kind": "value",
+      "value": -0.41333344377866665,
+      "rtol": 1e-06
+    },
+    "method2_max_err_vs_exact": {
+      "kind": "value",
+      "value": 0.12148135700345442,
+      "rtol": 1e-06
+    },
+    "method2_median_err_vs_exact": {
+      "kind": "value",
+      "value": 0.0017671863293884926,
+      "rtol": 1e-06
+    },
+    "arithmetic_null_max_err_vs_exact": {
+      "kind": "value",
+      "value": 2.1270320603016453,
+      "rtol": 1e-06
+    },
+    "arithmetic_null_median_err_vs_exact": {
+      "kind": "value",
+      "value": 0.22238009963004368,
+      "rtol": 1e-06
+    },
+    "examples_dominant_phi_near_1": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.4748623372145602,
+      "min_margin": 0.05,
+      "note": "examples whose dominant species has |phi - 1| < 0.05"
+    },
+    "wilke_rule_max_err_dominant_phi_near_1": {
+      "kind": "value",
+      "value": 0.023057642009502666,
+      "rtol": 1e-06
+    },
+    "method2_max_dev_on_printed_columns": {
+      "kind": "value",
+      "value": 0.09070294784580502,
+      "rtol": 1e-06
+    },
+    "method2_max_dev_on_printed_alt_reading": {
+      "kind": "value",
+      "value": 0.09954751131221706,
+      "rtol": 1e-06
+    },
+    "method2_claim_holds_on_printed": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.0929705215419499,
+      "min_margin": 0.001
+    },
+    "method2_claim_holds_every_reading": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.004524886877829426,
+      "min_margin": 0.001
+    },
+    "method2_claim_holds_vs_exact": {
+      "kind": "exact",
+      "value": false,
+      "margin": 0.2148135700345441,
+      "min_margin": 0.001
+    },
+    "eq25_DppB_exampleIV": {
+      "kind": "value",
+      "value": 2.222239058756263,
+      "rtol": 1e-06
+    },
+    "path_average_DppB_exampleIV": {
+      "kind": "value",
+      "value": 2.1570862260670767,
+      "rtol": 1e-06
+    },
+    "eq25_DppB_exampleIV_reldev": {
+      "kind": "value",
+      "value": 0.0010085850253436224,
+      "rtol": 1e-06
+    },
+    "path_average_DppB_exampleIV_reldev": {
+      "kind": "value",
+      "value": 0.0032959191009658273,
+      "rtol": 1e-06
+    },
+    "eq25_DppB_exampleIV_half_units": {
+      "kind": "value",
+      "value": 0.4478117512525692,
+      "rtol": 1e-06
+    },
+    "path_average_DppB_exampleIV_half_units": {
+      "kind": "value",
+      "value": 1.4172452134153524,
+      "rtol": 1e-06
+    },
+    "eq23_pairs_inside_1pct": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 0.5874599777799574,
+      "min_margin": 0.01
+    },
+    "eq23_pairs_inside_round_bound": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.1532603413930268,
+      "min_margin": 0.01
+    },
+    "eq23_pairs_inside_full_bound": {
+      "kind": "exact",
+      "value": 8,
+      "margin": 0.35195077310617195,
+      "min_margin": 0.01
+    },
+    "eq23_max_resid_consistent_rows": {
+      "kind": "value",
+      "value": 0.004125400222200426,
+      "rtol": 1e-06
+    },
+    "eq23_exI_set3_resid": {
+      "kind": "value",
+      "value": -0.1320974630860584,
+      "rtol": 1e-06
+    },
+    "eq23_exI_set3_round_bound": {
+      "kind": "value",
+      "value": 0.007272019390331134,
+      "rtol": 1e-06
+    },
+    "eq23_exIII_resid": {
+      "kind": "value",
+      "value": 0.09407796758429265,
+      "rtol": 1e-06
+    },
+    "eq23_exIII_round_bound": {
+      "kind": "value",
+      "value": 0.0038287242932134604,
+      "rtol": 1e-06
+    },
+    "eq23_exI_set3_NB_required": {
+      "kind": "value",
+      "value": -3.7231382956740866,
+      "rtol": 1e-06
+    },
+    "eq23_exI_set3_NA_required": {
+      "kind": "value",
+      "value": 4.301918821317576,
+      "rtol": 1e-06
+    },
+    "eq22_bracket_that_gives_eq23": {
+      "kind": "exact",
+      "value": "D_BC",
+      "note": "symbolic: readings of eq. (22)'s first bracket for which (21) + (22) give eq. (23)"
+    },
+    "sample_calc_max_reldev": {
+      "kind": "value",
+      "value": 0.002881294840145876,
+      "rtol": 1e-06
+    },
+    "sample_calc_within_print": {
+      "kind": "exact",
+      "value": 9,
+      "margin": 0.06626011492924444,
+      "min_margin": 0.0001,
+      "note": "printed steps within half a unit of their last digit"
+    },
+    "taylor_krishna_851_max_reldev": {
+      "kind": "value",
+      "value": 9.800309836149879e-05,
+      "rtol": 1e-06
+    },
+    "tk_within_print": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.21185908297616152,
+      "min_margin": 0.0001,
+      "note": "T&K intermediates within half a unit of their last digit"
+    },
+    "tk_wilke_identity_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "Xi (y_10 - y_1d) = (1 - y_1,mean) Phi: the same expression; no row can move it"
+    },
+    "tk_frozen_composition_err": {
+      "kind": "value",
+      "value": -0.0008047365963431696,
+      "rtol": 1e-06
+    },
+    "stagnant_frozen_composition_worst_err": {
+      "kind": "value",
+      "value": 0.3100737663210704,
+      "rtol": 1e-06
+    },
+    "exact_two_routes_reldiff": {
+      "kind": "bound",
+      "value": 1.4988010832439613e-13,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "two integrations of one system, each root refined to 1e-14 in Table-1 units"
+    },
+    "pymrm_vs_closed_form_reldiff_n320": {
+      "kind": "value",
+      "value": 5.503684377128337e-06,
+      "rtol": 0.0001
+    },
+    "pymrm_grid_order_min": {
+      "kind": "bound",
+      "value": 2.00391616382109,
+      "min": 1.99,
+      "basis": "theory",
+      "note": "second-order cells; successive differences of the nested ladder"
+    },
+    "pymrm_grid_order_max": {
+      "kind": "bound",
+      "value": 2.0079707453433135,
+      "max": 2.02,
+      "basis": "theory",
+      "note": "second-order cells; successive differences of the nested ladder"
+    },
+    "pymrm_extrapolated_vs_exact": {
+      "kind": "bound",
+      "value": 1.1523281662206841e-08,
+      "max": 1e-07,
+      "basis": "theory",
+      "note": "Richardson limit of a second-order ladder against the closed form; next-order terms"
+    },
+    "pymrm_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 20383.794826830337,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the flux non-uniformity of the finest solve"
+    },
+    "pymrm_flux_uniformity": {
+      "kind": "bound",
+      "value": 5.273181891141121e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "div N = 0 makes N uniform; the spread is the Newton solve's residual"
+    },
+    "pymrm_err_near_linear_examples": {
+      "kind": "bound",
+      "value": 5.431766147978578e-12,
+      "max": 1e-09,
+      "basis": "theory",
+      "note": "Examples II and III: near-linear exact profiles, grid error at the round-off floor"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "pp_sum_resid": [
+      "Example V p1_C 89.56 read as 89.570"
+    ],
+    "pair_consistent": [
+      "Example VI D_AC and D_BC cells read in each other's place"
+    ],
+    "examples_with_one_root_each_method": [
+      "Method 2 negative-p_f clip disabled",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "table1_method1_repro_max_reldev": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "table1_exampleVI_method1_NA_dev": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example VI Method-1 N_A -0.104 read as -0.1144"
+    ],
+    "table1_method2_repro_max_reldev": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "Method 2 negative-p_f clip disabled",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example IV m2_NB -0.0401 read as -0.04411",
+      "Example VI m2_NA -0.105 read as -0.1155"
+    ],
+    "table1_method3_repro_max_reldev": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "table1_method3_repro_second_max": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)",
+      "Example II m3_NA 0.131 read as 0.1441",
+      "Example III m3_NB -0.0528 read as -0.05808",
+      "Example VII Method-3 N_B at its alternative reading -0.221"
+    ],
+    "table1_method3_worst_cell": [
+      "D_AC and D_BC swapped",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "table1_m1_cells_within_print": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "table1_m2_cells_within_print": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "Method 2 negative-p_f clip disabled",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example VI m2_NA -0.105 read as -0.1155"
+    ],
+    "table1_m3_cells_within_print": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)",
+      "Example II m3_NA 0.131 read as 0.1441"
+    ],
+    "method1_sign_defect_rows": [
+      "Example I Method-1 N_B read with a minus sign"
+    ],
+    "method1_sign_defect_magnitude_dev": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "pf_A_exampleVI_method1": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5"
+    ],
+    "pf_A_from_printed_cell": [
+      "Example VI Method-1 N_A -0.104 read as -0.1144"
+    ],
+    "pf_A_exampleVI_method1_reldev": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "printed p_f_A 288 read as 282.2"
+    ],
+    "pf_A_exampleVI_half_units": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "printed p_f_A 288 read as 282.2"
+    ],
+    "pf_paragraph_within_print": [
+      "printed p_C_mean 72.5 read as 75.4"
+    ],
+    "wilke_rule_max_err_vs_exact": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_median_err_vs_exact": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_max_err_majority_flux": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5"
+    ],
+    "wilke_rule_median_err_majority_flux": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_max_err_minority_flux": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_median_err_minority_flux": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_min_err_minority_flux": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_err_IV_B": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_err_VII_B": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "method2_max_err_vs_exact": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "Method 2 negative-p_f clip disabled",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "method2_median_err_vs_exact": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "Method 2 negative-p_f clip disabled",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "arithmetic_null_max_err_vs_exact": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "arithmetic_null_median_err_vs_exact": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "examples_dominant_phi_near_1": [
+      "D_AC and D_BC swapped",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "wilke_rule_max_err_dominant_phi_near_1": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "method2_max_dev_on_printed_columns": [
+      "Example IV m2_NB -0.0401 read as -0.04411",
+      "Example VI m2_NA -0.105 read as -0.1155",
+      "Example VII Method-3 N_B at its alternative reading -0.221"
+    ],
+    "method2_max_dev_on_printed_alt_reading": [
+      "Example VI m2_NA -0.105 read as -0.1155"
+    ],
+    "method2_claim_holds_on_printed": [
+      "Example VI m2_NA -0.105 read as -0.1155"
+    ],
+    "method2_claim_holds_every_reading": [
+      "Example VI m2_NA -0.105 read as -0.1155"
+    ],
+    "method2_claim_holds_vs_exact": [
+      "D_AB x 1.5",
+      "printed method2_max_deviation_claim 10 read as 15"
+    ],
+    "eq25_DppB_exampleIV": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5"
+    ],
+    "path_average_DppB_exampleIV": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)"
+    ],
+    "eq25_DppB_exampleIV_reldev": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "printed D_pp_H2O_eq25 2.22 read as 2.264"
+    ],
+    "path_average_DppB_exampleIV_reldev": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)",
+      "printed D_pp_H2O_graphical 2.15 read as 2.193"
+    ],
+    "eq25_DppB_exampleIV_half_units": [
+      "harmonic rule replaced by the arithmetic mean",
+      "rule frozen at terminal 1 instead of the mean",
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "printed D_pp_H2O_eq25 2.22 read as 2.264"
+    ],
+    "path_average_DppB_exampleIV_half_units": [
+      "D_AC and D_BC swapped",
+      "D_AB x 1.5",
+      "N_A scan cut to |N_A| < 1e-6 g.mol/(s cm2)",
+      "printed D_pp_H2O_graphical 2.15 read as 2.193"
+    ],
+    "eq23_pairs_inside_1pct": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example II m3_NA 0.131 read as 0.1441"
+    ],
+    "eq23_pairs_inside_round_bound": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example II m3_NA 0.131 read as 0.1441"
+    ],
+    "eq23_pairs_inside_full_bound": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example II m3_NA 0.131 read as 0.1441"
+    ],
+    "eq23_max_resid_consistent_rows": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "eq23_exI_set3_resid": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example I set 3 N_B -3.93 read as -3.537"
+    ],
+    "eq23_exI_set3_round_bound": [
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "eq23_exIII_resid": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example III m3_NB -0.0528 read as -0.05808"
+    ],
+    "eq23_exIII_round_bound": [
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "eq23_exI_set3_NB_required": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm"
+    ],
+    "eq23_exI_set3_NA_required": [
+      "D_AC and D_BC swapped",
+      "R = 82.06 read as 83.0",
+      "film thickness 0.1 cm read as 0.11 cm",
+      "Example I set 3 N_B -3.93 read as -3.537"
+    ],
+    "sample_calc_max_reldev": [
+      "R + 1.1 % (82.06 -> 83.0; 8.3143 -> 8.4095) (sample calculation)",
+      "T + 1 % on both chains (sample calculation)",
+      "film thickness x 1.1 on both chains (sample calculation)",
+      "the two diffusivities each chain uses swapped (sample calculation)",
+      "D_AB / D_12 x 1.2 (sample calculation)"
+    ],
+    "sample_calc_within_print": [
+      "R + 1.1 % (82.06 -> 83.0; 8.3143 -> 8.4095) (sample calculation)",
+      "T + 1 % on both chains (sample calculation)",
+      "film thickness x 1.1 on both chains (sample calculation)",
+      "the two diffusivities each chain uses swapped (sample calculation)",
+      "D_AB / D_12 x 1.2 (sample calculation)"
+    ],
+    "taylor_krishna_851_max_reldev": [
+      "R + 1.1 % (82.06 -> 83.0; 8.3143 -> 8.4095) (Taylor and Krishna)",
+      "T + 1 % on both chains (Taylor and Krishna)",
+      "film thickness x 1.1 on both chains (Taylor and Krishna)",
+      "the two diffusivities each chain uses swapped (Taylor and Krishna)",
+      "D_AB / D_12 x 1.2 (Taylor and Krishna)"
+    ],
+    "tk_within_print": [
+      "R + 1.1 % (82.06 -> 83.0; 8.3143 -> 8.4095) (Taylor and Krishna)",
+      "T + 1 % on both chains (Taylor and Krishna)",
+      "film thickness x 1.1 on both chains (Taylor and Krishna)",
+      "the two diffusivities each chain uses swapped (Taylor and Krishna)",
+      "D_AB / D_12 x 1.2 (Taylor and Krishna)"
+    ],
+    "tk_wilke_identity_gap": [],
+    "tk_frozen_composition_err": [
+      "the two diffusivities each chain uses swapped (Taylor and Krishna)",
+      "D_AB / D_12 x 1.2 (Taylor and Krishna)"
+    ],
+    "stagnant_frozen_composition_worst_err": [
+      "the two diffusivities each chain uses swapped (Taylor and Krishna)",
+      "D_AB / D_12 x 1.2 (Taylor and Krishna)"
+    ],
+    "eq22_bracket_that_gives_eq23": [
+      "eq. (21)'s first bracket read with D_BC"
+    ],
+    "exact_two_routes_reldiff": [
+      "matrix-exponential route run with D_AC and D_BC swapped"
+    ],
+    "pymrm_vs_closed_form_reldiff_n320": [
+      "film divergence with nu = 1 (cylinder) instead of 0",
+      "interior face composition from the left cell (first order)"
+    ],
+    "pymrm_grid_order_min": [
+      "film divergence with nu = 1 (cylinder) instead of 0",
+      "interior face composition from the left cell (first order)"
+    ],
+    "pymrm_grid_order_max": [
+      "Examples II and III kept in the order study"
+    ],
+    "pymrm_extrapolated_vs_exact": [
+      "film divergence with nu = 1 (cylinder) instead of 0",
+      "interior face composition from the left cell (first order)"
+    ],
+    "pymrm_ladder_over_roundoff": [
+      "film divergence with nu = 1 (cylinder) instead of 0",
+      "Examples II and III kept in the order study"
+    ],
+    "pymrm_flux_uniformity": [
+      "film divergence with nu = 1 (cylinder) instead of 0"
+    ],
+    "pymrm_err_near_linear_examples": [
+      "film divergence with nu = 1 (cylinder) instead of 0",
+      "interior face composition from the left cell (first order)",
+      "Examples II and III kept in the order study"
+    ]
   }
 }

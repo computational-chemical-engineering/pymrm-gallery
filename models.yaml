@@ -166,9 +166,14 @@ models:
     title: "Maxwell–Stefan vs Fick for multicomponent mixtures"
     description: >
       The Maxwell-Stefan diffusivities and the composition-dependent Fick matrix
-      are the same physics in two bookkeepings — shown to machine precision —
-      while the scalar effective diffusivity fails structurally: osmotic
-      diffusion, uphill diffusion, and the diffusion barrier.
+      are the same physics in two bookkeepings, shown by a friction-system route
+      that shares no code with [B] and agrees over the whole two-bulb transient
+      to at most 1e-10 <!-- claim: ms_independent_equivalence -->, while the
+      scalar effective diffusivity fails structurally: osmotic diffusion, uphill
+      diffusion, and the diffusion barrier. Against the Duncan-Toor measurements
+      the mean deviation is 0.59 % <!-- claim: mean_abs_dev_ms --> (mole %) for
+      Maxwell-Stefan and 3.14 % <!-- claim: mean_abs_dev_wilke --> for the Wilke
+      scalar law with CO2 eliminated.
     section: A
     status: published
     page: pages/A4.2-maxwell-stefan-vs-fick/
@@ -182,11 +187,11 @@ models:
       container: "Chemical Engineering Science 52(6) 861–911"
       doi: 10.1016/S0009-2509(96)00458-7
     predicts: [Fick matrix from MS diffusivities, effective diffusivity breakdown, osmotic diffusion, reverse diffusion, diffusion barrier]
-    pymrm_api: [construct_grad, construct_div, NumJac, newton]
+    pymrm_api: [construct_grad, construct_boundary_value_matrices, construct_div, NumJac, newton]
     # tier 4 by the cross-page rule in docs/data-strategy.md §3a: the page's own
     # dataset is the tier-6 K&W worked examples, but its reported experimental
-    # deviations (0.59 / 3.14 mole %) rest on A4.9's tier-4 digitised Duncan &
-    # Toor measurements, loaded cross-page. meta.yaml's caveats say so.
+    # deviations rest on A4.9's tier-4 digitised Duncan & Toor measurements,
+    # loaded cross-page. meta.yaml's caveats say so.
     data: {tier: 4, method: digitised, status: complete, own_tier: 6,
            tier_from: A4.9}
     related: [A4.9, A4.3]
@@ -199,11 +204,14 @@ models:
       genuinely stagnant gases, so agreement there is arithmetic, not evidence.
       His own paper supplies the test that can fail: eight ternary film problems
       with the exact Stefan-Maxwell solution printed beside the rule. Recomputed
-      against that solution the rule is 86.6 % wrong at worst and 21.6 % at the
-      median - and the harmonic average is not what limits it. Replacing it with
-      the weighted arithmetic mean moves the median by 0.6 points while making
-      the worst case two and a half times worse; keeping it and moving the
-      composition, as Wilke's own Method 2 does, takes the worst case to 12.1 %.
+      against that solution the rule is 86.6 % <!-- claim: wilke_rule_max_err_vs_exact -->
+      wrong at worst and 21.6 % <!-- claim: wilke_rule_median_err_vs_exact --> at
+      the median, and the harmonic average is not what limits it. Replacing it
+      with the weighted arithmetic mean moves the median to 22.2 %
+      <!-- claim: arithmetic_null_median_err_vs_exact --> and the worst case to
+      212.7 % <!-- claim: arithmetic_null_max_err_vs_exact -->; keeping it and
+      moving the composition, as Wilke's own Method 2 does, takes the worst case
+      to 12.1 % <!-- claim: method2_max_err_vs_exact -->.
     section: A
     status: published
     page: pages/A4.1-wilke-mixture-rule/
