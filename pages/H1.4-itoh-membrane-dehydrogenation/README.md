@@ -1,4 +1,4 @@
-# H1.4 — Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium
+# H1.4: Itoh Pd membrane reactor: shifting a dehydrogenation equilibrium
 
 Reproduces Itoh (1987), *A membrane reactor using palladium*, AIChE Journal
 **33**(9) 1576–1578, [doi:10.1002/aic.690330921](https://doi.org/10.1002/aic.690330921).

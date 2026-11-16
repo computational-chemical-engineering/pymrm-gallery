@@ -1,4 +1,4 @@
-# A2.5 — Where the axial dispersion coefficient comes from
+# A2.5: Where the axial dispersion coefficient comes from
 
 `A2.1` takes the axial-dispersion reactor as given. `A2.3` derives a dispersion
 coefficient for a tube. This page is the experimental one: a pulse of argon in

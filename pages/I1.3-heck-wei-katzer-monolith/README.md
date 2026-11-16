@@ -1,4 +1,4 @@
-# I1.3 — Heck, Wei & Katzer 1976: what the 1-D monolith model is adequate for
+# I1.3: Heck, Wei & Katzer 1976: what the 1-D monolith model is adequate for
 
 The paper's two claims, tested: Table 1's asymptotic Nusselt numbers derived from
 scratch, the Nusselt singularity root-found downstream of the cause the text gives

@@ -1,4 +1,4 @@
-# A2.3 — Taylor–Aris dispersion
+# A2.3: Taylor–Aris dispersion
 
 Shear plus molecular diffusion produces spreading that looks exactly like
 diffusion but is thousands of times faster and, counter-intuitively, gets

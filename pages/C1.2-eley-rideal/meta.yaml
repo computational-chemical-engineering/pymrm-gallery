@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 15
+pymrm_min_version: "3.4.0"
+runtime_seconds: 30
 datasets:
   - prins-2018-printed-statements.csv
 
@@ -23,67 +23,68 @@ fit_or_test: >
   NO EXPERIMENTAL DATA EXIST IN THE SOURCE, AND THE PAGE CLAIMS NO
   EXPERIMENTAL VALIDATION. Prins (2018) is a historical and terminological
   review: it prints no measurement, no table and no figure (checked three
-  ways - full text read, all 8 pages rendered and inspected, pdfimages
-  inventory shows only decorative logos). Everything quantitative on the page
-  is either (a) analytical - the printed limits of Eqs. (3a)-(3c) derived
+  ways - full text read, every page rendered and inspected, and an image
+  inventory that shows only decorative logos). Everything quantitative on the
+  page is either (a) analytical - the printed limits of Eqs. (3a)-(3c) derived
   symbolically and measured numerically - or (b) a labelled NUMERICAL
   EXPERIMENT on constants imported from page C1.1, which are themselves FIT
-  constants (fitted by Hougen & Watson 1947 to their own 40 runs; no held-out
+  constants (fitted by Hougen & Watson 1947 to their own runs; no held-out
   measurement exists there either, as C1.1's own metadata states). The
   impact-law power study generates noiseless rates from the fitted mechanism
   (d) and refits the impact forms - it is labelled synthetic in the cell that
   runs it and everywhere its numbers appear. The one comparison against
-  measured rates (d vs o on the 12 printed 200 C runs) is a reproduction-side
-  fit-quality comparison on fit data, never validation.
+  measured rates (d vs o on the 12 <!-- claim: runs_at_200C --> printed 200 C runs) is a reproduction-side
+  fit-quality comparison on fit data, never validation, and its paired
+  difference is 1.6 <!-- claim: lr_gap_measured_over_se --> standard errors, not resolved at two.
 
 validation:
   # PRIMARY - analytical, each able to fail
-  - "all eleven printed limiting-order claims of p. 719 derived symbolically from the paper's own Eqs. (3a)-(3c) (all agree - the 'order in B = 1' claim is exact for Eq. (3b) and the reduced form of (3a); on the full (3a) it is off by a measured term that vanishes as K_B c_B -> 0) and measured numerically on independently coded laws (finite-x tails at the predicted size)"
-  - "the L-H maximum computed by two routes sharing no algebra - sympy closed form K_A c_A = 1 + K_B c_B vs pymrm newton root on the numpy-coded law - agreeing to 4.8e-11"
-  - "the identifiability window w* root-found (never sampled) by two optimizer routes agreeing to 1.8e-11, with a 401->1601 grid-refinement guard (4.6e-3) and a measured small-window law dev ~ 0.0157 (ln w)^2"
-  - "every C1.1 import reconciled against the book's own printed Table C: worst R_calc gap 0.006 over 11 of 12 runs, and 0.503 on run 25a - independently reproducing C1.1's documented digit-slip finding (printed 5.40, row-consistent 5.90)"
-  - "the impact-law misfit computed by two optimizer families (log-reparam LM from three fixed starts vs bounded TRF on direct parameters), agreeing to 1.0e-06"
-  - "the paper's two internally checkable numbers quantified: flux parity at 1000-10000 atm ('very high pressures'), HD energy budget 176 vs 196 kJ/mol, ratio 0.898 ('close to')"
+  - "all 11 <!-- claim: printed_limits_agree --> printed limiting-order claims of p. 719 derived symbolically from the paper's own Eqs. (3a)-(3c) (all agree - the 'order in B = 1' claim is exact for Eq. (3b) and the reduced form of (3a); on the full (3a) it is off by a measured term that vanishes as K_B c_B -> 0) and measured numerically on independently coded laws (finite-x tails at the predicted size)"
+  - "the L-H maximum computed by two routes sharing no algebra - sympy closed form K_A c_A = 1 + K_B c_B vs a pymrm find_roots root (exactly one on the physical range) of the numpy-coded law, agreeing to at most 1e-8 <!-- claim: maxloc_closed_minus_root_rel -->, with pymrm newton on a NumJac((1, 1)) as a root-finder cross-check to at most 1e-6 <!-- claim: maxloc_newton_minus_root_rel -->"
+  - "the identifiability window w* root-found (never sampled) by find_roots with exactly one root, two optimizer routes agreeing to at most 1e-6 <!-- claim: wstar_tol844_two_routes_rel -->, a 401 -> 1601 grid-refinement guard of at most 2e-2 <!-- claim: wstar_tol844_grid_refined_rel --> and a measured small-window law dev ~ 0.0157 <!-- claim: smallw_quad_const --> (ln w)^2"
+  - "every C1.1 import reconciled against the book's own printed Table C: 11 <!-- claim: codimer_Rcalc_rows_within_one_unit --> of the 12 <!-- claim: runs_at_200C --> runs within one unit of the last printed digit, and 0.503 <!-- claim: codimer_25a_abs_gap --> on run 25a - independently reproducing C1.1's documented digit-slip finding (its own published claim agrees to at most 1e-2 <!-- claim: codimer_25a_gap_vs_C11 -->)"
+  - "the impact-law misfit computed by two optimizer families (log-reparam LM from three fixed starts vs bounded TRF on direct parameters), agreeing to at most 1e-4 <!-- claim: lr_o_fit_two_routes_rel -->"
+  - "the paper's two internally checkable numbers quantified: flux parity at 1000 <!-- claim: mw_parity_atm_low --> to 10000 <!-- claim: mw_parity_atm_high --> atm ('very high pressures'), HD energy budget 176 <!-- claim: energy_sum_kJmol --> vs 196 <!-- claim: energy_exo_kJmol --> kJ/mol, ratio 0.898 <!-- claim: energy_ratio --> ('close to')"
   # PRINTED DEFECT (reported, never repaired)
   - "p. 719 prints 'The rate of the L-H reaction should even reach a maximum for c_A = K_A.' [sic] - dimensionally inconsistent, quoted verbatim; the derived condition K_A c_A = 1 + K_B c_B is unit-invariant where the printed one moves by lambda^2 under a unit rescale; the reduced-form reading K_A c_A = 1 is labelled an inference"
   # DEFECT INJECTION
-  - "a 14-row break table: printed exponents flipped both ways, numerator power, beta -> 0, the printed maximum condition adopted, unit rescale, off-maximum window centring, minimax norm, inverted K_U conversion, run 25a included, K_H term allowed, p_H span collapsed, K_S dropped, transcription slip 82 -> 28, K off by 10 %; coverage map asserted key-for-key against all 46 agreement metrics; the two exact identities (thermo consistency, the (3c)-(3b) proportionality) are named structural, below CI's ABS_FLOOR, each with an above-floor companion"
+  - "a break table in which every claim is moved by a defect entered through a call argument: printed exponents flipped both ways, numerator power, beta -> 0, the printed maximum condition adopted, unit rescale, off-maximum window centring, minimax norm, each converted constant inverted in turn, run 25a included, hydrogen term scaled out of the generator, transcription slips, a wrongly wired cross-check; the two exact identities (thermodynamic consistency, the (3c)-(3b) proportionality) are bounds with companions that move"
 
 adds: >
   Three things the source does not give. First, the paper's p. 719
   discrimination paragraph turned into a number: the chemisorbing species
-  must span a factor w* = 11.8 (root-found; 6.4 at 5 %, 40 at rate-space
-  scatter) centred on the L-H maximum before the impact law can be rejected
-  at classic-fit precision, with the placement mattering as much as the width
-  (centred where both laws are first order, the misfit collapses by three
-  orders). Second, the attribution question answered on the formalism's
-  founding dataset by a numerical experiment: Hougen & Watson's own mechanism
-  (o) is exactly Prins's Eq. (3b) (with the product's adsorption term
-  retained), and fit quality alone (27.4 % mean |Delta| at the
-  least-squares-optimal fit - the declared protocol; directly minimising
-  mean |Delta| instead gives a smaller number, conclusion unchanged - vs a
-  16.8 % noise floor) could have rejected it - but only because the 1947
-  design spans a decade in hydrogen pressure (the design also straddles the
-  L-H turnover at p_U* = 2.50 atm, an observation, not a second necessary
-  condition: collapsing the hydrogen span alone already drops the misfit
-  below the noise floor), making the founding gas-phase design blind in
-  exactly the way Prins says liquid-phase studies are. The denominator
-  exponent itself (1 vs 2) is indistinguishable there at the design's noise
-  floor even when the rates carry no noise.
-  Third, the printed-defect report: the maximum condition "c_A = K_A" [sic]
-  fails its own equation's unit test. The naming finding (E-R should be L-R;
-  what Eley and Rideal studied is a different mechanism) is the paper's own
-  thesis, reported plainly as the same finding class as B1.4 and H1.1.
+  must span a factor w* = 11.8 <!-- claim: wstar_tol844 --> (root-found; 6.4 <!-- claim: wstar_tol5 --> at 5 %; 39.8 <!-- claim: wstar_tol169 --> at the
+  rate-space scatter published by C1.1) centred on the L-H maximum before the
+  impact law can be rejected at the 1947 fit's own average deviation
+  (8.44 <!-- claim: codimer_tableC_avg_abs_pct --> %), with the placement mattering as much as the width (centred where
+  both laws are first order, the misfit at w* is 5.3e-05 <!-- claim: dev_at_wstar_center001 --> against 0.0844).
+  Second, the attribution question answered on the formalism's founding
+  dataset by a numerical experiment: Hougen & Watson's own mechanism (o) is
+  exactly Prins's Eq. (3b) (with the product's adsorption term retained), and
+  fit quality alone (27.4 <!-- claim: lr_o_on_exact_d_mean_pct --> % mean |Delta| at the least-squares-optimal
+  fit - the declared protocol; directly minimising mean |Delta| instead gives
+  22.8 <!-- claim: lr_o_direct_mean_pct --> % - vs a 16.8 <!-- claim: codimer_d_scatter_pct --> % noise floor) separates the two laws on noiseless rates - but only
+  because the 1947 design spans a decade in hydrogen pressure (the design also
+  straddles the L-H turnover at p_U* = 2.50 <!-- claim: codimer_pUstar_atm --> atm, an observation, not a second
+  necessary condition: collapsing the hydrogen span alone already drops the
+  misfit to 3.2 <!-- claim: lr_o_collapsedpH_mean_pct --> %, below the noise floor), while the denominator exponent
+  (1 vs 2) is indistinguishable there at the design's noise floor even when
+  the rates carry no noise. Against the measured rates the d-versus-o gap is
+  9.8 <!-- claim: lr_gap_measured_pct_points --> points with a standard error of 6.3 <!-- claim: lr_gap_measured_se_pts --> and is not resolved. Third, the
+  printed-defect report: the maximum condition "c_A = K_A" [sic] fails its own
+  equation's unit test. The naming finding (E-R should be L-R; what Eley and
+  Rideal studied is a different mechanism) is the paper's own thesis, reported
+  plainly as the same finding class as B1.4 and H1.1.
 
 agreement: >
-  All eleven printed limiting orders derived exactly; L-H maximum two-route
-  gap 4.8e-11; w* = 11.75 with routes agreeing to 1.8e-11; C1.1 imports
-  reconciled to 0.006 worst against the book's printed Table C (0.503 on the
-  known 25a slip, reproducing C1.1's finding); tableC mean deviation
-  recomputed 8.44 % against the book's printed +-8.44 and rate-space scatter
-  16.85 % against C1.1's published 16.86; impact-law misfit on noiseless
-  mechanism-d rates 27.4 % mean / 48.1 % max with two optimizer families
-  agreeing to 1.0e-06; energy budget 176/196 = 0.898.
+  All 11 <!-- claim: printed_limits_agree --> printed limiting orders derived exactly; L-H maximum two-route
+  gap at most 1e-8 <!-- claim: maxloc_closed_minus_root_rel -->; w* = 11.8 <!-- claim: wstar_tol844 --> with routes agreeing to at most 1e-6 <!-- claim: wstar_tol844_two_routes_rel -->;
+  C1.1 imports reconciled to within one printed unit on 11 <!-- claim: codimer_Rcalc_rows_within_one_unit --> of 12 <!-- claim: runs_at_200C --> runs of the book's
+  printed Table C (0.503 <!-- claim: codimer_25a_abs_gap --> on the known 25a slip, reproducing C1.1's finding); the Table C mean
+  deviation recomputed 8.44 <!-- claim: codimer_tableC_avg_abs_pct --> % and the rate-space scatter 16.8 <!-- claim: codimer_d_scatter_pct --> % against C1.1's
+  published numbers; impact-law misfit on noiseless mechanism-d rates
+  27.4 <!-- claim: lr_o_on_exact_d_mean_pct --> % mean / 48.1 <!-- claim: lr_o_on_exact_d_max_pct --> % max with two optimizer families agreeing to at most 1e-4 <!-- claim: lr_o_fit_two_routes_rel -->;
+  energy budget 176/196 = 0.898 <!-- claim: energy_ratio -->.
 
 reference:
   authors:

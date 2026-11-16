@@ -1,4 +1,4 @@
-# A4.9 — Duncan-Toor ternary gas diffusion
+# A4.9: Duncan-Toor ternary gas diffusion
 
 Two bulbs of gas joined by a capillary. Nitrogen starts 0.06 mole fraction apart,
 closes that gap, then keeps going *against* its own gradient until it is twice as
@@ -42,7 +42,7 @@ Neither can see a wrong number. Measured on the page's own `simulate()`:
 A digit transposition in the one diffusivity that drives the whole phenomenon ends
 the reversal 20× smaller and 2.3 h later, and both residuals stay at machine
 precision. They are kept and labelled `STRUCTURAL`, because they do catch what
-nothing else here catches — an unconverged Newton solve (1.7e-3) and a wrong `nu`
+nothing else here catches: an unconverged Newton solve (1.7e-3) and a wrong `nu`
 (0.98).
 
 Two further facts worth recording. Both metrics sit **below
@@ -52,14 +52,14 @@ the actual error falls 88-fold while the residual rises from 2.2e-15 to 4.2e-14.
 It is round-off in a linear solve, not accuracy.
 
 **This block is shared with `A4.2`**, which borrowed this page's dataset and
-copied the validation with it — the only two pages in the repository carrying
+copied the validation with it, the only two pages in the repository carrying
 `flux_nonuniformity` and `mole_balance_error`. Both are now labelled. A check's
 power depends on the physics, not on the code, so it does not survive a copy.
 
 ## Both numerical knobs are now refined
 
 `n_z = 40` had never been refined. Grid: observed order 2.06, spatial error
-1.5e-6 in mole fraction — about 3900× below the model-vs-data deviation. Time:
+1.5e-6 in mole fraction, about 3900× below the model-vs-data deviation. Time:
 observed order 1.15 (backward Euler), 2.2e-4 at the production `n_steps = 400`.
 Time is the dominant numerical error, 147× the grid's, and both are far below the
 0.59 mole % the comparison reports.

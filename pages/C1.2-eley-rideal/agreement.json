@@ -1,51 +1,598 @@
 {
   "page": "C1.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "thermo_eq_relresid_atK": 4.880101207143546e-16,
-    "thermo_eq_relresid_K10pct": 0.09433340447988713,
-    "fd_slope_h_refinement_max_abs": 8.881784197001252e-10,
-    "orderA_LH_slope_at_x1e4": -0.999790022326863,
-    "orderA_LH_slope_at_x1em4": 0.9998095418239927,
-    "orderA_LR_slope_at_x1e4": 9.999001626681547e-05,
-    "orderA_LR_slope_at_x1em4": 0.9999000099014665,
-    "orderAB_LH_slope_at_x1e4": 0.00019997999899112624,
-    "orderAB_LR_slope_at_x1e4": 1.000099989489911,
-    "orderB_LH_gap_from_1_beta03": 0.2608695651430395,
-    "maxloc_xstar_beta03": 1.3000000000627712,
-    "maxloc_closed_minus_newton_rel": 4.828537569778746e-11,
-    "derived_maxcond_unit_ratio": 1.0,
-    "printed_maxcond_unit_ratio": 1000000.0,
-    "deg3c3b_sup_dev_fixed_cB": 2.220446049250313e-16,
-    "deg3c3b_orderB_gap_beta03": 0.23076923069586996,
-    "wstar_tol844": 11.75064354939183,
-    "wstar_tol844_two_routes_rel": 1.834155050062236e-11,
-    "wstar_tol5": 6.3662762999083045,
-    "wstar_tol169": 40.00085498953113,
-    "wstar_tol844_grid_refined_rel": 0.004605638177179738,
-    "smallw_quad_const": 0.01569072226317609,
-    "dev_at_wstar_center001": 5.3101169988161377e-05,
-    "codimer_KU_per_atm": 0.5543478260869565,
-    "codimer_KH_per_atm": 0.40942028985507245,
-    "codimer_KS_per_atm": 0.36594202898550726,
-    "codimer_Rcalc_vs_tableC_max_abs_ex25a": 0.006000000000000227,
-    "codimer_25a_abs_gap": 0.5030899999999994,
-    "codimer_tableC_avg_abs_pct": 8.440833333333334,
-    "codimer_d_scatter_pct": 16.84697527121658,
-    "lr_o_on_exact_d_mean_pct": 27.40857416934773,
-    "lr_o_on_exact_d_max_pct": 48.11870056868562,
-    "lr_o_fit_two_routes_rel": 1.0244121542157814e-06,
-    "lr_p_on_exact_d_mean_pct": 30.342117898575072,
-    "lr_oKH_on_exact_d_mean_pct": 3.2607213804116397,
-    "lr_o_collapsedpH_mean_pct": 3.1566176917286346,
-    "lh_d_measured_mean_pct": 16.801963712016157,
-    "lr_o_measured_mean_pct": 26.61935588978693,
-    "lr_gap_measured_pct_points": 9.817392177770774,
-    "codimer_pUstar_atm": 2.503267973065273,
-    "codimer_pUstar_two_routes_rel": 3.1596147920254225e-10,
-    "mw_parity_atm_low": 1000.0,
-    "mw_parity_atm_high": 10000.0,
-    "energy_sum_kJmol": 176.0,
-    "energy_exo_kJmol": 196.0,
-    "energy_ratio": 0.8979591836734694
+    "runs_at_200C": {
+      "kind": "exact",
+      "value": 12
+    },
+    "printed_limits_agree": {
+      "kind": "exact",
+      "value": 11
+    },
+    "max_condition_is_1_plus_KBcB": {
+      "kind": "exact",
+      "value": true
+    },
+    "orderB_gap_closed_form": {
+      "kind": "exact",
+      "value": true
+    },
+    "p715_rhs_is_net_rate": {
+      "kind": "exact",
+      "value": true
+    },
+    "p715_rhs_is_three_term_form": {
+      "kind": "exact",
+      "value": true
+    },
+    "p715_equilibrium_residual": {
+      "kind": "bound",
+      "value": 4.880101207143546e-16,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "orderA_LH_slope_at_x1e4": {
+      "kind": "value",
+      "value": -0.999790022326863,
+      "rtol": 0.001
+    },
+    "orderA_LH_slope_at_x1em4": {
+      "kind": "value",
+      "value": 0.9998095418239927,
+      "rtol": 0.001
+    },
+    "orderA_LR_slope_at_x1e4": {
+      "kind": "value",
+      "value": 9.999001626681547e-05,
+      "rtol": 0.001
+    },
+    "orderA_LR_slope_at_x1em4": {
+      "kind": "value",
+      "value": 0.9999000099014665,
+      "rtol": 0.001
+    },
+    "orderAB_LH_slope_at_x1e4": {
+      "kind": "value",
+      "value": 0.00019997999899112624,
+      "rtol": 0.001
+    },
+    "orderAB_LR_slope_at_x1e4": {
+      "kind": "value",
+      "value": 1.000099989489911,
+      "rtol": 0.001
+    },
+    "fd_slope_h_refinement": {
+      "kind": "bound",
+      "value": 8.881784197001252e-10,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "orderB_LH_gap_beta03": {
+      "kind": "value",
+      "value": 0.2608695651430395,
+      "rtol": 0.001
+    },
+    "orderB_gap_vs_closed_form": {
+      "kind": "bound",
+      "value": 7.435180249260043e-11,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "maxloc_xstar_beta03": {
+      "kind": "value",
+      "value": 1.3000000008060109,
+      "rtol": 0.001
+    },
+    "maxloc_closed_minus_root_rel": {
+      "kind": "bound",
+      "value": 6.200082669494122e-10,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "maxloc_newton_minus_root_rel": {
+      "kind": "bound",
+      "value": 5.717228912516248e-10,
+      "max": 1e-06,
+      "basis": "tolerance"
+    },
+    "derived_maxcond_unit_ratio": {
+      "kind": "bound",
+      "value": 1.0,
+      "min": 0.999999999999,
+      "max": 1.000000000001,
+      "basis": "identity"
+    },
+    "printed_maxcond_unit_ratio": {
+      "kind": "value",
+      "value": 1000000.0,
+      "rtol": 1e-06
+    },
+    "deg3c3b_sup_dev_fixed_cB": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "deg3c3b_orderB_gap_beta03": {
+      "kind": "value",
+      "value": 0.23076923069586996,
+      "rtol": 0.001
+    },
+    "deg3c3b_gap_vs_closed_form": {
+      "kind": "bound",
+      "value": 7.33607896652444e-11,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "wstar_tol844": {
+      "kind": "value",
+      "value": 11.752240284081282,
+      "rtol": 0.001
+    },
+    "wstar_tol5": {
+      "kind": "value",
+      "value": 6.366276226725708,
+      "rtol": 0.001
+    },
+    "wstar_tol169": {
+      "kind": "value",
+      "value": 39.76795044019384,
+      "rtol": 0.001
+    },
+    "wstar_tol844_two_routes_rel": {
+      "kind": "bound",
+      "value": 2.768785201112678e-11,
+      "max": 1e-06,
+      "basis": "tolerance"
+    },
+    "wstar_tol844_grid_refined_rel": {
+      "kind": "bound",
+      "value": 0.004605901963170123,
+      "max": 0.02,
+      "basis": "chosen",
+      "note": "about four times the measured effect of 401 to 1601 points; the break row uses a 21-point definition grid"
+    },
+    "smallw_quad_const": {
+      "kind": "value",
+      "value": 0.015690722263194744,
+      "rtol": 0.001
+    },
+    "dev_at_wstar_center001": {
+      "kind": "value",
+      "value": 5.3108998051634516e-05,
+      "rtol": 0.001
+    },
+    "codimer_KU_per_atm": {
+      "kind": "value",
+      "value": 0.5543478260869565,
+      "rtol": 0.001
+    },
+    "codimer_KH_per_atm": {
+      "kind": "value",
+      "value": 0.40942028985507245,
+      "rtol": 0.001
+    },
+    "codimer_KS_per_atm": {
+      "kind": "value",
+      "value": 0.36594202898550726,
+      "rtol": 0.001
+    },
+    "codimer_25a_abs_gap": {
+      "kind": "value",
+      "value": 0.5030899999999994,
+      "rtol": 0.001
+    },
+    "codimer_Rcalc_worst_gap_units_ex25a": {
+      "kind": "value",
+      "value": 0.5999999999999339,
+      "rtol": 0.001
+    },
+    "codimer_d_scatter_pct": {
+      "kind": "value",
+      "value": 16.84697527121658,
+      "rtol": 0.001
+    },
+    "lr_o_on_exact_d_mean_pct": {
+      "kind": "value",
+      "value": 27.40857416934773,
+      "rtol": 0.001
+    },
+    "lr_o_on_exact_d_max_pct": {
+      "kind": "value",
+      "value": 48.11870056868562,
+      "rtol": 0.001
+    },
+    "lr_o_direct_mean_pct": {
+      "kind": "value",
+      "value": 22.763226159066623,
+      "rtol": 0.001
+    },
+    "lr_p_on_exact_d_mean_pct": {
+      "kind": "value",
+      "value": 30.342117898575072,
+      "rtol": 0.001
+    },
+    "lr_oKH_on_exact_d_mean_pct": {
+      "kind": "value",
+      "value": 3.2607213804116397,
+      "rtol": 0.001
+    },
+    "lr_o_collapsedpH_mean_pct": {
+      "kind": "value",
+      "value": 3.1566176917286346,
+      "rtol": 0.001
+    },
+    "codimer_pUstar_atm": {
+      "kind": "value",
+      "value": 2.5032679738218575,
+      "rtol": 0.001
+    },
+    "codimer_Rcalc_rows_within_one_unit": {
+      "kind": "exact",
+      "value": 11,
+      "margin": 0.4000000000000661,
+      "min_margin": 0.01
+    },
+    "codimer_25a_gap_vs_C11": {
+      "kind": "bound",
+      "value": 0.003090000000000259,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "about twice the measured gap, which is smaller than the worst gap of the other rows"
+    },
+    "codimer_scatter_vs_C11": {
+      "kind": "bound",
+      "value": 0.000538245534228543,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "about four times the measured relative gap between the two pages' scatter"
+    },
+    "lr_o_fit_two_routes_rel": {
+      "kind": "bound",
+      "value": 1.0244121542157814e-06,
+      "max": 0.0001,
+      "basis": "tolerance"
+    },
+    "codimer_pUstar_vs_closed_rel": {
+      "kind": "bound",
+      "value": 1.3722689651274322e-11,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "codimer_pUstar_newton_rel": {
+      "kind": "bound",
+      "value": 1.4220558064437228e-10,
+      "max": 1e-06,
+      "basis": "tolerance"
+    },
+    "pUstar_inside_design": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.13451697129494197,
+      "min_margin": 0.01
+    },
+    "codimer_tableC_avg_abs_pct": {
+      "kind": "value",
+      "value": 8.440833333333334,
+      "rtol": 0.001
+    },
+    "codimer_tableC_vs_C11_recompute": {
+      "kind": "bound",
+      "value": 0.016894256108161088,
+      "max": 0.05,
+      "basis": "chosen",
+      "note": "about three times the measured gap"
+    },
+    "pH_span_factor": {
+      "kind": "value",
+      "value": 23.64423076923077,
+      "rtol": 0.001
+    },
+    "lh_d_measured_mean_pct": {
+      "kind": "value",
+      "value": 16.801963712016157,
+      "rtol": 0.001
+    },
+    "lr_o_measured_mean_pct": {
+      "kind": "value",
+      "value": 26.61935588978693,
+      "rtol": 0.001
+    },
+    "lr_gap_measured_pct_points": {
+      "kind": "value",
+      "value": 9.817392177770772,
+      "rtol": 0.001
+    },
+    "lr_gap_measured_se_pts": {
+      "kind": "value",
+      "value": 6.260320931840457,
+      "rtol": 0.001
+    },
+    "lr_gap_measured_over_se": {
+      "kind": "bound",
+      "value": 1.5681931141642893,
+      "max": 2.0,
+      "basis": "chosen",
+      "note": "two standard errors, the page's convention for calling a paired difference resolved"
+    },
+    "mw_parity_atm_low": {
+      "kind": "value",
+      "value": 1000.0,
+      "rtol": 0.001
+    },
+    "mw_parity_atm_high": {
+      "kind": "value",
+      "value": 10000.0,
+      "rtol": 0.001
+    },
+    "energy_sum_kJmol": {
+      "kind": "value",
+      "value": 176.0,
+      "rtol": 0.001
+    },
+    "energy_exo_kJmol": {
+      "kind": "value",
+      "value": 196.0,
+      "rtol": 0.001
+    },
+    "energy_ratio": {
+      "kind": "value",
+      "value": 0.8979591836734694,
+      "rtol": 0.001
+    },
+    "energy_shortfall_pct": {
+      "kind": "value",
+      "value": 10.204081632653061,
+      "rtol": 0.001
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "runs_at_200C": [
+      "block read at 275 C instead of 200 C"
+    ],
+    "printed_limits_agree": [
+      "printed order_A_LH_high entered as +1",
+      "exponent of Eq. (3a) taken as 1",
+      "power of Eq. (3b) taken as 2"
+    ],
+    "max_condition_is_1_plus_KBcB": [
+      "candidate K_A c_A = 1, the reduced-form reading",
+      "exponent of Eq. (3a) taken as 1"
+    ],
+    "orderB_gap_closed_form": [
+      "exponent of Eq. (3a) taken as 1"
+    ],
+    "p715_rhs_is_net_rate": [
+      "reverse term dropped from the net rate"
+    ],
+    "p715_rhs_is_three_term_form": [
+      "theta_v taken to the first power"
+    ],
+    "p715_equilibrium_residual": [
+      "equilibrium ratio 10 % off K_gas"
+    ],
+    "orderA_LH_slope_at_x1e4": [
+      "L-H denominator exponent 1 instead of 2"
+    ],
+    "orderAB_LH_slope_at_x1e4": [
+      "L-H denominator exponent 1 instead of 2"
+    ],
+    "orderA_LR_slope_at_x1e4": [
+      "L-R denominator power 2 instead of 1"
+    ],
+    "orderAB_LR_slope_at_x1e4": [
+      "L-R denominator power 2 instead of 1"
+    ],
+    "orderA_LH_slope_at_x1em4": [
+      "numerator power of c_A 2 instead of 1 (both laws)"
+    ],
+    "orderA_LR_slope_at_x1em4": [
+      "numerator power of c_A 2 instead of 1 (both laws)"
+    ],
+    "fd_slope_h_refinement": [
+      "difference step 1.0 in ln x"
+    ],
+    "orderB_LH_gap_beta03": [
+      "beta -> 0, the reduced form the paper prints above Eq. 3b"
+    ],
+    "orderB_gap_vs_closed_form": [
+      "closed form evaluated at beta = 0.35, law at 0.3"
+    ],
+    "maxloc_xstar_beta03": [
+      "rate law coded at beta = 0.35, closed form at 0.3"
+    ],
+    "maxloc_closed_minus_root_rel": [
+      "rate law coded at beta = 0.35, closed form at 0.3",
+      "adopt the printed condition c_A = K_A (working K_A in mol/L)"
+    ],
+    "maxloc_newton_minus_root_rel": [
+      "newton run on the law at beta = 0.35"
+    ],
+    "derived_maxcond_unit_ratio": [
+      "the unit rescale applied to the printed condition"
+    ],
+    "printed_maxcond_unit_ratio": [
+      "the unit rescale applied to the derived condition"
+    ],
+    "deg3c3b_sup_dev_fixed_cB": [
+      "the proportionality factor taken as 1 + 1.3 beta"
+    ],
+    "deg3c3b_orderB_gap_beta03": [
+      "beta -> 0"
+    ],
+    "deg3c3b_gap_vs_closed_form": [
+      "closed form evaluated at beta = 0.35, law at 0.3"
+    ],
+    "wstar_tol844": [
+      "window centred at x0 = 0.01, where both laws are first order (no admissible root on the whole range: expected one root on [1.05, 5e+04]: no sign change in the scanned range)",
+      "worst-case (minimax) norm instead of the mean"
+    ],
+    "wstar_tol5": [
+      "worst-case (minimax) norm instead of the mean"
+    ],
+    "wstar_tol169": [
+      "worst-case (minimax) norm instead of the mean"
+    ],
+    "wstar_tol844_two_routes_rel": [
+      "route B window centred at x0 = 0.5"
+    ],
+    "wstar_tol844_grid_refined_rel": [
+      "definition grid of 21 points"
+    ],
+    "smallw_quad_const": [
+      "small window centred at x0 = 0.01"
+    ],
+    "dev_at_wstar_center001": [
+      "misfit read at the window centred at x0 = 0.02"
+    ],
+    "codimer_KU_per_atm": [
+      "KU converted as a/x instead of x/a"
+    ],
+    "codimer_Rcalc_rows_within_one_unit": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_Rcalc_worst_gap_units_ex25a": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "run 25a included in the worst gap"
+    ],
+    "codimer_25a_abs_gap": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_25a_gap_vs_C11": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_d_scatter_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_scatter_vs_C11": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "lr_o_on_exact_d_mean_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "lr_o_on_exact_d_max_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "lr_o_fit_two_routes_rel": [
+      "KH converted as a/x instead of x/a",
+      "cross-check route fitted to absolute instead of relative residuals"
+    ],
+    "lr_o_direct_mean_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "lr_p_on_exact_d_mean_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "lr_oKH_on_exact_d_mean_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "lr_o_collapsedpH_mean_pct": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a",
+      "generator with K_H scaled by 0.0"
+    ],
+    "codimer_pUstar_atm": [
+      "KU converted as a/x instead of x/a",
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_pUstar_vs_closed_rel": [
+      "closed form of p_U* evaluated at p_S = 0.4"
+    ],
+    "codimer_pUstar_newton_rel": [
+      "newton on p_U* run at p_S = 0.4"
+    ],
+    "codimer_KS_per_atm": [
+      "KS converted as a/x instead of x/a"
+    ],
+    "pUstar_inside_design": [
+      "KS converted as a/x instead of x/a",
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_KH_per_atm": [
+      "KH converted as a/x instead of x/a"
+    ],
+    "codimer_tableC_avg_abs_pct": [
+      "printed percentage of run 12ab with a decimal slip (0.1)"
+    ],
+    "codimer_tableC_vs_C11_recompute": [
+      "printed percentage of run 12ab with a decimal slip (0.1)"
+    ],
+    "pH_span_factor": [
+      "block read at 275 C instead of 200 C"
+    ],
+    "lh_d_measured_mean_pct": [
+      "rate of run 3c mistyped with a factor 10"
+    ],
+    "lr_o_measured_mean_pct": [
+      "rate of run 3c mistyped with a factor 10"
+    ],
+    "lr_gap_measured_pct_points": [
+      "rate of run 3c mistyped with a factor 10"
+    ],
+    "lr_gap_measured_se_pts": [
+      "rate of run 3c mistyped with a factor 10",
+      "standard error taken as sd / n"
+    ],
+    "lr_gap_measured_over_se": [
+      "standard error taken as sd / n"
+    ],
+    "mw_parity_atm_low": [
+      "printed L-R flux mistyped with a factor 10"
+    ],
+    "mw_parity_atm_high": [
+      "printed L-R flux mistyped with a factor 10"
+    ],
+    "energy_sum_kJmol": [
+      "translational energy mistyped as 28 (digits transposed)"
+    ],
+    "energy_ratio": [
+      "translational energy mistyped as 28 (digits transposed)",
+      "D-on-Cu binding energy read as 420"
+    ],
+    "energy_shortfall_pct": [
+      "translational energy mistyped as 28 (digits transposed)",
+      "D-on-Cu binding energy read as 420"
+    ],
+    "energy_exo_kJmol": [
+      "D-on-Cu binding energy read as 420"
+    ]
   }
 }

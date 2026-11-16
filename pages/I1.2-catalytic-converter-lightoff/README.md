@@ -1,4 +1,4 @@
-# I1.2 — Light-off in a monolithic catalytic converter
+# I1.2: Light-off in a monolithic catalytic converter
 
 An ignition front sweeping down a monolith channel, and the wrong-way
 temperature rise that appears when the same converter is suddenly cooled.

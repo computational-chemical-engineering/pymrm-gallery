@@ -1,4 +1,4 @@
-# H1.9 — Maxwell–Stefan mixture diffusion in a zeolite membrane
+# H1.9: Maxwell–Stefan mixture diffusion in a zeolite membrane
 
 Mixture diffusion in an MFI (silicalite) membrane, from Krishna, R. & Baur, R.,
 *Modelling issues in zeolite based separation processes*, **Separation and

@@ -1,4 +1,4 @@
-# H1.7 — Wijmans–Baker solution–diffusion model
+# H1.7: Wijmans–Baker solution–diffusion model
 
 From Wijmans, J. G. & Baker, R. W., *The solution-diffusion model: a review*,
 *J. Membr. Sci.* **107**(1–2) 1–21 (1995),
