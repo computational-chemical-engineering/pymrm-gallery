@@ -358,50 +358,23 @@ models:
       the reason is bookkeeping: what is measured is a mobility multiplied by a
       thermodynamic factor read off the adsorption isotherm. This page
       implements that separation from Krishna & Baur's review, reproduces the
-      results it prints as numbers, and then asks whether the claim survives the
-      review's own evidence - which it does not, in the form it is usually
-      stated. "The M-S diffusivity is far less loading-dependent than the Fick
-      one" is true by a factor of ten in the review's weak-confinement scenario
-      (eqs. 17-18) and false by the same factor in its strong-confinement
-      scenario (eqs. 19-20). The review states both, in consecutive paragraphs
-      of Section 2.1, and contrasts them explicitly twice; what is new here is
-      only that the two are quantified against each other on one axis. The
-      factor of ten is algebraically forced, not measured - Gamma = 1/(1-theta)
-      and eq. (19)'s eth = (1-theta) are exact reciprocals and the number is set
-      entirely by the choice theta_max = 0.9 - so the finding is the DIRECTION,
-      not the size. What survives both scenarios is narrower and is what the
-      page claims instead: given either of the review's two loading dependences,
-      the pole in the Fick diffusivity at saturation lives entirely in Gamma,
-      so the formulation removes a divergence rather than a dependence.
-      Along the way the review's two printed values for one orientation-averaged
-      zero-loading diffusivity, 4.1 % apart, are resolved: x and y reproduce
-      Karger's eq. (23) to 0.29 %, the printed D_z is out by a factor of exactly
-      two, and Table 3 is the value arithmetically consistent with the equation
-      as printed while the running text is consistent with its own printed D_z.
-      The review's SECOND application of eq. (23), to CH4, then tests that
-      factor out of sample - it prints 2.75e-7 m2/s and no D_z at all - and the
-      halved relation reproduces it to 0.25 % where the relation as printed
-      misses by 5.0 %, so the review's practice is the halved form in both of
-      its worked examples and Table 3 is the odd one out. The page does not say
-      whether the factor originates with Karger or with the review, because
-      Karger 1973 is not on disk. The dual-site
-      Langmuir isotherm reproduces the review's two worked 3MP loadings to
-      0.19 %; the single-component membrane flux ratio - in which the unprinted
-      membrane thickness cancels - lands 0.17 % from the printed 34/3.1, and
-      dropping the thermodynamic factor moves it by 3.73x, which is what gives
-      that check its power. The pymrm sphere agrees with the classical series to
-      1.21e-5. Fifteen break rows; the two that do not move are kept and
-      explained, one of them because construct_div weights the r = 0 face by an
-      area of exactly zero, so the centre boundary condition cannot be wrong in
-      spherical geometry. The page's third headline - the "two extrema in Gamma"
-      survey run over every Table 1 row - has NO printed target behind it and
-      says so: the only diagnostic touching those rows differentiates the same
-      isotherm object it tests and is blind to a wrong parameter, so the page
-      injects four plausible transcription slips and reports how far each moves
-      the survey's conclusions instead. Everything here is REPRODUCTION, NOT
-      VALIDATION: the targets are numbers the authors computed, the data tier is
-      6, and the review's Fig. 10(a) inflection in the 3MP desorption kinetics
-      is not reproduced under either stated scenario and is reported unresolved.
+      results it prints as numbers, and asks whether the claim survives the
+      review's own evidence. "The M-S diffusivity is far less loading-dependent
+      than the Fick one" holds in the review's weak-confinement scenario
+      (eqs. 17-18) and fails by the same factor in its strong-confinement
+      scenario (eqs. 19-20); the two factors are exact reciprocals, so the
+      finding is the direction, and what survives both scenarios is that the
+      pole in the Fick diffusivity at saturation lives entirely in Gamma.
+      Along the way the review's two printed values of one orientation-averaged
+      zero-loading diffusivity are resolved as a factor of two in its printed
+      D_z, which the review's second worked example, CH4, confirms out of
+      sample. The transient uptake into a spherical crystal with a
+      loading-dependent diffusivity is solved with pymrm (Newton per implicit
+      step, orders measured in cell size and step), and the "two extrema in
+      Gamma" survey, which has no printed target, carries a measurement of its
+      exposure to transcription slips instead of a validation. Everything here
+      is reproduction, not validation: the targets are numbers the authors
+      computed and the data tier is 6.
     section: A
     status: published
     page: pages/A4.7-zeolite-micropore-maxwell-stefan/
@@ -419,6 +392,10 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - construct_boundary_value_matrices
+      - newton
+      - find_roots
+      - observed_orders
     reference:
       authors: ["Krishna, R.", "Baur, R."]
       year: 2003
