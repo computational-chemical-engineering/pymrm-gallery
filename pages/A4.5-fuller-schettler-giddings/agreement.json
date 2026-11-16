@@ -1,36 +1,833 @@
 {
   "page": "A4.5",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "n_rows": 340.0,
-    "n_rows_reproduced": 338.0,
-    "n_rows_irreproducible": 2.0,
-    "max_abs_delta_pp": 0.04346631451904992,
-    "median_abs_delta_pp": 0.003844661054460352,
-    "ave_error_pct": 4.321147058823529,
-    "pct_over_10": 7.352941176470589,
-    "residual_sd_pct": 6.710094648535719,
-    "phi_prime_printed_column": 1.40479155,
-    "phi_prime_published_volumes": 1.39955245942742,
-    "phi_prime_free_refit": 1.3700689260482586,
-    "routeB_recovered_exponent": 1.7491980774231342,
-    "routeB_max_dev_excl_anomaly": 9.962990115364168e-05,
-    "routeB_median_dev": 3.098860475936327e-05,
-    "loco_held_out_pct": 6.606071963293259,
-    "loco_in_sample_refit_pct": 5.04299146150867,
-    "loco_in_sample_published_pct": 5.030730914063963,
-    "exponent_median": 1.7036419067548656,
-    "exponent_min": 1.5824323078493352,
-    "exponent_max": 1.9507194159923742,
-    "exponent_in_band": 20.0,
-    "refit_simple_volume_max_rel_dev": 0.018105875536363225,
-    "flux_pymrm_vs_quadrature": 3.63168485617571e-07,
-    "flux_grid_order": 2.0021325539365544,
-    "flux_spread_structural": 2.2797097681961443e-20,
-    "flux_change_b_min_anchor_cold": -5.852904691410266,
-    "flux_change_b_max_anchor_cold": 7.33303576782065,
-    "flux_change_b_15_anchor_cold": -8.642723372588978,
-    "flux_change_b_15_anchor_mid": -0.3741834025692503,
-    "break_revised_increments": 1.9879935451463857,
-    "break_wrong_bc": 0.9999999999992659
+    "n_rows": {
+      "kind": "exact",
+      "value": 340
+    },
+    "n_systems": {
+      "kind": "exact",
+      "value": 153,
+      "note": "the paper states 153"
+    },
+    "n_rows_image_corrected": {
+      "kind": "exact",
+      "value": 23,
+      "note": "count of the image_corrected column"
+    },
+    "ring_delta_min_pp": {
+      "kind": "value",
+      "value": 8.677128101046952,
+      "rtol": 1e-06,
+      "unit": "pp"
+    },
+    "ring_delta_max_pp": {
+      "kind": "value",
+      "value": 21.904805516640735,
+      "rtol": 1e-06,
+      "unit": "pp"
+    },
+    "d2_isotopic_delta_min_pp": {
+      "kind": "value",
+      "value": -0.3350545291506514,
+      "rtol": 1e-06,
+      "unit": "pp"
+    },
+    "d2_isotopic_delta_max_pp": {
+      "kind": "value",
+      "value": -0.11037709850244459,
+      "rtol": 1e-06,
+      "unit": "pp"
+    },
+    "n_rows_d2": {
+      "kind": "exact",
+      "value": 14
+    },
+    "n_hetero_reproduced": {
+      "kind": "exact",
+      "value": 7
+    },
+    "n_rows_irreproducible": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.635439007018217,
+      "min_margin": 0.1,
+      "note": "|delta| against 0.5 pp; margin relative to it"
+    },
+    "n_rows_reproduced": {
+      "kind": "exact",
+      "value": 338,
+      "margin": 0.635439007018217,
+      "min_margin": 0.1,
+      "note": "|delta| against 0.5 pp; margin relative to it"
+    },
+    "n_free_rows_failing": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.635439007018217,
+      "min_margin": 0.1,
+      "note": "|delta| against 0.5 pp; margin relative to it"
+    },
+    "irreproducible_are_named": {
+      "kind": "exact",
+      "value": true
+    },
+    "n_rows_inferred": {
+      "kind": "exact",
+      "value": 22
+    },
+    "max_abs_delta_pp": {
+      "kind": "value",
+      "value": 0.04346631451904992,
+      "rtol": 1e-06,
+      "unit": "pp",
+      "note": "over the rows other than the two named ones"
+    },
+    "median_abs_delta_pp": {
+      "kind": "value",
+      "value": 0.003844661054460352,
+      "rtol": 1e-06,
+      "unit": "pp"
+    },
+    "routeB_n_ratios": {
+      "kind": "exact",
+      "value": 142
+    },
+    "routeB_n_series": {
+      "kind": "exact",
+      "value": 51
+    },
+    "routeB_recovered_exponent": {
+      "kind": "value",
+      "value": 1.7491980774231342,
+      "rtol": 1e-06,
+      "note": "all ratios"
+    },
+    "routeB_recovered_exponent_excl": {
+      "kind": "value",
+      "value": 1.7500130731208037,
+      "rtol": 1e-06,
+      "note": "ratios touching a named row excluded"
+    },
+    "routeB_median_dev": {
+      "kind": "bound",
+      "value": 3.098860475936327e-05,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "rounding of the printed D_obs and error"
+    },
+    "routeB_max_dev_excl_anomaly": {
+      "kind": "bound",
+      "value": 9.962990115364168e-05,
+      "max": 0.001,
+      "basis": "theory",
+      "note": "rounding of the printed D_obs and error"
+    },
+    "routeB_n_beyond_rounding": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.9003700988463583,
+      "min_margin": 0.1
+    },
+    "routeB_beyond_are_named": {
+      "kind": "exact",
+      "value": true
+    },
+    "aggregate_worst_halfunits": {
+      "kind": "value",
+      "value": 1.0225352112675967,
+      "rtol": 1e-06,
+      "note": "half-units of the printed digit, worst of the 11 aggregates"
+    },
+    "aggregate_input_rounding_halfunits": {
+      "kind": "value",
+      "value": 0.09999999999999999,
+      "rtol": 1e-06,
+      "note": "half a unit of the last printed error digit, over half a unit of the coarsest printed mean digit; every error moves a mean by at most this"
+    },
+    "ave_error_pct": {
+      "kind": "value",
+      "value": 4.321147058823529,
+      "rtol": 1e-06,
+      "unit": "%",
+      "note": "mean |error| of the printed column, n = 340"
+    },
+    "pct_over_10": {
+      "kind": "value",
+      "value": 7.352941176470589,
+      "rtol": 1e-06,
+      "unit": "%",
+      "note": "n = 340"
+    },
+    "residual_sd_pct": {
+      "kind": "value",
+      "value": 6.710094648535719,
+      "rtol": 1e-06,
+      "unit": "%",
+      "note": "sqrt(sum e^2/(N - p)), N = 340, p = 28, 312 degrees of freedom"
+    },
+    "aggregates_within_print": {
+      "kind": "exact",
+      "value": 10,
+      "margin": 0.022535211267596722,
+      "min_margin": 0.01,
+      "note": "8 Table II means, AVE. ERROR, >10 % tail, STANDARD DEVIATION"
+    },
+    "table2_counts_exact": {
+      "kind": "exact",
+      "value": 6
+    },
+    "phi_prime_printed_column": {
+      "kind": "value",
+      "value": 1.40479155,
+      "rtol": 1e-06
+    },
+    "phi_prime_published_volumes": {
+      "kind": "value",
+      "value": 1.39955245942742,
+      "rtol": 1e-06
+    },
+    "phi_prime_free_refit": {
+      "kind": "value",
+      "value": 1.3700689260482586,
+      "rtol": 1e-06
+    },
+    "phi_prime_gap_printed_min": {
+      "kind": "bound",
+      "value": 0.07140844999999985,
+      "min": 0.002,
+      "basis": "theory",
+      "note": "rounding of the printed errors moves phi' by less"
+    },
+    "phi_prime_gap_published": {
+      "kind": "bound",
+      "value": 0.07664754057257994,
+      "min": 0.02,
+      "basis": "theory",
+      "note": "rounding of the printed D_obs moves phi' by less"
+    },
+    "refit_simple_volume_max_rel_dev": {
+      "kind": "value",
+      "value": 0.018105875536363225,
+      "rtol": 0.0001
+    },
+    "refit_n_at_bound": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 1.512967790073706,
+      "min_margin": 0.001,
+      "note": "margin: distance of the nearest volume to its bound"
+    },
+    "refit_start_spread": {
+      "kind": "bound",
+      "value": 1.7985612998927536e-14,
+      "max": 1e-10,
+      "basis": "tolerance"
+    },
+    "refit_optimality": {
+      "kind": "bound",
+      "value": 2.6820543444147638e-08,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "note": "least_squares first-order optimality"
+    },
+    "loco_held_out_pct": {
+      "kind": "value",
+      "value": 6.606071963293259,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "point-weighted over 153 points, 42 compounds"
+    },
+    "loco_in_sample_refit_pct": {
+      "kind": "value",
+      "value": 5.04299146150867,
+      "rtol": 0.0001,
+      "unit": "%"
+    },
+    "loco_in_sample_published_pct": {
+      "kind": "value",
+      "value": 5.030730914063963,
+      "rtol": 1e-06,
+      "unit": "%"
+    },
+    "loco_gap_pp": {
+      "kind": "value",
+      "value": 1.5630805017845892,
+      "rtol": 0.001,
+      "unit": "pp"
+    },
+    "loco_gap_se_pp": {
+      "kind": "value",
+      "value": 0.47647211961266694,
+      "rtol": 0.001,
+      "unit": "pp",
+      "note": "clustered by compound, 41 degrees of freedom"
+    },
+    "loco_gap_t": {
+      "kind": "bound",
+      "value": 3.2805287811073742,
+      "min": 2.0,
+      "basis": "chosen",
+      "note": "the excess is called a degradation only beyond two standard errors"
+    },
+    "loco_n_compounds": {
+      "kind": "exact",
+      "value": 42
+    },
+    "loco_n_points": {
+      "kind": "exact",
+      "value": 153
+    },
+    "loco_fits_at_bound": {
+      "kind": "exact",
+      "value": 2
+    },
+    "exponent_n_series": {
+      "kind": "exact",
+      "value": 26
+    },
+    "exponent_median": {
+      "kind": "value",
+      "value": 1.7036419067548616,
+      "rtol": 1e-06
+    },
+    "exponent_min": {
+      "kind": "value",
+      "value": 1.5824323078493363,
+      "rtol": 1e-06
+    },
+    "exponent_max": {
+      "kind": "value",
+      "value": 1.9507194159923844,
+      "rtol": 1e-06
+    },
+    "exponent_in_band": {
+      "kind": "exact",
+      "value": 20,
+      "margin": 0.005375370530606105,
+      "min_margin": 1e-06,
+      "note": "slopes in [1.6, 1.8]; margin against round-off, the statistics are in exponent_certain_in and exponent_certain_out"
+    },
+    "exponent_certain_in": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.004654912785136259,
+      "min_margin": 1e-06,
+      "note": "two standard errors"
+    },
+    "exponent_certain_out": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.004654912785136259,
+      "min_margin": 1e-06,
+      "note": "two standard errors"
+    },
+    "exponent_spread_over_ci": {
+      "kind": "value",
+      "value": 14.16488877473262,
+      "rtol": 1e-06
+    },
+    "exponent_extremes_z": {
+      "kind": "value",
+      "value": 7.877346228359204,
+      "rtol": 1e-06
+    },
+    "flux_pymrm_vs_quadrature": {
+      "kind": "value",
+      "value": 1.7940184804388082e-07,
+      "rtol": 0.001,
+      "note": "relative, 400 cells, D pinned mid-range"
+    },
+    "flux_grid_order": {
+      "kind": "bound",
+      "value": 1.9817261501644268,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "finest triple 200-400-800"
+    },
+    "flux_grid_order_min": {
+      "kind": "bound",
+      "value": 1.838902074500679,
+      "min": 1.8,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "second order approached from below; the coarsest triple is lowest"
+    },
+    "flux_grid_order_max": {
+      "kind": "bound",
+      "value": 1.9817261501644268,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory"
+    },
+    "flux_roundoff_margin": {
+      "kind": "bound",
+      "value": 945.1084179399801,
+      "min": 100.0,
+      "basis": "theory",
+      "note": "finest successive difference over n^2 eps"
+    },
+    "flux_richardson_vs_quadrature": {
+      "kind": "bound",
+      "value": 4.3962034013134144e-10,
+      "max": 1e-08,
+      "basis": "tolerance"
+    },
+    "flux_spread_structural": {
+      "kind": "bound",
+      "value": 9.59448773746805e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "structural": true,
+      "note": "a conservative finite-volume divergence: one flux through every face"
+    },
+    "flux_scale_identity": {
+      "kind": "bound",
+      "value": 4.2077452633293433e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "structural": true,
+      "note": "the problem is linear in Gamma"
+    },
+    "flux_change_b_min_anchor_cold": {
+      "kind": "value",
+      "value": -5.85290987238195,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at 300 K"
+    },
+    "flux_change_b_max_anchor_cold": {
+      "kind": "value",
+      "value": 7.333044139279332,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at 300 K"
+    },
+    "flux_change_b_15_anchor_cold": {
+      "kind": "value",
+      "value": -8.642730574699565,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at 300 K"
+    },
+    "flux_change_b_min_anchor_mid": {
+      "kind": "value",
+      "value": -0.22348005553458616,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at sqrt(300 x 600) K"
+    },
+    "flux_change_b_max_anchor_mid": {
+      "kind": "value",
+      "value": 0.12030509761979946,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at sqrt(300 x 600) K"
+    },
+    "flux_change_b_15_anchor_mid": {
+      "kind": "value",
+      "value": -0.3741912565960681,
+      "rtol": 0.0001,
+      "unit": "%",
+      "note": "D pinned at sqrt(300 x 600) K"
+    },
+    "flux_change_routes_gap_pp": {
+      "kind": "bound",
+      "value": 8.371458282141475e-06,
+      "max": 0.0001,
+      "basis": "tolerance",
+      "note": "discretisation at 400 cells"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "n_rows": [
+      "Table III page 6 not read"
+    ],
+    "n_systems": [
+      "Table III page 6 not read"
+    ],
+    "n_rows_image_corrected": [
+      "Table III page 6 not read"
+    ],
+    "n_rows_inferred": [
+      "Table III page 6 not read"
+    ],
+    "n_rows_d2": [
+      "Table III page 6 not read"
+    ],
+    "n_hetero_reproduced": [
+      "Table I: C 16.5 read as 16.0",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "ring term on piperidine, tetrahydrothiophene and ethylene oxide"
+    ],
+    "n_rows_irreproducible": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "ring term on piperidine, tetrahydrothiophene and ethylene oxide"
+    ],
+    "n_rows_reproduced": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "ring term on piperidine, tetrahydrothiophene and ethylene oxide"
+    ],
+    "irreproducible_are_named": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "ring term on piperidine, tetrahydrothiophene and ethylene oxide"
+    ],
+    "max_abs_delta_pp": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "ring term on piperidine, tetrahydrothiophene and ethylene oxide",
+      "M(D2) 4.00 read as 4.028"
+    ],
+    "median_abs_delta_pp": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3",
+      "M(D2) 4.00 read as 4.028"
+    ],
+    "n_free_rows_failing": [
+      "Table I: C 16.5 read as 16.0",
+      "the alternative increments C 15.9, H 2.31, O 6.11, N 4.54 (in no document on disk)",
+      "Sigma v(N2) and Sigma v(O2) swapped",
+      "b 1.75 read as 1.749, the paper's unrounded fit",
+      "eq. (4) prefactor 1.00e-3 read as 1.01e-3"
+    ],
+    "ring_delta_min_pp": [
+      "Table I: C 16.5 read as 16.0"
+    ],
+    "ring_delta_max_pp": [
+      "Table I: C 16.5 read as 16.0"
+    ],
+    "d2_isotopic_delta_min_pp": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6"
+    ],
+    "d2_isotopic_delta_max_pp": [
+      "Table I: C 16.5 read as 16.0",
+      "Table I: Sigma v(D2) 6.7 read as 7.6"
+    ],
+    "phi_prime_published_volumes": [
+      "Table I: C 16.5 read as 16.0",
+      "b 1.75 read as 1.70 in eq. (4) and every refit"
+    ],
+    "phi_prime_free_refit": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "absolute residuals in place of eq. (3)'s relative ones",
+      "ring increment bounded below by 0"
+    ],
+    "phi_prime_gap_published": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit"
+    ],
+    "refit_simple_volume_max_rel_dev": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "absolute residuals in place of eq. (3)'s relative ones",
+      "refit tolerance 1e-14 raised to 1e-3",
+      "ring increment bounded below by 0"
+    ],
+    "refit_n_at_bound": [
+      "ring increment bounded below by 0"
+    ],
+    "refit_start_spread": [
+      "absolute residuals in place of eq. (3)'s relative ones",
+      "refit tolerance 1e-14 raised to 1e-3"
+    ],
+    "refit_optimality": [
+      "refit tolerance 1e-14 raised to 1e-3"
+    ],
+    "loco_held_out_pct": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "held-out compound left in its own fit (in sample by construction)",
+      "compounds with a single point skipped"
+    ],
+    "loco_in_sample_refit_pct": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "compounds with a single point skipped"
+    ],
+    "loco_in_sample_published_pct": [
+      "Table I: C 16.5 read as 16.0",
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "compounds with a single point skipped"
+    ],
+    "loco_gap_pp": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "held-out compound left in its own fit (in sample by construction)",
+      "compounds with a single point skipped"
+    ],
+    "loco_gap_se_pp": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "held-out compound left in its own fit (in sample by construction)",
+      "compounds with a single point skipped"
+    ],
+    "loco_gap_t": [
+      "held-out compound left in its own fit (in sample by construction)"
+    ],
+    "loco_n_compounds": [
+      "compounds with a single point skipped"
+    ],
+    "loco_n_points": [
+      "compounds with a single point skipped"
+    ],
+    "loco_fits_at_bound": [
+      "b 1.75 read as 1.70 in eq. (4) and every refit",
+      "held-out compound left in its own fit (in sample by construction)"
+    ],
+    "routeB_n_ratios": [
+      "series formed without the reference number"
+    ],
+    "routeB_n_series": [
+      "series formed without the reference number"
+    ],
+    "routeB_recovered_exponent": [
+      "temperature column read 273.15 K high",
+      "series formed without the reference number"
+    ],
+    "routeB_recovered_exponent_excl": [
+      "temperature column read 273.15 K high",
+      "series formed without the reference number"
+    ],
+    "routeB_median_dev": [
+      "temperature column read 273.15 K high",
+      "identity exponent 1.75 read as 1.70 (route B only)"
+    ],
+    "routeB_max_dev_excl_anomaly": [
+      "temperature column read 273.15 K high",
+      "identity exponent 1.75 read as 1.70 (route B only)"
+    ],
+    "routeB_n_beyond_rounding": [
+      "temperature column read 273.15 K high",
+      "identity exponent 1.75 read as 1.70 (route B only)"
+    ],
+    "routeB_beyond_are_named": [
+      "temperature column read 273.15 K high",
+      "identity exponent 1.75 read as 1.70 (route B only)"
+    ],
+    "exponent_n_series": [
+      "series with three temperatures admitted"
+    ],
+    "exponent_median": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)"
+    ],
+    "exponent_min": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)"
+    ],
+    "exponent_max": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)"
+    ],
+    "exponent_in_band": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "band 1.6 to 1.8 read as 1.65 to 1.85",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)"
+    ],
+    "exponent_certain_in": [
+      "temperature column read 273.15 K high",
+      "band 1.6 to 1.8 read as 1.65 to 1.85",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)",
+      "slope standard errors halved"
+    ],
+    "exponent_certain_out": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "band 1.6 to 1.8 read as 1.65 to 1.85",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)",
+      "slope standard errors halved"
+    ],
+    "exponent_spread_over_ci": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)"
+    ],
+    "exponent_extremes_z": [
+      "temperature column read 273.15 K high",
+      "series with three temperatures admitted",
+      "slopes of the printed calculated D in place of the observed (1.75 by construction)",
+      "slope standard errors halved"
+    ],
+    "ave_error_pct": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs"
+    ],
+    "pct_over_10": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs",
+      "tail threshold 10 % read as 10.5 %"
+    ],
+    "residual_sd_pct": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs",
+      "parameter count 28 read as 27 (b not counted)"
+    ],
+    "phi_prime_printed_column": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs"
+    ],
+    "phi_prime_gap_printed_min": [
+      "printed error column read 3 % high"
+    ],
+    "aggregates_within_print": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs",
+      "parameter count 28 read as 27 (b not counted)",
+      "tail threshold 10 % read as 10.5 %",
+      "Table II category by the first component only"
+    ],
+    "table2_counts_exact": [
+      "Table II category by the first component only"
+    ],
+    "aggregate_worst_halfunits": [
+      "printed error column read 3 % high",
+      "errors relative to D_calc in place of D_obs",
+      "parameter count 28 read as 27 (b not counted)",
+      "tail threshold 10 % read as 10.5 %",
+      "Table II category by the first component only"
+    ],
+    "aggregate_input_rounding_halfunits": [
+      "printed errors read as rounded to one decimal"
+    ],
+    "flux_pymrm_vs_quadrature": [
+      "tube grid 400 cells read as 50",
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K"
+    ],
+    "flux_grid_order": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "order ladder 6400 to 204800 cells"
+    ],
+    "flux_grid_order_min": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "order ladder 6400 to 204800 cells"
+    ],
+    "flux_grid_order_max": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "order ladder 6400 to 204800 cells"
+    ],
+    "flux_roundoff_margin": [
+      "order ladder 6400 to 204800 cells"
+    ],
+    "flux_richardson_vs_quadrature": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)"
+    ],
+    "flux_change_b_min_anchor_cold": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K",
+      "cold anchor 300 K read as 350 K",
+      "exponent extremes replaced by the paper's band 1.6 and 1.8"
+    ],
+    "flux_change_b_max_anchor_cold": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K",
+      "cold anchor 300 K read as 350 K",
+      "exponent extremes replaced by the paper's band 1.6 and 1.8"
+    ],
+    "flux_change_b_15_anchor_cold": [
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K",
+      "cold anchor 300 K read as 350 K"
+    ],
+    "flux_change_b_min_anchor_mid": [
+      "tube grid 400 cells read as 50",
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K",
+      "exponent extremes replaced by the paper's band 1.6 and 1.8"
+    ],
+    "flux_change_b_max_anchor_mid": [
+      "tube grid 400 cells read as 50",
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K",
+      "exponent extremes replaced by the paper's band 1.6 and 1.8"
+    ],
+    "flux_change_b_15_anchor_mid": [
+      "tube grid 400 cells read as 50",
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)",
+      "b 1.75 read as 1.50 in both tube routes",
+      "hot end 600 K read as 450 K"
+    ],
+    "flux_change_routes_gap_pp": [
+      "tube grid 400 cells read as 50",
+      "construct_div nu 0 read as 1 (cylindrical)",
+      "outlet Dirichlet replaced by zero flux",
+      "face Gamma from the low-z cell (first order)",
+      "b 1.75 read as 1.50 in the pymrm route only (one route only)"
+    ]
+  },
+  "rows": {
+    "defined": 38,
+    "recorded": 38
   }
 }
