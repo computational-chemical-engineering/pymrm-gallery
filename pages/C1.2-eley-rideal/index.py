@@ -1244,7 +1244,7 @@ noiseless, so these are model discrepancies without standard errors.
 and @@do@@ degrees of freedom, to @@mo2@@ %. The paired per-run difference is **@@gp@@ points with a
 standard error of @@se@@** (sd/sqrt(n) of the 12 paired differences; the fits' degrees of freedom are not deducted), so it is @@ratio@@ standard errors: **not resolved at two standard errors**
 on these runs. (Compare `C1.1`'s published d-versus-h gap of @@c1@@ points and its gap of @@c2@@ points to
-the best rejected mechanism: those are pooled over three temperatures and carry no standard error, so they are not a like-for-like comparison with this single-temperature gap.)
+the best rejected mechanism: those are pooled over three temperatures, with paired standard errors combined over the three blocks, so they are not a like-for-like comparison with this single-temperature gap.)
 
 **Why the power study works, and when it would not** (break table): allow hydrogen into the
 first-power adsorption group and the misfit falls to @@o4@@ %; collapse the design's hydrogen span
