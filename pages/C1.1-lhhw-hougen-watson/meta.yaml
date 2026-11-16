@@ -14,72 +14,74 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 5
+pymrm_min_version: "3.4.0"
+runtime_seconds: 15
 datasets:
   - hougen-watson-1947-tableA-rates.csv
   - hougen-watson-1947-tableC-mechd-200C.csv
   - hougen-watson-1947-tablesDEF-constants.csv
   - hougen-watson-1947-tableG-summary.csv
   - hougen-watson-1947-eqq-thermo.csv
+  - hougen-watson-1947-printed-intermediates.csv
 
 fit_or_test: >
-  ENTIRELY FIT DATA. Every constant in the source (Tables D-G and the final
+  ENTIRELY FIT DATA. Every constant in the source (Tables D to G and the final
   eq. q) was fitted BY THE BOOK to the same 40 printed runs of Table A, and no
   held-out measurement exists anywhere in the source. Every agreement on the
-  page is therefore a reproduction of the estimation - of the book's
-  linearised least squares, its goodness-of-fit arithmetic, its temperature
-  correlation - or an internal-consistency adjudication between the book's own
-  printed numbers, and the page says so wherever a number appears. The one
-  numerical experiment (noiseless rates generated from the fitted mechanism h,
-  refitted by mechanism d, to measure the discrimination power of the design)
-  is labelled as synthetic in the cell that runs it and is never presented as
+  page is therefore a reproduction of the estimation (of the book's linearised
+  least squares, its goodness-of-fit arithmetic, its temperature correlation)
+  or an internal-consistency adjudication between the book's own printed
+  numbers, and the page says so wherever a number appears. The one numerical
+  experiment (noiseless rates generated from the fitted mechanism h, refitted
+  by mechanism d, to measure the discrimination power of the design) is
+  labelled as synthetic in the cell that runs it and is never presented as
   data. The reactor section is a demonstration with no printed target: the
   book poses the integration as its Chapter XXI Problem 1 but prints no
   answer, and its stated temperature lies outside the fitted range, so the
   page keeps the demonstration at 200 C and labels it a demonstration.
 
+# The notebook's break table re-runs every study with one defect injected
+# through its arguments; every claim has a row that fails its own check.
 validation:
-  # PRIMARY - the book's own printed intermediates, each able to fail
-  - "the 200 C transcription proven by the book's own printed checksums: the three linear pressure sums to 1.8e-15 (exact), the six product sums to 8.5e-5 (the book's own printed rounding), the four R-sums to 2.9e-3 under the book's 2-decimal rounding of R"
-  - "mechanism d constants at 200 C reproduced by two routes sharing no inputs beyond the model form - least squares on the transcribed data, and direct solution of the normal equations exactly as printed on book p. 952 - agreeing with each other to 0.63 % and with the printed solution to 0.58 %"
-  - "the book's fit-quality arithmetic reproduced: Sum delta^2 = 3.006 vs printed 3.002, average deviation 8.42 % vs printed +-8.44, and Table C's per-run columns to 0.03 worst (excluding the one provably misprinted cell)"
-  - "38 of 54 printed Table D/E/F rows consistent with the data to <3 % in every implied normal-equation summation; the 200 C anomaly diagnosed as ONE corrupted Sum(R pS) worksheet entry by two independent printed rows that imply the same wrong value to 1.1 %, reproducing eight printed rows to ~1 % when substituted"
-  - "the dS_S adjudication: with the printed dH_S, Table G's -30.46 reproduces the printed K_S row to 2.5 % rms where eq. (q)'s -30.96 misses by 23.6 % - a 10x separation that is its own break test"
-  - "two-route reactor check: pymrm finite-volume column vs gridless quadrature, first order observed 0.99, Richardson-extrapolated agreement 1.6e-5 (the routes share the rate function, so this tests transport only - stated on the page)"
+  # PRIMARY: the book's own printed intermediates, each able to fail
+  - "the 200 C transcription proven by the book's own printed checksums: the three linear pressure sums to at most 1e-9 <!-- claim: tableA_linear_psum_max_abs --> (digit for digit), the six product sums within at most 1 <!-- claim: tableA_product_psum_max_half_units --> half-unit of the printed last digit, the four R-sums to 3.9e-05 <!-- claim: tableA_Rsum_check_max_rel --> relative with Table C's printed R column"
+  - "mechanism d constants at 200 C reproduced by two routes sharing no inputs beyond the model form (least squares on the transcribed data, and direct solution of the normal equations exactly as printed on book p. 952) agreeing with each other to 0.0063 <!-- claim: mechd_200C_two_routes_max_rel --> and with the printed solution to 0.0058 <!-- claim: mechd_200C_vs_printed_max_rel --> relative"
+  - "the book's fit-quality arithmetic reproduced: Sum delta^2 to 0.0014 <!-- claim: tableC_sum_delta_sq_rel_dev --> relative, average deviation 8.42 <!-- claim: tableC_avg_abs_pct --> % against the printed +-8.44, and Table C's per-run R_calc to 0.026 <!-- claim: tableC_other_Rcalc_worst_abs --> worst outside the one provably misprinted cell"
+  - "38 <!-- claim: DEF_clean_row_count --> of 54 printed Table D/E/F rows consistent with the data to better than 3 % in every implied normal-equation summation; the 200 C anomaly diagnosed as ONE corrupted Sum(R pS) worksheet entry by two independent printed rows that imply the same wrong value to 0.011 <!-- claim: DEF_corrupted_sum_two_witness_gap_rel --> relative"
+  - "the dS_S adjudication: with the printed dH_S, Table G's -30.46 reproduces the printed K_S row to 0.025 <!-- claim: KS_row_rms_rel_tableG_dSS --> rms relative where eq. (q)'s -30.96 misses by 0.236 <!-- claim: KS_row_rms_rel_eqq_dSS -->"
+  - "two-route reactor check: the pymrm bed (bed length a root of the outlet conversion) against adaptive quadrature; observed orders within 0.9 to 1.1 (theory, first-order upwind) with the finest difference at least 1e3 <!-- claim: reactor_order_roundoff_margin --> times the solver tolerances; the extrapolated bed agrees with the quadrature to at most 1e-4 <!-- claim: reactor_WF_richardson_vs_quad_rel -->. The routes share the rate function, so this tests transport only, as the page says"
   # DIAGNOSTIC findings (report, not repair)
-  - "run 25a's printed R_calc (5.40) proven wrong by its own row (delta, delta^2 and % all require 5.90); three duplicate-row inconsistencies in Tables E/F; the 275 C g/m row unexplained by any single-element repair"
-  - "discrimination: the joint acceptable set {d, h} robust across sign-test thresholds 1-10 %, but d vs h separated by only 0.4 percentage points in rate space, and NOISELESS h-rates are captured by d to 3.6 % - the non-discrimination is structural to the 1-3.5 atm design"
-  # DEFECT INJECTION - the break table in the Validation section
-  - "a break table covering every reported metric: single-digit transcription slips, a wrong hydrogen basis, a mis-attributed corrupted sum, the dS_S variant, denominator exponent 2->1, fixed-total partial pressures (+51 % on W/F), a plugged outlet (singular Jacobian), nu=1 in a mass coordinate; structural rows named as such, including the one metric below or at CI's ABS_FLOOR"
+  - "run 25a's printed R_calc proven wrong by its own row: off by 0.50 <!-- claim: tableC_25a_printed_minus_consistent -->, 33 <!-- claim: tableC_25a_gap_over_rounding --> times the rounding of the printed inputs; 3 <!-- claim: DEF_duplicate_inconsistencies --> duplicate-row inconsistencies in Tables E/F, each judged by the implied-sum test; the 275 C g/m row unexplained by any single-element repair"
+  - "discrimination with paired standard errors: d and h are 0.36 <!-- claim: discrim_d_vs_h_gap_pct_points --> percentage points apart with a standard error of 0.58 <!-- claim: discrim_d_vs_h_gap_se_pts -->, and the best rejected mechanism trails by 2.7 <!-- claim: discrim_third_best_gap_pct_points --> points with a standard error of 2.2 <!-- claim: discrim_third_best_gap_se_pts -->, neither resolved at two standard errors; noiseless h-rates are fitted by d to 3.6 <!-- claim: discrim_power_d_fits_exact_h_pct --> %"
+  # DEFECT INJECTION: the break table in the Validation section
+  - "a break table in which every claim fails its own check under a defect entered through a call argument or a printed value: single-digit transcription slips in Tables A and C, decimal slips in one rate per temperature, a wrong hydrogen basis, a mis-attributed corrupted sum, the dS_S variants, adsorption-group exponents 1 and 0, fits capped at five evaluations, noiseless generated rates, a saturate coefficient of 2 (no mole change), fixed-total partial pressures, a Dirichlet outlet (no steady state), a loose bed-length root tolerance"
 
 adds: >
   Three things the book does not give. First, forensics: a single corrupted
   Sum(R pS) entry in the 1947 worksheets is identified behind eight of Table
-  D's eighteen rows (two independent printed rows imply the same wrong value
-  to 1.1 %), the eq. (q)/Table G dS_S disagreement is adjudicated from the
-  book's own K_S row, and one Table C cell is proven a digit slip by its own
-  row - with the acceptance verdicts shown to survive all of it. Second, the
-  modern answer to the discrimination question on the formalism's founding
-  dataset: the data fix the family (dual-site surface control, all three
-  species adsorbed - dropping the product term costs 6 points) but cannot
-  resolve molecular vs atomic hydrogen (0.4 points apart; even noiseless
-  h-rates are fitted by d to 3.6 %), so the book's stated fit-quality ground
-  for choosing d does not survive, while its chemical argument does. Third,
-  the bookkeeping demonstration: the fitted law in a pymrm plug-flow bed,
-  where building partial pressures from the fixed inlet total - a smooth,
-  plausible-looking slip - lengthens the 99.8 %-conversion bed by 51 %.
+  D's eighteen rows (two independent printed rows imply the same wrong value),
+  the eq. (q)/Table G dS_S disagreement is adjudicated from the book's own K_S
+  row, and one Table C cell is proven a digit slip by its own row, with the
+  joint acceptance verdict shown to survive all of it. Second, the
+  discrimination question on the formalism's founding dataset, with paired
+  standard errors: fit quality cannot separate d from h, nor the best rejected
+  desorption-controlled forms from the survivors, nor d with and without the
+  product's adsorption term; what the fits resolve is the gap to the forms that
+  fit 1.5 <!-- claim: nls_resolved_ratio_min --> to 3.4 <!-- claim: nls_resolved_ratio_max --> times worse than d, and the rest is the
+  book's sign test. Third, the bookkeeping demonstration: the fitted law in a
+  pymrm plug-flow bed, where building partial pressures from the fixed inlet
+  total, a smooth, plausible-looking slip, lengthens the 99.8 %-conversion bed
+  by a relative 0.51 <!-- claim: reactor_naive_fixed_total_bias_rel -->.
 
 agreement: >
-  Mechanism d constants at 200 C reproduced to 0.58 % worst (two independent
-  routes, 0.63 % apart); the book's Sum delta^2 = 3.002 and +-8.44 %
-  reproduced to 0.1 % and 0.02 percentage points; 38 of 54 printed mechanism
-  rows RHS-consistent to <3 % with the remainder diagnosed; K_S row
-  reproduced to 2.5 % rms by Table G's dS_S (23.6 % by eq. q's misprint);
-  eq. (q) itself reproduces its own 40 fitting rates to 19.1 % mean absolute
-  deviation in rate space - which the page shows is the honest rate-space
-  equivalent of the book's famous +-8.44 % in transformed space (factor 2.00
-  measured).
+  Mechanism d constants at 200 C reproduced to 0.0058 <!-- claim: mechd_200C_vs_printed_max_rel -->
+  relative worst (two independent routes, 0.0063 <!-- claim: mechd_200C_two_routes_max_rel --> apart);
+  the book's Sum delta^2 and +-8.44 % reproduced (8.42 <!-- claim: tableC_avg_abs_pct --> %); 38 <!-- claim: DEF_clean_row_count -->
+  of 54 printed mechanism rows consistent with the data with the remainder
+  diagnosed; K_S row reproduced to 0.025 <!-- claim: KS_row_rms_rel_tableG_dSS --> rms by Table G's dS_S;
+  eq. (q) itself reproduces its own 40 fitting rates to 19.1 <!-- claim: eqq_all40_mean_abs_pct --> % mean
+  absolute deviation in rate space, the rate-space size of the book's
+  +-8.44 % in transformed space (16.9 <!-- claim: rate_space_scatter_pct_200C --> % at 200 C, a factor of 2.00 <!-- claim: rate_space_over_R_space_ratio -->).
 
 reference:
   authors:
