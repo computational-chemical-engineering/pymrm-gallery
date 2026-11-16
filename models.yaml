@@ -96,7 +96,7 @@ models:
     description: >
       A binary diffusivity derived from the intermolecular potential rather than
       fitted to diffusion data, put against the 39 usable pairs of Chapman &
-      Cowling's Table 22 of measured D12. It predicts them to a few per cent —
+      Cowling's Table 22 of measured D12. It predicts them to a few per cent,
       but the Lennard-Jones constants it needs are a two-parameter fit to
       viscosity, and swapping in the book's own virial-derived constants for the
       same molecules more than doubles the error. The page separates what the
@@ -122,19 +122,18 @@ models:
         Carlo Cercignani (1990), reprinted 1993. ISBN 0 521 40844 X.
       doi: null
       note: >
-        The ORIGIN, not a reprint, and the document actually read - so there is no
-        `reference_read_from`. The catalogue recorded no citation at all for this
-        case ("—") before the monograph reached disk on 2026-08-05. Equations
+        The ORIGIN, not a reprint, and the document actually read, so there is no
+        `reference_read_from`. Equations
         (9.8, 7-8), (9.81, 1), (10.2, 1), (10.42, 1), (12.1, 6), (14.2, 1),
         (14.2, 4), (14.21, 1-6), (14.3, 1-2), (14.4, 1) and Tables 6, 11, 17 and
-        22 were read off cropped 300 dpi renders (the scan's NATIVE resolution) of
+        22 were read off cropped renders at the scan's native resolution of
         the page images. The origins of the fitted force constants
         (Hirschfelder, Bird & Spotz 1948/49) and of the tabulated collision
         integrals (Monchick & Mason 1961; Itean, Glueck & Svehla 1961) were NOT
         consulted; they reach the page through the book's own tables, which is
         what it prints and attributes.
     predicts: [binary gas diffusivity, collision integrals, composition dependence of D12, apparent D of a transient diffusion cell]
-    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, interp_cntr_to_stagg, newton]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, construct_coefficient_matrix, newton, find_roots, observed_orders]
     # tier 2: Table 22 is 50 MEASURED D12 values compiled by the authors from the
     # literature, with their references printed. Measurements at one remove - the
     # original experimental papers were not consulted - and no figure is digitised
