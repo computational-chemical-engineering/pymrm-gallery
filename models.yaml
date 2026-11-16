@@ -20,17 +20,20 @@ models:
     title: Fuller-Schettler-Giddings binary gas diffusivities
     description: >
       The most-used empirical estimate of binary gas diffusivity, rebuilt from its
-      own printed tables. Its famous 4.3 % is a GOODNESS OF FIT: the 27 atomic and
-      molecular diffusion volumes were fitted by least squares to the same 340
-      measurements the 4.3 % is reported against, and the authors say so. The paper
+      own printed tables. Its quoted average error is a GOODNESS OF FIT: the atomic
+      and molecular diffusion volumes were fitted by least squares to the same
+      measurements it is reported against, and the authors say so. The paper
       prints no held-out data, but its additive-increment scheme can be
-      cross-validated - leave one organic compound out, refit, predict it - and that
-      gives 6.61 % against 5.04 % in sample on the same points. The twenty simple
-      molecules admit no held-out test at all, because each carries its own fitted
-      parameter, and the page says so. 338 of the 340 printed FSG errors reproduce
-      to 0.043 percentage points; two do not, and twelve printed aggregates fall out
-      of the transcription, including the undocumented 6.71 "standard deviation",
-      which is the residual standard deviation with 28 fitted parameters.
+      cross-validated (leave one organic compound out, refit, predict it), and that
+      gives 6.61 <!-- claim: loco_held_out_pct --> % against
+      5.04 <!-- claim: loco_in_sample_refit_pct --> % in sample on the same points.
+      The simple molecules admit no held-out test, because each carries its own
+      fitted parameter. 338 <!-- claim: n_rows_reproduced --> of the
+      340 <!-- claim: n_rows --> printed FSG errors reproduce to
+      0.043 <!-- claim: max_abs_delta_pp --> percentage points, and the printed
+      "standard deviation" is the residual standard deviation with every Table I
+      volume and b counted as parameters. A pymrm tube solve shows what the
+      temperature exponent costs in a transport answer.
     section: A
     status: published
     page: pages/A4.5-fuller-schettler-giddings/
@@ -50,6 +53,7 @@ models:
       - construct_grad
       - construct_div
       - construct_coefficient_matrix
+      - compute_boundary_values
     reference:
       authors:
         - Fuller, E. N.
@@ -62,9 +66,9 @@ models:
         The origin paper itself, on disk and read in full at its native 300 ppi;
         there is no reprint route and none is needed. Identity verified from the
         printed title block, the ACS download stamp and the PDF's own DOI metadata.
-        Equations 1-5 and all 27 diffusion volumes were read off cropped page
-        images, not off the text layer, which silently altered a digit in 24 of the
-        340 data rows.
+        Equations 1-5 and every Table I diffusion volume were read off cropped page
+        images, not off the text layer, which altered digits in some data rows; the
+        CSV's image_corrected column names the field corrected in each.
     erratum_not_consulted: >
         doi:10.1021/ie50680a601, "Errata: A New Method for Predicting Gas
         Diffusivities", Ind. Eng. Chem. 58 (1966). NOT on disk and NOT consulted.
@@ -72,8 +76,8 @@ models:
         "errata"/"erratum" do not occur in them. An erratum to this paper would most
         plausibly correct the atomic diffusion volumes, which are the whole content
         of the correlation. The 1966 table is used exactly as printed; the
-        widely-reproduced later increments (C 15.9, H 2.31, O 6.11, N 4.54) appear
-        on the page only as an injected defect. Anyone with access should check the
+        widely reproduced later increments appear on the page only as an injected
+        defect. Anyone with access should check the
         volumes against the erratum before relying on the transcription.
     data:
       tier: 5
@@ -92,7 +96,7 @@ models:
     description: >
       A binary diffusivity derived from the intermolecular potential rather than
       fitted to diffusion data, put against the 39 usable pairs of Chapman &
-      Cowling's Table 22 of measured D12. It predicts them to a few per cent —
+      Cowling's Table 22 of measured D12. It predicts them to a few per cent,
       but the Lennard-Jones constants it needs are a two-parameter fit to
       viscosity, and swapping in the book's own virial-derived constants for the
       same molecules more than doubles the error. The page separates what the
@@ -118,19 +122,18 @@ models:
         Carlo Cercignani (1990), reprinted 1993. ISBN 0 521 40844 X.
       doi: null
       note: >
-        The ORIGIN, not a reprint, and the document actually read - so there is no
-        `reference_read_from`. The catalogue recorded no citation at all for this
-        case ("—") before the monograph reached disk on 2026-08-05. Equations
+        The ORIGIN, not a reprint, and the document actually read, so there is no
+        `reference_read_from`. Equations
         (9.8, 7-8), (9.81, 1), (10.2, 1), (10.42, 1), (12.1, 6), (14.2, 1),
         (14.2, 4), (14.21, 1-6), (14.3, 1-2), (14.4, 1) and Tables 6, 11, 17 and
-        22 were read off cropped 300 dpi renders (the scan's NATIVE resolution) of
+        22 were read off cropped renders at the scan's native resolution of
         the page images. The origins of the fitted force constants
         (Hirschfelder, Bird & Spotz 1948/49) and of the tabulated collision
         integrals (Monchick & Mason 1961; Itean, Glueck & Svehla 1961) were NOT
         consulted; they reach the page through the book's own tables, which is
         what it prints and attributes.
     predicts: [binary gas diffusivity, collision integrals, composition dependence of D12, apparent D of a transient diffusion cell]
-    pymrm_api: [construct_grad, construct_div, construct_coefficient_matrix, interp_cntr_to_stagg, newton]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, construct_coefficient_matrix, newton, find_roots, observed_orders]
     # tier 2: Table 22 is 50 MEASURED D12 values compiled by the authors from the
     # literature, with their references printed. Measurements at one remove - the
     # original experimental papers were not consulted - and no figure is digitised
@@ -265,13 +268,15 @@ models:
     title: "Knudsen diffusion and the Bosanquet relation"
     description: >
       The Bosanquet interpolation 1/D = 1/D_K + 1/D_AB is an approximation, not
-      an identity — and its error is worst in the bulk-diffusion limit and
+      an identity, and its error is worst in the bulk-diffusion limit and
       vanishes under Knudsen control, the opposite of the usual instinct.
       Quantified against the dusty gas model across the whole transition: for a
       spherical pellet running A -> 2B at a Thiele modulus of 30 it overestimates
-      the effectiveness factor by 27 % under bulk control (grid-converged 26.96 %;
-      25.5 % at phi = 10, 27.7 % at phi = 100) and by 3e-5 % under Knudsen
-      control.
+      the effectiveness factor by 26.96 % <!-- claim: bosanquet_eta_error_bulk -->
+      at Kn = 1e-3 (25.49 % <!-- claim: bosanquet_eta_error_bulk_phi10 --> at
+      phi = 10, 27.43 % <!-- claim: bosanquet_eta_error_bulk_phi100 --> at
+      phi = 100) and by 2.97e-7 <!-- claim: bosanquet_eta_error_knudsen -->
+      (relative) at Kn = 1e6, all extrapolated to zero cell size.
     section: A
     status: published
     page: pages/A4.4-knudsen-bosanquet/
@@ -297,7 +302,7 @@ models:
       consulted, and Krishna & Wesselingh give no citation for Bosanquet
       himself. Nothing on the page derives from them.
     predicts: [Knudsen diffusivity, effective diffusivity in the transition regime, Bosanquet error vs Knudsen number, internal pellet pressure, effectiveness factor, Graham's law flux ratio]
-    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, clip_approach]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, observed_orders]
     data: {tier: 6, method: table, status: complete}
     related: [A4.2, A4.3, A4.5, A4.6, B1.1]
 

@@ -1,39 +1,874 @@
 {
   "page": "A4.6",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "t17_rm_max_abs": 0.0051527474403672,
-    "t11_sigma_from_mu_max_rel": 0.0008731304064537593,
-    "t22_sigma12_from_D_max_abs": 0.005088647020572878,
-    "t22_halfsum_from_t11_max_abs": 0.007499999999999396,
-    "sigma_ratio_mean_pct": 10.464648170951275,
-    "omega11_quad_vs_t6_max_pct": 0.18040924628820454,
-    "omega22_quad_vs_t6_half_max_pct": 0.2985250260992278,
-    "omega22_quad_vs_t6_third_max_pct": 33.53235001739948,
-    "d12_two_routes_max_pct": 0.06615915522831806,
-    "t6_A_identity_max_rel": 0.0002926388220317877,
-    "t6_C_vs_dlnW_rms": 0.00371245193261207,
-    "eq1432_max_rel": 8.115730310009894e-14,
-    "lorentz_D2_over_D1": 1.0833333333332154,
-    "lorentz_variation_pct": 8.333333333320446,
-    "kihara_variation_pct": 11.111111111089023,
-    "composition_swing_max_pct": 3.283446788890265,
-    "cell_apparent_excess_pct_HeXe": 2.527252124736812,
-    "cell_equimolar_excess_pct_HeXe": 2.6766592663502564,
-    "cell_shortfall_pp_HeXe": 0.1494071416134446,
-    "cell_apparent_excess_pct_N2CO": 0.3128578475398047,
-    "d12_mean_abs_dev_pct": 3.6466600630385253,
-    "d12_bias_pct": 2.7436317578264617,
-    "d12_rms_pct": 4.568526217521567,
-    "d12_worst_dev_pct": 10.059588730966574,
-    "d12_n_pairs": 39.0,
-    "d12_within_5pct": 29.0,
-    "d12_rigid_sphere_mean_abs_pct": 17.23808007063662,
-    "d12_rigid_sphere_bias_pct": 17.23808007063662,
-    "d12_visc_params_subset_mean_abs_pct": 4.125734316639477,
-    "d12_other_params_subset_mean_abs_pct": 10.234225948750845,
-    "d12_quadrature_route_mean_abs_pct": 3.655374323117103,
-    "cell_grid_order": 2.070494211167346,
-    "cell_time_order": 0.9803231372346184,
-    "cell_newton_worst_residual": 1.0954214965663844e-13
+    "t22_sigma12_bias_z": {
+      "kind": "bound",
+      "value": 0.4057319449939605,
+      "min": -2.0,
+      "max": 2.0,
+      "basis": "theory",
+      "note": "mean signed residual over its standard error: rounding residuals average to zero"
+    },
+    "t22_sigma12_from_D_max_abs": {
+      "kind": "value",
+      "value": 0.005088647020572878,
+      "rtol": 1e-06
+    },
+    "t22_sigma12_max_over_rounding": {
+      "kind": "bound",
+      "value": 0.69304580866916,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "the residual over its rounding allowance (half units of every printed entry involved)"
+    },
+    "t22_sigma12_bias_z_1bar": {
+      "kind": "value",
+      "value": 34.7833918232165,
+      "rtol": 1e-06
+    },
+    "t17_rm_max_abs": {
+      "kind": "value",
+      "value": 0.0051527474403672,
+      "rtol": 1e-06
+    },
+    "t17_rm_max_over_rounding": {
+      "kind": "bound",
+      "value": 0.48554436527819866,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "the residual over its rounding allowance (half units of every printed entry involved)"
+    },
+    "t11_sigma_from_mu_max_rel": {
+      "kind": "value",
+      "value": 0.0008731304064537593,
+      "rtol": 1e-06
+    },
+    "t11_sigma_from_mu_max_over_rounding": {
+      "kind": "value",
+      "value": 2.065677328430182,
+      "rtol": 1e-06
+    },
+    "t11_sigma_from_mu_worst_gas": {
+      "kind": "exact",
+      "value": "D2"
+    },
+    "t11_sigma_from_mu_no_corr_max_rel": {
+      "kind": "value",
+      "value": 0.008771490415857341,
+      "rtol": 1e-06
+    },
+    "t22_halfsum_from_t11_max_abs": {
+      "kind": "value",
+      "value": 0.007499999999999396,
+      "rtol": 1e-06
+    },
+    "t22_halfsum_max_over_rounding": {
+      "kind": "value",
+      "value": 1.3636363636362538,
+      "rtol": 1e-06
+    },
+    "t22_halfsum_worst_exact": {
+      "kind": "value",
+      "value": 4.2875,
+      "rtol": 1e-06
+    },
+    "t22_halfsum_worst_printed": {
+      "kind": "value",
+      "value": 4.28,
+      "rtol": 1e-06
+    },
+    "t22_halfsum_worst_pair": {
+      "kind": "exact",
+      "value": "O2-Xe"
+    },
+    "t22_halfsum_from_t17_max_abs": {
+      "kind": "value",
+      "value": 0.7400000000000002,
+      "rtol": 1e-06
+    },
+    "sigma_ratio_mean_pct": {
+      "kind": "value",
+      "value": 10.464648170951275,
+      "rtol": 1e-06
+    },
+    "d12_mean_abs_dev_pct": {
+      "kind": "value",
+      "value": 3.6466600630385253,
+      "rtol": 1e-06
+    },
+    "d12_bias_pct": {
+      "kind": "value",
+      "value": -2.7436317578264617,
+      "rtol": 1e-06
+    },
+    "d12_bias_se_pct": {
+      "kind": "value",
+      "value": 0.5925839176110529,
+      "rtol": 1e-06
+    },
+    "d12_rms_pct": {
+      "kind": "value",
+      "value": 4.568526217521567,
+      "rtol": 1e-06
+    },
+    "d12_worst_dev_pct": {
+      "kind": "value",
+      "value": -10.059588730966574,
+      "rtol": 1e-06
+    },
+    "d12_worst_pair": {
+      "kind": "exact",
+      "value": "N2-CO2"
+    },
+    "d12_n_pairs": {
+      "kind": "exact",
+      "value": 39
+    },
+    "d12_rigid_sphere_mean_abs_pct": {
+      "kind": "value",
+      "value": 17.23808007063662,
+      "rtol": 1e-06
+    },
+    "d12_rigid_sphere_bias_pct": {
+      "kind": "value",
+      "value": -17.23808007063662,
+      "rtol": 1e-06
+    },
+    "d12_rigid_over_126_ratio": {
+      "kind": "value",
+      "value": 4.727087190099438,
+      "rtol": 1e-06
+    },
+    "d12_mean_abs_geometric_sigma_pct": {
+      "kind": "value",
+      "value": 3.25678944292081,
+      "rtol": 1e-06
+    },
+    "d12_mean_abs_1bar_pct": {
+      "kind": "value",
+      "value": 3.101757501994833,
+      "rtol": 1e-06
+    },
+    "d12_subset_n_pairs": {
+      "kind": "exact",
+      "value": 27
+    },
+    "d12_visc_params_subset_mean_abs_pct": {
+      "kind": "value",
+      "value": 4.125734316639477,
+      "rtol": 1e-06
+    },
+    "d12_other_params_subset_mean_abs_pct": {
+      "kind": "value",
+      "value": 10.234225948750845,
+      "rtol": 1e-06
+    },
+    "d12_other_over_visc_ratio": {
+      "kind": "value",
+      "value": 2.480582888596399,
+      "rtol": 1e-06
+    },
+    "d12_subset_diff_pp": {
+      "kind": "value",
+      "value": 6.108491632111368,
+      "rtol": 1e-06
+    },
+    "d12_subset_diff_se_pp": {
+      "kind": "value",
+      "value": 1.2269583131196204,
+      "rtol": 1e-06
+    },
+    "quad_joint_change_at_T05_pct": {
+      "kind": "value",
+      "value": 0.2114574271701919,
+      "rtol": 1e-06
+    },
+    "omega_gap_at_T05_refined_pct": {
+      "kind": "value",
+      "value": 0.03691507044887299,
+      "rtol": 1e-06
+    },
+    "quad_joint_change_at_T03_pct": {
+      "kind": "value",
+      "value": 0.09058734979057181,
+      "rtol": 1e-06
+    },
+    "omega_gap_at_T03_refined_pct": {
+      "kind": "value",
+      "value": 0.09708311208294074,
+      "rtol": 1e-06
+    },
+    "omega11_quad_vs_t6_max_pct": {
+      "kind": "value",
+      "value": 0.18040924636827382,
+      "rtol": 1e-06
+    },
+    "omega22_quad_vs_t6_half_max_pct": {
+      "kind": "value",
+      "value": 0.298525026195795,
+      "rtol": 1e-06
+    },
+    "quad_refinement_max_pct": {
+      "kind": "bound",
+      "value": 0.16436478095175344,
+      "max": 0.3,
+      "basis": "chosen",
+      "note": "largest change of any row under a single-knob refinement; the orbiting rows at the lowest kT/eps set it"
+    },
+    "quad_refinement_at_worst_row_pct": {
+      "kind": "bound",
+      "value": 3.510419939178888e-05,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "the quadrature at the row of the largest gap to Table 6 is converged far below that gap"
+    },
+    "quad_refinement_pair_range_pct": {
+      "kind": "value",
+      "value": 0.04811686870103138,
+      "rtol": 1e-06
+    },
+    "omega_gap_at_T05_pct": {
+      "kind": "value",
+      "value": 0.1740532037843634,
+      "rtol": 1e-06
+    },
+    "omega_gap_at_T03_pct": {
+      "kind": "value",
+      "value": 0.03656725705629693,
+      "rtol": 1e-06
+    },
+    "d12_two_routes_max_pct": {
+      "kind": "bound",
+      "value": 0.06615915530733263,
+      "max": 0.1,
+      "basis": "chosen",
+      "note": "D12 ~ 1/W11, so the gap is the table-against-quadrature gap in the pairs' range"
+    },
+    "d12_quadrature_route_mean_abs_pct": {
+      "kind": "value",
+      "value": 3.6553743231564124,
+      "rtol": 1e-06
+    },
+    "t6_A_identity_max_rel": {
+      "kind": "value",
+      "value": 0.0002926388220317877,
+      "rtol": 1e-06
+    },
+    "t6_A_identity_max_over_rounding": {
+      "kind": "value",
+      "value": 1.002175056902103,
+      "rtol": 1e-06
+    },
+    "t6_C_vs_dlnW_rms": {
+      "kind": "bound",
+      "value": 0.00371245193261207,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "a cubic-spline slope of a printed column against another printed column; a transposed digit raises it by an order of magnitude or more"
+    },
+    "eq1432_max_rel": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "eq. (14.3, 2) against eqs. (14.21, 2-6)"
+    },
+    "lorentz_D2_over_D1": {
+      "kind": "value",
+      "value": 1.0833333333333335,
+      "rtol": 1e-06
+    },
+    "lorentz_variation_pct": {
+      "kind": "value",
+      "value": 8.333333333333348,
+      "rtol": 1e-06
+    },
+    "kihara_variation_pct": {
+      "kind": "value",
+      "value": 11.111111111111116,
+      "rtol": 1e-06
+    },
+    "composition_swing_max_pct": {
+      "kind": "value",
+      "value": 3.2834468002305495,
+      "rtol": 1e-06
+    },
+    "composition_swing_max_pair": {
+      "kind": "exact",
+      "value": "He-Kr"
+    },
+    "composition_variation_max_pct": {
+      "kind": "value",
+      "value": 3.3949170970232423,
+      "rtol": 1e-06
+    },
+    "composition_variation_max_pair": {
+      "kind": "exact",
+      "value": "He-Kr"
+    },
+    "cell_apparent_excess_pct_HeXe": {
+      "kind": "value",
+      "value": 2.527492986531642,
+      "rtol": 1e-06
+    },
+    "cell_equimolar_excess_pct_HeXe": {
+      "kind": "value",
+      "value": 2.6766592663502564,
+      "rtol": 1e-06
+    },
+    "cell_shortfall_pp_HeXe": {
+      "kind": "value",
+      "value": 0.14916627981861463,
+      "rtol": 1e-06
+    },
+    "cell_apparent_excess_pct_H2N2": {
+      "kind": "value",
+      "value": 1.8035861040168668,
+      "rtol": 1e-06
+    },
+    "cell_equimolar_excess_pct_H2N2": {
+      "kind": "value",
+      "value": 1.8908279705185382,
+      "rtol": 1e-06
+    },
+    "cell_shortfall_pp_H2N2": {
+      "kind": "value",
+      "value": 0.08724186650167143,
+      "rtol": 1e-06
+    },
+    "cell_apparent_excess_pct_N2CO": {
+      "kind": "value",
+      "value": 0.3128460565721184,
+      "rtol": 1e-06
+    },
+    "cell_equimolar_excess_pct_N2CO": {
+      "kind": "value",
+      "value": 0.31271773183230156,
+      "rtol": 1e-06
+    },
+    "cell_grid_order": {
+      "kind": "bound",
+      "value": 2.0065148738414456,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "He-Xe apparent excess, finest triple of the cell-size ladder"
+    },
+    "cell_time_order": {
+      "kind": "bound",
+      "value": 0.9848749164928962,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "He-Xe apparent excess, finest triple of the step ladder; backward Euler"
+    },
+    "cell_grid_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 311414.94183028844,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the excess a split error of the Newton tolerance makes"
+    },
+    "cell_time_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 5273484.005109981,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the excess a split error of the Newton tolerance makes"
+    },
+    "cell_excess_discretisation_pp": {
+      "kind": "bound",
+      "value": 0.0029165001186917117,
+      "max": 0.01,
+      "basis": "theory",
+      "note": "production level against the value extrapolated in both cell size and step"
+    },
+    "cell_const_vs_series": {
+      "kind": "bound",
+      "value": 6.5798952372242425e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "constant-D split extrapolated in both axes against the cosine series; the remainder of the extrapolation"
+    },
+    "split_series_tail": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "theory",
+      "note": "tail bound of the cosine series at the smallest D of the inversion range"
+    },
+    "t22_sigma12_1bar_positive": {
+      "kind": "exact",
+      "value": 50,
+      "margin": 0.013399731119899005,
+      "min_margin": 0.0001,
+      "note": "Table 22 rows whose sigma12 rebuilt at 1 bar exceeds the printed one"
+    },
+    "d12_within_5pct": {
+      "kind": "exact",
+      "value": 29,
+      "margin": 0.08910337399517321,
+      "min_margin": 0.001,
+      "note": "pairs whose |dev| of the 12,6 prediction is below 5 %"
+    },
+    "d12_within_10pct": {
+      "kind": "exact",
+      "value": 38,
+      "margin": 0.005958873096657413,
+      "min_margin": 0.001,
+      "note": "pairs whose |dev| of the 12,6 prediction is below 10 %"
+    },
+    "d12_rigid_sphere_n_under": {
+      "kind": "exact",
+      "value": 39,
+      "margin": 8.553837717978451,
+      "min_margin": 0.001,
+      "note": "pairs the rigid-sphere null model under-predicts"
+    },
+    "composition_heavier_rises": {
+      "kind": "exact",
+      "value": 37,
+      "margin": 0.027519465323844194,
+      "min_margin": 0.001,
+      "note": "pairs of unequal mass where [D12]_2 is larger in the pure heavier gas"
+    },
+    "cell_shortfall_falls_with_mass_ratio": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.061924413316943205,
+      "min_margin": 0.001,
+      "note": "steps He-Xe -> H2-N2 -> N2-CO, of 2, where the shortfall falls"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "t22_sigma12_bias_z": [
+      "p = 1 bar for 1 atm: state",
+      "T = 293.15 K for 273.15 K: state"
+    ],
+    "t22_sigma12_from_D_max_abs": [
+      "p = 1 bar for 1 atm: state",
+      "T = 293.15 K for 273.15 K: state",
+      "D12 of H2-D2 transposed: state"
+    ],
+    "t22_sigma12_max_over_rounding": [
+      "p = 1 bar for 1 atm: state",
+      "T = 293.15 K for 273.15 K: state",
+      "D12 of H2-D2 transposed: state"
+    ],
+    "t22_sigma12_bias_z_1bar": [
+      "T = 293.15 K for 273.15 K: state",
+      "D12 of H2-D2 transposed: state"
+    ],
+    "t22_sigma12_1bar_positive": [
+      "D12 of H2-D2 transposed: state"
+    ],
+    "t17_rm_max_abs": [
+      "r_m of argon transposed: round trips"
+    ],
+    "t17_rm_max_over_rounding": [
+      "r_m of argon transposed: round trips"
+    ],
+    "t11_sigma_from_mu_max_rel": [
+      "mu of argon transposed: round trips",
+      "the 1.016 correction dropped: round trips"
+    ],
+    "t11_sigma_from_mu_max_over_rounding": [
+      "mu of argon transposed: round trips",
+      "the 1.016 correction dropped: round trips"
+    ],
+    "t11_sigma_from_mu_worst_gas": [
+      "mu of argon transposed: round trips",
+      "the 1.016 correction dropped: round trips"
+    ],
+    "t11_sigma_from_mu_no_corr_max_rel": [
+      "mu of argon transposed: round trips"
+    ],
+    "t22_halfsum_from_t11_max_abs": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "t22_halfsum_max_over_rounding": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "t22_halfsum_worst_exact": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "t22_halfsum_worst_printed": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "t22_halfsum_worst_pair": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "t22_halfsum_from_t17_max_abs": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "sigma_ratio_mean_pct": [
+      "Table 22 half-sum column shifted one row: round trips"
+    ],
+    "d12_mean_abs_dev_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_bias_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_bias_se_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_rms_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_worst_dev_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations"
+    ],
+    "d12_worst_pair": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations"
+    ],
+    "d12_n_pairs": [
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_rigid_sphere_mean_abs_pct": [
+      "sigma12 geometric for arithmetic mean: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_rigid_sphere_bias_pct": [
+      "sigma12 geometric for arithmetic mean: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_rigid_over_126_ratio": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_mean_abs_geometric_sigma_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_mean_abs_1bar_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_subset_n_pairs": [
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_visc_params_subset_mean_abs_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_other_params_subset_mean_abs_pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_other_over_visc_ratio": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_subset_diff_pp": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_subset_diff_se_pp": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "T = 293.15 K for 273.15 K: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "sigma of argon misread 3.42 -> 3.24: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_within_5pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_within_10pct": [
+      "eps12 arithmetic for geometric mean: deviations",
+      "sigma12 geometric for arithmetic mean: deviations",
+      "W11 = 1, collision integral deleted: deviations",
+      "sigma12 scaled by 1.01: deviations",
+      "p = 1 bar for 1 atm: deviations",
+      "eps/k of argon misread 124 -> 12.4: deviations",
+      "argon missing from Table 17: deviations"
+    ],
+    "d12_rigid_sphere_n_under": [
+      "argon missing from Table 17: deviations"
+    ],
+    "quad_joint_change_at_T05_pct": [
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega_gap_at_T05_refined_pct": [
+      "Table 6 column 3 read as 1/3: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "quad_joint_change_at_T03_pct": [
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega_gap_at_T03_refined_pct": [
+      "Table 6 column 3 read as 1/3: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega11_quad_vs_t6_max_pct": [
+      "W11 of the kT/eps = 2 row transposed: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega22_quad_vs_t6_half_max_pct": [
+      "Table 6 column 3 read as 1/3: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "quad_refinement_max_pct": [
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "quad_refinement_at_worst_row_pct": [
+      "W11 of the kT/eps = 2 row transposed: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "quad_refinement_pair_range_pct": [
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega_gap_at_T05_pct": [
+      "Table 6 column 3 read as 1/3: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "omega_gap_at_T03_pct": [
+      "Table 6 column 3 read as 1/3: quadrature",
+      "n_b = 30 per panel: quadrature",
+      "n_E = 12: quadrature"
+    ],
+    "d12_two_routes_max_pct": [
+      "W11 of the kT/eps = 2 row transposed: second route",
+      "n_b = 30 per panel: second route"
+    ],
+    "d12_quadrature_route_mean_abs_pct": [
+      "n_b = 30 per panel: second route"
+    ],
+    "t6_A_identity_max_rel": [
+      "W11 of the kT/eps = 2 row transposed: Table 6 identities",
+      "Table 6 column 3 read as 1/3: Table 6 identities"
+    ],
+    "t6_A_identity_max_over_rounding": [
+      "W11 of the kT/eps = 2 row transposed: Table 6 identities",
+      "Table 6 column 3 read as 1/3: Table 6 identities"
+    ],
+    "t6_C_vs_dlnW_rms": [
+      "W11 of the kT/eps = 2 row transposed: Table 6 identities"
+    ],
+    "eq1432_max_rel": [
+      "rigid-sphere B = 1/2 for 3/5: printed limits"
+    ],
+    "lorentz_D2_over_D1": [
+      "rigid-sphere B = 1/2 for 3/5: printed limits"
+    ],
+    "lorentz_variation_pct": [
+      "rigid-sphere B = 1/2 for 3/5: printed limits"
+    ],
+    "kihara_variation_pct": [
+      "Kihara B = 0.7 for 3/4: printed limits"
+    ],
+    "composition_swing_max_pct": [
+      "C = 0 (Maxwellian molecules): composition",
+      "masses swapped inside Delta: composition"
+    ],
+    "composition_swing_max_pair": [
+      "C = 0 (Maxwellian molecules): composition"
+    ],
+    "composition_variation_max_pct": [
+      "C = 0 (Maxwellian molecules): composition"
+    ],
+    "composition_variation_max_pair": [
+      "C = 0 (Maxwellian molecules): composition"
+    ],
+    "composition_heavier_rises": [
+      "C = 0 (Maxwellian molecules): composition",
+      "masses swapped inside Delta: composition"
+    ],
+    "cell_apparent_excess_pct_HeXe": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell",
+      "nu = 2 for the slab: He-Xe cell",
+      "interior face composition from the left cell: He-Xe cell",
+      "Crank-Nicolson for backward Euler: He-Xe cell",
+      "cosine series cut at 2 terms: He-Xe cell",
+      "ladders of 6 to 48 cells and 3 to 24 steps: He-Xe cell"
+    ],
+    "cell_equimolar_excess_pct_HeXe": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell"
+    ],
+    "cell_shortfall_pp_HeXe": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell",
+      "nu = 2 for the slab: He-Xe cell",
+      "interior face composition from the left cell: He-Xe cell",
+      "Crank-Nicolson for backward Euler: He-Xe cell",
+      "cosine series cut at 2 terms: He-Xe cell",
+      "ladders of 6 to 48 cells and 3 to 24 steps: He-Xe cell"
+    ],
+    "cell_apparent_excess_pct_H2N2": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell"
+    ],
+    "cell_equimolar_excess_pct_H2N2": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell"
+    ],
+    "cell_shortfall_pp_H2N2": [
+      "C = 0 (Maxwellian molecules): cell",
+      "masses swapped inside Delta: cell"
+    ],
+    "cell_apparent_excess_pct_N2CO": [
+      "C = 0 (Maxwellian molecules): cell"
+    ],
+    "cell_equimolar_excess_pct_N2CO": [
+      "C = 0 (Maxwellian molecules): cell"
+    ],
+    "cell_grid_order": [
+      "C = 0 (Maxwellian molecules): cell",
+      "interior face composition from the left cell: He-Xe cell",
+      "Crank-Nicolson for backward Euler: He-Xe cell"
+    ],
+    "cell_time_order": [
+      "C = 0 (Maxwellian molecules): cell",
+      "Crank-Nicolson for backward Euler: He-Xe cell",
+      "ladders of 6 to 48 cells and 3 to 24 steps: He-Xe cell"
+    ],
+    "cell_grid_ladder_over_roundoff": [
+      "C = 0 (Maxwellian molecules): cell",
+      "Newton tolerance 1e-12 -> 1e-6: He-Xe cell"
+    ],
+    "cell_time_ladder_over_roundoff": [
+      "C = 0 (Maxwellian molecules): cell",
+      "Newton tolerance 1e-12 -> 1e-6: He-Xe cell"
+    ],
+    "cell_excess_discretisation_pp": [
+      "ladders of 6 to 48 cells and 3 to 24 steps: He-Xe cell"
+    ],
+    "cell_const_vs_series": [
+      "nu = 2 for the slab: He-Xe cell",
+      "Crank-Nicolson for backward Euler: He-Xe cell"
+    ],
+    "split_series_tail": [
+      "cosine series cut at 2 terms: He-Xe cell"
+    ],
+    "cell_shortfall_falls_with_mass_ratio": [
+      "C = 0 (Maxwellian molecules): cell"
+    ]
+  },
+  "rows": {
+    "defined": 36,
+    "recorded": 36
   }
 }
