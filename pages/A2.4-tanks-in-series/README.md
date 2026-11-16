@@ -1,10 +1,10 @@
-# A2.4 — Tanks in series
+# A2.4: Tanks in series
 
 **Catalog ID:** `A2.4` · **Section:** A · **Tier:** T0 · **Priority:** P1 ·
 **Structures:** `S1`, `S3`, `S5` · **Data tier:** 6 (no measurement exists)
 
 Built from Octave Levenspiel, *Chemical Reaction Engineering*, **3rd edition,
-John Wiley & Sons (1999), ISBN 0-471-25424-X** — **Chapter 14 "The
+John Wiley & Sons (1999), ISBN 0-471-25424-X**, **Chapter 14 "The
 Tanks-In-Series Model", sections 14.1 and 14.2**, book pp. 321–338, plus **book
 p. 303 in Chapter 13**, which Fig. 14.7's own annotation names.
 
@@ -12,7 +12,7 @@ p. 303 in Chapter 13**, which Fig. 14.7's own annotation names.
 > and the $F$ curve of Fig. 14.7 are attributed *by this book* to **MacMullin,
 > R. B. and Weber, M., Jr., Trans. AIChE 31, 409 (1935)**. That paper is not on
 > disk and was not read. Every equation on the page was read from the 1999
-> monograph, on 600 dpi renders — the scan's native resolution. Nothing came from
+> monograph, on 600 dpi renders, the scan's native resolution. Nothing came from
 > the text layer, which is excellent for prose and destroys every equation and
 > subscript in the chapter (`pdftotext` returns Eq. 3 as `7. = (-&) NN e-tNli`).
 
@@ -20,8 +20,8 @@ p. 303 in Chapter 13**, which Fig. 14.7's own annotation names.
 
 The tanks-in-series model has one adjustable number, and Chapter 14 fits it three
 times. Reproducing an RTD from an $N$ fitted to that same RTD would be a goodness
-of fit, so the page does not do it. It fits $N$ where Levenspiel fits it — from
-**two moments**, in worked example E14.4 — and then asks what the fit is worth on
+of fit, so the page does not do it. It fits $N$ where Levenspiel fits it (from
+**two moments**, in worked example E14.4) and then asks what the fit is worth on
 quantities held out of it.
 
 **The headline is a limit, not an agreement.** E14.4 reads $\bar t = 60$ s and
@@ -30,14 +30,14 @@ of five *unequal* tanks of 9, 9, 9, 9 and 24 s has
 
 $$\textstyle\sum t_i = 60\ \text{s},\qquad \sum t_i^2 = 4(81)+576 = 900\ \text{s}^2$$
 
-— exactly the two numbers the method uses. Three things have to be said carefully
+These are exactly the two numbers the method uses. Three things have to be said carefully
 about what follows, and the page says all three:
 
 - the difference is **23.2 % <!-- claim: ambiguity_first_order_max_gap --> in outlet concentration**, first order, and only
   **0.16 %** in *conversion* (99.334 % against 99.488 %). Over the whole sweep
   the relative gap in conversion never exceeds 0.38 %;
-- 23.2 % is the value at $k\bar t = 10$, and it is **monotone** — 1.53 % at
-  $k\bar t = 2$, 69.7 % at $k\bar t = 50$ — so it is where the sweep stops, not a
+- 23.2 % is the value at $k\bar t = 10$, and it is **monotone** (1.53 % at
+  $k\bar t = 2$, 69.7 % at $k\bar t = 50$), so it is where the sweep stops, not a
   maximum over it;
 - it is **one chain**, hence a lower bound. Over *every* chain matching the same
   two moments the supremum is closed form (the extremal chain has at most two
@@ -51,7 +51,7 @@ Two moments do not determine a conversion, and the page measures by how much.
 
 ## Five printed defects, each proved from the book's own arithmetic
 
-0. **An inverted modelling rule — the consequential one.** Fig. 14.7 (p. 327)
+0. **An inverted modelling rule: the consequential one.** Fig. 14.7 (p. 327)
    carries, inside its own axes box, *"When $N > 50$ the curve becomes
    symmetrical in which case use fig. 13-11 with $N = \tfrac12(\mathbf{D}/uL)$"*.
    The ratio is upside down. The book proves it against itself twice: its own
@@ -60,7 +60,7 @@ Two moments do not determine a conversion, and the page measures by how much.
    under that corrected form the annotation's threshold $N>50$ is exactly
    $\mathbf{D}/uL < 0.01$, the printed validity limit of the very figure it
    points at. Read literally the rule sends a reader at $N = 64$ to
-   $\mathrm{Pe} = 0.0078$ instead of 128 — 138 % wrong in conversion at
+   $\mathrm{Pe} = 0.0078$ instead of 128: 138 % wrong in conversion at
    $k\bar t = 2$, against 0.053 % de-inverted. Reported, not repaired.
 1. **A factor of two.** Section 14.2 (p. 328) prints, for equal final conversion,
    $V_{N\,\text{tanks}}/V_p = 1 + k\bar t_i = 1 + k\bar t/(2N)$. With the book's
@@ -78,7 +78,7 @@ Two moments do not determine a conversion, and the page measures by how much.
    Ohio River, and the Comment two lines below reads "$L \le 272$ **miles**". The
    value 272 is exactly right; only the unit is a slip.
 4. **"$\Delta(\sigma^2) = 1000 - 100 = 900$ s."** E14.4 (p. 333). A variance
-   carrying the unit of a time — the same class as (3), and the value is right.
+   carrying the unit of a time, the same class as (3), and the value is right.
 
 A sixth item is a typesetting ambiguity rather than a defect: Eq. 11's prefactor
 denominator is set as $(N-1)!\,\bar t_N$ with $N$ **lowered**, where $\bar t^{\,N}$
@@ -92,7 +92,7 @@ printed.
 
 - **The identity, and the correction of the chapter's own conversion rule.** $N$
   equal tanks in series *is* `construct_convflux_upwind` + `construct_div` on
-  $N$ cells, exactly — so the model's numerical diffusion is $u L/(2N)$ and the
+  $N$ cells, exactly, so the model's numerical diffusion is $u L/(2N)$ and the
   equivalent Péclet number is $\mathrm{Pe} = 2N$, which is Fig. 14.7's printed
   annotation the right way up (defect 0 above). With the rule de-inverted, the
   two models' first-order conversions agree to 0.71 % at worst for $N\ge16$,
@@ -135,7 +135,7 @@ stochastic and the seed is set anyway.
 - **Independence is assumed, not tested.** Levenspiel's own footnote flags laminar
   flow as a case where it fails; the additivity check would pass anyway.
 - **The equal-tank assumption cuts both ways.** The page cannot say the vessel *is*
-  four equal tanks either — only that the two chains are indistinguishable by the
+  four equal tanks either, only that the two chains are indistinguishable by the
   two-moment method.
 - **Fig. 14.3's $E_{\theta,\text{inf}}$ annotation is not settled.** The two
   inflection points have different heights (0.4267 and 0.6943 of the maximum at

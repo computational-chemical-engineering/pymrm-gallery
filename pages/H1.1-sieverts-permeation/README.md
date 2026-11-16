@@ -1,4 +1,4 @@
-# H1.1 — Sieverts-law hydrogen permeation through Pd membranes
+# H1.1: Sieverts-law hydrogen permeation through Pd membranes
 
 The permeation closure of Itoh (1987), *A membrane reactor using palladium*,
 AIChE Journal **33**(9) 1576–1578,

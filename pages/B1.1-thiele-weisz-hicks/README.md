@@ -1,4 +1,4 @@
-# B1.1 + B1.5 — Thiele modulus and the Weisz-Hicks non-isothermal pellet
+# B1.1 + B1.5: Thiele modulus and the Weisz-Hicks non-isothermal pellet
 
 How much of a catalyst pellet actually works. Thiele (1939) answered it exactly
 for the isothermal case; Weisz & Hicks (1962) showed that once the pellet can

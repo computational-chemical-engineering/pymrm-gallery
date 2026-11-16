@@ -1,4 +1,4 @@
-# G1.1 — Larkins two-phase concurrent flow in packed beds
+# G1.1: Larkins two-phase concurrent flow in packed beds
 
 **Source.** Larkins, R. P., White, R. R. and Jeffrey, D. W. (1961),
 *Two-Phase Concurrent Flow in Packed Beds*, AIChE Journal **7**(2) 231–239,

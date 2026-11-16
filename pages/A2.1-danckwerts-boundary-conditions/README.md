@@ -1,4 +1,4 @@
-# A2.1 — The Danckwerts boundary conditions (covers A2.2)
+# A2.1: The Danckwerts boundary conditions (covers A2.2)
 
 A tubular reactor with axial dispersion needs two boundary conditions, and the
 obvious pair is wrong. Danckwerts (1953) gave the right pair: a **flux** balance

@@ -1,4 +1,4 @@
-# H1.8 — The Robeson upper bound, revisited
+# H1.8: The Robeson upper bound, revisited
 
 From Robeson, L. M., *The upper bound revisited*, *J. Membr. Sci.* **320**(1–2)
 390–400 (2008),

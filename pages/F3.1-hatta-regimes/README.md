@@ -1,4 +1,4 @@
-# F3.1 — Hatta number and the gas-liquid reaction regimes
+# F3.1: Hatta number and the gas-liquid reaction regimes
 
 Whether a dissolving gas reacts in the film or in the bulk decides which
 absorber you should build. One number settles it.
