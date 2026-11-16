@@ -265,13 +265,15 @@ models:
     title: "Knudsen diffusion and the Bosanquet relation"
     description: >
       The Bosanquet interpolation 1/D = 1/D_K + 1/D_AB is an approximation, not
-      an identity — and its error is worst in the bulk-diffusion limit and
+      an identity, and its error is worst in the bulk-diffusion limit and
       vanishes under Knudsen control, the opposite of the usual instinct.
       Quantified against the dusty gas model across the whole transition: for a
       spherical pellet running A -> 2B at a Thiele modulus of 30 it overestimates
-      the effectiveness factor by 27 % under bulk control (grid-converged 26.96 %;
-      25.5 % at phi = 10, 27.7 % at phi = 100) and by 3e-5 % under Knudsen
-      control.
+      the effectiveness factor by 26.96 % <!-- claim: bosanquet_eta_error_bulk -->
+      at Kn = 1e-3 (25.49 % <!-- claim: bosanquet_eta_error_bulk_phi10 --> at
+      phi = 10, 27.43 % <!-- claim: bosanquet_eta_error_bulk_phi100 --> at
+      phi = 100) and by 2.97e-7 <!-- claim: bosanquet_eta_error_knudsen -->
+      (relative) at Kn = 1e6, all extrapolated to zero cell size.
     section: A
     status: published
     page: pages/A4.4-knudsen-bosanquet/
@@ -297,7 +299,7 @@ models:
       consulted, and Krishna & Wesselingh give no citation for Bosanquet
       himself. Nothing on the page derives from them.
     predicts: [Knudsen diffusivity, effective diffusivity in the transition regime, Bosanquet error vs Knudsen number, internal pellet pressure, effectiveness factor, Graham's law flux ratio]
-    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, clip_approach]
+    pymrm_api: [construct_grad, construct_div, construct_boundary_value_matrices, NumJac, newton, observed_orders]
     data: {tier: 6, method: table, status: complete}
     related: [A4.2, A4.3, A4.5, A4.6, B1.1]
 

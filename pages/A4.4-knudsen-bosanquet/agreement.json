@@ -1,49 +1,444 @@
 {
   "page": "A4.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "jackson_centre_pressure_dev": 1.0794110034684223e-06,
-    "jackson_nu2_solved_increase": 0.41421296488196724,
-    "jackson_dev_x_kn_spread_1e5_to_1e8": 0.00040455650065762683,
-    "jackson_invariance_spread": 3.569094730870859e-08,
-    "graham_law_residual": 1.6433243846282594e-12,
-    "graham_flux_ratio_dev": 2.0922152899061075e-11,
-    "graham_residual_mass_exponent_inverted": 0.15532773511645914,
-    "graham_residual_b_offdiag_flipped": 0.025905059419217242,
-    "scaling_slope_dev_knudsen": 0.007302724756715673,
-    "scaling_slope_dev_bulk": 0.06264240714455958,
-    "scaling_slope_dev_knudsen_T400": 0.008300445872723716,
-    "scaling_slope_dev_bulk_T400": 0.05580008675701019,
-    "scaling_slope_dev_knudsen_D1p3": 0.005636762981958476,
-    "scaling_slope_dev_bulk_D1p3": 0.07871117105713035,
-    "dgm_vs_eq109_correct_rho": 2.4313085630891283e-15,
-    "dgm_vs_eq110_wrong_rho": 0.9885302076936195,
-    "dgm_vs_eq109_b_offdiag_flipped": 0.9969019575944981,
-    "grid_convergence_order": 2.214799113177626,
-    "geometry_eta_vs_closed_form_dev": 1.6673912832665394e-06,
-    "geometry_wrong_index_mismatch": 0.04932995851550592,
-    "worst_newton_residual": 1.167569969061648e-10,
-    "sweep_thiele_modulus": 30.0,
-    "sweep_grid_cells": 600.0,
-    "bosanquet_eta_error_bulk": 0.2697286054409678,
-    "bosanquet_eta_error_bulk_converged": 0.2696005825408039,
-    "bosanquet_eta_error_bulk_grid_error": 0.00012802290016389328,
-    "bosanquet_eta_error_bulk_phi10": 0.2548742071554675,
-    "bosanquet_eta_error_bulk_phi100": 0.27659569566986786,
-    "bosanquet_eta_error_kn1": 0.14121097595472687,
-    "bosanquet_eta_error_knudsen": 2.970691528325631e-07,
-    "bosanquet_flux_error_isobaric_bulk": -0.4132964966928756,
-    "bosanquet_flux_error_isobaric_knudsen": -0.00036553500895475377,
-    "bosanquet_centre_pressure_bulk": 1.99941479875798,
-    "dgm_centre_pressure_bulk": 1.0002868961490385,
-    "eq85_scaling_dev": 0.0,
-    "closed_form_error_map_dev": 6.661338147750939e-16,
-    "bosanquet_p0_vs_closed_form": 2.815525590449397e-12,
-    "defect_eq85_mass_exponent": 0.9999982769789975,
-    "defect_eq85_mass_dropped": 0.4142125821269167,
-    "defect_stoichiometry": 0.4999997928922587,
-    "blind_b_offdiag_sign": 5.589098381886259e-07,
-    "blind_wrong_geometry": 4.2248870069094835e-07,
-    "blind_five_cell_grid": 6.647933454839716e-07,
-    "blind_unconverged_solve": 5.855751662453557e-07
+    "eq85_scaling_dev": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "ratios of eq. (85) at 4T, 4M and 4d0 against 2, 1/2 and 4"
+    },
+    "symbolic_nonzero_residuals": {
+      "kind": "exact",
+      "value": 0,
+      "note": "residuals of eq. (109) against eqs. (82), (110), the error form and Graham's ratio"
+    },
+    "graham_law_residual": {
+      "kind": "bound",
+      "value": 1.6433243846282594e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "identity of eqs. (82)+(85) at grad p = 0; Newton tolerance"
+    },
+    "graham_flux_ratio_dev": {
+      "kind": "bound",
+      "value": 2.0922152899061075e-11,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "solved N_B/N_A against -sqrt(M_A/M_B); Newton tolerance"
+    },
+    "isobaric_fv_vs_closed_form": {
+      "kind": "bound",
+      "value": 2.073801042890011e-06,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "second-order discretisation error of the 200-cell slab against eq. (109) integrated"
+    },
+    "bosanquet_flux_error_isobaric_bulk": {
+      "kind": "value",
+      "value": -0.4132977133992105,
+      "rtol": 1e-06
+    },
+    "bosanquet_flux_error_isobaric_knudsen": {
+      "kind": "value",
+      "value": -0.0003655350097537813,
+      "rtol": 1e-06
+    },
+    "isobaric_local_coefficient_error_bulk": {
+      "kind": "value",
+      "value": -0.6579116981333502,
+      "rtol": 1e-06
+    },
+    "jackson_centre_pressure_dev": {
+      "kind": "value",
+      "value": 1.0794110032463777e-06,
+      "rtol": 0.0001
+    },
+    "jackson_nu2_solved_increase": {
+      "kind": "value",
+      "value": 0.4142129648819677,
+      "rtol": 1e-06
+    },
+    "jackson_dev_x_kn_spread_1e5_to_1e8": {
+      "kind": "bound",
+      "value": 0.0004044777176710479,
+      "max": 0.01,
+      "basis": "theory",
+      "note": "the departure from sqrt(nu_B) falls as 1/Kn: dev x Kn constant from Kn = 1e5 to 1e8"
+    },
+    "bosanquet_p0_vs_closed_form": {
+      "kind": "bound",
+      "value": 2.8151925235420094e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "nu_B D_A/D_B is exact once c_A(0) -> 0 (complete conversion at phi = 30); Newton tolerance"
+    },
+    "bosanquet_eta_error_decreasing_in_kn": {
+      "kind": "exact",
+      "value": 18,
+      "margin": 6.423437357572226e-07,
+      "min_margin": 1e-09,
+      "note": "steps between consecutive Kn of the sweep, of 18, where the effectiveness error falls"
+    },
+    "bosanquet_eta_error_bulk": {
+      "kind": "value",
+      "value": 0.2695992002082812,
+      "rtol": 1e-06
+    },
+    "bosanquet_eta_error_bulk_phi10": {
+      "kind": "value",
+      "value": 0.25486289858999556,
+      "rtol": 1e-06
+    },
+    "bosanquet_eta_error_bulk_phi100": {
+      "kind": "value",
+      "value": 0.2742990860292722,
+      "rtol": 1e-06
+    },
+    "bosanquet_eta_error_kn1": {
+      "kind": "value",
+      "value": 0.14116129140129466,
+      "rtol": 1e-06
+    },
+    "bosanquet_eta_error_knudsen": {
+      "kind": "value",
+      "value": 2.970101381461436e-07,
+      "rtol": 0.0001
+    },
+    "bosanquet_eta_error_bulk_grid_error": {
+      "kind": "value",
+      "value": 0.00012940523268656356,
+      "rtol": 1e-06
+    },
+    "dgm_centre_pressure_bulk": {
+      "kind": "value",
+      "value": 1.0002869120599307,
+      "rtol": 1e-06
+    },
+    "bosanquet_centre_pressure_bulk": {
+      "kind": "value",
+      "value": 1.9994147987579902,
+      "rtol": 1e-06
+    },
+    "eta_extrapolation_worst": {
+      "kind": "bound",
+      "value": 6.075296851232125e-05,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "finest level (4800 cells) against the extrapolated value; second order"
+    },
+    "bosanquet_eta_error_grows_with_phi": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.004699885820991012,
+      "min_margin": 0.0001,
+      "note": "steps phi 10 -> 30 -> 100, of 2, where the bulk-limit error rises"
+    },
+    "closed_form_error_map_dev": {
+      "kind": "bound",
+      "value": 6.661338147750939e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "both sides built from d_scalar"
+    },
+    "scaling_slope_dev_knudsen": {
+      "kind": "value",
+      "value": 0.0009004386561919375,
+      "rtol": 0.0001
+    },
+    "scaling_rate_knudsen": {
+      "kind": "bound",
+      "value": -0.9995979267635277,
+      "min": -1.02,
+      "max": -0.98,
+      "basis": "theory",
+      "note": "departure of the local slope from 1 falls as 1/Kn under Knudsen control"
+    },
+    "scaling_slope_dev_bulk": {
+      "kind": "value",
+      "value": 0.0013012529130884687,
+      "rtol": 0.0001
+    },
+    "scaling_rate_bulk": {
+      "kind": "bound",
+      "value": 0.999333066554784,
+      "min": 0.98,
+      "max": 1.02,
+      "basis": "theory",
+      "note": "departure of the local slope from 0 falls as Kn under bulk control"
+    },
+    "scaling_slope_vs_closed_form": {
+      "kind": "bound",
+      "value": 1.5021206500875905e-08,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "finite-volume slopes (120 cells) against eq. (109) integrated; discretisation"
+    },
+    "scaling_slope_dev_knudsen_T400": {
+      "kind": "value",
+      "value": 0.0010254160566205428,
+      "rtol": 0.0001
+    },
+    "scaling_slope_dev_bulk_T400": {
+      "kind": "value",
+      "value": 0.0011427042008183008,
+      "rtol": 0.0001
+    },
+    "scaling_slope_dev_knudsen_D1p3": {
+      "kind": "value",
+      "value": 0.0006928095045424243,
+      "rtol": 0.0001
+    },
+    "scaling_slope_dev_bulk_D1p3": {
+      "kind": "value",
+      "value": 0.001690860384484516,
+      "rtol": 0.0001
+    },
+    "dgm_vs_eq109_correct_rho": {
+      "kind": "bound",
+      "value": 2.4313085630891283e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "N_B = -nu_B N_A on every face of the scheme; Newton tolerance"
+    },
+    "dgm_vs_eq110_wrong_rho": {
+      "kind": "bound",
+      "value": 0.9885302076936195,
+      "min": 0.1,
+      "basis": "chosen",
+      "note": "a wrong flux ratio is visible: 0.1 lies orders of magnitude above the identity gap"
+    },
+    "grid_convergence_order": {
+      "kind": "bound",
+      "value": 2.036206060322752,
+      "min": 1.95,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "order of the finest triple (1600 to 6400 cells); orders fall towards 2 along the ladder"
+    },
+    "grid_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 177242.5702016457,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the Newton tolerance"
+    },
+    "jackson_shift_b_offdiag_flipped": {
+      "kind": "bound",
+      "value": 9.814002810415445e-07,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "of the order of the finite-Kn departure (4e-7); the defects the check catches move it by more than 1e-2"
+    },
+    "jackson_shift_slab": {
+      "kind": "bound",
+      "value": 1.326938559031987e-12,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "geometry leaves the Knudsen-limit centre pressure unchanged with complete conversion"
+    },
+    "jackson_shift_five_cells": {
+      "kind": "bound",
+      "value": 8.502898951601168e-08,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "a five-cell grid leaves the Knudsen-limit centre pressure within the finite-Kn departure"
+    },
+    "jackson_invariance_spread": {
+      "kind": "bound",
+      "value": 3.563207862100626e-08,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "Jackson's result contains no geometry, phi or grid; 1e-6 is the finite-Kn departure's order"
+    },
+    "geometry_eta_vs_closed_form_dev": {
+      "kind": "bound",
+      "value": 1.6673912832665394e-06,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "second-order discretisation error of 600 cells against the classical closed forms"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "eq85_scaling_dev": [
+      "eq. (85) mass exponent +1/2: scalings"
+    ],
+    "symbolic_nonzero_residuals": [
+      "eq. (109) read with x_A/rho for rho x_A: symbolic"
+    ],
+    "graham_law_residual": [
+      "eq. (85) mass exponent +1/2: isobaric slab",
+      "eq. (87) off-diagonals x 0.9: isobaric slab"
+    ],
+    "graham_flux_ratio_dev": [
+      "eq. (85) mass exponent +1/2: isobaric slab",
+      "eq. (87) off-diagonals x 0.9: isobaric slab"
+    ],
+    "isobaric_fv_vs_closed_form": [
+      "eq. (87) off-diagonals x 0.9: isobaric slab"
+    ],
+    "bosanquet_flux_error_isobaric_bulk": [
+      "eq. (85) mass exponent +1/2: isobaric slab"
+    ],
+    "bosanquet_flux_error_isobaric_knudsen": [
+      "eq. (85) mass exponent +1/2: isobaric slab"
+    ],
+    "isobaric_local_coefficient_error_bulk": [
+      "eq. (85) mass exponent +1/2: isobaric slab"
+    ],
+    "jackson_centre_pressure_dev": [
+      "eq. (85) mass exponent +1/2: Jackson limit",
+      "eq. (85) mass dependence dropped: Jackson limit",
+      "source term with 1 B per A, fluxes with nu_B: Jackson limit",
+      "conversion incomplete (phi = 3): Jackson limit"
+    ],
+    "jackson_nu2_solved_increase": [
+      "eq. (85) mass exponent +1/2: Jackson limit",
+      "eq. (85) mass dependence dropped: Jackson limit",
+      "source term with 1 B per A, fluxes with nu_B: Jackson limit",
+      "conversion incomplete (phi = 3): Jackson limit"
+    ],
+    "jackson_dev_x_kn_spread_1e5_to_1e8": [
+      "eq. (85) mass exponent +1/2: Jackson limit",
+      "eq. (85) mass dependence dropped: Jackson limit",
+      "source term with 1 B per A, fluxes with nu_B: Jackson limit",
+      "conversion incomplete (phi = 3): Jackson limit"
+    ],
+    "jackson_shift_b_offdiag_flipped": [
+      "the three hidden defects at Kn = 1"
+    ],
+    "jackson_shift_slab": [
+      "the three hidden defects at Kn = 1",
+      "the three hidden defects at phi = 3"
+    ],
+    "jackson_shift_five_cells": [
+      "the three hidden defects at Kn = 1",
+      "the three hidden defects at phi = 3"
+    ],
+    "jackson_invariance_spread": [
+      "invariance over phi = 3, 40, 80"
+    ],
+    "bosanquet_p0_vs_closed_form": [
+      "source term with 1 B per A: sweep"
+    ],
+    "bosanquet_eta_error_decreasing_in_kn": [
+      "nu_B = 1/2: sweep",
+      "source term with 1 B per A: sweep"
+    ],
+    "bosanquet_eta_error_bulk": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "bosanquet_eta_error_bulk_phi10": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "bosanquet_eta_error_bulk_phi100": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "bosanquet_eta_error_kn1": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "bosanquet_eta_error_knudsen": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors"
+    ],
+    "bosanquet_eta_error_bulk_grid_error": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors",
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "dgm_centre_pressure_bulk": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors"
+    ],
+    "bosanquet_centre_pressure_bulk": [
+      "eq. (85) mass exponent +1/2: quoted errors",
+      "nu_B = 1/2: quoted errors"
+    ],
+    "eta_extrapolation_worst": [
+      "interior face composition from the left cell: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "bosanquet_eta_error_grows_with_phi": [
+      "nu_B = 1/2: quoted errors",
+      "quoted errors on ladders of 20 to 320 cells"
+    ],
+    "closed_form_error_map_dev": [
+      "eq. (109) read with x_A/rho: closed-form map"
+    ],
+    "scaling_slope_dev_knudsen": [
+      "pair diffusivities held at their 1 atm value: scaling",
+      "Knudsen diffusivity held at the named pore size: scaling",
+      "eq. (87) off-diagonals x 0.9 in the finite-volume slab: scaling"
+    ],
+    "scaling_rate_knudsen": [
+      "pair diffusivities held at their 1 atm value: scaling",
+      "Knudsen diffusivity held at the named pore size: scaling"
+    ],
+    "scaling_slope_dev_bulk": [
+      "pair diffusivities held at their 1 atm value: scaling",
+      "eq. (87) off-diagonals x 0.9 in the finite-volume slab: scaling"
+    ],
+    "scaling_rate_bulk": [
+      "pair diffusivities held at their 1 atm value: scaling",
+      "eq. (87) off-diagonals x 0.9 in the finite-volume slab: scaling"
+    ],
+    "scaling_slope_vs_closed_form": [
+      "eq. (87) off-diagonals x 0.9 in the finite-volume slab: scaling"
+    ],
+    "scaling_slope_dev_knudsen_T400": [
+      "pair diffusivities held at their 1 atm value: T and D substitutions"
+    ],
+    "scaling_slope_dev_bulk_T400": [
+      "pair diffusivities held at their 1 atm value: T and D substitutions"
+    ],
+    "scaling_slope_dev_knudsen_D1p3": [
+      "pair diffusivities held at their 1 atm value: T and D substitutions"
+    ],
+    "scaling_slope_dev_bulk_D1p3": [
+      "pair diffusivities held at their 1 atm value: T and D substitutions"
+    ],
+    "dgm_vs_eq109_correct_rho": [
+      "eq. (87) off-diagonals x 0.9: closures",
+      "eq. (109) read with x_A/rho: closures"
+    ],
+    "dgm_vs_eq110_wrong_rho": [
+      "wrong-ratio test at nu_B = 1, where eq. (110) is exact: closures"
+    ],
+    "grid_convergence_order": [
+      "interior face composition from the left cell: grid order"
+    ],
+    "grid_ladder_over_roundoff": [
+      "Newton tolerance 1e-12 -> 1e-6: grid ladder"
+    ],
+    "geometry_eta_vs_closed_form_dev": [
+      "closed form of the next geometry: geometry"
+    ]
+  },
+  "rows": {
+    "defined": 28,
+    "recorded": 28
   }
 }
