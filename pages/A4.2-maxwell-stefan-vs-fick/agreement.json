@@ -1,29 +1,537 @@
 {
   "page": "A4.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "ex1_fick_matrix_maxdev": 0.0102806977012818,
-    "ex2_identity_maxdev": 0.016518108497430104,
-    "b12_backsolve_magnitude_dev": 0.0021367521367520095,
-    "fick_matrix_independent_maxdev": 3.0672216010632692e-12,
-    "ms_independent_equivalence": 7.771561172376096e-16,
-    "unused_friction_balance": 4.489381717764758e-16,
-    "ms_fick_algebraic_identity": 8.881784197001252e-16,
-    "structural_break_unconverged_newton": 0.0017533676381536662,
-    "structural_break_wrong_nu": 0.9756097560975611,
-    "structural_blind_lost_decade": 1.3672645821458303e-14,
-    "mole_balance_error": 2.1632816939198067e-16,
-    "flux_nonuniformity": 1.9354963477142276e-14,
-    "timestep_sensitivity": 0.00014848833019553975,
-    "ms_elimination_spread": 3.885780586188048e-16,
-    "mean_abs_dev_ms": 0.0058826829695680805,
-    "mean_abs_dev_wilke": 0.031385046561790676,
-    "mean_abs_dev_wilke_elim_h2": 0.04307273703930611,
-    "mean_abs_dev_wilke_elim_n2": 0.014425589246090659,
-    "n2_diff_err_ms": 0.013821036277773225,
-    "n2_diff_err_wilke": 0.09072152578046487,
-    "n2_diff_err_wilke_elim_h2": 0.09028344228275977,
-    "n2_diff_err_wilke_elim_n2": 0.03392986361484397,
-    "wilke_closure_defect": 1.0484314529847598,
-    "frozen_matrix_ratio_error": 0.06727202871057487
+    "ex1_fick_matrix_maxdev": {
+      "kind": "value",
+      "value": 0.0102806977012818,
+      "rtol": 1e-06
+    },
+    "ex1_b_maxdev": {
+      "kind": "value",
+      "value": 0.03532841708111781,
+      "rtol": 1e-06
+    },
+    "ex1_d21_over_d22": {
+      "kind": "value",
+      "value": -1.7790262172284645,
+      "rtol": 1e-06
+    },
+    "ex2_identity_maxdev": {
+      "kind": "value",
+      "value": 0.016518108497430104,
+      "rtol": 1e-06
+    },
+    "ex2_as_printed_maxdev": {
+      "kind": "value",
+      "value": 0.7505905508482458,
+      "rtol": 1e-06
+    },
+    "ex2_rival_b21_maxdev": {
+      "kind": "value",
+      "value": 3.0157113364873003,
+      "rtol": 1e-06
+    },
+    "b12_backsolve_magnitude_dev": {
+      "kind": "value",
+      "value": 0.0021367521367520095,
+      "rtol": 1e-06
+    },
+    "b12_backsolved": {
+      "kind": "value",
+      "value": 35923076.92307693,
+      "rtol": 1e-06
+    },
+    "d12_backsolved": {
+      "kind": "value",
+      "value": 3.375120540019286e-09,
+      "rtol": 1e-06
+    },
+    "d13_backsolved": {
+      "kind": "value",
+      "value": 2.5067489394523714e-09,
+      "rtol": 1e-06
+    },
+    "d23_backsolved": {
+      "kind": "value",
+      "value": 1.6611295681063122e-09,
+      "rtol": 1e-06
+    },
+    "fick_matrix_independent_maxdev": {
+      "kind": "bound",
+      "value": 3.0672216010632692e-12,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "two linear-algebra routes to one matrix; round-off of order cond([B]) eps"
+    },
+    "ms_independent_equivalence": {
+      "kind": "bound",
+      "value": 1.5543122344752192e-15,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "two routes, each solve converged to a 1e-12 Newton step"
+    },
+    "ms_fick_algebraic_identity": {
+      "kind": "bound",
+      "value": 1.4432899320127035e-15,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "[B] solve against its adjugate over determinant"
+    },
+    "unused_friction_balance": {
+      "kind": "bound",
+      "value": 4.489381717764758e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "sum_i grad x_i = 0 makes the n balances dependent"
+    },
+    "mole_balance_error": {
+      "kind": "bound",
+      "value": 7.787814098111305e-16,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "J(0) = J(L) to the capillary solve's residual closes the bulb balances"
+    },
+    "flux_nonuniformity": {
+      "kind": "bound",
+      "value": 1.9354963477142276e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "div J = 0 makes J uniform; the spread is the Newton solve's residual"
+    },
+    "structural_blind_lost_decade": {
+      "kind": "bound",
+      "value": 1.3672645821458303e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "div J = 0 makes J uniform; the spread is the Newton solve's residual"
+    },
+    "j2_over_j1_full": {
+      "kind": "value",
+      "value": -0.4675081140617449,
+      "rtol": 1e-06
+    },
+    "lost_decade_j2_over_j1": {
+      "kind": "value",
+      "value": 0.3898905002548827,
+      "rtol": 1e-06
+    },
+    "frozen_matrix_ratio_error": {
+      "kind": "value",
+      "value": 0.06727202871057487,
+      "rtol": 1e-06
+    },
+    "wilke_closure_defect": {
+      "kind": "value",
+      "value": 1.0484314529847598,
+      "rtol": 1e-06
+    },
+    "grid_error_ratio_nz40": {
+      "kind": "value",
+      "value": 3.319047055589366e-05,
+      "rtol": 1e-06
+    },
+    "grid_order": {
+      "kind": "bound",
+      "value": 2.0337475168406898,
+      "min": 1.95,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "order farthest from 2 on the ladder; central face gradients and mean face composition: second order"
+    },
+    "grid_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 747258.8411031921,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative successive difference over the Newton tolerance"
+    },
+    "time_order": {
+      "kind": "bound",
+      "value": 0.9193770611571949,
+      "min": 0.85,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "order farthest from 1 on the ladder; backward Euler: first order, approached from below as the coarsest triple is pre-asymptotic"
+    },
+    "time_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 22812.253394483007,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over n_steps times the Newton tolerance"
+    },
+    "feature_time_order": {
+      "kind": "bound",
+      "value": 0.9973461436034868,
+      "min": 0.85,
+      "max": 1.15,
+      "basis": "theory",
+      "note": "order farthest from 1 over point O, barrier time, barrier difference and hydrogen excursion read in time; backward Euler: first order"
+    },
+    "feature_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 214643.7350483872,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference of the four features over n_steps times the Newton tolerance"
+    },
+    "timestep_sensitivity": {
+      "kind": "value",
+      "value": 0.0001484883301957618,
+      "rtol": 1e-06
+    },
+    "ms_elimination_spread": {
+      "kind": "bound",
+      "value": 2.654126918244515e-16,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "three orderings of one physics, each solve converged to a 1e-12 Newton step"
+    },
+    "mean_abs_dev_wilke_elim_h2": {
+      "kind": "value",
+      "value": 0.04307273703930592,
+      "rtol": 1e-06
+    },
+    "mean_abs_dev_wilke_elim_n2": {
+      "kind": "value",
+      "value": 0.014425589246090612,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_wilke_elim_h2": {
+      "kind": "value",
+      "value": 0.09028344228275922,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_wilke_elim_n2": {
+      "kind": "value",
+      "value": 0.03392986361484381,
+      "rtol": 1e-06
+    },
+    "n_exp_points": {
+      "kind": "exact",
+      "value": 28,
+      "structural": true,
+      "note": "rows of the A4.9 CSV the comparison uses"
+    },
+    "n_n2_points": {
+      "kind": "exact",
+      "value": 5,
+      "structural": true,
+      "note": "rows of the A4.9 CSV the comparison uses"
+    },
+    "n_paired_points": {
+      "kind": "exact",
+      "value": 22,
+      "structural": true,
+      "note": "rows of the A4.9 CSV the comparison uses"
+    },
+    "n_paired_n2_points": {
+      "kind": "exact",
+      "value": 4,
+      "structural": true,
+      "note": "rows of the A4.9 CSV the comparison uses"
+    },
+    "mean_abs_dev_ms": {
+      "kind": "value",
+      "value": 0.005882682969568039,
+      "rtol": 1e-06
+    },
+    "mean_abs_dev_wilke": {
+      "kind": "value",
+      "value": 0.03138504656179077,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_ms": {
+      "kind": "value",
+      "value": 0.013821036277773124,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_wilke": {
+      "kind": "value",
+      "value": 0.09072152578046519,
+      "rtol": 1e-06
+    },
+    "mean_abs_dev_wilke_minus_ms": {
+      "kind": "value",
+      "value": 0.03245755366282894,
+      "rtol": 1e-06
+    },
+    "mean_abs_dev_wilke_minus_ms_se": {
+      "kind": "value",
+      "value": 0.005768906888190805,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_wilke_minus_ms": {
+      "kind": "value",
+      "value": 0.09612561187836507,
+      "rtol": 1e-06
+    },
+    "n2_diff_err_wilke_minus_ms_se": {
+      "kind": "value",
+      "value": 0.014987522004612858,
+      "rtol": 1e-06
+    },
+    "n2_point_o_time_h": {
+      "kind": "value",
+      "value": 0.9588093211435438,
+      "rtol": 1e-06
+    },
+    "n2_barrier_time_h": {
+      "kind": "value",
+      "value": 7.504011938892975,
+      "rtol": 1e-06
+    },
+    "n2_barrier_dx": {
+      "kind": "value",
+      "value": 0.12308170461164855,
+      "rtol": 1e-06
+    },
+    "h2_eff_excursion": {
+      "kind": "value",
+      "value": 0.04862013333219837,
+      "rtol": 1e-06
+    },
+    "mean_abs_dev_wilke_minus_ms_z": {
+      "kind": "bound",
+      "value": 5.62629182475989,
+      "min": 3.0,
+      "basis": "chosen",
+      "note": "verdict: Wilke worse than Maxwell-Stefan by at least three standard errors"
+    },
+    "n2_diff_err_wilke_minus_ms_z": {
+      "kind": "bound",
+      "value": 6.413709474373385,
+      "min": 3.0,
+      "basis": "chosen",
+      "note": "verdict: Wilke worse than Maxwell-Stefan by at least three standard errors"
+    },
+    "wilke_n2_dx_above_zero": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.011640851616518677,
+      "min_margin": 0.001,
+      "note": "Wilke N2 difference (CO2 eliminated) never reaches zero"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "ex1_b_maxdev": [
+      "ideal example with D(H2-CO2) and D(N2-CO2) swapped"
+    ],
+    "ex1_fick_matrix_maxdev": [
+      "ideal example with D(H2-CO2) and D(N2-CO2) swapped"
+    ],
+    "ex1_d21_over_d22": [
+      "ideal example with D(H2-CO2) and D(N2-CO2) swapped"
+    ],
+    "d12_backsolved": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "d13_backsolved": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "d23_backsolved": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "b12_backsolved": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "b12_backsolve_magnitude_dev": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "ex2_identity_maxdev": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "ex2_as_printed_maxdev": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "ex2_rival_b21_maxdev": [
+      "non-ideal example with B21 read as -1.07e+08"
+    ],
+    "fick_matrix_independent_maxdev": [
+      "[B] route with D(H2-N2) x 1.1, friction route unchanged"
+    ],
+    "j2_over_j1_full": [
+      "D(H2-N2) a decade low (steady capillary)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "flux_nonuniformity": [
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)"
+    ],
+    "structural_blind_lost_decade": [
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)"
+    ],
+    "lost_decade_j2_over_j1": [
+      "D(H2-N2) a decade low (steady capillary)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "frozen_matrix_ratio_error": [
+      "D(H2-N2) a decade low (steady capillary)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "wilke_closure_defect": [
+      "D(H2-N2) a decade low (steady capillary)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "unused_friction_balance": [
+      "unused friction balance evaluated with D(N2-CO2) x 1.1"
+    ],
+    "grid_order": [
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "grid_ladder_over_roundoff": [
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "capillary Newton tolerance 1e-12 -> 1e-5 (grid ladder)"
+    ],
+    "grid_error_ratio_nz40": [
+      "D(H2-N2) a decade low (steady capillary)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (steady capillary)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (steady capillary)",
+      "interior face composition from the left cell (first order)"
+    ],
+    "ms_fick_algebraic_identity": [
+      "explicit [D] and friction routes with D(H2-N2) x 1.1, [B] route unchanged"
+    ],
+    "ms_independent_equivalence": [
+      "explicit [D] and friction routes with D(H2-N2) x 1.1, [B] route unchanged"
+    ],
+    "mole_balance_error": [
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "n_exp_points": [],
+    "n_n2_points": [],
+    "n_paired_points": [],
+    "n_paired_n2_points": [],
+    "mean_abs_dev_ms": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "mean_abs_dev_wilke": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "n2_diff_err_ms": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "n2_diff_err_wilke": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "mean_abs_dev_wilke_minus_ms": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "mean_abs_dev_wilke_minus_ms_se": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "mean_abs_dev_wilke_minus_ms_z": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "n2_diff_err_wilke_minus_ms": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "n2_diff_err_wilke_minus_ms_se": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "n2_diff_err_wilke_minus_ms_z": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)",
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "wilke_n2_dx_above_zero": [
+      "Wilke run with N2 eliminated (scalar law on H2 and CO2)"
+    ],
+    "n2_point_o_time_h": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "n2_barrier_time_h": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "n2_barrier_dx": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "h2_eff_excursion": [
+      "D(H2-N2) a decade low (two-bulb transient)",
+      "all pair diffusivities equal to D(H2-N2) (Wilke exact) (two-bulb transient)",
+      "construct_div with nu = 1 (cylinder) instead of 0 (two-bulb transient)"
+    ],
+    "ms_elimination_spread": [
+      "orderings run without reordering the pair diffusivities"
+    ],
+    "mean_abs_dev_wilke_elim_h2": [
+      "orderings run without reordering the pair diffusivities"
+    ],
+    "mean_abs_dev_wilke_elim_n2": [
+      "orderings run without reordering the pair diffusivities"
+    ],
+    "n2_diff_err_wilke_elim_h2": [
+      "orderings run without reordering the pair diffusivities"
+    ],
+    "n2_diff_err_wilke_elim_n2": [
+      "orderings run without reordering the pair diffusivities"
+    ],
+    "feature_time_order": [
+      "bulb march by the trapezoidal rule (theta = 0.5)"
+    ],
+    "feature_ladder_over_roundoff": [
+      "bulb march by the trapezoidal rule (theta = 0.5)",
+      "capillary Newton tolerance 1e-12 -> 1e-8 (time ladder)"
+    ],
+    "time_order": [
+      "bulb march by the trapezoidal rule (theta = 0.5)"
+    ],
+    "timestep_sensitivity": [
+      "bulb march by the trapezoidal rule (theta = 0.5)"
+    ],
+    "time_ladder_over_roundoff": [
+      "bulb march by the trapezoidal rule (theta = 0.5)",
+      "capillary Newton tolerance 1e-12 -> 1e-8 (time ladder)"
+    ]
   }
 }

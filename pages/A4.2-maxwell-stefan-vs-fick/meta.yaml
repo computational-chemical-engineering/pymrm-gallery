@@ -14,73 +14,75 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 33
+pymrm_min_version: "3.4.0"
+runtime_seconds: 136
 datasets:
   - krishna-wesselingh-1997-worked-examples.csv
   - duncan-toor-1962-run1.csv                 # loaded cross-page from A4.9
 
 validation:
-  - both printed matrices of the ideal-gas worked example (p. 872) recomputed from the printed diffusivities via eqs. 26-27, [D] to 1.03% max per element (print-rounding limited)
-  - the non-ideal example's printed triple closes on the identity [D] = [B]^-1 [Gamma] to 1.65% per element once a provable sign typo in B12 is corrected; with the sign as printed, D12 is out by 75%, and the rival hypothesis that B21 carries the typo fails at 302%
-  - independent implementation check - the raw Maxwell-Stefan friction system with the sum(J)=0 bootstrap, sharing no code with the [B] route and eliminating no species - reproduces [D](x) to 3.1e-12 over 200 random ternary compositions and the whole two-bulb transient to 7.8e-16; the friction balance the solve never used vanishes to 4.5e-16
-  - STRUCTURAL - closed-cell species mole balance 2.2e-16 and capillary flux uniformity 1.9e-14 are ONE algebraic identity, copied from A4.9 along with its dataset (the only two pages carrying these metric names). solve_capillary drives div(J) to tol=1e-12 with construct_div(nu=0), so on a Cartesian grid the uniformity number IS the converged Newton residual, and J_0 = J_L then forces the mole balance. Neither can detect a wrong diffusivity - a lost decade in D(H2-N2) flips J2/J1 outright while both stay at machine zero. They do detect an unconverged solve and a wrong nu. Both sit below check_agreement.py's ABS_FLOOR = 1e-12 and are not compared by CI. Nothing on this page rests on them; checks 3 and 6 carry the argument
-  - time-step study - N2 shift on halving the time step 1.5e-4
-  - Maxwell-Stefan is invariant to 3.9e-16 under which species is eliminated; the Wilke scalar closure is not (mean deviation 1.44-4.31 mole % over the three orderings)
-  - mean absolute deviation against the cross-page A4.9 measurements 0.59 mole % (Maxwell-Stefan) vs 3.14 mole % (Wilke, CO2 eliminated); N2 bulb-difference 1.38 vs 9.07 mole %
+  - "BOTH WORKED EXAMPLES RECOMPUTED (p. 871-872): the ideal-gas [D] from the printed diffusivities via eqs. 26-27 to 1.03 % <!-- claim: ex1_fick_matrix_maxdev --> per element (print-rounding limited); the non-ideal triple closes on [D] = [B]^-1 [Gamma] to 1.65 % <!-- claim: ex2_identity_maxdev --> once the sign of the printed B12 is corrected. As printed it misses by 75.1 % <!-- claim: ex2_as_printed_maxdev -->; the rival hypothesis that B21 carries the typo misses by 301.6 % <!-- claim: ex2_rival_b21_maxdev -->."
+  - "INDEPENDENT IMPLEMENTATION: the raw Maxwell-Stefan friction system with the sum(J) = 0 bootstrap, sharing no code with the [B] route and eliminating no species, reproduces [D](x) over a fixed random sample of ternary compositions to at most 1e-9 <!-- claim: fick_matrix_independent_maxdev --> and the whole two-bulb transient to at most 1e-10 <!-- claim: ms_independent_equivalence -->; the friction balance the solve never used vanishes to at most 1e-12 <!-- claim: unused_friction_balance -->."
+  - "SOLVE CHECKS, NOT PHYSICS CHECKS: the closed-cell mole balance (at most 1e-10 <!-- claim: mole_balance_error -->) and the capillary flux uniformity (at most 1e-10 <!-- claim: flux_nonuniformity -->) are one identity: the uniformity is the converged Newton solve's residual, and J(0) = J(L) closes the balance. With D(H2-N2) a decade low the uniformity stays at round-off (at most 1e-10 <!-- claim: structural_blind_lost_decade -->) while J2/J1 goes from -0.468 <!-- claim: j2_over_j1_full --> to +0.390 <!-- claim: lost_decade_j2_over_j1 -->. A wrong construct_div geometry is what they catch (defect table)."
+  - "NUMERICS SPLIT: grid order 2.03 <!-- claim: grid_order --> at worst on the steady capillary (nested grids, successive differences); time order 0.92 <!-- claim: time_order --> at worst for the backward-Euler bulb march on a step ladder at fixed step times; halving the production step moves bulb-1 N2 by 1.48e-4 <!-- claim: timestep_sensitivity -->."
+  - "Maxwell-Stefan is invariant to the eliminated species to at most 1e-10 <!-- claim: ms_elimination_spread -->; the Wilke scalar closure is not: mean deviation from 1.44 % <!-- claim: mean_abs_dev_wilke_elim_n2 --> (N2 eliminated) to 4.31 % <!-- claim: mean_abs_dev_wilke_elim_h2 --> (H2 eliminated)."
+  - "AGAINST THE CROSS-PAGE A4.9 MEASUREMENTS (28 <!-- claim: n_exp_points --> points): mean absolute deviation 0.59 % <!-- claim: mean_abs_dev_ms --> (mole %, Maxwell-Stefan) against 3.14 % <!-- claim: mean_abs_dev_wilke --> (Wilke, CO2 eliminated), paired difference over the 22 <!-- claim: n_paired_points --> points after t = 0 3.25 % <!-- claim: mean_abs_dev_wilke_minus_ms --> with standard error 0.58 % <!-- claim: mean_abs_dev_wilke_minus_ms_se -->; N2 bulb difference 1.38 % <!-- claim: n2_diff_err_ms --> against 9.07 % <!-- claim: n2_diff_err_wilke --> over 5 <!-- claim: n_n2_points --> paired times, paired difference over the 4 <!-- claim: n_paired_n2_points --> times after t = 0 9.61 % <!-- claim: n2_diff_err_wilke_minus_ms --> with standard error 1.50 % <!-- claim: n2_diff_err_wilke_minus_ms_se -->."
+  - "A DEFECT-INJECTION TABLE: every claim fails at least one row (pair diffusivities, printed matrix elements, construct_div geometry, face-composition rule, Newton tolerance, time scheme, species ordering)."
 
 adds: >
-  The transport solver is the A4.9 page's, reused, and the mean deviation
-  against the measurements is therefore A4.9's published number by
-  construction. What the page adds is at the formulation level. (1) The eq.-27
+  The transport solver is the A4.9 page's, so the mean deviation against the
+  measurements is A4.9's published number by construction. pymrm supplies the
+  capillary solve (construct_grad with shapes_d, construct_boundary_value_matrices,
+  construct_div, NumJac, newton) and pymrm.checks the refinement ladders and the
+  roots in time. What the page adds is at the formulation level. (1) The eq.-27
   equivalence tested by a route that could have failed: coding [B] twice
   cannot detect an error inside [B], so the page solves the raw friction
-  balances with the sum(J)=0 bootstrap - no [B], no elimination, no shared
-  code - and recovers [D](x) and the whole transient to machine precision.
-  (2) The structure of the scalar closure's failure, rather than its score
-  (A4.9 already publishes 9.1 vs 1.4 mole % on the nitrogen signal; this page
-  reaches 9.07 vs 1.38 by an independent route, a full local-composition Wilke
-  solve instead of a frozen-[D] relaxation): a species carrying a positive
-  scalar diffusivity can never cross zero, the three scalar fluxes violate the
-  equimolar closure by 105% of the largest flux, and the scalar answer depends
-  on which species is eliminated (1.44-4.31 mole %) while Maxwell-Stefan is
-  invariant to 1e-16. (3) The review's Fig.-4 sketch of the effective D2
-  visiting +/-infinity, negative values and zero, computed as an actual curve
-  with the regimes timestamped. (4) A sign typo in the printed B12 of the
-  non-ideal example settled non-circularly - back-solving the authors'
-  unrounded diffusivities from B11, B21, B22 alone predicts B12 = +0.0359e9,
-  the printed magnitude with the opposite sign. (5) The review's
-  frozen-matrix flux estimate priced at 6.7% in the initial flux ratio.
+  balances with the sum(J) = 0 bootstrap (no [B], no elimination, no shared
+  code) and recovers [D](x) and the whole transient to round-off. (2) The
+  structure of the scalar closure's failure, rather than its score: a species
+  carrying a positive scalar diffusivity can never cross zero, the three scalar
+  fluxes violate the equimolar closure by 104.8 % <!-- claim: wilke_closure_defect -->
+  of the largest flux, and the scalar answer depends on which species is
+  eliminated while Maxwell-Stefan does not. (3) The review's Fig.-4 sketch of
+  the effective D2 visiting +/-infinity, negative values and zero, computed as
+  an actual curve, with point O at 0.959 <!-- claim: n2_point_o_time_h --> h and
+  the barrier at 7.504 <!-- claim: n2_barrier_time_h --> h root-found in time and
+  extrapolated to zero step.
+  (4) A sign typo in the printed B12 of the non-ideal example settled
+  non-circularly: back-solving the authors' unrounded diffusivities from B11,
+  B21, B22 alone predicts B12 = +0.0359e9 <!-- claim: b12_backsolved -->, the
+  printed magnitude to 0.21 % <!-- claim: b12_backsolve_magnitude_dev --> with
+  the opposite sign. (5) The review's frozen-matrix flux estimate priced at
+  6.7 % <!-- claim: frozen_matrix_ratio_error --> in the initial flux ratio.
 
 agreement: >
-  Worked examples: [D] of the ideal-gas example to 1.03% max per element,
-  the non-ideal identity to 1.65% (both limited by the 2-3 significant
-  figures printed). Internal: the independent friction-system route agrees
-  with the [B] route to 7.8e-16 over the transient and 3.1e-12 on [D] across
-  the composition triangle; mole balance 2.2e-16; elimination invariance
-  3.9e-16. Against the cross-page A4.9 measurements: 0.59 mole % mean
-  (Maxwell-Stefan) with nothing fitted - this is the same computation A4.9
-  published, on the same data with the same solver, so it necessarily
-  reproduces A4.9's figure and confirms the port is faithful rather than
-  corroborating it independently.
+  Worked examples: [D] of the ideal-gas example to
+  1.03 % <!-- claim: ex1_fick_matrix_maxdev --> per element, the non-ideal
+  identity to 1.65 % <!-- claim: ex2_identity_maxdev --> (both limited by the
+  figures printed). Internal: the independent friction-system route agrees with
+  the [B] route to at most 1e-10 <!-- claim: ms_independent_equivalence --> over
+  the transient. Against the cross-page A4.9 measurements:
+  0.59 % <!-- claim: mean_abs_dev_ms --> mean absolute deviation (mole %,
+  Maxwell-Stefan) with nothing fitted; this is the same computation A4.9
+  publishes, on the same data with the same solver, so it reproduces A4.9's
+  figure and confirms the port rather than corroborating it independently.
 
 caveats: >
-  The page's own dataset is tier 6 - the review authors' printed computations,
+  The page's own dataset is tier 6, the review authors' printed computations,
   not measurements. The experimental comparison uses the tier-4 digitised
   Duncan & Toor dataset published with page A4.9, loaded cross-page; its
-  provenance and +/-0.005 mole-fraction error live in that page's sidecar.
-  models.yaml therefore records data.tier 4 with own_tier 6 and
-  tier_from A4.9, per the cross-page rule in docs/data-strategy.md 3a
-  (changed 2026-08-02; it previously read tier 6, which hid the page from a
-  data.tier 4 filter even though its headline experimental deviations rest on
-  those measurements). Tier 4 records the provenance of the numbers compared
-  against, not a claim of independent validation - see the sentence above.
-  That error is 0.5 mole %, so the 0.59 mole % Maxwell-Stefan agreement sits
-  at the digitisation floor and must not be read as tighter than the data.
-  Every Wilke number is conditioned on which species is eliminated; the page
-  states the choice (CO2) wherever one is quoted and reports the full spread.
-  The non-ideal (liquid) example is verified as matrix algebra only; no
-  non-ideal transport problem is solved. The review's eq. (3) swaps Duncan &
-  Toor's bulb labels; this page follows the original labelling. B12 of the
-  non-ideal example is stored as printed and corrected in the open, with both
-  alternatives shown.
+  provenance and digitisation error live in that page's sidecar and are printed
+  on the page. models.yaml therefore records data.tier 4 with own_tier 6 and
+  tier_from A4.9, per the cross-page rule in docs/data-strategy.md 3a. Tier 4
+  records the provenance of the numbers compared against, not a claim of
+  independent validation. The digitisation error is about as large as the
+  Maxwell-Stefan mean deviation, so that agreement sits at the digitisation
+  floor and must not be read as tighter than the data. The standard errors of
+  the paired differences treat the points as independent; points along one
+  trajectory are correlated. Every Wilke number is conditioned on which species
+  is eliminated; the page states the choice (CO2) wherever one is quoted and
+  reports the full spread. The non-ideal (liquid) example is verified as matrix
+  algebra only; no non-ideal transport problem is solved. The review's eq. (3)
+  swaps Duncan & Toor's bulb labels; this page follows the original labelling.
+  B12 of the non-ideal example is stored as printed and corrected in the open,
+  with both alternatives shown.
