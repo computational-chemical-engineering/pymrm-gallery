@@ -1,44 +1,632 @@
 {
   "page": "A4.3",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "collocation_worst_dev": 8.69316912899265e-06,
-    "collocation_convergence_order": 2.0048364108051535,
-    "eq103_viscous_dev": 1.0402789740737717e-13,
-    "eq109_collapse_worst": 1.192379528447418e-13,
-    "p887_exponent_worst_dev": 0.020544787232489387,
-    "free_molecule_limit_dev": 0.00017613106928204836,
-    "maxwell_stefan_limit_dev": 7.949491640180106e-06,
-    "graham_residual_worst": 2.4955347998700506e-11,
-    "pressure_uniformity": 5.393528574287583e-16,
-    "jackson_sqrt_nu_worst": 0.00015021618395016922,
-    "knudsen_closed_form_worst": 0.0001558694405651151,
-    "visc_group_closed_form_dev": 2.220446049250313e-16,
-    "bmatrix_wall_free_null_vector": 1.3142795070058599e-16,
-    "bmatrix_column_dominance_margin": 0.9169744400850874,
-    "uphill_threshold_nm_at_x_0p49": 212.21042302895358,
-    "uphill_threshold_range_over_window": 4650.334000492599,
-    "uphill_window_halfwidth_1nm": 0.00010947001498551323,
-    "uphill_window_halfwidth_1mm": 0.017654172943708968,
-    "uphill_window_width_slope_in_d0": 0.9759065321863178,
-    "uphill_at_equal_end_compositions": 1.0,
-    "uphill_threshold_grid_spread": 7.669468216287001e-06,
-    "inert_concentration_variation_kn1": 0.2254935555295654,
-    "inert_scalar_closure_variation": 0.0,
-    "viscous_relief_1nm_pore": 9.20636788842577e-05,
-    "viscous_relief_1um_pore": 0.0062349947034811,
-    "viscous_relief_worst_over_pore_sizes": 0.006309995673849711,
-    "viscous_relief_worst_at_kn": 0.24693887663632635,
-    "viscous_relief_fixed_kn_artefact": 0.06901778167632677,
-    "grid_order": 2.0277969769996917,
-    "worst_newton_residual": 1.7894482106875642e-08,
-    "break_b_offdiag_sign": 19.415972734891426,
-    "break_knudsen_deleted_singular": 1.0,
-    "break_mass_exponent": 0.996740032364375,
-    "break_scalar_closure": 2.913225370813321,
-    "break_eq103_no_viscous": 0.024459634034077915,
-    "break_eq103_poiseuille_8": 0.07337890209846254,
-    "break_eq85_prefactor_v1": 2.7521897567606146e-06,
-    "break_eq85_prefactor_v2": 2.8110846983508964e-13,
-    "break_eq85_prefactor_v3": 8.179822319065957e-14
+    "bmatrix_wall_free_null_vector": {
+      "kind": "bound",
+      "value": 1.3142795070058599e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "column sums of the wall-free [B^e] vanish by D_ij = D_ji; round-off"
+    },
+    "bmatrix_colsum_knudsen_dev": {
+      "kind": "bound",
+      "value": 4.440892098500626e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "column sums of [B^e] equal 1/D^e_jM; round-off"
+    },
+    "bmatrix_column_dominance_margin": {
+      "kind": "bound",
+      "value": 0.9169744400850874,
+      "min": 0.001,
+      "basis": "chosen",
+      "note": "column sum over B_jj is positive by eq. (87); 1e-3 lies far below every draw"
+    },
+    "symbolic_nonzero_residuals": {
+      "kind": "exact",
+      "value": 0,
+      "note": "residuals of eqs. (105), (107), (103) and the friction sum"
+    },
+    "inert_concentration_variation_kn0p1": {
+      "kind": "value",
+      "value": 0.45122787487838,
+      "rtol": 1e-06
+    },
+    "inert_concentration_variation_kn1": {
+      "kind": "value",
+      "value": 0.24427646406839743,
+      "rtol": 1e-06
+    },
+    "inert_concentration_variation_kn10": {
+      "kind": "value",
+      "value": 0.045077695635312054,
+      "rtol": 1e-06
+    },
+    "inert_scalar_closure_variation": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "zero flux and a finite positive D_C force a flat profile"
+    },
+    "inert_flux_ratio": {
+      "kind": "bound",
+      "value": 1.0458684196238764e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "the inert's flux vanishes by conservation; the gap is the Newton tolerance"
+    },
+    "uphill_window_lower_1mm": {
+      "kind": "value",
+      "value": 0.48234582706532736,
+      "rtol": 1e-06
+    },
+    "uphill_window_upper_1mm": {
+      "kind": "value",
+      "value": 0.5002314298543666,
+      "rtol": 1e-06
+    },
+    "uphill_threshold_nm_at_x_0p483": {
+      "kind": "value",
+      "value": 4245.697962006227,
+      "rtol": 1e-06
+    },
+    "uphill_threshold_nm_at_x_0p49": {
+      "kind": "value",
+      "value": 212.21042302956246,
+      "rtol": 1e-06
+    },
+    "uphill_threshold_nm_at_x_0p4999": {
+      "kind": "value",
+      "value": 0.9129877470833605,
+      "rtol": 1e-06
+    },
+    "uphill_threshold_range_over_window": {
+      "kind": "value",
+      "value": 4650.334000176425,
+      "rtol": 1e-06
+    },
+    "kn_star_at_x_0p49": {
+      "kind": "value",
+      "value": 2.4393455768547576,
+      "rtol": 1e-06
+    },
+    "uphill_at_equal_end_compositions": {
+      "kind": "exact",
+      "value": 25,
+      "margin": 57.71387647993489,
+      "min_margin": 10.0,
+      "note": "pore diameters, of 25, where |N_N2/N_H2| exceeds 1e-6 at equal ends"
+    },
+    "uphill_window_halfwidth_1nm": {
+      "kind": "value",
+      "value": 0.00010947001499100883,
+      "rtol": 1e-06
+    },
+    "uphill_window_halfwidth_1um": {
+      "kind": "value",
+      "value": 0.015173510717568062,
+      "rtol": 1e-06
+    },
+    "uphill_window_halfwidth_1mm": {
+      "kind": "value",
+      "value": 0.01765417293467264,
+      "rtol": 1e-06
+    },
+    "uphill_window_width_slope_in_d0": {
+      "kind": "value",
+      "value": 0.9759065321611871,
+      "rtol": 1e-06
+    },
+    "uphill_threshold_grid_spread": {
+      "kind": "value",
+      "value": 7.669474069382787e-06,
+      "rtol": 0.0001
+    },
+    "jackson_sqrt_nu_worst": {
+      "kind": "value",
+      "value": 0.0001502161839500582,
+      "rtol": 1e-06
+    },
+    "knudsen_closed_form_worst": {
+      "kind": "value",
+      "value": 0.00015586944056500407,
+      "rtol": 1e-06
+    },
+    "jackson_p0_nu2": {
+      "kind": "value",
+      "value": 1.414142799640769,
+      "rtol": 1e-06
+    },
+    "jackson_p0_half_inert": {
+      "kind": "value",
+      "value": 1.207078735840325,
+      "rtol": 1e-06
+    },
+    "jackson_p0_equal_mass": {
+      "kind": "value",
+      "value": 1.999800049932466,
+      "rtol": 1e-06
+    },
+    "jackson_p0_bulk_kn0p01": {
+      "kind": "value",
+      "value": 1.0022975766413758,
+      "rtol": 1e-06
+    },
+    "jackson_dev_times_kn": {
+      "kind": "value",
+      "value": -0.49990198994762974,
+      "rtol": 1e-06
+    },
+    "jackson_kn_rate": {
+      "kind": "bound",
+      "value": -0.9999585433835739,
+      "min": -1.01,
+      "max": -0.99,
+      "basis": "theory",
+      "note": "departure from sqrt(nu_B) falls as 1/Kn between Kn = 1e4 and 1e6"
+    },
+    "jackson_phi_effect": {
+      "kind": "bound",
+      "value": 0.00022199988719640018,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "conversion complete at phi = 60: phi = 200 gives the same departure to the accuracy of the 800-cell extrapolation (about 2e-4)"
+    },
+    "visc_group_closed_form_dev": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-14,
+      "basis": "identity",
+      "note": "eqs. (85), (91), (106) assembled against 3 p d_0/(32 eta v_bar)"
+    },
+    "visc_group_1nm": {
+      "kind": "value",
+      "value": 0.0002639253493944008,
+      "rtol": 1e-06
+    },
+    "visc_group_1um": {
+      "kind": "value",
+      "value": 0.2639253493944008,
+      "rtol": 1e-06
+    },
+    "kn_1nm": {
+      "kind": "value",
+      "value": 138.86393512868784,
+      "rtol": 1e-06
+    },
+    "kn_1um": {
+      "kind": "value",
+      "value": 0.1388639351286879,
+      "rtol": 1e-06
+    },
+    "viscous_relief_1nm_pore": {
+      "kind": "value",
+      "value": 9.197556761366584e-05,
+      "rtol": 1e-06
+    },
+    "viscous_relief_1um_pore": {
+      "kind": "value",
+      "value": 0.006339349561931878,
+      "rtol": 1e-06
+    },
+    "viscous_relief_worst_over_pore_sizes": {
+      "kind": "value",
+      "value": 0.006404366856586711,
+      "rtol": 1e-06
+    },
+    "viscous_relief_worst_at_kn": {
+      "kind": "value",
+      "value": 0.1867181179203254,
+      "rtol": 0.001
+    },
+    "viscous_relief_worst_d0_nm": {
+      "kind": "value",
+      "value": 743.7089484157215,
+      "rtol": 0.001
+    },
+    "viscous_relief_fixed_kn_artefact": {
+      "kind": "value",
+      "value": 0.06895149551084262,
+      "rtol": 1e-06
+    },
+    "viscous_fixed_kn_overstatement": {
+      "kind": "value",
+      "value": 10.87674608210595,
+      "rtol": 1e-06
+    },
+    "collocation_worst_dev": {
+      "kind": "bound",
+      "value": 8.693071916976436e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "two-route gap on 100 cells, the second-order discretisation error; it moves by 1e-3 of itself over three BLAS kernels through the Newton tolerance at 1 mm"
+    },
+    "collocation_extrapolated_dev": {
+      "kind": "bound",
+      "value": 3.844702334276917e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "extrapolated finite-volume flux against solve_bvp at tol 1e-10"
+    },
+    "grid_order": {
+      "kind": "bound",
+      "value": 2.0124504154905067,
+      "min": 1.95,
+      "max": 2.05,
+      "basis": "theory",
+      "note": "order farthest from 2 on the 25-800 cell ladder; central faces: second order"
+    },
+    "grid_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 17732.701789638468,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative successive difference over the Newton tolerance"
+    },
+    "grid_error_n100": {
+      "kind": "bound",
+      "value": 3.9652277550317194e-07,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "second-order error of the 100-cell grid at 100 nm against the collocation route"
+    },
+    "eq103_viscous_dev": {
+      "kind": "bound",
+      "value": 1.0402789740737717e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "the arithmetic face mean makes the discrete single-component flux exact"
+    },
+    "graham_residual_worst": {
+      "kind": "bound",
+      "value": 2.4119930060339903e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "identity of eq. (82); the Newton tolerance enters increasingly as d0 grows (1 mm measured)"
+    },
+    "pressure_uniformity": {
+      "kind": "bound",
+      "value": 5.393528574287582e-16,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "equal end pressures and Graham's law keep p uniform; Newton tolerance"
+    },
+    "break_eq85_prefactor_v1": {
+      "kind": "value",
+      "value": 2.7521868437574426e-06,
+      "rtol": 0.001
+    },
+    "prefactor_v1_ratio": {
+      "kind": "bound",
+      "value": 6.940803943140529,
+      "max": 20.0,
+      "basis": "chosen",
+      "note": "d_0/2 in both routes moves the gap by the discretisation error's change with Kn; a defect V1 sees moves it by orders of magnitude"
+    },
+    "break_eq85_prefactor_v2": {
+      "kind": "bound",
+      "value": 2.8110846983508964e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "d_0/2 in both sides of eq. (103) leaves the identity intact"
+    },
+    "break_eq85_prefactor_v3": {
+      "kind": "bound",
+      "value": 8.090392774761231e-14,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "the prefactor cancels from Graham's sum; Newton tolerance"
+    },
+    "free_molecule_limit_dev": {
+      "kind": "value",
+      "value": 0.00017613107096392522,
+      "rtol": 1e-06
+    },
+    "free_molecule_rate": {
+      "kind": "bound",
+      "value": 0.9995835157679299,
+      "min": 0.99,
+      "max": 1.01,
+      "basis": "theory",
+      "note": "departure from N_i = -D^e_iM grad c_i is first order in d_0 (0.01 to 0.1 nm)"
+    },
+    "maxwell_stefan_limit_dev": {
+      "kind": "bound",
+      "value": 0.0005393081434914571,
+      "min": 0.0005,
+      "max": 0.00058,
+      "basis": "chosen",
+      "note": "departure at 1 mm, a physical value near 5.4e-4 whose spread over three BLAS kernels (2.2e-3 of itself) is too large for a value claim: held to a band"
+    },
+    "maxwell_stefan_rate": {
+      "kind": "bound",
+      "value": -0.999949189786488,
+      "min": -1.01,
+      "max": -0.99,
+      "basis": "theory",
+      "note": "departure from Maxwell-Stefan falls as 1/d_0 (1 mm to 10 mm)"
+    },
+    "maxwell_stefan_tol_effect": {
+      "kind": "bound",
+      "value": 0.00012153928544256232,
+      "max": 0.02,
+      "basis": "tolerance",
+      "note": "tenfold tighter Newton tolerance at 1 mm, relative to the departure"
+    },
+    "eq109_collapse_worst": {
+      "kind": "bound",
+      "value": 1.2279066652354231e-13,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "2x2 inversion against eq. (109), face by face"
+    },
+    "p887_exponent_worst_dev": {
+      "kind": "value",
+      "value": 0.02054478723282736,
+      "rtol": 1e-05
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "bmatrix_wall_free_null_vector": [
+      "eq. (87) off-diagonals x 0.9: [B^e] column sums",
+      "wall term kept in the wall-free [B^e]"
+    ],
+    "bmatrix_colsum_knudsen_dev": [
+      "eq. (87) off-diagonals x 0.9: [B^e] column sums",
+      "wall term deleted from the full [B^e]"
+    ],
+    "bmatrix_column_dominance_margin": [
+      "wall term deleted from the full [B^e]"
+    ],
+    "collocation_worst_dev": [
+      "eq. (87) off-diagonals x 0.9: collocation and grid",
+      "wall term deleted: collocation and grid",
+      "eq. (85) mass exponent +1/2, finite-volume route: collocation",
+      "scalar closure: collocation and grid",
+      "interior face composition from the left cell: collocation and grid"
+    ],
+    "collocation_extrapolated_dev": [
+      "eq. (87) off-diagonals x 0.9: collocation and grid",
+      "wall term deleted: collocation and grid",
+      "eq. (85) mass exponent +1/2, finite-volume route: collocation",
+      "scalar closure: collocation and grid",
+      "interior face composition from the left cell: collocation and grid"
+    ],
+    "grid_order": [
+      "wall term deleted: collocation and grid",
+      "interior face composition from the left cell: collocation and grid"
+    ],
+    "grid_ladder_over_roundoff": [
+      "wall term deleted: collocation and grid",
+      "eq. (85) mass exponent +1/2, finite-volume route: collocation",
+      "Newton tolerance 1e-12 -> 1e-6: collocation and grid"
+    ],
+    "grid_error_n100": [
+      "eq. (87) off-diagonals x 0.9: collocation and grid",
+      "wall term deleted: collocation and grid",
+      "eq. (85) mass exponent +1/2, finite-volume route: collocation",
+      "scalar closure: collocation and grid",
+      "interior face composition from the left cell: collocation and grid"
+    ],
+    "graham_residual_worst": [
+      "eq. (87) off-diagonals x 0.9: Graham's law",
+      "eq. (85) mass exponent +1/2: Graham's law"
+    ],
+    "pressure_uniformity": [
+      "eq. (87) off-diagonals x 0.9: Graham's law"
+    ],
+    "eq109_collapse_worst": [
+      "eq. (87) off-diagonals x 0.9: eq. (109) collapse"
+    ],
+    "free_molecule_limit_dev": [
+      "eq. (87) off-diagonals x 0.9: asymptotes",
+      "eq. (85) mass exponent +1/2, finite-volume route: asymptotes"
+    ],
+    "free_molecule_rate": [
+      "eq. (85) mass exponent +1/2, finite-volume route: asymptotes"
+    ],
+    "maxwell_stefan_limit_dev": [
+      "eq. (87) off-diagonals x 0.9: asymptotes",
+      "eq. (85) mass exponent +1/2, finite-volume route: asymptotes",
+      "Maxwell-Stefan limit at 30 mm with Newton tolerance 1e-11: asymptotes"
+    ],
+    "maxwell_stefan_rate": [
+      "eq. (87) off-diagonals x 0.9: asymptotes",
+      "eq. (85) mass exponent +1/2, finite-volume route: asymptotes",
+      "Maxwell-Stefan limit at 30 mm with Newton tolerance 1e-11: asymptotes"
+    ],
+    "maxwell_stefan_tol_effect": [
+      "Maxwell-Stefan limit at 30 mm with Newton tolerance 1e-11: asymptotes"
+    ],
+    "uphill_window_lower_1mm": [
+      "eq. (87) off-diagonals x 0.9: uphill window at 1 mm",
+      "eq. (85) d0/2: uphill window at 1 mm"
+    ],
+    "uphill_window_upper_1mm": [
+      "eq. (87) off-diagonals x 0.9: uphill window at 1 mm"
+    ],
+    "jackson_sqrt_nu_worst": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures",
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures"
+    ],
+    "knudsen_closed_form_worst": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures",
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures"
+    ],
+    "jackson_p0_nu2": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures",
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures"
+    ],
+    "jackson_p0_half_inert": [
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures"
+    ],
+    "jackson_p0_equal_mass": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures"
+    ],
+    "jackson_p0_bulk_kn0p01": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures",
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures"
+    ],
+    "jackson_dev_times_kn": [
+      "eq. (87) off-diagonals x 0.9: pellet pressures",
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures",
+      "conversion incomplete (phi = 6 and 20): pellet pressures"
+    ],
+    "jackson_kn_rate": [
+      "eq. (85) mass exponent +1/2: pellet pressures",
+      "M_B/M_A = 1 (mass not conserved): pellet pressures",
+      "conversion incomplete (phi = 6 and 20): pellet pressures"
+    ],
+    "jackson_phi_effect": [
+      "conversion incomplete (phi = 6 and 20): pellet pressures"
+    ],
+    "break_eq85_prefactor_v1": [
+      "eq. (85) mass exponent +1/2 in every route: prefactor study",
+      "eq. (85) d0/2 in the finite-volume route only: prefactor study"
+    ],
+    "prefactor_v1_ratio": [
+      "eq. (85) mass exponent +1/2 in every route: prefactor study",
+      "eq. (85) d0/2 in the finite-volume route only: prefactor study"
+    ],
+    "break_eq85_prefactor_v2": [
+      "eq. (85) d0/2 in the finite-volume route only: prefactor study"
+    ],
+    "break_eq85_prefactor_v3": [
+      "eq. (85) mass exponent +1/2 in every route: prefactor study"
+    ],
+    "uphill_window_halfwidth_1nm": [
+      "eq. (85) d0/2: uphill window over pore sizes",
+      "eq. (85) mass dependence dropped: uphill window over pore sizes"
+    ],
+    "uphill_window_halfwidth_1um": [
+      "eq. (85) d0/2: uphill window over pore sizes",
+      "eq. (85) mass dependence dropped: uphill window over pore sizes"
+    ],
+    "uphill_window_halfwidth_1mm": [
+      "eq. (85) d0/2: uphill window over pore sizes",
+      "eq. (85) mass dependence dropped: uphill window over pore sizes"
+    ],
+    "uphill_window_width_slope_in_d0": [
+      "eq. (85) d0/2: uphill window over pore sizes",
+      "eq. (85) mass dependence dropped: uphill window over pore sizes"
+    ],
+    "visc_group_closed_form_dev": [
+      "eq. (85) d0/2: Kn and the viscous group",
+      "eq. (91) 32 -> 8 in the assembled group"
+    ],
+    "visc_group_1nm": [
+      "eq. (85) d0/2: Kn and the viscous group",
+      "eq. (91) 32 -> 8 in the assembled group"
+    ],
+    "visc_group_1um": [
+      "eq. (85) d0/2: Kn and the viscous group",
+      "eq. (91) 32 -> 8 in the assembled group"
+    ],
+    "kn_1nm": [
+      "eq. (85) d0/2: Kn and the viscous group"
+    ],
+    "kn_1um": [
+      "eq. (85) d0/2: Kn and the viscous group"
+    ],
+    "viscous_relief_1nm_pore": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_relief_1um_pore": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_relief_worst_over_pore_sizes": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_relief_worst_at_kn": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_relief_worst_d0_nm": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_relief_fixed_kn_artefact": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "viscous_fixed_kn_overstatement": [
+      "eq. (85) d0/2: viscous sweep",
+      "eq. (91) 32 -> 8: viscous sweep"
+    ],
+    "uphill_threshold_nm_at_x_0p483": [
+      "D(H2-N2) x 1.1: thresholds"
+    ],
+    "uphill_threshold_nm_at_x_0p49": [
+      "D(H2-N2) x 1.1: thresholds"
+    ],
+    "uphill_threshold_nm_at_x_0p4999": [
+      "D(H2-N2) x 1.1: thresholds"
+    ],
+    "uphill_threshold_range_over_window": [
+      "D(H2-N2) x 1.1: thresholds"
+    ],
+    "kn_star_at_x_0p49": [
+      "D(H2-N2) x 1.1: thresholds"
+    ],
+    "inert_concentration_variation_kn0p1": [
+      "scalar closure (diagonal of [B^e]): inert pellets",
+      "inert consumed at 1 % of the rate of A"
+    ],
+    "inert_concentration_variation_kn1": [
+      "scalar closure (diagonal of [B^e]): inert pellets",
+      "inert consumed at 1 % of the rate of A"
+    ],
+    "inert_concentration_variation_kn10": [
+      "scalar closure (diagonal of [B^e]): inert pellets",
+      "inert consumed at 1 % of the rate of A"
+    ],
+    "inert_scalar_closure_variation": [
+      "inert contrast run with the full matrix",
+      "inert consumed at 1 % of the rate of A"
+    ],
+    "inert_flux_ratio": [
+      "inert consumed at 1 % of the rate of A"
+    ],
+    "uphill_at_equal_end_compositions": [
+      "scalar closure: equal end compositions"
+    ],
+    "symbolic_nonzero_residuals": [
+      "D_ji = 2 D_ij in the symbolic sum"
+    ],
+    "uphill_threshold_grid_spread": [
+      "threshold grid spread over 10 to 80 cells instead of 50 to 400"
+    ],
+    "eq103_viscous_dev": [
+      "interior face composition from the left cell: eq. (103)",
+      "viscous term deleted (B0 = 0): eq. (103)",
+      "eq. (91) 32 -> 8: eq. (103)",
+      "alpha' = 0 instead of 1: eq. (103)"
+    ],
+    "p887_exponent_worst_dev": [
+      "pair diffusivities held at their 1 atm value: exponents"
+    ]
+  },
+  "rows": {
+    "defined": 41,
+    "recorded": 41
   }
 }
