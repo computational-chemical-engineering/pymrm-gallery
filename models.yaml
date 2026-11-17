@@ -5133,18 +5133,21 @@ models:
       Brunauer, Emmett and Teller open by refuting a rival - the polarization
       theory of de Boer, Zwicker and Bradley - and only then derive their own
       isotherm. This page rebuilds both. The refutation is reproduced from its own
-      constants: the inter-layer dipole ratio comes out 0.0102 where Bradley's fit
-      needs 0.989, a factor 96.8, and Bradley's k lies outside the domain in which
+      constants: the inter-layer dipole ratio comes out
+      -0.0102 <!-- claim: polar_C_recomputed --> where Bradley's fit needs
+      0.989 <!-- claim: bradley_C_from_eq1c -->, a factor
+      96.8 <!-- claim: C_factor_bradley_over_computed -->, and Bradley's k lies outside the domain in which
       the polarization recursion has any decaying solution at all - confirmed by
       solving that recursion instead of quoting its closed form. The BET side is
       then split into what was fitted and what was not: the seven-gas surface
-      agreement is a real out-of-sample test that collapses a 46.9 % spread in v_m
-      to 10.6 %, while the celebrated agreement between v_m and point B is shown to
+      agreement is a real out-of-sample test that collapses a
+      46.9 <!-- claim: t3_vm_maxdev_pct --> % spread in v_m to
+      10.6 <!-- claim: t3_liquid_maxdev_pct --> %, while the celebrated agreement between v_m and point B is shown to
       be half-guaranteed by the equation's own shape - the BET inflection point
       cannot exceed 2/sqrt(3) v_m for any c, a ceiling derived in closed form and
       root-found independently. That bound is ONE-SIDED, capping only how far an
-      eye-read knee can sit above v_m; the paper's own butane isotherm has point B
-      52 % below it. One printed statement does not survive: "840 +- 70 cal. [...]
+      eye-read knee can sit above v_m; on the paper's own butane isotherm point B is
+      only 0.4828 <!-- claim: lowest_pointB_over_vm --> of v_m. One printed statement does not survive: "840 +- 70 cal. [...]
       for nitrogen on all twelve adsorbents" is the eleven-row number.
     section: J
     status: published
@@ -5176,7 +5179,8 @@ models:
       restatement of it (eqs. 1-4a and footnotes 3 and 10). Also not consulted:
       Emmett, P. H. and Brunauer, S. (1937) This Journal 59, 1553, the molecular
       cross-sections behind Tables III and V - recovered on the page by inverting
-      those tables' own columns and cross-checked between them to 0.66 % (which the
+      those tables' own columns and cross-checked between them to
+      0.66 <!-- claim: sigma_cross_table_max_pct --> % (which the
       page shows is NOT the printed rounding on the pair that sets it), with the
       residual circularity risk bounded by measurement rather than argument;
       McGavack, J. and Patrick, W. A. (1920) This Journal 42, 946; Palmer, W. G.
@@ -5203,28 +5207,31 @@ models:
 
   - id: J1.4
     slug: iast-mixed-gas-adsorption
-    title: "IAST 1965: mixture adsorption from pure-component isotherms alone — and a paper that prints no numbers"
+    title: "IAST 1965: mixture adsorption from pure-component isotherms alone, and a paper that prints no numbers"
     description: >
-      Myers and Prausnitz derive the ideal adsorbed solution theory - Raoult's law
+      Myers and Prausnitz derive the ideal adsorbed solution theory, Raoult's law
       with the pure-component reference taken at matched SPREADING PRESSURE,
-      P y_i = P_i(pi) x_i - and with it predict mixture adsorption from
+      P y_i = P_i(pi) x_i, and with it predict mixture adsorption from
       pure-component isotherms alone, no mixture data and no mixture parameters.
       Every one of the paper's four experimental validations is a figure of
       external data, and even the pure inputs are never tabulated (there is not
       one table in the paper), so this page validates what the paper actually
       prints: the derivation chain, verified with sympy (eleven identities exactly
-      zero), which surfaces two printed equation defects - eq. (11) is missing the
+      zero), which surfaces two printed equation defects: eq. (11) is missing the
       '+' between its two RT ln terms, and the sentence introducing eq. (21) cites
       eq. (21) itself; the graphical lever-rule construction of Fig. 1, proved and
-      drawn; and the solver, tested against closed forms it never touches - the
+      drawn; and the solver, tested against closed forms it never touches: the
       equal-capacity case (where the page derives symbolically that IAST IS
-      extended Langmuir, reproduced to 7.6e-16) and the Henry-law limit the paper
+      extended Langmuir, reproduced to below
+      1e-12 <!-- claim: equal_m_closed_form_max_rel -->) and the Henry-law limit the paper
       itself proves rigorous. The paper's consistency charge against the Langmuir
       mixture rule is then made quantitative: around a closed loop in (P, y) the
-      Gibbs one-form leaves an 11.9 %-of-scale spreading-pressure deficit for
-      unequal-capacity extended Langmuir - computed by line integral and by a
-      symbolically derived curl, agreeing to 2.7e-15, exactly linear in m2 - m1 -
-      where IAST closes the same loop to 8e-16. One structural result the paper
+      Gibbs one-form leaves an 11.9 % <!-- claim: loop_deficit_share_of_scale --> of scale
+      spreading-pressure deficit for unequal-capacity extended Langmuir, computed
+      by line integral and by a symbolically derived curl, agreeing to below
+      1e-12 <!-- claim: circulation_route_rel_agreement -->, exactly linear in
+      m2 - m1, where IAST closes the same loop to below
+      1e-12 <!-- claim: loop_circulation_iast_abs -->. One structural result the paper
       stops short of: IAST selectivity is exactly constant whenever the two pure
       isotherms are the same curve shifted in log P, so composition-dependent
       selectivity is a shape signal.
@@ -5283,12 +5290,12 @@ models:
       digitised, and the page states plainly that it establishes the theory's
       printed structure, not its empirical adequacy. All numerics run on
       illustrative parameter sets in arbitrary units, labelled as such at every
-      use; the transcribed CSV holds the paper's 34 printed scalars (conditions,
+      use; the transcribed CSV holds the paper's printed scalars (conditions,
       counts, reference-list numbers), each read off a digit-scale crop of the
       300 ppi native render. A computed reference CSV (the page's own IAST
       solutions on the illustrative pairs, byte-identical across runs) is shipped
       for regression-testing independent IAST implementations. Ref. 5's
-      'Ibid, 63, 456 (1959)' cannot belong to J. Chem. Phys. (4.6 volumes/year
+      'Ibid, 63, 456 (1959)' cannot belong to J. Chem. Phys. (4.6 <!-- claim: ref5_volumes_per_year --> volumes/year
       against ref. 4's own pair) and is cited nowhere in the running text; that
       J. Phys. Chem. was intended is recorded as an inference.
     page: pages/J1.4-iast-mixed-gas-adsorption/

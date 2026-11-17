@@ -1,27 +1,507 @@
 {
   "page": "J1.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "sym_zero_identity_count": 11.0,
-    "equal_m_closed_form_max_rel": 7.635453975501703e-16,
-    "unequal_m_nt_dev_windowsup": 0.21507876398405296,
-    "unequal_m_n1_dilute_limit_dev": 0.6417424305044159,
-    "henry_model_solver_max_rel": 2.174349832795058e-16,
-    "henry_selectivity_dev_P1em8": 2.7500014487813473e-08,
-    "henry_convergence_order": 0.9999997499762475,
-    "pi_quadrature_rel_err_257": 1.4870143879130993e-05,
-    "pi_quadrature_observed_order": 1.9999529168647325,
-    "gibbs_path_trap65_rel": 8.775985910945557e-05,
-    "gibbs_path_trap_order": 1.9999495810931398,
-    "gibbs_path_gauss64_rel": 4.1499910585415586e-16,
-    "loop_circulation_iast_abs": 7.771561172376096e-16,
-    "loop_circulation_ext_langmuir": -0.15483360141013042,
-    "loop_circulation_over_scale": -0.11916849778016288,
-    "circulation_route_rel_agreement": 2.6645352591003757e-15,
-    "circulation_linearity_dev": 2.220446049250313e-15,
-    "lever_rule_max_dev": 1.1102230246251565e-16,
-    "shape_translation_selectivity_rel_spread": 4.651834473179406e-14,
-    "shape_perturbed_selectivity_rel_spread": 0.010665083545773094,
-    "selectivity_dilute_ratio_P1": 4.392304845413265,
-    "selectivity_dilute1_solver_vs_closed_rel": 2.675426480358567e-08
+    "sym_zero_identity_count": {
+      "kind": "exact",
+      "value": 11,
+      "note": "sympy residuals exactly zero; verifies algebra, not numerics"
+    },
+    "eq18_dof_binary": {
+      "kind": "exact",
+      "value": 3,
+      "note": "eq. (18) for a binary on an inert adsorbent"
+    },
+    "ref5_volumes_per_year": {
+      "kind": "value",
+      "value": 4.6,
+      "rtol": 1e-09
+    },
+    "lever_rule_max_dev": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "lever readings against eqs. (22), (29); exact in exact arithmetic"
+    },
+    "selectivity_dilute1_P1": {
+      "kind": "value",
+      "value": 13.660254037844387,
+      "rtol": 1e-09,
+      "note": "closed form, 5(1+sqrt 3)"
+    },
+    "selectivity_dilute2_P1": {
+      "kind": "value",
+      "value": 60.000000000000014,
+      "rtol": 1e-09,
+      "note": "closed form, exactly 60"
+    },
+    "selectivity_dilute_ratio_P1": {
+      "kind": "value",
+      "value": 4.392304845413265,
+      "rtol": 1e-09
+    },
+    "pair_L_selectivity_mean": {
+      "kind": "value",
+      "value": 10.000000000000043,
+      "rtol": 1e-09,
+      "note": "b1/b2 for equal capacities"
+    },
+    "pair_L_selectivity_rel_spread": {
+      "kind": "bound",
+      "value": 3.1587177318215117e-12,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "constant by the shape-translation identity; newton tolerance 1e-13"
+    },
+    "equal_m_closed_form_max_rel": {
+      "kind": "bound",
+      "value": 7.635453975501703e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "newton step tolerance 1e-13 on ln z"
+    },
+    "unequal_m_nt_dev_windowsup": {
+      "kind": "value",
+      "value": 0.21507876398405287,
+      "rtol": 1e-06
+    },
+    "unequal_m_nt_dev_y_at_sup": {
+      "kind": "value",
+      "value": 0.0995547590386406,
+      "rtol": 1e-05
+    },
+    "unequal_m_nt_dev_grid_low_frac": {
+      "kind": "value",
+      "value": 0.006673458960080758,
+      "rtol": 0.0001,
+      "note": "the 30 x 30 grid read against the refined supremum"
+    },
+    "unequal_m_n1_dilute_limit_dev": {
+      "kind": "value",
+      "value": 0.6417424305044159,
+      "rtol": 1e-09
+    },
+    "henry_model_solver_max_rel": {
+      "kind": "bound",
+      "value": 2.174349832795058e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "newton step tolerance 1e-13 on ln z"
+    },
+    "henry_selectivity_dev_P1em8": {
+      "kind": "value",
+      "value": 2.7500014487813473e-08,
+      "rtol": 0.001,
+      "note": "first-order approach to K1/K2 at P = 1e-8"
+    },
+    "henry_convergence_order": {
+      "kind": "bound",
+      "value": 0.9998928527396849,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "the order farthest from 1 on the ladder P = 1e-3 ... 1e-8"
+    },
+    "henry_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 2474999.6517744744,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference over tol*|s|"
+    },
+    "pi_quadrature_rel_err_257": {
+      "kind": "value",
+      "value": 1.4870143879130993e-05,
+      "rtol": 0.001
+    },
+    "pi_quadrature_observed_order": {
+      "kind": "bound",
+      "value": 1.9990548699231883,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "trapezoid rule, ladder of 64 to 512 intervals"
+    },
+    "pi_quadrature_roundoff_margin": {
+      "kind": "bound",
+      "value": 98097944.72301844,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference over n eps |z|"
+    },
+    "pi_quadrature_no_anchor_rel": {
+      "kind": "value",
+      "value": 0.00414776712391407,
+      "rtol": 0.001
+    },
+    "pi_quadrature_no_anchor_order": {
+      "kind": "bound",
+      "value": 1.9998829680210184,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "refinement converges, at second order, to the wrong value"
+    },
+    "gibbs_path_trap65_rel": {
+      "kind": "value",
+      "value": 8.775985910945557e-05,
+      "rtol": 0.001
+    },
+    "gibbs_path_gauss64_rel": {
+      "kind": "bound",
+      "value": 4.1499910585415586e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "Gauss-64 is converged; the gap is the newton tolerance"
+    },
+    "gibbs_path_trap_order": {
+      "kind": "bound",
+      "value": 1.9999369776501994,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "trapezoid rule, ladder of 64 to 512 intervals"
+    },
+    "gibbs_path_roundoff_margin": {
+      "kind": "bound",
+      "value": 36186374.478117615,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference over max(tol, n eps) |q|"
+    },
+    "gibbs_path_arith_mean_rel": {
+      "kind": "value",
+      "value": 0.015196498662785727,
+      "rtol": 0.001
+    },
+    "gibbs_path_mismatch_rel": {
+      "kind": "value",
+      "value": 0.001596628828895409,
+      "rtol": 0.001
+    },
+    "loop_circulation_iast_abs": {
+      "kind": "bound",
+      "value": 7.771561172376096e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "Gauss-48 on every edge is converged; zero for any model with a spreading pressure"
+    },
+    "loop_circulation_iast_mismatch_abs": {
+      "kind": "value",
+      "value": 0.001969397378660309,
+      "rtol": 0.001,
+      "note": "the same loop with a 1 % spreading-pressure mismatch injected"
+    },
+    "loop_circulation_ext_langmuir": {
+      "kind": "value",
+      "value": -0.15483360141013042,
+      "rtol": 1e-06
+    },
+    "loop_circulation_over_scale": {
+      "kind": "value",
+      "value": -0.11916849778016288,
+      "rtol": 1e-06
+    },
+    "loop_deficit_share_of_scale": {
+      "kind": "value",
+      "value": 0.11916849778016288,
+      "rtol": 1e-06,
+      "note": "the magnitude of the deficit as a fraction of the loop's z scale"
+    },
+    "circulation_route_rel_agreement": {
+      "kind": "bound",
+      "value": 2.6645352591003757e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "Green's theorem; both routes on converged Gauss-48"
+    },
+    "circulation_linearity_dev": {
+      "kind": "bound",
+      "value": 2.220446049250313e-15,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "the curl is linear in m2 - m1, its denominator holds no m"
+    },
+    "shape_translation_selectivity_rel_spread": {
+      "kind": "bound",
+      "value": 4.651834473179406e-14,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "exactly constant by the shape identity; nested newton tolerance 1e-13"
+    },
+    "shape_perturbed_selectivity_rel_spread": {
+      "kind": "value",
+      "value": 0.010665083545773094,
+      "rtol": 0.0001
+    },
+    "selectivity_dilute1_solver_vs_closed_rel": {
+      "kind": "value",
+      "value": 2.675426480358567e-08,
+      "rtol": 0.001,
+      "note": "first-order approach in y1 at y1 = 1e-8"
+    },
+    "selectivity_dilute1_solver_vs_closed_rel_y1em7": {
+      "kind": "value",
+      "value": 2.6754266890804956e-07,
+      "rtol": 0.001,
+      "note": "the same at y1 = 1e-7: ten times larger, linear in y1"
+    }
+  },
+  "quoted": {
+    "sym_zero_identity_count": [
+      "11"
+    ],
+    "eq18_dof_binary": [
+      "3"
+    ],
+    "ref5_volumes_per_year": [
+      "4.6"
+    ],
+    "equal_m_closed_form_max_rel": [
+      "below 1e-12"
+    ],
+    "henry_model_solver_max_rel": [
+      "below 1e-12"
+    ],
+    "loop_circulation_iast_abs": [
+      "below 1e-12"
+    ],
+    "circulation_route_rel_agreement": [
+      "below 1e-12"
+    ],
+    "circulation_linearity_dev": [
+      "below 1e-12"
+    ],
+    "gibbs_path_gauss64_rel": [
+      "below 1e-12"
+    ],
+    "shape_translation_selectivity_rel_spread": [
+      "below 1e-10"
+    ],
+    "loop_deficit_share_of_scale": [
+      "12 %",
+      "11.9 %"
+    ],
+    "loop_circulation_ext_langmuir": [
+      "-0.1548"
+    ],
+    "loop_circulation_iast_mismatch_abs": [
+      "2e-3"
+    ],
+    "unequal_m_nt_dev_windowsup": [
+      "21.5 %",
+      "0.2151"
+    ],
+    "unequal_m_nt_dev_y_at_sup": [
+      "0.0996"
+    ],
+    "unequal_m_nt_dev_grid_low_frac": [
+      "0.7 %",
+      "0.67 %"
+    ],
+    "unequal_m_n1_dilute_limit_dev": [
+      "64 %",
+      "64.2 %",
+      "0.6417"
+    ],
+    "selectivity_dilute1_P1": [
+      "13.660254"
+    ],
+    "selectivity_dilute2_P1": [
+      "60"
+    ],
+    "selectivity_dilute_ratio_P1": [
+      "4.39",
+      "4.3923"
+    ],
+    "pair_L_selectivity_mean": [
+      "10"
+    ],
+    "gibbs_path_arith_mean_rel": [
+      "1.5 %"
+    ],
+    "gibbs_path_mismatch_rel": [
+      "0.16 %"
+    ],
+    "gibbs_path_trap65_rel": [
+      "8.8e-5"
+    ],
+    "pi_quadrature_no_anchor_rel": [
+      "4e-3"
+    ],
+    "pi_quadrature_rel_err_257": [
+      "1.49e-5"
+    ],
+    "henry_selectivity_dev_P1em8": [
+      "2.75e-8"
+    ],
+    "henry_convergence_order": [
+      "between 0.95 and 1.05",
+      "at least 0.95",
+      "at most 1.05"
+    ],
+    "pi_quadrature_observed_order": [
+      "between 1.9 and 2.1"
+    ],
+    "gibbs_path_trap_order": [
+      "between 1.9 and 2.1"
+    ],
+    "pi_quadrature_no_anchor_order": [
+      "between 1.9 and 2.1",
+      "at least 1.9",
+      "at most 2.1"
+    ],
+    "selectivity_dilute1_solver_vs_closed_rel": [
+      "2.7e-8"
+    ],
+    "selectivity_dilute1_solver_vs_closed_rel_y1em7": [
+      "2.7e-7"
+    ],
+    "shape_perturbed_selectivity_rel_spread": [
+      "1.1e-2"
+    ]
+  },
+  "breaks": {
+    "sym_zero_identity_count": [
+      "eq. (11) read as printed (no operator: a product)"
+    ],
+    "eq18_dof_binary": [
+      "adsorbent counted as a component in eq. (18)"
+    ],
+    "ref5_volumes_per_year": [
+      "ref. 5 year 1959 read as 1969"
+    ],
+    "equal_m_closed_form_max_rel": [
+      "m2 = 0.6 in pair L (capacities made unequal)",
+      "b1 wrong by 1 % in pair L",
+      "newton stopped on a 1e-3 step alone (no backward-error test)"
+    ],
+    "pair_L_selectivity_mean": [
+      "m2 = 0.6 in pair L (capacities made unequal)"
+    ],
+    "pair_L_selectivity_rel_spread": [
+      "m2 = 0.6 in pair L (capacities made unequal)"
+    ],
+    "unequal_m_nt_dev_windowsup": [
+      "m2 -> m1 in pair U (the models coincide again)",
+      "window supremum read off the y1 scan, not refined"
+    ],
+    "unequal_m_n1_dilute_limit_dev": [
+      "m2 -> m1 in pair U (the models coincide again)"
+    ],
+    "loop_circulation_ext_langmuir": [
+      "m2 -> m1 in pair U (the models coincide again)",
+      "m2 -> 0 in extended Langmuir (m1 - m2 doubled)"
+    ],
+    "loop_circulation_over_scale": [
+      "m2 -> m1 in pair U (the models coincide again)",
+      "m2 -> 0 in extended Langmuir (m1 - m2 doubled)"
+    ],
+    "loop_deficit_share_of_scale": [
+      "m2 -> m1 in pair U (the models coincide again)",
+      "m2 -> 0 in extended Langmuir (m1 - m2 doubled)"
+    ],
+    "unequal_m_nt_dev_y_at_sup": [
+      "window supremum read off the y1 scan, not refined"
+    ],
+    "unequal_m_nt_dev_grid_low_frac": [
+      "window supremum read off the y1 scan, not refined"
+    ],
+    "henry_model_solver_max_rel": [
+      "spreading-pressure matching skipped (x_i = y_i)"
+    ],
+    "henry_selectivity_dev_P1em8": [
+      "Henry selectivity read at P = 0.1 instead of the limit",
+      "Henry constant taken as b (capacity forgotten)"
+    ],
+    "henry_convergence_order": [
+      "pure isotherms with Sips exponent t = 0.5 (no Henry region)"
+    ],
+    "henry_order_roundoff_margin": [
+      "Henry ladder continued to P = 1e-13 (into the solver tolerance)"
+    ],
+    "pi_quadrature_rel_err_257": [
+      "linear grid instead of logarithmic in eq. (19)",
+      "Henry anchor dropped (t0 = 1e-3)"
+    ],
+    "pi_quadrature_observed_order": [
+      "left rectangle rule instead of the trapezoid"
+    ],
+    "pi_quadrature_no_anchor_order": [
+      "left rectangle rule instead of the trapezoid"
+    ],
+    "gibbs_path_trap_order": [
+      "left rectangle rule instead of the trapezoid"
+    ],
+    "pi_quadrature_roundoff_margin": [
+      "quadrature ladder continued to 2^20 intervals (into round-off)"
+    ],
+    "gibbs_path_trap65_rel": [
+      "n_t read as the arithmetic mean of eq. (26)",
+      "spreading pressures mismatched by 1 % (a broken eq. 40)"
+    ],
+    "gibbs_path_gauss64_rel": [
+      "n_t read as the arithmetic mean of eq. (26)"
+    ],
+    "loop_circulation_iast_abs": [
+      "spreading pressures mismatched by 1 % (a broken eq. 40)"
+    ],
+    "gibbs_path_roundoff_margin": [
+      "path ladder continued to 2^16 intervals (into round-off)"
+    ],
+    "circulation_route_rel_agreement": [
+      "line-integral route on 2-point Gauss"
+    ],
+    "circulation_linearity_dev": [
+      "edge 4 of the loop dropped"
+    ],
+    "lever_rule_max_dev": [
+      "chords OB and OC swapped in Fig. 1's construction"
+    ],
+    "shape_translation_selectivity_rel_spread": [
+      "one site's affinity of component 2 perturbed 5 %"
+    ],
+    "selectivity_dilute1_solver_vs_closed_rel": [
+      "dilute selectivity read at y1 = 0.1 instead of the limit"
+    ],
+    "selectivity_dilute1_solver_vs_closed_rel_y1em7": [
+      "dilute selectivity read at y1 = 0.1 instead of the limit"
+    ],
+    "selectivity_dilute1_P1": [
+      "pair L (equal shape) in place of pair U"
+    ],
+    "selectivity_dilute2_P1": [
+      "pair L (equal shape) in place of pair U"
+    ],
+    "selectivity_dilute_ratio_P1": [
+      "pair L (equal shape) in place of pair U"
+    ],
+    "gibbs_path_arith_mean_rel": [
+      "injected defects removed from the sensitivity studies"
+    ],
+    "gibbs_path_mismatch_rel": [
+      "injected defects removed from the sensitivity studies"
+    ],
+    "loop_circulation_iast_mismatch_abs": [
+      "injected defects removed from the sensitivity studies"
+    ],
+    "pi_quadrature_no_anchor_rel": [
+      "injected defects removed from the sensitivity studies"
+    ],
+    "shape_perturbed_selectivity_rel_spread": [
+      "injected defects removed from the sensitivity studies"
+    ]
+  },
+  "rows": {
+    "defined": 28,
+    "recorded": 28
   }
 }
