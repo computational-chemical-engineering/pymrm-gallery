@@ -2,7 +2,7 @@
   "page": "F3.2",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -11,72 +11,96 @@
   "metrics": {
     "vkh_worst_rel_error_pct": {
       "kind": "value",
-      "value": -2.7954633357038534,
+      "value": -2.795463343661211,
       "rtol": 0.05
     },
     "vkh_worst_gamma": {
       "kind": "value",
-      "value": 4.727910228526406,
+      "value": 4.727912840095147,
       "rtol": 0.05
     },
     "vkh_worst_q": {
       "kind": "value",
-      "value": 1.5217289736637973,
-      "rtol": 0.05
-    },
-    "vkh_worst_on_printed_labels_pct": {
-      "kind": "value",
-      "value": -2.729422310099984,
+      "value": 1.5217221896648654,
       "rtol": 0.05
     },
     "froment_10pct_claim_margin": {
       "kind": "value",
-      "value": 3.577224523848802,
+      "value": 3.5772245136661414,
       "rtol": 0.05
     },
     "beta_interface_at_worst": {
       "kind": "value",
-      "value": 0.1647374981668422,
-      "rtol": 0.05
-    },
-    "gamma_at_half_depletion": {
-      "kind": "value",
-      "value": 2.2035653164066815,
-      "rtol": 0.05
-    },
-    "gamma_at_99pct_depletion": {
-      "kind": "value",
-      "value": 13.037820053916313,
-      "rtol": 0.05
-    },
-    "vkh_error_at_half_depletion_pct": {
-      "kind": "value",
-      "value": -1.8304383279474448,
-      "rtol": 0.05
-    },
-    "vkh_error_at_99pct_depletion_pct": {
-      "kind": "value",
-      "value": -1.5034589551330495,
-      "rtol": 0.05
-    },
-    "vkh_error_at_full_depletion_pct": {
-      "kind": "value",
-      "value": -0.0003732658372348927,
+      "value": 0.16473634925523167,
       "rtol": 0.05
     },
     "beta_constancy_at_worst": {
       "kind": "value",
-      "value": 2.11522919512376,
+      "value": 2.1152400976237606,
       "rtol": 0.05
+    },
+    "vkh_worst_on_printed_labels_pct": {
+      "kind": "value",
+      "value": -2.729422270487842,
+      "rtol": 0.05
+    },
+    "gamma_at_half_depletion": {
+      "kind": "value",
+      "value": 2.2035595604589435,
+      "rtol": 0.05
+    },
+    "gamma_at_99pct_depletion": {
+      "kind": "value",
+      "value": 13.037771111135795,
+      "rtol": 0.05
+    },
+    "vkh_error_at_half_depletion_pct": {
+      "kind": "value",
+      "value": -1.830436013343052,
+      "rtol": 0.05
+    },
+    "vkh_error_at_99pct_depletion_pct": {
+      "kind": "value",
+      "value": -1.5034598166188529,
+      "rtol": 0.05
+    },
+    "vkh_error_at_full_depletion_pct": {
+      "kind": "bound",
+      "value": -0.0003732573597802054,
+      "min": -0.000392,
+      "max": -0.000355,
+      "basis": "chosen",
+      "note": "the VKH deficit at gamma = 1000 on the worst curve, -3.7327e-4 % in closed form, matched to 2e-5 of itself; its spread over three BLAS kernels (about 1e-4 of itself) is round-off in F_A divided by a deficit of 1e-5: held to a band of the old 5 %"
     },
     "beta_constancy_at_99pct_depletion": {
       "kind": "value",
-      "value": 19.200206605192175,
+      "value": 19.200266198370954,
       "rtol": 0.05
+    },
+    "beta_interface_at_axis_end": {
+      "kind": "bound",
+      "value": 3.4773630780391983e-28,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "|beta(0)| at gamma = 1000 on the worst curve: exponentially small in gamma, so what the solve returns is solver noise far below the Newton tolerance on unknowns of order one"
+    },
+    "depletion_falls_steps": {
+      "kind": "exact",
+      "value": 20,
+      "margin": 0.034863408061019466,
+      "min_margin": 0.001,
+      "note": "steps of ln beta(0), gamma = 0.5 to 100 on the worst curve, falling by more than 1e-6"
+    },
+    "constancy_rises_steps": {
+      "kind": "exact",
+      "value": 20,
+      "margin": 0.00742024319781663,
+      "min_margin": 0.001,
+      "note": "steps of the ln constancy ratio, gamma = 0.5 to 100 on the worst curve, rising by more than 1e-6"
     },
     "lev_small_M_1pct_threshold": {
       "kind": "value",
-      "value": 0.7230861468815154,
+      "value": 0.7230861557105376,
       "rtol": 0.05
     },
     "lev_pfo_expansion_err_pct": {
@@ -101,17 +125,22 @@
     },
     "lev_inst_asymptote_ratio_num": {
       "kind": "value",
-      "value": 0.2286236667842445,
+      "value": 0.2286236794469388,
       "rtol": 0.05
     },
     "lev_inst_overstatement_factor": {
       "kind": "value",
-      "value": 44.24445191547594,
+      "value": 44.244327175316116,
+      "rtol": 0.05
+    },
+    "vkh_deficit_over_lev_correction_axis_end": {
+      "kind": "value",
+      "value": 0.9727139934294725,
       "rtol": 0.05
     },
     "inst_deficit_exponent_num_steepest": {
       "kind": "value",
-      "value": -5.33847131505646,
+      "value": -5.338467327508683,
       "rtol": 0.05
     },
     "inst_deficit_exponent_vkh_finest": {
@@ -121,53 +150,53 @@
     },
     "inst_deficit_routes_max_rel_diff": {
       "kind": "bound",
-      "value": 8.609855356600526e-05,
+      "value": 8.01510278636286e-05,
       "min": 0.0,
       "max": 0.001,
       "basis": "chosen",
-      "note": "two methods on the M_H = 800 deficit E_i - F_A, about 1.3e-5 of F_A, so kernel round-off in F_A is amplified; measured 8.4e-5 to 9.0e-5 across BLAS kernels, the bound is about 11x that and still far below the 44x it supports"
+      "note": "two methods on the M_H = 800 deficit E_i - F_A, about 1.3e-5 of F_A, so round-off in F_A is amplified; measured 8.4e-5 to 9.0e-5 across BLAS kernels, far below the overstatement factor it supports"
     },
     "fv_vs_bvp_max_rel_diff": {
       "kind": "bound",
       "value": 5.987876919966162e-06,
       "max": 1e-05,
       "basis": "chosen",
-      "note": "one graded n_x = 800 solve against collocation at tol 1e-10, set by its second-order discretisation; measured 5.99e-6 on three kernels"
+      "note": "one graded n_x = 800 solve against collocation at tol 1e-10 over 20 chart points, set by its second-order discretisation"
     },
     "fv_vs_bvp_max_abs_diff_beta": {
       "kind": "bound",
       "value": 2.91313328765197e-06,
       "max": 5e-06,
       "basis": "chosen",
-      "note": "beta(0), the same two solvers; measured 2.91e-6 on three kernels"
+      "note": "beta(0), the same two solvers and points"
     },
     "ref_vs_bvp_max_rel_diff": {
       "kind": "bound",
       "value": 4.3693968221347745e-08,
       "max": 1e-07,
       "basis": "chosen",
-      "note": "the Richardson reference against collocation at tol 1e-10; measured 4.37e-8 on three kernels"
+      "note": "the Richardson reference against collocation at tol 1e-10"
     },
     "ref_self_refinement_max_rel_diff": {
       "kind": "bound",
-      "value": 3.841073770161074e-08,
+      "value": 3.666552172987281e-08,
       "max": 1e-07,
       "basis": "chosen",
-      "note": "the reference against Richardson (800, 1600); measured 3.84e-8 on three kernels"
+      "note": "the reference against Richardson (800, 1600)"
     },
     "first_integral_max_abs_resid": {
       "kind": "bound",
       "value": 6.417639042410883e-10,
       "max": 1e-08,
-      "basis": "chosen",
-      "note": "|q beta(0) - (1 + q - F_A)|/(1 + q) on the reference, never told to the discretisation; measured 6.4e-10 on three kernels"
+      "basis": "tolerance",
+      "note": "|q beta(0) - (1 + q - F_A)|/(1 + q) on the reference, never told to the discretisation; its size is the Newton tolerance"
     },
     "vkh_two_routes_max_rel_diff": {
       "kind": "bound",
       "value": 7.993605777301127e-15,
       "max": 1e-12,
       "basis": "tolerance",
-      "note": "the implicit relation solved for F_A and for gamma', Brent at xtol 1e-13, rtol 8.9e-16; measured 8.0e-15"
+      "note": "the implicit relation solved for F_A and for gamma', Brent at xtol 1e-13, rtol 8.9e-16"
     },
     "vkh_pfo_limit_max_rel_error": {
       "kind": "bound",
@@ -185,35 +214,53 @@
     },
     "fv_convergence_order": {
       "kind": "bound",
-      "value": 1.9999825760999916,
+      "value": 2.0000676975182254,
       "min": 1.9,
       "max": 2.1,
       "basis": "theory",
-      "note": "second-order finite volumes; 2.0000 between n_x = 400 and 800 at (gamma, q) = (10, 4)"
+      "note": "second-order finite volumes; the order farthest from 2 from successive differences of F_A at (10, 4) on the graded 100-800 ladder"
+    },
+    "fv_ladder_over_newton_tol": {
+      "kind": "bound",
+      "value": 56893.27086004993,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest relative successive difference of the ladder over the Newton tolerance: the orders measure the grid, not the solver"
     },
     "fv_rel_error_n800": {
       "kind": "value",
-      "value": 1.8964470563931357e-06,
+      "value": 1.8963402669269769e-06,
       "rtol": 0.05
     },
     "fv_rel_error_n800_uniform": {
-      "kind": "value",
-      "value": 7.625140741041037e-09,
-      "rtol": 0.05
+      "kind": "bound",
+      "value": 7.624515019344358e-09,
+      "max": 1e-08,
+      "basis": "chosen",
+      "note": "uniform n_x = 800 error at (10, 4) against collocation at tol 1e-11, 7.6e-9; against the Richardson reference 7.7e-9 and against the (800, 1600) extrapolations 8.0e-9 and 8.3e-9, so the reference is the larger uncertainty; its spread over three BLAS kernels (about 7e-5 of itself) is round-off in F_A: held to a bound"
     },
-    "chart_label_max_plateau_ratio": {
-      "kind": "value",
-      "value": 2.0,
-      "rtol": 0.05
+    "grading_cost_ratio": {
+      "kind": "bound",
+      "value": 248.71618222480015,
+      "min": 100.0,
+      "basis": "chosen",
+      "note": "graded over uniform n_x = 800 error at (10, 4); its denominator is a bound, so the ratio is a bound too"
     },
     "f31_definition_vkh_max_error_pct": {
       "kind": "value",
       "value": 2.076895931235552,
       "rtol": 0.05
     },
+    "f31_cold_own_grid_rel": {
+      "kind": "bound",
+      "value": 1.023170437264298e-11,
+      "max": 1e-09,
+      "basis": "chosen",
+      "note": "F3.1's VKH-error definition recomputed cold on its own grid against its stored value; measured 1.0e-11, F3.1's number spreads 5e-12 across kernels"
+    },
     "f31_definition_rootfound_pct": {
       "kind": "value",
-      "value": 2.078500811381268,
+      "value": 2.0785008163141456,
       "rtol": 0.05
     },
     "pfo_max_rel_error_graded": {
@@ -236,126 +283,37 @@
       "value": 1.292967695576408e-06,
       "max": 2e-05,
       "basis": "chosen",
-      "note": "this page's recomputation of F3.1's definition against F3.1's committed vkh_max_error_pct, made on another machine; the residual is F3.1's uniform n_x = 400 discretisation, 1.29e-6 on three kernels, and F3.1's own number spreads 5e-12 relative across kernels"
+      "note": "this page's recomputation of F3.1's definition against F3.1's committed vkh_max_error_pct; the residual is F3.1's uniform n_x = 400 discretisation, and F3.1's own number spreads 5e-12 across kernels"
     },
     "f31_first_order_error_ratio": {
       "kind": "value",
       "value": 893.9481974582452,
       "rtol": 0.05
+    },
+    "f31_first_order_reproduced_rel": {
+      "kind": "bound",
+      "value": 6.328271240363392e-15,
+      "max": 1e-12,
+      "basis": "chosen",
+      "note": "F3.1's first_order_max_rel_error recomputed on its uniform n_x = 400 grid; measured 6.3e-15, made by F3.1 on another machine"
+    },
+    "grading_worth_ratio": {
+      "kind": "value",
+      "value": 124.80801747410179,
+      "rtol": 0.05
+    },
+    "refinement_worth_ratio": {
+      "kind": "value",
+      "value": 7.162586310961456,
+      "rtol": 0.05
+    },
+    "chart_label_max_plateau_ratio": {
+      "kind": "value",
+      "value": 2.0,
+      "rtol": 0.05
     }
   },
-  "quoted": {
-    "vkh_worst_rel_error_pct": [
-      "-2.7955"
-    ],
-    "vkh_worst_gamma": [
-      "4.728"
-    ],
-    "vkh_worst_q": [
-      "1.522"
-    ],
-    "beta_interface_at_worst": [
-      "0.1647"
-    ],
-    "beta_constancy_at_worst": [
-      "2.115"
-    ],
-    "beta_constancy_at_99pct_depletion": [
-      "19.20"
-    ],
-    "froment_10pct_claim_margin": [
-      "3.5772"
-    ],
-    "vkh_worst_on_printed_labels_pct": [
-      "-2.7294"
-    ],
-    "gamma_at_half_depletion": [
-      "2.204"
-    ],
-    "vkh_error_at_half_depletion_pct": [
-      "-1.8304"
-    ],
-    "gamma_at_99pct_depletion": [
-      "13.038"
-    ],
-    "vkh_error_at_99pct_depletion_pct": [
-      "-1.5035"
-    ],
-    "vkh_error_at_full_depletion_pct": [
-      "-0.00037"
-    ],
-    "lev_small_M_1pct_threshold": [
-      "0.7231"
-    ],
-    "lev_pfo_expansion_err_pct": [
-      "-0.5366"
-    ],
-    "vkh_form_pfo_expansion_err_pct": [
-      "-0.7374"
-    ],
-    "uncorrected_E_eq_M_err_pct": [
-      "9.3004"
-    ],
-    "lev_inst_asymptote_ratio_vkh": [
-      "0.9953"
-    ],
-    "lev_inst_asymptote_ratio_num": [
-      "0.2286"
-    ],
-    "lev_inst_overstatement_factor": [
-      "44.24"
-    ],
-    "inst_deficit_exponent_num_steepest": [
-      "-5.3385"
-    ],
-    "inst_deficit_exponent_vkh_finest": [
-      "-1.9949"
-    ],
-    "inst_deficit_routes_max_rel_diff": [
-      "below 1e-3"
-    ],
-    "fv_vs_bvp_max_rel_diff": [
-      "5.99e-6"
-    ],
-    "ref_vs_bvp_max_rel_diff": [
-      "4.37e-8"
-    ],
-    "ref_self_refinement_max_rel_diff": [
-      "3.84e-8"
-    ],
-    "first_integral_max_abs_resid": [
-      "6.4e-10"
-    ],
-    "vkh_two_routes_max_rel_diff": [
-      "below 1e-12"
-    ],
-    "fv_convergence_order": [
-      "2.0000"
-    ],
-    "fv_rel_error_n800": [
-      "1.9e-6"
-    ],
-    "chart_label_max_plateau_ratio": [
-      "2.0"
-    ],
-    "f31_definition_vkh_max_error_pct": [
-      "2.0769",
-      "2.076896"
-    ],
-    "pfo_max_rel_error_graded": [
-      "7.088e-6"
-    ],
-    "pfo_max_rel_error_uniform_same_n": [
-      "8.847e-4"
-    ],
-    "f31_first_order_error_ratio": [
-      "893.9"
-    ],
-    "f31_stored_vs_recomputed_rel": [
-      "below 2e-5",
-      "1.29e-6"
-    ]
-  },
+  "quoted": {},
   "breaks": {
     "vkh_worst_rel_error_pct": [
       "(6.3.5-1) transcribed with + where it prints -",
@@ -459,6 +417,21 @@
       "beta given a zero-gradient bulk edge instead of beta(1) = 1",
       "worst point SAMPLED on the scan grid instead of root-found"
     ],
+    "beta_interface_at_axis_end": [
+      "the depletion of B dropped from the FILM model (beta = 1 identically)"
+    ],
+    "depletion_falls_steps": [
+      "(6.3.5-1) transcribed with + where it prints -",
+      "q read as E_i in (6.3.5-1) - the two books' groups swapped",
+      "the depletion of B dropped from the FILM model (beta = 1 identically)",
+      "beta given a zero-gradient bulk edge instead of beta(1) = 1"
+    ],
+    "constancy_rises_steps": [
+      "(6.3.5-1) transcribed with + where it prints -",
+      "q read as E_i in (6.3.5-1) - the two books' groups swapped",
+      "the depletion of B dropped from the FILM model (beta = 1 identically)",
+      "beta given a zero-gradient bulk edge instead of beta(1) = 1"
+    ],
     "lev_small_M_1pct_threshold": [
       "the depletion of B dropped from the FILM model (beta = 1 identically)",
       "beta given a zero-gradient bulk edge instead of beta(1) = 1",
@@ -497,6 +470,11 @@
       "beta given a zero-gradient bulk edge instead of beta(1) = 1",
       "Levenspiel's E_i^2(E_i - 1) transcribed as E_i(E_i - 1)"
     ],
+    "vkh_deficit_over_lev_correction_axis_end": [
+      "(6.3.5-1) transcribed with + where it prints -",
+      "(6.3.5-1) transcribed as F_A where it prints (F_A - 1)",
+      "q read as E_i in (6.3.5-1) - the two books' groups swapped"
+    ],
     "inst_deficit_exponent_num_steepest": [
       "the depletion of B dropped from the FILM model (beta = 1 identically)",
       "beta given a zero-gradient bulk edge instead of beta(1) = 1"
@@ -513,6 +491,12 @@
       "beta given a zero-gradient bulk edge instead of beta(1) = 1"
     ],
     "f31_definition_vkh_max_error_pct": [
+      "(6.3.5-1) transcribed with + where it prints -",
+      "(6.3.5-1) transcribed as F_A where it prints (F_A - 1)",
+      "q read as E_i in (6.3.5-1) - the two books' groups swapped",
+      "the depletion of B dropped from the FILM model (beta = 1 identically)"
+    ],
+    "f31_cold_own_grid_rel": [
       "(6.3.5-1) transcribed with + where it prints -",
       "(6.3.5-1) transcribed as F_A where it prints (F_A - 1)",
       "q read as E_i in (6.3.5-1) - the two books' groups swapped",
@@ -545,6 +529,16 @@
     "f31_first_order_error_ratio": [
       "film solved on 100 cells instead of 800",
       "uniform grid instead of graded, at the same n_x"
+    ],
+    "f31_first_order_reproduced_rel": [
+      "film solved on 100 cells instead of 800"
+    ],
+    "grading_worth_ratio": [
+      "film solved on 100 cells instead of 800",
+      "uniform grid instead of graded, at the same n_x"
+    ],
+    "refinement_worth_ratio": [
+      "film solved on 100 cells instead of 800"
     ],
     "vkh_two_routes_max_rel_diff": [
       "(6.3.5-1) transcribed with + where it prints -",
@@ -586,9 +580,13 @@
       "the depletion of B dropped from the FILM model (beta = 1 identically)"
     ],
     "fv_convergence_order": [
-      "the depletion of B dropped from the FILM model (beta = 1 identically)",
       "uniform grid instead of graded, at the same n_x",
       "beta given a zero-gradient bulk edge instead of beta(1) = 1"
+    ],
+    "fv_ladder_over_newton_tol": [
+      "uniform grid instead of graded, at the same n_x",
+      "beta given a zero-gradient bulk edge instead of beta(1) = 1",
+      "Newton stopped at an update of 1e-4"
     ],
     "fv_rel_error_n800": [
       "the depletion of B dropped from the FILM model (beta = 1 identically)",
@@ -601,9 +599,18 @@
       "film solved on 100 cells instead of 800",
       "beta given a zero-gradient bulk edge instead of beta(1) = 1"
     ],
+    "grading_cost_ratio": [
+      "the depletion of B dropped from the FILM model (beta = 1 identically)",
+      "uniform grid instead of graded, at the same n_x",
+      "beta given a zero-gradient bulk edge instead of beta(1) = 1"
+    ],
     "chart_label_max_plateau_ratio": [
       "Froment's curve labels read as E_i, the way Levenspiel's are",
       "the smallest printed curve label dropped from the CSV"
     ]
+  },
+  "rows": {
+    "defined": 19,
+    "recorded": 19
   }
 }
