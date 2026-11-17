@@ -358,50 +358,23 @@ models:
       the reason is bookkeeping: what is measured is a mobility multiplied by a
       thermodynamic factor read off the adsorption isotherm. This page
       implements that separation from Krishna & Baur's review, reproduces the
-      results it prints as numbers, and then asks whether the claim survives the
-      review's own evidence - which it does not, in the form it is usually
-      stated. "The M-S diffusivity is far less loading-dependent than the Fick
-      one" is true by a factor of ten in the review's weak-confinement scenario
-      (eqs. 17-18) and false by the same factor in its strong-confinement
-      scenario (eqs. 19-20). The review states both, in consecutive paragraphs
-      of Section 2.1, and contrasts them explicitly twice; what is new here is
-      only that the two are quantified against each other on one axis. The
-      factor of ten is algebraically forced, not measured - Gamma = 1/(1-theta)
-      and eq. (19)'s eth = (1-theta) are exact reciprocals and the number is set
-      entirely by the choice theta_max = 0.9 - so the finding is the DIRECTION,
-      not the size. What survives both scenarios is narrower and is what the
-      page claims instead: given either of the review's two loading dependences,
-      the pole in the Fick diffusivity at saturation lives entirely in Gamma,
-      so the formulation removes a divergence rather than a dependence.
-      Along the way the review's two printed values for one orientation-averaged
-      zero-loading diffusivity, 4.1 % apart, are resolved: x and y reproduce
-      Karger's eq. (23) to 0.29 %, the printed D_z is out by a factor of exactly
-      two, and Table 3 is the value arithmetically consistent with the equation
-      as printed while the running text is consistent with its own printed D_z.
-      The review's SECOND application of eq. (23), to CH4, then tests that
-      factor out of sample - it prints 2.75e-7 m2/s and no D_z at all - and the
-      halved relation reproduces it to 0.25 % where the relation as printed
-      misses by 5.0 %, so the review's practice is the halved form in both of
-      its worked examples and Table 3 is the odd one out. The page does not say
-      whether the factor originates with Karger or with the review, because
-      Karger 1973 is not on disk. The dual-site
-      Langmuir isotherm reproduces the review's two worked 3MP loadings to
-      0.19 %; the single-component membrane flux ratio - in which the unprinted
-      membrane thickness cancels - lands 0.17 % from the printed 34/3.1, and
-      dropping the thermodynamic factor moves it by 3.73x, which is what gives
-      that check its power. The pymrm sphere agrees with the classical series to
-      1.21e-5. Fifteen break rows; the two that do not move are kept and
-      explained, one of them because construct_div weights the r = 0 face by an
-      area of exactly zero, so the centre boundary condition cannot be wrong in
-      spherical geometry. The page's third headline - the "two extrema in Gamma"
-      survey run over every Table 1 row - has NO printed target behind it and
-      says so: the only diagnostic touching those rows differentiates the same
-      isotherm object it tests and is blind to a wrong parameter, so the page
-      injects four plausible transcription slips and reports how far each moves
-      the survey's conclusions instead. Everything here is REPRODUCTION, NOT
-      VALIDATION: the targets are numbers the authors computed, the data tier is
-      6, and the review's Fig. 10(a) inflection in the 3MP desorption kinetics
-      is not reproduced under either stated scenario and is reported unresolved.
+      results it prints as numbers, and asks whether the claim survives the
+      review's own evidence. "The M-S diffusivity is far less loading-dependent
+      than the Fick one" holds in the review's weak-confinement scenario
+      (eqs. 17-18) and fails by the same factor in its strong-confinement
+      scenario (eqs. 19-20); the two factors are exact reciprocals, so the
+      finding is the direction, and what survives both scenarios is that the
+      pole in the Fick diffusivity at saturation lives entirely in Gamma.
+      Along the way the review's two printed values of one orientation-averaged
+      zero-loading diffusivity are resolved as a factor of two in its printed
+      D_z, which the review's second worked example, CH4, confirms out of
+      sample. The transient uptake into a spherical crystal with a
+      loading-dependent diffusivity is solved with pymrm (Newton per implicit
+      step, orders measured in cell size and step), and the "two extrema in
+      Gamma" survey, which has no printed target, carries a measurement of its
+      exposure to transcription slips instead of a validation. Everything here
+      is reproduction, not validation: the targets are numbers the authors
+      computed and the data tier is 6.
     section: A
     status: published
     page: pages/A4.7-zeolite-micropore-maxwell-stefan/
@@ -419,6 +392,10 @@ models:
     pymrm_api:
       - construct_grad
       - construct_div
+      - construct_boundary_value_matrices
+      - newton
+      - find_roots
+      - observed_orders
     reference:
       authors: ["Krishna, R.", "Baur, R."]
       year: 2003
@@ -3455,24 +3432,25 @@ models:
       The kinetic-term x driving-force / adsorption-group formalism, rebuilt from
       the people it is named after: Chapter XIX of Chemical Process Principles
       derives the dual-site machinery from the Langmuir isotherm and works a
-      complete parameter estimation on printed data - 40 differential-reactor runs
+      complete parameter estimation on printed data: 40 differential-reactor runs
       of codimer hydrogenation, 18 rival mechanisms fitted by linearised least
       squares, sixteen rejected on sign grounds. The page re-runs the whole
       estimation: the 200 C transcription is proven by the book's own printed
-      checksums, the mechanism-d constants reproduce to 0.6 % by two independent
-      routes, and 38 of the 54 printed mechanism rows are consistent with the data
-      to better than 3 %. The remainder are diagnosed, not excused: eight of Table
-      D's rows trace to a single corrupted Sum(R pS) worksheet entry (two
-      independent printed rows imply the same wrong value to 1.1 %), the boxed
-      final equation misprints dS_S (-30.96 for Table G's -30.46, adjudicated from
-      the book's own K_S row at 10x separation), and one Table C cell is a digit
-      slip proven by its own row. The acceptance verdicts survive everything - the
-      joint acceptable set is {d, h} at every threshold - but the modern refit
-      shows the data cannot separate d from h (0.4 percentage points in rate
-      space; even noiseless h-rates are fitted by d to 3.6 %), so the book's
-      choice of d stands on chemistry, not statistics. A pymrm plug-flow
-      demonstration drives the fitted law through an isothermal bed where ignoring
-      the 42 % mole contraction silently lengthens the bed by half.
+      checksums, the mechanism-d constants reproduce by two independent routes
+      (0.0063 <!-- claim: mechd_200C_two_routes_max_rel --> apart), and 38 <!-- claim: DEF_clean_row_count --> of the 54 printed mechanism rows are consistent
+      with the data to better than 3 %. The remainder are diagnosed, not excused:
+      the c and g/m families of Table D trace to a single corrupted Sum(R pS)
+      worksheet entry (two independent printed rows imply the same wrong value),
+      the boxed final equation misprints dS_S (-30.96 for Table G's -30.46,
+      adjudicated from the book's own K_S row), and one Table C cell is a digit
+      slip proven by its own row. The joint acceptance verdict survives
+      everything ({d, h} at every threshold swept), but with paired standard
+      errors the refit shows the data cannot separate d from h (0.36 <!-- claim: discrim_d_vs_h_gap_pct_points --> points,
+      standard error 0.58 <!-- claim: discrim_d_vs_h_gap_se_pts -->; even noiseless h-rates are fitted by d to 3.6 <!-- claim: discrim_power_d_fits_exact_h_pct --> %), nor the
+      best rejected forms from the survivors, so the book's choice of d stands on
+      chemistry and its sign test, not on fit quality. A pymrm plug-flow
+      demonstration drives the fitted law through an isothermal bed where
+      ignoring the mole contraction silently lengthens the bed by a relative 0.51 <!-- claim: reactor_naive_fixed_total_bias_rel -->.
     section: C
     status: published
     page: pages/C1.1-lhhw-hougen-watson/
@@ -3488,13 +3466,16 @@ models:
       - the LHHW rate law for any of the 18 postulated single-rate-controlling-step mechanisms
       - the fitted constants of the accepted dual-site mechanism at 200, 275 and 325 C
       - the temperature dependence of the adsorption constants and the lumped rate constant (eq. q)
-      - the rate maximum with temperature that adsorption starvation produces (579 K at the specimen composition)
+      - the rate maximum with temperature that adsorption starvation produces (579 <!-- claim: rate_max_T_K_run3c_composition --> K at the specimen composition)
       - catalyst requirement of an isothermal plug-flow bed using the fitted law (demonstration)
     pymrm_api:
       - construct_convflux_upwind
       - construct_div
+      - compute_boundary_values
       - NumJac
       - newton
+      - find_roots
+      - observed_orders
     reference:
       authors:
         - "Hougen, O. A."
@@ -3513,10 +3494,12 @@ models:
       tier: 2
       method: >
         transcribed from cropped native-resolution (150 ppi) page-image
-        enlargements of Tables A, C, D, E, F, G and eq. (q); no figure digitised;
-        the 200 C block proven against the book's own printed least-squares sums
+        enlargements of Tables A, C, D, E, F, G, eq. (q) and the printed
+        intermediates of the estimation; no figure digitised; the 200 C block
+        proven against the book's own printed least-squares sums
       status: complete
     related:
+      - C1.2
       - C2.1
       - C2.3
       - C2.4
@@ -3533,38 +3516,36 @@ models:
       runs; no held-out measurement exists. Every agreement is labelled
       reproduction, never validation. Data tier 2 records that the underlying
       numbers are experimental measurements printed as tables (Tschernitz et al.
-      1946, reprinted in full by the book) - not that the page validates
+      1946, reprinted in full by the book), not that the page validates
       predictions against independent experiments.
 
       THE PRINTED DEFECTS, all reported and none repaired: (1) run 25a's R_calc
-      prints 5.40 where its own delta/delta^2/% columns require 5.90; (2) eight of
-      Table D's 200 C rows descend from one corrupted Sum(R pS) worksheet entry -
-      established by two independent printed rows implying the same wrong value
-      (685 vs the true 277.5) to 1.1 %, and substituting it reproduces both rows
-      to ~1 %; (3) eq. (q) misprints dS_S = -30.96 where Table G's -30.46
-      reproduces the book's own K_S row at 10x better rms - implementations that
-      type the boxed equation inherit a K_S ~22 % low; (4) three duplicate-row
-      inconsistencies (r's c = 4.95 vs siblings' 4.45 at 275 C; c's a = 9.97 vs
-      9.96 and q's a = 53.9 vs 54.0 at 325 C); (5) the 275 C g/m row is
-      unexplained by any single-element repair. The famous +-8.44 % is in
-      R = sqrt(pHpU/r) space; the same fit scatters 16.9 % in rate space (factor
-      2.00, the delta-method value, measured).
+      is off by 0.50 <!-- claim: tableC_25a_printed_minus_consistent --> from what its own delta/delta^2/% columns require; (2) the c and
+      g/m rows of Table D at 200 C descend from one corrupted Sum(R pS) worksheet
+      entry, established by two independent printed rows implying the same wrong
+      value (685 <!-- claim: DEF_implied_sum_RpS_c_row --> against the data's 278 <!-- claim: DEF_data_sum_RpS -->); (3) eq. (q) misprints dS_S = -30.96
+      where Table G's -30.46 reproduces the book's own K_S row, so
+      implementations that type the boxed equation inherit a K_S 22 <!-- claim: eqq_KS_low_pct --> % low;
+      (4) 3 <!-- claim: DEF_duplicate_inconsistencies --> duplicate-row inconsistencies in Tables E/F, each judged by the
+      implied-sum test; (5) the 275 C g/m row is unexplained by any
+      single-element repair. The famous +-8.44 % is in R = sqrt(pHpU/r) space;
+      the same fit scatters 16.9 <!-- claim: rate_space_scatter_pct_200C --> % in rate space (the delta-method factor of
+      two for a square root, measured).
 
-      THE DISCRIMINATION ANSWER: the sign test's joint decision {d, h} is robust
-      across thresholds 1-10 %, and the family shape is genuinely selected (the
-      best rejected mechanism is 2.7 points worse; deleting the product term
-      costs 6 points), but molecular-vs-atomic hydrogen is not resolvable: 0.4
-      percentage points apart, with noiseless h-rates fitted by d to 3.6 % over
-      the same compositions. The book's "the experimental fit is better with
-      mechanism d" does not survive rate-space refitting; its chemical argument
-      (no dissociation required) is what actually carries the choice.
+      THE DISCRIMINATION ANSWER, with paired standard errors over the runs: the
+      sign test's joint decision {d, h} is robust across the thresholds swept,
+      but fit quality resolves only the forms that fit 1.5 <!-- claim: nls_resolved_ratio_min --> to 3.4 <!-- claim: nls_resolved_ratio_max --> times worse
+      than d; 3 <!-- claim: nls_unresolved_from_best --> mechanisms (d, and the rejected desorption-controlled forms
+      among them) lie within two standard errors of the best fit, and dropping
+      the product term is not resolved either. The book's "the experimental fit
+      is better with mechanism d" does not survive rate-space refitting; its
+      chemical argument (no dissociation required) and its sign test carry the
+      choice.
 
       SCOPED OUT: the Johanson-Watson toluene example (book pp. 959-961), whose
-      constants derive from conversion-curve figures - the repo-wide
-      figure-review gate has no maintainer; and Chapter XXI's two-dimensional
-      bed illustration, whose intermediates are all charts. Neither is needed by
-      this page. Runtime ~5 s. One metric sits at or below check_agreement.py's
-      ABS_FLOOR and are named on the page as outside CI.
+      constants derive from conversion-curve figures; and Chapter XXI's
+      two-dimensional bed illustration, whose intermediates are all charts.
+      Neither is needed by this page.
 
   - id: C1.2
     slug: eley-rideal

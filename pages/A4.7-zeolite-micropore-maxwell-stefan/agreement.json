@@ -1,26 +1,905 @@
 {
   "page": "A4.7",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "default",
+    "threads": "default"
+  },
   "metrics": {
-    "karger_xy_max_rel_dev": 0.00285251798561148,
-    "karger_z_printed_over_computed": 0.5000477357349713,
-    "karger_table3_vs_text_rel": 0.04103343465045595,
-    "dsl_3MP_max_rel_dev": 0.0019118548408126879,
-    "gamma_eq33_vs_numerical": 2.518415465946333e-06,
-    "karger_CH4_halved_rel_dev": -0.002511188811189058,
-    "karger_CH4_unhalved_rel_dev": 0.05022671328671313,
-    "extrema_survey_worst_shift": 0.2654486775467637,
-    "extrema_survey_verdicts_moved": 1.0,
-    "extrema_survey_pairs_lost": 1.0,
-    "extrema_survey_unnamed_count": 3.0,
-    "sh75_series_exact": 10.07801477329602,
-    "F_at_Sh10": 0.7558851365175425,
-    "flux_ratio_rel_dev": -0.0017129708521635978,
-    "flux_ratio_gamma_lever": 3.7283271987249296,
-    "space_refined_rel_err": 1.2074177295641743e-05,
-    "dt_refined_rel_err": 0.00020512643804382837,
-    "dt_observed_order": 0.9569025960154038,
-    "sh_asymptote_dev": 1.3486576300181241e-09,
-    "delta_reconstructed_um": 39.96705401707085,
-    "face_mean_shift": 0.001016057677165172
+    "gamma_eq33_vs_numerical": {
+      "kind": "bound",
+      "value": 2.514214611615273e-06,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "central difference at step 1e-3 in ln P; its truncation error is gamma_fd_step_error"
+    },
+    "gamma_gap_over_budget": {
+      "kind": "bound",
+      "value": 0.9999976342221033,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "gap over the difference's truncation plus round-off error, pointwise; where truncation dominates the gap is the Richardson estimate itself, so the ratio is 1 + O(dlnP^2) there"
+    },
+    "gamma_fd_step_error": {
+      "kind": "bound",
+      "value": 2.1578132237389402e-07,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "second-order truncation error of the central difference, from two step sizes"
+    },
+    "gamma_single_site_collapse": {
+      "kind": "bound",
+      "value": 2.930988785010413e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "eq. (33) with one site is eq. (16)"
+    },
+    "karger_Dx_rel_dev": {
+      "kind": "value",
+      "value": 2.4752475247469263e-05,
+      "rtol": 1e-06
+    },
+    "karger_xy_max_rel_dev": {
+      "kind": "value",
+      "value": 0.00285251798561148,
+      "rtol": 1e-06
+    },
+    "karger_z_printed_over_computed": {
+      "kind": "value",
+      "value": 0.5000477357349713,
+      "rtol": 1e-06
+    },
+    "karger_z_halved_halfunits": {
+      "kind": "bound",
+      "value": 0.15789473684244204,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "the deviation over half a unit of the printed last digit (the source's own precision)"
+    },
+    "karger_table3_rel_dev": {
+      "kind": "value",
+      "value": 0.0006966961198617838,
+      "rtol": 1e-06
+    },
+    "karger_text_rel_dev": {
+      "kind": "value",
+      "value": -0.00012791286727453777,
+      "rtol": 1e-06
+    },
+    "karger_table3_vs_text_rel": {
+      "kind": "value",
+      "value": 0.04103343465045595,
+      "rtol": 1e-06
+    },
+    "karger_gap_over_rounding": {
+      "kind": "bound",
+      "value": 27.000000000000036,
+      "min": 10.0,
+      "basis": "theory",
+      "note": "the two printed averages differ by far more than their rounding"
+    },
+    "karger_sp2_rel_dev": {
+      "kind": "value",
+      "value": 0.0006966961198617838,
+      "rtol": 1e-06
+    },
+    "karger_CH4_halved_rel_dev": {
+      "kind": "value",
+      "value": -0.002511188811189058,
+      "rtol": 1e-06
+    },
+    "karger_CH4_unhalved_rel_dev": {
+      "kind": "value",
+      "value": 0.05022671328671313,
+      "rtol": 1e-06
+    },
+    "karger_CH4_halved_advantage": {
+      "kind": "value",
+      "value": 20.001169590641247,
+      "rtol": 1e-06
+    },
+    "karger_resistance_identity": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "c^2/D_z = a^2/D_x + b^2/D_y, satisfied by the corrected eq. (23c)"
+    },
+    "dsl_3MP_max_rel_dev": {
+      "kind": "value",
+      "value": 0.0019118548408126879,
+      "rtol": 1e-06
+    },
+    "dsl_3MP_halfunits_max": {
+      "kind": "bound",
+      "value": 0.4116847764876752,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "the deviation over half a unit of the printed last digit (the source's own precision)"
+    },
+    "mp3_theta_initial": {
+      "kind": "value",
+      "value": 5.595794157611756,
+      "rtol": 1e-06
+    },
+    "mp3_theta_surface": {
+      "kind": "value",
+      "value": 0.09282219749980442,
+      "rtol": 1e-06
+    },
+    "mp3_theta_at_gamma_max": {
+      "kind": "value",
+      "value": 4.007228796293073,
+      "rtol": 1e-06
+    },
+    "mp3_gamma_max": {
+      "kind": "value",
+      "value": 31.5928841910091,
+      "rtol": 1e-06
+    },
+    "mp3_theta_at_gamma_min": {
+      "kind": "value",
+      "value": 5.011456935729164,
+      "rtol": 1e-06
+    },
+    "mp3_gamma_min": {
+      "kind": "value",
+      "value": 8.801819400389705,
+      "rtol": 1e-06
+    },
+    "mp3_gamma_swing": {
+      "kind": "value",
+      "value": 30.86016615962991,
+      "rtol": 1e-06
+    },
+    "mp3_ms_swing_strong": {
+      "kind": "value",
+      "value": 8.946247845138828,
+      "rtol": 1e-06
+    },
+    "extrema_named_as_stated": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.018425613283443054,
+      "min_margin": 0.001
+    },
+    "extrema_survey_unnamed_count": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.10086862834448938,
+      "min_margin": 0.01
+    },
+    "extrema_unnamed_names": {
+      "kind": "exact",
+      "value": "C2, nC4, nC5"
+    },
+    "extrema_unnamed_satA": {
+      "kind": "exact",
+      "value": "8, 9, 12"
+    },
+    "extrema_max_offset_rel": {
+      "kind": "bound",
+      "value": 0.01672494422709055,
+      "max": 0.02,
+      "basis": "chosen",
+      "note": "the criterion for a maximum 'at Theta_sat,A': within 2 % of Theta_sat"
+    },
+    "extrema_2MB_thmin": {
+      "kind": "value",
+      "value": 5.71035643838076,
+      "rtol": 1e-06
+    },
+    "benzene_two_extrema": {
+      "kind": "exact",
+      "value": true
+    },
+    "extrema_survey_worst_shift": {
+      "kind": "value",
+      "value": 0.2654928421961843,
+      "rtol": 1e-06
+    },
+    "extrema_survey_verdicts_moved": {
+      "kind": "exact",
+      "value": 1
+    },
+    "extrema_survey_pairs_lost": {
+      "kind": "exact",
+      "value": 1
+    },
+    "extrema_2MB_thmin_slipped": {
+      "kind": "value",
+      "value": 4.194297677601772,
+      "rtol": 1e-06
+    },
+    "extrema_2MP_slip_shift": {
+      "kind": "bound",
+      "value": 6.821669923295914e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "'moves nothing': below 0.01 % of the extremum's loading"
+    },
+    "gamma_identity_slips_max": {
+      "kind": "bound",
+      "value": 3.993575561356266e-07,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "the identity on every slipped row stays at the central-difference error: blind to parameters"
+    },
+    "swing_weak_advantage": {
+      "kind": "value",
+      "value": 10.000000000000002,
+      "rtol": 1e-06
+    },
+    "swing_strong_advantage": {
+      "kind": "value",
+      "value": 10.000000000000002,
+      "rtol": 1e-06
+    },
+    "swing_reciprocal_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "identity",
+      "structural": true,
+      "note": "1/(1-theta) times (1-theta) is one: no row can move it"
+    },
+    "sh75_weak_03_ext": {
+      "kind": "value",
+      "value": 12.818121456793675,
+      "rtol": 1e-06
+    },
+    "sh75_weak_03": {
+      "kind": "value",
+      "value": 12.754347201786791,
+      "rtol": 1e-06
+    },
+    "sh_resolved_over_asymptote_03": {
+      "kind": "value",
+      "value": 1.0167526674103224,
+      "rtol": 1e-06
+    },
+    "sh75_weak_06": {
+      "kind": "value",
+      "value": 18.002714370932033,
+      "rtol": 1e-06
+    },
+    "sh_resolved_over_asymptote_06": {
+      "kind": "value",
+      "value": 0.9275900542766381,
+      "rtol": 1e-06
+    },
+    "sh75_weak_09_ext": {
+      "kind": "value",
+      "value": 35.98034258897202,
+      "rtol": 1e-06
+    },
+    "sh75_weak_09": {
+      "kind": "value",
+      "value": 35.83489848743547,
+      "rtol": 1e-06
+    },
+    "sh_resolved_over_asymptote_09": {
+      "kind": "value",
+      "value": 0.6259765662452953,
+      "rtol": 1e-06
+    },
+    "weak_asymmetry_pp_09": {
+      "kind": "value",
+      "value": 20.44698844896784,
+      "rtol": 1e-06
+    },
+    "sh75_production_rel_err": {
+      "kind": "bound",
+      "value": 0.004975319918901433,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "production Sh at F = 0.75 against its step and cell extrapolation, both curves"
+    },
+    "mp3_F_ads_eq17": {
+      "kind": "value",
+      "value": 0.9849539667218281,
+      "rtol": 1e-06
+    },
+    "mp3_F_des_eq17": {
+      "kind": "value",
+      "value": 0.7514373154344142,
+      "rtol": 1e-06
+    },
+    "mp3_F_ads_eq19": {
+      "kind": "value",
+      "value": 0.7845866975242488,
+      "rtol": 1e-06
+    },
+    "mp3_F_des_eq19": {
+      "kind": "value",
+      "value": 0.6710211416499446,
+      "rtol": 1e-06
+    },
+    "mp3_asymmetry_gap_min": {
+      "kind": "value",
+      "value": 0.11356555587430417,
+      "rtol": 1e-06
+    },
+    "flux_ratio_rel_dev": {
+      "kind": "value",
+      "value": -0.0017129708521635978,
+      "rtol": 1e-06
+    },
+    "flux_ratio_over_rounding": {
+      "kind": "bound",
+      "value": 0.055552962405551756,
+      "max": 1.0,
+      "basis": "theory",
+      "note": "deviation over the relative rounding allowance of the two two-figure fluxes"
+    },
+    "flux_ratio_gamma_lever": {
+      "kind": "value",
+      "value": 3.72832719872493,
+      "rtol": 1e-06
+    },
+    "delta_reconstructed_um": {
+      "kind": "value",
+      "value": 39.96705401707085,
+      "rtol": 1e-06
+    },
+    "delta_spread_identity": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "the two thicknesses' ratio is the flux ratio's deviation, algebraically"
+    },
+    "sp_pure_rel_dev": {
+      "kind": "value",
+      "value": 0.0013600816048964237,
+      "rtol": 1e-06
+    },
+    "space_observed_order": {
+      "kind": "bound",
+      "value": 1.9530638849333914,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "constant D, finest triple, cell size"
+    },
+    "dt_observed_order": {
+      "kind": "bound",
+      "value": 0.9872799058879613,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "constant D, finest triple, backward Euler"
+    },
+    "space_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 5886531.735298172,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the accumulated LU round-off bound"
+    },
+    "dt_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 36337397.53563561,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the accumulated LU round-off bound"
+    },
+    "dt_refined_rel_err": {
+      "kind": "value",
+      "value": 0.00020512643804364547,
+      "rtol": 1e-06
+    },
+    "space_refined_rel_err": {
+      "kind": "bound",
+      "value": 8.624330283079392e-06,
+      "max": 2e-05,
+      "basis": "theory",
+      "note": "step extrapolation on the finest grid: the spatial error of that grid; its value depends on the extrapolation order (8.5e-6 with the observed order, 1.2e-5 with order 1)"
+    },
+    "ext_both_vs_series": {
+      "kind": "bound",
+      "value": 2.265026839529178e-06,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "extrapolated in both axes against eq. (30): the remainder of a first-order extrapolation whose step orders are 0.98 and 0.99, against a production error of 1.5e-3"
+    },
+    "production_rel_err": {
+      "kind": "value",
+      "value": 0.0015415927815817657,
+      "rtol": 1e-06
+    },
+    "nl_space_order": {
+      "kind": "bound",
+      "value": 1.7822789849066283,
+      "min": 1.7,
+      "max": 2.1,
+      "basis": "theory",
+      "note": "3MP desorption, finest triple, cell size; the ladder approaches 2 from below"
+    },
+    "nl_time_order": {
+      "kind": "bound",
+      "value": 0.9966778379904628,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "3MP desorption, finest triple, step"
+    },
+    "nl_space_over_roundoff": {
+      "kind": "bound",
+      "value": 15346.939368424388,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the Newton tolerance accumulated over the steps"
+    },
+    "nl_time_over_roundoff": {
+      "kind": "bound",
+      "value": 40646.000681072706,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference over the Newton tolerance accumulated over the steps"
+    },
+    "nl_production_err": {
+      "kind": "bound",
+      "value": 0.0015813774846421547,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "production discretisation error of the hardest non-linear uptake; an order below every uptake difference the page reads off"
+    },
+    "face_mean_shift": {
+      "kind": "bound",
+      "value": 0.00042671503150248924,
+      "max": 0.003,
+      "basis": "chosen",
+      "note": "of the order of the production discretisation error: no result depends on the face mean"
+    },
+    "centre_bc_shift": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "identity",
+      "note": "the r = 0 face has zero area in a sphere"
+    },
+    "sh75_series_exact": {
+      "kind": "value",
+      "value": 10.078014773296,
+      "rtol": 1e-06
+    },
+    "sh75_vs_printed_rel": {
+      "kind": "value",
+      "value": 0.007801477329600015,
+      "rtol": 1e-06
+    },
+    "F_at_Sh10": {
+      "kind": "value",
+      "value": 0.7558851365175425,
+      "rtol": 1e-06
+    },
+    "F_at_Sh10_pp": {
+      "kind": "value",
+      "value": 0.5885136517542522,
+      "rtol": 1e-06
+    },
+    "sh_asymptote_dev": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "one-mode limit at Fo = 2; m >= 2 terms are e^-59"
+    },
+    "series_tail_max": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "theory",
+      "note": "tail bound of eq. (30) at the smallest Fo used"
+    },
+    "fo_k15": {
+      "kind": "value",
+      "value": 0.021651603771287404,
+      "rtol": 1e-06
+    },
+    "F_at_k15": {
+      "kind": "value",
+      "value": 0.4331507027660976,
+      "rtol": 1e-06
+    },
+    "j15_tau_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the same root on J1.5, committed on another machine"
+    },
+    "j15_uptake_gap": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the same uptake on J1.5, committed on another machine"
+    },
+    "targets_worst_rel_dev": {
+      "kind": "value",
+      "value": 0.007846848690056696,
+      "rtol": 1e-06
+    },
+    "karger_eq23_vs_text_rel": {
+      "kind": "value",
+      "value": 0.041758718605023226,
+      "rtol": 1e-06
+    },
+    "sh_resolved_over_asymptote_const": {
+      "kind": "value",
+      "value": 1.083265921435301,
+      "rtol": 1e-06
+    },
+    "sh75_weak_rises_with_theta_s": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 5.248367169145242,
+      "min_margin": 0.01,
+      "note": "steps theta_s 0.3 -> 0.6 -> 0.9, of 2, where Sh at F = 0.75 rises"
+    },
+    "mp3_desorption_rate_rises": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.0034524381495830638,
+      "min_margin": 1e-06,
+      "note": "backward-Euler steps of the 3MP desorption, both scenarios, where the rate rises"
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "karger_Dx_rel_dev": [
+      "cell dimensions a and b swapped: Karger"
+    ],
+    "karger_xy_max_rel_dev": [
+      "cell dimensions a and b swapped: Karger"
+    ],
+    "karger_z_printed_over_computed": [
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "printed D_z with its last two digits transposed: Karger"
+    ],
+    "karger_z_halved_halfunits": [
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "printed D_z with its last two digits transposed: Karger"
+    ],
+    "karger_table3_rel_dev": [
+      "cell dimensions a and b swapped: Karger",
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "Table 3 average with its last two digits transposed: Karger"
+    ],
+    "karger_text_rel_dev": [
+      "cell dimensions a and b swapped: Karger",
+      "printed D_z with its last two digits transposed: Karger"
+    ],
+    "karger_table3_vs_text_rel": [
+      "Table 3 average with its last two digits transposed: Karger"
+    ],
+    "karger_gap_over_rounding": [
+      "Table 3 average with its last two digits transposed: Karger"
+    ],
+    "karger_sp2_rel_dev": [
+      "cell dimensions a and b swapped: Karger",
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger"
+    ],
+    "karger_CH4_halved_rel_dev": [
+      "cell dimensions a and b swapped: Karger",
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "CH4 nu_zz read as printed (nu_str twice): Karger"
+    ],
+    "karger_CH4_unhalved_rel_dev": [
+      "cell dimensions a and b swapped: Karger",
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "CH4 nu_zz read as printed (nu_str twice): Karger"
+    ],
+    "karger_CH4_halved_advantage": [
+      "cell dimensions a and b swapped: Karger",
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger",
+      "CH4 nu_zz read as printed (nu_str twice): Karger"
+    ],
+    "karger_resistance_identity": [
+      "eq. (23c) denominator as printed, nu_zz + nu_zz: Karger",
+      "D_z halved inside eq. (23c): Karger"
+    ],
+    "dsl_3MP_max_rel_dev": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "dsl_3MP_halfunits_max": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_theta_initial": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_theta_surface": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_theta_at_gamma_max": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_gamma_max": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_theta_at_gamma_min": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_gamma_min": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_gamma_swing": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "mp3_ms_swing_strong": [
+      "b_A of 3MP raised 5 %: worked loadings"
+    ],
+    "gamma_eq33_vs_numerical": [
+      "eq. (33) without the site-B factor: identity",
+      "eq. (33) without the site-A factor: identity",
+      "difference step 0.1 in ln P: identity"
+    ],
+    "gamma_gap_over_budget": [
+      "eq. (33) without the site-B factor: identity",
+      "eq. (33) without the site-A factor: identity"
+    ],
+    "gamma_fd_step_error": [
+      "difference step 0.1 in ln P: identity"
+    ],
+    "gamma_single_site_collapse": [
+      "eq. (33) without the site-A factor: identity"
+    ],
+    "extrema_named_as_stated": [
+      "nC7 Theta_sat,B read as 0: survey",
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_survey_unnamed_count": [
+      "nC5 Theta_sat,B 0.5 read as 0: survey",
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_unnamed_names": [
+      "nC5 Theta_sat,B 0.5 read as 0: survey",
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_unnamed_satA": [
+      "nC5 Theta_sat,B 0.5 read as 0: survey",
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_max_offset_rel": [
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_2MB_thmin": [
+      "2MB Theta_sat,B 4.2 read as 0.42: survey",
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "benzene_two_extrema": [
+      "eq. (33) without the site-B factor: survey"
+    ],
+    "extrema_survey_worst_shift": [
+      "the 2MB slip left out: exposure",
+      "eq. (33) without the site-B factor: exposure"
+    ],
+    "extrema_survey_verdicts_moved": [
+      "the nC5 slip left out: exposure",
+      "eq. (33) without the site-B factor: exposure"
+    ],
+    "extrema_survey_pairs_lost": [
+      "the nC5 slip left out: exposure"
+    ],
+    "extrema_2MB_thmin_slipped": [
+      "the 2MB slip left out: exposure",
+      "eq. (33) without the site-B factor: exposure"
+    ],
+    "extrema_2MP_slip_shift": [
+      "2MP slip of three decades for one: exposure"
+    ],
+    "gamma_identity_slips_max": [
+      "eq. (33) without the site-B factor: exposure"
+    ],
+    "swing_weak_advantage": [
+      "theta_max = 0.8 for 0.9: swings"
+    ],
+    "swing_strong_advantage": [
+      "theta_max = 0.8 for 0.9: swings"
+    ],
+    "swing_reciprocal_gap": [],
+    "sh75_weak_03_ext": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh75_weak_03": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh_resolved_over_asymptote_03": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement"
+    ],
+    "sh75_weak_06": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh_resolved_over_asymptote_06": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement"
+    ],
+    "sh75_weak_09_ext": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh75_weak_09": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh_resolved_over_asymptote_09": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement"
+    ],
+    "weak_asymmetry_pp_09": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh75_production_rel_err": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement",
+      "step schedule coarsened 4 times: weak confinement"
+    ],
+    "sh75_weak_rises_with_theta_s": [
+      "Gamma dropped from eq. (18), D = eth(0): weak confinement"
+    ],
+    "mp3_F_ads_eq17": [
+      "Gamma dropped, D = eth: 3MP uptake",
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "mp3_F_des_eq17": [
+      "Gamma dropped, D = eth: 3MP uptake",
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "mp3_F_ads_eq19": [
+      "Gamma dropped, D = eth: 3MP uptake",
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "mp3_F_des_eq19": [
+      "Gamma dropped, D = eth: 3MP uptake",
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "mp3_asymmetry_gap_min": [
+      "Gamma dropped, D = eth: 3MP uptake",
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "mp3_desorption_rate_rises": [
+      "nC7 row of Table 1 read for 3MP, crystal starting near saturation: 3MP uptake"
+    ],
+    "space_observed_order": [
+      "nu = 0 for the sphere: constant-D ladders",
+      "ladders of 6 to 48 cells: constant-D ladders",
+      "cell ladder of 200 cells repeated, not refined: constant-D ladders"
+    ],
+    "dt_observed_order": [
+      "step ladder scaling dt0 alone: constant-D ladders",
+      "step ladder at s = 1/8 repeated, not refined: constant-D ladders"
+    ],
+    "space_ladder_over_roundoff": [
+      "cell ladder of 200 cells repeated, not refined: constant-D ladders"
+    ],
+    "dt_ladder_over_roundoff": [
+      "step ladder at s = 1/8 repeated, not refined: constant-D ladders"
+    ],
+    "dt_refined_rel_err": [
+      "nu = 0 for the sphere: constant-D ladders",
+      "step ladder scaling dt0 alone: constant-D ladders",
+      "ladders of 6 to 48 cells: constant-D ladders"
+    ],
+    "space_refined_rel_err": [
+      "nu = 0 for the sphere: constant-D ladders",
+      "step ladder scaling dt0 alone: constant-D ladders",
+      "ladders of 6 to 48 cells: constant-D ladders",
+      "step ladder at s = 1/8 repeated, not refined: constant-D ladders"
+    ],
+    "ext_both_vs_series": [
+      "nu = 0 for the sphere: constant-D ladders",
+      "step ladder scaling dt0 alone: constant-D ladders",
+      "ladders of 6 to 48 cells: constant-D ladders",
+      "step ladder at s = 1/8 repeated, not refined: constant-D ladders"
+    ],
+    "production_rel_err": [
+      "nu = 0 for the sphere: constant-D ladders"
+    ],
+    "nl_space_order": [
+      "cell ladder of 150 cells repeated, not refined: 3MP ladders",
+      "ladders of 6 to 48 cells: 3MP ladders"
+    ],
+    "nl_time_order": [
+      "step ladder scaling dt0 alone: 3MP ladders"
+    ],
+    "nl_space_over_roundoff": [
+      "cell ladder of 150 cells repeated, not refined: 3MP ladders"
+    ],
+    "nl_time_over_roundoff": [
+      "step ladder scaling dt0 alone: 3MP ladders"
+    ],
+    "nl_production_err": [
+      "production crystal of 10 cells: 3MP ladders"
+    ],
+    "face_mean_shift": [
+      "crystal of 10 cells for 150: face mean"
+    ],
+    "centre_bc_shift": [
+      "nu = 0 for the sphere: centre condition"
+    ],
+    "sh75_series_exact": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood",
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "sh75_vs_printed_rel": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood",
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "F_at_Sh10": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood",
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "F_at_Sh10_pp": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood",
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "sh_asymptote_dev": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood"
+    ],
+    "series_tail_max": [
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "fo_k15": [
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "F_at_k15": [
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "j15_tau_gap": [
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "j15_uptake_gap": [
+      "eq. (30) cut at 2 terms: Sherwood"
+    ],
+    "sh_resolved_over_asymptote_const": [
+      "eq. (31) prefactor 2/3 read as 1/2: Sherwood"
+    ],
+    "flux_ratio_rel_dev": [
+      "Gamma dropped, loading difference: membrane",
+      "M-S diffusivities of C1 and nC4 swapped: membrane",
+      "nC4 flux 3.1 read as 1.3: membrane"
+    ],
+    "flux_ratio_over_rounding": [
+      "Gamma dropped, loading difference: membrane",
+      "M-S diffusivities of C1 and nC4 swapped: membrane",
+      "nC4 flux 3.1 read as 1.3: membrane"
+    ],
+    "flux_ratio_gamma_lever": [
+      "Gamma dropped, loading difference: membrane"
+    ],
+    "delta_reconstructed_um": [
+      "Gamma dropped, loading difference: membrane",
+      "M-S diffusivities of C1 and nC4 swapped: membrane",
+      "MFI cell with one O per Si: membrane"
+    ],
+    "delta_spread_identity": [],
+    "sp_pure_rel_dev": [
+      "nC4 flux 3.1 read as 1.3: membrane"
+    ],
+    "targets_worst_rel_dev": [
+      "eq. (31) prefactor 2/3 read as 1/2: printed targets",
+      "D_z halved inside eq. (23c): printed targets"
+    ],
+    "karger_eq23_vs_text_rel": [
+      "D_z halved inside eq. (23c): printed targets"
+    ]
+  },
+  "rows": {
+    "defined": 42,
+    "recorded": 42
   }
 }
