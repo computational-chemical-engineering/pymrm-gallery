@@ -1,8 +1,8 @@
 {
-  "page": "J1.1-langmuir-isotherm",
+  "page": "J1.1",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -100,22 +100,22 @@
     },
     "t7_F_over_L": {
       "kind": "value",
-      "value": 3.8234903507132354,
+      "value": 3.8234903507132323,
       "rtol": 0.05
     },
     "t7_null_mean": {
       "kind": "value",
-      "value": 19.404110936140988,
+      "value": 19.404110936140977,
       "rtol": 0.05
     },
     "t7_null_kp": {
       "kind": "value",
-      "value": 26.77321205486093,
+      "value": 26.773212054860917,
       "rtol": 0.05
     },
     "t7_graphical_penalty": {
       "kind": "value",
-      "value": 1.063119154089408,
+      "value": 1.0631191540894076,
       "rtol": 0.001
     },
     "qF_column_max_dev_pct": {
@@ -126,10 +126,24 @@
     },
     "fit_two_route_max_rel": {
       "kind": "bound",
-      "value": 9.402589817852913e-12,
+      "value": 1.8020029912690916e-11,
       "max": 1e-09,
       "basis": "tolerance",
-      "note": "relative gap between newton (tol 1e-12) and brentq (xtol 1e-13) on the same central-difference dS, worst over every fit; 9.4e-12 to 1.3e-11 on three BLAS kernels in the locked environment"
+      "note": "relative gap between newton (tol 1e-12) and Brent (xtol 1e-13) on the same central-difference dS, worst over the fits of sections 6.2 and 6.6"
+    },
+    "t7_L_second_route_rel": {
+      "kind": "bound",
+      "value": 2.6645352591003757e-15,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "Table VII Case I RMS by the derivative-free scan against the fit of 6.6; both optima located to xtol 1e-13"
+    },
+    "t7_BET_free_over_L_multilayer": {
+      "kind": "bound",
+      "value": 9.245350847183941e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "Case VI refitted to its own curve reaching p/p0 = 0.3: round-off of the fit"
     },
     "beta_max": {
       "kind": "value",
@@ -147,6 +161,44 @@
       "margin": 0.1428571428571428,
       "min_margin": 0.05,
       "note": "entries with recomputed beta >= 1; the margin is the smallest |beta - 1|"
+    },
+    "beta_n_above_one_textlayer": {
+      "kind": "exact",
+      "value": 17,
+      "margin": 0.1428571428571428,
+      "min_margin": 0.05,
+      "note": "entries above the monolayer bound if eq. (37) were read 25.2e16; the margin is the smallest relative distance of a scaled beta from 1"
+    },
+    "disc_n_langmuir_wins": {
+      "kind": "exact",
+      "value": 13,
+      "margin": 0.3425549340064473,
+      "min_margin": 0.05,
+      "note": "tables on which the best Freundlich RMS exceeds Langmuir's; the margin is the smallest relative distance of an RMS ratio from 1"
+    },
+    "beta_n_exact": {
+      "kind": "exact",
+      "value": 22,
+      "margin": 1.0,
+      "min_margin": 0.05,
+      "note": "rows whose printed beta equals N0 over the monolayer count rounded to the printed 0.01"
+    },
+    "sigma_n_below": {
+      "kind": "exact",
+      "value": 18,
+      "margin": 0.01432429840877436,
+      "min_margin": 0.0,
+      "note": "cells whose printed sigma lies below eq. (38); a sign count, so the margin is the smallest |deviation| in percent"
+    },
+    "sigma_trunc_reproduces": {
+      "kind": "exact",
+      "value": 15,
+      "note": "cells reproduced exactly by cutting eq. (38) at the cell's printed granularity"
+    },
+    "sigma_round_reproduces": {
+      "kind": "exact",
+      "value": 11,
+      "note": "cells reproduced exactly by rounding eq. (38) at the cell's printed granularity"
     },
     "order_breaks_recomputed_beta": {
       "kind": "exact",
@@ -221,7 +273,7 @@
       "value": 5.551115123125783e-16,
       "max": 1e-13,
       "basis": "chosen",
-      "note": "4000-layer ladder summed term by term against the BET closed form at x = 0.2; truncation is x^4000, so the gap is summation round-off (5.6e-16 measured)"
+      "note": "4000-layer ladder summed term by term against the BET closed form at x = 0.2; truncation is x^4000, so the gap is summation round-off"
     },
     "caseVI_ladder_20layer_rel": {
       "kind": "value",
@@ -242,17 +294,46 @@
     },
     "eq14_time_order": {
       "kind": "bound",
-      "value": 0.9948437769080223,
+      "value": 0.9867955645588528,
       "min": 0.9,
       "max": 1.1,
       "basis": "theory",
-      "note": "observed order of implicit Euler over 200 to 1600 steps; first order"
+      "note": "observed order of implicit Euler from successive differences of the trajectory on 200 to 1600 steps, the one furthest from 1; first order"
+    },
+    "eq14_ladder_over_roundoff": {
+      "kind": "bound",
+      "value": 42906308.22011962,
+      "min": 1000.0,
+      "basis": "chosen",
+      "note": "finest successive difference of the trajectory over the march's floor n_steps * max(newton tol, eps) * theta1; the orders mean something only far above that floor"
     },
     "t_half_march_vs_eq16_rel": {
       "kind": "value",
-      "value": 0.0018753613693760496,
+      "value": 0.0018753613693762716,
       "rtol": 0.05,
       "note": "discretisation error, 1600 implicit steps"
+    },
+    "t_half_march_order": {
+      "kind": "bound",
+      "value": 1.005427341409036,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "observed order of the half-coverage time from successive differences on 200 to 1600 steps, the one furthest from 1; first order"
+    },
+    "t_half_richardson_vs_eq16_rel": {
+      "kind": "bound",
+      "value": 1.2191382627424474e-05,
+      "max": 5e-05,
+      "basis": "chosen",
+      "note": "Richardson value (observed order) of the marched half-coverage time against eq. (16): the march converges to eq. (16), not merely converges; the gap is dominated by the error of the order estimate, and the bound covers it"
+    },
+    "t_half_closed_form_vs_eq16_rel": {
+      "kind": "bound",
+      "value": 2.220446049250313e-16,
+      "max": 1e-14,
+      "basis": "tolerance",
+      "note": "eq. (14)'s closed form inverted at half coverage against eq. (16), an algebraic identity; the gap is the root finder's tolerance"
     },
     "x_max_anywhere": {
       "kind": "value",
@@ -281,23 +362,23 @@
     },
     "x_1pct_rootfind": {
       "kind": "value",
-      "value": 0.009899330969547546,
+      "value": 0.00989933096954734,
       "rtol": 0.05
     },
     "x_1pct_two_route_rel": {
       "kind": "value",
-      "value": 0.0001675720756978416,
+      "value": 0.0001675720757187138,
       "rtol": 0.05,
       "note": "the finite-c correction to the c -> infinity limit 1/101"
     },
     "x_1pct_sampling_error_pct": {
       "kind": "value",
-      "value": 6.263947275262072,
+      "value": 6.263947275264292,
       "rtol": 0.05
     },
     "p_1pct_over_p_max": {
       "kind": "value",
-      "value": 1113.5965729951256,
+      "value": 1113.5965729951024,
       "rtol": 0.05
     },
     "x_max_90K_only": {
@@ -327,7 +408,7 @@
     },
     "p0_shrink_factor_for_parity": {
       "kind": "value",
-      "value": 12.144978864123727,
+      "value": 12.14497886412373,
       "rtol": 0.05
     },
     "slope_at_3bars": {
@@ -342,16 +423,18 @@
     },
     "p_for_slope_020": {
       "kind": "value",
-      "value": 25.64102564102564,
+      "value": 25.641025641025635,
       "rtol": 0.005
     }
   },
   "quoted": {
     "t7_F_over_L": [
-      "3.82"
+      "3.82",
+      "3.8235"
     ],
     "disc_median_ratio": [
-      "2.12"
+      "2.12",
+      "2.1211"
     ],
     "beta_headroom": [
       "1.1667"
@@ -426,7 +509,10 @@
       "1.78e-3"
     ],
     "eq14_time_order": [
-      "0.995"
+      "0.987"
+    ],
+    "t_half_march_order": [
+      "1.005"
     ],
     "t_half_march_vs_eq16_rel": [
       "1.875e-3"
@@ -445,10 +531,61 @@
     ],
     "caseVI_series_vs_closed_form": [
       "below 1e-13"
+    ],
+    "t7_L_second_route_rel": [
+      "below 1e-12"
+    ],
+    "t7_BET_free_over_L_multilayer": [
+      "below 1e-9"
+    ],
+    "t_half_closed_form_vs_eq16_rel": [
+      "at most 1e-14"
+    ],
+    "t_half_richardson_vs_eq16_rel": [
+      "at most 5e-5"
+    ],
+    "t7_null_mean": [
+      "19.4"
+    ],
+    "t7_null_kp": [
+      "26.8"
+    ],
+    "x_max_90K_only": [
+      "7.7e-4"
+    ],
+    "departure_max_90K_only": [
+      "0.082"
+    ],
+    "scatter_over_sep_min_90K_only": [
+      "31.1"
+    ],
+    "x_max_155K_permanent_gases": [
+      "1.2e-6"
+    ],
+    "beta_n_above_one_textlayer": [
+      "17"
+    ],
+    "disc_n_langmuir_wins": [
+      "13"
+    ],
+    "beta_n_exact": [
+      "22"
+    ],
+    "sigma_n_below": [
+      "18"
+    ],
+    "sigma_trunc_reproduces": [
+      "15"
+    ],
+    "sigma_round_reproduces": [
+      "11"
     ]
   },
   "breaks": {
     "N0_max_rel_pct": [
+      "eq. (37) coefficient 25.2e15 -> 25.2e16 (the text layer's reading)"
+    ],
+    "beta_n_above_one": [
       "eq. (37) coefficient 25.2e15 -> 25.2e16 (the text layer's reading)"
     ],
     "beta_max": [
@@ -461,6 +598,9 @@
     "s_inlier_max_dev_pct": [
       "mica surface 5750 -> 5075 sq.cm (transposition)"
     ],
+    "beta_headroom": [
+      "methane/CO2 monolayer counts swapped"
+    ],
     "sigma_max_abs_rel_pct": [
       "eq. (38) sqrt(MT) -> MT"
     ],
@@ -468,6 +608,10 @@
       "Table XXI sigma_liq inverted (a plausible misreading of 'relative life')"
     ],
     "disc_median_ratio": [
+      "Freundlich NOT refitted (the paper's own 8.4 p^0.417 everywhere)",
+      "Langmuir fitted by Langmuir's linearisation instead of on q"
+    ],
+    "disc_n_langmuir_wins": [
       "Freundlich NOT refitted (the paper's own 8.4 p^0.417 everywhere)",
       "Langmuir fitted by Langmuir's linearisation instead of on q"
     ],
@@ -480,6 +624,9 @@
     "x_1pct_rootfind": [
       "1 % separation sampled on a 40-point log grid, not root-found"
     ],
+    "p_1pct_over_p_max": [
+      "1 % separation sampled on a 40-point log grid, not root-found"
+    ],
     "t_half_eq15_corrected": [
       "eq. (15) taken as printed"
     ],
@@ -487,12 +634,37 @@
       "eq. (14) marched with 200 steps instead of 1600"
     ],
     "t_half_march_vs_eq16_rel": [
-      "half-coverage root-found on a 200-step march instead of 1600"
+      "half-coverage root-found on a 200-step march instead of 1600",
+      "eq. (14) without its evaporation term (k = alpha mu only)"
+    ],
+    "eq14_time_order": [
+      "eq. (14) marched with a midpoint rule instead of implicit Euler"
+    ],
+    "t_half_march_order": [
+      "eq. (14) marched with a midpoint rule instead of implicit Euler"
+    ],
+    "eq14_ladder_over_roundoff": [
+      "each implicit step solved to a newton step of 1e-6"
+    ],
+    "t_half_richardson_vs_eq16_rel": [
+      "eq. (14) without its evaporation term (k = alpha mu only)"
+    ],
+    "t_half_closed_form_vs_eq16_rel": [
+      "eq. (14) without its evaporation term (k = alpha mu only)"
     ],
     "t4_two_route_b_rel_pct": [
       "Table IV: printed b = 58.3 used instead of the two-point solution"
     ],
+    "t4_b_printed_dev_pct": [
+      "Table IV b 58.3 -> 57.5"
+    ],
     "t7_F_over_L": [
+      "Table VII top row q_obs 33.0 -> 30.0"
+    ],
+    "t7_null_mean": [
+      "Table VII top row q_obs 33.0 -> 30.0"
+    ],
+    "t7_null_kp": [
       "Table VII top row q_obs 33.0 -> 30.0"
     ],
     "n_obs_mismatches": [
@@ -513,6 +685,9 @@
     "departure_max_pct": [
       "separation read at the mean pressure instead of the maximum"
     ],
+    "departure_max_90K_only": [
+      "separation read at the mean pressure instead of the maximum"
+    ],
     "sym_eq26_residual": [
       "eq. (22): the bare fraction theta_0 omitted from the inventory"
     ],
@@ -524,6 +699,23 @@
     ],
     "beta_max_abs_dev": [
       "Table XX beta repaired to 0.46 instead of reported"
+    ],
+    "beta_n_exact": [
+      "Table XX beta repaired to 0.46 instead of reported"
+    ],
+    "beta_n_above_one_textlayer": [
+      "eq. (37) text-layer coefficient read 25.2e15 (factor 1)"
+    ],
+    "sigma_n_below": [
+      "eq. (38) coefficient 5 % low"
+    ],
+    "sigma_trunc_reproduces": [
+      "eq. (38) coefficient 5 % low",
+      "sigma reproduction tested by rounding instead of cutting"
+    ],
+    "sigma_round_reproduces": [
+      "eq. (38) coefficient 5 % low",
+      "sigma reproduction tested by cutting instead of rounding"
     ],
     "t22_single_max_pct": [
       "Table XXI sigma_liq inverted"
@@ -537,14 +729,14 @@
     "scatter_over_sep_min": [
       "Table XXI sigma_liq inverted"
     ],
+    "x_max_90K_only": [
+      "Table XXI sigma_liq inverted"
+    ],
+    "x_max_155K_permanent_gases": [
+      "Table XXI sigma_liq inverted"
+    ],
     "qF_column_max_dev_pct": [
       "printed q_F column checked against 8.4 p^0.42 instead of p^0.417"
-    ],
-    "t7_null_mean": [
-      "Table VII top row q_obs 33.0 -> 30.0"
-    ],
-    "t7_null_kp": [
-      "Table VII top row q_obs 33.0 -> 30.0"
     ],
     "t7_graphical_penalty": [
       "Table VII optimum taken on the p/q linearisation"
@@ -573,9 +765,6 @@
     "caseVI_ladder_20layer_rel": [
       "ladder truncated at 5 layers instead of 20"
     ],
-    "eq14_time_order": [
-      "eq. (14) marched with a midpoint rule instead of implicit Euler"
-    ],
     "slope_at_3bars": [
       "Table VII a 0.156 -> 0.15"
     ],
@@ -591,38 +780,27 @@
     "x_1pct_sampling_error_pct": [
       "the sampling grid refined from 40 to 400 points"
     ],
-    "p_1pct_over_p_max": [
-      "1 % separation sampled on a 40-point log grid, not root-found"
-    ],
-    "x_max_90K_only": [
-      "Table XXI sigma_liq inverted"
-    ],
-    "departure_max_90K_only": [
-      "separation read at the mean pressure instead of the maximum"
-    ],
     "scatter_over_sep_min_90K_only": [
       "every 155 K row kept rather than dropped"
-    ],
-    "x_max_155K_permanent_gases": [
-      "Table XXI sigma_liq inverted"
     ],
     "t7_BET_free_over_L": [
       "Table VII's q replaced by Case VI's own curve reaching p/p0 = 0.3"
     ],
+    "t7_BET_free_over_L_multilayer": [
+      "Case VI fitted to its own curve with Table VII's p0"
+    ],
+    "t7_L_second_route_rel": [
+      "the derivative-free refit stopped at its grid minimum"
+    ],
     "p0_shrink_factor_for_parity": [
       "p0 margin computed on the 90 K entries only"
     ],
-    "t4_b_printed_dev_pct": [
-      "Table IV b 58.3 -> 57.5"
-    ],
     "fit_two_route_max_rel": [
       "newton tol and backward_tol loosened to 1e-3 on one fit"
-    ],
-    "beta_headroom": [
-      "methane/CO2 monolayer counts swapped"
-    ],
-    "beta_n_above_one": [
-      "eq. (37) coefficient 25.2e15 -> 25.2e16 (the text layer's reading)"
     ]
+  },
+  "rows": {
+    "defined": 57,
+    "recorded": 57
   }
 }
