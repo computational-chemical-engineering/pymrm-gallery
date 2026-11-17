@@ -1,40 +1,478 @@
 {
   "page": "F3.5",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "table2_F_vs_Jratio_maxdev": 0.001814882032667775,
-    "k3_scale_fitted": 1.4584680013479845,
-    "k3_scale_spread_per_condition": 0.04955010884641742,
-    "k3_scale_refitted_to_Eu": 1.473468819416778,
-    "E_maxdev_printed": 0.21412616932786555,
-    "Ju_maxdev_reconstructed": 0.038477518905975394,
-    "Eu_maxdev_reconstructed": 0.006245920697338647,
-    "E_promoted_maxdev_reconstructed": 0.07576778334456313,
-    "F_maxdev_reconstructed": 0.0562598115614541,
-    "desorption_F_dev": -0.11951229306205347,
-    "desorption_F_dev_printed_constants": -0.023386689535761396,
-    "desorption_drive_cut": 0.3912273944573811,
-    "desorption_drive_cut_printed_constants": 0.34673812504000634,
-    "Fmax_branch_Kc2": 0.0562598115614541,
-    "Fmax_branch_Kw": 0.08594864818684012,
-    "Eu_max_branch_Kc1": 0.19818279556036722,
-    "s_from_figures_mean": 1.4445963992156121,
-    "fig_charge_dev_unpromoted_max": 0.0011250000000000426,
-    "fig_charge_dev_promoted_max": 0.0020249999999998325,
-    "pfo_max_rel_err": 3.494006279747275e-05,
-    "vkh_dev": 0.0005037971494195048,
-    "grid_delta": 1.3214982231835037e-05,
-    "kinst_delta": 2.2315512100856694e-05,
-    "pen_vs_film_max": 0.11301141734650444,
-    "pen_vs_film_max_richardson": 0.11564239792153698,
-    "pen_time_order": 1.0159798906523478,
-    "pen_vs_film_max_nt160_withdrawn": 0.1048827394642553,
-    "physical_E1": 5.366218580604709e-11,
-    "second_order_cross": 1.0032179087460236e-08,
-    "collapse_residual": 9.712259053107353e-06,
-    "carbon_flux_closure": 6.456460965998938e-10,
-    "amine_flux_closure": 1.2343871223243346e-10,
-    "charge_flux": 1.0625834033608378e-09,
-    "electroneutrality": 2.7941496227867903e-11,
-    "gas_side_fraction": 2.295782467169705e-05
+    "table2_F_vs_Jratio_maxdev": {
+      "kind": "bound",
+      "value": 0.001814882032667775,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "printed F against the ratio of printed fluxes, each printed to three significant digits: rounding alone reaches a few 1e-3"
+    },
+    "k3_scale_fitted": {
+      "kind": "value",
+      "value": 1.4584687002827659,
+      "rtol": 0.05
+    },
+    "k3_scale_spread_per_condition": {
+      "kind": "value",
+      "value": 0.04955010884641742,
+      "rtol": 0.05
+    },
+    "k3_scale_refitted_to_Eu": {
+      "kind": "value",
+      "value": 1.473468813499613,
+      "rtol": 0.05
+    },
+    "E_maxdev_printed": {
+      "kind": "value",
+      "value": 0.21412616934291817,
+      "rtol": 0.05
+    },
+    "Ju_maxdev_reconstructed": {
+      "kind": "value",
+      "value": 0.0384764269269493,
+      "rtol": 0.05
+    },
+    "Eu_maxdev_reconstructed": {
+      "kind": "value",
+      "value": 0.006245679419396799,
+      "rtol": 0.05
+    },
+    "E_promoted_maxdev_reconstructed": {
+      "kind": "value",
+      "value": 0.07576762334313947,
+      "rtol": 0.05
+    },
+    "F_maxdev_reconstructed": {
+      "kind": "value",
+      "value": 0.05625997240604974,
+      "rtol": 0.05
+    },
+    "Fmax_branch_Kc2": {
+      "kind": "value",
+      "value": 0.05625997240604974,
+      "rtol": 0.05
+    },
+    "Fmax_branch_Kw": {
+      "kind": "value",
+      "value": 0.08594824518079058,
+      "rtol": 0.05
+    },
+    "Eu_max_branch_Kc1": {
+      "kind": "value",
+      "value": 0.1981827715110973,
+      "rtol": 0.05
+    },
+    "s_from_figures_mean": {
+      "kind": "value",
+      "value": 1.4445963992156121,
+      "rtol": 0.05
+    },
+    "fig_charge_dev_unpromoted_max": {
+      "kind": "bound",
+      "value": 0.0011250000000000426,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "charge balance of the dashed bulk readings against [K+] = 2 c_carb; the reading resolution is a few mol/m3 on thousands"
+    },
+    "fig_charge_dev_promoted_max": {
+      "kind": "bound",
+      "value": 0.0020249999999998325,
+      "max": 0.005,
+      "basis": "chosen",
+      "note": "charge balance of the solid bulk readings, the same reading resolution"
+    },
+    "desorption_F_dev_printed_constants": {
+      "kind": "value",
+      "value": -0.02338668958129253,
+      "rtol": 0.05
+    },
+    "desorption_drive_cut_printed_constants": {
+      "kind": "value",
+      "value": 0.34673812504000634,
+      "rtol": 0.05
+    },
+    "desorption_F_dev": {
+      "kind": "value",
+      "value": -0.11951242669305717,
+      "rtol": 0.05
+    },
+    "desorption_drive_cut": {
+      "kind": "value",
+      "value": 0.39122745114773816,
+      "rtol": 0.05
+    },
+    "physical_E1": {
+      "kind": "bound",
+      "value": 5.366218580604709e-11,
+      "max": 1e-09,
+      "basis": "identity",
+      "note": "all reactions off: E = 1 for any conservative scheme on a linear profile"
+    },
+    "pfo_max_rel_err": {
+      "kind": "bound",
+      "value": 3.4940062748622935e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "graded n_x = 400 film against the closed form over Ha 0.1 to 300; set by the second-order discretisation of the thinnest reaction layer"
+    },
+    "second_order_cross": {
+      "kind": "bound",
+      "value": 1.0028919472659936e-08,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "note": "two assemblies of the same problem on the same grid; their gap is the Newton tolerances, 1e-8 mol/m3 and 1e-11"
+    },
+    "vkh_dev": {
+      "kind": "bound",
+      "value": 0.0005037971461581137,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "the film against the Van Krevelen-Hoftijzer approximation at the DEA Hatta number; the approximation error there is of order 1e-4"
+    },
+    "collapse_residual": {
+      "kind": "bound",
+      "value": 9.712255793492552e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "the reverse term of reaction (2) at K_eq scaled by 1e6 is of order 1e-5 of the forward rate"
+    },
+    "carbon_flux_closure": {
+      "kind": "bound",
+      "value": 6.532425025615986e-10,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "every reaction conserves carbon, so the carbon flux is uniform up to the Newton residual"
+    },
+    "amine_flux_closure": {
+      "kind": "bound",
+      "value": 1.3946226311252564e-10,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "every reaction conserves the amine count and the amine is non-volatile"
+    },
+    "charge_flux": {
+      "kind": "bound",
+      "value": 1.0379553757628152e-09,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "note": "charge-conserving reactions and only neutral CO2 through the interface: zero on every face up to the Newton residual, for any diffusivities"
+    },
+    "electroneutrality": {
+      "kind": "bound",
+      "value": 4.0010149859881493e-11,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "equal ion diffusivities and electroneutral Dirichlet data: zero up to the Newton residual"
+    },
+    "grid_delta": {
+      "kind": "bound",
+      "value": 1.3215001567479234e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "E of HDA at alpha = 0.2 on 800 against 400 cells, held two decades below the reproduction deviations it supports"
+    },
+    "kinst_delta": {
+      "kind": "bound",
+      "value": 2.231551486753247e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "E of HDA at alpha = 0.2 with one more decade of k_inst, held two decades below the reproduction deviations"
+    },
+    "gas_side_fraction": {
+      "kind": "bound",
+      "value": 2.2957821149685606e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "m E k_L/k_g at the largest E of the reconstructed run: the share of the resistance the Dirichlet interface drops"
+    },
+    "cases_below_ceiling": {
+      "kind": "exact",
+      "value": 12,
+      "margin": 0.7980755298024982,
+      "min_margin": 0.01,
+      "note": "E over its instantaneous ceiling, the twelve reconstructed cases"
+    },
+    "pen_vs_film_max": {
+      "kind": "value",
+      "value": 0.1130114176682635,
+      "rtol": 0.05
+    },
+    "pen_vs_film_max_richardson": {
+      "kind": "value",
+      "value": 0.1156711162207274,
+      "rtol": 0.05
+    },
+    "pen_richardson_error_estimate": {
+      "kind": "value",
+      "value": 0.0013224186098027002,
+      "rtol": 0.05
+    },
+    "pen_time_order": {
+      "kind": "bound",
+      "value": 1.0159798898380235,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "backward Euler; the order farthest from 1 over the two triples of the n_t ladder 160 to 1280"
+    },
+    "pen_ladder_over_newton_tol": {
+      "kind": "bound",
+      "value": 1337279.9426611958,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest successive difference of the ladder over the Newton step tolerance per level: the orders measure the time step, not the solver"
+    }
+  },
+  "quoted": {
+    "E_maxdev_printed": [
+      "21.4%"
+    ],
+    "k3_scale_fitted": [
+      "1.4585"
+    ],
+    "Ju_maxdev_reconstructed": [
+      "3.8%"
+    ],
+    "Eu_maxdev_reconstructed": [
+      "0.6%"
+    ],
+    "E_promoted_maxdev_reconstructed": [
+      "7.6%"
+    ],
+    "F_maxdev_reconstructed": [
+      "5.6%"
+    ],
+    "k3_scale_spread_per_condition": [
+      "5.0%"
+    ],
+    "k3_scale_refitted_to_Eu": [
+      "1.4735"
+    ],
+    "Eu_max_branch_Kc1": [
+      "19.8%"
+    ],
+    "Fmax_branch_Kw": [
+      "8.6%"
+    ],
+    "Fmax_branch_Kc2": [
+      "5.6%"
+    ],
+    "s_from_figures_mean": [
+      "1.445"
+    ],
+    "fig_charge_dev_unpromoted_max": [
+      "at most 5e-3"
+    ],
+    "fig_charge_dev_promoted_max": [
+      "at most 5e-3"
+    ],
+    "desorption_F_dev_printed_constants": [
+      "-2.3%"
+    ],
+    "desorption_F_dev": [
+      "-12.0%"
+    ],
+    "desorption_drive_cut_printed_constants": [
+      "34.7%"
+    ],
+    "desorption_drive_cut": [
+      "39.1%"
+    ],
+    "pfo_max_rel_err": [
+      "at most 1e-4"
+    ],
+    "grid_delta": [
+      "at most 1e-4"
+    ],
+    "kinst_delta": [
+      "at most 1e-4"
+    ],
+    "vkh_dev": [
+      "at most 1e-3"
+    ],
+    "pen_vs_film_max": [
+      "11.3%"
+    ],
+    "pen_time_order": [
+      "between 0.9 and 1.1"
+    ],
+    "pen_ladder_over_newton_tol": [
+      "at least 1e3"
+    ],
+    "pen_vs_film_max_richardson": [
+      "11.57%"
+    ],
+    "pen_richardson_error_estimate": [
+      "1.3e-3"
+    ],
+    "physical_E1": [
+      "at most 1e-9"
+    ],
+    "second_order_cross": [
+      "at most 1e-6"
+    ],
+    "collapse_residual": [
+      "at most 1e-4"
+    ],
+    "carbon_flux_closure": [
+      "at most 1e-8"
+    ],
+    "amine_flux_closure": [
+      "at most 1e-8"
+    ],
+    "charge_flux": [
+      "at most 1e-8"
+    ],
+    "electroneutrality": [
+      "at most 1e-9"
+    ],
+    "cases_below_ceiling": [
+      "12"
+    ],
+    "gas_side_fraction": [
+      "at most 1e-4"
+    ],
+    "table2_F_vs_Jratio_maxdev": [
+      "at most 5e-3"
+    ]
+  },
+  "breaks": {
+    "E_maxdev_printed": [
+      "K_w transcribed 10 % low (Table 1)"
+    ],
+    "desorption_F_dev_printed_constants": [
+      "K_w transcribed 10 % low (Table 1)",
+      "c_Am read 20 % high (Table 1)"
+    ],
+    "desorption_drive_cut_printed_constants": [
+      "c_Am read 20 % high (Table 1)"
+    ],
+    "desorption_F_dev": [
+      "K_w transcribed 10 % low (Table 1)",
+      "the reconstruction scalar left at s = 1",
+      "c_Am read 20 % high (Table 1)"
+    ],
+    "desorption_drive_cut": [
+      "the reconstruction scalar left at s = 1",
+      "c_Am read 20 % high (Table 1)"
+    ],
+    "k3_scale_fitted": [
+      "K_w transcribed 10 % low (Table 1)",
+      "K_c1 transcribed 10 % high (Table 1)",
+      "the first printed J_u read 10 % high (Table 2)"
+    ],
+    "k3_scale_spread_per_condition": [
+      "the first printed J_u read 10 % high (Table 2)"
+    ],
+    "k3_scale_refitted_to_Eu": [
+      "K_w transcribed 10 % low (Table 1)"
+    ],
+    "s_from_figures_mean": [
+      "K_w transcribed 10 % low (Table 1)",
+      "K_c1 transcribed 10 % high (Table 1)"
+    ],
+    "fig_charge_dev_unpromoted_max": [
+      "c_carb read 5 % high (Table 1)"
+    ],
+    "fig_charge_dev_promoted_max": [
+      "c_carb read 5 % high (Table 1)"
+    ],
+    "Eu_max_branch_Kc1": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "Ju_maxdev_reconstructed": [
+      "the reconstruction scalar left at s = 1",
+      "the first printed J_u read 10 % high (Table 2)"
+    ],
+    "Eu_maxdev_reconstructed": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "E_promoted_maxdev_reconstructed": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "F_maxdev_reconstructed": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "Fmax_branch_Kc2": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "Fmax_branch_Kw": [
+      "the reconstruction scalar left at s = 1"
+    ],
+    "table2_F_vs_Jratio_maxdev": [
+      "the first printed J_u read 10 % high (Table 2)"
+    ],
+    "carbon_flux_closure": [
+      "reaction (3) does not make HCO3-",
+      "reaction (2) does not make AmCOO-"
+    ],
+    "amine_flux_closure": [
+      "reaction (2) does not make AmCOO-"
+    ],
+    "charge_flux": [
+      "reaction (3) does not make HCO3-",
+      "reaction (2) does not make AmCOO-"
+    ],
+    "electroneutrality": [
+      "D(HCO3-) halved",
+      "reaction (3) does not make HCO3-",
+      "reaction (2) does not make AmCOO-"
+    ],
+    "grid_delta": [
+      "the film on 50 cells instead of 400"
+    ],
+    "kinst_delta": [
+      "the k_inst ladder stopped at 1e4"
+    ],
+    "pfo_max_rel_err": [
+      "the film on 50 cells instead of 400"
+    ],
+    "second_order_cross": [
+      "one amine per CO2 in reaction (2) instead of two"
+    ],
+    "vkh_dev": [
+      "one amine per CO2 in reaction (2) instead of two"
+    ],
+    "collapse_residual": [
+      "the K_eq scan stopped at 1e2 instead of 1e6"
+    ],
+    "physical_E1": [
+      "the film 10 % thicker than D_CO2/k_L"
+    ],
+    "gas_side_fraction": [
+      "k_g read as 1 m/s (Table 1)"
+    ],
+    "cases_below_ceiling": [
+      "the instantaneous ceiling without the carbonate's capacity"
+    ],
+    "pen_vs_film_max": [
+      "penetration at n_t = 160 instead of 640"
+    ],
+    "pen_vs_film_max_richardson": [
+      "contact time D/k_L^2, the 4/pi of Higbie dropped"
+    ],
+    "pen_richardson_error_estimate": [
+      "contact time D/k_L^2, the 4/pi of Higbie dropped",
+      "uniform time steps instead of the geometric time grid"
+    ],
+    "pen_time_order": [
+      "uniform time steps instead of the geometric time grid"
+    ],
+    "pen_ladder_over_newton_tol": [
+      "Newton per time level stopped at 1e-3 of the largest concentration"
+    ]
+  },
+  "rows": {
+    "defined": 20,
+    "recorded": 20
   }
 }
