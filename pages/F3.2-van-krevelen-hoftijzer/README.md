@@ -30,7 +30,7 @@ where the headline sits. Against it, over the chart's own printed domain:
 |---|---|
 | worst error of Van Krevelen-Hoftijzer | -2.7955 <!-- claim: vkh_worst_rel_error_pct --> % at γ = 4.728 <!-- claim: vkh_worst_gamma -->, q = 1.522 <!-- claim: vkh_worst_q --> |
 | worst over the ten printed curve labels only | -2.7294 <!-- claim: vkh_worst_on_printed_labels_pct --> % |
-| margin against "valid to within 10 percent" (book p. 340) | 3.577 <!-- claim: froment_10pct_claim_margin --> |
+| margin against "valid to within 10 percent" (book p. 340) | 3.5772 <!-- claim: froment_10pct_claim_margin --> |
 
 Both extrema are roots of a central difference of the error in ln γ and ln q,
 bracketed by a scan of the whole window. That the approximation never lies above
@@ -116,8 +116,8 @@ discretisation. Root-finding γ at the same three E_i gives
 2.0785 <!-- claim: f31_definition_rootfound_pct --> %: almost all of the gap to the
 headline comes from letting q move. The first-order check is reproduced on
 `F3.1`'s grid to at most 1e-12 <!-- claim: f31_first_order_reproduced_rel -->;
-graded n_x = 800 gives 7.09e-6 <!-- claim: pfo_max_rel_error_graded -->, uniform
-n_x = 800 8.85e-4 <!-- claim: pfo_max_rel_error_uniform_same_n --> and uniform
+graded n_x = 800 gives 7.088e-6 <!-- claim: pfo_max_rel_error_graded -->, uniform
+n_x = 800 8.847e-4 <!-- claim: pfo_max_rel_error_uniform_same_n --> and uniform
 n_x = 400 6.34e-3 <!-- claim: pfo_max_rel_error_uniform_half_n -->.
 
 A break table injects one defect per row (a sign, offset or group of (6.3.5-1),
