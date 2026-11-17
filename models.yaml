@@ -5050,25 +5050,19 @@ models:
     description: >
       Langmuir fitted his isotherm by drawing a straight line through the p/q-versus-p
       plot, so the q_cal columns of Tables II-XVII are a two-parameter fit judged
-      against its own training data; the page labels that a goodness of fit everywhere
-      and never reports it as a metric. What CAN fail is elsewhere. Langmuir's own
-      contest against Freundlich is a fair one - two parameters each, the same eleven
-      points - and with both forms refitted optimally Freundlich loses by 3.82 in RMS
-      on Table VII and on 13 of the 14 tables that can host the comparison, the single
-      exception being the table Langmuir himself excludes. The monomolecular
-      conclusion rests not on the isotherm but on beta, the saturation amount against
-      a monolayer count from the liquid density, whose worst row leaves only 17 % of
-      headroom. The page's own result explains why it had to: Langmuir's Case VI,
-      eqs. (29) and (30) of the same paper, is shown symbolically to be EXACTLY the
-      BET isotherm twenty years early, and every pressure he reached lies below
-      p/p0 = 1.6e-3 - recovered by inverting his own Table XXI - where his monolayer
-      and multilayer equations differ by at most 0.16 %, against observational scatter
-      12 to 1100 times larger; and refitting BET to Table VII with BOTH parameters free
-      improves the fit by 1.26 parts in 100000, the multilayer model returning Case I
-      exactly. Four printed defects are reported and none repaired, including eq. (15)'s
-      logarithm, which gives t_half = 0 where eq. (16) two lines below it does not; a
-      fifth pattern, the sigma column running low, is reported separately because it is
-      a truncation convention rather than an error.
+      against its own training data; the page labels that a goodness of fit and never
+      reports it as evidence. What can fail is elsewhere. Langmuir's own contest against
+      Freundlich is a fair one, and with both forms refitted on q Freundlich loses by a
+      factor 3.82 <!-- claim: t7_F_over_L --> in RMS on Table VII. The monomolecular
+      conclusion rests on beta, whose worst row leaves a headroom 1/beta of only
+      1.1667 <!-- claim: beta_headroom -->. The page's own result explains why it had
+      to: Langmuir's Case VI, eqs. (29) and (30), is shown symbolically to be the BET
+      isotherm, and every pressure he reached lies below p/p0 =
+      1.6e-3 <!-- claim: x_max_anywhere -->, where his monolayer and multilayer
+      equations differ by at most 0.160 <!-- claim: departure_max_pct --> %, against
+      observational scatter at least 12.2 <!-- claim: scatter_over_sep_min --> times
+      larger. Printed defects are reported and none repaired, among them eq. (15),
+      disproved by marching eq. (14).
     section: J
     status: published
     tier: T0
@@ -5111,51 +5105,24 @@ models:
       read on a 300 ppi crop of journal page 311.
     data: {tier: 5, method: table, status: complete}
     note: >
-      TIER 5, AND ONLY ONE COLUMN OF IT IS MEASUREMENT. q_obs is measured - a McLeod
-      gauge pressure and a gas volume by difference. a, b, b', sigma, N0, beta and
-      Tables XXI, XXII and XXV are all constants Langmuir DERIVED from those
-      measurements, so reproducing one is reproduction and never validation, and the
-      page says so at every such comparison.
-
-      THE FIT IS A FIT. Eqs. (31)/(33)/(19) at the printed constants reproduce all 101
-      printed q_cal cells to 0.434 cu.mm, and that number is reported on the page as a
-      transcription check and NEVER as evidence for the model. Null baselines are
-      printed beside every agreement that is quoted: a zero-parameter constant is 3.7
-      to 87 times worse in RMS and a one-parameter proportional law 1.8 to 27 times.
-
-      THE MICA NUMBERS ARE UNCORRECTED - journal page 1385 says the bulb-A results are
-      "10 to 30% too high" because the blank was never subtracted - and no correction
-      is applied anywhere. One Table IX point is disowned by the paper and is kept,
-      flagged, and reported with and without.
-
-      SCOPE, DECIDED BEFORE TRANSCRIPTION: the theory of journal pages 1368-1376 and
-      Tables II-XI, XIII-XXII, plus Table XXV solely to exercise eq. (37) on a third
-      adsorbent. Tables I, XII, XXIII and XXIV - outgassing inventories and the
-      platinum oxygen/carbon-monoxide bookkeeping - are scoped out and not transcribed.
-
-      FOUR PRINTED DEFECTS, REPORTED AND NONE REPAIRED: eq. (15)'s logarithm, which
-      gives t_half = 0 where eq. (16) two lines below gives tau ln2/(alpha(1+sigma1
-      mu)) - established by MARCHING eq. (14) rather than by asserting it, and the
-      one-character correction is labelled an inference; Table IV's b = 58.3, where the
-      two observations (57.4937) and the paper's own b' = 100.0 (57.5000) agree to
-      0.011 % and the printed value is 1.40 % from both; Table XX's beta = 0.36 for
-      methane on glass, where the paper's own N0 and monolayer count give 0.4571 and
-      where the printed value uniquely breaks the paper's own ordering claim; the pair
-      "(100 bars) ... 0.20" on journal page 1384, where 0.20 corresponds to 25.641 bars
-      under the paper's own a. AND, FILED SEPARATELY BECAUSE IT IS NOT AN ERROR AGAINST
-      LANGMUIR: the sigma column of Tables XVIII-XX runs low, 18 of 21 printed values
-      below the computed one, worst 3.77 %. The three worst rows are exactly the rows he
-      prints to one or two significant figures (10,000; 10,000; 26,000), and truncating
-      at each cell's own printed granularity reproduces 15 of 21 cells against 11 for
-      rounding - he discarded figures, he did not miscompute them.
-
-      THE PDF'S TEXT LAYER RENDERS EQ. (37) AS 25.2e16 WHERE THE PAGE PRINTS 25.2e15.
-      That is a factor ten in every surface coverage and would put 17 of 20 entries
-      above the monolayer bound, reversing the paper's conclusion. THAT COUNT IS NOT
-      TYPED ANYWHERE ON THE PAGE: it is counted from the data in section 6.5 and the
-      break row prints the same 17 (the three that would survive are the mica 155 K
-      oxygen, argon and nitrogen entries, each an order of magnitude clear of the
-      threshold). It is carried as a break row.
+      Tier 5, and only one column of it is measurement: q_obs is measured, and a, b,
+      b', sigma, N0, beta and Tables XXI, XXII and XXV are constants Langmuir derived
+      from it, so reproducing one is reproduction, never validation. The eq. (31),
+      (33) and (19) curves at the printed constants reproduce the printed q_cal cells
+      to 0.434 <!-- claim: qcal_max_abs_cu_mm --> cu.mm, reported as a transcription
+      check. The mica numbers are uncorrected (the paper: "10 to 30% too high") and no
+      correction is applied. Scope: the theory of journal pages 1368-1376 and Tables
+      II-XI, XIII-XXII, plus Table XXV for eq. (37); Tables I, XII, XXIII and XXIV are
+      not transcribed. Printed defects, reported and none repaired: eq. (15)'s
+      logarithm, which gives t_half = 0 where eq. (16) does not; Table IV's b,
+      1.40 <!-- claim: t4_b_printed_dev_pct --> % from the two-point solution; Table
+      XX's beta for methane on glass, which breaks the paper's own ordering claim; and
+      the pair "(100 bars) ... 0.20", where 0.20 corresponds to
+      25.64 <!-- claim: p_for_slope_020 --> bars under the paper's own a. Filed
+      separately, as a truncation convention and not an error: the sigma column runs
+      low, worst 3.77 <!-- claim: sigma_max_abs_rel_pct --> %. The PDF text layer
+      renders eq. (37)'s coefficient a factor ten too large, which would reverse the
+      paper's conclusion; it is carried as a break row.
     page: pages/J1.1-langmuir-isotherm/
     related: [J1.3, J1.5, C1.1, A2.1]
 
