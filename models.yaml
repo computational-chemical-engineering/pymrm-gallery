@@ -3780,6 +3780,43 @@ models:
     page: pages/C2.1-xu-froment-smr/
     related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
+  - id: C2.13
+    slug: voltz-co-propylene-oxidation
+    title: "Three-way catalyst: Voltz CO and propylene oxidation kinetics"
+    description: >
+      The self-inhibited Langmuir-Hinshelwood rates of CO and propylene on
+      platinum that most catalytic-converter models use: the rate maximum in CO
+      located by root finding, and the paper's isothermal integral reactor rebuilt
+      with pymrm and tested against the authors' own calculated curves and the
+      measurements of their Figures 19 and 20.
+    section: C
+    status: published
+    tier: T0
+    priority: P1
+    structures: [S1, S2]
+    phases: [gas-solid]
+    predicts: [reaction rate, conversion, rate maximum, inhibition]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, find_roots, observed_orders]
+    reference:
+      authors: ["Voltz, S. E.", "Morgan, C. R.", "Liederman, D.", "Jacob, S. M."]
+      year: 1973
+      container: "Industrial & Engineering Chemistry Product Research and Development 12(4) 294-301"
+      doi: 10.1021/i360048a006
+    data: {tier: 4, method: digitised, status: complete}
+    note: >
+      Built from Voltz et al. itself. Table I read from a 600 dpi render; the
+      measured markers of Figures 19 and 20 and one crossing per calculated line
+      digitised by extract_figures.py. The constants were fitted to these runs,
+      so agreement with the markers is reproduction, not validation. Two findings
+      the paper does not state: the propylene ppm of its feeds enter the rates
+      halved, as its "ppm of propylene (as C6 FID)" implies, and the figures'
+      space velocity relates to V/F by a factor no stated basis explains; the
+      page infers it from the authors' curves. The adsorption constants and
+      activation energies of I1.2 (Oh and Cavendish) are checked to be these,
+      unit-converted at face value.
+    page: pages/C2.13-voltz-co-propylene-oxidation/
+    related: [I1.2, C1.1, C2.1, C2.10]
+
   - id: D1.1
     slug: froment-fixed-bed-ladder
     title: "Five fixed-bed models on one reactor: what each rung of Froment's ladder buys"

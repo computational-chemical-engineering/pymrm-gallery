@@ -1,0 +1,68 @@
+dataset_id: voltz-1973-fig19-fig20
+title: Measured CO and propylene conversion against space velocity at 550 degF
+status: complete
+
+source:
+  authors:
+    - "Voltz, S. E."
+    - "Morgan, C. R."
+    - "Liederman, D."
+    - "Jacob, S. M."
+  year: 1973
+  container: "Industrial & Engineering Chemistry Product Research and Development 12(4) 294-301"
+  doi: 10.1021/i360048a006
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+conditions:
+  temperature_F: 550
+  catalyst: "pelleted Pt/alumina, 6-8 mesh spheres, 158 m2/g, bulk density 0.72 g/cm3"
+  reactor: "isothermal integral fixed bed in a salt bath, synthetic gas with 10 % H2O"
+  inlet: "see voltz-1973-fig19-fig20-conditions.csv"
+
+provenance_tier:
+  tier: 4
+  note: >
+    Experimental markers of the paper's own model test. The Table I constants
+    were fitted to these runs (among others), so agreement with them is a
+    reproduction of the fit, not a validation.
+
+acquisition:
+  method: digitised
+  figure: "Figure 19 (CO conversion, page 299) and Figure 20 (propylene conversion, page 300)"
+  tool: "poppler pdftoppm at 600 dpi (native scan 300 ppi); eye-placed markers refined by scipy.ndimage.uniform_filter"
+  script: >
+    pages/C2.13-voltz-co-propylene-oxidation/extract_figures.py regenerates this
+    file from a local copy of the PDF (not in the repository). The eye readings
+    and the glyph assignment are constants in the script, so it is deterministic.
+  procedure: >
+    Only the markers were extracted. Each was placed by eye on the 600 dpi
+    render and assigned to its curve by glyph (A inverted triangle, B circle,
+    C cross, D triangle, E diamond, F circle, G square). The centre was then
+    moved to the densest 23 px box within 10 px of the eye reading; for two
+    touching pairs per figure the eye reading is kept. Every marker was checked
+    on an overlay of the extracted points on the render. Axes calibrated on the
+    printed ticks (x logarithmic, 585.3 px per decade on Figure 19 and 593.0 on
+    Figure 20; y 8.78 and 8.95 px per percentage point).
+  operator: "Claude Opus 5.5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-11-19
+  estimated_error: >
+    About +/- 1 percentage point in conversion and +/- 3 % in space velocity
+    (placing a glyph about 25 px across to within about 8 px).
+
+missing:
+  - "Figure 20: a circle near SV 7 and 10 % conversion drawn over the E diamond is not recorded."
+
+columns:
+  - {name: figure, unit: "-", description: "19 (CO) or 20 (C3H6)"}
+  - {name: species, unit: "-", description: "CO or C3H6"}
+  - {name: curve, unit: "-", description: "curve label A to G"}
+  - {name: space_velocity, unit: "L/(min g cat)", description: "space velocity as on the axis"}
+  - {name: conversion_pct, unit: "%", description: "measured conversion"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The original figure and
+  table images are NOT reproduced.
