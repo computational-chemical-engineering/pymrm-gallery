@@ -1,0 +1,62 @@
+dataset_id: akita-yoshida-1974-fig12
+title: "Calculated against observed kLa, Figure 12 of the 1974 paper"
+status: complete
+
+source:
+  authors: ["Akita, K.", "Yoshida, F."]
+  year: 1974
+  container: "Industrial & Engineering Chemistry Process Design and Development 13(1) 84-91"
+  doi: 10.1021/i260049a016
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/), downloaded
+    through an institutional subscription (TU Eindhoven). No PDF and no page image is
+    stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 12, journal page 90"
+  tool: "poppler pdftoppm at 300 dpi (the native scan resolution) + a 2x grid overlay, marker centres placed by eye; isolated markers checked against blob centroids from scipy.ndimage"
+  procedure: >
+    The axes are logarithmic. Calibration from the printed ticks, in page pixels at
+    300 ppi: abscissa 10 at column 775.5 and 100 at column 998 (222.5 px per
+    decade); ordinate 1 at row 760, 10 at row 536 and 100 at row 313.5 (223.25 px
+    per decade; the 10 tick sits 0.75 px from the line through the other two).
+    The frame corners then fall at 0.63 and 0.60 against the printed 0.6.
+    33 markers were placed. The marker shape gives the liquid (circle water,
+    triangle glycol, square methanol) and the fill the column (open 7.7 cm,
+    filled 15.0 cm), as in the legend. The diagonal line and the legend were not
+    extracted.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-19
+  estimated_error: >
+    Isolated markers: within 1.5 px of the blob centroid (13 markers checked),
+    0.007 decade or 1.6 % in each coordinate. Markers in the clusters near
+    kLa = 10 and 30 1/hr overlap, and their centres are uncertain to about 3 px,
+    0.013 decade or 3 %. Calibration: 1 px, 0.5 %.
+
+conditions: >
+  Water, glycol (concentration not stated) and methanol at 20 C in the 7.7 and
+  15.0 cm square columns with single-orifice spargers. The calculated values come
+  from the authors' eq 27 with kL from eq 32 and measured bubble size
+  distributions, which are not published, so the page cannot recompute them; it
+  measures the agreement the figure shows.
+
+missing:
+  - "Possible markers hidden under others in the two clusters; 33 were resolved."
+
+columns:
+  - {name: marker, unit: "-", description: "index, ordered by abscissa pixel"}
+  - {name: liquid, unit: "-", description: "water, glycol or methanol, from the marker shape"}
+  - {name: D_cm, unit: cm, description: "column side, from the marker fill"}
+  - {name: x_px, unit: px, description: "marker centre column at 300 ppi"}
+  - {name: y_px, unit: px, description: "marker centre row at 300 ppi"}
+  - {name: kla_obs_per_h, unit: 1/hr, description: "observed kLa, from x_px through the calibration"}
+  - {name: kla_calc_per_h, unit: 1/hr, description: "kLa calculated by eq 27, from y_px through the calibration"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
