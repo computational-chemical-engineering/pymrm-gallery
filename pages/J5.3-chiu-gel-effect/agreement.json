@@ -2,7 +2,7 @@
   "page": "J5.3-chiu-gel-effect",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -135,17 +135,17 @@
     },
     "Tgp_band_width_C": {
       "kind": "value",
-      "value": 25.777777777777715,
+      "value": 25.77777777777797,
       "rtol": 0.05
     },
     "A_exponent_implied": {
       "kind": "value",
-      "value": 2.0658640708524194,
+      "value": 2.06586407085242,
       "rtol": 0.05
     },
     "A_gain_min_at_Tgp_band_ends": {
       "kind": "value",
-      "value": 3.5346809353952424,
+      "value": 3.53468093539435,
       "rtol": 0.05
     },
     "A_second_difference": {
@@ -155,27 +155,27 @@
     },
     "qssa_lam0_ratio_50C": {
       "kind": "value",
-      "value": 3.5175513584224323,
+      "value": 3.5175513584191123,
       "rtol": 0.05
     },
     "qssa_lam0_ratio_other_max": {
       "kind": "value",
-      "value": 2.5480910060511723,
+      "value": 2.5480910060507798,
       "rtol": 0.05
     },
     "qssa_conv_max_dev_50C": {
       "kind": "value",
-      "value": 0.03861088696764359,
+      "value": 0.038610886967527014,
       "rtol": 0.05
     },
     "concave_up_lower_x_max": {
       "kind": "value",
-      "value": 0.3064307458903581,
+      "value": 0.3064312882395892,
       "rtol": 0.05
     },
     "concave_onset_margin_min": {
       "kind": "value",
-      "value": 0.12933477911579228,
+      "value": 0.12932409504773934,
       "rtol": 0.05,
       "note": "spreads 1e-5 absolute across BLAS kernels; quoted to three decimals"
     },
@@ -251,11 +251,11 @@
     },
     "bvp_order": {
       "kind": "bound",
-      "value": 1.8617771981908688,
+      "value": 1.7483130529163704,
       "min": 1.5,
       "max": 2.5,
       "basis": "theory",
-      "note": "second-order finite volumes on the spherical shell; 1.86 at n = 1280"
+      "note": "second-order finite volumes on the spherical shell; the observed order of K_mid on the finest triple n = 320, 640, 1280, from successive differences"
     },
     "bvp_K_spread_rel": {
       "kind": "bound",
@@ -266,16 +266,30 @@
     },
     "march_order": {
       "kind": "bound",
-      "value": 1.0094352088716685,
+      "value": 1.027698411952258,
       "min": 0.9,
       "max": 1.1,
       "basis": "theory",
-      "note": "backward Euler is first order in dt; 1.0094 over a 16x refinement"
+      "note": "backward Euler is first order in dt; the observed order of x(t_hi) on the finest triple nt = 800, 1600, 3200, from successive differences"
     },
     "march_err_finest": {
       "kind": "value",
       "value": 2.1196163680681224e-05,
       "rtol": 0.05
+    },
+    "bvp_roundoff_margin": {
+      "kind": "bound",
+      "value": 135615.93222724416,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference of K_mid over n^2 eps |K|"
+    },
+    "march_roundoff_margin": {
+      "kind": "bound",
+      "value": 6710.724244143873,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference of x(t_hi) over nt times the newton tol"
     },
     "mw_approx_pre_onset_max": {
       "kind": "value",
@@ -289,12 +303,12 @@
     },
     "xlim_50C": {
       "kind": "value",
-      "value": 0.9553484443358589,
+      "value": 0.955348444335859,
       "rtol": 0.05
     },
     "xlim_monotone_margin": {
       "kind": "value",
-      "value": 0.011165332809713435,
+      "value": 0.011165332809709105,
       "rtol": 0.05
     },
     "i0_dlogkt_max": {
@@ -313,6 +327,75 @@
       "max": 1e-10,
       "basis": "tolerance",
       "note": "conversion, absolute; x contains no M_0, so the gap is BDF at rtol 1e-11; measured 1.0e-12 to 1.7e-12 across BLAS kernels, the bound is about 60x that"
+    },
+    "A_gain_at_Tgp_band_lo": {
+      "kind": "value",
+      "value": 3.6123662306776727,
+      "rtol": 0.05
+    },
+    "Tgp_band_lo_C": {
+      "kind": "value",
+      "value": 102.22222222222229,
+      "rtol": 0.05
+    },
+    "Tgp_band_hi_C": {
+      "kind": "value",
+      "value": 128.00000000000026,
+      "rtol": 0.05
+    },
+    "n_fitted_distinct": {
+      "kind": "exact",
+      "value": 13
+    },
+    "n_named_params": {
+      "kind": "exact",
+      "value": 4,
+      "structural": true,
+      "note": "the paper's own count of named parameters (book p. 352), not computed"
+    },
+    "n_conditions": {
+      "kind": "exact",
+      "value": 6,
+      "structural": true,
+      "note": "the number of rows of Table II, the conditions the paper fitted; no transcribed digit changes it"
+    },
+    "n_compressed": {
+      "kind": "exact",
+      "value": 8,
+      "structural": true,
+      "note": "3 + 2 + 2 + 1 by the form of the paper's own correlations (Figures 13 and 15), not computed"
+    },
+    "qssa_n_above_2": {
+      "kind": "exact",
+      "value": 3,
+      "margin": 0.03289434269769653,
+      "min_margin": 0.001,
+      "note": "conditions whose QSSA factor exceeds the printed 2"
+    },
+    "onset_other_over_headline": {
+      "kind": "value",
+      "value": 3.235589047172794,
+      "rtol": 0.05
+    },
+    "onset_band_over_max_dev": {
+      "kind": "value",
+      "value": 9.325064804838211,
+      "rtol": 0.05
+    },
+    "onset_compressed_over_max_dev": {
+      "kind": "value",
+      "value": 1.6906541500076662,
+      "rtol": 0.05
+    },
+    "theta_t_decades_per_unit_onset": {
+      "kind": "value",
+      "value": 4.600930459126555,
+      "rtol": 0.05
+    },
+    "dE_theta_t_mean_kcal": {
+      "kind": "value",
+      "value": 34.712380478108514,
+      "rtol": 0.001
     }
   },
   "quoted": {
@@ -340,8 +423,14 @@
     "onset_dev_other_loading_max": [
       "0.03126"
     ],
+    "onset_other_over_headline": [
+      "3.24"
+    ],
     "onset_definition_band_max": [
       "0.09009"
+    ],
+    "onset_band_over_max_dev": [
+      "9.33"
     ],
     "onset_two_route_max_rel": [
       "below 1e-10"
@@ -352,8 +441,14 @@
     "onset_compressed_shift_max": [
       "0.01633"
     ],
+    "onset_compressed_over_max_dev": [
+      "1.691"
+    ],
     "onset_per_decade_theta_t": [
       "-0.21735"
+    ],
+    "theta_t_decades_per_unit_onset": [
+      "4.601"
     ],
     "qss_start_max_rel": [
       "7.36e-06"
@@ -364,8 +459,20 @@
     "dE_theta_t_01548_kcal": [
       "34.516600"
     ],
+    "dE_theta_t_mean_kcal": [
+      "34.712380"
+    ],
     "dE_theta_p_kcal": [
       "27.771564"
+    ],
+    "dE_theta_t_rel_vs_printed": [
+      "2.67 %"
+    ],
+    "dE_theta_p_rel_vs_printed": [
+      "0.82 %"
+    ],
+    "ln10_onset_shift": [
+      "0.00116"
     ],
     "A_linear_in_Tgp2_max_rel": [
       "8.819e-04"
@@ -378,6 +485,15 @@
     ],
     "A_gain_min_at_Tgp_band_ends": [
       "3.5347"
+    ],
+    "A_gain_at_Tgp_band_lo": [
+      "3.6124"
+    ],
+    "Tgp_band_lo_C": [
+      "102.2222"
+    ],
+    "Tgp_band_hi_C": [
+      "128.0000"
     ],
     "A_second_difference": [
       "-0.007000"
@@ -393,6 +509,9 @@
     ],
     "qssa_conv_max_dev_50C": [
       "0.038611"
+    ],
+    "qssa_n_above_2": [
+      "3"
     ],
     "concave_up_lower_x_max": [
       "0.30643"
@@ -411,10 +530,24 @@
       "18.8281 %"
     ],
     "compress_theta_p_max_rel": [
-      "0.083695"
+      "0.083695",
+      "8.3695 %"
     ],
     "compress_A_max_rel": [
-      "0.000882"
+      "0.000882",
+      "0.0882 %"
+    ],
+    "n_named_params": [
+      "4"
+    ],
+    "n_fitted_distinct": [
+      "13"
+    ],
+    "n_conditions": [
+      "6"
+    ],
+    "n_compressed": [
+      "8"
     ],
     "moment_identity_max_rel": [
       "below 1e-14"
@@ -432,10 +565,10 @@
       "less than 1e-8"
     ],
     "bvp_order": [
-      "1.8618"
+      "1.7483"
     ],
     "march_order": [
-      "1.0094"
+      "1.0277"
     ],
     "march_err_finest": [
       "2.12e-05"
@@ -495,6 +628,25 @@
     "A_gain_min_at_Tgp_band_ends": [
       "Table II: A(70) 0.152 -> 0.142",
       "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "A_gain_at_Tgp_band_lo": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "Tgp_band_lo_C": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "Tgp_band_hi_C": [
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168"
+    ],
+    "n_fitted_distinct": [
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: theta_p(70) 250 -> 2500 min, both rows",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258"
     ],
     "A_second_difference": [
       "Table II: A(70) 0.152 -> 0.142",
@@ -604,6 +756,71 @@
       "Table II: A(70) 0.152 -> 0.142",
       "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258"
     ],
+    "onset_other_over_headline": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(70, 0.01548) 83.0 -> 88.0 min",
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "stated: printed onset at 70 degC 0.35 -> 0.30",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
+    ],
+    "onset_band_over_max_dev": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "stated: printed onset at 70 degC 0.35 -> 0.30",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)",
+      "definition band formed without the 3-5 and 4-6 decade windows",
+      "definition band formed without the 4-6 decade window"
+    ],
+    "onset_compressed_over_max_dev": [
+      "Table I: k_t0 pre-exponential 5.88e9 -> 5.68e9",
+      "Table I: k_p0 activation energy 4353 -> 4553 cal/mol",
+      "Table I: k_d exponent 15430 -> 15480 K",
+      "Table I: d_m intercept 0.973 -> 0.978",
+      "Table I: d_p 1.2 -> 1.3 g/cm3",
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)",
+      "Table II: theta_p(90) 3.0e1 -> 4.0e1 min",
+      "Table II: A(70) 0.152 -> 0.142",
+      "Table II: A(90) 0.163 -> 0.168",
+      "Table II: B 0.03 -> 0.05 at 50 degC / 0.0258",
+      "stated: printed onset at 70 degC 0.35 -> 0.30",
+      "onset read at the flattest point of the sloped branch, not by the window fit",
+      "onset from the L0-1 .. L0-3 decade window instead of L0-2 .. L0-4",
+      "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)",
+      "compressed A perturbed by 1 % before the onset is recomputed"
+    ],
+    "dE_theta_t_mean_kcal": [
+      "Table II: theta_t(50, 0.0258) 1500 -> 1800 min",
+      "Table II: theta_t(90, 0.0258) 3.80 -> 3.30 min",
+      "Table II: theta_t(50, 0.01548) 2.33e3 read as 3.23e3",
+      "Table II: theta_t(50, 0.0258) 1.50e3 read as 1.05e3 (digits transposed)"
+    ],
     "ln10_onset_shift": [
       "eq. 31/32's printed 2.3 read as 2.35 instead of ln(10)"
     ],
@@ -625,12 +842,6 @@
     "switch_logkt_jump": [
       "the counterfactual switched at x_c = 0.45 instead of 0.30"
     ],
-    "concave_up_lower_x_max": [
-      "concavity recomputed with theta_t doubled"
-    ],
-    "concave_onset_margin_min": [
-      "concavity recomputed with theta_t doubled"
-    ],
     "moment_identity_max_rel": [
       "one sign flipped in eq. 13, in eq. 17, and in eq. 12"
     ],
@@ -642,14 +853,17 @@
       "moment identity on a different seeded population, N = 24"
     ],
     "bvp_rms_err_finest": [
-      "BVP refined only to n = 80 instead of n = 640",
+      "BVP ladder stopped at n = 80 instead of n = 1280",
       "construct_div with nu = 0 (Cartesian) instead of nu = 2"
     ],
     "bvp_order": [
-      "BVP refined only to n = 80 instead of n = 640"
+      "BVP ladder stopped at n = 80 instead of n = 1280"
     ],
     "bvp_K_spread_rel": [
       "construct_div with nu = 0 (Cartesian) instead of nu = 2"
+    ],
+    "bvp_roundoff_margin": [
+      "BVP ladder run on n = 16384, 32768, 65536"
     ],
     "eq22_rm_over_rD_max_dev": [
       "construct_div with nu = 0 (Cartesian) instead of nu = 2",
@@ -664,6 +878,9 @@
     ],
     "march_order": [
       "backward Euler refined only to nt = 200 instead of nt = 3200"
+    ],
+    "march_roundoff_margin": [
+      "backward-Euler newton tol 1e-12 -> 1e-4"
     ],
     "mw_approx_pre_onset_max": [
       "molecular-weight split moved from the onset to halfway to x = 1"
@@ -686,6 +903,9 @@
     "onset_per_decade_theta_t": [
       "theta_t leverage measured at 90 degC instead of 50 degC"
     ],
+    "theta_t_decades_per_unit_onset": [
+      "theta_t leverage measured at 90 degC instead of 50 degC"
+    ],
     "onset_compressed_shift_max": [
       "compressed A perturbed by 1 % before the onset is recomputed"
     ],
@@ -695,12 +915,25 @@
     "qssa_lam0_ratio_other_max": [
       "QSSA comparison rebuilt with theta_t doubled"
     ],
+    "concave_up_lower_x_max": [
+      "concavity recomputed with theta_t doubled"
+    ],
+    "concave_onset_margin_min": [
+      "concavity recomputed with theta_t doubled"
+    ],
     "onset_definition_band_max": [
       "definition band formed without the 3-5 and 4-6 decade windows",
       "definition band formed without the 4-6 decade window"
     ],
     "onset_resample_floor_max_rel": [
       "resampling floor measured over nx = 2001/4001/8001 only"
+    ],
+    "qssa_n_above_2": [
+      "QSSA factor threshold read as 1.5 instead of the printed 2"
     ]
+  },
+  "rows": {
+    "defined": 55,
+    "recorded": 55
   }
 }

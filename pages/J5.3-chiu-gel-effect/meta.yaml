@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 190
+pymrm_min_version: "3.4.0"
+runtime_seconds: 290
 datasets:
   - chiu1983-table1-rate-constants
   - chiu1983-table2-model-parameters
@@ -78,18 +78,15 @@ data:
   method: table
   status: complete
   note: >
-    THREE PRINTED SOURCES, TRANSCRIBED, NOTHING DIGITISED.  Table I (8 lines),
-    Table II (6 rows) and the six numerical results the running text and
-    Figure 13's caption state about the model's own output, each stored with the
-    sentence it was read from.  NO CURVE ON ANY OF THE PAPER'S EIGHTEEN FIGURES
-    IS TRACED AND NO VALUE OFF A FIGURE ENTERS ANY DATASET, FIT OR METRIC.
-    One reading INSIDE figures is declared where it is used and is a
-    corroboration, not a data source: Figures 10-12 plot log k_t and log k_p
-    against conversion on an axis labelled 0 to 12, and their plateaux at about
-    9.3 and about 4.5 agree with what Table I's constants give (9.2952/4.5256 at
-    50 degC, 9.3229/4.6972 at 70, 9.3475/4.8499 at 90).  That corroborates the
-    transcription of four pre-exponentials and two activation energies; no
-    number from it is in a CSV or a metric.
+    THREE PRINTED SOURCES, TRANSCRIBED, NOTHING DIGITISED.  Table I, Table II
+    and the numerical results the running text and Figure 13's caption state
+    about the model's own output, each stored with the sentence it was read
+    from.  NO CURVE ON ANY OF THE PAPER'S FIGURES IS TRACED AND NO VALUE OFF A
+    FIGURE ENTERS ANY DATASET, FIT OR METRIC.  One reading inside figures is
+    declared where it is used and is a corroboration, not a data source: the
+    log k_t and log k_p plateaux of Figures 10-12 sit at the levels Table I's
+    constants give, which the notebook prints.  No number from that reading is
+    in a CSV or a metric.
 
 fit_vs_test: >
   EVERY PARAMETER IN TABLE II IS A FITTED NUMBER AND THE PAGE LABELS IT ONE
@@ -99,70 +96,63 @@ fit_vs_test: >
   anything computed from those cells and compared with the paper is a
   CONSISTENCY CHECK on the authors' own fit and on this page's transcription,
   never a validation of the model against nature.
-  THE PAPER'S SIX STATED NUMERICAL RESULTS ARE ITS OWN MODEL OUTPUT, so
-  reproducing them is REPRODUCTION and the page says so in those words: two
-  computations of the same published equations, which tests transcription and
-  implementation and nothing else.
+  THE PAPER'S STATED NUMERICAL RESULTS ARE ITS OWN MODEL OUTPUT, so
+  reproducing them is REPRODUCTION: two computations of the same published
+  equations, which tests transcription and implementation and nothing else.
   THE ONE COMPARISON THAT WOULD BE A TEST IS NOT AVAILABLE.  The measurements
   are Marten & Hamielec's (ref 7) and appear in this paper only as markers on
-  Figures 3-9.  The page therefore establishes NOTHING about this model's
-  empirical adequacy, and does not digitise a curve to manufacture a claim it
-  cannot support.
+  Figures 3-9, so the page establishes NOTHING about the model's empirical
+  adequacy.
   A NULL BASELINE IS COMPUTED BESIDE THE ONE AGREEMENT THAT COULD HAVE FAILED
   FREELY: Figure 15's "all three points fall on the same straight line" holds to
-  8.819e-04 relative in A, against 1.535e-02 for the same three points fitted
-  linearly in T instead - 17.4057x worse.  The two forms have the same number of
-  parameters on the same three points and neither nests inside the other, so the
-  DIRECTION of that ratio is evidence rather than algebra, which the page states
-  explicitly (unlike the nested-null case on J4.4).
-  WHAT THAT RATIO IS EVIDENCE FOR IS CONCAVITY IN T, NOT THE QUADRATIC FORM, and
-  the page says so with its own measurements rather than letting 17.4057x stand
-  alone.  The gain is a strong function of T_gp, and this page has already shown
-  that the three printed A values cannot determine T_gp: at the two ends of the
-  interval they DO admit the gain is 3.6124x and 3.5347x, and it diverges at
-  111.42857 degC where the three points are exactly collinear by construction.
-  Nor is the quadratic singled out - A against 1/T beats linear-in-T by 5.5926x
-  and A against (T - 130)^2 by 3.2607x, both two-parameter and neither nested.
-  With three points and one residual degree of freedom what all of them read is
-  the second difference of A, -0.007000, which linear-in-T cannot represent.
+  8.819e-04 <!-- claim: A_linear_in_Tgp2_max_rel --> relative in A, against
+  1.535e-02 <!-- claim: A_null_linear_in_T_max_rel --> for the same three points
+  fitted linearly in T, a gain of 17.4057 <!-- claim: A_null_gain -->.  The two
+  forms have the same number of parameters and neither nests inside the other,
+  so the direction of that ratio is evidence rather than algebra.
+  WHAT THAT RATIO IS EVIDENCE FOR IS CONCAVITY IN T, NOT THE QUADRATIC FORM.  The
+  three printed A values cannot determine T_gp: at the two ends of the interval
+  they admit the gain is 3.6124 <!-- claim: A_gain_at_Tgp_band_lo --> and
+  3.5347 <!-- claim: A_gain_min_at_Tgp_band_ends -->, and it diverges at
+  111.42857 <!-- claim: Tgp_implied_C --> degC, where the three points are
+  exactly collinear by construction.  Two other non-nested two-parameter
+  regressors beat linear-in-T as well (the notebook prints them); what all of
+  them read is the second difference of A,
+  -0.007000 <!-- claim: A_second_difference -->.
 
 scope_out:
   the_experimental_comparison: >
     FIGURES 3-9 CARRY EVERY MEASUREMENT IN THE PAPER AND NONE OF IT IS
-    DIGITISED.  Conversion histories at three temperatures and two initiator
-    loadings, and average molecular weights against conversion at four of those
-    six conditions, all plotted as markers taken from Marten & Hamielec (ref 7).
-    Reading them would need a figure review, and the page is built so that it
-    does not need one: the paper's own tables and stated results support
-    everything claimed.  THE COST IS STATED PLAINLY - this page shows that the
-    model was transcribed and implemented correctly and that its own internal
-    correlations hold, and shows nothing at all about whether it describes PMMA.
+    DIGITISED.  Conversion histories and average molecular weights, all plotted
+    as markers taken from Marten & Hamielec (ref 7).  The paper's own tables and
+    stated results support everything claimed here.  THE COST IS STATED PLAINLY:
+    this page shows that the model was transcribed and implemented correctly and
+    that its own internal correlations hold, and shows nothing about whether it
+    describes PMMA.
   r_m_and_r_D: >
     THE PAPER PRINTS NO NUMBER FOR EITHER RADIUS, so the size of the correction
-    the page derives for eq. 22 cannot be evaluated for PMMA.  The search behind
-    that negative claim: r_m appears only inside the derivation of eq. 21-27 on
-    book pp. 351-352 and in the caption of Figure 2, never beside a numeral, on
-    a `pdftotext` sweep restricted to PDF pages 1-9 (the pages whose running
-    heads name this article), and all nine of those pages were also read as
+    the page derives for eq. 22 cannot be evaluated for PMMA.  r_m appears only
+    inside the derivation of eq. 21-27 on book pp. 351-352 and in the caption of
+    Figure 2, never beside a numeral, on a `pdftotext` sweep restricted to the
+    pages whose running heads name this article, all of which were also read as
     images.  theta_t = r_m^2/(3 D_0) is fitted as a whole and never split.
   the_molar_mass: >
     NOT PRINTED, AND RECONSTRUCTED RATHER THAN GUESSED.  M_0 = d_m/MW is needed
     by eq. 13, 14, 16 and 17; the paper gives d_m and, on book p. 356, the
-    Registry No. 80-62-6, and MW = 100.117 g/mol follows from C5H8O2.  The
-    notebook DEMONSTRATES that this cannot reach a headline rather than
-    asserting it: doubling MW moves the conversion history by less than 1e-10
-    and lambda_0 by less than 1e-9 relative - both solver noise - and mu_1 by
-    0.499939, exactly the factor it should.
+    Registry No. 80-62-6, and MW follows from C5H8O2 and standard atomic
+    weights.  The notebook DEMONSTRATES that this cannot reach a headline:
+    doubling MW leaves the conversion history unchanged to less than
+    1e-10 <!-- claim: mw_reconstruction_x_maxdiff --> and scales the molecular
+    weights by exactly the factor it should.
 
 printed_defects_reported_not_repaired:
   - >
-    FIGURE 3'S LEGEND PRINTS THE LOWER INITIATOR LOADING AS 0.01584 where
-    Table II and the legends of Figures 4, 5 and 8 and the captions of Figures 6
-    and 8 all print 0.01548 - the last two digits transposed.  Read at 3x on the
-    300 ppi bilevel image, where the glyphs are unambiguous.  FIVE PRINTINGS
-    AGAINST ONE makes 0.01548 the value the CSV carries; the odd one out is
-    recorded, not corrected, and nothing on the page depends on which is right
-    because Table II is what the model is run from.
+    FIGURE 3'S LEGEND PRINTS THE LOWER INITIATOR LOADING with its last two
+    digits transposed, where Table II and the legends and captions of
+    Figures 4, 5, 6 and 8 agree with the value the CSV carries.  Read at 3x on
+    the bilevel image, where the glyphs are unambiguous; the odd one out is
+    recorded in the Table II sidecar, not corrected, and nothing on the page
+    depends on it because Table II is what the model is run from.
   - >
     TABLE I GIVES k_d THE UNITS "L/min" although eq. 1, (1/V) d(IV)/dt = -k_d I,
     makes it a FIRST-ORDER constant whose units are 1/min.  The CSV carries the
@@ -174,12 +164,11 @@ printed_defects_reported_not_repaired:
     [sic] - "presence" for "present".  Quoted verbatim; nothing depends on it.
   - >
     NOT FILED AS A DEFECT BUT MEASURED AND STATED: eq. 31 and 32 print the
-    base-ten-to-natural conversion as 2.3, where ln(10) = 2.302585.  The page
-    runs the model with the PRINTED 2.3 everywhere and prices the alternative -
-    reading it as 2.302585 moves log10 k_t by up to 0.00924 of a decade and the
-    onset conversion by 0.00116, about a ninth of the distance by which the
-    reconstruction misses the printed onsets, so it is not negligible at this
-    page's resolution and is reported rather than quietly improved.
+    base-ten-to-natural conversion as a rounded ln(10).  The page runs the model
+    with the PRINTED value everywhere and prices the alternative: reading it as
+    ln(10) moves the onset conversion by
+    0.00116 <!-- claim: ln10_onset_shift -->, which is not negligible against the
+    distance by which the reconstruction misses the printed onsets.
 
 validation:
   ranked: >
@@ -187,174 +176,92 @@ validation:
     measurement, because this paper contains none in numerals.
     (1) INTERNAL IDENTITIES: eq. 24 and eq. 26 re-derived symbolically from
     eq. 21 with the paper's own boundary conditions, both exactly zero; eq. 22's
-    "Since r_D >> r_m" shown to cost EXACTLY r_m/r_D, symbolically and then a
-    second time through the flux a pymrm spherical-shell BVP actually computes -
-    1.858e-05 over five ratios at n = 6400, converging onto r_m/r_D at observed
-    order 1.8953; and the moment equations 12-17 reproduced from eq. 4a, 4b and 5
-    summed over a seeded finite population, a relative residual below 1e-14
-    both with k_tc = 0 and with a non-zero k_tc.
-    (2) THE PAPER'S OWN CORRELATIONS recomputed from its own Table II - Figure
-    13's activation energies (34.908161 and 34.516600 against a printed 34;
-    27.771564 against a printed 28) and Figure 15's straight line (8.819e-04,
-    against a 1.535e-02 null).
-    (3) THE PAPER'S SIX STATED RESULTS reproduced from the model - the three
-    onset conversions, the two activation energies and the QSSA factor.
-    (4) THREE REFINEMENT STUDIES to observed order - the shell BVP's profile, the
-    backward-Euler marcher, and the shell's own flux, which is what prices eq. 22
-    - each against a reference that shares no assembly with it; plus a refinement
-    of the resampling grid the onsets are read on, which fixes how many of their
-    digits are worth printing (1.311e-05 relative, so five).
-    (5) 53 DEFECT INJECTIONS with a generated coverage map.
+    "Since r_D >> r_m" shown to cost EXACTLY r_m/r_D, symbolically and through
+    the flux a pymrm spherical-shell BVP computes, to
+    1.858e-05 <!-- claim: eq22_rm_over_rD_max_dev -->; and the moment equations
+    12-17 reproduced from eq. 4a, 4b and 5 summed over a seeded finite
+    population, a relative residual below
+    1e-14 <!-- claim: moment_identity_ktc_max_rel --> with a non-zero k_tc.
+    (2) THE PAPER'S OWN CORRELATIONS recomputed from its own Table II: Figure
+    13's activation energies (34.908161 <!-- claim: dE_theta_t_0258_kcal --> and
+    34.516600 <!-- claim: dE_theta_t_01548_kcal --> for theta_t,
+    27.771564 <!-- claim: dE_theta_p_kcal --> for theta_p) and Figure 15's
+    straight line.
+    (3) THE PAPER'S STATED RESULTS reproduced from the model: the onset
+    conversions, the activation energies and the QSSA factor.
+    (4) REFINEMENT STUDIES to observed order (the shell BVP, the backward-Euler
+    marcher and the shell's own flux), each against a reference that shares no
+    assembly with it, plus a refinement of the resampling grid the onsets are
+    read on, which moves them by
+    1.311e-05 <!-- claim: onset_resample_floor_max_rel --> relative, so five
+    decimals are quoted.
+    (5) DEFECT INJECTIONS with a coverage map generated from measured moves.
   headline: >
-    THE THREE ONSET CONVERSIONS.  Book p. 354 defines the onset as the
-    intersection of a line extrapolated from "the sloped region" of the log k_t
-    curve with "the initial value", and states 0.26, 0.35 and 0.45.
-    Reconstructed as a least-squares line over the decades L_0-2 to L_0-4 and
-    extrapolated to L_0 = log10 k_t^0, the model gives 0.25516, 0.34838 and
-    0.44034 - all three low, by 0.00484, 0.00162 and 0.00966 - with the
-    increase with temperature reproduced.
-    THE HEADLINE IS AT I_0 = 0.0258 mol/L AND THE PAGE SAYS SO AND SAYS WHAT IT
-    COSTS.  The paper quotes ONE onset per temperature while Figures 10-12 plot
-    BOTH loadings and the sentence names neither; 0.0258 is the loading listed
-    first in all three legends and the one Figures 16-18 plot, and that is the
-    whole basis for the choice.  The SAME construction on the 0.01548 curve of
-    the SAME figures misses by up to 0.03126 - 3.24 times the headline miss,
-    inside the definitional band but well outside the headline's own error - and
-    the notebook prints the pair in prose, not only in a table.
-    THE LIMIT ON THAT NUMBER IS THE SENTENCE, NOT THE ARITHMETIC, and the page
-    is built so that the reader can see which: SEVEN defensible readings - six of
-    "the sloped region" (four decade windows and two tangents) and one of "the
-    initial value" - spread the answer by up to 0.09009, 9.33 times the largest
-    miss.  The two arithmetic floors are far below that and are named for what
-    they measure: the resampling grid moves the onsets by 1.311e-05 relative,
-    which is why five decimals are quoted and not six, and an independent
-    integration reproduces them to below 1e-10 relative, which prices the ATTRACTING
-    MANIFOLD lambda_0(x) rather than the accuracy of either integration.
-    THE BAND IS A SPREAD OVER SEVEN READINGS, NOT A BOUND OVER EVERY READING OF
-    THE SENTENCE, and the page states the difference.  The most literal reading
-    of all - the tangent at the steepest point of the descent - gives 0.44783,
-    0.47680 and 0.51866, outside the band at every condition.  It is excluded for
-    a reason the notebook measures rather than asserts: its tangent point sits at
-    x = 0.86, the right edge of THIS PAGE's window, at all six conditions, so
-    that reading is set by where the curve is truncated and not by the curve.
-    THAT IS THE ONLY GROUND ON WHICH ANYTHING IS KEPT OUT, AND IT IS APPLIED TO
-    THE READINGS THAT ARE KEPT IN.  The widest-swinging of the seven, the
-    4-6-decade window (0.29957, 0.41999, 0.49516), passes it: its fit mask ends
-    inside x = 0.86 at four of the six conditions, including the condition at
-    which the reported band is widest, so that band is not set by the truncation
-    either.
-    Both narrower bands, without the 4-6-decade window and without the 3-5 and
-    4-6 windows, are break rows.  The construction reads the FIRST local
-    minimum of the second derivative as "the bend": at large theta_t the GLOBAL
-    minimum is the GLASS effect at high conversion, which would make the onset
-    NON-MONOTONE in theta_t.
-    THE CONSTRUCTION IS ROOT-FOUND OR SOLVED, NEVER SAMPLED, and the tangent
-    variants that enter the band are root-finds on the third derivative of
-    log10 k_t.
-    THE MONOTONICITY GUARD IS ON THE TANGENT CONSTRUCTION as well as on the
-    derivative-free WINDOW fit, which has no curvature-feature selection and so
-    cannot show this defect; the notebook prints the tabulated-theta_t tangent at
-    both nx = 2001 and nx = 4001.  Both constructions are asserted monotone at
-    half, one and twice theta_t.
+    THE ONSET CONVERSIONS.  Book p. 354 defines the onset as the intersection of
+    a line extrapolated from "the sloped region" of the log k_t curve with "the
+    initial value", and states one onset per temperature.  Reconstructed as a
+    least-squares line over the decades L_0-2 to L_0-4 and extrapolated to
+    L_0 = log10 k_t^0, the model gives 0.25516 <!-- claim: onset_x_50C -->,
+    0.34838 <!-- claim: onset_x_70C --> and 0.44034 <!-- claim: onset_x_90C -->,
+    off by -0.00484 <!-- claim: onset_dev_50C -->,
+    -0.00162 <!-- claim: onset_dev_70C --> and
+    -0.00966 <!-- claim: onset_dev_90C -->, with the increase with temperature
+    reproduced.
+    THE HEADLINE IS AT THE HIGHER INITIATOR LOADING AND THE PAGE SAYS SO.  The
+    paper quotes one onset per temperature while Figures 10-12 plot both
+    loadings; the higher one is listed first in all three legends and is the one
+    Figures 16-18 plot.  The same construction on the other loading's curve
+    misses by up to 0.03126 <!-- claim: onset_dev_other_loading_max -->,
+    3.24 <!-- claim: onset_other_over_headline --> times the headline miss.
+    THE LIMIT ON THAT NUMBER IS THE SENTENCE, NOT THE ARITHMETIC: the defensible
+    readings of the construction spread the answer by up to
+    0.09009 <!-- claim: onset_definition_band_max -->,
+    9.33 <!-- claim: onset_band_over_max_dev --> times the largest miss, while an
+    independent integration reproduces the onsets to below
+    1e-10 <!-- claim: onset_two_route_max_rel --> relative, which prices the
+    attracting manifold lambda_0(x) rather than the accuracy of either
+    integration.  The band is a spread over the readings the notebook lists, not
+    a bound over every reading of the sentence: the steepest-slope tangent lies
+    outside it and is excluded because its tangent point sits at the right edge
+    of this page's window, and the same test is applied to the readings kept in.
   second_routes: >
-    SEVEN QUANTITIES ARE COMPUTED A SECOND WAY - SIX OF THEM BY AN INDEPENDENT
-    ROUTE, THE SEVENTH BY THE FIRST ROUTE DELIBERATELY BROKEN - AND THE PAGE
-    SAYS WHAT EACH ONE ACTUALLY TESTS.  The constitutive curve from the six ODEs
-    re-parametrised by conversion and integrated with a different solver family
-    (below 1e-10) - which prices the ATTRACTING MANIFOLD lambda_0(x) and not the
-    accuracy of either integration, since the residual is unchanged across solver
-    families and tolerances while the resampling grid moves the onset by
-    1.311e-05; the start state the two routes share, pinned separately against
-    the ALGEBRAIC quasi-steady root of eq. 12, which shares no time stepping
-    (7.36e-06); eq. 26 against sympy's own integration of eq. 21 (exactly 0);
-    eq. 22's error against the symbolic r_m/r_D, read off the DISCRETE FLUX the
-    pymrm shell solve computes (1.858e-05 at n = 6400, converging at order
-    1.8953); the moment equations against the chain-length equations summed
-    (below 1e-14); the same identity with its truncation deliberately violated
-    (3.13e-02, which is the first route deliberately broken and is labelled a
-    companion, not an independent check); and the conversion through
-    the gel region by the pymrm backward-Euler marcher against BDF (2.12e-05).
-    The eq. 22 route reads the discrete flux, and the nu = 0 break row moves it
-    by four orders.
+    QUANTITIES COMPUTED A SECOND WAY, AND WHAT EACH ONE TESTS.  The constitutive
+    curve from the ODEs re-parametrised by conversion with a different solver
+    family (below 1e-10 <!-- claim: onset_two_route_max_rel -->), which prices
+    the attracting manifold; the shared start state against the algebraic
+    quasi-steady root of eq. 12 (7.36e-06 <!-- claim: qss_start_max_rel -->);
+    eq. 26 against sympy's own integration of eq. 21 (exactly zero); eq. 22's
+    error against the symbolic r_m/r_D, read off the discrete flux of the pymrm
+    shell solve (1.858e-05 <!-- claim: eq22_rm_over_rD_max_dev -->); the moment
+    equations against the chain-length equations summed (below
+    1e-14 <!-- claim: moment_identity_max_rel -->); the same identity with its
+    truncation deliberately violated
+    (3.13e-02 <!-- claim: moment_identity_trunc_max_rel -->, a companion, not an
+    independent check); and the conversion through the gel region by the pymrm
+    backward-Euler marcher against BDF
+    (2.12e-05 <!-- claim: march_err_finest -->).
   break_table: >
-    53 DEFECT INJECTIONS, and the coverage map is GENERATED from their measured
-    moves rather than written by hand: each row returns a dictionary of metrics
-    recomputed under the defect, a row covers a metric only if it moves it by
-    more than 1e-6 relative, and the notebook fails to execute if any metric is
-    uncovered or any row moves nothing.  All 53 rows move a reported metric; the
-    map holds 249 measured row-metric links and all 56 metrics are covered or
-    named structural.  The rows split 19 / 34 between MIS-TRANSCRIBING ONE
-    PRINTED CELL and CHANGING A METHOD or a resolution, and the notebook
-    computes that split rather than asserting it.
-    A metric wired to the wrong quantity is invisible to a coverage map that
-    only asks whether SOMETHING moves it.  eq22_rm_over_rD_max_dev reads the
-    discrete flux, so the nu = 0 row covers it and moves it by four orders, and
-    a coarse-shell row covers it too.
-    ONE METRIC IS DECLARED STRUCTURAL AND SAYS WHAT IT CANNOT DETECT:
-    moment_identity_broken_max_rel is exactly 2 by construction, because flipping
-    the sign of a moment term that matches its chain-length sum exactly turns
-    |rhs-lhs|/|lhs| into |-2c|/|c| on ANY population.  It shows the identity has
-    teeth against a sign and says nothing about magnitude, about the truncation
-    or about the population - which is why moment_identity_trunc_max_rel exists
-    beside it, depends on the population, and IS covered.
-    NO WEAK METRIC IS DECLARED: every value claim is moved past its 5 %
-    comparison tolerance by at least one row, and the weakest cover among the
-    values is 5.4023 % on onset_x_90C - the onset at the
-    temperature where the diffusion term is smallest and the curve therefore
-    least sensitive to a mis-transcribed constant.  onset_per_decade_theta_t
-    responds to theta_t almost exactly log-linearly, so re-measuring the slope
-    over a narrower interval barely moves it; its row measures the same leverage
-    at 90 degC instead of 50 degC, where the response genuinely differs, and
-    moves the metric 8.258 %.
-    EVERY METRIC DECLARES HOW IT IS CHECKED (agreement.json, format 2), and the
-    set of claims never depends on a value.  Round-off quantities are BOUNDS
-    with a stated basis, checked on every machine and in CI: the two
-    moment-identity residuals (below 1e-14), the symbolic eq. 26 residual
-    (exactly 0), the shell's flux constancy (below 1e-8), the two-route onset
-    gap and the MW-doubled conversion (both below 1e-10, set by the solver
-    tolerances); the two observed orders are bounds from theory, and the
-    sign-flip identity is a structural bound at 2.  Every other metric is a
-    value, held to 5 % of its baseline in CI, far above its measured spread
-    across BLAS kernels.  The prose states those bounds, never the round-off
-    digits, which differ from machine to machine.  A break row breaks a claim
-    when the claim's own check fails on the injected value, and every claim
-    except the structural sign-flip identity has such a row.  eq. 22's
-    deviation from r_m/r_D is a discretisation error on the shell solve's own
-    flux, 1.858e-05, a value.
-    THE 5 % COMPARISON APPLIES TO THE VALUES ONLY: a relative move means
-    nothing for a number at round-off, whose digits differ between BLAS
-    kernels, so each round-off metric is a bound, checked against its bound
-    rather than against its baseline, and is broken by a row that leaves it.
+    The coverage map is GENERATED from measured moves: each row returns the
+    claims recomputed under its defect, and the notebook fails to execute if any
+    claim is uncovered and not named structural, or any row moves nothing.  The
+    notebook prints the number of rows and links.  A row breaks a claim when the
+    claim's own check fails on the injected value.  Ratios and means the prose
+    quotes are recomputed from each row's own outputs.
+    STRUCTURAL CLAIMS SAY WHAT THEY CANNOT DETECT: moment_identity_broken_max_rel
+    is exactly 2 by construction, because flipping the sign of a moment term
+    that matches its chain-length sum exactly turns |rhs-lhs|/|lhs| into
+    |-2c|/|c| on any population, which is why moment_identity_trunc_max_rel
+    exists beside it and is covered; and three counts are fixed by the paper
+    (the named parameters, the rows of Table II, and the size of the paper's own
+    compression).
+    Round-off quantities are BOUNDS with a stated basis, checked on every machine
+    and in CI; the observed orders are bounds from theory; every other metric is
+    a value held to 5 % of its baseline in CI.
   determinism: >
     Nothing on the page is stochastic except the test population of the
     moment-closure identity, which is drawn from a SEEDED generator (seed
-    19830348, the volume and first page of the article).  No sampling, no
-    bootstrap, no random initial guess and no continuation chain: every
-    integration starts from the same t = 0 state, so no answer can depend on a
-    sweep order.  Two consecutive executions give identical content, figures and
-    agreement.json.
-  prose_sweep: >
-    79 prose values and 17 prose counts are pinned against the live computation
-    and the notebook fails to execute if any drifts - every count this metadata
-    states about the break table among them, because a count in a YAML file is a
-    hand-typed integer no computation can rewrite.  A mechanical sweep then
-    reads meta.yaml, README.md, models_entry.yaml, the three data sidecars AND
-    THE NOTEBOOK'S OWN MARKDOWN for two token classes: numbers written to five
-    or more decimals, which must match a live value to half an ulp of their own
-    printed digits, and INTEGERS of two or more digits, which must match a count
-    the computation produced, a printed table cell, or one of a pinned set of
-    source-derived constants (book pages, equation numbers, the year, reference
-    volumes) that no computation here can check.  BOTH TOKEN COUNTS ARE
-    SHAPE-DEPENDENT and both shapes are pinned: integrate_case.py copies page/
-    only and splices models_entry.yaml into models.yaml, so that file is swept
-    in the queue tree and is absent - and counted as absent - in the published
-    page.  The sweep REPORTS ITS ACHIEVED DETECTION RATE rather than claiming
-    completeness, and it COUNTS THE TWO CLASSES IT CANNOT SEE AT ALL:
-    word-spelled small integers and single-digit numbers are outside the token
-    classes entirely and are checked against nothing, so no count in this
-    metadata is written as a word or a single digit where it matters.  The
-    page names the class, counts its instances, and does not claim coverage of
-    it.
+    19830348, the year and first page of the article).  Every integration starts
+    from the same t = 0 state, so no answer can depend on a sweep order.
 
 what_pymrm_adds: >
   HONESTLY, VERY LITTLE TO THE PHYSICS, AND THE PAGE SAYS SO.  This is a
@@ -363,19 +270,20 @@ what_pymrm_adds: >
   solution with pymrm nowhere in the causal chain.
   WHAT PYMRM DOES BUY, IN TWO PLACES, BOTH MEASURED.  (1) A residual-and-Jacobian
   form for the eight-field source term: NumJac((1, 8)) plus newton gives a
-  backward-Euler step that is first order (observed 1.0094 over a 16x
-  refinement, 2.12e-05 against the BDF reference) and, more to the point, gives
-  the model the shape a nonisothermal or spatially resolved version would need -
+  backward-Euler step that is first order (observed
+  1.0277 <!-- claim: march_order --> from successive differences,
+  2.12e-05 <!-- claim: march_err_finest --> against the BDF reference) and gives
+  the model the shape a nonisothermal or spatially resolved version would need,
   which is what the paper's own conclusion asks for.  NO SUCH EXTENSION IS
   COMPUTED, because nothing in this paper would test it.  (2) The paper's own
   eq. 21 SOLVED instead of approximated: construct_grad and construct_div(nu=2)
   on the shell r_m <= r <= r_D reproduce the exact first integral (the same flux
-  at all 1281 faces to less than 1e-8 relative - STRUCTURAL for a conservative finite-volume
-  scheme with no source, and named as such) at observed order 1.8618, and give
-  the page the one thing the derivation leaves unpriced: the VALUE of that flux
-  is not structural, and it agrees with eq. 22 understating K by exactly r_m/r_D
-  to 1.858e-05 over five ratios at n = 6400, converging at order 1.8953.  Setting
-  nu = 0 moves that by four orders.
+  at every face to less than 1e-8 <!-- claim: bvp_K_spread_rel --> relative,
+  structural for a conservative finite-volume scheme with no source) with its
+  flux at observed order 1.7483 <!-- claim: bvp_order -->, and the VALUE of that
+  flux agrees with eq. 22 understating K by exactly r_m/r_D to
+  1.858e-05 <!-- claim: eq22_rm_over_rD_max_dev -->.  Setting nu = 0 moves that
+  by orders of magnitude.
   AND WHAT IT DOES NOT ADD: no extension to conditions the paper did not
   compute, no spatial resolution, no comparison with any measurement, and no
   resolution of the half of the case that lives in Figures 3-9.
