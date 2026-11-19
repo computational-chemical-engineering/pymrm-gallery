@@ -2728,7 +2728,7 @@ for _t, _n, _k, _d in _DIAG:
 # ---- and the rows must COMPUTE what they return, parsed rather than trusted ----
 # A row that returns a TYPED CONSTANT for a metric records a move of exactly 1
 # whatever the reported value is: a hand-written coverage claim wearing the
-# generator's clothes.  This guard is copied from published J4.2.  It parses each row's own source plus one level of the
+# generator's clothes.  It parses each row's own source plus one level of the
 # helpers that row names, and rejects any metric key bound to a numeric literal or
 # to a local that is only ever assigned one.  What it cannot say is whether the
 # expression is the RIGHT one; that is what the measured moves are for.

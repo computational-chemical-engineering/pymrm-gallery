@@ -108,8 +108,8 @@
 # whether it affects this page, is in *The data*.
 #
 # J4.1 recorded that Rawlings & Ekerdt cite their five growth laws to two
-# textbooks, so *"nothing on this page is attributed to Blackman, Tessier, Moser or
-# Contois personally"*. Andrews' reference list carries the primary citations for
+# textbooks, *"not to Blackman, Tessier, Moser or Contois personally, and nothing
+# here is attributed to those four"*. Andrews' reference list carries the primary citations for
 # three of those four: Moser (Carnegie Inst. of Washington, 1958), **Teissier**
 # (*Ann. Physiol. Physicochim. Biol.* **12**, 527, 1936; Rawlings spells the law
 # "Tessier", and neither spelling is repaired here) and Contois (*J. Gen.

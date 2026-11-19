@@ -320,8 +320,7 @@ range into a number**; the two are printed side by side.
   the neighbouring rung's threshold fails `ladder_controls_rejected`; and a row reading
   the control's jump allowance as 0.005 K (below every measured jump, 0.012 to 0.095 K)
   re-runs the five ladder controls and the 9-point fine Pe_a grid and fails the two
-  page-wide rejection counts. An AST guard (from published
-  `J4.2`) rejects a metric key bound to a numeric literal, to arithmetic on literals, to a
+  page-wide rejection counts. An AST guard rejects a metric key bound to a numeric literal, to arithmetic on literals, to a
   `float`/`int` cast of one, to a subscript of a frozen literal tuple, or to a local name (in the row's own body or a one-level helper) bound by a plain or tuple-unpacking
   assignment; its teeth are measured on **six** negative controls, one per laundering
   form, its false-positive control binds a *metric* key to a computed value, and
