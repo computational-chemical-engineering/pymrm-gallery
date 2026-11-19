@@ -156,6 +156,17 @@ claims = Claims(PAGE.split("-")[0])
 # negative order in its own reactant over most of the warm-up. Note $G$ carries a
 # factor $T$, so $k_i$ has units of mol·K/(cm² s); that factor is easy to lose.
 #
+# **The propylene basis of $K_2$ and $K_3$.** Oh and Cavendish's adsorption
+# constants are those of Voltz et al., converted with the propylene ppm taken at
+# face value. Voltz et al. define the propylene concentration in their rate
+# equations as ppm of propylene measured as C6 by flame ionisation, which is half
+# the propylene ppm, and their own calculated curves confirm that reading
+# ([`C2.13`](../C2.13-voltz-co-propylene-oxidation/)). On that basis the
+# pre-exponentials of $K_2$ and $K_3$ for propylene mole fractions would be half
+# and a quarter of those in Table I ($K_3$ multiplies $c_{\rm C_3H_6}^2$). This
+# page reproduces Oh and Cavendish's model as printed and keeps their constants;
+# how far the other basis would move light-off is not computed here.
+#
 # | Symbol | Name in `model.py` |
 # |---|---|
 # | $T_s$, $T_g$, $c_{g,i}$, $c_{s,i}$ | fields `I_TS`, `I_TG`, `I_YG`, `I_YS` of the state `u` |
@@ -1378,6 +1389,10 @@ print(f"{int(tbl.caught.sum())} of {len(tbl)} pairs caught; {len(unc)} uncaught:
 # - **Bounds where the residual has more than one root.** With an inhibition
 #   denominator like $G$, full Newton steps can converge to a root with negative
 #   mole fractions; `bounds=` at zero keeps the solve on the physical one.
+#
+# Reusing the kinetics: $K_2$ and $K_3$ here carry Oh and Cavendish's propylene
+# basis (see *The published model*); the kinetics on the basis of Voltz et al.
+# are on [`C2.13`](../C2.13-voltz-co-propylene-oxidation/).
 #
 # Related pages: [`D2.2`](../D2.2-van-welsenaere-froment-runaway/) for the
 # steady-state runaway boundary of the same competition between heat release and
