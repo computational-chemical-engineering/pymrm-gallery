@@ -6264,8 +6264,9 @@ models:
     slug: asm1-activated-sludge
     title: "ASM1 activated sludge model"
     description: >
-      A 104-cell stoichiometric matrix whose continuity relations close as exact
-      symbolic identities — and whose only imperfection is two rounded decimals.
+      The ASM1 stoichiometric matrix, whose continuity relations close as exact
+      symbolic identities and whose only imperfection is two rounded decimals,
+      put through a plug-flow lane with its recycle inside one Newton system.
     section: J
     status: published
     page: pages/J4.8-asm1-activated-sludge/
@@ -6274,7 +6275,7 @@ models:
     structures: [S1, S4]
     phases: [liquid]
     predicts: [COD/nitrogen/charge continuity, nitrification and denitrification, alkalinity]
-    pymrm_api: [construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_div, construct_convflux_upwind, NumJac, newton]
     reference:
       authors: ["Henze, M.", "Grady, C. P. L.", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
       year: 1987
