@@ -600,6 +600,12 @@ def reactor_study(nu_m=None, g_num=None, grids=GRIDS, **kw):
     return out
 
 
+def leak_grid_change(out):
+    """Relative change of the COD leak between the coarsest and finest grid."""
+    lo, hi = min(out), max(out)
+    return float(abs(out[hi]["b"]["COD"]) / abs(out[lo]["b"]["COD"]) - 1)
+
+
 def study_max(out, key):
     """Largest absolute balance (or leak-to-prediction gap) over the grids."""
     if key == "pred":
@@ -628,8 +634,10 @@ print("   discretisation: the upwind boundary fluxes and the summed source term 
 print("   to cancel exactly, and they do at every grid.")
 print(f"\n   COD does not close. It leaks {leak150:.4f} g O2 m-3 d-1 at n = 150. The matrix's own")
 print("   two residuals times the integrated rates predict that leak to below 1e-8")
-print(f"   relative at every grid (here {study_max(RS, 'pred'):.0e}), so it is stoichiometric")
-print("   and not numerical: it follows the rate integrals grid by grid.")
+print(f"   relative at every grid (here {study_max(RS, 'pred'):.0e}), as a conservative scheme")
+print("   requires: it leaks only what the matrix leaks.")
+print(f"   Between n = {min(RS)} and {max(RS)} the leak moves by {100 * leak_grid_change(RS):.2f} %: it depends")
+print("   on the discretisation through the rate integrals, little against the leak itself.")
 # the exact-factor leak is round-off (exactly 0 on some BLAS kernels), so it is
 # stated against its bound, never divided by
 print("\n   Substituting 20/7 and 32/7 closes the same lane to below 1e-8 at every grid")
@@ -718,10 +726,10 @@ PC = picard_study()
 print("   The fixed-point route solves the lane for a fixed inlet, sets the inlet to")
 print("   the blend of feed and the new outlet, and repeats until the inlet moves less")
 print(f"   than 1e-9 g m-3. It takes {PC['outer']} lane solves; the inlet updates")
-print(f"   shrink by about {PC['contraction']:.1f} per iterate, against R/(1+R) = "
+print(f"   shrink by about {PC['contraction']:.2f} per iterate, close to R/(1+R) = "
       f"{R_INT / (1 + R_INT):.3f} for a passive component.")
 print("   The Newton system with the recycle inside takes one solve.")
-print(f"   The two routes agree to below 1e-7 g m-3 in every cell (here {PC['gap']:.0e}),")
+print(f"   The two routes agree to below 1e-8 g m-3 in every cell (here {PC['gap']:.0e}),")
 print("   the gap set by the fixed-point tolerance. They share the operators, the")
 print("   rates and the outlet face value; they differ in how the recycle is closed.")
 
@@ -968,8 +976,9 @@ print("   continuity at all: no kinetic parameter appears in any of the checks a
 # iterate, the slow, passive components setting the pace (check 6); placing the
 # recycle inside the Newton system removes the iteration. And take the boundary
 # fluxes from the convection operator (its exit face) rather than from a cell
-# value picked by hand: reading the outlet one cell upstream breaks an otherwise
-# round-off balance (break table).
+# value picked by hand: reading the outlet one cell upstream breaks the COD
+# balance, which has a source along the lane; nitrogen and charge do not notice it
+# (break table).
 #
 # **Related pages.** `J4.7` (enzyme kinetics in a pellet), `I1.2` (a reaction
 # network with strong switching behaviour), [`C2.1`](../C2.1-xu-froment-smr/)
@@ -1010,12 +1019,14 @@ claims.value("n_loss_no_n2_max", loss_hi, unit="g N per g COD")
 claims.value("lane_otr", otr150, unit="g O2 m-3 d-1")
 claims.value("xbh_change_one_pass", xbh_change)
 claims.bound("reactor_charge_balance", study_max(RS, "charge"), max=1e-8, basis="identity",
-             unit="g m-3 d-1", note="conservative discretisation closes charge to round-off, max over n = 75, 150, 300")
+             unit="g m-3 d-1", note="identity of a conservative scheme at a converged solve: charge closes to round-off, max over n = 75, 150, 300")
 claims.bound("reactor_nitrogen_balance", study_max(RS, "N"), max=1e-8, basis="identity",
-             unit="g m-3 d-1", note="conservative discretisation closes nitrogen to round-off, max over n = 75, 150, 300")
+             unit="g m-3 d-1", note="identity of a conservative scheme at a converged solve: nitrogen closes to round-off, max over n = 75, 150, 300")
 claims.value("reactor_cod_leak", leak150, unit="g m-3 d-1")
+claims.value("reactor_cod_leak_grid_change", leak_grid_change(RS),
+             note="relative change of the COD leak from n = 75 to n = 300")
 claims.bound("reactor_cod_leak_vs_prediction", study_max(RS, "pred"), max=1e-8, basis="identity",
-             note="the leak is the matrix's two residuals times the rates, to round-off, max over grids")
+             note="identity of a conservative scheme at a converged solve: the leak is the matrix's two residuals times the rates, to round-off, max over grids")
 claims.bound("reactor_cod_leak_exact_factors", study_max(RS_EXACT, "COD"), max=1e-8,
              basis="identity", unit="g m-3 d-1",
              note="with 20/7 and 32/7 COD closes; exactly 0 on some BLAS kernels")
@@ -1034,7 +1045,7 @@ claims.bound("lane_order_roundoff_margin", OS["margin"], min=1e3, basis="toleran
              note="finest successive difference over max(newton tol, eps |q|)")
 claims.value("picard_iterations", PC["outer"])
 claims.value("picard_contraction", PC["contraction"])
-claims.bound("recycle_routes_gap", PC["gap"], max=1e-7, basis="tolerance", unit="g m-3",
+claims.bound("recycle_routes_gap", PC["gap"], max=1e-8, basis="tolerance", unit="g m-3",
              note="fixed-point route stopped at an inlet step of 1e-9")
 claims.exact("alk_nit_den_ratio", float(alk_nit / alk_den))
 claims.exact("alk_matrix_matches_rule", bool(alk_nit_m == alk_nit and alk_den_m == alk_den))
@@ -1124,6 +1135,8 @@ ROWS = [
             lane(p=P_BH2)),
         "zg_last_cell_cod_shift": lambda: zg_study(p=P_BH2)["shift"]}),
     ("oxygen transfer per cell (kLa times the cell width)", {
+        "reactor_cod_leak_grid_change": lambda: leak_grid_change(
+            reactor_study(kla_per_cell=True, grids=(GRIDS[0], GRIDS[-1]))),
         "lane_order_min": lambda: order_study(kla_per_cell=True)["min"],
         "lane_order_max": lambda: order_study(kla_per_cell=True)["max"],
         "lane_order_preasymptotic_max": lambda: order_study(kla_per_cell=True)["slow_max"],
@@ -1195,12 +1208,13 @@ SAYS = {
     "coefficients_recovered_identically": ["8"],
     "coefficients_recovered_up_to_rounding": ["2"],
     "picard_iterations": ["57"],
-    "picard_contraction": ["0.6"],
-    "recycle_routes_gap": ["below 1e-7"],
+    "picard_contraction": ["0.65"],
+    "recycle_routes_gap": ["below 1e-8"],
     "reactor_nitrogen_balance": ["below 1e-8"],
     "reactor_charge_balance": ["below 1e-8"],
     "lane_otr": ["652"],
     "reactor_cod_leak": ["0.2071"],
+    "reactor_cod_leak_grid_change": ["0.19 %"],
     "reactor_cod_leak_vs_prediction": ["below 1e-8"],
     "reactor_cod_leak_exact_factors": ["below 1e-8"],
     "lane_order_min": ["at least 0.9"],

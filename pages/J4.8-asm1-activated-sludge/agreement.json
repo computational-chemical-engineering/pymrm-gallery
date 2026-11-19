@@ -84,7 +84,7 @@
       "max": 1e-08,
       "basis": "identity",
       "unit": "g m-3 d-1",
-      "note": "conservative discretisation closes charge to round-off, max over n = 75, 150, 300"
+      "note": "identity of a conservative scheme at a converged solve: charge closes to round-off, max over n = 75, 150, 300"
     },
     "reactor_nitrogen_balance": {
       "kind": "bound",
@@ -92,7 +92,7 @@
       "max": 1e-08,
       "basis": "identity",
       "unit": "g m-3 d-1",
-      "note": "conservative discretisation closes nitrogen to round-off, max over n = 75, 150, 300"
+      "note": "identity of a conservative scheme at a converged solve: nitrogen closes to round-off, max over n = 75, 150, 300"
     },
     "reactor_cod_leak": {
       "kind": "value",
@@ -100,12 +100,18 @@
       "rtol": 0.05,
       "unit": "g m-3 d-1"
     },
+    "reactor_cod_leak_grid_change": {
+      "kind": "value",
+      "value": 0.0018992443784136004,
+      "rtol": 0.05,
+      "note": "relative change of the COD leak from n = 75 to n = 300"
+    },
     "reactor_cod_leak_vs_prediction": {
       "kind": "bound",
       "value": 1.3701906635648768e-11,
       "max": 1e-08,
       "basis": "identity",
-      "note": "the leak is the matrix's two residuals times the rates, to round-off, max over grids"
+      "note": "identity of a conservative scheme at a converged solve: the leak is the matrix's two residuals times the rates, to round-off, max over grids"
     },
     "reactor_cod_leak_exact_factors": {
       "kind": "bound",
@@ -180,7 +186,7 @@
     "recycle_routes_gap": {
       "kind": "bound",
       "value": 2.1120740711921826e-09,
-      "max": 1e-07,
+      "max": 1e-08,
       "basis": "tolerance",
       "unit": "g m-3",
       "note": "fixed-point route stopped at an inlet step of 1e-9"
@@ -281,10 +287,10 @@
       "57"
     ],
     "picard_contraction": [
-      "0.6"
+      "0.65"
     ],
     "recycle_routes_gap": [
-      "below 1e-7"
+      "below 1e-8"
     ],
     "reactor_nitrogen_balance": [
       "below 1e-8"
@@ -297,6 +303,9 @@
     ],
     "reactor_cod_leak": [
       "0.2071"
+    ],
+    "reactor_cod_leak_grid_change": [
+      "0.19 %"
     ],
     "reactor_cod_leak_vs_prediction": [
       "below 1e-8"
@@ -437,6 +446,9 @@
     ],
     "zg_last_cell_cod_shift": [
       "heterotroph decay rate b_H doubled"
+    ],
+    "reactor_cod_leak_grid_change": [
+      "oxygen transfer per cell (kLa times the cell width)"
     ],
     "lane_order_min": [
       "oxygen transfer per cell (kLa times the cell width)"

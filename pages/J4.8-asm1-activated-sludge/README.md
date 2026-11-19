@@ -78,11 +78,12 @@ value enters through `shapes_d` and the outlet value is the exit-face row of the
 convection operator, so one solve replaces the fixed-point iteration on the
 inlet. That iteration is kept as a second route: it needs
 57 <!-- claim: picard_iterations --> lane solves, its updates shrinking by
-0.6 <!-- claim: picard_contraction --> per iterate against R/(1+R) for a
+0.65 <!-- claim: picard_contraction --> per iterate, close to R/(1+R) for a
 passive component, and agrees with the one-solve route to below
-1e-7 <!-- claim: recycle_routes_gap --> g m⁻³.
+1e-8 <!-- claim: recycle_routes_gap --> g m⁻³.
 
-Its job is a second, independent form of the same check: at steady state the
+Its job is to carry the same check through the
+discretisation: at steady state the
 flux of a conserved quantity through the lane can only change by what crosses
 the boundary. Nitrogen and charge close to below
 1e-8 <!-- claim: reactor_nitrogen_balance --> and below
@@ -91,8 +92,9 @@ against an oxygen demand of 652 <!-- claim: lane_otr --> g m⁻³ d⁻¹; COD le
 0.2071 <!-- claim: reactor_cod_leak --> g m⁻³ d⁻¹, which the two stoichiometric
 residuals predict to below 1e-8 <!-- claim: reactor_cod_leak_vs_prediction -->
 relative, and which falls to below 1e-8 <!-- claim: reactor_cod_leak_exact_factors -->
-g m⁻³ d⁻¹ with the exact fractions. The same defect shows up symbolically and
-numerically, and both vanish together.
+g m⁻³ d⁻¹ with the exact fractions. For a conservative scheme at a converged
+solve this is an identity: the balances test the operators, the solve and the
+numeric matrix, not the transcription a second time.
 
 Grid refinement on n = 100 to 1600: effluent ammonia and soluble organic
 nitrogen converge at first order, observed orders from successive differences
@@ -139,7 +141,6 @@ nothing in the validation depends on the choice.
   iteration.
 - **The rate expressions clip negative concentrations**, so Newton is
   bounded below by zero, `bounds=(0, None)`.
-- **Put a cell face on the aeration boundary.**
 - **The PDF text layer is unusable** for this paper's tables: 1/Y_H comes out as
   `I / r~` and (4.57-Y_A)/Y_A as `4 . 5 7 - Y4 / Y,~`. Journal pages 506, 507 and
   513 were rendered at 600 dpi and read as images.
@@ -168,3 +169,7 @@ they admit no free parameter.
   the same flux of a conserved quantity; only COD, which has a source along the
   lane, moves, by 0.51 <!-- claim: zg_last_cell_cod_shift --> g m⁻³ d⁻¹ with the
   exact fractions.
+- 2026-11-19. The page said the COD leak "is grid independent, which"
+  ... "numerical error would not be". It moves by
+  0.19 % <!-- claim: reactor_cod_leak_grid_change --> between 75 and 300 cells:
+  a discretisation-dependent value, small against the leak itself.
