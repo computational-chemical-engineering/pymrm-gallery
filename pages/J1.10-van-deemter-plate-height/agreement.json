@@ -1,8 +1,8 @@
 {
-  "page": "J1.10-van-deemter-plate-height",
+  "page": "J1.10",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -11,50 +11,101 @@
   "metrics": {
     "pymrm_H_vs_eq38_rel": {
       "kind": "value",
-      "value": 4.121012503999211e-05,
+      "value": 4.122145775720121e-05,
       "rtol": 0.05,
       "note": "discretisation error at n_z = 1400, dt = 1 s; grid-limited"
     },
     "pymrm_grid_order": {
       "kind": "bound",
-      "value": 3.001238990885788,
+      "value": 3.005941029830639,
       "min": 2.5,
       "max": 3.5,
       "basis": "chosen",
-      "note": "observed order of the two-station H against eq (38) over a 4x grid refinement with the van Leer correction; 3.00 measured, bare upwind gives 1.00"
+      "note": "observed order of the two-station H from successive differences on n_z = 350, 700, 1400, 2800 (dt = 0.5 s), the one farther from 3; van Leer is formally second order and H converges faster, so only the range is claimed"
+    },
+    "pymrm_grid_roundoff_margin": {
+      "kind": "bound",
+      "value": 11601135.045990407,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "smallest successive difference of the grid ladder over n_steps eps H"
+    },
+    "pymrm_upwind_dispersion_coeff": {
+      "kind": "value",
+      "value": 0.9999927559985938,
+      "rtol": 0.05,
+      "note": "mean (H - H_38)/h with bare upwind; the prediction is exactly 1"
     },
     "pymrm_upwind_dispersion_coeff_err": {
       "kind": "value",
       "value": 7.2440014061703195e-06,
       "rtol": 0.05,
-      "note": "|mean (H - H_38)/h - 1| with bare upwind; the prediction is exactly 1"
+      "note": "|mean (H - H_38)/h - 1| with bare upwind, the O(h) remainder"
     },
-    "pymrm_dt_order_mu1": {
+    "pymrm_dt_order_upwind_dev": {
       "kind": "bound",
-      "value": 2.1089450563859167,
-      "min": 1.5,
-      "max": 2.5,
+      "value": 0.006544411948976148,
+      "max": 0.1,
+      "basis": "theory",
+      "note": "worst |order - 2| of c_I(z2) at t = 4800 and 5200 s over dt = 8 to 0.5 s, linear Crank-Nicolson (limiter off), successive differences"
+    },
+    "pymrm_dt_roundoff_margin": {
+      "kind": "bound",
+      "value": 2009573.3556252816,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "smallest finest successive difference of c_I(z2) over n_steps eps c_I"
+    },
+    "pymrm_dt_swing_H": {
+      "kind": "bound",
+      "value": 4.490319909233875e-07,
+      "max": 1e-05,
       "basis": "chosen",
-      "note": "pre-asymptotic three-point fit of log|mu1(dt) - mu1(1 s)| on dt = 8, 4, 2 s; the deferred correction lagged one step makes the scheme first order asymptotically. A fit of differences of nearly equal moments: it gives 1.79 and 2.11 under two numpy/scipy versions with identical model code, so only the range is claimed. Backward Euler gives 0.91 and 0.65 in the same two environments, below it"
+      "note": "relative spread of the two-station H, van Leer, over dt = 8 to 0.5 s; the bound keeps it 4x below the baseline's own error against eq (38)"
+    },
+    "pymrm_deferred_vs_newton_H_rel": {
+      "kind": "bound",
+      "value": 2.7666196887876637e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "two-station H of the one-sweep deferred correction against the same theta scheme solved by newton with the ConvFluxTVD Jacobian, n_z = 350, dt = 2 s; the bound keeps it below the reported run's own error against eq (38)"
+    },
+    "pymrm_dt_mu1_sign_changes": {
+      "kind": "exact",
+      "value": 1,
+      "note": "sign changes in the successive differences of mu1(z2) on the van Leer dt ladder (n_z = 700): the limited march has no regular time order there"
+    },
+    "pymrm_mu1_deferred_vs_newton_rel": {
+      "kind": "bound",
+      "value": 6.653184967175818e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "mu1(z2) of the one-sweep deferred correction against the same theta scheme solved by newton, n_z = 350, dt = 2 s; the lag moves the absolute moment"
     },
     "pymrm_kappa3_vs_laplace_rel": {
       "kind": "value",
-      "value": 0.0020871830495707844,
+      "value": 0.002087206151127008,
       "rtol": 0.05,
       "note": "cancellation-limited at n_z = 1400, dt = 1 s; a regression guard"
     },
     "pymrm_kappa4_vs_laplace_rel": {
       "kind": "value",
-      "value": 0.01514007239116566,
+      "value": 0.015139683539097781,
       "rtol": 0.05,
       "note": "cancellation-limited at n_z = 1400, dt = 1 s; a regression guard"
     },
     "pymrm_bc_insensitivity": {
       "kind": "bound",
-      "value": 1.5067377738819943e-06,
+      "value": 9.149620745496634e-07,
       "max": 1e-05,
       "basis": "chosen",
-      "note": "relative move of the two-station H when the Danckwerts inlet is replaced by a Dirichlet one; a difference of nearly equal plate heights (1.45e-6 and 1.51e-6 in two numerical environments). The bound keeps it 4x below the baseline's own error against eq (38)"
+      "note": "relative move of the two-station H when the Danckwerts inlet is replaced by a Dirichlet one; a difference of nearly equal plate heights. The bound keeps it 4x below the baseline's own error against eq (38)"
+    },
+    "DII_from_table3_m2s": {
+      "kind": "value",
+      "value": 1.3480625194622815e-10,
+      "rtol": 0.05,
+      "unit": "m2/s"
     },
     "DII_from_table3_rel_dev": {
       "kind": "value",
@@ -66,19 +117,53 @@
       "value": 0.018271375406853307,
       "rtol": 0.05
     },
+    "lambda_from_table3": {
+      "kind": "value",
+      "value": 2.9926998309696202,
+      "rtol": 0.05
+    },
     "lambda_from_table3_rel_dev": {
       "kind": "value",
       "value": 0.002433389676793296,
       "rtol": 0.05
+    },
+    "df_celite_n_butane_um": {
+      "kind": "value",
+      "value": 10.056523950597587,
+      "rtol": 0.05,
+      "unit": "um"
+    },
+    "df_celite_iso_butane_um": {
+      "kind": "value",
+      "value": 10.571207535464712,
+      "rtol": 0.05,
+      "unit": "um"
+    },
+    "df_sterchamol_um": {
+      "kind": "value",
+      "value": 8.655879372454828,
+      "rtol": 0.05,
+      "unit": "um"
     },
     "df_worst_rel_dev": {
       "kind": "value",
       "value": 0.05712075354647128,
       "rtol": 0.05
     },
+    "eq56_coefficient": {
+      "kind": "value",
+      "value": 3.3333333333333334e-08,
+      "rtol": 0.05,
+      "note": "D_II / (100 D_I) from the printed constants"
+    },
     "eq56_celite_rel_dev": {
       "kind": "value",
       "value": 0.011209658706663905,
+      "rtol": 0.05
+    },
+    "slope_ratio_theory": {
+      "kind": "value",
+      "value": 1.4479933558100007,
       "rtol": 0.05
     },
     "slope_ratio_rel_dev": {
@@ -86,14 +171,29 @@
       "value": 0.03467109612666619,
       "rtol": 0.05
     },
+    "gamma_iso_butane_superficial": {
+      "kind": "value",
+      "value": 0.4444444444444444,
+      "rtol": 0.05
+    },
     "table3_n_median_rel_dev": {
       "kind": "value",
-      "value": 0.021016244522443883,
+      "value": 0.02101624452244355,
       "rtol": 0.05
     },
     "table3_n_max_rel_dev": {
       "kind": "value",
-      "value": 0.2911532451179031,
+      "value": 0.29115324511790197,
+      "rtol": 0.05
+    },
+    "table3_n_median_height_route": {
+      "kind": "value",
+      "value": 0.015867104558932477,
+      "rtol": 0.05
+    },
+    "table3_n_median_width_route": {
+      "kind": "value",
+      "value": 0.022288610108312845,
       "rtol": 0.05
     },
     "table1_calc_frac_reproduced": {
@@ -103,13 +203,13 @@
     },
     "table1_dS0_window_lo_ml": {
       "kind": "value",
-      "value": 165.974,
+      "value": 165.97392584913553,
       "rtol": 0.05,
       "unit": "ml"
     },
     "table1_dS0_window_hi_ml": {
       "kind": "value",
-      "value": 167.4188,
+      "value": 167.41893820986897,
       "rtol": 0.05,
       "unit": "ml"
     },
@@ -147,6 +247,23 @@
       "rtol": 0.05,
       "note": "the corrected eq (21) at a = 5 against the a + sqrt(2 pi) of eq (25); an asymptotic error, not round-off"
     },
+    "eq21_printed_solvable_rows": {
+      "kind": "exact",
+      "value": 2,
+      "note": "Table 2 rows (A = 5 ml) for which the width route with eq (21) as printed has a root on [A/25, 1e4] ml (find_roots, 400-point log scan)"
+    },
+    "group1_at_recovered_column": {
+      "kind": "value",
+      "value": 0.0023798763656392237,
+      "rtol": 0.05,
+      "note": "2D/(uz) at the recovered length"
+    },
+    "group2_at_recovered_column": {
+      "kind": "value",
+      "value": 0.003377216519371846,
+      "rtol": 0.05,
+      "note": "F_I u/(alpha z) at the recovered length"
+    },
     "skewness_at_recovered_column": {
       "kind": "value",
       "value": 0.14350364730499396,
@@ -154,9 +271,14 @@
     },
     "z_for_skewness_0p05_mm": {
       "kind": "value",
-      "value": 4600.501316255881,
+      "value": 4600.501316255805,
       "rtol": 0.05,
       "unit": "mm"
+    },
+    "z_for_skewness_over_column": {
+      "kind": "value",
+      "value": 8.237318715934439,
+      "rtol": 0.05
     },
     "sym_chain_residual": {
       "kind": "bound",
@@ -165,29 +287,134 @@
       "basis": "identity",
       "note": "sympy simplifies (38) with (45), (46), (48) substituted, minus (49), to 0; recorded as 1 if it does not"
     },
+    "sym_chain_exact_count": {
+      "kind": "exact",
+      "value": 4,
+      "note": "steps of the symbolic chain whose residual sympy simplifies to 0, of 4"
+    },
     "rootfind_vs_closed_form_optimum": {
       "kind": "bound",
-      "value": 2.220446049250313e-16,
+      "value": 0.0,
       "max": 1e-12,
       "basis": "tolerance",
-      "note": "max relative gap between the root-found u_opt (brentq, xtol 1e-14, rtol 8.9e-16) and sqrt(B/C); measured 2.2e-16"
+      "note": "max relative gap between u_opt root-found on dH/du = 0 (find_roots, 1e-3 to 1e3 mm/s, xtol 1e-15) and the closed form sqrt(B/C)"
     }
   },
   "quoted": {
-    "pymrm_dt_order_mu1": [
-      "between 1.5 and 2.5"
-    ],
     "pymrm_bc_insensitivity": [
       "below 1e-5"
     ],
     "pymrm_grid_order": [
-      "between 2.5 and 3.5"
+      "between 2.5 and 3.5",
+      "at least 2.5",
+      "at most 3.5"
     ],
     "pymrm_H_vs_eq38_rel": [
-      "4e-5"
+      "4e-5",
+      "4.1e-5"
     ],
     "skewness_at_recovered_column": [
       "0.14"
+    ],
+    "pymrm_upwind_dispersion_coeff": [
+      "0.99999"
+    ],
+    "pymrm_dt_swing_H": [
+      "below 1e-5"
+    ],
+    "pymrm_dt_mu1_sign_changes": [
+      "1"
+    ],
+    "pymrm_dt_order_upwind_dev": [
+      "below 0.1"
+    ],
+    "pymrm_deferred_vs_newton_H_rel": [
+      "below 1e-5"
+    ],
+    "lambda_from_table3": [
+      "2.99"
+    ],
+    "lambda_from_table3_rel_dev": [
+      "0.24 %"
+    ],
+    "DII_from_table3_m2s": [
+      "1.34e-10"
+    ],
+    "DII_from_table3_rel_dev": [
+      "3.7 %"
+    ],
+    "DII_D_I_sensitivity": [
+      "1.8 %"
+    ],
+    "df_celite_n_butane_um": [
+      "10.1",
+      "10.06"
+    ],
+    "df_celite_iso_butane_um": [
+      "10.6",
+      "10.57"
+    ],
+    "df_sterchamol_um": [
+      "8.7",
+      "8.66"
+    ],
+    "eq56_coefficient": [
+      "3.333e-8"
+    ],
+    "table1_dS0_window_lo_ml": [
+      "166.0"
+    ],
+    "table1_dS0_window_hi_ml": [
+      "167.4"
+    ],
+    "table3_n_median_rel_dev": [
+      "2.1 %"
+    ],
+    "table3_n_median_height_route": [
+      "1.6 %"
+    ],
+    "table3_n_median_width_route": [
+      "2.2 %"
+    ],
+    "eq21_printed_a0_limit": [
+      "2"
+    ],
+    "eq21_printed_solvable_rows": [
+      "2"
+    ],
+    "gamma_iso_butane_superficial": [
+      "0.444"
+    ],
+    "group1_at_recovered_column": [
+      "2e-3",
+      "2.4e-3"
+    ],
+    "group2_at_recovered_column": [
+      "3.4e-3"
+    ],
+    "z_for_skewness_over_column": [
+      "8.2"
+    ],
+    "pymrm_kappa3_vs_laplace_rel": [
+      "0.21 %"
+    ],
+    "pymrm_kappa4_vs_laplace_rel": [
+      "1.5 %"
+    ],
+    "slope_ratio_theory": [
+      "1.448"
+    ],
+    "table3_recovered_length_mm": [
+      "558"
+    ],
+    "eq21_corrected_large_a_dev": [
+      "1.1e-6"
+    ],
+    "eq54_fit_rmse_mm": [
+      "0.28"
+    ],
+    "eq54_null_rmse_mm": [
+      "0.92"
     ]
   },
   "breaks": {
@@ -209,11 +436,32 @@
     "pymrm_grid_order": [
       "bare upwind in place of van Leer"
     ],
+    "pymrm_grid_roundoff_margin": [
+      "grid ladder with its finest level repeated"
+    ],
+    "pymrm_upwind_dispersion_coeff": [
+      "van Leer runs read as if bare upwind"
+    ],
     "pymrm_upwind_dispersion_coeff_err": [
       "van Leer runs read as if bare upwind"
     ],
-    "pymrm_dt_order_mu1": [
+    "pymrm_dt_order_upwind_dev": [
       "backward Euler (theta = 1) in place of Crank-Nicolson"
+    ],
+    "pymrm_dt_swing_H": [
+      "backward Euler (theta = 1) in place of Crank-Nicolson"
+    ],
+    "pymrm_dt_mu1_sign_changes": [
+      "stale inlet data in the deferred correction"
+    ],
+    "pymrm_mu1_deferred_vs_newton_rel": [
+      "stale inlet data in the deferred correction"
+    ],
+    "pymrm_dt_roundoff_margin": [
+      "dt ladder with its finest level repeated"
+    ],
+    "pymrm_deferred_vs_newton_H_rel": [
+      "deferred route without the limiter, against newton"
     ],
     "pymrm_kappa3_vs_laplace_rel": [
       "time window truncated to 60 %"
@@ -232,8 +480,26 @@
       "restore the 1/X molecular term",
       "drop the slowest row"
     ],
+    "lambda_from_table3": [
+      "H/d_p at the low end of each printed range"
+    ],
+    "DII_from_table3_m2s": [
+      "H/d_p at the low end of each printed range"
+    ],
     "df_worst_rel_dev": [
       "iso-butane x used on the n-butane C"
+    ],
+    "df_celite_n_butane_um": [
+      "iso-butane x used on the n-butane C"
+    ],
+    "df_celite_iso_butane_um": [
+      "film D_II doubled"
+    ],
+    "df_sterchamol_um": [
+      "film D_II doubled"
+    ],
+    "eq56_coefficient": [
+      "D_I doubled"
     ],
     "eq56_celite_rel_dev": [
       "Sterchamol d_p on the Celite d_f"
@@ -241,11 +507,27 @@
     "slope_ratio_rel_dev": [
       "the two printed x exchanged"
     ],
+    "slope_ratio_theory": [
+      "the two printed x exchanged"
+    ],
+    "gamma_iso_butane_superficial": [
+      "iso-butane B read as interstitial at F_I = 0.5"
+    ],
     "table3_n_median_rel_dev": [
-      "eq (21) exactly as printed"
+      "eq (21) exactly as printed",
+      "nv = 77 ml in place of 70 (10 % high)"
     ],
     "table3_n_max_rel_dev": [
       "eq (21) exactly as printed"
+    ],
+    "table3_n_median_height_route": [
+      "nv = 77 ml in place of 70 (10 % high)"
+    ],
+    "table3_n_median_width_route": [
+      "nv = 77 ml in place of 70 (10 % high)"
+    ],
+    "eq21_printed_solvable_rows": [
+      "the corrected denominator in the width-route scan"
     ],
     "table1_calc_frac_reproduced": [
       "v sqrt(n) = 41.25 (dS0 = 165 exactly)"
@@ -274,17 +556,33 @@
     "eq21_corrected_large_a_dev": [
       "eq (21) as printed at a = 5"
     ],
+    "group1_at_recovered_column": [
+      "lambda = 8 (the 200-400 mesh value) on this column"
+    ],
+    "group2_at_recovered_column": [
+      "alpha halved"
+    ],
     "skewness_at_recovered_column": [
       "alpha halved"
     ],
     "z_for_skewness_0p05_mm": [
       "alpha halved"
     ],
+    "z_for_skewness_over_column": [
+      "alpha halved"
+    ],
     "sym_chain_residual": [
+      "eq (49): 75 -> 80"
+    ],
+    "sym_chain_exact_count": [
       "eq (49): 75 -> 80"
     ],
     "rootfind_vs_closed_form_optimum": [
       "closed form inverted, u_opt = sqrt(C/B)"
     ]
+  },
+  "rows": {
+    "defined": 46,
+    "recorded": 46
   }
 }
