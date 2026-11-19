@@ -14,191 +14,56 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 75
+pymrm_min_version: "3.4.0"
+runtime_seconds: 120
 datasets: []
 
 validation:
-  - Eq. 17 reduced with Eq. 16 reproduces the paper's separately printed Eq. 30 factor by factor and exponent by exponent, and only when alpha_a + alpha_c = 1 (4.6e-12)
-  - what that check can and cannot detect, measured by injecting five mis-transcriptions one at a time - each of the four single-equation exponent swaps lifts it to O(1) at asymmetric alpha, while at Doyle's own alpha = 0.5 every swap is a no-op and a swap applied to BOTH prefactors cancels and is undetectable
-  - the zero-current potential of Eq. 17 equals Eq. 16 to 6.6e-16 V under that condition, and its closed-form offset away from it is matched to 7.3e-16 V
-  - i = 0 at zero surface overpotential for every parameter set (7.8e-15); the anodic and cathodic partial currents balance there (1.5e-14, reported as the structural identity it is), their common value being Eq. 30's i_0 to 5.3e-15 over four alpha pairs including asymmetric ones
-  - R_ct = RT/(nFi_0) with n = alpha_a + alpha_c, against a central difference on Eq. 17 (1.8e-9)
-  - the arcsinh inversion, printed by Marquis et al. as their Eqs. 1g-1h and 18 and used on J3.4, fed forward through Eq. 17 over five decades of current (9.7e-11)
-  - the closed-form Tafel threshold against root-finding on the full law over six transfer coefficients and three tolerance levels (3.1e-15)
-  - Doyle's printed delta = 1.95 and nu = 68, whose ratio removes the unprinted conductivity and tests Eq. 30's exchange current density (-15.7 %, evaluated at the initial state the paper specifies) - shown in the same cell to be arithmetically identical to J3.4's 19 % kappa spread rather than an independent second test
-  - the J3.4 cell re-solved with the standard form in place of Eq. 17 as printed, giving the same cell potential to 2.2e-12 mV
-  - the Tafel-substituted cell's first-step overpotential against the uniform-reaction prediction (0.46 %)
-  - grid independence over an eightfold refinement, and exact conservation of total salt (8.9e-16)
-  - time-step independence over an eightfold refinement of dt AND dt_max together, observed order 0.95, which is the half of the discretisation error the grid ladder holds constant by construction - the temporal error is 0.273 mV against a 0.149 mV grid spread, i.e. the LARGER of the two was the one no version of this page measured
-  - the peak overpotential re-measured at the corner where both knobs are refined together (1.519 mV against the published 0.738), and separately the sustained peak past the initial transient (0.146 mV, stable to 10.6 % over the whole refinement box)
-  - salt conservation given the break row it never had - a 0.1 % leak in the collector boundary condition takes the drift from 4.4e-16 to 2.2e-02 - since the residual itself is a telescoping identity, exact for any interior flux
-  - an audit of all 69 published metrics against the break-table rule: 63 carry a row that moves them, 6 are labelled structural with what each cannot detect, and 11 sit below check_agreement.py's ABS_FLOOR = 1e-12 and are therefore not compared by CI at all
-  - the cell run with and without the nu = 2 factor J3.4 leaves open, to show the kinetic conclusions do not depend on it
+  - "Eq. 17 reduced with Eq. 16 reproduces the separately printed Eq. 30 to below 1e-10 <!-- claim: eq17_vs_eq30_max_rel --> relative, and only when alpha_a + alpha_c = 1; its root-found zero-current potential equals Eq. 16 to below 1e-13 <!-- claim: eq17_zero_current_vs_eq16_V --> V"
+  - "what that check can and cannot detect, measured by injecting mis-transcriptions one at a time; at Doyle's alpha_a = alpha_c every exponent swap is a no-op, and a swap applied to both prefactors cancels and is undetectable"
+  - "i = 0 at zero surface overpotential, the partial-current balance (structural), the exchange current density from the partial currents, R_ct = RT/(nFi_0) and the arcsinh inversion, each as a bound with its basis"
+  - "the closed-form Tafel threshold against the single root of the full law located by pymrm.checks.find_roots, to below 1e-12 <!-- claim: tafel_threshold_closed_vs_numeric -->"
+  - "Doyle's printed delta and nu, whose ratio removes the unprinted conductivity and tests Eq. 30's exchange current density (-15.7 % <!-- claim: nu2_over_delta_dev_frac -->), shown to be the same number as J3.4's kappa spread rather than a second test"
+  - "the J3.4 cell re-solved with the standard form in place of Eq. 17 as printed, giving the same cell potential to below 1e-6 <!-- claim: bv_vs_eq17_cell_potential_mV --> mV"
+  - "grid and time-step ladders measured separately, the time-step orders by pymrm.checks.observed_orders at least 0.8 <!-- claim: dt_observed_order --> and at most 1.2 <!-- claim: dt_observed_order_max -->, and the salt identity with the collector-leak row that moves it"
+  - "a defect-injection table with a row for every non-structural claim"
 
 adds: >
-  Nothing to the law itself - Butler-Volmer is one line of arithmetic and pymrm
-  has no role in it. What the page adds is the quantified validity boundary of
-  each limit, and the operating envelope needed to make it actionable. The Tafel
-  threshold turns out to have an exact closed form, eta = RT ln(1 + 1/eps) /
-  ((alpha_a + alpha_c) F), which depends on the transfer coefficients only
-  through their sum: asymmetry changes the Tafel slope but not the Tafel onset.
-  The linear threshold does depend on the split, has two asymptotic forms
-  (sqrt(24 eps) symmetric, 2 eps/|alpha_a - alpha_c| strongly asymmetric, good to
-  3.6 % and 6.8 %), and is non-monotonic in alpha_a because the asymmetry and
-  curvature errors cancel just below 0.5 - a real anomaly the page reports and
-  then advises against relying on. Doyle's Eq. 30 is derived from Eq. 17 rather
-  than used alongside it, which turns two separately transcribed equations into a
-  check on both and shows they are mutually consistent only for
-  alpha_a + alpha_c = 1. The ratio nu^2/delta cancels the conductivity Doyle
-  never prints, so Eq. 30's exchange current density can be tested against
-  printed numbers without J3.4's reconstruction. Finally the J3.4 cell is used as
-  an operating envelope - a use it was not built for and a quantity it never
-  reports - and shows its two electrodes sitting 2.9 decades apart in |eta_s|,
-  which at a 1 % tolerance puts them in different regimes.
+  Nothing to the law itself: Butler-Volmer is one line of arithmetic. pymrm
+  contributes the root finds of every threshold (pymrm.checks.find_roots) and the
+  operating envelope, J3.4's porous-electrode cell solved by newton on a NumJac
+  Jacobian per implicit-Euler step, with the time-step orders from
+  pymrm.checks.observed_orders. The Tafel threshold has an exact closed form that
+  depends on the transfer coefficients only through their sum; the linear
+  threshold depends on the split and is the first of several crossings. In the
+  cell the two electrodes sit 2.9 <!-- claim: eta_separation_decades --> decades
+  apart in |eta_s|.
 
 agreement: >
-  The algebraic identities hold to between 4.6e-12 and 6.6e-16, and the closed-form
-  Tafel threshold matches root-finding on the full law to 3.1e-15. Eq. 30 recovers
-  a i_o2 delta_c / I that is 15.7 % below what Doyle's own printed delta = 1.95 and
-  nu = 68 imply - the only comparison on the page that involves the paper's
-  numbers rather than its algebra. Thresholds at Doyle's 373.15 K, with
-  alpha_a + alpha_c = 1: Tafel is 10 % out at 77.1 mV, 5 % at 97.9 mV, 1 % at
-  148.4 mV; the symmetric linear form is 10 % out at 51.7 mV, 5 % at 35.9 mV, 1 %
-  at 15.8 mV (61.6/78.2/118.6 and 41.3/28.7/12.6 mV at 298.15 K). In the published
-  J3.4 cell at I = 10 A/m2 the porous cathode runs at a mean surface overpotential
-  of 0.032 mV and a peak of 0.74 mV, three decades inside the 5 % linear window,
-  while the lithium foil runs at 24.8 mV - 0.69 of the 5 % threshold but 1.6 times
-  the 1 % one - and at 46.6 mV at I = 20, past the 5 % boundary. The separation
-  between the two electrodes is 2.9 decades in |eta_s|. Four of the five injected
-  mis-transcriptions move the Eq. 17 vs Eq. 30 residual from 4.5e-12 to between
-  0.95 and 1.0 at asymmetric alpha; none of them moves it at all at Doyle's
-  alpha = 0.5, and the fifth cancels and is undetectable anywhere.
-  Substituting the linear law in the cathode moves the cell potential by
-  1.5e-10 mV; substituting Tafel moves it by 519 mV, of the wrong sign. The
-  Tafel-substituted cell's first-step overpotential, +446.2 mV, matches the
-  uniform-reaction prediction of +444.2 mV to 0.46 %. The cell potential moves
-  0.149 mV over an eightfold grid refinement and salt is conserved to 8.9e-16.
-  The temporal error, measurable for the first time since J3.5's dt_scale was
-  ported in on 2026-08-05, is 0.273 mV at the production schedule with an
-  observed order of 0.95 - 1.8 times the grid spread, and 2.4 times it on the
-  cell-averaged overpotential. Both are far below anything the page concludes
-  from, but the larger of the two was the one no version of this page had
-  measured.
+  Thresholds at Doyle's 373.15 K with alpha_a + alpha_c = 1: Tafel is 10 % out
+  at 77.1 <!-- claim: eta_tafel_10pct_mV --> mV and 1 % out at
+  148.4 <!-- claim: eta_tafel_1pct_mV --> mV; the symmetric linear form is 5 %
+  out at 35.9 <!-- claim: eta_linear_5pct_mV --> mV and 1 % out at
+  15.8 <!-- claim: eta_linear_1pct_mV --> mV. In the J3.4 cell at I = 10 A/m2 the
+  porous cathode runs at a mean surface overpotential of
+  0.032 <!-- claim: cell_cathode_mean_eta_s_mV --> mV, while the lithium foil runs
+  at 24.8 <!-- claim: cell_anode_eta_s_I10_mV --> mV, and at
+  46.6 <!-- claim: cell_anode_eta_s_I20_mV --> mV at I = 20. Substituting Tafel in
+  the cathode moves the cell potential by 519 <!-- claim: tafel_cathode_dV_mV -->
+  mV, of the wrong sign.
 
 caveats: >
-  Provenance tier 6. Nothing on this page is compared with a measurement. Doyle's
-  Figure 2 contains no experimental points at all, confirmed by the maintainer on
-  review of the original, and every check here is either an algebraic identity or
-  a number the paper prints. This page is reproduced and internally verified; it
-  is NOT validated against experiment.
-
-  The historical sources of the Butler-Volmer equation - Tafel (1905),
-  J. A. V. Butler (1924, 1932), Erdey-Gruz and Volmer (1930) - were NOT consulted.
-  They are not on disk, are not open access, and no DOI is asserted for them; they
-  are recorded as conventional attribution only. Every equation on the page is
-  read from Doyle, Fuller and Newman (1993), off 600 dpi renders of journal pages
-  1527, 1528 and 1530, because that scan's text layer mangles them.
-
-  The -15.7 % on the nu^2/delta check is NOT explained, and the page says so.
-  Rounding of the printed groups does not account for it: nu +- 0.5 and
-  delta +- 0.005 give only a +-1.7 % band, and closing the gap would need
-  nu = 62.4, which is 8.2 % from the printed 68. Neither obvious explanation is
-  available. The concentration state is printed: the sentence under Eq. 30 reads
-  "For these calculations, the concentrations are taken to be at their initial
-  values", Fig. 2's caption pins the initial solid at 1 % of maximum, and the page
-  evaluates Eq. 30 exactly there. And kappa cancels identically from nu^2/delta,
-  so an ambiguity in the effective conductivity cannot be where the residual sits.
-  Closing it would need u_0 = 0.0141 against a printed 0.01, or R_s = 0.843 um
-  against a printed 1.0 um - both contradict Table II, so neither is adopted. The
-  residual is reported, not explained. It is also NOT an independent second
-  disagreement: 1/(1 - 0.1574) - 1 = +18.67 % is the same number as J3.4's spread
-  between its two routes to the unprinted conductivity (+18.67 %, differing only
-  by the 1/sigma term), so it must not be counted twice. What this reading adds is
-  that the disagreement survives with kappa removed entirely.
-
-  The peak cathode overpotential is deliberately reported as NOT converged, in
-  EITHER knob. It is a boundary-layer value in the first cathode cell and rises by
-  1.9x over an eightfold grid refinement (increments 0.208, 0.166, 0.104 mV, so
-  the sequence is converging and has simply not arrived) - and it also sits in the
-  FIRST TIME STEP, 0.39 s into a discharge of 1.7e4 s, so it rises by a further
-  1.34x over an eightfold refinement of the time step. Refining both together
-  takes it from the published 0.738 mV to 1.519 mV and the margin to the 1 %
-  linear threshold from 21.4x to 10.4x. The conclusion - the cathode deep inside
-  the linear window - survives with an order of magnitude to spare, but 10.4x is
-  the honest margin and it replaces the 15.7x an earlier version of this page
-  quoted from the grid ladder alone. The SUSTAINED peak, once that initial
-  transient has decayed, is 0.146 mV and varies by only 10.6 % over the whole
-  refinement box; that is the converged number and the page says so. The
-  cell-averaged value moves 0.40 % under the grid and 0.95 % under the time step.
-
-  Corrected 2026-08-05: this page's Cell.march is J3.4's, and J3.5's dt_scale fix
-  - scaling dt AND dt_max, the only way to refine a schedule that grows x1.3 per
-  step - had never been inherited. Until now the three grid_* metrics refined
-  space at a constant temporal error and were read as if they bounded the whole
-  discretisation error. They are now labelled spatial-only and each has a
-  temporal counterpart printed beside it. dt_scale = 1 is the production
-  schedule, so all 47 previously published metrics are bit-identical; 22 were
-  added. Three further things that did not travel with the helper are recorded on
-  the page: march here has no record/t_stop snapshot interface, which is what
-  J3.4's two checks with real power are built on; the charge branch of the
-  stopping rule (v_top = 3.2 V) is absent, latent because every run here is a
-  discharge; and kappa, eps and delta_c are fixed constants rather than
-  constructor arguments.
-
-  Every published metric now carries a break-table row or is labelled structural.
-  Six are structural, and each is a deliberate record of a blind spot: the
-  partial-current balance (exact for alpha_a + alpha_c = 1), the both-prefactor
-  swap and the symmetric-alpha worst case (both record that a defect is
-  undetectable), the balance's own worst case, and the two readings of the kappa
-  disagreement, which are one number by construction. Eleven of the 69 sit below
-  check_agreement.py's ABS_FLOOR = 1e-12 and are therefore not compared by CI at
-  all - they are unprotected rather than proven, which is a second reason not to
-  lead with any of them. Every break row added is far above that floor.
-
-  Two of the identity checks are reported as identities rather than as evidence,
-  and an injected-defect table on the page measures which is which. At Doyle's own
-  alpha_a = alpha_c = 0.5 EVERY exponent swap is a no-op, so the whole
-  discriminating power of the Eq. 17 vs Eq. 30 comparison comes from the
-  hypothetical asymmetric rows of the sweep; and because the
-  (c_max - c)^alpha_c c^alpha_a prefactor is the same code expression on both
-  sides, a swap applied to both at once cancels and is undetectable even there.
-  The partial-current balance never moves under any injected defect: it is an
-  exact algebraic consequence of alpha_a + alpha_c = 1.
-
-  Where the two electrodes sit is tolerance-dependent and the page states the
-  tolerance. At I = 10 both are inside the 5 % linear window (cathode by three
-  decades, foil by a factor of 1.4); they are in genuinely different regimes only
-  at the 1 % tolerance or at I = 20. What is tolerance-independent is the 2.9
-  decades of separation between them.
-
-  Corrected 2026-08-02: the operating-envelope numbers at I = 20 A/m2 were being
-  read at the march endpoint (u = 0.4033 at V = 1.473 V) rather than at the
-  V_cutoff = 1.7 V the loaded J3.4 parameter file carries and Doyle states. The
-  march inherits J3.4's v_stop = 1.55 V, which is 150 mV below that cutoff and
-  exists to give the stepper room, so the endpoint is a stepper artefact. An
-  earlier version of the page reported "collapses at u = 0.40" with a cathode peak
-  of 3.7 mV and called that the largest kinetic overpotential anywhere in these
-  runs. Read at the cutoff the collapse is at u = 0.3707 (1.9 V crossing at
-  u = 0.2638, which is J3.4's 0.264; Doyle's stated u_at_sharp_drop is 0.30, and
-  the same run at I = 10 gives u = 0.8312 at the cutoff against J3.4's 0.831 and
-  Doyle's 0.84), and the cathode peak inside the envelope is 1.679 mV, a factor
-  2.2 smaller. The superlative was independently wrong - the lithium foil at
-  I = 20 runs at 46.6 mV - and has been removed rather than restated. No agreement
-  metric changed: the I = 5 and I = 10 readouts are taken under a u < 0.80 mask
-  that is stricter than their cutoffs, and the anode maximum at I = 20 falls
-  before the cutoff. Only the I = 20 cathode row of the envelope table moved
-  (peak 3.705 -> 1.679 mV, mean 0.305 -> 0.064 mV), and the page prints the
-  past-cutoff value beside it, labelled.
-
-  The cancellation anomaly in the linear threshold (81 mV at alpha_a = 0.42
-  against 36 mV at 0.50) is a true property of the function but is fragile: its
-  location is set by the tolerance, jumping at alpha_a = 0.4103 for a 5 %
-  tolerance and at 0.4593 for a 1 % one, both located by root-finding on the
-  overshoot peak. The page prints it and then recommends the asymptote instead.
-
-  The absolute overpotentials belong to one cell at 100 C whose rate constant its
-  authors chose, in their own words, as "a value corresponding to a nearly
-  reversible situation" because none had been measured for TiS2. That choice is
-  why this cathode is in the linear regime. The thresholds transfer; these
+  Provenance tier 6. Nothing on this page is compared with a measurement; every
+  check is an algebraic identity or a number the paper prints. The historical
+  sources of the Butler-Volmer equation were not consulted and no DOI is asserted
+  for them. The nu^2/delta residual is reported, not explained, and it is the
+  same disagreement as J3.4's kappa spread, not a second one. The peak cathode
+  overpotential sits in the first cathode cell and the first time step and is
+  converged in neither knob; with both refined it is
+  1.519 <!-- claim: corner_peak_eta_mV --> mV, a margin of
+  10.4 <!-- claim: corner_peak_margin_factor --> times to the 1 % linear threshold,
+  and the sustained value past the transient is
+  0.146 <!-- claim: sustained_peak_eta_mV --> mV. The absolute overpotentials
+  belong to one cell at 100 C with a rate constant its authors chose as "a value
+  corresponding to a nearly reversible situation"; the thresholds transfer, these
   overpotentials do not.

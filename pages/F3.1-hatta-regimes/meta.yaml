@@ -10,26 +10,37 @@ phases: [gas-liquid]
 authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
-pymrm_min_version: "2.3"
-runtime_seconds: 29
+pymrm_min_version: "3.4.0"
+runtime_seconds: 20
 datasets: []
 validation:
-  - pseudo-first-order E against the exact Ha/tanh(Ha)
-  - grid convergence order
-  - limiting behaviour E -> 1 and E -> E_i
-  - second-order solve reduces to first order when the co-reactant is in excess
+  - "pseudo-first-order E against the exact Ha/tanh(Ha): largest relative error 6.3e-3 <!-- claim: first_order_max_rel_error --> over the sweep on 400 cells, concentrated at high Ha"
+  - "grid study at Ha = 5 from successive differences on 100 to 800 cells: observed order between 2.9 and 3.1 <!-- claim: convergence_order -->, a pre-asymptotic range; at Ha = 2 on 400 to 3200 cells the order is between 1.9 and 2.1 <!-- claim: convergence_order_ha2 -->, the second order of the scheme; each with its round-off margin"
+  - "limits of the second-order solve at both ends of the Ha sweep, and the reduction to first order with the co-reactant in excess"
+  - "the worst point of each approximation refined from a scan of the whole Ha window, checked against a 1600-cell film and, for Van Krevelen-Hoftijzer, reconciled with F3.2's reference"
+  - "a defect-injection table: every claim fails at least one row, two of them making an approximation exact by construction"
 adds: >
-  An error bar on the two enhancement-factor approximations that absorber design
-  runs on. Van Krevelen-Hoftijzer is within 2.1% of the full film solution;
-  DeCoursey reaches 8.7%, worst around Ha ~ 1.5 in the transition between the
-  fast and instantaneous regimes - which is the operating region of a real amine
-  absorber.
+  An error bar on the two enhancement-factor approximations, at three values
+  of E_i, against the film equations solved with pymrm operators and newton.
+  Van Krevelen-Hoftijzer is worst at -2.08 <!-- claim: vkh_worst_error_pct --> %
+  at Ha = 1.65 <!-- claim: vkh_worst_ha_over_ei --> E_i, the transition from the
+  fast to the instantaneous regime. DeCoursey is worst at
+  8.73 <!-- claim: decoursey_worst_error_pct --> % at Ha =
+  0.0143 <!-- claim: decoursey_worst_ha_over_ei --> E_i, the slow-to-fast
+  transition, and that error is
+  0.991 <!-- claim: decoursey_worst_share_of_pfo_limit --> of the difference
+  between Danckwerts' sqrt(1 + Ha^2) and the film's Ha/tanh(Ha), which it keeps
+  with the co-reactant in excess: it is the film versus the surface-renewal
+  model DeCoursey was derived for, not a second-order effect.
 agreement: >
-  6.3e-3 max relative error against the exact first-order solution over
-  0.02 <= Ha <= 200 (concentrated at high Ha where the reaction layer is thinner
-  than a cell); the second-order solve reproduces the first-order limit to
-  5.4e-6 when E_i -> infinity.
+  6.3e-3 <!-- claim: first_order_max_rel_error --> largest relative error against
+  the exact first-order solution over the sweep, concentrated at high Ha where
+  the reaction layer spans 2 <!-- claim: reaction_layer_cells_at_ha_max --> cells
+  of the film; the second-order solve reproduces the first-order limit to
+  5.4e-6 <!-- claim: excess_reduces_to_first_order --> with the co-reactant in
+  large excess.
 caveats: >
-  Provenance tier 6 - validated against exact solutions and limiting cases, not
+  Provenance tier 6: validated against exact solutions and limiting cases, not
   against experiment. Hatta's regimes and the first-order enhancement are
   analytical; VKH and DeCoursey are published approximations, not measurements.
+  The film model only: surface-renewal and penetration models give different E.

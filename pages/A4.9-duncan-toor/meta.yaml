@@ -14,49 +14,35 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 48
+pymrm_min_version: "3.4.0"
+runtime_seconds: 100
 datasets:
   - duncan-toor-1962-run1.csv
 
-# Ranked by measured power, not by how small the residual looks. Every entry has
-# a row in the notebook's defect-injection table.
+# Ranked by measured power. Every non-structural claim has a row in the
+# notebook's break table.
 validation:
-  # --- PRIMARY: the only check here that can see a wrong NUMBER ---------------
-  - PRIMARY - mean/max deviation against the 28 digitised Figure 2 measurements, 0.59 / 1.79 mole %. Measured power - a transposed D(N2-CO2) 16.8 -> 61.8 moves it to 2.28 mole %, a lost decade in D(H2-N2) to 5.19 mole %, and each also destroys the headline (the N2 reversal ends 20x smaller and 2.3 h later, or never crosses at all). This is the only guard on the physics
-  # --- Numerical error bounds ------------------------------------------------
-  - capillary grid refinement n_z = 10..160, observed order 2.06; at the production n_z = 40 the spatial error is 1.5e-6 in mole fraction, ~3900x below the model-vs-data deviation
-  - time-step refinement n_steps = 100..1600, observed order 1.15 (backward Euler); 2.2e-4 at the production 400, so time is the dominant numerical error, 147x the grid's
-  # --- STRUCTURAL: one algebraic identity, two labels -------------------------
-  - STRUCTURAL - flux uniformity along the capillary, 1.6e-14. solve_capillary drives div(N) to tol=1e-12 with construct_div(nu=0), and on a Cartesian grid that residual IS (N_i+1 - N_i)/dz = 0, so this is the converged Newton residual re-divided by a scale. It cannot detect any value of d_ms, LA_EFF or the bulb volumes - an LA_EFF or vol_2 digit swap leaves it BIT-IDENTICAL. It does detect an unconverged solve (1.7e-3) and a wrong nu (0.98). It also improves on a coarser grid, and sits below check_agreement.py's ABS_FLOOR = 1e-12, so CI does not compare it
-  - STRUCTURAL - species mole balance in the closed cell, 2.2e-16. This is the SAME identity - with the flux uniform, N_0 = N_L, so the two bulb updates cancel term for term; it is zero iff the check above passes. Also below ABS_FLOOR and not compared by CI
-  # This block is shared with A4.2, which copied it along with this page's
-  # dataset - the only two pages carrying these two metric names. Both are now
-  # labelled. A check's power depends on the physics, not on the code.
+  - "PRIMARY - mean and largest absolute deviation against the 28 <!-- claim: n_points --> digitised Figure 2 measurements, 0.59 % <!-- claim: mean_abs_deviation --> and 1.79 % <!-- claim: max_abs_deviation --> in mole fraction. Every one-digit transcription error of a diffusivity, of the effective (L/A) or of a bulb volume in the break table moves it; this is the only guard on the physics"
+  - "capillary grid refinement n_z = 10 to 160 on the time-exact solve_ivp route, observed orders at least 1.8 <!-- claim: grid_observed_order --> and at most 2.2 <!-- claim: grid_observed_order -->; spatial error at the production n_z = 40 of 1.6e-6 <!-- claim: grid_error_nz40 --> in mole fraction"
+  - "backward-Euler time-step refinement n_steps = 100 to 800, observed orders at least 0.9 <!-- claim: timestep_observed_order --> and at most 1.1 <!-- claim: timestep_observed_order -->; time error at the production 400 steps of 3.0e-4 <!-- claim: timestep_error_ns400 --> against solve_ivp on the same grid, 183 <!-- claim: time_over_grid_error_ratio --> times the spatial error"
+  - "STRUCTURAL - flux uniformity along the capillary, below 1e-12 <!-- claim: flux_nonuniformity -->, and the closed-cell mole balance, below 1e-13 <!-- claim: mole_balance_error -->. One identity, the converged Newton residual over a scale; it catches an unconverged solve and a wrong construct_div geometry, never a wrong constant"
 
 adds: >
   Qualitative correction of Fick's law, which cannot cross zero at all and is
-  wrong by 9.1 mole % in the N2 difference against 1.4 mole % for Maxwell-Stefan;
-  plus a quantitative correction of Toor's 1962 linearisation by resolving the
-  composition dependence of [B] along the capillary (5.5% of the peak N2
-  separation).
+  off by 9.1 % <!-- claim: fick_n2_dev --> in the N2 difference against 1.4 %
+  <!-- claim: ms_n2_dev --> for Maxwell-Stefan; plus a quantitative correction
+  of Toor's 1962 linearisation by resolving the composition dependence of [B]
+  along the capillary (5.0 % <!-- claim: toor_dev_frac --> of the N2 difference
+  at the barrier).
 
 agreement: >
-  0.59 mole % mean absolute deviation over 28 digitised points, against the
-  0.45 mole % the paper reports for its own Maxwell-Stefan predictions and a
-  stated experimental error of 2.6 mole %. Roughly 0.5 mole % of our figure is
-  digitisation error rather than model error. Nothing was fitted.
-
-  This is the page's only guard, and the page now says so. The two internal
-  residuals it used to present alongside it (flux uniformity 1.6e-14, closed-cell
-  mole balance 2.2e-16) are one algebraic identity wearing two labels - the
-  converged Newton residual re-divided by a scale - and neither can see any value
-  of the diffusivities, the effective (L/A) or the bulb volumes. Both are also
-  below check_agreement.py's ABS_FLOOR = 1e-12 and are therefore not compared by
-  CI at all. They are kept, labelled STRUCTURAL, because they do catch an
-  unconverged solve and a wrong geometry, and nothing else here would.
+  0.59 % <!-- claim: mean_abs_deviation --> mean absolute deviation in mole
+  fraction on 28 <!-- claim: n_points --> digitised points, nothing fitted.
+  This comparison is the page's only guard on the physics. Flux uniformity and
+  the mole balance are one structural identity that catches an unconverged
+  solve and a wrong geometry, and nothing about the parameters.
 
 caveats: >
-  Two of the thirty markers in Fig. 2 overlap another series and are absent from
-  the dataset rather than guessed. The initial compositions are themselves the
-  t=0 digitised points, so they carry the same +/-0.005 uncertainty.
+  Two markers of Fig. 2 overlap another series and are absent from the dataset
+  rather than guessed. The initial compositions are themselves the t = 0
+  digitised points, so they carry the digitisation uncertainty of the sidecar.

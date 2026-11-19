@@ -1,12 +1,291 @@
 {
   "page": "F3.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "first_order_max_rel_error": 0.006336733444486526,
-    "convergence_order": 3.0719034053588943,
-    "limit_E_small_Ha": 1.0008331631554483,
-    "limit_E_large_Ha": 19.96831594054015,
-    "excess_reduces_to_first_order": 5.384037445220569e-06,
-    "vkh_max_error_pct": 2.076893245879678,
-    "decoursey_max_error_pct": 8.72038368927803
+    "first_order_max_rel_error": {
+      "kind": "value",
+      "value": 0.006336733444486526,
+      "rtol": 1e-06
+    },
+    "first_order_worst_below_ha20_share": {
+      "kind": "bound",
+      "value": 0.000897548925143462,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "the error grows with Ha: below Ha = 20 it stays under 1 % of the largest one"
+    },
+    "reaction_layer_cells_at_ha_max": {
+      "kind": "value",
+      "value": 2.0,
+      "rtol": 1e-12
+    },
+    "convergence_order": {
+      "kind": "bound",
+      "value": 3.0236073089672493,
+      "min": 2.9,
+      "max": 3.1,
+      "basis": "chosen",
+      "note": "observed order of the interface flux at Ha = 5 on the nested ladder 100 to 800 cells, a pre-asymptotic range; the order farthest from 3 is held"
+    },
+    "order_roundoff_margin": {
+      "kind": "bound",
+      "value": 4014.9189007119335,
+      "min": 100.0,
+      "basis": "chosen",
+      "note": "finest successive difference over eps cond_inf(A) |E| of the direct solve"
+    },
+    "convergence_order_ha2": {
+      "kind": "bound",
+      "value": 1.9493538894504008,
+      "min": 1.9,
+      "max": 2.1,
+      "basis": "chosen",
+      "note": "observed order of the interface flux at Ha = 2 on the nested ladder 400 to 3200 cells, the second order of the scheme; the order farthest from 2 is held"
+    },
+    "order_roundoff_margin_ha2": {
+      "kind": "bound",
+      "value": 6.631861925073544,
+      "min": 3.0,
+      "basis": "chosen",
+      "note": "finest successive difference over eps cond_inf(A) |E| of the direct solve, at Ha = 2 on 3200 cells; cond_inf is the worst-case amplification, so this floor is an upper bound on the round-off"
+    },
+    "limit_E_small_Ha": {
+      "kind": "value",
+      "value": 1.0008331631549936,
+      "rtol": 1e-06
+    },
+    "small_ha_rate_over_closed_form": {
+      "kind": "value",
+      "value": 0.9997957859923188,
+      "rtol": 1e-06
+    },
+    "limit_E_large_Ha": {
+      "kind": "value",
+      "value": 19.968315940530147,
+      "rtol": 1e-06
+    },
+    "excess_reduces_to_first_order": {
+      "kind": "value",
+      "value": 5.384037399745834e-06,
+      "rtol": 0.001
+    },
+    "excess_vs_first_order_same_grid": {
+      "kind": "value",
+      "value": 4.416637059745376e-06,
+      "rtol": 0.001
+    },
+    "vkh_max_error_pct": {
+      "kind": "value",
+      "value": 2.0768932458584493,
+      "rtol": 1e-06
+    },
+    "decoursey_max_error_pct": {
+      "kind": "value",
+      "value": 8.720383689262896,
+      "rtol": 1e-06
+    },
+    "vkh_worst_error_pct": {
+      "kind": "value",
+      "value": -2.0784986579280775,
+      "rtol": 1e-06
+    },
+    "decoursey_worst_error_pct": {
+      "kind": "value",
+      "value": 8.73013786163641,
+      "rtol": 1e-06
+    },
+    "vkh_worst_ha": {
+      "kind": "value",
+      "value": 8.234257264829093,
+      "rtol": 0.0001
+    },
+    "vkh_worst_ha_over_ei": {
+      "kind": "value",
+      "value": 1.6468514529658187,
+      "rtol": 0.0001
+    },
+    "decoursey_worst_ha": {
+      "kind": "value",
+      "value": 1.4267572383876628,
+      "rtol": 0.0001
+    },
+    "decoursey_worst_ha_over_ei": {
+      "kind": "value",
+      "value": 0.014267572383876628,
+      "rtol": 0.0001
+    },
+    "decoursey_pfo_limit_max_error_pct": {
+      "kind": "value",
+      "value": 8.806050814342603,
+      "rtol": 1e-06
+    },
+    "decoursey_worst_share_of_pfo_limit": {
+      "kind": "value",
+      "value": 0.9913794555236324,
+      "rtol": 1e-06
+    },
+    "vkh_worst_grid_rel_change": {
+      "kind": "bound",
+      "value": 1.0225956341702869e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "discretisation of the 400-cell film at the worst point, against 1600 cells"
+    },
+    "decoursey_worst_grid_rel_change": {
+      "kind": "bound",
+      "value": 1.9857898321262724e-06,
+      "max": 1e-05,
+      "basis": "chosen",
+      "note": "discretisation of the 400-cell film at the worst point, against 1600 cells"
+    },
+    "vkh_worst_vs_f32_rootfound_rel": {
+      "kind": "bound",
+      "value": 1.0384340728419872e-06,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "F3.2's graded, extrapolated reference against this page's uniform 400-cell film, at the same three E_i"
+    }
+  },
+  "quoted": {
+    "first_order_max_rel_error": [
+      "6.3e-3"
+    ],
+    "reaction_layer_cells_at_ha_max": [
+      "2"
+    ],
+    "excess_reduces_to_first_order": [
+      "5.4e-6"
+    ],
+    "vkh_max_error_pct": [
+      "2.1"
+    ],
+    "decoursey_max_error_pct": [
+      "8.7"
+    ],
+    "vkh_worst_error_pct": [
+      "-2.08"
+    ],
+    "vkh_worst_ha": [
+      "8.23"
+    ],
+    "vkh_worst_ha_over_ei": [
+      "1.65"
+    ],
+    "decoursey_worst_error_pct": [
+      "8.73"
+    ],
+    "decoursey_worst_ha": [
+      "1.43"
+    ],
+    "decoursey_worst_ha_over_ei": [
+      "0.0143"
+    ],
+    "decoursey_pfo_limit_max_error_pct": [
+      "8.81"
+    ],
+    "decoursey_worst_share_of_pfo_limit": [
+      "0.991"
+    ],
+    "convergence_order": [
+      "between 2.9 and 3.1"
+    ],
+    "convergence_order_ha2": [
+      "between 1.9 and 2.1"
+    ]
+  },
+  "breaks": {
+    "first_order_max_rel_error": [
+      "pseudo-first-order sweep on n_x = 200"
+    ],
+    "reaction_layer_cells_at_ha_max": [
+      "pseudo-first-order sweep on n_x = 200"
+    ],
+    "first_order_worst_below_ha20_share": [
+      "interface flux read from the first cell centre"
+    ],
+    "convergence_order": [
+      "interface flux read from the first cell centre",
+      "order ladder moved to 800 to 6400 cells (past the third-order range)"
+    ],
+    "convergence_order_ha2": [
+      "interface flux read from the first cell centre"
+    ],
+    "order_roundoff_margin": [
+      "order ladder moved to 800 to 6400 cells (past the third-order range)"
+    ],
+    "order_roundoff_margin_ha2": [
+      "Ha = 2 order ladder moved to 800 to 6400 cells (into round-off)"
+    ],
+    "limit_E_small_Ha": [
+      "interface held at a(0) = 1.01"
+    ],
+    "small_ha_rate_over_closed_form": [
+      "interface held at a(0) = 1.01"
+    ],
+    "limit_E_large_Ha": [
+      "E_i = 19 at the large-Ha end (q 5 % low)"
+    ],
+    "excess_reduces_to_first_order": [
+      "E_i = 1e3 in the excess check"
+    ],
+    "excess_vs_first_order_same_grid": [
+      "E_i = 1e3 in the excess check"
+    ],
+    "vkh_max_error_pct": [
+      "VKH divided by E_i instead of E_i - 1",
+      "VKH at E_i = 1e6 only (exact by construction)"
+    ],
+    "vkh_worst_error_pct": [
+      "VKH divided by E_i instead of E_i - 1",
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "vkh_worst_ha": [
+      "VKH divided by E_i instead of E_i - 1",
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "vkh_worst_ha_over_ei": [
+      "VKH divided by E_i instead of E_i - 1",
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "vkh_worst_vs_f32_rootfound_rel": [
+      "VKH divided by E_i instead of E_i - 1"
+    ],
+    "decoursey_max_error_pct": [
+      "DeCoursey with q under Ha^4 instead of q^2"
+    ],
+    "decoursey_worst_share_of_pfo_limit": [
+      "DeCoursey with q under Ha^4 instead of q^2",
+      "DeCoursey limit against sqrt(1 + Ha^2) (exact by construction)"
+    ],
+    "decoursey_worst_error_pct": [
+      "DeCoursey with q under Ha^4 instead of q^2",
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "decoursey_worst_ha": [
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "decoursey_worst_ha_over_ei": [
+      "worst points read off the 55-point scan, not refined"
+    ],
+    "decoursey_pfo_limit_max_error_pct": [
+      "DeCoursey limit against sqrt(1 + Ha^2) (exact by construction)"
+    ],
+    "vkh_worst_grid_rel_change": [
+      "worst-point film on n_x = 50"
+    ],
+    "decoursey_worst_grid_rel_change": [
+      "worst-point film on n_x = 50"
+    ]
+  },
+  "rows": {
+    "defined": 13,
+    "recorded": 13
   }
 }

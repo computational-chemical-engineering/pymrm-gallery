@@ -2,7 +2,7 @@
   "page": "J4.8",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -17,6 +17,10 @@
       "kind": "exact",
       "value": true
     },
+    "cod_closed_count": {
+      "kind": "exact",
+      "value": 6
+    },
     "cod_residual_p2": {
       "kind": "value",
       "value": -0.0007742183488853016,
@@ -26,6 +30,14 @@
       "kind": "value",
       "value": -0.01020408163265306,
       "rtol": 0.05
+    },
+    "cod_residual_p2_symbolic": {
+      "kind": "exact",
+      "value": "(Y_H - 1)/(1001*Y_H)"
+    },
+    "cod_residual_p3_symbolic": {
+      "kind": "exact",
+      "value": "-1/(700*Y_A)"
     },
     "cod_residuals_zero_with_exact_factors": {
       "kind": "exact",
@@ -43,38 +55,67 @@
       "kind": "exact",
       "value": true
     },
+    "n_loss_no_n2_min": {
+      "kind": "value",
+      "value": 0.15708928752407014,
+      "rtol": 0.05,
+      "unit": "g N per g COD"
+    },
+    "n_loss_no_n2_max": {
+      "kind": "value",
+      "value": 0.41045910611128,
+      "rtol": 0.05,
+      "unit": "g N per g COD"
+    },
+    "lane_otr": {
+      "kind": "value",
+      "value": 652.2508254924331,
+      "rtol": 0.05,
+      "unit": "g O2 m-3 d-1"
+    },
+    "xbh_change_one_pass": {
+      "kind": "value",
+      "value": -0.022842866979738585,
+      "rtol": 0.05
+    },
     "reactor_charge_balance": {
       "kind": "bound",
-      "value": 2.842170943040401e-14,
+      "value": 4.263256414560601e-14,
       "max": 1e-08,
       "basis": "identity",
       "unit": "g m-3 d-1",
-      "note": "conservative discretisation closes charge to round-off"
+      "note": "identity of a conservative scheme at a converged solve: charge closes to round-off, max over n = 75, 150, 300"
     },
     "reactor_nitrogen_balance": {
       "kind": "bound",
-      "value": 1.3642420526593924e-12,
+      "value": 4.547473508864641e-13,
       "max": 1e-08,
       "basis": "identity",
       "unit": "g m-3 d-1",
-      "note": "conservative discretisation closes nitrogen to round-off"
+      "note": "identity of a conservative scheme at a converged solve: nitrogen closes to round-off, max over n = 75, 150, 300"
     },
     "reactor_cod_leak": {
       "kind": "value",
-      "value": 0.2071576023226953,
+      "value": 0.2071371682541212,
       "rtol": 0.05,
       "unit": "g m-3 d-1"
     },
+    "reactor_cod_leak_grid_change": {
+      "kind": "value",
+      "value": 0.0018992443784136004,
+      "rtol": 0.05,
+      "note": "relative change of the COD leak from n = 75 to n = 300"
+    },
     "reactor_cod_leak_vs_prediction": {
       "kind": "bound",
-      "value": 6.118838108692497e-11,
+      "value": 1.3701906635648768e-11,
       "max": 1e-08,
       "basis": "identity",
-      "note": "the leak is the matrix's two residuals times the rates, to round-off"
+      "note": "identity of a conservative scheme at a converged solve: the leak is the matrix's two residuals times the rates, to round-off, max over grids"
     },
     "reactor_cod_leak_exact_factors": {
       "kind": "bound",
-      "value": 7.275957614183426e-12,
+      "value": 1.8189894035458565e-11,
       "max": 1e-08,
       "basis": "identity",
       "unit": "g m-3 d-1",
@@ -82,33 +123,396 @@
     },
     "reactor_cod_leak_fraction_of_otr": {
       "kind": "value",
-      "value": 0.0003175690548549939,
+      "value": 0.0003175728725183871,
       "rtol": 0.05
+    },
+    "zg_last_cell_balance": {
+      "kind": "bound",
+      "value": 2.2737367544323206e-13,
+      "max": 1e-08,
+      "basis": "identity",
+      "unit": "g m-3 d-1",
+      "note": "zero-gradient exit, outflow read from the last cell: nitrogen and charge, n = 150"
+    },
+    "zg_last_cell_cod_shift": {
+      "kind": "value",
+      "value": 0.5095196760739782,
+      "rtol": 0.05,
+      "unit": "g m-3 d-1"
+    },
+    "lane_order_min": {
+      "kind": "bound",
+      "value": 0.9462567346272555,
+      "min": 0.9,
+      "basis": "theory",
+      "note": "first-order upwind; outlet S_NH and S_ND, successive differences, n = 100 to 1600"
+    },
+    "lane_order_max": {
+      "kind": "bound",
+      "value": 1.0134460155414677,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "first-order upwind; outlet S_NH and S_ND, successive differences, n = 100 to 1600"
+    },
+    "lane_order_preasymptotic_max": {
+      "kind": "bound",
+      "value": 0.7648602319506026,
+      "max": 0.8,
+      "basis": "chosen",
+      "note": "the other outlet values are not in the asymptotic range on n = 100 to 1600"
+    },
+    "tn_grid_change": {
+      "kind": "value",
+      "value": 0.005790369170487475,
+      "rtol": 0.05
+    },
+    "lane_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 10030452.288267711,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "finest successive difference over max(newton tol, eps |q|)"
+    },
+    "picard_iterations": {
+      "kind": "value",
+      "value": 57.0,
+      "rtol": 0.05
+    },
+    "picard_contraction": {
+      "kind": "value",
+      "value": 0.6456149433075562,
+      "rtol": 0.05
+    },
+    "recycle_routes_gap": {
+      "kind": "bound",
+      "value": 2.1120740711921826e-09,
+      "max": 1e-08,
+      "basis": "tolerance",
+      "unit": "g m-3",
+      "note": "fixed-point route stopped at an inlet step of 1e-9"
+    },
+    "alk_nit_den_ratio": {
+      "kind": "exact",
+      "value": 2.0
+    },
+    "alk_matrix_matches_rule": {
+      "kind": "exact",
+      "value": true
+    },
+    "alk_linearity_dev": {
+      "kind": "bound",
+      "value": 3.3306690738754696e-15,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "alkalinity is read by no rate: a passive tracer"
+    },
+    "tn_optimum_fraction": {
+      "kind": "value",
+      "value": 0.5022677120612477,
+      "rtol": 0.05
+    },
+    "tn_at_optimum": {
+      "kind": "value",
+      "value": 8.73172235921399,
+      "rtol": 0.05,
+      "unit": "g N m-3"
+    },
+    "tn_no_anoxic": {
+      "kind": "value",
+      "value": 26.85410278495088,
+      "rtol": 0.05,
+      "unit": "g N m-3"
     },
     "tn_reduction_at_optimum": {
       "kind": "value",
-      "value": 0.6746250048765576,
+      "value": 0.6748458725604016,
+      "rtol": 0.05
+    },
+    "alk_need_f0": {
+      "kind": "value",
+      "value": 3.374799687735758,
+      "rtol": 0.05,
+      "unit": "mol m-3"
+    },
+    "alk_need_f30": {
+      "kind": "value",
+      "value": 1.475204907170876,
+      "rtol": 0.05,
+      "unit": "mol m-3"
+    },
+    "alk_need_f50": {
+      "kind": "value",
+      "value": 0.26050628795892905,
+      "rtol": 0.05,
+      "unit": "mol m-3"
+    },
+    "alk_need_zero_fraction": {
+      "kind": "value",
+      "value": 0.5655165346311735,
+      "rtol": 0.05
+    },
+    "ka_snd_rel_change": {
+      "kind": "value",
+      "value": -0.7895414351896863,
+      "rtol": 0.05
+    },
+    "ka_tn_rel_change": {
+      "kind": "value",
+      "value": 0.20854161115280956,
+      "rtol": 0.05
+    },
+    "ka_soluble_n_rel_change": {
+      "kind": "value",
+      "value": -0.00498297076646137,
       "rtol": 0.05
     }
   },
-  "quoted": {},
-  "breaks": {},
-  "breaks_required": false,
-  "unbroken": [
-    "charge_residuals_all_zero",
-    "nitrogen_residuals_all_zero",
-    "cod_residual_p2",
-    "cod_residual_p3",
-    "cod_residuals_zero_with_exact_factors",
-    "coefficients_recovered_identically",
-    "coefficients_recovered_up_to_rounding",
-    "eq3_cross_check",
-    "reactor_charge_balance",
-    "reactor_nitrogen_balance",
-    "reactor_cod_leak",
-    "reactor_cod_leak_vs_prediction",
-    "reactor_cod_leak_exact_factors",
-    "reactor_cod_leak_fraction_of_otr",
-    "tn_reduction_at_optimum"
-  ]
+  "quoted": {
+    "n_loss_no_n2_min": [
+      "0.16"
+    ],
+    "n_loss_no_n2_max": [
+      "0.41"
+    ],
+    "cod_closed_count": [
+      "6"
+    ],
+    "coefficients_recovered_identically": [
+      "8"
+    ],
+    "coefficients_recovered_up_to_rounding": [
+      "2"
+    ],
+    "picard_iterations": [
+      "57"
+    ],
+    "picard_contraction": [
+      "0.65"
+    ],
+    "recycle_routes_gap": [
+      "below 1e-8"
+    ],
+    "reactor_nitrogen_balance": [
+      "below 1e-8"
+    ],
+    "reactor_charge_balance": [
+      "below 1e-8"
+    ],
+    "lane_otr": [
+      "652"
+    ],
+    "reactor_cod_leak": [
+      "0.2071"
+    ],
+    "reactor_cod_leak_grid_change": [
+      "0.19 %"
+    ],
+    "reactor_cod_leak_vs_prediction": [
+      "below 1e-8"
+    ],
+    "reactor_cod_leak_exact_factors": [
+      "below 1e-8"
+    ],
+    "lane_order_min": [
+      "at least 0.9"
+    ],
+    "lane_order_max": [
+      "at most 1.1"
+    ],
+    "lane_order_preasymptotic_max": [
+      "below 0.8"
+    ],
+    "tn_grid_change": [
+      "0.6 %"
+    ],
+    "alk_nit_den_ratio": [
+      "2"
+    ],
+    "tn_optimum_fraction": [
+      "0.50"
+    ],
+    "tn_at_optimum": [
+      "8.73"
+    ],
+    "tn_no_anoxic": [
+      "26.85"
+    ],
+    "tn_reduction_at_optimum": [
+      "67 %"
+    ],
+    "alk_need_f0": [
+      "3.37"
+    ],
+    "alk_need_f30": [
+      "1.48"
+    ],
+    "alk_need_f50": [
+      "0.26"
+    ],
+    "alk_need_zero_fraction": [
+      "0.566"
+    ],
+    "ka_snd_rel_change": [
+      "-79 %"
+    ],
+    "ka_tn_rel_change": [
+      "21 %"
+    ],
+    "ka_soluble_n_rel_change": [
+      "-0.5 %"
+    ],
+    "reactor_cod_leak_fraction_of_otr": [
+      "0.032 %"
+    ],
+    "zg_last_cell_balance": [
+      "below 1e-8"
+    ],
+    "zg_last_cell_cod_shift": [
+      "0.51"
+    ]
+  },
+  "breaks": {
+    "charge_residuals_all_zero": [
+      "NH4+ charge taken as +1/7 per g N"
+    ],
+    "reactor_charge_balance": [
+      "NH4+ charge taken as +1/7 per g N"
+    ],
+    "alk_nit_den_ratio": [
+      "NH4+ charge taken as +1/7 per g N"
+    ],
+    "alk_matrix_matches_rule": [
+      "NH4+ charge taken as +1/7 per g N"
+    ],
+    "nitrogen_residuals_all_zero": [
+      "S_N2 cell left blank, as printed"
+    ],
+    "reactor_nitrogen_balance": [
+      "S_N2 cell left blank, as printed"
+    ],
+    "zg_last_cell_balance": [
+      "S_N2 cell left blank, as printed"
+    ],
+    "cod_closed_count": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "cod_residual_p2": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "cod_residual_p3": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "cod_residual_p2_symbolic": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "cod_residual_p3_symbolic": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "cod_residuals_zero_with_exact_factors": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "coefficients_recovered_identically": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "coefficients_recovered_up_to_rounding": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "reactor_cod_leak": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "reactor_cod_leak_fraction_of_otr": [
+      "nitrate COD taken as -4.57 per g N, not -32/7"
+    ],
+    "eq3_cross_check": [
+      "process-7 S_S cell read as 1 - f_P"
+    ],
+    "reactor_cod_leak_vs_prediction": [
+      "outlet flux read one cell upstream (c[-2])"
+    ],
+    "reactor_cod_leak_exact_factors": [
+      "exact-factor lane run on the printed decimals"
+    ],
+    "n_loss_no_n2_min": [
+      "Y_H range read from the Y_A row of Table 4"
+    ],
+    "n_loss_no_n2_max": [
+      "Y_H range read from the Y_A row of Table 4"
+    ],
+    "lane_otr": [
+      "heterotroph decay rate b_H doubled"
+    ],
+    "xbh_change_one_pass": [
+      "heterotroph decay rate b_H doubled"
+    ],
+    "zg_last_cell_cod_shift": [
+      "heterotroph decay rate b_H doubled"
+    ],
+    "reactor_cod_leak_grid_change": [
+      "oxygen transfer per cell (kLa times the cell width)"
+    ],
+    "lane_order_min": [
+      "oxygen transfer per cell (kLa times the cell width)"
+    ],
+    "lane_order_max": [
+      "oxygen transfer per cell (kLa times the cell width)"
+    ],
+    "lane_order_preasymptotic_max": [
+      "oxygen transfer per cell (kLa times the cell width)"
+    ],
+    "tn_grid_change": [
+      "oxygen transfer per cell (kLa times the cell width)"
+    ],
+    "lane_order_roundoff_margin": [
+      "Newton step tolerance 1e-1 on the grid ladder"
+    ],
+    "picard_iterations": [
+      "fixed-point recycle stopped at an inlet step of 1e-4"
+    ],
+    "recycle_routes_gap": [
+      "fixed-point recycle stopped at an inlet step of 1e-4"
+    ],
+    "picard_contraction": [
+      "recycle ratio 4 in the fixed-point route"
+    ],
+    "tn_optimum_fraction": [
+      "anoxic growth switched off (eta_g = 0)"
+    ],
+    "tn_at_optimum": [
+      "anoxic growth switched off (eta_g = 0)"
+    ],
+    "tn_reduction_at_optimum": [
+      "anoxic growth switched off (eta_g = 0)"
+    ],
+    "tn_no_anoxic": [
+      "influent ammonia doubled"
+    ],
+    "alk_need_f0": [
+      "influent ammonia doubled"
+    ],
+    "alk_linearity_dev": [
+      "nitrification switched by alkalinity, K_ALK = 0.5 mol m-3 (not in ASM1)"
+    ],
+    "alk_need_f30": [
+      "nitrification switched by alkalinity, K_ALK = 0.5 mol m-3 (not in ASM1)"
+    ],
+    "alk_need_f50": [
+      "nitrification switched by alkalinity, K_ALK = 0.5 mol m-3 (not in ASM1)"
+    ],
+    "alk_need_zero_fraction": [
+      "nitrification switched by alkalinity, K_ALK = 0.5 mol m-3 (not in ASM1)"
+    ],
+    "ka_snd_rel_change": [
+      "k_A row read as k_a (one ammonification value)"
+    ],
+    "ka_tn_rel_change": [
+      "k_A row read as k_a (one ammonification value)"
+    ],
+    "ka_soluble_n_rel_change": [
+      "k_A row read as k_a (one ammonification value)"
+    ]
+  },
+  "rows": {
+    "defined": 16,
+    "recorded": 16
+  }
 }

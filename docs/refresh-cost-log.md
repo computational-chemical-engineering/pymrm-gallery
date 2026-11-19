@@ -84,5 +84,16 @@ ends without a usage record.
 | A1.7 | 2026-11-09 | 83 | 23.2 | 439 | 1.3 | 2.6 | 27.0 | 4 |
 | A1.8 | 2026-11-09 | 120 | 37.7 | 498 | 1.3 | 2.4 | 41.4 | 4 |
 | A2.6 | 2026-11-09 | 113 | 37.1 | 500 | 1.7 | 2.2 | 41.0 | 2 |
+| J4.4 | 2026-11-19 | 76 | 14.4 | 299 | 3.2 | 0.9 | 18.5 | 1 |
+| J3.1 | 2026-11-19 | 131 | 37.0 | 419 | 2.3 | 0.9 | 40.2 | 2 |
+| J4.2 | 2026-11-19 | 102 | 31.6 | 445 | 2.3 | 0.9 | 34.8 | 1 |
+| J1.10 | 2026-11-19 | 137 | 35.4 | 370 | 2.4 | 2.4 | 40.2 | 4 |
+| J4.8 | 2026-11-19 | 87 | 19.5 | 323 | 1.9 | 2.9 | 24.3 | 3 |
+| F3.1 | 2026-11-19 | 61 | 9.2 | 210 | 1.4 | 3.6 | 14.2 | 5 |
+| J4.1 | 2026-11-19 | 259 | 43.8 | 283 | 2.5 | 2.5 | 48.8 | 4 |
+| J4.6 | 2026-11-19 | 144 | 37.4 | 361 | 2.4 | 2.7 | 42.5 | 4 |
+| A4.9 | 2026-11-19 | 87 | 16.1 | 254 | 1.8 | 4.5 | 22.4 | 5 |
+
+2026-11-19 sprint (personal account, pages in parallel, one worktree each; fix rounds on Opus where they changed code). J4.1's refresh took three agents on the call budget. Second, independent reviews of J1.10 and J4.8 found 2 and 1 further must-fix items (not in the must-fix column).
 
 32 pages: total per page median 27.3 M (range 6.4 to 50.5); must-fix median 2.0, range 0 to 8.

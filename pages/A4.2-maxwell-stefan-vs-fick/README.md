@@ -56,7 +56,7 @@ diffusion, reverse diffusion, diffusion barrier).
   the initial flux ratio is off by 6.7 % <!-- claim: frozen_matrix_ratio_error -->.
 
 The mean deviation against the measurements is the number page `A4.9` already
-publishes (same solver, grid and dataset), so it confirms a faithful port, not
+publishes (same discretisation, grid and dataset), so it confirms a faithful port, not
 an independent corroboration.
 
 ## Numerics

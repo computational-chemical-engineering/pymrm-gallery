@@ -1,74 +1,956 @@
 {
   "page": "J3.1",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "eq17_vs_eq30_max_rel": 4.559633914707422e-12,
-    "eq17_zero_current_vs_eq16_V": 6.602707877083714e-16,
-    "alpha_offset_closed_form_V": 7.324869877312068e-16,
-    "zero_current_at_zero_eta_rel": 7.812526736310485e-15,
-    "partial_currents_balance_rel_structural": 1.4986779671699454e-14,
-    "i0_from_partials_vs_eq30_rel": 5.329070518200751e-15,
-    "defect_eq30_tail_swap_eq17_vs_eq30": 0.9747671767258852,
-    "defect_eq17_prefactor_swap_eq17_vs_eq30": 0.9522851547124209,
-    "defect_both_prefactors_swap_eq17_vs_eq30": 4.5440469260127684e-12,
-    "defect_eq30_tail_swap_i0_from_partials": 38.13871213303543,
-    "defect_worst_at_symmetric_alpha_eq17_vs_eq30": 0.0,
-    "defect_worst_partial_currents_balance": 1.4986779671699454e-14,
-    "Rct_identity_max_rel": 1.8223802467076666e-09,
-    "arcsinh_inversion_max_rel": 9.664535838282973e-11,
-    "tafel_threshold_closed_vs_numeric": 3.1086244689504383e-15,
-    "nu2_over_delta_dev_frac": -0.15736033080646405,
-    "eta_tafel_10pct_mV": 77.10287014574033,
-    "eta_tafel_1pct_mV": 148.39640494461023,
-    "eta_linear_5pct_mV": 35.85870827903011,
-    "eta_linear_1pct_mV": 15.807834015303929,
-    "linear_sym_asymptote_rel": 0.03589502805191791,
-    "linear_asym_asymptote_rel": 0.06774922774766323,
-    "linear_sign_convention_rel": 0.0,
-    "linear_window_narrowing_0p5_to_0p1": 9.025192298279542,
-    "i0_general_vs_eq30_rel": 8.881784197001252e-16,
-    "cell_cathode_mean_eta_s_mV": 0.03181810889294849,
-    "cell_cathode_peak_eta_s_mV": 0.7383180488931274,
-    "cell_anode_eta_s_I10_mV": 24.806777730090744,
-    "cell_anode_eta_s_I20_mV": 46.630058989644,
-    "bv_vs_eq17_cell_potential_mV": 2.220446049250313e-12,
-    "linear_cathode_dV_mV": 1.4521717162097048e-10,
-    "tafel_cathode_dV_mV": 519.0742821463919,
-    "tafel_first_step_vs_prediction_frac": 0.00461622680821816,
-    "linear_anode_dV_I20_mV": 4.24104345087882,
-    "grid_V_spread_mV": 0.14877755853159869,
-    "grid_mean_eta_spread_frac": 0.004030699221797647,
-    "grid_peak_eta_ratio": 1.9005847044417596,
-    "dt_V_spread_mV": 0.23768462978734917,
-    "dt_V_temporal_error_mV": 0.2733709017659347,
-    "dt_observed_order": 0.9469523555664936,
-    "dt_mean_eta_spread_frac": 0.009489406895328439,
-    "dt_peak_eta_ratio": 1.3439413102067923,
-    "corner_peak_eta_mV": 1.518684670214654,
-    "corner_peak_margin_factor": 10.40889812436812,
-    "sustained_peak_eta_mV": 0.14591353271109497,
-    "sustained_peak_box_spread_frac": 0.10619538990362919,
-    "salt_conservation": 8.881784197001252e-16,
-    "break_salt_collector_leak": 0.02196401569182127,
-    "nu_factor_eta_sensitivity_frac": 0.018508635548833308,
-    "nu2_over_delta_as_kappa_ratio": 0.18674688192293232,
-    "j34_kappa_route_spread": 0.18674703084147115,
-    "linear_jump_alpha_a_1pct": 0.4593172321139133,
-    "linear_jump_alpha_a_5pct": 0.4102655500738238,
-    "superficial_reading_linear_err": 0.0018318386554422306,
-    "interfacial_reading_linear_err": 4.174442380655563e-08,
-    "superficial_tafel_headroom_factor": 20.763290136429454,
-    "j35_C_r_scale_ratio": 0.099498743710662,
-    "break_eq16_alpha_sum_not_1": 0.16838286238564287,
-    "break_alpha_offset_factor_dropped": 0.1683828623856431,
-    "break_zero_current_wrong_equilibrium": 3.4528688777178767,
-    "break_Rct_n_forced_to_1": 1.0000000012393548,
-    "break_arcsinh_at_asymmetric_alpha": 2.1902995265437952,
-    "break_tafel_threshold_log_form": 0.0397474322108724,
-    "break_mirror_without_alpha_swap": 3.985098526332119,
-    "break_i0_general_alpha_sum_not_1": 1.6085876720795538,
-    "break_linear_threshold_last_crossing_mV": 203.3980030678692,
-    "break_tafel_prediction_on_exact_run": 1.0000716350730035,
-    "metrics_below_ci_floor": 11.0,
-    "metrics_labelled_structural": 6.0
+    "eq17_vs_eq30_max_rel": {
+      "kind": "bound",
+      "value": 4.487661049484573e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "note": "round-off of exponentials of order 10 over 4000 states"
+    },
+    "eq17_zero_current_vs_eq16_V": {
+      "kind": "bound",
+      "value": 6.934897514720427e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "unit": "V",
+      "note": "find_roots xtol 1e-15 V"
+    },
+    "alpha_offset_closed_form_V": {
+      "kind": "bound",
+      "value": 7.467984564080155e-16,
+      "max": 1e-13,
+      "basis": "tolerance",
+      "unit": "V",
+      "note": "find_roots xtol 1e-15 V"
+    },
+    "zero_current_at_zero_eta_rel": {
+      "kind": "bound",
+      "value": 7.812526736310485e-15,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "partial_currents_balance_rel_structural": {
+      "kind": "bound",
+      "value": 1.4986779671699454e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "exact for alpha_a + alpha_c = 1 at any state; blind to every exponent swap (row defect_worst_partial_currents_balance)"
+    },
+    "i0_from_partials_vs_eq30_rel": {
+      "kind": "bound",
+      "value": 5.329070518200751e-15,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "Rct_identity_max_rel": {
+      "kind": "bound",
+      "value": 1.8182986227799347e-09,
+      "max": 1e-07,
+      "basis": "tolerance",
+      "note": "central difference with h = 1e-7 V: round-off eps*|i|/(h di/deta)"
+    },
+    "i0_general_vs_eq30_rel": {
+      "kind": "bound",
+      "value": 8.881784197001252e-16,
+      "max": 1e-12,
+      "basis": "identity"
+    },
+    "arcsinh_inversion_max_rel": {
+      "kind": "bound",
+      "value": 9.664535838282973e-11,
+      "max": 1e-08,
+      "basis": "identity",
+      "note": "exact for alpha_a = alpha_c; the floor is the cancellation printed below"
+    },
+    "defect_eq30_tail_swap_eq17_vs_eq30": {
+      "kind": "value",
+      "value": 0.9747671767258852,
+      "rtol": 1e-06
+    },
+    "defect_eq17_prefactor_swap_eq17_vs_eq30": {
+      "kind": "value",
+      "value": 0.9522851547124209,
+      "rtol": 1e-06
+    },
+    "defect_eq30_tail_swap_i0_from_partials": {
+      "kind": "value",
+      "value": 38.13871213303543,
+      "rtol": 1e-06
+    },
+    "defect_both_prefactors_swap_eq17_vs_eq30": {
+      "kind": "bound",
+      "value": 4.487728938544316e-12,
+      "max": 1e-10,
+      "basis": "identity",
+      "structural": true,
+      "note": "a blind spot: the same swap on both sides cancels in the ratio"
+    },
+    "defect_worst_at_symmetric_alpha_eq17_vs_eq30": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "a blind spot: swapping equal exponents changes nothing"
+    },
+    "defect_worst_partial_currents_balance": {
+      "kind": "bound",
+      "value": 1.4986779671699454e-14,
+      "max": 1e-12,
+      "basis": "identity",
+      "structural": true,
+      "note": "a blind spot: no exponent swap moves the balance"
+    },
+    "nu2_over_delta_dev_frac": {
+      "kind": "value",
+      "value": -0.15736033080646405,
+      "rtol": 1e-06
+    },
+    "j34_kappa_route_spread": {
+      "kind": "value",
+      "value": 0.18674703084147115,
+      "rtol": 1e-06
+    },
+    "nu2_over_delta_as_kappa_ratio": {
+      "kind": "value",
+      "value": 0.18674688192293232,
+      "rtol": 1e-06
+    },
+    "j34_kappa_spread_vs_committed_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-06,
+      "basis": "chosen",
+      "note": "the same arithmetic as J3.4's committed claim, on another run"
+    },
+    "eta_tafel_10pct_mV": {
+      "kind": "value",
+      "value": 77.10287014574033,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "eta_tafel_1pct_mV": {
+      "kind": "value",
+      "value": 148.39640494461023,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "tafel_threshold_closed_vs_numeric": {
+      "kind": "bound",
+      "value": 3.1086244689504383e-15,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "find_roots xtol 1e-16 V on a threshold of order 0.1 V"
+    },
+    "eta_linear_5pct_mV": {
+      "kind": "value",
+      "value": 35.85870827903013,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "eta_linear_1pct_mV": {
+      "kind": "value",
+      "value": 15.807834015303907,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "linear_sym_asymptote_rel": {
+      "kind": "value",
+      "value": 0.03589502805191802,
+      "rtol": 1e-06
+    },
+    "linear_5pct_alpha0p42_mV": {
+      "kind": "value",
+      "value": 81.32855383898054,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "linear_5pct_alpha0p3_mV": {
+      "kind": "value",
+      "value": 8.289012725927181,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "break_linear_threshold_last_crossing_mV": {
+      "kind": "value",
+      "value": 203.3980030678692,
+      "rtol": 1e-06,
+      "unit": "mV",
+      "note": "the 5 % threshold at alpha_a = 0.3 taken as the last crossing: the trap"
+    },
+    "linear_sign_convention_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "the two sides are the same root-find with the sign handling reversed"
+    },
+    "linear_asym_asymptote_rel": {
+      "kind": "value",
+      "value": 0.06774922774766168,
+      "rtol": 1e-06
+    },
+    "linear_window_narrowing_0p5_to_0p1": {
+      "kind": "value",
+      "value": 9.025192298279434,
+      "rtol": 1e-06
+    },
+    "linear_jump_alpha_a_1pct": {
+      "kind": "value",
+      "value": 0.45931723279016684,
+      "rtol": 1e-06
+    },
+    "linear_jump_alpha_a_5pct": {
+      "kind": "value",
+      "value": 0.4102655510196499,
+      "rtol": 1e-06
+    },
+    "linear_overshoot_peak_alpha0p45": {
+      "kind": "value",
+      "value": 0.015159035127459752,
+      "rtol": 1e-06
+    },
+    "cell_cathode_mean_eta_s_mV": {
+      "kind": "value",
+      "value": 0.03181810889294849,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "cell_cathode_peak_eta_s_mV": {
+      "kind": "value",
+      "value": 0.7383180488931274,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "cell_anode_eta_s_I10_mV": {
+      "kind": "value",
+      "value": 24.806777730090744,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "cell_anode_eta_s_I20_mV": {
+      "kind": "value",
+      "value": 46.630058989644,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "cell_cathode_peak_I20_cutoff_mV": {
+      "kind": "value",
+      "value": 1.6787258353065937,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "u_cutoff_I20": {
+      "kind": "value",
+      "value": 0.3706609317091768,
+      "rtol": 0.001
+    },
+    "u_cutoff_I10": {
+      "kind": "value",
+      "value": 0.8311504583302433,
+      "rtol": 0.001
+    },
+    "u_1p9V_I20": {
+      "kind": "value",
+      "value": 0.26384784248337473,
+      "rtol": 0.001
+    },
+    "u_cutoff_I10_vs_J34_abs": {
+      "kind": "bound",
+      "value": 1.1021196791305421e-05,
+      "max": 0.002,
+      "basis": "chosen",
+      "note": "the same cell and cutoff on J3.4; its run and readout differ"
+    },
+    "eta_separation_decades": {
+      "kind": "value",
+      "value": 2.8918959915517353,
+      "rtol": 0.001
+    },
+    "foil_I10_over_linear_5pct": {
+      "kind": "value",
+      "value": 0.6917922847934134,
+      "rtol": 0.001
+    },
+    "foil_I10_over_linear_1pct": {
+      "kind": "value",
+      "value": 1.5692711415159575,
+      "rtol": 0.001
+    },
+    "foil_I20_over_linear_5pct": {
+      "kind": "value",
+      "value": 1.3003831210761392,
+      "rtol": 0.001
+    },
+    "foil_I20_over_linear_1pct": {
+      "kind": "value",
+      "value": 2.9498069719419138,
+      "rtol": 0.001
+    },
+    "superficial_reading_linear_err": {
+      "kind": "value",
+      "value": 0.0018318386554422306,
+      "rtol": 1e-06
+    },
+    "interfacial_reading_linear_err": {
+      "kind": "value",
+      "value": 4.174442380655563e-08,
+      "rtol": 1e-06
+    },
+    "superficial_tafel_headroom_factor": {
+      "kind": "value",
+      "value": 20.763290136429454,
+      "rtol": 1e-06
+    },
+    "a_delta_c": {
+      "kind": "value",
+      "value": 209.99999999999997,
+      "rtol": 1e-09
+    },
+    "superficial_eta_s_mV": {
+      "kind": "value",
+      "value": 6.7463399570582405,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "superficial_i_over_i0": {
+      "kind": "value",
+      "value": 0.21019586857588268,
+      "rtol": 1e-06
+    },
+    "i0_initial_A_m2": {
+      "kind": "value",
+      "value": 47.57467436325898,
+      "rtol": 1e-06,
+      "unit": "A/m2"
+    },
+    "j35_C_r_scale_ratio": {
+      "kind": "value",
+      "value": 0.099498743710662,
+      "rtol": 1e-06
+    },
+    "interfacial_i_over_i0": {
+      "kind": "value",
+      "value": 0.0010009327075042034,
+      "rtol": 1e-06
+    },
+    "tafel_cathode_predicted_eta_mV": {
+      "kind": "value",
+      "value": 444.1694209135156,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "tafel_first_step_vs_prediction_frac": {
+      "kind": "value",
+      "value": 0.00461622680821816,
+      "rtol": 0.02
+    },
+    "bv_vs_eq17_cell_potential_mV": {
+      "kind": "bound",
+      "value": 2.220446049250313e-12,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "unit": "mV",
+      "note": "the same law written two ways; newton tol 1e-9 on scaled residuals"
+    },
+    "linear_cathode_dV_mV": {
+      "kind": "bound",
+      "value": 1.4521717162097048e-10,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "unit": "mV",
+      "note": "the linearisation error at |eta_s| below 1 mV is under the solver tolerance"
+    },
+    "tafel_cathode_dV_mV": {
+      "kind": "value",
+      "value": 519.0742821463919,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "linear_cathode_dV_noreplay_mV": {
+      "kind": "bound",
+      "value": 1.4521717162097048e-10,
+      "max": 1e-06,
+      "basis": "tolerance",
+      "unit": "mV",
+      "note": "the same comparison with both runs stepping adaptively"
+    },
+    "linear_anode_dV_I20_mV": {
+      "kind": "value",
+      "value": 4.24104345087882,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "linear_anode_dV_I10_mV": {
+      "kind": "value",
+      "value": 0.626318271430535,
+      "rtol": 1e-06,
+      "unit": "mV"
+    },
+    "grid_V_spread_mV": {
+      "kind": "value",
+      "value": 0.14877092673004633,
+      "rtol": 0.02,
+      "unit": "mV",
+      "note": "spatial only: the time schedule is the same on every grid"
+    },
+    "grid_mean_eta_spread_frac": {
+      "kind": "value",
+      "value": 0.004030699221797647,
+      "rtol": 0.02
+    },
+    "grid_peak_eta_ratio": {
+      "kind": "value",
+      "value": 1.9005847044417596,
+      "rtol": 0.001
+    },
+    "salt_conservation": {
+      "kind": "bound",
+      "value": 8.881784197001252e-16,
+      "max": 1e-12,
+      "basis": "identity",
+      "note": "telescoping divergence with zero salt flux on both boundary faces"
+    },
+    "dt_observed_order": {
+      "kind": "bound",
+      "value": 0.9351408018480654,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory",
+      "note": "implicit Euler is first order; the smaller of the two ladder triples"
+    },
+    "dt_observed_order_max": {
+      "kind": "bound",
+      "value": 0.9566745783233009,
+      "min": 0.8,
+      "max": 1.2,
+      "basis": "theory"
+    },
+    "dt_finest_over_roundoff": {
+      "kind": "bound",
+      "value": 1109297.9227724832,
+      "min": 1000.0,
+      "basis": "theory",
+      "note": "finest V difference over the newton floor 1e-9 RT/F"
+    },
+    "dt_V_spread_mV": {
+      "kind": "value",
+      "value": 0.23726352922714966,
+      "rtol": 0.02,
+      "unit": "mV"
+    },
+    "dt_V_temporal_error_mV": {
+      "kind": "value",
+      "value": 0.27293233205716305,
+      "rtol": 0.02,
+      "unit": "mV"
+    },
+    "dt_mean_eta_spread_frac": {
+      "kind": "value",
+      "value": 0.009489406895328439,
+      "rtol": 0.02
+    },
+    "dt_peak_eta_ratio": {
+      "kind": "value",
+      "value": 1.3439413102067923,
+      "rtol": 0.001
+    },
+    "peak_eta_at_first_step": {
+      "kind": "exact",
+      "value": true
+    },
+    "peak_eta_time_s": {
+      "kind": "value",
+      "value": 0.39173722000000005,
+      "rtol": 1e-06,
+      "unit": "s"
+    },
+    "discharge_time_s": {
+      "kind": "value",
+      "value": 16861.654700366023,
+      "rtol": 0.001,
+      "unit": "s"
+    },
+    "corner_peak_eta_mV": {
+      "kind": "value",
+      "value": 1.518684670214654,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "corner_peak_margin_factor": {
+      "kind": "value",
+      "value": 10.408898124368106,
+      "rtol": 0.001
+    },
+    "grid_peak_finest_mV": {
+      "kind": "value",
+      "value": 1.0076271536694215,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "dt_peak_finest_mV": {
+      "kind": "value",
+      "value": 0.9922561259787521,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "sustained_peak_eta_mV": {
+      "kind": "value",
+      "value": 0.14591353271109497,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "sustained_peak_box_spread_frac": {
+      "kind": "value",
+      "value": 0.10619538990362919,
+      "rtol": 0.02
+    },
+    "break_salt_collector_leak": {
+      "kind": "value",
+      "value": 0.02196401569182127,
+      "rtol": 0.001,
+      "note": "salt drift with a collector leak of 1e-3 |I|/F"
+    },
+    "leak_cell_potential_shift_mV": {
+      "kind": "value",
+      "value": 3.458257209618454,
+      "rtol": 0.001,
+      "unit": "mV"
+    },
+    "nu_factor_eta_sensitivity_frac": {
+      "kind": "value",
+      "value": 0.018508635548833308,
+      "rtol": 0.001
+    },
+    "nu_factor_V_shift_mV": {
+      "kind": "value",
+      "value": 49.4173537707252,
+      "rtol": 0.001,
+      "unit": "mV"
+    }
+  },
+  "quoted": {
+    "eq17_vs_eq30_max_rel": [
+      "below 1e-10"
+    ],
+    "eq17_zero_current_vs_eq16_V": [
+      "below 1e-13"
+    ],
+    "zero_current_at_zero_eta_rel": [
+      "below 1e-12"
+    ],
+    "partial_currents_balance_rel_structural": [
+      "below 1e-12"
+    ],
+    "i0_from_partials_vs_eq30_rel": [
+      "below 1e-12"
+    ],
+    "Rct_identity_max_rel": [
+      "below 1e-7"
+    ],
+    "arcsinh_inversion_max_rel": [
+      "below 1e-8"
+    ],
+    "tafel_threshold_closed_vs_numeric": [
+      "below 1e-12"
+    ],
+    "nu2_over_delta_dev_frac": [
+      "-15.7 %"
+    ],
+    "j34_kappa_route_spread": [
+      "18.7 %"
+    ],
+    "bv_vs_eq17_cell_potential_mV": [
+      "below 1e-6"
+    ],
+    "linear_cathode_dV_mV": [
+      "below 1e-6"
+    ],
+    "tafel_first_step_vs_prediction_frac": [
+      "0.46 %"
+    ],
+    "grid_V_spread_mV": [
+      "0.149"
+    ],
+    "dt_V_temporal_error_mV": [
+      "0.273"
+    ],
+    "dt_observed_order": [
+      "at least 0.8"
+    ],
+    "dt_observed_order_max": [
+      "at most 1.2"
+    ],
+    "salt_conservation": [
+      "below 1e-12"
+    ],
+    "break_salt_collector_leak": [
+      "0.022"
+    ],
+    "eta_tafel_10pct_mV": [
+      "77.1"
+    ],
+    "eta_linear_5pct_mV": [
+      "35.9"
+    ],
+    "eta_tafel_1pct_mV": [
+      "148.4"
+    ],
+    "eta_linear_1pct_mV": [
+      "15.8"
+    ],
+    "linear_5pct_alpha0p3_mV": [
+      "8.29"
+    ],
+    "break_linear_threshold_last_crossing_mV": [
+      "203.4"
+    ],
+    "cell_cathode_mean_eta_s_mV": [
+      "0.032"
+    ],
+    "cell_cathode_peak_eta_s_mV": [
+      "0.74"
+    ],
+    "cell_anode_eta_s_I10_mV": [
+      "24.8"
+    ],
+    "cell_anode_eta_s_I20_mV": [
+      "46.6"
+    ],
+    "foil_I10_over_linear_5pct": [
+      "0.69"
+    ],
+    "foil_I10_over_linear_1pct": [
+      "1.57"
+    ],
+    "foil_I20_over_linear_5pct": [
+      "1.30"
+    ],
+    "foil_I20_over_linear_1pct": [
+      "2.95"
+    ],
+    "corner_peak_eta_mV": [
+      "1.519"
+    ],
+    "corner_peak_margin_factor": [
+      "10.4"
+    ],
+    "sustained_peak_eta_mV": [
+      "0.146"
+    ],
+    "sustained_peak_box_spread_frac": [
+      "10.6 %"
+    ],
+    "interfacial_i_over_i0": [
+      "0.0010"
+    ],
+    "eta_separation_decades": [
+      "2.9"
+    ],
+    "tafel_cathode_dV_mV": [
+      "519"
+    ],
+    "u_cutoff_I20": [
+      "0.3707"
+    ],
+    "u_1p9V_I20": [
+      "0.2638"
+    ],
+    "cell_cathode_peak_I20_cutoff_mV": [
+      "1.679"
+    ],
+    "u_cutoff_I10": [
+      "0.8312"
+    ],
+    "defect_eq17_prefactor_swap_eq17_vs_eq30": [
+      "0.95"
+    ],
+    "defect_eq30_tail_swap_eq17_vs_eq30": [
+      "0.97"
+    ],
+    "peak_eta_time_s": [
+      "0.39"
+    ],
+    "discharge_time_s": [
+      "16862"
+    ],
+    "j35_C_r_scale_ratio": [
+      "0.0995"
+    ]
+  },
+  "breaks": {
+    "eq17_vs_eq30_max_rel": [
+      "Eq. 30 tail exponents swapped"
+    ],
+    "i0_from_partials_vs_eq30_rel": [
+      "Eq. 30 tail exponents swapped"
+    ],
+    "eq17_zero_current_vs_eq16_V": [
+      "alpha_a + alpha_c != 1 in the zero-current check"
+    ],
+    "alpha_offset_closed_form_V": [
+      "(1/n - 1) factor dropped from the closed-form offset"
+    ],
+    "zero_current_at_zero_eta_rel": [
+      "1/n dropped from the equilibrium potential"
+    ],
+    "Rct_identity_max_rel": [
+      "n forced to 1 in R_ct"
+    ],
+    "arcsinh_inversion_max_rel": [
+      "arcsinh inversion used at alpha_a = 0.3"
+    ],
+    "tafel_threshold_closed_vs_numeric": [
+      "ln(1/eps) written for ln(1 + 1/eps)"
+    ],
+    "linear_sign_convention_rel": [
+      "alpha swap omitted from the mirror"
+    ],
+    "i0_general_vs_eq30_rel": [
+      "general i_0 compared with Eq. 30 at alpha = (0.5, 0.4)"
+    ],
+    "eta_tafel_10pct_mV": [
+      "T read as 298.15 K"
+    ],
+    "eta_tafel_1pct_mV": [
+      "T read as 298.15 K"
+    ],
+    "eta_linear_5pct_mV": [
+      "T read as 298.15 K"
+    ],
+    "eta_linear_1pct_mV": [
+      "T read as 298.15 K"
+    ],
+    "linear_5pct_alpha0p42_mV": [
+      "T read as 298.15 K"
+    ],
+    "linear_sym_asymptote_rel": [
+      "sqrt(24 eps) written as sqrt(12 eps)"
+    ],
+    "linear_asym_asymptote_rel": [
+      "asymmetric asymptote applied at alpha_a = 0.42"
+    ],
+    "linear_window_narrowing_0p5_to_0p1": [
+      "linear threshold taken at the last crossing"
+    ],
+    "linear_5pct_alpha0p3_mV": [
+      "linear threshold taken at the last crossing"
+    ],
+    "linear_jump_alpha_a_1pct": [
+      "symmetric slope 2 alpha_a f eta at asymmetric alpha"
+    ],
+    "linear_jump_alpha_a_5pct": [
+      "symmetric slope 2 alpha_a f eta at asymmetric alpha"
+    ],
+    "linear_overshoot_peak_alpha0p45": [
+      "symmetric slope 2 alpha_a f eta at asymmetric alpha"
+    ],
+    "nu2_over_delta_dev_frac": [
+      "initial solid state read as u_0 = 0.02"
+    ],
+    "nu2_over_delta_as_kappa_ratio": [
+      "initial solid state read as u_0 = 0.02"
+    ],
+    "j34_kappa_route_spread": [
+      "initial solid state read as u_0 = 0.02"
+    ],
+    "j34_kappa_spread_vs_committed_rel": [
+      "initial solid state read as u_0 = 0.02"
+    ],
+    "j35_C_r_scale_ratio": [
+      "initial solid state read as u_0 = 0.02"
+    ],
+    "superficial_reading_linear_err": [
+      "k_2 halved"
+    ],
+    "interfacial_reading_linear_err": [
+      "k_2 halved"
+    ],
+    "superficial_tafel_headroom_factor": [
+      "k_2 halved"
+    ],
+    "superficial_eta_s_mV": [
+      "k_2 halved"
+    ],
+    "i0_initial_A_m2": [
+      "k_2 halved"
+    ],
+    "superficial_i_over_i0": [
+      "k_2 halved"
+    ],
+    "interfacial_i_over_i0": [
+      "k_2 halved"
+    ],
+    "tafel_cathode_predicted_eta_mV": [
+      "k_2 halved"
+    ],
+    "cell_cathode_mean_eta_s_mV": [
+      "k_2 halved"
+    ],
+    "cell_cathode_peak_eta_s_mV": [
+      "k_2 halved"
+    ],
+    "eta_separation_decades": [
+      "k_2 halved",
+      "i_o1 of the foil halved"
+    ],
+    "cell_anode_eta_s_I10_mV": [
+      "i_o1 of the foil halved"
+    ],
+    "cell_anode_eta_s_I20_mV": [
+      "i_o1 of the foil halved"
+    ],
+    "foil_I10_over_linear_5pct": [
+      "i_o1 of the foil halved"
+    ],
+    "foil_I10_over_linear_1pct": [
+      "i_o1 of the foil halved"
+    ],
+    "foil_I20_over_linear_5pct": [
+      "i_o1 of the foil halved"
+    ],
+    "foil_I20_over_linear_1pct": [
+      "i_o1 of the foil halved"
+    ],
+    "linear_anode_dV_I20_mV": [
+      "i_o1 of the foil halved",
+      "limit laws replaced by the exact law"
+    ],
+    "linear_anode_dV_I10_mV": [
+      "i_o1 of the foil halved",
+      "limit laws replaced by the exact law"
+    ],
+    "u_cutoff_I20": [
+      "electrolyte diffusivity halved"
+    ],
+    "u_1p9V_I20": [
+      "electrolyte diffusivity halved"
+    ],
+    "cell_cathode_peak_I20_cutoff_mV": [
+      "electrolyte diffusivity halved"
+    ],
+    "u_cutoff_I10": [
+      "electrolyte diffusivity halved"
+    ],
+    "u_cutoff_I10_vs_J34_abs": [
+      "electrolyte diffusivity halved"
+    ],
+    "discharge_time_s": [
+      "electrolyte diffusivity halved"
+    ],
+    "a_delta_c": [
+      "specific area from R_s doubled"
+    ],
+    "bv_vs_eq17_cell_potential_mV": [
+      "Tafel cathode law in the standard-form comparison"
+    ],
+    "linear_cathode_dV_mV": [
+      "linear law switched at both electrodes"
+    ],
+    "linear_cathode_dV_noreplay_mV": [
+      "linear law switched at both electrodes"
+    ],
+    "tafel_cathode_dV_mV": [
+      "limit laws replaced by the exact law"
+    ],
+    "tafel_first_step_vs_prediction_frac": [
+      "Tafel prediction tested on the exact-law run"
+    ],
+    "grid_V_spread_mV": [
+      "harmonic face means replaced by arithmetic"
+    ],
+    "grid_mean_eta_spread_frac": [
+      "k_2 halved in the grid ladder"
+    ],
+    "grid_peak_eta_ratio": [
+      "k_2 halved in the grid ladder"
+    ],
+    "grid_peak_finest_mV": [
+      "harmonic face means replaced by arithmetic",
+      "k_2 halved in the grid ladder"
+    ],
+    "salt_conservation": [
+      "collector salt leak of 1e-3 |I|/F"
+    ],
+    "dt_V_spread_mV": [
+      "dt_max left unscaled in the dt ladder"
+    ],
+    "dt_V_temporal_error_mV": [
+      "dt_max left unscaled in the dt ladder"
+    ],
+    "dt_observed_order": [
+      "dt_max left unscaled in the dt ladder"
+    ],
+    "dt_observed_order_max": [
+      "dt_max left unscaled in the dt ladder"
+    ],
+    "dt_finest_over_roundoff": [
+      "newton tolerance 1e-4 in the dt ladder"
+    ],
+    "dt_mean_eta_spread_frac": [
+      "k_2 halved in the dt ladder"
+    ],
+    "dt_peak_eta_ratio": [
+      "k_2 halved in the dt ladder"
+    ],
+    "dt_peak_finest_mV": [
+      "k_2 halved in the dt ladder"
+    ],
+    "corner_peak_eta_mV": [
+      "corner taken at 4x instead of 8x"
+    ],
+    "corner_peak_margin_factor": [
+      "margin taken to the 5 % threshold"
+    ],
+    "sustained_peak_eta_mV": [
+      "first-step transient kept in the sustained peak"
+    ],
+    "sustained_peak_box_spread_frac": [
+      "first-step transient kept in the sustained peak"
+    ],
+    "peak_eta_at_first_step": [
+      "first-step transient kept in the sustained peak"
+    ],
+    "peak_eta_time_s": [
+      "production time step halved"
+    ],
+    "defect_eq30_tail_swap_eq17_vs_eq30": [
+      "injected defects removed"
+    ],
+    "defect_eq17_prefactor_swap_eq17_vs_eq30": [
+      "injected defects removed"
+    ],
+    "defect_eq30_tail_swap_i0_from_partials": [
+      "injected defects removed"
+    ],
+    "break_linear_threshold_last_crossing_mV": [
+      "injected defects removed"
+    ],
+    "break_salt_collector_leak": [
+      "injected defects removed"
+    ],
+    "leak_cell_potential_shift_mV": [
+      "injected defects removed"
+    ],
+    "nu_factor_eta_sensitivity_frac": [
+      "injected defects removed"
+    ],
+    "nu_factor_V_shift_mV": [
+      "injected defects removed"
+    ]
+  },
+  "rows": {
+    "defined": 34,
+    "recorded": 34
   }
 }

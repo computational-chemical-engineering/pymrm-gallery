@@ -4383,7 +4383,10 @@ models:
     description: >
       Where reaction and diffusion compete in a liquid film: the exact
       first-order solution, and how far the Van Krevelen–Hoftijzer and DeCoursey
-      enhancement approximations can be trusted.
+      enhancement approximations can be trusted, and where each is worst: Van
+      Krevelen-Hoftijzer in the fast-to-instantaneous transition, DeCoursey at
+      the slow-to-fast transition, where its error is the film against the
+      surface-renewal model it was derived for.
     section: F
     status: published
     tier: T0
@@ -4400,7 +4403,7 @@ models:
       container: "Recueil des Travaux Chimiques des Pays-Bas 67(7) 563-586"
       doi: 10.1002/recl.19480670708
     predicts: [enhancement factor, absorption regime]
-    pymrm_api: [construct_grad, construct_div, NumJac, newton, clip_approach]
+    pymrm_api: [construct_grad, construct_div, NumJac, newton, find_roots, observed_orders]
     data: {tier: 6, method: analytical, status: complete}
     page: pages/F3.1-hatta-regimes/
     related: [F3.2, F3.3, F3.5, B1.1, A4.9]
@@ -5335,60 +5338,9 @@ models:
     title: "The van Deemter equation: the three terms, the constants they were read off, and what the Gaussian costs"
     description: >
       Every chromatography textbook prints H = A + B/u + Cu and attributes it to van Deemter,
-      Zuiderweg and Klinkenberg (1956). The 1956 paper does not start there: it starts from a
-      two-phase material balance, reduces it to a Gaussian, and only on p. 286 - from twelve
-      measured points - writes down three numbers. This page rebuilds that chain and reports what
-      each step supports. The algebra is sound: (34) -> (38), (38)+(45,46,48) -> (49) and its C,
-      and (38)+(41,50,51) -> (52) all have exactly zero residual, and for each the paper names
-      the route - which equations go into which - but never prints the manipulation or checks it;
-      a fourth route the paper never takes - the Laplace transform of eqs. (29)/(30), whose
-      residence-time cumulants give H = kappa_2/kappa_1^2 - reproduces eq. (38) symbolically as
-      well. Eq. (38) is then computed WITHOUT eq. (38), by integrating eqs. (29)/(30) in time with
-      pymrm and reading H from the difference of the first two time moments at two interior
-      stations: 4.1e-5, with the two-station difference cancelling the boundary condition to below 1e-5.
-      The grid study has a known answer rather than only an order - first-order upwind adds u h / 2
-      of numerical dispersion, so switching the limiter off must shift H by exactly h, and the
-      measured coefficient is 0.99999 (observed order 3.00 with van Leer, 1.00 bare). Refitting
-      Table 3 through eq. (49) returns lambda = 2.99 against the printed 3 and D_II = 1.34e-10 m2/s
-      against the printed 1.3e-10 - and the extraction is almost free of D_I, which the paper never
-      prints for that system, moving 1.8 % as D_I is swept 2x and then removed. The effective film
-      thickness comes back three times, from three different printed constant sets: 10.06, 10.57
-      and 8.66 um against the paper's approx 10, approx 10 and 9 um; eq. (56)'s coefficient
-      reproduces to 1 %, and the Sterchamol ratio is SHARPER with this page's d_f than with the
-      paper's own rounded 9 um. Table 1's eleven printed calc values are all reproduced, and they
-      pin Delta S_0 to 166.0-167.4 ml against the paper's tilde-marked "~ 165". Table 3 is rebuilt
-      from Table 2 by the paper's own two independent routes to a median 2.1 % over eighteen
-      endpoints, and split by route the height determination beats the width one, 1.6 % against
-      2.2 %. ONE PRINTED EQUATION CANNOT BE RIGHT, PROVED FROM THE PAPER'S OWN NUMBERS AND
-      REPORTED, NOT REPAIRED. Eq. (21) as printed carries (a+delta)/delta where its own eqs. (24)
-      and (25) require (a+delta)/a: as printed it gives 2 in the limit eq. (24) fixes at 4 and
-      DIVERGES where eq. (25) fixes it at a + sqrt(2 pi), and the width route to the plate number
-      then admits no root at all for seven of Table 2's nine conditions - while eq. (22), the only
-      other free thing, is verified symbolically to be exactly the inflection condition of
-      eq. (19). One further arithmetic item is recorded but is NOT an error: eq. (56) set to unity
-      gives d_f/d_p = 1.83e-4 where the text says "about 0 0001" - an order-of-magnitude sentence
-      quoted to one significant figure, so 1.83e-4 is the same order of magnitude and the
-      conclusion it carries is unaffected. A third finding is an ambiguity that CANNOT be closed:
-      the List of Symbols defines u as interstitial
-      while Tables 2-4 and Figs. 11-14 are headed superficial; Fig. 9 converts and the gas-liquid
-      section does not appear to, since the quoted 2 gamma D_I = 8e-6 m2/s is numerically identical
-      to eq. (54)'s iso-butane coefficient read in mm2/s (F_I = 1) and implies gamma = 0.444, just
-      below the paper's own stated 0.5-1.0. F_I is not printed for those columns, so the page
-      reports the band each reading requires rather than choosing. FIT, NOT TEST, AND LABELLED
-      EVERYWHERE: eqs. (54)/(55) were fitted by the authors to the twelve Table 4 points they are
-      compared against, so those residuals are a goodness of fit reported beside a null baseline
-      (the best constant H, beaten by a factor 3.3 to 6.2), and lambda and D_II were extracted from
-      Table 3, so refitting it reproduces the paper's extraction and not a measurement. What the
-      page adds is a number for the paper's own unquantified condition: eqs. (33)/(34) hold "for
-      locations z much larger than both 2D/u and F_I u/alpha", and because the cumulants are
-      exactly additive in z, the Laplace expansion's kappa_3 and kappa_4 give the skewness and
-      excess kurtosis of a column of any length in closed form - pymrm's two-station run is the
-      independent check on them (0.21 % and 1.5 %, both labelled cancellation-limited rather than
-      converged), not the source of either. Both of the paper's groups fall as 1/z; the skewness
-      falls only as z^(-1/2), so
-      at the column that produced Table 3 the groups are 2.4e-3 and 3.4e-3 - comfortably "<< 1" -
-      and the elution curve is still skewed by 0.14. Reaching a skewness of 0.05 needs a column 8.2
-      times longer, root-found rather than swept.
+      Zuiderweg and Klinkenberg (1956). This page rebuilds the paper's chain from the two-phase
+      balance to the three constants, computes the plate height a second way with a pymrm
+      solution of the column, and finds one printed equation that cannot be right.
     section: J
     status: published
     page: pages/J1.10-van-deemter-plate-height/
@@ -5399,8 +5351,8 @@ models:
     predicts:
       - the plate height of a chromatographic column as A + B/u + Cu, with each constant a product
         of printed physical quantities rather than a fitted number
-      - the optimum carrier velocity and the minimum plate height, root-found and cross-checked
-        against sqrt(B/C) and A + 2 sqrt(BC)
+      - the optimum carrier velocity and the minimum plate height, sqrt(B/C) and A + 2 sqrt(BC),
+        checked against a root of dH/du found on the physical range
       - the effective liquid film thickness d_f from a measured C term, for three column/solute
         combinations
       - the intraparticle diffusivity D_II and the packing factor lambda from a plate-height
@@ -5413,6 +5365,11 @@ models:
       - construct_div
       - construct_convflux_upwind
       - interp_cntr_to_stagg_tvd
+      - ConvFluxTVD
+      - newton
+      - describe_bc
+      - find_roots
+      - observed_orders
     reference:
       authors: ["van Deemter, J. J.", "Zuiderweg, F. J.", "Klinkenberg, A."]
       year: 1956
@@ -5434,19 +5391,14 @@ models:
     data:
       tier: 6
       method: >
-        All four printed tables (71 data rows) and 56 printed scalars transcribed from 2x
-        digit-scale crops of 300 ppi native-resolution renders. NO POINT TAKEN OFF ANY FIGURE. The
-        scan's text layer misreads the journal volume in the document's first line ("Vol 6" for
-        "Vol. 5") and was used for nothing numeric. FIVE ambiguous readings were settled by
-        arithmetic constraints the tables impose on themselves (two in Table 2 - the doubling
-        velocity series and the 23 ml width; three in Table 3 - a decimal placement and two integer
-        pairs, from n H being one column length and H/(H/d_p) the stated mesh). THREE more, across
-        five cells of Table 4, were settled with Figs. 11 and 13, which carry no point between
-        u = 5 and 15 mm/s; the page shows all three also follow from inside Table 4 alone, from its
-        ascending velocity column and from eq. (55). TWO printed curve labels on Fig. 8 (n = 240,
-        n = 277) are read as text and used only to say which of Table 3's printed endpoints came
-        from which route. Note for the papers inventory: this paper prints FOUR tables, not the two
-        recorded there.
+        All four printed tables and the printed scalars transcribed from digit-scale crops of
+        native-resolution renders. NO POINT TAKEN OFF ANY FIGURE. The scan's text layer misreads
+        the journal volume in the document's first line ("Vol 6" for "Vol. 5") and was used for
+        nothing numeric. Ambiguous readings were settled by arithmetic constraints the tables
+        impose on themselves; the readings of Table 4 checked against Figs. 11 and 13 also follow
+        from inside Table 4 alone, from its ascending velocity column and from eq. (55). Two
+        printed curve labels on Fig. 8 are read as text and used only to say which of Table 3's
+        printed endpoints came from which route. The paper prints FOUR tables.
       status: complete
     related: [J1.5, J1.6, J1.8, A2.3, A2.4, A2.6]
 
@@ -5505,9 +5457,10 @@ models:
       The interfacial charge-transfer law as Doyle, Fuller and Newman print it,
       with the exchange current density derived from their own equations rather
       than quoted, and the overpotential at which each of its two standard
-      approximations goes wrong by 1, 5 and 10 % — closed form for Tafel, and
-      checked against the overpotentials the published J3.4 cell actually runs at.
-      Its two electrodes turn out to be in different regimes.
+      approximations goes wrong by a stated fraction: closed form for Tafel, a
+      first crossing for the linear limit, checked against the overpotentials the
+      published J3.4 cell actually runs at. Its two electrodes sit
+      2.9 <!-- claim: eta_separation_decades --> decades apart in |eta_s|.
     section: J
     status: published
     page: pages/J3.1-butler-volmer-tafel/
@@ -5538,7 +5491,7 @@ models:
       - the overpotential at which the Tafel approximation deviates by a stated fraction
       - the overpotential at which the linear approximation deviates by a stated fraction
       - the surface overpotential distribution in a porous electrode
-    pymrm_api: [construct_grad, construct_div, NumJac, stencil_block_diagonals, newton]
+    pymrm_api: [construct_grad, construct_div, NumJac, stencil_block_diagonals, newton, find_roots, observed_orders]
     data: {tier: 6, method: analytical, status: complete}
     related: [J3.4, J3.5, J3.3, J3.2, B1.6, D1.4]
 
@@ -5603,17 +5556,17 @@ models:
       REPARAMETERISED: constant yield makes X = phi(a - S), so
       mu_m S/(K_sx X + S) = (mu_m/beta) S/(K_sx phi a/beta + S) with
       beta = 1 - K_sx phi - a bijection between the two parameter pairs, sympy
-      residual exactly zero, confirmed to better than 1e-3 in both constants by two
+      residual exactly zero, confirmed to below 1e-3 <!-- claim: contois_map_KS_relerr --> in both constants by two
       optimisers started from different places on the two parameterisations (the
       exact residuals are those optimisers' exit tolerances, printed on the page
       and registered as bounds that every run checks, not as values). Of the
-      two that ARE separable at this design, Blackman needs 1.30 repeats of the run
-      and Tessier 10.3, N* being a ~50 %-power threshold rather than a
-      95 %-detection sample size.
+      two that ARE separable at this design, Blackman needs 1.30 <!-- claim: Nstar_blackman --> repeats of the run
+      and Tessier 10.3 <!-- claim: Nstar_tessier -->, N* being a half-power threshold rather than a
+      detection sample size.
       MONOD AND BLACKMAN AGREE EXACTLY ON BOTH PROPERTIES FROMENT DEFINES THE
       CONSTANTS BY - the asymptote, and the half rate at S = K_S, which sits on
       Blackman's linear branch - and differ by EXACTLY mu_m/3 at the branch switch
-      S = 2 K_S, and by mu_m(3-2 sqrt 2)/2 = 0.0858 mu_m at S = (sqrt 2 - 1) K_S on
+      S = 2 K_S, and by mu_m(3-2 sqrt 2)/2 = 0.0858 <!-- claim: sym_blackman_gap_lower_over_mum --> mu_m at S = (sqrt 2 - 1) K_S on
       the lower branch. Both closed forms, both checked against a root-found
       extremum.
       AND ON THE ONE REAL DATASET, THE RANKING OF THE FIVE IS DECIDED BY THE DATA
@@ -5622,44 +5575,44 @@ models:
       and not consulted. Fit them as the exercise invites, comparing
       ln(Cc_end/Cc_start)/dt with mu evaluated at the interval-AVERAGE substrate
       concentration, and Monod comes LAST of the four two-parameter laws (RMS
-      0.054690 1/h against Blackman's 0.026772) while Moser's exponent n = 1.93
-      clears the 95 % F test at F = 12.27 against F(1,4) = 7.71 - a verdict CO-CAUSED
+      0.054690 <!-- claim: rmsA_Monod --> 1/h against Blackman's 0.026772 <!-- claim: rmsA_Blackman -->) while Moser's exponent n = 1.93 <!-- claim: routeA_n_moser -->
+      clears the F test at F = 12.27 <!-- claim: routeA_F_moser_vs_monod --> against F(1,4) = 7.71 <!-- claim: F_crit_95 --> - a verdict CO-CAUSED
       by the one printed cell the page flags, since at that cell's balance-implied
-      60.18 route A gives F = 5.45 against the same 7.71 and the verdict flips. Do
+      60.18 <!-- claim: balance_row4_imputed_CA --> route A gives F = 5.45 <!-- claim: routeA_F_imputed --> against the same critical value and the verdict flips. Do
       the interval average EXACTLY instead - the same seven growth rates, the same
       five models, no new parameter, with the substrate trajectory taken from the
       table's own material balance rather than from the printed averages (route B
       never reads the CA_bar column, and the balance line it uses is the SIX-ROW
-      one) - and Monod's residual falls 42 % to 0.031466, Blackman becomes the
-      worst of the four, n drops to 1.51 and F to 1.44.
+      one) - and Monod's residual falls 42 % <!-- claim: routeB_monod_rms_drop --> to 0.031466 <!-- claim: rmsB_Monod -->, Blackman becomes the
+      worst of the four, n drops to 1.51 <!-- claim: routeB_n_moser --> and F to 1.44 <!-- claim: routeB_F_moser_vs_monod -->.
       A SEEDED BOOTSTRAP PRICES THAT, WITH A CONTROL, every draw refitted the way
       route A fits the real data rather than read off the scan grid. On data the
-      Monod model itself generates, the reduction rejects Monod 36.5 % +- 1.1 % of
-      the time and drives the median fitted exponent to 1.61 +- 0.0074; on data
+      Monod model itself generates, the reduction rejects Monod 36.5 % <!-- claim: boot_size_forward_truth --> +- 1.1 % <!-- claim: boot_size_forward_se --> of
+      the time and drives the median fitted exponent to 1.61 <!-- claim: boot_median_n_forward_truth --> +- 0.0074 <!-- claim: boot_median_n_forward_se -->; on data
       drawn from the reduction's OWN model, where it is correctly specified, it
-      sits AT nominal size, 4.95 % +- 0.5 %, and returns 1.01 +- 0.0049. Those six
+      sits AT nominal size, 4.95 % <!-- claim: boot_size_control_truth --> +- 0.5 % <!-- claim: boot_size_control_se -->, and returns 1.01 <!-- claim: boot_median_n_control_truth --> +- 0.0049 <!-- claim: boot_median_n_control_se -->. Those six
       numbers are Monte-Carlo estimates at 2000 seeded draws - four frequencies
       and two medians, not six frequencies - and every quotation of them carries
       its sampling error; at that draw count the frequencies are seed-independent
       in their leading figure only and the medians to at least two figures. So the
       small-sample F
       approximation at n = 7 is essentially exact and is not the culprit - the
-      reduction is - and the observed F = 12.27 has p = 0.23 +- 0.0094 against a
-      properly generated Monod null. The grid-only numbers the first version of this page
-      reported, 30.8 % and a conservative-looking 2.1 %, are kept as a break row.
+      reduction is - and the observed F = 12.27 <!-- claim: routeA_F_moser_vs_monod --> has p = 0.23 <!-- claim: boot_p_of_observed_F --> +- 0.0094 <!-- claim: boot_p_of_observed_F_se --> against a
+      properly generated Monod null. Fits read off the scan grid without refinement
+      give 30.8 % <!-- claim: boot_gridonly_size_forward --> and a conservative-looking 2.1 % <!-- claim: boot_gridonly_size_control -->, a break row.
       The bias behind it is
-      0.0663 1/h at CA_bar = 9, which is 1.21 TIMES THE RESIDUAL SCATTER the
+      0.0663 <!-- claim: bias_max_abs_excl_bad_row --> 1/h at CA_bar = 9, which is 1.21 <!-- claim: bias_over_routeA_rms --> TIMES THE RESIDUAL SCATTER the
       ranking is read off, and it has a sign: mu is concave, so the shortcut makes
       every saturating law look too gradual near exhaustion.
       THE EXPERIMENT THAT DOES SEPARATE CONTOIS FROM MONOD IS NAMED AND PRICED: a
       chemostat sweeping the FEED. Monod washes out at D_c = mu_m S_f/(K_S + S_f),
       Contois at D_c = mu_m whatever the feed; the two cross at EXACTLY S_f = a,
       the substrate intercept of the batch run's own material balance (root-found
-      at 197.1 against 197.120, equal within the Contois fit's exit tolerance), and
-      differ by a factor 1.83 at S_f = 20.
+      at 197.1 <!-- claim: Sf_crossing --> against 197.120 <!-- claim: balance_a -->, equal within the Contois fit's exit tolerance), and
+      differ by a factor 1.83 <!-- claim: Dc_ratio_at_Sf20 --> at S_f = 20.
       ONE PRINTED CELL IS REPORTED AND NOT REPAIRED: the table's fourth
       interval-average substrate concentration is off the constant-yield line the
-      other six rows fix at R^2 = 0.99996 (all seven give 0.98505), and a
+      other six rows fix at R^2 = 0.99996 <!-- claim: balance_R2_six_rows --> (all seven give 0.98505 <!-- claim: balance_R2_all_rows -->), and a
       leave-one-out sweep says which row rather than merely that one is off.
     section: J
     status: published
@@ -5738,27 +5691,19 @@ models:
       on a constant-yield batch run - Moser by nesting, Contois by an exact
       reparameterisation - so a batch fit that "prefers" one of them is reporting
       its own optimiser. Of the two that are separable, only Blackman is resolvable
-      by the single run available, at N* = 1.30 repeats against Tessier's 10.3.
+      by the single run available, at N* = 1.30 <!-- claim: Nstar_blackman --> repeats against Tessier's 10.3 <!-- claim: Nstar_tessier -->.
       The page's second finding is methodological and cost the first: the ranking
       of the five laws on the one real dataset flips depending on whether the rate
       law is evaluated at the interval-average substrate concentration or averaged
       across the interval, and a seeded bootstrap WITH A CONTROL ARM shows the
-      shortcut rejects a true Monod 36.5 % +- 1.1 % of the time against
-      4.95 % +- 0.5 %, i.e. exactly nominal, for its own correctly-specified model. Every empirical number is a goodness of fit and is
+      shortcut rejects a true Monod 36.5 % <!-- claim: boot_size_forward_truth --> +- 1.1 % <!-- claim: boot_size_forward_se --> of the time against
+      4.95 % <!-- claim: boot_size_control_truth --> +- 0.5 % <!-- claim: boot_size_control_se -->, i.e. at nominal, for its own correctly-specified model. Every empirical number is a goodness of fit and is
       labelled one; the identities are proofs and are labelled structural; and the
       Rawlings reproduction is reproduction, not validation.
-      79 defect injections, all 79 of which move their metric, cover 60 of 74
-      metrics; the other 14 are named structural with above-floor companions, and
-      six quantities the page proves are exactly zero are printed but not
-      reported at all, because CI compares everything above ABS_FLOOR at 5 % and
-      they are optimiser and root-find exit tolerances - a rule asserted over the
-      whole enumerated class of 18 such quantities rather than over the list of
-      exclusions. An assertion cell checks 96 prose and metadata values plus 10
-      break-table lookups against the live computation, and a mechanical sweep
-      requires every number written in scientific notation in meta.yaml,
-      README.md, this entry and both data sidecars to match a live value to half
-      an ulp of its own printed digits, and measures its own detection rate by
-      mutating every token it finds.
+      Every claim is registered in agreement.json as a value, a bound or an exact
+      result; every non-structural claim has a break row that fails its own check;
+      the quantities the page proves exactly zero are bounds. Every number in the
+      page's README.md, meta.yaml and this entry carries a claim marker.
       SCOPE BOUNDARY: substrate inhibition (Froment eq. 1.5.2-4, Graef & Andrews
       [1973]; Rawlings' mu_m S/(K_s+S+K_1 S^2)) belongs to J4.2 and gets no
       quantitative treatment here; Williams' structured model, eqs. (1.5.2-5) to
@@ -5771,107 +5716,41 @@ models:
     description: >
       Andrews (1968) puts Haldane's enzyme-inhibition function into a batch and a
       chemostat balance and states two results in one sentence of his Summary: in
-      BATCH culture the primary effect of substrate inhibition is an increase in
-      the LAG TIME, whereas in CONTINUOUS culture it "may result in process
-      instability". He also assumes there is NO LAG PHASE, so the first claim is
+      batch culture the primary effect of substrate inhibition is an increase in the
+      lag time, whereas in continuous culture it "may result in process
+      instability". He also assumes there is no lag phase, so the first claim is
       about a lag his kinetics manufacture and can be measured against a
-      no-inhibition control. THIS PAGE TESTS BOTH RATHER THAN ILLUSTRATING THEM,
-      with his own printed constants, and DIGITISES NOTHING.
-      THE PAPER PRINTS NO TABLE - every "table" hit in the text layer is inside the
-      word "unstable" - but it is not figure-gated, because every parameter set is
-      typeset inside a figure legend, and reading a legend is transcription.
-      THE BATCH CLAIM SURVIVES QUANTITATIVELY. Going from no inhibition to his
-      K_i = 2.0 g/l multiplies the time to reach 5 g/l by 5.256387, from 6.949160 h
-      to 36.527476 h, and 94.40 % of that increase is LAG against 5.65 % a slower
-      exponential phase. Under Monod the lag is IDENTICALLY ZERO by the same
-      definition, so inhibition creates a lag where there was none. The share is
-      monotone: 87.78 % at K_i = 10, 91.25 % at 5, 94.40 % at 2.
-      THE PAGE ALSO STATES WHAT THOSE TWO NUMBERS DO NOT SAY. The PEAK specific
-      growth rate falls only 19.4344 %, 0.997009 to 0.803246 1/h, and that is not
-      the effect of inhibition on growth: the peak is reached at 36.492522 h of a
-      36.527476 h run, 99.90431 % of the way through; the run is above half its
-      peak rate for 0.638869 h, 1.7490088 % of its duration; the biomass rises
-      114.67072-fold during the lag; and the REALISED mean rate
-      ln(X_f/X_i)/t_f falls from 0.994042 to 0.189111 1/h, 80.98 %. And the lag
-      SHARE is a partition only near Andrews' own target, because lambda does not
-      depend on X_f while dt_f does: at X_f = 1 g/l the same decomposition returns
-      109.4003 %. The 94.40 % is quoted at his 5 g/l target and defined there.
-      BOTH OF HIS STATED NUMERICAL RESULTS COME BACK FROM A CLOSED FORM. Constant
-      yield collapses eqs. (4)-(5) to one autonomous ODE with a rational integrand,
-      so partial fractions give the batch time exactly (both sympy residuals zero):
-      36.527476 h against his printed 36 (+1.4652 %) and 12.371597 h against his
-      12.5 (-1.0272 %), agreeing with LSODA to 6.7e-12 while sharing no code with
-      it. THE SECOND DEPENDS ON READING ONE SENTENCE, AND HIS OWN FIGURE READS IT:
-      p. 715's "increased in 2.0 g/l steps after reduction in each case to 0.02
-      g/l" supports three literal readings - reset to 2.0, increment by 2.0, or a
-      2.0/4.0/6.0 ladder - worth 12.366419 h, 12.371597 h and 13.794022 h, a raw
-      spread of 11.5442 %. The typeset annotation inside Fig. 7, "REPEATED ORGANISM
-      SEPARATION & DILUTION. S_i ADDED IN INCREMENTS OF 2.0 GM/L", read at digit
-      scale on a 300 ppi crop of the rotated landscape page and transcribed into
-      the CSV, is the increment reading; that is what the page reports, with the
-      reset reading priced at 0.042 % away and the ladder reading, +10.3522 %,
-      named as the one the annotation excludes.
-      THE CONTINUOUS CLAIM IS PROVED, NOT ILLUSTRATED. At theta = 3 h, S_0 = 5 g/l
-      there are THREE steady states: a stable node at S_1 = 0.0150567,
-      X_1 = 2.492472; a SADDLE at S_1 = 3.984943 with eigenvalues +0.0561790 and
-      -1/3 per hour - which is the root eq. (9) as printed returns; and WASHOUT,
-      which is LOCALLY STABLE, eigenvalue -0.0481080. The saddle's sign is exact,
-      not numerical: det J = mu'(S*) X_1/(Y theta), so it carries the sign of mu'
-      whatever the constants.
-      INHIBITION BARELY MOVES THE STEADY STATE AND COMPLETELY CHANGES ITS BASIN. At
-      the same muhat, K_s, theta and S_0, dropping the inhibition term moves the
-      operating substrate by 0.3778 % and the operating biomass by 0.0011 % - and
-      takes the washout eigenvalue from -0.0481080 to +0.660702 per hour, stable to
-      unstable. Andrews notices the first half himself ("the inhibition function
-      reduces to the Monod function") and understates it.
-      THERE ARE TWO WASHOUT CONDITIONS AND EQ. (11) IS ONLY ONE OF THEM. His
-      theta_w = 1/muhat_m = 1.244949 h is the FOLD and contains no S_0; the other -
-      washout is stable whenever mu(S_0) < 1/theta, i.e. theta < 1/mu(S_0) =
-      3.506000 h - depends on the feed and he does not print it. The exact bistable
-      window at S_0 = 5 g/l is theta in (1.244949, 3.506000) h, AND ANDREWS
-      OPERATES AT 3 h, INSIDE IT. The two conditions unify him with J4.1: under
-      Monod mu is monotone, the fold never happens, and only the transcritical one
-      survives - as D_c = mu_m S_f/(K_S + S_f), the formula J4.1 loads from
-      Rawlings & Ekerdt. One criterion, D = mu(S), read at two different points.
-      ALL SIX OF HIS STATED CONTINUOUS-CULTURE OUTCOMES REPRODUCE, and the page
-      root-finds the thresholds he omits, on EVENT-TERMINATED integrations rather
-      than swept windows: the critical inoculum is 0.1842466 g/l (his 0.10 is 45.7 %
-      below it, his 0.50 171.4 % above), the critical step is S_0 = 17.28760 g/l,
-      and the critical ramp is 0.8720668 h - SO HIS 1 HR RAMP CLEARS IT BY ONLY
-      14.67 %. Two of those are computed twice by routes sharing only the
-      right-hand side: the inoculum by basin bisection AND by the saddle's
-      backward-integrated stable manifold (2.4e-12), the step by bisection AND by a
-      separatrix side test (8.1e-14). The Fig. 8 threshold, by contrast, is exactly
-      S_0 = 5.0 BY CONSTRUCTION and is labelled structural rather than reported.
-      SEVEN PRINTED DEFECTS ARE REPORTED AND NONE REPAIRED. eq. (9) is printed with
-      a BARE + and no +-, so it returns the higher root - the one this same paper
-      calls unstable. eq. (10) is printed X_i = Y(S_0 - S_1) where X_1 is meant,
-      X_i being this paper's symbol for the initial inoculum; the text layer turns
-      X_1 into "XI", so only a render could show it. Figs. 4 and 7 give the
-      dimensionless yield as GM/L, decided by the printed definition plus the
-      dimensions of eq. (5) rather than by the five-to-two count across legends.
-      Plus "Recherces" [sic], "step chances" [sic], "innoculum" and "a inhibition
-      function" [sic].
-      AND ONE APPROXIMATION THAT IS NOT CALLED A DEFECT: his half-rate definitions
-      of K_s and K_i are exact only as K_s/K_i -> 0 and have NO SOLUTION unless
-      K_i >= 4 K_s - exactly eq. (2)'s condition for muhat_m >= muhat/2 - and are
-      +1.5468 % and -1.5232 % out at the K_i = 2.0 g/l of his chemostat figures -
-      which is the MILDEST of the three K_i he prints, against +3.1947 %/-3.0958 %
-      at the K_i = 1.0 of his Fig. 4 and +6.8502 %/-6.4110 % at the K_i = 0.50 of
-      his Fig. 1, all three printed on the page. It gives the numbers and the
-      condition and does NOT claim he was unaware; his own "even when K_s and K_i
-      are well separated" is the nearest thing to a qualification.
-      THE PAGE ADDS TWO THINGS ANDREWS DID NOT HAVE. Seeding the feed with
-      0.0213935 g/l - 0.8583 % of the operating biomass - destroys the fold, and
-      that number is where the page caught its own grid-limited calculation:
-      bisecting a root COUNT sees the merging roots only while they are more than a
-      grid cell apart, so the reported value is the DOUBLE-ROOT one (G = G' = 0,
-      leaving mu(theta mu - 1) = mu'(S_0 - S), no grid in it), with the counting
-      route shown converging onto it across six orders of magnitude in three scans.
-      And the same kinetics in a
-      pymrm plug-flow fermenter have NO bistability at any residence time or seed,
-      which confirms Andrews' own "multistage operation with separate substrate
-      supply" prediction IN THAT LIMIT ONLY.
+      no-inhibition control. The page tests both with his own printed constants,
+      read off his typeset figure legends, and digitises nothing.
+      THE BATCH CLAIM SURVIVES QUANTITATIVELY: going from no inhibition to his K_i
+      multiplies the time to his target biomass by 5.2564 <!-- claim: batch_time_ratio_vs_no_inhibition -->,
+      and 94.40 % <!-- claim: lag_share_of_delay_Ki2 --> of the increase is lag. The
+      page also states what that does not say: the run reaches its peak growth rate
+      at 99.904 % <!-- claim: peak_time_fraction --> of its duration, the realised
+      mean rate changes by -80.98 % <!-- claim: batch_realised_mean_growth_drop_rel -->,
+      and the lag share is a partition only near his own target.
+      BOTH OF HIS STATED NUMERICAL RESULTS COME BACK FROM A CLOSED FORM for the batch
+      time, derived by partial fractions: 36.527476 h <!-- claim: batch_time_direct_h -->
+      against his 36 and 12.371597 h <!-- claim: batch_time_seeded_h --> against his
+      12.5, the second under the reading of his acclimation sentence that his own
+      Fig. 7 annotation prints.
+      THE CONTINUOUS CLAIM IS PROVED, NOT ILLUSTRATED: at his theta and S_0 the
+      chemostat has three steady states, the upper one a saddle (the root eq. (9) as
+      printed returns) and washout locally stable, from the sign of det J =
+      mu'(S*) X_1/(Y theta). Under Monod the same operating point barely moves and
+      washout turns unstable. The exact bistable window runs from the fold of
+      eq. (11) to the transcritical crossing mu(S_0) = 1/theta he does not print, and
+      he operates inside it. All six of his stated continuous-culture outcomes
+      reproduce, and the thresholds he does not print are root-found: the critical
+      inoculum 0.1842466 <!-- claim: critical_inoculum_g_per_l --> g/l, computed two
+      independent ways, the critical step and the critical ramp, which his 1 hr ramp
+      clears by only 14.67 % <!-- claim: andrews_ramp_margin_rel -->.
+      Seven printed defects are reported and none repaired. And two results Andrews
+      did not have: seeding the feed with
+      0.0213935 <!-- claim: feed_seed_removing_hysteresis_g_per_l --> g/l of biomass
+      removes the fold and the instability with it, and a pymrm plug-flow fermenter,
+      the infinite-stage limit of his proposed multistage operation, has no
+      bistability at all.
     section: J
     status: published
     page: pages/J4.2-andrews-substrate-inhibition/
@@ -5897,11 +5776,9 @@ models:
         ramp duration separating recovery from washout
       - the feed biomass X_0 at which the hysteresis disappears entirely
       - the plug-flow limit of multistage operation, which has no bistability
-      - which of the two ways of reading a plug-flow outlet is more accurate under
-        a zero-gradient outflow condition, measured rather than assumed - both are
-        first order (1.0011 and 1.0013) and the last-cell read is closer at every
-        grid, by 1.3226x at the finest, so compute_boundary_values is used for flux
-        consistency and not for accuracy
+      - the order of the pymrm chemostat marcher and plug-flow solve, from
+        successive differences of refinement ladders, with an outflow outlet read
+        through compute_boundary_values
     pymrm_api:
       - NumJac
       - newton
@@ -5950,179 +5827,59 @@ models:
       method: transcription
       status: complete
     note: >
-      ANDREWS' NUMBERS ARE HIS OWN SIMULATION OUTPUT - "The solutions presented in
-      this paper were obtained using PACTOLUS on the IBM 360 computer" (p. 708) -
-      and his two stated times are HIS OWN READINGS OF HIS OWN PLOT ("It can be
-      seen that only 12.5 hr are required..."). So matching them is REPRODUCTION,
-      NOT VALIDATION, and the page says so in those words. THE PAPER CONTAINS NO
-      EXPERIMENTAL DATA AT ALL; the only measurements it mentions are other
-      people's, in prose and without numbers. Nothing on this page is fitted and no
-      number on it is a goodness of fit.
-      THE FIGURE COMPARISON IS OUT OF SCOPE AND THE PAGE SAYS SO: no curve on any
-      of the ten figures is traced, so the page DOES NOT ESTABLISH EMPIRICAL
-      ADEQUACY AGAINST ANDREWS' PLOTTED RESULTS. Two initial conditions he never
-      prints - Fig. 9's S_1(0) and Fig. 10's initial state - are this page's
-      assumptions, stated as such, with the sensitivity reported (the critical
-      inoculum varies 5.2120 % over the whole sampled S_1(0) in [0, 0.2] g/l, and
-      0.4071 % over [0, 0.05] alone, which is the flattering window and not the one
-      reported; S_1(0) = 0 is itself corroborated by Fig. 9, where both S_1 curves
-      emanate from the origin). X_0 = 0 is
-      likewise this page's reading, checked by a full-text search and a read of all
-      seventeen renders that find no value for it anywhere.
-      J4.1 LEFT THIS CASE THE INHIBITION FORM ON PURPOSE and this page settles it:
-      Andrews eq. (1), Froment eq. (1.5.2-4) and Rawlings & Ekerdt's
-      mu_m S/(K_s + S + K_1 S^2) are proved one function in sympy, with Froment's
-      r_m = Andrews' muhat and Rawlings' K_1 = 1/K_i. It also finds the trap in the
-      crossing: Froment's prose defines r_m as "the maximum specific rate of
-      biomass growth", true for his Monod eq. (1.5.2-1) and FALSE for his
-      inhibition eq. (1.5.2-4), where the maximum is r_m/(1 + 2 sqrt(K_S/K_i)) -
-      24.4949 % lower at Andrews' constants. Going the other way, Andrews' own
-      reference list carries the primary citations for Moser, Teissier and Contois
-      that J4.1 could not attribute; they are transcribed for whoever builds those
-      cases, and NOTHING IS ATTRIBUTED TO ANY OF THEM.
-      Validation is ranked and the fourth route refused: internal identities (all
-      sympy residuals exactly zero, printed and NOT reported, because a symbolic
-      zero is a proof) and stated numerical results in the text; NO FIGURE IS
-      DIGITISED. SIX quantities are computed twice and the page separates the four
-      genuinely independent ones - batch time 6.7e-12, critical inoculum 2.4e-12,
-      critical step 8.1e-14, X_0 fold 1.2e-9 - from the two that are the same
-      algebra written twice and are labelled TRANSCRIPTION CHECKS: eq. (9) against a
-      Brent root (1.1e-16) and the transcritical residence time by its two routes
-      (exactly 0.0). The break table mis-transcribes one term of each to show what
-      they can catch. Both error-carrying axes are refined - marcher time step, observed
-      order 1.0021, Richardson 338x; plug-flow grid, order 1.0011, Richardson 637x.
-      Both branches of the lag split and the switch between them are exercised, at
-      K_i = S_i^2/K_s = 3333.3333 exactly. TWENTY-FOUR defect injections, and THE
-      COVERAGE MAP IS GENERATED FROM THEIR MEASURED MOVES rather than written by
-      hand: each row returns a dictionary keyed by metric name holding those metrics
-      recomputed under the defect, a row covers a metric only if it moves it by more
-      than 1e-6 relative, and the notebook fails to execute if any metric is
-      uncovered or any row moves nothing. AND THE ROWS ARE PARSED RATHER THAN
-      TRUSTED: a row returning a typed constant for a metric would record a move of
-      exactly 1.0 whatever the reported value was, so its links could not fail -
-      this page shipped five such literals in the lag row, the only cover of four
-      metrics, and a static guard now rejects any agreement.json key bound to a
-      numeric literal, with the offending row kept verbatim as its negative control
-      so the teeth are measured rather than claimed. All 63 metrics are covered. FIVE of them
-      sit below check_agreement.py's ABS_FLOOR = 1e-12 and are named individually
-      with above-floor companions, asserted. Four quantities are
-      genuinely structural and are labelled identities rather than agreements:
-      eq. (11) - 1/eq. (2) = 0.0 exactly, S + X/Y conservation, the Fig. 8
-      threshold S_0 = 5.0, and plug-flow monotonicity (dX/dt = mu X > 0). 101 prose
-      and metadata values plus nine structural assertions are checked against the
-      live computation and the notebook fails to execute if any drifts. Nothing is
-      stochastic and the one sweep-shaped calculation uses a deterministic per-tau
-      initial guess rather than a warm start, so two executions give a
-      byte-identical agreement.json and an identical content hash including both
-      figures.
+      ANDREWS' NUMBERS ARE HIS OWN SIMULATION OUTPUT ("The solutions presented in
+      this paper were obtained using PACTOLUS on the IBM 360 computer", p. 708), and
+      his two stated times are his own readings of his own plot. So matching them is
+      REPRODUCTION, NOT VALIDATION, and the page says so. The paper contains no
+      experimental data; nothing on this page is fitted and no number on it is a
+      goodness of fit. No curve on any of the ten figures is traced, so the page does
+      not establish empirical adequacy against Andrews' plotted results. Two initial
+      conditions he never prints (Fig. 9's S_1(0) and Fig. 10's initial state) are
+      this page's assumptions, stated as such, with the sensitivity reported over
+      the whole sampled range; S_1(0) = 0 is corroborated by Fig. 9, where both S_1
+      curves emanate from the origin. X_0 = 0 is likewise this page's reading.
+      J4.1 left this case the inhibition form, and the page proves Andrews eq. (1),
+      Froment eq. (1.5.2-4) and Rawlings & Ekerdt's form one function in sympy,
+      loading J4.1's rows rather than retyping them; Froment's definition of r_m as
+      "the maximum" fails for the inhibition form. Every root is found by
+      pymrm.checks.find_roots over a stated range and raises unless exactly one root
+      is found; six quantities are computed twice, four by independent routes and
+      two as transcription checks; both error-carrying axes are refined; and every
+      non-structural claim has a break-table row that fails it.
     related: [J4.1, J4.6, J4.8, J4.9, C1.1, B1.1, D2.1, A2.8]
 
   - id: J4.4
     slug: luedeking-piret
     title: "Luedeking-Piret: refitting alpha and beta from the one run whose raw data are printed"
     description: >
-      Luedeking & Piret (1959) print dP/dt = alpha dN/dt + beta N in their Summary
-      and give six (alpha, beta) pairs, one per pH level, in Table III.  THE PAPER
-      USES GREEK alpha AND beta; the catalogue and this repository's case yaml both
-      call them "a and b", and the page keeps the paper's symbols and records the
-      discrepancy.  ONLY ONE OF THE SIX pH LEVELS HAS ITS RAW DATA PRINTED: Tables I
-      and II tabulate the pH 6.0 run and nothing else, as the running text on book
-      p. 401 says outright, so the page refits that one row and scopes the other
-      five out rather than digitising Figs. 4-11.  NO CURVE IS DIGITISED AND NO VALUE
-      OFF A FIGURE ENTERS ANY DATASET, FIT OR METRIC; the single figure READING on
-      the page - Fig. 10's zero-based beta panel, calibrated once to corroborate the
-      SIGN of one Table III cell - is declared as such wherever it appears.
-      THE REFIT IS A CONSISTENCY CHECK ON THE AUTHORS' OWN GRAPHICAL FIT, NOT A
-      VALIDATION OF THEIR MODEL, and the page says so in those words: book p. 409,
-      "The constants alpha and beta are determined from the plots of Fig. 11", and
-      Fig. 11 plots (1/N)(dP/dt) against k, which ARE Table II's last two columns -
-      the same measurements sit on both sides of the comparison.  Ordinary least
-      squares on those 22 points gives alpha = 2.266562 and beta = 0.528684 against
-      the printed 2.2 and 0.55, +3.03 % and -3.88 %, and BOTH ARE INSIDE ONE
-      STANDARD ERROR (0.508390 and 0.427714 of one).  THE TWO CONSTANTS ARE
-      ANTICORRELATED AT -0.891902, so the pair matters more than either number:
-      holding alpha at the authors' 2.2 returns beta = 0.551282, 0.23 % from their
-      0.55; holding beta at 0.55 returns alpha = 2.216616, 0.76 % from their 2.2;
-      and their pair costs only 0.65 % in rms against the least-squares optimum
-      (0.101450 against 0.100792).  Their straight edge is statistically
-      indistinguishable from least squares.  THE FORM IS TESTED AGAINST TWO NULLS
-      AND BOTH ARE THE PAPER'S OWN REJECTED ALTERNATIVES (book p. 410, "Neither
-      statement was found to hold true outside of the period of logarithmic
-      growth"): acid production proportional to growth rate alone is 5.5500x worse
-      in rms and proportional to bacterial density alone 4.9158x worse, rising to
-      14.2416x and 17.7940x on the integrated acid curve.  THE DIRECTION OF THOSE
-      RATIOS IS ALGEBRA - each null is an exactly nested submodel, so the ratio
-      cannot fall below 1 - SO BOTH HALVES OF THE PAPER'S SENTENCE ARE TESTED, not
-      only the flattering one: on the logarithmic plateau the paper points to, the
-      12 rows whose printed k lies in 0.46-0.48 (a spread of 4.3478 %, reached
-      across a gap from 0.40), the two one-term forms cost only 1.036042x and
-      1.033197x, while on the 10 rows outside it they cost 5.011873x and 3.708246x.
-      The authors' qualifier is thus quantitative in both directions, and the page
-      states why a ratio near 1 there is DEGENERACY rather than agreement: dN/dt =
-      k_c N makes the two regressors nearly proportional and the plateau-only fit
-      returns alpha = 1.614396, beta = 0.792957.  A THIRD ROUTE TO THE
-      CONSTANTS TOUCHES NO DIFFERENTIATED COLUMN AT ALL - integrating eq. (2) and
-      fitting the measured P column gives alpha = 2.272660, beta = 0.510150 - and
-      the integrated model with the AUTHORS' printed constants reproduces the whole
-      measured acid curve to 1.70 % rms and the final 43.3 mg/ml to +3.12 %
-      (44.649542 predicted), which the page labels a coherence check between two
-      reductions of one run rather than an independent test, because Table II's
-      dP/dt column IS the P column graphically differentiated.  THE CROSSOVER THE
-      PAPER DESCRIBES IN WORDS IS GIVEN A NUMBER: the two terms are equal at
-      k* = beta/alpha = 0.25 1/h at pH 6.0, reached at t ~ 10.1 h, 72.8 % of
-      the way through the tabulated window, ROOT-FOUND TWICE on column pairs that
-      share nothing (the k column, and separately the dN/dt and N columns), the two
-      routes differing by 2.450e-05 - WHICH THE PAGE LABELS A TRANSCRIPTION-
-      CONSISTENCY RESIDUAL AND NOT THE PRECISION OF t*, since a linear interpolant
-      moves t* by 0.16 % and a single mis-transcribed Table III cell by 6.5 %, so t*
-      is quoted to one decimal; and over the whole run the two mechanisms contribute
-      46.7 % and
-      53.3 % of the acid, so neither is a correction.  ACROSS pH, beta COLLAPSES AND
-      alpha BARELY MOVES: beta is strictly decreasing over all six levels by a
-      factor of 5.0, alpha is flat at 2.2 for the top three and rises only
-      1.613636 overall, so k* falls 8.068182-fold and the fermentation becomes
-      almost purely growth-associated as the pH drops.  WHAT SIX PAIRS DO NOT
-      ESTABLISH IS STATED: not that the form holds at the other five levels (six
-      fitted pairs are six OUTPUTS of the Fig. 11 test, not the test), not a
-      functional alpha(pH) or beta(pH), and not the inflection the paper reads off
-      its own Fig. 10, since three of the six alpha values are printed as the same
-      number.  TABLE II CHECKS ITSELF BY THE PAPER'S OWN DEFINITIONS (book p. 400,
-      k and (1/N)(dP/dt) are quotients of the other columns) and the page MEASURES
-      how strong that check is: the identities hold to 2.7356 % and 1.841 %, pure
-      round-off of independently rounded two-figure columns, and 1764 of the 2019
-      single-digit substitutions available in the (N, dN/dt, k) triple - 87.3700 % -
-      break them by more than that band.  TWO PRINTED FEATURES ARE REPORTED AND NOT
-      REPAIRED: Table III's pH 5.6 beta cell carries a stray mark before its leading
-      zero, and the reading 0.49 is SETTLED THREE WAYS WITH ARITHMETIC FIRST: the
-      minus reading breaks the beta monotonicity this notebook asserts, so the
-      notebook would refuse to execute and the break row prices the violation at
-      2800 %; the paper's own Fig. 10 (book p. 407) plots beta against pH on a
-      ZERO-BASED axis with all six points above the axis, that one at about 0.50,
-      which corroborates the SIGN without contributing a number to any dataset or
-      metric; and only then the connected-component measurement (8 px, 4x3, matching
-      the five genuine mid-dots in the same column at area 8-11 and NOT the page's
-      one true hyphen at 11x4 px and area 38, with zero free-floating components of
-      area 4-20 anywhere on the page).  It is a dot, not a minus, the digits are
-      intact, the value is 0.49, and what the mark IS cannot be settled from one
-      copy and is not guessed at.  TABLE III HAS NO INTERNAL IDENTITY - six rows,
-      three independent columns, no derived quantity - but the page no longer says
-      it "offers no arithmetic at all", because it does not: its pH column is
-      printed a second time in running text on book p. 400 and asserted against the
-      CSV, beta(pH) is plotted zero-based in Fig. 10, and the pH 6.0 row can be
-      refitted from Tables I and II.  The Nomenclature also lists alpha and beta as
-      "Constants" with no units, which appear only in Table III's footnotes.  The
-      pymrm content is
-      deliberately modest and labelled as such: a batch fermenter marched with
-      newton + NumJac((1,2)) and a plug-flow fermenter from
-      construct_convflux_upwind + construct_div (nu=0) with the outlet read by
-      compute_boundary_values, both closed by the paper's own printed k column so
-      that NO GROWTH LAW IS IMPORTED, and both checked against the closed form
-      eq. (2) has exactly - P = P_0 + alpha (N - N_0) + beta int N dt - coming back
-      first order at 1.008072 and 1.004313 with a Richardson outlet 2.224e-05 from
-      the closed form.  The outlet-read question J4.2 raised is RE-MEASURED here
-      rather than inherited: with a zero-gradient outflow condition both reads are
-      first order and the last-cell read is the closer, by 1.016655 at ncell 3200,
-      so compute_boundary_values is kept for flux CONSISTENCY, not accuracy.
+      Luedeking & Piret (1959) relate lactic acid formation to growth and to
+      biomass, dP/dt = alpha dN/dt + beta N, and print six (alpha, beta) pairs,
+      one per pH, in Table III. Only the pH 6.0 run has raw data in the paper
+      (Tables I and II), so the page refits that one pair and scopes the other
+      five out; no curve is digitised. The refit is a consistency check on the
+      authors' own graphical fit, not a validation of the model, because Fig. 11's
+      axes are Table II's last two columns. Least squares on 22 <!-- claim: n_rows_eq3 -->
+      points gives alpha = 2.2666 <!-- claim: alpha_refit_eq3 --> and
+      beta = 0.5287 <!-- claim: beta_refit_eq3 -->, with the printed pair within one
+      standard error of each (printed_pair_inside_one_se) and costing
+      0.65 % <!-- claim: eq3_printed_pair_rms_penalty --> in rms against the optimum.
+      Against the two one-term laws the paper itself rejects, the two-term form is
+      5.55 <!-- claim: eq2_null_growth_only_ratio --> and
+      4.92 <!-- claim: eq2_null_density_only_ratio --> times better in rms over all
+      rows, while on the logarithmic plateau, where the paper says both one-term
+      forms hold, the ratios are 1.036 <!-- claim: eq2_logphase_null_growth_only_ratio -->
+      and 1.033 <!-- claim: eq2_logphase_null_density_only_ratio -->. An integral form
+      with no differentiated column gives a third route, the printed constants
+      reproduce the acid curve to 1.70 % <!-- claim: P_curve_rms_rel --> rms, and the
+      crossover k* = beta/alpha is a checked unique root at
+      t = 10.1 <!-- claim: crossover_time_h --> h on two column paths. Table II checks
+      itself: its k identity catches 87.4 % <!-- claim: digit_substitution_detection -->
+      of single-digit substitutions. The pymrm content is a batch fermenter
+      (backward Euler, newton + NumJac((1, 2))) and a steady plug-flow fermenter
+      (construct_convflux_upwind + construct_div, outflow outlet read by
+      compute_boundary_values), both closed by the printed k column and checked
+      against the closed form of eq. (2), with observed orders between 0.9 and
+      1.1 <!-- claim: pfr_grid_order --> for the plug-flow ladder.
     section: J
     status: published
     page: pages/J4.4-luedeking-piret/
@@ -6167,88 +5924,23 @@ models:
         1(4) 393-412 (1959)
       doi: 10.1002/jbmte.390010406
       note: >
-        ORIGIN_CONSULTED - the paper is on disk and all twenty pages were read at
-        300 ppi, the file's native resolution (pdfimages -list reports every text
-        page as CCITT-G4 bilevel at 300x300 ppi; two small 150 ppi JPEG photographs
-        sit on PDF page 4, which carries no numeral used here).  Identity confirmed
-        from the document's own first page: the masthead "Journal of Biochemical and
-        Microbiological Technology and Engineering / VOL. I, NO. 4.  PAGES 393-412
-        (1959)", the title, the by-line "ROBERT LUEDEKING and EDGAR L. PIRET /
-        Department of Chemical Engineering, University of Minnesota / Minneapolis
-        14, Minnesota", and the Summary, which prints the relation this case is
-        about.  The DOI is the catalogue's, crossref-verified 2026-08-02 against the
-        citation string.  The 1959 typesetting prints no DOI, but this FILE carries
-        one: the Wiley download stamp down the right margin of all twenty pages
-        reads onlinelibrary.wiley.com/doi/10.1002/jbmte.390010406 - born-digital
-        overlay text, not a scanned numeral - and it agrees with the catalogue's.
-        Nothing on the page depends on it.  docs/papers-inventory.yaml still records
-        doi: null for this file and should be updated at integration.
-        THE TEXT LAYER WAS USED ONLY FOR SEARCHING, NEVER FOR A DIGIT: every decimal
-        point in this paper is a BRITISH MID-DOT and this scan's text layer
-        relocates and drops them, rendering book p. 406's "pH 5.4" as "pH 3.4" and
-        then as "pH 3 4", and the U.O.D. definition "N = 0.125r" as "N = 0.12%".
-        THREE BYTE-IDENTICAL COPIES arrived (md5
-        601827724b39cac54e549e8aebb1227e, 885270 bytes each) under three filenames;
-        two are parked in duplicates/ and are not parts.
-        NO CSV IS BORROWED and that is a finding, not an omission: the notebook
-        searches pages/J4.1-monod/data/printed-growth-laws.csv cell by cell for
-        luedeking, piret, lactic, product, alpha and beta and prints ZERO hits
-        across all six terms.  That file is about the growth law mu(S); Luedeking &
-        Piret propose no growth law at all and eq. (2) contains no substrate
-        concentration, so there is nothing to reconcile.  Nothing else was consulted
-        and nothing is attributed to anyone the paper cites.
+        Origin consulted: every page read at the file's native resolution,
+        identity confirmed from the masthead, title, by-line and Summary. The text
+        layer was used only for searching, never for a digit, since it relocates
+        and drops the paper's mid-dot decimal points. No row of a borrowed CSV is used: J4.1's
+        printed-growth-laws.csv is loaded only to be searched for this paper's terms, with no hit.
     data:
       tier: 2
       method: table
       status: complete
     note: >
-      A GENUINE EXPERIMENTAL-DATA CASE, AND THE PAGE IS BUILT AROUND WHAT THE DATA
-      CAN AND CANNOT SUPPORT.  Every fitted number on it is a GOODNESS OF FIT and is
-      labelled one; the refit against the authors' own constants is a CONSISTENCY
-      CHECK on their fitting, not a validation of their model, because Fig. 11's
-      axes are Table II's own columns and the same measurements sit on both sides.
-      NULL BASELINES ARE COMPUTED BESIDE THE HEADLINE and both are the paper's own
-      rejected alternatives.  THE SCOPE DECISION IS THE CASE'S MAIN JUDGEMENT: five
-      of Table III's six rows have no printed raw data anywhere in the paper - the
-      search behind that negative claim is a pdftotext grep - case-sensitive "Table"
-      returns FIVE hits, three captions plus the p. 401 running-text mention and the
-      p. 409 cross-reference, and case-insensitive "table" returns six, the extra
-      being the word "unsuitable" - plus a look at all twenty renders for ruled
-      blocks, finding only PDF pages 9, 10 and 18 - so five rows are transcribed,
-      used for trends, and explicitly NOT refitted, and no curve is digitised to
-      manufacture them.  28 defect injections cover all 62 metrics with 235 measured
-      row-metric links, and the coverage map is GENERATED from the measured moves
-      rather than written by hand.  NO BLIND SPOT IS DECLARED: every metric is moved
-      past check_agreement.py's 5 % comparison tolerance, and the weakest cover is
-      5.62 % on pfr_boundary_over_last_cell - a ratio of two reads of the same solve
-      that agree to 1.7 % on every grid, which this page used to defend as nearly
-      structural on the ground that "any defect that changes the solution moves both
-      reads and leaves the ratio where it was".  THAT WAS FALSE AS A UNIVERSAL AND
-      THE COUNTEREXAMPLE IS NOW A ROW: it holds away from the outlet (0.15 % for the
-      same substitution one printed row earlier) but the last printed k cell sits in
-      the OUTLET cell, where a defect changes the local gradient the two reads
-      differ by, and moves the ratio 5.62 %.  AN EARLIER VERSION DECLARED SIX WEAK
-      METRICS AND MITIGATED THEM WITH A SENTENCE THAT WAS FALSE BY CONSTRUCTION
-      ("each is moved more than 5 % by a row that changes the method", when weak is
-      DEFINED as the maximum over all rows); that is retracted on the page, and the
-      notebook now recomputes the blind spot with the review's rows taken back out
-      of the coverage map - six weak, then one, then none - rather than stating a
-      count.  No metric sits below ABS_FLOOR.  Six quantities are computed twice,
-      three of them by genuinely independent data paths (the integral-form refit,
-      the two-column crossover root-find, and the closed form against both solvers).
-      82 prose and metadata values are checked against the live computation,
-      including every count the metadata states about the break table, and a
-      shape-aware mechanical sweep now covers TWO token classes - 5+-decimal numbers
-      and 2+-digit INTEGERS, the class two of this page's three factual errors came
-      through - over the metadata AND the notebook's own markdown, pinning both
-      counts in both the queue-tree and published-page shapes, reporting its
-      achieved detection rate rather than claiming completeness, and counting the
-      two classes it cannot see at all (word-spelled and single-digit counts, the
-      hole the third error came through).  Nothing is stochastic and no plug-flow grid is warm-started, so two
-      executions give an identical agreement.json.  THE PAGE IS EXPLICIT ABOUT WHAT
-      PYMRM DOES NOT ADD: the fit is numpy.linalg.lstsq, the plug-flow extension is
-      an illustration of composability that no measurement in this paper tests, and
-      the five unprinted pH levels stay unresolved.
+      A genuine experimental-data case built around what the data can and cannot
+      support. Every fitted number is a goodness of fit and is labelled one; null
+      baselines are the paper's own rejected alternatives; five of Table III's six
+      rows are transcribed, used for trends and not refitted. Every claim fails at
+      least one defect-injection row. The page is explicit that the fit is
+      numpy.linalg.lstsq and that no measurement in the paper tests the plug-flow
+      extension.
     related:
       - J4.1
       - J4.2
@@ -6262,94 +5954,39 @@ models:
     title: "Michaelis-Menten and Briggs-Haldane: one rate law, two constants, and what data can decide between them"
     description: >
       Froment, De Wilde & Bischoff section 1.5.1 derives the enzyme rate law
-      TWICE - by rapid equilibrium, giving eq. (1.5.1-8) with K_M = k_-1/k_1 and
-      named there "the Michaelis-Menten equation", and by the pseudo steady state,
-      "formulated by Briggs and Haldane", giving the identical expression with
-      K_M = (k_-1 + k_2)/k_1 as eq. (1.5.1-14). The two constants differ by
-      1 + k_2/k_-1, which nothing in the rate law bounds. This page asks what an
-      experiment can settle, and the answer is narrow and quantifiable.
-      FIRST: NO steady-state rate measurement can separate them, exactly - and the
-      exactness is ALGEBRAIC. Substituting k_2 = r_m/C_E0, k_-1 = k_2/rho,
-      k_1 = (k_-1+k_2)/K_M into eq. (1.5.1-13) returns eq. (1.5.1-15) identically
-      and d r/d rho = 0, proved in sympy in the notebook's symbolic cell
-      under "The published model". The
-      numerical sweep is a check on that algebra, not the evidence for it: holding
-      r_m and K_M fixed and sweeping rho = k_2/k_-1 over EIGHT DECADES, the rate
-      law evaluated from the elementary constants is identical to double precision
-      over four decades of concentration - max relative difference below 1e-14 on
-      the nine swept rho (exactly zero there), and below 1e-14 over 2000 seeded
-      random (rho, C_E0) draws, where the float round trips are no longer exact. The exact zero is a
-      property of the values swept; the degeneracy is a property of the algebra,
-      and the page reports both. Meanwhile K_M(BH)/K_M(MM) = 1 + rho runs from
-      1.0001 to 1e4. The map from four elementary constants to the two observable
-      ones has a two-dimensional fibre and rho runs along it.
-      SECOND: a batch transient does see rho - the spread of C_A(t) over those
-      eight decades is 0.9773 eps, with eps = C_E0/(c_A0+K_M) - but the maximum
-      sits INSIDE THE INDUCTION LAYER, at t = 2.011e-7 min, because the layer
-      duration 1/[k_1(c_A0+K_M)] itself runs from 2.09e-8 min at rho = 1e-4 to
-      2.09e-4 min at rho = 1e4. A uniform 181-point scan of the 18-minute run
-      reads that maximum 66.3 % LOW, so it is root-found on a combined logarithmic
-      and uniform scan rather than sampled. Froment's single sentence that "only
-      transient experimentation (stopped flow, or relaxation ...) can help" is
-      exactly right and this is the number behind it. Over the window an
-      experiment sampled like the source table can see (t >= 3 min) only 0.242 eps
-      survives as a persistent offset; root-found against that table's 5e-4 cmol/L
-      print resolution it needs eps = 2.069e-3, and with r_m, K_M and C_E0 all
-      free to compensate - which is what a fit does - eps = 5.798e-2. AT THAT
-      LOADING THE QUASI-STEADY-STATE APPROXIMATION IS ITSELF OFF BY 88.9 TIMES the
-      resolution the discrimination is read at (against the free substrate C_A;
-      38.8 times against total substrate C_A + C_A-E, the other defensible
-      convention): the regime where the two derivations differ observably in a
-      slow measurement is the regime where neither of them is the right model.
-      THOSE TWO EPSILONS ARE NOT THE SAME MEASUREMENT, and the page says so rather
-      than dividing one by the other: 2.069e-3 is a MAXIMUM over t in [3, 18] min
-      of the rho-spread, 5.798e-2 is an RMS over a 25-point grid from t = 0 of a
-      REFITTED misfit. The same RMS on the same grid with nothing free gives
-      eps = 3.185e-3, so of the raw ratio 28.0 a factor 1.539 is the change of
-      statistic and window and 18.20 is the price of compensation. All three are
-      separate metrics and each states its own statistic, window and grid.
-      THIRD, on measurement: Rawlings & Ekerdt Exercise 9.15's seven printed
-      c_S-versus-time points give r_m = 0.162583 cmol/(L min) and K_M = 0.503055
-      cmol/L at 4.02e-3 RMS - a FIT, since those are the same seven points -
-      against best-fitted one-parameter nulls of 5.34e-2 (zero order), 3.90e-2
-      (first) and 1.05e-1 (second). Pinning rho anywhere in [1e-4, 1e4] and
-      re-optimising the other three moves the achievable sum of squares by 8.6 %,
-      monotonically and with no interior optimum, and the four-parameter
-      mass-action model gives F = 1.9009 against F(2, 3) = 9.5521 at 95 %. So the
-      page states plainly what it does NOT establish: not "the Michaelis-Menten
-      mechanism", only that a two-parameter saturating law beats the best simple
-      order by 9.71x on one seven-point run - which every member of that
-      two-parameter family does equally well.
-      Ten symbolic identities close the printed chain, both routes, including
-      eq. (1.5.1-8) as the k_2 -> 0 limit of eq. (1.5.1-13). eps is DERIVED here,
-      not borrowed: at fixed C_E0/c_A0 with K_M swept over three decades,
-      C_E0/c_A0 mispredicts the error by a factor 95.0 while C_E0/(c_A0+K_M) holds
-      it inside 1.91 - Froment's printed comparison with the substrate alone is
-      the K_M << c_A0 corner of it and is right there (coefficient 0.9541).
-      "The decomposition is the rate determining step" is given a number:
-      rho <= 2.1951e-3 for route 1 to predict the batch curve to the table's own
-      resolution, root-found and then reproduced to 0.080 % by an analytic
-      sensitivity of the closed-form solution with its extremum root-found -
-      a second route sharing no ODE solver and no mass-action model. The fit is
-      likewise computed twice, through the Lambert-W closed form and through the
-      pymrm backward-Euler marcher with Richardson extrapolation, agreeing to
-      better than 1e-5 relative. Two printed defects, reported and NOT repaired, both
-      settled from the book's own equations: p. 24's high-concentration limit
-      "rA = k1CE0" [sic], which contradicts the limit of its own eq. (1.5.1-8),
-      its eq. (1.5.1-15) definition of r_m, and its Problem 2.4(b) - and is
-      dimensionally impossible; and p. 25's "Lineweaver-Burke plot of 1/r versus
-      CA" [sic], where 1/r is exactly affine in 1/C_A (below 1e-13) and strictly
-      convex in C_A. The convexity is what settles that defect and it is
-      convention-free, and so is the size once the right line is named: the
-      statistic is a MAXIMUM, so the line that minimises it is the Chebyshev
-      (minimax) line, and no straight line comes closer than 31.72 % of the
-      curve's own range over 0.05-1.0 cmol/L (the floor is 31.7256 %, rounded
-      down) - closed form, certified by exact
-      three-point equioscillation, and independent of every weighting choice.
-      The distance from the best LEAST-SQUARES line is larger and IS a
-      convention, reported as one - 50.32 % log-weighted, 66.88 % uniformly
-      weighted - all three in closed form with the extremum root-found rather
-      than read off a grid.
+      twice: by rapid equilibrium, eq. (1.5.1-8) with K_M = k_-1/k_1, named there
+      "the Michaelis-Menten equation", and by the pseudo steady state "formulated
+      by Briggs and Haldane", the identical expression with K_M = (k_-1 + k_2)/k_1,
+      eq. (1.5.1-14). The page asks what an experiment can settle. No
+      steady-state rate measurement can: under the reparameterisation
+      k_2 = r_m/C_E0, k_-1 = k_2/rho, k_1 = (k_-1+k_2)/K_M, eq. (1.5.1-13) is
+      eq. (1.5.1-15) and d r/d rho = 0, proved in sympy and checked to below
+      1e-14 <!-- claim: rate_law_rho_degeneracy_max_rel --> over eight decades of
+      rho. A batch transient does see rho, at order eps = C_E0/(c_A0 + K_M), but
+      the largest spread, 0.9773 <!-- claim: rho_spread_induction_over_eps --> eps,
+      sits in the induction layer at t = 2.011e-7 <!-- claim: rho_spread_induction_peak_min -->
+      min. Over the window the source table samples only
+      0.242 <!-- claim: rho_spread_over_eps_trace_limit --> eps survives, and with
+      r_m, K_M and C_E0 free to compensate, telling rho = 1e-4 from 1e4 at the
+      table's 5e-4 cmol/L resolution needs eps = 5.798e-2 <!-- claim: eps_star_discrimination_with_compensation -->,
+      a factor 18.20 <!-- claim: eps_star_compensation_penalty --> more enzyme than
+      the same statistic with nothing free, at which the quasi-steady-state
+      approximation is itself off by 88.9 <!-- claim: qssa_error_at_discrimination_eps_over_resolution -->
+      times that resolution. The seven-point batch table of Rawlings & Ekerdt
+      Exercise 9.15 gives r_m = 0.162583 <!-- claim: mm_fit_rm_cmol_per_L_min -->
+      cmol/(L min) and K_M = 0.503055 <!-- claim: mm_fit_KM_cmol_per_L --> cmol/L
+      at 4.02e-3 <!-- claim: mm_fit_rms_cmol_per_L --> RMS against
+      3.90e-2 <!-- claim: null_first_order_rms_cmol_per_L --> for a first-order
+      null, and the two elementary-step parameters are not significant
+      (F = 1.90 <!-- claim: full_model_F_statistic --> against
+      F_crit,95 = 9.55 <!-- claim: full_model_F_crit_95 -->). The quasi-steady
+      state is controlled by C_E0/(c_A0 + K_M), not C_E0/c_A0, and rho* for the
+      rapid-equilibrium route is computed twice, 0.080 % <!-- claim: rho_star_equilibrium_two_route_rel_diff -->
+      apart. Two printed defects, reported and not repaired: p. 24's limit
+      "rA = k1CE0" [sic], contradicted by the book's own equations, and p. 25's
+      "Lineweaver-Burke plot of 1/r versus CA" [sic], where 1/r is strictly convex
+      in C_A and no straight line comes closer than 31.7 % <!-- claim: lineweaver_printed_axes_nonlinearity_minimax -->
+      of its range over 0.05 to 1.0 cmol/L.
     section: J
     status: published
     page: pages/J4.6-michaelis-menten-briggs-haldane/
@@ -6420,14 +6057,16 @@ models:
         corroborates the second printed defect independently of Froment's own
         algebra; and his claim that the direct C_A-versus-tau fit "is direct, is
         less prone to fiddling, and is more reliable", which this page measures
-        (the reciprocal construction returns K_M 46.7 % low and r_m 34.1 % low on
-        the one dataset, of which +14.0 points is the differencing alone).
+        (the reciprocal construction returns K_M -46.7 % <!-- claim: lb_KM_bias_vs_nls -->
+        and r_m -34.1 % <!-- claim: lb_rm_bias_vs_nls --> off the direct fit on the
+        one dataset, of which 14.0 % <!-- claim: lb_KM_bias_finite_difference_only -->
+        on K_M is the differencing alone).
     data:
       tier: 2
       method: >
         Two transcriptions, no digitising and no figure extraction. THE SOURCE
-        SECTION PRINTS NO NUMBERS AT ALL - no worked example, no table, no figure
-        in section 1.5.1 - so the empirical input comes from a different book:
+        SECTION PRINTS NO NUMBERS AT ALL (no worked example, no table, no figure
+        in section 1.5.1), so the empirical input comes from a different book:
         the seven c_S-versus-time pairs printed in Exercise 9.15 of Rawlings &
         Ekerdt, "Chemical Reactor Analysis and Design Fundamentals", 2nd edn
         (2025 printing). ITS PROVENANCE IS NOT STATED BY THAT BOOK: the exercise
@@ -6438,13 +6077,14 @@ models:
         read off a printed page) and is NOT a claim that these are measurements,
         and the page says so on every surface. What the page does establish: the
         table is not an exactly-rounded evaluation of the model it is set to fit
-        (max residual 13.87x the 5e-4 print resolution), and its fitted constants
-        sit within 0.61 % of the round values K = 2 L/cmol and K_M = 0.5 cmol/L.
+        (max residual 13.87 <!-- claim: mm_fit_maxres_over_print_resolution --> times
+        the 5e-4 print resolution), and K_M sits within
+        0.61 % <!-- claim: mm_fit_KM_rel_dev_from_half --> of 0.5 cmol/L.
         C_E0 is not printed either, so r_m cannot be split into k_2 and the enzyme
         loading and eps cannot be evaluated for that run at all. NOTHING THE PAGE
         CONCLUDES DEPENDS ON THE TABLE. The second dataset is the FIRST FIFTEEN of
-        the eighteen numbered equations of Froment 1.5.1 - (1.5.1-16) to
-        (1.5.1-18) are competitive inhibition and are out of scope - plus nine
+        the eighteen numbered equations of Froment 1.5.1 ((1.5.1-16) to
+        (1.5.1-18) are competitive inhibition and are out of scope) plus nine
         prose claims, quoted verbatim with the two printed defects flagged and not
         repaired.
       status: complete
@@ -6457,98 +6097,21 @@ models:
       - B2.3
       - C1.2
     note: >
-      FIT/TEST, LABELLED ON EVERY SURFACE. r_m and K_M are FITTED to the same
-      seven points the agreement is reported against, so that agreement is a
-      goodness of fit; three best-fitted one-parameter nulls are computed beside
-      it and the only empirical claim made is the 9.71x RMS ratio against the
-      best of them, which is a claim about SATURATION and not about a mechanism.
-      Everything else is either an exact algebraic identity (the ten symbolic
-      identities, the rho-degeneracy - PROVED in sympy, not merely swept - and
-      the exact linearity of 1/r in 1/C_A) or a computed property of the printed
-      equations.
-      THE F TEST'S NESTING IS NON-REGULAR and the page says so: the null sits on
-      the boundary C_E0 = 0 and rho is unidentified under it, so F(2, 3) is an
-      approximation. The direction is safe - a boundary null makes the true null
-      distribution stochastically no larger, so the real p-value is at least the
-      tabulated 0.29 and "not justified" holds a fortiori.
-      DIRECTION OF THE DISCRIMINATION CLAIM: the misfit of a wrong-rho model to
-      right-rho data comes from an optimiser, which returns an UPPER BOUND on a
-      minimum, so "cannot be separated" is the safe direction and the reported
-      eps* is if anything an underestimate of what an experiment needs. A
-      ROBUSTNESS ROW narrows the multistart and must not move it much; it does
-      not - 5.7e-6 relative, 1.2x the 4.61e-6 that two brentq root-finds at this
-      page's own xtol can resolve, so of the ORDER of the tolerance rather than
-      provably below it, and about five orders below every genuine mover of the
-      same metric. That last comparison is the one the notebook asserts, and that
-      row is labelled a robustness row and is not counted as coverage.
-      The reverse direction (true rho = 1e-4 fitted by rho = 1e4) is easier -
-      4.45e-3 against 1.31e-3 at eps = 0.1 - so the direction reported is the
-      binding one.
-      NEVER A SAMPLED MAXIMUM, AND HERE IT MATTERED. Every max-over-t on this page
-      is located on a scan and then root-found in its own bracket. That is not a
-      rounding refinement: the two mass-action solutions differ most inside the
-      induction layer at t ~ 1e-7 min, and a uniform 181-point scan of the
-      18-minute run reads that maximum 66.3 % low. The metric recording that
-      shortfall is itself in agreement.json.
-      THREE THINGS EVERY REPORTED THRESHOLD IS A PROPERTY OF, all stated and all
-      three carrying break rows: the 5e-4 cmol/L resolution it is read at
-      (doubled), the rho interval [1e-4, 1e4] (narrowed to [0.5, 2]), and, for the
-      compensated eps*, the 25-point sampling grid the misfit is computed on
-      (coarsened to 13). Those vary a declared CONVENTION and would move by the
-      same amounts even if the computation under them were wrong, so a fourth row
-      varies the computation itself - the ODE solve underneath the root-find
-      loosened to rtol 1e-6 - which is the only class of row that can expose a
-      wrong baseline, and whose move doubles as the convergence evidence for the
-      quoted eps*.
-      AND ONE MORE: the
-      STATISTIC, and WHICH LINE it is measured against. "How far from a straight
-      line" is a maximum, so the minimising line is the CHEBYSHEV one; the page
-      reports that convention-free floor (31.72 %) alongside the least-squares
-      distances under both weightings (50.32 %, 66.88 %), all in closed form.
-      Calling the least-squares distance "the best straight line", which implies
-      nothing straight gets within half the range when a straight line comes
-      within 31.7 %, is a break row, injecting 0.5032 into the 0.3173 floor; two
-      more use an unconverged 400-point grid and read the floor on a tenth of the
-      interval.
-      COVERAGE: 52 rows - 51 defect injections, all 51 of which move their metric
-      by more than MOVE_TOL = 1e-6 relative, covering 42 of 53 metrics; plus ONE
-      ROBUSTNESS ROW, written to show that a metric does NOT move, which is
-      labelled as such and is NOT counted as coverage for that metric. The
-      coverage map prints how hard each covered metric's strongest row hits it,
-      and the notebook asserts that the weakest of those is still above
-      ROOT_FIND_RES - which is DERIVED, 2*ln(10)*XTOL_LOG10 = 4.61e-6, the
-      resolution of a difference between two root-finds at the page's own
-      tolerance. The eleven
-      metrics with no mover are named individually as structural, definitional or
-      companion values and the notebook ASSERTS that BOTH generic not-coverage
-      labels are never used - the UNCOVERED fallback and the "robustness rows
-      only" branch, in which a metric could otherwise land and still pass. Seven
-      metrics sit below CI's ABS_FLOOR of 1e-12 (three symbolic zeros - the
-      chain, the rho-degeneracy proof and the swept degeneracy check - the
-      degeneracy's float spread over random draws at 4.44e-16, the exact
-      linearity at 9.67e-16, and the two conservation balances at 1.2e-17 and
-      1.7e-15); each is named with an above-floor companion, and the substrate
-      balance is NOT an identity - a break row that doubles the P row of the
-      source moves it to O(1).
-      DETERMINISM: two consecutive executions give identical content and a
-      byte-identical agreement.json. Both pandas Stylers are rendered through
-      HTML(...to_html()) with a pinned uuid rather than displayed - the
-      display(styler) route emits a memory address into text/plain and a random
-      CSS id into text/html, which is the defect the 2026-08-13 handoff records on
-      five published pages - and stdout is batched so ipykernel's flush timer
-      cannot split a cell's output differently between runs.
-      WHAT PYMRM ADDS IS SMALL AND THE PAGE SAYS SO. A well-mixed batch of four
-      species is 0-D; solve_ivp would have integrated it, and does, as the
-      reference. What pymrm buys is a Jacobian assembled the way the rest of the
-      gallery assembles it - NumJac((1, n_c)) for the pointwise block, never a
-      bare 1-D shape - so BatchReduced.source transplants unchanged into J4.7
-      (immobilised enzyme particle) or B1.1's pellet.
-      SCOPE: competitive inhibition, eqs. (1.5.1-16) to (1.5.1-18), is out (a
-      different case), as is all of section 1.5.2 (Monod, Graef-Andrews, Williams)
-      which belongs to J4.9/J4.8. Product formation is irreversible as
-      eq. (1.5.1-1) prints it; the book's own Problem 2.4 derives a REVERSIBLE
-      form with a [P]/K term, which is a larger model and is not on this page.
-
+      The seven Exercise 9.15 points are the same points the fit is reported
+      against, so that agreement is a goodness of fit; the one empirical claim is
+      the 9.71 <!-- claim: null_first_order_rms_ratio --> times RMS ratio against
+      the best first-order null, a claim about saturation. Everything else is an
+      exact algebraic identity or a computed property of the printed equations.
+      The F test's nesting is non-regular (the null sits on the boundary C_E0 = 0),
+      and the boundary makes "not justified" hold a fortiori. The misfit of a
+      wrong-rho model comes from an optimiser, an upper bound on a minimum, so
+      "cannot be separated" is the safe direction. Every maximum over t is a root
+      of the analytic time derivative after a logarithmic and uniform scan, and
+      every threshold is the single root pymrm.checks.find_roots finds on its
+      range. Each threshold is a property of the resolution, the rho interval and,
+      for the compensated eps*, the sampling grid it is read on, and each carries a
+      break row; a defect-injection table gives every non-structural claim a row
+      that fails its own check.
   - id: J4.7
     slug: immobilised-enzyme-pellet
     title: "Diffusion-limited immobilised enzyme particle"
@@ -6567,8 +6130,9 @@ models:
     slug: asm1-activated-sludge
     title: "ASM1 activated sludge model"
     description: >
-      A 104-cell stoichiometric matrix whose continuity relations close as exact
-      symbolic identities — and whose only imperfection is two rounded decimals.
+      The ASM1 stoichiometric matrix, whose continuity relations close as exact
+      symbolic identities and whose only imperfection is two rounded decimals,
+      put through a plug-flow lane with its recycle inside one Newton system.
     section: J
     status: published
     page: pages/J4.8-asm1-activated-sludge/
@@ -6577,7 +6141,7 @@ models:
     structures: [S1, S4]
     phases: [liquid]
     predicts: [COD/nitrogen/charge continuity, nitrification and denitrification, alkalinity]
-    pymrm_api: [construct_div, construct_convflux_upwind]
+    pymrm_api: [construct_div, construct_convflux_upwind, NumJac, newton]
     reference:
       authors: ["Henze, M.", "Grady, C. P. L.", "Gujer, W.", "Marais, G. v. R.", "Matsuo, T."]
       year: 1987
@@ -6598,110 +6162,62 @@ models:
       treatments for switching diffusion control on at a prescribed critical conversion
       "in a somewhat ad hoc fashion".  THEIR COMPARISON WITH EXPERIMENT LIVES ONLY IN
       FIGURES 3-9, whose markers are Marten & Hamielec's data, SO THAT HALF OF THE CASE
-      IS OUT OF SCOPE AND NOTHING IS DIGITISED; the page therefore establishes nothing
-      about whether the model describes PMMA and says so wherever it matters.  What the
-      paper prints in numerals is two tables and six stated results about its own
-      output, and every parameter in Table II is a FITTED number by the table's own
-      title, so everything computed from them is a CONSISTENCY CHECK on the authors'
-      fit and on this transcription, never a validation against nature.
+      IS OUT OF SCOPE AND NOTHING IS DIGITISED; the page establishes nothing about
+      whether the model describes PMMA and says so.  Every parameter in Table II is a
+      FITTED number by the table's own title, so everything computed from them is a
+      CONSISTENCY CHECK on the authors' fit and on this transcription.
       THE HEADLINE IS THE PAPER'S OWN GRAPHICAL ONSET CONSTRUCTION, reconstructed from
-      the sentence that defines it (book p. 354, "extrapolating the sloped region to
-      intersect with the initial value") and computed rather than read: a least-squares
-      line over the decades L0-2 to L0-4 gives 0.25516, 0.34838 and 0.44034 against
-      the printed 0.26, 0.35 and 0.45, low by 0.00484, 0.00162 and 0.00966, with the
-      increase with temperature reproduced.  THOSE ARE AT I_0 = 0.0258 mol/L AND THE
-      PAGE SAYS SO: the paper quotes one onset per temperature while Figures 10-12 plot
-      both loadings and the sentence names neither, 0.0258 is the loading listed first
-      in all three legends and the one Figures 16-18 plot, and the same construction on
-      the 0.01548 curve of the same figures misses by up to 0.03126, 3.24 times the
-      headline miss.  THE LIMIT ON THAT NUMBER IS THE SENTENCE,
-      NOT THE ARITHMETIC, and the page separates the two: SEVEN defensible readings -
-      six of "the sloped region", one of "the initial value" - spread the answer by
-      0.09009, 9.33 times the largest miss, while the resampling grid moves it by
-      1.311e-05 relative (which is why five decimals are quoted and not six) and a
-      completely independent integration - the six ODEs re-parametrised by conversion,
-      different solver family - reproduces it to below 1e-10 relative, a residual that prices the
-      ATTRACTING MANIFOLD lambda_0(x) rather than the accuracy of either integration.
-      The band is reported beside the value, the fit's digits are never quoted as if
-      they were the onset, and the page states what the band does NOT cover: the
-      steepest-slope tangent gives 0.44783, 0.47680 and 0.51866 and is excluded because
-      its tangent point sits at the right edge of THIS PAGE's window at all six
-      conditions.  THAT IS THE ONLY GROUND ON WHICH ANYTHING IS EXCLUDED AND IT IS
-      APPLIED TO WHAT IS KEPT IN: the widest-swinging reading in the band, the
-      4-6-decade window (0.29957, 0.41999, 0.49516), passes the same test, its fit mask
-      ending inside x = 0.86 at four of the six conditions including the one where the
-      band is widest.
+      the sentence that defines it (book p. 354) and computed rather than read: a
+      least-squares line over the decades L0-2 to L0-4 gives
+      0.25516 <!-- claim: onset_x_50C -->, 0.34838 <!-- claim: onset_x_70C --> and
+      0.44034 <!-- claim: onset_x_90C -->, the largest miss against the printed onsets
+      0.00966 <!-- claim: onset_max_abs_dev -->, with the increase with temperature
+      reproduced.  Those are at the higher initiator loading, and the page says so: the
+      same construction on the other loading's curve misses by up to
+      0.03126 <!-- claim: onset_dev_other_loading_max -->.  THE LIMIT ON THAT NUMBER
+      IS THE SENTENCE, NOT THE ARITHMETIC: the defensible readings of the construction
+      spread the answer by 0.09009 <!-- claim: onset_definition_band_max -->,
+      9.33 <!-- claim: onset_band_over_max_dev --> times the largest miss, while the
+      resampling grid moves it by 1.311e-05 <!-- claim: onset_resample_floor_max_rel -->
+      relative and an independent integration reproduces it to below
+      1e-10 <!-- claim: onset_two_route_max_rel --> relative.
       TWO OF THE PAPER'S OWN CORRELATIONS ARE RECOMPUTED FROM ITS OWN TABLE II.
-      Figure 13's Arrhenius plots give 34.908161 and 34.516600 kcal/mol at the two
-      initiator loadings against the printed 34 (+2.67 % and +1.52 %, mean 34.712380)
-      and 27.771564 against the printed 28 (-0.82 %).  Figure 15's "All three points
-      fall on the same straight line" holds to 8.819e-04 relative, against 1.535e-02
-      for the same three points fitted linearly in T - 17.4057x worse, and NEITHER FORM
-      NESTS INSIDE THE OTHER, so the direction of that ratio is evidence and not
-      algebra.  The T_gp that would make the three A values exactly collinear is
-      111.42857 degC against Table I's printed 114, but the printed rounding of A alone
-      admits [102.2222, 128.0000] degC, so the three cells CANNOT distinguish them and
-      the page reports the interval rather than the point.  WHAT THE RATIO IS EVIDENCE
-      FOR IS CONCAVITY IN T AND NOT THE QUADRATIC FORM, and the page restates it that
-      way: 17.4057x is the gain at ONE admissible T_gp - it is 3.6124x and 3.5347x at
-      the two ends of that interval and diverges inside it - and two other non-nested
-      two-parameter regressors beat linear-in-T as well (A against 1/T, 5.5926x;
-      A against (T - 130)^2, 3.2607x), so what all of them read is the second difference
-      of A, -0.007000, which linear-in-T cannot represent.
-      THE PAPER'S OWN FRAMING IS TESTED RATHER THAN RESTATED, WHICH IS WHAT THIS PAGE
-      IS FOR.  "Only a small number of adjustable parameters" means four named
-      parameters and THIRTEEN fitted numbers over six conditions; the paper's own
-      Figures 13 and 15 compress those thirteen to eight, reproducing A to 0.0882 % and
-      theta_p to 8.3695 % but theta_t only to 18.8281 %, which moves the onset
-      conversion by 0.01633 - 1.691 times the distance by which the reconstruction
-      misses the printed onsets.  The compression is true as a procedure and lossy as
-      an identity.  And the "ad hoc" criticism survives a quantitative test: eq. 31 and
-      32 carry no branch at all, the nearest thing to an onset knob (theta_t) moves the
-      onset by only -0.21735 per decade - 4.601 decades to buy one unit of onset,
-      where a prescribed critical conversion buys it 1:1 by construction - and the
-      counterfactual settles the paper's own argument on book p. 353: the same model
-      switched on at x_c = 0.3 is concave DOWN over 100 % of its pre-switch portion and
-      jumps 0.760194 of a decade in log k_t at the switch - both factors of that
-      expression evaluated at x_c exactly, the radical concentration root-found on the
-      dense solution rather than read off the nearest grid point - while the published
-      model is
-      concave UP from x = 0.30643 to the sharp rise with every onset inside that window,
-      the smallest margin 0.129.  ONE QUALIFICATION THE PAPER DOES NOT MAKE: below that lower
-      bound the published curve is concave down too - initiator depletion - so
-      "concave upward preceding the sharp rise" is true of the region it means and not
-      of the whole pre-gel curve.
-      THE QUASI-STEADY-STATE ASSUMPTION IS MEASURED AT ALL SIX CONDITIONS INSTEAD OF
-      THE ONE THE PAPER PLOTS.  Its "more than a factor of 2" is 3.5176x at 50 degC
-      with I0 = 0.0258, where the conversion history nevertheless agrees to 0.038611 in
-      x - the paper's "surprisingly consistent"; across the six the factor runs 1.4889
-      to 4.8466 and exceeds 2 at three of them and fails at three, falling with
-      temperature and rising as the initiator loading falls.
-      FIVE IDENTITIES ARE PROVED RATHER THAN ASSERTED: eq. 24 and eq. 26 re-derived
-      symbolically from eq. 21 with the paper's own boundary conditions (exactly zero),
-      eq. 22's "Since r_D >> r_m" shown to cost EXACTLY r_m/r_D - symbolically and then
-      a second time through the flux a pymrm spherical-shell BVP actually computes,
-      1.858e-05 over five ratios at n = 6400 and converging onto r_m/r_D at observed
-      order 1.8953 - and the moment
-      equations 12-17 reproduced from eq. 4a, 4b and 5 summed over a seeded finite
-      population to a relative residual below 1e-14, INCLUDING the k_tc terms, which Table I sets to zero and
-      which therefore no condition the paper reports ever exercises.
-      The eq. 22 metric reads the discrete flux, and the nu = 0 break row moves it by
-      four orders.
-      A STRUCTURAL POINT THE PAPER'S PROSE DOES NOT MAKE: its "limiting conversion at
-      long times" is reproduced as an ORDERING (0.95535, 0.98173, 0.99289 at a stated
-      rate threshold, smallest gap 0.011165) but this model has NO limiting conversion
-      in the mathematical sense - as x -> 1 the Fujita-Doolittle factor returns to 1,
-      1/k_p -> 1/k_p0 + theta_p lambda_0 stays finite and dx/dt vanishes only through
-      (1-x), so integrated far enough every condition creeps to 0.97897, 0.99850 and
-      0.99998 and is still rising.  The plateau in Figures 3-5 is where the curve stops
-      being drawn.
-      THREE PRINTED FEATURES ARE REPORTED AND NOT REPAIRED: Figure 3's legend prints
-      the lower initiator loading as 0.01584 where five other printings give 0.01548;
-      Table I gives the first-order k_d the units "L/min" where eq. 1 makes them 1/min;
-      and book p. 353 reads "The presence model" [sic].  A fourth is measured rather
-      than filed as a defect: eq. 31 and 32 print the base-ten conversion as 2.3 and
-      not ln(10), which is worth 0.00116 in onset conversion, so the model is run with
-      the printed 2.3 and the alternative is priced.
+      Figure 13's Arrhenius plots give 34.908161 <!-- claim: dE_theta_t_0258_kcal -->
+      and 34.516600 <!-- claim: dE_theta_t_01548_kcal --> kcal/mol for theta_t and
+      27.771564 <!-- claim: dE_theta_p_kcal --> for theta_p.  Figure 15's "All three
+      points fall on the same straight line" holds to
+      8.819e-04 <!-- claim: A_linear_in_Tgp2_max_rel --> relative, against
+      1.535e-02 <!-- claim: A_null_linear_in_T_max_rel --> for the same three points
+      fitted linearly in T, and neither form nests inside the other; but the printed
+      rounding of A admits T_gp anywhere in
+      [102.2222 <!-- claim: Tgp_band_lo_C -->, 128.0000 <!-- claim: Tgp_band_hi_C -->]
+      degC, so what the comparison establishes is CONCAVITY IN T, the second
+      difference of A being -0.007000 <!-- claim: A_second_difference -->, and not the
+      quadratic form.
+      THE PAPER'S OWN FRAMING IS TESTED RATHER THAN RESTATED.  "Only a small number of
+      adjustable parameters" means 13 <!-- claim: n_fitted_distinct --> fitted numbers;
+      the paper's own Figures 13 and 15 compress them, but reproduce theta_t only to
+      18.8281 % <!-- claim: compress_theta_t_max_rel -->, which moves the onset
+      conversion by 0.01633 <!-- claim: onset_compressed_shift_max -->.  The "ad hoc"
+      criticism survives a quantitative test: eq. 31 and 32 carry no branch, theta_t
+      moves the onset by only -0.21735 <!-- claim: onset_per_decade_theta_t --> per
+      decade, and the same model switched on at a critical conversion is concave down
+      before its switch and jumps 0.760194 <!-- claim: switch_logkt_jump --> of a
+      decade in log k_t at it.
+      THE QUASI-STEADY-STATE ASSUMPTION IS MEASURED AT EVERY CONDITION: its "more than
+      a factor of 2" is 3.5176 <!-- claim: qssa_lam0_ratio_50C --> at the condition the
+      paper plots and holds at 3 <!-- claim: qssa_n_above_2 --> of the six.
+      IDENTITIES ARE PROVED RATHER THAN ASSERTED: eq. 24 and eq. 26 re-derived
+      symbolically from eq. 21 (exactly zero), eq. 22's "Since r_D >> r_m" shown to
+      cost exactly r_m/r_D, symbolically and through the flux a pymrm spherical-shell
+      BVP computes (1.858e-05 <!-- claim: eq22_rm_over_rD_max_dev -->), and the moment
+      equations 12-17 reproduced from the chain-length equations summed over a seeded
+      population to below 1e-14 <!-- claim: moment_identity_ktc_max_rel --> relative,
+      including the k_tc terms no condition the paper reports exercises.
+      THREE PRINTED FEATURES ARE REPORTED AND NOT REPAIRED: Figure 3's legend
+      transposes two digits of the lower initiator loading; Table I gives the
+      first-order k_d the units "L/min"; and book p. 353 reads "The presence model"
+      [sic].
     section: J
     status: published
     page: pages/J5.3-chiu-gel-effect/

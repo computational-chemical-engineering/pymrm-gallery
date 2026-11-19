@@ -379,3 +379,75 @@
   metric: f31_definition_vkh_max_error_pct
   date: 2026-11-17
   reason: "a six-digit restatement of F3.1's stored number dropped; the four-digit literal stays (old 2.076896 dropped, 2.0769 kept)"
+- page: J1.10
+  metric: pymrm_dt_order_mu1
+  date: 2026-11-19
+  reason: "the three-point order of mu1(z2) came from a van Leer correction that read the inlet data of c_in = 1 at every step; with the current inlet value no observable of the limited march has a regular order (README Corrections), so the time order is now claimed on the linear scheme as pymrm_dt_order_upwind_dev, with pymrm_dt_roundoff_margin and the dt swing of H as pymrm_dt_swing_H; the backward-Euler row moved to those claims"
+- page: J4.1
+  metric: pymrm_batch_observed_order
+  date: 2026-11-19
+  reason: "the order is now from observed_orders on three or more levels (refresh checklist rule 14), a theory bound [0.995, 1.005] stated as 1.00; the two-level literal 0.9993 is dropped, and the break row 'order read off 25/50 steps, and its refit unconverged' is replaced by 'order read off 6/12/24 steps, and its refit at 25 steps', the same coarse-step defect on three levels"
+- page: J4.1
+  metric: pymrm_refit_mum_relerr
+  date: 2026-11-19
+  reason: "break row 'pymrm batch marcher at 25 steps instead of the Richardson pair' merged into 'the pymrm marcher's order read off 6/12/24 steps, and its refit at 25 steps', which injects the same 25-step refit"
+- page: J4.1
+  metric: pymrm_refit_KS_relerr
+  date: 2026-11-19
+  reason: "break row renamed, not removed: 'order read off 25/50 steps, and its refit unconverged' is now 'order read off 6/12/24 steps, and its refit at 25 steps', the same 25-step refit"
+- page: J4.1
+  metric: pfr_batch_relerr_finest
+  date: 2026-11-19
+  reason: "the plug-flow outlet is now a convective outflow ({'outflow': True}, refresh checklist rule 21), whose outlet face carries the last cell's value, so the row 'outlet read at the last cell CENTRE' injects no defect and is removed; the claim keeps its nu = 1 and flipped-sign rows"
+- page: J4.1
+  metric: pfr_observed_order
+  date: 2026-11-19
+  reason: "the order is now from observed_orders on the 200 to 6400 cell ladder, a theory bound [0.99, 1.01] stated as 1.00 (the two-level literal 0.9981 is dropped); break row renamed from 'the two COARSEST grids' to 'the three COARSEST grids', since an order now needs three levels"
+- page: J4.1
+  metric: pfr_richardson_relerr
+  date: 2026-11-19
+  reason: "classified by role (refresh checklist rule 3): the Richardson value at the observed order against the batch state is a discretisation residual, a theory bound at most 1e-4, no longer a pinned value"
+- page: J4.1
+  metric: pfr_centre_read_order
+  date: 2026-11-19
+  reason: "removed: under the outflow outlet the last cell centre and the outlet face carry the same value, so an order of the centre read is the order of the boundary read, pfr_observed_order"
+- page: J4.1
+  metric: pfr_centre_over_boundary_read
+  date: 2026-11-19
+  reason: "removed: under the outflow outlet the centre read equals the boundary read, so the ratio is 1 by construction and measures nothing"
+- page: J4.1
+  metric: boot_size_forward_truth
+  date: 2026-11-19
+  reason: "a Monte-Carlo estimate at 2000 draws; its tolerance is now three times the relative spread over twelve seeds (refresh checklist rule 4), measured 0.033, so rtol 0.05 -> 0.10"
+- page: J4.1
+  metric: boot_size_control_truth
+  date: 2026-11-19
+  reason: "a Monte-Carlo estimate at 2000 draws; three times the relative spread over twelve seeds (refresh checklist rule 4), measured 0.066, and three binomial standard errors of a frequency near 0.05 at 2000 draws, about 0.30, so rtol 0.05 -> 0.30; at that tolerance the half-noise row no longer moves it past its check, and the grid-only row still breaks it"
+- page: J4.1
+  metric: boot_p_of_observed_F
+  date: 2026-11-19
+  reason: "a Monte-Carlo estimate at 2000 draws; three times the relative spread over twelve seeds (refresh checklist rule 4), measured 0.045, so rtol 0.05 -> 0.15"
+- page: J4.1
+  metric: boot_p_of_observed_n
+  date: 2026-11-19
+  reason: "a Monte-Carlo estimate at 2000 draws; three times the relative spread over twelve seeds (refresh checklist rule 4), measured 0.056, so rtol 0.05 -> 0.20; at that tolerance the grid-only row no longer moves it past its check, and the half-noise row still breaks it"
+- page: J4.6
+  metric: pymrm_be_time_order
+  date: 2026-11-19
+  reason: "change of definition: the worst successive-difference order (0.99551) replaces the mean order against Radau (0.99796); literals 0.998 and 0.9980 dropped, 0.996 added; bound [0.9, 1.1] unchanged"
+- page: J4.6
+  metric: rho_star_equilibrium_two_route_rel_diff
+  date: 2026-11-19
+  reason: "a two-route gap, now a bound max 1e-3 (basis chosen) instead of a value: its fifth digit moves 2e-8 across BLAS kernels with the LSODA steps under the rho* root-find; measured 8.0e-4, literals 8.00e-4 and 0.080 % kept"
+- page: J1.10
+  metric: pymrm_upwind_dispersion_coeff_err
+  date: 2026-11-19
+  reason: "a residual stated as a bound (max 1e-4, here 7.24e-6) instead of a value, checklist rule 3; the van Leer row (0.9988) still breaks it"
+- page: J5.3
+  metric: bvp_order
+  date: 2026-11-19
+  reason: "break row renamed, not removed: 'BVP refined only to n = 80 instead of n = 640' is now 'BVP ladder stopped at n = 80 instead of n = 1280', the finest level of the ladder"
+- page: J5.3
+  metric: bvp_rms_err_finest
+  date: 2026-11-19
+  reason: "break row renamed, not removed: 'BVP refined only to n = 80 instead of n = 640' is now 'BVP ladder stopped at n = 80 instead of n = 1280', the finest level of the ladder"

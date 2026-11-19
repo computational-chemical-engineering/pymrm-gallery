@@ -2,7 +2,7 @@
   "page": "J4.1",
   "format": 2,
   "env": {
-    "pymrm": "3.3.0",
+    "pymrm": "3.4.0",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
     "openblas_coretype": "Haswell",
@@ -64,7 +64,7 @@
       "value": 1.6177134978107549e-16,
       "max": 1e-14,
       "basis": "tolerance",
-      "note": "relative to the closed-form gap; brentq at xtol 1e-14 on a stationary point, so the error is second order in xtol; measured 1.6e-16"
+      "note": "relative to the closed-form gap; find_roots at xtol 1e-14 on a stationary point, so the error is second order in xtol; measured 1.6e-16"
     },
     "num_blackman_gap_switch_relerr": {
       "kind": "bound",
@@ -75,10 +75,10 @@
     },
     "num_blackman_Sstar_over_Ks_relerr": {
       "kind": "bound",
-      "value": 0.0,
+      "value": 2.6803154833089315e-16,
       "max": 1e-13,
       "basis": "tolerance",
-      "note": "relative to S*/K_S; brentq's own guarantee xtol + rtol|x| is 2.5e-14 relative here; measured 0"
+      "note": "relative to S*/K_S; the root's guarantee xtol + rtol|x| is 2.5e-14 relative here; measured 0"
     },
     "balance_R2_all_rows": {
       "kind": "value",
@@ -167,85 +167,85 @@
     },
     "rmsB_Monod": {
       "kind": "value",
-      "value": 0.03146591791390595,
+      "value": 0.03146591790962613,
       "rtol": 0.01
     },
     "rmsB_Blackman": {
       "kind": "value",
-      "value": 0.03955419774646493,
+      "value": 0.039554197746461614,
       "rtol": 0.05
     },
     "rmsB_Tessier": {
       "kind": "value",
-      "value": 0.026307960406974428,
+      "value": 0.026307960407054205,
       "rtol": 0.05
     },
     "rmsB_Moser": {
       "kind": "value",
-      "value": 0.026984636368144556,
+      "value": 0.026984631181585852,
       "rtol": 0.05
     },
     "rmsB_Contois": {
       "kind": "value",
-      "value": 0.031465917909657956,
+      "value": 0.03146591790961857,
       "rtol": 0.01
     },
     "rmsB_zero_order": {
       "kind": "value",
-      "value": 0.2782783793270219,
+      "value": 0.27827837932701577,
       "rtol": 0.001
     },
     "rmsB_first_order": {
       "kind": "value",
-      "value": 0.1515974208213084,
+      "value": 0.15159742082290326,
       "rtol": 0.01
     },
     "routeB_F_moser_vs_monod": {
       "kind": "value",
-      "value": 1.438857269283315,
+      "value": 1.4388593585461105,
       "rtol": 0.05
     },
     "routeB_n_moser": {
       "kind": "value",
-      "value": 1.509944521446105,
+      "value": 1.5093906534866335,
       "rtol": 0.05
     },
     "routeB_monod_mu_m": {
       "kind": "value",
-      "value": 0.8809225698042655,
+      "value": 0.8809208444897302,
       "rtol": 0.01
     },
     "routeB_monod_K_S": {
       "kind": "value",
-      "value": 20.453534619198617,
+      "value": 20.453296311651275,
       "rtol": 0.05
     },
     "routeA_over_routeB_monod_rms": {
       "kind": "value",
-      "value": 1.7380794665911339,
+      "value": 1.7380794668275377,
       "rtol": 0.01
     },
     "contois_map_mum_relerr": {
       "kind": "bound",
-      "value": 2.188055917444097e-06,
+      "value": 2.6796158411402693e-08,
       "max": 0.001,
       "basis": "tolerance",
-      "note": "relative to the Monod mu_m; two least_squares exits; measured 3.4e-7 to 2.2e-6 across BLAS kernels"
+      "note": "relative to the Monod mu_m; two least_squares exits; measured 2.7e-8 to 3.7e-8 across BLAS kernels"
     },
     "contois_map_KS_relerr": {
       "kind": "bound",
-      "value": 1.28440374380035e-05,
+      "value": 1.1281523140462635e-07,
       "max": 0.001,
       "basis": "tolerance",
-      "note": "relative to the Monod K_S; two least_squares exits; measured 3.2e-6 to 1.3e-5 across BLAS kernels, the bound is about 78x the largest"
+      "note": "relative to the Monod K_S; two least_squares exits; measured 1.1e-7 to 2.9e-7 across BLAS kernels, the bound is about 3400x the largest"
     },
     "contois_minus_monod_rms": {
       "kind": "bound",
-      "value": 4.247990847972005e-12,
+      "value": 7.556455461354972e-15,
       "max": 1e-10,
       "basis": "tolerance",
       "unit": "1/h",
-      "note": "one curve fitted twice; two least_squares exits; measured 7.9e-13 to 4.2e-12 across BLAS kernels, the bound is 15x the largest"
+      "note": "one curve fitted twice; two least_squares exits; measured 7.6e-15 to 1.5e-13 across BLAS kernels, the bound is about 650x the largest"
     },
     "bias_max_abs": {
       "kind": "value",
@@ -270,128 +270,128 @@
     "boot_size_forward_truth": {
       "kind": "value",
       "value": 0.3655,
-      "rtol": 0.05
+      "rtol": 0.1
     },
     "boot_size_control_truth": {
       "kind": "value",
       "value": 0.0495,
-      "rtol": 0.05
+      "rtol": 0.3
     },
     "boot_median_n_forward_truth": {
       "kind": "value",
       "value": 1.6116813639035863,
-      "rtol": 0.05
+      "rtol": 0.02
     },
     "boot_median_n_control_truth": {
       "kind": "value",
       "value": 1.0088666797308774,
-      "rtol": 0.05
+      "rtol": 0.02
     },
     "boot_p_of_observed_F": {
       "kind": "value",
       "value": 0.228,
-      "rtol": 0.05
+      "rtol": 0.15
     },
     "boot_p_of_observed_n": {
       "kind": "value",
       "value": 0.1285,
-      "rtol": 0.05
+      "rtol": 0.2
     },
     "sep_blackman": {
       "kind": "value",
-      "value": 0.0346590105280515,
+      "value": 0.03465875135815711,
       "rtol": 0.05
     },
     "sep_over_scatter_blackman": {
       "kind": "value",
-      "value": 1.1014778155489438,
+      "value": 1.1014695791713809,
       "rtol": 0.05
     },
     "Nstar_blackman": {
       "kind": "value",
-      "value": 1.3035196925793398,
+      "value": 1.303539187117714,
       "rtol": 0.05
     },
     "sep_tessier": {
       "kind": "value",
-      "value": 0.012347743802119173,
+      "value": 0.012347773892206992,
       "rtol": 0.05
     },
     "sep_over_scatter_tessier": {
       "kind": "value",
-      "value": 0.3924164499476511,
+      "value": 0.3924174062765711,
       "rtol": 0.05
     },
     "Nstar_tessier": {
       "kind": "value",
-      "value": 10.270100575287927,
+      "value": 10.270050518475632,
       "rtol": 0.05
     },
     "sep_moser": {
       "kind": "bound",
-      "value": 2.4882565043928867e-14,
+      "value": 8.332487797362327e-14,
       "max": 1e-09,
       "basis": "tolerance",
       "unit": "1/h",
-      "note": "Moser contains Monod at n = 1; least_squares at xtol 1e-13; measured 2.0e-14 to 3.9e-14 across BLAS kernels and above 1e-12 on other machines; 1e-9 is also the degeneracy threshold"
+      "note": "Moser contains Monod at n = 1; least_squares at xtol 1e-13; measured 2.8e-14 to 8.3e-14 across BLAS kernels and above 1e-12 on other machines; 1e-9 is also the degeneracy threshold"
     },
     "sep_over_scatter_moser": {
       "kind": "bound",
-      "value": 7.907782989840047e-13,
+      "value": 2.648099388453954e-12,
       "max": 1e-07,
       "basis": "tolerance",
       "note": "sep_moser over the route-B scatter"
     },
     "sep_contois": {
       "kind": "bound",
-      "value": 6.327419820804088e-14,
+      "value": 1.2047043509274878e-13,
       "max": 1e-09,
       "basis": "tolerance",
       "unit": "1/h",
-      "note": "Contois is Monod under a constant yield; least_squares at xtol 1e-13; measured 2.0e-14 to 6.3e-14 across BLAS kernels; 1e-9 is also the degeneracy threshold"
+      "note": "Contois is Monod under a constant yield; least_squares at xtol 1e-13; measured 1.2e-13 to 1.5e-13 across BLAS kernels; 1e-9 is also the degeneracy threshold"
     },
     "sep_over_scatter_contois": {
       "kind": "bound",
-      "value": 2.010880419289395e-12,
+      "value": 3.8286006923031535e-12,
       "max": 1e-07,
       "basis": "tolerance",
       "note": "sep_contois over the route-B scatter"
     },
     "Sf_crossing": {
       "kind": "value",
-      "value": 197.11821055152194,
+      "value": 197.12023281197892,
       "rtol": 0.005
     },
     "Sf_for_10pct_gap": {
       "kind": "value",
-      "value": 95.51519569534155,
+      "value": 95.5151982934013,
       "rtol": 0.05
     },
     "Dc_ratio_at_Sf20": {
       "kind": "value",
-      "value": 1.8325284720135577,
+      "value": 1.8325214512730321,
       "rtol": 0.05
     },
     "Sf_crossing_vs_a_relerr": {
       "kind": "bound",
-      "value": 1.0431249385588358e-05,
+      "value": 1.7223091833882697e-07,
       "max": 0.001,
       "basis": "tolerance",
-      "note": "relative to a; S_f = a identically, the gap is the Contois fit's two exit tolerances (decomposed on the page); measured 4.1e-7 to 1.0e-5 across BLAS kernels, the bound is 50x the largest"
+      "note": "relative to a; S_f = a identically, the gap is the Contois fit's two exit tolerances (decomposed on the page); measured 1.0e-7 to 1.7e-7 across BLAS kernels, the bound is about 5800x the largest"
     },
     "Dc_monod_closed_form": {
       "kind": "value",
-      "value": 0.43552316409265923,
+      "value": 0.43552487673841755,
       "rtol": 0.05
     },
     "Dc_monod_transient_relerr": {
       "kind": "value",
-      "value": 0.00037966271374130956,
+      "value": 0.00037966138259052843,
       "rtol": 0.05
     },
     "Dc_contois_transient_relerr": {
       "kind": "value",
-      "value": 0.0002454463285732135,
+      "value": 0.00024544639021045544,
       "rtol": 0.05
     },
     "rawlings_10_19_max_relerr": {
@@ -403,76 +403,314 @@
     },
     "rawlings_Dc_relerr": {
       "kind": "value",
-      "value": 0.00021431400909706076,
+      "value": 0.00021431402853870906,
       "rtol": 0.05
     },
     "pymrm_batch_observed_order": {
       "kind": "bound",
-      "value": 0.9993158511390777,
+      "value": 0.996065618857251,
       "min": 0.995,
       "max": 1.005,
       "basis": "theory",
-      "note": "backward Euler is first order in dt, and 200/400 steps are in the asymptotic range: 0.9993 measured; the 25/50-step row gives 0.9942"
+      "note": "backward Euler is first order in dt; finest triple 100/200/400 of the successive differences, the interval farthest from 1"
+    },
+    "pymrm_batch_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 9697.419471383128,
+      "min": 100.0,
+      "basis": "tolerance",
+      "note": "smallest finest successive difference of the seven predictions over newton's backward_tol 1e-8 times the prediction"
     },
     "pymrm_batch_conservation_relerr": {
       "kind": "bound",
-      "value": 4.325538398042067e-16,
+      "value": 2.8836922653613783e-16,
       "max": 1e-13,
       "basis": "identity",
-      "note": "relative to S + X/phi; backward Euler keeps a linear invariant of the source to round-off; measured 4.3e-16 to 1.3e-15 across BLAS kernels, the bound is about 77x that"
+      "note": "relative to S + X/phi; backward Euler keeps a linear invariant of the source to round-off; measured 1.4e-16 to 2.9e-16 across BLAS kernels, the bound is about 350x the largest"
     },
     "pymrm_refit_mum_relerr": {
       "kind": "bound",
-      "value": 1.044392376937312e-06,
+      "value": 6.96674875678112e-07,
       "max": 0.0001,
       "basis": "chosen",
-      "note": "two-route gap, LSODA fit against Richardson-extrapolated backward Euler at 200/400 steps; set by the two fits' stopping rules, measured 1.0e-6 to 1.2e-6 across BLAS kernels; the bound is the prose claim and 1e2 below the 25-step row"
+      "note": "two-route gap, LSODA fit against Richardson-extrapolated backward Euler at 200/400 steps; set by the two fits' stopping rules, measured 7.0e-7 to 8.2e-7 across BLAS kernels; the bound is the prose claim and 1e2 below the 25-step row"
     },
     "pymrm_refit_KS_relerr": {
       "kind": "bound",
-      "value": 7.779336317699347e-06,
+      "value": 2.529654996855306e-06,
       "max": 0.0001,
       "basis": "chosen",
-      "note": "as for mu_m; measured 2.6e-6 to 7.8e-6 across BLAS kernels; the bound is the prose claim and below the unconverged 25-step refit"
+      "note": "as for mu_m; measured 2.5e-6 to 3.4e-6 across BLAS kernels; the bound is the prose claim and below the unconverged 25-step refit"
     },
     "pfr_batch_relerr_finest": {
       "kind": "value",
-      "value": 0.0012208283711877194,
+      "value": 0.0003053206003400328,
       "rtol": 0.05
     },
     "pfr_observed_order": {
       "kind": "bound",
-      "value": 0.998080889832734,
+      "value": 0.9957938888371292,
       "min": 0.99,
       "max": 1.01,
       "basis": "theory",
-      "note": "first-order upwind, asymptotic at 800/1600 cells; outlet from compute_boundary_values, 0.9981 measured; the 100/200 row gives 0.985"
+      "note": "first-order upwind; finest triple 1600/3200/6400 of the successive differences of the outlet from compute_boundary_values"
     },
     "pfr_richardson_relerr": {
+      "kind": "bound",
+      "value": 1.1914771398276835e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "Richardson value of the finest triple (observed order) against the batch state: a discretisation residual"
+    },
+    "pfr_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 30482.05044608074,
+      "min": 100.0,
+      "basis": "tolerance",
+      "note": "finest successive difference of the outlet over newton's backward_tol 1e-8 times the outlet value: the order is read far above the solver floor"
+    },
+    "routeB_monod_rms_drop": {
       "kind": "value",
-      "value": 3.245795498338991e-06,
+      "value": 0.4246523136106839,
+      "rtol": 0.01
+    },
+    "routeA_monod_last_margin": {
+      "kind": "bound",
+      "value": 0.0031566552464594236,
+      "min": 0.0,
+      "basis": "chosen",
+      "unit": "1/h",
+      "note": "route-A Monod RMS minus the largest of the other three two-parameter laws: Monod is last of the four exactly when this is positive"
+    },
+    "routeB_blackman_worst_margin": {
+      "kind": "value",
+      "value": 0.008088279836835487,
+      "rtol": 0.1
+    },
+    "rmsA_null_over_monod": {
+      "kind": "value",
+      "value": 3.683953622133041,
+      "rtol": 0.01
+    },
+    "rmsA_null_over_blackman": {
+      "kind": "value",
+      "value": 7.5255512475647715,
+      "rtol": 0.01
+    },
+    "balance_R2_loo_min_other": {
+      "kind": "value",
+      "value": 0.9757379180326532,
+      "rtol": 0.0001
+    },
+    "balance_R2_loo_max_other": {
+      "kind": "value",
+      "value": 0.9848061684475133,
+      "rtol": 0.0001
+    },
+    "blackman_Nstar_shortfall": {
+      "kind": "value",
+      "value": 0.303539187117714,
       "rtol": 0.05
     },
-    "pfr_centre_read_order": {
-      "kind": "bound",
-      "value": 0.9956831755015441,
-      "min": 0.99,
-      "max": 1.01,
-      "basis": "theory",
-      "note": "first-order upwind, asymptotic at 800/1600 cells; outlet read at the last cell centre, 0.9957 measured; the 100/200 row gives 0.965"
-    },
-    "pfr_centre_over_boundary_read": {
+    "rawlings_Dc_closed_form": {
       "kind": "value",
-      "value": 0.38552925727272686,
-      "rtol": 0.005
+      "value": 0.8333333333333334,
+      "rtol": 0.001
+    },
+    "boot_gridonly_size_forward": {
+      "kind": "value",
+      "value": 0.308,
+      "rtol": 0.1
+    },
+    "boot_gridonly_size_control": {
+      "kind": "value",
+      "value": 0.021,
+      "rtol": 0.3
+    },
+    "boot_gridonly_median_n_forward": {
+      "kind": "value",
+      "value": 1.602857142857143,
+      "rtol": 0.02
+    },
+    "boot_gridonly_median_n_control": {
+      "kind": "value",
+      "value": 0.9514285714285715,
+      "rtol": 0.02
+    },
+    "boot_gridonly_p_of_observed_F": {
+      "kind": "value",
+      "value": 0.1835,
+      "rtol": 0.18
+    },
+    "boot_control_size_offset_se": {
+      "kind": "bound",
+      "value": 0.1025978352085155,
+      "max": 3.0,
+      "basis": "chosen",
+      "note": "distance of the control's size from 0.05 in binomial standard errors of a nominal test at NBOOT draws: 'at nominal' means within three"
+    },
+    "boot_size_forward_at_routeA_sigma": {
+      "kind": "value",
+      "value": 0.2355,
+      "rtol": 0.15
+    },
+    "boot_size_control_at_routeA_sigma": {
+      "kind": "value",
+      "value": 0.047,
+      "rtol": 0.2
+    },
+    "boot_control_scale_free_se": {
+      "kind": "bound",
+      "value": 0.5154378970324822,
+      "max": 3.0,
+      "basis": "chosen",
+      "note": "the control's size at route A's scatter minus at route B's, in binomial standard errors: 'scale-free' means within three"
+    },
+    "boot_edge_fraction_main": {
+      "kind": "bound",
+      "value": 0.00025,
+      "max": 0.0025,
+      "basis": "chosen",
+      "note": "fraction of the 2 NBOOT draws at route B's scatter whose scan optimum is on a grid edge; 0 to 3 draws over twelve seeds (SEED + 1000 to SEED + 1011), the bound is ten draws, about three times the largest"
+    },
+    "boot_edge_fraction_routeA_sigma": {
+      "kind": "value",
+      "value": 0.00925,
+      "rtol": 0.6
+    },
+    "blind_yield_gap_change_over_move": {
+      "kind": "bound",
+      "value": 1.5707420197107145e-05,
+      "max": 0.001,
+      "basis": "chosen",
+      "note": "change of the LSODA-versus-pymrm gap under a 30 % yield error, over the prediction's own move: 'blind' means the gap moves by a small part of it"
+    },
+    "marcher_invariant_mu_tripled_relerr": {
+      "kind": "bound",
+      "value": 1.1534769061445513e-15,
+      "max": 1e-13,
+      "basis": "identity",
+      "note": "S + X/phi after tripling mu_m, relative: backward Euler conserves the linear invariant of the source (-m/phi, m) for any growth law; a different yield in the source from the one in the invariant breaks it"
+    },
+    "Sf_rootfind_over_guarantee": {
+      "kind": "bound",
+      "value": 0.17250136210978712,
+      "max": 1.0,
+      "basis": "tolerance",
+      "structural": true,
+      "note": "a solver-contract bound: the S_f crossing's distance from S_f = a over find_roots' guaranteed accuracy xtol + rtol|x|, which no physics row can move"
+    },
+    "balance_row4_imputed_CA": {
+      "kind": "value",
+      "value": 60.180389784483964,
+      "rtol": 0.001
+    },
+    "routeA_F_imputed": {
+      "kind": "value",
+      "value": 5.447729916109863,
+      "rtol": 0.01
+    },
+    "routeA_F_imputed_below_crit": {
+      "kind": "bound",
+      "value": 2.2609175060669227,
+      "min": 0.0,
+      "basis": "chosen",
+      "note": "F(1,4) critical value minus route A's F with row 4 imputed: the imputation flips the verdict exactly when this is positive"
+    },
+    "rmsA_imputed_Monod": {
+      "kind": "value",
+      "value": 0.04687043093112273,
+      "rtol": 0.001
+    },
+    "rmsA_imputed_Blackman": {
+      "kind": "value",
+      "value": 0.0406459891984897,
+      "rtol": 0.001
+    },
+    "routeA_imputed_blackman_margin": {
+      "kind": "value",
+      "value": 0.006224441732633035,
+      "rtol": 0.05
+    },
+    "eoi_row3": {
+      "kind": "value",
+      "value": 74.89126490084408,
+      "rtol": 0.01
+    },
+    "eoi_row4": {
+      "kind": "value",
+      "value": 44.334014435509204,
+      "rtol": 0.01
+    },
+    "eoi_row5": {
+      "kind": "value",
+      "value": 13.461740769500807,
+      "rtol": 0.01
+    },
+    "eoi_row3_relgap": {
+      "kind": "value",
+      "value": 0.1678748344350658,
+      "rtol": 0.01
+    },
+    "eoi_row5_relgap": {
+      "kind": "value",
+      "value": 0.5358020424310067,
+      "rtol": 0.01
+    },
+    "boot_size_forward_se": {
+      "kind": "value",
+      "value": 0.010768234534964402,
+      "rtol": 0.025
+    },
+    "boot_size_control_se": {
+      "kind": "value",
+      "value": 0.004850244839180801,
+      "rtol": 0.1
+    },
+    "boot_median_n_forward_se": {
+      "kind": "value",
+      "value": 0.007359723038735333,
+      "rtol": 0.3
+    },
+    "boot_median_n_control_se": {
+      "kind": "value",
+      "value": 0.004850088183421475,
+      "rtol": 0.35
+    },
+    "boot_p_of_observed_F_se": {
+      "kind": "value",
+      "value": 0.009381257911389069,
+      "rtol": 0.05
+    },
+    "boot_p_of_observed_n_se": {
+      "kind": "value",
+      "value": 0.007482905518580333,
+      "rtol": 0.075
+    },
+    "boot_size_forward_at_routeA_sigma_se": {
+      "kind": "value",
+      "value": 0.009487880427155477,
+      "rtol": 0.05
+    },
+    "boot_size_control_at_routeA_sigma_se": {
+      "kind": "value",
+      "value": 0.00473238840333293,
+      "rtol": 0.1
+    },
+    "flagged_row": {
+      "kind": "exact",
+      "value": 4,
+      "margin": 0.015150921164924003,
+      "min_margin": 0.001,
+      "note": "the row (1-based) whose removal raises the balance line's R^2 most; margin: R^2 over the next best removal"
     },
     "n_separable_alternatives": {
       "kind": "exact",
       "value": 2,
-      "margin": 4.198773349386298,
+      "margin": 7.091588668245603,
       "min_margin": 1.0,
       "structural": true,
-      "note": "alternatives with a separation above the SEP_BOUND 1/h bound, so that N* is defined: Blackman and Tessier; margin in decades to that bound; decided by the identities, which no row can move"
+      "note": "alternatives with a separation above the SEP_BOUND 1/h bound, so that N* is defined: Blackman and Tessier; margin in decades to that bound on the separable side, the degenerate side held by its two bound claims; decided by the identities, which no row can move"
     }
   },
   "quoted": {
@@ -586,21 +824,13 @@
       "1.89"
     ],
     "pfr_observed_order": [
-      "1.00",
-      "0.9981"
-    ],
-    "pymrm_batch_observed_order": [
-      "1.00",
-      "0.9993"
-    ],
-    "pfr_centre_read_order": [
       "1.00"
     ],
-    "pfr_centre_over_boundary_read": [
-      "0.39"
+    "pymrm_batch_observed_order": [
+      "1.00"
     ],
     "pfr_richardson_relerr": [
-      "3.2e-6"
+      "below 1e-4"
     ],
     "rawlings_Dc_relerr": [
       "2.1e-4"
@@ -640,17 +870,171 @@
     ],
     "sep_contois": [
       "below 1e-09"
+    ],
+    "routeB_monod_rms_drop": [
+      "42 %"
+    ],
+    "routeB_blackman_worst_margin": [
+      "0.0081"
+    ],
+    "routeA_monod_last_margin": [
+      "above 0"
+    ],
+    "routeA_F_imputed_below_crit": [
+      "above 0"
+    ],
+    "rmsA_null_over_monod": [
+      "3.68"
+    ],
+    "rmsA_null_over_blackman": [
+      "7.53"
+    ],
+    "balance_R2_loo_min_other": [
+      "0.9757",
+      "0.975738"
+    ],
+    "balance_R2_loo_max_other": [
+      "0.9848",
+      "0.984806"
+    ],
+    "blackman_Nstar_shortfall": [
+      "30 %"
+    ],
+    "rawlings_Dc_closed_form": [
+      "0.8333"
+    ],
+    "boot_gridonly_size_forward": [
+      "0.308"
+    ],
+    "boot_gridonly_size_control": [
+      "2.1 %"
+    ],
+    "boot_gridonly_median_n_forward": [
+      "1.60"
+    ],
+    "boot_gridonly_median_n_control": [
+      "0.95"
+    ],
+    "boot_gridonly_p_of_observed_F": [
+      "0.18"
+    ],
+    "boot_control_size_offset_se": [
+      "below 3"
+    ],
+    "boot_control_scale_free_se": [
+      "below 3"
+    ],
+    "boot_size_forward_at_routeA_sigma": [
+      "0.2355"
+    ],
+    "boot_size_control_at_routeA_sigma": [
+      "0.0470"
+    ],
+    "boot_size_forward_se": [
+      "1.1 %",
+      "0.0108"
+    ],
+    "boot_size_control_se": [
+      "0.5 %",
+      "0.0049"
+    ],
+    "boot_median_n_forward_se": [
+      "0.0074"
+    ],
+    "boot_median_n_control_se": [
+      "0.0049"
+    ],
+    "boot_p_of_observed_F_se": [
+      "0.0094"
+    ],
+    "boot_p_of_observed_n_se": [
+      "0.0075"
+    ],
+    "boot_size_forward_at_routeA_sigma_se": [
+      "0.0095"
+    ],
+    "boot_size_control_at_routeA_sigma_se": [
+      "0.0047"
+    ],
+    "boot_edge_fraction_main": [
+      "below 2.5e-3"
+    ],
+    "boot_edge_fraction_routeA_sigma": [
+      "0.93 %"
+    ],
+    "blind_yield_gap_change_over_move": [
+      "below 1e-3"
+    ],
+    "marcher_invariant_mu_tripled_relerr": [
+      "below 1e-13"
+    ],
+    "Sf_rootfind_over_guarantee": [
+      "below 1"
+    ],
+    "balance_row4_imputed_CA": [
+      "60.18"
+    ],
+    "routeA_F_imputed": [
+      "5.45"
+    ],
+    "rmsA_imputed_Monod": [
+      "0.04687"
+    ],
+    "rmsA_imputed_Blackman": [
+      "0.04065"
+    ],
+    "routeA_imputed_blackman_margin": [
+      "0.0062"
+    ],
+    "eoi_row3": [
+      "74.89"
+    ],
+    "eoi_row4": [
+      "44.33"
+    ],
+    "eoi_row5": [
+      "13.46"
+    ],
+    "eoi_row3_relgap": [
+      "16.8 %"
+    ],
+    "eoi_row5_relgap": [
+      "53.6 %"
+    ],
+    "flagged_row": [
+      "4"
     ]
   },
   "breaks": {
+    "sym_blackman_gap_at_switch_over_mum": [
+      "Blackman switch placed at S = 4 K_S"
+    ],
+    "sym_blackman_gap_lower_over_mum": [
+      "Blackman switch placed at S = 4 K_S"
+    ],
+    "num_blackman_gap_switch_relerr": [
+      "Blackman gap read at S = K_S instead of the switch S = 2 K_S"
+    ],
+    "num_blackman_Sstar_over_Ks_relerr": [
+      "lower-branch extremum read off a 64-point scan, not root-found"
+    ],
+    "num_blackman_gap_lower_relerr": [
+      "lower-branch extremum read off a 64-point scan, not root-found"
+    ],
     "balance_R2_six_rows": [
       "the flagged row kept in the balance line"
     ],
     "balance_phi": [
       "balance line drops row 1 instead of the flagged row"
     ],
+    "balance_a": [
+      "balance line drops row 1 instead of the flagged row"
+    ],
     "rmsA_Monod": [
       "every route-A fit with the flagged cell replaced by its balance-implied value"
+    ],
+    "max_swing_over_CAbar": [
+      "substrate swing taken as the biomass swing (yield omitted)"
     ],
     "routeB_n_moser": [
       "route B yield phi perturbed by 5 %"
@@ -670,18 +1054,36 @@
       "route-A Moser scan restricted to n <= 1.5",
       "every route-A fit with the flagged cell replaced by its balance-implied value"
     ],
+    "F_crit_95": [
+      "F critical value with Moser's extra parameter not counted (1, 3 dof)"
+    ],
     "contois_map_mum_relerr": [
       "Contois map evaluated with the wrong yield (phi -> 2 phi)"
     ],
-    "num_blackman_gap_switch_relerr": [
-      "Blackman gap read at S = K_S instead of the switch S = 2 K_S"
+    "contois_map_KS_relerr": [
+      "Contois map evaluated with the wrong yield (phi -> 2 phi)"
     ],
     "sep_contois": [
       "Contois separation measured on the ROUTE-A design"
     ],
+    "sep_over_scatter_contois": [
+      "Contois separation measured on the ROUTE-A design"
+    ],
+    "sep_moser": [
+      "Moser and Contois fits without their least_squares refinement"
+    ],
+    "sep_over_scatter_moser": [
+      "Moser and Contois fits without their least_squares refinement"
+    ],
+    "contois_minus_monod_rms": [
+      "Moser and Contois fits without their least_squares refinement"
+    ],
     "Nstar_blackman": [
       "N* computed at 99 % instead of 95 %",
       "every separation measured at 3 of the 7 design points"
+    ],
+    "blackman_Nstar_shortfall": [
+      "N* computed at 99 % instead of 95 %"
     ],
     "Nstar_tessier": [
       "scatter taken from route A instead of route B",
@@ -691,28 +1093,51 @@
       "bootstrap at half the noise level",
       "the whole bootstrap fitted on the search grid alone, with no per-draw refinement"
     ],
+    "boot_median_n_forward_truth": [
+      "bootstrap truth taken from route A's own model"
+    ],
     "rawlings_10_19_max_relerr": [
       "Rawlings' printed y = 1 replaced by 2",
       "Rawlings' printed S_f = 5 replaced by 8"
     ],
-    "boot_median_n_forward_truth": [
-      "bootstrap truth taken from route A's own model"
+    "rawlings_Dc_relerr": [
+      "Rawlings' printed K_s = 1 replaced by 2"
     ],
     "Dc_monod_transient_relerr": [
       "washout threshold loosened 1e-6 -> 1e-3 of y S_f"
     ],
-    "rawlings_Dc_relerr": [
-      "Rawlings' printed K_s = 1 replaced by 2"
+    "Dc_contois_transient_relerr": [
+      "washout threshold loosened 1e-6 -> 1e-3 of y S_f"
     ],
     "pfr_batch_relerr_finest": [
       "plug flow with nu = 1 (cylindrical) instead of nu = 0",
-      "plug-flow outlet read at the last cell CENTRE",
       "plug flow with the substrate sign flipped in the source"
     ],
+    "pfr_order_roundoff_margin": [
+      "plug-flow newton stopped on a 1e-4 step alone (floor 1e-4)"
+    ],
+    "pfr_observed_order": [
+      "every plug-flow number read off the three COARSEST grids"
+    ],
+    "pfr_richardson_relerr": [
+      "every plug-flow number read off the three COARSEST grids"
+    ],
+    "pymrm_batch_observed_order": [
+      "the pymrm marcher's order read off 6/12/24 steps, and its refit at 25 steps"
+    ],
     "pymrm_refit_mum_relerr": [
-      "pymrm batch marcher at 25 steps instead of the Richardson pair"
+      "the pymrm marcher's order read off 6/12/24 steps, and its refit at 25 steps"
+    ],
+    "pymrm_refit_KS_relerr": [
+      "the pymrm marcher's order read off 6/12/24 steps, and its refit at 25 steps"
+    ],
+    "pymrm_batch_order_roundoff_margin": [
+      "marcher newton stopped on a 1e-3 step alone (floor 1e-3)"
     ],
     "pymrm_batch_conservation_relerr": [
+      "pymrm batch marcher with the yield used only in the source, not the state"
+    ],
+    "marcher_invariant_mu_tripled_relerr": [
       "pymrm batch marcher with the yield used only in the source, not the state"
     ],
     "rmsA_Tessier": [
@@ -724,9 +1149,17 @@
     "rmsA_first_order": [
       "every route-A fit with the flagged cell replaced by its balance-implied value"
     ],
+    "routeA_monod_last_margin": [
+      "every route-A fit with the flagged cell replaced by its balance-implied value"
+    ],
+    "rmsA_null_over_monod": [
+      "every route-A fit with the flagged cell replaced by its balance-implied value"
+    ],
+    "rmsA_null_over_blackman": [
+      "every route-A fit with the flagged cell replaced by its balance-implied value"
+    ],
     "boot_size_control_truth": [
-      "the whole bootstrap fitted on the search grid alone, with no per-draw refinement",
-      "the whole bootstrap re-drawn at half the noise level"
+      "the whole bootstrap fitted on the search grid alone, with no per-draw refinement"
     ],
     "boot_median_n_control_truth": [
       "the whole bootstrap fitted on the search grid alone, with no per-draw refinement"
@@ -736,7 +1169,6 @@
       "the whole bootstrap re-drawn at half the noise level"
     ],
     "boot_p_of_observed_n": [
-      "the whole bootstrap fitted on the search grid alone, with no per-draw refinement",
       "the whole bootstrap re-drawn at half the noise level"
     ],
     "rmsA_zero_order": [
@@ -775,6 +1207,12 @@
     "routeA_over_routeB_monod_rms": [
       "every route-B fit with the ALL-SEVEN balance line"
     ],
+    "routeB_monod_rms_drop": [
+      "every route-B fit with the ALL-SEVEN balance line"
+    ],
+    "routeB_blackman_worst_margin": [
+      "every route-B fit with the ALL-SEVEN balance line"
+    ],
     "sep_blackman": [
       "every separation measured at 3 of the 7 design points"
     ],
@@ -808,6 +1246,12 @@
     "row4_end_of_interval_relgap": [
       "the whole balance test on the ARITHMETIC-mean biomass"
     ],
+    "balance_R2_loo_min_other": [
+      "the whole balance test on the ARITHMETIC-mean biomass"
+    ],
+    "balance_R2_loo_max_other": [
+      "the whole balance test on the ARITHMETIC-mean biomass"
+    ],
     "Dc_ratio_at_Sf20": [
       "the chemostat prediction built from the ROUTE-A constants"
     ],
@@ -820,48 +1264,111 @@
     "Dc_monod_closed_form": [
       "the chemostat prediction built from the ROUTE-A constants"
     ],
-    "pfr_observed_order": [
-      "every plug-flow number read off the two COARSEST grids"
-    ],
-    "pfr_centre_read_order": [
-      "every plug-flow number read off the two COARSEST grids"
-    ],
-    "pfr_centre_over_boundary_read": [
-      "every plug-flow number read off the two COARSEST grids"
-    ],
-    "pfr_richardson_relerr": [
-      "every plug-flow number read off the two COARSEST grids"
-    ],
-    "pymrm_batch_observed_order": [
-      "the pymrm marcher's order read off 25/50 steps, and its refit unconverged"
-    ],
-    "pymrm_refit_KS_relerr": [
-      "the pymrm marcher's order read off 25/50 steps, and its refit unconverged"
-    ],
-    "contois_map_KS_relerr": [
-      "Contois map evaluated with the wrong yield (phi -> 2 phi)"
-    ],
-    "sep_over_scatter_contois": [
-      "Contois separation measured on the ROUTE-A design"
-    ],
-    "balance_a": [
-      "balance line drops row 1 instead of the flagged row"
-    ],
     "Sf_crossing_vs_a_relerr": [
       "the chemostat prediction built from the ROUTE-A constants"
+    ],
+    "flagged_row": [
+      "leave-one-out sweep picks the row whose removal helps LEAST"
+    ],
+    "balance_row4_imputed_CA": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "routeA_F_imputed": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "routeA_F_imputed_below_crit": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "rmsA_imputed_Monod": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "rmsA_imputed_Blackman": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "routeA_imputed_blackman_margin": [
+      "the row-4 imputation left at the printed cell"
+    ],
+    "eoi_row3": [
+      "end-of-interval values read off the ALL-SEVEN balance line"
+    ],
+    "eoi_row4": [
+      "end-of-interval values read off the ALL-SEVEN balance line"
+    ],
+    "eoi_row5": [
+      "end-of-interval values read off the ALL-SEVEN balance line"
+    ],
+    "eoi_row3_relgap": [
+      "end-of-interval values read off the ALL-SEVEN balance line"
+    ],
+    "eoi_row5_relgap": [
+      "end-of-interval values read off the ALL-SEVEN balance line"
+    ],
+    "rawlings_Dc_closed_form": [
+      "Rawlings' printed K_s = 1 replaced by 2 in their D_c formula"
+    ],
+    "boot_control_size_offset_se": [
+      "the control's distance from nominal read off the grid-only bootstrap"
+    ],
+    "boot_gridonly_size_forward": [
+      "the grid-only bootstrap re-drawn at half the noise level"
+    ],
+    "boot_gridonly_p_of_observed_F": [
+      "the grid-only bootstrap re-drawn at half the noise level"
+    ],
+    "boot_gridonly_size_control": [
+      "the grid-only bootstrap re-drawn at half the noise level"
+    ],
+    "boot_gridonly_median_n_control": [
+      "the grid-only bootstrap re-drawn at half the noise level"
+    ],
+    "boot_gridonly_median_n_forward": [
+      "grid-only bootstrap truth taken from route A's own model"
+    ],
+    "boot_size_forward_at_routeA_sigma": [
+      "the route-A-scatter forward arm at half its noise level"
+    ],
+    "boot_size_control_at_routeA_sigma": [
+      "the route-A-scatter control arm drawn from the forward truth"
+    ],
+    "boot_control_scale_free_se": [
+      "the route-A-scatter control arm drawn from the forward truth"
+    ],
+    "boot_size_forward_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_size_control_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_median_n_forward_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_median_n_control_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_p_of_observed_F_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_p_of_observed_n_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_size_forward_at_routeA_sigma_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_size_control_at_routeA_sigma_se": [
+      "every bootstrap sampling error at 500 draws instead of 2000"
+    ],
+    "boot_edge_fraction_main": [
+      "the Moser exponent grid cut at n <= 2"
+    ],
+    "boot_edge_fraction_routeA_sigma": [
+      "the Moser exponent grid cut at n <= 2"
+    ],
+    "blind_yield_gap_change_over_move": [
+      "the wrong yield given to the LSODA route only"
     ]
   },
-  "breaks_required": false,
-  "unbroken": [
-    "sym_blackman_gap_at_switch_over_mum",
-    "sym_blackman_gap_lower_over_mum",
-    "num_blackman_gap_lower_relerr",
-    "num_blackman_Sstar_over_Ks_relerr",
-    "F_crit_95",
-    "contois_minus_monod_rms",
-    "max_swing_over_CAbar",
-    "sep_moser",
-    "sep_over_scatter_moser",
-    "Dc_contois_transient_relerr"
-  ]
+  "rows": {
+    "defined": 53,
+    "recorded": 53
+  }
 }
