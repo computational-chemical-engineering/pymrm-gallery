@@ -317,10 +317,10 @@ print(f"c_t = {c_t:.2f} mol/m3;  pair diffusivities span a factor "
 #    - the closure of the digitised compositions and the bulb-identity note in
 #      the sidecar: the $t=0$ compositions are renormalised to sum to one before
 #      they start the runs, and the $t=0$ points stay in the comparison;
-#    - `A4.9` reads point O and the diffusion barrier off its step values and
-#      refines its grid and time step: this page root-finds both features in
-#      time and repeats both refinements (Validation), so its times are not
-#      `A4.9`'s read-offs.
+#    - `A4.9` root-finds point O and the diffusion barrier on a time-exact
+#      `solve_ivp` route and refines its grid and time step: this page
+#      root-finds both features on its own route and repeats both refinements
+#      (Validation), so its times are computed here, not taken from `A4.9`.
 
 # %%
 wx = load_data("krishna-wesselingh-1997-worked-examples.csv", page=PAGE)
@@ -1155,7 +1155,7 @@ print(f"   N2 bulb-difference error over {CL['n_n2_points']} paired times "
       f" mole %, {CL['n2_diff_err_wilke_minus_ms_z']:.1f} standard errors")
 print("   The standard errors treat the points as independent; points along one")
 print("   trajectory are correlated, so they probably understate the uncertainty.")
-print("   This is the SAME computation A4.9 published (same solver, grid, step count and")
+print("   This is the SAME computation A4.9 published (same discretisation, grid, step count and")
 print("   dataset), so the Maxwell-Stefan mean is necessarily reproduced, not")
 print("   independently corroborated. For scale, the digitisation error the A4.9")
 print(f"   sidecar states: {exp_meta['acquisition']['estimated_error'].strip().splitlines()[0]}")
@@ -1334,7 +1334,7 @@ claims.report();   # the semicolon keeps the notebook from echoing the payload
 # %% [markdown]
 # ## What pymrm adds
 #
-# **The transport solver is the one of the `A4.9` page**: same grid, operators
+# **The transport discretisation is the one of the `A4.9` page**: same grid, operators
 # and Newton march, so the Maxwell–Stefan deviation from the measurements is the
 # number `A4.9` publishes, by construction. pymrm contributes the capillary
 # solve (`construct_grad` with `shapes_d` for the moving bulb compositions,
