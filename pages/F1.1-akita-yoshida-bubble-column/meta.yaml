@@ -1,0 +1,75 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F1.1
+slug: akita-yoshida-bubble-column
+title: "Akita and Yoshida: gas holdup and kLa in bubble columns"
+section: F
+status: published
+tier: T0
+priority: P1
+structures: [S1]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Akita, K.", "Yoshida, F."]
+    year: 1973
+    title: "Gas Holdup and Volumetric Mass Transfer Coefficient in Bubble Columns. Effects of Liquid Properties"
+    container: "Industrial & Engineering Chemistry Process Design and Development 12(1) 76-80"
+    doi: 10.1021/i260045a015
+  - authors: ["Akita, K.", "Yoshida, F."]
+    year: 1974
+    title: "Bubble Size, Interfacial Area, and Liquid-Phase Mass Transfer Coefficient in Bubble Columns"
+    container: "Industrial & Engineering Chemistry Process Design and Development 13(1) 84-91"
+    doi: 10.1021/i260049a016
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 7
+datasets:
+  - akita-yoshida-1974-table2-properties.csv
+  - akita-yoshida-1974-table4-bubble-sizes.csv
+  - akita-yoshida-1973-table2-ranges.csv
+  - akita-yoshida-1974-fig12.csv
+  - akita-yoshida-printed-numbers.csv
+
+validation:
+  - the 1974 Table IV distribution recomputed from its counts, with its moments, mean diameters and log-normal fit
+  - the Froude, Bond, Galilei and Schmidt numbers of the 1973 Table II recomputed from the printed velocities and the 1974 property table
+  - the holdup correlation evaluated at the ends of the 1973 Table II ranges
+  - the 1974 kL and interfacial area multiplied back against the 1973 kLa at the same holdup
+  - the exponents of the dimensional eqs. 17 and 33 derived from the dimensionless ones, and eq. 24 derived from eqs. 19, 21 and 23
+  - eq. 23 against eq. 11 over the holdup range the 1974 paper gives it, with its crossings and minimum as bracketed roots
+  - the scatter of the digitised 1974 Figure 12 as a number
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Nothing to the correlations; the page is algebra, and pymrm contributes only
+  pymrm.checks.find_roots for the implicit holdup and the roots of the eq. 23
+  comparison. What the page adds to the papers is a set of checks they do not
+  print: the two tables against each other, the 1974 pieces multiplied back
+  against the 1973 product, the rounding inside eq. 24, the range over which
+  eq. 23 stands in for eq. 11, and the scatter of Figure 12 as a number.
+
+agreement: >
+  The 1974 product of kL and area is 1.071 <!-- claim: kla_product_geo_ratio -->
+  times the 1973 kLa at the same holdup (geometric mean over the matched 1973
+  Table II points). The holdup correlation gives 1.039 <!-- claim: eps_hi_geo_ratio -->
+  times the printed holdup at the highest velocity of each matched row, with a
+  mean absolute deviation of 13.3 % <!-- claim: eps_hi_mean_abs_dev --> and 1.232 <!-- claim: eps_lo_geo_ratio --> at the lowest velocity. The
+  Figure 12 markers have a geometric-mean ratio calculated/observed of
+  0.964 <!-- claim: f12_geo_ratio --> and a mean absolute deviation of
+  16.3 % <!-- claim: f12_mean_abs_dev -->. Of its 68 <!-- claim: t4_entries --> derived entries, Table IV reproduces from its counts
+  all but 4 <!-- claim: t4_entries_off --> to one unit of the last digit; the largest gap is one
+  third-moment entry that the printed column total does not include.
+
+caveats: >
+  This is a correlation page, not a discretised model. The holdup check uses the
+  ends of range tables, which are not paired runs. The 1973 holdup and kLa figures
+  were not digitised (overlapping markers, and one figure without a calibratable
+  ordinate), so the 1973 correlations are tested against tables, not against their
+  full data. Figure 12 is digitised by hand with the error stated in its sidecar,
+  and its calculated values cannot be recomputed because the bubble size
+  distributions behind them are not published.
