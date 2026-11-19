@@ -1,68 +1,990 @@
 {
-  "page": "J4.2-andrews-substrate-inhibition",
+  "page": "J4.2",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "mu_hat_m_eq2_per_h": 0.8032457720443428,
-    "S_m_eq3_g_per_l": 0.2449489742783178,
-    "eq2_vs_rootfound_max_rel": 2.220446049250313e-16,
-    "eq3_vs_rootfound_argmax_rel": 2.220446049250313e-16,
-    "theta_washout_h": 1.2449489742783177,
-    "half_rate_low_root_g_per_l": 0.030464028516734243,
-    "half_rate_high_root_g_per_l": 1.9695359714832659,
-    "Ks_definition_rel_error": 0.0154676172244748,
-    "Ki_definition_rel_error": -0.015232014258367066,
-    "Ki_min_for_half_rate_defs_g_per_l": 0.12,
-    "rm_as_maximum_overstatement_rel": 0.24494897427831774,
-    "batch_time_direct_h": 36.52747557683508,
-    "batch_time_direct_vs_printed36_rel": 0.014652099356530002,
-    "batch_closedform_vs_lsoda_rel": 6.681988296008967e-12,
-    "batch_time_seeded_h": 12.371597482794177,
-    "batch_time_seeded_vs_printed12p5_rel": -0.010272201376465801,
-    "seed_readings_raw_spread_rel": 0.11544189992147746,
-    "seed_reset_vs_increment_rel": -0.0004185386770062527,
-    "seed_speedup_factor": 2.9525269980401267,
-    "lag_hours_at_Ki2": 27.922318494599278,
-    "lag_share_of_delay_Ki2": 0.9440131506118717,
-    "lag_share_of_delay_Ki5": 0.9124871582573425,
-    "lag_share_of_delay_Ki10": 0.8777879980628407,
-    "lag_share_of_delay_at_Xf1": 1.0940027701847395,
-    "peak_growth_rate_drop_rel": -0.19434449063149173,
-    "batch_realised_mean_growth_drop_rel": -0.8097552514689615,
-    "batch_time_ratio_vs_no_inhibition": 5.256386879119819,
-    "branch_switch_Ki_g_per_l": 3333.3333333333335,
-    "steady_S_lower_g_per_l": 0.015056675872079211,
-    "steady_S_upper_g_per_l": 3.9849433241279213,
-    "steady_X_lower_g_per_l": 2.49247166206396,
-    "steady_X_upper_g_per_l": 0.5075283379360394,
-    "eq9_printed_vs_rootfound_upper_rel": 1.1102230246251565e-16,
-    "saddle_positive_eigenvalue_per_h": 0.056178966354689996,
-    "washout_eigenvalue_haldane_per_h": -0.048108005324206116,
-    "washout_eigenvalue_monod_per_h": 0.6607024519549369,
-    "lower_node_fast_eigenvalue_per_h": -73.01914192931764,
-    "theta_transcritical_h": 3.5060000000000002,
-    "theta_transcritical_two_routes_rel": 0.0,
-    "monod_vs_haldane_S_shift_rel": 0.00377839147194745,
-    "monod_vs_haldane_X_shift_rel": -1.1369282262771176e-05,
-    "monod_theta_c_h": 1.006,
-    "all_six_stated_outcomes_ok": 1.0,
-    "fig8_direction_ok": 1.0,
-    "critical_inoculum_g_per_l": 0.18424664213673553,
-    "critical_inoculum_two_routes_rel": 2.3505641877363814e-12,
-    "critical_inoculum_S1_init_sensitivity_rel": 0.05211954741897018,
-    "critical_step_S0_g_per_l": 17.287597871124817,
-    "critical_step_two_routes_rel": 8.060219158778636e-14,
-    "critical_ramp_duration_h": 0.8720667988003954,
-    "andrews_step_margin_rel": 0.15689872873579858,
-    "andrews_ramp_margin_rel": 0.14670114878308405,
-    "pymrm_march_time_step_order": 1.0021309950485744,
-    "pymrm_march_richardson_abs_err": 1.702079659661626e-07,
-    "pfr_outlet_grid_order": 1.0011321846858463,
-    "pfr_last_cell_read_order": 1.001305959559354,
-    "pfr_boundary_over_last_cell_err_ratio_ncell800": 1.322621457072709,
-    "pfr_richardson_abs_err": 4.254326150925653e-07,
-    "pfr_outlet_X_at_tau3_ncell800_g_per_l": 0.23890743618872498,
-    "pfr_outlet_X_at_tau6_richardson_g_per_l": 0.6076462145033377,
-    "feed_seed_removing_hysteresis_g_per_l": 0.021393476490798143,
-    "feed_seed_fold_two_routes_rel": 1.1833438673392038e-09,
-    "feed_seed_fold_S_g_per_l": 4.492568064568628
+    "mu_hat_m_eq2_per_h": {
+      "kind": "value",
+      "value": 0.8032457720443428,
+      "rtol": 0.05,
+      "unit": "1/h"
+    },
+    "S_m_eq3_g_per_l": {
+      "kind": "value",
+      "value": 0.2449489742783178,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "theta_washout_h": {
+      "kind": "value",
+      "value": 1.2449489742783177,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "eq2_vs_rootfound_max_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "eq. (2) against mu at the root of the analytic dmu/dS (xtol 1e-17): a transcription check, equal by algebra"
+    },
+    "eq3_vs_rootfound_argmax_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "eq. (3) against the root of the analytic dmu/dS"
+    },
+    "eq11_minus_inverse_eq2": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-15,
+      "basis": "identity",
+      "structural": true,
+      "unit": "h",
+      "note": "eq. (11) and 1/eq. (2) are the same arithmetic expression"
+    },
+    "rm_as_maximum_overstatement_rel": {
+      "kind": "value",
+      "value": 0.24494897427831774,
+      "rtol": 0.05
+    },
+    "Ki_min_for_half_rate_defs_g_per_l": {
+      "kind": "value",
+      "value": 0.12,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "half_rate_low_root_g_per_l": {
+      "kind": "value",
+      "value": 0.030464028516734243,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "half_rate_high_root_g_per_l": {
+      "kind": "value",
+      "value": 1.9695359714832659,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "Ks_definition_rel_error": {
+      "kind": "value",
+      "value": 0.0154676172244748,
+      "rtol": 0.05
+    },
+    "Ki_definition_rel_error": {
+      "kind": "value",
+      "value": -0.015232014258367066,
+      "rtol": 0.05
+    },
+    "Ks_definition_rel_error_Ki1": {
+      "kind": "value",
+      "value": 0.03194746725523427,
+      "rtol": 0.05
+    },
+    "Ki_definition_rel_error_Ki1": {
+      "kind": "value",
+      "value": -0.030958424017657027,
+      "rtol": 0.05
+    },
+    "Ks_definition_rel_error_Ki0p5": {
+      "kind": "value",
+      "value": 0.06850176076554453,
+      "rtol": 0.05
+    },
+    "Ki_definition_rel_error_Ki0p5": {
+      "kind": "value",
+      "value": -0.06411010564593267,
+      "rtol": 0.05
+    },
+    "batch_time_no_inhibition_h": {
+      "kind": "value",
+      "value": 6.949160405588639,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "batch_time_ratio_vs_no_inhibition": {
+      "kind": "value",
+      "value": 5.256386879119819,
+      "rtol": 0.05
+    },
+    "lag_hours_at_Ki2": {
+      "kind": "value",
+      "value": 27.922318494599278,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "lag_share_of_delay_Ki2": {
+      "kind": "value",
+      "value": 0.9440131506118717,
+      "rtol": 0.05
+    },
+    "lag_expo_share_Ki2": {
+      "kind": "value",
+      "value": 0.056505054279461044,
+      "rtol": 0.05
+    },
+    "lag_share_of_delay_Ki5": {
+      "kind": "value",
+      "value": 0.9124871582573425,
+      "rtol": 0.05
+    },
+    "lag_share_of_delay_Ki10": {
+      "kind": "value",
+      "value": 0.8777879980628407,
+      "rtol": 0.05
+    },
+    "lag_share_of_delay_at_Xf1": {
+      "kind": "value",
+      "value": 1.0940027701847395,
+      "rtol": 0.05
+    },
+    "lag_share_of_delay_at_Xf0p5": {
+      "kind": "value",
+      "value": 1.2380274471632342,
+      "rtol": 0.05
+    },
+    "peak_growth_rate_drop_rel": {
+      "kind": "value",
+      "value": -0.19434449063149173,
+      "rtol": 0.05
+    },
+    "batch_realised_mean_growth_drop_rel": {
+      "kind": "value",
+      "value": -0.8097552514689615,
+      "rtol": 0.05
+    },
+    "peak_time_fraction": {
+      "kind": "value",
+      "value": 0.9990430964084095,
+      "rtol": 0.05
+    },
+    "above_half_peak_fraction": {
+      "kind": "value",
+      "value": 0.01749008845189739,
+      "rtol": 0.05
+    },
+    "lag_biomass_fold_rise": {
+      "kind": "value",
+      "value": 114.67071680842866,
+      "rtol": 0.05
+    },
+    "branch_switch_Ki_g_per_l": {
+      "kind": "value",
+      "value": 3333.3333333333335,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "lag_share_monotone_in_Ki": {
+      "kind": "exact",
+      "value": true,
+      "note": "the lag share grows with inhibition strength, K_i = 10, 5, 2"
+    },
+    "batch_time_direct_h": {
+      "kind": "value",
+      "value": 36.52747557683508,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "batch_time_direct_vs_printed36_rel": {
+      "kind": "value",
+      "value": 0.014652099356530002,
+      "rtol": 0.05
+    },
+    "batch_time_seeded_h": {
+      "kind": "value",
+      "value": 12.371597482794177,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "batch_time_seeded_vs_printed12p5_rel": {
+      "kind": "value",
+      "value": -0.010272201376465801,
+      "rtol": 0.05
+    },
+    "batch_time_seeded_reset_h": {
+      "kind": "value",
+      "value": 12.366419490751275,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "batch_time_seeded_ladder_h": {
+      "kind": "value",
+      "value": 13.794022451989592,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "seed_readings_raw_spread_rel": {
+      "kind": "value",
+      "value": 0.11544189992147746,
+      "rtol": 0.05
+    },
+    "seed_reset_vs_increment_rel": {
+      "kind": "value",
+      "value": -0.0004185386770062527,
+      "rtol": 0.05
+    },
+    "seed_speedup_factor": {
+      "kind": "value",
+      "value": 2.9525269980401267,
+      "rtol": 0.05
+    },
+    "seed_first_cycle_h": {
+      "kind": "value",
+      "value": 9.770814606568315,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "seed_rest_cycles_h": {
+      "kind": "value",
+      "value": 2.6007828762258627,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "batch_closedform_vs_lsoda_rel": {
+      "kind": "bound",
+      "value": 6.680878072984342e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "closed form against an LSODA event at rtol 1e-12"
+    },
+    "seed_cycles": {
+      "kind": "exact",
+      "value": 6
+    },
+    "steady_S_lower_g_per_l": {
+      "kind": "value",
+      "value": 0.015056675872079213,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "steady_S_upper_g_per_l": {
+      "kind": "value",
+      "value": 3.9849433241279213,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "steady_X_lower_g_per_l": {
+      "kind": "value",
+      "value": 2.49247166206396,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "steady_X_upper_g_per_l": {
+      "kind": "value",
+      "value": 0.5075283379360394,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "saddle_positive_eigenvalue_per_h": {
+      "kind": "value",
+      "value": 0.056178966354689996,
+      "rtol": 0.05,
+      "unit": "1/h"
+    },
+    "washout_eigenvalue_haldane_per_h": {
+      "kind": "value",
+      "value": -0.048108005324206116,
+      "rtol": 0.05,
+      "unit": "1/h"
+    },
+    "lower_node_fast_eigenvalue_per_h": {
+      "kind": "value",
+      "value": -73.01914192931764,
+      "rtol": 0.05,
+      "unit": "1/h"
+    },
+    "theta_transcritical_h": {
+      "kind": "value",
+      "value": 3.5060000000000002,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "eq9_printed_vs_rootfound_upper_rel": {
+      "kind": "bound",
+      "value": 1.1102230246251565e-16,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "eq. (9) as printed against the root of mu(S) = 1/theta: a transcription check"
+    },
+    "theta_transcritical_two_routes_rel": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "1/mu(S_0) against the root of eq. (9) at S_+ = S_0: a transcription check"
+    },
+    "steady_state_kinds": {
+      "kind": "exact",
+      "value": "stable node/saddle/stable node",
+      "note": "lower/upper/washout, from the signs of the eigenvalues of the analytic Jacobian"
+    },
+    "andrews_theta_inside_bistable_window": {
+      "kind": "exact",
+      "value": true,
+      "margin": 0.16866666666666674,
+      "min_margin": 0.001
+    },
+    "monod_vs_haldane_S_shift_rel": {
+      "kind": "value",
+      "value": 0.003778391471947566,
+      "rtol": 0.05
+    },
+    "monod_vs_haldane_X_shift_rel": {
+      "kind": "value",
+      "value": -1.1369282262752023e-05,
+      "rtol": 0.05
+    },
+    "washout_eigenvalue_monod_per_h": {
+      "kind": "value",
+      "value": 0.6607024519549369,
+      "rtol": 0.05,
+      "unit": "1/h"
+    },
+    "monod_theta_c_h": {
+      "kind": "value",
+      "value": 1.006,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "all_six_stated_outcomes_ok": {
+      "kind": "exact",
+      "value": true
+    },
+    "fig8_direction_ok": {
+      "kind": "exact",
+      "value": true
+    },
+    "critical_inoculum_g_per_l": {
+      "kind": "value",
+      "value": 0.18424664213672753,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "critical_inoculum_two_routes_rel": {
+      "kind": "bound",
+      "value": 2.3081536681957004e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "outcome root (xtol 1e-14, LSODA rtol 1e-12) against the stable manifold (rtol 1e-13)"
+    },
+    "critical_inoculum_S1_init_sensitivity_rel": {
+      "kind": "value",
+      "value": 0.05211954741796432,
+      "rtol": 0.05
+    },
+    "critical_inoculum_S1_init_sensitivity_narrow_rel": {
+      "kind": "value",
+      "value": 0.004070917803027818,
+      "rtol": 0.05
+    },
+    "critical_step_S0_g_per_l": {
+      "kind": "value",
+      "value": 17.287597871124788,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "critical_step_two_routes_rel": {
+      "kind": "bound",
+      "value": 3.622657729351886e-13,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "outcome root (xtol 1e-13) against the separatrix side test"
+    },
+    "critical_ramp_duration_h": {
+      "kind": "value",
+      "value": 0.8720667988002224,
+      "rtol": 0.05,
+      "unit": "h"
+    },
+    "andrews_step_margin_rel": {
+      "kind": "value",
+      "value": 0.15689872873580057,
+      "rtol": 0.05
+    },
+    "andrews_ramp_margin_rel": {
+      "kind": "value",
+      "value": 0.14670114878331142,
+      "rtol": 0.05
+    },
+    "feed_seed_fold_S_g_per_l": {
+      "kind": "value",
+      "value": 4.492568064568628,
+      "rtol": 0.05
+    },
+    "feed_seed_removing_hysteresis_g_per_l": {
+      "kind": "value",
+      "value": 0.021393476490798143,
+      "rtol": 0.05
+    },
+    "feed_seed_share_of_operating_biomass": {
+      "kind": "value",
+      "value": 0.008583237601619383,
+      "rtol": 0.05
+    },
+    "feed_seed_fold_two_routes_rel": {
+      "kind": "value",
+      "value": 1.183537379212396e-09,
+      "rtol": 0.05
+    },
+    "pymrm_march_time_step_order": {
+      "kind": "bound",
+      "value": 1.0253997580819503,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler is first order; the value is the order furthest from 1 over both fields and every triple of the ladder"
+    },
+    "pymrm_march_roundoff_margin": {
+      "kind": "bound",
+      "value": 53355.04892119842,
+      "min": 1000.0,
+      "basis": "chosen",
+      "note": "finest successive difference over the newton step tolerance"
+    },
+    "pymrm_march_richardson_abs_err": {
+      "kind": "value",
+      "value": 1.7020796729835414e-07,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "pfr_outlet_grid_order": {
+      "kind": "bound",
+      "value": 1.00936198470517,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "first-order upwind; order furthest from 1 over both fields and every triple of the ladder"
+    },
+    "pfr_roundoff_margin": {
+      "kind": "bound",
+      "value": 12146844.848520689,
+      "min": 1000.0,
+      "basis": "chosen",
+      "note": "finest successive difference over the newton step tolerance"
+    },
+    "pfr_richardson_abs_err": {
+      "kind": "value",
+      "value": 5.837611406223078e-07,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "pfr_outlet_X_at_tau3_ncell800_g_per_l": {
+      "kind": "value",
+      "value": 0.23890747147416883,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "pfr_outlet_X_at_tau6_richardson_g_per_l": {
+      "kind": "value",
+      "value": 0.6076461010578447,
+      "rtol": 0.05,
+      "unit": "g/l"
+    },
+    "pfr_cell_balance_max_rel": {
+      "kind": "bound",
+      "value": 6.661338147750939e-16,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "structural": true,
+      "note": "S + X/Y is carried unchanged by the yield-coupled source in every cell"
+    }
+  },
+  "quoted": {
+    "batch_time_ratio_vs_no_inhibition": [
+      "5.2564"
+    ],
+    "lag_share_of_delay_Ki2": [
+      "94.40 %"
+    ],
+    "lag_expo_share_Ki2": [
+      "5.65 %"
+    ],
+    "lag_share_of_delay_Ki10": [
+      "87.78 %"
+    ],
+    "lag_share_of_delay_Ki5": [
+      "91.25 %"
+    ],
+    "peak_growth_rate_drop_rel": [
+      "-19.43 %"
+    ],
+    "peak_time_fraction": [
+      "99.904 %"
+    ],
+    "above_half_peak_fraction": [
+      "1.7490 %"
+    ],
+    "batch_realised_mean_growth_drop_rel": [
+      "-80.98 %"
+    ],
+    "lag_biomass_fold_rise": [
+      "114.67"
+    ],
+    "lag_share_of_delay_at_Xf1": [
+      "109.4003 %"
+    ],
+    "batch_time_direct_h": [
+      "36.527476"
+    ],
+    "batch_time_direct_vs_printed36_rel": [
+      "+1.4652 %"
+    ],
+    "batch_time_seeded_h": [
+      "12.371597"
+    ],
+    "batch_time_seeded_vs_printed12p5_rel": [
+      "-1.0272 %"
+    ],
+    "batch_closedform_vs_lsoda_rel": [
+      "below 1e-9"
+    ],
+    "seed_readings_raw_spread_rel": [
+      "11.5442 %"
+    ],
+    "seed_reset_vs_increment_rel": [
+      "-0.0419 %"
+    ],
+    "steady_S_lower_g_per_l": [
+      "0.0150567"
+    ],
+    "steady_X_lower_g_per_l": [
+      "2.492472"
+    ],
+    "lower_node_fast_eigenvalue_per_h": [
+      "-73.019142"
+    ],
+    "steady_S_upper_g_per_l": [
+      "3.984943"
+    ],
+    "steady_X_upper_g_per_l": [
+      "0.507528"
+    ],
+    "saddle_positive_eigenvalue_per_h": [
+      "+0.0561790"
+    ],
+    "washout_eigenvalue_haldane_per_h": [
+      "-0.0481080"
+    ],
+    "monod_vs_haldane_S_shift_rel": [
+      "0.3778 %"
+    ],
+    "monod_vs_haldane_X_shift_rel": [
+      "-0.0011 %"
+    ],
+    "washout_eigenvalue_monod_per_h": [
+      "+0.660702"
+    ],
+    "theta_washout_h": [
+      "1.244949"
+    ],
+    "theta_transcritical_h": [
+      "3.506000"
+    ],
+    "critical_inoculum_g_per_l": [
+      "0.1842466"
+    ],
+    "critical_inoculum_S1_init_sensitivity_rel": [
+      "5.2120 %"
+    ],
+    "critical_inoculum_S1_init_sensitivity_narrow_rel": [
+      "0.4071 %"
+    ],
+    "critical_step_S0_g_per_l": [
+      "17.28760"
+    ],
+    "critical_ramp_duration_h": [
+      "0.8720668"
+    ],
+    "andrews_ramp_margin_rel": [
+      "14.67 %"
+    ],
+    "critical_inoculum_two_routes_rel": [
+      "below 1e-9"
+    ],
+    "critical_step_two_routes_rel": [
+      "below 1e-9"
+    ],
+    "feed_seed_removing_hysteresis_g_per_l": [
+      "0.0213935"
+    ],
+    "feed_seed_share_of_operating_biomass": [
+      "0.8583 %"
+    ],
+    "feed_seed_fold_two_routes_rel": [
+      "1.2e-9"
+    ],
+    "pymrm_march_time_step_order": [
+      "at least 0.95",
+      "at most 1.05"
+    ],
+    "pfr_outlet_grid_order": [
+      "at least 0.95",
+      "at most 1.05"
+    ],
+    "pfr_outlet_X_at_tau6_richardson_g_per_l": [
+      "0.6076461"
+    ],
+    "half_rate_low_root_g_per_l": [
+      "0.0304640"
+    ],
+    "half_rate_high_root_g_per_l": [
+      "1.969536"
+    ],
+    "Ks_definition_rel_error": [
+      "+1.5468 %"
+    ],
+    "Ki_definition_rel_error": [
+      "-1.5232 %"
+    ],
+    "Ks_definition_rel_error_Ki1": [
+      "+3.1947 %"
+    ],
+    "Ki_definition_rel_error_Ki1": [
+      "-3.0958 %"
+    ],
+    "Ks_definition_rel_error_Ki0p5": [
+      "+6.8502 %"
+    ],
+    "Ki_definition_rel_error_Ki0p5": [
+      "-6.4110 %"
+    ],
+    "rm_as_maximum_overstatement_rel": [
+      "24.4949 %"
+    ]
+  },
+  "breaks": {
+    "mu_hat_m_eq2_per_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l",
+      "muhat 1 -> 0.9 1/h",
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "S_m_eq3_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l",
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "theta_washout_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l",
+      "muhat 1 -> 0.9 1/h",
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "rm_as_maximum_overstatement_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l",
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "half_rate_low_root_g_per_l": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "half_rate_high_root_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "Ks_definition_rel_error": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "Ki_definition_rel_error": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "batch_time_direct_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "closed form with the (S_f - S_i)/K_i term dropped",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "batch_time_direct_vs_printed36_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "closed form with the (S_f - S_i)/K_i term dropped",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "batch_time_seeded_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h",
+      "acclimation read as the 2/4/6 ladder"
+    ],
+    "batch_time_seeded_vs_printed12p5_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h",
+      "acclimation read as the 2/4/6 ladder"
+    ],
+    "batch_time_seeded_reset_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "batch_time_seeded_ladder_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "seed_readings_raw_spread_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "seed_reset_vs_increment_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "seed_speedup_factor": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "closed form with the (S_f - S_i)/K_i term dropped",
+      "acclimation read as the 2/4/6 ladder"
+    ],
+    "seed_first_cycle_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "seed_rest_cycles_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h",
+      "acclimation read as the 2/4/6 ladder"
+    ],
+    "seed_cycles": [
+      "acclimation read as the 2/4/6 ladder"
+    ],
+    "batch_time_ratio_vs_no_inhibition": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "lag_hours_at_Ki2": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "muhat 1 -> 0.9 1/h",
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "peak_growth_rate_drop_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "batch_realised_mean_growth_drop_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "peak_time_fraction": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "lag_biomass_fold_rise": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "steady_S_lower_g_per_l": [
+      "K_s 0.03 -> 0.015 g/l",
+      "operate at eq. (9)'s printed root",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "theta 3 -> 1.2 h (below theta_w)"
+    ],
+    "steady_S_upper_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)"
+    ],
+    "steady_X_lower_g_per_l": [
+      "Y 0.5 -> 0.4",
+      "operate at eq. (9)'s printed root",
+      "S_0 5 -> 7 g/l (still bistable)"
+    ],
+    "steady_X_upper_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "Y 0.5 -> 0.4",
+      "S_0 5 -> 7 g/l (still bistable)"
+    ],
+    "saddle_positive_eigenvalue_per_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "washout_eigenvalue_haldane_per_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "S_0 5 -> 7 g/l (still bistable)",
+      "S_0 5 -> 3 g/l (below the bistable range)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "washout_eigenvalue_monod_per_h": [
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "lower_node_fast_eigenvalue_per_h": [
+      "K_s 0.03 -> 0.015 g/l",
+      "operate at eq. (9)'s printed root",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "theta_transcritical_h": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "S_0 5 -> 7 g/l (still bistable)",
+      "S_0 5 -> 3 g/l (below the bistable range)"
+    ],
+    "monod_vs_haldane_S_shift_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l",
+      "operate at eq. (9)'s printed root"
+    ],
+    "monod_vs_haldane_X_shift_rel": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "monod_theta_c_h": [
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "steady_state_kinds": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "operate at eq. (9)'s printed root",
+      "theta 3 -> 4 h (above 1/mu(S_0))"
+    ],
+    "andrews_theta_inside_bistable_window": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "theta 3 -> 1.2 h (below theta_w)",
+      "S_0 5 -> 3 g/l (below the bistable range)"
+    ],
+    "feed_seed_fold_S_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "S_0 5 -> 7 g/l (still bistable)"
+    ],
+    "feed_seed_removing_hysteresis_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "Y 0.5 -> 0.4",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "S_0 5 -> 7 g/l (still bistable)"
+    ],
+    "feed_seed_share_of_operating_biomass": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "S_0 5 -> 7 g/l (still bistable)"
+    ],
+    "critical_inoculum_g_per_l": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "Y 0.5 -> 0.4",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "S_0 5 -> 7 g/l (still bistable)",
+      "S_0 5 -> 3 g/l (below the bistable range)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "all_six_stated_outcomes_ok": [
+      "K_i 2 -> 1e12 g/l (Monod)",
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "theta 3 -> 1.2 h (below theta_w)"
+    ],
+    "Ki_min_for_half_rate_defs_g_per_l": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "Ks_definition_rel_error_Ki1": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "Ki_definition_rel_error_Ki1": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "Ks_definition_rel_error_Ki0p5": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "Ki_definition_rel_error_Ki0p5": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "branch_switch_Ki_g_per_l": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "above_half_peak_fraction": [
+      "K_s 0.03 -> 0.015 g/l"
+    ],
+    "batch_closedform_vs_lsoda_rel": [
+      "closed form with the (S_f - S_i)/K_i term dropped"
+    ],
+    "fig8_direction_ok": [
+      "theta 3 -> 4 h (above 1/mu(S_0))",
+      "theta 3 -> 1.2 h (below theta_w)"
+    ],
+    "critical_step_S0_g_per_l": [
+      "S_0 5 -> 7 g/l (still bistable)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "andrews_step_margin_rel": [
+      "S_0 5 -> 7 g/l (still bistable)",
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "batch_time_no_inhibition_h": [
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "critical_ramp_duration_h": [
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "andrews_ramp_margin_rel": [
+      "muhat 1 -> 0.9 1/h"
+    ],
+    "lag_share_of_delay_Ki2": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_expo_share_Ki2": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_share_of_delay_Ki5": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_share_of_delay_Ki10": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_share_of_delay_at_Xf1": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_share_of_delay_at_Xf0p5": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "lag_share_monotone_in_Ki": [
+      "lag tangent at t = 0, not at the peak"
+    ],
+    "pymrm_march_time_step_order": [
+      "marcher with the trapezoidal rule (theta_t = 1/2)"
+    ],
+    "pymrm_march_richardson_abs_err": [
+      "marcher with -c/theta dropped from the constant operator"
+    ],
+    "pymrm_march_roundoff_margin": [
+      "marcher newton tolerance 1e-6"
+    ],
+    "pfr_outlet_X_at_tau3_ncell800_g_per_l": [
+      "construct_div nu=1 (cylindrical)",
+      "inlet bc zero-gradient, not Dirichlet"
+    ],
+    "pfr_richardson_abs_err": [
+      "construct_div nu=1 (cylindrical)",
+      "inlet bc zero-gradient, not Dirichlet"
+    ],
+    "pfr_outlet_X_at_tau6_richardson_g_per_l": [
+      "construct_div nu=1 (cylindrical)"
+    ],
+    "pfr_outlet_grid_order": [
+      "plug-flow ladder 6/12/24/48 cells (not asymptotic)"
+    ],
+    "pfr_roundoff_margin": [
+      "plug-flow newton tolerance 1e-6"
+    ],
+    "feed_seed_fold_two_routes_rel": [
+      "X_0 fold from the root count at ngrid 1501"
+    ],
+    "eq9_printed_vs_rootfound_upper_rel": [
+      "eq. (9) transcribed with 4 K_s K_i as 4 K_s"
+    ],
+    "theta_transcritical_two_routes_rel": [
+      "eq. (9) transcribed with 4 K_s K_i as 4 K_s"
+    ],
+    "eq2_vs_rootfound_max_rel": [
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "eq3_vs_rootfound_argmax_rel": [
+      "eq. (2) without the 2, eq. (3) without the square root"
+    ],
+    "critical_inoculum_two_routes_rel": [
+      "outcome classified at t = 50 h, not on an event",
+      "separatrix route B queried at the wrong substrate"
+    ],
+    "critical_inoculum_S1_init_sensitivity_rel": [
+      "S_1(0) sensitivity over a sample without its largest value"
+    ],
+    "critical_inoculum_S1_init_sensitivity_narrow_rel": [
+      "S_1(0) sensitivity over a sample without its largest value"
+    ],
+    "critical_step_two_routes_rel": [
+      "separatrix route B queried at the wrong substrate"
+    ]
+  },
+  "rows": {
+    "defined": 25,
+    "recorded": 25
   }
 }

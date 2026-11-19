@@ -14,8 +14,8 @@ authors:
   - name: "PyMRM Gallery contributors"
     orcid: null
 
-pymrm_min_version: "2.3"
-runtime_seconds: 70
+pymrm_min_version: "3.4.0"
+runtime_seconds: 90
 datasets:
   - andrews1968-printed-model
 
@@ -123,15 +123,14 @@ data:
     page.
   status: complete
   the_paper_prints_no_table: >
-    Confirmed two ways. `pdftotext -layout` over all seventeen pages gives 51484
-    characters and a case-insensitive search for `table` returns exactly two
-    hits, BOTH inside the word "unstable"; and all seventeen 300 ppi renders
-    were read, with no ruled block, no column head and no "Table N" caption
-    anywhere. The paper prints TEN figures, Figs. 1-10, and every parameter set
-    is typeset inside a legend, which is why this case is not figure-gated:
-    reading a typeset legend is transcription, not digitising. Figs. 2 and 3 are
-    PACTOLUS block diagrams and carry no parameter set; the other eight carry one
-    each and all eight are in the CSV.
+    Confirmed two ways. A case-insensitive search of the `pdftotext -layout`
+    text of all seventeen pages finds `table` only inside the word "unstable";
+    and all seventeen renders were read, with no ruled block, no column head and
+    no "Table N" caption anywhere. The paper prints ten figures, Figs. 1-10, and
+    every parameter set is typeset inside a legend, which is why this case is not
+    figure-gated: reading a typeset legend is transcription, not digitising.
+    Figs. 2 and 3 are PACTOLUS block diagrams and carry no parameter set; the
+    other eight carry one each and all eight are in the CSV.
   no_measurements_anywhere: >
     THE PAPER CONTAINS NO EXPERIMENTAL DATA. The only measurements it refers to
     are other people's, in prose and without numbers (Boon and Laudelout on
@@ -161,13 +160,11 @@ what_the_page_reproduces_and_what_it_cannot:
     S_1(0) and Fig. 10's initial state - are assumptions of this page, stated as
     such, with the sensitivity of the answer to each reported over the WHOLE
     sampled interval rather than a flattering part of it: the critical inoculum
-    varies 5.2120 % over S_1(0) in [0, 0.2] g/l (0.4071 % over [0, 0.05] alone).
-    THAT TRUNCATION IS ALSO A BREAK ROW, which is why the reported spread is
-    covered at 92 % rather than at the 0.23 % its only previous mover managed:
-    it was the one metric of the 63 whose strongest cover sat below the 5 % at
-    which check_agreement compares, so no defect this page injects could have
-    shown up as a regression in it. The row drops the largest sampled S_1(0),
-    re-root-finds the rest and reports 0.4071 % against the reported 5.2120 %.
+    varies 5.2120 % <!-- claim: critical_inoculum_S1_init_sensitivity_rel -->
+    over the sampled S_1(0), and only
+    0.4071 % <!-- claim: critical_inoculum_S1_init_sensitivity_narrow_rel -->
+    with the largest sampled S_1(0) left out, which is the flattering window and
+    not the one reported.
     S_1(0) = 0 IS CORROBORATED BY ANDREWS' OWN FIG. 9, where both S_1 curves
     emanate from the origin while the two X_1 curves start at 0.10 and 0.50 as
     labelled, read on a 300 ppi crop of the rotated landscape page.
@@ -223,11 +220,18 @@ approximation_stated_as_an_identity_and_NOT_called_a_defect: >
   gives muhat_m >= muhat/2. HOW FAR OUT THEY ARE DEPENDS ON WHICH OF HIS THREE
   PRINTED K_i YOU TAKE, and the page prints all three rather than the mildest:
   at K_i = 2.0 g/l (Figs. 6-10, this page's case) the exact roots are
-  0.030464028517 and 1.969535971483 g/l, +1.5468 % and -1.5232 % off the values
-  he names them for; at the K_i = 1.0 g/l of his Fig. 4, +3.1947 % and
-  -3.0958 %; and at the K_i = 0.50 g/l of his Fig. 1, +6.8502 % and -6.4110 %.
-  Quoting only the K_i = 2.0 row would understate the approximation more than
-  fourfold for a case he prints. THIS IS NOT FILED AS A DEFECT: it is an
+  0.0304640 <!-- claim: half_rate_low_root_g_per_l --> and
+  1.969536 <!-- claim: half_rate_high_root_g_per_l --> g/l,
+  +1.5468 % <!-- claim: Ks_definition_rel_error --> and
+  -1.5232 % <!-- claim: Ki_definition_rel_error --> off the values he names
+  them for; at the K_i = 1.0 g/l of his Fig. 4,
+  +3.1947 % <!-- claim: Ks_definition_rel_error_Ki1 --> and
+  -3.0958 % <!-- claim: Ki_definition_rel_error_Ki1 -->; and at the
+  K_i = 0.50 g/l of his Fig. 1,
+  +6.8502 % <!-- claim: Ks_definition_rel_error_Ki0p5 --> and
+  -6.4110 % <!-- claim: Ki_definition_rel_error_Ki0p5 -->. Quoting only the
+  K_i = 2.0 row would understate the approximation for a case he prints.
+  THIS IS NOT FILED AS A DEFECT: it is an
   approximation rather than a misprint, and the nearest thing in the paper to a
   qualification is on the same page, "even when K_s and K_i are well separated
   there is a considerable reduction in the maximum specific growth rate
@@ -238,182 +242,66 @@ validation:
   ranking: >
     No worked example with printed intermediates and no measurements exist, so
     the two highest available routes are used and the fourth is refused:
-    (2) internal identities the paper must satisfy, and (3) stated numerical
-    results in the text. (4) figure digitisation is REFUSED, with the
-    consequence stated on the page.
+    internal identities the paper must satisfy, and stated numerical results in
+    the text. Figure digitisation is REFUSED, with the consequence stated on the
+    page.
   identities: >
     eqs. (2), (3), (6) and (11) re-derived from eq. (1) in sympy with residual
-    exactly 0; the batch-time closed form derived by partial fractions with both
-    the decomposition and the antiderivative residuals exactly 0; Andrews'
-    eq. (1) proved identical to Froment's eq. (1.5.2-4) and to Rawlings &
-    Ekerdt's substrate-inhibition form with K_1 = 1/K_i, both residuals exactly
-    0; eq. (11) equal to 1/eq. (2) to 0.0 in double precision. All printed,
-    NONE reported as metrics, because a symbolic zero is a proof rather than a
-    measurement.
-  one_sentence_with_three_readings_settled_by_a_figure_annotation: >
-    Book p. 715 describes the acclimated-seed procedure as "a substrate
-    concentration of 2.0 g/l with the substrate concentration being increased in
-    2.0 g/l steps after reduction in each case to 0.02 g/l". In isolation that
-    supports THREE literal readings - reset to 2.0, increment by 2.0 from the
-    0.02 left behind, or step the initial concentration up a 2.0/4.0/6.0 ladder -
-    giving 12.366419 h, 12.371597 h and 13.794022 h, a RAW SPREAD OF 11.5442 %
-    against his printed 12.5 hr. THE TYPESET ANNOTATION INSIDE FIG. 7 SETTLES IT:
-    "REPEATED ORGANISM SEPARATION & DILUTION. S_i ADDED IN INCREMENTS OF 2.0
-    GM/L", read at digit scale on a 300 ppi crop of the rotated landscape page
-    and transcribed into the CSV as fig7_annotation. "Added in increments of 2.0"
-    is the increment reading, so 12.371597 h (-1.0272 %) is what the page
-    reports; the reset reading is kept and priced at 0.0419 % away, and the
-    ladder reading is reported as the one the annotation excludes. The page does
-    not call the sentence ambiguous, because his own figure is not.
+    exactly zero; the batch-time closed form derived by partial fractions with
+    both the decomposition and the antiderivative residuals exactly zero;
+    Andrews' eq. (1) proved identical to Froment's eq. (1.5.2-4) and to Rawlings
+    & Ekerdt's substrate-inhibition form with K_1 = 1/K_i. The notebook raises if
+    any residual is not zero.
   stated_results: >
-    36.527476 h against Andrews' 36 (+1.4652 %) and 12.371597 h against his 12.5
-    (-1.0272 %), both from the closed form; and all six stated outcomes of
+    36.527476 h <!-- claim: batch_time_direct_h --> against Andrews' printed
+    36 hr and 12.371597 h <!-- claim: batch_time_seeded_h --> against his
+    12.5 hr, both from the closed form; and all six stated outcomes of
     Figs. 8, 9 and 10 reproduced, with the thresholds he does not print
-    root-found.
+    root-found on event-terminated integrations.
+  one_sentence_with_three_readings_settled_by_a_figure_annotation: >
+    Book p. 715's acclimated-seed sentence supports three literal readings
+    (reset to 2.0, increment by 2.0 from the 0.02 left behind, or a 2.0/4.0/6.0
+    ladder) with a raw spread of
+    11.5442 % <!-- claim: seed_readings_raw_spread_rel -->. The typeset
+    annotation inside Fig. 7, "S_i ADDED IN INCREMENTS OF 2.0 GM/L", is the
+    increment reading, which the page reports; the reset reading differs from it
+    by -0.0419 % <!-- claim: seed_reset_vs_increment_rel --> and the ladder
+    reading is the one the annotation excludes.
   second_independent_computations: >
-    SIX quantities are computed twice, and the page distinguishes the FOUR that
-    are genuinely independent from the TWO that are transcription checks. The
-    four: the batch time by closed form against LSODA (6.7e-12 rel); the critical
-    inoculum by bisection on the IVP outcome against the saddle's
-    backward-integrated stable manifold (2.4e-12 rel); the critical step by
-    bisection against a separatrix side test (8.1e-14 rel); and the X_0 that
-    kills the fold by root counting against a double-root solve (1.2e-9 rel at
-    the finest scan). The two transcription checks: eq. (9) as printed against a
-    Brent root of mu(S) = 1/theta (1.1e-16 rel) and the transcritical residence
-    time as 1/mu(S_0) against a Brent root of eq. (9) at S_+ = S_0 (exactly 0.0)
-    - both are the same algebra written twice, so they agree by construction and
-    catch only a mis-transcription, which is what they are called on the page and
-    what the break table injects into them. The whole range is 0.0 to 1.2e-9.
-    Beyond those, the pymrm marcher and plug-flow solve are refined against LSODA
-    and the batch IVP with Richardson extrapolation.
+    Six quantities are computed twice, and the page separates the four that are
+    independent from the two that are transcription checks. The four: the batch
+    time by closed form against LSODA, the critical inoculum by a root of the IVP
+    outcome against the saddle's backward-integrated stable manifold, the
+    critical step by a root of the outcome against a separatrix side test, and
+    the X_0 that removes the fold by a root of the steady-state count against a
+    double-root solve. The two transcription checks, eq. (9) as printed against
+    the root of mu(S) = 1/theta and the transcritical residence time as
+    1/mu(S_0) against the root of eq. (9) at S_+ = S_0, are the same algebra
+    written twice; the break table mis-transcribes one term of each.
   root_found_never_swept: >
-    Every threshold on the page is a Brent root on an EVENT-TERMINATED
-    integration - the classifier stops on reaching the operating state or on
-    biomass falling through 1e-9 g/l - so no number is read off the end of a
-    fixed window and no extremum is a grid maximum. THE ONE GRID-LIMITED
-    QUANTITY IS CAUGHT AND NOT REPORTED: the X_0 fold found by bisecting an
-    integer root count is grid-limited by construction, its scan is refined over
-    three scans across six orders of magnitude to show it converging (4.9e-3,
-    5.3e-6, 1.2e-9), and the
-    reported value is the double-root one, which has no grid in it.
+    Every root on the page is found by pymrm.checks.find_roots over a stated
+    physical range and raises unless exactly one root is found; every threshold
+    is a root on an event-terminated integration. The X_0 fold found from the
+    steady-state count is grid-limited by construction and is not reported; it
+    is shown converging onto the double-root value as its scan is refined.
   refinement: >
-    Both axes that carry error are refined. The pymrm backward-Euler chemostat
-    marcher gives observed order 1.0021 over nstep 150..2400 with Richardson
-    338x better than the finest step; the pymrm plug-flow solve gives observed
-    order 1.0011 over ncell 100..800 with Richardson 637x better than the finest
-    grid.
-    THE TWO WAYS OF READING THE OUTLET ARE BOTH REFINED AND THE PAGE REPORTS WHAT
-    IT MEASURED, not the standing warning: against the same batch reference on
-    the same four grids, the compute_boundary_values read converges at order
-    1.0011 and the last-cell-centre read at 1.0013 - BOTH FIRST ORDER - and the
-    last-cell read is the CLOSER of the two at every grid, by a ratio that hardly
-    moves under refinement (1.3215 at ncell 100, 1.3226 at ncell 800).
-    That is what a zero-gradient outflow condition does: the boundary value is
-    reconstructed from an interior solution that is itself only first-order
-    accurate. compute_boundary_values is kept because it returns the value the
-    flux operator transports, so a mass balance written on it closes - a
-    consistency argument, not an accuracy one - and because it stays right when
-    the outflow condition is not zero-gradient. J4.1 measured the same pair on
-    its own Monod plug-flow problem and found both reads first order there too,
-    with the last-cell read closer by a different constant.
-    NO PLUG-FLOW OUTLET IS REPORTED OFF A SINGLE GRID: the tau = 6 h outlet is
-    reported as the Richardson value of ncell 1200 and 2400, 0.6076462 g/l,
-    with the raw ncell 1200 value printed beside it and its 0.1637 % distance
-    from the batch reference stated; the tau = 3 h value is named
-    pfr_outlet_X_at_tau3_ncell800_g_per_l so that its key says it is a grid
-    quantity, and the ratio between the two reads is named
-    pfr_boundary_over_last_cell_err_ratio_ncell800 for the same reason - it is
-    a grid quantity too, and it drifts, 1.3215 at ncell 100 to 1.3226 at 800.
-  branches: >
-    The lag decomposition is piecewise in K_i - the steepest point of the batch
-    run is the interior peak S_m when S_m < S_i and the start of the run
-    otherwise - and BOTH BRANCHES AND THE SWITCH are exercised: K_i = 2, 5, 10
-    on the interior-peak branch, K_i -> infinity on the other, and
-    K_i = S_i^2/K_s = 3333.3333 exactly at the switch, where the lag is
-    -6.4e-23 h and the split is continuous.
+    Both axes that carry error are refined, each with orders from successive
+    differences of the refinement ladder and a round-off companion: the pymrm
+    backward-Euler chemostat marcher over five step counts, and the pymrm
+    plug-flow solve over four grids, with outlet {"outflow": True} read through
+    compute_boundary_values. No plug-flow outlet is reported off a single grid:
+    the tau = 6 h outlet is the Richardson value of 1200 and 2400 cells.
   break_table: >
-    TWENTY-FOUR defect injections, and the coverage map is GENERATED FROM THEIR
-    MEASURED MOVES rather than written by hand: every row returns a dictionary
-    keyed by metric name whose values are those metrics recomputed under the
-    defect, a row covers a metric only if the recomputed value moves it by more
-    than 1e-6 relative, and the notebook fails to execute if any metric is
-    neither moved nor named structural or if any row moves nothing. All 63
-    metrics are moved by at least one row, over 150 measured row-metric links.
-    AND THE ROWS THEMSELVES ARE PARSED RATHER THAN TRUSTED. A row that returned a
-    TYPED CONSTANT for a metric would record a relative move of exactly 1.0
-    whatever the reported value was, so its coverage links could not fail - a
-    hand-written coverage claim wearing the generator's clothes. This page
-    shipped that: the lag row returned five literal 0.0s and was the only cover
-    of four metrics. It now recomputes the alternative split through the same
-    lag_split/lag_share the reported split comes from, with S_m forced to S_i
-    (the values are unchanged, the link became falsifiable), and a static guard
-    reads every row's own source plus one level of the notebook helpers it names
-    and rejects any agreement.json key bound to a numeric literal or to a local
-    name only ever assigned one. The guard's teeth are MEASURED: the offending
-    row is kept verbatim as a negative control and the guard is asserted to catch
-    all five of its literal metrics and to leave its _-prefixed diagnostic alone.
-    An earlier draft carried the link as free text and two of its entries were
-    false - one named a row that never recomputed the metric, another asserted
-    that two routes "part company" under a defect they both carry, where they in
-    fact still agree to 6e-14. FOUR rows are transcription errors rather than
-    physics errors, because four reported residuals (eq. 2 and eq. 3 against
-    their root-found values, eq. 9 against the Brent root, and the transcritical
-    residence time by its two routes) are zero by algebra whenever the copying is
-    right: they are labelled transcription checks, not independent computations,
-    and each has a row that mis-transcribes one term of the equation it checks.
-  below_the_CI_floor: >
-    FIVE of the 63 metrics sit below check_agreement.py's ABS_FLOOR = 1e-12 and
-    are therefore OUTSIDE the regression suite: eq2_vs_rootfound_max_rel,
-    eq3_vs_rootfound_argmax_rel, eq9_printed_vs_rootfound_upper_rel,
-    theta_transcritical_two_routes_rel and critical_step_two_routes_rel. Each is
-    named on the page with an ABOVE-FLOOR COMPANION carrying the same physics
-    (mu_hat_m_eq2_per_h, S_m_eq3_g_per_l, steady_S_upper_g_per_l,
-    theta_transcritical_h, critical_step_S0_g_per_l), and an assertion checks
-    that every below-floor metric has one and that no companion is itself below
-    the floor.
-  structural_and_labelled_so: >
-    eq. (11) minus 1/eq. (2) is exactly 0.0 because they are the same arithmetic
-    expression; S + X/Y conservation is enforced cell by cell by the
-    yield-coupled source whatever the grid; the Fig. 8 threshold is exactly
-    S_0 = 5.0 g/l BY CONSTRUCTION, because the initial state is the steady state
-    at that S_0, so what the +-0.2 excursions test is the DIRECTION and the
-    reported metric is fig8_direction_ok; and the plug-flow outlet is monotone in
-    residence time because dX/dt = mu X > 0, which is a property of eq. (4) and
-    not a measurement. All four are named as identities on the page, under the
-    names the code prints them by - none of them is an agreement.json key.
-  prose_sweep: >
-    101 prose and metadata values are checked against the live computation by an
-    assertion cell plus nine structural assertions; the notebook FAILS TO EXECUTE
-    if any drifts. A SECOND, MECHANICAL SWEEP then reads this file, README.md,
-    the data sidecar and models_entry.yaml and requires every number written to
-    five or more decimal places to match a live value to half an ulp of its own
-    printed digits. Five decimals rather than four is deliberate: it excludes the
-    DOI without needing an exception list. THE TOKEN COUNT DEPENDS ON THE SHAPE
-    THE PAGE IS IN, and both counts are pinned in the notebook and the one that
-    applies is asserted: 93 tokens across the four files in the case queue, 60 in
-    the published page, where integrate_case.py has spliced models_entry.yaml
-    into models.yaml so that only three of the four sit next to the notebook (on
-    Colab none of them do, and the sweep says so and counts them). The sweep
-    MEASURES ITS OWN TEETH instead of claiming completeness, by corrupting the
-    last printed digit of every token it found and reporting how many of those
-    corruptions it rejects: 100 %. HARDENED on the spot to every digit position,
-    by +1 and by +5, it rejects all but ONE substitution, which the code names by
-    the live value it lands on: the reported Richardson plug-flow outlet at
-    tau = 6 h, 0.6076462, corrupted in its seventh decimal into the LSODA batch
-    reference 0.60764725 printed beside it, a millionth away. A second distinct
-    survivor fails the build. Three quantities that are NOT metrics -
-    t_peak/t_f, the fraction of the run above half the peak rate and the fold
-    rise during the lag - are written to five or more decimals in README.md and
-    models_entry.yaml for exactly this reason: check_agreement never compares
-    them, so the sweep is the only net they can be inside.
+    Every non-structural claim has a break-table row that injects a defect
+    through a constant or an argument of the study computing it and fails the
+    claim's own check; the rows are declared with claims.define_rows. Four rows
+    are transcription errors, one per transcription check. The two structural
+    claims are named identities: eq. (11) minus 1/eq. (2), and S + X/Y across
+    the plug-flow cells.
   determinism: >
-    Nothing on this page is stochastic - no sampling, no bootstrap, no random
-    initial guess, and the one continuation-shaped calculation (the plug-flow
-    sweep over residence time) uses a DETERMINISTIC per-tau initial guess, the
-    batch trajectory sampled at z/v, rather than a warm start from the previous
-    tau, so no reported number can depend on the sweep order. Two consecutive
-    executions give a byte-identical agreement.json and an identical content
-    hash over all cell sources and outputs including both figure PNGs.
+    Nothing on this page is stochastic, and the plug-flow sweep over residence
+    time uses a deterministic per-tau initial guess, the batch trajectory sampled
+    at z/v, rather than a warm start from the previous tau.
 
 honesty:
   what_pymrm_adds: >
