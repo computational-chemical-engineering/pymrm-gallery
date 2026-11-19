@@ -37,10 +37,11 @@
       "note": "mean (H - H_38)/h with bare upwind; the prediction is exactly 1"
     },
     "pymrm_upwind_dispersion_coeff_err": {
-      "kind": "value",
+      "kind": "bound",
       "value": 7.2440014061703195e-06,
-      "rtol": 0.05,
-      "note": "|mean (H - H_38)/h - 1| with bare upwind, the O(h) remainder"
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "|mean (H - H_38)/h - 1| with bare upwind over n_z = 350, 700, 1400 (dt = 0.5 s): the leading-order coefficient is exactly 1, so this is the O(h) remainder plus the time error; the bound admits that remainder and fails any scheme whose numerical dispersion is not u h / 2"
     },
     "pymrm_dt_order_upwind_dev": {
       "kind": "bound",
@@ -59,9 +60,9 @@
     "pymrm_dt_swing_H": {
       "kind": "bound",
       "value": 4.490319909233875e-07,
-      "max": 1e-05,
+      "max": 1e-06,
       "basis": "chosen",
-      "note": "relative spread of the two-station H, van Leer, over dt = 8 to 0.5 s; the bound keeps it 4x below the baseline's own error against eq (38)"
+      "note": "relative spread of the two-station H, van Leer, over dt = 8 to 0.5 s; the bound keeps it 40x below the baseline's own error against eq (38)"
     },
     "pymrm_deferred_vs_newton_H_rel": {
       "kind": "bound",
@@ -81,6 +82,13 @@
       "max": 0.0001,
       "basis": "chosen",
       "note": "mu1(z2) of the one-sweep deferred correction against the same theta scheme solved by newton, n_z = 350, dt = 2 s; the lag moves the absolute moment"
+    },
+    "pymrm_mu1z1_deferred_vs_newton_rel": {
+      "kind": "bound",
+      "value": 1.9883008504750777e-05,
+      "max": 0.0001,
+      "basis": "chosen",
+      "note": "mu1(z1) of the one-sweep deferred correction against the same theta scheme solved by newton, n_z = 350, dt = 2 s; printed beside the mu1(z2) and H gaps"
     },
     "pymrm_kappa3_vs_laplace_rel": {
       "kind": "value",
@@ -296,8 +304,8 @@
       "kind": "bound",
       "value": 0.0,
       "max": 1e-12,
-      "basis": "tolerance",
-      "note": "max relative gap between u_opt root-found on dH/du = 0 (find_roots, 1e-3 to 1e3 mm/s, xtol 1e-15) and the closed form sqrt(B/C)"
+      "basis": "identity",
+      "note": "max relative gap between u_opt root-found on dH/du = -B/u^2 + C = 0 (find_roots, 1e-3 to 1e3 mm/s, xtol 1e-15) and the closed form sqrt(B/C): an identity that tests the root finder on that expression only"
     }
   },
   "quoted": {
@@ -320,7 +328,7 @@
       "0.99999"
     ],
     "pymrm_dt_swing_H": [
-      "below 1e-5"
+      "below 1e-6"
     ],
     "pymrm_dt_mu1_sign_changes": [
       "1"
@@ -455,6 +463,9 @@
       "stale inlet data in the deferred correction"
     ],
     "pymrm_mu1_deferred_vs_newton_rel": [
+      "stale inlet data in the deferred correction"
+    ],
+    "pymrm_mu1z1_deferred_vs_newton_rel": [
       "stale inlet data in the deferred correction"
     ],
     "pymrm_dt_roundoff_margin": [

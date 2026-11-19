@@ -1266,8 +1266,8 @@ ORD_UPWIND = float(observed_orders(lambda n: dict(zip(NZS[:3], [r[2] for r in up
 UPWIND_COEF = float(np.mean([c for _, c, _ in up_rows]))
 print(f"   observed order {ORD_UPWIND:.2f} (first order, against {ORD_GRID:.2f} with the limiter)")
 UPWIND_COEF_DEV = float(abs(UPWIND_COEF - 1.0))
-print(f"   mean coefficient {UPWIND_COEF:.6f} against the predicted 1 "
-      f"(|error| {UPWIND_COEF_DEV:.1e})")
+print(f"   mean coefficient {UPWIND_COEF:.6f} against the predicted 1: "
+      f"|error| below 1e-4 (here {UPWIND_COEF_DEV:.1e})")
 
 # Time: the ladder is given as step counts, so observed_orders sees a ratio of 2.
 # The observable is c_I at z2 at two fixed times on the falling and rising flanks of
@@ -1325,7 +1325,7 @@ print(f"   worst departure from 2: below 0.1 (here {DT_ORDER_DEV:.3f}); smallest
 print(f"   orders with the van Leer correction: " + fmt_o(O_VL)
       + f"  (mu1(z2) differences change sign {MU1_SIGN_CHANGES} time(s) on this ladder)"
       + "  (first order at t = 4800 s, irregular at 5200 s; none is claimed)")
-print(f"   over the 16x change in dt the two-station H moves below 1e-5 relative "
+print(f"   over the 16x change in dt the two-station H moves below 1e-6 relative "
       f"(here {DT_SWING_H:.1e}): it is grid-limited, not dt-limited.")
 
 # The order is a claim about the SCHEME, so break the scheme: theta = 1 is
@@ -1346,11 +1346,15 @@ _, _, zs_d, Kc_d = solve(n_z=N_NEWTON, dt=DT_NEWTON)
 H_NEWTON, H_DEFER = float(plate_height(Kc_n, zs_n)), float(plate_height(Kc_d, zs_d))
 DEFER_VS_NEWTON = float(abs(dev(H_DEFER, H_NEWTON)))
 MU1_DEFER_VS_NEWTON = float(abs(dev(Kc_d[1][1], Kc_n[1][1])))
+MU1Z1_DEFER_VS_NEWTON = float(abs(dev(Kc_d[0][1], Kc_n[0][1])))
 print(f"\nDeferred correction against ConvFluxTVD + newton (n_z = {N_NEWTON}, dt = {DT_NEWTON:g} s):")
 print(f"   H {H_DEFER:.9f} against {H_NEWTON:.9f}: below 1e-5 relative (here {DEFER_VS_NEWTON:.1e});")
 print(f"   the same grid is {abs(dev(H_NEWTON, H38)):.1e} from eq (38), so the lag is not what limits H")
+print(f"   mu1(z1) {Kc_d[0][1]:.6f} against {Kc_n[0][1]:.6f} s: {MU1Z1_DEFER_VS_NEWTON:.1e} relative")
 print(f"   mu1(z2) {Kc_d[1][1]:.6f} against {Kc_n[1][1]:.6f} s: {MU1_DEFER_VS_NEWTON:.1e} relative")
-print("   The lag moves the absolute first moment and cancels in the two-station H.")
+print(f"   The lag moves the first moment at both stations; the two-station H is closer"
+      f" than either ({DEFER_VS_NEWTON:.1e} against {MU1Z1_DEFER_VS_NEWTON:.1e} and"
+      f" {MU1_DEFER_VS_NEWTON:.1e}).")
 
 # %% [markdown]
 # ### Break table
@@ -1372,13 +1376,14 @@ def add(label, value, note=""):
 
 _, _, zsb, Kcb = solve(n_z=700, dt=2.0)
 add("baseline: H from pymrm (n_z=700, dt=2, van Leer)", float(plate_height(Kcb, zsb)))
-for lab, kw in (("bare upwind (limiter=None)", dict(limiter=None)),
-                ("coarse grid, n_z = 175", dict(n_z=175)),
-                ("F_II halved (a different phase ratio)", dict()),
-                ("alpha halved", dict(alpha=ALPHA / 2)),
-                ("K perturbed by +1 %", dict(K=KK * 1.01)),
-                ("D perturbed by +1 %", dict(D=D_LONG * 1.01)),
-                ("time window truncated to 60 %", dict(t_end=0.6 * T_END))):
+BRK1_KW = {"bare upwind (limiter=None)": dict(limiter=None),
+           "coarse grid, n_z = 175": dict(n_z=175),
+           "F_II halved (a different phase ratio)": dict(),
+           "alpha halved": dict(alpha=ALPHA / 2),
+           "K perturbed by +1 %": dict(K=KK * 1.01),
+           "D perturbed by +1 %": dict(D=D_LONG * 1.01),
+           "time window truncated to 60 %": dict(t_end=0.6 * T_END)}
+for lab, kw in BRK1_KW.items():
     if lab.startswith("F_II halved"):
         col = Column(U_INT, D_LONG, ALPHA, KK, FI, FII / 2, L_TOT, 700)
         ts_, rec_, zs_ = col.run(T_END, 2.0, T_SIG, [Z1, Z2])
@@ -1758,16 +1763,19 @@ claims.bound("pymrm_grid_roundoff_margin", GRID_ROUNDOFF, min=1e3, basis="theory
              note="smallest successive difference of the grid ladder over n_steps eps H")
 claims.value("pymrm_upwind_dispersion_coeff", UPWIND_COEF,
              note="mean (H - H_38)/h with bare upwind; the prediction is exactly 1")
-claims.value("pymrm_upwind_dispersion_coeff_err", UPWIND_COEF_DEV,
-             note="|mean (H - H_38)/h - 1| with bare upwind, the O(h) remainder")
+claims.bound("pymrm_upwind_dispersion_coeff_err", UPWIND_COEF_DEV, max=1e-4, basis="chosen",
+             note="|mean (H - H_38)/h - 1| with bare upwind over n_z = 350, 700, 1400 (dt = 0.5 s):"
+                  " the leading-order coefficient is exactly 1, so this is the O(h) remainder plus"
+                  " the time error; the bound admits that remainder and fails any scheme whose"
+                  " numerical dispersion is not u h / 2")
 claims.bound("pymrm_dt_order_upwind_dev", DT_ORDER_DEV, max=0.1, basis="theory",
              note="worst |order - 2| of c_I(z2) at t = 4800 and 5200 s over dt = 8 to 0.5 s,"
                   " linear Crank-Nicolson (limiter off), successive differences")
 claims.bound("pymrm_dt_roundoff_margin", DT_ROUNDOFF, min=1e3, basis="theory",
              note="smallest finest successive difference of c_I(z2) over n_steps eps c_I")
-claims.bound("pymrm_dt_swing_H", DT_SWING_H, max=1e-5, basis="chosen",
+claims.bound("pymrm_dt_swing_H", DT_SWING_H, max=1e-6, basis="chosen",
              note="relative spread of the two-station H, van Leer, over dt = 8 to 0.5 s;"
-                  " the bound keeps it 4x below the baseline's own error against eq (38)")
+                  " the bound keeps it 40x below the baseline's own error against eq (38)")
 claims.bound("pymrm_deferred_vs_newton_H_rel", DEFER_VS_NEWTON, max=1e-5, basis="chosen",
              note="two-station H of the one-sweep deferred correction against the same theta"
                   " scheme solved by newton with the ConvFluxTVD Jacobian, n_z = 350, dt = 2 s;"
@@ -1778,6 +1786,9 @@ claims.exact("pymrm_dt_mu1_sign_changes", MU1_SIGN_CHANGES,
 claims.bound("pymrm_mu1_deferred_vs_newton_rel", MU1_DEFER_VS_NEWTON, max=1e-4, basis="chosen",
              note="mu1(z2) of the one-sweep deferred correction against the same theta scheme"
                   " solved by newton, n_z = 350, dt = 2 s; the lag moves the absolute moment")
+claims.bound("pymrm_mu1z1_deferred_vs_newton_rel", MU1Z1_DEFER_VS_NEWTON, max=1e-4, basis="chosen",
+             note="mu1(z1) of the one-sweep deferred correction against the same theta scheme"
+                  " solved by newton, n_z = 350, dt = 2 s; printed beside the mu1(z2) and H gaps")
 claims.value("pymrm_kappa3_vs_laplace_rel", K3_DEV,
              note="cancellation-limited at n_z = 1400, dt = 1 s; a regression guard")
 claims.value("pymrm_kappa4_vs_laplace_rel", K4_DEV,
@@ -1834,16 +1845,45 @@ claims.bound("sym_chain_residual", 0.0 if r2 == 0 else 1.0, max=0.0, basis="iden
                   " recorded as 1 if it does not")
 claims.exact("sym_chain_exact_count", CHAIN_OK,
              note="steps of the symbolic chain whose residual sympy simplifies to 0, of 4")
-claims.bound("rootfind_vs_closed_form_optimum", ROOT_ID, max=1e-12, basis="tolerance",
-             note="max relative gap between u_opt root-found on dH/du = 0 (find_roots,"
-                  " 1e-3 to 1e3 mm/s, xtol 1e-15) and the closed form sqrt(B/C)")
+claims.bound("rootfind_vs_closed_form_optimum", ROOT_ID, max=1e-12, basis="identity",
+             note="max relative gap between u_opt root-found on dH/du = -B/u^2 + C = 0"
+                  " (find_roots, 1e-3 to 1e3 mm/s, xtol 1e-15) and the closed form sqrt(B/C):"
+                  " an identity that tests the root finder on that expression only")
 
 # --- break rows: the value each claim takes with the defect injected ----------
-# Break table 1 moves the PDE at n_z = 700, dt = 2 s; each row is carried onto
-# the reported run as the relative move it causes there.
+# Break table 1's defects are solved again at the claim's own setting
+# (n_z = 1400, dt = 1 s), each row its own solve with the defect injected.
+def h_defect(lab, n_z=1400, dt=1.0):
+    """H with break table 1's defect `lab` at (n_z, dt): two-station, or one-station
+    for the two single-station rows."""
+    if lab.startswith("F_II halved"):
+        col = Column(U_INT, D_LONG, ALPHA, KK, FI, FII / 2, L_TOT, n_z)
+        ts_, rec_, zs_ = col.run(T_END, dt, T_SIG, [Z1, Z2])
+        return float(plate_height([cumulants(ts_, rec_[:, j]) for j in range(2)], zs_))
+    if lab.startswith("ONE station (z2"):
+        _, _, z_, K_ = solve(n_z=n_z, dt=dt)
+        return float(z_[1] * (K_[1][2] - mu2_in) / (K_[1][1] - mu1_in) ** 2)
+    if lab.startswith("ONE station at z = 20"):
+        _, _, z_, K_ = solve(n_z=n_z, dt=dt, stations=(20.0, Z2))
+        return float(z_[0] * (K_[0][2] - mu2_in) / (K_[0][1] - mu1_in) ** 2)
+    kw = dict(n_z=n_z, dt=dt)
+    kw.update({**BRK1_KW, "construct_div with nu=1 (cylindrical)": dict(nu=1)}[lab])
+    with np.errstate(invalid="ignore", divide="ignore"):
+        _, _, z_, K_ = solve(**kw)
+    return float(plate_height(K_, z_))
+
+
 def df_of(C, x, dii=DII_FILM):
     """Film thickness (um) from eq (53)'s C, x = K F_I/F_II and the film D_II."""
     return float(np.sqrt(np.pi ** 2 / 8 * C * (1 + x) ** 2 * dii / x) * 1e3)
+
+
+_STALE = {}
+def _stale_cumulants():
+    """Cumulants of the deferred route with stale inlet data, n_z = 350, dt = 2 s (one solve)."""
+    if not _STALE:
+        _STALE["K"] = solve(n_z=N_NEWTON, dt=DT_NEWTON, inlet_data=False)[3]
+    return _STALE["K"]
 
 
 def _defer_upwind_vs_newton():
@@ -1875,8 +1915,8 @@ mh_nv, mw_nv = route_medians(recs_nv)
 D_LAM8 = GAMMA_ASSUMED * D_I_ASSUMED + 8.0 * U_INT * DP
 Y_LO = FLOW.h_over_dp_lo.to_numpy(float)
 (two_lam_lo, S_lo), _ = fit_eq49(X, Y_LO)
-BREAKS = [(f"break table 1: {lab}", "pymrm_H_vs_eq38_rel", lambda v=v: abs(dev(H_PYMRM * v / brk[0][1], H38)))
-          for lab, v, dbase, d38, note in brk[1:-1]]
+BREAKS = [(f"break table 1: {lab}", "pymrm_H_vs_eq38_rel", lambda lab=lab: abs(dev(h_defect(lab), H38)))
+          for lab, *_ in brk[1:-1]]
 BREAKS += [
     ("ONE station: Dirichlet inlet against Danckwerts", "pymrm_bc_insensitivity", lambda: BC_MOVE_SINGLE),
     ("bare upwind in place of van Leer", "pymrm_grid_order", lambda: ORD_UPWIND),
@@ -1894,8 +1934,9 @@ BREAKS += [
     ("stale inlet data in the deferred correction", "pymrm_dt_mu1_sign_changes",
      lambda: mu1_sign_changes(dt_ladder(inlet_data=False))),
     ("stale inlet data in the deferred correction", "pymrm_mu1_deferred_vs_newton_rel",
-     lambda: float(abs(dev(solve(n_z=N_NEWTON, dt=DT_NEWTON, inlet_data=False)[3][1][1],
-                           Kc_n[1][1])))),
+     lambda: float(abs(dev(_stale_cumulants()[1][1], Kc_n[1][1])))),
+    ("stale inlet data in the deferred correction", "pymrm_mu1z1_deferred_vs_newton_rel",
+     lambda: float(abs(dev(_stale_cumulants()[0][1], Kc_n[0][1])))),
     ("dt ladder with its finest level repeated", "pymrm_dt_roundoff_margin", _dt_repeated),
     ("deferred route without the limiter, against newton", "pymrm_deferred_vs_newton_H_rel",
      _defer_upwind_vs_newton),
@@ -1987,7 +2028,7 @@ SAYS = {
     "pymrm_H_vs_eq38_rel": ["4e-5", "4.1e-5"],
     "skewness_at_recovered_column": ["0.14"],
     "pymrm_upwind_dispersion_coeff": ["0.99999"],
-    "pymrm_dt_swing_H": ["below 1e-5"],
+    "pymrm_dt_swing_H": ["below 1e-6"],
     "pymrm_dt_mu1_sign_changes": ["1"],
     "pymrm_dt_order_upwind_dev": ["below 0.1"],
     "pymrm_deferred_vs_newton_H_rel": ["below 1e-5"],

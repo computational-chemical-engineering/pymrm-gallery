@@ -73,7 +73,7 @@ measurement of either constant.
   limited flux implicit, solved by `newton` with the exact Jacobian of
   `ConvFluxTVD`, gives the same two-station $H$ to
   below 1e-5 <!-- claim: pymrm_deferred_vs_newton_H_rel -->. Over a 16-fold change of the
-  step, $H$ moves below 1e-5 <!-- claim: pymrm_dt_swing_H -->; with the limiter
+  step, $H$ moves below 1e-6 <!-- claim: pymrm_dt_swing_H -->; with the limiter
   off, Crank-Nicolson's order on the concentration at a fixed time departs from 2
   by below 0.1 <!-- claim: pymrm_dt_order_upwind_dev -->, and backward Euler is
   first order.
@@ -196,6 +196,6 @@ data/          four tables + the printed scalars, each with a provenance sidecar
 - 2026-11-19: said that $H$ "moves 1.2 × 10⁻⁶ over 8× in $\Delta t$". The van Leer
   correction of that march read the inlet data of $c_{\text{in}} = 1$ at every
   step instead of the current inlet value (reproduced with the old code); with
-  the current inlet value $H$ moves below 1e-5 <!-- claim: pymrm_dt_swing_H -->
+  the current inlet value $H$ moves below 1e-6 <!-- claim: pymrm_dt_swing_H -->
   relative over a 16-fold range of the step.
 - 2026-11-19: said that the time order of $\mu_1(z_2)$ was claimed "between 1.5 and 2.5" and that the orders "fall from about 2 at the coarse end to about 1". Both came from the same stale inlet data. With the current inlet value the successive differences of $\mu_1(z_2)$ change sign 1 <!-- claim: pymrm_dt_mu1_sign_changes --> time on the ladder, so the limited march has no regular order there, and the page claims a time order only with the limiter off.
