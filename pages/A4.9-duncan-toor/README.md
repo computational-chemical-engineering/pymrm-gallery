@@ -1,68 +1,64 @@
 # A4.9: Duncan-Toor ternary gas diffusion
 
-Two bulbs of gas joined by a capillary. Nitrogen starts 0.06 mole fraction apart,
+Two bulbs of gas joined by a capillary. Nitrogen starts slightly apart,
 closes that gap, then keeps going *against* its own gradient until it is twice as
 far apart the other way, and finally stops dead at the moment its gradient is
 largest. Fick's law can produce none of that.
 
 - **Structures:** `S3` (1D steady BVP), `S9` (implicit multicomponent flux)
 - **Reference:** Duncan & Toor (1962), AIChE J 8(1) 38-41, doi:10.1002/aic.690080112
-- **Runtime:** ~48 s
+- **Runtime:** about 100 s (`meta.yaml` `runtime_seconds`)
 
 ## Agreement
 
-0.59 mole % mean absolute deviation over 28 digitised points, nothing fitted.
-The paper reports 0.45 mole % for its own Maxwell-Stefan predictions and quotes
-2.6 mole % experimental error; about 0.5 mole % of our figure is digitisation
-error rather than model error.
+0.59 % <!-- claim: mean_abs_deviation --> mean absolute deviation in mole
+fraction on the 28 <!-- claim: n_points --> digitised points, largest 1.79 % <!-- claim: max_abs_deviation -->,
+nothing fitted.
 
-Point O (osmotic diffusion) at 0.96 h, diffusion barrier at 7.52 h.
+Point O (osmotic diffusion) at 0.96 <!-- claim: point_o_time_h --> h and the
+diffusion barrier at 7.50 <!-- claim: barrier_time_h --> h: roots of the N2
+difference and of the N2 flux on the time-exact `solve_ivp` route. At the barrier
+the N2 difference is 2.0 <!-- claim: n2_extreme_ratio --> times its initial value,
+with the opposite sign.
 
-## The comparison with the data is the *only* guard
+## The comparison with the data is the only guard
 
-The page used to open its Validation section with *"Four checks. The first three
-do not use the experimental data at all"*, which reads as a strength and is the
-opposite of one. Two of those three were the same algebraic identity:
-`solve_capillary` drives `div(N)` to `tol=1e-12` with `construct_div(nu=0)`, so on
-a Cartesian grid the flux-uniformity check **is** the converged Newton residual;
-and with the flux uniform, `N_0 = N_L`, so the mole balance is zero iff the
-uniformity check passes.
+Flux uniformity along the capillary (below 1e-12 <!-- claim: flux_nonuniformity -->)
+and the closed-cell mole balance (below 1e-13 <!-- claim: mole_balance_error -->)
+are one algebraic identity: the capillary solve drives `div(N)` to the Newton
+tolerance with `construct_div(nu=0)`, which on a Cartesian grid is the flux
+difference between faces, and a uniform flux makes the two bulb updates cancel.
+Neither can see a wrong constant. The notebook's break table perturbs each of
+the five transcribed constants by one digit: every row moves the data
+comparison, the regime times or both, and none lifts the flux non-uniformity
+above 1e-10 (5 <!-- claim: n_injections_flux_within_bound --> of 5). They are kept, labelled structural, because they catch what
+nothing else here catches: an unconverged capillary solve and a wrong `nu`.
 
-Neither can see a wrong number. Measured on the page's own `simulate()`:
+## Numerical error
 
-| injected defect | flux non-uniformity | mole balance | vs data | N₂ crossing | final Δx(N₂) |
-| --- | --- | --- | --- | --- | --- |
-| as published | 1.58e-14 | 2.16e-16 | 0.59 % | 1.00 h | +0.0849 |
-| `D(N₂–CO₂)` 16.8 → 61.8 (digit swap) | 1.93e-14 | 4.33e-16 | **2.28 %** | **3.28 h** | **+0.0043** |
-| `D(N₂–CO₂)` 16.8 → 1.68 | 2.16e-14 | 4.33e-16 | **1.30 %** | 0.92 h | +0.2090 |
-| `D(H₂–N₂)` 83.3 → 8.33 | 1.68e-14 | 1.73e-16 | **5.19 %** | **never** | −0.1106 |
-| `LA_EFF` 258.1 → 285.1 | *bit-identical* | *bit-identical* | 0.80 % | 1.08 h | +0.0934 |
-| `vol_2` 78.63 → 87.63 | *bit-identical* | 3.27e-16 | 0.73 % | 1.04 h | +0.0902 |
+Grid: refined on the time-exact route over `n_z` 10 to 160, observed orders
+at least 1.8 <!-- claim: grid_observed_order --> and at most 2.2 <!-- claim: grid_observed_order -->, spatial error at the
+production `n_z = 40` of 1.6e-6 <!-- claim: grid_error_nz40 --> in mole
+fraction. Time: backward Euler over `n_steps` 100 to 800, observed orders
+at least 0.9 <!-- claim: timestep_observed_order --> and at most 1.1 <!-- claim: timestep_observed_order -->, time error at the
+production 400 steps of 3.0e-4 <!-- claim: timestep_error_ns400 --> against
+`solve_ivp` on the same grid. Time dominates, 183 <!-- claim: time_over_grid_error_ratio -->
+times the spatial error; the mean
+model-vs-data deviation is 3.6e3 <!-- claim: dev_over_grid_error --> times the
+spatial error.
 
-A digit transposition in the one diffusivity that drives the whole phenomenon ends
-the reversal 20× smaller and 2.3 h later, and both residuals stay at machine
-precision. They are kept and labelled `STRUCTURAL`, because they do catch what
-nothing else here catches: an unconverged Newton solve (1.7e-3) and a wrong `nu`
-(0.98).
+## What pymrm adds
 
-Two further facts worth recording. Both metrics sit **below
-`check_agreement.py`'s `ABS_FLOOR = 1e-12`**, so CI does not compare them at all.
-And the flux-uniformity metric *improves* on a coarser grid: from `n_z` 10 to 80
-the actual error falls 88-fold while the residual rises from 2.2e-15 to 4.2e-14.
-It is round-off in a linear solve, not accuracy.
-
-**This block is shared with `A4.2`**, which borrowed this page's dataset and
-copied the validation with it, the only two pages in the repository carrying
-`flux_nonuniformity` and `mole_balance_error`. Both are now labelled. A check's
-power depends on the physics, not on the code, so it does not survive a copy.
-
-## Both numerical knobs are now refined
-
-`n_z = 40` had never been refined. Grid: observed order 2.06, spatial error
-1.5e-6 in mole fraction, about 3900× below the model-vs-data deviation. Time:
-observed order 1.15 (backward Euler), 2.2e-4 at the production `n_steps = 400`.
-Time is the dominant numerical error, 147× the grid's, and both are far below the
-0.59 mole % the comparison reports.
+The discretisation: constant `construct_grad` and `construct_div` operators with
+the bulb compositions entering through `shapes_d`, a `NumJac` Jacobian for the
+implicit Maxwell-Stefan flux and a checked `newton` solve. Against Fick with
+Wilke effective diffusivities, which cannot cross zero, the N2 difference is off
+by 9.1 % <!-- claim: fick_n2_dev --> against 1.4 % <!-- claim: ms_n2_dev --> for
+Maxwell-Stefan; against Toor's linearisation, resolving the composition
+dependence of [B] changes the N2 difference by up to 5.0 % <!-- claim: toor_dev_frac -->
+of its value at the barrier. That dependence is the whole gap: with every pair
+diffusivity equal, so that [B] is constant, Toor's closed form and the
+time-exact route agree to below 1e-10 <!-- claim: toor_gap_equal_d -->.
 
 ## Data
 
@@ -70,6 +66,21 @@ Digitised from Figure 2 by programmatic marker extraction, validated by closure,
 monotonicity and the closed-cell exchange balance. See
 `data/duncan-toor-1962-run1.meta.yaml` for the method and its limits.
 
-All model parameters were verified against the paper text. Note the paper uses an
-*effective* (L/A) of 258.1 1/cm measured from binary runs, not the geometric
-251.1 1/cm.
+All model parameters were checked against the paper text. The paper uses an
+*effective* (L/A) measured from binary runs, not the geometric value; the
+notebook prints both.
+
+## Corrections
+
+- 2026-11-19: "Point O (osmotic diffusion) at 0.96 h, diffusion barrier at 7.52 h."
+  The barrier is at 7.50 <!-- claim: barrier_time_h --> h, the root of the N2
+  flux on the time-exact route; the old value was the backward-Euler step with
+  the largest N2 difference.
+- 2026-11-19: "composition dependence of [B] along the capillary (5.5% of the peak N2 separation)"
+  The gap is 5.0 % <!-- claim: toor_dev_frac --> of the N2 difference at the
+  barrier, measured against the time-exact route; the old value compared Toor's
+  closed form with the backward-Euler trajectory and so included its time error.
+- 2026-11-19: "building a difference three times larger than it started with"
+  The N2 difference at the barrier is 2.0 <!-- claim: n2_extreme_ratio --> times
+  the initial one in size; the largest measured is at least 2.2 <!-- claim: exp_n2_diff_ratio -->
+  and at most 2.3 <!-- claim: exp_n2_diff_ratio --> times.

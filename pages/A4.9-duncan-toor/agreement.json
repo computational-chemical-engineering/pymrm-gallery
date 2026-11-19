@@ -1,18 +1,389 @@
 {
   "page": "A4.9",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
   "metrics": {
-    "mean_abs_deviation": 0.0058826829695680805,
-    "max_abs_deviation": 0.017866868380168432,
-    "rmse": 0.00807079781858326,
-    "injection_mean_dev_worst_ratio": 8.81455875871279,
-    "timestep_sensitivity": 0.00014848833019553975,
-    "timestep_observed_order": 1.1469947415287178,
-    "grid_observed_order": 2.0644499956811906,
-    "grid_error_nz40": 1.5129152642900934e-06,
-    "flux_nonuniformity": 1.5766646398323812e-14,
-    "mole_balance_error": 2.1632816939198067e-16,
-    "injection_flux_nonuniformity_worst_ratio": 1.3665813462121956,
-    "structural_break_unconverged_newton": 0.001740950726508739,
-    "structural_break_wrong_nu": 0.9756097560975608
+    "n_points": {
+      "kind": "exact",
+      "value": 28,
+      "structural": true,
+      "note": "rows of the CSV"
+    },
+    "n2_diff_initial": {
+      "kind": "exact",
+      "value": -0.060493169678907055,
+      "structural": true,
+      "note": "normalised t = 0 rows of the CSV"
+    },
+    "exp_n2_diff_ratio": {
+      "kind": "exact",
+      "value": 2.231281198003328,
+      "structural": true,
+      "note": "largest measured |dx_N2| over the t = 0 value, CSV rows"
+    },
+    "point_o_time_h": {
+      "kind": "value",
+      "value": 0.9588054401220903,
+      "rtol": 1e-06,
+      "unit": "h",
+      "note": "root of dx_N2(t), solve_ivp route"
+    },
+    "barrier_time_h": {
+      "kind": "value",
+      "value": 7.503987183893429,
+      "rtol": 1e-06,
+      "unit": "h",
+      "note": "root of the N2 flux term d(dx_N2)/dt, solve_ivp route"
+    },
+    "n2_extreme_ratio": {
+      "kind": "value",
+      "value": 2.034649302437346,
+      "rtol": 1e-06,
+      "note": "|dx_N2| at the barrier over |dx_N2| at t = 0"
+    },
+    "capillary_volume_fraction": {
+      "kind": "value",
+      "value": 0.003665720960162439,
+      "rtol": 1e-09
+    },
+    "mean_abs_deviation": {
+      "kind": "value",
+      "value": 0.005882706638182651,
+      "rtol": 1e-06,
+      "note": "mean |model - measured| over the CSV rows"
+    },
+    "max_abs_deviation": {
+      "kind": "value",
+      "value": 0.017866940823206112,
+      "rtol": 1e-06,
+      "note": "largest |model - measured| over the CSV rows"
+    },
+    "rmse": {
+      "kind": "value",
+      "value": 0.00807082568721596,
+      "rtol": 1e-06,
+      "note": "root-mean-square |model - measured| over the CSV rows"
+    },
+    "grid_observed_order": {
+      "kind": "bound",
+      "value": 2.0328425844179394,
+      "min": 1.8,
+      "max": 2.2,
+      "basis": "theory",
+      "note": "order farthest from 2 over n_z 10 to 160 and N2 in bulb 1 at 4, 8, 12 and 16 h"
+    },
+    "grid_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 23125.801697299434,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "smallest finest successive difference over rtol * |x|"
+    },
+    "grid_error_nz40": {
+      "kind": "value",
+      "value": 1.6254471060239695e-06,
+      "rtol": 0.001,
+      "note": "max over the step times of |x_N2,1(n_z=40) - Richardson value|"
+    },
+    "timestep_observed_order": {
+      "kind": "bound",
+      "value": 0.9805764817181779,
+      "min": 0.9,
+      "max": 1.1,
+      "basis": "theory",
+      "note": "order farthest from 1 over n_steps 100 to 800 and N2 in bulb 1 at 4, 8, 12 and 16 h"
+    },
+    "time_order_roundoff_margin": {
+      "kind": "bound",
+      "value": 13675647.06455937,
+      "min": 1000.0,
+      "basis": "tolerance",
+      "note": "smallest finest successive difference over the solver tolerance"
+    },
+    "timestep_sensitivity": {
+      "kind": "value",
+      "value": 0.00014855938432156712,
+      "rtol": 0.0001,
+      "note": "max N2 change in bulb 1 on halving dt from the production step"
+    },
+    "timestep_error_ns400": {
+      "kind": "value",
+      "value": 0.00029786860855407493,
+      "rtol": 0.0001,
+      "note": "max |backward Euler - solve_ivp| for N2 in bulb 1, same grid"
+    },
+    "time_over_grid_error_ratio": {
+      "kind": "value",
+      "value": 183.25333838927295,
+      "rtol": 0.001
+    },
+    "dev_over_grid_error": {
+      "kind": "value",
+      "value": 3619.131386300492,
+      "rtol": 0.001
+    },
+    "ode_route_tol_gap": {
+      "kind": "bound",
+      "value": 2.8457791678704325e-12,
+      "max": 1e-09,
+      "basis": "tolerance",
+      "note": "solve_ivp at rtol 1e-11 against 1e-12, all four bulb fractions"
+    },
+    "flux_nonuniformity": {
+      "kind": "bound",
+      "value": 1.5216647105359027e-14,
+      "max": 1e-12,
+      "basis": "tolerance",
+      "note": "the converged Newton residual over a scale, newton tol 1e-12"
+    },
+    "mole_balance_error": {
+      "kind": "bound",
+      "value": 1.7306253551358455e-16,
+      "max": 1e-13,
+      "basis": "identity",
+      "note": "N_0 = N_L makes the bulb updates cancel"
+    },
+    "n_injections_flux_within_bound": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.999698041618935,
+      "min_margin": 0.5,
+      "note": "constant rows whose flux non-uniformity stays below 1e-10"
+    },
+    "ms_n2_dev": {
+      "kind": "value",
+      "value": 0.01382100408889797,
+      "rtol": 1e-06,
+      "note": "mean |dx_N2 - measured| over the measured times"
+    },
+    "fick_n2_dev": {
+      "kind": "value",
+      "value": 0.09061422835193546,
+      "rtol": 1e-06,
+      "note": "mean |dx_N2 - measured| over the measured times"
+    },
+    "toor_n2_dev": {
+      "kind": "value",
+      "value": 0.01485022580489955,
+      "rtol": 1e-06,
+      "note": "mean |dx_N2 - measured| over the measured times"
+    },
+    "toor_max_dev": {
+      "kind": "value",
+      "value": 0.006196041296081173,
+      "rtol": 1e-05,
+      "note": "max over t of |Toor - solve_ivp| in dx_N2, refined maximisation"
+    },
+    "toor_dev_frac": {
+      "kind": "value",
+      "value": 0.05034060130898395,
+      "rtol": 1e-05,
+      "note": "toor_max_dev over |dx_N2| at the barrier"
+    },
+    "toor_gap_equal_d": {
+      "kind": "bound",
+      "value": 4.2575318270898777e-13,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "max over 401 times of |Toor - solve_ivp| in dx_N2, all D_ij equal: [B] constant"
+    }
+  },
+  "quoted": {
+    "capillary_volume_fraction": [
+      "0.4 %"
+    ],
+    "mean_abs_deviation": [
+      "0.59 %"
+    ],
+    "max_abs_deviation": [
+      "1.79 %"
+    ],
+    "point_o_time_h": [
+      "0.96"
+    ],
+    "barrier_time_h": [
+      "7.50"
+    ],
+    "n2_extreme_ratio": [
+      "2.0"
+    ],
+    "n_points": [
+      "28"
+    ],
+    "fick_n2_dev": [
+      "9.1 %"
+    ],
+    "ms_n2_dev": [
+      "1.4 %"
+    ],
+    "toor_dev_frac": [
+      "5.0 %"
+    ],
+    "toor_gap_equal_d": [
+      "below 1e-10"
+    ],
+    "exp_n2_diff_ratio": [
+      "between 2.2 and 2.3"
+    ],
+    "n_injections_flux_within_bound": [
+      "5"
+    ],
+    "grid_observed_order": [
+      "between 1.8 and 2.2"
+    ],
+    "timestep_observed_order": [
+      "between 0.9 and 1.1"
+    ],
+    "grid_error_nz40": [
+      "1.6e-6"
+    ],
+    "timestep_error_ns400": [
+      "3.0e-4"
+    ],
+    "time_over_grid_error_ratio": [
+      "183"
+    ],
+    "dev_over_grid_error": [
+      "3.6e3"
+    ],
+    "flux_nonuniformity": [
+      "below 1e-12"
+    ],
+    "mole_balance_error": [
+      "below 1e-13"
+    ]
+  },
+  "breaks": {
+    "mean_abs_deviation": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "max_abs_deviation": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "rmse": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "point_o_time_h": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "barrier_time_h": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "n2_extreme_ratio": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "ms_n2_dev": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "fick_n2_dev": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "toor_n2_dev": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "LA_EFF 258.1 -> 285.1 (digit swap)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "toor_max_dev": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "toor_dev_frac": [
+      "D(N2-CO2) 16.8 -> 61.8 (digit swap)",
+      "D(N2-CO2) 16.8 -> 1.68 (lost decade)",
+      "D(H2-N2) 83.3 -> 8.33 (lost decade)",
+      "vol_2 78.63 -> 87.63 (digit swap)"
+    ],
+    "flux_nonuniformity": [
+      "capillary newton stopped after 1 iteration, unchecked",
+      "construct_div(nu=1), cylindrical geometry"
+    ],
+    "mole_balance_error": [
+      "construct_div(nu=1), cylindrical geometry"
+    ],
+    "capillary_volume_fraction": [
+      "LA_EFF 258.1 -> 285.1 (digit swap)"
+    ],
+    "n_injections_flux_within_bound": [
+      "capillary newton stopped after 1 iteration, unchecked"
+    ],
+    "grid_observed_order": [
+      "[B] at the left-cell composition on interior faces"
+    ],
+    "grid_error_nz40": [
+      "[B] at the left-cell composition on interior faces"
+    ],
+    "dev_over_grid_error": [
+      "[B] at the left-cell composition on interior faces"
+    ],
+    "time_over_grid_error_ratio": [
+      "[B] at the left-cell composition on interior faces",
+      "trapezoidal step (theta = 0.5) in the time study"
+    ],
+    "timestep_observed_order": [
+      "trapezoidal step (theta = 0.5) in the time study"
+    ],
+    "timestep_sensitivity": [
+      "trapezoidal step (theta = 0.5) in the time study"
+    ],
+    "timestep_error_ns400": [
+      "trapezoidal step (theta = 0.5) in the time study"
+    ],
+    "time_order_roundoff_margin": [
+      "bulb coupling tolerance 1e-6 in the time study"
+    ],
+    "grid_order_roundoff_margin": [
+      "solve_ivp rtol 1e-6 in the grid study and the second route"
+    ],
+    "ode_route_tol_gap": [
+      "solve_ivp rtol 1e-6 in the grid study and the second route"
+    ],
+    "toor_gap_equal_d": [
+      "vol_2 78.63 -> 87.63 in Toor's closed form only (all D_ij equal)"
+    ]
+  },
+  "rows": {
+    "defined": 12,
+    "recorded": 12
   }
 }
