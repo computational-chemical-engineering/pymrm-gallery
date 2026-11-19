@@ -1,0 +1,82 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.13
+slug: voltz-co-propylene-oxidation
+title: "Three-way catalyst: Voltz CO and propylene oxidation kinetics"
+section: C
+status: published
+tier: T0
+priority: P1
+structures: [S1, S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Voltz, S. E.", "Morgan, C. R.", "Liederman, D.", "Jacob, S. M."]
+  year: 1973
+  container: "Industrial & Engineering Chemistry Product Research and Development 12(4) 294-301"
+  doi: 10.1021/i360048a006
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 190
+datasets:
+  - voltz-1973-table1.csv
+  - voltz-1973-fig19-fig20-conditions.csv
+  - voltz-1973-fig19-fig20.csv
+  - voltz-1973-calculated-lines.csv
+  - "I1.2-catalytic-converter-lightoff/oh-cavendish-1982-parameters.csv (borrowed)"
+
+validation:
+  - >-
+    The authors' calculation reproduced: for each point where their
+    calculated lines of Figures 19 and 20 cross one conversion level, tau
+    times SV scatters by 0.047 <!-- claim: a_spread_dex --> dex with
+    propylene in ppm as C6, against 0.143 <!-- claim: a_spread_other_basis_dex --> dex
+    with propylene in plain ppm.
+  - >-
+    Oh and Cavendish's adsorption constants and activation temperatures (page
+    I1.2) equal Voltz's, unit-converted at face value, to the printed digits: worst relative
+    gap 7.6e-4 <!-- claim: oc_K_pre_max_relgap -->, worst gap 0.44 <!-- claim: oc_E_max_gap_K --> K.
+  - >-
+    Closed-form limit of the CO rate maximum without the k_a3 term, to the
+    root finder's tolerance.
+  - >-
+    The pymrm integral reactor against an independent solve_ivp march at every
+    calculated-line point, within 0.075 <!-- claim: pymrm_vs_march_max_pp -->
+    percentage points on the page's grid, observed order 1.00 <!-- claim: order_min -->
+    on a grid ladder.
+  - >-
+    Claims format 2: every claim is failed by at least one break row, each
+    injected through an argument or a Table I constant.
+
+adds: >
+  The rate law needs no solver; pymrm provides the integral reactor of eq 1 as
+  a reusable steady model and the root finding. With it the page shows that the
+  propylene ppm of the feeds enters the rates halved, as the paper's "ppm of
+  propylene (as C6 FID)" implies, and that the figures' space
+  velocity relates to V/F by a factor 0.59 <!-- claim: a_fit_over_a_0C --> of
+  the value for litres at 0 degC and the stated bulk density.
+
+agreement: >
+  With tau times SV = 0.0238 <!-- claim: a_fit --> s L/(min g) inferred from the
+  calculated lines, the model misses the CO markers of Figure 19 by 6.3 <!-- claim: rms_fig19_pp -->
+  percentage points (root mean square) and the propylene markers of Figure 20 by
+  14.7 <!-- claim: rms_fig20_pp -->. The constants were fitted to these runs, so
+  this is reproduction of the fit, not validation. The mean misses are
+  -0.89 <!-- claim: bias_fig19_pp --> +/- 0.85 <!-- claim: bias_se_fig19_pp --> (CO)
+  and +2.66 <!-- claim: bias_fig20_pp --> +/- 2.03 <!-- claim: bias_se_fig20_pp -->
+  (propylene) percentage points, mean +/- standard error. Curve A of Figure 20
+  dominates the propylene miss (root mean square 28.4 <!-- claim: rms_20A_pp -->,
+  mean +24.1 <!-- claim: bias_20A_pp -->), while the model matches the
+  authors' own line for that curve to -0.028 <!-- claim: dev_20A_dex --> dex in
+  tau times SV: that miss is the paper's own.
+
+caveats: >
+  The gas-volume basis of the space velocity and the catalyst volume per gram
+  are not stated in the paper, so the absolute space-time scale is inferred,
+  not predicted. Whether the authors depleted O2 along the bed is not stated;
+  the page depletes it by stoichiometry. Curve A of Figure 19 (4 % CO, 800 ppm
+  propylene) is the worst-reproduced calculated line.
