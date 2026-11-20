@@ -105,6 +105,12 @@ PAGE = "<PAGE>", PYMRM = ">=3.4.0,<4"; meta.yaml pymrm_min_version "3.4.0" and a
 measured runtime_seconds; model.py with NumPy-style docstrings (classes and functions
 only, no plotting, no data loading); test_model.py (import, one fast solve, one stored
 value via load_claims, offline in seconds); build_page.py removed with plain `rm`.
+Code shape (the `health` step of accept_page.py reports it): no function in model.py
+over about 60 lines or deeply nested; computing functions go in model.py, not in
+index.py. A function that takes many physical inputs gets
+`# codehealth: allow params -- <reason, e.g. one input per symbol of eq. N>` on or
+above its def line, or a frozen dataclass for one physical concept; never pack inputs
+into a tuple or dict to lower the score.
 Build index.py cell by cell with Edit; do not write a cell to a separate file and
 splice it in.
 
@@ -225,7 +231,11 @@ What to check, in this order:
 4. The checklist, as a final pass.
 
 Cheap checks you may run: `python scripts/accept_page.py pages/<PAGE> --only
-dashes,lint,outputs` (seconds, changes no file); <others, with runtime>.
+dashes,lint,outputs,contract,health` (seconds, changes no file); <others, with runtime>.
+Code health: judge each function the `health` step names (brain function, nesting,
+a long function in index.py that belongs in model.py) on whether it hurts reading
+or testing the page; a fix is MUST-FIX only when it does. Judge the functions, not
+the score. Each `codehealth: allow` comment needs a reason that holds.
 List every false or unsupported statement in README.md, meta.yaml and the markdown
 cells, with file:line and the number that contradicts or fails to support it.
 State the page's one finding with its number, and whether the page sets it against
