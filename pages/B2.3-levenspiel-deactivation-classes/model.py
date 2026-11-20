@@ -400,11 +400,11 @@ class Bed:
                                           self.s_c, axis=0)[-1]
             w[-1] -= 1.0
             K = vstack([csr_array((self.m, self.m)), csr_array(w[np.newaxis, :])], format="csr")
-        self.divK = (self.div @ K).tocsc()
+        self.divK = self.div @ K
         if route == "deferred":
             conv, conv_bc = construct_convflux_upwind(self.shape, self.s_f, self.s_c,
                                                       self.bc, v=1.0)
-            self.L_up = (self.div @ conv).tocsc() + self.divK
+            self.L_up = self.div @ conv + self.divK
             self.b_up = (self.div @ conv_bc).toarray().ravel()
         self.last_nit = 0
 
@@ -424,7 +424,7 @@ class Bed:
             g = g + mass * (yr - y_old)
         J = self.div @ jac + self.divK + construct_coefficient_matrix(
             np.broadcast_to(diag, (self.m,)).reshape(self.shape))
-        return g, J.tocsc()
+        return g, J
 
     def cascade(self, coef, order, y0=None):
         """Solve ``dy/ds = -coef(s) y^order``, ``y(0) = 1``, on the cells.
@@ -470,7 +470,7 @@ class Bed:
                                                 self.bc, 1.0, tvd_limiter=self.limiter, axis=0)
             dcorr = self.div @ np.asarray(dface).ravel()
             diag = coef * order * _pow(y, order - 1.0)
-            J = (self.L_up + construct_coefficient_matrix(diag.reshape(self.shape))).tocsc()
+            J = self.L_up + construct_coefficient_matrix(diag.reshape(self.shape))
             r = self.L_up @ y + self.b_up + coef * _pow(y, order) + dcorr
             y_new = y + splu(J).solve(-r)
             change = np.max(np.abs(y_new - y))

@@ -116,7 +116,7 @@ class Cascade:
             coef = np.zeros(self.shape)
             coef[-1, 0] = abs(self.u) / self.dz[-1]
             jac_conv = jac_conv + construct_coefficient_matrix(coef, shape=self.shape)
-        self.jac_const = jac_conv.tocsc()
+        self.jac_const = jac_conv
         self.g_const = np.asarray((div_mat @ conv_bc).todense()).ravel()
 
     # ---- steady state ---------------------------------------------------
@@ -135,7 +135,7 @@ class Cascade:
         c : numpy.ndarray
             Concentration in every tank, shape ``(N,)``.
         """
-        jac = (self.jac_const + k * eye_array(self.N, format="csc")).tocsc()
+        jac = self.jac_const + k * eye_array(self.N, format="csc")
         c = splu(jac).solve(-self.g_const)
         return c[-1], c
 
@@ -170,7 +170,7 @@ class Cascade:
             c = np.asarray(c).reshape(self.shape)
             g_rxn, jac_rxn = numjac(lambda x: self.reaction(x, k, order), c)
             g = self.jac_const @ c.ravel() + self.g_const + np.asarray(g_rxn).ravel()
-            return g, (self.jac_const + jac_rxn).tocsc()
+            return g, self.jac_const + jac_rxn
 
         guess = np.full(self.shape, self.c_in if c_guess is None else c_guess)
         sol = newton(residual, guess, tol=1e-14)
@@ -200,7 +200,7 @@ class Cascade:
         c = np.zeros(self.N)
         c[0] = 1.0 / self.dz[0]
         dt = tmax / nt
-        lu = splu((identity(self.N, format="csc") + theta * dt * self.jac_const).tocsc())
+        lu = splu(identity(self.N, format="csc") + theta * dt * self.jac_const)
         ts = np.empty(nt + 1)
         es = np.empty(nt + 1)
         ts[0], es[0] = 0.0, abs(self.u) * c[-1]
@@ -268,20 +268,20 @@ def dispersion_exit(Pe, ktbar, n=1500, limiter=vanleer, tol=1e-10, return_info=F
      div_mat) = _dispersion_operators(Pe, ktbar, n)
     # first-order upwind: one linear solve (and the initial guess for TVD)
     jac_up = (div_mat @ (conv_mat - d_ax * grad_mat)
-              + ktbar * eye_array(n, format="csc")).tocsc()
+              + ktbar * eye_array(n, format="csc"))
     g_up = np.asarray((div_mat @ (conv_bc - d_ax * grad_bc)).todense()).ravel()
     c = splu(jac_up).solve(-g_up)
     nit = 0
     if limiter is not None:
         jac_diff_rxn = (-d_ax * (div_mat @ grad_mat)
-                        + ktbar * eye_array(n, format="csc")).tocsc()
+                        + ktbar * eye_array(n, format="csc"))
         g_diff = -d_ax * np.asarray((div_mat @ grad_bc).todense()).ravel()
         tvd = ConvFluxTVD(shape, z_f, z_c, bc, tvd_limiter=limiter)
 
         def residual(c):
             flux, jac_conv = tvd(c, 1.0)
             g = div_mat @ flux.reshape(-1) + jac_diff_rxn @ c.reshape(-1) + g_diff
-            return g, (div_mat @ jac_conv + jac_diff_rxn).tocsc()
+            return g, div_mat @ jac_conv + jac_diff_rxn
 
         sol = newton(residual, c.reshape(shape), tol=tol, damping="monotone")
         if not sol.success:
@@ -322,7 +322,7 @@ def dispersion_exit_deferred(Pe, ktbar, n=1500, limiter=vanleer, max_it=200, tol
     """
     (shape, z_f, z_c, bc, d_ax, conv_mat, conv_bc, grad_mat, grad_bc,
      div_mat) = _dispersion_operators(Pe, ktbar, n)
-    jac = (div_mat @ (conv_mat - d_ax * grad_mat) + ktbar * eye_array(n, format="csc")).tocsc()
+    jac = div_mat @ (conv_mat - d_ax * grad_mat) + ktbar * eye_array(n, format="csc")
     g_const = np.asarray((div_mat @ (conv_bc - d_ax * grad_bc)).todense()).ravel()
     lu = splu(jac)
     c = lu.solve(-g_const)

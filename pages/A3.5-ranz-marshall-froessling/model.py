@@ -79,7 +79,7 @@ def nu_shell(n, ratio, D=1.0, Ca=1.0, Cb=0.0, nu=2, geometric=True, outer="diric
           else {"a": 1.0, "b": 0.0, "d": 0.0})
     grad, grad_bc = construct_grad(shape, r_f, r_c, bc)
     div = construct_div(shape, r_f, nu=nu)
-    lhs = (div @ (-D * grad)).tocsc()
+    lhs = div @ (-D * grad)
     rhs = -np.asarray((div @ (-D * grad_bc)).todense()).ravel()
     C = spsolve(lhs, rhs).reshape(shape)
     if at == "surface":
@@ -158,7 +158,7 @@ def sh_stefan(n, ratio, ya, yb=0.0, D=1.0, c=1.0, convection=True, n_scan=24,
     cv, cv_bc = div @ (c * conv1), div @ (c * conv1_bc)
 
     def produced(W, end=0):
-        lhs = (dif + on * W * cv).tocsc()
+        lhs = dif + on * W * cv
         rhs = -np.asarray((dif_bc + on * W * cv_bc).todense()).ravel()
         y = spsolve(lhs, rhs).reshape(shape)
         y_f, dydr = compute_boundary_values(y, r_f, r_c, bc[end], bound_id=end)

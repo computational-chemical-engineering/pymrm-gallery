@@ -156,7 +156,7 @@ class DustyGas:
         else:
             raise ValueError(f"face_rule {face_rule!r}")
         # face compositions: boundary faces from the bc, interior faces from w
-        self.face = sps.vstack([bl, sps.kron(w, sps.eye(self.n)), br]).tocsr()
+        self.face = sps.vstack([bl, sps.kron(w, sps.eye(self.n)), br], format="csc")
         self.face_bc = np.concatenate([blb.toarray().ravel(), np.zeros((n_cell - 1) * self.n),
                                        brb.toarray().ravel()]).reshape((-1, 1))
         self.numjac = NumJac(self.shape, axes_diagonals=[0], axes_blocks=[-1])

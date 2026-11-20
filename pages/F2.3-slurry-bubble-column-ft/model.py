@@ -153,12 +153,12 @@ def block_diag2(blocks):
 
     Returns
     -------
-    scipy.sparse.csr_array
+    scipy.sparse.csc_array
         Shape ``(2 n, 2 n)``, rows and columns cell-major like the flattened state.
     """
     n = blocks.shape[0]
     # block row k holds one block, in block column k
-    return bsr_array((blocks, np.arange(n), np.arange(n + 1)), shape=(2 * n, 2 * n)).tocsr()
+    return bsr_array((blocks, np.arange(n), np.arange(n + 1)), shape=(2 * n, 2 * n)).tocsc()  # CSC: BSR has no CSC constructor
 
 
 def contraction(r, alpha, law="molar"):
@@ -300,7 +300,7 @@ class SlurryColumn:
         conv_mat, conv_bc = construct_convflux_upwind(shape, self.z_f, self.z_c, self.bc,
                                                       v=1.0, axis=0)
         div_mat = construct_div(shape, self.z_f, nu=0, axis=0)   # nu = 0: constant area
-        self.jac_conv = (div_mat @ conv_mat).tocsr()
+        self.jac_conv = div_mat @ conv_mat
         self.g_conv = np.asarray((div_mat @ conv_bc).todense()).ravel()
         self.k_ex = np.tile(op.K / op.Ub_in, n)                  # K/(U^i - U_df) per row
         # x enters every cell's gas rows as -K/(U^i - U_df) x: a (2n, 2) constant block

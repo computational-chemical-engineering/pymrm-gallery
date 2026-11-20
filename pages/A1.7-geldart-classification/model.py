@@ -159,7 +159,7 @@ class DavidsonBubble:
         self.ops = {}
         for name, bc in self.bc.items():
             grad_mat, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, bc)
-            jac = (div_mat @ grad_mat + sink_mat).tocsc()
+            jac = div_mat @ grad_mat + sink_mat
             self.ops[name] = (grad_mat, grad_bc, jac, div_mat @ grad_bc)
 
     def solve(self):

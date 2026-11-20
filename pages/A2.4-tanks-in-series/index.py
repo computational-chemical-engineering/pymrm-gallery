@@ -2108,10 +2108,10 @@ brk("ambiguity: unequal chain with the zero-gradient outflow bc",
 def _no_sink(N):
     """Exit face suppressed (b=1, d=0) and the outflow sink forgotten."""
     cs = Cascade(N, tbar=1.0, c_in=1.0, outlet="stirred")
-    jac = cs.jac_const.tolil()
+    jac = cs.jac_const.copy()
     jac[N - 1, N - 1] -= abs(cs.u) / cs.dz[-1]
-    jac = jac.tocsc() + 2.0 * eye_array(N, format="csc")
-    return splu(jac.tocsc()).solve(-cs.g_const)[-1]
+    jac = jac + 2.0 * eye_array(N, format="csc")
+    return splu(jac).solve(-cs.g_const)[-1]
 
 
 _ns_bad = {N: abs(_no_sink(N) - Cascade(N, tbar=1.0, c_in=1.0).first_order(2.0)[0])
