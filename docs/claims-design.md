@@ -162,7 +162,13 @@ claims.report()
   `"rows": {"defined": n, "recorded": n}` (declared rows that recorded a claim). A
   row whose study cannot run records nan for the claims it targets, which fails their
   checks: right only when the failed solve is itself the detection, otherwise fix the
-  study. Without the declaration such a row drops out of the table unseen.
+  study. Without the declaration such a row drops out of the table unseen. Rows under
+  which every claim came back as nan or None are listed in `"rows_missing_only"`
+  (written only when there are any); `accept_page.py` shows them as a LOOK, because
+  such a row records a crash, not a moved claim.
+- `assert_check_values(computed, "check_values.csv", page=...)` asserts the page's
+  functions against check values from a second route (`data/check_values.csv`:
+  `name,value,rtol`) and must run before the first claim is registered.
 - `load_claims(page)` returns `{name: float}` from either format. Pages reading another
   page's file switch to it first, before any page writes format 2. A comparison of a
   live number with another page's committed number is a `bound` with a measured basis,

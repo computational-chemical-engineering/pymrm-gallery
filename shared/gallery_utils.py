@@ -141,6 +141,61 @@ def nrmse(model, data) -> float:
     return rmse(model, data) / span if span > 0 else np.nan
 
 
+def assert_check_values(computed: dict, name: str = "check_values.csv",
+                        page: str | None = None) -> dict:
+    """Assert a page's functions against independent check values.
+
+    The check values come from a second route (the build plan's equations file,
+    computed by a script that is not the page), one row per quantity in
+    ``data/<name>`` with columns ``name``, ``value`` and ``rtol``. A page calls
+    this before its first result, so a wrong function stops the page instead of
+    reaching a claim.
+
+    Parameters
+    ----------
+    computed : dict
+        The page's value for each ``name`` in the table, at the table's test
+        condition.
+    name, page : str
+        The dataset and the page folder, as for :func:`load_data`.
+
+    Returns
+    -------
+    dict
+        ``{name: computed / value - 1}`` for every row.
+
+    Raises
+    ------
+    AssertionError
+        When a row is missing from ``computed`` or outside its ``rtol``.
+    """
+    table = load_data(name, page=page)
+    dev, bad = {}, []
+    for row in table.itertuples():
+        if row.name not in computed:
+            bad.append(f"{row.name}: not computed")
+            continue
+        dev[row.name] = float(computed[row.name]) / float(row.value) - 1.0
+        if not abs(dev[row.name]) <= float(row.rtol):
+            bad.append(f"{row.name}: {computed[row.name]!r} against {row.value!r} "
+                       f"(rtol {row.rtol:g})")
+    if bad:
+        raise AssertionError(f"{len(bad)} check value(s) fail:\n  " + "\n  ".join(bad))
+    worst = max(dev.values(), key=abs) if dev else 0.0
+    print(f"check values: {len(dev)} of {len(table)} agree, worst relative {worst:.1e}")
+    return dev
+
+
+def _is_missing(x) -> bool:
+    """A break-row value that is no number: None or nan (the study crashed)."""
+    if x is None:
+        return True
+    try:
+        return bool(np.isnan(x))
+    except (TypeError, ValueError):
+        return False
+
+
 def report_agreement(page_id: str, metrics: dict, write: bool = True) -> dict:
     """Print agreement metrics and write ``agreement.json`` for CI regression checks.
 
@@ -287,6 +342,7 @@ class Claims:
         self.quoted: dict[str, list[str]] = {}
         self._rows: dict[str, list[tuple[str, bool]]] = {}
         self._defined: list[str] | None = None
+        self._missing: dict[str, list[bool]] = {}
         self._problems: list[str] = []
 
     # -- registration ---------------------------------------------------------
@@ -382,6 +438,7 @@ class Claims:
             raise KeyError(f"break row {row!r} names unknown claim {name!r}")
         caught = not _passes(self.metrics[name], self.metrics[name]["value"], broken)
         self._rows.setdefault(name, []).append((row, caught))
+        self._missing.setdefault(row, []).append(_is_missing(broken))
         return caught
 
     def says(self, literal: str, name: str) -> bool:
@@ -445,6 +502,11 @@ class Claims:
         }
         if self._defined is not None:
             payload["rows"] = {"defined": len(self._defined), "recorded": n_recorded}
+        # rows under which every claim came back without a number: they record a
+        # crash, not a moved value (written only when there are any)
+        crash = [r for r, flags in self._missing.items() if flags and all(flags)]
+        if crash:
+            payload["rows_missing_only"] = crash
         if not require_breaks:
             # A page migrated before its break table: visible in the file and
             # listed by scripts/check_claims.py until the table exists.

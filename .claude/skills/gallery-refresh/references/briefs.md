@@ -18,6 +18,19 @@ report it asks for." Placeholders:
 | `<EXEMPLAR>` | the plugin exemplar closest to the page, and the part of it that matters |
 | `<ROWS>` | the learnings row numbers the page added |
 
+**New pages (not refreshes): plan first.** Before the build agent starts, one `think`
+call writes `<SCRATCH>/<id>_PLAN.md` (one page: the question, the message to test,
+results R1..Rn each with what it must show, the validations, what counts as a claim,
+stop rules) and `<SCRATCH>/<id>_EQUATIONS.md` (the equations as used, units, and check
+values at one test condition computed by a second route: a script of the plan agent or
+the coordinator, never the builder). The coordinator turns the check values into
+`pages/<PAGE>/data/check_values.csv` (`name,value,rtol`, with a `.meta.yaml` sidecar
+naming the second route). The build brief names both files; the builder calls
+`gallery_utils.assert_check_values(...)` before the first claim (accept_page.py's
+`contract` step checks the order) and closes the page with the finding the plan asked
+for, or says the numbers do not support it. Log the plan call as its own cost-log row.
+Worked example: `~/Code/agentic-science/bench/g2/package/PLAN.md` and `EQUATIONS.md`.
+
 The plugin exemplars: `~/Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/exemplars/`
 (dispersion_reactor, steady_pellet, steady_tvd_channel for ConvFluxTVD and
 `{"outflow": True}`, assembly_styles, refinement_orders, correlation_roots,
@@ -213,6 +226,10 @@ What to check, in this order:
 
 Cheap checks you may run: `python scripts/accept_page.py pages/<PAGE> --only
 dashes,lint,outputs` (seconds, changes no file); <others, with runtime>.
+List every false or unsupported statement in README.md, meta.yaml and the markdown
+cells, with file:line and the number that contradicts or fails to support it.
+State the page's one finding with its number, and whether the page sets it against
+the relevant scatter or uncertainty. If there is none, that is a MUST-FIX.
 Output (at most 400 words): numbered items for a Sonnet fix round, each MUST-FIX or
 optional, with file:line, what is wrong, and the exact fix (replacement wording where
 wording is the issue). Then one verdict line per question asked above.

@@ -16,14 +16,23 @@ git diff --cached --stat                                # nothing you did not me
 - Read the README `## Corrections` yourself. Each entry: old wording in quotes and
   exact, what is true stated, every number with a `<!-- claim: name -->` marker. A
   phrase like "under those assumptions" must have its assumptions inside the same entry.
-- `python scripts/accept_page.py pages/<PAGE> --only sync,agreement,claims,stable,dashes,lint`
+- `python scripts/accept_page.py pages/<PAGE> --only sync,agreement,claims,stable,dashes,contract,lint`
   (seconds): every step PASS, agreement PASS or LOOK with only the known pre-commit
   cases below, every LOOK line accounted for. Run it again after any edit of yours to
   index.py.
+- After a fix round, read every prose sentence the fix diff added or changed against
+  the page output: `git diff -U0 <before-fix> -- pages/<PAGE>/README.md
+  pages/<PAGE>/meta.yaml pages/<PAGE>/index.py`, markdown lines only (`# ` in
+  index.py). Count the new unsupported sentences in the cost-log row; if five fix
+  rounds in a row add none, this step may be dropped.
+- `--only contract`: `claims.report()` executed, check values asserted first, and
+  `status: published` set by the branch (LOOK: the coordinator sets it).
 - The claim count, break-table line and break-row count: `--only outputs` prints
   them from the executed notebook and agreement.json without running anything. The
   rows line must read PASS (as many recorded as defined); LOOK means the page does
-  not declare its rows with `claims.define_rows`, which a refreshed page must.
+  not declare its rows with `claims.define_rows`, which a refreshed page must, that
+  no more than one row catches a claim, or that a row only records a crash (say so
+  on the page, or make the row move a number).
 
 ## Known checker behaviour
 
