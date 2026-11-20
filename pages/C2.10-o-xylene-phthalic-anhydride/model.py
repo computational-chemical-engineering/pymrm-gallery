@@ -299,7 +299,7 @@ class Tube2D:
         grad_mat, grad_bc = construct_grad(self.shape, self.r_f, self.r_c, bc, axis=0)
         div_mat = construct_div(self.shape, self.r_f, nu=self.nu, axis=0)  # nu=1: cylinder
         disp_mat = construct_coefficient_matrix(self.dispersion[None, :], self.shape, axis=0)
-        self.jac_disp = (div_mat @ disp_mat @ grad_mat).tocsc()
+        self.jac_disp = div_mat @ disp_mat @ grad_mat
         self.g_disp = np.asarray((div_mat @ disp_mat @ grad_bc).todense()).ravel()
         self.numjac = NumJac(self.shape)          # pointwise source: last axis in full
 
@@ -471,7 +471,7 @@ class Tube1DSteady:
                                                       v=1.0, axis=0)
         div_mat = construct_div(self.shape, self.z_f, nu=0, axis=0)   # nu=0: axial
         sink = construct_coefficient_matrix(np.broadcast_to(self.wall, self.shape))
-        self.jac_const = (div_mat @ conv_mat + sink).tocsc()
+        self.jac_const = div_mat @ conv_mat + sink
         self.g_const = (div_mat @ conv_bc).toarray().reshape(-1, 1) \
             - np.broadcast_to(self.wall * self.u_wall, self.shape).reshape(-1, 1)
         self.numjac = NumJac(self.shape)           # pointwise source: last axis in full

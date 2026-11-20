@@ -413,7 +413,7 @@ class Slab:
                                                      self.bc, axis=0)
         # nu = 0: slab (Cartesian)
         self.div_mat = construct_div(self.shape, self.x_f, nu=nu, axis=0)
-        self.jac_diff = (self.div_mat @ (-self.grad_mat)).tocsc()
+        self.jac_diff = self.div_mat @ (-self.grad_mat)
         self.g_const = (self.div_mat @ (-self.grad_bc)).toarray().reshape(-1, 1)
         self.numjac = NumJac(self.shape)
         # the full residual with d(c) on the faces reads both neighbours of a cell
@@ -556,7 +556,7 @@ class Cyl2D:
             jac = jac + div_mat @ (-grad_mat)
             g = g + div_mat @ (-grad_bc)
             measures.append(np.diff(x_f ** (nu + 1)) / (nu + 1))
-        self.jac_diff = jac.tocsc()
+        self.jac_diff = jac
         self.g_const = g.toarray().reshape(-1, 1)
         self.numjac = NumJac(self.shape)
         w = np.multiply.outer(measures[0], measures[1])

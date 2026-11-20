@@ -263,8 +263,8 @@ def annulus_operators(n, T_in, T_out, nu=1):
     bc = ({"a": 0.0, "b": 1.0, "d": T_in}, {"a": 0.0, "b": 1.0, "d": T_out})
     grad, grad_bc = construct_grad(shape, r_f, r_c, bc, axis=0)
     div = construct_div(shape, r_f, nu=nu, axis=0)   # nu=1: (1/r) d(r q)/dr
-    return dict(r_f=r_f, r_c=r_c, bc=bc, grad=grad.tocsr(), shape=shape,
-                grad_bc=np.asarray(grad_bc.todense()).reshape(-1, 1), div=div.tocsr())
+    return dict(r_f=r_f, r_c=r_c, bc=bc, grad=grad, shape=shape,
+                grad_bc=np.asarray(grad_bc.todense()).reshape(-1, 1), div=div)
 
 
 def face_temperatures(T, ops):
@@ -357,7 +357,7 @@ def solve_annulus(n, T_in, T_out, kfun=None, k_const=None, nu=1, method="newton"
     ops = annulus_operators(n, T_in, T_out, nu)
     info = {} if info is None else info
     if k_const is not None:
-        A = (ops["div"] @ (-float(k_const) * ops["grad"])).tocsc()
+        A = ops["div"] @ (-float(k_const) * ops["grad"])
         b = ops["div"] @ (-float(k_const) * ops["grad_bc"])
         T = spsolve(A, -b.ravel()).reshape(-1, 1)
         info["iterations"] = 1
@@ -386,7 +386,7 @@ def solve_annulus(n, T_in, T_out, kfun=None, k_const=None, nu=1, method="newton"
         for _ in range(maxit):
             k_f = np.asarray(kfun(face_temperatures(T, ops)), float).reshape(-1, 1)
             Km = construct_coefficient_matrix(k_f, shape=ops["shape"], axis=0)
-            A = (ops["div"] @ (Km @ ops["grad"])).tocsc()
+            A = ops["div"] @ (Km @ ops["grad"])
             b0 = ops["div"] @ (k_f * ops["grad_bc"])
             T_new = spsolve(A, -b0.ravel()).reshape(-1, 1)
             steps.append(float(np.max(np.abs(T_new - T))))

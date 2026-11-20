@@ -675,7 +675,7 @@ class SPMe:
         # the two cancel (the zero total flux above), at x = L both vanish
         flux_I = -(D_face @ (grad_bc_left @ np.array([[self.g_per_I]]))) + mig
         self.flux_I = flux_I.ravel()
-        self.Lop = (div @ (-D_face @ grad)).tocsc()                # c~ -> div(-D_eff grad c~)
+        self.Lop = div @ (-D_face @ grad)                # c~ -> div(-D_eff grad c~)
         self.q_per_I = -(div @ flux_I).ravel()                     # source per unit I
         self.bval_left, self.bval_left_bc = construct_boundary_value_matrices(
             shape, self.x_f, self.x_c, bc=self.bc[0], bound_id=0, shape_d=(1, 1))
@@ -733,7 +733,7 @@ class SPMe:
         from scipy.sparse.linalg import splu
         dt = t_end / n_t
         M = construct_coefficient_matrix(self.eps / dt)
-        lu = splu((M + self.Lop).tocsc())
+        lu = splu(M + self.Lop)
         c, out = np.zeros(self.n_x), np.empty((n_t, self.n_x))
         for k in range(n_t):
             c = lu.solve(self.eps * c / dt + self.q_per_I * I)

@@ -249,7 +249,7 @@ class BarkelewTube:
         # v = 1: zeta is a scaled contact time, so d(v x)/dzeta = source.
         # nu = 0: Cartesian (a contact time has no curvature).
         div_mat = construct_div(self.shape, self.z_f, nu=self.nu, axis=0)
-        self.jac_const = (div_mat @ conv_mat).tocsc()
+        self.jac_const = div_mat @ conv_mat
         self.g_const = div_mat @ conv_bc
         self.numjac = NumJac(self.shape)          # pointwise source: last axis in full
 
@@ -489,7 +489,7 @@ class Tube:
                                                       bc, v=1.0, axis=0)
         # v = 1 on the contact time; nu = 0: Cartesian.
         div_mat = construct_div(self.shape, self.z_f, nu=0, axis=0)
-        self.jac_const = (div_mat @ conv_mat).tocsc()
+        self.jac_const = div_mat @ conv_mat
         self.g_const = div_mat @ conv_bc
         self.numjac = NumJac(self.shape)
 

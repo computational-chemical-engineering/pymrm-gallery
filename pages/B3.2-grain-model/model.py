@@ -379,16 +379,16 @@ class GrainModel:
         # enters through the sink and rate closures, not through this operator
         div = construct_div((n, 1), self.x_f, nu=nu)
         self.grad, self.grad_bc = grad, grad_bc
-        self.lop = (div @ (-diff * grad)).tocsc()                   # -(diff psi')' on (n, 1)
+        self.lop = div @ (-diff * grad)                   # -(diff psi')' on (n, 1)
         self.lop_bc = (div @ (-diff * grad_bc)).toarray().ravel()
-        self.lin = self.layout.place(self.lop, "psi", "psi").tocsc()
+        self.lin = self.layout.place(self.lop, "psi", "psi")
         self.b = np.zeros(self.layout.size)
         self.layout.put(self.b, "psi", self.lop_bc)
         self.b = self.b.reshape(-1, 1)
         self.numjac = NumJac(self.shape) if jacobian == "numjac" else None
         self.t = 0.0
         self.xi = np.ones(n)
-        self.psi = spsolve((self.lop + diags_array(self.sink_coeff(self.xi)[0])).tocsc(), -self.lop_bc)
+        self.psi = spsolve(self.lop + diags_array(self.sink_coeff(self.xi)[0], format="csc"), -self.lop_bc)
         self.I_gas = 0.0
         self.q_prev = self.influx()
         self.hist = {"t": [], "EP": [], "xi_s": [], "xi_0": [], "front": []}

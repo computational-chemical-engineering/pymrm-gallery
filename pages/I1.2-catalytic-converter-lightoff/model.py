@@ -354,7 +354,7 @@ class Monolith:
                                                       bc_conv, v=v, axis=0)
         self.bc_conv = bc_conv
 
-        self.jac_const = (-div_mat @ (lam_mat @ grad_mat) + div_mat @ conv_mat).tocsc()
+        self.jac_const = -div_mat @ (lam_mat @ grad_mat) + div_mat @ conv_mat
         self.g_const = np.asarray(
             (-div_mat @ (lam_mat @ grad_bc) + div_mat @ conv_bc).todense()).reshape(-1, 1)
         self.numjac = NumJac(shape)        # last axis in full: every term is pointwise
@@ -494,7 +494,7 @@ class Monolith:
         u = w.reshape(self.u.shape) * self.col_scale
         f, jac_f = self.numjac(self.source, u)
         g = self.jac_const @ u.reshape(-1, 1) + self.g_const - f.reshape(-1, 1) - g_old
-        return self._rs * g, (self._Dr @ (self.jac_const - jac_f) @ self._Dc).tocsc()
+        return self._rs * g, self._Dr @ (self.jac_const - jac_f) @ self._Dc
 
     def step_from(self, u_old, dt):
         """One backward-Euler step of length ``dt`` from ``u_old``, model state untouched.

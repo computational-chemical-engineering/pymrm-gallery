@@ -240,7 +240,7 @@ class Tube:
         div = construct_div((n, 1), self.z_f, nu=nu)
         G = construct_coefficient_matrix(self.G_f.reshape(-1, 1))
         self.flux_op, self.flux_bc = -(G @ grad), -(G @ grad_bc)   # face flux = op x + bc
-        self.A = (div @ self.flux_op).tocsc()                       # div(flux) = 0
+        self.A = div @ self.flux_op                       # div(flux) = 0
         self.rhs = -np.asarray((div @ self.flux_bc).todense()).ravel()
 
     def solve(self, permc_spec="COLAMD"):

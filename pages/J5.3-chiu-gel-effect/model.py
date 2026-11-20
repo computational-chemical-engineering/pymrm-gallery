@@ -386,7 +386,7 @@ def shell_bvp(n, ratio, Cm_=0.3, Cb_=1.0, D_=1.0, rm_=1.0, nu=2):
     bc = ({"a": 0.0, "b": 1.0, "d": Cm_}, {"a": 0.0, "b": 1.0, "d": Cb_})
     grad, grad_bc = construct_grad(shape, r_f, r_c, bc, axis=0)
     div = construct_div(shape, r_f, nu=nu, axis=0)       # nu = 2: spherical
-    c = spsolve((div @ (-D_ * grad)).tocsc(),
+    c = spsolve(div @ (-D_ * grad),
                 -(div @ (-D_ * grad_bc)).toarray().ravel())
     dCdr = np.asarray((grad @ c.reshape(-1, 1) + grad_bc)).ravel()
     K_faces = 4 * np.pi * r_f**2 * D_ * dCdr               # eq. 21's left side

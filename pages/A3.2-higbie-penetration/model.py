@@ -94,7 +94,7 @@ class Film:
     def _build_operators(self):
         grad_mat, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, self.bc)
         div_mat = construct_div(self.shape, self.x_f, nu=0)   # nu = 0: Cartesian slab
-        self.jac_diff = (self.Lam * (div_mat @ grad_mat)).tocsr()
+        self.jac_diff = self.Lam * (div_mat @ grad_mat)
         self.g_const = self.Lam * (div_mat @ grad_bc).toarray().ravel()
         # the same tridiagonal operator in solve_banded's (3, n_x) layout
         self.ab_diff = np.zeros((3, self.n_x))

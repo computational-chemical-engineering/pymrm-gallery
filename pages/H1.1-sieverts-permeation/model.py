@@ -111,7 +111,7 @@ def wall_solve(c_in, c_out, r_i, r_o, D, l_0, n_r=200, nu=1, D_profile=None):
     diff_mat = construct_coefficient_matrix(D_f.reshape((-1, 1)), shape=shape, axis=0)
     flux_mat = -diff_mat @ grad_mat
     flux_bc = -diff_mat @ grad_bc
-    jac = (div_mat @ flux_mat).tocsc()
+    jac = div_mat @ flux_mat
     g_const = (div_mat @ flux_bc).toarray().ravel()
     c = spsolve(jac, -g_const)
     J_f = (flux_mat @ c + flux_bc.toarray().ravel())        # -D dc/dr at every face
@@ -200,7 +200,7 @@ class Permeator:
         conv_mat, conv_bc = construct_convflux_upwind(self.shape, self.z_f, self.z_c, self.bc,
                                                       v=1.0, axis=0)
         div_mat = construct_div(self.shape, self.z_f, nu=self.nu, axis=0)   # nu = 0: L is axial
-        self.jac_const = (div_mat @ conv_mat).tocsc()
+        self.jac_const = div_mat @ conv_mat
         self.g_const = (div_mat @ conv_bc).toarray().reshape((-1, 1))
         self.numjac = NumJac(self.shape, eps_jac=self.eps_jac)   # pointwise sink
 
@@ -230,8 +230,8 @@ class Permeator:
         g_src, jac_src = self.numjac(lambda x: self.source(x * x), s)
         w = s * s
         g = self.g_const + self.jac_const @ w.reshape((-1, 1)) - g_src.reshape((-1, 1))
-        jac = self.jac_const @ diags_array(2.0 * s.ravel()) - jac_src
-        return g, jac.tocsc()
+        jac = self.jac_const @ diags_array(2.0 * s.ravel(), format="csc") - jac_src
+        return g, jac
 
     def flat_guess(self):
         """The inlet value in every cell."""

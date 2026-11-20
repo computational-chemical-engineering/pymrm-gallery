@@ -280,9 +280,9 @@ class MaxMixedness:
         conv_mat, conv_bc = construct_convflux_upwind(self.shape, self.x_f, self.x_c,
                                                       self.bc, v=self.v, axis=0)
         self.div = construct_div(self.shape, self.x_f, nu=0, axis=0)  # nu=0: Cartesian
-        self.conv_mat = conv_mat.tocsc()
+        self.conv_mat = conv_mat
         self.conv_bc = np.asarray(conv_bc.todense()).reshape(-1, 1)
-        self.jac_up = (self.div @ self.conv_mat).tocsc()
+        self.jac_up = self.div @ self.conv_mat
         self.g_up = np.asarray(self.div @ self.conv_bc).reshape(-1)
         self.tvd = (None if limiter is None else
                     ConvFluxTVD(self.shape, self.x_f, self.x_c, self.bc,
@@ -328,10 +328,10 @@ class MaxMixedness:
         jac_s = construct_coefficient_matrix(ds, shape=self.shape)
         if self.tvd is None:
             res = self.jac_up @ g.reshape(-1) + self.g_up - s.reshape(-1)
-            return res, (self.jac_up - jac_s).tocsc()
+            return res, self.jac_up - jac_s
         flux, jac_f = self.tvd(g, self.v)
         res = self.div @ flux.reshape(-1) - s.reshape(-1)
-        return res, (self.div @ jac_f - jac_s).tocsc()
+        return res, self.div @ jac_f - jac_s
 
     # -- the two solver routes ---------------------------------------------------
     def solve(self, tol=1e-11, maxfev=60):
@@ -401,7 +401,7 @@ class MaxMixedness:
             s, ds = self.source(g)
             jac_s = construct_coefficient_matrix(ds, shape=self.shape)
             res = self.jac_up @ g.reshape(-1) + self.g_up - s.reshape(-1) + corr
-            return res, (self.jac_up - jac_s).tocsc()
+            return res, self.jac_up - jac_s
 
         g = np.full(self.shape, self.g_inf)
         change = np.inf
