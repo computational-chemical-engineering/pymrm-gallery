@@ -1172,7 +1172,7 @@ def prof(n, **kw):
     """Quasi-steady gas profile at C_L = 0.3 C_star, from the operators."""
     op = _operators(n, H_T, VS0, C_in=C_IN, **kw)
     A_ = op["L"] + sp.eye(n, format="csc") * ((1 - EPS) * kk / HENRY)
-    return spsolve(A_.tocsc(), -op["g"] + (1 - EPS) * kk * 0.3 * C_IN / HENRY)
+    return spsolve(A_, -op["g"] + (1 - EPS) * kk * 0.3 * C_IN / HENRY)
 
 
 p0, p1 = prof(8), prof(8, inlet_top=True)

@@ -288,8 +288,8 @@ class RunawayTube:
             self.shape, self.z_f, self.z_c, bc, v=1.0, axis=0, shapes_d=((1, 2), None))
         # v = 1: z is the contact time, so d(v x)/dz = source. nu = 0: Cartesian.
         div_mat = construct_div(self.shape, self.z_f, nu=0, axis=0)
-        self.jac_const = (div_mat @ conv_mat).tocsc()
-        self.g_inlet = (div_mat @ conv_bc_in).tocsc()
+        self.jac_const = div_mat @ conv_mat
+        self.g_inlet = div_mat @ conv_bc_in
         self.numjac = NumJac(self.shape)          # pointwise source: last axis in full
 
     def set_inlet(self, p0, T0=None):

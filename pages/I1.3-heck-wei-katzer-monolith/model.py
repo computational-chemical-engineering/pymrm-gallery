@@ -256,7 +256,7 @@ def duct(nx, ny=None, geom="square", nu_r=1, plug=False, wall_neumann=False,
         lap = lap + d @ g
         lap_bc = lap_bc + d @ gbc
     lap_bc = np.asarray(lap_bc.todense()).ravel()
-    lu = splu(lap.tocsc())
+    lu = splu(lap)
     u = np.ones(int(np.prod(shape))) if plug else lu.solve(-1.0 - lap_bc)
     th = lu.solve(u - lap_bc)
     ub = (u * dv).sum() / dv.sum()
@@ -264,7 +264,7 @@ def duct(nx, ny=None, geom="square", nu_r=1, plug=False, wall_neumann=False,
     nu_h1 = -4.0 * ub * A_full ** 2 / (P_full ** 2 * thb)
     w = dv * u if weight_eigen else dv
     # v0 fixed: ARPACK's default start vector is random
-    lam = eigsh((-diags_array(dv) @ lap).tocsc(), k=1, M=diags_array(w).tocsc(),
+    lam = eigsh(-diags_array(dv, format="csc") @ lap, k=1, M=diags_array(w, format="csc"),
                 sigma=0.0, which="LM", v0=np.ones(int(np.prod(shape))))[0][0]
     nu_t = 4.0 * lam * ub * A_full ** 2 / P_full ** 2
     fre = (4.0 * A_full / P_full) ** 2 / (2.0 * ub)
@@ -374,7 +374,7 @@ class Graetz:
     def _diffusion(self, bc_r):
         gr, gr_bc = construct_grad(self.shape, self.r_f, self.r_c, bc_r, axis=1)
         dr = construct_div(self.shape, self.r_f, nu=1, axis=1)      # nu=1: cylindrical, radial
-        return (dr @ gr).tocsc(), np.asarray((dr @ gr_bc).todense()).ravel()
+        return dr @ gr, np.asarray((dr @ gr_bc).todense()).ravel()
 
     def _result(self, T, bc_r, q, nit, incr, wall_read="face"):
         # the wall value from pymrm's boundary reconstruction on the face;
@@ -423,7 +423,7 @@ class Graetz:
                                                   bc_x, v=self.v, axis=0)
         dx = construct_div(self.shape, self.x_f, nu=0, axis=0)      # nu=0: Cartesian, axial
         lap, lap_bc = self._diffusion(bc_r)
-        A = (dx @ conv - lap).tocsc()
+        A = dx @ conv - lap
         b = np.asarray((dx @ conv_bc).todense()).ravel() - lap_bc
         lu = splu(A)
         T = lu.solve(-b).reshape(self.shape)
@@ -465,7 +465,7 @@ class Graetz:
         def residual(T):
             flux, jac = tvd(T, self.v)
             g = dx @ flux.reshape(-1) - lap @ T.reshape(-1) - lap_bc
-            return g, (dx @ jac - lap).tocsc()
+            return g, dx @ jac - lap
 
         T0 = (self.solve(wall, inlet, tvd=False, outflow=outflow)["T"] if guess == "upwind"
               else np.full(self.shape, float(inlet)))
@@ -810,7 +810,7 @@ class Radial:
         g, _, g_q = construct_grad(self.shape, self.r_f, self.r_c, self.bc, axis=0,
                                    shapes_d=(None, (1, 1)))
         d = construct_div(self.shape, self.r_f, nu=nu_r, axis=0)   # nu=1: cylindrical
-        self.lap = (d @ g).tocsc()
+        self.lap = d @ g
         self.lap_q = np.asarray((d @ g_q).todense()).reshape(self.shape)   # per unit q
         self.w = 0.5 * (1.0 - self.r_c ** 2).reshape(self.shape)          # eq. (15) coefficient
 
@@ -827,7 +827,7 @@ class Radial:
         wall value of ``c0`` and ``S`` the wall value gained per unit gradient.
         """
         accum = construct_coefficient_matrix(self.w / h, shape=self.shape)
-        lu = splu((accum - self.lap).tocsc())
+        lu = splu(accum - self.lap)
         dc = lu.solve(self.lap_q.ravel()).reshape(self.shape)   # response to unit q
         S = self.wall_value(dc, 1.0)       # the wall value is affine in (c, q)
 

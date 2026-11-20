@@ -285,7 +285,7 @@ class BatchMassAction:
             c = w.reshape(1, self.NC)
             f, jf = self.numjac(self.source, c)
             return (((c - c_old)/dt - th*f - (1 - th)*f_old).reshape(-1, 1),
-                    (self.eye/dt - th*jf).tocsc())
+                    self.eye/dt - th*jf)
         r = newton(res, c_old.reshape(-1, 1).copy(), tol=self.tol, maxfev=50,
                    stagnation=True, backward_tol=self.backward_tol)
         if not r.success:
@@ -351,7 +351,7 @@ class BatchReduced:
             def res(w, c_old=c_old):
                 cc = w.reshape(1, 1)
                 f, jf = self.numjac(self.source, cc)
-                return ((cc - c_old)/dt - f).reshape(-1, 1), (self.eye/dt - jf).tocsc()
+                return ((cc - c_old)/dt - f).reshape(-1, 1), self.eye/dt - jf
             r = newton(res, c.reshape(-1, 1).copy(), tol=1e-14, maxfev=50,
                        stagnation=True)
             if not r.success:

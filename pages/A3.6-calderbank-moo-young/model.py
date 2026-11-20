@@ -86,7 +86,7 @@ def sh_sphere(ratio=1e-4, n_r=800, nu=2, outer="dirichlet", at="surface"):
           else {"a": 1.0, "b": 0.0, "d": 0.0})
     div = construct_div(shape, r_f, nu=nu)
     grad, grad_bc = construct_grad(shape, r_f, r_c, bc)
-    lap = (div @ grad).tocsc()
+    lap = div @ grad
     rhs = -np.asarray((div @ grad_bc).todense()).ravel()
     c = spsolve(lap, rhs).reshape(shape)
     if at == "surface":
@@ -177,11 +177,11 @@ class BoundaryLayer:
         bc = self.bc(interface)
         div = construct_div(self.shape, self.y_f, nu=0)
         grad, grad_bc = construct_grad(self.shape, self.y_f, self.y_c, bc)
-        A = (self.D * (div @ grad)).tocsc()
+        A = self.D * (div @ grad)
         b = self.D * np.asarray((div @ grad_bc).todense()).ravel()
-        U = construct_coefficient_matrix(self.u.reshape(-1, 1), self.shape).tocsc()
+        U = construct_coefficient_matrix(self.u.reshape(-1, 1), self.shape)
         dx = self.L / n_x
-        lu = splu((U / dx - A).tocsc())        # constant operator, factorised once
+        lu = splu(U / dx - A)        # constant operator, factorised once
         c = np.zeros(self.n_y)
         kx = np.empty(n_x)
         for j in range(n_x):

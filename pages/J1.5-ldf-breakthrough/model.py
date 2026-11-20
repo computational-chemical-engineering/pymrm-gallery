@@ -237,7 +237,7 @@ class Particle:
         self.bc = ({"a": 1.0, "b": 0.0, "d": 0.0}, {"a": 0.0, "b": 1.0, "d": 1.0})
         grad, grad_bc = construct_grad(self.shape, self.r_f, self.r_c, self.bc)
         div = construct_div(self.shape, self.r_f, nu=self.nu if nu_div is None else nu_div)
-        self.jac = (-(div @ grad)).tocsc()                # dq/dtau = -jac q + g
+        self.jac = -(div @ grad)                # dq/dtau = -jac q + g
         self.g = (div @ grad_bc).toarray().ravel()
         if weights == "volume":
             w = np.diff(self.r_f ** (self.nu + 1))
@@ -266,7 +266,7 @@ class Particle:
 
     def _factor(self, dt):
         if dt not in self._lu:
-            self._lu[dt] = splu((eye_array(self.n_r, format="csc") / dt + self.jac).tocsc())
+            self._lu[dt] = splu(eye_array(self.n_r, format="csc") / dt + self.jac)
         return self._lu[dt]
 
     def step(self, q, dt):

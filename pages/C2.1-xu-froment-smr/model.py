@@ -212,7 +212,7 @@ class SteamReformer:
         conv_mat, conv_bc = construct_convflux_upwind(self.shape, self.tau_f, self.tau_c,
                                                       self.bc, v=1.0, axis=0)
         div_mat = construct_div(self.shape, self.tau_f, nu=0, axis=0)
-        self.jac_const = (div_mat @ conv_mat).tocsc()
+        self.jac_const = div_mat @ conv_mat
         self.g_const = (div_mat @ conv_bc).toarray().reshape(-1, 1)
         # The source at a cell depends on that cell's two conversions only, so
         # the default stencil (last axis, the two fields, coupled in full) is exact

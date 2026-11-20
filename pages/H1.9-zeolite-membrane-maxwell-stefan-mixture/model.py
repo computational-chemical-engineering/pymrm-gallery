@@ -627,7 +627,7 @@ class Membrane:
         """
         Th0, Thd = self.boundary_loadings(p0, pd)
         gbc = self._gbc(Th0, Thd)
-        eye = sp.eye_array(self.n_z * self.n, format="csr")
+        eye = sp.eye_array(self.n_z * self.n, format="csc")
         Th = np.tile(Thd, (self.n_z, 1))
         t = 0.0
         rec = []
@@ -641,7 +641,7 @@ class Membrane:
                     ok = False
                     for k in range(1, maxit + 1):
                         Mf = self._M(Th_it, Th0, Thd)
-                        A = (eye / step - self.div @ Mf @ self.grad).tocsc()
+                        A = eye / step - self.div @ Mf @ self.grad
                         b = Th_old.reshape(-1) / step + (self.div @ Mf) @ gbc
                         Tn = spsolve(A, b).reshape(self.n_z, self.n)
                         guard = bool(np.any(Tn < 1e-10))

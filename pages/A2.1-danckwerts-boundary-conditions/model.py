@@ -89,12 +89,12 @@ class _Linear1D:
         conv_mat, conv_bc = construct_convflux_upwind(shape, z_f, z_c, bc, v=self.u)
         grad_mat, grad_bc = construct_grad(shape, z_f, z_c, bc)
         self.div_mat = construct_div(shape, z_f, nu=nu)
-        self.conv_mat = conv_mat.tocsc()
+        self.conv_mat = conv_mat
         self.conv_bc = np.asarray(conv_bc.todense()).ravel()
-        self.diff_flux_mat = (-d_mat @ grad_mat).tocsc()
+        self.diff_flux_mat = -d_mat @ grad_mat
         self.diff_flux_bc = np.asarray((-d_mat @ grad_bc).todense()).ravel()
-        self.jac_diff_rxn = (self.div_mat @ self.diff_flux_mat + k_mat).tocsc()
-        self.jac_up = (self.div_mat @ self.conv_mat + self.jac_diff_rxn).tocsc()
+        self.jac_diff_rxn = self.div_mat @ self.diff_flux_mat + k_mat
+        self.jac_up = self.div_mat @ self.conv_mat + self.jac_diff_rxn
         self.g_up = np.asarray(self.div_mat @ (self.conv_bc + self.diff_flux_bc)).ravel()
         self.lu_up = (splu(self.jac_up) if permc_spec is None
                       else splu(self.jac_up, permc_spec=permc_spec))
@@ -126,7 +126,7 @@ class _Linear1D:
                 g = self.div_mat @ flux.reshape(-1) + self.jac_diff_rxn @ c + g_diff
             if jacobian == "upwind":
                 return g, self.jac_up
-            return g, (self.div_mat @ jac_conv + self.jac_diff_rxn).tocsc()
+            return g, self.div_mat @ jac_conv + self.jac_diff_rxn
 
         sol = newton(residual, c_up.reshape(self.shape), tol=tol, damping="monotone",
                      stagnation=True, maxfev=maxfev)
