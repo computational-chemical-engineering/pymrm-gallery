@@ -289,10 +289,10 @@ class Crystal:
         grad, gb = construct_grad(self.shape, self.r_f, self.r_c, bc)
         bl, blv = construct_boundary_value_matrices(self.shape, self.r_f, self.r_c, bc[0], bound_id=0)
         br, brv = construct_boundary_value_matrices(self.shape, self.r_f, self.r_c, bc[1], bound_id=1)
-        self.grad, self.grad_bc = grad.tocsr(), np.asarray(gb.toarray()).reshape(-1, 1)
+        self.grad, self.grad_bc = grad, np.asarray(gb.toarray()).reshape(-1, 1)
         zero = sps.csr_matrix((self.n_r - 1, self.n_r))
         # boundary face loadings: Theta_face = B @ Theta + b
-        self.Bface = sps.vstack([bl, zero, br]).tocsr()
+        self.Bface = sps.vstack([bl, zero, br], format="csc")
         bv = np.zeros((self.n_r + 1, 1))
         bv[0] = np.asarray(blv.toarray() if sps.issparse(blv) else blv).ravel()[0]
         bv[-1] = np.asarray(brv.toarray() if sps.issparse(brv) else brv).ravel()[0]
@@ -327,7 +327,7 @@ class Crystal:
             Df, dDf = self._face_D(y)
             r = (y - Th_old) / dt + self.div @ (-Df * g)
             dflux = -(self.grad.multiply(Df) + dDf.multiply(g))
-            return r, (self.eye / dt + self.div @ dflux).tocsc()
+            return r, self.eye / dt + self.div @ dflux
         return fun
 
     def run(self, Th0, Th_s, fo_out, s=1.0, dt0=5e-6, dt_frac=0.02, dt_max=5e-3, keep_rates=False):
@@ -349,7 +349,7 @@ class Crystal:
         self.rates, self.step_fo = [], []
         linear = not callable(self.D)
         if linear:
-            lap = (self.div @ (-self.D * self.grad)).tocsc()
+            lap = self.div @ (-self.D * self.grad)
             src = self.div @ (-self.D * self.grad_bc)
             norm_lap = float(abs(lap).sum(axis=1).max())
         eps = np.finfo(float).eps
@@ -357,7 +357,7 @@ class Crystal:
             while fo < target - 1e-15:
                 dt = min(dt_max * s, max(dt0 * s, dt_frac * s * fo), target - fo)
                 if linear:
-                    lu = splu((self.eye / dt + lap).tocsc())
+                    lu = splu(self.eye / dt + lap)
                     new = lu.solve(Th / dt - src).reshape(self.shape)
                     # backward error of LU on an M-matrix: at most cond eps, cond <= 1 + dt |L|
                     self.floor += (1.0 + dt * norm_lap) * eps * max(1.0, float(np.abs(new).max()))
@@ -394,9 +394,9 @@ class Crystal:
 
         def step(Th, dt):
             if not callable(self.D):
-                lap = (self.div @ (-self.D * self.grad)).tocsc()
+                lap = self.div @ (-self.D * self.grad)
                 src = self.div @ (-self.D * self.grad_bc)
-                return splu((self.eye / dt + lap).tocsc()).solve(Th / dt - src).reshape(self.shape)
+                return splu(self.eye / dt + lap).solve(Th / dt - src).reshape(self.shape)
             res = newton(self._residual(Th, dt), Th, tol=self.tol, stagnation=True, maxfev=50,
                              bounds=self.bounds)
             if not res.success:

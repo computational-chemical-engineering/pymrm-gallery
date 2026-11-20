@@ -141,7 +141,7 @@ class Element:
     def operators(self, bc):
         """``D d2/dx2`` for ``bc``: (matrix, boundary vector, banded matrix)."""
         grad, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, bc)
-        jac = (self.D * (self.div @ grad)).tocsr()
+        jac = self.D * (self.div @ grad)
         g = self.D * (self.div @ grad_bc).toarray().ravel()
         ab = np.zeros((3, self.n_x))
         ab[0, 1:], ab[1], ab[2, :-1] = jac.diagonal(1), jac.diagonal(0), jac.diagonal(-1)
@@ -336,7 +336,7 @@ class TwoSpeciesElement:
         div = construct_div(self.shape, self.x_f, nu=0)    # nu = 0: Cartesian slab
         d_face = construct_coefficient_matrix(np.array([self.D, self.Dp]),
                                               shape=self.shape, axis=0)
-        jac = (div @ d_face @ grad).tocsc()
+        jac = div @ d_face @ grad
         g = (div @ d_face @ grad_bc).toarray().ravel()
         return jac, g
 

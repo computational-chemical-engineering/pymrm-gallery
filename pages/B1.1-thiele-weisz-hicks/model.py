@@ -89,7 +89,7 @@ class Pellet:
         grad_mat, grad_bc = construct_grad(self.shape, self.r_f, self.r_c, bc)
         div_mat = construct_div(self.shape, self.r_f, nu=self.nu)  # 0 slab, 1 cylinder, 2 sphere
         self.flux_mat, self.flux_bc = -grad_mat, -grad_bc
-        self.jac_diff = (div_mat @ self.flux_mat).tocsc()
+        self.jac_diff = div_mat @ self.flux_mat
         self.g_diff = (div_mat @ self.flux_bc).toarray().ravel()
         # the surface-flux row: eta is read from the flux the solver balanced
         self.surf = np.asarray(self.flux_mat[[-1], :].todense()).ravel()
@@ -131,7 +131,7 @@ class Pellet:
             Effectiveness factor.
         """
         a = self.jac_diff + phi**2 * eye_array(self.n_r, format="csc")
-        y = spsolve(a.tocsc(), -self.g_diff)
+        y = spsolve(a, -self.g_diff)
         return y, self.eta_from(y, phi)
 
     def residual(self, y, phi, rate):

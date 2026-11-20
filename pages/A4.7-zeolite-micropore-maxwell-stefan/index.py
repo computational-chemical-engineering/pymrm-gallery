@@ -405,7 +405,7 @@ print(f"eq. (33) with one site against eq. (16), Gamma (1 - theta) - 1: at most 
 def crystal_check():
     """Volume weights and the operator's centre column on the production grid."""
     c = Crystal(1.0, n_r=N_R)
-    return float(abs(c.w.sum() - 1.0)), float(np.abs(c.div.tocsc()[:, [0]].toarray()).max())
+    return float(abs(c.w.sum() - 1.0)), float(np.abs(c.div[:, [0]].toarray()).max())
 
 
 W_GAP, DIV_COL0 = crystal_check()

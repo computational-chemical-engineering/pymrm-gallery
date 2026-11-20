@@ -112,7 +112,7 @@ class Pellet:
             jac_diff = jac_diff + div_mat @ (-grad_mat)        # flux = -grad(chi)
             g_diff = g_diff + div_mat @ (-grad_bc)
             measures.append(np.diff(x_f ** (nu_ax + 1)) / (nu_ax + 1))
-        self.jac_diff = jac_diff.tocsc()
+        self.jac_diff = jac_diff
         self.g_diff = g_diff.toarray().ravel()
         self.jac_react = construct_coefficient_matrix(np.ones(self.shape), shape=self.shape)
         self._measures = measures
@@ -134,7 +134,7 @@ class Pellet:
         numpy.ndarray
             ``chi``, shape :attr:`shape`.
         """
-        mat = (self.jac_diff + lam**2 * self.jac_react).tocsc()
+        mat = self.jac_diff + lam**2 * self.jac_react
         return spsolve(mat, -self.g_diff).reshape(self.shape)
 
     def eta(self, lam, chi=None):

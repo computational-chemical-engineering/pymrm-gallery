@@ -108,11 +108,11 @@ class GraetzTube:
         grad_r, grad_r_bc = construct_grad(self.shape, self.s_f, self.s_c, self.bc_r, axis=1)
         div_r = construct_div(self.shape, self.s_f, nu=nu_r, axis=1)     # nu=1: cylindrical
         # conduction (radial, and axial when 1/Pe^2 > 0): linear, constant
-        self.jac_cond = (-(div_r @ grad_r) - inv_pe2 * (self.div_z @ grad_z)).tocsc()
+        self.jac_cond = -(div_r @ grad_r) - inv_pe2 * (self.div_z @ grad_z)
         self.g_cond = np.asarray((-(div_r @ grad_r_bc) - inv_pe2 * (self.div_z @ grad_z_bc))
                                  .todense()).ravel()
         # first-order upwind convection: the whole operator is linear
-        self.jac_up = (self.div_z @ conv + self.jac_cond).tocsc()
+        self.jac_up = self.div_z @ conv + self.jac_cond
         self.g_up = np.asarray((self.div_z @ conv_bc).todense()).ravel() + self.g_cond
         self.tvd = (None if limiter is None else
                     ConvFluxTVD(self.shape, self.x_f, self.x_c, self.bc_z,
@@ -137,7 +137,7 @@ class GraetzTube:
         th = np.asarray(x).reshape(self.shape)
         flux, jac_f = self.tvd(th, self.v)
         res = self.div_z @ flux.reshape(-1) + self.jac_cond @ th.reshape(-1) + self.g_cond
-        return res, (self.div_z @ jac_f + self.jac_cond).tocsc()
+        return res, self.div_z @ jac_f + self.jac_cond
 
     def solve(self, tol=1e-11, maxfev=30):
         """Solve by Newton with the exact Jacobian of the limited flux.

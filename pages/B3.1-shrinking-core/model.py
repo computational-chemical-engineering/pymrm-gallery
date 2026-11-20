@@ -328,7 +328,7 @@ class Shell:
         shape = (n, 1)
         grad, grad_bc = construct_grad(shape, self.x_f, self.x_c, self.bc)
         div = construct_div(shape, self.x_f, nu=nu)
-        self._lhs = (div @ (-D * grad)).tocsc()
+        self._lhs = div @ (-D * grad)
         self._rhs = -(div @ (-D * grad_bc)).toarray().ravel()
 
     def solve(self, permc_spec="COLAMD"):

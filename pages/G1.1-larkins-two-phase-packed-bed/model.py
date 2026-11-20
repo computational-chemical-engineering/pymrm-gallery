@@ -422,7 +422,7 @@ class ColumnFV:
                                                   self.bc, v=1.0)
         div = construct_div(self.shape, self.x_f, nu=0)     # nu = 0: Cartesian axial
         self.conv = conv
-        self.jac_const = (div @ conv).tocsr()
+        self.jac_const = div @ conv
         self.g_const = np.asarray((div @ conv_bc).todense()).reshape(-1, 1)
         self.numjac = NumJac(self.shape)                    # (n, 1): diagonal source
         self._src = np.vectorize(self.col.dPdz)

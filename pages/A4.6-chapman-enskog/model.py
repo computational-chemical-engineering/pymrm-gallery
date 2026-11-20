@@ -428,7 +428,7 @@ class DiffusionCell:
             w = sps.eye(n_z - 1, n_z)
         else:
             raise ValueError(f"face_rule {face_rule!r}")
-        self.face = sps.vstack([bl, w, br]).tocsr()   # zero-flux faces: no bc vector
+        self.face = sps.vstack([bl, w, br], format="csc")   # zero-flux faces: no bc vector
         self.eye = sps.eye(n_z, format="csc")
         self.x0 = np.where(self.x_c < 0.5 * L + step_offset * (L / n_z), 1.0, 0.0).reshape(self.shape)
 
@@ -449,7 +449,7 @@ class DiffusionCell:
             dd = (self.d(xf + h) - self.d(xf - h)) / (2.0 * h)
             dflux = -(construct_coefficient_matrix(self.d(xf)) @ self.grad
                       + construct_coefficient_matrix(dd * g) @ self.face)
-            return r, (self.eye / dt + self.theta * (self.div @ dflux)).tocsc()
+            return r, self.eye / dt + self.theta * (self.div @ dflux)
         return fun
 
     def solve(self, t_end, n_t):
@@ -461,8 +461,8 @@ class DiffusionCell:
         x = self.x0.copy()
         if not callable(self.d):                      # constant D: linear, one factorisation
             lap = self.div @ (-self.d * self.grad)
-            lu = splu((self.eye / dt + self.theta * lap).tocsc())
-            expl = (self.eye / dt - (1.0 - self.theta) * lap).tocsr()
+            lu = splu(self.eye / dt + self.theta * lap)
+            expl = self.eye / dt - (1.0 - self.theta) * lap
             for _ in range(n_t):
                 x = lu.solve(expl @ x).reshape(self.shape)
             return x
