@@ -47,6 +47,16 @@ contract  what the gate itself must not take on trust: ``claims.report()`` is a
 lint      the refresh checklist's "Before you report" scans: Correction quotes
           against the old page (FAIL on a miss) and untagged README numbers (LOOK:
           each hit must be tagged, quoted or an identifier)
+health    ``codehealth diff --base <base>`` (cce-code-health, scope in
+          ``.codehealth/config.toml``: model.py, test_model.py, scripts, shared),
+          restricted to this page: LOOK for a brain function, a file smell, any
+          function debt, and a function in index.py over 60 lines (it belongs in
+          model.py). Physics functions take many parameters by nature: mark them
+          ``# codehealth: allow params -- <reason>`` on or above the def line, or use
+          a frozen dataclass for one physical concept; never pack inputs into a
+          tuple or dict to lower the score. Never FAIL yet: calibration on the
+          first pages. SKIP when codehealth is not installed or the base has no
+          config (diff reads the config from the base commit).
 outputs   only with ``--only``: the claim count, break-table line and break-row
           count from the executed index.ipynb and agreement.json as they stand,
           without running anything
@@ -79,7 +89,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = Path.home() / "Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/scripts"
 STEPS = ("sync", "kernels", "agreement", "claims", "plugin", "metadata", "stable",
-         "dashes", "contract", "lint")
+         "dashes", "contract", "lint", "health")
 EXTRA = ("outputs", "port")
 HISTORY = re.compile(r"\bearlier\b|\bprevious|\bused to\b|before the refresh")
 VERSION = re.compile(r"pymrm [0-9]")
@@ -321,6 +331,79 @@ def contract(r: Runner, page: Path, base: str) -> None:
         r.report("contract", "PASS", "claims.report() executed"
                  + ("; check values asserted first" if (page / "data/check_values.csv")
                     .is_file() else ""))
+
+
+def codehealth_exe() -> str | None:
+    """The codehealth executable: beside this Python, on PATH, or in the suite venv."""
+    import shutil
+    for c in (Path(sys.executable).parent / "codehealth", shutil.which("codehealth"),
+              Path.home() / "Code/pymrm_suite/.venv/bin/codehealth"):
+        if c and Path(c).is_file():
+            return str(c)
+    return None
+
+
+def index_functions(page: Path, limit: int = 60) -> list[str]:
+    """Functions in index.py longer than ``limit`` lines."""
+    import ast
+    try:
+        tree = ast.parse((page / "index.py").read_text())
+    except SyntaxError:
+        return []
+    return [f"index.py:{n.lineno} {n.name}: {n.end_lineno - n.lineno + 1} lines in "
+            "index.py; does it belong in model.py?"
+            for n in ast.walk(tree)
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and n.end_lineno - n.lineno + 1 > limit]
+
+
+def health(r: Runner, page: Path, base: str) -> None:
+    """Report codehealth findings for the page's files in scope (never FAIL yet)."""
+    exe = codehealth_exe()
+    if exe is None or not (ROOT / ".codehealth/config.toml").is_file():
+        r.report("health", "SKIP", "codehealth or .codehealth/config.toml not found")
+        return
+    rel = page.relative_to(ROOT).as_posix() + "/"
+    with tempfile.TemporaryDirectory() as tmp:
+        out_json = Path(tmp) / "diff.json"
+        code, out = r.run([exe, "diff", "--repo", str(ROOT), "--base", base,
+                           "--json", str(out_json)])
+        if not out_json.is_file():
+            r.report("health", "LOOK", "codehealth diff did not run", tail(out))
+            return
+        d = json.loads(out_json.read_text())
+    if d.get("meta", {}).get("profile") != "python@1":
+        r.report("health", "SKIP", f"base {base} has no .codehealth/config.toml "
+                 "(diff reads the config from the base commit)")
+        return
+    head = {p: v for p, v in d.get("head", {}).items() if p.startswith(rel)}
+    old = d.get("base", {})
+    items = []
+    for p, v in sorted(head.items()):
+        name = Path(p).name
+        items += [f"{name}: file smell {sm}" for sm in v.get("file_smells", [])]
+        was_brain = {f["qualname"] for f in old.get(p, {}).get("functions", [])
+                     if f.get("brain")}
+        for f in v.get("functions", []):
+            other = f.get("debt_parts", {})
+            if f.get("brain"):
+                tag = "brain function" if f["qualname"] not in was_brain else \
+                    "brain function (already on the base)"
+                items.append(f"{name}:{f['line']} {f['name']}: {tag}, {f['nloc']} "
+                             f"lines, cognitive {f['cognitive']}, nesting {f['nesting']}")
+            elif other:
+                hint = (" (allow with a reason, or one dataclass per physical concept)"
+                        if set(other) == {"params"} else "")
+                items.append(f"{name}:{f['line']} {f['name']}: "
+                             + ", ".join(f"{k} {x:g}" for k, x in other.items()) + hint)
+    items += index_functions(page)
+    db = sum(v.get("debt", 0) for p, v in old.items() if p.startswith(rel))
+    dh = sum(v.get("debt", 0) for v in head.values())
+    r.log.write("\nhealth:\n" + "\n".join(items) + "\n")
+    r.report("health", "LOOK" if items else "PASS",
+             f"{len(head)} touched file(s) in scope, debt {db:g} -> {dh:g}"
+             + (f"; {len(items)} item(s) to judge, not the score" if items else ""),
+             items)
 
 
 def make_ref(page: Path, out: Path) -> int:
@@ -575,6 +658,9 @@ def main() -> int:
         if untagged:
             r.report("lint", "LOOK", f"{len(untagged)} README line(s) with untagged "
                      "numbers: each must be tagged, quoted or an identifier", untagged)
+
+    if "health" in steps:
+        health(r, page, args.base)
 
     if "outputs" in steps:
         found = summary_of_outputs(page)
