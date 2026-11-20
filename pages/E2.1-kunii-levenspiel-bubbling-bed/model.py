@@ -341,7 +341,7 @@ class BubblingBed:
             C, c_in, c_top = x[:N].reshape(n, 3), x[N], x[N + 1]
         else:                          # no recirculation: every inlet carries the feed
             c_in = c_top = 1.0
-            C = spsolve(M.tocsc(), -(self.b_in + self.b_top).ravel()).reshape(n, 3)
+            C = spsolve(M, -(self.b_in + self.b_top).ravel()).reshape(n, 3)
         return BedSolution(self, Km, Kr, C, c_in, c_top)
 
 

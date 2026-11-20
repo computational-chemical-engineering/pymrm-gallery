@@ -123,7 +123,7 @@ class IntegralReactor:
         conv, conv_bc = construct_convflux_upwind(self.shape, self.x_f, self.x_c,
                                                   self.bc, v=1.0, axis=0)
         div = construct_div(self.shape, self.x_f, nu=0, axis=0)   # nu=0: Cartesian bed
-        self.jac_const = (div @ conv).tocsc()
+        self.jac_const = div @ conv
         self.g_const = (div @ conv_bc).toarray().reshape(-1, 1)
         self.numjac = NumJac(self.shape)      # pointwise source: the 3 fields coupled
 

@@ -1157,7 +1157,7 @@ def two_solver_gap(phi, n_u=GRIDS[-1], L=2.0):
     s = WettedSphere(n_u=n_u)
     a = float(PAPER.alpha_gLs(L))
     lap, lap_bc = s.operators(a, 1.0)
-    A = (lap - (3.0 * phi) ** 2 * eye_array(n_u, format="csc")).tocsc()
+    A = lap - (3.0 * phi) ** 2 * eye_array(n_u, format="csc")
     y_lu = splu(A, permc_spec="NATURAL").solve(-lap_bc.ravel())
     return abs(s.eta(s.solve(phi, a)) / s.eta(y_lu) - 1.0)
 

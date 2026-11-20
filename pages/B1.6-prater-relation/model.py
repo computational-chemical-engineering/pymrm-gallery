@@ -196,7 +196,7 @@ class TwoFieldPellet:
         grad_mat, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, self.bc, axis=0)
         # nu: 0 slab (Cartesian), 1 cylinder, 2 sphere
         div_mat = construct_div(self.shape, self.x_f, nu=nu_div, axis=0)
-        self.lap = (div_mat @ grad_mat).tocsc()
+        self.lap = div_mat @ grad_mat
         self.lap_bc = (div_mat @ grad_bc).toarray().reshape(-1, 1)
         self.bounds = (np.array([-np.inf, theta_floor]), np.inf)   # per field
 
@@ -462,7 +462,7 @@ class ReducedPellet:
                    {"a": 0.0, "b": 1.0, "d": 1.0})           # surface: y = 1
         grad_mat, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, self.bc, axis=0)
         div_mat = construct_div(self.shape, self.x_f, nu=self.nu, axis=0)  # 0/1/2 geometry
-        self.lap = (div_mat @ grad_mat).tocsc()
+        self.lap = div_mat @ grad_mat
         self.lap_bc = (div_mat @ grad_bc).toarray().reshape(-1, 1)
 
     def residual(self, y, phi, beta, gamma):

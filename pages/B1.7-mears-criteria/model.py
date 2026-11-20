@@ -384,7 +384,7 @@ class Pellet:
         self.bc = ({"a": 1.0, "b": 0.0, "d": 0.0}, bc_s)
         grad, grad_bc = construct_grad(self.shape, self.u_f, self.u_c, self.bc)
         div = construct_div(self.shape, self.u_f, nu=nu)        # 0 slab, 1 cylinder, 2 sphere
-        self.lap = (div @ grad).tocsc()
+        self.lap = div @ grad
         self.lap_bc = (div @ grad_bc).toarray().reshape(-1, 1)
         self.numjac = NumJac(self.shape)                        # only for jacobian="numjac"
 
@@ -619,9 +619,9 @@ class AxialVessel:
         grad, grad_bc = construct_grad(self.shape, self.z_f, self.z_c, self.bc)
         self.div = construct_div(self.shape, self.z_f, nu=0)   # nu = 0: Cartesian
         # diffusion and its boundary part, and upwind convection plus diffusion
-        self.jac_diff = (-d_ax * (self.div @ grad)).tocsc()
+        self.jac_diff = -d_ax * (self.div @ grad)
         self.g_diff = -d_ax * (self.div @ grad_bc).toarray().ravel()
-        self.jac_up = (self.div @ (conv - d_ax * grad)).tocsc()
+        self.jac_up = self.div @ (conv - d_ax * grad)
         self.g_up = (self.div @ (conv_bc - d_ax * grad_bc)).toarray().ravel()
         self.conv, self.conv_bc, self.limiter = conv, conv_bc, limiter
         if limiter is not None:
@@ -630,7 +630,7 @@ class AxialVessel:
 
     def _upwind_guess(self, ktau):
         """First-order upwind solution of the first-order problem: one linear solve."""
-        return splu((self.jac_up + ktau * self.eye).tocsc()).solve(-self.g_up)
+        return splu(self.jac_up + ktau * self.eye).solve(-self.g_up)
 
     def solve(self, ktau, n_react=1, tol=1e-12, maxfev=50):
         """Steady profile by ``newton`` with the exact TVD Jacobian.
@@ -674,7 +674,7 @@ class AxialVessel:
             g = self.div @ np.asarray(flux).reshape(-1) + self.jac_diff @ c + self.g_diff + src
             jac = self.div @ jac_conv + self.jac_diff + construct_coefficient_matrix(
                 dsrc.reshape(self.shape))
-            return g, jac.tocsc()
+            return g, jac
 
         sol = newton(residual, self._upwind_guess(ktau).reshape(self.shape), tol=tol,
                      maxfev=maxfev, damping="monotone", stagnation=True)
@@ -707,7 +707,7 @@ class AxialVessel:
             return c, 0
         for sweep in range(1, max_it + 1):
             w = ktau * np.clip(c, 0.0, None) ** (n_react - 1.0)
-            lu = splu((self.jac_up + construct_coefficient_matrix(w.reshape(self.shape))).tocsc())
+            lu = splu(self.jac_up + construct_coefficient_matrix(w.reshape(self.shape)))
             if self.limiter is None:
                 corr = 0.0
             else:

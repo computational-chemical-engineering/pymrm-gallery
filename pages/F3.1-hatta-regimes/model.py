@@ -236,7 +236,7 @@ class Film:
         if self.n_c != 1:
             raise ValueError("solve_first_order needs a Film with n_c = 1")
         a = self.jac_diff + ha**2 * eye_array(self.n_x, format="csc")
-        u = spsolve(a.tocsc(), -self.g_diff)
+        u = spsolve(a, -self.g_diff)
         return u, self.enhancement(u)
 
     def solve_second_order(self, ha, e_i, tol=1e-11):

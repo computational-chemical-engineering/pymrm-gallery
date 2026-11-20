@@ -349,15 +349,15 @@ class Lane:
         self.conv, self.conv_l = conv, conv_l
         self.conv_r = np.asarray(conv_r.todense() if hasattr(conv_r, "todense")
                                  else conv_r, dtype=float).reshape(-1)
-        self.A = (div @ conv).tocsc()
-        self.B = (div @ conv_l).tocsc()               # inlet value -> cell balances
+        self.A = div @ conv
+        self.B = div @ conv_l               # inlet value -> cell balances
         self.b_r = np.asarray(div @ self.conv_r).reshape(-1)
         # outlet face value as a matrix on the state: the recycle reads what the
         # operator transports through the exit face
         last = slice(n * nc, (n + 1) * nc)
-        self.E = (conv[last, :] / self.u).tocsc()
+        self.E = conv[last, :] / self.u
         self.e_r = self.conv_r[last] / self.u
-        self.K = (self.B @ self.E * (R / (1.0 + R))).tocsc()   # recycle coupling, constant
+        self.K = self.B @ self.E * (R / (1.0 + R))   # recycle coupling, constant
         self.numjac = NumJac(self.shape)              # pointwise source: last axis only
 
     def source(self, c):

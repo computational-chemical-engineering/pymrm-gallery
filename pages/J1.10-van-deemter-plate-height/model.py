@@ -168,7 +168,7 @@ class Column:
             Cell centres of the stations.
         """
         n = self.n_z
-        lu = splu((eye_array(2 * n, format="csc") / dt - theta * self.M).tocsc())
+        lu = splu(eye_array(2 * n, format="csc") / dt - theta * self.M)
         c = np.zeros(2 * n)
         idx = self._stations(stations)
         nt = int(round(t_end / dt))
@@ -226,8 +226,8 @@ class Column:
 
             def residual(x):
                 f1, jI = f(x, cin1)
-                jac = eye / dt - theta * (bmat([[jI, None], [None, zero]]) + self.exchange)
-                return (x - c_old) / dt - theta * f1 - (1 - theta) * f0, jac.tocsc()
+                jac = eye / dt - theta * (bmat([[jI, None], [None, zero]], format="csc") + self.exchange)
+                return (x - c_old) / dt - theta * f1 - (1 - theta) * f0, jac
 
             sol = pymrm.newton(residual, c_old, tol=tol, damping="monotone", stagnation=True)
             if not sol.success:

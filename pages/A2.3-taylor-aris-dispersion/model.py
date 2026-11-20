@@ -165,7 +165,7 @@ def closure(Pe, n_r=200, nu=1, mean="discrete", subtract_mean=True, pin=0):
     lap[pin, :] = 0.0
     lap[pin, pin] = 1.0
     rhs[pin] = 0.0
-    B = spsolve(lap.tocsc(), rhs)
+    B = spsolve(lap.tocsc(), rhs)   # LIL (item assignment above) -> CSC for spsolve
     return ClosureResult(-float(np.sum(w * u_dev * B)), B.reshape(shape), r_c, w, u_dev)
 
 
@@ -270,7 +270,7 @@ class Slug:
         div_z = construct_div(self.shape, self.z_f, nu=0, axis=0)        # nu = 0: Cartesian
         gr, gr_bc = construct_grad(self.shape, self.r_f, self.r_c, bc_r, axis=1)
         div_r = construct_div(self.shape, self.r_f, nu=nu_r, axis=1)     # nu = 1: radial
-        self.jac = (div_z @ (conv - gz) - div_r @ gr).tocsc()
+        self.jac = div_z @ (conv - gz) - div_r @ gr
         g = div_z @ (conv_bc - gz_bc) - div_r @ gr_bc
         self.g = np.asarray(g.todense() if hasattr(g, "todense") else g).ravel()
 
@@ -289,7 +289,7 @@ class Slug:
         """Advance ``n`` backward-Euler steps of size ``dt``."""
         if self._dt != dt:
             n_tot = self.c.size
-            self._lu = splu((eye_array(n_tot, format="csc") / dt + self.jac).tocsc())
+            self._lu = splu(eye_array(n_tot, format="csc") / dt + self.jac)
             self._dt = dt
         for _ in range(n):
             self.c = self._lu.solve(self.c / dt - self.g)

@@ -290,7 +290,7 @@ class IsothermalBed:
         shape = (n, 3)
         conv, conv_bc = construct_convflux_upwind(shape, self.w_f, self.w_c, self.bc, v=1.0)
         div = construct_div(shape, self.w_f, nu=nu_geom)
-        self.L = (div @ conv).tocsc()                       # assembled once
+        self.L = div @ conv                       # assembled once
         self.b = np.asarray((div @ conv_bc).todense()).reshape(shape)
         self.numjac = NumJac(shape)
         self.N = np.tile(self.feed, (n, 1))

@@ -214,7 +214,7 @@ class Absorber:
         # per-cell coupling of the residual rows [y, x] to the fields [y, x]: +N, -N
         self.source = construct_coefficient_matrix(
             np.array([[KGa, -KGa * m], [-KGa, KGa * m]]), shape=((n, 2, 1), (n, 1, 2)))
-        self.upwind = (self.div @ conv + self.source).tocsc()
+        self.upwind = self.div @ conv + self.source
         self.g_upwind = (self.div @ conv_bc).toarray().ravel()
         self.tvd = ConvFluxTVD(self.shape, self.z_f, self.z_c, bc=self.bc,
                                tvd_limiter=limiter, axis=0)
