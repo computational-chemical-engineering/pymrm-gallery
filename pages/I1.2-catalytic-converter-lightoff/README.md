@@ -104,6 +104,17 @@ discriminates much more sharply than the peak temperature.
 hydraulic diameter, which is why eqs 17 and 18 divide by `2*R_h`. Table II
 confirms the reading.
 
+## The propylene basis of K2 and K3
+
+Oh and Cavendish's adsorption constants are those of Voltz et al. (1973),
+converted with the propylene ppm taken at face value. Voltz et al. define the
+propylene concentration in their rate equations as ppm of propylene measured as
+C6 by flame ionisation, half the propylene ppm, and their own calculated curves
+confirm that reading (`C2.13`). On that basis the pre-exponentials of K2 and K3
+for propylene mole fractions would be half and a quarter of those in Table I.
+The page keeps Oh and Cavendish's printed constants, since it reproduces their
+model; the effect of the other basis on light-off is not computed.
+
 ## pymrm points recorded here
 
 1. **Bounds keep Newton on the physical root.** The inhibition denominator of the
