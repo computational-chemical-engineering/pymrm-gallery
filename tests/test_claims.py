@@ -7,7 +7,8 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "shared"))
-from gallery_utils import Claims, ClaimsFailed, load_claims, parse_literal  # noqa: E402
+from gallery_utils import (Claims, ClaimsFailed, assert_check_values, load_claims,  # noqa: E402
+                           parse_literal)
 
 
 @pytest.mark.parametrize("text, op, nums, unit", [
@@ -194,3 +195,25 @@ def test_report_writes_only_in_a_page_folder(tmp_path, monkeypatch):
     (tmp_path / "index.py").write_text("# %%\n")
     c.report()
     assert (tmp_path / "agreement.json").exists()          # a page folder
+
+
+def test_rows_missing_only_lists_crash_rows():
+    c = _one()
+    c.define_rows(["sign flip", "solver fails"])
+    c.breaks("sign flip", "m", -0.7186)
+    c.breaks("solver fails", "m", float("nan"))
+    payload = c.report(write=False)
+    assert payload["rows_missing_only"] == ["solver fails"]
+    c2 = _one()
+    c2.breaks("sign flip", "m", -0.7186)
+    assert "rows_missing_only" not in c2.report(write=False)
+
+
+def test_assert_check_values(tmp_path, monkeypatch):
+    import gallery_utils
+    (tmp_path / "cv.csv").write_text("name,value,rtol\na,2.0,0.001\nb,10.0,0.01\n")
+    monkeypatch.setattr(gallery_utils, "_resolve", lambda name, page: tmp_path / name)
+    dev = assert_check_values({"a": 2.001, "b": 10.05}, "cv.csv")
+    assert abs(dev["a"] - 5e-4) < 1e-12
+    with pytest.raises(AssertionError, match="2 check value"):
+        assert_check_values({"a": 2.1}, "cv.csv")

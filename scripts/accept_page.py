@@ -21,7 +21,10 @@ kernels   ``scripts/run_kernels.py`` (three kernels); with ``--quick`` one pinne
           instead, for iterating. The final acceptance is never ``--quick``.
           Prints the page's claim count and its break-table line, and checks the
           break-row count: FAIL when a row the page declares
-          (``claims.define_rows``) recorded nothing, LOOK when it declares none.
+          (``claims.define_rows``) recorded nothing, LOOK when it declares none,
+          LOOK when no more than one row catches any claim, and LOOK for rows
+          under which every claim came back without a number (a crash or a
+          missing value, not a moved claim; ``rows_missing_only``).
 agreement ``scripts/check_agreement.py --base <base>``: this page's lines that are
           not OK or NEW
 claims    ``scripts/check_claims.py``, ``pytest tests/`` and the page's
@@ -34,6 +37,13 @@ dashes    em dashes in the page files, its models.yaml entry and the learnings r
           naming it, and pymrm version names in the page code and meta.yaml (FAIL);
           history words there (LOOK: "the previous step" is fine, "the previous
           version of this page" is not)
+contract  what the gate itself must not take on trust: ``claims.report()`` is a
+          top-level statement of index.py (FAIL; LOOK when it is not the last
+          one); with ``data/check_values.csv`` (check values from a second
+          route), ``assert_check_values`` is called before the first claim is
+          registered (FAIL), and a new page without that file is a LOOK;
+          ``status: published`` added in meta.yaml or models.yaml by this
+          branch is a LOOK for the coordinator.
 lint      the refresh checklist's "Before you report" scans: Correction quotes
           against the old page (FAIL on a miss) and untagged README numbers (LOOK:
           each hit must be tagged, quoted or an identifier)
@@ -69,7 +79,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = Path.home() / "Code/pymrm_suite/pymrm/plugins/pymrm/skills/conventions/scripts"
 STEPS = ("sync", "kernels", "agreement", "claims", "plugin", "metadata", "stable",
-         "dashes", "lint")
+         "dashes", "contract", "lint")
 EXTRA = ("outputs", "port")
 HISTORY = re.compile(r"\bearlier\b|\bprevious|\bused to\b|before the refresh")
 VERSION = re.compile(r"pymrm [0-9]")
@@ -79,6 +89,7 @@ class Runner:
     def __init__(self, log: Path):
         self.log = log.open("w")
         self.failed = False
+        self.n_fail = 0
         self.lines = 0
 
     def run(self, cmd: list[str], cwd: Path = ROOT, env: dict | None = None
@@ -100,6 +111,7 @@ class Runner:
                details: list[str] | None = None) -> None:
         if status == "FAIL":
             self.failed = True
+            self.n_fail += 1
         print(f"{status:<4} {step:<9} {text}".rstrip())
         for d in (details or [])[:4]:
             print(f"       {d[:160]}")
@@ -175,6 +187,15 @@ def check_rows(r: Runner, agreement: Path) -> None:
     if data.get("format") != 2:
         r.report("rows", "SKIP", "agreement.json is format 1 (report_agreement)")
         return
+    caught_by = {row for rows_ in data.get("breaks", {}).values() for row in rows_}
+    if len(caught_by) <= 1:
+        r.report("rows", "LOOK", f"{len(caught_by)} break row(s) catch any claim: a page "
+                 "needs more than one row that moves a number")
+    crash = data.get("rows_missing_only", [])
+    if crash:
+        r.report("rows", "LOOK", f"{len(crash)} row(s) only record a crash or a missing "
+                 "value, no claim moved: say so on the page, or make the row move a "
+                 "number", crash)
     rows = data.get("rows")
     if not rows:
         r.report("rows", "LOOK", "break rows not declared: call claims.define_rows(labels) "
@@ -228,6 +249,78 @@ def lint(page: Path, base: str) -> tuple[list[str], list[str]]:
         if hits:
             untagged.append(f"README.md:{i} {hits}")
     return misses, untagged
+
+
+CLAIM_CALLS = {"value", "bound", "exact", "count"}
+
+
+def _calls(tree, attr: str) -> list:
+    """Calls ``<name>.<attr>(...)`` or ``<attr>(...)`` anywhere in ``tree``."""
+    import ast
+    out = []
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Call):
+            f = n.func
+            if (isinstance(f, ast.Attribute) and f.attr == attr) or \
+                    (isinstance(f, ast.Name) and f.id == attr):
+                out.append(n)
+    return out
+
+
+def contract(r: Runner, page: Path, base: str) -> None:
+    """claims.report() executed, check values asserted first, status changes."""
+    import ast
+    fails_before = r.n_fail
+    try:
+        tree = ast.parse((page / "index.py").read_text())
+    except SyntaxError as e:
+        r.report("contract", "FAIL", f"index.py does not parse: {e}")
+        return
+    top = [n for n in tree.body if isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
+           and isinstance(n.value.func, ast.Attribute) and n.value.func.attr == "report"
+           and isinstance(n.value.func.value, ast.Name)
+           and "claims" in n.value.func.value.id]
+    if not top:
+        r.report("contract", "FAIL", "claims.report() is not a top-level statement of "
+                 "index.py (commented out, or inside a function): no claim is checked")
+    elif tree.body[-1] is not top[-1]:
+        r.report("contract", "LOOK", f"claims.report() at index.py:{top[-1].lineno} is "
+                 "not the last statement")
+    first_claim = min((c.lineno for a in CLAIM_CALLS for c in _calls(tree, a)
+                       if isinstance(c.func, ast.Attribute)
+                       and isinstance(c.func.value, ast.Name)
+                       and "claims" in c.func.value.id), default=None)
+    rel = page.relative_to(ROOT).as_posix()
+    if (page / "data/check_values.csv").is_file():
+        asserts = [c.lineno for c in _calls(tree, "assert_check_values")]
+        if not asserts:
+            r.report("contract", "FAIL", "data/check_values.csv exists but index.py never "
+                     "calls assert_check_values")
+        elif first_claim is not None and min(asserts) > first_claim:
+            r.report("contract", "FAIL", f"assert_check_values (index.py:{min(asserts)}) "
+                     f"comes after the first claim (index.py:{first_claim})")
+    else:
+        code, _ = r.run(["git", "cat-file", "-e", f"{base}:{rel}/index.py"])
+        new = code != 0 and r.run(["git", "cat-file", "-e",
+                                   f"{base}:{rel}/build_page.py"])[0] != 0
+        if new:
+            r.report("contract", "LOOK", "new page without data/check_values.csv: "
+                     "assert check values from a second route before the first result")
+    _, diff = r.run(["git", "diff", "-U0", base, "--", f"{rel}/meta.yaml", "models.yaml"])
+    lines = diff.splitlines()
+    if r.run(["git", "cat-file", "-e", f"{base}:{rel}/meta.yaml"])[0] != 0 and \
+            (page / "meta.yaml").is_file():
+        # a new page's meta.yaml may not be committed yet: all of it is added
+        lines += ["+" + ln for ln in (page / "meta.yaml").read_text().splitlines()]
+    pub = sorted({ln for ln in lines
+                  if re.match(r"^\+\s*(-\s*)?status:\s*published\b", ln)})
+    if pub:
+        r.report("contract", "LOOK", f"status: published added by this branch "
+                 f"({len(pub)} line(s)): the coordinator sets it, not a build or fix round")
+    if r.n_fail == fails_before:
+        r.report("contract", "PASS", "claims.report() executed"
+                 + ("; check values asserted first" if (page / "data/check_values.csv")
+                    .is_file() else ""))
 
 
 def make_ref(page: Path, out: Path) -> int:
@@ -470,6 +563,9 @@ def main() -> int:
             # "the previous step" is fine, "the previous version of this page" is not
             r.report("dashes", "LOOK", f"{len(words)} history word(s): each must be "
                      "about the computation, never the page's or pymrm's history", words)
+
+    if "contract" in steps:
+        contract(r, page, args.base)
 
     if "lint" in steps:
         misses, untagged = lint(page, args.base)
