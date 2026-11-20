@@ -459,7 +459,7 @@ def march_splu(film, n_t, refactor=True):
     u, lu = np.zeros(film.n_x), None
     for dz in np.diff(z):
         if refactor or lu is None:
-            lu = splu((cap_mat / dz - film.jac_diff).tocsc())
+            lu = splu(cap_mat / dz - film.jac_diff)
         u = lu.solve(film.cap * u / dz + film.g_const)
     return film.cup(u)
 

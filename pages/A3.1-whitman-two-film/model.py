@@ -280,7 +280,7 @@ class TwoFilm:
             - lf * place(at_liq @ flux_c, "c2", "c") - lf * place(at_liq @ flux_c_int, "c2", "c2"))
         if not self.jump:
             jac = jac - place(one, "p2", "c2")             # p2 - c2 = 0
-        self.jac_const = jac.tocsc()
+        self.jac_const = jac
         self.g_p1, self.g_c3 = np.zeros(self.shape), np.zeros(self.shape)
         self.layout.put(self.g_p1, "p", (div @ flux_p_bulk).toarray())
         self.layout.put(self.g_p1, "c2", (at_gas @ flux_p_bulk).toarray())
@@ -299,7 +299,7 @@ class TwoFilm:
         if not self.exact_jacobian:
             return g, self.jac_const
         return g, (self.jac_const + self.layout.place(
-            np.array([[-float(self.dpeq(c2))]]), "p2", "c2")).tocsc()
+            np.array([[-float(self.dpeq(c2))]]), "p2", "c2"))
 
     def initial_guess(self, p1, c3):
         """The deleted-liquid-film state: ``c2 = c3``, ``p2 = f(c3)``, linear profiles."""

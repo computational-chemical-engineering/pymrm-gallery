@@ -319,7 +319,7 @@ class CO2PlugFlow:
                                                       self.bc, v=self.v_g)
         div_mat = construct_div(self.shape, self.x_f, nu=0)   # nu = 0: Cartesian axial
         jac_sink = self.K * self.a_gl * eye_array(self.n_x, format="csc")  # J a_gl = K a_gl c
-        self.jac_const = (div_mat @ conv_mat + jac_sink).tocsc()
+        self.jac_const = div_mat @ conv_mat + jac_sink
         self.g_const = (div_mat @ conv_bc).toarray().reshape(-1, 1)
 
     def solve(self):
