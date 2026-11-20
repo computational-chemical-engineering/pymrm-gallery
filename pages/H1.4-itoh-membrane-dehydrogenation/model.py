@@ -305,7 +305,7 @@ class MembraneReactor:
         jac_t, g_t = self._channel(self.layout.shapes["tube"], self.bc_tube, 1.0)
         jac_s, g_s = self._channel(self.layout.shapes["shell"], self.bc_shell, v_shell)
         place = self.layout.place
-        self.jac_const = (place(jac_t, "tube", "tube") + place(jac_s, "shell", "shell")).tocsc()
+        self.jac_const = place(jac_t, "tube", "tube") + place(jac_s, "shell", "shell")
         g = np.zeros(self.shape)
         self.layout.put(g, "tube", g_t)
         self.layout.put(g, "shell", g_s)

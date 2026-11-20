@@ -199,7 +199,7 @@ def _operators(n, H_t, v_s, nu=0, inlet_top=False, dirichlet_both=False, C_in=1.
         bc, v = (inlet, outlet), v_s
     Conv, conv_bc = construct_convflux_upwind(shape, x_f, bc=bc, v=v)
     Div = construct_div(shape, x_f, nu=nu)
-    return dict(L=(Div @ Conv).tocsc(), g=np.asarray((Div @ conv_bc).todense()).ravel(),
+    return dict(L=Div @ Conv, g=np.asarray((Div @ conv_bc).todense()).ravel(),
                 bc=bc, x_f=x_f, v=v)
 
 def _net_inflow(C, op, read="face"):
@@ -315,7 +315,7 @@ def phi_pymrm(n, H_t, v_s, eps, k, Henry, C_in=8.5, C_L_frac=0.3,
     op = _operators(n, H_t, v_s, nu=nu, C_in=C_in, **bckw)
     A = op["L"] + sp.eye(n, format="csc") * (sign * ph * k / Henry)
     b = -op["g"] + sign * ph * k * C_L
-    c = spsolve(A.tocsc(), b)
+    c = spsolve(A, b)
     phi = float((c.mean() / Henry - C_L) / (C_in / Henry - C_L))
     if not return_balance:
         return phi

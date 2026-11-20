@@ -345,13 +345,13 @@ class Bed:
         gr, gr_bc = construct_grad(self.shape, self.r_f, self.r_c, self.bc_r, axis=1)
         div_r = construct_div(self.shape, self.r_f, nu=nu_r, axis=1)     # nu=1: radial, cylindrical
         n_tot = n_z * n_r
-        self.conv = conv.tocsc()
+        self.conv = conv
         self.conv_bc = np.asarray(conv_bc.todense()).ravel()
         self.jac_up = (self.div_z @ (conv - D_d * gz) - DR_d * (div_r @ gr)
-                       + k * eye_array(n_tot, format="csc")).tocsc()
+                       + k * eye_array(n_tot, format="csc"))
         self.g_up = np.asarray((self.div_z @ (conv_bc - D_d * gz_bc)
                                 - DR_d * (div_r @ gr_bc)).todense()).ravel()
-        self.jac_no_conv = (self.jac_up - self.div_z @ self.conv).tocsc()
+        self.jac_no_conv = self.jac_up - self.div_z @ self.conv
         self.lu_up = splu(self.jac_up)            # constant operator: factorised once
         self.tvd = ConvFluxTVD(self.shape, self.z_f, self.z_c, self.bc_z,
                                tvd_limiter=vanleer, axis=0)
@@ -410,7 +410,7 @@ class Bed:
                 g = self.jac_up @ (c - c_up_flat) + self.div_z @ (flux.reshape(-1) - flux_up)
                 if jacobian == "upwind":
                     return g, self.jac_up
-                return g, (self.jac_no_conv + self.div_z @ jac).tocsc()
+                return g, self.jac_no_conv + self.div_z @ jac
 
             sol = newton(residual, c_up, tol=tol, maxfev=maxfev, damping="monotone",
                          stagnation=True, scale=scale)

@@ -68,7 +68,7 @@ def theta_pymrm(N, Pe_L, n=1600, bc_in=None, nu=0, disp=1.0, profile=False):
     conv, conv_bc = construct_convflux_upwind(shape, z_f, z_c, bc, v=1.0, axis=0)
     grad, grad_bc = construct_grad(shape, z_f, z_c, bc, axis=0)
     div = construct_div(shape, z_f, nu=nu, axis=0)
-    jac = (div @ (conv - disp * grad / Pe_L) + N * eye_array(n, format="csr")).tocsc()
+    jac = div @ (conv - disp * grad / Pe_L) + N * eye_array(n, format="csc")
     rhs = -(div @ (conv_bc - disp * grad_bc / Pe_L)).toarray().ravel()
     th = spsolve(jac, rhs)
     out = float(np.ravel(compute_boundary_values(th.reshape(shape), z_f, z_c,

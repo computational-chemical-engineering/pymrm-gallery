@@ -366,10 +366,10 @@ class Bed:
             w[-1] -= 1.0
             self.K = vstack([csr_array((self.n, self.n)), csr_array(w[np.newaxis, :])], format="csr")
         self.outlet = outlet
-        self.divK = (self.div @ self.K).tocsc()
+        self.divK = self.div @ self.K
         if route == "deferred":
             conv, conv_bc = construct_convflux_upwind(self.shape, self.x_f, self.x_c, self.bc, v=1.0)
-            self.L_up = (self.div @ conv).tocsc() + self.divK
+            self.L_up = self.div @ conv + self.divK
             self.b_up = (self.div @ conv_bc).toarray().ravel()
 
     # -- physics ---------------------------------------------------------------
@@ -407,7 +407,7 @@ class Bed:
         if mass:
             g = g + mass * (y.ravel() - y_old)
         J = self.div @ jac + self.divK + construct_coefficient_matrix(diag.reshape(self.shape))
-        return g, J.tocsc()
+        return g, J
 
     def solve_y(self, C, y0=None, mass=0.0, y_old=None, tol=None):
         """Gas profile at frozen coke ``C``.
@@ -451,7 +451,7 @@ class Bed:
     def _deferred(self, C, y0, mass, y_old, tol, max_it=300):
         """Upwind operator implicit, van Leer correction of the previous sweep explicit."""
         diag = self.gcoef(C) + mass
-        lu = splu((self.L_up + construct_coefficient_matrix(diag.reshape(self.shape))).tocsc())
+        lu = splu(self.L_up + construct_coefficient_matrix(diag.reshape(self.shape)))
         rhs0 = -self.b_up + (mass * y_old if mass else 0.0)
         y = np.asarray(y0, float).ravel()
         for sweep in range(1, max_it + 1):
