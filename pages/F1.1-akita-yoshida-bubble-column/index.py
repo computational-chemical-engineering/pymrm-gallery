@@ -214,7 +214,8 @@ C = Data(PROPS, T4, T2, F12)
 # implicit in $\varepsilon_G$ and is solved with `pymrm.checks.find_roots`, which
 # scans the whole physical range and refines every sign change; the page raises
 # unless exactly one root is found. `study(K, C)` computes every number the page
-# reports, so the break table reruns all of it with one defect at a time.
+# reports except the two ratios to `F1.3` and `F1.4`, which are formed from its output;
+# the break table reruns all of it with one defect at a time.
 
 # %%
 def si_props(props, key):
@@ -483,7 +484,7 @@ say("The counts add to <<n:d>> bubbles, as printed. Of the <<ne:d>> derived entr
     "count gives <<v2:.2f>>. The printed column of $\\Delta\\mu_3'$ adds to <<d3:.2f>> mm³ "
     "more than the printed total, while the $\\Delta F$ and $\\Delta\\mu_2'$ columns add to "
     "their totals (ratios <<rf:.6f>> and <<r2:.6f>>). The printed total is consistent "
-    "with the class value the count gives, so the entry is most likely a misprint.",
+    "with the class value the count gives, not with the printed entry.",
     n=M["t4_n_total"], ne=M["t4_entries"], off=M["t4_entries_off"],
     off3=M["t4_entries_off_three_units"], c1=M["t4_worst_dF_class"], p1=M["t4_worst_dF_printed"],
     v1=M["t4_worst_dF_computed"], m1=100 * M["t4_worst_dF_mu2_check"],
@@ -514,9 +515,8 @@ say("Froude numbers: the worst of the <<n:d>> recomputed values differs from the
     "one by <<w:pct2>>, and <<off:d>> lie more than one unit of the printed last digit away. "
     "Bond, Galilei and Schmidt numbers: <<ng:d>> printed values in <<nm:d>> rows, worst relative difference "
     "<<wg:pct2>>; <<oh:d>> differ by more than half a unit of the last digit and <<o2:d>> by "
-    "more than one unit. Values between half a unit and one unit away are what truncation "
-    "instead of rounding would give, or slightly different property values in 1973; "
-    "either way the two tables describe the same liquids to the worst difference above.",
+    "more than one unit. The two tables describe the same liquids to the worst difference "
+    "above.",
     n=M["fr_entries"], w=M["fr_worst_rel_dev"], off=M["fr_entries_off"], ng=M["grp_entries"], nm=M["n_matched_rows"],
     wg=M["grp_worst_rel_dev"], oh=M["grp_entries_off_half"], o2=M["grp_entries_off_two"])
 
@@ -586,7 +586,7 @@ for (liq, Dc), q in C.f12.groupby(["liquid", "D_cm"]):
 lim = np.array([0.6, 400])
 ax.plot(lim, lim, "k-", lw=0.8)
 ax.set_xlabel("$k_La$ observed (1/h)")
-ax.set_ylabel("$k_La$ calculated by eq. 27 (1/h)")
+ax.set_ylabel("$k_La$ calculated in the 1974 paper (1/h)")
 ax.legend(fontsize=7)
 ax.set_title("re-plotted from digitised markers", fontsize=9)
 plt.tight_layout()
@@ -730,7 +730,9 @@ say("The Akita-Yoshida deviation here is <<a:.2f>> times that of eq. 19 on F1.4 
 #
 # Every number registered below has a row that moves it. Each row mistypes one
 # published constant, or changes one input of the data, and reruns the whole study;
-# the claims it fails are counted. The controls fail nothing.
+# the claims it fails are counted. A row under which one of the root searches no
+# longer finds exactly one root makes the study raise; such a row records a crash, and every
+# claim counts as failed for it, not as moved. The controls fail nothing.
 
 # %%
 RTOL = 1e-6

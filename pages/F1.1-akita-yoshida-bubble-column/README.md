@@ -44,5 +44,5 @@ same holdup. Use eq. 11.
 
 **One Table IV entry disagrees with its counts.** The third-moment entry of the eleventh size class is
 printed 25.54 <!-- claim: t4_worst_dmu3_printed --> where the counts give 23.55 <!-- claim: t4_worst_dmu3_computed -->;
-the printed column total agrees with the computed value, which
-points to a misprint in that entry.
+the printed column total agrees with the computed value, not with
+the printed entry.
