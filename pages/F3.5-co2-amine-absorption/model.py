@@ -255,7 +255,7 @@ class Film:
         # the constant diffusion operator, assembled once; flux_mat c + flux_bc is
         # -dc/dxi on every face, boundary terms included
         self.flux_mat, self.flux_bc = -grad_mat, -grad_bc
-        self.jac_diff = (div_mat @ self.flux_mat).tocsc()
+        self.jac_diff = div_mat @ self.flux_mat
         self.g_diff = np.asarray((div_mat @ self.flux_bc).todense()).ravel()
         # the rate is pointwise: the default stencil couples the species axis only
         self.numjac = NumJac(self.shape)
@@ -593,7 +593,7 @@ def second_order_dimensionless(ha, q, n_x=400, s_grid=6.0, tol=1e-11):
           {"a": [[0.0, 0.0]], "b": [[1.0, 1.0]], "d": [[0.0, 1.0]]})
     grad, gbc = construct_grad((n_x, 2), x_f, x_c, bc, axis=0)
     div = construct_div((n_x, 2), x_f, nu=0, axis=0)
-    A = (div @ -grad).tocsc()
+    A = div @ -grad
     g = np.asarray((div @ -gbc).todense()).reshape((-1, 1))
     nj = NumJac((n_x, 2))
 

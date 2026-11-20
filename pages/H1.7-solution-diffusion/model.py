@@ -80,7 +80,7 @@ def film_wall_ratio(Jv, delta, D, R_int, n=400, profile=False, wall="face", solv
     div = construct_div(shape, x_f, nu=0)          # nu = 0: Cartesian film
     lhs = div @ (conv - D * grad)
     rhs = -(div @ (conv_bc - D * grad_bc)).toarray().ravel()
-    c = (spsolve if solver is None else solver)(lhs.tocsc(), rhs).reshape(shape)
+    c = (spsolve if solver is None else solver)(lhs, rhs).reshape(shape)
     if profile:
         return x_c, c[:, 0]
     if wall == "cell":

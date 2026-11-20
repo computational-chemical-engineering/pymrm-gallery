@@ -257,7 +257,7 @@ def first_order_study(n_x=N_X, flux_read="face"):
 def cond_inf(film, ha):
     """cond_inf of the linear film matrix, exact: the matrix is an M-matrix, so
     its inverse is non-negative and ||A^-1||_inf is the largest entry of A^-1 1."""
-    A = (film.jac_diff + ha**2 * eye_array(film.n_x, format="csc")).tocsc()
+    A = film.jac_diff + ha**2 * eye_array(film.n_x, format="csc")
     inv_one = splu(A).solve(np.ones(film.n_x))
     if inv_one.min() <= 0.0:
         raise RuntimeError("film matrix is not an M-matrix; the cond_inf identity fails")

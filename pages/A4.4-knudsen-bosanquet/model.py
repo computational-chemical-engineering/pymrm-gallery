@@ -137,7 +137,7 @@ class Cell:
             w = sps.eye(n - 1, n)
         else:
             raise ValueError(f"face_rule {face_rule!r}")
-        self.face = sps.vstack([bl, sps.kron(w, sps.eye(2)), br]).tocsr()
+        self.face = sps.vstack([bl, sps.kron(w, sps.eye(2)), br], format="csc")
         self.face_bc = np.concatenate([blb.toarray().ravel(), np.zeros(2 * (n - 1)),
                                        brb.toarray().ravel()]).reshape((-1, 1))
         self.numjac = NumJac(self.shape, axes_diagonals=[0], axes_blocks=[-1])

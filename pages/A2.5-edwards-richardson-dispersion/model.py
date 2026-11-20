@@ -93,7 +93,7 @@ class _ThetaTVD:
 
     def _factor(self, dt, theta):
         if self._key != (dt, theta):
-            self._lhs = (self.M / dt + theta * self.A).tocsc()
+            self._lhs = self.M / dt + theta * self.A
             self._lu = splu(self._lhs)
             self._key = (dt, theta)
         return self._lu
@@ -150,7 +150,7 @@ class _ThetaTVD:
             flux, jac_tvd = self._tvd(c.reshape(shape), self.v)
             f_up = conv @ c.reshape(-1) + self._conv_bc
             g = lhs @ (c.reshape(-1) - c_up) + div @ (flux.reshape(-1) - f_up)
-            return g, (lhs + div @ (jac_tvd - conv)).tocsc()
+            return g, lhs + div @ (jac_tvd - conv)
 
         sol = newton(residual, c_up.reshape(shape), tol=self.tol, damping="monotone",
                      stagnation=True)
@@ -205,7 +205,7 @@ class TracerBed(_ThetaTVD):
                                                             self.bc, v=u)
         grad, grad_bc = construct_grad(self.shape, self.x_f, self.x_c, self.bc)
         self.div = construct_div(self.shape, self.x_f, nu=nu)   # nu=0: Cartesian slab
-        self.A = (self.div @ (self.conv - D * grad)).tocsc()
+        self.A = self.div @ (self.conv - D * grad)
         self.b0 = np.asarray((self.div @ (self.conv_bc - D * grad_bc)).todense()).ravel()
         self.M = eye_array(n, format="csc")
         self.limiter, self.tol, self.max_corr, self.method = limiter, tol, max_corr, method
@@ -257,7 +257,7 @@ class TwoZoneBed(_ThetaTVD):
         # per-cell exchange: +kappa (c1 - c2) in zone 1, -kappa (c1 - c2) in zone 2
         exchange = construct_coefficient_matrix(kappa * np.array([[1.0, -1.0], [-1.0, 1.0]]),
                                                 shape=((n, 2, 1), (n, 1, 2)))
-        self.A = (self.div @ (self.conv - d_face @ grad) + exchange).tocsc()
+        self.A = self.div @ (self.conv - d_face @ grad) + exchange
         self.b0 = np.asarray((self.div @ (self.conv_bc - d_face @ grad_bc)).todense()).ravel()
         # accumulation carries th_i: the volume fraction multiplies dc_i/dt
         self.M = (construct_coefficient_matrix(th, shape=self.shape) if mass == "theta"

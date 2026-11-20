@@ -259,7 +259,7 @@ class WettedSphere:
         key = (float(alpha), float(C_star))
         if key not in self._ops:
             g, gb = construct_grad(self.shape, self.u_f, self.u_c, self.bc(alpha, C_star))
-            lap = (self.div @ g).tocsc()
+            lap = self.div @ g
             lap_bc = (self.div @ gb).toarray().reshape(-1, 1)
             self._ops[key] = (lap, lap_bc)
         return self._ops[key]
