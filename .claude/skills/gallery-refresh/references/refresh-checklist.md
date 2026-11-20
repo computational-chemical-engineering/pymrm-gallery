@@ -191,6 +191,16 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
     `d` in it; never multiply it by `d` again. A constant-coefficient validation cannot
     see the slip, so test a face value under a state-dependent coefficient (`A4.7`: a
     face at 0.9 read 0.81, Sh 35.47 against 35.83; row 264).
+39. Build every sparse array in CSC and never convert afterwards. scipy constructors
+    take `format="csc"` (`eye_array` and `diags_array` return DIA, `kron`, `block_array`
+    and `block_diag` COO, and `eye_array(n)/dt - J` comes out CSR); keep it. pymrm
+    results (operators, `ConvFluxTVD`, `construct_coefficient_matrix`, `NumJac`,
+    `BlockLayout`) are CSC already: no `.tocsc()` or `.tocsr()` on them. The only
+    exception is IBM: its functions return CSR, so convert there only where
+    `splu`/`spilu` need CSC, with a comment saying why. When a refresh or fix touches a
+    page, remove its needless conversions and prove the removal with the page's
+    agreement and claims checks. Check: `grep -nE 'tocsc\(\)|tocsr\(\)' $P/*.py`.
+    (user, 2026-11-20; pymrm style guide 9.4 and anti-pattern 8)
 
 ## Corrections
 

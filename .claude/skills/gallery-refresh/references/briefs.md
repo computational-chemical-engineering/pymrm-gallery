@@ -112,7 +112,9 @@ index.py. A function that takes many physical inputs gets
 above its def line, or a frozen dataclass for one physical concept; never pack inputs
 into a tuple or dict to lower the score.
 Build index.py cell by cell with Edit; do not write a cell to a separate file and
-splice it in.
+splice it in. Sparse arrays: `format="csc"` on scipy constructors, never `.tocsc()` or
+`.tocsr()` afterwards except on IBM's CSR results (checklist 39); remove the page's
+needless conversions and show the claims unchanged.
 
 Lane B: <what the page computes, with old build_page.py line numbers from the facts
 file for the solver, root finds and outlet reads; the candidate changes:
@@ -228,7 +230,7 @@ What to check, in this order:
 2. Each Correction: real error or change of definition / fair rounding; old wording
    quoted exactly; what is true stated with claim markers.
 3. <lane-specific numerics: routes, orders, roots, break rows>
-4. The checklist, as a final pass.
+4. The checklist, as a final pass, including rule 39 (`.tocsc()`/`.tocsr()` outside IBM).
 
 Cheap checks you may run: `python scripts/accept_page.py pages/<PAGE> --only
 dashes,lint,outputs,contract,health` (seconds, changes no file); <others, with runtime>.
