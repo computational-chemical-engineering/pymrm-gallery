@@ -10,7 +10,7 @@ report it asks for." Placeholders:
 | `<ID>` | catalog ID, e.g. `F2.3` |
 | `<WT>` | the checkout the agent works in (a worktree of the sweep branch) |
 | `<BRANCH>` | the branch checked out there |
-| `<VENV>` | venv built from requirements-lock.txt (pymrm 3.4.0, jupytext) |
+| `<VENV>` | venv built from requirements-lock.txt (pymrm 3.4.1, jupytext) |
 | `<SCRATCH>` | the coordinator's scratchpad directory |
 | `<id>` | lower-case short ID for file names, e.g. `f23` |
 | `<FACTS>` | `<SCRATCH>/<id>_facts.md`, written by `scripts/page_facts.py <ID>` |
@@ -72,7 +72,7 @@ agent read and rewrote the whole page anyway (see SKILL.md).
 
 ```
 Refresh the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, onto
-the new page layout and pymrm 3.4.0, in both lanes. Do not commit, do not `git add`,
+the new page layout and pymrm 3.4.1, in both lanes. Do not commit, do not `git add`,
 do not `git rm` (delete files with plain `rm`): other agents may share the git index.
 Touch only pages/<PAGE>/, the <ID> entry in models.yaml, and new rows appended at the
 end of docs/refresh-learnings.md (re-read each shared file's end right before editing
@@ -101,7 +101,7 @@ is pages/<PAGE>/build_page.py: its cells are the strings passed to
 Lane A (infrastructure): index.py from templates/index.py, carrying the old cells in
 order; paired index.ipynb via `jupytext --set-formats ipynb,py:percent index.py`;
 bootstrap cell verbatim from templates/bootstrap_cell.py with GALLERY_REF = "main",
-PAGE = "<PAGE>", PYMRM = ">=3.4.0,<4"; meta.yaml pymrm_min_version "3.4.0" and a
+PAGE = "<PAGE>", PYMRM = ">=3.4.1,<4"; meta.yaml pymrm_min_version "3.4.1" and a
 measured runtime_seconds; model.py with NumPy-style docstrings (classes and functions
 only, no plotting, no data loading); test_model.py (import, one fast solve, one stored
 value via load_claims, offline in seconds); build_page.py removed with plain `rm`.
@@ -173,7 +173,7 @@ intermediate state show that the layout move changed nothing it computes.
 
 ```
 Refresh the gallery page pages/<PAGE> in the git checkout <WT>, branch <BRANCH>, onto
-the new page layout and pymrm 3.4.0. Do not commit, do not `git add`, do not `git rm`
+the new page layout and pymrm 3.4.1. Do not commit, do not `git add`, do not `git rm`
 (delete files with plain `rm`). Touch only pages/<PAGE>/, the <ID> entry in
 models.yaml, and new rows appended at the end of docs/refresh-learnings.md (re-read
 each shared file's end right before editing it).
@@ -189,8 +189,8 @@ question needs it.
 <the working-style block>
 
 Layout: index.py from templates/index.py, paired index.ipynb via jupytext; bootstrap
-cell verbatim with GALLERY_REF="main", PAGE the directory name, PYMRM ">=3.4.0,<4";
-meta.yaml pymrm_min_version "3.4.0" and measured runtime_seconds; every number the
+cell verbatim with GALLERY_REF="main", PAGE the directory name, PYMRM ">=3.4.1,<4";
+meta.yaml pymrm_min_version "3.4.1" and measured runtime_seconds; every number the
 page states is a Claims entry, last code cell `claims.report();`; break rows declared
 with `claims.define_rows(labels)` before they run, a row that cannot run recording nan
 for its claims; agreement.json format 2; build_page.py removed; README `## Corrections` for any published statement
