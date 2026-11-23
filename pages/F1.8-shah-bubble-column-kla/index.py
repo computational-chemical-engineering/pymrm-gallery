@@ -104,14 +104,14 @@ def say(text, **v):
 # that porous plates and two-phase nozzles give considerably higher values. Their
 # Table 4-a.1 fits $k_La = b\,u_G^n$ to data of Deckwer and co-workers, with $n$ from
 # 0.78 to 0.82 and $b$ depending on the sparger and the liquid. On p. 366 they add that
-# the liquid velocity has no influence on $k_La$ (their Figure 6-a.1), so that the
+# "an influence of $u_L$ on $k_La$ can be neglected" (their Figure 6-a.1), so that the
 # correlation carries over to columns with liquid flow.
 #
 # The page asks whether the review's own printed material supports these statements:
 # how far below the other printed correlations Akita-Yoshida sits, in units of the
 # printed mean errors; whether the exponent of Akita-Yoshida is near 0.8; and whether
 # the one data set the review prints that no correlation was fitted to (Figure
-# 6-a.1) shows no effect of the liquid velocity. It is not a test against new data.
+# 6-a.1) supports neglecting the liquid velocity. It is not a test against new data.
 # [F1.1](../F1.1-akita-yoshida-bubble-column/) tests Akita-Yoshida against its own
 # papers; [F1.3](../F1.3-wilkinson-high-pressure-holdup/) and
 # [F1.4](../F1.4-krishna-ellenberger-holdup/) are holdup pages.
@@ -168,8 +168,10 @@ def say(text, **v):
 # the page images and kept as printed; the page loads them into the one dictionary `K`
 # that every function takes, so a break row per constant is one call. The liquid is
 # water at 20 C from F1.1's property table (the `water_20` row); the review prints no
-# water properties. Air viscosity $\mu_G = 1.81\times10^{-5}$ Pa s and $g = 9.81$
-# m/s² are page inputs. The test condition of the check values is $D = 0.15$ m,
+# water properties. Air viscosity $\mu_G = 1.81\times10^{-5}$ Pa s (the usual handbook value for
+# air at 20 C and 1 atm, not checked here against a specific table) and $g = 9.81$
+# m/s² are page inputs; R2 gives the effect of $\mu_G$ on Hikita's maximum ratio over a
+# bracket of air viscosities around the page value. The test condition of the check values is $D = 0.15$ m,
 # $u_G = 0.05$ m/s.
 #
 # Ambiguities in the printed text, recorded and not resolved unless stated:
@@ -197,7 +199,10 @@ K = {r.name: float(Fraction(r.printed)) for r in PN.itertuples()}
 PRINTED = dict(zip(PN.name, PN.printed))
 display(PN.set_index("name"))
 ROWS = ("noz_tap", "noz_salt", "sin_tap", "sin_salt")
-MU_AIR = 1.81e-5       # Pa s, air at 20 C (page input; the review prints none)
+MU_AIR = 1.81e-5       # Pa s, air at 20 C and 1 atm, the usual handbook value (not checked against a specific table); the review prints none; R2 shows its effect
+MU_AIR_BRACKET = (1.7e-5, 1.9e-5)  # Pa s, air from 0 to 40 C: the sensitivity of Hikita's ratio in R2
+UL_PAIR_TOL = 0.06     # Fig 6-a.1 pairs: markers of two liquid velocities match within this fraction in uG
+D_SCAN = (0.01, 5.0)   # m, physical range of the column diameter for the A-Y/Hikita crossing
 G = 9.81               # m/s2
 D_T, UG_T = 0.15, 0.05  # m, m/s: the test condition of the check values
 
@@ -496,32 +501,72 @@ def r1_correlations(K, C):
     return M
 
 
+def window_max(num, den, n, lo, hi, D, L, g, K, C):
+    """Maximum of num/den over [lo, hi]: the window ends and the interior roots of E6 = n.
+
+    d ln(ratio)/d ln uG = E6 - n, so the maximum is at the interior root when there is
+    one (0 or 1) and at a window end otherwise. Returns the maximum and the roots."""
+    roots = e7_roots(n, lo, hi, D, L, g, K, C)
+    return max(num(x) / den(x) for x in [lo, hi] + roots), roots
+
+
+def hik_max_ratio_closed(D, K, C):
+    """Maximum over Hikita's window of A-Y/Hikita at diameter D: the closed-form E7 point
+    when it lies inside the window, else a window end (a second route to window_max)."""
+    L, g = C.L, C.g
+    n, lo, hi = K["hik_e1"] - 1, K["hik_uG_min"], K["hik_uG_max"]
+    cand = [lo, hi]
+    if n < K["ay_eps_exp"]:
+        us = e7_closed(n, D, L, g, K, C)[1]
+        cand += [us] if lo < us < hi else []
+    return max(kla_ay(u, D, L, g, K, C) / kla_hikita(u, L, g, K) for u in cand)
+
+
 def r2_conservative(K, C):
     """R2 and R3: A-Y against the nozzle row (D 0.2 m) and Hikita (D 0.15 m)."""
     L, g = C.L, C.g
     M = {}
     lo, hi, D, n = max(K["noz_tap_uG_min"], K["ay_uG_min"]), K["noz_tap_uG_max"], K["noz_D"], K["noz_tap_n"]
     row = lambda u: kla_row(u, K, "noz_tap")
-    e, us = e7_closed(n, D, L, g, K, C)
-    M["noz_eps_star"], M["noz_uG_star"] = e, us
-    M["noz_uG_star_root_gap"] = abs(one_root(n, lo, hi, D, L, g, K, C) / us - 1)
-    M["noz_max_ratio"] = kla_ay(us, D, L, g, K, C) / row(us)
-    M["noz_ratio_lo"], M["noz_ratio_hi"] = (kla_ay(u, D, L, g, K, C) / row(u) for u in (lo, hi))
+    ay = lambda u, D=D: kla_ay(u, D, L, g, K, C)
+    M["noz_max_ratio"], roots = window_max(ay, row, n, lo, hi, D, L, g, K, C)
+    if roots:   # the E7 point and the root gap exist only with an interior maximum
+        e, us = e7_closed(n, D, L, g, K, C)
+        M["noz_eps_star"], M["noz_uG_star"] = e, us
+        M["noz_uG_star_root_gap"] = abs(roots[0] / us - 1)
+    M["noz_ratio_lo"], M["noz_ratio_hi"] = (ay(u) / row(u) for u in (lo, hi))
     M["noz_gap_over_err"] = (1 - M["noz_max_ratio"]) / (K["noz_tap_err"] / 100)
     M["noz_gap_lo_over_err"] = (1 - M["noz_ratio_lo"]) / (K["noz_tap_err"] / 100)
     hlo, hhi, Dh, nh = K["hik_uG_min"], K["hik_uG_max"], D_T, K["hik_e1"] - 1
-    eh, uh = e7_closed(nh, Dh, L, g, K, C)
-    M["hik_uG_star"] = uh
-    M["hik_uG_star_root_gap"] = abs(one_root(nh, hlo, hhi, Dh, L, g, K, C) / uh - 1)
-    M["hik_max_ratio"] = kla_ay(uh, Dh, L, g, K, C) / kla_hikita(uh, L, g, K)
-    M["hik_ratio_lo"], M["hik_ratio_hi"] = (kla_ay(u, Dh, L, g, K, C) / kla_hikita(u, L, g, K) for u in (hlo, hhi))
+    hik = lambda u: kla_hikita(u, L, g, K)
+    M["hik_max_ratio"], roots = window_max(lambda u: kla_ay(u, Dh, L, g, K, C), hik, nh, hlo, hhi, Dh, L, g, K, C)
+    if roots:
+        eh, uh = e7_closed(nh, Dh, L, g, K, C)
+        M["hik_uG_star"] = uh
+        M["hik_uG_star_root_gap"] = abs(roots[0] / uh - 1)
+    M["hik_ratio_lo"], M["hik_ratio_hi"] = (kla_ay(u, Dh, L, g, K, C) / hik(u) for u in (hlo, hhi))
+    for tag, mu in zip(("lo", "hi"), MU_AIR_BRACKET):   # the air viscosity is a page input
+        Lm = replace(L, muG=mu)
+        M[f"hik_max_ratio_muG_{tag}"] = window_max(lambda u: kla_ay(u, Dh, L, g, K, C),
+                                                   lambda u: kla_hikita(u, Lm, g, K), nh, hlo, hhi, Dh, L, g, K, C)[0]
+    # Akita-Yoshida has a diameter and Hikita none: the maximum ratio at other diameters
+    for tag, Dx in (("hik_Dmin", K["hik_D_min"]), ("hik_Dmax", K["hik_D_max"]), ("ay_Dmax", K["ay_D_max"])):
+        M[f"hik_max_ratio_{tag}"] = window_max(lambda u: kla_ay(u, Dx, L, g, K, C), hik, nh, hlo, hhi, Dx, L, g, K, C)[0]
+    roots = find_roots(lambda Dx: hik_max_ratio_closed(Dx, K, C) - 1, *D_SCAN, n_scan=80, log=True, xtol=1e-12)["roots"]
+    if len(roots) == 1:   # the study records the crossing only when it is unique on the whole range
+        M["hik_cross_D"] = roots[0]
+        gap = window_max(lambda u: kla_ay(u, roots[0], L, g, K, C), hik, nh, hlo, hhi, roots[0], L, g, K, C)[0] - 1
+        if abs(gap) > 1e-6:
+            raise ValueError(f"the crossing diameter fails the maximum found by roots: {gap:.2e}")
     f = lambda u: kla_ay(u, D, L, g, K, C)
     M["secant_exp_noz_window"] = math.log(f(hi) / f(lo)) / math.log(hi / lo)
     M["e6_noz_lo"] = slope_e6(holdup_ay(lo, D, L, g, K, C), K)
     M["e6_noz_hi"] = slope_e6(holdup_ay(hi, D, L, g, K, C), K)
     M["e6_T"] = slope_e6(holdup_ay(C.uG_T, C.D_T, L, g, K, C), K)
     M["secant_minus_n_noz"] = M["secant_exp_noz_window"] - n
-    M["uG_e6_eq_0p8"] = one_root(0.8, lo, hi, D, L, g, K, C)
+    roots = e7_roots(0.8, lo, hi, D, L, g, K, C)
+    if len(roots) == 1:
+        M["uG_e6_eq_0p8"] = roots[0]
     stop_rules(ratio=[M["noz_max_ratio"], M["noz_ratio_lo"], M["noz_ratio_hi"], M["hik_max_ratio"]])
     return M
 
@@ -566,6 +611,23 @@ def ul_effect(df, tag):
     return M
 
 
+def ul_pairs(df, tol):
+    """Highest minus lowest liquid velocity at matched gas velocity: each marker of the
+    highest-uL series is paired with the nearest-uG marker of the lowest-uL series if that
+    lies within ``tol`` (fraction of uG), each used once; mean, standard error and t of
+    the paired differences in log ratio to the drawn line."""
+    hi_u, lo_u = df.uL_m_s.max(), df.uL_m_s.min()
+    A, B = df[df.uL_m_s == hi_u], df[df.uL_m_s == lo_u]
+    dist = np.abs(B.uG_m_s.to_numpy()[None, :] / A.uG_m_s.to_numpy()[:, None] - 1)
+    j = dist.argmin(axis=1)    # the nearest partner of each marker, accepted within tol
+    ok = dist[np.arange(len(A)), j] <= tol
+    if len(set(j[ok])) != ok.sum():
+        raise ValueError("a marker is paired twice")
+    m, se = mean_se(A.lr.to_numpy()[ok] - B.lr.to_numpy()[j[ok]])
+    return {"ul_pair_diff": m, "ul_pair_se": se, "ul_pair_t": m / se, "ul_pair_n": int(ok.sum()),
+            "ul_pair_n__margin": float(np.abs(dist - tol).min())}
+
+
 def r4_fig6a1(K, C):
     """R4: Figure 6-a.1 against the drawn row line and against A-Y at D 0.14 m."""
     L, g, D = C.L, C.g, K["f6a1_D"]
@@ -583,6 +645,7 @@ def r4_fig6a1(K, C):
     M["_uL"] = d.uL_m_s.to_numpy()
     d["lr"] = np.log(q_row)
     M |= ul_effect(d, "ul_all")
+    M |= ul_pairs(d, UL_PAIR_TOL)
     M |= ul_effect(d[d.uG_m_s <= K["noz_tap_uG_max"]], "ul_le08")
     first = d.groupby("uL_m_s").uG_m_s.transform("min") == d.uG_m_s
     M |= ul_effect(d[~first], "ul_nofirst")
@@ -605,7 +668,10 @@ def r5_fig6a2(K, C, ratio_lo, ratio_hi):
     M["_f2_q"] = q
     k, n = int((q > 1).sum()), len(q)
     M["f2_n_above"] = k
-    M["f2_sign_p"] = min(1.0, 2 * sum(math.comb(n, i) for i in range(max(k, n - k), n + 1)) / 2**n)
+    sign_p = lambda j: min(1.0, 2 * sum(math.comb(n, i) for i in range(max(j, n - j), n + 1)) / 2**n)
+    M["f2_sign_p"] = sign_p(k)
+    M["f2_sign_p_one_fewer"], M["f2_sign_p_one_more"] = sign_p(k - 1), sign_p(k + 1)
+    M["f2_nearest_marker_dev"] = float(np.abs(q - 1).min())
     # Holdup ratio that would reconcile the Deckwer squares (D 0.20 m) with R2's
     # A-Y/nozzle ratio at D 0.2: (1/(ratio x geo))^(1/1.1).
     gd = M["f2_square_geo"]
@@ -677,6 +743,12 @@ def study(K, C):
 
 
 M = study(K, C)
+_absent = [k_ for k_ in ("noz_uG_star", "noz_eps_star", "noz_uG_star_root_gap", "hik_uG_star", "hik_uG_star_root_gap",
+                         "uG_e6_eq_0p8", "hik_cross_D") if k_ not in M]
+if _absent:   # a defect may remove these; the clean study must have them
+    raise ValueError(f"the clean study lacks {_absent}")
+if not K["hik_D_max"] < M["hik_cross_D"] < K["ay_D_max"]:
+    raise ValueError("the crossing diameter is not between Hikita's largest and Akita-Yoshida's largest diameter")
 print(f"{sum(not k.startswith('_') and not k.endswith('__margin') for k in M)} numbers computed")
 
 # %% [markdown]
@@ -726,23 +798,38 @@ plt.show()
 # %% [markdown]
 # ### R2. How far below: Akita-Yoshida against the nozzle row and Hikita
 #
-# The nozzle row is evaluated at its own diameter, 0.2 m, over the part of its range
-# that Akita-Yoshida covers; Hikita at 0.15 m over its stated range. The largest value
-# of the ratio is the E7 maximum.
+# The nozzle row is evaluated at its own diameter over the part of its range that
+# Akita-Yoshida covers; Hikita at the test diameter over its stated range. The largest
+# value of the ratio is the E7 maximum, or a window end when E6 = $n$ has no root in the
+# window. Akita-Yoshida has a diameter (E8) and Hikita has none, so the Hikita
+# comparison is repeated at other diameters.
 
 # %%
-say("Akita-Yoshida over the nozzle row at 0.2 m: <<lo:.3f>> at $u_G$ = 0.003 m/s, <<hi:.3f>> at 0.08 m/s, and "
+say("Akita-Yoshida over the nozzle row at <<Dn:g>> m: <<lo:.3f>> at $u_G$ = <<l0:g>> m/s, <<hi:.3f>> at <<h0:g>> m/s, and "
     "at most <<mx:.4f>> at $u_G^*$ = <<us:.4f>> m/s ($\\varepsilon^*$ = <<es:.4f>>; `find_roots` on E6 = $n$ "
     "returns the same $u_G^*$ to <<gap:.1e>>). The smallest gap, $1 - $ <<mx:.3f>>, is <<g1:.2f>> times the "
     "row's printed mean error of <<err:g>> %; at the low end of the window it is <<g2:.2f>> times. Over Hikita "
-    "at 0.15 m: <<hl:.3f>> at 0.042 m/s, <<hh:.3f>> at 0.38 m/s and at most <<hm:.4f>> at <<hu:.4f>> m/s "
-    "(two routes agree to <<hg:.1e>>). So Akita-Yoshida is below both over the whole window: by at least "
+    "at <<Dt:g>> m: <<hl:.3f>> at <<hl0:g>> m/s, <<hh:.3f>> at <<hh0:g>> m/s and at most <<hm:.4f>> at <<hu:.4f>> m/s "
+    "(two routes agree to <<hg:.1e>>). So at these diameters Akita-Yoshida is below both over the whole window: by at least "
     "<<p1:pct1>> against the nozzle row and at least <<p2:pct1>> against Hikita. Hikita prints no mean error, "
     "so its gap has no printed scale.",
     lo=M["noz_ratio_lo"], hi=M["noz_ratio_hi"], mx=M["noz_max_ratio"], us=M["noz_uG_star"],
     es=M["noz_eps_star"], gap=M["noz_uG_star_root_gap"], g1=M["noz_gap_over_err"], err=K["noz_tap_err"],
     g2=M["noz_gap_lo_over_err"], hl=M["hik_ratio_lo"], hh=M["hik_ratio_hi"], hm=M["hik_max_ratio"],
-    hu=M["hik_uG_star"], hg=M["hik_uG_star_root_gap"], p1=1 - M["noz_max_ratio"], p2=1 - M["hik_max_ratio"])
+    hu=M["hik_uG_star"], hg=M["hik_uG_star_root_gap"], p1=1 - M["noz_max_ratio"], p2=1 - M["hik_max_ratio"],
+    Dn=K["noz_D"], l0=max(K["noz_tap_uG_min"], K["ay_uG_min"]), h0=K["noz_tap_uG_max"], Dt=D_T,
+    hl0=K["hik_uG_min"], hh0=K["hik_uG_max"])
+say("Hikita has no diameter and Akita-Yoshida's $k_La$ scales as $D^{<<e8:.2f>>}$ at fixed $u_G$ (E8), so the gap "
+    "to Hikita depends on $D$. At Hikita's own diameters, <<d1:g>> and <<d2:g>> m, the largest ratio of "
+    "Akita-Yoshida to Hikita is <<r1:.3f>> and <<r2:.3f>>. It reaches 1 at $D$ = <<dc:.4f>> m, the one root on <<s0:g>> to "
+    "<<s1:g>> m of the maximum ratio minus one; that lies beyond Hikita's diameters and inside Akita-Yoshida's range of "
+    "<<a0:g>> to <<a1:g>> m. At <<a1:g>> m, the largest diameter Akita-Yoshida states, it is up to <<r3:.4f>> times "
+    "Hikita. The air viscosity is a page input (Parameters): Hikita's maximum ratio at <<m1:.2e>> and <<m2:.2e>> "
+    "Pa s is <<q1:.3f>> and <<q2:.3f>>, against <<q0:.3f>> at the page's <<mu:.3g>> Pa s.",
+    e8=M["e8_ay_D_exp"], d1=K["hik_D_min"], d2=K["hik_D_max"], r1=M["hik_max_ratio_hik_Dmin"],
+    r2=M["hik_max_ratio_hik_Dmax"], dc=M["hik_cross_D"], s0=D_SCAN[0], s1=D_SCAN[1], a0=K["ay_D_min"],
+    a1=K["ay_D_max"], r3=M["hik_max_ratio_ay_Dmax"], m1=MU_AIR_BRACKET[0], m2=MU_AIR_BRACKET[1],
+    q1=M["hik_max_ratio_muG_lo"], q2=M["hik_max_ratio_muG_hi"], q0=M["hik_max_ratio"], mu=C.L.muG)
 
 # %% [markdown]
 # ### R3. The exponent of Akita-Yoshida against $n$ = 0.8
@@ -751,7 +838,7 @@ say("Akita-Yoshida over the nozzle row at 0.2 m: <<lo:.3f>> at $u_G$ = 0.003 m/s
 ugn = np.geomspace(0.003, 0.08, 120)
 e6 = [slope_e6(holdup_ay(u, K["noz_D"], L_, g_, K, C), K) for u in ugn]
 fig, ax = plt.subplots(figsize=(6.0, 3.8))
-ax.semilogx(ugn, e6, "k", label="Akita-Yoshida, E6 (D = 0.2 m)")
+ax.semilogx(ugn, e6, "k", label=f"Akita-Yoshida, E6 (D = {K['noz_D']:g} m)")
 ax.axhline(M["secant_exp_noz_window"], color="k", ls=":", label="Akita-Yoshida secant exponent over the window")
 ax.axhspan(K["n_min_kastanek"], K["n_max_kastanek"], color="C1", alpha=0.3, label="printed n range")
 ax.axhline(K["hik_e1"] - 1, color="C0", ls="--", label="Hikita")
@@ -779,43 +866,50 @@ for (s, uL), mk in zip(d1.groupby(["series", "uL_m_s"]).groups, ("o", "s", "^"))
     dd = d1[d1.series == s]
     ax.plot(dd.uG_m_s, dd.kLa_1_s, mk, mfc="none", label=f"$u_L$ = {uL} m/s")
 uu = np.linspace(0.005, 0.14, 100)
-ax.plot(uu, kla_row(uu, K, "noz_tap"), "k--", label="nozzle row 0.467 $u_G^{0.82}$")
-ax.plot(uu, [kla_ay(u, K["f6a1_D"], L_, g_, K, C) for u in uu], "k", label="Akita-Yoshida, D = 0.14 m")
+ax.plot(uu, kla_row(uu, K, "noz_tap"), "k--", label=f"nozzle row {K['noz_tap_b']:g} $u_G^{{{K['noz_tap_n']:g}}}$")
+ax.plot(uu, [kla_ay(u, K["f6a1_D"], L_, g_, K, C) for u in uu], "k", label=f"Akita-Yoshida, D = {K['f6a1_D']:g} m")
 ax.set(xlabel="$u_G$ (m/s)", ylabel="$k_La$ (1/s)", title="Figure 6-a.1 re-plotted from the digitised points")
 ax.legend(fontsize=8)
 plt.show()
 say("Against the drawn line the <<n:d>> markers have a geometric-mean ratio of <<g:.3f>> and a mean absolute "
-    "deviation of <<m:pct1>>, <<mr:.2f>> times the row's printed mean error. Against Akita-Yoshida at 0.14 m "
-    "(below its stated 0.152 m; the $D^{0.17}$ effect over that gap is <<de:pct2>>) the geometric mean is "
+    "deviation of <<m:pct1>>, <<mr:.2f>> times the row's printed mean error. Against Akita-Yoshida at <<Df:g>> m "
+    "(below its stated <<Dm:g>> m; the $D^{<<e8:.2f>>}$ effect over that gap is <<de:pct2>>) the geometric mean is "
     "<<ga:.3f>>, and <<na:d>> of the <<n:d>> markers lie above it (closest marker <<am:pct1>> from it). Whether "
     "these liquid velocities are inside Akita-Yoshida's range depends on A4: <<t1:d>> of <<n:d>> are above the "
-    "0.044 m/s of Table 2.1, <<t2:d>> above the 0.44 m/s of Table 4-a.2.",
+    "<<u1:g>> m/s of Table 2.1, <<t2:d>> above the <<u2:g>> m/s of Table 4-a.2.",
     n=M["f1_n"], g=M["f1_geo_row"], m=M["f1_mad_row"], mr=M["f1_mad_row_over_err"],
     de=M["f1_ay_D_range_effect"] - 1, ga=M["f1_geo_ay"], na=M["f1_n_above_ay"], am=M["f1_n_above_ay__margin"],
-    t1=M["f1_n_uL_above_t21"], t2=M["f1_n_uL_above_t4a2"])
+    t1=M["f1_n_uL_above_t21"], t2=M["f1_n_uL_above_t4a2"], Df=K["f6a1_D"], Dm=K["ay_D_min"],
+    e8=M["e8_ay_D_exp"], u1=K["ay_uL_max_t21"], u2=K["ay_uL_max_t4a2"])
 
 # %%
-UL_TAGS = {"ul_all": "all markers", "ul_le08": f"without the {M['f1_n_gt_08']} markers above uG 0.08 m/s",
+UL = sorted(d1.uL_m_s.astype(float).unique())   # the liquid velocities of the figure, lowest first
+UL_TAGS = {"ul_all": "all markers", "ul_le08": f"without the {M['f1_n_gt_08']} markers above uG {K['noz_tap_uG_max']:g} m/s",
            "ul_nofirst": "without each series' lowest-uG marker"}
 tab = pd.DataFrame({lab: {
     **{f"mean ln(kLa/line), uL {u}": f"{M[f'{t}_mean_lr_uL{u}']:+.3f} ± {M[f'{t}_se_lr_uL{u}']:.3f}"
-       for u in (0.054, 0.076, 0.108)},
-    "difference uL 0.108 - 0.054 (Welch)": f"{M[f'{t}_diff']:+.3f} ± {M[f'{t}_diff_se']:.3f}",
+       for u in UL},
+    f"difference uL {UL[-1]:g} - {UL[0]:g} (Welch)": f"{M[f'{t}_diff']:+.3f} ± {M[f'{t}_diff_se']:.3f}",
     "t": f"{M[f'{t}_diff_t']:.2f}",
     "slope of ln ratio on uL (s/m)": f"{M[f'{t}_slope']:+.2f} ± {M[f'{t}_slope_se']:.2f}"}
     for t, lab in UL_TAGS.items()})
 display(tab)
-say("The log ratio of measured $k_La$ to the drawn line rises with the liquid velocity: the uL 0.108 series "
-    "lies <<d:.3f>> ± <<ds:.3f>> above the uL 0.054 series in mean log ratio (Welch t = <<t:.2f>>), and the "
-    "slope on $u_L$ is <<s:.2f>> ± <<ss:.2f>> s/m. Without the markers above 0.08 m/s the difference is "
-    "<<d2:.3f>> ± <<d2s:.3f>> (t = <<t2:.2f>>); without each series' lowest-$u_G$ marker it is <<d3:.3f>> ± "
-    "<<d3s:.3f>> (t = <<t3:.2f>>). The figure the review cites for \"an influence of $u_L$ on $k_La$ can be "
-    "neglected\" shows, in its own markers, a difference of <<dp:pct0>> in $k_La$ between the highest and lowest "
-    "liquid velocity, <<z:.1f>> standard errors from zero.",
-    d=M["ul_all_diff"], ds=M["ul_all_diff_se"], t=M["ul_all_diff_t"], s=M["ul_all_slope"],
-    ss=M["ul_all_slope_se"], d2=M["ul_le08_diff"], d2s=M["ul_le08_diff_se"], t2=M["ul_le08_diff_t"],
-    d3=M["ul_nofirst_diff"], d3s=M["ul_nofirst_diff_se"], t3=M["ul_nofirst_diff_t"],
-    dp=math.exp(M["ul_all_diff"]) - 1, z=M["ul_all_diff_t"])
+say("The log ratio of measured $k_La$ to the drawn line rises with the liquid velocity. The highest and the lowest "
+    "liquid velocity are compared at matched gas velocity: each marker of the $u_L$ = <<uh:g>> m/s series is paired with "
+    "the marker of the $u_L$ = <<ul:g>> m/s series nearest in $u_G$ if that lies within <<tol:pct0>> of its $u_G$, each "
+    "marker used once. At matched gas velocity the highest liquid velocity lies <<d:.3f>> ± <<ds:.3f>> above the "
+    "lowest in log ratio to the drawn line (t = <<t:.2f>>, <<np:d>> pairs). The unmatched Welch comparison of all "
+    "markers gives <<dw:.3f>> ± <<dws:.3f>> (t = <<tw:.2f>>); the matched value is the headline because the two series "
+    "do not cover the same gas velocities. The slope of the log ratio on $u_L$ is <<s:.2f>> ± <<ss:.2f>> s/m. Without the "
+    "markers above <<u8:g>> m/s the Welch difference is <<d2:.3f>> ± <<d2s:.3f>> (t = <<t2:.2f>>); without each series' "
+    "lowest-$u_G$ marker it is <<d3:.3f>> ± <<d3s:.3f>> (t = <<t3:.2f>>). The figure the review cites for \"an influence "
+    "of $u_L$ on $k_La$ can be neglected\" shows, in its own markers and at matched gas velocity, a difference of "
+    "<<dp:pct0>> in $k_La$ between the highest and lowest liquid velocity, <<z:.1f>> standard errors from zero.",
+    uh=UL[-1], ul=UL[0], tol=UL_PAIR_TOL, d=M["ul_pair_diff"], ds=M["ul_pair_se"], t=M["ul_pair_t"], np=M["ul_pair_n"],
+    dw=M["ul_all_diff"], dws=M["ul_all_diff_se"], tw=M["ul_all_diff_t"], s=M["ul_all_slope"],
+    ss=M["ul_all_slope_se"], u8=K["noz_tap_uG_max"], d2=M["ul_le08_diff"], d2s=M["ul_le08_diff_se"],
+    t2=M["ul_le08_diff_t"], d3=M["ul_nofirst_diff"], d3s=M["ul_nofirst_diff_se"], t3=M["ul_nofirst_diff_t"],
+    dp=math.exp(M["ul_pair_diff"]) - 1, z=M["ul_pair_t"])
 
 # %% [markdown]
 # ### R5. Figure 6-a.2: the markers over the drawn line
@@ -831,7 +925,7 @@ for m, mk in (("triangle", "^"), ("square", "s"), ("diamond", "D"), ("circle", "
     lab = f"{dd.author.iloc[0]}, D = {dd.Dc_m.iloc[0]} m" if m != "unassigned" else "unassigned (hidden)"
     ax.loglog(dd.x_group, dd.kLa_1_s, mk, mfc="none", label=lab)
 xx = np.geomspace(4e-3, 0.3, 50)
-ax.loglog(xx, K["ay_c2"] * xx, "k", label="$k_La$ = 0.6 x (E2)")
+ax.loglog(xx, K["ay_c2"] * xx, "k", label=f"$k_La$ = {K['ay_c2']:g} x (E2)")
 ax.set(xlabel="$(D_L/D^2)\\,Sc^{0.5}Bo^{0.62}Ga^{0.31}\\varepsilon^{1.1}$ (1/s), measured holdup",
        ylabel="measured $k_La$ (1/s)", title="Figure 6-a.2 re-plotted from the digitised points")
 ax.legend(fontsize=7)
@@ -843,9 +937,12 @@ say("Pooled, <<k:d>> of the <<n:d>> markers lie above the line (sign test, two-s
     "Deckwer squares (0.20 m column) the geometric mean over the line is <<g:.3f>>. To agree with R2, where "
     "Akita-Yoshida with its own holdup is <<lo:.3f>> to <<mx:.3f>> of the nozzle row fitted to the same "
     "laboratory's data (Table 4-a.1 cites Deckwer et al. 1974), the measured holdup would have to exceed the E1 holdup by a factor of <<h1:.3f>> to "
-    "<<h2:.3f>>. The review prints no holdup for these runs, so the page stops there.",
+    "<<h2:.3f>>. The review prints no holdup for these runs, so the page stops there. The marker nearest the line lies "
+    "<<nd:pct1>> from it, against a reading error of <<re:pct1>> (V4), so its side is not certain: with one marker more "
+    "above the line the sign test gives p = <<p2:.3f>>, with one fewer p = <<p1:.3f>>.",
     k=M["f2_n_above"], n=M["f2_n"], p=M["f2_sign_p"], g=M["f2_square_geo"], lo=M["noz_ratio_lo"],
-    mx=M["noz_max_ratio"], h1=M["f2_holdup_ratio_at_max"], h2=M["f2_holdup_ratio_at_lo"])
+    mx=M["noz_max_ratio"], h1=M["f2_holdup_ratio_at_max"], h2=M["f2_holdup_ratio_at_lo"],
+    nd=M["f2_nearest_marker_dev"], re=10**M["v4_f2_sd_log10"] - 1, p1=M["f2_sign_p_one_fewer"], p2=M["f2_sign_p_one_more"])
 
 # %% [markdown]
 # ### R6. The constant $b$ within Table 4-a.1
@@ -908,15 +1005,16 @@ say("E6 at the test condition: <<e:.6f>>; the central difference differs by <<g:
 # R4 and R5 statistics carry.
 
 # %%
-say("Figure 6-a.1: the <<n1:d>> dash centres lie at <<g1:.4f>> times 0.467 $u_G^{0.82}$ (geometric mean), "
+say("Figure 6-a.1: the <<n1:d>> dash centres lie at <<g1:.4f>> times <<b:g>> $u_G^{<<nn:g>>}$ (geometric mean), "
     "standard deviation <<s1:pct1>> in the log, <<a1:.1e>> 1/s absolute. Figure 6-a.2: a log-log fit of the "
-    "<<n2:d>> line points gives slope <<sl:.4f>> and intercept <<ic:.4f>> against 1 and 0.6; the points lie at "
-    "<<g2:.4f>> times 0.6 x, standard deviation <<s2:.4f>> decade (<<s2p:pct1>>). Both traces reproduce their "
-    "printed formulas within about one reading error, so the axes need no correction. The R4 uL difference, "
+    "<<n2:d>> line points gives slope <<sl:.4f>> and intercept <<ic:.4f>> against 1 and <<c2:g>>; the points lie at "
+    "<<g2:.4f>> times <<c2:g>> x, standard deviation <<s2:.4f>> decade (<<s2p:pct1>>). Both traces reproduce their "
+    "printed formulas within about one reading error, so the axes need no correction. The matched R4 uL difference, "
     "<<d:.3f>> in the log, is <<dr:.1f>> times the per-point reading error.",
     n1=M["v4_f1_n"], g1=M["v4_f1_geo"], s1=M["v4_f1_sd_log"], a1=M["v4_f1_sd_abs"], n2=M["v4_f2_n"],
     sl=M["v4_f2_slope"], ic=M["v4_f2_intercept"], g2=M["v4_f2_geo"], s2=M["v4_f2_sd_log10"],
-    s2p=10**M["v4_f2_sd_log10"] - 1, d=M["ul_all_diff"], dr=M["ul_all_diff"] / M["v4_f1_sd_log"])
+    s2p=10**M["v4_f2_sd_log10"] - 1, d=M["ul_pair_diff"], dr=M["ul_pair_diff"] / M["v4_f1_sd_log"],
+    b=K["noz_tap_b"], nn=K["noz_tap_n"], c2=K["ay_c2"])
 
 # %% [markdown]
 # ## Finding
@@ -924,26 +1022,30 @@ say("Figure 6-a.1: the <<n1:d>> dash centres lie at <<g1:.4f>> times 0.467 $u_G^
 # The numbers above, set against the printed scatter.
 
 # %%
-say("**Conservative.** Akita-Yoshida is the lowest of the counted printed air-water correlations everywhere "
-    "in their common ranges (<<c:d>> of 3 above it throughout). Against the nozzle row, fitted to "
-    "<<N:d>> points with a printed mean error of <<err:g>> %, it is lower by <<g1:pct0>> to <<g2:pct0>>: <<r1:.1f>> "
-    "to <<r2:.1f>> mean errors. Against Hikita the gap is <<h1:pct0>> to <<h2:pct0>>. \"Conservative\" here "
-    "means below the other printed correlations by these amounts, not a safety margin.\n\n"
-    "**Exponent.** The fitted rows carry $n$ = 0.78 to 0.82; Akita-Yoshida does not: its local exponent runs "
+say("**Conservative.** At the test diameter <<Dt:g>> m, Akita-Yoshida is the lowest of the counted printed air-water "
+    "correlations everywhere in their common ranges (<<c:d>> of 3 above it throughout). Against the nozzle row at its "
+    "own diameter <<Dn:g>> m, fitted to <<N:d>> points with a printed mean error of <<err:g>> %, it is lower by "
+    "<<g1:pct0>> to <<g2:pct0>>: <<r1:.1f>> to <<r2:.1f>> mean errors. Against Hikita at <<Dt:g>> m the gap is "
+    "<<h1:pct0>> to <<h2:pct0>>; Hikita has no diameter, and the ratio of Akita-Yoshida to Hikita reaches 1 at "
+    "$D$ = <<dc:.3f>> m, beyond Hikita's own diameters, and <<r3:.2f>> at <<a1:g>> m. \"Conservative\" here means below "
+    "the other printed correlations by these amounts, at the diameters named.\n\n"
+    "**Exponent.** The fitted rows carry $n$ = <<nlo:g>> to <<nhi:g>>; Akita-Yoshida does not: its local exponent runs "
     "from <<ea:.2f>> to <<eb:.2f>> over the same window.\n\n"
-    "**Liquid velocity.** The held-out Figure 6-a.1 does not support \"no effect of $u_L$\" at the resolution "
-    "of its own markers: the highest liquid velocity sits <<dp:pct0>> above the lowest, <<t:.1f>> standard "
-    "errors, and the difference keeps its sign without the high-$u_G$ markers (<<t2:.1f>>) and without the "
-    "lowest-$u_G$ ones (<<t3:.1f>>). The difference is <<de:.1f>> times the row's printed mean error of <<err:g>> %. "
+    "**Liquid velocity.** The held-out Figure 6-a.1 does not support \"an influence of $u_L$ on $k_La$ can be "
+    "neglected\" at the resolution of its own markers: at matched gas velocity the highest liquid velocity sits "
+    "<<dp:pct0>> above the lowest in $k_La$, <<t:.1f>> standard errors (<<np:d>> pairs), <<de:.1f>> times the row's "
+    "printed mean error of <<err:g>> %. The unmatched Welch difference of all markers keeps its sign without the "
+    "high-$u_G$ markers (<<t2:.1f>>) and without the lowest-$u_G$ ones (<<t3:.1f>>). "
     "The page names no cause for it: the column, sparger and liquid velocities of Figure 6-a.1 all lie outside "
     "the row's basis. On the same markers Akita-Yoshida is low again: <<na:d>> of <<n:d>> lie above it "
     "(geometric mean <<ga:.2f>>).",
     c=M["r1_n_above"], N=int(K["noz_tap_N"]), err=K["noz_tap_err"], g1=1 - M["noz_max_ratio"],
     g2=1 - M["noz_ratio_lo"], r1=M["noz_gap_over_err"], r2=M["noz_gap_lo_over_err"],
     h1=1 - M["hik_max_ratio"], h2=1 - M["hik_ratio_hi"], ea=M["e6_noz_lo"], eb=M["e6_noz_hi"],
-    dp=math.exp(M["ul_all_diff"]) - 1, t=M["ul_all_diff_t"], t2=M["ul_le08_diff_t"], t3=M["ul_nofirst_diff_t"],
-    n=M["f1_n"], ga=M["f1_geo_ay"], na=M["f1_n_above_ay"],
-    de=(math.exp(M["ul_all_diff"]) - 1) / (K["noz_tap_err"] / 100))
+    dp=math.exp(M["ul_pair_diff"]) - 1, t=M["ul_pair_t"], np=M["ul_pair_n"], t2=M["ul_le08_diff_t"],
+    t3=M["ul_nofirst_diff_t"], n=M["f1_n"], ga=M["f1_geo_ay"], na=M["f1_n_above_ay"],
+    de=(math.exp(M["ul_pair_diff"]) - 1) / (K["noz_tap_err"] / 100), Dt=D_T, Dn=K["noz_D"], dc=M["hik_cross_D"],
+    r3=M["hik_max_ratio_ay_Dmax"], a1=K["ay_D_max"], nlo=K["n_min_kastanek"], nhi=K["n_max_kastanek"])
 
 # %% [markdown]
 # ## What pymrm adds
@@ -964,7 +1066,7 @@ say("**Conservative.** Akita-Yoshida is the lowest of the counted printed air-wa
 #   dictionary `K`, and can be lifted into a reactor model as mass-transfer closures.
 #   Use `kla_ny` only with the root restored and only inside its viscosity range.
 # - Choosing Akita-Yoshida over the nozzle or sintered rows is a choice of a lower
-#   $k_La$ by the factors in R1 and R2; state it as such.
+#   $k_La$ by the factors in R1 and R2, at the diameters named below; state it as such.
 # - For a column with liquid flow, Figure 6-a.1 is the only evidence the review prints;
 #   read R4 before assuming $u_L$ has no effect.
 # - The Akita-Yoshida liquid-velocity range is uncertain by a factor of ten (A4).
@@ -972,18 +1074,28 @@ say("**Conservative.** Akita-Yoshida is the lowest of the counted printed air-wa
 #   its own papers), [F1.3](../F1.3-wilkinson-high-pressure-holdup/) and
 #   [F1.4](../F1.4-krishna-ellenberger-holdup/) (holdup).
 
+# %%
+say("**Diameters.** R1 sets the correlations against Akita-Yoshida at the test diameter <<Dt:g>> m, R2 the nozzle row "
+    "at its own <<Dn:g>> m and Hikita at <<Dt:g>> m. Akita-Yoshida has a diameter and Hikita none: the gap to Hikita "
+    "closes at $D$ = <<dc:.3f>> m, and at <<a1:g>> m, the largest diameter Akita-Yoshida states, it is up to "
+    "<<r3:.2f>> times Hikita. Read the factors above at the diameter of the column in hand.",
+    Dt=D_T, Dn=K["noz_D"], dc=M["hik_cross_D"], a1=K["ay_D_max"], r3=M["hik_max_ratio_ay_Dmax"])
+
 # %% [markdown]
 # ### The break table
 #
 # Every non-structural number registered below has a row that moves it. Each row
-# mistypes one printed constant, or changes one input or data point, and reruns the
+# mistypes one printed constant (by 10 %, `hik_e1` by 5 %: at 10 % the Hikita
+# ratio to Akita-Yoshida leaves the stop rule's window), or changes one input or data point, and reruns the
 # whole study; the claims it fails are counted. Mistyped by 10 %, four window ends
 # bind no reported number and get no row: `ny_uG_max`, `noz_tap_uG_min`,
 # `sin_tap_uG_min` and `sin_tap_uG_max` (each minimum of R1 sits at an interior root
 # or at the end of Akita-Yoshida's range); the two A4 limits get rows that cross a
-# liquid velocity of Figure 6-a.1. A row under which a root search no
-# longer finds the expected number of roots, or a stop rule fires, makes the study
-# raise; such a row records a crash and every claim counts as failed for it. The
+# liquid velocity of Figure 6-a.1. The maxima of R2 are taken over the window ends and
+# the interior roots of E6 = n, so a defect that removes the interior maximum moves
+# the reported maximum instead of stopping the study. A row under which a stop rule
+# fires still makes the study raise; such a row records a crash, and the summary below
+# lists every row that only crashes, which is not counted as catching a claim. The
 # controls fail nothing.
 
 # %%
@@ -1005,7 +1117,7 @@ BOUNDS = {"v2_ay_cgs_gap": (1e-12, "identity", "E1 and E2 are dimensionless with
           "v2_hik_cgs_gap": (1e-12, "identity", STRUCTURAL["v2_hik_cgs_gap"])}
 # Count margins: at least the reading error of a marker (V4: about 1.3 % on Figure
 # 6-a.1 and 1.8 % on Figure 6-a.2).
-COUNTS = {"r1_n_above": 0.05, "f1_n_above_ay": 0.03, "f1_n_uL_above_t21": 0.05, "f1_n_uL_above_t4a2": 0.05,
+COUNTS = {"ul_pair_n": 0.013, "r1_n_above": 0.05, "f1_n_above_ay": 0.03, "f1_n_uL_above_t21": 0.05, "f1_n_uL_above_t4a2": 0.05,
           "f2_triangle_above": 0.02, "f2_square_above": 0.02, "f2_diamond_above": 0.02,
           "f2_circle_above": 0.02, "f2_n_above": 0.02}
 EXACT = {"v1_agree", "f1_n_gt_08"}
@@ -1033,7 +1145,7 @@ def register(M):
 register(M)
 
 # %%
-UNUSED = {"ay_uG_max", "ay_D_max", "ay_Ht_min_t21", "ay_Ht_max_t21", "ay_Ht_min_t4a2", "ay_Ht_max_t4a2",
+UNUSED = {"ay_uG_max", "ay_Ht_min_t21", "ay_Ht_max_t21", "ay_Ht_min_t4a2", "ay_Ht_max_t4a2",
           "ay_muL_min", "ay_muL_max", "hik_muL_min", "ny_muL_max", "noz_salt_N",
           "noz_salt_err", "sin_tap_N", "sin_tap_err", "sin_salt_N", "sin_salt_err", "noz_uL_min",
           "noz_uL_max", "f6a1_Ht", "f6a1_T_C", "f6a2_Dc_large", "n_min_kastanek", "n_max_kastanek", "noz_tap_N"}
@@ -1072,7 +1184,10 @@ def fig_drop(fig, i):
     return f"{fig} row {i} dropped", K, replace(C, **{fig: getattr(C, fig).drop(index=i).reset_index(drop=True)})
 
 
-DEFECTS = [mistyped(k) for k in K if k not in UNUSED | NONBINDING] + [
+# hik_e1 is mistyped by 5 %: by 10 % the Hikita ratio to A-Y leaves the stop rule's window
+# and the row would only stop the study.
+DEFECTS = [mistyped(k) for k in K if k not in UNUSED | NONBINDING | {"hik_e1"}] + [
+    set_to("hik_e1", K["hik_e1"] * 1.05),
     set_to("ay_uL_max_t21", 0.06), set_to("ay_uL_max_t4a2", 0.06),
     ("gravity 9.81 -> 9.7", K, replace(C, g=9.7)),
     liquid("rho", 1.02), liquid("mu", 1.05), liquid("sigma", 1.05), liquid("DL", 1.05), liquid("muG", 1.1),
@@ -1081,17 +1196,19 @@ DEFECTS = [mistyped(k) for k in K if k not in UNUSED | NONBINDING] + [
     ("test diameter 0.15 -> 0.16 m", K, replace(C, D_T=0.16)),
     ("test velocity 0.05 -> 0.055 m/s", K, replace(C, uG_T=0.055)),
     fig_change("f6a1", 0, "kLa_1_s", 1.05), fig_change("f6a1", 10, "uG_m_s", 1.05),
+    fig_change("f6a1", 4, "uG_m_s", 1.15),
     fig_change("f6a1", 17, "kLa_1_s", 0.95), fig_drop("f6a1", 8),
     fig_relabel("f6a1", 20, "uL_m_s", "0.054"), fig_change("f6a1", 25, "kLa_1_s", 1.03),
     fig_change("f6a2", 1, "kLa_1_s", 1.05), fig_change("f6a2", 0, "x_group", 1.05),
     fig_change("f6a2", 5, "kLa_1_s", 0.95), fig_change("f6a2", 16, "kLa_1_s", 1.05),
+    fig_change("f6a2", 5, "kLa_1_s", 1.2), fig_change("f6a2", 11, "kLa_1_s", 1.12),
     fig_relabel("f6a2", 6, "marker", "square"), fig_change("f6a2", 30, "kLa_1_s", 1.02),
     fig_drop("f6a2", 15),
 ]
 CONTROLS = [("control: clean rerun", K, C),
             ("control: Figure 6-a.1 rows in reverse order", K, replace(C, f6a1=C.f6a1.iloc[::-1].reset_index(drop=True)))]
 claims.define_rows([r_ for r_, _, _ in CONTROLS + DEFECTS])
-BREAK = []
+BREAK, CRASH = [], set()   # CRASH: rows under which every claim came back without a number
 for row, k_, c_ in CONTROLS + DEFECTS:
     try:
         Mb = study(k_, c_)
@@ -1099,6 +1216,8 @@ for row, k_, c_ in CONTROLS + DEFECTS:
         Mb = {}
     for name in claims.metrics:
         BREAK.append((row, name, claims.breaks(row, name, Mb.get(name, np.nan))))
+    if not any(name in Mb for name in claims.metrics):
+        CRASH.add(row)
 
 # %%
 # The break table: one line per row, with the claims it fails.
@@ -1110,7 +1229,8 @@ assert not _bad, f"a control row failed a claim: {_bad}"
 print(f"{'injected defect':<60} {'claims failed':>13}")
 for r_, cs in by_row.items():
     print(f"{r_[:60]:<60} {sum(cs):13d}")
-_caught = {m_ for _, m_, c_ in BREAK if c_}
+_caught = {m_ for r_, m_, c_ in BREAK if c_ and r_ not in CRASH}   # a crash is not a moved claim
+print(f"rows that only crash: {', '.join(sorted(CRASH)) or 'none'}")
 _open = sorted(k_ for k_ in claims.metrics if k_ not in _caught
                and not claims.metrics[k_].get("structural"))
 print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are failed by at "

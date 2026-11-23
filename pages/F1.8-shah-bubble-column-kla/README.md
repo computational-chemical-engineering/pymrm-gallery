@@ -3,8 +3,8 @@
 The kLa statements of the bubble-column review by Shah, Kelkar, Godbole and Deckwer,
 *AIChE J.* **28**(3) 353-379 (1982),
 [doi:10.1002/aic.690280302](https://doi.org/10.1002/aic.690280302): Akita-Yoshida as
-the conservative estimate, kLa = b uG^n with one exponent n, and no effect of the liquid
-velocity. The page tests them against the correlations, table and figures the review
+the conservative estimate, kLa = b uG^n with one exponent n, and that "an influence of
+$u_L$ on $k_La$ can be neglected". The page tests them against the correlations, table and figures the review
 itself prints. A correlation page; it calls no pymrm operator.
 
 ## Contents
@@ -26,9 +26,13 @@ the Akita-Yoshida constants of the original papers are loaded from
 
 ## Things to know before reusing this
 
-- Akita-Yoshida is below the nozzle row of Table 4-a.1 everywhere in its range, at
-  most 0.7336 <!-- claim: noz_max_ratio --> of it. Choosing it is a choice of a lower
-  kLa by that factor or more, not a safety margin.
+- Akita-Yoshida is below the nozzle row of Table 4-a.1 over the part of the row's window
+  it covers, at the row's diameter: at most 0.7336 <!-- claim: noz_max_ratio --> of it,
+  1.51 <!-- claim: noz_gap_over_err --> printed mean errors or more. Against Hikita it is
+  lower up to D = 0.2752 <!-- claim: hik_cross_D --> m, beyond Hikita's own diameters;
+  at Akita-Yoshida's largest stated diameter it would be up to
+  1.1417 <!-- claim: hik_max_ratio_ay_Dmax --> times Hikita. Choosing it is a choice of
+  a lower kLa by these factors.
 - The local exponent of Akita-Yoshida is not the n of the fitted rows: it falls with the holdup, and its
   secant exponent over the nozzle window is 0.904 <!-- claim: secant_exp_noz_window -->.
 - The Nakanoh-Yoshida velocity group is printed without its square root; the page
@@ -36,6 +40,10 @@ the Akita-Yoshida constants of the original papers are loaded from
   printed). Water is outside that correlation's viscosity range.
 - The Akita-Yoshida liquid-velocity range is printed in two tables of the review a
   factor of ten apart; the page does not decide which is right.
-- Figure 6-a.1, the review's evidence that the liquid velocity does not matter, shows
-  a difference of 0.300 <!-- claim: ul_all_diff --> in mean log ratio between its
-  highest and lowest liquid velocity (t = 4.06 <!-- claim: ul_all_diff_t -->).
+- Figure 6-a.1, the review's evidence that "an influence of $u_L$ on $k_La$ can be
+  neglected", shows at matched gas velocity the highest liquid velocity lying
+  0.222 <!-- claim: ul_pair_diff --> ± 0.033 <!-- claim: ul_pair_se --> above the lowest
+  in log ratio to the drawn line (t = 6.7 <!-- claim: ul_pair_t -->,
+  5 <!-- claim: ul_pair_n --> pairs). The unmatched comparison of all markers gives
+  0.300 <!-- claim: ul_all_diff --> ± 0.074 <!-- claim: ul_all_diff_se --> (Welch
+  t = 4.06 <!-- claim: ul_all_diff_t -->).

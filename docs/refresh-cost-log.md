@@ -97,3 +97,14 @@ ends without a usage record.
 2026-11-19 sprint (personal account, pages in parallel, one worktree each; fix rounds on Opus where they changed code). J4.1's refresh took three agents on the call budget. Second, independent reviews of J1.10 and J4.8 found 2 and 1 further must-fix items (not in the must-fix column).
 
 32 pages: total per page median 27.3 M (range 6.4 to 50.5); must-fix median 2.0, range 0 to 8.
+
+## New pages (build cycle with a plan step, workflow C1-C4)
+
+Tokens as prompt M (input plus cache) per agent from `scripts/agent_tokens.py`. Plan: `think` writes
+PLAN.md, EQUATIONS.md and a check-value script; build: `implement` on Opus; review: `gallery-reviewer`
+(Opus); fix: `gallery-fixer` (Sonnet). Reviewer test C5 (queue rule 8): the Fable review of the same
+pre-fix commit runs on the personal account and is noted here, not added to the total.
+
+| page | date | plan M | build M | build last ctx k | review M | fix round M | total M | must-fix | notes |
+|---|---|---|---|---|---|---|---|---|---|
+| F1.8 | 2026-11-23 | 4.3 | 9.8 | 232 | 1.6 | 6.3 | 22.0 | 5 distinct (Opus 4, Fable 3, all verified) | Team account. Fable review 0.662 M units against Opus about 0.42 M (C5 page 1: Fable -1 verified must-fix at about 1.6x; Fable's unique item, the Fig 6-a.1 difference unmatched in uG, moved the headline from 0.300 to 0.222). Coordinator: check values rewritten to 12 digits (6 digits failed rtol 1e-6), Styler display replaced (memory address in repr), an unverifiable handbook citation replaced by plain wording. Prose-diff after the fix: 0 new unsupported sentences. |
