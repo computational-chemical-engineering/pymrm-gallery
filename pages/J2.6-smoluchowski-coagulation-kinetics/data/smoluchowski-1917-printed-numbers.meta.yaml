@@ -1,0 +1,50 @@
+dataset_id: smoluchowski-1917-printed-numbers
+title: "Zsigmondy's gold-sol counts as Smoluchowski prints them (Versuche D, E, F), the NaCl colour-change times and the stated numbers the page checks"
+status: complete
+
+source:
+  authors: ["Smoluchowski, M. v."]
+  year: 1917
+  title: "Versuch einer mathematischen Theorie der Koagulationskinetik kolloider Loesungen"
+  container: "Zeitschrift fuer physikalische Chemie 92, 129-168"
+  doi: null
+  access: >
+    Scanned journal PDF held outside the repository (~/papers/pymrm-gallery/). No
+    PDF and no page image is stored in this repository. The article has no DOI;
+    it is cited by journal, volume and pages.
+  licence: "public domain by age (author died 1917); numbers transcribed, no page image reproduced"
+
+acquisition:
+  method: table
+  figure: "tables of Versuch D and E (p. 149), Versuch F (p. 150), the NaCl series (p. 148); text of pp. 141, 156, 166"
+  resolution: "PDF pages 13, 20 to 23, 28 and 38 (printed page = PDF page + 128), rendered at 110 ppi from the native 300 ppi bilevel scan; the means and the parenthesised entries checked at 300 ppi"
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-23
+  estimated_error: >
+    None beyond the printed precision; every entry is transcribed as printed and
+    kept as a string (read with dtype=str). The scan's OCR text layer is NOT used:
+    it misreads Versuch E's mean 1/T as 0.0466 where the image prints 0.0456.
+
+conditions: >
+  Counts nu1 are in arbitrary units (p. 149, "in willkuerlichem Masse"); t in
+  seconds. Parentheses in the 1/T column mark rows left out of the mean (the 2, 3
+  and 5 s rows and Versuch F's two rows marked (?), p. 150); "(?)" is kept inside
+  the nu1 string. Measurements at 100 mmol/l NaCl, "rasche" coagulation (p. 148).
+  The NaCl T is the time to a colour change, not the T of eq. 15, and is quoted
+  only. Exponents of ten are written in e-notation; the paper prints "x . 10^n".
+  Group "stated" holds numbers the text states (pp. 141, 156, 166): fractions as
+  printed, the unit or scale in the meaning column.
+
+columns:
+  - {name: group, unit: "-", description: "D, E, F (Versuch), NaCl (p. 148 series) or stated (a number in the text)"}
+  - {name: item, unit: "-", description: "nu0, r, nu1, invT, nu1_ber, mean_invT, Rr, T_s or a stated quantity"}
+  - {name: at, unit: "s or mmol/l", description: "time t in s for the table columns, NaCl concentration for the NaCl series, empty otherwise"}
+  - {name: printed, unit: "see meaning", description: "the entry as printed, a string"}
+  - {name: page, unit: "-", description: "journal page"}
+  - {name: meaning, unit: "-", description: "what the entry is, with its unit"}
+
+redistribution_basis: >
+  The article is in the public domain by age. Numerical values are facts in any
+  case (Feist Publications v. Rural Telephone, 1991). No figure or page image is
+  reproduced; Figures 1 and 2 of the paper are drawings of closed forms and are
+  re-plotted from the formulas.

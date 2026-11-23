@@ -1,0 +1,68 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J2.6
+slug: smoluchowski-coagulation-kinetics
+title: "Smoluchowski (1917): coagulation kinetics and Zsigmondy's counts"
+section: J
+status: published
+tier: T0
+priority: P1
+structures: [S11]
+phases: [liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Smoluchowski, M. v."]
+    year: 1917
+    title: "Versuch einer mathematischen Theorie der Koagulationskinetik kolloider Loesungen"
+    container: "Zeitschrift fuer physikalische Chemie 92, 129-168"
+    doi: null
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 71
+datasets:
+  - smoluchowski-1917-printed-numbers.csv
+  - check_values.csv
+
+validation:
+  - eq. 24 substituted into eq. 22 symbolically, the series summed against eq. 23 and the total mass, and the maxima of each size found as roots and set against the printed formula
+  - the truncated coagulation system marched by RK4 on a step ladder, against eq. 24 with the constant kernel, with observed orders, a round-off companion, a truncation check and DOP853 as a second route
+  - the printed sum of p. 156 and eq. 29 against the direct sum of eq. 24, which exposes two misprints
+  - the paper's own arithmetic of eqs. 27 and 28 with the constant its tables imply
+  - every function against independent check values from a second route
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Nothing to the kinetics; the page is closed forms and one small ODE system without a
+  spatial operator. pymrm contributes pymrm.checks.find_roots for every reported root
+  and pymrm.checks.observed_orders for the RK4 ladder. What the page adds to the paper
+  is a set of checks it does not print: its arithmetic in half-units, the constant its
+  tables imply, the scatter of each series as a standard error, and the conversion
+  choices varied one at a time.
+
+agreement: >
+  Recomputed from the printed counts, R/r is 1.405 <!-- claim: r2_D_Rr --> (D),
+  3.10 <!-- claim: r2_E_Rr --> (E) and 2.617 <!-- claim: r2_F_Rr --> (F) against the
+  printed 1.40, 3.12 and 2.63; 6 <!-- claim: r1_col_n_within --> of the 15
+  <!-- claim: r1_col_n --> printed per-row rates lie within half a unit of eq. 25. Over
+  the conversion choices R/r runs from 1.30 <!-- claim: r6_D_lo --> to 2.03
+  <!-- claim: r6_D_hi --> for D, 2.27 <!-- claim: r6_E_lo --> to 4.61
+  <!-- claim: r6_E_hi --> for E and 2.35 <!-- claim: r6_F_lo --> to 3.58
+  <!-- claim: r6_F_hi --> for F; 1 <!-- claim: r6_n_contain_2 --> of the three ranges
+  contains the contact value 2, D's, through the 2 s row the paper rejects. Point IV is a
+  statement of order and the counts support it; on each choice's own standard error
+  they exclude contact under the paper's conversion in 3 <!-- claim: r2_n_excluding_2 -->
+  of the three Versuche, and D lies below contact, which the theory does not allow, in
+  9 <!-- claim: r6_D_n_same_side --> of its 10 <!-- claim: r6_D_n_choices --> choices.
+
+caveats: >
+  Three short series that Zsigmondy called preliminary, with no counting error
+  printed: the standard errors are over three rows per series and leave out the shared
+  initial count, the particle radius and the temperature. The paper prints neither the
+  viscosity, the temperature nor Avogadro's number; the page uses the constant its own
+  tables imply and water at 20 C as a sensitivity. Kernel (18) for aggregates assumes
+  compact spheres, which the paper itself doubts. The delay and the shape exponent are
+  fitted with one degree of freedom per series.

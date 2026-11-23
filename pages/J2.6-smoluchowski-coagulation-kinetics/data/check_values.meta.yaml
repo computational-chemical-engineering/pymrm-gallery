@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Smoluchowski, M. v."]
+  year: 1917
+  container: "Zeitschrift fuer physikalische Chemie 92, 129-168"
+  access: >
+    The equations are those of the paper as listed in the build plan's equations
+    file (with the misprints M1 to M3 corrected as stated there), and the counts
+    are those printed for Zsigmondy's Versuche D, E and F (pp. 149-151); the values
+    are not read from the paper but computed from them by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (double precision computed, rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script j26_check_values.py (plain Python with scipy, no pymrm, no page code), 2026-11-23; its constant-kernel ODE run checked against eq. 24 to 1e-11; the coordinator recomputed C_A1_water_20C = 3 mu/(2 k Theta) (agreement to all 12 digits) and the maxima nu2_max = 4/27 and nu5_max = 16/729"
+  date: 2026-11-23
+  estimated_error: "none beyond floating point for the closed-form rows; the rows at rtol 1e-9 (kernel 18, truncated ODE) and 1e-6 (fitted shape exponent) carry the route's own error"
+
+conditions: >
+  Test condition T: Versuch E as printed, accepted rows t = 10, 20, 40 s, initial
+  count nu10 = 1.97 (half units), the constant C = C_P (geometric mean of the
+  constants implied by the printed triples of D, E and F). Theory rows are
+  dimensionless (tau = t/T). C_A1_water_20C uses water at 20 C (mu 0.01002 g/(cm s),
+  an outside value; the paper prints neither mu, Theta nor N). Rows named _printed use
+  a printed form (misprint), the others the corrected one.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; the unit is the name's suffix where it has one"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
