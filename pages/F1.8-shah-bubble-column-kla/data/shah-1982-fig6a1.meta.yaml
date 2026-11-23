@@ -1,0 +1,62 @@
+dataset_id: shah-1982-fig6a1
+title: "kLa against gas velocity at three liquid velocities, Figure 6-a.1 of the review"
+status: complete
+
+source:
+  authors: ["Shah, Y. T.", "Kelkar, B. G.", "Godbole, S. P.", "Deckwer, W.-D."]
+  year: 1982
+  container: "AIChE Journal 28(3) 353-379"
+  doi: 10.1002/aic.690280302
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/), downloaded
+    through an institutional subscription (TU Eindhoven). No PDF and no page image is
+    stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 6-a.1, journal page 366"
+  tool: "pdfimages (native 300 ppi bilevel scan, CCITT); marker centres by normalised cross-correlation with the three legend markers as templates (scipy), every match checked by eye against the figure; dash centres from connected components (scipy.ndimage)"
+  procedure: >
+    Linear axes. Calibration by a least-squares affine map from the printed ticks in
+    page pixels at 300 ppi: ordinate ticks 0.02 to 0.10 on both the left (column
+    345.5; rows 634, 514, 395, 274, 155) and the right frame (rows 629.5, 509.5,
+    391, 270, 150), abscissa ticks 0.05, 0.10, 0.15 on the bottom (columns 545,
+    744.5, 944.5) and top frame (543, 742, 942), and the origin at the frame corner
+    (345.5, 750.5). The scan is turned by about 0.3 degrees, which the affine map
+    absorbs. One pixel is 2.5e-4 m/s in uG and 1.67e-4 1/s in kLa. All 21 markers
+    were placed (8 circles uL 0.054, 6 triangles 0.076, 7 squares 0.108 m/s, as in
+    the legend). The dashed line was traced by the centres of its 27 free dashes.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-23
+  estimated_error: >
+    Calibration residual at most 2 px (3.4e-4 1/s). Free markers within about 1 px
+    of the template peak; the three markers that touch the dashed line (noted in
+    the file) about 2 px. The reading error of a point is measured on the page from
+    the dash centres against the printed 0.467 uG^0.82 (Validation V4).
+
+conditions: >
+  Column 0.14 m diameter, 2.65 m height, 20 C, ring sparger with 1 mm holes, liquid
+  velocities 0.054, 0.076 and 0.108 m/s (legend). The dashed line is labelled
+  kLa = 0.467 uG^0.82 (uL = 0.01-0.03 m/s), the nozzle tap-water row of Table 4-a.1.
+  The figure gives no water quality; the page treats it as water at 20 C.
+
+missing:
+  - "Possible markers hidden under others; none seen."
+
+columns:
+  - {name: kind, unit: "-", description: "marker or line"}
+  - {name: series, unit: "-", description: "circle, triangle or square (marker); dashed (line)"}
+  - {name: uL_m_s, unit: m/s, description: "liquid velocity from the legend (markers only)"}
+  - {name: uG_m_s, unit: m/s, description: "superficial gas velocity, from the pixel position through the calibration"}
+  - {name: kLa_1_s, unit: 1/s, description: "volumetric mass transfer coefficient, from the pixel position"}
+  - {name: px_x, unit: px, description: "centre column at 300 ppi"}
+  - {name: px_y, unit: px, description: "centre row at 300 ppi"}
+  - {name: note, unit: "-", description: "reading note"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
