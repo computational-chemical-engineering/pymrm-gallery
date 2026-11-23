@@ -29,7 +29,7 @@
 # Zsigmondy's counts of single gold particles (Versuche D, E and F), turned the fitted
 # coagulation time $T$ into the ratio $R/r$ of the capture radius to the particle radius,
 # found 1.40, 3.12 and 2.63, and concluded that the particles must nearly touch
-# ($R/r = 2$) to coagulate. This page rebuilds the closed forms, recomputes his
+# ($R/r$ of order 2, where 2 is contact) to coagulate. This page rebuilds the closed forms, recomputes his
 # arithmetic from the printed tables, and asks how precisely the counts fix $R/r$ and
 # whether 2 lies inside that precision once the choices he made are varied.
 
@@ -116,10 +116,14 @@ def say(text, **v):
 # > ungefähr dem Teilchendurchmesser entspricht, d. h. dass die Teilchen sich beinahe
 # > berühren müssen, damit merkliche Anziehung eintrete." (p. 168)
 #
-# "it follows from them that the size of the sphere of attraction in those cases
+# "it follows from them that the order of magnitude of the sphere of attraction in those cases
 # corresponds roughly to the particle diameter, that is, that the particles must nearly
-# touch for noticeable attraction to occur." On p. 151 he adds that values of $R/r$
-# below 2 (contact) are impossible in his theory, "Kleinere Werte als 2 würde allerdings
+# touch for noticeable attraction to occur." On p. 151 he reports $R/r$ from 1.40 to
+# 3.12 ("schwanken ... von 1.40 bis 3.12"), says what $R/r = 2$ would mean, "Würde
+# $R/r$ = 2 sein, so würde dies bedeuten, dass die Teilchen sich erst bei
+# unmittelbarer Berührung anziehen" ("if $R/r$ were 2, this would mean that the
+# particles attract only on direct contact"), and adds that values of $R/r$
+# below 2 are impossible in his theory, "Kleinere Werte als 2 würde allerdings
 # unsere bisherige Theorie überhaupt nicht zulassen" ("values smaller than 2, however,
 # our theory so far would not allow at all"), and leaves Versuch D's 1.40 open: "Ob dies
 # die Erklärung des im Versuch D berechneten $R$-Wertes ist, oder ob da zufällige
@@ -418,7 +422,8 @@ def rr_stats(v, cfg, law=None):
     m = used(v, cfg)
     per = rr_of(v, cfg, inv_t_rows(v, cfg, law)[m])
     mu, se = mean_se(per)
-    return {"Rr": mu, "se": se, "t2": (mu - 2) / se, "per": per, "invT": mu * cfg.data[v]["nu0"] / c_val(cfg)}
+    return {"Rr": mu, "se": se, "t2": (mu - 2) / se, "per": per, "dof": len(per) - 1,
+            "invT": mu * cfg.data[v]["nu0"] / c_val(cfg)}
 
 # %% [markdown]
 # ### Fits: the free t = 0 count, the shape family, the delay
@@ -437,7 +442,9 @@ def fit_nu10(v, cfg):
     sol = least_squares(ln_resid_24, x0, args=(t, y), x_scale=[1, x0[1]], xtol=1e-15, ftol=1e-15, gtol=1e-15)
     if not sol.success:
         raise RuntimeError(f"nu10 fit {v}: {sol.message}")
-    return math.exp(sol.x[0]), sol.x[1]
+    dof = len(y) - 2
+    cov = np.linalg.inv(sol.jac.T @ sol.jac) * (sol.fun @ sol.fun) / dof
+    return math.exp(sol.x[0]), sol.x[1], math.sqrt(cov[1, 1]), dof
 
 
 P_BOUNDS = (0.05, 50.0)
@@ -468,7 +475,8 @@ def shape_fit(vs, cfg, p_fixed=None):
     at_bound = min(p - P_BOUNDS[0], P_BOUNDS[1] - p) < 1e-6
     dof = len(sol.fun) - len(sol.x)
     cov = np.linalg.inv(sol.jac.T @ sol.jac) * (sol.fun @ sol.fun) / dof
-    return {"p": p, "p_se": math.sqrt(cov[0, 0]), "s": sol.x[1:], "res": sol.fun, "dof": dof, "at_bound": at_bound}
+    return {"p": p, "p_se": math.sqrt(cov[0, 0]), "s": sol.x[1:], "s_se": np.sqrt(np.diag(cov)[1:]),
+            "res": sol.fun, "dof": dof, "at_bound": at_bound}
 
 
 def delay_fit(v, cfg):
@@ -482,7 +490,7 @@ def delay_fit(v, cfg):
     cov = np.linalg.inv(X.T @ X) * (r @ r) / (len(t) - 2)
     a, b = coef
     g = np.array([1 / b, -a / b**2])          # gradient of t0 = a/b
-    return {"invT": b, "t0": a / b, "t0_se": math.sqrt(g @ cov @ g)}
+    return {"invT": b, "invT_se": math.sqrt(cov[1, 1]), "dof": len(t) - 2, "t0": a / b, "t0_se": math.sqrt(g @ cov @ g)}
 
 # %% [markdown]
 # ### The coagulation equations: closed forms and the truncated system
@@ -572,7 +580,8 @@ def kernel18_rr(v, cfg, spline):
         if len(roots) != 1:
             raise ValueError(f"kernel 18, {v} t = {t}: {len(roots)} roots on (0, {TAU_MAX})")
         taus.append(roots[0] / t)
-    return rr_of(v, cfg, np.mean(taus))
+    per = rr_of(v, cfg, np.array(taus))
+    return float(per.mean()), float(per.std(ddof=1) / math.sqrt(len(per))), len(per) - 1
 
 
 def check_computed(cfg):
@@ -617,7 +626,7 @@ def check_computed(cfg):
     a1, a2 = at_taus(tau, N, [1.0, 2.0])
     out |= {"kernel18_nu1_ratio_tau1": a1[0] / n_k(1, 1.0), "kernel18_nu1_ratio_tau2": a2[0] / n_k(1, 2.0),
             "kernel18_sum_ratio_tau2": a2.sum() / (1 / 3)}
-    k18 = kernel18_rr("E", cfg, sp)
+    k18 = kernel18_rr("E", cfg, sp)[0]
     out |= {"E_Rr_kernel18": k18, "E_Rr_kernel18_over_eq24": k18 / st["Rr"]}
     return out
 
@@ -703,7 +712,7 @@ def rounding_movement(v, cfg):
 
 def r1_arithmetic(cfg):
     """R1: Section IV's arithmetic recomputed from the printed counts."""
-    M, col, ber = {}, [], []
+    M, col, ber, reach = {}, [], [], []
     for v in VS:
         d = cfg.data[v]
         inv = inv_t_rows(v, cfg)
@@ -721,13 +730,22 @@ def r1_arithmetic(cfg):
         M[f"r1_{v}_mean_gap_over_rounding"] = (pm - mu) / mov
         M[f"r1_{v}_rounding_movement"] = mov
         entries = [number(d["invT_s"][i]) for i in np.where(used(v, cfg))[0]]
-        M[f"r1_{v}_mean_of_printed_entries"] = float(np.mean(entries))
+        M[("r1_" if v == "E" else "_r1_") + f"{v}_mean_of_printed_entries"] = float(np.mean(entries))
+        h10 = half_unit(d["nu1_s"][0])
+        for i in idx:   # does a move of both printed counts by their half units reach the printed entry?
+            h, t = half_unit(d["nu1_s"][i]), times(v, cfg)[i]
+            lo = (math.sqrt((nu10(v, cfg) - h10) / (d["nu1"][i] + h)) - 1) / t
+            hi = (math.sqrt((nu10(v, cfg) + h10) / (d["nu1"][i] - h)) - 1) / t
+            p_, hu = number(d["invT_s"][i]), half_unit(d["invT_s"][i])
+            reach.append(max(lo - (p_ + hu), (p_ - hu) - hi) / hu)   # <= 0: reachable
         bdev = [abs(nu10(v, cfg) / (1 + t * pm) ** 2 - number(b)) / half_unit(b)
                 for t, b in zip(times(v, cfg)[idx], np.array(d["ber_s"])[idx])]
         M[f"r1_{v}_ber_n_within"] = int(sum(x <= 1 for x in bdev))
         ber += bdev
     M["r1_col_n_within"], M["r1_col_n"] = int(sum(x <= 1 for x in col)), len(col)
     M["r1_col_n_within__margin"] = float(min(abs(x - 1) for x in col))
+    M["r1_n_reachable"] = int(sum(x <= 0 for x in reach))
+    M["r1_n_reachable__margin"] = float(min(abs(x) for x in reach))   # half units of the printed 1/T
     M["r1_ber_n_within"], M["r1_ber_n"] = int(sum(x <= 1 for x in ber)), len(ber)
     M["r1_ber_n_within__margin"] = float(min(abs(x - 1) for x in ber))
     M["r1_E_nu10_reproducing"] = nu10_reproducing("E", cfg)
@@ -757,8 +775,11 @@ def r2_precision(cfg):
                        ("nu10_lo", replace(cfg, nu10_factor=cfg.nu10_factor * (1 - NU10_REL))),
                        ("C_A1", replace(cfg, c_choice="A1"))):
             M[f"r2_{v}_Rr_{tag}"] = rr_stats(v, c)["Rr"]
-        n10, s = fit_nu10(v, cfg)
+        n10, s, s_se, dof = fit_nu10(v, cfg)
+        M[f"_r2_{v}_nu10_fit_own"] = (rr_of(v, cfg, s), rr_of(v, cfg, s_se), dof)
         M[f"r2_{v}_nu10_fit"], M[f"r2_{v}_Rr_nu10_fit"] = n10, rr_of(v, cfg, s)
+    for v in VS:
+        M[f"r2_{v}_nu10_halfspan"] = (M[f"r2_{v}_Rr_nu10_hi"] - M[f"r2_{v}_Rr_nu10_lo"]) / (2 * M[f"r2_{v}_Rr"])
     M["r2_F_Rr_doubtful_in"] = rr_stats("F", replace(cfg, doubtful_in=True))["Rr"]
     tc = stats.t.ppf(0.975, 2)   # two-sided 95 %, two degrees of freedom
     M["r2_n_excluding_2"] = int(sum(abs(M[f"r2_{v}_t2"]) > tc for v in VS))
@@ -785,15 +806,19 @@ def r3_law(cfg):
     M["r3_p_pooled"], M["r3_p_pooled_se"] = pooled["p"], pooled["p_se"]
     M["r3_p_pooled_t1"] = (pooled["p"] - 1) / pooled["p_se"]
     M["r3_p_pooled_t2"] = (2 - pooled["p"]) / pooled["p_se"]
+    M["r3_pooled_dof"] = pooled["dof"]
+    M["r3_p_pooled_t_crit"] = stats.t.ppf(0.975, pooled["dof"])
     M["_r3_pooled_at_bound"] = pooled["at_bound"]
     for v, s in zip(VS, pooled["s"]):
         M[f"r3_{v}_Rr_pooled_p"] = rr_of(v, cfg, s)
     M["_r3_pooled_s"] = dict(zip(VS, pooled["s"]))
+    for v, s, se in zip(VS, pooled["s"], pooled["s_se"]):
+        M[f"_r3_{v}_pooled_own"] = (rr_of(v, cfg, s), rr_of(v, cfg, se), pooled["dof"])
     r1, r2 = shape_fit(list(VS), cfg, 1.0)["res"], shape_fit(list(VS), cfg, 2.0)["res"]
     dd = r2**2 - r1**2
     mu, se = mean_se(dd)
     M["r3_paired_d"], M["r3_paired_se"], M["r3_paired_t"] = mu, se, mu / se
-    M["r3_ssr_p1"], M["r3_ssr_p2"] = float(r1 @ r1), float(r2 @ r2)
+    M["_r3_ssr_p1"], M["_r3_ssr_p2"] = float(r1 @ r1), float(r2 @ r2)
     M["r3_n_rising_eq16"] = int(sum(M[f"r3_{v}_trend_eq16"] > 0 for v in VS))
     M["r3_n_rising_eq16__margin"] = min(abs(M[f"r3_{v}_trend_t_eq16"]) for v in VS)   # in standard errors
     M["r3_n_rising_eq24"] = int(sum(M[f"r3_{v}_trend_eq24"] > 0 for v in VS))
@@ -808,7 +833,7 @@ def r4_excluded(cfg):
         d = cfg.data[v]
         st = rr_stats(v, cfg)
         tr = transient(v, cfg, st["Rr"])
-        M[f"r4_{v}_R2_D"], M[f"r4_{v}_4piR3nu0"] = tr["R2_D"], tr["4piR3nu0"]
+        M[f"r4_{v}_R2_D"], M[f"_r4_{v}_4piR3nu0"] = tr["R2_D"], tr["4piR3nu0"]
         early = np.where(d["paren"] & ~d["doubt"])[0]
         dl = delay_fit(v, cfg)
         M[f"r4_{v}_t0"], M[f"r4_{v}_t0_se"] = dl["t0"], dl["t0_se"]
@@ -820,21 +845,27 @@ def r4_excluded(cfg):
             need = s / st["invT"] - t
             ratios.append(tr["delta"](t) / need)
             tag = f"t{d['t'][i]:g}"
-            M[f"r4_{v}_need_{tag}"] = need
-            M[f"r4_{v}_delta_{tag}"] = tr["delta"](t)
+            pub = "r4_" if (v, tag) == ("E", "t2") else "_r4_"   # only E at 2 s is printed
+            M[f"{pub}{v}_need_{tag}"] = need
+            M[f"{pub}{v}_delta_{tag}"] = tr["delta"](t)
             M[f"r4_{v}_t0_implied_{tag}"] = s / dl["invT"] - t
             imp.append(M[f"r4_{v}_t0_implied_{tag}"])
-        # verdict: undetermined when |t0| < 2 se; consistent when every excluded row's t0
-        # lies within 2 se of the fitted t0; inconsistent otherwise
+        # verdict: undetermined when |t0| is below the two-sided 95 % t quantile of the fit's
+        # degrees of freedom in standard errors; consistent when every excluded row's t0
+        # lies within that many standard errors of the fitted t0; inconsistent otherwise
+        tc = stats.t.ppf(0.975, dl["dof"])
+        M[f"_r4_{v}_t_crit"] = tc
         z0 = abs(dl["t0"]) / dl["t0_se"]
         zi = [abs(x - dl["t0"]) / dl["t0_se"] for x in imp]
         M[f"r4_{v}_t0_z"] = z0
         M[f"r4_{v}_t0_implied_z_max"] = max(zi)
-        M[f"r4_{v}_delay_verdict"] = ("undetermined" if z0 < 2 else
-                                      "consistent" if max(zi) <= 2 else "inconsistent")
-        M[f"r4_{v}_delay_verdict__margin"] = min(abs(z0 - 2), *(abs(z - 2) for z in zi)) / 2
+        M[f"r4_{v}_delay_verdict"] = ("undetermined" if z0 < tc else
+                                      "consistent" if max(zi) <= tc else "inconsistent")
+        M[f"r4_{v}_delay_verdict__margin"] = min(abs(z0 - tc), *(abs(z - tc) for z in zi)) / tc
+        M[f"_r4_{v}_delay_own"] = (rr_of(v, cfg, dl["invT"]), rr_of(v, cfg, dl["invT_se"]), dl["dof"])
     M["r4_transient_ratio_min"], M["r4_transient_ratio_max"] = min(ratios), max(ratios)
     M["r4_n_early"] = len(ratios)
+    M["r4_t_crit"] = M["_r4_D_t_crit"]   # one degree of freedom for each Versuch
     return M
 
 
@@ -896,7 +927,8 @@ def r5_kernel(cfg):
     sp = CubicHermiteSpline(tau, N[:, 0], [rhs(n, c)[0] for n in N])
     M["_sp18"], M["_sp19"] = sp, sp19
     for v in VS:
-        rr = kernel18_rr(v, cfg, sp)
+        rr, rr_se, rr_dof = kernel18_rr(v, cfg, sp)
+        M[f"_r5_{v}_own"] = (rr, rr_se, rr_dof)
         M[f"r5_{v}_Rr"], M[f"r5_{v}_shift"] = rr, rr / rr_stats(v, cfg)["Rr"] - 1
     q = [abs(M[f"r5_{v}_shift"]) * rr_stats(v, cfg)["Rr"] / rr_stats(v, cfg)["se"] for v in VS]
     M["r5_n_within_se"] = int(sum(x < 1 for x in q))   # shifts smaller than the Versuch's standard error
@@ -965,35 +997,52 @@ CHOICES = ("printed rows, C_P", "C_A1 for C_P", "nu10 +5 %", "nu10 -5 %", "nu10 
 
 
 def r6_synthesis(cfg, M):
-    """R6: per Versuch, R/r under every choice of R2 to R5, its range against 2."""
-    out = {}
-    tab = {}
+    """R6: per Versuch, R/r under every choice of R2 to R5 (laws (11) and (14) are left out:
+    they hold the nucleus fixed, p. 143), its range against 2, and 2 tested on each choice's
+    own mean, standard error and degrees of freedom."""
+    out, tab, tst = {}, {}, {}
+    ce = replace(cfg, early_in=True)
     for v in VS:
-        row = {"printed rows, C_P": M[f"r2_{v}_Rr"], "C_A1 for C_P": M[f"r2_{v}_Rr_C_A1"],
-               "nu10 +5 %": M[f"r2_{v}_Rr_nu10_hi"], "nu10 -5 %": M[f"r2_{v}_Rr_nu10_lo"],
-               "nu10 fitted": M[f"r2_{v}_Rr_nu10_fit"],
-               "(?) rows in": M["r2_F_Rr_doubtful_in"] if v == "F" else np.nan,
-               "early rows in": rr_stats(v, replace(cfg, early_in=True))["Rr"],
-               "law (16)": M[f"r3_{v}_Rr_eq16"], "shape, pooled p": M[f"r3_{v}_Rr_pooled_p"],
-               "delay t0": M[f"r4_{v}_Rr_delay"], "kernel (18)": M[f"r5_{v}_Rr"]}
+        own = {"printed rows, C_P": rr_stats(v, cfg),
+               "C_A1 for C_P": rr_stats(v, replace(cfg, c_choice="A1")),
+               "nu10 +5 %": rr_stats(v, replace(cfg, nu10_factor=cfg.nu10_factor * (1 + NU10_REL))),
+               "nu10 -5 %": rr_stats(v, replace(cfg, nu10_factor=cfg.nu10_factor * (1 - NU10_REL))),
+               "nu10 fitted": M[f"_r2_{v}_nu10_fit_own"],
+               "(?) rows in": rr_stats("F", replace(cfg, doubtful_in=True)) if v == "F" else None,
+               "early rows in": rr_stats(v, ce),
+               "law (16)": rr_stats(v, cfg, "16"),
+               "shape, pooled p": M[f"_r3_{v}_pooled_own"],
+               "delay t0": M[f"_r4_{v}_delay_own"],
+               "kernel (18)": M[f"_r5_{v}_own"]}
+        own = {k: (x["Rr"], x["se"], x["dof"]) if isinstance(x, dict) else x for k, x in own.items()}
+        row = {k: np.nan if x is None else x[0] for k, x in own.items()}
         tab[v] = row
+        t_ = {k: (x[0] - 2) / x[1] for k, x in own.items() if x is not None}
+        crit = {k: stats.t.ppf(0.975, own[k][2]) for k in t_}
+        tst[v] = {k: (abs(t_[k]) > crit[k], abs(t_[k]) / crit[k]) for k in t_}
         x = np.array([w for w in row.values() if np.isfinite(w)])
         lo, hi = x.min(), x.max()
         out[f"r6_{v}_lo"], out[f"r6_{v}_hi"] = lo, hi
         out[f"r6_{v}_contains_2"] = bool(lo <= 2 <= hi)
-        if not lo <= 2 <= hi:   # distance from 2 to the nearer end, in the Versuch's standard errors
-            out[f"r6_{v}_gap_se"] = (lo - 2 if lo > 2 else 2 - hi) / M[f"r2_{v}_se"]
         out[f"r6_{v}_range_over_gap"] = (hi - lo) / abs(M[f"r2_{v}_Rr"] - 2)
-        ce = replace(cfg, early_in=True)
-        out[f"r6_{v}_early_gap_over_rounding"] = (row["early rows in"] - 2) / rr_of(v, ce, rounding_movement(v, ce))
+        pub = "r6_" if v == "D" else "_r6_"   # only D's is printed
+        out[f"{pub}{v}_early_gap_over_rounding"] = (row["early rows in"] - 2) / rr_of(v, ce, rounding_movement(v, ce))
+        pe = "_r6_" if v == "D" else "r6_"   # D's count is not printed
+        out[f"{pe}{v}_n_excluding_2"] = sum(e for e, _ in tst[v].values())
+        out[f"{pe}{v}_n_excluding_2__margin"] = min(abs(r - 1) for _, r in tst[v].values())
     for v, side in (("D", -1), ("E", 1), ("F", 1)):   # choices on the side of 2 the base value lies
         x = tab[v]
         x = np.array([w for w in x.values() if np.isfinite(w)])
         out[f"r6_{v}_n_same_side"] = int(np.sum(side * (x - 2) > 0))
         out[f"r6_{v}_n_same_side__margin"] = float(np.min(np.abs(x - 2)) / 2)
         out[f"r6_{v}_n_choices"] = len(x)
+    other = [tst[v][k] for v in VS for k in tst[v] if k != "printed rows, C_P"]   # the base is r2_n_excluding_2
+    out["r6_n_other_excluding_2"] = sum(e for e, _ in other)
+    out["r6_n_other_excluding_2__margin"] = min(abs(r - 1) for _, r in other)
+    out["r6_n_other_choices"] = len(other)
     out["r6_n_contain_2"] = int(sum(out[f"r6_{v}_contains_2"] for v in VS))
     out["r6_n_contain_2__margin"] = min(min(abs(out[f"r6_{v}_lo"] - 2), abs(out[f"r6_{v}_hi"] - 2)) for v in VS) / 2
+    out["r6_all_lo"], out["r6_all_hi"] = min(out[f"r6_{v}_lo"] for v in VS), max(out[f"r6_{v}_hi"] for v in VS)
     out["_r6_table"] = pd.DataFrame(tab)
     return out
 
@@ -1058,8 +1107,9 @@ display(pd.DataFrame(r1_tab).set_index(["Versuch", "t (s)"]))
 say("**The 1/T column.** <<n:d>> of the <<N:d>> printed entries lie within half a unit of eq. 25 on the printed counts "
     "(D <<nd:d>> of 4, E <<ne:d>> of 5, F <<nf:d>> of 6); the closest call is F's \"(?)\" row at 40 s, "
     "<<fm:.4f>> half-units. E's five entries all lie above the recomputed values: the $\\nu_{10}$ that fits E's "
-    "column best is <<n10:.4f>> against the printed 1.97. The deviations are last-digit arithmetic; no misprint of "
-    "a count can be shown from them, so the page uses values recomputed from the printed counts.\n\n"
+    "column best is <<n10:.4f>> against the printed 1.97. Moving both printed counts by half a unit of their last "
+    "digit reaches <<nr:d>> of the <<N:d>> printed entries, so no misprint of a count can be shown from them; the page "
+    "uses values recomputed from the printed counts.\n\n"
     "**The means.** Recomputed over the rows in the mean: D <<md:.5f>>, E <<me:.5f>>, F <<mf:.5f>> 1/s against the "
     "printed 0.0299, 0.0456 and 0.0188; the gaps are <<gd:.2f>>, <<ge:.2f>> and <<gf:.2f>> half-units of the "
     "printed mean, and <<rd:.2f>>, <<re:.2f>> and <<rf:.2f>> of the movement that rounding the counts to two "
@@ -1070,7 +1120,7 @@ say("**The 1/T column.** <<n:d>> of the <<N:d>> printed entries lie within half 
     "and F. Their first-order rounding intervals overlap on <<lo:.4e>> to <<hi:.4e>> (a band <<w:pct2>> wide), so "
     "one constant fits all three. The page uses the geometric mean, $C_P$ = <<cp:.4e>> s/cm³; water at 20 C (A1) "
     "gives <<ca:.4f>> times $C_P$.",
-    n=M["r1_col_n_within"], N=M["r1_col_n"], nd=M["r1_D_col_n_within"], ne=M["r1_E_col_n_within"],
+    n=M["r1_col_n_within"], N=M["r1_col_n"], nr=M["r1_n_reachable"], nd=M["r1_D_col_n_within"], ne=M["r1_E_col_n_within"],
     nf=M["r1_F_col_n_within"], fm=1 - M["r1_F_col_n_within__margin"], n10=M["r1_E_nu10_reproducing"],
     md=M["r1_D_mean"], me=M["r1_E_mean"], mf=M["r1_F_mean"], gd=M["r1_D_mean_gap_half_units"],
     ge=M["r1_E_mean_gap_half_units"], gf=M["r1_F_mean_gap_half_units"], rd=M["r1_D_mean_gap_over_rounding"],
@@ -1156,8 +1206,8 @@ say("Under the other printed laws the same rows give $R/r$ = <<a:.2f>>, <<b:.2f>
     "in <<n24:d>> of 3 under $(24)_1$; the smallest $|t|$ behind these signs is <<m16:.2f>> and <<m24:.2f>>.\n\n"
     "**Shape family.** Fitted per Versuch (one degree of freedom, indicative) $p$ = <<pd:.2f>>, <<pe:.2f>>, "
     "<<pf:.2f>>, with $R/r$ = <<qd:.2f>>, <<qe:.2f>>, <<qf:.2f>>. Pooled with one common $p$ and a $1/T$ per Versuch "
-    "(five degrees of freedom): $p$ = <<p:.2f>> ± <<ps:.2f>>, <<t1:.1f>> standard errors from 1 and <<t2:.1f>> from 2, "
-    "with $R/r$ = <<rd:.2f>>, <<re:.2f>>, <<rf:.2f>>. The direct comparison of the two printed laws on the nine rows "
+    "(<<dof:d>> degrees of freedom): $p$ = <<p:.2f>> ± <<ps:.2f>>, <<t1:.1f>> standard errors from 1 and <<t2:.1f>> "
+    "from 2, against the two-sided 95 % quantile of $t$ at that many degrees of freedom, <<tq:.2f>>, with $R/r$ = <<rd:.2f>>, <<re:.2f>>, <<rf:.2f>>. The direct comparison of the two printed laws on the nine rows "
     "(squared ln residuals, each law with its own fitted $1/T$, paired): $(24)_1$ minus (16) = <<pd2:.4f>> ± "
     "<<pse:.4f>>, $t$ = <<pt:.2f>>. The counts do not choose between (16) and $(24)_1$; the pooled fit lies between.",
     a=M["r3_D_Rr_eq16"], b=M["r3_E_Rr_eq16"], c=M["r3_F_Rr_eq16"], d=M["r3_D_Rr_eq14"], e=M["r3_E_Rr_eq14"],
@@ -1168,7 +1218,7 @@ say("Under the other printed laws the same rows give $R/r$ = <<a:.2f>>, <<b:.2f>
     n16=M["r3_n_rising_eq16"], n24=M["r3_n_rising_eq24"], m16=M["r3_n_rising_eq16__margin"],
     m24=M["r3_n_rising_eq24__margin"], pd=M["r3_D_p"], pe=M["r3_E_p"], pf=M["r3_F_p"], qd=M["r3_D_Rr_at_p"],
     qe=M["r3_E_Rr_at_p"], qf=M["r3_F_Rr_at_p"], p=M["r3_p_pooled"], ps=M["r3_p_pooled_se"],
-    t1=M["r3_p_pooled_t1"], t2=M["r3_p_pooled_t2"], rd=M["r3_D_Rr_pooled_p"], re=M["r3_E_Rr_pooled_p"],
+    t1=M["r3_p_pooled_t1"], t2=M["r3_p_pooled_t2"], dof=M["r3_pooled_dof"], tq=M["r3_p_pooled_t_crit"], rd=M["r3_D_Rr_pooled_p"], re=M["r3_E_Rr_pooled_p"],
     rf=M["r3_F_Rr_pooled_p"], pd2=M["r3_paired_d"], pse=M["r3_paired_se"], pt=M["r3_paired_t"])
 if any(M[f"_r3_{v}_p_at_bound"] for v in VS) or M["_r3_pooled_at_bound"]:
     raise ValueError("a shape fit stopped at a bound of p")
@@ -1190,12 +1240,16 @@ say("**(a) The transient.** With $D = 1/(4\\pi rC)$ and the Versuch's own $R/r$,
     "**(b) The delay.** A straight line $\\sqrt{\\nu_{10}/\\nu_1} - 1 = (t + t_0)/T$ through the three rows in the "
     "mean gives $t_0$ = <<td:.2f>> ± <<sd:.3f>> s (D), <<te:.2f>> ± <<se:.2f>> s (E) and <<tf:.2f>> ± <<sf:.2f>> s (F), "
     "one degree of freedom each. The early rows would need $t_0$ = <<id:.2f>> s (D, 2 s), <<ie2:.2f>> and <<ie5:.2f>> s "
-    "(E, 2 and 5 s) and <<if_:.2f>> s (F, 3 s) on that line. Rule: undetermined when $|t_0|$ is below two standard "
-    "errors, consistent when every early row lies within two standard errors of $t_0$, inconsistent otherwise. "
-    "Verdicts: D <<vd>>, E <<ve>>, F <<vf>>. D's accepted rows fall on a line with a negative intercept, so a delay "
+    "(E, 2 and 5 s) and <<if_:.2f>> s (F, 3 s) on that line. Rule, with the two-sided 95 % quantile of $t$ at the fit's "
+    "degrees of freedom (<<tc:.2f>>) in place of 2: undetermined when $|t_0|$ is below that many standard errors "
+    "(it is <<z0d:.1f>> (D), <<z0e:.2f>> (E), <<z0f:.2f>> (F)), consistent when every early row lies within that "
+    "many standard errors of $t_0$ (the largest distance is <<zid:.1f>> (D), <<zie:.1f>> (E), <<zif:.1f>> (F)), "
+    "inconsistent otherwise. Verdicts: D <<vd>>, E <<ve>>, F <<vf>>. D's accepted rows fall on a line with a negative intercept ($t_0$ < 0 above), so a delay "
     "cannot explain its 2 s row; for E and F the three rows do not fix $t_0$. With the delay fitted, $R/r$ = "
     "<<rd:.2f>>, <<re:.2f>>, <<rf:.2f>>. The delay is inferred under $(24)_1$, not measured.",
-    a=M["r4_D_R2_D"], b=M["r4_E_R2_D"], c=M["r4_F_R2_D"], d=max(M[f"r4_{v}_4piR3nu0"] for v in VS),
+    a=M["r4_D_R2_D"], b=M["r4_E_R2_D"], c=M["r4_F_R2_D"], d=max(M[f"_r4_{v}_4piR3nu0"] for v in VS), tc=M["r4_t_crit"],
+    z0d=M["r4_D_t0_z"], z0e=M["r4_E_t0_z"], z0f=M["r4_F_t0_z"], zid=M["r4_D_t0_implied_z_max"],
+    zie=M["r4_E_t0_implied_z_max"], zif=M["r4_F_t0_implied_z_max"],
     lo=M["r4_transient_ratio_min"], hi=M["r4_transient_ratio_max"], n=M["r4_n_early"], de=M["r4_E_delta_t2"],
     ne=M["r4_E_need_t2"], td=M["r4_D_t0"], sd=M["r4_D_t0_se"], te=M["r4_E_t0"], se=M["r4_E_t0_se"],
     tf=M["r4_F_t0"], sf=M["r4_F_t0_se"], id=M["r4_D_t0_implied_t2"], ie2=M["r4_E_t0_implied_t2"],
@@ -1226,8 +1280,9 @@ say("With kernel (18), $\\nu_1$ is <<a:.4f>> and <<b:.4f>> times its (24) value 
 # %% [markdown]
 # ### R6. R/r under every choice
 #
-# Every choice of R2 to R5 applied alone; the vertical line is contact, $R/r = 2$, the
-# bar the base value ± one standard error of R2.
+# Every choice of R2 to R5 applied alone, laws (11) and (14) excepted (stated below the
+# table); the vertical line is contact, $R/r = 2$, the bar the base value ± one standard
+# error of R2.
 
 # %%
 tab6 = M["_r6_table"]
@@ -1244,17 +1299,25 @@ axs[0].invert_yaxis()
 plt.tight_layout()
 plt.show()
 display(tab6.map(lambda x: "-" if not np.isfinite(x) else f"{x:.3f}"))
-say("Ranges over the choices: D <<dl:.3f>> to <<dh:.3f>>, E <<el:.2f>> to <<eh:.2f>>, F <<fl:.2f>> to <<fh:.2f>>, "
-    "<<dr:.1f>>, <<er:.1f>> and <<fr:.1f>> times each base value's distance from 2. <<n:d>> of 3 ranges contain 2: "
-    "D's, and only through its 2 s row: the 2, 3, 5 s rows in the mean give <<de:.3f>>, <<dre:.1f>> of the movement "
-    "that rounding the counts can cause above 2, so the printed digits do not decide whether D's range reaches 2. <<sd:d>> of D's <<cd:d>> choices give values below 2. E (<<se_:d>> of <<ce:d>> above 2) and F "
-    "(<<sf:d>> of <<cf:d>>) stay above, their ranges ending <<eg:.2f>> and <<fg:.2f>> of their own standard errors "
-    "above 2.",
+say("Ranges over the choices kept: D <<dl:.3f>> to <<dh:.3f>>, E <<el:.2f>> to <<eh:.2f>>, F <<fl:.2f>> to <<fh:.2f>>, "
+    "<<dr:.1f>>, <<er:.1f>> and <<fr:.1f>> times each base value's distance from 2. Laws (11) and (14) are left out: "
+    "they hold the nucleus fixed ($D$ for $D_1 + D_2$, p. 143) and give Versuch D <<la:.2f>> and <<lb:.2f>>. "
+    "<<n:d>> of 3 ranges contain 2: D's, and among the choices kept only through its 2 s row: the 2, 3, 5 s rows in the "
+    "mean give <<de:.3f>>, <<dre:.1f>> of the movement that rounding the counts can cause above 2, so the printed "
+    "digits do not decide whether D's range reaches 2. <<sd:d>> of D's <<cd:d>> choices give values below 2. E "
+    "(<<se_:d>> of <<ce:d>> above 2) and F (<<sf:d>> of <<cf:d>>) lie above 2 in value. Each choice has its own "
+    "mean, standard error and degrees of freedom (the row scatter, or the covariance of the fit that gives it), and "
+    "2 is tested against the two-sided 95 % quantile of $t$ at those degrees of freedom: 2 is excluded in "
+    "<<xe:d>> of E's <<ce:d>> choices and <<xf:d>> of F's <<cf:d>>, and in <<nk:d>> of the <<nt:d>> choices other "
+    "than the base (the base: <<nx:d>> of 3).",
     dl=M["r6_D_lo"], dh=M["r6_D_hi"], el=M["r6_E_lo"], eh=M["r6_E_hi"], fl=M["r6_F_lo"], fh=M["r6_F_hi"],
     dr=M["r6_D_range_over_gap"], er=M["r6_E_range_over_gap"], fr=M["r6_F_range_over_gap"], n=M["r6_n_contain_2"],
-    de=tab6.loc["early rows in", "D"], dre=M["r6_D_early_gap_over_rounding"], eg=M["r6_E_gap_se"],
-    fg=M["r6_F_gap_se"], sd=M["r6_D_n_same_side"], cd=M["r6_D_n_choices"], se_=M["r6_E_n_same_side"],
-    ce=M["r6_E_n_choices"], sf=M["r6_F_n_same_side"], cf=M["r6_F_n_choices"])
+    la=M["r3_D_Rr_eq11"], lb=M["r3_D_Rr_eq14"],
+    de=tab6.loc["early rows in", "D"], dre=M["r6_D_early_gap_over_rounding"],
+    sd=M["r6_D_n_same_side"], cd=M["r6_D_n_choices"], se_=M["r6_E_n_same_side"],
+    ce=M["r6_E_n_choices"], sf=M["r6_F_n_same_side"], cf=M["r6_F_n_choices"],
+    xe=M["r6_E_n_excluding_2"], xf=M["r6_F_n_excluding_2"], nk=M["r6_n_other_excluding_2"],
+    nt=M["r6_n_other_choices"], nx=M["r2_n_excluding_2"])
 
 # %% [markdown]
 # ## Validation
@@ -1372,24 +1435,31 @@ say("The page's functions reproduce all <<c:d>> check values; worst relative dev
 say("**How precisely the counts fix $R/r$.** On the scatter of its three accepted rows, each Versuch fixes $R/r$ "
     "to <<rd:pct1>>, <<re:pct1>> and <<rf:pct1>> (one standard error): <<d:.3f>> ± <<sd:.3f>> (D), <<e:.2f>> ± <<se:.2f>> (E), <<f:.3f>> ± <<sf:.3f>> (F). On that "
     "scatter alone, 2 is excluded in <<nx:d>> of 3 Versuche ($t$ = <<td:.1f>>, <<te:.2f>>, <<tf:.1f>>, two degrees of "
-    "freedom), and the three are not one value (F = <<F:.0f>>).\n\n"
-    "**What the choices do.** The choices the paper made move $R/r$ by more than its scatter: over the conversion "
+    "freedom; it leaves out the shared $t = 0$ count, and ±5 % on it moves $R/r$ by ±<<sd5:pct1>>, ±<<se5:pct1>> and "
+    "±<<sf5:pct1>>), and the three are not one value (F = <<F:.0f>>).\n\n"
+    "**What the choices do.** Replacing the paper's choices by the alternatives of R2 to R5 moves $R/r$ by more than its scatter: over the conversion "
     "law, the $t = 0$ count, the excluded rows, the delay, the kernel and the constant $C$, D runs from "
     "<<dl:.2f>> to <<dh:.2f>>, E from <<el:.2f>> to <<eh:.2f>>, F from <<fl:.2f>> to <<fh:.2f>>. <<n:d>> of 3 "
-    "ranges contain 2, D's, and only by readmitting the 2 s row the paper rejects, by less than the rounding of the "
-    "counts can move it; E and F stay above 2 under every choice (<<ne:d>> of <<ce:d>>, <<nf:d>> of <<cf:d>>), by "
-    "<<eg:.1f>> and <<fg:.1f>> of their standard errors at the nearest end.\n\n"
-    "**The reading.** \"Must nearly touch\" holds as an order of magnitude: across all choices the counts put the "
-    "capture radius between <<lo:.2f>> and <<hi:.2f>> particle radii, around the contact value 2. They do not "
-    "support contact as a sharp value: D lies below 2 under <<ns:d>> of its <<nc:d>> choices, which the paper's theory "
-    "does not allow (it would need $\\nu_0$ or $C$ off by a factor <<fd:.2f>>), and E and F lie above it. The page "
+    "ranges contain 2, D's, and among the choices kept only by readmitting the 2 s row the paper rejects, by less than "
+    "the rounding of the counts can move it; E and F lie above 2 in value under every choice (<<ne:d>> of <<ce:d>>, "
+    "<<nf:d>> of <<cf:d>>), and 2 is excluded on their own standard error in <<xe:d>> of <<ce:d>> and <<xf:d>> of "
+    "<<cf:d>>.\n\n"
+    "**The reading.** Point IV is a statement of order, and p. 151 itself reports $R/r$ from <<pl:.2f>> to <<ph:.2f>>. "
+    "Across the choices the counts put $R/r$ between <<lo:.2f>> and <<hi:.2f>>, so the reading holds. Contact as a "
+    "sharp value is a separate question: on each choice's own standard error, 2 is excluded under the paper's "
+    "conversion in <<nx:d>> of 3 Versuche and under <<nk:d>> of the <<nt:d>> other choices, on both sides of it. D lies below 2 under <<ns:d>> of its "
+    "<<nc:d>> choices, which the theory does not allow ($R/r = 2$ is contact, p. 151; it would need $\\nu_0$ or $C$ "
+    "off by a factor <<fd:.2f>>). The page "
     "names no cause for D's low value; the paper leaves it open too. Three short series that Zsigmondy called "
     "preliminary, with no counting error printed, neither validate nor refute the theory.",
     d=M["r2_D_Rr"], sd=M["r2_D_se"], e=M["r2_E_Rr"], se=M["r2_E_se"], f=M["r2_F_Rr"], sf=M["r2_F_se"],
     td=M["r2_D_t2"], te=M["r2_E_t2"], tf=M["r2_F_t2"], F=M["r2_anova_F"], dl=M["r6_D_lo"], dh=M["r6_D_hi"],
     el=M["r6_E_lo"], eh=M["r6_E_hi"], fl=M["r6_F_lo"], fh=M["r6_F_hi"], n=M["r6_n_contain_2"],
-    eg=M["r6_E_gap_se"], fg=M["r6_F_gap_se"], lo=min(M[f"r6_{v}_lo"] for v in VS),
-    hi=max(M[f"r6_{v}_hi"] for v in VS), fd=1 / M["r2_D_nu0_factor"], nx=M["r2_n_excluding_2"],
+    xe=M["r6_E_n_excluding_2"], xf=M["r6_F_n_excluding_2"], nk=M["r6_n_other_excluding_2"],
+    nt=M["r6_n_other_choices"], pl=min(number(DATA[v]["Rr_s"]) for v in VS),
+    ph=max(number(DATA[v]["Rr_s"]) for v in VS), sd5=M["r2_D_nu10_halfspan"], se5=M["r2_E_nu10_halfspan"],
+    sf5=M["r2_F_nu10_halfspan"], lo=M["r6_all_lo"], hi=M["r6_all_hi"], fd=1 / M["r2_D_nu0_factor"],
+    nx=M["r2_n_excluding_2"],
     ns=M["r6_D_n_same_side"], nc=M["r6_D_n_choices"], ne=M["r6_E_n_same_side"], ce=M["r6_E_n_choices"],
     nf=M["r6_F_n_same_side"], cf=M["r6_F_n_choices"], rd=M["r2_D_se"] / M["r2_D_Rr"],
     re=M["r2_E_se"] / M["r2_E_Rr"], rf=M["r2_F_se"] / M["r2_F_Rr"])
@@ -1442,7 +1512,7 @@ STRUCTURAL = {"v1_initial_slopes_match": "eqs. 11, 14, 16 and 24_1 differentiate
               "r1_col_n": "entries of the printed 1/T columns", "r1_ber_n": "entries of the printed nu1 ber. columns",
               "r4_n_early": "rows at 2, 3 and 5 s in the printed tables",
               "r6_D_n_choices": "choices applied to D", "r6_E_n_choices": "choices applied to E",
-              "r6_F_n_choices": "choices applied to F",
+              "r6_F_n_choices": "choices applied to F", "r6_n_other_choices": "choices other than the base, over D, E and F",
               "v3_y_printed": "the printed bracket of p. 156 evaluated at k 50, tau 20; the M1 row breaks the identity gap"}
 BOUNDS = {"v1_sum_gap": (None, 1e-14, "identity", "eq. 23 against the series of eq. 24 plus its closed-form tail"),
           "v1_mass_gap": (None, 1e-14, "identity", "sum of k nu_k against E13 at K = 80"),
@@ -1467,10 +1537,11 @@ BOUNDS = {"v1_sum_gap": (None, 1e-14, "identity", "eq. 23 against the series of 
 # Count margins: the counts are arithmetic on printed strings, exact up to floating
 # point (1e-12); the margins of fitted signs and verdicts are in standard errors.
 COUNTS = {"r1_col_n_within": 1e-4, "r1_D_col_n_within": 1e-4, "r1_E_col_n_within": 1e-4,
-          "r1_F_col_n_within": 1e-4, "r1_ber_n_within": 1e-4, "r3_n_rising_eq16": 0.5, "r3_n_rising_eq24": 0.5,
+          "r1_F_col_n_within": 1e-4, "r1_ber_n_within": 1e-4, "r1_n_reachable": 1e-4,
+          "r6_E_n_excluding_2": 0.01, "r6_F_n_excluding_2": 0.01, "r6_n_other_excluding_2": 0.01, "r3_n_rising_eq16": 0.5, "r3_n_rising_eq24": 0.5,
           "r6_n_contain_2": 0.005, "r6_D_n_same_side": 0.005, "r6_E_n_same_side": 0.005,
           "r6_F_n_same_side": 0.005, "r2_n_excluding_2": 0.05, "r5_n_within_se": 0.05, "r4_D_delay_verdict": 0.05, "r4_E_delay_verdict": 0.05, "r4_F_delay_verdict": 0.05}
-EXACT = {"v1_eq24_in_eq22", "r1_D_ber_n_within", "r1_E_ber_n_within", "r1_F_ber_n_within"}
+EXACT = {"v1_eq24_in_eq22", "r3_pooled_dof", "r1_D_ber_n_within", "r1_E_ber_n_within", "r1_F_ber_n_within"}
 
 
 def register(M):
@@ -1526,6 +1597,7 @@ DEFECTS = [
     printed_row("D", "invT", "10", "0.0296"),
     printed_row("F", "nu1_ber", "60", "0.46"),
     printed_row("F", "nu1", "40", "0.70"),
+    printed_row("F", "nu1", "20", "1.10"),
     printed_row("E", "invT", "20", "0.0485"),
     printed_row("E", "nu1", "0", "1.977"),
 ]
@@ -1539,7 +1611,12 @@ for row, c_ in CONTROLS + DEFECTS:
         print(f"{row}: {e}")
         Mb = {}
     for name in claims.metrics:
-        BREAK.append((row, name, claims.breaks(row, name, Mb.get(name, np.nan))))
+        x_ = Mb.get(name, np.nan)
+        # a claim a row's study does not produce (absent, nan) is not a catch: only a crashed
+        # row records nan, for every claim, and is listed apart
+        if Mb and (x_ is None or (isinstance(x_, (float, np.floating)) and np.isnan(x_))):
+            continue
+        BREAK.append((row, name, claims.breaks(row, name, x_)))
     if not any(name in Mb for name in claims.metrics):
         CRASH.add(row)
 
