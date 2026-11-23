@@ -1,0 +1,71 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F2.1
+slug: deckwer-bubble-column-dispersion
+title: "Axial dispersion and kLa in tall bubble columns (Deckwer, Burckhart and Zoll, 1974)"
+section: F
+status: planned
+tier: T1
+priority: P2
+structures: [S7, S4]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 30
+reference:
+  authors: ["Deckwer, W.-D.", "Burckhart, R.", "Zoll, G."]
+  year: 1974
+  container: "Chemical Engineering Science 29(11) 2177-2188"
+  doi: 10.1016/0009-2509(74)80025-4
+datasets:
+  - deckwer-1974-printed-numbers.csv
+  - deckwer-1974-table1.csv
+  - deckwer-1974-operating-points.csv
+  - deckwer-1974-holdup-reads.csv
+  - deckwer-1974-fig10-ports.csv
+  - deckwer-1974-fig10-feeds.csv
+  - deckwer-1974-fig11.csv
+  - check_values.csv
+
+validation:
+  - >-
+    The page's functions reproduce check values from a second route (closed forms,
+    solve_bvp, gradient-root fits) before any claim; the coupled finite-volume values
+    after Richardson extrapolation with the first- and second-order terms, the inlet
+    face within 5.6e-8 <!-- claim: v3_fv_vs_bvp_c0 --> of solve_bvp
+  - >-
+    The pymrm coupled solve is first order on six nested grids (inlet face order
+    0.99 <!-- claim: v2_order_c0 --> on the finest triple), its finest differences far
+    above the round-off measured with a second column ordering, and it reproduces the
+    closed forms for an inert gas and for nitrogen
+  - >-
+    Three misprints of the appendix measured at one test condition: the printed sign of
+    A4 moves the outlet by -9.8 % <!-- claim: m1_A4_printed_sign_c_out_shift -->, the
+    printed A19 by -2.4 % <!-- claim: m2_A19_printed_c_out_shift -->, the printed sign of
+    b' by 65.4 % <!-- claim: m3_bprime_printed_c_out_shift -->
+
+adds: >
+  The coupled liquid-dispersion and gas plug-flow model that the paper named and set
+  aside, solved as one Newton system on pymrm operators with the outlet values read on
+  the faces and a refinement study; it is the truth against which the paper's two
+  prescribed-gas evaluation models are measured. The closed forms need only
+  find_roots.
+
+agreement: >
+  No measured profile is compared: the page tests the paper's evaluation for
+  self-consistency at its operating points. Against the coupled model, constant-y
+  evaluation gives 0.831 <!-- claim: s3_fit_cy_F10BCII --> of the true Stanton number
+  for BC II water desorption and eq. 7 gives 0.943 <!-- claim: s3_fit_e7_F10BCII -->;
+  the plug-flow NTU evaluation gives 0.464 <!-- claim: s2_ntu_ratio_VL0p8_min --> to
+  0.622 <!-- claim: s2_ntu_ratio_VL0p8_max --> of it at the liquid flow of Fig. 9.
+
+caveats: >
+  The feed of the BC I absorption points and the Henry coefficient are not printed and
+  are named assumptions; the measured profiles of Figs. 9 and 10 are not digitised, and
+  Table 1 is the paper's regression of its own fits, so no kLa here is validated. kLa,
+  the gas holdup and the gas velocity are constant along the column, as in the paper,
+  and the gas is in plug flow without dispersion.

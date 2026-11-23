@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's model functions at one test condition"
+status: complete
+
+source:
+  authors: ["Deckwer, W.-D.", "Burckhart, R.", "Zoll, G."]
+  year: 1974
+  container: "Chemical Engineering Science 29(11) 2177-2188"
+  doi: 10.1016/0009-2509(74)80025-4
+  access: >
+    The equations are those of the paper as listed in the build plan's equations
+    file (with the misprints M1 to M7 corrected as stated there); the values are not
+    read from the paper but computed by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (double precision computed, rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f21_check_values.py (Python with scipy, no pymrm, no page code), 2026-11-23; its closed-form rows checked against mpmath by the plan agent (worst 2e-13); the Danckwerts outlet ratio and the roots r1, r2 recomputed by the coordinator from the Wehner-Wilhelm closed form (agreement 4e-12)"
+  date: 2026-11-23
+  estimated_error: "none beyond floating point; the rtol column is the tolerance, not an error estimate"
+
+conditions: >
+  Test condition T: the paper's Fig. 10, boundary conditions BC I, tap water,
+  absorption from air, liquid flow 3.0 m3/h, superficial gas velocity at the inlet
+  0.65 cm/s, gas holdup 0.023 (Fig. 1 read, fixed here), inlet concentration 0.6 mg/l,
+  fit design D2 of the plan. The oxygen saturation 9.86 mg/l at 16 C (Benson and Krause
+  1984) is an outside value; the paper prints no Henry constant. Rows named A4_printed
+  use the boundary condition as printed (misprint M1), the others the corrected one.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; the unit is the name's suffix where it has one"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
