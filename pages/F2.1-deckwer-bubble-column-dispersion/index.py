@@ -177,6 +177,10 @@ claims = Claims(PAGE.split("-")[0])
 # - $L$ is the column length (723 cm and 440 cm): the paper gives no separate dispersion
 #   height. $u_G$ in eqs. 1 and 8 is $u_{G0}$ at the column entry (the figures plot
 #   $u_{G0}$).
+# - $n_{G0}$ in $\Lambda$ is the molar gas flow at the column entry, at the pressure
+#   $p(0) = p_t (1 + h)$ with $h$ the hydrostatic head over $p_t$: $u_{G0}$ is the gas velocity
+#   at the entry (the figures plot it), so the moles follow from the entry pressure. R4
+#   prints the effect of taking $p_t$ instead (`gas_p="top"`).
 # - $p_t = 1$ atm, $\rho = 0.999$ g/cm³, $g = 981$ cm/s², $R = 82.0574$ cm³ atm/(mol K),
 #   $M = 32$ g/mol, $T = 16$ °C (printed).
 # - $c^*_{\mathrm{sat}} = 9.86$ mg/l for water under air at 16 °C and 1 atm (Benson and
@@ -184,8 +188,9 @@ claims = Claims(PAGE.split("-")[0])
 #   effect on R4 is measured with $c^*_{\mathrm{sat}}$ 5 % up and down.
 # - **Assumption (feed of BC I).** The feed $c_0 = 0.6$ mg/l for every BC I absorption point:
 #   Fig. 10 marks two feeds on its ordinate (about 0.66 and 1.05 mg/l, open circles) that
-#   cannot be assigned to one of the two BC I curves by marker shape. Relative results of
-#   R2 do not depend on it; R4 does, through $\theta_0$.
+#   cannot be assigned to one of the two BC I curves by marker shape. R2 depends on it only
+#   weakly and R4 through $\theta_0$; R2 prints the largest St changes and the counts with the
+#   other feed mark (1.05 mg/l).
 # - **Assumption (feed of BC II water).** $c_0 = 5.42$ mg/l, read at the square mark on
 #   Fig. 10's ordinate (the only mark with that shape).
 # - The 0.7 N Na₂SO₄ points use the water row of their column: Table 1 has no such row,
@@ -280,12 +285,13 @@ def eps_point(pid):
 
 
 def point(pid, K=K0, VL=None, uG=None, eps=None, swap_table=False, drop_epsL=False,
-          swap_dims=False):
+          swap_dims=False, gas_p="entry"):
     """Dimensionless groups of one operating point (eqs. 1, 4 to 6, 8 and the gas capacity).
 
     The defects of the break table enter as arguments: ``swap_table`` uses the other
     column's Table 1 row, ``drop_epsL`` drops (1 - eps_G) from Pe, ``swap_dims`` takes the
-    other column's diameter and length.
+    other column's diameter and length, ``gas_p="top"`` takes the gas flow n_G0 at the top
+    pressure p_t instead of the entry pressure p_t (1 + h).
     """
     op = OPS.loc[pid]
     col = op.column
@@ -305,7 +311,8 @@ def point(pid, K=K0, VL=None, uG=None, eps=None, swap_table=False, drop_epsL=Fal
     h = head_atm(eps, L, K["rho"], K["g"]) / K["p_t"]
     H = K["y_air"] * K["p_t"] / K["csat"]          # atm l/mg, from the saturation value
     c_ref = K["y_ref"] * K["p_t"] / H              # mg/l
-    Lam = capacity_ratio(uL, c_ref, K["M"], K["y_ref"], uG, K["p_t"] * (1 + h), K["R"], K["T_K"])
+    Lam = capacity_ratio(uL, c_ref, K["M"], K["y_ref"], uG,
+                         K["p_t"] * (1 + h) if gas_p == "entry" else K["p_t"], K["R"], K["T_K"])
     absorption = op["mode"] == "absorption"
     y0 = K["y_air"] if absorption else 0.0
     if absorption:
@@ -585,14 +592,27 @@ def s1_root_sets(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, bprime
     return out
 
 
+# The feed of the BC I points that Fig. 10's open circles leave open (assigned == "no"), and the
+# step of the gas holdup for the fragility of the count within 3 %.
+FEED_ALT = float(FEEDS[FEEDS.assigned == "no"].c0_mgl.max())
+EPS_STEP = 0.01
+# The three cases (point, Pe factor) outside S1's 3 % at the baseline, the worst first: the
+# claims below follow these cases, and their count plus the count within 3 % must make 20.
+S1_OUT = [("F9-BCI-H2O", 0.5), ("F9-BCI-Na2SO4", 0.5), ("F10-BCI-H2O-0.8", 2.0)]
+
+
 def study_r2(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, bprime_sign=-1.0,
-             roots=True, show=False):
-    """R2: St ratio, rms and change for D x 2 and x 1/2 at the ten points, designs D1 and D2."""
+             roots=True, sens=True, d_eps=0.0, show=False):
+    """R2: St ratio, rms and change for D x 2 and x 1/2 at the ten points, designs D1 and D2.
+
+    ``d_eps`` adds to every gas holdup; ``sens`` adds the feed and holdup sensitivities.
+    """
     out, rows = {}, []
     for design in ("D1", "D2"):
         dev, scat, rmsl, chl = [], [], [], []
         for pid in PIDS:
-            pt = point(pid, K, swap_table=swap_table, drop_epsL=drop_epsL)
+            pt = point(pid, K, eps=eps_point(pid) + d_eps if d_eps else None,
+                       swap_table=swap_table, drop_epsL=drop_epsL)
             x = PORT_X[pt["column"]] if design == "D1" else XK
             al, be, _ = cstar_coefficients(pt["y0"], 0.0, K0["y_ref"], pt["h"], bprime_sign)
             scale = abs(pt["theta0"] - al - 0.5 * be)
@@ -613,6 +633,43 @@ def study_r2(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, bprime_sig
         out[f"s1_{design}_worst_dev"] = (dev.max(), dict(kind="value", rtol=1e-5))
         out[f"s1_{design}_worst_rms_rel"] = (max(rmsl), dict(kind="value", rtol=1e-5))
         out[f"s1_{design}_worst_change_rel"] = (max(chl), dict(kind="value", rtol=1e-9))
+    kw = dict(swap_table=swap_table, drop_epsL=drop_epsL, inlet_sign=inlet_sign,
+              bprime_sign=bprime_sign, roots=False, sens=False)
+    if sens:
+        devs = {d: np.array([abs(r[4] - 1) for r in rows if r[0] == d]) for d in ("D1", "D2")}
+        named = np.array([abs(r[4] - 1) for pid, f in S1_OUT for r in rows
+                          if r[0] == "D1" and r[1] == pid and r[2] == f])
+        out["s1_D1_case_total"] = (devs["D1"].size, dict(
+            kind="exact", structural=True,
+            note="10 operating points, D times 2 and times 1/2: set by the design, no input moves it"))
+        out["s1_D1_named_outside_count"] = (int(np.sum(named >= 0.03)), dict(
+            kind="count", values=named, threshold=0.03, min_margin=1e-3,
+            note="of the three named cases, those at or beyond 3 %; with the count within 3 % "
+                 "they make all 20 cases"))
+        for i, v in enumerate(named, 1):
+            out[f"s1_D1_dev_out{i}"] = (v, dict(kind="value", rtol=1e-5,
+                                                note="|St ratio - 1| at the i-th named case"))
+        below = np.where(devs["D1"] < 0.03, devs["D1"], -1.0)
+        near = int(np.argmax(below))
+        out["s1_D1_nearest_dev"] = (below[near], dict(
+            kind="value", rtol=1e-5, note="the largest |St ratio - 1| inside 3 %, design D1"))
+        o_f, _ = study_r2(K=dict(K, c0_abs=FEED_ALT), **kw)
+        o_e, r_e = study_r2(K=K, d_eps=EPS_STEP, **kw)
+        for d in ("D1", "D2"):
+            out[f"s1_{d}_worst_dev_feed1p05"] = (o_f[f"s1_{d}_worst_dev"][0], dict(
+                kind="value", rtol=1e-5, note="largest |St ratio - 1| with the BC I feed read as 1.05 mg/l"))
+        for d in ("D1", "D2"):
+            out[f"s1_{d}_count_within_3pct_feed1p05"] = (
+                o_f[f"s1_{d}_count_within_3pct"][0], dict(
+                    kind="count", values=o_f[f"s1_{d}_count_within_3pct"][1]["values"],
+                    threshold=0.03, above=False, min_margin=1e-3,
+                    note="count within 3 % with the BC I feed read as 1.05 mg/l"))
+        out["s1_D1_count_within_3pct_epsp01"] = (
+            o_e["s1_D1_count_within_3pct"][0], dict(
+                kind="count", values=o_e["s1_D1_count_within_3pct"][1]["values"], threshold=0.03,
+                above=False, min_margin=1e-3, note="count within 3 % with every eps_G raised by 0.01"))
+        out["s1_D1_nearest_dev_epsp01"] = (abs([r for r in r_e if r[0] == "D1"][near][4] - 1), dict(
+            kind="value", rtol=1e-5, note="the nearest case of the baseline, eps_G raised by 0.01"))
     if roots:
         for (col, VL, tag), rts in s1_root_sets(K, swap_table, drop_epsL, inlet_sign,
                                                 bprime_sign).items():
@@ -633,6 +690,18 @@ for design in ("D1", "D2"):
     print(f"design {design}: St within 3 % in {R2[f's1_{design}_count_within_3pct'][0]} of 20 "
           f"cases, within the Table 1 scatter in {R2[f's1_{design}_count_within_scatter'][0]}; "
           f"largest |St ratio - 1| {100 * R2[f's1_{design}_worst_dev'][0]:.1f} %")
+print(f"The other BC I feed mark ({FEED_ALT} mg/l): largest |St ratio - 1| "
+      f"{100 * R2['s1_D1_worst_dev_feed1p05'][0]:.1f} % (D1) and "
+      f"{100 * R2['s1_D2_worst_dev_feed1p05'][0]:.1f} % (D2), within 3 % in "
+      f"{R2['s1_D1_count_within_3pct_feed1p05'][0]} and {R2['s1_D2_count_within_3pct_feed1p05'][0]} "
+      f"cases of {R2['s1_D1_case_total'][0]}.")
+_out = ", ".join(f"{p} x{f:g} {100 * R2[f's1_D1_dev_out{i}'][0]:.1f} %" for i, (p, f) in
+                 enumerate(S1_OUT, 1))
+print(f"The three D1 cases outside 3 % (point, Pe factor, |St ratio - 1|): {_out}; "
+      f"{R2['s1_D1_named_outside_count'][0]} of them are outside.")
+print(f"The nearest case inside the bound: {100 * R2['s1_D1_nearest_dev'][0]:.2f} %, "
+      f"{100 * R2['s1_D1_nearest_dev_epsp01'][0]:.2f} % with eps_G raised by {EPS_STEP}; the "
+      f"count within 3 % is then {R2['s1_D1_count_within_3pct_epsp01'][0]}.")
 print("\nuG (cm/s) where |St ratio - 1| crosses 3 %, design D2, Fig. 1 holdup line:")
 for k, v in R2.items():
     if k.startswith("s1_root_") and k.endswith("_count"):
@@ -687,10 +756,22 @@ F11_RATIO = (F11.kLa_NTU_line / F11.kLa_BCII_line).to_numpy()
 UG_F11 = F11.uG0_cm_s.to_numpy()
 
 
-def s2_ratios(VL, uG, K=K0, swap_table=False, drop_epsL=False, c0plus=False, inlet_sign=1.0):
-    """NTU and stirred-tank two-point St over the dispersion model's St (BC II, c* = 0)."""
-    pt = point("F10-BCII-H2O-2.5", K, VL=VL, uG=uG, eps=eps_line("BC II", uG),
-               swap_table=swap_table, drop_epsL=drop_epsL)
+PRINTED_MOL = [p for p in OPS.index if p.startswith("F9-BCII-mol")]
+PRINTED_H2O = "F10-BCII-H2O-2.5"
+
+
+def s2_ratios(VL, uG, K=K0, swap_table=False, drop_epsL=False, c0plus=False, inlet_sign=1.0,
+              pid=None):
+    """NTU and stirred-tank two-point St over the dispersion model's St (BC II, c* = 0).
+
+    With ``pid`` the point is one of the paper's printed operating points (its own V_L, uG,
+    holdup and Table 1 row); otherwise the tap-water line of Fig. 10 at ``VL`` and ``uG``.
+    """
+    if pid is None:
+        pt = point(PRINTED_H2O, K, VL=VL, uG=uG, eps=eps_line("BC II", uG),
+                   swap_table=swap_table, drop_epsL=drop_epsL)
+    else:
+        pt = point(pid, K, swap_table=swap_table, drop_epsL=drop_epsL)
     out, inlet = adm_profile([1.0, 0.0], pt["Pe"], pt["St"], 0, 0, 0, 1.0, inlet_sign)
     feed = inlet if c0plus else 1.0      # c0plus: the jumped inlet face read as the feed
     with np.errstate(invalid="ignore"):  # a broken inlet can make c(1) negative: nan, not a ratio
@@ -698,11 +779,25 @@ def s2_ratios(VL, uG, K=K0, swap_table=False, drop_epsL=False, c0plus=False, inl
                 st_two_point_cstr(out, feed, 0.0, 0.0) / pt["St"])
 
 
-def study_r3(K=K0, swap_table=False, drop_epsL=False, c0plus=False, inlet_sign=1.0, show=False):
-    """R3: NTU ratio at V_L 0.8 and 2.5, roots for ratio 0.8 and for Fig. 11's ratios."""
+def study_r3(K=K0, swap_table=False, drop_epsL=False, c0plus=False, inlet_sign=1.0,
+             f11_invert=False, show=False):
+    """R3: NTU ratio at V_L 0.8 and 2.5, roots for ratio 0.8 and for Fig. 11's ratios.
+
+    ``f11_invert`` reads Fig. 11's ratio the wrong way round (BC II line over NTU line).
+    """
     kw = dict(K=K, swap_table=swap_table, drop_epsL=drop_epsL, c0plus=c0plus,
               inlet_sign=inlet_sign)
-    out = {}
+    f11 = 1 / F11_RATIO if f11_invert else F11_RATIO
+    out = {"t1_scatter_BCII_water": (SCATTER[OTHER["BC II"] if swap_table else "BC II"], dict(
+               kind="value", rtol=1e-9, note="Table 1 relative mean deviation, BC II water")),
+           "s2_fig11_ratio_min": (f11.min(), dict(kind="value", rtol=1e-9)),
+           "s2_fig11_ratio_max": (f11.max(), dict(kind="value", rtol=1e-9))}
+    mol = [s2_ratios(None, None, **kw, pid=p)[0] for p in PRINTED_MOL]
+    out["s2_ntu_ratio_printed_mol_min"] = (min(mol), dict(
+        kind="value", rtol=1e-9, note="Fig. 9 BC II molasses points, printed V_L and uG"))
+    out["s2_ntu_ratio_printed_mol_max"] = (max(mol), dict(kind="value", rtol=1e-9))
+    out["s2_ntu_ratio_printed_H2O"] = (s2_ratios(None, None, **kw, pid=PRINTED_H2O)[0], dict(
+        kind="value", rtol=1e-9, note="BC II water point of Fig. 10, printed V_L and uG"))
     ntu = {VL: np.array([s2_ratios(VL, u, **kw)[0] for u in UG_F11]) for VL in (0.8, 2.5)}
     cstr = np.array([s2_ratios(VL, u, **kw)[1] for VL in (0.8, 2.5) for u in UG_F11])
     for VL in (0.8, 2.5):
@@ -717,7 +812,7 @@ def study_r3(K=K0, swap_table=False, drop_epsL=False, c0plus=False, inlet_sign=1
         note="stirred-tank St above the dispersion St (p. 2180: too high)"))
     out["s2_cstr_ratio_min"] = (cstr.min(), dict(kind="value", rtol=1e-9))
     roots08, implied = [], []
-    for u, rf in zip(UG_F11, F11_RATIO):
+    for u, rf in zip(UG_F11, f11):
         for target, store in ((0.8, roots08), (rf, implied)):
             res = find_roots(lambda VL: s2_ratios(VL, u, **kw)[0] - target, 0.4, 6.0,
                              n_scan=32, log=True, xtol=1e-12)
@@ -748,6 +843,12 @@ print(f"\nNTU St over dispersion St: {R3['s2_ntu_ratio_VL0p8_min'][0]:.3f} to "
       f"{R3['s2_count_ntu_within_20pct'][0]} of 12 cases.")
 print(f"Stirred tank above the dispersion St in {R3['s2_count_cstr_too_high'][0]} of 12 cases "
       f"(smallest ratio {R3['s2_cstr_ratio_min'][0]:.3f}): p. 2180's sign holds.")
+print(f"Fig. 11's NTU line lies at {R3['s2_fig11_ratio_min'][0]:.3f} to "
+      f"{R3['s2_fig11_ratio_max'][0]:.3f} of its BC II line; the ratio reaches 0.8 at V_L "
+      f"{R3['s2_VL_ratio0p8_uG0p6'][0]:.2f} (uG 0.6) to {R3['s2_VL_ratio0p8_uG1p5'][0]:.2f} "
+      f"(uG 1.5) m3/h, and the NTU St over the dispersion St at the printed BC II points is "
+      f"{R3['s2_ntu_ratio_printed_mol_min'][0]:.3f} to {R3['s2_ntu_ratio_printed_mol_max'][0]:.3f} "
+      f"(molasses, Fig. 9) and {R3['s2_ntu_ratio_printed_H2O'][0]:.3f} (water, Fig. 10).")
 print(f"Fig. 11's BC II line against Table 1: largest deviation "
       f"{100 * R3['v4_fig11_line_max_dev'][0]:.1f} %, the reading error of R3's ratios.")
 
@@ -788,9 +889,9 @@ R4_TAG = {"F9-BCI-H2O": "F9BCI", "F10-BCI-H2O-0.8": "F10BCI0p8",
 
 def r4_point(pid, K=K0, swap_table=False, drop_epsL=False, VL=None, inlet_sign=1.0,
              gas_outlet="outflow", outlet_read="face", bprime_sign=-1.0, b3_prefactor="St",
-             balance="inert", two_term=True, dy_sign=1.0):
+             balance="inert", two_term=True, dy_sign=1.0, gas_p="entry"):
     """Coupled truth at one point and the two fits over it."""
-    pt = point(pid, K, VL=VL, swap_table=swap_table, drop_epsL=drop_epsL)
+    pt = point(pid, K, VL=VL, swap_table=swap_table, drop_epsL=drop_epsL, gas_p=gas_p)
     q = unpack(coupled_extrapolated(pt, two_term, inlet_sign=inlet_sign, gas_outlet=gas_outlet,
                                     outlet_read=outlet_read, bprime_sign=bprime_sign), pt)
     r_cy, r_e7, dym = fit_cases(pt, q["data"], inlet_sign, bprime_sign, b3_prefactor, balance,
@@ -810,11 +911,12 @@ def print_r4(res):
 
 def study_r4(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, gas_outlet="outflow",
              outlet_read="face", bprime_sign=-1.0, b3_prefactor="St", balance="inert",
-             two_term=True, dy_sign=1.0, root=True, sens=True, show=False):
+             two_term=True, dy_sign=1.0, gas_p="entry", root=True, sens=True, show=False):
     """R4: Delta y_t, the bend of y(x), and the constant-y and eq. 7 fits over the coupled truth."""
     kw = dict(K=K, swap_table=swap_table, drop_epsL=drop_epsL, inlet_sign=inlet_sign,
               gas_outlet=gas_outlet, outlet_read=outlet_read, bprime_sign=bprime_sign,
-              b3_prefactor=b3_prefactor, balance=balance, two_term=two_term, dy_sign=dy_sign)
+              b3_prefactor=b3_prefactor, balance=balance, two_term=two_term, dy_sign=dy_sign,
+              gas_p=gas_p)
     res = {pid: r4_point(pid, **kw) for pid in R4_IDS}
     out = {}
     for pid, r in res.items():
@@ -853,6 +955,13 @@ def study_r4(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, gas_outlet
             note=f"of {VL_SCAN.size} V_L from 0.4 to 6 m3/h, BC II water, uG 0.53"))
         out["s3_BCII_cy_bias_VL0p4"] = (bias[0], dict(kind="value", rtol=1e-4))
         out["s3_BCII_cy_bias_VL6"] = (bias[-1], dict(kind="value", rtol=1e-4))
+        kw95 = dict(kw, K=dict(K, csat=K["csat"] * 0.95))
+        bias95 = np.array([1 - r4_point(pid, VL=v, **kw95)["r_cy"] for v in VL_SCAN])
+        out["s3_BCII_cy_bias_VL6_csat0p95"] = (bias95[-1], dict(
+            kind="value", rtol=1e-4, note="as s3_BCII_cy_bias_VL6 with c*_sat 5 % lower"))
+        out["s3_BCII_scan_cy_beyond_scatter_csat0p95"] = (int(np.sum(bias95 > SCATTER[col])), dict(
+            kind="count", values=bias95 / SCATTER[col], threshold=1.0, min_margin=1e-3,
+            note=f"of {VL_SCAN.size} V_L from 0.4 to 6 m3/h, c*_sat 5 % lower"))
     if sens:
         ch_csat, ch_naive = [], []
         for fac in (1.05, 0.95):
@@ -863,6 +972,11 @@ def study_r4(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, gas_outlet
             alt = "naive" if balance == "inert" else "inert"
             ch_naive.append(abs(fit_cases(res[pid]["pt"], res[pid]["q"]["data"], inlet_sign,
                                           bprime_sign, b3_prefactor, alt)[1] - res[pid]["r_e7"]))
+        top = {pid: r4_point(pid, **dict(kw, gas_p="top")) for pid in R4_IDS}
+        out["s3_sens_ptop_cy_F10BCII"] = (top["F10-BCII-H2O-2.5"]["r_cy"], dict(
+            kind="value", rtol=1e-4, note="constant-y ratio, BC II water, n_G0 at p_t"))
+        out["s3_sens_ptop_gain_max"] = (max(r["r_e7"] / r["r_cy"] - 1 for r in top.values()), dict(
+            kind="value", rtol=1e-4, note="largest eq. 7 gain over the four points, n_G0 at p_t"))
         out["s3_sens_csat_max"] = (max(ch_csat), dict(
             kind="value", rtol=1e-3, note="largest change of the constant-y ratio, c*_sat +-5 %"))
         out["s3_sens_naive_balance_max"] = (max(ch_naive), dict(
@@ -874,7 +988,8 @@ def study_r4(K=K0, swap_table=False, drop_epsL=False, inlet_sign=1.0, gas_outlet
 
 R4, R4_RES = study_r4(show=True)
 print(f"\n|Delta y_t| below S3's 0.04 at {R4['s3_count_dyt_within_0p04'][0]} of 4 points. Eq. 7 "
-      f"raises St over constant y by at most {100 * R4['s3_eq7_gain_max'][0]:.1f} %.")
+      f"raises St over constant y by at most {100 * R4['s3_eq7_gain_max'][0]:.1f} % at the four "
+      "points.")
 print(f"Constant-y bias beyond the Table 1 scatter at {R4['s3_count_cy_beyond_scatter'][0]} of 4 "
       f"points; eq. 7 bias beyond it at {R4['s3_count_e7_beyond_scatter'][0]}.")
 print(f"BC II, uG 0.53 cm/s: the constant-y bias crosses the 14.6 % scatter "
@@ -882,6 +997,14 @@ print(f"BC II, uG 0.53 cm/s: the constant-y bias crosses the 14.6 % scatter "
       f"lies above it at {R4['s3_BCII_scan_cy_beyond_scatter'][0]} of {VL_SCAN.size} scan points; "
       f"{100 * R4['s3_BCII_cy_bias_VL0p4'][0]:.1f} % at V_L 0.4, "
       f"{100 * R4['s3_BCII_cy_bias_VL6'][0]:.1f} % at 6.")
+print(f"The V_L scan: the constant-y bias at 6 m3/h is "
+      f"{100 * R4['s3_BCII_cy_bias_VL6'][0]:.2f} % and {100 * R4['s3_BCII_cy_bias_VL6_csat0p95'][0]:.2f} % "
+      f"with c*_sat 5 % lower; it lies above the {100 * SCATTER['BC II']:.1f} % scatter at "
+      f"{R4['s3_BCII_scan_cy_beyond_scatter'][0]} of {VL_SCAN.size} scan points, "
+      f"{R4['s3_BCII_scan_cy_beyond_scatter_csat0p95'][0]} with c*_sat 5 % lower.")
+print(f"n_G0 at the top pressure p_t instead of the entry pressure: BC II water constant-y ratio "
+      f"{R4['s3_sens_ptop_cy_F10BCII'][0]:.3f}, eq. 7 gain at most "
+      f"{100 * R4['s3_sens_ptop_gain_max'][0]:.1f} %.")
 print(f"H unknown: c*_sat +-5 % moves the constant-y ratio by at most "
       f"{R4['s3_sens_csat_max'][0]:.4f}; the naive balance moves the eq. 7 ratio by at most "
       f"{R4['s3_sens_naive_balance_max'][0]:.4f}.")
@@ -936,11 +1059,11 @@ def print_ladder(names, ns, vals, orders, finest, roundoff, ext, bvp, gap):
     print("orders (successive triples):")
     for o in orders:
         print("       " + " ".join(f"{x:14.3f}" for x in o))
-    print("finest difference: " + " ".join(f"{x:.2e}" for x in finest))
-    print("round-off (MMD_ATA): " + " ".join(f"{x:.1e}" for x in roundoff))
+    print("finest difference (here " + " ".join(f"{x:.2e}" for x in finest) + ")")
+    print("round-off (MMD_ATA) (here " + " ".join(f"{x:.1e}" for x in roundoff) + ")")
     print("extrapolated: " + " ".join(f"{x:.10f}" for x in ext))
     print("solve_bvp:    " + " ".join(f"{x:.10f}" for x in bvp))
-    print("relative gaps to solve_bvp: " + " ".join(f"{x:.1e}" for x in gap))
+    print("relative gaps to solve_bvp (here " + " ".join(f"{x:.1e}" for x in gap) + ")")
     one = richardson(vals[-3:], False)
     print("with the first-order term only: " + " ".join(f"{x:.1e}" for x in
                                                         np.abs(one[:3] / bvp - 1)))
@@ -1007,9 +1130,9 @@ def study_v(inlet_sign=1.0, gas_outlet="outflow", outlet_read="face", two_term=T
 
 
 V = study_v(show=True)
-print(f"Lambda = 0 against A6 to A11: {V['v1_lambda0_vs_A6_A11'][0]:.1e}; c* = 0 against the "
-      f"closed vessel: {V['v1_cstar0_vs_closed_vessel'][0]:.1e}; O2 balance on the faces "
-      f"{V['v3_o2_balance'][0]:.1e}")
+print(f"Lambda = 0 against A6 to A11 (here {V['v1_lambda0_vs_A6_A11'][0]:.1e}); c* = 0 against "
+      f"the closed vessel (here {V['v1_cstar0_vs_closed_vessel'][0]:.1e}); O2 balance on the "
+      f"faces (here {V['v3_o2_balance'][0]:.1e})")
 
 # %% [markdown]
 # ### The misprints and the limits, measured at T
@@ -1049,8 +1172,8 @@ def study_mp(inlet_sign=1.0, b3_prefactor="St", bprime_sign=-1.0, balance="inert
         "lim_pe1e-4_over_cstr_minus_1": (lo - 1, dict(kind="value", rtol=1e-3)),
     }
     if show:
-        for k, (v, _) in out.items():
-            print(f"{k:36s} {v: .6e}")
+        for k, (v, sp) in out.items():
+            print(f"{k:36s} " + (f"(here {v:.1e})" if sp["kind"] == "bound" else f"{v: .6e}"))
     return out
 
 
@@ -1065,11 +1188,14 @@ MP = study_mp(show=True)
 # %%
 print(f"S1, D off by a factor 2 (design D1, the real ports): |St ratio - 1| up to "
       f"{100 * R2['s1_D1_worst_dev'][0]:.1f} %; within 3 % in {R2['s1_D1_count_within_3pct'][0]} "
-      f"of 20 cases, within the Table 1 scatter in {R2['s1_D1_count_within_scatter'][0]} of 20.")
+      f"of {R2['s1_D1_case_total'][0]} cases ({R2['s1_D1_count_within_3pct_epsp01'][0]} with eps_G "
+      f"raised by {EPS_STEP}), within the Table 1 scatter in "
+      f"{R2['s1_D1_count_within_scatter'][0]}.")
 print(f"S2, plug flow (NTU), BC II: St ratio {R3['s2_ntu_ratio_VL0p8_min'][0]:.3f} to "
-      f"{R3['s2_ntu_ratio_VL0p8_max'][0]:.3f} at V_L 0.8 m3/h (below 0.8 everywhere there: "
-      f"{R3['s2_count_ntu_within_20pct'][0]} of 12 cases within 20 %), "
-      f"{R3['s2_ntu_ratio_VL2p5_min'][0]:.3f} to {R3['s2_ntu_ratio_VL2p5_max'][0]:.3f} at 2.5. "
+      f"{R3['s2_ntu_ratio_VL0p8_max'][0]:.3f} at V_L 0.8 m3/h ({R3['s2_count_ntu_within_20pct'][0]} "
+      f"of 12 cases within 20 %), {R3['s2_ntu_ratio_VL2p5_min'][0]:.3f} to "
+      f"{R3['s2_ntu_ratio_VL2p5_max'][0]:.3f} at 2.5; Fig. 11's own ratio "
+      f"{R3['s2_fig11_ratio_min'][0]:.3f} to {R3['s2_fig11_ratio_max'][0]:.3f}. "
       f"Stirred tank: at least {R3['s2_cstr_ratio_min'][0]:.2f} times the dispersion St.")
 print("S3, gas phase, against the coupled model: constant-y St ratios "
       + ", ".join(f"{R4[f's3_fit_cy_{t}'][0]:.3f}" for t in R4_TAG.values())
@@ -1078,20 +1204,21 @@ print("S3, gas phase, against the coupled model: constant-y St ratios "
       f"eq. 7 {R4['s3_count_e7_beyond_scatter'][0]} of 4.")
 
 # %% [markdown]
-# **Reading the numbers.** The mixing input matters in two places. A stirred-tank
-# evaluation is far off everywhere, as p. 2180 says. The plug-flow NTU evaluation is
-# lower than the dispersion St by more than S2's 20 per cent, and by more than the
-# Table 1 scatter, at the liquid flow of Fig. 9; at the higher BC II flow of Fig. 10 it
-# is within S2's bound, but beyond the scatter at the upper gas velocities of Fig. 11.
-# S2 holds only at the higher liquid flows, a condition the paper does not state. A
-# dispersion coefficient off by a factor of two moves St beyond the 3 per cent of S1 at
-# the Fig. 9 BC I points, where St is large and the profile is flat after the first
-# tenth of the column, and beyond the scatter in one case there; D is above 100 cm²/s at
-# those points, so S1's threshold is not what decides it, the port positions and St are. The gas phase is the largest effect where the gas
-# carries little oxygen compared with the liquid (BC II desorption into nitrogen): there
-# the constant-$y$ evaluation is low by more than the scatter at every liquid flow
-# scanned, and eq. 7 brings it back within. At the BC I absorption points the
-# constant-$y$ evaluation stays within the scatter.
+# **Reading the numbers.** S1 holds at the measuring ports in most of the cases (counts
+# printed above) and fails at the Fig. 9 BC I points, where St is large and the profile is
+# flat after the first tenth of the column, and once at the Fig. 10 BC I point at the lower
+# liquid flow with D halved. D is above 100 cm²/s at those points, so S1's threshold is not
+# what decides it: the port positions and St are. S2 holds for Fig. 11 as drawn, where the
+# NTU line lies inside 20 per cent of the BC II line, and is not a general bound: the
+# dispersion model puts the NTU evaluation more than 20 per cent low, and beyond the Table 1
+# scatter, at the liquid flow of Fig. 9, and no single liquid flow reproduces Fig. 11's
+# ratios. A stirred-tank evaluation is far off everywhere, as p. 2180 says. S3 holds: eq. 7
+# raises St by less than the paper's 20 per cent at the four points. Against the coupled
+# model the constant-$y$ evaluation is low by more than the scatter at the BC II water point
+# of Fig. 10, and at every liquid flow scanned there for the saturation value used (the
+# margin at the top of the scan is smaller than a 5 % change of $c^*_{\mathrm{sat}}$ moves
+# it); eq. 7 brings it back within. At the BC I absorption points the constant-$y$
+# evaluation stays within the scatter.
 
 # %% [markdown]
 # ## What pymrm adds
@@ -1154,6 +1281,8 @@ STUDY_FN = {"R1": lambda **k: study_r1(**k)[0], "R2": lambda **k: study_r2(**k)[
 K_EXP = dict(K0, D_exp_uG=0.5)
 K_MG = dict(K0, M=K0["M"] * 1e3)
 K_RJ = dict(K0, R=8314.46)       # J/(kmol K) where cm3 atm/(mol K) belongs: Lambda x 101
+K_CS = dict(K0, csat=K0["csat"] * 0.95)    # the unprinted saturation value 5 % low
+K_DC = dict(K0, D_coef=K0["D_coef"] * 2)   # eq. 1 with its coefficient twice as large
 ROWS = [
     ("A4 inlet sign as printed (M1)", {"R2": dict(inlet_sign=-1.0), "R3": dict(inlet_sign=-1.0),
                                         "V": dict(inlet_sign=-1.0), "MP": dict(inlet_sign=-1.0)}),
@@ -1188,20 +1317,32 @@ ROWS = [
                                                               sens=False),
                                                    "V": dict(two_term=False)}),
     ("orders measured on extrapolated values", {"V": dict(order_on="extrapolated")}),
-    ("second ordering solved to newton tol 1e-3", {"V": dict(companion_tol=1e-3)}),
+    ("c*_sat 5 % low", {"R4": dict(K=K_CS, sens=False)}),
+    ("eq. 1 coefficient twice as large", {"R1": dict(K=K_DC), "R2": dict(K=K_DC),
+                                          "R3": dict(K=K_DC),
+                                          "R4": dict(K=K_DC, root=False, sens=False)}),
+    ("Fig. 11 ratio read upside down", {"R3": dict(f11_invert=True)}),
 ]
 claims.define_rows([lab for lab, _ in ROWS])
-TABLE = []
+TABLE, CRASHED, NO_NUMBER = [], [], []
 for label, studies in ROWS:
     for sname, kw in studies.items():
         try:
             broken = STUDY_FN[sname](**kw)
-        except Exception as exc:       # a study that cannot run records nan for its claims
-            print(f"{label} / {sname}: {type(exc).__name__}: {exc}")
-            broken = {}
+        except Exception as exc:       # a crash is reported, never counted as a catch
+            print(f"CRASH {label} / {sname}: {type(exc).__name__}: {exc}")
+            CRASHED.append((label, sname))
+            continue
         for name in BASE[sname]:
-            val = broken.get(name, (np.nan,))[0]
+            if name not in broken:     # the row's study does not compute this claim
+                continue
+            val = broken[name][0]
+            if not np.isfinite(val):   # no number came back: not a moved value
+                NO_NUMBER.append((label, name))
+                continue
             TABLE.append((label, name, claims[name], val, claims.breaks(label, name, val)))
+print(f"{len(CRASHED)} study crash(es); {len(NO_NUMBER)} claim(s) came back without a number "
+      "in a broken run and are not counted.")
 print(f"{'row':44s} {'claim':38s} {'caught':>6s}")
 for label, name, v0, v1, caught in TABLE:
     if caught:
