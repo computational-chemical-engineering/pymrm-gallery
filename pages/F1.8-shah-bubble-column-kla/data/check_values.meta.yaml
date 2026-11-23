@@ -1,0 +1,36 @@
+dataset_id: check-values
+title: "Independent check values for the page's correlation functions at one test condition"
+status: complete
+
+source:
+  authors: ["Shah, Y. T.", "Kelkar, B. G.", "Godbole, S. P.", "Deckwer, W.-D."]
+  year: 1982
+  container: "AIChE Journal 28(3) 353-379"
+  doi: 10.1002/aic.690280302
+  access: >
+    The equations are those of the review as listed in the build plan's equations
+    file; the values are not read from the paper but computed by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (double precision computed); each row's rtol is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f18_check_values.py (plain Python and the standard library, no pymrm, no page code), 2026-11-23; key rows (eps, kLa Akita-Yoshida, kLa Hikita, their ratio) recomputed by the coordinator with scipy brentq to all printed digits"
+  date: 2026-11-23
+  estimated_error: "none beyond floating point; the rtol column is the tolerance, not an error estimate"
+
+conditions: >
+  Test condition: air-water, 20 C, 1 atm, column diameter D = 0.15 m, superficial gas
+  velocity uG = 0.05 m/s unless the name says otherwise (D0p2 = 0.2 m; uG0.003 and so
+  on). Water properties: the water_20 row of F1.1's akita-yoshida-1974-table2-properties.csv
+  (rho_L 998.2 kg/m3, mu_L 1.005e-3 Pa s, sigma 72.8e-3 N/m, D_L 2.10e-9 m2/s); air
+  viscosity 1.81e-5 Pa s (a page input; the review prints none). The Nakanoh-Yoshida
+  rows marked restored use uG/sqrt(gD) as Froude group; printed rows use the printed
+  uG/(gD). The exact identity that the Akita-Yoshida holdup does not depend on D
+  (exponent 0) is checked on the page itself, not here: a zero cannot be a relative check.
+  F1p1 rows reproduce F1.1's own check at nu_L = 1.005e-6.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; the unit is the name's suffix where it has one"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

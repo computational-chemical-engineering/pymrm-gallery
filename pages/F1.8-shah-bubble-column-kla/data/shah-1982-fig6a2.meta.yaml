@@ -1,0 +1,65 @@
+dataset_id: shah-1982-fig6a2
+title: "Measured kLa against the Akita-Yoshida group, Figure 6-a.2 of the review"
+status: complete
+
+source:
+  authors: ["Shah, Y. T.", "Kelkar, B. G.", "Godbole, S. P.", "Deckwer, W.-D."]
+  year: 1982
+  container: "AIChE Journal 28(3) 353-379"
+  doi: 10.1002/aic.690280302
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/), downloaded
+    through an institutional subscription (TU Eindhoven). No PDF and no page image is
+    stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Figure 6-a.2, journal page 366"
+  tool: "pdfimages (native 300 ppi bilevel scan, CCITT); marker centres by normalised cross-correlation with the four legend markers as templates (scipy), each checked by eye, overlapping ones on 5x and 6x zoomed crops; line centres per pixel column from connected components (scipy.ndimage)"
+  procedure: >
+    Logarithmic axes. Calibration by a least-squares affine map of log10 values from
+    the printed major and minor ticks in page pixels at 300 ppi: 24 abscissa ticks on
+    the top frame (5e-3 at column 1333 to 1 at 2077) and 13 on the bottom frame,
+    16 ordinate ticks on the left frame (0.1 at row 191 to 4e-3 at 646) and 11 on
+    the right. About 323 px per decade in x and 326 in y. 24 markers were placed:
+    3 triangles, 12 squares, 4 diamonds, 4 circles and one marker partly hidden
+    behind a square whose shape cannot be decided (label unassigned). The solid
+    line was traced at 25 pixel columns where it is free of markers.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-23
+  estimated_error: >
+    Calibration residual at most 2.8 px, 0.009 decade or 2 % (the printed minor
+    ticks are irregular by that much). Free markers within about 1.5 px of the
+    template peak, 0.005 decade; overlapping markers (noted in the file) about 3 px,
+    0.01 decade. The scatter of the line trace against y = 0.6 x is measured on the
+    page (Validation V4).
+
+conditions: >
+  Abscissa (D_L/Dc^2) Sc^0.5 Bo^0.62 Ga^0.31 eps^1.1 with measured holdup, ordinate
+  measured kLa (1/s), as printed. Authors and column diameters from the legend:
+  triangle Towell et al. (1965) 0.406 m, square Deckwer et al. (1974) 0.20 m,
+  diamond Kastanek et al. (1977) 1.00 m, circle Kataoka et al. (1979) 5.50 m; the
+  last two were evaluated with Dc = 0.6 m (footnote). The line is labelled Akita,
+  Yoshida (1973); the caption says 1974.
+
+missing:
+  - "Possible markers hidden under others in the cluster at abscissa 0.02 to 0.06; one partly hidden marker is listed as unassigned."
+
+columns:
+  - {name: kind, unit: "-", description: "marker or line"}
+  - {name: marker, unit: "-", description: "triangle, square, diamond, circle or unassigned; solid for the line"}
+  - {name: author, unit: "-", description: "from the legend"}
+  - {name: Dc_m, unit: m, description: "column diameter from the legend"}
+  - {name: x_group, unit: 1/s, description: "abscissa group, from the pixel position through the calibration"}
+  - {name: kLa_1_s, unit: 1/s, description: "measured kLa, from the pixel position"}
+  - {name: px_x, unit: px, description: "centre column at 300 ppi"}
+  - {name: px_y, unit: px, description: "centre row at 300 ppi"}
+  - {name: note, unit: "-", description: "reading note"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
