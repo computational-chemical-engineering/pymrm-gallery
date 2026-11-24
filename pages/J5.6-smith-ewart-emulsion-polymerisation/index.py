@@ -222,6 +222,9 @@ LADDER = (1600, 3200, 6400, 12800, 25600)
 T_END = {"upper": 1.40, "lower": 1.71}     # scaled march horizons, past each t_1
 
 
+M_ASYM, ALPHA_ASYM = 0.3, 1e10      # the large-alpha asymptote of the slope is checked here
+
+
 @dataclass(frozen=True)
 class Cfg:
     """Everything the study reads; every break row changes one field."""
@@ -238,6 +241,7 @@ class Cfg:
     ladder: tuple = LADDER
     comp_scale: float = 1.0        # inflow factor of the PBE round-off companion
     inflow_scale: float = 1.0      # PBE inflow factor (a defect when not 1)
+    scan_n: int = 25               # number of m values in the plateau scan, 1e-3 to 10
 
 
 C0 = Cfg()
@@ -442,13 +446,20 @@ def part_p1(cfg, M):
         M["r1_T_min_slope"], M["r1_T_alpha_min_slope"] = mi[1], mi[0] * law.term
         M["r1_m_plateau_01"] = law.term * one_root(
             lambda me: smin(me)[1] - 0.1, 1e-4, 0.3, "plateau slope 0.1", n_scan=24, xtol=1e-15)
-        grid = np.geomspace(1e-3, 10.0, 25)
+        grid = np.geomspace(1e-3, 10.0, cfg.scan_n)
         has = [smin(mm / law.term) is not None for mm in grid]
         M["r1_scan_n_m"] = len(grid)
         M["r1_scan_n_below_half"] = int(np.sum(grid < 0.5))
+        M["r1_scan_n_at_or_above_half"] = int(np.sum(grid >= 0.5))
         M["r1_scan_n_min"] = int(sum(has))
         M["r1_scan_n_min_at_or_above_half"] = int(sum(h for h, mm in zip(has, grid) if mm >= 0.5))
         M["_scan"] = (grid, has)
+        # the slope at m = 0.3 (between the plateau threshold and 1/2) and the large-alpha
+        # asymptote s = 1/2 + (2m - 1)/(4a), a = sqrt(8 alpha), checked at alpha = 1e10
+        M["r1_m03_min_slope"] = smin(M_ASYM / law.term)[1]
+        dev = float(slope_closed(ALPHA_ASYM, M_ASYM, law)) - 0.5
+        M["r1_asym_dev"] = dev
+        M["r1_asym_gap"] = abs(dev / ((2 * M_ASYM - 1) / (4 * math.sqrt(8 * ALPHA_ASYM))) - 1)
     # eq. 8 (A3)
     a0 = 1e-6
     if cfg.reentry:
@@ -696,10 +707,10 @@ plt.show()
 say("At T ($\\alpha$ = 0.1, $m$ = 0.01) the exact $\\bar n$ is <<n:.6f>>, <<r:.4f>> times the "
     "Case 2 value, with $p_0$ = <<p0:.6f>> and $p_1$ = <<p1:.6f>>; the local slope is <<s:.6f>>.",
     n=M["r1_T_nbar"], r=M["r1_T_rate_over_case2"], p0=M["r1_T_p0"], p1=M["r1_T_p1"], s=M["r1_T_slope"])
-say("**Case 2 needs a far larger $\\beta$ than the paper states.** The paper derives "
-    "\"(from (10) $\\beta$>1)\" (p. 595) and calls the approximation of Appendix I satisfactory "
-    "\"when $\\beta$>1\". At $m$ = 0 the exact $\\bar n$ is within 10 % of 1/2 only for "
-    "$\\beta \\ge$ <<b10:.4f>> (<<rb:.2f>> times the stated condition) and within 1 % for "
+say("**How large $\\beta$ must be.** The paper reads \"(from (10) $\\beta$>1)\" (p. 595), calls the "
+    "approximation of Appendix I satisfactory \"when $\\beta$>1\", and expects $\\bar n$ near 1/2 "
+    "\"if $\\beta$ is sufficiently large\". At $m$ = 0 the exact $\\bar n$ is within 10 % of 1/2 only for "
+    "$\\beta \\ge$ <<b10:.4f>> (<<rb:.2f>> times the value 1 read from eq. 10) and within 1 % for "
     "$\\beta \\ge$ <<b1:.3f>>; at $\\beta$ = 1 it is <<e1:.4f>>, <<ex:.1%>> above 1/2. Case 3 is within "
     "10 % for $\\alpha \\ge$ <<c3:.4f>> at $m$ = 0 and <<c3m:.4f>> at $m$ = 0.01; Case 1 within "
     "10 % for $\\alpha \\le$ <<c1:.4e>> at $m$ = 0.01. At $m$ = 0.01 the band where $\\bar n$ is "
@@ -710,18 +721,23 @@ say("**Case 2 needs a far larger $\\beta$ than the paper states.** The paper der
     hi=M["r1_alpha_nbar_055"], dec=M["r1_case2_band_decades"])
 say("**The plateau.** At $m$ = 0.01 the slope falls to <<sm:.5f>> at $\\alpha$ = <<am:.5f>> "
     "(root of the analytic derivative). The smallest slope reaches 0.1 only for "
-    "$m \\le$ <<mp:.6f>>. Over <<ns:d>> values of $m$ from 0.001 to 10, <<nm:d>> have an interior "
+    "$m \\le$ <<mp:.6f>>, so by that threshold Case 2 is already gone above this $m$; at $m$ = <<mq:.1f>> the "
+    "smallest slope is <<s3:.4f>>. Over <<ns:d>> values of $m$ from 0.001 to 10, <<nm:d>> have an interior "
     "minimum of the slope below 1/2 on $\\alpha \\le 10^4$: all <<nb:d>> below $m$ = 1/2 and <<na:d>> of "
-    "the <<nab:d>> at or above it: "
-    "there the slope falls monotonically from 1 to 1/2 (at $m$ = 1/2 exactly, "
-    "$s = \\tfrac12(1 + 2a/\\sinh 2a)$, <<s5:.6f>> at $\\alpha$ = 0.1). This is the paper's "
+    "the <<nab:d>> at or above it. Any dip below 1/2 is gone from $m$ = 1/2 on (closed form there, "
+    "$s = \\tfrac12(1 + 2a/\\sinh 2a)$, <<s5:.6f>> at $\\alpha$ = 0.1; none of the scanned $m$ up to 10). "
+    "The boundary sits at $m$ = 1/2 because the large-$\\alpha$ slope is "
+    "$s = \\tfrac12 + (2m - 1)/(4a) + O(a^{-2})$ with $a = \\sqrt{8\\alpha}$, below 1/2 for $m < 1/2$ "
+    "and above it for $m > 1/2$; at $m$ = <<mq:.1f>> and $\\alpha$ = <<aq:.0e>> it gives $s - 1/2$ = "
+    "<<dv:.4e>>, within <<ag:.1e>> (relative) of the asymptote. This is the paper's "
     "\"transition from case 1 to case 3 without ever realizing case 2\" (p. 596), with the "
     "exact boundary at $k_0 a = k_t/2$, where the paper asks only that $k_0a$ \"must be much smaller "
     "than $k_t$\" (p. 596).",
     sm=M["r1_T_min_slope"], am=M["r1_T_alpha_min_slope"], mp=M["r1_m_plateau_01"],
     ns=M["r1_scan_n_m"], nm=M["r1_scan_n_min"], nb=M["r1_scan_n_below_half"],
     nab=M["r1_scan_n_m"] - M["r1_scan_n_below_half"], na=M["r1_scan_n_min_at_or_above_half"],
-    s5=M["v2_slope_m_half"])
+    s5=M["v2_slope_m_half"], mq=M_ASYM, s3=M["r1_m03_min_slope"], aq=ALPHA_ASYM, dv=M["r1_asym_dev"],
+    ag=M["r1_asym_gap"])
 say("**Eqs. 7 and 8.** The ratio of termination in particles to $2(\\rho'/N)N_1$ is <<r7:.6f>> at T "
     "against its $\\alpha \\to 0$ limit $1/(1+m)$ = <<l7:.6f>>. Read with re-entry (A3), eq. 8 at "
     "$\\alpha_0$ = 1e-6 gives $\\alpha$ = <<a8:.6e>> and $\\bar n$ = <<n8:.6e>>, <<r8:.6f>> times "
@@ -830,10 +846,11 @@ plt.show()
 say("On <<l0:d>> to <<l1:d>> cells (CFL 1) the stage end, a root in time of a spline through the "
     "step values, extrapolates to $t_1/t^\\ast$ = <<tu:.9f>> (upper) and <<tl:.9f>> (lower), and "
     "$N(t_1)/\\rho t^\\ast$ to <<nu:.9f>> and <<nl:.9f>>. Against the closed forms <<cu:.9f>> and "
-    "<<cl:.9f>> the gaps are below 1e-7, the bound of the Richardson remainder (here <<au:.0e>>, "
+    "<<cl:.9f>> the gaps are below 1e-7, a chosen bound (here <<au:.0e>>, "
     "<<al:.0e>>, <<bu:.0e>> and <<bl:.0e>>), against error estimates of the finest grid of "
-    "<<etu:.1e>>, <<etl:.1e>>, <<enu:.1e>> and <<enl:.1e>>: well inside the plan's stop rule of ten "
-    "error estimates. The route "
+    "<<etu:.1e>>, <<etl:.1e>>, <<enu:.1e>> and <<enl:.1e>>. The largest gap is <<fr:.0e>> of its "
+    "error estimate, so the plan's rule (gaps within ten error estimates) could not fail here; "
+    "the bound is chosen from the gaps' size instead. The route "
     "that does not use eqs. 25a and 28 reproduces both bounds: the step from growth and nucleation to "
     "the paper's integral equation holds.",
     l0=LADDER[0], l1=LADDER[-1], tu=M["r5_upper_t1_ext"], tl=M["r5_lower_t1_ext"],
@@ -841,7 +858,8 @@ say("On <<l0:d>> to <<l1:d>> cells (CFL 1) the stage end, a root in time of a sp
     etu=M["r5_upper_t1_err_est"], etl=M["r5_lower_t1_err_est"],
     enu=M["r5_upper_Nt1_err_est"], enl=M["r5_lower_Nt1_err_est"], au=max(M["r5_upper_t1_ext_gap"], 1e-16),
     al=max(M["r5_lower_t1_ext_gap"], 1e-16), bu=max(M["r5_upper_Nt1_ext_gap"], 1e-16),
-    bl=max(M["r5_lower_Nt1_ext_gap"], 1e-16))
+    bl=max(M["r5_lower_Nt1_ext_gap"], 1e-16),
+    fr=max(M[f"r5_{k}_ext_gap"] / M[f"r5_{k}_err_est"] for k in ("upper_t1", "lower_t1", "upper_Nt1", "lower_Nt1")))
 say("Physical scale, once: $t^\\ast = (a_sS/\\rho\\theta)^{3/5}$ and $N = k(\\rho/\\mu)^{2/5}(a_sS)^{3/5}$ "
     "with $k = (4\\pi)^{-1/5}3^{-2/5}N/(\\rho t^\\ast)$; the page uses no physical value.")
 
@@ -911,12 +929,13 @@ BOUNDS = {"v1_T_gap": (None, 1e-12, "identity", "recursion against closed form (
           "r3_dimension_residual": (None, 1e-14, "identity", "N in cm^-3 from rho, mu, a_s S"),
           "r4_ml_last_term": (None, 1e-16, "tolerance", "series stopped below 1e-17 relative"),
           "v3_upper_N_conservation": (None, 1e-12, "identity", STRUCTURAL["v3_upper_N_conservation"]),
-          "v3_finest_over_roundoff": (100.0, None, "chosen", "plan: finest difference 100 times round-off")}
+          "v3_finest_over_roundoff": (100.0, None, "chosen", "plan: finest difference 100 times round-off"),
+          "r1_asym_gap": (None, 1e-3, "chosen", "asymptote of the slope: O(1/a) remainder and round-off at a = 3e5")}
 for k in ORDER_KEYS:
     BOUNDS[f"v3_{k}_order_min"] = (0.9, 1.1, "theory", "first-order upwind and implicit Euler: 1")
     BOUNDS[f"v3_{k}_order_max"] = (0.9, 1.1, "theory", "first-order upwind and implicit Euler: 1")
-    BOUNDS[f"r5_{k}_ext_gap"] = (None, 1e-7, "theory", "Richardson remainder O(dv^2) on 12800 and 25600 cells")
-EXACT = {"r1_scan_n_m", "r1_scan_n_below_half", "r1_scan_n_min", "r1_scan_n_min_at_or_above_half", "r2_n_printed_coef_exact",
+    BOUNDS[f"r5_{k}_ext_gap"] = (None, 1e-7, "chosen", "Richardson remainder O(dv^2) on 12800 and 25600 cells; the plan's ten error estimates could not fail")
+EXACT = {"r1_scan_n_m", "r1_scan_n_below_half", "r1_scan_n_min", "r1_scan_n_min_at_or_above_half", "r1_scan_n_at_or_above_half", "r2_n_printed_coef_exact",
          "r2_n_appendix_coef_exact", "r2_errors_decrease", "v1_T_nmax", "v1_nmax_alpha1e4",
          "v1_map_n_points", "r3_n_exponents_as_printed", "r34_n_printed", "r4_min_terms_29",
          "r4_min_terms_26a"}
@@ -964,8 +983,9 @@ for k in ORDER_KEYS:     # the error estimates are printed beside the gaps; thei
 # are counted. Only finite values are recorded; a row under which the study raises is
 # listed as a crash. Two rows remove the root that ends Stage I: under them the flux has no
 # sign change on the whole scanned range (shown by the scan, and for $E_{2/3}$ by its
-# complete monotonicity), and the claims that need $y_1$ record nan (rule 11). The control
-# fails nothing.
+# complete monotonicity), and the claims that need $y_1$ record nan (rule 11). The row that
+# takes $A_p/A$ in (21a) records nan for the stage end: $A_p(0) = 0$, so nothing nucleates.
+# The control fails nothing.
 
 # %%
 def printed_row(item, new, parts):
@@ -984,6 +1004,7 @@ DEFECTS = [
     ("truncation leaks entry out of n_max", replace(C0, law=Law(leak=True)), ("rec",)),
     ("n_max = 3 called converged", replace(C0, nmax_cap=3), ("rec",)),
     ("eq. 13 also at n = 2", replace(C0, law=Law()), ("p1",)),
+    ("m scan of 13 values, not 25", replace(C0, scan_n=13), P1),
     ("(4 pi)^(1/3) inside eq. 22", replace(C0, stage=Stage(pi_exp=1 / 3)), ST),
     ("kernel (t - tau)^(1/3)", replace(C0, stage=Stage(q=1 / 3)), PB),
     ("Gamma(1 + 2n/3) in (29)", replace(C0, stage=Stage(ml_a=2 / 3)), ST),
