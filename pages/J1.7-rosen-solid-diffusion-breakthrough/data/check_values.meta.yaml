@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Rosen, J. B."]
+  year: 1952
+  container: "Journal of Chemical Physics 20, 387-394"
+  doi: "10.1063/1.1700431"
+  access: >
+    The equations are those of the paper (exact integral eq. 25, long-bed form eq. 37,
+    the Table I to III functions, the Table IV saddle-point quantities), with the
+    misprints corrected as stated in the build plan's equations file; the values are
+    not read from the paper but computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative), except erf_gx_at_1pct_nu0p01 at 15 digits (root re-solved 2026-11-24 to xtol 1e-12, so the page's printed worst deviation does not sit on a rounding boundary); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script j17_check_values.py (mpmath and scipy, no pymrm, no page code; exact route by de Hoog Laplace inversion at 40 digits), 2026-11-23; its key values matched a separate quadrature to about 1e-11; the coordinator confirmed u0_limit_inf = e/(2 pi)^(1/2), delta0_limit_inf = -1/12 and kappa2_T = 2 gx (1/5 + nu)"
+  date: 2026-11-24
+  estimated_error: "none beyond floating point for the closed-form rows; rows at rtol 1e-10 to 1e-6 carry the route's own error (series, root finding, location of a maximum)"
+
+conditions: >
+  Test condition T: gx = 50 (bed length parameter), nu = 0.01 (film resistance
+  parameter), linear isotherm, solid diffusion in spheres with a surface film, as in
+  the paper. Rows without the suffix _T need no bed condition (function values at the
+  stated argument, Table IV limits at sigma*theta -> infinity). erf_gx_at_1pct_nu0p01
+  is the gx at which the largest absolute concentration error of eq. 37 equals 0.01.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; dimensionless throughout"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

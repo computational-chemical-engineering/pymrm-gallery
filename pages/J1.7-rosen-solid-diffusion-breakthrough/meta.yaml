@@ -1,0 +1,76 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J1.7
+slug: rosen-solid-diffusion-breakthrough
+title: "Rosen (1952): fixed-bed breakthrough with solid diffusion into spheres"
+section: J
+status: published
+tier: T0
+priority: P2
+structures: [S4]
+phases: [liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 605
+reference:
+  authors: ["Rosen, J. B."]
+  year: 1952
+  title: "Kinetics of a fixed bed system for solid diffusion into spherical particles"
+  container: "Journal of Chemical Physics 20(3) 387-394"
+  doi: 10.1063/1.1700431
+datasets:
+  - rosen-1952-table2.csv
+  - rosen-1952-table4.csv
+  - rosen-1952-statements.csv
+  - check_values.csv
+
+validation:
+  - >-
+    The exact integral by panel Gauss-Legendre against Talbot inversion of the transform:
+    largest gap at the corner of the stated range below
+    1e-12 <!-- claim: v1_gap_T -->, the same at Table IV's points and at two further bed lengths
+  - >-
+    The zeroth and first time moments of the computed curve against the mass balance and
+    the variance of the transform, relative gaps below 1e-10 <!-- claim: v2_m0_gap -->;
+    the start value without a film and the midpoint of the jump with one
+  - >-
+    The series of eq. 18 against eq. 24 at Table II's arguments; a quadrature ladder with
+    observed orders and a round-off companion; every function against independent check
+    values from a second route
+  - >-
+    Table II reproduced: 8 <!-- claim: r1_cells_off_print --> of
+    80 <!-- claim: r1_cells_total --> printed cells are off by more than half a unit of the
+    last digit, by at most 1.71 <!-- claim: r1_largest_halfunits --> half-units
+
+adds: >
+  Checks only. The page is a closed form, a real integral and a Laplace inversion; pymrm
+  contributes pymrm.checks.find_roots (the cut-off of the integral, the saddle root, every
+  maximum as a derivative root, the throughput levels and the bed lengths where eq. 37
+  reaches 1 percent) and pymrm.checks.observed_orders (the quadrature ladder).
+
+agreement: >
+  Eq. 37 against the exact solution, under two readings set in the plan before the page was
+  built. In concentration, the direct reading of the sentence, its largest error at the corner
+  of the stated range is 0.0140 <!-- claim: r3_a_T --> of the feed (0.0128 <!-- claim: r3_a_gx50_nu0 -->
+  without a film), and it reaches 0.01 only from a bed length group of
+  81.3 <!-- claim: r3_gx_a_nu0 --> (no film) and 121.9 <!-- claim: r3_gx_a_nu0p01 -->
+  (largest film group): the statement does not hold in this reading. In throughput on fractions
+  0.05 <!-- claim: r3_band_lo --> to 0.95 <!-- claim: r3_band_hi --> its largest error there is
+  0.73 % <!-- claim: r3_b_T -->, and it holds from 30.9 <!-- claim: r3_gx_b_nu0 --> and
+  32.2 <!-- claim: r3_gx_b_nu0p01 -->: within "1 percent" on that band. The largest error sits at
+  an end of the band: at the shortest stated bed length group it holds for symmetric bands that start at
+  0.0248 <!-- claim: r3_band_edge_nu0 --> or later (0.0278 <!-- claim: r3_band_edge_nu0p01 --> with the film);
+  on 0.01 <!-- claim: r3_band_sens_lo --> to 0.99 <!-- claim: r3_band_sens_hi --> it is
+  1.59 % <!-- claim: r3_b_sens_gx50_nu0 --> without a film.
+  Table IV's exact column reproduces except at sigma theta 1.0, printed 0.808 for
+  0.814416 <!-- claim: r2_u_st1p0 -->.
+
+caveats: >
+  Linear isotherm, step input into a clean bed, no axial dispersion, uniform spheres, as in
+  the paper; the verdict covers film groups up to the paper's 0.01. The paper never says
+  what its percent is of; the two readings are the page's. Eq. 36, elution (eq. 7) and
+  later corrected forms of eq. 37 are not tested.
