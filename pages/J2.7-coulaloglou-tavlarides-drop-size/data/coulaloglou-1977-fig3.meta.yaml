@@ -1,0 +1,52 @@
+dataset_id: coulaloglou-1977-fig3
+title: "Sauter mean diameter against impeller speed: symbols and model lines of Fig. 3"
+status: complete
+
+source:
+  authors: ["Coulaloglou, C. A.", "Tavlarides, L. L."]
+  year: 1977
+  title: "Description of interaction processes in agitated liquid-liquid dispersions"
+  container: "Chemical Engineering Science 32, 1289-1297"
+  doi: "10.1016/0009-2509(77)85023-9"
+  access: >
+    Scanned journal PDF held outside the repository (~/papers/pymrm-gallery/), lawful
+    access. No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (facts extracted; no figure or page image is reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 3, journal page 1294"
+  tool: "poppler pdftoppm at 300 ppi (the native scan resolution) + scipy.ndimage"
+  procedure: >
+    Axis ticks located as short dark runs inside the frame and fitted; markers found
+    as blobs surviving a 7 x 7 morphological opening (lines are 3 to 5 px wide), their
+    centre of mass taken; the symbol shape assigned by eye from 3x zoomed tiles; each
+    symbol assigned to the nearest nominal speed (190, 220, 250, 280, 310 rpm, p. 1294).
+    Model lines read as the centre of the dark run in single pixel columns where exactly
+    three curves are separate, top to bottom phi 0.15, 0.10, 0.05.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-24
+  estimated_error: >
+    Ordinate ticks 0.48 to 0.16 mm (9 ticks, 0.04 apart) fitted linearly, largest residual 8.5e-4 mm; 5.72e-4 mm per px. The top frame line carries the label 0 50 but sits one tick spacing (0.04) above 0.48, at 0.52 on the ladder; the ladder is used. Abscissa ticks 200 to 350 rpm fitted linearly, largest residual 0.55 rpm (the printed tick spacing varies by 4 %). Marker centre +-2 px, so +-0.0012 mm; line centre +-1.5 px, so +-0.0009 mm. Reading error used by the page: 0.0012 mm for symbols and lines.
+  completeness: >
+    14 symbols: phi 0.05 (triangles) and 0.10 (circles) at 190 to 310 rpm, phi 0.15 (squares) at 220 to 310 rpm; no 190 rpm square is printed. Lines read at 21 columns each (196 to 329 rpm), away from the markers, the arrows and the label.
+
+conditions: >
+  Continuous-flow 12 l baffled vessel, 10 cm turbine, water (continuous) and
+  kerosene-dichlorobenzene (dispersed), nominal residence time 10 min (p. 1294). Symbols
+  are measurements; solid lines are the authors' model (caption). Series by holdup phi.
+
+columns:
+  - {name: phi, unit: "-", description: "dispersed-phase holdup of the series (unassigned: shape undecidable)"}
+  - {name: kind, unit: "-", description: "symbol (measurement) or line (model curve)"}
+  - {name: symbol, unit: "-", description: "triangle, circle, square or undecided; empty for line reads"}
+  - {name: N_nominal_rpm, unit: "rpm", description: "nominal speed a symbol is assigned to; empty for line reads"}
+  - {name: N_read_rpm, unit: "rpm", description: "abscissa as read"}
+  - {name: d32_mm, unit: "mm", description: "Sauter mean diameter as plotted"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications v.
+  Rural Telephone, 1991). Extraction for scientific research by a research organisation
+  with lawful access is covered by Art. 15n Auteurswet (implementing DSM Directive (EU)
+  2019/790 Art. 3). No figure or page image is reproduced; the figures are re-plotted
+  from the extracted points.

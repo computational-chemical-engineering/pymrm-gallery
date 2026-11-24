@@ -1,0 +1,58 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J2.7
+slug: coulaloglou-tavlarides-drop-size
+title: "Coulaloglou and Tavlarides (1977): drop breakage and coalescence in a stirred vessel"
+section: J
+status: published
+tier: T0
+priority: P2
+structures: [S11]
+phases: [liquid-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Coulaloglou, C. A.", "Tavlarides, L. L."]
+    year: 1977
+    title: "Description of interaction processes in agitated liquid-liquid dispersions"
+    container: "Chemical Engineering Science 32, 1289-1297"
+    doi: 10.1016/0009-2509(77)85023-9
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 231
+datasets:
+  - coulaloglou-1977-printed-numbers.csv
+  - coulaloglou-1977-fig3.csv
+  - coulaloglou-1977-fig4.csv
+  - coulaloglou-1977-fig2-theory.csv
+  - check_values.csv
+
+validation:
+  - volume exact per breakage column and at the steady state; the number lost below the smallest pivot measured and shown immaterial
+  - limits without breakage and coalescence, breakage alone by Newton against the back substitution, lambda -> 0, C3 -> 0, and a constant kernel against the closed-form CSTR number
+  - grid refinement q = 4 to 64 with observed orders, extrapolated values and a round-off companion; the calibrated S on its own ladder
+  - a BDF time march to 60 residence times at 16 conditions, and the paper's marching iteration
+  - every function against independent check values from a second route
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Nothing to the model; the population balance has no space coordinate and the page uses
+  no finite-volume operator. pymrm contributes pymrm.newton for the dense steady balance
+  with its analytic Jacobian, pymrm.checks.find_roots for every calibration and threshold,
+  and pymrm.checks.observed_orders for the grid ladder.
+
+agreement: >
+  The printed calculated omega_v of Fig. 2 is reproduced to a ratio of
+  1.0228 <!-- claim: r3_omega_v_ratio --> in 1/s, inside the rounding band of "6 %". Over 190 to 310 rpm the
+  full model's d32 exponent is -1.075 <!-- claim: r5_m_full_0.05 --> to -1.020 <!-- claim: r5_m_full_0.15 --> and the data's
+  pooled exponent -1.0951 <!-- claim: r5_pooled_m --> ± 0.0106 <!-- claim: r5_pooled_se -->, which excludes -6/5 and lies between -6/5 and
+  the reconstruction's exponent.
+
+caveats: >
+  The constants were fitted to the same Fig. 3 and 4 data, S is calibrated to one printed
+  model result, and the physical properties, feed and counting convention are not printed;
+  the figure reads carry the reading errors of their sidecars. The Fig. 2 width is not
+  reproduced and no cause is named.

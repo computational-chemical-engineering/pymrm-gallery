@@ -1,0 +1,52 @@
+dataset_id: coulaloglou-1977-fig4
+title: "Volume coalescence frequency against impeller speed: symbols and model lines of Fig. 4"
+status: complete
+
+source:
+  authors: ["Coulaloglou, C. A.", "Tavlarides, L. L."]
+  year: 1977
+  title: "Description of interaction processes in agitated liquid-liquid dispersions"
+  container: "Chemical Engineering Science 32, 1289-1297"
+  doi: "10.1016/0009-2509(77)85023-9"
+  access: >
+    Scanned journal PDF held outside the repository (~/papers/pymrm-gallery/), lawful
+    access. No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (facts extracted; no figure or page image is reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 4, journal page 1295"
+  tool: "poppler pdftoppm at 300 ppi (the native scan resolution) + scipy.ndimage"
+  procedure: >
+    Axis ticks located as short dark runs inside the frame and fitted; markers found
+    as blobs surviving a 7 x 7 morphological opening (lines are 3 to 5 px wide), their
+    centre of mass taken; the symbol shape assigned by eye from 3x zoomed tiles; each
+    symbol assigned to the nearest nominal speed (190, 220, 250, 280, 310 rpm, p. 1294).
+    Model lines read as the centre of the dark run in single pixel columns where exactly
+    three curves are separate, top to bottom phi 0.15, 0.10, 0.05.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-24
+  estimated_error: >
+    Logarithmic ordinate: 11 labelled ticks 0.2 to 1.4 fitted as a line in ln(omega), largest residual 0.0040 in ln, 292 px per unit of ln (0.34 % per px). Abscissa ticks 200 to 400 rpm fitted linearly, largest residual 0.24 rpm. Marker centre +-2 px, so +-0.7 %. Reading error used by the page: 0.7 % for symbols and lines.
+  completeness: >
+    16 symbols: repeat runs give two squares at 250 rpm and two triangles at 310 rpm; one symbol at 220 rpm between a square and a circle has an undecidable shape and is labelled unassigned. No triangle and no square at 190 rpm. Lines read at 10 columns each (197 to 296 rpm), where the three curves are separate.
+
+conditions: >
+  Continuous-flow 12 l baffled vessel, 10 cm turbine, water (continuous) and
+  kerosene-dichlorobenzene (dispersed), nominal residence time 10 min (p. 1294). Symbols
+  are measurements; solid lines are the authors' model (caption). Series by holdup phi.
+
+columns:
+  - {name: phi, unit: "-", description: "dispersed-phase holdup of the series (unassigned: shape undecidable)"}
+  - {name: kind, unit: "-", description: "symbol (measurement) or line (model curve)"}
+  - {name: symbol, unit: "-", description: "triangle, circle, square or undecided; empty for line reads"}
+  - {name: N_nominal_rpm, unit: "rpm", description: "nominal speed a symbol is assigned to; empty for line reads"}
+  - {name: N_read_rpm, unit: "rpm", description: "abscissa as read"}
+  - {name: omega_axis_per_min, unit: "as printed on the axis (mn^-1)", description: "omega_v as plotted; the axis prints mn^-1, the notation gives every frequency in s^-1"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications v.
+  Rural Telephone, 1991). Extraction for scientific research by a research organisation
+  with lawful access is covered by Art. 15n Auteurswet (implementing DSM Directive (EU)
+  2019/790 Art. 3). No figure or page image is reproduced; the figures are re-plotted
+  from the extracted points.
