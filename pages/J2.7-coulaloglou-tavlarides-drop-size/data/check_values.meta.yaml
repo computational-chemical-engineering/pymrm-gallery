@@ -1,0 +1,37 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Coulaloglou, C. A.", "Tavlarides, L. L."]
+  year: 1977
+  container: "Chemical Engineering Science 32, 1289-1297"
+  doi: "10.1016/0009-2509(77)85023-9"
+  access: >
+    The equations are those of the paper (breakage frequency eqs. 13 and 14, daughter
+    distribution eq. 15, collision frequency and film-drainage efficiency eqs. 17 to 27,
+    holdup damping eq. 35, constants eqs. 36 and 37), with the misprints corrected as stated
+    in the build plan's equations file (eq. 25 exponent 4, eq. 32 sign and variance), and the
+    paper's own estimates on pp. 1295-1296; the values are not read from the paper but
+    computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script j27_check_values.py (numpy and scipy, no pymrm, no page code; steady population balance by pseudo-transient continuation plus dense Newton, cross-checked by a scipy BDF time march to 60 residence times to 1e-6 in d32), 2026-11-24; corrected 2026-11-24 by the coordinator (the breakage-only back substitution now keeps the diagonal term B_kk, found by the build agent; d32_breakage_only and slope_breakage_only moved by about 2e-5, the order rows by about 1e-9, all other rows unchanged)"
+  date: 2026-11-24
+  estimated_error: "none beyond floating point for the closed-form rows; rows at rtol 1e-10 to 1e-5 carry the route's own error (Newton tolerance, root finding, observed orders from three grid levels)"
+
+conditions: >
+  Test condition T: N* = 310 rpm (31/6 1/s), holdup phi = 0.10, residence time theta = 600 s,
+  impeller diameter D = 10 cm, vessel volume V_T = 12000 cm3, constants as printed in eqs.
+  36 and 37, counts per vessel, X = mu_c rho_c / sigma^2 from the printed 6 % coalescence
+  efficiency, S = sigma / rho_d = 48 cm3/s2 (stated, near the calibrated value), fixed-pivot
+  grid with q = 8 (137 pivots), feed and domain as in the equations file. Rows for the Fig. 1
+  caption constants use phi = 0.15; the slope rows span 190 to 310 rpm at phi = 0.10.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as in the equations file (cgs: cm, s)"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
