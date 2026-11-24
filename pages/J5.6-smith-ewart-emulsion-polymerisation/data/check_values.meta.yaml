@@ -1,0 +1,36 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Smith, W. V.", "Ewart, R. H."]
+  year: 1948
+  container: "The Journal of Chemical Physics 16, 592-599"
+  doi: "10.1063/1.1746951"
+  access: >
+    The equations are those of the paper (the steady radical-distribution balance eq. 1 and its
+    limiting cases eqs. 2, 7, 8, 10 to 17; the Stage I particle-number bounds eqs. 21 to 30, 21a,
+    25a, 26a and Appendix I), with the readings and misprints stated in the build plan's
+    equations file (eq. 8 read with re-entry of desorbed radicals); the closed form of eq. 1 in
+    modified Bessel functions is later work (Stockmayer 1957, O'Toole 1965). The values are not
+    read from the paper but computed from its equations by a second route; the half-unit rows
+    compare those values with the paper's printed constants.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script j56_check_values.py (numpy and scipy, no pymrm, no page code; Bessel closed form cross-checked against the truncated recursion, Mittag-Leffler series cross-checked against a product-integration solve of eq. 28 and against a numpy population balance), 2026-11-24"
+  date: 2026-11-24
+  estimated_error: "none beyond floating point for the closed-form rows; rows at rtol 1e-10 to 3.5e-5 carry the route's own error (root finding, truncation level, population-balance step)"
+
+conditions: >
+  Test condition T: alpha = 0.1 (beta = 10), m = 0.01; rows named m0 use the same alpha with
+  m = 0; eq. 8 rows use alpha_0 = 1e-6 at m = 0.01; the Stage I constants are pure numbers in the
+  equations file's E14 scaling; the PBE rows use the equations file's E15 with n_c = 1600 cells
+  at scaled time t = 1 (800 implicit Euler steps).
+
+columns:
+  - {name: name, unit: "-", description: "quantity; dimensionless as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
