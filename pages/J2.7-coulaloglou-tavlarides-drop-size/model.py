@@ -283,10 +283,14 @@ class SteadyPBE:
         return y, {"newton": res,
                    "residual": float(np.max(np.abs(self.residual(y))) / np.max(self.feed))}
 
-    def march(self, rtol=1e-12, sweeps=500):
+    def march(self, rtol=1e-12, sweeps=500, increment=None, floor=1e-6):
         """The paper's marching iteration (p. 1293): sweeps from the largest pivot down,
-        coalescence births and losses lagged by one sweep. Returns (y, sweeps used)
-        or (y, -1) when it has not converged after ``sweeps``."""
+        coalescence births and losses lagged by one sweep. Stops when the largest change
+        of a sweep relative to the largest entry is at most ``rtol``, or, with
+        ``increment`` given (the paper's rule, 0.001), when the relative change per
+        increment is at most ``increment`` at every pivot holding more than ``floor``
+        of the largest entry. Returns (y, sweeps used) or (y, -1) when it has not
+        stopped after ``sweeps``."""
         y = self.breakage_only()
         for it in range(1, sweeps + 1):
             _, cb, _, _ = self.rates(y)
@@ -295,7 +299,11 @@ class SteadyPBE:
             for k in range(self.n - 1, -1, -1):
                 new[k] = ((self.feed[k] + cb[k] + self.B[k, k + 1:] @ (self.g[k + 1:] * new[k + 1:]))
                           / (self.g[k] + 1 / self.p.theta + ky[k]))
-            done = np.max(np.abs(new - y)) <= rtol * np.max(new)
+            if increment is None:
+                done = np.max(np.abs(new - y)) <= rtol * np.max(new)
+            else:
+                sig = new > floor * np.max(new)
+                done = np.max(np.abs(new - y)[sig] / new[sig]) <= increment
             y = new
             if done:
                 return y, it

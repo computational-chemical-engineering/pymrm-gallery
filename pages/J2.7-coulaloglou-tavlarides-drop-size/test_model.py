@@ -51,3 +51,11 @@ def test_stored_claim():
     m = SteadyPBE(8, N_T, PHI_T, stored["r3_S"], x_from_efficiency())
     d32b = m.stats(m.breakage_only())["d32"] * 10
     assert abs(d32b / stored["r3_d32_brk_mm"] - 1) < 1e-6
+
+
+def test_march_stop_rule():
+    """A looser per-increment stop rule stops after fewer sweeps; the tight default is not reached."""
+    m = SteadyPBE(4, N_T, PHI_T, S_T, x_from_efficiency())
+    _, n_loose = m.march(increment=1e-1)
+    _, n_paper = m.march(increment=1e-3)
+    assert 0 < n_loose < n_paper < 500

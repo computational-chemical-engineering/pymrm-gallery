@@ -13,7 +13,7 @@
 # %% [markdown]
 # ---
 # title: "Coulaloglou and Tavlarides (1977): drop breakage and coalescence in a stirred vessel"
-# description: "The Coulaloglou-Tavlarides breakage and coalescence kernels in a steady population balance for a continuous-flow stirred vessel, tested against the paper's own statement that the maximum stable drop size goes as N^(-6/5) over its range of impeller speeds."
+# description: "The Coulaloglou-Tavlarides breakage and coalescence kernels in a steady population balance for a continuous-flow stirred vessel, asked whether the paper's N^(-6/5) scaling for the maximum stable drop size holds for d32 in its model, curves and data over its range of impeller speeds."
 # categories: [sec:J, struct:S11, tier:T0, data:tier6, phase:liquid-liquid]
 # date: 2026-11-24
 # ---
@@ -26,13 +26,15 @@
 # collision frequency and a film-drainage coalescence efficiency for drops in locally
 # isotropic turbulence, put them in a population balance for a continuous-flow stirred
 # vessel, and fitted four constants to drop sizes and coalescence frequencies measured in
-# a 12 l vessel. From the breakage frequency alone they state that the maximum stable
-# drop size goes as $N^{\ast -6/5}$, the classical $d_{32}/D \propto We^{-0.6}$. This page
+# a 12 l vessel. From the breakage frequency alone they derive, for the maximum stable drop
+# size where the exponential of eq. 14 dominates, $d_{max} \sim N^{\ast -6/5}$ (p. 1291), the
+# exponent of the classical $d_{32}/D \propto We^{-0.6}$; the paper does not claim it for
+# $d_{32}$. This page
 # rebuilds the model from the paper alone (it prints no physical properties, no feed and
 # no counting convention, and the page fixes each from the paper's own printed numbers),
-# solves the steady population balance, and asks whether the model, its printed curves
-# and its data follow $N^{\ast -6/5}$ over the paper's own range of 190 to 310 rpm, and if
-# not, which process moves the exponent.
+# solves the steady population balance, and asks whether $d_{32}$ in the model, its printed
+# curves and its data follows $N^{\ast -6/5}$ over the paper's own range of 190 to 310 rpm,
+# and if not, which process moves the exponent.
 
 # %%
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
@@ -110,8 +112,9 @@ def say(text, **v):
 # kernel from inertial-subrange turbulence and a population balance that couples them; the
 # kernels are still the default in many population-balance codes. Their breakage
 # frequency gives, for the largest drops, the scaling they quote on p. 1291: "$d_{max}
-# \sim N^{-6/5}$ which is in accordance with the data reported in the literature". The
-# page tests that statement on the paper's own model, curves and data. It does not
+# \sim N^{-6/5}$ which is in accordance with the data reported in the literature", derived
+# for $d_{max}$ where the exponential of eq. 14 dominates. The page asks whether the
+# scaling holds for $d_{32}$ in the paper's own model, curves and data. It does not
 # repeat the aggregation kinetics of `J2.6` (Smoluchowski, constant kernel) or the fixed
 # pivot discretisation of `J2.4`, which it uses and cites.
 #
@@ -158,7 +161,7 @@ def say(text, **v):
 #
 # $$\frac{d\ln d}{d\ln N^{\ast}} = -\frac{3(1+2y)}{5y-2} \;\to\; -\frac65 \quad (y\to\infty),$$
 #
-# so the paper's $-6/5$ is the limit of breakage alone at large $y$.
+# so the paper's $-6/5$ for $d_{max}$ is the limit of breakage alone at large $y$.
 
 # %% [markdown]
 # ## Parameters and assumptions
@@ -204,6 +207,7 @@ def half_unit(pn, item):
 
 SPEEDS = np.array([190.0, 220.0, 250.0, 280.0, 310.0])   # rpm, Figs. 3 and 4
 PHIS = (0.05, 0.10, 0.15)
+MARCH_FLOOR = 1e-6               # pivots below this fraction of the largest entry do not enter the stop rule
 READ3, READ4 = 0.0012, 0.007    # sidecar reading errors: mm (Fig. 3), relative (Fig. 4)
 
 
@@ -230,6 +234,7 @@ class Cfg:
     v2_xfac: float = 1e6      # X factor of the lambda -> 0 limit
     v2_c3fac: float = 1e-10   # C3 factor of the C3 -> 0 continuity check
     bdf_span: float = 60.0    # BDF horizon in residence times
+    march_inc: float = 1e-3   # the paper's stop rule of the marching iteration (p. 1293): relative change per increment
 
 
 def params(cfg):
@@ -527,6 +532,15 @@ def regress(xv, yv):
     return r.slope, r.stderr, len(xv) - 2
 
 
+def read_se(A, d32):
+    """Standard error of the first coefficient of ln d32 on the design matrix A (ln N first)
+    when every read d32 carries the figure-reading error READ3 (mm) as one standard
+    deviation, propagated through the least-squares weights."""
+    A = np.asarray(A, dtype=float)
+    w = (np.linalg.inv(A.T @ A) @ A.T)[0]
+    return float(np.sqrt(np.sum((w * READ3 / d32) ** 2)))
+
+
 def part_sweep(cfg, p, M):
     """R4, R5: the 15 conditions at q and 2q (extrapolated), the data and the lines."""
     s, x = M["_S"], M["r1_X"]
@@ -546,17 +560,23 @@ def part_sweep(cfg, p, M):
         mf = regress(SPEEDS, res[phi][:, 0])[0]
         mb = regress(SPEEDS, res[phi][:, 2])[0]
         M[f"r5_m_full_{phi:.2f}"], M[f"r5_m_brk_{phi:.2f}"] = mf, mb
-        M[f"r5_shift_res_{phi:.2f}"], M[f"r5_shift_coal_{phi:.2f}"] = mb + 1.2, mf - mb
+        M[f"r5_shift_res_{phi:.2f}"], M[f"r5_shift_coal_{phi:.2f}"] = mb + 1.2, mf - mb   # breakage-only slope less -6/5; full less breakage-only
         M[f"_grid_{phi}"] = abs(mf - regress(SPEEDS, vals[2 * cfg.q][:, 0])[0])
         d = cfg.fig3[(cfg.fig3.phi == f"{phi:.2f}") & (cfg.fig3.kind == "symbol")]
-        sl, se, dof = regress(d.N_nominal_rpm.astype(float), d.d32_mm.astype(float))
+        sl, se_res, dof = regress(d.N_nominal_rpm.astype(float), d.d32_mm.astype(float))
+        lnN = np.log(d.N_nominal_rpm.astype(float).to_numpy())
+        se_rd = read_se(np.column_stack([lnN, np.ones_like(lnN)]), d.d32_mm.astype(float).to_numpy())
+        se = max(se_res, se_rd)    # the larger of the regression and the reading-error term
+        M[f"_r5_se_res_{phi:.2f}"], M[f"_r5_se_read_{phi:.2f}"], M[f"_r5_dof_{phi:.2f}"] = se_res, se_rd, dof
         M[f"r5_data_m_{phi:.2f}"], M[f"r5_data_se_{phi:.2f}"] = sl, se
         M[f"r5_data_t_{phi:.2f}"] = (sl + 1.2) / se
         M[f"r5_line_m_{phi:.2f}"] = regress(SPEEDS, line_at(cfg.fig3, f"{phi:.2f}", "d32_mm", SPEEDS))[0]
     M["r5_slope_grid_err"] = max(M[f"_grid_{phi}"] for phi in PHIS)
     ts = [M[f"r5_data_t_{phi:.2f}"] for phi in PHIS]
-    M["r5_n_data_excl"] = int(sum(abs(t) > 2 for t in ts))
-    M["r5_n_data_excl__margin"] = min(abs(abs(t) - 2) for t in ts) / 2
+    tc = [float(stats.t.ppf(0.975, M[f"_r5_dof_{phi:.2f}"])) for phi in PHIS]   # two-sided 95 %
+    M["_r5_tcrit"] = tc
+    M["r5_n_data_excl"] = int(sum(abs(t) > c for t, c in zip(ts, tc)))
+    M["r5_n_data_excl__margin"] = min(abs(abs(t) - c) / c for t, c in zip(ts, tc))
     # pooled: common slope, one intercept per holdup (rule 35)
     d = cfg.fig3[(cfg.fig3.kind == "symbol") & cfg.fig3.phi.isin(["0.05", "0.10", "0.15"])]
     X = np.column_stack([np.log(d.N_nominal_rpm.astype(float))]
@@ -564,7 +584,10 @@ def part_sweep(cfg, p, M):
     yv = np.log(d.d32_mm.astype(float).to_numpy())
     beta, rss, *_ = np.linalg.lstsq(X, yv, rcond=None)
     dof = len(yv) - X.shape[1]
-    se = math.sqrt(float(rss[0]) / dof * np.linalg.inv(X.T @ X)[0, 0])
+    se_res = math.sqrt(float(rss[0]) / dof * np.linalg.inv(X.T @ X)[0, 0])
+    se_rd = read_se(X, d.d32_mm.astype(float).to_numpy())
+    se = max(se_res, se_rd)
+    M["_r5_pooled_se_res"], M["_r5_pooled_se_read"] = se_res, se_rd
     M["r5_pooled_m"], M["r5_pooled_se"], M["r5_pooled_dof"] = beta[0], se, dof
     M["r5_pooled_t"] = (beta[0] + 1.2) / se
     # holdup ratio at 310 rpm
@@ -699,6 +722,10 @@ def part_valid(cfg, p, M):
     ym, sweeps = m.march()
     M["v4_march_sweeps"] = sweeps
     M["v4_march_gap"] = abs(m.stats(ym)["d32"] / st["d32"] - 1)
+    yp, sweeps_p = m.march(increment=cfg.march_inc, floor=MARCH_FLOOR)
+    M["v4_march_inc"] = cfg.march_inc
+    M["v4_march_stop_sweeps"] = sweeps_p
+    M["v4_march_stop_gap"] = (st["d32"] - m.stats(yp)["d32"]) / st["d32"]
 
 
 def part_ladder(cfg, p, M):
@@ -883,24 +910,38 @@ tab = pd.DataFrame({
     "E15 at d_max": [M[f"r2_slope_{f:.2f}"] for f in PHIS],
     "breakage-only PBE": [M[f"r5_m_brk_{f:.2f}"] for f in PHIS],
     "full PBE": [M[f"r5_m_full_{f:.2f}"] for f in PHIS],
+    "breakage-only less -6/5": [M[f"r5_shift_res_{f:.2f}"] for f in PHIS],
+    "full less breakage-only": [M[f"r5_shift_coal_{f:.2f}"] for f in PHIS],
     "Fig. 3 lines": [M[f"r5_line_m_{f:.2f}"] for f in PHIS],
     "Fig. 3 data": [M[f"r5_data_m_{f:.2f}"] for f in PHIS],
-    "data s.e.": [M[f"r5_data_se_{f:.2f}"] for f in PHIS],
+    "s.e. regression": [M[f"_r5_se_res_{f:.2f}"] for f in PHIS],
+    "s.e. reading": [M[f"_r5_se_read_{f:.2f}"] for f in PHIS],
+    "data s.e. (larger)": [M[f"r5_data_se_{f:.2f}"] for f in PHIS],
     "t against -6/5": [M[f"r5_data_t_{f:.2f}"] for f in PHIS]})
 display(tab.round(4))
+_rd = [f for f in PHIS if M[f"_r5_se_read_{f:.2f}"] > M[f"_r5_se_res_{f:.2f}"]]
+DOM = (f"the reading term is the larger at {len(_rd)} of {len(PHIS)} holdups"
+       + (" ($\\phi$ = " + ", ".join(f"{f:.2f}" for f in _rd) + ")" if _rd else "")
+       + " and the regression term at the others")
 say("The full model's slope is <<a:.3f>> to <<b:.3f>> over the three holdups (grid error of "
     "a slope at most <<g:.0e>>), its local exponent at 190 and 310 rpm <<la:.3f>> to <<lb:.3f>>; "
-    "breakage alone with the residence time gives <<c:.3f>> to <<d:.3f>>. The residence time "
-    "steepens the exponent past $-6/5$ by <<r1:.3f>> to <<r2:.3f>>; coalescence flattens it by "
-    "<<k1:.3f>> to <<k2:.3f>>. The data slopes exclude $-6/5$ at <<nx:d>> of 3 holdups "
-    "($|t| > 2$); pooled with a common slope and one intercept per holdup (dof <<dof:d>>) the "
-    "slope is <<pm:.4f>> ± <<pse:.4f>>, t = <<pt:.1f>> against $-1.2$. In Weber numbers the "
+    "breakage alone gives <<c:.3f>> to <<d:.3f>>. At the finite $y$ that $g\\theta$ = 1 sets, the "
+    "prefactor of eq. 14 steepens the exponent past $-6/5$; coalescence flattens it by "
+    "<<k1:.3f>> to <<k2:.3f>>. The standard error of each data slope is the larger of the "
+    "regression error and the error that the figure-reading uncertainty of ±<<rd:.4f>> mm "
+    "carries into the slope; <<dom>>. The data slopes exclude $-6/5$ at <<nx:d>> of <<nh:d>> "
+    "holdups ($|t|$ above the two-sided 95 % point of Student's t, <<t1:.2f>> to <<t2:.2f>> at "
+    "their degrees of freedom); pooled with a common slope and one intercept per holdup (dof "
+    "<<dof:d>>) the slope is <<pm:.4f>> ± <<pse:.4f>> (<<pdom>>), t = <<pt:.1f>> against $-1.2$. "
+    "In Weber numbers the "
     "pooled exponent is <<we:.3f>> against $-0.6$. The local exponent of the full model equals "
     "$-6/5$ at <<nr:d>> speeds between 100 and 600 rpm ($\\phi$ = 0.10).",
     a=min(M[f"r5_m_full_{f:.2f}"] for f in PHIS), b=max(M[f"r5_m_full_{f:.2f}"] for f in PHIS),
     g=M["r5_slope_grid_err"], la=M["r5_mloc_min"], lb=M["r5_mloc_max"],
     c=min(M[f"r5_m_brk_{f:.2f}"] for f in PHIS), d=max(M[f"r5_m_brk_{f:.2f}"] for f in PHIS),
-    r1=-max(M[f"r5_shift_res_{f:.2f}"] for f in PHIS), r2=-min(M[f"r5_shift_res_{f:.2f}"] for f in PHIS),
+    rd=READ3, nh=len(PHIS), t1=min(M["_r5_tcrit"]), t2=max(M["_r5_tcrit"]),
+    dom=DOM,
+    pdom=("reading term" if M["_r5_pooled_se_read"] > M["_r5_pooled_se_res"] else "regression term") + " larger",
     k1=min(M[f"r5_shift_coal_{f:.2f}"] for f in PHIS), k2=max(M[f"r5_shift_coal_{f:.2f}"] for f in PHIS),
     nx=M["r5_n_data_excl"], dof=M["r5_pooled_dof"], pm=M["r5_pooled_m"], pse=M["r5_pooled_se"],
     pt=M["r5_pooled_t"], we=M["r5_pooled_m"] / 2, nr=M["r5_n_roots_m_65"])
@@ -942,8 +983,11 @@ say("**V3 refinement** ($q$ = 4 to 64 at the Fig. 2 point): orders of $d_{32}$ <
 say("**V4 second routes.** A BDF time march to 60 residence times meets the Newton steady state "
     "in $d_{32}$ to <<a:.0e>> at <<n:d>> conditions (the Fig. 2 point and the 15 of R4). The "
     "paper's marching iteration (coalescence lagged by one sweep) <<mc>>; after it stops, "
-    "$d_{32}$ is <<g:.3f>> off.",
-    a=max(M["v4_bdf_max_gap"], 1e-12), n=M["v4_bdf_n_cases"],
+    "$d_{32}$ is <<g:.3f>> off. With the paper's own stop rule (p. 1293: a relative change of "
+    "<<inc:g>> per increment, over the pivots holding more than <<fl:g>> of the largest entry) it "
+    "stops after <<sw:d>> sweeps with $d_{32}$ <<sg:.3f>> (relative) below the steady state.",
+    a=max(M["v4_bdf_max_gap"], 1e-12), n=M["v4_bdf_n_cases"], inc=C0.march_inc, fl=MARCH_FLOOR,
+    sw=M["v4_march_stop_sweeps"], sg=M["v4_march_stop_gap"],
     mc=(f"converges in {M['v4_march_sweeps']} sweeps" if M["v4_march_sweeps"] > 0
         else "does not converge in 500 sweeps"), g=M["v4_march_gap"])
 say("**V5 check values.** <<n:d>> values from a second route agree, each inside its own "
@@ -979,7 +1023,7 @@ for k in ("d32", "omega_v", "omega_n", "S"):
         BOUNDS[f"v3_{k}_order_{e}"] = (1.7, 2.3, "theory", "fixed pivot on smooth densities: 2")
 COUNTS = {"r1_fig1_n_follow": 0.05, "r1_C4_est_n_reproduced": 0.01, "r4_fig3_n_inside": 0.05,
           "r4_fig4_n_inside": 0.05, "r5_n_data_excl": 0.05}
-EXACT = {"r3_n_roots", "r3_pv_n_roots", "r5_pooled_dof", "v4_march_sweeps",
+EXACT = {"r3_n_roots", "r3_pv_n_roots", "r5_pooled_dof", "v4_march_sweeps", "v4_march_stop_sweeps",
          "r5_n_roots_m_65", "v4_bdf_n_cases"}
 MARGINED = {"r1_C4_bracket_holds": 0.05, "r3_printed_in_band": 0.001}
 
@@ -1054,6 +1098,7 @@ DEFECTS = [
     ("V2 lambda -> 0 at X x 100 only", replace(C0, v2_xfac=100.0), ("closed", "cal", "valid")),
     ("V2 C3 -> 0 at C3 x 0.01 only", replace(C0, v2_c3fac=0.01), ("closed", "cal", "valid")),
     ("BDF march to 0.01 residence times", replace(C0, bdf_span=0.01), ("closed", "cal", "valid")),
+    ("marching stop rule 0.01 per increment", replace(C0, march_inc=1e-2), ("closed", "cal", "valid")),
     ("R2 finite-difference step 0.3 in ln N*", replace(C0, fd_h=0.3), ("closed", "cal", "r2")),
     ("grid ends at 0.34 mm (11 doublings)", replace(C0, octaves=11), ("closed", "cal")),
     ("production grid q = 2", replace(C0, q=2), ("closed", "cal", "sweep")),
@@ -1136,8 +1181,8 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 # independent routes are plain numpy and scipy (a BDF time march and the check values).
 # What the page adds to the paper is a set of checks it does not print: the counting
 # convention and the frequency unit decided by the paper's own printed model numbers, the
-# exponent split into residence time and coalescence, and the data slopes with their
-# standard errors.
+# exponent shift owed to coalescence, and the data slopes with their standard errors, which
+# carry the figure-reading error.
 
 # %% [markdown]
 # ## Reuse
