@@ -3780,6 +3780,46 @@ models:
     page: pages/C2.1-xu-froment-smr/
     related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
+  - id: C2.7
+    slug: yates-satterfield-fischer-tropsch
+    title: "Fischer-Tropsch on cobalt: the Yates-Satterfield rate law"
+    description: >
+      The cobalt Fischer-Tropsch rate law most slurry-reactor models use, with
+      its Table V parameters at 220 and 240 C, tested against the apparent
+      activation energy the paper reports, using the parameter covariance
+      recovered from the paper's own experimental design; then put in the
+      paper's CSTR and an ideal plug-flow reactor with pymrm.
+    section: C
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S1, S2]
+    phases: [gas-solid]
+    predicts: [reaction rate, apparent activation energy, parameter covariance, conversion]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, find_roots, observed_orders]
+    reference:
+      authors: ["Yates, I. C.", "Satterfield, C. N."]
+      year: 1991
+      container: "Energy & Fuels 5(1) 168-173"
+      doi: 10.1021/ef00025a029
+    data: {tier: 4, method: digitised, status: complete}
+    note: >
+      Built from Yates and Satterfield itself. The catalogue line's chain-growth
+      (ASF) product distribution is not in this paper ("Product compositions
+      obtained at the same operating conditions will be reported separately",
+      p. 168) and is left out. Over the partial pressures both temperatures
+      cover, Table V gives an apparent activation energy of 133.0
+      <!-- claim: r3_band_lo --> to 159.4 <!-- claim: r3_band_hi --> kJ/mol,
+      not the values the paper reports ("The apparent activation energies were
+      92.7 and 94.5 kJ/mol", p. 172), which Table V reaches only below every
+      measured P_CO; against Table V's own standard error (a-b covariance
+      recovered from the design of Figures 1 and 2) the smallest one-sample z
+      is 9.56 <!-- claim: r3_z_945 -->, and 3.00 <!-- claim: r3_z_945_pair -->
+      when the scatter of the one measured rate pair behind a quoted value is
+      counted.
+    page: pages/C2.7-yates-satterfield-fischer-tropsch/
+    related: [F2.3, C1.1, C2.13, C2.1]
+
   - id: C2.13
     slug: voltz-co-propylene-oxidation
     title: "Three-way catalyst: Voltz CO and propylene oxidation kinetics"
