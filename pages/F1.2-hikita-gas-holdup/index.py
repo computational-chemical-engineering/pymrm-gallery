@@ -1058,7 +1058,7 @@ say("**The gap.** Over the velocity range of the paper (<<umin:g>> to <<umax:.1f
     "eq. 8 where $P$ is large, but two of the three gases miss its gas factor: at matched velocity H2 sits <<t8:+.1f>> "
     "and the 5:1 mixture <<t58:+.1f>> standard errors from eq. 8's ratio to air, the 1:1 mixture <<t18:+.1f>> (it follows "
     "eq. 8), and H2 does not sit below the 5:1 mixture as eq. 8 puts it (<<t:+.1f>>). The H2 miss is <<mh:pct1>> in holdup, "
-    "inside eq. 8's printed <<md:g>> % maximum deviation, and about one reading error in size: the miss is in the ratio "
+    "inside eq. 8's printed <<md:g>> % maximum deviation and several reading errors of a marker in size: the miss is in the ratio "
     "between gases. "
     "All of this is the fitting data of eq. 8: it shows how eq. 8 represents its own data, not that it holds "
     "elsewhere. No n-butanol marker could be assigned in Figure 3, so the smallest property factor is not tested.\n\n"

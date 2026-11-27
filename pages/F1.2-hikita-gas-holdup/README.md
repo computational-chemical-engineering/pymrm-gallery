@@ -35,7 +35,7 @@ constants and water at 20 C are loaded from
   somewhere in the paper's velocity range for all 12 <!-- claim: n_fitted_maxdev_gt_10 --> of the
   12 <!-- claim: n_fitted --> fitted systems (9 <!-- claim: n_fitted_maxdev_gt_10_beyond_rounding --> by more
   than the rounding of the printed $Mo$ exponent moves the ratio); air-water clears
-  10 % by only 0.0032 <!-- claim: maxdev_air_water_excess -->. The ratio of Akita-Yoshida to eq. 8 is a
+  `10 %` by only 0.0032 <!-- claim: maxdev_air_water_excess -->. The ratio of Akita-Yoshida to eq. 8 is a
   velocity-shape factor common to all systems, peaking at
   1.0545 <!-- claim: shape_factor -->, times a property factor: 1.2671 <!-- claim: P_H2_water --> for H2 in
   water, 0.8285 <!-- claim: P_air_nbutanol --> for n-butanol. Neither formula has a
@@ -44,7 +44,7 @@ constants and water at 20 C are loaded from
   air-methanol, a fitted system: its gas-to-liquid viscosity ratio is 1.511 <!-- claim: mr_methanol_over_bound -->
   times the upper bound. H2-water is inside only through that half unit: its
   $\rho_G/\rho_L$ is -0.2645 <!-- claim: halfunits_rr_lo --> half-units from the printed lower bound
-  8.4e-5 (positive is inside). The window excludes water systems below a gas velocity of
+  `8.4e-5` (positive is inside). The window excludes water systems below a gas velocity of
   0.0793 <!-- claim: u_enter_Ca_window_air_water --> m/s (air-water, strict bound), although the experiments start
   lower. It is narrower than the plotted fitting data at both ends: 1 <!-- claim: f3_n_below_Ca --> of
   the 33 <!-- claim: f3_n_assigned --> assigned Figure 3 markers has a $Ca$ below the printed bound, and
@@ -53,8 +53,8 @@ constants and water at 20 C are loaded from
 - In Figure 2, at matched velocity, H2 lies -0.158 <!-- claim: f2_H2_air --> ±
   0.011 <!-- claim: f2_H2_air_se --> in ln(holdup) from air, where Akita-Yoshida (no gas
   effect) gives 0. Eq. 8 puts H2 at 0.7892 <!-- claim: gasfactor_H2_water --> of air, so the markers show
-  a smaller drop: a misfit of 8.222 % <!-- claim: f2_H2_air_misfit --> in holdup, inside eq. 8's printed 10 %
-  maximum deviation, and about one reading error. H2 and the 5:1 mixture miss eq. 8's gas factor
+  a smaller drop: a misfit of 8.222 % <!-- claim: f2_H2_air_misfit --> in holdup, inside eq. 8's printed `10 %`
+  maximum deviation; the ± is about one reading error of a marker, the misfit several. H2 and the 5:1 mixture miss eq. 8's gas factor
   (t = +7.3 <!-- claim: f2_H2_air_t8 --> and -3.8 <!-- claim: f2_51_air_t8 -->); the 1:1 mixture follows it
   (t = -0.4 <!-- claim: f2_11_air_t8 -->). The miss is in the ratio between gases.
 - In Figure 3, eq. 8 is closer than Akita-Yoshida for H2 by 0.1315 <!-- claim: f3_pair_H2_water --> ±
