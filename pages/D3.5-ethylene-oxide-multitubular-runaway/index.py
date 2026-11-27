@@ -67,7 +67,6 @@ setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the pat
 # %%
 import math
 import re
-import time
 import warnings
 
 import numpy as np
@@ -525,14 +524,30 @@ def h527(k, y, Tc, h_lo, h_hi, levels=(1000, 2000), w_end=600.0):
     return richardson(vals), vals
 
 
-def m_study(dH2=None, inhibition=True, levels=(500, 1000)):
-    """R4 at M (F_fig6, 500 K, explosion limit): the critical cooling and h527."""
+def richardson2(values):
+    """Second Richardson step on three levels: the first-order steps of the two pairs,
+    then one step on their difference (second-order remainder)."""
+    e1, e2 = richardson(values[:2]), richardson(values[1:])
+    return e2 + (e2 - e1) / 3.0
+
+
+def m_study(dH2=None, inhibition=True, levels=(500, 1000), s_levels=(500, 1000, 2000)):
+    """R4 at M (F_fig6, 500 K, explosion limit): the critical cooling and h527. The peak
+    height is extrapolated from ``s_levels`` (three levels, two Richardson steps; two
+    levels, one step, when ``s_levels`` is None)."""
     k = kin(F6, dH2=dH2, inhibition=inhibition)
     hS = semenov(kin(F6, dH2=dH2), T_STD, Y_LEL)[0]
-    res, wend = mv_problem(k, Y_LEL, T_STD, hS, "h", hS, 0.2 * hS, levels=levels)
-    out = {"hcrit_MV_M_F6": richardson([r["x"] for r in res]),
-           "smin_MV_M_F6": richardson([r["S"] for r in res]),
-           "Tstar_crit_M_F6": richardson([r["T"] for r in res])}
+    res, wend = mv_problem(k, Y_LEL, T_STD, hS, "h", hS, 0.2 * hS,
+                           levels=s_levels or levels)
+    out = {"hcrit_MV_M_F6": richardson([r["x"] for r in res[:2]]),
+           "Tstar_crit_M_F6": richardson([r["T"] for r in res[:2]])}
+    if s_levels:
+        s3 = [r["S"] for r in res]
+        out["smin_MV_M_F6"] = richardson2(s3)
+        out["smin_levels"] = s3
+        out["smin_order"] = observed_orders(lambda n: s3[s_levels.index(n)], s_levels)["orders"]
+    else:
+        out["smin_MV_M_F6"] = richardson([r["S"] for r in res])
     out["hcrit_over_hSem_M_F6"] = out["hcrit_MV_M_F6"] / hS
     h5, h5_levels = h527(k, Y_LEL, T_STD, 1.001 * out["hcrit_MV_M_F6"], hS)
     out["h527_M_F6"] = h5
@@ -578,6 +593,18 @@ Y, Y_RES = y_study()
 TC, TC_RES = tc_study()
 FR, FR_RES = frow1_study()
 
+
+def spread_study(spread=None):
+    """The spread of ``F_fig6`` between the Figure 6 curves (`C2.11`'s claim, a fraction),
+    in percent, and the move it causes in the critical cooling at M through the
+    logarithmic slope (``spread`` is a break-row option)."""
+    spread = C211_CLAIMS["F_fig6_curve_spread"] if spread is None else spread
+    return {"F_fig6_curve_spread_pct": 100.0 * spread,
+            "hcrit_move_F_spread_pct": 100.0 * spread * FR["dlnh_dlnF_M"]}
+
+
+SP = spread_study()
+
 # %%
 def f1_scan(k, y, Tc, n=400):
     """|S*_h| on a log scan of h over 0.005 to 500 W/(kg K), each point a fresh tube."""
@@ -599,22 +626,26 @@ def f1_max(k, y, Tc, levels=(500,)):
     if j == 0 or j == hs.size - 1:
         raise RuntimeError("F = 1: largest |S*| at the end of the h scan")
     wend = 4.0 * float(W[j - 1])
-    vals = []
+    vals, temps = [], []
     for n in levels:
         tb = CooledTube(k, y, Tc, hs[j + 1], CP, wend, n)
         tb.trace("h", np.geomspace(4.0 * hs[j + 1] + 1.0, hs[j + 1], 4))
         sc = scan_sensitivity(tb, "h", hs[j + 1], hs[j - 1], max_dlog=0.05, min_peak=np.inf)
-        vals.append(abs(refine_extremum(tb, "h", sc)["S"]))
-    return (richardson(vals) if len(vals) > 1 else vals[0]), (hs, S)
+        r = refine_extremum(tb, "h", sc)
+        vals.append(abs(r["S"]))
+        temps.append(r["T"])
+    ext = (lambda v: richardson(v) if len(v) > 1 else v[0])
+    return ext(vals), (hs, S), ext(temps)
 
 
 def f1_study(dH2=None, F=1.0):
     """F = 1 (Table 6 as printed): the largest |S*_h| at M and over the window corners."""
     k = kin(F, dH2=dH2)
-    sM, scanM = f1_max(k, Y_LEL, T_STD, levels=(1000, 2000))
+    sM, scanM, tM = f1_max(k, Y_LEL, T_STD, levels=(1000, 2000))
     corners = [(y, Tc) for y in (Y_STD, Y_LEL) for Tc in (min(T_KIN), T_HI)]
     vals = [f1_max(k, y, Tc)[0] for y, Tc in corners]
-    return {"max_abs_Sh_M_F1": sM, "max_abs_Sh_window_F1": max(vals + [sM])}, scanM
+    return {"max_abs_Sh_M_F1": sM, "max_abs_Sh_window_F1": max(vals + [sM]),
+            "Tstar_at_Sh_max_M_F1": tM}, scanM
 
 
 F1, F1_SCAN = f1_study()
@@ -716,7 +747,8 @@ say("At B the inlet heat release is <<q1:.2f>> W/kg with Table 6 as printed and 
     "<<tt1:.1f>> and <<tt6:.1f>> K above the coolant); the Frank-Kamenetskii form "
     "overestimates it by a factor <<fk:.4f>> (`F_fig6`). The `C2.10` tube's cooling is "
     "<<rc:.3f>> of h_Sem at B, below the frozen-composition limit, yet the tube is stable "
-    "(R3): consumption and product inhibition stabilise it, which R4 measures.",
+    "(R3); its composition changes along the tube (consumption, product inhibition) are what "
+    "the frozen limit leaves out, and R4 measures their net effect.",
     q1=INL["q_in_B_F1"], q6=INL["q_in_B_F6"], s1=INL["sigma_in_B_F1"],
     s6=INL["sigma_in_B_F6"], e1=INL["Eq_in_B_kJmol_F1"], e6=INL["Eq_in_B_kJmol_F6"],
     hs1=INL["hSem_B_F1"], hs6=INL["hSem_B_F6"], tt1=INL["Tt_minus_Tc_B_F1"],
@@ -804,7 +836,11 @@ fig.tight_layout(); plt.show()
 say("**With Table 6 as printed (F = 1) the window holds no sensitive point.** The largest "
     "|S*_h| over h from 0.005 to 500 W/(kg K) is <<s1:.4f>> at M and <<sw:.4f>> at the "
     "worst corner of the window (454 and 527 K, 1.8 and 3 %), against a peak of "
-    "<<sm:.0f>> with `F_fig6`: the hot spot only follows the cooling. "
+    "about <<sm:.0f>> with `F_fig6` (extrapolated from <<nsl>> grids, 500 to 2000 cells, with "
+    "the peak <<sl>> and observed order <<so:.2f>>, then a second Richardson step): the "
+    "hot spot only follows the cooling. The F = 1 maximum at M sits at a hot spot of "
+    "<<tfm:.1f>> K, past the highest kinetic temperature, <<thi:.0f>> K: extrapolated "
+    "kinetics. "
     "**With `F_fig6` the boundary lies inside the window.** At M the critical cooling is "
     "h_crit = <<hc:.4f>> W/(kg K), <<rr:.4f>> of the Semenov tangency; over the four "
     "corners the ratio lies between <<rmin:.3f>> and <<rmax:.3f>>. The `C2.10` tube "
@@ -818,20 +854,26 @@ say("**With Table 6 as printed (F = 1) the window holds no sensitive point.** Th
     "The boundary is therefore located only by extrapolated kinetics, which the paper "
     "warns against (S5).",
     s1=F1["max_abs_Sh_M_F1"], sw=F1["max_abs_Sh_window_F1"], sm=M["smin_MV_M_F6"],
+    nsl=len(M["smin_levels"]), sl=", ".join(f"{v:.2f}" for v in M["smin_levels"]),
+    so=float(np.ravel(M["smin_order"])[-1]), tfm=F1["Tstar_at_Sh_max_M_F1"],
     hc=M["hcrit_MV_M_F6"], rr=M["hcrit_over_hSem_M_F6"], rmin=MAP["map_ratio_min"],
     rmax=MAP["map_ratio_max"], tc3=TC["Tc_crit_C210_03_F6"], tc18=TC["Tc_crit_C210_018_F6"],
     thi=T_HI, tsm=M["Tstar_crit_M_F6"], ts3=TC["Tstar_crit_C210_03_F6"],
     nt=int(np.sum(top_count()[0] > T_HI)),
     h5=M["h527_M_F6"], h5r=M["h527_over_hcrit_M_F6"])
-say("**The criterion is intrinsic here**: MV in y_E at h = h_crit(M) puts the critical "
-    "ethene fraction at <<yc:.6f>>, the explosion limit itself. **The normaliser matters "
+say("**At M the criterion is intrinsic**: MV in y_E at h = h_crit(M) puts the critical "
+    "ethene fraction at <<yc:.6f>>, the explosion limit itself (shown at M only). **The normaliser matters "
     "little in h, more in T_c**: with the rise T* - T_c in place of T* the critical cooling "
     "at M moves by <<rh:.1e>> (relative), the critical coolant temperature of the `C2.10` "
     "tube at 1.8 % by <<rt:+.2f>> K, so that edge value is not robust. **The factor "
     "matters in proportion**: with `C2.11`'s Table 4 row 1 factor the critical cooling at "
-    "M is <<hr:.4f>> W/(kg K), d ln h_crit/d ln F = <<dl:.3f>>.",
+    "M is <<hr:.4f>> W/(kg K), d ln h_crit/d ln F = <<dl:.3f>>. **Set against the spread of "
+    "the factor itself**: `C2.11`'s factor varies by <<sp:.3f>> percent between the Figure 6 "
+    "curves, which moves h_crit by <<mv:.3f>> percent through that slope. The h scan covers "
+    "U, d_t, the voidage and the activity (E15), but not c_p.",
     yc=Y["ycrit_MV_at_hcrit_M_F6"], rh=RISE["hcrit_rise_shift_rel"],
-    rt=RISE["Tc_crit_rise_shift_018_K"], hr=FR["hcrit_MV_M_Frow1"], dl=FR["dlnh_dlnF_M"])
+    rt=RISE["Tc_crit_rise_shift_018_K"], hr=FR["hcrit_MV_M_Frow1"], dl=FR["dlnh_dlnF_M"],
+    sp=SP["F_fig6_curve_spread_pct"], mv=SP["hcrit_move_F_spread_pct"])
 
 # %% [markdown]
 # ### R5: what the hot spot costs in selectivity
@@ -846,11 +888,12 @@ say("**The criterion is intrinsic here**: MV in y_E at h = h_crit(M) puts the cr
 say("At B with `F_fig6`: inlet <<s0:.4f>>, isothermal tube <<si:.4f>>, cooled tube "
     "<<sc:.4f>> at X = 0.5. The products cost <<cp:.4f>>, the <<dT:.1f>> K hot spot "
     "<<ch:.4f>>. Near the boundary (3 % ethene, h = 1.05 h_crit, hot spot <<dn:.1f>> K "
-    "above the coolant) the hot spot costs <<cn:.4f>>, <<gr:.1f>> times as much. With "
+    "above the coolant, <<tn:.1f>> K, past the highest kinetic temperature, <<thi:.0f>> K: "
+    "extrapolated kinetics) the hot spot costs <<cn:.4f>>, <<gr:.1f>> times as much. With "
     "Table 6 as printed the selectivity at X = 0.5 stays at <<s1:.4f>>.",
     s0=INL["sigma_in_B_F6"], si=B["sigma_X50_iso500_F6"], sc=B["sigma_X50_B_F6"],
     cp=B["sel_cost_products_B"], dT=B["dTstar_B_F6"], ch=B["sel_cost_hotspot_B"],
-    dn=NC["dTstar_nc"], cn=NC["sel_cost_hotspot_nc"],
+    dn=NC["dTstar_nc"], tn=T_STD + NC["dTstar_nc"], thi=T_HI, cn=NC["sel_cost_hotspot_nc"],
     gr=NC["sel_cost_hotspot_nc"] / B["sel_cost_hotspot_B"], s1=B["sigma_X50_B_F1"])
 
 # %% [markdown]
@@ -927,20 +970,42 @@ def v5_study(factor_on="r2"):
     return {"V5_c211_worst": max(abs(mine[n] / cv11[n] - 1.0) for n in mine)}, dH11
 
 
-def v6_study(a=None):
-    """V6: activity a on both rates equals a = 1 at h/a on a tube a times shorter in w."""
+def v6_study(a=None, a_h=None):
+    """V6: activity a on both rates equals a = 1 at h/a on a tube a times shorter in w
+    (``a_h``, a break-row option, divides the cooling of the second tube instead of ``a``)."""
     a = F3_R2 if a is None else a
+    a_h = a if a_h is None else a_h
     t1 = CooledTube(kin(F6, a=a), Y_STD, T_STD, H_C210, CP, 600.0, 2000)
     t1.trace("h", np.geomspace(4 * H_C210 + 1, H_C210, 4))
-    t2 = CooledTube(kin(F6), Y_STD, T_STD, H_C210 / a, CP, 600.0 * a, 2000)
-    t2.trace("h", np.geomspace(4 * H_C210 / a + 1, H_C210 / a, 4))
+    t2 = CooledTube(kin(F6), Y_STD, T_STD, H_C210 / a_h, CP, 600.0 * a, 2000)
+    t2.trace("h", np.geomspace(4 * H_C210 / a_h + 1, H_C210 / a_h, 4))
     return {"V6_activity_gap": abs((t1.hot_spot()[1] - T_STD) / (t2.hot_spot()[1] - T_STD) - 1)}
+
+
+def repeat_study(override=None):
+    """V5: every row this page's CSV repeats from `C2.11`'s printed-numbers CSV, compared as
+    strings. ``override`` (a break-row option) replaces page values before the comparison."""
+    pn11 = load_data("borman-1995-printed-numbers.csv", page=C211, dtype=str).set_index("quantity")
+    mine = PN.value.to_dict()
+    mine.update(override or {})
+    same = {q: (q, q) for q in ("dH_epoxidation", "dH_combustion", "dH_EO_oxidation",
+                                "conversion_limit")}
+    same.update({"gas_particle_dT_max": ("gas_particle_dT_max", "dT_gas_particle_max"),
+                 "standard_ethene": ("standard_ethene", "table4_feed_ethene"),
+                 "last_series_activity": ("last_series_activity", "series3_activity_text")})
+    pairs = [(mine[a], pn11.loc[b, "value"]) for a, b in same.values()]
+    pairs.append((";".join(mine[f"T_kinetic_{i}"] for i in range(1, 5)),
+                  pn11.loc["T_experiments", "value"]))
+    pairs.append((f"{mine['P_total_low']}-{mine['P_total_high']}",
+                  pn11.loc["P_total_range", "value"]))
+    return {"repeated_rows_agree": sum(a == b for a, b in pairs)}, len(pairs)
 
 
 V2, V2_LADDER = v2_study()
 V4 = v4_study()
 V5, DH11 = v5_study()
 V6 = v6_study()
+RP, N_RP = repeat_study()
 say("**V1 balances.** Along every tube of the base study the C, H and O invariants change "
     "by at most <<v1:.1e>> (relative; bound 1e-12), and the adiabatic energy invariant by "
     "<<v1e:.1e>>: first-order upwind keeps every linear invariant cell by cell.",
@@ -960,12 +1025,17 @@ say("**V3 grid ladder at B.** T*, w at X = 0.5 and the integral selectivity ther
     o1=B["V3_order_min"], o2=B["V3_order_max"], nl=len(B_LEVELS),
     h0=M_RES[0]["x"], h1=M_RES[1]["x"], hc=M["hcrit_MV_M_F6"])
 say("**V4 sensitivity.** dT*/dh from the Newton Jacobian agrees with a central difference "
-    "of two solves to <<g:.1e>> (relative; the difference is of second order in the step).",
+    "of two solves to <<g:.1e>> (relative).",
     g=V4["V4_sens_gap"])
 say("**V5 `C2.11` reproduction.** At the Figure 6 point the page's rate law reproduces "
     "`C2.11`'s check values r1, r2, sigma and both apparent activation energies to "
     "<<w:.1e>>. The heats in `C2.11`'s CSV (<<a>>, <<b>> kJ/mol) are this page's.",
     w=V5["V5_c211_worst"], a=DH11[0], b=DH11[1])
+say("Every row this page's CSV repeats from `C2.11`'s printed-numbers CSV (the heats, the "
+    "kinetic temperatures, the pressure range, the conversion limit, the gas-particle "
+    "temperature difference, the Table 4 ethene fraction and the last-series activity) is "
+    "compared as a string: <<n>> of <<N>> repeated rows agree.",
+    n=RP["repeated_rows_agree"], N=N_RP)
 say("**V6 activity identity.** A tube at activity <<a:g>> (Table 6 f3 of r2) and the tube "
     "at activity 1, cooling h/a and length a w give the same hot spot to <<g:.1e>>.",
     a=F3_R2, g=V6["V6_activity_gap"])
@@ -979,7 +1049,7 @@ say("**V6 activity identity.** A tube at activity <<a:g>> (Table 6 f3 of r2) and
 
 # %%
 ALL = {**GEO, **INL, **B, **M, **Y, **TC, **FR, **F1, **MAP, **NC, **RISE, **V2, **V4, **V5,
-       **V6}
+       **V6, **RP, **SP}
 TIGHT = 1e-9          # closed forms, quadrature and root finds: deterministic to round-off
 TUBE = 1e-6           # Richardson values of Newton solves (tol 1e-11 on scaled unknowns)
 for name in ("V_ring_mm3", "m_particle_g", "rho_p_kgm3", "rho_p_min_kgm3", "rho_p_max_kgm3",
@@ -1014,8 +1084,15 @@ claims.bound("Tc_crit_C210_018_F6", TC["Tc_crit_C210_018_F6"], min=T_HI - 1.0, m
              basis="chosen", note="critical within the top kelvin of the kinetic range (p. 51)")
 claims.bound("Tc_crit_rise_shift_018_K", RISE["Tc_crit_rise_shift_018_K"], min=-0.3, max=-0.2,
              basis="chosen", note="a quarter kelvin; fixed to about 1e-4 K by the flat peak")
-claims.value("smin_MV_M_F6", M["smin_MV_M_F6"], rtol=1e-4,
-             note="peak height of a near-cliff extremum")
+claims.value("smin_MV_M_F6", M["smin_MV_M_F6"], rtol=2e-3,
+             note="peak height of a near-cliff extremum, two Richardson steps on 500, 1000 and "
+                  "2000 cells")
+claims.value("F_fig6_curve_spread_pct", ALL["F_fig6_curve_spread_pct"], rtol=TIGHT,
+             note="C2.11's claim F_fig6_curve_spread, in percent")
+claims.value("hcrit_move_F_spread_pct", ALL["hcrit_move_F_spread_pct"], rtol=TUBE,
+             note="spread of the factor times the logarithmic slope")
+claims.value("Tstar_at_Sh_max_M_F1", ALL["Tstar_at_Sh_max_M_F1"], rtol=5e-4,
+             note="hot spot at the F = 1 maximum of |S*_h| at M; rtol as for the critical points")
 claims.value("Tstar_crit_M_F6", M["Tstar_crit_M_F6"], rtol=5e-4,
              note="critical point; rtol from the kernel spread")
 claims.value("hcrit_rise_shift_rel", RISE["hcrit_rise_shift_rel"], rtol=1e-2,
@@ -1039,8 +1116,10 @@ claims.bound("V4_sens_gap", V4["V4_sens_gap"], max=1e-5, basis="tolerance",
              note="central difference, step 1e-3 h, plus NumJac eps_jac 1e-8")
 claims.bound("V5_c211_worst", V5["V5_c211_worst"], max=1e-11, basis="tolerance",
              note="the rtol of C2.11's check rows")
+claims.exact("repeated_rows_agree", RP["repeated_rows_agree"],
+             note="rows repeated from C2.11's printed-numbers CSV, string equality")
 claims.bound("V6_activity_gap", V6["V6_activity_gap"], max=1e-10, basis="identity",
-             structural=True, note="replacing w by a w maps (a, h) onto (1, h/a) exactly (E15)")
+             note="replacing w by a w maps (a, h) onto (1, h/a) exactly (E15)")
 
 H_U_RAW = geometry(u_unit=1.0)["h_C210_W_per_kgK"]
 DH2_MISREAD = 1232e3            # J/mol: the printed 1323 with two digits transposed
@@ -1054,10 +1133,10 @@ ROWS = [
      [(geometry, dict(o2_per_burnt=2.5)), (b_study, dict(o2_per_burnt=2.5))]),
     ("combustion heat 1323 kJ/mol read as 1232",
      [(inlet_study, dict(dH2=DH2_MISREAD)), (b_study, dict(dH2=DH2_MISREAD)),
-      (m_study, dict(dH2=DH2_MISREAD)), (map_study, dict(dH2=DH2_MISREAD)),
+      (m_study, dict(dH2=DH2_MISREAD, s_levels=None)), (map_study, dict(dH2=DH2_MISREAD)),
       (f1_study, dict(dH2=DH2_MISREAD)), (nc_study, dict(dH2=DH2_MISREAD)),
       (rise_study, dict(dH2=DH2_MISREAD))]),
-    ("product inhibition off (K_C = K_EO = K_W = 0)", [(m_study, dict(inhibition=False))]),
+    ("product inhibition off (K_C = K_EO = K_W = 0)", [(m_study, dict(inhibition=False, s_levels=None))]),
     ("y-criterion evaluated at 0.9 h_crit", [(y_study, dict(h_factor=0.9))]),
     ("Table 4 row 2 factor in place of row 1", [(frow1_study, dict(F=C211_CLAIMS["F_row2"]))]),
     ("isothermal reference at T_c + 10 K",
@@ -1073,6 +1152,12 @@ ROWS = [
                                      (inlet_study, dict(h_frozen=1.01 * H_C210))]),
     ("NumJac eps_jac 1e-3 in the sensitivity", [(v4_study, dict(eps_jac=1e-3))]),
     ("F_fig6 applied to r1 at the Figure 6 point", [(v5_study, dict(factor_on="r1"))]),
+    ("one repeated Table 4 ethene fraction misread (1.6 for 1.8)",
+     [(repeat_study, dict(override={"standard_ethene": "1.6"}))]),
+    ("spread of F_fig6 read as a percentage instead of a fraction",
+     [(spread_study, dict(spread=100.0 * C211_CLAIMS["F_fig6_curve_spread"]))]),
+    ("activity check with the second tube at cooling h instead of h/a",
+     [(v6_study, dict(a_h=1.0))]),
     ("top kinetic temperature 527 K misread as 827 K", [(top_count, dict(T_top=827.0))]),
 ]
 claims.define_rows([label for label, _ in ROWS])
@@ -1111,17 +1196,20 @@ print(f"{len(ROWS)} rows; {len(caught)} of {len(claims.metrics)} claims are fail
 
 # %% [markdown]
 # ### The finding
-#
-# With Table 6 as printed the paper's own window offers no parametrically sensitive tube:
-# the hot spot follows the cooling, with normalised sensitivities two orders of magnitude
-# below the scale at which Morbidelli and Varma's criterion places a boundary. With the
-# combustion factor that reproduces the authors' Figure 6 the runaway boundary runs
-# through the window, and every critical point lies above the highest temperature at which
-# the kinetics were measured, so it is located only by extrapolation (S5). This supports
-# `C2.11`'s finding M1 from the reactor side, since a strongly exothermic test reaction (S1)
-# is what the printed table fails to give; it does not prove it, and it says nothing about
-# why the printed constant differs. The flammability of the feed at the explosion limit is
-# not modelled.
+
+# %%
+say("With Table 6 as printed the paper's own window offers no parametrically sensitive "
+    "tube: the hot spot follows the cooling, and its largest normalised sensitivity over "
+    "the window (<<sw:.4f>>) is far below the peak the combustion factor gives (about "
+    "<<sm:.0f>>). With the combustion factor that reproduces the authors' Figure 6 the "
+    "runaway boundary runs through the window, and every critical point lies above the "
+    "highest temperature at which the kinetics were measured, so it is located only by "
+    "extrapolation (S5). This supports `C2.11`'s finding M1 from the reactor side, since "
+    "under the printed table the window chosen to study heat effects (S1) holds no "
+    "sensitive tube; it does not prove it, and it says nothing about why the printed "
+    "constant differs. The flammability of the feed at the explosion limit is not "
+    "modelled.",
+    sw=F1["max_abs_Sh_window_F1"], sm=M["smin_MV_M_F6"])
 
 # %% [markdown]
 # ## What pymrm adds
