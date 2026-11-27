@@ -5725,6 +5725,35 @@ models:
       paper.
     related: [J3.4, J1.5, B1.1]
 
+  - id: J3.6
+    slug: springer-zawodzinski-gottesfeld
+    title: "Springer, Zawodzinski and Gottesfeld (1991): water balance and resistance of a PEM fuel cell membrane"
+    description: >
+      Springer, Zawodzinski and Gottesfeld's PEM fuel cell membrane model: whether the
+      membrane results of Table I, alpha = 0.4 and R_mem = 0.285 Ohm cm2, follow from the
+      printed membrane equations with the printed interface water fractions. Only with
+      the drag counted once in Eqs. 23 and 24 and with the unprinted rho_dry/M_m root-found
+      (0.0016942 <!-- claim: r4_cf_star --> mol/cm3); read literally, Eq. 24 needs alpha
+      below 0.2262 <!-- claim: r5_literal_bound -->. At that root R_mem is
+      0.27875 <!-- claim: r4_R_star --> Ohm cm2, -2.19 <!-- claim: r4_R_gap_pct --> %
+      against the printed value, and no alpha in its printed half-unit band reaches it.
+    section: J
+    status: planned
+    page: pages/J3.6-springer-zawodzinski-gottesfeld/
+    tier: T1
+    priority: P1
+    structures: [S3, S10]
+    phases: [gas-solid]
+    reference:
+      authors: ["Springer, T. E.", "Zawodzinski, T. A.", "Gottesfeld, S."]
+      year: 1991
+      container: "Journal of the Electrochemical Society 138, 2334-2342"
+      doi: 10.1149/1.2085971
+    predicts: [membrane water content profile, net water flux per proton, membrane resistance]
+    pymrm_api: [construct_grad, construct_div, interp_cntr_to_stagg, compute_boundary_values, NumJac, newton, checks.find_roots, checks.observed_orders]
+    data: {tier: 0, method: table, status: complete}
+    related: [J3.4, J3.5, J3.2, J3.7, B1.1]
+
   - id: J4.1
     slug: monod
     title: "Monod: what a growth curve can and cannot pick out of the family"

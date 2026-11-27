@@ -1,0 +1,64 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: J3.6
+slug: springer-zawodzinski-gottesfeld
+title: "Springer, Zawodzinski and Gottesfeld (1991): water balance and resistance of a PEM fuel cell membrane"
+section: J
+status: planned
+tier: T1
+priority: P1
+structures: [S3, S10]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Springer, T. E.", "Zawodzinski, T. A.", "Gottesfeld, S."]
+    year: 1991
+    title: "Polymer electrolyte fuel cell model"
+    container: "Journal of the Electrochemical Society 138, 2334-2342"
+    doi: 10.1149/1.2085971
+
+pymrm_min_version: "3.4.1"
+runtime_seconds: 97
+datasets:
+  - springer-1991-printed-numbers.csv
+  - fig-reads.csv
+  - check_values.csv
+
+validation:
+  - constant diffusion coefficient and linear drag against the closed form, and the exact linear profile at zero current
+  - zero current against the Kirchhoff integral of the diffusion coefficient, and zero flux for a uniform water content
+  - one flux on every face (discrete water balance), and the boundary flux from compute_boundary_values against the operator
+  - grid refinement on five grids with observed orders and a round-off companion; values extrapolated before comparison
+  - the bordered Newton root for rho_dry/M_m against find_roots on the whole physical range
+  - every function against independent check values from a second route
+  - every number the page states is a registered claim with a break row that moves it, apart from five named identities
+
+adds: >
+  Not the model: the correlations, the gas side and Eq. 27 are closed forms. pymrm
+  contributes the membrane solve (construct_grad, construct_div, interp_cntr_to_stagg,
+  NumJac, newton, the boundary flux from compute_boundary_values), the unprinted
+  rho_dry/M_m as an extra unknown with the algebraic row alpha - 0.4 = 0 in one bordered
+  Newton system, and the checks (pymrm.checks.find_roots, pymrm.checks.observed_orders).
+
+agreement: >
+  The gas side of Table I closes on alpha: the values back-solved from x_w1, x_w4 and x_O4
+  all round to 0.4 (3 <!-- claim: r2_n_round --> of them), and Eq. 27 gives V_cell within 0.88 <!-- claim: r7_vcell_hu -->
+  half-units of 0.668. The membrane does not reproduce R_mem: with the drag counted once
+  and rho_dry/M_m root-found for alpha = 0.4 (0.0016942 <!-- claim: r4_cf_star --> mol/cm3),
+  R_mem is 0.27875 <!-- claim: r4_R_star --> Ohm cm2, -12.5 <!-- claim: r4_R_hu -->
+  half-units of the printed 0.285, and stays between 0.27718 <!-- claim: r4_R_band_lo -->
+  and 0.28048 <!-- claim: r4_R_band_hi --> over the printed half-unit band of alpha. The
+  swollen-thickness reading gives 0.30470 <!-- claim: r6_R_swollen_star -->, so the printed
+  value lies between the two readings. Read literally, Eq. 24 needs alpha below
+  0.2262 <!-- claim: r5_literal_bound -->.
+
+caveats: >
+  rho_dry/M_m, the gas constant and the thickness convention of Eq. 26 are not printed;
+  the page root-finds the first, assumes the second for Eq. 27 only, and brackets the
+  third. The electrodes (Eqs. 9 to 14) and Figs. 5 to 10 need unprinted inputs and are
+  not tested. The Fig. 4 comparison is illustrative: its caption holds gas flows
+  constant, so its 0.5 A/cm2 curve may not be the Table I case.
