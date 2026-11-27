@@ -85,7 +85,7 @@ the original papers could only sketch with a handful of points.
 |---|---|---|---|---|---|
 | E2.1 | **Kunii–Levenspiel bubbling bed** | *IEC Proc. Des. Dev.* 7:481 (1968); *Fluidization Engineering* (1991) | S7 | T0 | **P1** |
 | E2.2 | Kato–Wen bubble assemblage | *Chem. Eng. Sci.* 24 (1969) | S7 | T1 | P2 |
-| E2.3 | Grace generalised three-phase | *Can. J. Chem. Eng.* 64 (1986) | S7 | T1 | P1 |
+| E2.3 | Grace's regime map: Geldart's boundaries for any gas, and where his two B/D criteria part | *Can. J. Chem. Eng.* 64 (1986) | S7 | T1 | P1 |
 | E2.4 | Thompson–Bi–Grace generic model | *Chem. Eng. Sci.* 54 (1999) | S7 | T1 | P2 |
 | E2.5 | Werther / Hilligardt–Werther | (1980s) | S7 | T1 | P2 |
 | E2.6 | Turbulent-regime reactor model | Cui, Grace; Bi & Grace regime maps | S7 | T2 | P2 |
@@ -110,7 +110,7 @@ for section E and should anchor E2.7 and E2.9.
 | ID | Model | Canonical reference | Predicts | T | P |
 |---|---|---|---|---|---|
 | F1.1 | Akita–Yoshida | *IEC Proc. Des. Dev.* 12 (1973), 13 (1974) | ε_g, k_L a, d_b | T0 | P1 |
-| F1.2 | Hikita et al. | *Chem. Eng. J.* 20 (1980) | ε_g, k_L a incl. liquid properties | T1 | P1 |
+| F1.2 | Hikita et al. | *Chem. Eng. J.* 20 (1980) 59-67 | ε_g with liquid and gas properties; electrolyte factor | T1 | P1 |
 | F1.3 | Wilkinson et al. | *AIChE J* 38 (1992) | ε_g with scale/pressure effects | T1 | P1 |
 | F1.4 | **Krishna–Ellenberger two-bubble-class** | *AIChE J* 42:2627 (1996) | Small + large bubble holdup, churn-turbulent | T1 | **P1** |
 | F1.5 | Vandu–Krishna | *Chem. Eng. Process.* (2004) | k_L a in churn-turbulent | T1 | P1 |

@@ -1,0 +1,75 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F1.2
+slug: hikita-gas-holdup
+title: "Hikita et al.: gas holdup with liquid and gas properties"
+section: F
+status: published
+tier: T1
+priority: P1
+structures: [S1]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Hikita, H.", "Asai, S.", "Tanigawa, K.", "Segawa, K.", "Kitao, M."]
+    year: 1980
+    title: "Gas hold-up in bubble columns"
+    container: "Chemical Engineering Journal 20 59-67"
+    doi: 10.1016/0300-9467(80)85006-4
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 20
+datasets:
+  - hikita-1980-printed-numbers.csv
+  - hikita-1980-table2-properties.csv
+  - hikita-1980-fig2.csv
+  - hikita-1980-fig3.csv
+  - check_values.csv
+  - akita-yoshida-printed-numbers.csv         # loaded cross-page from F1.1
+  - akita-yoshida-1974-table2-properties.csv   # loaded cross-page from F1.1
+
+validation:
+  - Table 1's Akita-Yoshida constants against F1.1's transcription of the original paper, and the Akita-Yoshida function against F1.8's check value
+  - every function against independent check values from a second route
+  - eq. 9 against eq. 8 written out, eq. 8 in SI against cm-g-s, and Akita-Yoshida's independence of the diameter
+  - the maximum of the ratio in closed form against a bracketed root, the Akita-Yoshida slope against a central difference, and the property factor against the ratio of maxima
+  - the drawn lines of both figures against the forms they draw, beside the tick-fit residuals of the sidecars
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Little: the page is algebra, and pymrm contributes only pymrm.checks.find_roots for
+  the implicit Akita-Yoshida holdup, the crossings and band edges of the ratio to eq. 8
+  and the second route to its maximum. What the page adds to the paper is the split of
+  the gap to Akita-Yoshida into a shape and a property factor, the window checked
+  against the paper's own systems and plotted points, and the scatter of Figures 2 and
+  3 as numbers.
+
+agreement: >
+  Over the paper's velocity range eq. 8 and Akita-Yoshida differ by more than eq. 8's
+  printed maximum deviation somewhere for all 12 <!-- claim: n_fitted_maxdev_gt_10 --> of
+  the 12 <!-- claim: n_fitted --> fitted systems (air-water by only 0.0032 <!-- claim: maxdev_air_water_excess -->); the ratio is a shape factor peaking at 1.0545
+  <!-- claim: shape_factor --> times a property factor of 1.2671
+  <!-- claim: P_H2_water --> for H2 and 0.8285 <!-- claim: P_air_nbutanol --> for
+  n-butanol. On the 48 <!-- claim: f3_n --> Figure 3 markers read, the average deviation
+  from eq. 8 is 4.33 % <!-- claim: f3_AD -->, and on the assigned markers eq. 8 is the
+  closer of the two by 0.0575 <!-- claim: f3_pair_all --> ± 0.0132 <!-- claim: f3_pair_all_se -->
+  in absolute log ratio (fitting data; ± is marker scatter only). In Figure 2, H2 and the 5:1
+  mixture miss eq. 8's gas factor, the 1:1 mixture follows it (t = -0.4 <!-- claim: f2_11_air_t8 -->);
+  the H2 misfit is 8.222 % <!-- claim: f2_H2_air_misfit --> in holdup against eq. 8's gas factor of 0.7892
+  <!-- claim: gasfactor_H2_water -->, inside eq. 8's printed 10 % maximum deviation, and about one
+  reading error. The printed window is narrower than the plotted data at both ends: 1 <!-- claim: f3_n_below_Ca -->
+  of 33 <!-- claim: f3_n_assigned --> assigned markers is below its $Ca$ bound, 2 <!-- claim: f3_n_above_umax --> H2
+  markers need a velocity beyond the highest of the experiments.
+
+caveats: >
+  This is a correlation page, not a discretised model. Figures 2 and 3 are the fitting
+  data of eq. 8, so agreement with them is not validation; the held-out Figure 4, the
+  electrolyte Figures 12 and 13 are not digitised. Both figures are read by hand from
+  the scan with the error stated in their sidecars, and the Figure 3 markers
+  read are a lower bound of the plotted set. One column and one nozzle: nothing here
+  bears on diameter or sparger effects. Window membership allows half a unit of each
+  bound's last printed digit; the page prints the strict counts beside.

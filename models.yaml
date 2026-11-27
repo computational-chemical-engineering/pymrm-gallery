@@ -3781,6 +3781,46 @@ models:
     page: pages/C2.1-xu-froment-smr/
     related: [C2.2, C2.6, D3.1, B1.11, B1.1, D1.4]
 
+  - id: C2.7
+    slug: yates-satterfield-fischer-tropsch
+    title: "Fischer-Tropsch on cobalt: the Yates-Satterfield rate law"
+    description: >
+      The cobalt Fischer-Tropsch rate law most slurry-reactor models use, with
+      its Table V parameters at 220 and 240 C, tested against the apparent
+      activation energy the paper reports, using the parameter covariance
+      recovered from the paper's own experimental design; then put in the
+      paper's CSTR and an ideal plug-flow reactor with pymrm.
+    section: C
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S1, S2]
+    phases: [gas-solid]
+    predicts: [reaction rate, apparent activation energy, parameter covariance, conversion]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, find_roots, observed_orders]
+    reference:
+      authors: ["Yates, I. C.", "Satterfield, C. N."]
+      year: 1991
+      container: "Energy & Fuels 5(1) 168-173"
+      doi: 10.1021/ef00025a029
+    data: {tier: 4, method: digitised, status: complete}
+    note: >
+      Built from Yates and Satterfield itself. The catalogue line's chain-growth
+      (ASF) product distribution is not in this paper ("Product compositions
+      obtained at the same operating conditions will be reported separately",
+      p. 168) and is left out. Over the partial pressures both temperatures
+      cover, Table V gives an apparent activation energy of 133.0
+      <!-- claim: r3_band_lo --> to 159.4 <!-- claim: r3_band_hi --> kJ/mol,
+      not the values the paper reports ("The apparent activation energies were
+      92.7 and 94.5 kJ/mol", p. 172), which Table V reaches only below every
+      measured P_CO; against Table V's own standard error (a-b covariance
+      recovered from the design of Figures 1 and 2) the smallest one-sample z
+      is 9.56 <!-- claim: r3_z_945 -->, and 3.00 <!-- claim: r3_z_945_pair -->
+      when the scatter of the one measured rate pair behind a quoted value is
+      counted.
+    page: pages/C2.7-yates-satterfield-fischer-tropsch/
+    related: [F2.3, C1.1, C2.13, C2.1]
+
   - id: C2.13
     slug: voltz-co-propylene-oxidation
     title: "Three-way catalyst: Voltz CO and propylene oxidation kinetics"
@@ -3817,6 +3857,73 @@ models:
       unit-converted at face value.
     page: pages/C2.13-voltz-co-propylene-oxidation/
     related: [I1.2, C1.1, C2.1, C2.10]
+
+  - id: C2.11
+    slug: borman-westerterp-eo-selectivity
+    title: "Ethene epoxidation selectivity over silver (Borman and Westerterp)"
+    description: >
+      Do the selectivity conclusions of Borman and Westerterp (1995) follow from
+      their preferred model III with the printed Table 6? Not as printed: the
+      model gives 99.6 <!-- claim: sigma_T_F1_pct --> % selectivity where the
+      authors' own calculated curves lie far lower. One factor of
+      112.8 <!-- claim: F_fig6 --> on the combustion rate constant reproduces all
+      three curves of their Figure 6; the trend signs and the fall of selectivity
+      with temperature hold for any factor.
+    section: C
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S1]
+    phases: [gas-solid]
+    predicts: [reaction rate, selectivity, apparent activation energy]
+    pymrm_api: [NumJac, newton, residual_check, find_roots, observed_orders]
+    reference:
+      authors: ["Borman, P. C.", "Westerterp, K. R."]
+      year: 1995
+      container: "Industrial & Engineering Chemistry Research 34(1) 49-58"
+      doi: 10.1021/ie00040a002
+    data: {tier: 4, method: digitised, status: complete}
+    note: >
+      Tables 3, 4, 6 and 7 and the printed numbers read from the page images;
+      Figure 6 (the authors' model III curves) digitised by extract_figures.py.
+      The kinetic data set is not printed, so the fit itself is neither tested
+      nor refitted. D3.5 (planned, same source) should load the combustion-rate
+      factor F_fig6 from this page with load_claims.
+    page: pages/C2.11-borman-westerterp-eo-selectivity/
+    related: [D3.5, C2.10, C2.1, C2.13, C1.1]
+  - id: C2.5
+    slug: vandenbussche-froment-methanol-co2-route
+    title: "Methanol synthesis from CO2: does the printed kinetic model reproduce its own reactor simulations (Vanden Bussche and Froment)"
+    description: >
+      The CO2-route methanol synthesis and reverse water gas shift kinetics of
+      Vanden Bussche and Froment (eq. 3, Table 2, the printed equilibrium
+      constants) put back against the paper's own adiabatic bench-reactor
+      simulations (Figs. 5 to 7) and its Klier comparison (Fig. 8), with pymrm
+      solving the plug-flow reactors and the printed statistics rechecked from
+      their own digits.
+    section: C
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S2]
+    phases: [gas-solid]
+    predicts: [reaction rate, conversion, temperature profile, approach to equilibrium]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, residual_check, find_roots, observed_orders]
+    reference:
+      authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+      year: 1996
+      container: "Journal of Catalysis 161, 1-10"
+      doi: 10.1006/jcat.1996.0156
+    data: {tier: 2, method: digitised, status: complete}
+    note: >
+      Built from Vanden Bussche and Froment (1996) itself. Tables 1 to 3 are
+      vector text; Figs. 5 to 8 digitised by extract_figures.py from the
+      embedded scans. The experiments ("276 experiments", p. 5) are not printed, so there is no refit
+      and no parity test: every figure compared is the authors' own simulation.
+      Heats and heat capacities are not printed; the page reads them from the
+      NIST WebBook and tests the alternatives.
+    page: pages/C2.5-vandenbussche-froment-methanol-co2-route/
+    related: [C2.1, C2.10, C1.1]
 
   - id: D1.1
     slug: froment-fixed-bed-ladder
@@ -4263,6 +4370,76 @@ models:
       does not.
     related: [E2.1, E1.2, E1.4, E1.3, E1.5]
 
+  - id: E1.4
+    slug: sit-grace-interphase-mass-transfer
+    title: "Sit and Grace (1981): bubble interaction and interphase mass transfer"
+    description: >
+      Sit and Grace split the single-bubble interphase coefficient into a throughflow term
+      and a penetration term, postulate that bubble interaction raises only the throughflow
+      term, and derive eqns (3), (4) for freely bubbling beds from it. The page tests whether
+      the paper's own printed numbers (Table 2, the coefficients of interacting and isolated
+      bubbles, Table 1) decide that, with one small pymrm solve (the penetration problem
+      behind the diffusive term) and pymrm's checks on the tracer balance of a growing bubble as verification.
+    section: E
+    status: published
+    page: pages/E1.4-sit-grace-interphase-mass-transfer/
+    tier: T1
+    priority: P1
+    structures: [S1, S4]
+    phases: [gas-solid]
+    predicts:
+      - >-
+        bubble-to-dense-phase coefficient of single bubbles (eqns 1, 2) and the
+        throughflow-only enhancement postulate, tested against the paper's printed
+        coefficients and Tables 1 and 2; the constants of eqns (3), (4) checked against
+        their stated inputs only
+    reference:
+      authors: ["Sit, S. P.", "Grace, J. R."]
+      year: 1981
+      title: "Effect of bubble interaction on interphase mass transfer in gas fluidized beds"
+      container: "Chemical Engineering Science 36, 327-335"
+      doi: 10.1016/0009-2509(81)85012-9
+    pymrm_api: [construct_grad, construct_div, compute_boundary_values, checks.find_roots, checks.observed_orders]
+    data: {tier: 2, method: table, status: complete}
+    related: [E1.2, E1.1, E2.1, E1.3]
+  - id: E2.3
+    slug: grace-regime-map
+    title: "Grace's regime map: Geldart's boundaries for any gas, and where his two B/D criteria part"
+    description: >
+      Grace (1986) writes Geldart's four powder groups as boundaries in the dimensionless
+      particle size d* against the density ratio, for any gas. The page tests whether every
+      boundary number he prints follows, within its printed rounding, from the correlation
+      and constants he states for it (36 <!-- claim: boundary_numbers_within --> of the 36
+      <!-- claim: boundary_numbers_within_of --> comparisons do, taking his printed constants
+      as exact; eq 15 only for an air viscosity he does not print), and measures where his
+      two B/D criteria part: the cloud criterion (eqs 18-19) and the Ergun-term balance
+      (eqs 20-21), both on eq 10 with the same C1, C2, cross once at drho/rho =
+      437.1 <!-- claim: x_cross_19_21_exact -->, exactly twice eq 19's b, at the low end of
+      what he calls "of order 500 to 1e4" (500 is reached for eps_mf =
+      0.449 <!-- claim: eps_mf_for_cross_500 --> instead of the value he assumes, or d_b =
+      114 <!-- claim: db_over_dp_for_cross_500 --> d_p instead of 100), and differ by a
+      factor 1.13 <!-- claim: ratio_21_over_19_500 --> to
+      4.44 <!-- claim: ratio_21_over_19_1e4 --> in d* over 500 to 1e4. A correlation page; pymrm contributes
+      only pymrm.checks.find_roots.
+    section: E
+    status: published
+    page: pages/E2.3-grace-regime-map/
+    tier: T1
+    priority: P2
+    structures: []
+    phases: [gas-solid]
+    predicts:
+      - minimum fluidisation velocity (eq 11)
+      - terminal velocity (Table 2)
+      - C/A, A/B and B/D boundaries in d* for any gas
+    pymrm_api: [find_roots]
+    reference:
+      authors: ["Grace, J. R."]
+      year: 1986
+      container: "Canadian Journal of Chemical Engineering 64(3) 353-363 (1986)"
+      doi: 10.1002/cjce.5450640301
+    related: [A1.7, A1.8, E1.1, E2.1]
+
   - id: E2.7
     slug: cfb-core-annulus
     title: "Circulating fluidised bed core–annulus model"
@@ -4308,6 +4485,32 @@ models:
       doi: 10.1021/i260049a016
     data: {tier: 2, method: table, status: complete}
     related: [F1.3, F1.4, A3.7]
+
+  - id: F1.2
+    slug: hikita-gas-holdup
+    title: "Hikita et al.: gas holdup with liquid and gas properties"
+    description: >
+      Hikita's gas-holdup correlation carries the gas density and viscosity besides
+      the liquid properties. Set beside Akita-Yoshida on the paper's own systems, the
+      gap splits into a velocity-shape factor common to all systems and a property
+      factor; the paper's window and its plotted fitting data are checked against
+      each other. A correlation page; it calls no pymrm operator.
+    section: F
+    status: published
+    page: pages/F1.2-hikita-gas-holdup/
+    tier: T1
+    priority: P1
+    structures: [S1]
+    phases: [gas-liquid]
+    predicts: [gas holdup from liquid and gas properties for pure liquids and non-electrolyte solutions, electrolyte correction factor from ionic strength]
+    pymrm_api: [find_roots]
+    reference:
+      authors: ["Hikita, H.", "Asai, S.", "Tanigawa, K.", "Segawa, K.", "Kitao, M."]
+      year: 1980
+      container: "Chemical Engineering Journal 20 59-67"
+      doi: 10.1016/0300-9467(80)85006-4
+    data: {tier: 4, method: digitised, status: complete}
+    related: [F1.1, F1.8, F1.3, F1.4]
 
   - id: F1.4
     slug: krishna-ellenberger-holdup
@@ -4611,6 +4814,38 @@ models:
         another page; F3.1's agreement.json is loaded.
     data: {tier: 6, method: analytical, status: complete}
     related: [F3.1, F3.3, F3.5, B1.1, A3.2]
+
+  - id: F3.3
+    slug: decoursey-danckwerts-enhancement
+    title: "DeCoursey (1974): an explicit enhancement factor for the Danckwerts surface-renewal model, tested against the exact model"
+    description: >
+      DeCoursey derived an explicit enhancement factor for a second-order reaction under
+      Danckwerts surface renewal, Eq. (21), and could compare it only with Higbie-model
+      numbers. The page solves the exact surface-renewal model (coupled transient A and B
+      penetration, averaged over the exponential age distribution) over the paper's own
+      Table 2 grid, tests on that grid the paper's prediction that Eq. (21) is "within about 12 per
+      cent of the exact results for the Danckwerts model", recomputes Tables 1 and 2 with
+      the exact Higbie average of the same solution, and measures where the error comes
+      from. The film comparison is F3.1's.
+    section: F
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S4]
+    # note: the catalogue line (docs/catalog-B-reactors.md, F3 table) gives S3; the page
+    # solves a 1-D transient PDE (no steady route exists for second-order surface
+    # renewal), which is S4 in docs/taxonomy.md.
+    phases: [gas-liquid]
+    reference:
+      authors: ["DeCoursey, W. J."]
+      year: 1974
+      container: "Chemical Engineering Science 29, 1867-1872"
+      doi: 10.1016/0009-2509(74)85003-7
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, construct_coefficient_matrix,
+                compute_boundary_values, NumJac, newton, checks.find_roots, checks.observed_orders]
+    data: {tier: 6, method: table, status: complete}
+    page: pages/F3.3-decoursey-danckwerts-enhancement/
+    related: [F3.1, F3.2, F3.4, F3.5]
 
   # ---------------------------------------------------------------- section G
   - id: G1.1
@@ -5727,6 +5962,37 @@ models:
       property functions of their cell live in cited codes, not the printed
       paper.
     related: [J3.4, J1.5, B1.1]
+
+  - id: J3.6
+    slug: springer-zawodzinski-gottesfeld
+    title: "Springer, Zawodzinski and Gottesfeld (1991): water balance and resistance of a PEM fuel cell membrane"
+    description: >
+      Springer, Zawodzinski and Gottesfeld's PEM fuel cell membrane model: whether the
+      membrane results of Table I, alpha = 0.4 and R_mem = 0.285 Ohm cm2, follow from the
+      printed membrane equations with the printed interface water fractions. Only with
+      the drag counted once in Eqs. 23 and 24 and with the unprinted rho_dry/M_m root-found
+      (0.0016942 <!-- claim: r4_cf_star --> mol/cm3); read literally, Eq. 24 needs alpha
+      below 0.2262 <!-- claim: r5_literal_bound -->. At that root Eq. 26 on the
+      dry thickness gives R_mem = 0.27875 <!-- claim: r4_R_star --> Ohm cm2,
+      -2.19 <!-- claim: r4_R_gap_pct --> % against the printed 0.285, and the swollen
+      thickness gives 0.30470 <!-- claim: r6_R_swollen_star -->; the paper does not say
+      which it used.
+    section: J
+    status: published
+    page: pages/J3.6-springer-zawodzinski-gottesfeld/
+    tier: T1
+    priority: P1
+    structures: [S3, S10]
+    phases: [gas-solid]
+    reference:
+      authors: ["Springer, T. E.", "Zawodzinski, T. A.", "Gottesfeld, S."]
+      year: 1991
+      container: "Journal of the Electrochemical Society 138, 2334-2342"
+      doi: 10.1149/1.2085971
+    predicts: [membrane water content profile, net water flux per proton, membrane resistance]
+    pymrm_api: [construct_grad, construct_div, interp_cntr_to_stagg, compute_boundary_values, NumJac, newton, checks.find_roots, checks.observed_orders]
+    data: {tier: 0, method: table, status: complete}
+    related: [J3.4, J3.5, J3.2, J3.7, B1.1]
 
   - id: J4.1
     slug: monod

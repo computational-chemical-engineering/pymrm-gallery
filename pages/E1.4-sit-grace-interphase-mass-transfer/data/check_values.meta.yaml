@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at stated test conditions"
+status: complete
+
+source:
+  authors: ["Sit, S. P.", "Grace, J. R."]
+  year: 1981
+  container: "Chemical Engineering Science 36, 327-335"
+  doi: "10.1016/0009-2509(81)85012-9"
+  access: >
+    The equations are those of the paper (eqns 1 to 4 for the bubble-to-dense-phase coefficient,
+    the Table 1 tracer accounting and the Table 2 enhancement data), with the readings and
+    misprints stated in the build plan's equations file. The values are not read from the paper
+    but computed from its equations and printed numbers by a second route; the half-unit rows
+    compare those values with the paper's printed constants and table cells.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script e14_check_values.py (numpy and scipy, no pymrm, no page code; penetration amount cross-checked against profile and flux integrals, surface-renewal factors against quadrature, the tracer-balance K against a solve_ivp march), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; rows with a looser rtol carry the route's own error"
+
+conditions: >
+  T: present work, U_mf 11.2 cm/s, D_G 0.2 cm2/s, D_B 15 cm, eps_mf 0.40, U_B 90 cm/s (a test
+  value, not the Fig. 4 read), bubble thickness w 0.9 cm. T1: Table 1 cells, front bubble 0.3 to
+  0.6 s, V linear in time, perimeter factor 1. T2: Table 2 rows at the midpoint of the printed
+  D_B range, eps_mf 0.40, U_B = 0.711 (g D_B)^(1/2), g 981 cm/s2. P: scaled penetration problem.
+
+columns:
+  - {name: name, unit: "as in the row name", description: "quantity, as defined in the equations file"}
+  - {name: value, unit: "as in the row name", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

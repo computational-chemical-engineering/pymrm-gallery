@@ -1,0 +1,29 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Grace, J. R."]
+  year: 1986
+  container: "Canadian Journal of Chemical Engineering 64, 353-363"
+  doi: "10.1002/cjce.5450640301"
+  access: >
+    The equations are those of the paper (eqs. 1 to 21, Tables 2 and 6). The values are not
+    read from the paper but computed by an independent script from the equations and constants
+    the paper prints, at the test condition stated on the page.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): an independent script (numpy and scipy, no pymrm, no page code; closed forms cross-checked against brentq roots, the direct eq. 18 solve and scans), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; looser rtol rows carry the route's own error"
+
+conditions: >
+  The test condition stated on the page (air at 298 K and 101.3 kPa, glass of 2500 kg/m3, 500 µm at 0.5 m/s).
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as named on the page"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

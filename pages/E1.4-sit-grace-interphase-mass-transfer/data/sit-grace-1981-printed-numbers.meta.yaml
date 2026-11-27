@@ -1,0 +1,48 @@
+dataset_id: sit-grace-1981-printed-numbers
+title: "Every number of the running text and equations the page uses, as printed"
+status: complete
+
+source:
+  authors: ["Sit, S. P.", "Grace, J. R."]
+  year: 1981
+  title: "Effect of bubble interaction on interphase mass transfer in gas fluidized beds"
+  container: "Chemical Engineering Science 36, 327-335"
+  doi: 10.1016/0009-2509(81)85012-9
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/), lawful
+    institutional access (TU Eindhoven). A 300 ppi scan whose OCR text layer is usable for
+    prose only: it drops every displayed equation and garbles table cells and numbers.
+    No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no figure or page image reproduced)"
+
+acquisition:
+  method: table
+  resolution: "pages 327 to 334 (PDF pages 1 to 8) read from 300 dpi renders of the scan; OCR unusable for numbers"
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: "none beyond the printed precision; every value is kept as printed, a string (load with dtype=str)"
+
+conditions: >
+  Journal page = PDF page + 326. U_mf is printed once, as 0.112 m/s on p. 327, and
+  as 11.2 cm/s in Table 2. The OCR layer reads "20-80%" as "280%" and "3-8" as
+  "3-a" (p. 329, 333); the image values are given here. eps_mf, U_B and the mean
+  bubble size of eqns (3), (4) are printed nowhere.
+
+missing:
+  - "eps_mf, U_B, U-bar_B and D-bar_B: not printed (page inputs)"
+  - "the per-bubble data behind 9.6, 8.5 and 1.8: in reference [14], not printed"
+
+columns:
+  - {name: name, unit: "-", description: "page identifier of the printed value"}
+  - {name: printed, unit: "as in unit", description: "the value as printed (string)"}
+  - {name: unit, unit: "-", description: "unit as printed"}
+  - {name: page, unit: "-", description: "journal page"}
+  - {name: pdf_page, unit: "-", description: "PDF page"}
+  - {name: meaning, unit: "-", description: "what the number is, with a short quote where it matters"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.

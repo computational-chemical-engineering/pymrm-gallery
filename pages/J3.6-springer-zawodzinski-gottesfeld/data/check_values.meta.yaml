@@ -1,0 +1,35 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Springer, T. E.", "Zawodzinski, T. A.", "Gottesfeld, S."]
+  year: 1991
+  container: "Journal of the Electrochemical Society 138, 2334-2342"
+  doi: "10.1149/1.2085971"
+  access: >
+    The equations are those of the paper (the membrane property correlations Eqs. 15 to 22, the
+    membrane water balance Eqs. 23 to 26, the gas-side relations Eqs. 7, 8 and 27), with the
+    readings and misprints stated in the build plan's equations file (Eq. 20 corrected to Eq. 21,
+    the drag counted once, Eq. 26 read with the printed thickness, the fixed-charge concentration
+    rho_dry/M_m not printed and set by the page). The values are not read from the paper but
+    computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script j36_check_values.py (numpy and scipy, no pymrm, no page code; the membrane rows by quadrature of z(lambda) with brentq, cross-checked against solve_ivp DOP853 shooting to 1e-9; the zero-current flux by a polynomial antiderivative cross-checked against quad), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; the membrane rows carry the quadrature route's own error, covered by their rtol"
+
+conditions: >
+  Test condition: the Table I base case of the paper (J = 0.5 A/cm2, cell at 80 C, 3 atm,
+  membrane thickness 0.0175 cm, interface water mole fractions 0.1013 and 0.2327); rows named
+  cfref use a fixed-charge concentration of 1.8e-3 mol/cm3, rows named cfstar the value that
+  gives the printed alpha = 0.4.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, in the units stated in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

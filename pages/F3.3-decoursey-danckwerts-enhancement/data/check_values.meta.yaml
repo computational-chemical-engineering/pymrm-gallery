@@ -1,0 +1,35 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["DeCoursey, W. J."]
+  year: 1974
+  container: "Chemical Engineering Science 29, 1867-1872"
+  doi: "10.1016/0009-2509(74)85003-7"
+  access: >
+    The equations are those of the paper (the Danckwerts surface-renewal model with a
+    second-order irreversible reaction, Eqs. 2 to 21, and the comparison relations Eqs. 22 and
+    23), with the readings and misprints stated in the build plan's equations file (Eq. 23 read
+    with erf where erfc is printed; the reactant ratio at unequal diffusivities from the exact
+    penetration relation, not Eq. 14). The exact surface-renewal and penetration values are later
+    computations, not the paper's. The values are not read from the paper but computed from its
+    equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f33_check_values.py (numpy and scipy, no pymrm, no page code; closed forms cross-checked by quadrature; the exact surface-renewal and penetration rows from a scipy method-of-lines march in two coordinate systems agreeing to about 1e-8 after Richardson extrapolation), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; the exact-model rows carry the march's extrapolated error, covered by their rtol (1e-8 to 2.2e-4)"
+
+conditions: >
+  Test condition: E_a = 6 (instantaneous-reaction enhancement), D_B/D_A = 1, M = 24 (the largest
+  printed correction of the paper's Table 1); the reactant-ratio row uses E_a = 6, D_B/D_A =
+  0.02; the pseudo-first-order rows are closed forms over M.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, dimensionless as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
