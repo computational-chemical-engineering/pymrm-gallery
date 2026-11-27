@@ -86,7 +86,7 @@ def md(text):
 #
 # In the churn-turbulent regime a bubble column holds two gas populations. Small
 # bubbles travel with the liquid or slurry, which "suffers backmixing considerably"
-# (p. 312), and fill it to a voidage close to the one at the regime transition. Large
+# (p. 311), and fill it to a voidage close to the one at the regime transition. Large
 # bubbles rise through it fast and nearly in plug flow. Krishna et al. separate the two
 # by shutting the gas off and following the pressure: the large bubbles leave in a few
 # seconds, the small ones slowly. Their conclusion (p. 315, quoted from the page image):
@@ -100,7 +100,8 @@ def md(text):
 # The two halves are each stated more weakly in the text: ε_df "is virtually
 # independent of the column diameter" (p. 314) and "practically independent of the
 # column diameter" (p. 315); ε_b "is virtually independent of slurry concentration, but
-# is a significant function of the column diameter" (p. 315). This page measures each
+# is a significant function of the column diameter" (p. 315). The abstract (p. 311) says of the slurry that
+# "the influence on the dilute-phase gas holdup is small". This page measures each
 # half on the paper's own figures and reports the number beside the word.
 #
 # The paper prints no reactor model. What the split implies for conversion is worked
@@ -370,6 +371,8 @@ claims.bound("tick_residual_worst_px", tick_worst, max=2.0, basis="chosen", stru
              note="calibration quality of the committed reads (plan V4: below 2 px); no model defect moves it")
 claims.bound("second_pass_fig6_max_diff", sp6["eps_df_difference_max"], max=0.002, basis="chosen",
              structural=True, note="against the sidecar read error of 0.002; a property of the committed data")
+claims.exact("check_values_agree", len(CHECK), structural=True,
+             note="rows of the committed check values the page reproduces; a failing row raises before this line")
 claims.exact("fig6_markers", n6, structural=True, note="rows of the committed CSV that are data")
 claims.exact("fig9_markers", len(F9), structural=True, note="rows of the committed CSV")
 claims.exact("fig8_markers", len(F8), structural=True, note="rows of the committed CSV")
@@ -616,6 +619,11 @@ def study_dense(p=P, dy6=0.0, legend=False, glyph=True, swap016=False, err7=ERR7
     out["dense_016_gap_D010_minus_fig6"] = c10.centre_low - out["fig6_mean_es016"]
     out["dense_016_margin"] = (out["dense_016_gap_D010_minus_fig6"] - err7 - 2 * out["fig6_se_es016"])
     out["dense_016_eq4_minus_fig6"] = float(eps_df(0.16, p)) - out["fig6_mean_es016"]
+    c25 = st[(st.eps_s == 0.25) & (st.D_T == "0.10")].iloc[0]
+    out["dense_025_D010_eq4_miss"] = float(eps_df(0.25, p)) - (c25.centre_high + err7)
+    spans = {r.eps_s: r.centre_high - r.centre_low for r in st[(st.D_T == "0.10") & st.eps_s.isin([0.05, 0.10, 0.25])].itertuples()}
+    out["fig7_016_D010_span"] = c10.centre_high - c10.centre_low
+    out["fig7_D010_span_min"], out["fig7_D010_span_max"] = min(spans.values()), max(spans.values())
     a0 = st[st.D_T == "all"].iloc[0]
     out["fig7_es0_low"], out["fig7_es0_high"] = a0.centre_low, a0.centre_high
     out["fig6_series_below_eq4"] = int(sum(out[f"fig6_z_vs_eq4_es{TAG[float(s)]}"] < 0 for s in ES6))
@@ -685,20 +693,26 @@ md(f"**Against eq. 4.** At 0.38 m the Fig. 6 means sit below eq. 4 in {n_below} 
    f"{R2['fig7_016_D038_low']:.4f} to {R2['fig7_016_D038_high']:.4f}; Fig. 6's 0.38 m mean is "
    f"{R2['fig6_mean_es016']:.4f}. The lowest 0.10 m centre is {R2['dense_016_gap_D010_minus_fig6']:.4f} above "
    f"the 0.38 m mean, {R2['dense_016_margin']:.4f} after subtracting the Fig. 7 read error and two Fig. 6 "
-   f"standard errors: the two diameters are {'disjoint' if R2['dense_016_margin'] > 0 else 'not separated'} at "
+   f"standard errors: the visible centres of the two diameters are {'disjoint' if R2['dense_016_margin'] > 0 else 'not separated'} at "
    f"this concentration, and eq. 4 ({float(eps_df(0.16, P)):.3f}) lies "
    f"{'inside' if R2['fig7_eq4_distance_D0.10_es016'] > 0 else 'outside'} the 0.10 m range and "
    f"{'inside' if R2['fig7_eq4_distance_D0.38_es016'] > 0 else 'outside'} the 0.38 m range (each widened by the "
    f"read error). At ε_s = 0 the three diameters overlap in one "
    f"stack on the axis (centres {R2['fig7_es0_low']:.3f} to {R2['fig7_es0_high']:.3f}) and cannot be "
-   f"separated, so the figures test the paper's \"virtually independent of the column diameter\" at one "
-   f"concentration, where it does not hold: the difference is "
-   f"{R2['dense_016_gap_D010_minus_fig6'] / R2['fig6_mean_es016'] * 100:.0f} % of the 0.38 m value.")
+   f"separated, so the figures compare the diameters at one concentration. There the difference is "
+   f"{R2['dense_016_gap_D010_minus_fig6'] / R2['fig6_mean_es016'] * 100:.0f} % of the 0.38 m value, where the "
+   f"paper writes \"virtually independent of the column diameter\". One pair of groups does not show that the "
+   f"diameter is the cause: the 0.10 m column's own ε_s = 0.25 group misses eq. 4 by "
+   f"{R2['dense_025_D010_eq4_miss']:.4f} after the read error, as much as the gap, and a 0.10 m circle inside the "
+   f"solid mass of 0.38 m diamonds could not be seen (the visible 0.10 m centres span "
+   f"{R2['fig7_016_D010_span']:.4f}; the other three isolated 0.10 m stacks span {R2['fig7_D010_span_min']:.4f} "
+   f"to {R2['fig7_D010_span_max']:.4f}).")
 
 # %% [markdown]
 # ### R3. Dilute phase: is ε_b independent of the slurry, and does it scale as $D_T^{-0.18}$?
 #
-# Per series of Fig. 8 with at least 8 labelled markers, the amplitude
+# Per column and panel of Fig. 8 with at least 8 labelled markers (the 0.10 m reference of panel a pools the
+# series ε_s 0, 0.05 and 0.10; the 0.38 m amplitude of panel b pools ε_s 0.29 and 0.36), the amplitude
 # $A = \exp\,\mathrm{mean}(\ln y - 0.58 \ln x)$ with the standard error of the mean log
 # (a fit of one parameter per series). Fig. 8 plots $y = \varepsilon_b(D_T/0.1)^{0.18}$,
 # so the amplitude of ε_b itself is $A_u = A\,(0.1/D_T)^N$. With N = 0.18, $A_u$ falls by
@@ -744,15 +758,63 @@ def study_dilute(p=P, dy8=0.0, pool_a=False):
         out[f"dilute_ratio_se_{key}"] = r * se
         out[f"dilute_ratio_z_vs_N018_{key}"] = np.log(r / pred) / se
         out[f"dilute_ratio_z_vs_N0_{key}"] = np.log(r) / se
-    lnD = np.log([A[k][3] for k in ("D010_low", "D019_low", "D038_low")])
-    lnA = np.log([Au[k][0] for k in ("D010_low", "D019_low", "D038_low")])
-    w = 1 / np.array([Au[k][1] for k in ("D010_low", "D019_low", "D038_low")]) ** 2
-    X = np.vstack([np.ones(3), lnD]).T
-    cov = np.linalg.inv(X.T @ (w[:, None] * X))
-    coef = cov @ X.T @ (w * lnA)
-    out["dilute_free_N"] = -coef[1]
-    out["dilute_free_N_se"] = np.sqrt(cov[1, 1])
-    out["dilute_free_N_z_vs_018"] = (-coef[1] - 0.18) / np.sqrt(cov[1, 1])
+    low = ("D010_low", "D019_low", "D038_low")
+
+    def wfit(amps, ses):
+        """Weighted fit of ln A_u = c - N ln D_T over the three columns: (N, its formal se, chi-square)."""
+        lnD = np.log([A[k][3] for k in low])
+        X = np.vstack([np.ones(3), lnD]).T
+        w = 1 / np.asarray(ses) ** 2
+        cv = np.linalg.inv(X.T @ (w[:, None] * X))
+        cf = cv @ X.T @ (w * np.log(amps))
+        return -cf[1], np.sqrt(cv[1, 1]), float(np.sum(w * (np.log(amps) - X @ cf) ** 2))
+
+    N_fit, N_se, chi2 = wfit([Au[k][0] for k in low], [Au[k][1] for k in low])
+    out["dilute_free_N"] = N_fit
+    out["dilute_free_N_se"] = N_se
+    out["dilute_free_N_z_vs_018"] = (N_fit - 0.18) / N_se
+    out["dilute_free_N_chi2"] = chi2
+    r19, r38 = out["dilute_ratio_D019_low"], out["dilute_ratio_D038_low"]
+    out["dilute_pair_N_010_019"] = -np.log(r19) / np.log(0.19 / p["D_ref"])
+    out["dilute_pair_N_010_038"] = -np.log(r38) / np.log(0.38 / p["D_ref"])
+    out["dilute_pair_N_019_038"] = -np.log(r38 / r19) / np.log(0.38 / 0.19)
+    # the same fit on the abscissa range the three series share
+    lo_x = max(xs["a"][sel[k][1]].min() for k in low)
+    hi_x = min(xs["a"][sel[k][1]].max() for k in low)
+    out["dilute_shared_range_lo"], out["dilute_shared_range_hi"] = lo_x, hi_x
+    win = {}
+    for k in low:
+        m_ = sel[k][1] & (xs["a"] >= lo_x) & (xs["a"] <= hi_x)
+        a_, se_, n_ = amp(xs["a"][m_], ys["a"][m_], p["m"])
+        win[k] = (a_ * (p["D_ref"] / A[k][3]) ** p["N"], se_)
+    out["dilute_free_N_shared_range"] = wfit([win[k][0] for k in low], [win[k][1] for k in low])[0]
+    # series as the unit of scatter: the three eps_s series of the 0.10 m reference
+    sub = {}
+    for es, tg in (("0", "es0"), ("0.05", "es005"), ("0.10", "es010")):
+        k = (fa.D_T.values == "0.10") & (fa.eps_s.values == es)
+        sub[es] = amp(xs["a"][k], ys["a"][k], p["m"])
+        out[f"fig8_n_D010_{tg}"] = sub[es][2]
+    out["dilute_D010_subseries_gap"] = sub["0.10"][0] / sub["0.05"][0] - 1.0
+    out["dilute_D010_subseries_z"] = (np.log(sub["0.10"][0] / sub["0.05"][0])
+                                      / np.hypot(sub["0.10"][1], sub["0.05"][1]))
+    sd = np.std(np.log([v[0] for v in sub.values()]), ddof=1)
+    out["dilute_series_logsd_D010"] = sd
+    se_ref, se_one = sd / np.sqrt(3), sd
+    for key, D in (("D019_low", 0.19), ("D038_low", 0.38)):
+        r = out[f"dilute_ratio_{key}"]
+        pred = (D / p["D_ref"]) ** -p["N"]
+        out[f"dilute_series_z_vs_1_{key}"] = np.log(r) / np.hypot(se_one, se_ref)
+        out[f"dilute_series_z_vs_N018_{key}"] = np.log(r / pred) / np.hypot(se_one, se_ref)
+    out["N018_factor_D019"] = (0.19 / p["D_ref"]) ** -p["N"]
+    out["N018_factor_D038"] = (0.38 / p["D_ref"]) ** -p["N"]
+    out["alpha2_ratio"] = p["a2_high"] / p["a2_low"]
+    # reference of the circles with eps_s 0 only (labelled, plus the unassigned circles of panel a)
+    k0 = ((fa.D_T.values == "0.10") & (fa.eps_s.values == "0")) | (
+        (fa.D_T.values == "unassigned") & (fa["shape"].values == "circle"))
+    A0 = amp(xs["a"][k0], ys["a"][k0], p["m"])
+    out["fig8_n_es0_reference"] = A0[2]
+    out["dilute_ratio_D019_es0ref"] = Au["D019_low"][0] / A0[0]
+    out["dilute_ratio_D038_es0ref"] = Au["D038_low"][0] / A0[0]
     for D in ("010", "038"):
         r = A[f"D{D}_high"][0] / A[f"D{D}_low"][0]
         se = np.hypot(A[f"D{D}_high"][1], A[f"D{D}_low"][1])
@@ -760,6 +822,17 @@ def study_dilute(p=P, dy8=0.0, pool_a=False):
         out[f"slurry_ratio_se_D{D}"] = r * se
         out[f"slurry_ratio_z_vs_1_D{D}"] = np.log(r) / se
         out[f"slurry_ratio_z_vs_alpha2_D{D}"] = np.log(r / (p["a2_high"] / p["a2_low"])) / se
+    se_sl = np.hypot(sd / np.sqrt(2), sd)       # 0.38 m high: two eps_s series, low: one
+    out["slurry_series_z_vs_1_D038"] = np.log(out["slurry_ratio_D038"]) / se_sl
+    out["slurry_series_z_vs_alpha2_D038"] = np.log(out["slurry_ratio_D038"] / (p["a2_high"] / p["a2_low"])) / se_sl
+    # selection: the isolated 0.38 m markers of Fig. 8b against every Fig. 8b marker at U - U_df >= 0.15
+    band = fb.U_minus_Udf.values >= 0.15
+    a_band, _, n_band = amp(xs["b"][band], ys["b"][band], p["m"])
+    out["slurry_selected_over_band_D038"] = A["D038_high"][0] / a_band - 1.0
+    out["fig8_n_band_b"] = n_band
+    kh = fb.D_T.values == "0.38"
+    out["slurry_D038_high_over_line"] = np.log(ys["b"][kh] / (fig8_amplitude(0.36, p) * xs["b"][kh] ** p["m"]))
+    out["slurry_D038_high_above_line"] = int((out["slurry_D038_high_over_line"] > 0).sum())
     return out, A
 
 
@@ -775,8 +848,11 @@ for k, v in R3.items():
         continue
     if k.startswith("fig8_n_"):
         claims.exact(k, v, structural=k != "fig8_n_D010_low", note=NOTE_N)
-    else:
+    elif k not in ("slurry_D038_high_over_line", "slurry_D038_high_above_line", "dilute_shared_range_lo",
+                 "dilute_shared_range_hi"):      # the range is x data no defect moves: printed, not a claim
         claims.value(k, v, rtol=1e-6)
+n_hi = claims.count("slurry_D038_high_above_line", R3["slurry_D038_high_over_line"], 0.0, min_margin=1e-3,
+                    relative=False, note="isolated 0.38 m Fig. 8b markers above the drawn line; margin in ln y")
 fig, ax = plt.subplots(1, 2, figsize=(12.4, 4.3))
 style = {"D010_low": ("C0", "o"), "D019_low": ("C1", "^"), "D038_low": ("C2", "v"), "D010_high": ("C0", "s"), "D038_high": ("C2", "P")}
 for pan, axx in (("a", ax[0]), ("b", ax[1])):
@@ -801,20 +877,41 @@ md(f"**Diameter (ε_s ≤ 0.10, Fig. 8a).** Relative to 0.10 m, the ε_b amplitu
    f"{computed['diameter_factor_019']:.3f} and {computed['diameter_factor_038']:.3f}: the 0.19 m column is "
    f"{R3['dilute_ratio_z_vs_N018_D019_low']:+.1f} standard errors from it, the 0.38 m column "
    f"{R3['dilute_ratio_z_vs_N018_D038_low']:+.1f}. Against no diameter effect (ratio 1) they are "
-   f"{R3['dilute_ratio_z_vs_N0_D019_low']:+.1f} and {R3['dilute_ratio_z_vs_N0_D038_low']:+.1f}. Fitted to the three "
-   f"columns, N = {R3['dilute_free_N']:.2f} ± {R3['dilute_free_N_se']:.2f} "
-   f"({R3['dilute_free_N_z_vs_018']:+.1f} standard errors from 0.18). "
-   + (f"The 0.19 m column's ε_b is above the 0.10 m one by more than two standard errors, so these columns do "
-      f"not show ε_b falling with diameter between 0.10 and 0.19 m. " if R3['dilute_ratio_z_vs_N0_D019_low'] > 2 else "")
-   + (f"Between 0.10 and 0.38 m ε_b falls, by less than N = 0.18 predicts. "
-      if R3['dilute_ratio_z_vs_N0_D038_low'] < -2 and R3['dilute_ratio_z_vs_N018_D038_low'] > 2 else "")
+   f"{R3['dilute_ratio_z_vs_N0_D019_low']:+.1f} and {R3['dilute_ratio_z_vs_N0_D038_low']:+.1f} (these z-scores are "
+   f"marker-level: the marker scatter within one pooled series). As series-level z-scores, with the scatter of the "
+   f"three ε_s series of the 0.10 m reference (log SD {R3['dilute_series_logsd_D010']:.3f}) as the unit, the 0.19 m "
+   f"ratio is {R3['dilute_series_z_vs_1_D019_low']:+.1f} from 1 and {R3['dilute_series_z_vs_N018_D019_low']:+.1f} "
+   f"from {computed['diameter_factor_019']:.3f}, the 0.38 m ratio {R3['dilute_series_z_vs_1_D038_low']:+.1f} from 1 "
+   f"and {R3['dilute_series_z_vs_N018_D038_low']:+.1f} from {computed['diameter_factor_038']:.3f}. With only the "
+   f"{R3['fig8_n_es0_reference']} circles of ε_s 0 as reference the ratios are {R3['dilute_ratio_D019_es0ref']:.3f} "
+   f"and {R3['dilute_ratio_D038_es0ref']:.3f}, so the direction of the 0.19 m and 0.38 m results stands. A formal "
+   f"weighted fit of the three columns gives N = {R3['dilute_free_N']:.2f} ({R3['dilute_free_N_se']:.2f} formal "
+   f"standard error; it is not a fit): its chi-square is {R3['dilute_free_N_chi2']:.0f} on one degree of freedom, "
+   f"so no single power of D_T fits the three columns. Pair by pair the exponent is "
+   f"{R3['dilute_pair_N_010_019']:+.3f} (0.10 to 0.19 m), {R3['dilute_pair_N_010_038']:+.3f} (0.10 to 0.38 m) and "
+   f"{R3['dilute_pair_N_019_038']:+.3f} (0.19 to 0.38 m). The amplitudes are taken at the printed exponent 0.58 "
+   f"over different abscissa ranges; on the range the three series share "
+   f"({R3['dilute_shared_range_lo']:.3f} to {R3['dilute_shared_range_hi']:.3f} m/s) the same formal fit gives "
+   f"N = {R3['dilute_free_N_shared_range']:.2f}, so a single N depends on the range chosen. The 0.10 m reference "
+   f"pools {R3['fig8_n_D010_es0']}, {R3['fig8_n_D010_es005']} and {R3['fig8_n_D010_es010']} markers of ε_s 0, "
+   f"0.05 and 0.10, and its 0.05 and 0.10 series differ by {R3['dilute_D010_subseries_gap'] * 100:.1f} % "
+   f"({R3['dilute_D010_subseries_z']:.1f} marker standard errors) in one column. Every standard error here is "
+   f"of the marker scatter and holds no run-to-run scatter and no selection. "
+   + (f"What the figure shows is the order: ε_b at 0.19 m sits higher than at 0.10 m and at 0.38 m lower, which "
+      f"no positive N gives between 0.10 and 0.19 m. "
+      if R3['dilute_pair_N_010_019'] < 0 < R3['dilute_pair_N_010_038'] else "")
    + "\n\n"
    f"**Slurry (Fig. 8b against 8a).** At 0.38 m the high-slurry amplitude (ε_s 0.29 and 0.36 pooled) is "
-   f"{R3['slurry_ratio_D038']:.3f} ± {R3['slurry_ratio_se_D038']:.3f} times the low-slurry one; \"virtually "
-   f"independent\" means 1 ({R3['slurry_ratio_z_vs_1_D038']:+.1f} standard errors away) and the paper's own change "
-   f"of α₂ means {computed['alpha2_high_over_low']:.3f} ({R3['slurry_ratio_z_vs_alpha2_D038']:+.1f}). These Fig. 8b "
-   f"markers are the ones isolated from the dense band (pluses and crosses at its edges), so their selection can "
-   f"bias the amplitude in either direction. At 0.10 m only {AMP['D010_high'][2]} high-slurry markers (circles below "
+   f"{R3['slurry_ratio_D038']:.3f} ± {R3['slurry_ratio_se_D038']:.3f} times the low-slurry one. The paper's own "
+   f"step in α₂ is {R3['alpha2_ratio']:.3f}, {R3['slurry_ratio_z_vs_alpha2_D038']:+.1f} marker-level standard "
+   f"errors away ({R3['slurry_series_z_vs_alpha2_D038']:+.1f} series-level), so the figure agrees with the paper's "
+   f"α₂ pair; \"virtually independent of slurry concentration\" (p. 315) and \"the influence on the dilute-phase "
+   f"gas holdup is small\" (abstract) are the paper's words for that step. A ratio of exactly 1 is "
+   f"{R3['slurry_ratio_z_vs_1_D038']:+.1f} marker-level and {R3['slurry_series_z_vs_1_D038']:+.1f} series-level "
+   f"away. These Fig. 8b markers are the ones isolated from the dense band (pluses and crosses at its edges): "
+   f"their amplitude is {R3['slurry_selected_over_band_D038'] * 100:.1f} % higher than that of all "
+   f"{R3['fig8_n_band_b']} Fig. 8b markers at U - U_df ≥ 0.15 m/s ({n_hi} of {len(R3['slurry_D038_high_over_line'])} "
+   f"lie on the upper side of the drawn line), so part of the ratio can be selection. At 0.10 m only {AMP['D010_high'][2]} high-slurry markers (circles below "
    f"the band) carry a label, fewer than the 8 this page requires for an amplitude, so the slurry effect at 0.10 m "
    f"is not measured here.")
 
@@ -1115,7 +1212,7 @@ for row in ROWS:
 # upwind plug flow for the large bubbles with an outflow outlet and convection-dispersion
 # with a Danckwerts inlet for the dense phase, one linear `newton` step, exit values from
 # `compute_boundary_values`, converging at first order to the closed form (`observed_orders`,
-# with a round-off companion). That reactor is the template `F2.3` extends with liquid
+# with a round-off companion). `F2.3` builds the same two-class structure with liquid
 # coupling and kinetics.
 
 # %% [markdown]
