@@ -24,22 +24,34 @@ paper, which was not available: the page is built from the 2009 paper only.
   0.72028 <!-- claim: r1_cpc_avg_film --> against 0.80081 <!-- claim: r1_cpc_2d -->. A
   local Lévêque coefficient gives 0.80287 <!-- claim: r1_cpc_local_film -->. The paper's
   recipe, the mean of inlet and outlet film fluxes, is
-  0.55193 <!-- claim: r1_recipe_gap_pct --> % above the 2-D module mean.
+  0.55193 <!-- claim: r1_recipe_gap_pct --> % above the 2-D module mean. The Richardson error
+  estimates of the 2-D values are 1e-6 <!-- claim: r1_rec_2d_est --> (recovery) and
+  4e-6 <!-- claim: r1_cpc_2d_est --> (outlet CPC), far smaller than the gaps. With a plug
+  profile the outlet CPC gap of the averaged film has the other sign,
+  +0.085418 <!-- claim: v5_plug_cpc_gap_avg -->, against
+  -0.080531 <!-- claim: r1_cpc_gap_avg --> with the parabolic profile.
 - **Over the Graetz number** (fixed film beta), the module-total error of the averaged
   coefficient is not monotone: most negative -5.3664 <!-- claim: r2_err_ext_pct --> % near
-  Gz = 10.777 <!-- claim: r2_err_ext_gz -->, past -2 % between
+  Gz = 10.8 <!-- claim: r2_err_ext_gz -->, past -2 % between
   Gz = 4.2044 <!-- claim: r2_gz_err2_lo --> and 31.903 <!-- claim: r2_gz_err2_hi -->, and back
-  towards zero where the outlet nears equilibrium. There is no single Graetz number below
-  which the module total fails.
+  towards zero where the outlet nears equilibrium. All of these lie outside the paper's
+  "(4–7%)" depletion (Gz 365.53 <!-- claim: r2_gz_depl_hi --> to
+  845.87 <!-- claim: r2_gz_depl_lo -->), so outside its validation conditions; over the whole
+  scanned Graetz window at this beta the module total falls past -2 % only inside that
+  band.
 - **The profile matters.** The wall Reynolds number is 7.4612 <!-- claim: r1_rewall_lo --> to
   13.43 <!-- claim: r1_rewall_hi --> (assumed Schmidt range), far from small suction. With a
   plug profile the averaged film misses the module total by
-  -43.595 <!-- claim: v5_plug_rec_gap_pct --> %: the module-total verdict holds for the
-  parabolic profile only.
+  -43.595 <!-- claim: v5_plug_rec_gap_pct --> %: the module-total verdict rests on the
+  parabolic profile; a plug profile drops the no-slip wall and brackets the hydrodynamics rather
+  than modelling them. At the paper's depletion the tube is only L/d
+  0.033989 <!-- claim: r2_Ld_min --> to 0.14158 <!-- claim: r2_Ld_max --> long (assumed
+  Schmidt range), so the profile is still developing: a judgement, not measured.
 - **Printed numbers.** Fig. 9's reference fluxes give a membrane permeance times thickness
-  that spreads by 1.0638 <!-- claim: r3_spread_pct --> %; 1 <!-- claim: r3_n_exceed --> of 3
-  pairs against the 100 micrometre panel differ by more than the half-units of the printed
-  fluxes. Eq. (1) with Eq. (6) as printed gives CPC 0.80493 <!-- claim: r5_cpc_printed -->
+  that spreads by 1.0638 <!-- claim: r3_spread_pct --> %; of the pairs of each thinner panel
+  with the 100 micrometre panel, 1 <!-- claim: r3_n_exceed --> differs by more than the
+  half-units of the two printed fluxes (half of the last significant digit: the trailing zero of
+  a printed integer such as 1880 is a placeholder). Eq. (1) with Eq. (6) as printed gives CPC 0.80493 <!-- claim: r5_cpc_printed -->
   at the test condition against 0.70788 <!-- claim: r5_cpc_exact --> for the exact film (M5:
   which form the authors coded is not decidable).
 - **Fig. 10 (figure reads).** The membrane permeance implied by Eq. (10) drops by
@@ -53,8 +65,9 @@ paper, which was not available: the page is built from the 2009 paper only.
 
 ## Things to know before reusing this
 
-- The 2-D tube is the page's extension; the paper prints no module, and not the inputs of its
-  maps. The maps are turbulent (Table 4) and nothing here transfers to them.
+- The 2-D tube is the page's extension; the paper solves no module (its model is the point of Fig. 2),
+  and its maps cannot be re-solved from what it prints. Searched: text, tables, captions,
+  nomenclature; viscosity and hydraulic diameter appear as symbols only. The maps are turbulent (Table 4) and nothing here transfers to them.
 - The Schmidt number and the viscosity are assumptions, not the paper's.
 - Not covered: the six-component model, surface steps, sweep gas, counter-current permeate.
 

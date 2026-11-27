@@ -113,9 +113,9 @@ def say(text, **v):
 # arithmetic mean of the two fluxes evaluated at the inlet and outlet of the membrane
 # module" (p. 623).
 #
-# What the page can decide. The paper prints neither its diffusivities, viscosity, module
-# length nor membrane parameters, so its maps cannot be re-solved, and they are out of
-# scope here. What can be decided is whether its film relation, with the coefficient of
+# What the page can decide. The paper does not print its diffusivities, viscosity or module
+# length (searched: text, tables, captions, nomenclature; viscosity and hydraulic diameter
+# appear as symbols only), so its maps cannot be re-solved, and they are out of scope here. What can be decided is whether its film relation, with the coefficient of
 # Eq. (9), describes a laminar tube point by point; that needs a resolved solve, which is
 # the page's own extension. The siblings cover the rest: `H1.1` the Sieverts closure and
 # the permeator, `H1.4` the membrane reactor; this page owns the gas-side boundary layer.
@@ -169,11 +169,12 @@ def say(text, **v):
 # %% [markdown]
 # ## Parameters and assumptions
 #
-# The test condition (TC) is the validation of Table 5: $x_{in}$ from "50:50", $\theta$ from
+# The test condition (TC) takes its inputs from Table 5's validation: $x_{in}$ from "50:50", $\theta$ from
 # the printed permeate pressure at a feed of 20 bar (inside the printed feed range), and
 # $Gz$, $Da$ chosen so that the 2-D partial pressure depletion falls inside the paper's
 # depletion range and the inlet film CPC near Fig. 10's level. Nothing else is taken from
-# the paper; diffusivity, viscosity and module length are not printed.
+# the paper; diffusivity, viscosity and module length are not printed (searched: text,
+# tables, captions, nomenclature; viscosity and hydraulic diameter appear as symbols only).
 #
 # **Assumptions (not the paper's).** The Schmidt number of H2:N2 50:50 at 400 °C enters only
 # to turn a Graetz number into a length, $L/d = Re\,Sc/Gz$, and the wall Reynolds number; the
@@ -202,6 +203,14 @@ def num(pn, item):
 def half_unit(s):
     """Half a unit of the last printed digit of the string ``s``."""
     return 0.5 * 10.0 ** -(len(s.split(".")[1]) if "." in s else 0)
+
+
+def half_unit_flux(s):
+    """Half a unit of the last significant digit of ``s``: the trailing zeros of a printed
+    integer (a rounded reading such as 1880) are read as placeholders, so 1880 has half unit 5."""
+    if "." in s:
+        return half_unit(s)
+    return 0.5 * 10.0 ** (len(s) - len(s.rstrip("0")))
 
 
 X_IN = 0.5                                        # H2:N2 50:50 (Table 5)
@@ -377,34 +386,39 @@ def part_r3(c, M):
         M[f"r3_pi_{d}um"], pid[i] = pi, pi * d * 1e-6
         M[f"r3_pid_{d}um"] = pid[i]
     M["r3_spread_pct"] = 100.0 * (max(pid.values()) / min(pid.values()) - 1.0)
-    # pairs against the thickest membrane: gap / (half-units of the two printed fluxes)
+    # pairs against the thickest membrane: gap / (half-units of the two printed fluxes; the
+    # trailing zeros of a printed integer are placeholders, see half_unit_flux)
     ratios = []
     for i in (1, 2, 3):
         s1, s4 = printed(c.pn, f"f9_flux_{i}"), printed(c.pn, "f9_flux_4")
-        allow = half_unit(s1) / float(s1) + half_unit(s4) / float(s4)
+        allow = half_unit_flux(s1) / float(s1) + half_unit_flux(s4) / float(s4)
         ratios.append(abs(pid[i] / pid[4] - 1.0) / allow)
     M["r3_n_exceed"] = int(sum(r > 1.0 for r in ratios))
     M["r3_n_exceed__margin"] = float(min(abs(r - 1.0) for r in ratios))
     M["r3_worst_ratio"] = float(max(ratios))
+    M["_r3_n_pairs"] = len(ratios)
 
 
 def part_r4(c, M):
     """Zero-flux limit of the film CPC: closed form against root solves on either side."""
-    M["r4_cpc0"] = cpc_zero_flux(BETA, THETA, c.g_stefan)
+    th = num(c.pn, "t5_pperm_bar") / P_FEED_TC            # from the printed permeate pressure
+    M["r4_cpc0"] = cpc_zero_flux(BETA, th, c.g_stefan)
     for side, e in (("fwd", 1e-6), ("back", -1e-6)):
-        M[f"r4_cpc0_gap_{side}"] = abs(film_cpc(THETA * (1.0 + e), BETA, THETA) - M["r4_cpc0"])
+        M[f"r4_cpc0_gap_{side}"] = abs(film_cpc(th * (1.0 + e), BETA, th) - M["r4_cpc0"])
 
 
 def part_r5(c, M):
     """Eq. (1) with Eq. (6) as printed (M5) against the exact film, at TC and over x_b."""
-    M["r5_cpc_exact"] = film_cpc(X_IN, BETA, THETA)
-    M["r5_cpc_printed"] = film_cpc(X_IN, BETA, THETA, c.film_r5)
-    M["r5_cpc_linear"] = film_cpc(X_IN, BETA, THETA, "linear")
+    th = num(c.pn, "t5_pperm_bar") / P_FEED_TC            # from the printed permeate pressure
+    M["r5_cpc_exact"] = film_cpc(X_IN, BETA, th)
+    M["r5_cpc_printed"] = film_cpc(X_IN, BETA, th, c.film_r5)
+    M["r5_cpc_linear"] = film_cpc(X_IN, BETA, th, "linear")
     M["r5_gap_tc"] = M["r5_cpc_printed"] - M["r5_cpc_exact"]
-    gap = lambda xb: film_cpc(xb, BETA, THETA, c.film_r5) - film_cpc(xb, BETA, THETA)
-    xs = np.linspace(THETA * 1.02, 0.99, 60)
+    gap = lambda xb: film_cpc(xb, BETA, th, c.film_r5) - film_cpc(xb, BETA, th)
+    xs = np.linspace(th * 1.02, 0.99, 60)
     d = np.diff([gap(x) for x in xs])
-    M["r5_n_gap_increasing"] = int(np.sum(d > 0))         # of the 59 scan intervals
+    M["r5_n_gap_increasing"] = int(np.sum(d > 0))
+    M["_r5_n_intervals"] = len(d)
     M["r5_n_gap_increasing__margin"] = float(np.min(np.abs(d)) / np.max(np.abs(d)))
     M["r5_gap_099"] = gap(0.99)
 
@@ -683,9 +697,13 @@ say("The error of the 1-D recovery with the averaged coefficient is not monotone
     "middle level, value extrapolated); $Sh_{avg}$ falls below $Sh_\\infty$ at $Gz^*$ = "
     "<<gs:.4f>>. It reaches -2 % at $Gz$ = <<a:.3f>> and <<b:.3f>>, and -5 % at <<c:.3f>> and "
     "<<d:.3f>>. Below the first root both routes approach equilibrium at the outlet and agree "
-    "again.",
+    "again. The paper's depletion range lies at $Gz$ = <<h:.2f>> to <<l:.2f>>, outside both "
+    "bands, so outside its validation conditions; over the scanned window the module total "
+    "misses by more than 2 % only between the two -2 % roots (one root on each side of the "
+    "minimum).",
     e=M["r2_err_ext_pct"], ge=M["r2_err_ext_gz"], gs=M["c_gz_star"], a=M["r2_gz_err2_lo"],
-    b=M["r2_gz_err2_hi"], c=M["r2_gz_err5_lo"], d=M["r2_gz_err5_hi"])
+    b=M["r2_gz_err2_hi"], c=M["r2_gz_err5_lo"], d=M["r2_gz_err5_hi"],
+    h=M["r2_gz_depl_hi"], l=M["r2_gz_depl_lo"])
 
 # %%
 gzs = np.exp(np.linspace(*W_FULL, 10))
@@ -716,9 +734,11 @@ fig.tight_layout(); plt.show()
 for d in (5, 15, 50, 100):
     print(f"{d:4d} um  Pi = {1e3 * M[f'r3_pi_{d}um']:.5f} mmol m-2 s-1 Pa-0.5   Pi*delta = {M[f'r3_pid_{d}um']:.5e}")
 say("$\\Pi\\delta$ spreads by <<s:.3f>> % over the four panels. Against the thickest membrane, "
-    "<<n:d>> of 3 pairs differ by more than the half-units of their two printed fluxes "
-    "(largest: <<w:.3f>> allowances, the thinnest membrane).",
-    s=M["r3_spread_pct"], n=M["r3_n_exceed"], w=M["r3_worst_ratio"])
+    "<<n:d>> of <<N:d>> pairs differ by more than the half-units of their two printed fluxes "
+    "(largest: <<w:.3f>> allowances, the thinnest membrane). A half-unit is half of the last "
+    "significant digit, so the trailing zero of a printed integer such as 1880 is a placeholder "
+    "(half-unit 5).",
+    s=M["r3_spread_pct"], n=M["r3_n_exceed"], N=M["_r3_n_pairs"], w=M["r3_worst_ratio"])
 
 # %% [markdown]
 # ### R4 and R5. The film relation itself
@@ -733,11 +753,11 @@ say("R4: zero-flux CPC at TC <<c:.6f>> (closed form); root solves at $x_b = \\th
     c=M["r4_cpc0"], f=M["r4_cpc0_gap_fwd"], b=M["r4_cpc0_gap_back"])
 say("R5: at TC the exact film gives CPC <<e:.5f>>, Eq. (1) with Eq. (6) as printed <<p:.5f>> "
     "(<<g:+.5f>>), the film without the Stefan term <<l:.5f>>. Over $x_b$ the printed form "
-    "exceeds the exact film by more as $x_b$ grows (<<m:d>> of 59 scan intervals from just above "
+    "exceeds the exact film by more as $x_b$ grows (<<m:d>> of <<N:d>> scan intervals from just above "
     "$\\theta$ to 0.99 increase), <<x:.5f>> at $x_b$ = 0.99. Eq. (7) departs from "
     "Eq. (6) by 1 % at $\\varphi$ = <<ph:.5f>>.",
     e=M["r5_cpc_exact"], p=M["r5_cpc_printed"], g=M["r5_gap_tc"], l=M["r5_cpc_linear"],
-    m=M["r5_n_gap_increasing"], x=M["r5_gap_099"], ph=M["r5_phi_1pc"])
+    m=M["r5_n_gap_increasing"], N=M["_r5_n_intervals"], x=M["r5_gap_099"], ph=M["r5_phi_1pc"])
 
 # %% [markdown]
 # ### R6. Questions Fig. 10 raises (figure reads)
@@ -796,8 +816,6 @@ STRUCTURAL = {"c_leveque_local": "Leveque constant, a closed form",
               "c_sh_inf": "Graetz eigenvalue, a root of a closed form",
               "c_gz_star": "closed form of the two constants",
               "r5_phi_1pc": "root of two closed forms (Eqs. 6 and 7)",
-              "r5_cpc_exact": "the exact film at TC (a check value)",
-              "r5_cpc_linear": "the low-flux film at TC (a check value)",
               "r1_cross_leveque": "Leveque theory, (2/3)^3 by construction",
               "v2_n2_balance": "N2 identity of the conservative scheme"}
 BOUNDS = {"r4_cpc0_gap_fwd": (None, 1e-5, "theory", "root solve 1e-6 from theta, O(1e-6) from the limit"),
@@ -842,9 +860,8 @@ register(M)
 # Every non-structural number registered above has a row that moves it. Each row injects
 # one defect through `Cfg` (a printed entry, a figure read, the model, the discretisation, an
 # assumption or a solver setting) and reruns the parts of the study it reaches. Only finite
-# values are recorded; a part that raises is listed. The control fails nothing. Structural,
-# with no row: the Lévêque and Graetz constants and $Gz^*$, Eq. (7)'s 1 % point, the exact and
-# low-flux films at TC (check values), the Lévêque crossing $(2/3)^3$ and the N2 identity.
+# values are recorded; a part that raises is listed and counted. The control fails nothing. Structural,
+# with no row: the Lévêque and Graetz constants and $Gz^*$, Eq. (7)'s 1 % point, the Lévêque crossing $(2/3)^3$ and the N2 identity.
 
 # %%
 def printed_row(item, new, parts):
@@ -884,6 +901,7 @@ DEFECTS = [
     printed_row("eq9_lam_const", "1.61", ("closed",)),
     printed_row("f9_pperm_kpa", "100", ("r3",)),
     printed_row("f9_flux_1", "1900", ("r3",)),
+    printed_row("t5_pperm_bar", "1.10", ("r4", "r5")),
     printed_row("depl_lo_pct", "5", ("closed", "tc", "r2dep")),
     printed_row("depl_hi_pct", "5", ("closed", "tc", "r2dep", "r6")),
 ]
@@ -918,6 +936,8 @@ for r_, cs in by_row.items():
     print(f"{r_[:58]:<58} {len(cs):8d} {sum(cs):7d}")
 for r_, e_ in CRASH.items():
     print(f"crashed part: {r_}: {e_}")
+print(f"{len(CRASH)} of {sum(len(p_) for _, _, p_ in CONTROLS + DEFECTS)} row parts raised "
+      f"(each row still records the claims of its other parts)")
 _caught = {m_ for r_, m_, c_ in BREAK if c_}
 _open = sorted(k_ for k_ in claims.metrics if k_ not in _caught
                and not claims.metrics[k_].get("structural"))
@@ -941,7 +961,8 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 #
 # ### The finding
 #
-# At the paper's laminar validation condition the film with Eq. (9)'s averaged coefficient
+# At a test condition whose depletion lies inside the 4 to 7 % the paper reports for Peters et
+# al.'s tests, the film with Eq. (9)'s averaged coefficient
 # gets the module total nearly right and the local CPC wrong (R1): it is not "valid in every
 # position" of a laminar tube, while a local Lévêque coefficient is close. Over the Graetz
 # window the module-total error of the averaged coefficient is not monotone: it peaks at
@@ -952,6 +973,15 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 # module total too. A plug profile drops the no-slip wall, so it brackets the hydrodynamics
 # rather than modelling them; a Berman-type suction profile is not solved here. Nothing
 # here transfers to the paper's turbulent maps (Table 4), which are out of scope.
+
+# %%
+say("Uncertainty of the finding: the Richardson error estimates of the 2-D values at TC are "
+    "<<e1:.4e>> (recovery) and <<e2:.4e>> (outlet CPC), far smaller than the gaps they are set "
+    "against, the recovery gap <<g1:+.5f>> % and the outlet CPC gap <<g2:+.6f>> of the averaged "
+    "film. With a plug profile the outlet CPC gap is <<g3:+.6f>>: it remains, with the other "
+    "sign.",
+    e1=M["r1_rec_2d_est"], e2=M["r1_cpc_2d_est"], g1=M["r1_rec_gap_pct"],
+    g2=M["r1_cpc_gap_avg"], g3=M["v5_plug_cpc_gap_avg"])
 
 # %% [markdown]
 # ## Reuse
