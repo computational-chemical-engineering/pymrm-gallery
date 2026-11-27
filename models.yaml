@@ -3890,6 +3890,39 @@ models:
       factor F_fig6 from this page with load_claims.
     page: pages/C2.11-borman-westerterp-eo-selectivity/
     related: [D3.5, C2.10, C2.1, C2.13, C1.1]
+  - id: C2.5
+    slug: vandenbussche-froment-methanol-co2-route
+    title: "Methanol synthesis from CO2: does the printed kinetic model reproduce its own reactor simulations (Vanden Bussche and Froment)"
+    description: >
+      The CO2-route methanol synthesis and reverse water gas shift kinetics of
+      Vanden Bussche and Froment (eq. 3, Table 2, the printed equilibrium
+      constants) put back against the paper's own adiabatic bench-reactor
+      simulations (Figs. 5 to 7) and its Klier comparison (Fig. 8), with pymrm
+      solving the plug-flow reactors and the printed statistics rechecked from
+      their own digits.
+    section: C
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S2]
+    phases: [gas-solid]
+    predicts: [reaction rate, conversion, temperature profile, approach to equilibrium]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, compute_boundary_values, residual_check, find_roots, observed_orders]
+    reference:
+      authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+      year: 1996
+      container: "Journal of Catalysis 161, 1-10"
+      doi: 10.1006/jcat.1996.0156
+    data: {tier: 2, method: digitised, status: complete}
+    note: >
+      Built from Vanden Bussche and Froment (1996) itself. Tables 1 to 3 are
+      vector text; Figs. 5 to 8 digitised by extract_figures.py from the
+      embedded scans. The 276 experiments are not printed, so there is no refit
+      and no parity test: every figure compared is the authors' own simulation.
+      Heats and heat capacities are not printed; the page reads them from the
+      NIST WebBook and tests the alternatives.
+    page: pages/C2.5-vandenbussche-froment-methanol-co2-route/
+    related: [C2.1, C2.10, C1.1]
 
   - id: D1.1
     slug: froment-fixed-bed-ladder

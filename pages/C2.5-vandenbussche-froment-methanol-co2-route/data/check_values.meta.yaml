@@ -1,0 +1,36 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+  year: 1996
+  container: "Journal of Catalysis 161, 1-10"
+  doi: "10.1006/jcat.1996.0156"
+  access: >
+    The equations are those of the paper (eq. 3 with the parameters of Table 2, the equilibrium
+    constants printed on p. 5, the Table 1 to Table 2 conversion and the printed statistics, the
+    bench reactor of Table 3), with the readings and misprints stated in the build plan's
+    equations file. The values are not read from the paper but computed from its equations and
+    printed parameters by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script c25_check_values.py (numpy and scipy, no pymrm, no page code; equilibrium shortcut cross-checked against an isothermal plug flow at large W/F, adiabatic plateau shortcut against the long-bed ODE outlet, scipy solve_ivp Radau), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; looser rtol rows carry the route's own error"
+
+conditions: >
+  TC: T = 523.15 K, p_t = 50 bar, y = CO 0.030, CO2 0.025, H2 0.800, CH3OH 0.010, H2O 0.005,
+  inert 0.130 (rate law). EQ8 and PF8: Fig. 8 feed at x = 3 % CO2, 75 bar, isothermal plug flow
+  at 503.15 K and W/F0 = 10 kg s/mol. AD: Table 3 adiabatic bench reactor with the test energy
+  model E0 (constant mass c_p 3350 J/(kg K), van 't Hoff heats, inert argon), a test
+  configuration with an exact linear energy invariant, not the page's physical reading.
+  Gas constant 8.314462618 J/(mol K).
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
