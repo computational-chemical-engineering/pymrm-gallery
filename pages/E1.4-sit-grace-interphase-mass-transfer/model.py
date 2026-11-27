@@ -196,18 +196,29 @@ class Penetration:
         return -float(np.ravel(grad_left)[0])   # gradient along +x (P1)
 
     # codehealth: allow params -- time, scheme weight and the two solver switches of the ladder
-    def stepped(self, nt, t=1.0, theta=1.0, permc_spec="COLAMD", bc_scale=1.0):
+    def stepped(self, nt, t=1.0, theta=1.0, route="splu", bc_scale=1.0):
         """Amount at time t after nt steps of the theta scheme (1: backward Euler).
 
-        One sparse LU per call (the operator is constant)."""
+        One sparse LU per call (the operator is constant). ``route="banded"`` solves the same
+        tridiagonal system with LAPACK's banded solver instead, the round-off companion."""
         dt = t / nt
         I = sparse.eye_array(self.n, format="csc")
-        lhs = splu(I - theta * dt * self.A, permc_spec=permc_spec)
+        L_ = I - theta * dt * self.A
+        if route == "banded":
+            ab = np.zeros((3, self.n))
+            for k in (-1, 0, 1):
+                d = L_.diagonal(k)
+                ab[1 - k, max(k, 0):self.n + min(k, 0)] = d
+            assert np.isclose(abs(L_).sum(), np.abs(ab).sum(), rtol=1e-12), "the operator is not tridiagonal"
+            lhs = lambda r: linalg.solve_banded((1, 1), ab, r)
+        else:
+            lu = splu(L_, permc_spec="COLAMD")
+            lhs = lu.solve
         rhs_op = I + (1.0 - theta) * dt * self.A
         src = dt * self.b * bc_scale
         c = self.c0.copy()
         for _ in range(nt):
-            c = lhs.solve(rhs_op @ c + src)
+            c = lhs(rhs_op @ c + src)
         return float(self.vol @ c)
 
 

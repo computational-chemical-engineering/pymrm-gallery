@@ -17,7 +17,7 @@
 # %% [markdown]
 # ---
 # title: "Sit and Grace (1981): bubble interaction and interphase mass transfer"
-# description: "Sit and Grace postulate that bubble interaction raises only the throughflow term of the single-bubble interphase coefficient and derive their freely-bubbling eqns (3), (4) from it; the page tests whether the paper's own printed numbers decide that, with two small pymrm solves for the penetration term and the tracer balance."
+# description: "Sit and Grace postulate that bubble interaction raises only the throughflow term of the single-bubble interphase coefficient and derive their freely-bubbling eqns (3), (4) from it; the page tests whether the paper's own printed numbers decide that, with one small pymrm solve for the penetration term and pymrm checks on the tracer balance."
 # categories: [sec:E, struct:S1, struct:S4, tier:T1, data:tier2, phase:gas-solid]
 # date: 2026-11-27
 # ---
@@ -63,9 +63,9 @@ from gallery_bootstrap import setup
 setup(PAGE, PYMRM, GALLERY_REF);  # the semicolon stops the cell echoing the path
 
 # %%
-# Imports. pymrm contributes two small solves (the penetration problem with
-# construct_grad, construct_div and compute_boundary_values; the tracer march) and the
-# checks (find_roots, observed_orders); model.py is put on sys.path by setup().
+# Imports. pymrm contributes one small solve (the penetration problem with
+# construct_grad, construct_div and compute_boundary_values) and the checks (find_roots and
+# observed_orders on the plain numpy tracer march); model.py is put on sys.path by setup().
 import math
 import re
 from dataclasses import dataclass, field, replace
@@ -242,7 +242,7 @@ CONF = (0.90, 0.95)          # the confidence levels of the p. 330 verdict
 # | `sit-grace-1981-printed-numbers.csv` | every number of the text and equations the page uses, as printed (strings) |
 # | `sit-grace-1981-table1.csv` | Table 1, the tracer accounting of a vertical pair, every cell as printed |
 # | `sit-grace-1981-table2.csv` | Table 2, the five studies, every cell as printed ("12-15", "3-8", "small") |
-# | `sit-grace-1981-fig4.csv` | Fig. 4, nose height of the front bubble in the approach period (9 markers) |
+# | `sit-grace-1981-fig4.csv` | Fig. 4, nose height of the front bubble in the approach period (the slope fit uses the markers counted in the data summary below) |
 # | `sit-grace-1981-fig9.csv` | Fig. 9, concentration of the front, back and single bubble at the Table 1 times |
 #
 # The page loads one claim from page `E1.2` (its through-flow coefficient of the
@@ -469,7 +469,7 @@ def _s4(C):
          "_s4_extrap": ra["extrapolated"], "_s4_fextrap": rf["extrapolated"]}
     pb = Penetration(N_BE_CELLS, C.L, C.d_left, C.first_cell)
     rb = observed_orders(lambda nt: pb.stepped(nt, theta=C.theta), NT_BE)
-    comp_b = pb.stepped(NT_BE[-1], theta=C.theta, permc_spec="NATURAL", bc_scale=C.comp_scale)
+    comp_b = pb.stepped(NT_BE[-1], theta=C.theta, route="banded", bc_scale=C.comp_scale)
     M |= {"s4_be_order_min": min(rb["orders"]), "s4_be_order_max": max(rb["orders"]),
           "s4_be_gap": abs(rb["extrapolated"] - ex_a),
           "s4_be_companion": abs(rb["values"][-1] - comp_b) / abs(rb["values"][-1] - rb["values"][-2]),
@@ -609,6 +609,7 @@ def r2_fit(C, R, F):
         M[f"r2_{tag}_b_ci0"] = int(np.sum(np.abs(b) < hw))
         M[f"r2_{tag}_b_ci0__margin"] = float(np.min(np.abs(np.abs(b) - hw) / hw))
         M[f"_n_{tag}"] = a.size
+        M[f"r2_{tag}_n"] = a.size
         out[tag] = res
     r160 = np.concatenate([100 * r[4][2].ravel() for r in out["fit4"]])
     M["r2_fit4_res160_min"], M["r2_fit4_res160_max"] = float(r160.min()), float(r160.max())
@@ -644,8 +645,12 @@ def r3_study(C):
     z = {"two-sided": lambda p: stats.norm.ppf(1 - (1 - p) / 2), "one-sided": stats.norm.ppf}[C.quantile]
     coef = C.table["murray"][t["dim"]]
     fT = k_t / (k_t + k_d)
+    UB0 = fig4_slope(C)[0]
     M = {"r3_UB": fig4_slope(C)[0], "r3_UB_se": fig4_slope(C)[1],
          "r3_kT_over_iso": k_t / Ki,
+         "r3_c_fig4_min": float(UB0 / math.sqrt(G * max(t["DB"]))), "r3_c_fig4_max": float(UB0 / math.sqrt(G * min(t["DB"]))),
+         "r3_kT_over_iso_hu_min": float(kT(C, t["umf"] - 0.5 * unit(C.t2.umf_cm_s[C.t2.dp_um == "390"].iloc[0]), t["dim"])
+                                       / (Ki + 0.5 * unit(C.pn["K_isolated_cm_s"]))),
          "r3_K1_over_iso_min": float(((k_t + k_d) / Ki).min()), "r3_K1_over_iso_max": float(((k_t + k_d) / Ki).max()),
          "r3_ratio_vert": Kv / Ki, "r3_ratio_obl": Ko / Ki,
          "r3_ratio_inside": int(np.sum((ratios > lo) & (ratios < hi))),
@@ -734,6 +739,16 @@ def f9_read(C, curve, time):
     return float(d.C_vol_pct.iloc[0])
 
 
+def f9_secant(C, curve, time):
+    """Slope (vol %/s) of the digitised curve at a read: the secant through the reads just before and
+    after it, or through its one neighbour at the end of the curve."""
+    d = C.f9[C.f9.curve == curve].sort_values("time_s")
+    t, y = d.time_s.to_numpy(), d.C_vol_pct.to_numpy()
+    i = int(np.argmin(np.abs(t - time)))
+    lo, hi = max(i - 1, 0), min(i + 1, len(t) - 1)
+    return float((y[hi] - y[lo]) / (t[hi] - t[lo]))
+
+
 def r4_fig9(C):
     """R4(b): Fig. 9 at the Table 1 times against the C_B column (vol %)."""
     T1, M = t1_numbers(C), {}
@@ -741,13 +756,21 @@ def r4_fig9(C):
              "0.6_rear": ("back", 0.6), "0.7_rear": ("back", 0.7)}
     for k, (cv, tm) in pairs.items():
         M[f"r4_f9_{k}"] = f9_read(C, cv, tm) - 100 * T1[tuple(k.split("_"))]["C"]
-    near = min((f9_read(C, cv, 1.1) for cv in ("front", "back")), key=lambda x: abs(x - 0.14))
+    cv11 = min(("front", "back"), key=lambda cv: abs(f9_read(C, cv, 1.1) - 100 * T1[("1.1", "resultant")]["C"]))
+    near = f9_read(C, cv11, 1.1)
     M["r4_f9_1.1_resultant"] = near - 100 * T1[("1.1", "resultant")]["C"]
     M["r4_f9_1.1_vs_implied"] = near - 100 * T1[("1.1", "resultant")]["P"] / T1[("1.1", "resultant")]["V"]
     diffs = np.array([M[f"r4_f9_{k}"] for k in list(pairs) + ["1.1_resultant"]])
     M["r4_f9_within"] = int(np.sum(np.abs(diffs) <= C.f9_err))
     M["r4_f9_within__margin"] = float(np.min(np.abs(np.abs(diffs) - C.f9_err)) / C.f9_err)
     M["_n_f9"] = len(diffs)
+    slopes = [f9_secant(C, cv, tm) for cv, tm in list(pairs.values()) + [(cv11, 1.1)]]
+    dt = np.abs(diffs) / np.abs(slopes)
+    M["r4_f9_dt_within"] = int(np.sum(dt <= 0.05))
+    M["r4_f9_dt_within__margin"] = float(np.min(np.abs(dt - 0.05)) / 0.05)
+    M["r4_f9_slope_front_0.3"] = slopes[0]
+    tw = [0.5, 0.6, 0.7]
+    M["r4_f9_front_avg_06"] = float(np.trapezoid([f9_read(C, "front", x) for x in tw], tw) / (tw[-1] - tw[0]))
     return M
 
 
@@ -774,7 +797,13 @@ def r4_tracer(C):
     Ikd = np.array([int_kd_s_over_v(t0, t1_, V0, V1, w, t["DG"], ee, fig4_slope(C)[0], 1.0, C.convention,
                                     C.size_factor) for ee in EPS_BR])
     VC1 = y0 * np.exp(-k_t * I - Ikd)
-    return {"r4_K_front": Kf, "r4_phi_96": Kf / Kv, "r4_phi_34": Kf / Ki,
+    a0, a1 = T1[("0.3", "front")], T1[("0.6", "front")]
+    hv, hp = 0.5 * unit(a0["sV"]), 0.5 * unit(a0["sP"])
+    Khu = []
+    for s0, s1, s2, s3 in product((-1, 1), repeat=4):
+        v0, v1_ = V0 + s0 * hv, (V0 + s0 * hv if C.hold_volume else V1 + s1 * hv)
+        Khu.append(math.log((y0 + s2 * hp) / (y1 + s3 * hp)) / int_s_over_v(t0, t1_, v0, v1_, w))
+    return {"r4_K_front": Kf, "r4_K_front_hu_min": min(Khu), "r4_K_front_hu_max": max(Khu), "r4_phi_96": Kf / Kv, "r4_phi_34": Kf / Ki,
             "r4_K_fig9": math.log(yf9[0] / yf9[1]) / I,
             "r4_VC06_96": y0 * math.exp(-Kv * I), "r4_VC06_34": y0 * math.exp(-Ki * I),
             "r4_VC06_eqn1_min": float(VC1.min()), "r4_VC06_eqn1_max": float(VC1.max()),
@@ -970,7 +999,7 @@ BOUNDS = {
     "s4_be_order_min": (0.95, 1.05, "theory", "backward Euler"),
     "s4_be_order_max": (0.95, 1.05, "theory", "backward Euler"),
     "s4_be_gap": (None, 1e-6, "theory", "first-order Richardson leaves O(dt^2); the 800-cell space error is 3e-10"),
-    "s4_be_companion": (None, 1e-2, "chosen", "the finest ladder difference exceeds the NATURAL-ordering gap 100-fold"),
+    "s4_be_companion": (None, 1e-2, "chosen", "the finest ladder difference exceeds the banded-solver gap 100-fold"),
     "s1_K_order_min": (0.95, 1.05, "theory", "backward Euler"), "s1_K_order_max": (0.95, 1.05, "theory", "backward Euler"),
     "s1_VC_order_min": (0.95, 1.05, "theory", "backward Euler"), "s1_VC_order_max": (0.95, 1.05, "theory", "backward Euler"),
     "s1_K_gap": (None, 1e-4, "theory", "first-order Richardson leaves O(dt^2) against the closed form"),
@@ -982,8 +1011,8 @@ COUNTS = {"r2_conc_T_min": ("r2_conc", 0.01), "r2_conc_T_max": ("r2_conc", 0.01)
           "r2_inside_pc": ("r2_inside_pc", 0.01), "r2_fit4_b_ci0": ("r2_fit4_b_ci0", 0.0),
           "r2_fit3_b_ci0": ("r2_fit3_b_ci0", 0.0), "r3_ratio_inside": ("r3_ratio_inside", 0.01),
           "r4_cells_within": ("r4_cells_within", 0.1), "r4_pct_within": ("r4_pct_within", 0.1),
-          "r4_f9_within": ("r4_f9_within", 0.1), "r5_inside": ("r5_inside", 0.005)}
-EXACT = {"r2_overlap_390_320", "r2_n_pairs"}
+          "r4_f9_within": ("r4_f9_within", 0.1), "r4_f9_dt_within": ("r4_f9_dt_within", 0.1), "r5_inside": ("r5_inside", 0.005)}
+EXACT = {"r2_overlap_390_320", "r2_n_pairs", "r2_fit4_n", "r2_fit3_n"}
 VALUE_RTOL = {"s4_amount_err_n100": 1e-3}
 
 
@@ -1080,8 +1109,8 @@ plt.show()
 
 # %%
 pairs0 = decidable_pairs(R0)
-say("**(a) Ordering.** Table 2 decides <<np:d>> pairs (the 34 against 35 of the 390 and 320 μm rows is inside "
-    "their half units, and the 90 μm \"small\" is ordered by the text only against the present work). Over all "
+say("**(a) Ordering.** Table 2 decides <<np:d>> pairs (the 34 against 35 of the 390 and 320 μm rows is not decided: "
+    "their $f_T$ intervals overlap, and the 90 μm \"small\" is ordered by the text only against the present work). Over all "
     "<<nj:d>> joint corners, throughflow-only enhancement orders <<ct>> of <<np:d>> as printed, diffusion-only "
     "<<cd>> of <<np:d>>, uniform <<cu:d>> of <<np:d>>; the smallest relative gap in $f_T$ within a decided pair is "
     "<<cm:pct0>>. The $f_T$ intervals of the 390 and 320 μm rows (<<f3>> and <<f2>>) <<ov>>, so their order "
@@ -1114,7 +1143,10 @@ say("**(c) Both parts free.** A least-squares fit of the increase to $(E_T - 1) 
     "row sits <<r>> points below the fit. Without Pereira's row (three rows, one degree of freedom) $E_T - 1$ = "
     "<<a3>>, $E_D - 1$ = <<b3>>, half-widths <<h3>>, and $E_D$ = 1 inside at <<n3:d>> of <<N3:d>> corners. "
     "With Pereira the fitted $E_D - 1$ <<s4>>; without it, it is <<s3>>. Four rows with two free parameters, "
-    "measured in different ways (M4), carry that much and no more.",
+    "measured in different ways, carry that much and no more. Where the three rows are nearly collinear the "
+    "one-degree-of-freedom half-width falls to <<hmin:.3f>>, so the corners whose interval excludes 0 are no evidence "
+    "of $E_D < 1$.",
+    hmin=min(M["r2_fit3_bhw_min"], M["r2_fit4_bhw_min"]),
     s4=("brackets zero" if M["r2_fit4_b_min"] < 0 < M["r2_fit4_b_max"] else "keeps one sign"),
     s3=("negative at every corner" if M["r2_fit3_b_max"] < 0 else "of either sign"),
     a=M_span("r2_fit4_a", ".3f"), b=M_span("r2_fit4_b", ".3f"), h=M_span("r2_fit4_bhw", ".3f"),
@@ -1132,7 +1164,9 @@ say("**(c) Both parts free.** A least-squares fit of the increase to $(E_T - 1) 
 say("Fig. 4 gives the front bubble's nose velocity in the approach period as <<ub:.1f>> ± <<se:.1f>> cm/s "
     "(slope and standard error of <<n:d>> markers). With it, eqn (1)'s throughflow term alone is <<kt:.4f>> times "
     "the isolated coefficient, whatever $\\epsilon_{mf}$ and $U_B$, and the whole of eqn (1) is <<K>> times it: eqn "
-    "(1) cannot give the isolated value (M5). It would at $U_{mf}$ = <<u>> cm/s.\n\n"
+    "(1) cannot give the isolated value. It would at $U_{mf}$ = <<u>> cm/s. Fig. 4's slope corresponds to "
+    "$c = U_B/(g D_B)^{1/2}$ = <<cf>> for the present work, <<cin>> the <<cb0>> to <<cb1>> bracket used for the Table 2 "
+    "rows; the ordering count in R2 was evaluated on that bracket only.\n\n"
     "**The pair.** The printed coefficients are <<rv:.3f>> and <<ro:.3f>> times the isolated one, <<ni:d>> of 2 "
     "inside \"two to three times larger\". If only the throughflow term is enhanced, the approach-period "
     "multiplier is $E_T = (K_{pair} - k_D)/(K_{iso} - k_D)$ with the measured isolated base: <<bv>> (vertical) "
@@ -1144,9 +1178,10 @@ say("Fig. 4 gives the front bubble's nose velocity in the approach period as <<u
     "<<s95:.3f>> and <<s90:.3f>> cm/s (degrees of freedom not printed: an inversion, not a test).\n\n"
     "**Three numbers for one bed.** For 390 μm the paper prints 34 % (Table 2), \"only 64%\" for single bubbles "
     "(p. 330), which is <<e64:pct1>> more for the pair, and the 1.8 on the throughflow term, which is <<e18>> % on "
-    "eqn (1)'s coefficient. They are not one quantity (M4); the page does not rank them.",
+    "eqn (1)'s coefficient. They are not one quantity; the page does not rank them.",
     ub=M["r3_UB"], se=M["r3_UB_se"], n=fig4_slope(C0)[2], kt=M["r3_kT_over_iso"], K=M_span("r3_K1_over_iso", ".3f"),
-    u=M_span("r3_umf_iso", ".2f"), rv=M["r3_ratio_vert"], ro=M["r3_ratio_obl"], ni=M["r3_ratio_inside"],
+    u=M_span("r3_umf_iso", ".2f"), cf=M_span("r3_c_fig4", ".2f"), cb0=C_BR[0], cb1=C_BR[1],
+    cin=("inside" if C_BR[0] <= M["r3_c_fig4_min"] and M["r3_c_fig4_max"] <= C_BR[1] else "outside"), rv=M["r3_ratio_vert"], ro=M["r3_ratio_obl"], ni=M["r3_ratio_inside"],
     bv=M_span("r3_ET_base_vert", ".2f"), bo=M_span("r3_ET_base_obl", ".2f"), sv=M_span("r3_ET_split_vert", ".2f"),
     so=M_span("r3_ET_split_obl", ".2f"), s95=M["r3_se_95"], s90=M["r3_se_90"], e64=M["r3_enh_64"],
     e18=M_span("r3_enh_18", ".1f"))
@@ -1170,7 +1205,7 @@ say("<<n:d>> of <<N:d>> cells lie within their allowance (the 0.6 s front cell i
     "printed 0.14. The printed sums and cumulative transfers follow the printed $V_BC_B$ column (<<s:d>> of 9), and "
     "<<p:d>> of 5 printed percentages (46, 77, 100 and 50 %, and the text's \"77% of the transfer occurring "
     "within the first 50%\") follow it within their half unit; the 38 % elapsed is <<e:pct1>> rounded up, exactly "
-    "at the half unit. With 0.14 kept, the 77 % would be <<f:pct1>>. So the text and the sums support the "
+    "at the half unit. With 0.14 kept, the 77 % would be <<f:pct1>>. So the text and the sums agree with the "
     "printed 1.74 against the printed 0.14; at 0.6 s the rear cell would need $C_B$ = <<ci:.3f>> % or $V_B$ = "
     "<<vi:.0f>> cm³. The page does not decide which cell is right. The pair transfers <<tr:pct1>> of its tracer "
     "over the 0.8 s.",
@@ -1190,14 +1225,24 @@ ax.plot([], [], "o", mfc="none", mec="k", label="Table 1 $C_B$ (front, rear, res
 ax.set(xlabel="time, s", ylabel="tracer concentration, vol %", xlim=(0.2, 1.2))
 ax.legend(fontsize=7)
 plt.show()
-say("Table 1's concentrations are \"averaged values taken from Fig. 9\" (p. 330). Against the curves read at the "
-    "same times the differences are <<d>> vol %; <<n:d>> of <<N:d>> lie within the reading error of <<err:g>> vol %. "
-    "The rear-bubble cells sit far below the back-bubble curve, whose drawn part begins at about 0.5 s while Table 1 "
-    "lists the rear bubble from 0.3 s (M13); at 1.1 s the curves stand <<i:.3f>> vol % above the $C_B$ the printed "
-    "product implies.",
+_imp11 = 100 * T10[("1.1", "resultant")]["P"] / T10[("1.1", "resultant")]["V"]
+say("Table 1's concentrations are \"averaged values taken from Fig. 9\" (p. 330); the paper does not say how they were "
+    "averaged. Read at the printed times the curves stand <<d>> vol % above the table, and <<n:d>> of <<N:d>> lie "
+    "within the reading error of <<err:g>> vol %. Table 1 prints its times to 0.1 s. By the secant slope of the "
+    "digitised curve (the reads on either side of the cell, or its one neighbour at the end of the curve), a "
+    "half unit of the printed time, 0.05 s, closes the gap for <<nt:d>> of <<N:d>> table values, and the front "
+    "bubble's curve falls <<s:.1f>> vol %/s at 0.3 s. The rear-bubble cells and the 1.1 s cell are not closed: the "
+    "back curve stays <<gb:.2f>> vol % or more above the rear cells, and its drawn part begins at about 0.5 s while "
+    "Table 1 lists the rear bubble from 0.3 s. At 1.1 s the curves stand <<i:.3f>> (nearest curve) and <<ib:.3f>> "
+    "(back curve) vol % above the $C_B$ the printed product implies. A window average of the front curve over 0.5 to 0.7 s "
+    "(trapezoid over its three reads) is <<w:.3f>> vol %, above the 0.6 s read of <<r:.3f>>, so averaging does not "
+    "close the gap to the table's <<c:.2f>>. The page does not say whether the table or the figure is right.",
     d=", ".join(f"{M['r4_f9_' + k]:+.3f}" for k in ("0.3_front", "0.6_front", "0.7_front", "0.6_rear", "0.7_rear",
                                                      "1.1_resultant")),
-    n=M["r4_f9_within"], N=M["_n_f9"], err=C0.f9_err, i=M["r4_f9_1.1_vs_implied"])
+    n=M["r4_f9_within"], N=M["_n_f9"], err=C0.f9_err, i=M["r4_f9_1.1_vs_implied"],
+    nt=M["r4_f9_dt_within"], s=-M["r4_f9_slope_front_0.3"], gb=min(M["r4_f9_0.6_rear"], M["r4_f9_0.7_rear"]),
+    ib=f9_read(C0, "back", 1.1) - _imp11, w=M["r4_f9_front_avg_06"], r=f9_read(C0, "front", 0.6),
+    c=100 * T10[("0.6", "front")]["C"])
 
 # %%
 t0_, t1x, V0_, V1_, y0_, y1_ = front_interval(C0)
@@ -1220,20 +1265,23 @@ ax.set(xlabel="time, s", ylabel="$V_B C_B$, cm³", title="front bubble, approach
 ax.legend(fontsize=7)
 plt.show()
 say("**The tracer balance (E9).** For the front bubble over the approach period (0.3 to 0.6 s, $V_B$ linear in "
-    "time, $w$ = 0.9 cm), Table 1 implies $K$ = <<K:.2f>> cm/s at a perimeter factor 1: the printed 9.6 needs a "
-    "transfer surface <<p96:.3f>> times the circle's, the isolated 3.4 <<p34:.2f>> times. With Table 1's volumes and "
-    "the Fig. 9 front curve instead of the $C_B$ column, $K$ = <<Kf:.2f>> cm/s. Marched forward from the 0.3 s "
+    "time, $w$ = 0.9 cm), Table 1 implies $K$ = <<K:.2f>> cm/s (<<Kh>> over half a unit of the printed "
+    "volumes and products) at a perimeter factor 1; the printed 9.6 would follow at a transfer surface <<p96:.3f>> "
+    "times the circle's and the isolated 3.4 at <<p34:.2f>> times, if Table 1's cells were the data behind them (they "
+    "are fits to per-bubble data the paper does not print). With Table 1's volumes and "
+    "the Fig. 9 front curve instead of the $C_B$ column, $K$ = <<Kf:.2f>> cm/s, and the printed 9.6 lies <<btw>> the two. Marched forward from the 0.3 s "
     "cell, $V_BC_B$ at 0.6 s is <<v96:.3f>> cm³ at $K$ = 9.6, <<v34:.3f>> at 3.4 and <<v1>> with eqn (1) along the "
     "growing bubble, against the printed 1.12. The rear bubble's apparent $K$ is <<r1:.2f>> cm/s with the printed "
     "cell and <<r2:.2f>> with the products; the page offers no mechanism for it.",
-    K=M["r4_K_front"], p96=M["r4_phi_96"], p34=M["r4_phi_34"], Kf=M["r4_K_fig9"], v96=M["r4_VC06_96"],
+    K=M["r4_K_front"], p96=M["r4_phi_96"], p34=M["r4_phi_34"], Kf=M["r4_K_fig9"], v96=M["r4_VC06_96"], Kh=M_span("r4_K_front_hu", ".2f"),
+    btw=("between" if sorted([M["r4_K_fig9"], M["r4_K_front"]])[0] < num(C0, "K_vertical_cm_s") < max(M["r4_K_fig9"], M["r4_K_front"]) else "not between"),
     v34=M["r4_VC06_34"], v1=M_span("r4_VC06_eqn1", ".3f"), r1=M["r4_K_rear_printed"], r2=M["r4_K_rear_products"])
 
 # %% [markdown]
 # ### R5. Eqns (3), (4) from the paper's numbers
 #
 # "(Table 2)" for "the final 0.8 s" (p. 334) can only be Table 1, which spans 0.3 to 1.1 s
-# (M2). A printed constant is compared in half units of its last printed digit.
+# A printed constant is compared in half units of its last printed digit.
 
 # %%
 say("E5 gives E = <<E:.2f>>, as printed. Then $E/\\pi$ = <<ep:.4f>>, and the printed 0.4 is <<h3:.2f>> half units "
@@ -1267,7 +1315,7 @@ say("The amount converges at orders <<a>> and the face flux (read with `compute_
     "the time-integrated face fluxes to below 1e-11 (discrete conservation, an identity; here <<i:.1e>>). Round-off "
     "companion: `expm_multiply` against the dense `expm` at 400 cells differs by less than 1e-2 of the finest "
     "ladder difference (here <<c:.1e>>). In time, backward Euler on 800 cells converges at orders <<b>> to an amount "
-    "<<gb:.1e>> from $2/\\sqrt{\\pi}$ (bound 1e-6); a second `permc_spec` at the finest level differs by less than 1e-2 of "
+    "<<gb:.1e>> from $2/\\sqrt{\\pi}$ (bound 1e-6); `scipy.linalg.solve_banded` on the same tridiagonal system at the finest level differs by less than 1e-2 of "
     "the finest difference (here <<cb:.1e>>).",
     a=M_span("s4_amount_order", ".2f"), f=M_span("s4_flux_order", ".2f"), ga=M["s4_amount_gap"], gf=M["s4_flux_gap"],
     e=M["s4_amount_err_n100"], i=M["s4_identity"], c=M["s4_companion"], b=M_span("s4_be_order", ".3f"),
@@ -1312,11 +1360,16 @@ say("The paper calls its explanation \"semi-quantitative\" (p. 333), and its num
     "390 μm the postulate overpredicts the 160 μm row (<<p>> % against 15). Both parts free, with Pereira, $E_D - 1$ = "
     "<<fb>> and its interval contains 0 at <<n4:d>> of <<N4:d>> combinations; without Pereira $E_D - 1$ = <<fb3>>, "
     "0 inside at <<n3:d>> of <<N3:d>>. The table is consistent with the postulate and does not prove it.\n"
-    "- **The 390 μm coefficients do not fit eqn (1).** $U_{mf}/\\pi$ alone is <<kt:.3f>> times the isolated 3.4 cm/s, "
-    "so eqn (1) is <<K>> times it at the paper's conditions. The throughflow multiplier of the approach period is at "
-    "least <<lv:.2f>> (vertical) and <<lo:.2f>> (oblique), <<cmp>> the 1.8 that eqns (3), (4) use for a different span.\n"
-    "- **Table 1** implies $K$ = <<Kf:.2f>> cm/s for the front bubble against the printed 9.6 (perimeter factor "
-    "<<phi:.2f>> needed), and two of its cells are off their products by <<h1:.1f>> and <<h2:.1f>> allowances.\n"
+    "- **The 390 μm coefficients do not fit eqn (1).** $U_{mf}/\\pi$ alone is <<kt:.4f>> times the isolated 3.4 cm/s, "
+    "and <<kh:.3f>> times it with both printed values moved half a unit against the gap, so eqn (1), at <<K>> times it "
+    "for the whole coefficient, cannot give it. The paper prints no error for the 3.4 cm/s, and the page does not say "
+    "whether eqn (1), the 11.2 or the 3.4 is off. With the measured isolated base, the throughflow multiplier of the approach period is at "
+    "least <<lv:.2f>> (vertical) and <<lo:.2f>> (oblique); with eqn (1)'s own throughflow term it is <<sv>> and <<so>>. "
+    "All are <<cmp>> the 1.8 that eqns (3), (4) use for a different span.\n"
+    "- **Table 1** implies $K$ = <<Kf:.2f>> cm/s for the front bubble (<<Kh>> over half a unit of the printed volumes "
+    "and products), and <<K9:.2f>> with the Fig. 9 front curve and the same volumes; the printed 9.6 lies <<btw>> the "
+    "two, so the tracer accounting does not test it. Two of its cells are off their products by <<h1:.1f>> and "
+    "<<h2:.1f>> allowances.\n"
     "- **Eqns (3), (4)** follow from 1.8 and 40 % <<w>> half a unit of their printed digit (<<h3:.2f>> and "
     "<<h4:.3f>> half units); over the stated 30 to 60 %, <<ni:d>> of 2 printed constants stay inside the range. The 1.8 and the "
     "40 % themselves are not supported or tested by any printed number, and nothing here tests eqns (3), (4) "
@@ -1325,17 +1378,19 @@ say("The paper calls its explanation \"semi-quantitative\" (p. 333), and its num
     cd=span(M["r2_conc_D_min"], M["r2_conc_D_max"], "d"), cu=M["r2_conc_U"], a=M_span("r2_ET1_p390", ".2f"),
     b=M_span("r2_ET1_t160", ".2f"), p=M_span("r2_pred160", ".1f"), fb=M_span("r2_fit4_b", ".3f"),
     n4=M["r2_fit4_b_ci0"], N4=M["_n_fit4"], fb3=M_span("r2_fit3_b", ".3f"), n3=M["r2_fit3_b_ci0"], N3=M["_n_fit3"],
-    kt=M["r3_kT_over_iso"], K=M_span("r3_K1_over_iso", ".2f"), lv=M["r3_ratio_vert"], lo=M["r3_ratio_obl"],
-    Kf=M["r4_K_front"], phi=M["r4_phi_96"], h1=M["r4_hu_0.6_rear"], h2=M["r4_hu_1.1_resultant"],
+    kt=M["r3_kT_over_iso"], kh=M["r3_kT_over_iso_hu_min"], K=M_span("r3_K1_over_iso", ".2f"), lv=M["r3_ratio_vert"], lo=M["r3_ratio_obl"],
+    Kf=M["r4_K_front"], Kh=M_span("r4_K_front_hu", ".2f"), K9=M["r4_K_fig9"],
+    btw=("between" if min(M["r4_K_fig9"], M["r4_K_front"]) < num(C0, "K_vertical_cm_s") < max(M["r4_K_fig9"], M["r4_K_front"]) else "not between"), h1=M["r4_hu_0.6_rear"], h2=M["r4_hu_1.1_resultant"],
     h3=M["r5_hu_eqn3"], h4=M["r5_hu_eqn4_den"], ni=M["r5_inside"],
     hd=("orders as the postulate says" if M["r2_conc_T_min"] == M["r2_n_pairs"] else "does not order as the postulate says"),
-    cmp=("above" if min(M["r3_ratio_vert"], M["r3_ratio_obl"]) > num(C0, "enh_throughflow") else "not above"),
+    sv=M_span("r3_ET_split_vert", ".2f"), so=M_span("r3_ET_split_obl", ".2f"),
+    cmp=("above" if min(M["r3_ratio_vert"], M["r3_ratio_obl"], M["r3_ET_split_vert_min"], M["r3_ET_split_obl_min"]) > num(C0, "enh_throughflow") else "not above"),
     w=("within" if max(M["r5_hu_eqn3"], M["r5_hu_eqn4_den"]) < 1 else "not within"))
 
 # %% [markdown]
 # ## What pymrm adds
 #
-# Two small solves and the checks, not the model. Every quantity on this page also has a
+# One small solve and the checks, not the model. Every quantity on this page also has a
 # closed form (the Higbie integral for the penetration term, power-law integrals in $V_B$
 # for the tracer balance), and those closed forms are the second route and the check values:
 # pymrm adds verification, not a result the closed forms cannot give.
@@ -1344,7 +1399,7 @@ say("The paper calls its explanation \"semi-quantitative\" (p. 333), and its num
 # `compute_boundary_values` for the face flux) is the numerical derivation of the one part
 # of eqn (1) the paper takes from a theory it does not print, the $4/\pi$ and the square root
 # of the diffusive term; it mirrors page `E1.2`, which solves the throughflow. The implicit
-# march integrates the tracer balance of a growing bubble, and `pymrm.checks.find_roots`
+# march of the tracer balance of a growing bubble is plain numpy, and `pymrm.checks.find_roots`
 # inverts it for $K$. `pymrm.checks.observed_orders` measures every ladder, including the
 # fourth-order superconvergence of the penetration functionals.
 
@@ -1370,7 +1425,7 @@ say("The paper calls its explanation \"semi-quantitative\" (p. 333), and its num
 # Every non-structural number registered above has a row that moves it. Each row injects
 # one defect through a field of the configuration (a reading of the model, a pymrm solver
 # setting, a mistyped printed number or a changed data point) and reruns the whole study;
-# a row whose study raises records nothing, and only finite values are recorded. The
+# a row whose study raises records nan for every claim, and a row that ran records its finite values. The
 # controls fail nothing.
 
 # %%
@@ -1449,7 +1504,7 @@ DEFECTS = [
     t1_cell("0.7", "front", "C_B_vol_pct", "0.83"),
     ("Table 1 last time 1.1 read 1.0", replace(C0, t1=C0.t1.assign(time_s=C0.t1.time_s.replace("1.1", "1.0")))),
     t2_cell("160", "overall_pct_inc", "34"), t2_cell("320", "umf_cm_s", "2.8"), t2_cell("390", "umf_cm_s", "1.12"),
-    t2_cell("93", "overall_pct_inc", "13-18"), t2_cell("160", "overall_pct_inc", "21"),
+    t2_cell("93", "overall_pct_inc", "13-18"), t2_cell("390", "DB_cm", "12"), t2_cell("160", "overall_pct_inc", "21"),
     f9_swap(), f9_scale(0.98), f4_marker(7, 2.0),
 ]
 CONTROLS = [("control: clean rerun", C0),
@@ -1462,16 +1517,15 @@ for row, c_ in CONTROLS + DEFECTS:
             Mb = study(c_)
     except (ValueError, RuntimeError, ZeroDivisionError, KeyError, IndexError) as e:
         print(f"{row}: {type(e).__name__}: {e}")
-        Mb = {}
+        Mb = {name: float("nan") for name in claims.metrics}      # a study that raises records nan
+        CRASH.add(row)
     for name in claims.metrics:
         if claims.metrics[name].get("structural"):
             continue
         x_ = Mb.get(name, None)
-        if x_ is None or (isinstance(x_, (float, np.floating)) and not np.isfinite(x_)):
-            continue                  # only finite values are recorded
+        if row not in CRASH and (x_ is None or (isinstance(x_, (float, np.floating)) and not np.isfinite(x_))):
+            continue                  # a row that ran records only its finite values
         BREAK.append((row, name, claims.breaks(row, name, x_)))
-    if not any(name in Mb for name in claims.metrics):
-        CRASH.add(row)
 
 # %%
 # The break table: one line per row, with the claims it fails.
