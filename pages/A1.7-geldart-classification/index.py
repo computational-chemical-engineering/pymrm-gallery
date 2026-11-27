@@ -1626,6 +1626,9 @@ tie_df, tie_lab = edit_cell(t1, (t1.ratio_meas == 1.0).to_numpy() & (t1.d_sv_um 
                             "U_MB", lambda v: round(v - 0.01, 2))
 dia78_df, dia78_lab = edit_cell(t1, (t1.d_sv_um == 78).to_numpy(), "U_0", lambda v: np.nan)
 exact_df, exact_lab = edit_cell(t1, (t1.d_sv_um == 78).to_numpy(), "rho_s_exact", lambda v: not v)
+# one unit in the last printed digit of U_MB on the disagreeing row: it stays the only
+# row where the criterion and the strict ratio part, so its recorded ratio moves
+dis_df, dis_lab = edit_cell(t1, (t1.index == dis_row), "U_MB", lambda v: round(v + 0.01, 2))
 rows2 = [("REFERENCE: the null model, group A for everything (thr6: 225 -> inf)", dict(thr6=np.inf)),
          (f"thr6: 225 -> {C6:.1f} (the recomputed constant)", dict(thr6=C6)),
          ("thr6: 225 -> 150", dict(thr6=150.0)),
@@ -1640,6 +1643,7 @@ rows2 = [("REFERENCE: the null model, group A for everything (thr6: 225 -> inf)"
          (tie_lab, dict(df=tie_df)),
          (dia78_lab, dict(df=dia78_df)),
          (exact_lab, dict(df=exact_df)),
+         (dis_lab, dict(df=dis_df)),
          ("Table 1 transcribed without its last row", dict(df=t1.iloc[:-1]))]
 out2 = []
 for lab, kw in rows2:
