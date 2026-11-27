@@ -942,6 +942,16 @@ brk_all(extra_row[0], got12)
 print(f"\nOne more row, for the effective particle of Result 2: {extra_row[0]} moves it to "
       f"eps_mf = {got12['implied_eps_mf']:.4f}, phi_s = {got12['implied_phi_s']:.4f} "
       f"(C1 {got12['C1_deviation_pct']:+.1f} %).")
+# A misread of 12 moves eps_mf and the excluded root by less than their 5 % tolerance;
+# the digit misread 11 -> 17 (a 1 read as a 7) still leaves one admissible root and
+# moves both beyond it.
+G2_MISREAD = 17.0
+row17 = f"eq. (2) mis-read as {G2_MISREAD:g}"
+got17 = derivation(g2=G2_MISREAD)
+brk_all(row17, got17)
+print(f"{row17} moves it to eps_mf = {got17['implied_eps_mf']:.4f}, "
+      f"phi_s = {got17['implied_phi_s']:.4f}, excluded root phi_s = "
+      f"{got17['second_root_phi_s']:.4f}.")
 print("\nWHAT THIS CHECK CANNOT DO:")
 print("  * It cannot tell whether Ergun's 150 and 1.75 are RIGHT. It identifies which")
 print("    friction-law constants Wen & Yu used, given that they used the Ergun form.")
