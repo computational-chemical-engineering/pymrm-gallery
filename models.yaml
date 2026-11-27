@@ -4336,6 +4336,38 @@ models:
       does not.
     related: [E2.1, E1.2, E1.4, E1.3, E1.5]
 
+  - id: E1.4
+    slug: sit-grace-interphase-mass-transfer
+    title: "Sit and Grace (1981): bubble interaction and interphase mass transfer"
+    description: >
+      Sit and Grace split the single-bubble interphase coefficient into a throughflow term
+      and a penetration term, postulate that bubble interaction raises only the throughflow
+      term, and derive eqns (3), (4) for freely bubbling beds from it. The page tests whether
+      the paper's own printed numbers (Table 2, the coefficients of interacting and isolated
+      bubbles, Table 1) decide that, with two small pymrm solves (the penetration problem
+      behind the diffusive term, the tracer balance of a growing bubble) as verification.
+    section: E
+    status: planned
+    page: pages/E1.4-sit-grace-interphase-mass-transfer/
+    tier: T1
+    priority: P1
+    structures: [S1, S4]
+    phases: [gas-solid]
+    predicts:
+      - >-
+        bubble-to-dense-phase coefficient of single bubbles (eqns 1, 2) and its
+        throughflow-only enhancement (eqns 3, 4), tested against the paper's printed
+        coefficients and Tables 1 and 2
+    reference:
+      authors: ["Sit, S. P.", "Grace, J. R."]
+      year: 1981
+      title: "Effect of bubble interaction on interphase mass transfer in gas fluidized beds"
+      container: "Chemical Engineering Science 36, 327-335"
+      doi: 10.1016/0009-2509(81)85012-9
+    pymrm_api: [construct_grad, construct_div, compute_boundary_values, checks.find_roots, checks.observed_orders]
+    data: {tier: 2, method: table, status: complete}
+    related: [E1.2, E1.1, E2.1, E1.3]
+
   - id: E2.7
     slug: cfb-core-annulus
     title: "Circulating fluidised bed core–annulus model"
