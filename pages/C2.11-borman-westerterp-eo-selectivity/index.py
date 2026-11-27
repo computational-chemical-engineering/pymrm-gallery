@@ -121,7 +121,7 @@ def show(frame, uuid, fmt=None):
 #   approximately equal adsorption constants, hardly affect the selectivity." Their
 #   Figure 6 shows these trends, "Selectivity calculated according to model III" (p. 56);
 # - on temperature (p. 56): "The apparent activation energy, the combined temperature
-#   influence on the reaction rate constant and the chemisorption of the total combustion
+#   influence on the reaction rate constant, and the chemisorption of the total combustion
 #   reaction is larger than that for the epoxidation reaction, 86 and 70 kJ/mol,
 #   respectively. This leads to a decreasing selectivity toward ethene oxide with
 #   increasing temperature."
