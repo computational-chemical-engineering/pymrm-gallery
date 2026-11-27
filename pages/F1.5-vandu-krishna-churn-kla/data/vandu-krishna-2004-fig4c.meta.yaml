@@ -28,20 +28,27 @@ acquisition:
     thick; value at the mean row, ends where the line is unbroken by more than 60 px; each
     line labelled by the series whose markers above 0.08 m/s have the nearest median.
     The overlay of every read centre on the bitmap was checked by eye.
+    The two half-hidden water triangles (kind marker_partial) are read by hand, from the
+    visible apex column and the visible base row of each, with the triangle height of the
+    legend marker: the centre column is the apex column, the centre row is the base row
+    plus the distance from the base to the vertex centroid (a third of the height); the
+    values are converted with the same calibration. Their cover and rival columns are 0.
   operator: "Claude Opus 5.5 (assisted)"
   date: 2026-11-27
   estimated_error: >
-    About 2 native px per centre (2 px: 0.0009 m/s in U, 0.0017 1/s in P). The page measures the reading error empirically
+    About 2 native px per centre (2 px: 0.0009 m/s in U, 0.0017 1/s in P); about 4 native
+    px per centre for the two marker_partial rows (4 px: 0.0018 m/s in U, 0.0035 1/s in P),
+    because the apex or base is read from a partly covered outline. The page measures the reading error empirically
     from the same series read in more than one figure.
 
 conditions: "Air, ambient, about 293 K."
 
 missing:
   - "Markers below U = 0.03 m/s are not read (overlapping clusters near the axis)."
-  - "Water: two triangles half hidden beside others (near U 0.14 and 0.21) fall below the cover threshold and are not read; the counts read are lower bounds."
+  - "Water: two triangles half hidden beside others (near U 0.15 and 0.22) fall below the cover threshold; they are listed as kind marker_partial (see estimated_error) and the main statistics leave them out."
 
 columns:
-  - {name: kind, unit: "-", description: "marker or line (two rows per line: its ends)"}
+  - {name: kind, unit: "-", description: "marker, marker_partial (half-hidden marker read by hand, larger reading error) or line (two rows per line: its ends)"}
   - {name: series, unit: "-", description: "liquid (Fig. 10f: Tellus oil per column diameter)"}
   - {name: shape, unit: "-", description: "marker shape or line thickness"}
   - {name: U_m_s, unit: m/s, description: "superficial gas velocity"}

@@ -125,7 +125,7 @@ def say(text, **v):
 # | E7 | $Sc = \mu_L/(\rho_L D_L)$ | nomenclature, p. 995 |
 # | E8 | $k_La = \varepsilon_G P$, $P = C\,Sc^{-1/3}$ for $U$ > 0.08 m/s | abstract; Conclusions 1, 2; Fig. 5 line |
 #
-# Readings (the build plan's ambiguities A1 to A13, kept in the page's notes):
+# Readings:
 #
 # - Eq. 5 is printed with $C_L/C_L^*$ on the left; it is the sensor signal of E2 driven
 #   by $C_L(t)$ of E4. The page re-derives it and integrates E2 and E4 as a second route
@@ -150,8 +150,7 @@ def say(text, **v):
 # string. The page adds: $g$ = 9.81 m/s2 (as F1.1); Akita and Yoshida's constants from
 # F1.1's transcription; for Validation V4 only, the Wilke-Chang and Hayduk-Minhas
 # diffusivity forms as commonly quoted from the paper's ref. [8], with an oxygen molar
-# volume of 25.6 cm3/mol (the build plan's decision; 27.9 would put all five estimates
-# low). The test condition of the check values (air-water, $D_T$ = 0.38 m,
+# volume of 25.6 cm3/mol. The test condition of the check values (air-water, $D_T$ = 0.38 m,
 # $\varepsilon_G$ = 0.25) lies inside Akita and Yoshida's ranges.
 
 # %%
@@ -163,6 +162,9 @@ G = 9.81                                   # m/s2
 LIQ4 = ("water", "tetradecane", "paraffin", "tellus")
 LIQ5 = LIQ4 + ("ethanol",)
 D_TEST, EPS_TEST = 0.38, 0.25              # test condition of the check values
+LONG_WINDOW = 6                              # record length as a multiple of Fig. 3a's window (R4)
+READ_PX, PARTIAL_PX = 2.0, 4.0              # reading error per centre, native px (sidecars: marker, marker_partial)
+FLIP_DRAWS, FLIP_SEED = 20000, 20261127     # seeded redraws of the markers within the reading error (R3)
 U_ALT = 0.10                               # sensitivity threshold (m/s), A9
 T975 = stats.t.ppf(0.975, 2)               # Student t, two degrees of freedom
 # E13 (Validation V4 only; not from this paper): Wilke-Chang 7.4e-8 (phi M)^0.5 T/(mu V^0.6),
@@ -183,8 +185,8 @@ E13 = {"wc": 7.4e-8, "hm": 13.3e-8, "hm_T": 1.47, "hm_a": 10.2, "hm_b": 0.791, "
 # - `vandu-krishna-2004-fig4c.csv`, `-fig8c.csv`, `-fig10f.csv`: $P$ against $U$ read
 #   from the native 600 ppi bitmaps by template matching (`data/digitise_raster.py`):
 #   the markers and the paper's thick horizontal "plateau" lines (A4: "the thick
-#   horizontal lines in Fig. 4(c)", p. 993). Fig. 4c's markers below 0.03 m/s and two
-#   half-hidden water triangles are not read (sidecar). Figures 4a and 6a (holdups),
+#   horizontal lines in Fig. 4(c)", p. 993). Fig. 4c's markers below 0.03 m/s are not read; two
+#   half-hidden water triangles are read by hand (kind marker_partial, sidecar). Figures 4a and 6a (holdups),
 #   6c, 6f and 10c are not digitised.
 # - Cross-page: F1.1's transcription of Akita and Yoshida's kLa constants and the
 #   ranges of their Table II. F1.1 establishes that its constants reproduce Akita and
@@ -531,7 +533,7 @@ def study(K, C):
     # R4: the measurement
     X["eq5_water37_t5"] = eq5(5.0, K["kLaL_water_U037"], K["ks_water"])
     X["eq5_equal_rates_limit_t5"] = 1 - (1 + 0.3 * 5.0) * math.exp(-0.3 * 5.0)
-    rates = []
+    rates = {}
     for name, (k, ks, tw) in probe_cases(K, C).items():
         th = t_half(k, ks)
         kd, td = dead_time_fit(k, ks, tw)
@@ -541,8 +543,13 @@ def study(K, C):
         M[f"probe_{name}_t_half"] = th
         M[f"probe_{name}_half_rate_over_kLaL"] = math.log(2) / th / k
         M[f"probe_{name}_deadtime_rate_over_kLaL"], M[f"probe_{name}_deadtime_td"] = kd / k, td
-        rates += [M[f"probe_{name}_{c}_rate_over_kLaL"] for c in ("ls", "moment", "half", "deadtime")]
-    M["probe_rate_min"], M["probe_rate_max"] = min(rates), max(rates)
+        rates[name] = [M[f"probe_{name}_{c}_rate_over_kLaL"] for c in ("ls", "moment", "half", "deadtime")]
+    wt = [r for n_, v in rates.items() if not n_.startswith("tellus") for r in v]      # water and tetradecane
+    M["probe_rate_min_wt"], M["probe_rate_max_wt"] = min(wt), max(wt)
+    M["probe_rate_min_tellus"], M["probe_rate_max_tellus"] = min(rates["tellus37"]), max(rates["tellus37"])
+    kt, kst, twt = probe_cases(K, C)["tellus37"]
+    M["probe_tellus37_level_at_window"] = float(eq5(twt, kt, kst))
+    M["probe_tellus37_deadtime_rate_long"] = dead_time_fit(kt, kst, LONG_WINDOW * twt)[0] / kt
     kw, ksw = K["kLaL_water_U037"], (C.ks_set if C.ks_set is not None else K["ks_water"])
     M["probe_water37_kLaL_shift_ks_x0.9"], M["probe_water37_kLaL_shift_ks_x1.1"] = ks_shift(kw, ksw, 0.9), ks_shift(kw, ksw, 1.1)
     # Fig. 2b: the drawn sensor constants against the caption
@@ -661,9 +668,10 @@ CORE = [("fig4c", "water"), ("fig4c", "tetradecane"), ("fig4c", "paraffin"), ("f
         ("fig10f", "tellus_D0.38"), ("fig8c", "slurry25")]
 
 
-def markers(C, fig, s):
+def markers(C, fig, s, partial=False):
+    """Marker positions of one series; ``partial`` adds the half-hidden markers (kind marker_partial)."""
     d = C.raster[fig]
-    d = d[(d.kind == "marker") & (d.series == s)].sort_values("U_m_s")
+    d = d[d.kind.isin(("marker", "marker_partial") if partial else ("marker",)) & (d.series == s)].sort_values("U_m_s")
     U, P = d.U_m_s.to_numpy(float), d.P_1_s.to_numpy(float).copy()
     for f, dp in C.raster_shift:
         if f == fig:
@@ -678,6 +686,33 @@ def markers(C, fig, s):
         if f == fig:
             U = U * fac
     return U, P
+
+
+def reading_sd(C, fig, s, partial=True):
+    """Reading error of each marker of markers(C, fig, s, partial) as (sd of U, sd of P): the sidecar's
+    native px (READ_PX, PARTIAL_PX) times the figure's calibration, taken from the px columns."""
+    d = C.raster[fig]
+    mk = d[d.kind == "marker"]
+    su, sp = abs(np.polyfit(mk.px_x, mk.U_m_s, 1)[0]), abs(np.polyfit(mk.px_y, mk.P_1_s, 1)[0])
+    d = d[d.kind.isin(("marker", "marker_partial") if partial else ("marker",)) & (d.series == s)].sort_values("U_m_s")
+    px = np.where(d.kind.to_numpy() == "marker_partial", PARTIAL_PX, READ_PX)
+    return px * su, px * sp
+
+
+def flip_fraction(U, P, sd_u, sd_p, lo, draws=FLIP_DRAWS, seed=FLIP_SEED):
+    """Fraction of seeded redraws of the markers above ``lo`` (each moved by its reading error, normal)
+    in which the slope of P on U is beyond two standard errors."""
+    m = U > lo
+    U, P, sd_u, sd_p = U[m], P[m], sd_u[m], sd_p[m]
+    rng = np.random.default_rng(seed)
+    Ud = U + sd_u * rng.standard_normal((draws, len(U)))
+    Pd = P + sd_p * rng.standard_normal((draws, len(U)))
+    dx = Ud - Ud.mean(axis=1, keepdims=True)
+    sxx = np.sum(dx ** 2, axis=1)
+    b = np.sum(dx * (Pd - Pd.mean(axis=1, keepdims=True)), axis=1) / sxx
+    res = Pd - Pd.mean(axis=1, keepdims=True) - b[:, None] * dx
+    se = np.sqrt(np.sum(res ** 2, axis=1) / (len(U) - 2) / sxx)
+    return float(np.mean(np.abs(b / se) > 2))
 
 
 def drawn_thick(C, fig, s, shift=True):
@@ -728,6 +763,17 @@ def flatness(K, C, P5, P9, P11):
         line = drawn_thick(C, fig, s)
         if line is not None:
             M[f"r3_line_over_vector_{s}"] = line / ref[s] - 1
+    # water with its two half-hidden markers read, and redraws of the markers within the reading error
+    thr_ = thr
+    Uw, Pw = markers(C, "fig4c", "water")
+    Up, Pp = markers(C, "fig4c", "water", partial=True)
+    rp = flat(Up, Pp, thr_)
+    M["r3_n_water_partial"], M["r3_t_water_partial"] = rp["n"], rp["t"]
+    M["r3_water_flip_frac"] = flip_fraction(Uw, Pw, *reading_sd(C, "fig4c", "water", partial=False), thr_)
+    M["r3_water_flip_frac_partial"] = flip_fraction(Up, Pp, *reading_sd(C, "fig4c", "water"), thr_)
+    tp = [rp["t"] if s == "water" else t for (_, s), t in zip(CORE, ts["main"])]
+    M["r3_n_t_beyond_2_partial"] = int(np.sum(np.abs(tp) > 2))
+    M["r3_n_t_beyond_2_partial__margin"] = float(np.min(np.abs(np.abs(tp) - 2)))
     for tag, v in ts.items():
         v = np.abs(np.array(v))
         sfx = "" if tag == "main" else f"_{tag}"
@@ -806,7 +852,7 @@ plt.show()
 
 # %%
 say("Least squares over the four plateaus give $b$ = <<b:.4f>> ± <<se:.4f>> (standard error, 2 degrees of freedom); "
-    "$-1/3$ lies <<t:+.2f>> standard errors from it, and the 95 % interval is <<lo:.3f>> to <<hi:.3f>>. Tellus oil "
+    "the slope lies <<t:+.2f>> standard errors from $-1/3$, and the 95 % interval is <<lo:.3f>> to <<hi:.3f>>. Tellus oil "
     "carries a leverage of <<lev:.3f>>: without it the slope is <<nt:.3f>>; without paraffin oil (the liquid the "
     "paper names for foaming at low velocities) it is <<np:.4f>> ± <<nps:.4f>>; the adjacent pairs give "
     "<<p1:.3f>> (water to tetradecane) and <<p2:.3f>> (tetradecane to paraffin oil). A factor of <<f:.3f>> on the "
@@ -841,12 +887,30 @@ _r3cols = ["slope (1/s per m/s)", "SE", "t", "Delta", "SE(Delta)", "t without lo
 _r3tab[_r3cols] = _r3tab[_r3cols].map(lambda v: f"{v:.4g}" if isinstance(v, (float, int)) and not isinstance(v, bool) else v)
 display(_r3tab)
 _tn = min((abs(M[f"r3_t_{s}"]), s) for _, s in CORE if f"r3_t_{s}" in M and abs(abs(M[f"r3_t_{s}"]) - 2) == M["r3_n_t_beyond_2__margin"])
-say("The verdict for <<sn:s>> is marginal: its |t| is <<tn:.3f>>, against the threshold 2.", tn=_tn[0], sn=_tn[1])
+say("The verdict for <<sn:s>> is undecided: its |t| is <<tn:.3f>> on the fully visible markers, against the threshold 2. "
+    "Two water triangles of Figure 4c are half hidden behind others; read by hand from their visible apex and base "
+    "(kind marker_partial, reading error <<pp:g>> px against <<rp:g>> px for the other markers), they give "
+    "$t$ = <<twp:.3f>> from <<nwp:d>> markers, and with them <<kp:d>> of <<n:d>> series are beyond two standard "
+    "errors. Moving every marker of water by its reading error (normal, <<nd:d>> seeded redraws), the slope is beyond "
+    "two standard errors in <<ff:.0%>> of the redraws of the visible markers and in <<ffp:.0%>> of the redraws that "
+    "include the two partial markers.",
+    tn=_tn[0], sn=_tn[1], pp=PARTIAL_PX, rp=READ_PX, twp=M["r3_t_water_partial"], nwp=M["r3_n_water_partial"],
+    kp=M["r3_n_t_beyond_2_partial"], n=M["r3_n_series"], nd=FLIP_DRAWS, ff=M["r3_water_flip_frac"],
+    ffp=M["r3_water_flip_frac_partial"])
 say("Above 0.08 m/s, <<k:d>> of <<n:d>> series have a slope of $P$ on $U$ beyond two standard errors; without each "
-    "series' lowest-velocity marker <<k1:d>> of <<n1:d>>, and from 0.10 m/s <<k2:d>> of <<n2:d>>. The standard errors "
+    "series' lowest-velocity marker <<k1:d>> of <<n1:d>>, and from 0.10 m/s <<k2:d>> of <<n2:d>> (that set is the main "
+    "one for water and the one without the lowest marker for the other five series). The standard errors "
     "come from the scatter about each line, which contains the reading error measured in V5.",
     k=M["r3_n_t_beyond_2"], n=M["r3_n_series"], k1=M["r3_n_t_beyond_2_nolow"], n1=M["r3_n_series_nolow"],
     k2=M["r3_n_t_beyond_2_u010"], n2=M["r3_n_series_u010"])
+_beyond = [s for _, s in CORE if abs(M[f"r3_t_{s}"]) > 2]
+assert set(_beyond) == {"paraffin", "tellus_D0.10", "tellus_D0.38", "slurry25"}, _beyond
+say("The size of the change is a separate number from the test. $\\Delta$ is the fitted change of $P$ between the lowest "
+    "and the highest marker above 0.08 m/s, as a fraction of the mean $P$ of those markers. The <<kb:d>> series beyond "
+    "two standard errors change by <<d1:+.1%>> to <<d2:+.1%>>; tetradecane changes by <<dt:+.1%>> and water by "
+    "<<dw:+.1%>>. A slope can be beyond two standard errors and still be small in size; the page states both.",
+    kb=len(_beyond), d1=min(M[f"r3_delta_{s}"] for s in _beyond), d2=max(M[f"r3_delta_{s}"] for s in _beyond),
+    dt=M["r3_delta_tetradecane"], dw=M["r3_delta_water"])
 
 # %%
 fig, axs = plt.subplots(1, 3, figsize=(11, 3.4))
@@ -875,15 +939,25 @@ ptab = pd.DataFrame({n: {"kLa_L (caption)": c[0], "k_sensor": c[1], "window (s)"
                          "dead time / kLa_L": M[f"probe_{n}_deadtime_rate_over_kLaL"], "dead time (s)": M[f"probe_{n}_deadtime_td"]}
                      for n, c in probe_cases(K, C).items()}).T
 display(ptab.map(lambda v: f"{v:.4g}" if isinstance(v, (float, int)) and not isinstance(v, bool) else v))
-say("An evaluation that ignored the sensor would return between <<a:.3f>> and <<b:.3f>> of the corrected $k_La_L$ over "
-    "the four captioned cases and four conventions: the correction the paper calls \"small in all the experiments\" "
-    "is <<c:.0%>> to <<d:.0%>> of the value. If the water sensor constant were 10 % lower or higher, the corrected "
+_CONV = {"ls": "least squares", "moment": "first moment", "half": "half time", "deadtime": "dead time"}
+_pc = probe_cases(K, C)
+_rate = {(n_, c_): M[f"probe_{n_}_{c_}_rate_over_kLaL"] for n_ in _pc for c_ in _CONV}
+_lo = min((v, k_) for k_, v in _rate.items() if not k_[0].startswith("tellus"))[1]
+_hi = max((v, k_) for k_, v in _rate.items() if not k_[0].startswith("tellus"))[1]
+say("An evaluation that ignored the sensor would return between <<a:.3f>> and <<b:.3f>> of the corrected $k_La_L$ for "
+    "water and tetradecane (three captioned cases, four conventions; the paper calls the correction \"small in all "
+    "the experiments\"): the lowest ratio is <<lo:s>>, the highest <<hi:s>>. For Tellus oil the four conventions give "
+    "<<ta:.3f>> to <<tb:.3f>> on the plotted window of Figure 3a (<<tw:g>> s), where the sensor response has "
+    "reached <<lv:.3f>> of saturation; the dead-time ratio on a record <<lw:d>> times longer is <<tl:.3f>>. "
+    "If the water sensor constant were 10 % lower or higher, the corrected "
     "$k_La_L$ at the same half time would move by <<s1:+.2%>> and <<s2:+.2%>>; by one standard deviation of the "
     "Figure 2b scatter (<<sd:.4f>> 1/s), <<s3:+.2%>> and <<s4:+.2%>>. The caption sensor constants lie beyond two "
     "standard errors of their Figure 2b means for <<nb:d>> of 5 liquids (ratios caption/mean <<r1:.3f>> to <<r2:.3f>>). "
     "Scaling the three captioned plateaus by the first-moment ratio changes the three-liquid exponent from <<e0:.3f>> "
     "to <<e1:.3f>>.",
-    a=M["probe_rate_min"], b=M["probe_rate_max"], c=1 - M["probe_rate_max"], d=1 - M["probe_rate_min"],
+    a=M["probe_rate_min_wt"], b=M["probe_rate_max_wt"], lo=f"{_lo[0]} by {_CONV[_lo[1]]}",
+    hi=f"{_hi[0]} by {_CONV[_hi[1]]}", ta=M["probe_rate_min_tellus"], tb=M["probe_rate_max_tellus"], tw=_pc["tellus37"][2],
+    lv=M["probe_tellus37_level_at_window"], lw=LONG_WINDOW, tl=M["probe_tellus37_deadtime_rate_long"],
     s1=M["probe_water37_kLaL_shift_ks_x0.9"], s2=M["probe_water37_kLaL_shift_ks_x1.1"], sd=M["fig2b_water_sd"],
     s3=M["probe_water37_kLaL_shift_ks_minus_sd"], s4=M["probe_water37_kLaL_shift_ks_plus_sd"],
     nb=M["fig2b_n_caption_beyond_2se"], r1=min(M[f"fig2b_{k}_caption_over_mean"] for k in LIQ5),
@@ -978,7 +1052,7 @@ say("At 293 K and an oxygen molar volume of 25.6 cm3/mol, E13 lands within half 
 say("Tellus oil in the 0.1 m column is plotted in Figures 4c, 8c and 10f. Pairing markers by velocity, the rms "
     "difference in $P$ is <<a:.5f>> 1/s (4c against 10f, <<na:d>> pairs), <<b:.5f>> (8c against 10f, <<nb:d>>) and "
     "<<c:.5f>> (4c against 8c, <<nc:d>>), and <<u:.5f>> m/s in $U$, a few pixels at each figure's scale; the drawn lines differ by factors <<l1:.3f>> and "
-    "<<l2:.3f>> from Figure 10f's. Each figure's tick fit is in its sidecar (at most 1.4 px).",
+    "<<l2:.3f>> from Figure 10f's. Each figure's tick fit is in its sidecar.",
     a=M["v5_rms_dP_fig4c_fig10f"], na=M["v5_n_pairs_fig4c_fig10f"], b=M["v5_rms_dP_fig8c_fig10f"],
     nb=M["v5_n_pairs_fig8c_fig10f"], c=M["v5_rms_dP_fig4c_fig8c"], nc=M["v5_n_pairs_fig4c_fig8c"], u=M["v5_rms_dU"],
     l1=M["v5_tellus_line_4c_over_10f"], l2=M["v5_tellus_line_8c_over_10f"])
@@ -992,19 +1066,28 @@ say("**The exponent.** The paper's own plateaus give $b$ = <<b:.3f>> ± <<se:.3f
     "neither confirm nor refute $Sc^{-1/3}$; one liquid (Tellus oil, leverage <<lev:.2f>>) sets the slope, and "
     "Schmidt number and viscosity cannot be told apart (r = <<r:.4f>>).\n\n"
     "**The constant.** The drawn line, the only printed form of the rule, misses its own four plateaus by "
-    "<<m1:+.0%>> to <<m2:+.0%>>, each plateau being exact; the least-squares constant is <<cr:.3f>> times lower.\n\n"
-    "**Flat in U.** <<k:d>> of <<n:d>> digitised series have a slope beyond two standard errors above 0.08 m/s "
-    "(<<k2:d>> of <<n2:d>> from 0.10 m/s); \"For all systems studied\" (Conclusion 1) holds for the others within their "
-    "scatter. The mean of the markers above 0.08 m/s lies within <<mm:.1%>> of the exact plateau of every series, the "
-    "drawn thick line within <<ml:.1%>>: which of the two the paper plotted as its plateau stays open.\n\n"
+    "<<m1:+.0%>> to <<m2:+.0%>>, each plateau being exact; the drawn line's constant is <<cr:.3f>> times the least-squares constant.\n\n"
+    "**Flat in U.** <<k:d>> of <<n:d>> digitised series have a slope beyond two standard errors above 0.08 m/s; "
+    "their fitted line changes by <<d1:+.1%>> to <<d2:+.1%>> of the mean $P$ between the lowest and the highest "
+    "marker. Tetradecane changes by <<dt:+.1%>>. Water changes by <<dw:+.1%>> and is undecided: $t$ = <<tw:.2f>>, "
+    "and <<twp:.2f>> with its two half-hidden markers read; its slope is beyond two standard errors in <<ff:.0%>> of "
+    "the seeded redraws within the reading error. \"For all systems studied\" (Conclusion 1) is a statement about size "
+    "as well as about slope; the numbers above are both. The mean of the markers above 0.08 m/s lies within <<mm:.1%>> "
+    "of the exact plateau of every series, the drawn thick line within <<ml:.1%>>: which of the two the paper plotted "
+    "as its plateau stays open.\n\n"
     "**The probe correction.** An uncorrected evaluation would return <<pa:.2f>> to <<pb:.2f>> of the corrected value "
-    "for the captioned cases: a correction of <<ca:.0%>> to <<cb:.0%>>, against \"small in all the experiments\". The "
-    "page sizes this from printed numbers; it does not redo the authors' fits.",
+    "for water and tetradecane, over four conventions; for Tellus oil <<ta:.2f>> to <<tb:.2f>> on the plotted window of "
+    "Figure 3a, where the response has reached <<lv:.2f>> of saturation, and <<tl:.2f>> with a dead time on a record "
+    "<<lw:d>> times longer. The paper writes \"small in all the experiments\" (p. 992). The page sizes this from "
+    "printed numbers; it does not redo the authors' fits.",
     b=M["exp_free_slope"], se=M["exp_free_se"], t=abs(M["exp_t_vs_minus_third"]), lo=M["exp_ci_lo"], hi=M["exp_ci_hi"],
     lev=M["exp_leverage_tellus"], r=M["corr_lnSc_lnmu"], m1=min(M[f"rule_miss_{k}"] for k in LIQ4),
     m2=max(M[f"rule_miss_{k}"] for k in LIQ4), cr=M["fig5_line_C_over_C_LS"], k=M["r3_n_t_beyond_2"], n=M["r3_n_series"],
-    k2=M["r3_n_t_beyond_2_u010"], n2=M["r3_n_series_u010"], pa=M["probe_rate_min"], pb=M["probe_rate_max"],
-    ca=1 - M["probe_rate_max"], cb=1 - M["probe_rate_min"],
+    d1=min(M[f"r3_delta_{s}"] for s in _beyond), d2=max(M[f"r3_delta_{s}"] for s in _beyond),
+    dt=M["r3_delta_tetradecane"], dw=M["r3_delta_water"], tw=M["r3_t_water"], twp=M["r3_t_water_partial"],
+    ff=M["r3_water_flip_frac"], pa=M["probe_rate_min_wt"], pb=M["probe_rate_max_wt"],
+    ta=M["probe_rate_min_tellus"], tb=M["probe_rate_max_tellus"], lv=M["probe_tellus37_level_at_window"],
+    tl=M["probe_tellus37_deadtime_rate_long"], lw=LONG_WINDOW,
     mm=max(abs(M[f"r3_mean_over_vector_{s}"]) for _, s in CORE), ml=max(abs(M[f"r3_line_over_vector_{s}"]) for _, s in CORE))
 
 # %% [markdown]
@@ -1055,8 +1138,7 @@ STRUCTURAL = {"v3_eq5_at_zero": "E5 is 0 at t = 0 for any rates (the sensor and 
               **{f"v5_n_pairs_{a}_{b}": "digitised marker pairs" for a, b in (("fig4c", "fig10f"), ("fig8c", "fig10f"), ("fig4c", "fig8c"))},
               "AY_Sc_min": "F1.1's transcription of Akita and Yoshida's Table II", "AY_Sc_max": "as AY_Sc_min",
               "v3_eq5_ode_gap": "two routes to E5 (closed form, DOP853 integration of E2 and E4); no input moves them apart",
-              "v3_ls_quad_gap": "two routes to the E10a rate (stationarity root, quadrature plus minimisation)",
-              "v3_dead_ssr_quad_gap": "two routes to the E10d sum of squares (closed form, quadrature)"}
+              "v3_ls_quad_gap": "two routes to the E10a rate (stationarity root, quadrature plus minimisation)"}
 BOUNDS = {"v3_eq5_at_zero": (1e-15, "identity"), "v3_eq5_slope_at_zero": (1e-15, "identity"),
           "v3_AY_factor_gap": (1e-12, "identity"), "v3_slope_polyfit_gap": (1e-10, "tolerance"),
           "v3_CLS_numeric_gap": (1e-8, "tolerance"),
@@ -1065,7 +1147,9 @@ BOUNDS = {"v3_eq5_at_zero": (1e-15, "identity"), "v3_eq5_slope_at_zero": (1e-15,
           "v3_dead_ssr_quad_gap": (1e-9, "tolerance", "quad at epsrel 1e-13 against the closed form")}
 COUNTS = {"v4_n_within_halfunit": 0.01, "v1_n_xfig_within_0p5pct": 0.05, "fig2b_n_caption_beyond_2se": 0.05,
           "v2_n_halfunit_shift": 0.01, "v2_n_halfunit_noshift": 0.01, "r3_n_t_beyond_2": 0.005,
-          "r3_n_t_beyond_2_nolow": 0.005, "r3_n_t_beyond_2_u010": 0.005}   # in t units; R3 prints the nearest |t|
+          "r3_n_t_beyond_2_nolow": 0.005, "r3_n_t_beyond_2_u010": 0.005,
+          "r3_n_t_beyond_2_partial": 0.005}   # in t units; R3 prints the nearest |t|
+FLIP = {"r3_water_flip_frac": 0.01, "r3_water_flip_frac_partial": 0.01}   # fractions of 20000 redraws; 3 x the spread over seeds
 EXACT = {k for k in M if k.startswith("r3_n_") and k not in COUNTS and not k.endswith("__margin")}
 
 
@@ -1082,6 +1166,8 @@ def register(M):
             claims.exact(name, v, structural=True, note=STRUCTURAL[name])
         elif name in COUNTS:
             claims.exact(name, v, margin=M[name + "__margin"], min_margin=COUNTS[name])
+        elif name in FLIP:
+            claims.value(name, v, rtol=0.0, atol=FLIP[name])
         elif name in EXACT or isinstance(v, (int, np.integer)):
             claims.exact(name, int(v))
         else:

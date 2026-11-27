@@ -576,14 +576,34 @@
       "value": 1.4094472824439457,
       "rtol": 1e-06
     },
-    "probe_rate_min": {
+    "probe_rate_min_wt": {
       "kind": "value",
       "value": 0.5616114873340242,
       "rtol": 1e-06
     },
-    "probe_rate_max": {
+    "probe_rate_max_wt": {
+      "kind": "value",
+      "value": 0.8792079393527644,
+      "rtol": 1e-06
+    },
+    "probe_rate_min_tellus": {
+      "kind": "value",
+      "value": 0.764525599081927,
+      "rtol": 1e-06
+    },
+    "probe_rate_max_tellus": {
       "kind": "value",
       "value": 0.9300007500515022,
+      "rtol": 1e-06
+    },
+    "probe_tellus37_level_at_window": {
+      "kind": "value",
+      "value": 0.4710588867659301,
+      "rtol": 1e-06
+    },
+    "probe_tellus37_deadtime_rate_long": {
+      "kind": "value",
+      "value": 0.9850244908570075,
       "rtol": 1e-06
     },
     "probe_water37_kLaL_shift_ks_x0.9": {
@@ -870,8 +890,7 @@
       "value": 5.639932965095795e-13,
       "max": 1e-09,
       "basis": "tolerance",
-      "structural": true,
-      "note": "two routes to the E10d sum of squares (closed form, quadrature)"
+      "note": "quad at epsrel 1e-13 against the closed form"
     },
     "v3_eq5_at_zero": {
       "kind": "bound",
@@ -1353,6 +1372,33 @@
       "kind": "value",
       "value": 0.0048014073512185895,
       "rtol": 1e-06
+    },
+    "r3_n_water_partial": {
+      "kind": "exact",
+      "value": 14
+    },
+    "r3_t_water_partial": {
+      "kind": "value",
+      "value": -2.1566085972581783,
+      "rtol": 1e-06
+    },
+    "r3_water_flip_frac": {
+      "kind": "value",
+      "value": 0.4226,
+      "rtol": 0.0,
+      "atol": 0.01
+    },
+    "r3_water_flip_frac_partial": {
+      "kind": "value",
+      "value": 0.92125,
+      "rtol": 0.0,
+      "atol": 0.01
+    },
+    "r3_n_t_beyond_2_partial": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.15660859725817833,
+      "min_margin": 0.005
     },
     "r3_n_series": {
       "kind": "exact",
@@ -2386,13 +2432,41 @@
       "Tw_fig3b 40 -> 44",
       "sensor removed: k_sensor -> 1e6"
     ],
-    "probe_rate_min": [
+    "probe_rate_min_wt": [
       "ks_water 0.47 -> 0.517",
       "kLaL_water_U037 0.238 -> 0.2618",
       "kLaL_water_es0_U014 0.223 -> 0.2453",
       "sensor removed: k_sensor -> 1e6"
     ],
-    "probe_rate_max": [
+    "probe_rate_max_wt": [
+      "ks_tetradecane 0.86 -> 0.946",
+      "kLaL_tetradecane_U037 0.323 -> 0.3553",
+      "Tw_fig3a 25 -> 27.5",
+      "sensor removed: k_sensor -> 1e6",
+      "Fig. 3a window 40 s for 25 s"
+    ],
+    "probe_rate_min_tellus": [
+      "ks_tellus 0.28 -> 0.308",
+      "kLaL_tellus_U037 0.03 -> 0.033",
+      "Tw_fig3a 25 -> 27.5",
+      "sensor removed: k_sensor -> 1e6",
+      "Fig. 3a window 40 s for 25 s"
+    ],
+    "probe_rate_max_tellus": [
+      "ks_tellus 0.28 -> 0.308",
+      "kLaL_tellus_U037 0.03 -> 0.033",
+      "Tw_fig3a 25 -> 27.5",
+      "sensor removed: k_sensor -> 1e6",
+      "Fig. 3a window 40 s for 25 s"
+    ],
+    "probe_tellus37_level_at_window": [
+      "ks_tellus 0.28 -> 0.308",
+      "kLaL_tellus_U037 0.03 -> 0.033",
+      "Tw_fig3a 25 -> 27.5",
+      "sensor removed: k_sensor -> 1e6",
+      "Fig. 3a window 40 s for 25 s"
+    ],
+    "probe_tellus37_deadtime_rate_long": [
       "ks_tellus 0.28 -> 0.308",
       "kLaL_tellus_U037 0.03 -> 0.033",
       "Tw_fig3a 25 -> 27.5",
@@ -3258,6 +3332,29 @@
       "Fig. 9 y calibration 1 pt off",
       "Fig. 8c ordinate one minor tick off (0.01 1/s)",
       "Fig. 9 y scale stretched 1 %"
+    ],
+    "r3_n_water_partial": [
+      "threshold 0.08 -> 0.04 m/s"
+    ],
+    "r3_t_water_partial": [
+      "threshold 0.08 -> 0.04 m/s",
+      "Fig. 4c every second marker 3 % high",
+      "Fig. 4c ordinate skewed by -0.04 1/s per m/s"
+    ],
+    "r3_water_flip_frac": [
+      "threshold 0.08 -> 0.04 m/s",
+      "Fig. 4c every second marker 3 % high",
+      "Fig. 4c ordinate skewed by -0.04 1/s per m/s"
+    ],
+    "r3_water_flip_frac_partial": [
+      "threshold 0.08 -> 0.04 m/s",
+      "Fig. 4c every second marker 3 % high",
+      "Fig. 4c ordinate skewed by -0.04 1/s per m/s"
+    ],
+    "r3_n_t_beyond_2_partial": [
+      "threshold 0.08 -> 0.04 m/s",
+      "Fig. 4c every second marker 3 % high",
+      "Fig. 8c ordinate skewed by -0.05 1/s per m/s"
     ],
     "r3_n_series": [],
     "r3_n_t_beyond_2": [

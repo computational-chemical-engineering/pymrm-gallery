@@ -13,7 +13,9 @@ their native 600 ppi (ink is True). For each panel:
 - centres (D1): circle and square the box centre of the template; triangle the vertex
   centroid, h/6 from the box centre toward the base;
 - each thick horizontal line (the paper's drawn plateau) is the set of rows with a large
-  ink count, at least LINE_ROWS rows thick; its value is the mean row.
+  ink count, at least LINE_ROWS rows thick; its value is the mean row;
+- a panel may list half-hidden markers (``partial``) read by hand from the visible apex and
+  base; they are written as kind marker_partial, with a larger reading error.
 """
 import csv
 import subprocess
@@ -41,6 +43,9 @@ PANELS = {
                   series={"water": ("tri_down", (2807, 140)), "tetradecane": ("circle", (2807, 202)),
                           "paraffin": ("square", (2807, 263)), "tellus": ("tri_up", (2807, 325))},
                   legend=(2712, 3205, 70, 392), umin=0.03,
+                  # two water triangles half hidden beside others, read by hand from the visible base
+                  # and apex: (series, apex column px, centroid row px); written as kind marker_partial
+                  partial=[("water", 2822.0, 459.7), ("water", 2975.8, 452.5)],
                   cover={"paraffin": 0.75},       # the plotted squares are a little smaller than the legend's
                   bands={"water": (0.35, 0.8), "tetradecane": (0.35, 0.8), "paraffin": (0.1, 0.35),
                          "tellus": (0.0, 0.1)}),
@@ -195,6 +200,8 @@ def panel(pdf, name, spec, tmp):
         if X <= ycol + 8 or Y >= xrow - 8 or fx(X) < spec.get("umin", 0.0):
             continue
         rows.append(("marker", s, spec["series"][s][0], fx(X), fy(Y), X, Y, cov, rival))
+    for s, X, Y in spec.get("partial", []):
+        rows.append(("marker_partial", s, spec["series"][s][0], fx(X), fy(Y), X, Y, 0.0, 0.0))
     for yy, xa, xb, th in lines(sub, xrow, ycol, x0, y0):
         # the series whose markers above 0.08 m/s have the nearest median value draws this line
         med = {s: np.median([r[4] for r in rows if r[0] == "marker" and r[1] == s and r[3] > 0.08])

@@ -40,11 +40,24 @@ and Table II ranges are loaded from [F1.1](../F1.1-akita-yoshida-bubble-column/)
   -27.4 % <!-- claim: rule_miss_tetradecane --> (tetradecane) to
   +29.6 % <!-- claim: rule_miss_tellus --> (Tellus oil): use the plateau of the liquid
   when it is one of the four.
-- "Practically independent of U": of the 6 <!-- claim: r3_n_series --> digitised
-  series, 4 <!-- claim: r3_n_t_beyond_2 --> have a slope beyond two standard errors,
-  and water is marginal (5 <!-- claim: r3_n_t_beyond_2_nolow -->
-  without each series' lowest marker).
-- The probe correction is not small: an uncorrected evaluation would return
-  0.562 <!-- claim: probe_rate_min --> to 0.930 <!-- claim: probe_rate_max --> of the
-  corrected kLa_L in the captioned cases.
+- "Practically independent of U" has a test and a size. Past the paper's threshold velocity,
+  4 <!-- claim: r3_n_t_beyond_2 --> of the 6 <!-- claim: r3_n_series --> digitised series have
+  a slope beyond two standard errors; their fitted line changes by
+  +9.5 % <!-- claim: r3_delta_slurry25 --> to +19.7 % <!-- claim: r3_delta_tellus_D0.38 --> of the
+  mean P between the lowest and the highest marker (paraffin oil
+  +16.1 % <!-- claim: r3_delta_paraffin -->, Tellus oil in the smallest column
+  +11.2 % <!-- claim: r3_delta_tellus_D0.10 -->). Tetradecane changes by
+  +1.5 % <!-- claim: r3_delta_tetradecane -->. Water changes by
+  -9.0 % <!-- claim: r3_delta_water --> and is undecided: t = -1.99 <!-- claim: r3_t_water -->
+  on the fully visible markers, -2.16 <!-- claim: r3_t_water_partial --> with its two half-hidden
+  markers read (5 <!-- claim: r3_n_t_beyond_2_partial --> of the 6 series beyond two standard
+  errors then), and its slope is beyond two standard errors in
+  42 % <!-- claim: r3_water_flip_frac --> of seeded redraws of the markers within the reading error.
+- The probe correction, sized from the printed constants (the paper: "small in all the
+  experiments"): an uncorrected evaluation would return 0.562 <!-- claim: probe_rate_min_wt --> to
+  0.879 <!-- claim: probe_rate_max_wt --> of the corrected kLa_L for water and tetradecane, over
+  four conventions. For Tellus oil it depends on the record length: 0.765 <!-- claim: probe_rate_min_tellus -->
+  to 0.930 <!-- claim: probe_rate_max_tellus --> on the plotted window of Figure 3a, where the
+  response has reached 0.47 <!-- claim: probe_tellus37_level_at_window --> of saturation, and
+  0.985 <!-- claim: probe_tellus37_deadtime_rate_long --> with a dead time on a much longer record.
 - C carries 1/s: the rule holds for these columns, spargers and ambient air only.
