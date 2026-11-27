@@ -264,6 +264,11 @@ def half_units(K, key, value):
     return abs(value - K[key]) / (0.5 * UNIT[key])
 
 
+def interval_halfunits(K, key, lo, hi):
+    """Distance of the printed entry from the interval [lo, hi], in half-units of its last digit."""
+    return max(lo - K[key], K[key] - hi, 0.0) / (0.5 * UNIT[key])
+
+
 def air(K):
     """A1, A2, A3: gas and test-particle state and the two scale factors."""
     T, P = K["eq15_T_K"], K["eq15_P_kPa"] * 1e3
@@ -304,9 +309,10 @@ def eq18_a(K):
     return K["eq18_ub_coef"] * math.sqrt(K["eq18_db_over_dp"]) * K["eq18_eps_mf"]
 
 
-def eq19_consts(K):
-    """Prefactor and constant b of eq 19, derived from eq 18 with the p. 361 inputs."""
-    a, c1, c2 = eq18_a(K), K["eq18_C1"], K["eq18_C2"]
+def eq19_consts(K, c1=None, c2=None):
+    """Prefactor and constant b of eq 19, derived from eq 18 with the p. 361 inputs (C1, C2 as given)."""
+    a = eq18_a(K)
+    c1, c2 = K["eq18_C1"] if c1 is None else c1, K["eq18_C2"] if c2 is None else c2
     return (4 * a * a * c1 * c1 / (c2 * c2)) ** (1 / 3), a * a / c2
 
 
@@ -354,6 +360,12 @@ def crossing_closed(d0, coef, b):
     if len(good) != 1:
         raise ValueError("crossing: no unique root with b r < 1")
     return 1 / good[0]
+
+
+def cross_with(K):
+    """Crossing of eq 19 and eq 21 for the constants and p. 361 inputs in ``K``."""
+    coef, b = eq19_consts(K)
+    return crossing(K, eq20(K, K["eq18_C1"], K["eq18_C2"]), coef, b)
 
 
 def eq16(K, x):
@@ -473,7 +485,7 @@ def r3_limits(K):
     M["err11_n_over"] = int(sum(v > 0 for v in allv))
     M["err11_n_over__margin"] = min(abs(v) for v in allv)
     c1, c2 = pair(K, "grace")
-    d0 = eq20(K, c1, c2)
+    d0 = 2 * (c1 * c1 / c2) ** (1 / 3)   # the identity's own point, independent of eq 20's printed prefactor
     M["ratio11a_at_dBD"] = 0.5 * c2 * d0**2 / c1 / umf_star(d0, c1, c2)
     M["ratio11b_at_dBD"] = math.sqrt(c2 * d0) / umf_star(d0, c1, c2)
     M["ratio11_at_Remf_2C1_gap"] = max(abs(M["ratio11a_at_dBD"] / 2 - 1), abs(M["ratio11b_at_dBD"] / math.sqrt(2) - 1))
@@ -509,12 +521,20 @@ def r4_r5_bd(K, ag):
     M["x_cross_19_21_exact"] = crossing(K, d21, coef, b)
     M["x_cross_closed_gap"] = abs(crossing_closed(d21, coef, b) / M["x_cross_19_21_exact"] - 1)
     M["x_cross_19_21_printed"] = crossing(K, K["eq21_dstar"], K["eq19_coef"], K["eq19_b"])
-    M["x_cross_19_21_C_lo"] = crossing(K, eq20(K, K["eq18_C1"] - UNIT["eq18_C1"] / 2, K["eq18_C2"] + UNIT["eq18_C2"] / 2), coef, b)
-    M["x_cross_19_21_C_hi"] = crossing(K, eq20(K, K["eq18_C1"] + UNIT["eq18_C1"] / 2, K["eq18_C2"] - UNIT["eq18_C2"] / 2), coef, b)
+    for tag, sg in (("lo", -1), ("hi", 1)):   # eq 19 and eq 21 both rebuilt from the same rounded C1, C2
+        c1r = K["eq18_C1"] + sg * UNIT["eq18_C1"] / 2
+        c2r = K["eq18_C2"] - sg * UNIT["eq18_C2"] / 2
+        coef_r, b_r = eq19_consts(K, c1r, c2r)
+        M[f"x_cross_19_21_C_{tag}"] = crossing(K, eq20(K, c1r, c2r), coef_r, b_r)
+    d0 = 2 * (K["eq18_C1"] ** 2 / K["eq18_C2"]) ** (1 / 3)   # eq 20's own point, independent of its printed prefactor
+    M["x_cross_minus_2b_gap"] = abs(crossing(K, d0, coef, b) / (2 * b) - 1)
     xs = [M[k] for k in ("x_cross_19_21_exact", "x_cross_19_21_printed", "x_cross_19_21_C_lo", "x_cross_19_21_C_hi")]
     M["x_cross_n_below_500"] = int(sum(x < xlo for x in xs))
     M["x_cross_n_below_500__margin"] = min(abs(x / xlo - 1) for x in xs)
-    M["x_cross_19_21_margin_to_500"] = xlo / M["x_cross_19_21_exact"] - 1
+    M["x_cross_19_21_margin_to_500"] = 1 - M["x_cross_19_21_exact"] / xlo
+    # what moves the crossing to 500: the assumed eps_mf and bubble multiple of p. 361 (not C1, C2)
+    M["eps_mf_for_cross_500"] = one_root(lambda e: cross_with(K | {"eq18_eps_mf": e}) - xlo, 0.2, 0.9, "crossing = 500 in eps_mf", log=False)
+    M["db_over_dp_for_cross_500"] = one_root(lambda r: cross_with(K | {"eq18_db_over_dp": r}) - xlo, 10.0, 1e3, "crossing = 500 in d_b/d_p")
     M["x_cross_19_chenpei27"] = crossing(K, K["chenpei_dstar"], coef, b)
     M["x_cross_19_baeyensgeldart46"] = crossing(K, K["bg_dstar"], coef, b)
     for x, tag in ((xlo, "500"), (xhi, "1e4"), (x_T, "T")):
@@ -598,6 +618,17 @@ def r8_table2(K, ag, ds):
               "row 4 at 3350")
     cmp = [("Table 2", f"v* range end, {lab}", key, f"t2_end{j}", v) for j, ((v, key), lab) in enumerate(zip(ends, labels))]
     M["t2_halfunits_91p7"] = half_units(K, "t2_v4", ends[-1][0])
+    # the printed partner d* also carries its half-unit: v* over d* +- half a unit, set against the printed v*
+    dkeys = ("t2_d1", "t2_d1", "t2_d2", "t2_d2", "t2_d3", "t2_d3", "t2_d4")
+    fs = (f[1], f[2], f[2], f[3], f[3], f[4], f[4])
+    hs = []
+    for fn, dk, (_, vk) in zip(fs, dkeys, ends):
+        hd = 0.5 * UNIT[dk]
+        hs.append(interval_halfunits(K, vk, *sorted((fn(K[dk] - hd), fn(K[dk] + hd)))))
+    M["t2_v_at_3349p5"] = f[4](K["t2_d4"] - 0.5 * UNIT["t2_d4"])
+    M["t2_partner_ends_within"] = int(sum(h <= 1 for h in hs))
+    M["t2_partner_ends_within__margin"] = min(abs(h - 1) for h in hs)
+    M["t2_partner_ends_within_of"] = len(hs)
     M["stokes_limit_gap"] = abs(f[1](1e-3) / (1e-3**2 / 18) - 1)
     for j, tag in ((1, "1p5"), (2, "2p7"), (3, "44")):
         d = K[f"eq13_d{j}"]
@@ -609,6 +640,16 @@ def r8_table2(K, ag, ds):
         d = one_root(lambda z: vt(K, z) - v, 0.5, K["t2_d4"], f"Table 2 inverse at v* = {v:g}")
         M[f"eq13_dstar_at_v_{tag}"] = d
         cmp.append(("eq 13", f"d* at v* = {PRINTED[f'eq13_v{j}']}", f"eq13_d{j}", f"eq13_d_at_v{j}", d))
+    hs = []
+    for j in (1, 2, 3):
+        d, v = K[f"eq13_d{j}"], K[f"eq13_v{j}"]
+        hd, hv = 0.5 * UNIT[f"eq13_d{j}"], 0.5 * UNIT[f"eq13_v{j}"]
+        hs.append(interval_halfunits(K, f"eq13_v{j}", *sorted((vt(K, d - hd), vt(K, d + hd)))))
+        dl, dh = (one_root(lambda z: vt(K, z) - w, 0.5, K["t2_d4"], f"Table 2 inverse at v* = {w:g}") for w in (v - hv, v + hv))
+        hs.append(interval_halfunits(K, f"eq13_d{j}", dl, dh))
+    M["eq13_partner_ends_within"] = int(sum(h <= 1 for h in hs))
+    M["eq13_partner_ends_within__margin"] = min(abs(h - 1) for h in hs)
+    M["eq13_partner_ends_within_of"] = len(hs)
     M["eq13_halfunits_v_at_2p7"] = half_units(K, "eq13_v2", M["eq13_vstar_at_2p7"])
     M["eq13_halfunits_d_at_v10"] = half_units(K, "eq13_d3", M["eq13_dstar_at_v_10"])
     r15, r27, r44 = (M[f"eq13_Ret_at_{t}"] for t in ("1p5", "2p7", "44"))
@@ -711,7 +752,7 @@ display(plain(show))
 say("<<n:d>> of the <<t:d>> derived cells of Table 6 round to the printed entry (largest <<w:.3f>> half-units). "
     "Eq 21's 53 is the rounding of <<r:.3f>> (Richardson) and <<g:.3f>> (Grace), but the half-unit intervals of the "
     "printed $C_1$, $C_2$ give <<rl:.2f>> to <<rh:.2f>> and <<gl:.2f>> to <<gh:.2f>>: both straddle 52.5 "
-    "(<<s:d>> of 2), so 52 and 53 are equally consistent with the printed inputs. With the Wen-Yu pair, "
+    "(<<s:d>> of 2), so the printed inputs also allow 52. With the Wen-Yu pair, "
     "$Ar$ = <<wa:,.0f>> and $d_p^*$ = <<wd:.2f>> against the printed 223,000 and 61. The p. 361 pairs: $Ar$ = 20,000 "
     "gives $d_p^*$ = <<a:.2f>> (printed 27), $Ar = 10^5$ gives <<b:.2f>> (printed 46).",
     n=M["t6_cells_rounding_to_print"], t=M["t6_cells_rounding_to_print_of"],
@@ -783,14 +824,17 @@ ax.legend(fontsize=7, loc="upper right")
 plt.show()
 say("`find_roots` on $(b, 10^7)$ finds one crossing of eq 19 and eq 21, at $\\Delta\\rho/\\rho$ = <<x:.1f>> "
     "(the quadratic of the published model agrees to <<g:.0e>>, bound 1e-12); with the printed 251, 219 and 53 it "
-    "is <<xp:.1f>>, and over the rounding interval of the printed $C_1$, $C_2$ it runs from <<xl:.1f>> to <<xh:.1f>>. "
-    "All <<n:d>> of the 4 lie below the 500 that opens the practical range; the exact crossing by "
-    "<<m:pct1>>. Over 500 to $10^4$, eq 21 is <<r5:.3f>> to <<r4:.3f>> times eq 19 in $d_p^*$ (at the test "
+    "is <<xp:.1f>>, and with eq 19 and eq 21 both rebuilt from the rounding interval of the printed $C_1$, $C_2$ it "
+    "runs from <<xl:.1f>> to <<xh:.1f>>. All <<n:d>> of the 4 lie below 500, the exact crossing <<m:pct1>> below 500. "
+    "The crossing is exactly twice eq 19's $b$ (gap <<gb:.0e>>, bound 1e-10), whatever $C_1$ is, so what could move it is the assumed "
+    "$\\epsilon_{mf}$ and $d_b/d_p$ of p. 361: it reaches 500 for $\\epsilon_{mf}$ = <<ee:.3f>> instead of 0.42, or $d_b$ = "
+    "<<dd:.1f>> $d_p$ instead of 100, and 500 is the low end of what Grace calls \"of order 500 to $10^4$\". Over 500 to $10^4$, eq 21 is <<r5:.3f>> to <<r4:.3f>> times eq 19 in $d_p^*$ (at the test "
     "particle <<rt:.3f>>, a factor <<at:.1f>> in $Ar$). Eq 19 meets the constant Chen-Pei 27 at "
     "$\\Delta\\rho/\\rho$ = <<xc:.0f>> and the Baeyens-Geldart 46 at <<xg:.0f>>.",
     x=M["x_cross_19_21_exact"], g=max(M["x_cross_closed_gap"], 1e-16), xp=M["x_cross_19_21_printed"],
     xl=min(M["x_cross_19_21_C_lo"], M["x_cross_19_21_C_hi"]), xh=max(M["x_cross_19_21_C_lo"], M["x_cross_19_21_C_hi"]),
     n=M["x_cross_n_below_500"], m=M["x_cross_19_21_margin_to_500"], r5=M["ratio_21_over_19_500"],
+    gb=max(M["x_cross_minus_2b_gap"], 1e-16), ee=M["eps_mf_for_cross_500"], dd=M["db_over_dp_for_cross_500"],
     r4=M["ratio_21_over_19_1e4"], rt=M["ratio_21_over_19_T"], at=M["Ar_ratio_21_over_19_T"],
     xc=M["x_cross_19_chenpei27"], xg=M["x_cross_19_baeyensgeldart46"])
 
@@ -851,13 +895,15 @@ show = CMP[CMP.group.isin(["Table 2", "eq 13"])][["group", "item", "printed", "c
 display(plain(show))
 say(r"The pieces of Table 2 join with jumps of <<j1:+.3f>> %, <<j2:+.3f>> % and <<j3:+.3f>> % at $d_p^*$ = 3.8, "
     r"7.58 and 227. <<n:d>> of the 7 printed $v_T^*$ range ends lie within a half-unit of the formula at their "
-    r"$d_p^*$ end; the last, 91.7 at 3350, is <<v:.3f>>, <<h:.2f>> half-units away (truncated, not rounded). Row 1 "
+    r"$d_p^*$ end; the last, 91.7 at 3350, is <<v:.3f>>, <<h:.2f>> half-units away. With the printed $d_p^*$ given its half-unit too (v* at 3349.5 is <<v5:.4f>>), <<pw:d>> of the 7 "
+    r"ends are within a half-unit. Row 1 "
     r"tends to Stokes' $d_p^{*2}/18$ (gap <<s:.0e>> at $d_p^*$ = 0.001, bound 1e-10). Each bracket of eq 13 names a "
-    r"$d_p^*$ \"or\" a $v_T^*$; through Table 2 <<p:d>> of the 6 ends lie within a half-unit of their partner "
+    r"$d_p^*$ \"or\" a $v_T^*$; through Table 2 <<p:d>> of the 6 ends lie within a half-unit of their partner (<<qw:d>> of 6 with the partner's own half-unit) "
     r"($v_T^*$ at 2.7 is <<hv:.2f>> half-units from 0.37, $d_p^*$ at $v_T^*$ = 10 is <<hd:.2f>> from 44). $n$ is "
     r"continuous across the three brackets to <<n1:+.2f>> %, <<n2:+.2f>> % and <<n3:+.2f>> %, at $Re_t$ = <<t1:.3f>>, "
     r"<<t2:.3f>> and <<t3:.0f>>. At the test particle $v_T^*$ = <<vt:.4f>>, $v_T$ = <<vm:.4f>> m/s.",
     j1=100 * M["t2_jump_rel_3p8"], j2=100 * M["t2_jump_rel_7p58"], j3=100 * M["t2_jump_rel_227"],
+    pw=M["t2_partner_ends_within"], qw=M["eq13_partner_ends_within"], v5=M["t2_v_at_3349p5"],
     n=M["t2_range_cells_within_half_unit"], v=M["t2_v_at_3350"], h=M["t2_halfunits_91p7"],
     s=max(M["stokes_limit_gap"], 1e-16), p=M["eq13_pair_ends_within_half_unit"], hv=M["eq13_halfunits_v_at_2p7"],
     hd=M["eq13_halfunits_d_at_v10"], n1=100 * M["eq13_n_jump_1p5"], n2=100 * M["eq13_n_jump_2p7"],
@@ -923,21 +969,27 @@ say("The page's functions reproduce all <<c:d>> check values of the second route
 # ## Finding
 
 # %%
-say("**The boundary numbers follow from the printed equations.** <<n:d>> of the <<t:d>> boundary numbers Grace prints "
-    "(Table 6's derived cells, eq 19's constants and limits, eq 21 and the p. 361 values, eq 15 at A1, eq 16's $Ar$ "
-    "form) lie within a half-unit of their last printed digit when recomputed from the constants he states for "
-    "them; the one nearest the edge differs from its printed value by <<m:.3f>> of a half-unit. Eq 15 needs an air viscosity the paper "
+say("**The boundary numbers follow from the printed equations.** <<n:d>> of the <<t:d>> comparisons with a number "
+    "Grace prints (Table 6's derived cells, eq 19's constants and limits, eq 21 and the p. 361 values, eq 15 at A1, "
+    "eq 16's $Ar$ form) lie within a half-unit of the last printed digit when recomputed from the constants he "
+    "states for them, taking those constants as exact (eq 15's four with the page's air viscosity). The closest is "
+    "Richardson's 53, computed <<r:.3f>>, <<m:.3f>> of a half-unit from the edge; the rounding of his $C_1$, $C_2$ "
+    "carries it from <<rl:.2f>> to <<rh:.2f>>, across 52.5, so that 53 cannot be decided. Eq 15 needs an air viscosity the paper "
     "does not print; it holds for $\\mu$ from <<lo:.2f>> to <<hi:.2f>> µPa s. Eq 19's 219 fixes the bubble "
-    "coefficient 0.711 (with $1/\\sqrt2$ it would be <<b2:.1f>>). The supporting tables do less well: <<t2:d>> of 7 "
-    "Table 2 range ends and <<e13:d>> of 6 eq 13 bracket ends.\n\n"
+    "coefficient 0.711 (with $1/\\sqrt2$ it would be <<b2:.1f>>). In the supporting tables, <<t2:d>> of 7 Table 2 range ends and "
+    "<<e13:d>> of 6 eq 13 bracket ends lie within a half-unit of the formula at the printed partner taken exactly; "
+    "with the partner given its own half-unit, <<t2p:d>> of 7 and <<e13p:d>> of 6.\n\n"
     "**The two B/D criteria part.** Built on eq 10 with the same $C_1$, $C_2$, eq 19 and eq 21 cross once, at "
-    "$\\Delta\\rho/\\rho$ = <<x:.1f>> (<<xp:.1f>> from the printed constants), <<mg:pct1>> below the 500 where "
-    "Grace's practical range begins; the crossing stays below 500 over the rounding of his constants. Over that "
-    "range they differ by a factor <<r5:.2f>> to <<r4:.2f>> in $d_p^*$; for glass in air at A1, <<b19:.0f>> µm "
+    "$\\Delta\\rho/\\rho$ = <<x:.1f>> (<<xp:.1f>> from the printed constants), exactly twice eq 19's constant $b$, "
+    "<<mg:pct1>> below 500 and at the low end of what Grace calls \"of order 500 to $10^4$\"; it stays below 500 "
+    "over the rounding of his constants. It reaches 500 for $\\epsilon_{mf}$ = <<ee:.3f>> instead of his 0.42, or "
+    "$d_b$ = <<dd:.0f>> $d_p$ instead of 100. Over 500 to $10^4$ the criteria differ by a factor <<r5:.2f>> to <<r4:.2f>> in $d_p^*$; for glass in air at A1, <<b19:.0f>> µm "
     "against <<b21:.0f>> µm. Grace recommends eq 21; the page measures the gap and does not decide between them.",
     n=M["boundary_numbers_within"], t=M["boundary_numbers_within_of"], m=M["boundary_numbers_max_halfunits"],
     lo=M["mu_window_lo_uPas_at_rhoT"], hi=M["mu_window_hi_uPas_at_rhoT"], b2=M["eq19_b_one_over_sqrt2"],
     t2=M["t2_range_cells_within_half_unit"], e13=M["eq13_pair_ends_within_half_unit"],
+    t2p=M["t2_partner_ends_within"], e13p=M["eq13_partner_ends_within"], r=M["t6_richardson_dBD"],
+    rl=M["dBD_richardson_lo"], rh=M["dBD_richardson_hi"], ee=M["eps_mf_for_cross_500"], dd=M["db_over_dp_for_cross_500"],
     x=M["x_cross_19_21_exact"], xp=M["x_cross_19_21_printed"], mg=M["x_cross_19_21_margin_to_500"],
     r5=M["ratio_21_over_19_500"], r4=M["ratio_21_over_19_1e4"], b19=M["eq19_dp_um_T"], b21=M["dpBD21_um_T"])
 
@@ -992,6 +1044,8 @@ STRUCTURAL = {
     "eq19_SI_gap_T": "the same in SI units, solved in micrometres",
     "v2_eq18_scaling_gap": "eq 18 depends on d* and drho/rho only, for any mu and g",
     "x_cross_closed_gap": "the quadratic is the exact crossing of eq 19 with a constant",
+    "x_cross_minus_2b_gap": "eq 19 and eq 21 are built on the same C1, C2, so d0^3/coef^3 = 2/b and the crossing is exactly 2b, "
+                            "whatever C1 is",
     "x_min_closed_gap": "the closed form is the exact root of the derivative",
     "ca_drho_gap": "drho cancels from eq 14 in Ar",
     "err11_n_over": "Re_mf = C2 Ar / (sqrt(C1^2 + C2 Ar) + C1) lies below C2 Ar / (2 C1) and below sqrt(C2 Ar) "
@@ -999,7 +1053,7 @@ STRUCTURAL = {
     "eq18_roots_below_b": "for x <= b eq 18 has no root in d* (published model, E11)"}
 BOUNDS = {"r1_identity_gap": (1e-12, "identity"), "ratio11_at_Remf_2C1_gap": (1e-12, "identity"),
           "eq19_direct_gap_T": (1e-10, "tolerance"), "eq19_SI_gap_T": (1e-10, "tolerance"),
-          "v2_eq18_scaling_gap": (1e-10, "tolerance"), "x_cross_closed_gap": (1e-12, "tolerance"),
+          "v2_eq18_scaling_gap": (1e-10, "tolerance"), "x_cross_closed_gap": (1e-12, "tolerance"), "x_cross_minus_2b_gap": (1e-10, "tolerance"),
           "x_min_closed_gap": (1e-12, "tolerance"), "ca_drho_gap": (1e-12, "identity"),
           "eq20_root_gap": (1e-10, "tolerance"), "stokes_limit_gap": (1e-10, "theory")}
 NOTES = {"eq20_root_gap": "eq 20 printed as 2 (C1^2/C2)^(1/3) against the root of eq 10 at the printed Re_mf = 2 C1",
@@ -1012,13 +1066,18 @@ NOTES = {"eq20_root_gap": "eq 20 printed as 2 (C1^2/C2)^(1/3) against the root o
 COUNT_MIN = 1e-4
 EXACT = {"err11a_worst_pair", "err11b_worst_pair"}
 INFO = {"boundary_numbers_within_of", "t6_cells_rounding_to_print_of", "eq15_within_of",
-        "t2_range_cells_within_half_unit_of", "eq13_pair_ends_within_half_unit_of"}
+        "t2_range_cells_within_half_unit_of", "eq13_pair_ends_within_half_unit_of",
+        "t2_partner_ends_within_of", "eq13_partner_ends_within_of"}
+
+
+# printed as the identity's own values (2 and sqrt 2); their departure is the claim ratio11_at_Remf_2C1_gap
+UNREGISTERED = {"ratio11a_at_dBD", "ratio11b_at_dBD"}
 
 
 def register(M):
     """Register every reported number with its kind."""
     for name, v in M.items():
-        if name.startswith("_") or name.endswith("__margin"):
+        if name.startswith("_") or name.endswith("__margin") or name in UNREGISTERED:
             continue
         if name in BOUNDS:
             mx, basis = BOUNDS[name]
@@ -1041,8 +1100,8 @@ def register(M):
 register(M)
 
 # %%
-def mistyped(name):
-    v = K[name] * 1.1
+def mistyped(name, factor=1.1):
+    v = K[name] * factor
     return f"{name} {PRINTED[name]} -> {v:.6g}", K | {name: v}
 
 
@@ -1052,7 +1111,7 @@ def set_to(name, v, why=""):
 
 
 mu18 = 1.8e-5 / (air(K)["mu"])
-DEFECTS = [mistyped(k) for k in PRINTED] + [
+DEFECTS = [mistyped(k, 0.9 if k == "t2_c4_1" else 1.1) for k in PRINTED] + [
     set_to("eq18_ub_coef", 1 / math.sqrt(2), " (Geldart's 1/sqrt 2)"),
     set_to("eq18_db_over_dp", 50.0), set_to("eq18_eps_mf", 0.45),
     ("Wen-Yu C1, C2 in eq 19 and eq 21", K | {"eq18_C1": K["t6_wenyu_C1"], "eq18_C2": K["t6_wenyu_C2"]}),
