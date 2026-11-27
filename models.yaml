@@ -4814,6 +4814,38 @@ models:
     data: {tier: 6, method: analytical, status: complete}
     related: [F3.1, F3.3, F3.5, B1.1, A3.2]
 
+  - id: F3.3
+    slug: decoursey-danckwerts-enhancement
+    title: "DeCoursey (1974): an explicit enhancement factor for the Danckwerts surface-renewal model, tested against the exact model"
+    description: >
+      DeCoursey derived an explicit enhancement factor for a second-order reaction under
+      Danckwerts surface renewal, Eq. (21), and could compare it only with Higbie-model
+      numbers. The page solves the exact surface-renewal model (coupled transient A and B
+      penetration, averaged over the exponential age distribution) over the paper's own
+      Table 2 grid, tests on that grid the paper's prediction that Eq. (21) is "within about 12 per
+      cent of the exact results for the Danckwerts model", recomputes Tables 1 and 2 with
+      the exact Higbie average of the same solution, and measures where the error comes
+      from. The film comparison is F3.1's.
+    section: F
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S4]
+    # note: the catalogue line (docs/catalog-B-reactors.md, F3 table) gives S3; the page
+    # solves a 1-D transient PDE (no steady route exists for second-order surface
+    # renewal), which is S4 in docs/taxonomy.md.
+    phases: [gas-liquid]
+    reference:
+      authors: ["DeCoursey, W. J."]
+      year: 1974
+      container: "Chemical Engineering Science 29, 1867-1872"
+      doi: 10.1016/0009-2509(74)85003-7
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, construct_coefficient_matrix,
+                compute_boundary_values, NumJac, newton, checks.find_roots, checks.observed_orders]
+    data: {tier: 6, method: table, status: complete}
+    page: pages/F3.3-decoursey-danckwerts-enhancement/
+    related: [F3.1, F3.2, F3.4, F3.5]
+
   # ---------------------------------------------------------------- section G
   - id: G1.1
     slug: larkins-two-phase-packed-bed
