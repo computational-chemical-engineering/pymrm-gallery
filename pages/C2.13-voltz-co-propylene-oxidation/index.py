@@ -222,6 +222,7 @@ print(f"{len(obs)} markers ({(obs.figure == 19).sum()} CO, {(obs.figure == 20).s
 
 # %%
 N_CELLS = 800
+LADDER = (200, 400, 800, 1600)     # cells, observed-order ladder
 
 
 def a_per_point(par, hc_basis, o2_consumed, n):
@@ -238,7 +239,7 @@ def a_per_point(par, hc_basis, o2_consumed, n):
 
 
 def study(par=PAR, hc_basis=2.0, o2_consumed=True, n=N_CELLS, power=2,
-          march_o2=True, ladder=(200, 400, 800, 1600), ratio=None, oc=oc):
+          march_o2=True, ladder=LADDER, ratio=None, extrapolate=False, oc=oc):
     """Every number the page states, as a function of the parameters and choices."""
     m = {}
     k = rate_constants(par, T_FIG)
@@ -312,9 +313,13 @@ def study(par=PAR, hc_basis=2.0, o2_consumed=True, n=N_CELLS, power=2,
         gaps.append(abs(rx.solve(tau)[j] - ref[j]))
     m["pymrm_vs_march_max_pp"] = max(gaps)
     tau_a = m["a_fit"] / lines.space_velocity.iloc[0]          # curve A, Figure 19
-    def outlet(nn):
+    def outlet_on(nn):
         return IntegralReactor(par, T_FIG, COND["A"], hc_basis=hc_basis,
                                o2_consumed=o2_consumed, n=int(nn)).solve(tau_a)[0]
+
+    def outlet(nn):     # extrapolate: Richardson with nn / 2, a second-order outlet
+        q = outlet_on(nn)
+        return 2.0 * q - outlet_on(nn // 2) if extrapolate else q
 
     try:
         ref_study = observed_orders(outlet, ladder, ratio=ratio)
@@ -500,6 +505,10 @@ claims.bound("order_max", base["order_max"], min=0.9, max=1.1, basis="theory")
 claims.bound("finest_difference_pp", base["finest_difference_pp"], min=1e-9, basis="theory",
              note="at least 1e3 times round-off of a percentage")
 
+ROW_EXP1 = "adsorption-group exponent 1 in the maximum (no root: d ln r/dCO > 0)"
+ROW_RATIO3 = "refinement ratio declared as 3 for a ladder of 2 (refused, nan)"
+ROW_SAME = "ladder without refinement, one grid four times (refused, nan)"
+SAME_GRID = (LADDER[2],) * 4
 P10 = lambda key, f: dict(PAR, **{key: PAR[key] * f})  # noqa: E731
 ROWS = [
     ("Table I k0_r1 10 % high", lambda: study(par=P10("k0_r1", 1.1))),
@@ -511,18 +520,31 @@ ROWS = [
     ("Table I E_a1 with its sign lost", lambda: study(par=dict(PAR, E_a1=1730.0))),
     ("propylene in plain ppm in the rates", lambda: study(hc_basis=1.0)),
     ("O2 not consumed", lambda: study(o2_consumed=False)),
-    ("adsorption-group exponent 1 in the maximum (no root: d ln r/dCO > 0)",
-     lambda: study(power=1)),
+    (ROW_EXP1, lambda: study(power=1)),
     ("march reference without O2 consumption", lambda: study(march_o2=False)),
     ("pymrm reactor on 100 cells", lambda: study(n=100)),
-    ("refinement ratio declared as 3 for a ladder of 2 (refused, nan)",
-     lambda: study(ratio=3.0)),
-    ("ladder without refinement, one grid four times (refused, nan)",
-     lambda: study(ladder=(800, 800, 800, 800), ratio=1.0)),
+    (ROW_RATIO3, lambda: study(ratio=3.0)),
+    (ROW_SAME, lambda: study(ladder=SAME_GRID, ratio=1.0)),
+    ("outlet Richardson-extrapolated on every grid, second order in place of upwind",
+     lambda: study(extrapolate=True)),
     ("ladder on 10 to 80 cells, outside the asymptotic range",
      lambda: study(ladder=(10, 20, 40, 80))),
 ]
 claims.define_rows([label for label, _ in ROWS])
+# Rows whose defect leaves the quantity undefined detect by failure, each shown by a
+# route that does not use the call that failed. Exponent 1 with ka3 = 0:
+# d ln r/dCO times CO (1 + ka1 CO + ka2 HC) is 1 + ka2 HC, positive at every CO, so
+# r has no maximum. A ladder's order needs its true refinement ratio, above 1.
+k_fig = rate_constants(PAR, T_FIG)
+no_max_factor = 1.0 + k_fig["ka2"] * 100.0 / 2.0
+ladder_ratio = LADDER[1] / LADDER[0]
+by_failure = set()
+if no_max_factor > 0:
+    by_failure.add((ROW_EXP1, "co_max_closed_form_relgap"))
+for row, declared, grids in ((ROW_RATIO3, 3.0, LADDER), (ROW_SAME, 1.0, SAME_GRID)):
+    true_ratio = grids[1] / grids[0]
+    if declared != ladder_ratio and true_ratio == ladder_ratio or true_ratio == 1.0:
+        by_failure |= {(row, "order_min"), (row, "order_max")}
 BREAK = []
 for label, run in ROWS:
     with np.errstate(all="ignore"):
@@ -530,13 +552,17 @@ for label, run in ROWS:
     for name in broken:
         if name in claims.metrics:
             BREAK.append((label, name, base[name], broken[name],
-                          claims.breaks(label, name, broken[name])))
+                          claims.breaks(label, name, broken[name],
+                                        detects_by_failure=(label, name) in by_failure)))
 bt = pd.DataFrame(BREAK, columns=["injected defect", "claim", "clean", "with defect", "caught"])
 caught = bt.groupby("claim").caught.any()
 fmt = lambda v: f"{v:.4g}" if isinstance(v, float) else str(v)  # noqa: E731
 show(bt[bt.caught].style.hide(axis="index").format({"clean": fmt, "with defect": fmt}), "c2133")
 print(f"{len(ROWS)} rows; claims caught by at least one row: {int(caught.sum())} of "
       f"{len(caught)}; not caught: {sorted(caught[~caught].index) or 'none'}")
+print(f"detected by failure: exponent 1 leaves d ln r/dCO > 0 (factor 1 + ka2 HC = "
+      f"{no_max_factor:.4g}); the ladder refines by {ladder_ratio:g}, so a declared 3 "
+      "is refused, and one grid four times has ratio 1 and no order")
 
 # %% [markdown]
 # ## What pymrm adds
