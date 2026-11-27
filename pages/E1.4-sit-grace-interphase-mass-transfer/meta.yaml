@@ -1,0 +1,80 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: E1.4
+slug: sit-grace-interphase-mass-transfer
+title: "Sit and Grace (1981): bubble interaction and interphase mass transfer"
+section: E
+status: published
+tier: T1
+priority: P1
+structures: [S1, S4]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Sit, S. P.", "Grace, J. R."]
+    year: 1981
+    title: "Effect of bubble interaction on interphase mass transfer in gas fluidized beds"
+    container: "Chemical Engineering Science 36, 327-335"
+    doi: 10.1016/0009-2509(81)85012-9
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 25
+datasets:
+  - sit-grace-1981-printed-numbers.csv
+  - sit-grace-1981-table1.csv
+  - sit-grace-1981-table2.csv
+  - sit-grace-1981-fig4.csv
+  - sit-grace-1981-fig9.csv
+  - check_values.csv
+
+validation:
+  - every model function against the check values of a second route, before the first number is registered
+  - >-
+    the penetration problem solved with pymrm finite volumes, exact in time, reproduces the
+    Higbie amount behind eqn (1)'s diffusive term to below 1e-10 <!-- claim: s4_amount_gap -->,
+    with orders between 3.98 <!-- claim: s4_amount_order_min --> and 4.00 <!-- claim: s4_amount_order_max -->
+    (superconvergence of the functional on a uniform grid) and round-off companions
+  - >-
+    the implicit tracer march of a growing bubble (plain numpy), inverted for K with pymrm.checks.find_roots,
+    converges at first order to the closed form, 1.5e-6 <!-- claim: s1_K_gap --> relative
+  - potential-flow surface renewal by quadrature returns the sphere's printed term exactly, which validates the circle's factor
+  - every Table 2 statement is evaluated at every corner of the unprinted voidage and bubble-velocity brackets
+  - every non-structural number the page states is a registered claim with a break row that moves it
+
+adds: >
+  One small solve and the checks, not the model. Every quantity also has a closed form,
+  which is the second route: pymrm adds verification, not a result the closed forms cannot
+  give. The penetration solve derives the constant of eqn (1)'s diffusive term numerically;
+  the tracer march (plain numpy) with pymrm.checks.find_roots inverts Table 1 for K; observed_orders
+  measures every ladder.
+
+agreement: >
+  Over every corner of the brackets, throughflow-only enhancement orders
+  6 <!-- claim: r2_conc_T_min --> of 6 <!-- claim: r2_n_pairs --> decidable Table 2 pairs as
+  printed and diffusion-only 0 <!-- claim: r2_conc_D_max -->. A free two-part fit with
+  Pereira's row puts the diffusive enhancement minus one between -0.033 <!-- claim: r2_fit4_b_min --> and
+  0.040 <!-- claim: r2_fit4_b_max -->, with an interval half-width of 0.071 <!-- claim: r2_fit4_bhw_min -->
+  to 0.373 <!-- claim: r2_fit4_bhw_max -->; without it between -0.416 <!-- claim: r2_fit3_b_min -->
+  and -0.051 <!-- claim: r2_fit3_b_max -->, its interval containing 0 at 472 <!-- claim: r2_fit3_b_ci0 --> of
+  512 <!-- claim: r2_fit3_n --> corners. Eqn (1)'s throughflow term alone is
+  1.0486 <!-- claim: r3_kT_over_iso --> times the isolated coefficient the paper prints, and
+  1.029 <!-- claim: r3_kT_over_iso_hu_min --> times it with both printed values moved half a unit
+  against the gap. With the measured isolated base the approach-period throughflow multiplier is
+  at least 2.82 <!-- claim: r3_ratio_vert --> (vertical); with eqn (1)'s own split it is
+  2.41 <!-- claim: r3_ET_split_vert_min --> to 2.47 <!-- claim: r3_ET_split_vert_max -->. Table 1 implies K = 11.34 <!-- claim: r4_K_front --> cm/s for the front bubble (11.23 <!-- claim: r4_K_front_hu_min -->
+  to 11.45 <!-- claim: r4_K_front_hu_max --> over half a unit of the printed volumes and products), and
+  8.86 <!-- claim: r4_K_fig9 --> with the Fig. 9 front curve.
+  The printed eqn (3) constant is 0.40 <!-- claim: r5_hu_eqn3 --> half units from E/pi.
+
+caveats: >
+  The paper calls its explanation semi-quantitative, and the page tests it, it does not
+  endorse it. The voidage and the bubble velocities are printed nowhere; they are page
+  brackets. The fits behind the pair, isolated-bubble and enhancement coefficients are not printed and are not redone.
+  Table 2's "Overall % Inc." is read as a coefficient ratio, the paper does not define it.
+  The tracer balance's transfer surface (perimeter times thickness, dense phase at zero) is
+  the page's reading of a definition the paper cites and does not print. Nothing here tests
+  eqns (3), (4) against a freely bubbling bed.

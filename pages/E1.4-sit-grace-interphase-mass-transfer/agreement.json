@@ -1,0 +1,2140 @@
+{
+  "page": "E1.4",
+  "format": 2,
+  "env": {
+    "pymrm": "3.4.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openblas_coretype": "Haswell",
+    "threads": "1"
+  },
+  "metrics": {
+    "r1_dims_ok": {
+      "kind": "exact",
+      "value": 10,
+      "structural": true,
+      "note": "dimension exponents of the printed terms; no reading of the paper changes them"
+    },
+    "r4_sums_ok": {
+      "kind": "exact",
+      "value": 9,
+      "structural": true,
+      "note": "the printed sums and cumulative transfers against the printed cells, read as strings"
+    },
+    "r1_md_2d": {
+      "kind": "value",
+      "value": 0.5,
+      "rtol": 1e-06
+    },
+    "r1_md_3d": {
+      "kind": "value",
+      "value": 0.3333333333333333,
+      "rtol": 1e-06
+    },
+    "r1_E12_gap": {
+      "kind": "bound",
+      "value": 4.377241351605221e-07,
+      "max": 1e-05,
+      "basis": "theory",
+      "note": "E1.2's solve carries its discretisation error, about 1e-6"
+    },
+    "r1_renewal_circle": {
+      "kind": "value",
+      "value": 0.9003163161571061,
+      "rtol": 1e-06
+    },
+    "r1_renewal_sphere_gap": {
+      "kind": "bound",
+      "value": 0.0,
+      "max": 1e-10,
+      "basis": "tolerance",
+      "note": "quad epsrel 1e-13 on both integrals"
+    },
+    "r1_m8_min": {
+      "kind": "value",
+      "value": 0.0795496726877462,
+      "rtol": 1e-06
+    },
+    "r1_m8_max": {
+      "kind": "value",
+      "value": 0.10202030261635904,
+      "rtol": 1e-06
+    },
+    "r1_m9_min": {
+      "kind": "value",
+      "value": 0.6164414002968976,
+      "rtol": 1e-06
+    },
+    "r1_m9_max": {
+      "kind": "value",
+      "value": 0.7071067811865476,
+      "rtol": 1e-06
+    },
+    "s4_amount_order_min": {
+      "kind": "bound",
+      "value": 3.9757626625349585,
+      "min": 3.9,
+      "max": 4.1,
+      "basis": "theory",
+      "note": "superconvergence of the amount on a uniform grid"
+    },
+    "s4_amount_order_max": {
+      "kind": "bound",
+      "value": 3.9979905144819536,
+      "min": 3.9,
+      "max": 4.1,
+      "basis": "theory",
+      "note": "superconvergence of the amount on a uniform grid"
+    },
+    "s4_flux_order_min": {
+      "kind": "bound",
+      "value": 3.9645576422139035,
+      "min": 3.9,
+      "max": 4.1,
+      "basis": "theory",
+      "note": "superconvergence of the face flux on a uniform grid"
+    },
+    "s4_flux_order_max": {
+      "kind": "bound",
+      "value": 3.996675133704971,
+      "min": 3.9,
+      "max": 4.1,
+      "basis": "theory",
+      "note": "superconvergence of the face flux on a uniform grid"
+    },
+    "s4_amount_gap": {
+      "kind": "bound",
+      "value": 6.115330464240287e-12,
+      "max": 1e-10,
+      "basis": "theory",
+      "note": "Richardson estimate from the finest triple against 2/sqrt(pi)"
+    },
+    "s4_flux_gap": {
+      "kind": "bound",
+      "value": 1.505140456714571e-11,
+      "max": 1e-10,
+      "basis": "theory",
+      "note": "Richardson estimate from the finest triple against 1/sqrt(pi)"
+    },
+    "s4_amount_err_n100": {
+      "kind": "value",
+      "value": -1.3685500899196512e-06,
+      "rtol": 0.001
+    },
+    "s4_identity": {
+      "kind": "bound",
+      "value": 1.4033219031261979e-13,
+      "max": 1e-11,
+      "basis": "identity",
+      "structural": true,
+      "note": "discrete conservation of the finite-volume scheme: cell amount = time-integrated face fluxes"
+    },
+    "s4_companion": {
+      "kind": "bound",
+      "value": 5.586156585859455e-07,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "the finest ladder difference exceeds the expm_multiply gap 100-fold"
+    },
+    "s4_be_order_min": {
+      "kind": "bound",
+      "value": 0.9986160193224356,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s4_be_order_max": {
+      "kind": "bound",
+      "value": 0.9996599014518849,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s4_be_gap": {
+      "kind": "bound",
+      "value": 5.5187884706597856e-08,
+      "max": 1e-06,
+      "basis": "theory",
+      "note": "first-order Richardson leaves O(dt^2); the 800-cell space error is 3e-10"
+    },
+    "s4_be_companion": {
+      "kind": "bound",
+      "value": 1.7005949774652018e-10,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "the finest ladder difference exceeds the banded-solver gap 100-fold"
+    },
+    "r2_conc_T_min": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.2537839840063145,
+      "min_margin": 0.01
+    },
+    "r2_conc_T_max": {
+      "kind": "exact",
+      "value": 6,
+      "margin": 0.2537839840063145,
+      "min_margin": 0.01
+    },
+    "r2_conc_D_min": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.2537839840063145,
+      "min_margin": 0.01
+    },
+    "r2_conc_D_max": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.2537839840063145,
+      "min_margin": 0.01
+    },
+    "r2_n_pairs": {
+      "kind": "exact",
+      "value": 6
+    },
+    "r2_conc_U": {
+      "kind": "exact",
+      "value": 0,
+      "structural": true,
+      "note": "uniform enhancement predicts the same increase in every row, so no pair is ordered"
+    },
+    "r2_overlap_390_320": {
+      "kind": "exact",
+      "value": 1
+    },
+    "r2_fT_p390_min": {
+      "kind": "value",
+      "value": 0.7879060507599198,
+      "rtol": 1e-06
+    },
+    "r2_fT_p390_max": {
+      "kind": "value",
+      "value": 0.8507322339721269,
+      "rtol": 1e-06
+    },
+    "r2_fT_t320_min": {
+      "kind": "value",
+      "value": 0.7253435063393578,
+      "rtol": 1e-06
+    },
+    "r2_fT_t320_max": {
+      "kind": "value",
+      "value": 0.8281279066212184,
+      "rtol": 1e-06
+    },
+    "r2_fT_t160_min": {
+      "kind": "value",
+      "value": 0.4318340302173898,
+      "rtol": 1e-06
+    },
+    "r2_fT_t160_max": {
+      "kind": "value",
+      "value": 0.5785235061159505,
+      "rtol": 1e-06
+    },
+    "r2_fT_per_min": {
+      "kind": "value",
+      "value": 0.05781842790730805,
+      "rtol": 1e-06
+    },
+    "r2_fT_per_max": {
+      "kind": "value",
+      "value": 0.08969995917677266,
+      "rtol": 1e-06
+    },
+    "r2_fT_sg90_min": {
+      "kind": "value",
+      "value": 0.2399162206159686,
+      "rtol": 1e-06
+    },
+    "r2_fT_sg90_max": {
+      "kind": "value",
+      "value": 0.31412193099892416,
+      "rtol": 1e-06
+    },
+    "r2_ET1_p390_min": {
+      "kind": "value",
+      "value": 0.39965571589137605,
+      "rtol": 1e-06
+    },
+    "r2_ET1_p390_max": {
+      "kind": "value",
+      "value": 0.4315235295782749,
+      "rtol": 1e-06
+    },
+    "r2_ET1_t320_min": {
+      "kind": "value",
+      "value": 0.42264002601724693,
+      "rtol": 1e-06
+    },
+    "r2_ET1_t320_max": {
+      "kind": "value",
+      "value": 0.48252999708561495,
+      "rtol": 1e-06
+    },
+    "r2_ET1_t160_min": {
+      "kind": "value",
+      "value": 0.2592807352065245,
+      "rtol": 1e-06
+    },
+    "r2_ET1_t160_max": {
+      "kind": "value",
+      "value": 0.3473556725589422,
+      "rtol": 1e-06
+    },
+    "r2_ET1_per_min": {
+      "kind": "value",
+      "value": 0.3344483127453679,
+      "rtol": 1e-06
+    },
+    "r2_ET1_per_max": {
+      "kind": "value",
+      "value": 1.3836419096045378,
+      "rtol": 1e-06
+    },
+    "r2_ET1_per_text_min": {
+      "kind": "value",
+      "value": 0.5574138545756133,
+      "rtol": 1e-06
+    },
+    "r2_pred160_min": {
+      "kind": "value",
+      "value": 17.258493849278906,
+      "rtol": 1e-06
+    },
+    "r2_pred160_max": {
+      "kind": "value",
+      "value": 24.964650530315367,
+      "rtol": 1e-06
+    },
+    "r2_pred160_above": {
+      "kind": "exact",
+      "value": 64,
+      "margin": 0.11345121608251009,
+      "min_margin": 0.01
+    },
+    "r2_pred132_p390_min": {
+      "kind": "value",
+      "value": 25.212993624317438,
+      "rtol": 1e-06
+    },
+    "r2_pred132_p390_max": {
+      "kind": "value",
+      "value": 27.22343148710807,
+      "rtol": 1e-06
+    },
+    "r2_predpc_p390_min": {
+      "kind": "value",
+      "value": 20.220589355460447,
+      "rtol": 1e-06
+    },
+    "r2_predpc_p390_max": {
+      "kind": "value",
+      "value": 21.83294205954199,
+      "rtol": 1e-06
+    },
+    "r2_pred132_t320_min": {
+      "kind": "value",
+      "value": 23.210992202859458,
+      "rtol": 1e-06
+    },
+    "r2_pred132_t320_max": {
+      "kind": "value",
+      "value": 26.500093011878995,
+      "rtol": 1e-06
+    },
+    "r2_predpc_t320_min": {
+      "kind": "value",
+      "value": 18.61500259985574,
+      "rtol": 1e-06
+    },
+    "r2_predpc_t320_max": {
+      "kind": "value",
+      "value": 21.252831244834717,
+      "rtol": 1e-06
+    },
+    "r2_pred132_t160_min": {
+      "kind": "value",
+      "value": 13.818688966956477,
+      "rtol": 1e-06
+    },
+    "r2_pred132_t160_max": {
+      "kind": "value",
+      "value": 18.51275219571042,
+      "rtol": 1e-06
+    },
+    "r2_predpc_t160_min": {
+      "kind": "value",
+      "value": 11.082461654302001,
+      "rtol": 1e-06
+    },
+    "r2_predpc_t160_max": {
+      "kind": "value",
+      "value": 14.847057258120145,
+      "rtol": 1e-06
+    },
+    "r2_pred132_per_min": {
+      "kind": "value",
+      "value": 1.8501896930338577,
+      "rtol": 1e-06
+    },
+    "r2_pred132_per_max": {
+      "kind": "value",
+      "value": 2.870398693656726,
+      "rtol": 1e-06
+    },
+    "r2_predpc_per_min": {
+      "kind": "value",
+      "value": 1.9272809302436011,
+      "rtol": 1e-06
+    },
+    "r2_predpc_per_max": {
+      "kind": "value",
+      "value": 2.9899986392257545,
+      "rtol": 1e-06
+    },
+    "r2_pred132_sg90_min": {
+      "kind": "value",
+      "value": 7.677319059710996,
+      "rtol": 1e-06
+    },
+    "r2_pred132_sg90_max": {
+      "kind": "value",
+      "value": 10.051901791965575,
+      "rtol": 1e-06
+    },
+    "r2_predpc_sg90_min": {
+      "kind": "value",
+      "value": 6.157139384969341,
+      "rtol": 1e-06
+    },
+    "r2_predpc_sg90_max": {
+      "kind": "value",
+      "value": 8.061532930413986,
+      "rtol": 1e-06
+    },
+    "r2_inside_132": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.04629983670709076,
+      "min_margin": 0.01
+    },
+    "r2_inside_pc": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.023137150541343014,
+      "min_margin": 0.01
+    },
+    "r2_fit4_a_min": {
+      "kind": "value",
+      "value": 0.3726289281817245,
+      "rtol": 1e-06
+    },
+    "r2_fit4_a_max": {
+      "kind": "value",
+      "value": 0.45269451402356237,
+      "rtol": 1e-06
+    },
+    "r2_fit4_b_min": {
+      "kind": "value",
+      "value": -0.03322211213837116,
+      "rtol": 1e-06
+    },
+    "r2_fit4_b_max": {
+      "kind": "value",
+      "value": 0.03970231448343553,
+      "rtol": 1e-06
+    },
+    "r2_fit4_bhw_min": {
+      "kind": "value",
+      "value": 0.07122530045889426,
+      "rtol": 1e-06
+    },
+    "r2_fit4_bhw_max": {
+      "kind": "value",
+      "value": 0.37279110583871633,
+      "rtol": 1e-06
+    },
+    "r2_fit4_b_ci0": {
+      "kind": "exact",
+      "value": 16384,
+      "margin": 0.7250493217833036,
+      "min_margin": 0.0,
+      "note": "corners and cells are finite sets; margin is recorded"
+    },
+    "r2_fit4_n": {
+      "kind": "exact",
+      "value": 16384
+    },
+    "r2_fit3_a_min": {
+      "kind": "value",
+      "value": 0.42119086123454164,
+      "rtol": 1e-06
+    },
+    "r2_fit3_a_max": {
+      "kind": "value",
+      "value": 0.579290926395059,
+      "rtol": 1e-06
+    },
+    "r2_fit3_b_min": {
+      "kind": "value",
+      "value": -0.41580957644054206,
+      "rtol": 1e-06
+    },
+    "r2_fit3_b_max": {
+      "kind": "value",
+      "value": -0.0507077631720063,
+      "rtol": 1e-06
+    },
+    "r2_fit3_bhw_min": {
+      "kind": "value",
+      "value": 0.0009874941737331579,
+      "rtol": 1e-06
+    },
+    "r2_fit3_bhw_max": {
+      "kind": "value",
+      "value": 3.8122059511419573,
+      "rtol": 1e-06
+    },
+    "r2_fit3_b_ci0": {
+      "kind": "exact",
+      "value": 472,
+      "margin": 0.0005472489635593617,
+      "min_margin": 0.0,
+      "note": "corners and cells are finite sets; margin is recorded"
+    },
+    "r2_fit3_n": {
+      "kind": "exact",
+      "value": 512
+    },
+    "r2_fit4_res160_min": {
+      "kind": "value",
+      "value": -9.481029135055975,
+      "rtol": 1e-06
+    },
+    "r2_fit4_res160_max": {
+      "kind": "value",
+      "value": -1.7033426218556869,
+      "rtol": 1e-06
+    },
+    "r3_UB": {
+      "kind": "value",
+      "value": 98.71796271001257,
+      "rtol": 1e-06
+    },
+    "r3_UB_se": {
+      "kind": "value",
+      "value": 0.9830824787457614,
+      "rtol": 1e-06
+    },
+    "r3_kT_over_iso": {
+      "kind": "value",
+      "value": 1.0485502133113105,
+      "rtol": 1e-06
+    },
+    "r3_c_fig4_min": {
+      "kind": "value",
+      "value": 0.8137969368387401,
+      "rtol": 1e-06
+    },
+    "r3_c_fig4_max": {
+      "kind": "value",
+      "value": 0.9098526353262628,
+      "rtol": 1e-06
+    },
+    "r3_kT_over_iso_hu_min": {
+      "kind": "value",
+      "value": 1.028740646651961,
+      "rtol": 1e-06
+    },
+    "r3_K1_over_iso_min": {
+      "kind": "value",
+      "value": 1.2832622710247288,
+      "rtol": 1e-06
+    },
+    "r3_K1_over_iso_max": {
+      "kind": "value",
+      "value": 1.3495620760454712,
+      "rtol": 1e-06
+    },
+    "r3_ratio_vert": {
+      "kind": "value",
+      "value": 2.823529411764706,
+      "rtol": 1e-06
+    },
+    "r3_ratio_obl": {
+      "kind": "value",
+      "value": 2.5,
+      "rtol": 1e-06
+    },
+    "r3_ratio_inside": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.05882352941176461,
+      "min_margin": 0.01
+    },
+    "r3_umf_iso_min": {
+      "kind": "value",
+      "value": 7.466182389734634,
+      "rtol": 1e-06
+    },
+    "r3_umf_iso_max": {
+      "kind": "value",
+      "value": 8.174358123052473,
+      "rtol": 1e-06
+    },
+    "r3_se_90": {
+      "kind": "value",
+      "value": 0.6687525151029459,
+      "rtol": 1e-06
+    },
+    "r3_se_95": {
+      "kind": "value",
+      "value": 0.5612348026171192,
+      "rtol": 1e-06
+    },
+    "r3_enh_64": {
+      "kind": "value",
+      "value": 0.5625,
+      "rtol": 1e-06
+    },
+    "r3_enh_18_min": {
+      "kind": "value",
+      "value": 62.15647175764186,
+      "rtol": 1e-06
+    },
+    "r3_enh_18_max": {
+      "kind": "value",
+      "value": 65.36778876692182,
+      "rtol": 1e-06
+    },
+    "r3_ET_base_vert_min": {
+      "kind": "value",
+      "value": 3.3828017024758488,
+      "rtol": 1e-06
+    },
+    "r3_ET_base_vert_max": {
+      "kind": "value",
+      "value": 3.6088131036066224,
+      "rtol": 1e-06
+    },
+    "r3_ET_split_vert_min": {
+      "kind": "value",
+      "value": 2.405719360892085,
+      "rtol": 1e-06
+    },
+    "r3_ET_split_vert_max": {
+      "kind": "value",
+      "value": 2.468949337081178,
+      "rtol": 1e-06
+    },
+    "r3_ET_base_obl_min": {
+      "kind": "value",
+      "value": 2.960046561714005,
+      "rtol": 1e-06
+    },
+    "r3_ET_base_obl_max": {
+      "kind": "value",
+      "value": 3.1459591658699635,
+      "rtol": 1e-06
+    },
+    "r3_ET_split_obl_min": {
+      "kind": "value",
+      "value": 2.0971700824145163,
+      "rtol": 1e-06
+    },
+    "r3_ET_split_obl_max": {
+      "kind": "value",
+      "value": 2.1604000586036087,
+      "rtol": 1e-06
+    },
+    "r4_hu_0.3_front": {
+      "kind": "value",
+      "value": 0.3883495145631071,
+      "rtol": 1e-06
+    },
+    "r4_hu_0.3_rear": {
+      "kind": "value",
+      "value": 0.476190476190466,
+      "rtol": 1e-06
+    },
+    "r4_hu_0.6_rear": {
+      "kind": "value",
+      "value": 6.5079365079364955,
+      "rtol": 1e-06
+    },
+    "r4_hu_0.7_front": {
+      "kind": "value",
+      "value": 0.5154639175257736,
+      "rtol": 1e-06
+    },
+    "r4_hu_0.7_rear": {
+      "kind": "value",
+      "value": 0.3778234086242339,
+      "rtol": 1e-06
+    },
+    "r4_hu_1.1_resultant": {
+      "kind": "value",
+      "value": 23.760217983651227,
+      "rtol": 1e-06
+    },
+    "r4_cells_within": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.4845360824742264,
+      "min_margin": 0.1
+    },
+    "r4_frac06": {
+      "kind": "value",
+      "value": 0.45569620253164567,
+      "rtol": 1e-06
+    },
+    "r4_frac07": {
+      "kind": "value",
+      "value": 0.7721518987341773,
+      "rtol": 1e-06
+    },
+    "r4_pct_within": {
+      "kind": "exact",
+      "value": 5,
+      "margin": 0.13924050632913065,
+      "min_margin": 0.1
+    },
+    "r4_elapsed06": {
+      "kind": "value",
+      "value": 0.37499999999999994,
+      "rtol": 1e-06
+    },
+    "r4_frac07_if014": {
+      "kind": "value",
+      "value": 0.6051587301587302,
+      "rtol": 1e-06
+    },
+    "r4_C_impl_06r": {
+      "kind": "value",
+      "value": 0.6882352941176471,
+      "rtol": 1e-06
+    },
+    "r4_V_impl_06r": {
+      "kind": "value",
+      "value": 365.62499999999994,
+      "rtol": 1e-06
+    },
+    "r4_C_impl_11": {
+      "kind": "value",
+      "value": 0.2806451612903226,
+      "rtol": 1e-06
+    },
+    "r4_transferred": {
+      "kind": "value",
+      "value": 0.6448979591836734,
+      "rtol": 1e-06
+    },
+    "r4_f9_0.3_front": {
+      "kind": "value",
+      "value": 0.05899999999999994,
+      "rtol": 1e-06
+    },
+    "r4_f9_0.6_front": {
+      "kind": "value",
+      "value": 0.09099999999999997,
+      "rtol": 1e-06
+    },
+    "r4_f9_0.7_front": {
+      "kind": "value",
+      "value": 0.03899999999999998,
+      "rtol": 1e-06
+    },
+    "r4_f9_0.6_rear": {
+      "kind": "value",
+      "value": 0.578,
+      "rtol": 1e-06
+    },
+    "r4_f9_0.7_rear": {
+      "kind": "value",
+      "value": 0.303,
+      "rtol": 1e-06
+    },
+    "r4_f9_1.1_resultant": {
+      "kind": "value",
+      "value": 0.182,
+      "rtol": 1e-06
+    },
+    "r4_f9_1.1_vs_implied": {
+      "kind": "value",
+      "value": 0.04135483870967743,
+      "rtol": 1e-06
+    },
+    "r4_f9_within": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 1.5999999999999988,
+      "min_margin": 0.1
+    },
+    "r4_f9_dt_within": {
+      "kind": "exact",
+      "value": 1,
+      "margin": 0.6697247706422007,
+      "min_margin": 0.1
+    },
+    "r4_f9_slope_front_0.3": {
+      "kind": "value",
+      "value": -4.709999999999999,
+      "rtol": 1e-06
+    },
+    "r4_f9_front_avg_06": {
+      "kind": "value",
+      "value": 0.5095,
+      "rtol": 1e-06
+    },
+    "r4_K_front": {
+      "kind": "value",
+      "value": 11.338656513380544,
+      "rtol": 1e-06
+    },
+    "r4_K_front_hu_min": {
+      "kind": "value",
+      "value": 11.230635102829927,
+      "rtol": 1e-06
+    },
+    "r4_K_front_hu_max": {
+      "kind": "value",
+      "value": 11.447113980212162,
+      "rtol": 1e-06
+    },
+    "r4_phi_96": {
+      "kind": "value",
+      "value": 1.18111005347714,
+      "rtol": 1e-06
+    },
+    "r4_phi_34": {
+      "kind": "value",
+      "value": 3.334898974523689,
+      "rtol": 1e-06
+    },
+    "r4_K_fig9": {
+      "kind": "value",
+      "value": 8.860533893598198,
+      "rtol": 1e-06
+    },
+    "r4_VC06_96": {
+      "kind": "value",
+      "value": 1.2620393522021625,
+      "rtol": 1e-06
+    },
+    "r4_VC06_34": {
+      "kind": "value",
+      "value": 1.931905655629881,
+      "rtol": 1e-06
+    },
+    "r4_VC06_eqn1_min": {
+      "kind": "value",
+      "value": 1.8017982346497599,
+      "rtol": 1e-06
+    },
+    "r4_VC06_eqn1_max": {
+      "kind": "value",
+      "value": 1.8153375142276371,
+      "rtol": 1e-06
+    },
+    "r4_K_rear_printed": {
+      "kind": "value",
+      "value": 0.7395953294107487,
+      "rtol": 1e-06
+    },
+    "r4_K_rear_products": {
+      "kind": "value",
+      "value": 1.87418508202005,
+      "rtol": 1e-06
+    },
+    "s1_K_order_min": {
+      "kind": "bound",
+      "value": 1.0019592046922081,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s1_K_order_max": {
+      "kind": "bound",
+      "value": 1.0156722301299148,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s1_K_gap": {
+      "kind": "bound",
+      "value": 1.507482731755161e-06,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "first-order Richardson leaves O(dt^2) against the closed form"
+    },
+    "s1_VC_order_min": {
+      "kind": "bound",
+      "value": 0.984743681639296,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s1_VC_order_max": {
+      "kind": "bound",
+      "value": 0.998082236358314,
+      "min": 0.95,
+      "max": 1.05,
+      "basis": "theory",
+      "note": "backward Euler"
+    },
+    "s1_VC_gap": {
+      "kind": "bound",
+      "value": 2.4711655710607516e-07,
+      "max": 0.0001,
+      "basis": "theory",
+      "note": "first-order Richardson leaves O(dt^2) against the closed form"
+    },
+    "s1_companion": {
+      "kind": "bound",
+      "value": 7.881077264917496e-12,
+      "max": 0.01,
+      "basis": "chosen",
+      "note": "the finest ladder difference exceeds the log-sum gap 100-fold"
+    },
+    "r5_E": {
+      "kind": "value",
+      "value": 1.32,
+      "rtol": 1e-06
+    },
+    "r5_E_over_pi": {
+      "kind": "value",
+      "value": 0.4201690497626037,
+      "rtol": 1e-06
+    },
+    "r5_hu_eqn3": {
+      "kind": "value",
+      "value": 0.40338099525207394,
+      "rtol": 1e-06
+    },
+    "r5_E_over_4": {
+      "kind": "value",
+      "value": 0.33,
+      "rtol": 1e-06
+    },
+    "r5_third_over": {
+      "kind": "value",
+      "value": 1.01010101010101,
+      "rtol": 1e-06
+    },
+    "r5_hu_eqn4_den": {
+      "kind": "value",
+      "value": 0.06060606060606055,
+      "rtol": 1e-06
+    },
+    "r5_fc_04": {
+      "kind": "value",
+      "value": 0.32079632679489656,
+      "rtol": 1e-06
+    },
+    "r5_fc_13": {
+      "kind": "value",
+      "value": 0.4166666666666666,
+      "rtol": 1e-06
+    },
+    "r5_c3_lo": {
+      "kind": "value",
+      "value": 0.39470425886790045,
+      "rtol": 1e-06
+    },
+    "r5_c3_hi": {
+      "kind": "value",
+      "value": 0.4710986315520102,
+      "rtol": 1e-06
+    },
+    "r5_c4_lo": {
+      "kind": "value",
+      "value": 0.31,
+      "rtol": 1e-06
+    },
+    "r5_c4_hi": {
+      "kind": "value",
+      "value": 0.37,
+      "rtol": 1e-06
+    },
+    "r5_K3_over_K1_min": {
+      "kind": "value",
+      "value": 1.1993956782638222,
+      "rtol": 1e-06
+    },
+    "r5_K3_over_K1_max": {
+      "kind": "value",
+      "value": 1.2096974652713322,
+      "rtol": 1e-06
+    },
+    "r5_inside": {
+      "kind": "exact",
+      "value": 2,
+      "margin": 0.013239352830248935,
+      "min_margin": 0.005
+    }
+  },
+  "quoted": {},
+  "breaks": {
+    "r1_md_2d": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "Murray's q in place of Davidson's in the E1.2 comparison"
+    ],
+    "r1_md_3d": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "Murray's q in place of Davidson's in the E1.2 comparison"
+    ],
+    "r1_E12_gap": [
+      "Murray's q in place of Davidson's in the E1.2 comparison"
+    ],
+    "r1_renewal_circle": [
+      "circle surface velocity 1.5 U (the sphere's)"
+    ],
+    "r1_renewal_sphere_gap": [
+      "sphere surface velocity 2 U (the circle's)"
+    ],
+    "r1_m8_min": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "circle surface velocity 1.5 U (the sphere's)",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r1_m8_max": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "circle surface velocity 1.5 U (the sphere's)",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r1_m9_min": [
+      "eps_mf outside the root (effective diffusivity eps D_G)"
+    ],
+    "r1_m9_max": [
+      "eps_mf outside the root (effective diffusivity eps D_G)"
+    ],
+    "s4_amount_order_min": [
+      "far boundary of the penetration problem at L = 2",
+      "first cell starts at the boundary value"
+    ],
+    "s4_amount_order_max": [
+      "far boundary of the penetration problem at L = 2",
+      "first cell starts at the boundary value"
+    ],
+    "s4_flux_order_min": [
+      "far boundary of the penetration problem at L = 2",
+      "first cell starts at the boundary value"
+    ],
+    "s4_flux_order_max": [
+      "far boundary of the penetration problem at L = 2",
+      "first cell starts at the boundary value"
+    ],
+    "s4_amount_gap": [
+      "far boundary of the penetration problem at L = 2",
+      "mis-signed Dirichlet dictionary at x = 0 (d = -1)",
+      "first cell starts at the boundary value"
+    ],
+    "s4_flux_gap": [
+      "far boundary of the penetration problem at L = 2",
+      "mis-signed Dirichlet dictionary at x = 0 (d = -1)",
+      "first cell starts at the boundary value"
+    ],
+    "s4_amount_err_n100": [
+      "far boundary of the penetration problem at L = 2",
+      "mis-signed Dirichlet dictionary at x = 0 (d = -1)",
+      "first cell starts at the boundary value"
+    ],
+    "s4_companion": [
+      "S4 round-off companions with the boundary value 1e-4 high"
+    ],
+    "s4_be_order_min": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s4_be_order_max": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s4_be_gap": [
+      "far boundary of the penetration problem at L = 2",
+      "mis-signed Dirichlet dictionary at x = 0 (d = -1)",
+      "first cell starts at the boundary value"
+    ],
+    "s4_be_companion": [
+      "S4 round-off companions with the boundary value 1e-4 high"
+    ],
+    "r2_conc_T_min": [
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18"
+    ],
+    "r2_conc_T_max": [
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18"
+    ],
+    "r2_conc_D_min": [
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_conc_D_max": [
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_n_pairs": [
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18"
+    ],
+    "r2_overlap_390_320": [
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_fT_p390_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_fT_p390_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_fT_t320_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_fT_t320_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_fT_t160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows"
+    ],
+    "r2_fT_t160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows"
+    ],
+    "r2_fT_per_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (1) for Pereira's 3-d row"
+    ],
+    "r2_fT_per_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (1) for Pereira's 3-d row"
+    ],
+    "r2_fT_sg90_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows"
+    ],
+    "r2_fT_sg90_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows"
+    ],
+    "r2_ET1_p390_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_ET1_p390_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_ET1_t320_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_ET1_t320_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_ET1_t160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_ET1_t160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_ET1_per_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18"
+    ],
+    "r2_ET1_per_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18"
+    ],
+    "r2_ET1_per_text_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row",
+      "printed pereira_text_pct 5-8 read 6-8"
+    ],
+    "r2_pred160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_pred160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_pred160_above": [
+      "bubble radius in place of D_B in the penetration term",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_pred132_p390_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_pred132_p390_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_predpc_p390_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r2_predpc_p390_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_pred132_t320_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_pred132_t320_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_predpc_t320_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_predpc_t320_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8"
+    ],
+    "r2_pred132_t160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_pred132_t160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_predpc_t160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r2_predpc_t160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r2_pred132_per_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_pred132_per_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_predpc_per_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row"
+    ],
+    "r2_predpc_per_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (1) for Pereira's 3-d row"
+    ],
+    "r2_pred132_sg90_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_pred132_sg90_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r2_predpc_sg90_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r2_predpc_sg90_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r2_inside_132": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_inside_pc": [
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_a_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_a_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_b_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_b_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_bhw_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "normal quantile for the t quantile in the free fit",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_bhw_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "normal quantile for the t quantile in the free fit",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_b_ci0": [
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_n": [
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_fit3_a_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_a_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_b_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_b_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_bhw_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "normal quantile for the t quantile in the free fit",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_bhw_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "normal quantile for the t quantile in the free fit",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_b_ci0": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "normal quantile for the t quantile in the free fit",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit3_n": [
+      "Table 2 390 um DB_cm 12-15 read 12"
+    ],
+    "r2_fit4_res160_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r2_fit4_res160_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "eqn (1) for Pereira's 3-d row",
+      "Table 2 160 um overall_pct_inc 15 read 34",
+      "Table 2 320 um umf_cm_s 8.2 read 2.8",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 93 um overall_pct_inc 3-8 read 13-18",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Table 2 160 um overall_pct_inc 15 read 21"
+    ],
+    "r3_UB": [
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_UB_se": [
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_kT_over_iso": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r3_c_fig4_min": [
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_c_fig4_max": [
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_kT_over_iso_hu_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12"
+    ],
+    "r3_K1_over_iso_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_K1_over_iso_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ratio_vert": [
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "printed K_isolated_cm_s 3.4 read 4.3"
+    ],
+    "r3_ratio_obl": [
+      "printed K_isolated_cm_s 3.4 read 4.3"
+    ],
+    "r3_ratio_inside": [
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "printed K_isolated_cm_s 3.4 read 4.3"
+    ],
+    "r3_umf_iso_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_umf_iso_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_se_90": [
+      "one-sided normal quantiles for the 90 %/95 % verdict",
+      "printed K_vertical_cm_s 9.6 read 10.6"
+    ],
+    "r3_se_95": [
+      "one-sided normal quantiles for the 90 %/95 % verdict",
+      "printed K_vertical_cm_s 9.6 read 10.6"
+    ],
+    "r3_enh_64": [
+      "printed single_total_over_pair_pct 64 read 46"
+    ],
+    "r3_enh_18_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_enh_18_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed enh_throughflow 1.8 read 1.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_base_vert_min": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_base_vert_max": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_split_vert_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_split_vert_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_base_obl_min": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_base_obl_max": [
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_split_obl_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r3_ET_split_obl_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "enhancement on the whole coefficient",
+      "enhancement on the diffusive term",
+      "eqn (2) for the 2-d rows",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r4_hu_0.3_front": [
+      "Table 1 allowance without the product's half unit"
+    ],
+    "r4_hu_0.3_rear": [
+      "Table 1 allowance without the product's half unit",
+      "Table 1 0.3 s rear C_B_vol_pct 1.90 read 1.09"
+    ],
+    "r4_hu_0.6_rear": [
+      "Table 1 allowance without the product's half unit",
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43",
+      "Table 1 0.6 s rear V_B_cm3 340 read 366"
+    ],
+    "r4_hu_0.7_front": [
+      "Table 1 allowance without the product's half unit",
+      "Table 1 0.7 s front C_B_vol_pct 0.38 read 0.83"
+    ],
+    "r4_hu_0.7_rear": [
+      "Table 1 allowance without the product's half unit"
+    ],
+    "r4_hu_1.1_resultant": [
+      "Table 1 allowance without the product's half unit",
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47",
+      "Table 1 1.1 s resultant C_B_vol_pct 0.14 read 0.41"
+    ],
+    "r4_cells_within": [
+      "Table 1 0.6 s rear V_B_cm3 340 read 366",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21",
+      "Table 1 0.3 s rear C_B_vol_pct 1.90 read 1.09",
+      "Table 1 0.7 s front C_B_vol_pct 0.38 read 0.83"
+    ],
+    "r4_frac06": [
+      "C_B = 0.14 kept at 1.1 s (V_B x C_B for the printed V_B C_B)",
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43",
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_frac07": [
+      "C_B = 0.14 kept at 1.1 s (V_B x C_B for the printed V_B C_B)",
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47"
+    ],
+    "r4_pct_within": [
+      "C_B = 0.14 kept at 1.1 s (V_B x C_B for the printed V_B C_B)",
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43",
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21",
+      "Table 1 last time 1.1 read 1.0"
+    ],
+    "r4_elapsed06": [
+      "Table 1 last time 1.1 read 1.0"
+    ],
+    "r4_frac07_if014": [
+      "Table 1 1.1 s resultant C_B_vol_pct 0.14 read 0.41"
+    ],
+    "r4_C_impl_06r": [
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43",
+      "Table 1 0.6 s rear V_B_cm3 340 read 366"
+    ],
+    "r4_V_impl_06r": [
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43"
+    ],
+    "r4_C_impl_11": [
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47"
+    ],
+    "r4_transferred": [
+      "C_B = 0.14 kept at 1.1 s (V_B x C_B for the printed V_B C_B)",
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47"
+    ],
+    "r4_f9_0.3_front": [
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_0.6_front": [
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_0.7_front": [
+      "Table 1 0.7 s front C_B_vol_pct 0.38 read 0.83",
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_0.6_rear": [
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_0.7_rear": [
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_1.1_resultant": [
+      "Table 1 1.1 s resultant C_B_vol_pct 0.14 read 0.41",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_1.1_vs_implied": [
+      "Table 1 1.1 s resultant VBCB_cm3 1.74 read 1.47",
+      "Table 1 1.1 s resultant C_B_vol_pct 0.14 read 0.41",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_within": [
+      "Fig. 9 reading error 0.15 for 0.015 vol %"
+    ],
+    "r4_f9_dt_within": [
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)"
+    ],
+    "r4_f9_slope_front_0.3": [
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_f9_front_avg_06": [
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)",
+      "Fig. 9 concentration axis x 0.98"
+    ],
+    "r4_K_front": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_K_front_hu_min": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_K_front_hu_max": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_phi_96": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "printed K_vertical_cm_s 9.6 read 10.6",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_phi_34": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "printed K_isolated_cm_s 3.4 read 4.3",
+      "Table 1 0.6 s front VBCB_cm3 1.12 read 1.21"
+    ],
+    "r4_K_fig9": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Fig. 9 front and back curves swapped at 0.6 and 0.7 s (nearest-pixel assignment)"
+    ],
+    "r4_VC06_96": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "printed K_vertical_cm_s 9.6 read 10.6"
+    ],
+    "r4_VC06_34": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "printed K_isolated_cm_s 3.4 read 4.3"
+    ],
+    "r4_VC06_eqn1_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r4_VC06_eqn1_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r4_K_rear_printed": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 1 0.6 s rear VBCB_cm3 2.34 read 2.43",
+      "Table 1 0.6 s rear V_B_cm3 340 read 366"
+    ],
+    "r4_K_rear_products": [
+      "bubble thickness 9 cm for 9 mm",
+      "V_B held at its 0.3 s value in E9",
+      "Table 1 0.6 s rear V_B_cm3 340 read 366",
+      "Table 1 0.3 s rear C_B_vol_pct 1.90 read 1.09"
+    ],
+    "s1_K_order_min": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s1_K_order_max": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s1_K_gap": [
+      "march of C_B, not V_B C_B (growth dilution dropped)"
+    ],
+    "s1_VC_order_min": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s1_VC_order_max": [
+      "trapezoidal weight 0.5 in both time ladders"
+    ],
+    "s1_VC_gap": [
+      "march of C_B, not V_B C_B (growth dilution dropped)"
+    ],
+    "s1_companion": [
+      "S1 round-off companion with V_B C_B(0.3 s) 1e-4 high"
+    ],
+    "r5_E": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_E_over_pi": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_hu_eqn3": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r5_E_over_4": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_third_over": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_hu_eqn4_den": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_fc_04": [
+      "printed enh_throughflow 1.8 read 1.6",
+      "printed eqn3_const 0.4 read 0.5"
+    ],
+    "r5_fc_13": [
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_c3_lo": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_c3_hi": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_c4_lo": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_c4_hi": [
+      "complement f_c for 1 - f_c in E5",
+      "printed enh_throughflow 1.8 read 1.6"
+    ],
+    "r5_K3_over_K1_min": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r5_K3_over_K1_max": [
+      "Davidson throughflow in place of Murray's (2 U_mf/pi, 3 U_mf/4)",
+      "eps_mf outside the root (effective diffusivity eps D_G)",
+      "bubble radius in place of D_B in the penetration term",
+      "eqn (2) for the 2-d rows",
+      "printed eqn3_const 0.4 read 0.5",
+      "Table 2 390 um umf_cm_s 11.2 read 1.12",
+      "Table 2 390 um DB_cm 12-15 read 12",
+      "Fig. 4 marker at 0.55 s read +2 cm"
+    ],
+    "r5_inside": [
+      "printed eqn3_const 0.4 read 0.5"
+    ]
+  },
+  "rows": {
+    "defined": 50,
+    "recorded": 50
+  }
+}
