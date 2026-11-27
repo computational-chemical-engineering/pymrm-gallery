@@ -32,7 +32,7 @@ sys.path.insert(0, str(ROOT / "shared"))
 from gallery_utils import _NUM, _says_ok, parse_literal  # noqa: E402
 
 SPREAD = ROOT / "docs" / "reproducibility" / "spread.json"
-PHRASE = r"(?:(?:below|under|less than|at most|above|over|more than|at least)\s+)?"
+PHRASE = r"(?:\b(?:below|under|less than|at most|above|over|more than|at least)\s+)?"
 TAG = re.compile(rf"({PHRASE}{_NUM}\s*%?)\s*<!--\s*claim:\s*([\w.\-]+)\s*-->", re.I)
 STALE = re.compile(r"ABS_FLOOR|outside (?:the )?CI|below (?:the )?(?:CI'?s? )?floor", re.I)
 
