@@ -6819,3 +6819,30 @@ models:
     pymrm_api: [construct_convflux_upwind, construct_div, newton, checks.find_roots, checks.observed_orders]
     data: {tier: 0, method: table, status: complete}
     related: [J5.3, J5.1, J5.2, J2.1, J2.2, J2.6]
+  - id: I1.9
+    slug: sorption-enhanced-reforming
+    title: "Hufton, Mayorga and Sircar (1999): the equilibrium limit of sorption-enhanced steam reforming"
+    description: >
+      The batch equilibrium of steam reforming and the water-gas shift with a fraction f of
+      the CO2 removed (Eqs. 3 to 10 of the paper), re-solved and tested against the paper's
+      printed numbers (p. 251 and Table 1) and the sentences built on them, with the
+      unprinted equilibrium constants taken from C2.1 and every verdict checked over a band
+      in them. The paper prints no column model, so the SERP experiment is not modelled.
+    section: I
+    status: planned
+    tier: T1
+    priority: P1
+    structures: [S10]
+    # note: the catalogue line (docs/catalog-B-reactors.md, I1 table) gives S4+S12; the
+    # paper prints no column model (no kinetics, sorbent capacity, void fraction or LDF
+    # coefficient), only an algebraic batch equilibrium, which is S10 in docs/taxonomy.md.
+    phases: [gas-solid]
+    reference:
+      authors: ["Hufton, J. R.", "Mayorga, S.", "Sircar, S."]
+      year: 1999
+      container: "AIChE Journal 45, 248-256"
+      doi: 10.1002/aic.690450205
+    pymrm_api: [newton, checks.find_roots, checks.check_jacobian]
+    data: {tier: 6, method: table, status: complete}
+    page: pages/I1.9-sorption-enhanced-reforming/
+    related: [C2.1, I1.2, I1.3, D2.6]
