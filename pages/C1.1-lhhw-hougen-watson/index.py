@@ -95,14 +95,16 @@ def show(styler, uuid):
     display(HTML(styler.set_uuid(uuid).to_html()))
 
 
-def brk(row, metric, broken):
-    """One injected defect: ``broken`` is what claim ``metric`` becomes with it."""
-    caught = claims.breaks(row, metric, broken)
+def brk(row, metric, broken, by_failure=False):
+    """One injected defect: ``broken`` is what claim ``metric`` becomes with it.
+    ``by_failure`` declares that the defect leaves no solution (shown by a second route
+    on the page), so a nan is the detection."""
+    caught = claims.breaks(row, metric, broken, detects_by_failure=by_failure)
     BREAK.append((row, metric, claims[metric], broken, caught))
     return caught
 
 
-def brk_moved(row, got):
+def brk_moved(row, got, by_failure=False):
     """Break rows for the claims of ``got`` that the defect enters: a value, count or
     label that changes (a nan counts), and a bound the defect breaks. A claim the
     defect leaves where it was gets no row from this defect."""
@@ -111,23 +113,23 @@ def brk_moved(row, got):
             continue
         x = claims[n]
         if claims.metrics[n]["kind"] == "bound":
-            if claims.breaks(row, n, v):
+            if claims.breaks(row, n, v, detects_by_failure=by_failure):
                 BREAK.append((row, n, x, v, True))
         elif isinstance(x, (bool, int, str)):
             if v != x:
-                brk(row, n, v)
+                brk(row, n, v, by_failure)
         elif not (np.isfinite(v) and abs(v - x) <= 1e-9 * abs(x) + 1e-12):
-            brk(row, n, v)
+            brk(row, n, v, by_failure)
 
 
-def brk_study(row, study, names, *args, **kw):
+def brk_study(row, study, names, *args, by_failure=False, **kw):
     """Break rows from ``study(*args, **kw)``; a study that raises (no root, no
     converged solve) records nan for every claim in ``names``."""
     try:
         got = study(*args, **kw)
     except (ValueError, RuntimeError):
         got = {n: float("nan") for n in names}
-    brk_moved(row, got)
+    brk_moved(row, got, by_failure)
 
 
 def cols(block):
@@ -1021,7 +1023,7 @@ def tempcorr_study(abscissa="1/T", swap=False, dss_table=None, dss_eqq=None):
     vh = {}
     for key in ("K_U", "K_S", "K_H", "alpha_Ek"):
         slope, icept = np.polyfit(x, np.log(row(key)), 1)
-        vh[key] = (-slope * RGAS, icept * RGAS) if abscissa == "1/T" else (np.nan, np.nan)
+        vh[key] = (-slope * RGAS, icept * RGAS)     # a T abscissa read as if it were 1/T
     dss_g = TH["dS_S"] if dss_table is None else dss_table
     dss_q = TH["dS_S_eqq"] if dss_eqq is None else dss_eqq
     KS_row = row("K_S")
@@ -1415,14 +1417,40 @@ ROWS = [
     ("bed-length root tolerance 0.1 instead of 1e-9", lambda: column_study(xtol=0.1), None),
     ("conversion target 1 (the integral of 1/r diverges as p_U -> 0)", lambda: quad_study(x_target=1.0), None),
 ]
+# Two rows leave no solution at all, so their nan is the detection; each is shown by a
+# route that needs no solver.
+# (i) Dirichlet zero outlet: the upwind fluxes telescope, so summed over the bed the steady
+# balance of species i reads N_i,in - N_i,out = -nu_i * int r dw at ANY state. With the
+# outlet flows forced to zero, U, H2 and S then need int r dw = 1, 1.4 and 0 at once.
+_dbed = IsothermalBed(bed_rate(), 40, 100.0, feed=FEED, nu=NU, P=P_BED,
+                      outlet_bc={"a": 0.0, "b": 1.0, "d": 0.0})
+_states = (_dbed.N.ravel(), np.random.default_rng(0).random(_dbed.N.size))
+NEED_INT_R = [(np.diff(_dbed.w_f)[:, None] * (_dbed.L @ x + _dbed.b.ravel()).reshape(_dbed.N.shape)).sum(axis=0)
+              / np.asarray(NU) for x in _states]
+# (ii) conversion target 1: p_U is proportional to 1 - X, so (1 - X)/r tends to a positive
+# constant and the integrand of W/F behaves as C/(1 - X), whose integral diverges.
+_eps = np.array([1e-4, 1e-6, 1e-8])
+_N1 = np.asarray(FEED)[None, :] + np.asarray(NU)[None, :] * (1 - _eps)[:, None]
+_p1 = P_BED * _N1 / _N1.sum(axis=1, keepdims=True)
+TAIL_C = _eps / bed_rate()(_p1[:, 1], _p1[:, 0], _p1[:, 2])
+print("Dirichlet outlet: int r dw needed by the U, H2, S balances, two states: "
+      + "; ".join(", ".join(f"{v:.3g}" for v in np.round(need, 12) + 0.0) for need in NEED_INT_R))
+print("conversion target 1: (1 - X)/r at 1 - X = " + ", ".join(f"{e:.0e}" for e in _eps)
+      + ": " + ", ".join(f"{c:.4f}" for c in TAIL_C) + " (a positive limit: log divergence)")
+BY_FAILURE = {ROWS[i][0] for i in range(len(ROWS))
+              if ROWS[i][0].startswith(("outlet a Dirichlet zero", "conversion target 1 "))}
+assert len(BY_FAILURE) == 2
+assert all(np.allclose(need, -np.asarray(FEED) / np.asarray(NU), atol=1e-12) for need in NEED_INT_R)
+assert np.all(TAIL_C > 0) and np.ptp(TAIL_C) < 1e-3 * TAIL_C[-1]
+
 claims.define_rows([label for label, _, _ in ROWS])
 for label, study, names in ROWS:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         if names is None:
-            brk_moved(label, study())
+            brk_moved(label, study(), by_failure=label in BY_FAILURE)
         else:
-            brk_study(label, study, names)
+            brk_study(label, study, names, by_failure=label in BY_FAILURE)
 
 bt = pd.DataFrame(BREAK, columns=["injected defect", "claim", "clean", "with defect", "caught"])
 show(bt.style.hide(axis="index").format({"clean": lambda v: f"{v:.4g}" if isinstance(v, float) else str(v),
