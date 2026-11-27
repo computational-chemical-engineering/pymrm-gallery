@@ -74,8 +74,8 @@ from gallery_utils import Claims, assert_check_values, cite_data, load_data, loa
 from model import (R_GAS, SPECIES, T_REF, Y_O2_AIR, BertyReactor, adsorption, air_feed,
                    apparent_activation, conversions_from_fractions, denominator,
                    dln_ratio_dP, dsigma_dT, element_balances, factor_for_selectivity,
-                   invert_berty, orders, outlet_fractions, pressures, r3_eq8, rates,
-                   selectivity, table6_params)
+                   invert_berty, orders, outlet_fractions, pressures, r3_eq8, rate_models_I_II,
+                   rates, selectivity, table6_params)
 
 plt.rcParams.update({"figure.dpi": 110, "axes.grid": True, "grid.alpha": 0.3})
 claims = Claims(PAGE.split("-")[0])
@@ -382,6 +382,24 @@ def fig6_model(par, F, T=None, half=True, form="caption", fig=None):
     return out
 
 
+def fig6_model_I_II(model, par, T, F=1.0):
+    """Selectivity (%) of model I or II, constants as printed at 476 K, at every digitised
+    point of Figure 6, with ``F`` on the combustion rate."""
+    out = np.empty(len(FIG6))
+    for c in ("C", "EO", "W"):
+        m = (FIG6.curve == c).to_numpy()
+        P = fig6_pressures(c, FIG6.P_bar[m])
+        r1, r2 = (rate_models_I_II(model, par[rx], T, P) for rx in ("r1", "r2"))
+        out[m] = 100.0 * selectivity(r1, F * r2)
+    return out
+
+
+def printed6(t6, model, rx, prm):
+    """One Table 6 entry as printed (string)."""
+    m = (t6.model == model) & (t6.reaction == rx) & (t6.parameter == prm)
+    return t6.value[m].iloc[0]
+
+
 def fit_factor(par, half=True, form="caption", curves=("C", "EO", "W"), T=None):
     """F minimising the squared selectivity residual over the chosen curves: a log
     scan of 10 to 1000, then a bounded minimisation between the scan neighbours."""
@@ -534,6 +552,32 @@ def part_fig6(M, c, par):
         M[f"fig6_mean_{tag}"] = float(np.mean(dev))
         M[f"fig6_inside_{tag}"] = int(np.sum(np.abs(dev) <= BAND))
     M["F_fig6_lumpform"] = fit_factor(par, c.half, "lump", T=c.T_fig)
+    # the printed 476 K adsorption constants in place of the (K_inf, T_ads) pairs
+    par476 = {rx: {**p, "pair": {}} for rx, p in par.items()}
+    M["F_fig6_K476"] = (fit_factor(par476, c.half, c.form, T=c.T_fig)
+                        if c.F_fix is None else c.F_fix)
+    # the readings of the factor on r2 that the page rules out
+    f3 = {rx: float(printed6(c.t6, "III", rx, "f3")) for rx in ("r1", "r2")}
+    s3 = {rx: printed6(c.t6, "III", rx, "f3") for rx in ("r1", "r2")}
+    h3 = {rx: 0.5 * unit_of(s3[rx]) for rx in s3}
+    M["f3_ratio_x100"] = 100.0 * f3["r1"] / f3["r2"]
+    M["f3_ratio_x100_lo"] = 100.0 * (f3["r1"] - h3["r1"]) / (f3["r2"] + h3["r2"])
+    M["f3_ratio_x100_hi"] = 100.0 * (f3["r1"] + h3["r1"]) / (f3["r2"] - h3["r2"])
+    M["f3_factor"], M["f3_factor_inv"] = f3["r2"] / f3["r1"], f3["r1"] / f3["r2"]
+    M["sigma_T_f3_pct"] = 100.0 * selectivity(r1T, f3["r2"] / f3["r1"] * r2T, c.half)
+    M["sigma_T_f3inv_pct"] = 100.0 * selectivity(r1T, f3["r1"] / f3["r2"] * r2T, c.half)
+    forms = np.array([M["F_fig6"], M["F_fig6_K476"], M["F_fig6_lumpform"]])
+    M["_f3_forms_margin"] = np.minimum(forms - M["f3_ratio_x100_lo"],
+                                       M["f3_ratio_x100_hi"] - forms)
+    M["f3_interval_forms_inside"] = int(np.sum(M["_f3_forms_margin"] > 0.0))
+    devs = []
+    for name in ("I", "II"):
+        pp = table6_params(c.t6, name)
+        dev = fig6_model_I_II(name, pp, c.T_fig) - y
+        devs.append(np.abs(dev))
+        M[f"fig6_rms_model{name}"] = float(np.sqrt(np.mean(dev ** 2)))
+    M["_fig6_margin_modelsI_II"] = BAND - np.minimum(*devs)
+    M["fig6_inside_modelsI_II"] = int(np.sum(M["_fig6_margin_modelsI_II"] >= 0.0))
     # the closed-form F for 70.0 % at the base point against a find_roots root
     F70 = factor_for_selectivity(r1T, r2T, 0.700, c.half if c.closed_half is None
                                  else c.closed_half)
@@ -885,6 +929,30 @@ say("As printed ($F = 1$), model III gives <<s1:.2f>> % at the caption condition
     fl=M["F_fig6_lumpform"])
 
 # %% [markdown]
+# **Readings of the factor that do not restore the printed constants.** Three further
+# readings are computed. The deactivation factors $f_3$ of Table 6 refer later series to
+# series 1 (eq. 6), so they scale $r_2/r_1$ by $f_3(r_2)/f_3(r_1)$ or its inverse. Models I
+# and II of Table 5 are evaluated with their printed constants and no factor. The printed
+# 476 K adsorption constants replace the pairs $(K_\infty, T_{ads})$ in a refit of $F$.
+
+# %%
+say("No other reading restores the printed constants: the deactivation factors refer "
+    "later series to series 1 (eq. 6) and move $r_2/r_1$ by <<a:.3f>> or <<b:.3f>> "
+    "(selectivity <<s1:.2f>> or <<s2:.2f>> % at the caption condition, against <<s0:.2f>> %); "
+    "models I and II as printed miss the curves (root mean square <<r1:.2f>> and <<r2:.2f>> "
+    "points, <<ni:d>> of the <<n:d>> digitised points within the band for either). The ratio "
+    "100 $f_3(r_1)/f_3(r_2)$ = <<q:.1f>> matches the factor, but its rounding interval, "
+    "<<lo:.1f>> to <<hi:.1f>>, covers all <<nf:d>> factors the printed forms give (the "
+    "caption form, the lump form and the printed 476 K adsorption constants), so it cannot "
+    "be tested; the page does not adopt it as the cause. With the printed 476 K adsorption "
+    "constants in place of the pairs the fit gives $F$ = <<fk:.1f>>, against <<F:.1f>>.",
+    a=M["f3_factor"], b=M["f3_factor_inv"], s1=M["sigma_T_f3_pct"], s2=M["sigma_T_f3inv_pct"],
+    s0=M["sigma_T_F1_pct"], r1=M["fig6_rms_modelI"], r2=M["fig6_rms_modelII"],
+    ni=M["fig6_inside_modelsI_II"], n=len(FIG6), q=M["f3_ratio_x100"],
+    lo=M["f3_ratio_x100_lo"], hi=M["f3_ratio_x100_hi"], nf=M["f3_interval_forms_inside"],
+    fk=M["F_fig6_K476"], F=M["F_fig6"])
+
+# %% [markdown]
 # **The trends.** The sign of $\partial\sigma/\partial P_j$ is the sign of
 # $\partial\ln(r_1/r_2)/\partial P_j = -2K_j^1/D_1 + 2K_j^2/D_2$, in which the factor on
 # $r_2$ does not appear: the trend signs hold for any $F$. They are evaluated at every
@@ -995,7 +1063,7 @@ say("At the Figure 6 composition and <<tf:g>> K, $E_{app}$ is <<e1:.1f>> kJ/mol 
 
 # %%
 say("At the Figure 6 condition eq. 8 gives $r_3/r_1$ = <<a:.3f>> (<<b:.3f>> if $r_3$ counts "
-    "CO2 formed), outside the printed <<lo>> to <<hi>> on either basis. Eq. 8 was measured without "
+    "CO2 formed), outside the printed <<lo>> to <<hi>> (printed as $r_1/r_3$) on either basis. Eq. 8 was measured without "
     "ethene, and the paper itself expects $r_3$ to be much smaller under reaction conditions "
     "(competitive adsorption), which this page cannot test; it does not claim that ethene "
     "oxide oxidation matters.",
@@ -1087,6 +1155,24 @@ cl.value("fig6_rms_F100_Tfree", M["fig6_rms_F100_Tfree"], rtol=0.1, unit="select
 cl.count("fig6_inside_F100_Tfree", BAND - np.abs(M["_fig6_dev_F100_Tfree"]), 0.0,
          min_margin=0.002, note="points within the reading band at F = 100, T fitted")
 cl.value("F_fig6_lumpform", M["F_fig6_lumpform"], rtol=0.01)
+cl.value("F_fig6_K476", M["F_fig6_K476"], rtol=0.001,
+         note="fit with the printed 476 K adsorption constants in place of the pairs")
+cl.value("sigma_T_f3_pct", M["sigma_T_f3_pct"], rtol=5e-4, unit="%",
+         note="r2/r1 multiplied by f3(r2)/f3(r1)")
+cl.value("sigma_T_f3inv_pct", M["sigma_T_f3inv_pct"], rtol=5e-4, unit="%",
+         note="r2/r1 multiplied by f3(r1)/f3(r2)")
+cl.value("f3_factor", M["f3_factor"], rtol=0.01, note="f3(r2)/f3(r1), printed")
+cl.value("f3_factor_inv", M["f3_factor_inv"], rtol=0.01, note="f3(r1)/f3(r2), printed")
+cl.value("f3_ratio_x100", M["f3_ratio_x100"], rtol=0.01)
+cl.value("f3_ratio_x100_lo", M["f3_ratio_x100_lo"], rtol=0.01)
+cl.value("f3_ratio_x100_hi", M["f3_ratio_x100_hi"], rtol=0.01)
+cl.count("f3_interval_forms_inside", M["_f3_forms_margin"], 0.0, min_margin=0.5,
+         note="factors of the three printed forms inside the rounding interval of the f3 ratio")
+for name in ("I", "II"):
+    cl.value(f"fig6_rms_model{name}", M[f"fig6_rms_model{name}"], rtol=0.05,
+             unit="selectivity points", note=f"model {name} as printed, no factor")
+cl.count("fig6_inside_modelsI_II", M["_fig6_margin_modelsI_II"], 0.0, min_margin=0.002,
+         note="points within the reading band for model I or model II as printed")
 for c in ("C", "EO", "W"):
     cl.exact(f"sign_{c}", M[f"sign_{c}"], margin=M[f"sign_margin_{c}"], min_margin=0.05)
     cl.value(f"dlnratio_dP{c}_T", M[f"dlnratio_dP{c}_T"], unit="1/bar")
@@ -1208,6 +1294,10 @@ ROWS = [
     ("Table 6 r1 T_lump 8520 read as 8250", lambda: study(t6=t6_with("III", "r1", "T_lump", "8250"))),
     ("Table 6 r2 T_act 14650 read as 16450", lambda: study(t6=t6_with("III", "r2", "T_act", "16450"))),
     ("Table 6 r2 T_lump 10470 read as 11470", lambda: study(t6=t6_with("III", "r2", "T_lump", "11470"))),
+    ("Table 6 r2 K_C 98.5 read as 89.5", lambda: study(t6=t6_with("III", "r2", "K_C", "89.5"))),
+    ("Table 6 r2 f3 0.39 read as 0.93", lambda: study(t6=t6_with("III", "r2", "f3", "0.93"))),
+    ("Table 6 model I r2 k_inf 1.42e6 read as 1.42e5", lambda: study(t6=t6_with("I", "r2", "k_inf", "1.42e5"))),
+    ("Table 6 model II r2 k_inf 8.1e9 read as 7.6e9", lambda: study(t6=t6_with("II", "r2", "k_inf", "7.6e9"))),
     ("Table 6 r1 K_O 84.8 read as 48.8", lambda: study(t6=t6_with("III", "r1", "K_O", "48.8"))),
     ("Table 6 r1 k_lump 8.9e6 read as 9.8e6", lambda: study(t6=t6_with("III", "r1", "k_lump", "9.8e6"))),
     ("Table 4 r1 and r2 columns swapped", lambda: study(t4=T4_SWAP)),
@@ -1263,7 +1353,8 @@ say("As printed, model III gives <<s1:.2f>> % selectivity at the Figure 6 condit
     "<<ylo:.1f>> to <<yhi:.1f>> % (<<i1:d>> of <<n:d>> digitised points within the reading "
     "band) and the measured selectivities are <<m1:.1f>>, <<m2:.1f>> and <<m3:.1f>> %. What the "
     "numbers show: the model III combustion rate constant, in both of its printed forms, is "
-    "smaller by a factor of <<F:.1f>> than the paper's own Figure 6 requires. With that one "
+    "smaller by a factor of <<F:.1f>> (<<fk:.1f>> to <<F:.1f>> over the printed forms of the "
+    "constants) than the paper's own Figure 6 requires. With that one "
     "factor all three curves are reproduced: root mean square <<rms:.3f>> points, largest "
     "residual <<mx:.3f>>, <<ifit:d>> of <<n:d>> points within the reading band of <<band:g>> "
     "points, the three per-curve factors within <<spr:.2f>> % of each other. The Table 4 runs, "
@@ -1272,12 +1363,12 @@ say("As printed, model III gives <<s1:.2f>> % selectivity at the Figure 6 condit
     "<<ww>> it. Nor does the fall of the selectivity with temperature: at the Figure 6 "
     "composition the apparent activation energies are <<e1:.1f>> and <<e2:.1f>> kJ/mol, "
     "against the printed <<p1:g>> and <<p2:g>>. Eq. 8 gives $r_3/r_1$ = <<r3:.3f>>, against "
-    "the printed range <<lo>> to <<hi>>.",
+    "the printed range <<lo>> to <<hi>> (printed as $r_1/r_3$).",
     s1=M["sigma_T_F1_pct"], s4=M["sigma_T4_F1_pct"], ylo=FIG6.selectivity_pct.min(),
     yhi=FIG6.selectivity_pct.max(), i1=M["fig6_inside_F1"], n=len(FIG6),
     m1=M["sigma_meas_row1_pct"], m2=M["sigma_meas_row2_pct"], m3=M["sigma_meas_row3_pct"],
-    F=M["F_fig6"], rms=M["fig6_rms_Ffit"], mx=M["fig6_maxdev_Ffit"], ifit=M["fig6_inside_Ffit"],
-    band=BAND, spr=100 * M["F_fig6_curve_spread"], f1=M["F_row1"], f2=M["F_row2"],
+    F=M["F_fig6"], fk=M["F_fig6_K476"], rms=M["fig6_rms_Ffit"], mx=M["fig6_maxdev_Ffit"],
+    ifit=M["fig6_inside_Ffit"], band=BAND, spr=100 * M["F_fig6_curve_spread"], f1=M["F_row1"], f2=M["F_row2"],
     f3=M["F_row3"], wc=WORD[M["sign_C"]], weo=WORD[M["sign_EO"]], ww=WORD[M["sign_W"]],
     e1=M["Eapp1_T_kJmol"], e2=M["Eapp2_T_kJmol"], p1=printed("E_app_epoxidation"),
     p2=printed("E_app_combustion"), r3=M["r3_over_r1_T"],

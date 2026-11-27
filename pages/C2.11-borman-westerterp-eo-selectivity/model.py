@@ -103,6 +103,26 @@ def rates(par, T, P, F=1.0, form="caption", frozen=False):
     return (rate(par["r1"], T, P, form, frozen), F * rate(par["r2"], T, P, form, frozen))
 
 
+def rate_models_I_II(model, p, T, P):
+    """Rate of model I or II (Table 5) with the adsorption constants as printed at 476 K.
+
+    Model I: ``r = k_r K_E P_E P_O^n / D`` with ``D = 1 + K_E P_E + K_C P_C + K_EO P_EO
+    + K_W P_W``; model II: ``r = k_r K_O K_E P_E P_O / D^2`` with ``K_O P_O`` added to
+    ``D``. ``k_r = k_inf exp(-T_act/T)``; the printed constants are kept at every ``T``.
+    """
+    P = np.asarray(P, dtype=float)
+    K = p["K"]
+    D = (1.0 + K["E"] * P[..., 0] + K["C"] * P[..., 2] + K["EO"] * P[..., 3]
+         + K["W"] * P[..., 4])
+    k = p["k_inf"] * np.exp(-p["T_act"] / T)
+    if model == "I":
+        return k * K["E"] * P[..., 0] * P[..., 1] ** p["n"] / D
+    if model == "II":
+        D = D + K["O"] * P[..., 1]
+        return k * K["O"] * K["E"] * P[..., 0] * P[..., 1] / D ** 2
+    raise ValueError(f"unknown model {model!r}")
+
+
 def selectivity(r1, r2, half=True):
     """Selectivity to EO, ``r1/(r1 + r2/2)`` (A-3 with eqs. 1, 2: two CO2 per ethene).
 
