@@ -1682,6 +1682,12 @@ F10_P = fig10_summary(*fig10_table(p0=0.020))
 for key, nm in (("TM_tangent", "tangent at T_M"), ("chord", "chord T_w to T_M")):
     brk(P020, f"fig10_{key}_no_runaway", 4 - F10_P["n_run"][nm])
 brk(P020, "fig10_page_n_under_1pct", F10_P["n_under_1"])
+# with the units trap only the square-dropped curve reaches 800 K, so the trap
+# records nan for the other Fig. 10 deviations; this row moves them with the
+# curves still crossing the axis
+for metric, key in (("fig10_page_worst_dev_pct", "page_worst"),
+                    ("fig10_alt_dev_min_pct", "alt_min"), ("fig10_alt_dev_max_pct", "alt_max")):
+    brk(P020, metric, F10_P[key])
 
 
 def _square_no_runaway_status_ignored():
