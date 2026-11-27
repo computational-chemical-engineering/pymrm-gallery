@@ -1507,9 +1507,11 @@ def eq_route_err(rho, **kw):
 
 
 @lru_cache(maxsize=None)
-def rho_star_at(res=RES, rtol=1e-11, atol=1e-14):
-    """rho at which route 1 mispredicts C_A(t) by `res`, root-found in log10(rho)."""
-    return 10**root1(lambda g: eq_route_err(10**g, rtol=rtol, atol=atol) - res,
+def rho_star_at(res=RES, rtol=1e-11, atol=1e-14, total=False):
+    """rho at which route 1 mispredicts C_A(t) by `res`, root-found in log10(rho).
+
+    total=True compares route 1 with C_A + C_A-E instead of the free substrate."""
+    return 10**root1(lambda g: eq_route_err(10**g, rtol=rtol, atol=atol, total=total) - res,
                      -5, 0, n_scan=11, xtol=1e-10, what="rho* of route 1")
 
 
@@ -2066,8 +2068,8 @@ ROWS = [
         "qssa_group_spread_CE0_over_cA0": lambda: qssa_group(KMs=(0.4, 0.6))["spread_cA0"],
         "qssa_group_spread_CE0_over_cA0_plus_KM":
             lambda: qssa_group(KMs=(0.4, 0.6))["spread_cA0_KM"]}),
-    ("ODE tolerance loosened to rtol 1e-6 under the root-find", {
-        "rho_star_equilibrium_route": lambda: rho_star_at(rtol=1e-6, atol=1e-9)}),
+    ("route 1 error measured on C_A + C_A-E instead of free C_A", {
+        "rho_star_equilibrium_route": lambda: rho_star_at(total=True)}),
     ("max |ds/dK_M| sampled on a 19-point t grid", {
         "dsdKM_rootfound_over_sampled": lambda: gmax/dsdKM_max(sampled_on=_t19)[1]}),
     (SAMP19, {
