@@ -1,0 +1,92 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.5
+slug: vandenbussche-froment-methanol-co2-route
+title: "Methanol synthesis from CO2: does the printed kinetic model reproduce its own reactor simulations (Vanden Bussche and Froment)"
+section: C
+status: published
+tier: T1
+priority: P1
+structures: [S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+  year: 1996
+  container: "Journal of Catalysis 161, 1-10"
+  doi: 10.1006/jcat.1996.0156
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 160
+datasets:
+  - vandenbussche-1996-table1.csv
+  - vandenbussche-1996-table2.csv
+  - vandenbussche-1996-table3.csv
+  - vandenbussche-1996-printed-numbers.csv
+  - vandenbussche-1996-fig5b.csv
+  - vandenbussche-1996-fig8.csv
+  - vandenbussche-1996-figure-readings.csv
+  - nist-webbook-thermo.csv
+  - nist-webbook-methanol-cp.csv
+  - nist-webbook-methanol-enthalpy.csv
+  - check_values.csv
+thermodynamics_source: >
+  Heats and heat capacities are not printed in the paper. Heat capacities:
+  NIST Chemistry WebBook Shomate coefficients (Chase 1998, NIST-JANAF) for CO,
+  CO2, H2, H2O, Ar and N2, and the TRC ideal-gas table for methanol. Heats:
+  298.15 K standard heats from the WebBook formation enthalpies (methanol gas
+  from the liquid value of Chao and Rossini 1965 plus the NIST average heat of
+  vaporisation). The van 't Hoff heats of the printed equilibrium correlations
+  are computed beside them.
+
+validation:
+  - >-
+    Every value of an independent check script (rates and constants at a
+    test condition, Table 1 to Table 2, the statistics, two equilibria, an
+    isothermal bed and the bench bed with a test energy model) reproduced by
+    the page's functions before any result.
+  - >-
+    Element balances on the pymrm and solve_ivp routes to round-off; the exact
+    energy invariant of the constant-heat-capacity test model at every cell; a
+    long bed ends on the algebraic adiabatic equilibrium.
+  - >-
+    Convergence on a ladder of six grids: observed orders rise toward 1, finest
+    triple 0.91 <!-- claim: v3_order_finest_min --> to
+    0.97 <!-- claim: v3_order_finest_max -->; the Richardson values meet the
+    check script's within their error estimates.
+  - >-
+    Claims format 2 with a break table whose every row is a defect injected
+    through an argument (transcription slips, units, thermodynamic readings,
+    figure calibration, grids, solver iterations).
+
+adds: >
+  The rate law and statistics are plain numpy; pymrm solves the adiabatic and
+  isothermal plug-flow beds (finite volumes in the catalyst mass, NumJac,
+  newton) and finds the roots and orders. With them the page finds that Fig. 5's
+  plateau is reproduced with 298 K heats and argon, that the rate factor Fig. 5b
+  implies (1.096 <!-- claim: r3_F -->) moves with the unprinted heat capacities
+  by 1.05 <!-- claim: r3_shift_over_half_distance --> times half its distance
+  from 1, so it is undecided, that Fig. 7a's temperature axis is offset, and that
+  Fig. 8's curve exceeds the equilibrium of the paper's own constants at its
+  caption's condition.
+
+agreement: >
+  Fig. 5b plateau within 0.33 <!-- claim: r3_plateau_minus_fig --> K with the
+  rates as printed (RMS over the profile 1.43 <!-- claim: r3_rms_F1 --> K);
+  Figs. 6 and 7 predicted without refitting, methanol plateaus within
+  0.033 <!-- claim: r4_fig7b_dyM_maxabs --> mol% of Fig. 7b. Fig. 8 is
+  reproduced (RMS 0.70 <!-- claim: r5_rms_fit --> points) only at
+  504.2 <!-- claim: r5_T_fit --> K, not at the caption's temperature (best RMS
+  5.04 <!-- claim: r5_rms_caption --> points). Every figure is the authors'
+  simulation, not a measurement.
+
+caveats: >
+  The experiments are not printed, so the kinetics are not tested against data
+  here. Heats, heat capacities and the inert of Table 3 are not printed and are
+  read from other sources; the implied rate factor depends on them. Fig. 8's
+  W/F0 and temperature are fitted, and which temperature the authors used is
+  not known. The figure readings are about one pixel.

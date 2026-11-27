@@ -1,0 +1,45 @@
+dataset_id: vandenbussche-1996-figure-readings
+title: "Plateaus and features read from Figs. 5 to 8"
+status: complete
+
+source:
+  authors: ["Vanden Bussche, K. M.", "Froment, G. F."]
+  year: 1996
+  container: "Journal of Catalysis 161, 1-10"
+  doi: "10.1006/jcat.1996.0156"
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no figure or page image reproduced)"
+
+provenance_tier:
+  tier: 2
+  note: "Readings of the authors' simulated curves (Figs. 5 to 7) and of Klier's markers (Fig. 8)."
+acquisition:
+  method: digitised
+  figure: "Figs. 5 to 8, journal pages 8 and 9 (embedded 1-bit scans, 307 to 369 ppi)"
+  tool: "extract_figures.py (pdfimages at native resolution, numpy column scans)"
+  procedure: >
+    Plateaus: mean of the run centres of one curve over a z/L window clear of
+    the labels (columns zL_lo to zL_hi; value window per curve in the script);
+    sd is the spread of those centres. Fig. 6c: the minimum of the topmost
+    (solid, 15 bar) run for z/L 0.06 to 0.35. Fig. 8: Klier's three markers at
+    2 % CO2 overlap; the lowest and highest marker centres are the blob's
+    bottom and top less half the height of the isolated marker at 10 %. The
+    inlet ends of Fig. 7a are not read (the curves merge).
+  operator: "Claude Opus 5.5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-11-27
+  estimated_error: "about 1 px (value_per_px column); Fig. 7a T axis reads 3 to 4 K above the model and Fig. 5b (see the page)"
+columns:
+  - {name: figure, unit: "-", description: "figure and panel"}
+  - {name: curve, unit: "-", description: "curve label"}
+  - {name: quantity, unit: "-", description: "what is read"}
+  - {name: zL_lo, unit: "-", description: "window start (z/L, or x for Fig. 8)"}
+  - {name: zL_hi, unit: "-", description: "window end"}
+  - {name: value, unit: "see unit", description: "reading"}
+  - {name: sd, unit: "see unit", description: "spread of the readings in the window (or one pixel)"}
+  - {name: n_px, unit: "-", description: "number of runs averaged"}
+  - {name: value_per_px, unit: "see unit", description: "axis value of one pixel"}
+  - {name: unit, unit: "-", description: "unit"}
+redistribution_basis: >
+  Numerical values are facts, not protected by copyright (Feist, 1991);
+  extraction for scientific research is covered by Art. 15n Auteurswet
+  (DSM Art. 3). No figure or page image is reproduced.
