@@ -85,7 +85,7 @@ the original papers could only sketch with a handful of points.
 |---|---|---|---|---|---|
 | E2.1 | **Kunii–Levenspiel bubbling bed** | *IEC Proc. Des. Dev.* 7:481 (1968); *Fluidization Engineering* (1991) | S7 | T0 | **P1** |
 | E2.2 | Kato–Wen bubble assemblage | *Chem. Eng. Sci.* 24 (1969) | S7 | T1 | P2 |
-| E2.3 | Grace generalised three-phase | *Can. J. Chem. Eng.* 64 (1986) | S7 | T1 | P1 |
+| E2.3 | Grace's regime map: Geldart's boundaries for any gas, and where his two B/D criteria part | *Can. J. Chem. Eng.* 64 (1986) | S7 | T1 | P1 |
 | E2.4 | Thompson–Bi–Grace generic model | *Chem. Eng. Sci.* 54 (1999) | S7 | T1 | P2 |
 | E2.5 | Werther / Hilligardt–Werther | (1980s) | S7 | T1 | P2 |
 | E2.6 | Turbulent-regime reactor model | Cui, Grace; Bi & Grace regime maps | S7 | T2 | P2 |

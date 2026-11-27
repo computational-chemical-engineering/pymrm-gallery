@@ -1,0 +1,80 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: E2.3
+slug: grace-regime-map
+title: "Grace's regime map: Geldart's boundaries for any gas, and where his two B/D criteria part"
+section: E
+status: published
+tier: T1
+priority: P2
+structures: []
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Grace, J. R."]
+    year: 1986
+    title: "Contacting modes and behaviour classification of gas-solid and other two-phase suspensions"
+    container: "Canadian Journal of Chemical Engineering 64(3) 353-363"
+    doi: 10.1002/cjce.5450640301
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 6
+datasets:
+  - grace-1986-printed-numbers.csv
+  - check_values.csv
+
+structures_note: >
+  DELIBERATELY EMPTY, and the page says so in its "PyMRM implementation" section: the
+  boundaries are algebraic relations between dimensionless scalars, with no spatial or
+  time coordinate, no conservation law and no unknown field (precedent H1.8).
+
+validation:
+  - every page function against independent check values from a second route
+  - eq 19's closed form against the direct root of eq 18, in d* and in SI units
+  - eq 18 solved in SI units with the viscosity doubled and g changed returns the same d* (eq 18 depends on d* and the density ratio only)
+  - the identities of eqs 5 to 9 and of eq 11's limits at Re_mf = 2 C1
+  - every number the page states is a registered claim with a break row that moves it, or is labelled structural with the reason
+
+adds: >
+  Nothing to the correlations; the page is algebra on printed equations, nothing is
+  discretised, and pymrm contributes only pymrm.checks.find_roots for eq 18, the
+  crossings, the minimum of eq 19 over eq 16 and the Table 2 inversions. What the page
+  adds to the paper is each printed boundary number tested in half-units of its last
+  digit, the measured gap between the two B/D criteria, and the air-viscosity window
+  that eq 15 implies.
+
+agreement: >
+  36 <!-- claim: boundary_numbers_within --> of the 36
+  <!-- claim: boundary_numbers_within_of --> comparisons with a number Grace prints lie
+  within a half-unit of the last printed digit when recomputed from the constants he
+  states, taking them as exact (eq 15's four with the page's air viscosity); the closest
+  is Richardson's 53, computed 52.507 <!-- claim: t6_richardson_dBD -->, at 0.985
+  <!-- claim: boundary_numbers_max_halfunits --> of a half-unit, and the rounding of his
+  $C_1$, $C_2$ carries it across the rounding edge, so that 53 cannot be decided; eq 15 needs an air viscosity between 18.19
+  <!-- claim: mu_window_lo_uPas_at_rhoT --> and 18.41
+  <!-- claim: mu_window_hi_uPas_at_rhoT --> µPa s, which the paper does not print. In
+  the supporting tables, 6 <!-- claim: t2_range_cells_within_half_unit --> of 7 Table 2
+  range ends and 4 <!-- claim: eq13_pair_ends_within_half_unit --> of 6 eq 13 bracket
+  ends lie within a half-unit of the formula at the printed partner taken exactly; with
+  the partner given its own half-unit, 7 <!-- claim: t2_partner_ends_within --> of 7 and
+  6 <!-- claim: eq13_partner_ends_within --> of 6. The two B/D criteria (eq 19, cloud; eq 21, Ergun terms) cross once at
+  drho/rho = 437.1 <!-- claim: x_cross_19_21_exact -->, exactly twice eq 19's constant
+  b, at the low end of what Grace calls "of order 500 to 10^4"; it reaches 500 for
+  eps_mf = 0.449 <!-- claim: eps_mf_for_cross_500 --> instead of the value he assumes, or d_b =
+  114 <!-- claim: db_over_dp_for_cross_500 --> d_p instead of 100. The criteria differ by a factor 1.13
+  <!-- claim: ratio_21_over_19_500 --> to 4.44 <!-- claim: ratio_21_over_19_1e4 --> in
+  d* over that range.
+
+caveats: >
+  This is a correlation page, not a discretised model, and it tests the paper against
+  itself: agreement says the printed numbers follow from the printed equations, not
+  that the boundaries are right. Grace prints no gas properties; the test condition
+  (air at 298 K and 101.3 kPa, Sutherland viscosity, glass of 2500 kg/m3) is the page's
+  assumption, and A1's viscosity sits only 0.24 % <!-- claim: mu_A1_window_margin -->
+  inside the eq 15 window. The page measures the gap between eq 19 and eq 21 and does
+  not decide which is right. Fig 3 is not digitised, and Geldart's measured powders are not
+  placed on the map.
