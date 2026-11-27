@@ -51,13 +51,13 @@ Each CSV has a `.meta.yaml` provenance sidecar beside it. The page loads one cla
   1.029 <!-- claim: r3_kT_over_iso_hu_min --> times it with both printed values moved half a unit
   against the gap, so eqn (1) cannot give it (the whole of eqn (1) is
   1.28 <!-- claim: r3_K1_over_iso_min --> to 1.35 <!-- claim: r3_K1_over_iso_max --> times it, with the
-  bubble velocity of a pair read from Fig. 4). The paper prints no error for the 3.4, and the page
-  does not say whether eqn (1), the 11.2 or the 3.4 is off.
+  bubble velocity of a pair read from Fig. 4). The paper prints no error for `3.4`, and the page
+  does not say whether eqn (1), the printed `11.2` or `3.4` is off.
 - Table 1 implies K = 11.34 <!-- claim: r4_K_front --> cm/s
   (11.23 <!-- claim: r4_K_front_hu_min --> to 11.45 <!-- claim: r4_K_front_hu_max --> over half a unit
   of the printed volumes and products) for the front bubble in the approach period under the
   page's reading of the transfer surface, and 8.86 <!-- claim: r4_K_fig9 --> cm/s with the Fig. 9
-  front curve in place of the C_B column: the printed 9.6 lies between the two, so Table 1 does
+  front curve in place of the C_B column: the printed `9.6` lies between the two, so Table 1 does
   not test it. Two of its cells disagree with their products by 6.5 <!-- claim: r4_hu_0.6_rear --> and
   23.8 <!-- claim: r4_hu_1.1_resultant --> rounding allowances, and the page does not decide
   which entry is right.
