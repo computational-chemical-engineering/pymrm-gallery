@@ -1,0 +1,70 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F1.5
+slug: vandu-krishna-churn-kla
+title: "Vandu and Krishna: kLa per unit gas holdup in the churn-turbulent regime"
+section: F
+status: planned
+tier: T1
+priority: P1
+structures: [S1]
+phases: [gas-liquid, gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Vandu, C. O.", "Krishna, R."]
+    year: 2004
+    title: "Volumetric mass transfer coefficients in slurry bubble columns operating in the churn-turbulent flow regime"
+    container: "Chemical Engineering and Processing 43 987-995"
+    doi: 10.1016/j.cep.2003.09.007
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 16
+datasets:
+  - vandu-krishna-2004-printed-numbers.csv
+  - vandu-krishna-2004-vector.csv           # Figs. 2b, 5, 7, 9, 11 by vector extraction
+  - vandu-krishna-2004-fig2a-curves.csv     # Fig. 2a drawn curves by vector extraction
+  - vandu-krishna-2004-fig4c.csv
+  - vandu-krishna-2004-fig8c.csv
+  - vandu-krishna-2004-fig10f.csv
+  - check_values.csv
+  - akita-yoshida-printed-numbers.csv       # loaded cross-page from F1.1
+  - akita-yoshida-1973-table2-ranges.csv    # loaded cross-page from F1.1
+
+validation:
+  - every function against independent check values from a second route
+  - plotted Schmidt numbers, solids fractions and diameters of the vector figures against the printed tables, and the same plateau read from two vector figures
+  - the drawn Fig. 2a curves against the caption sensor constants, with and without a time shift
+  - eq. 5 against direct integration, the least-squares probe rate against quadrature, the dead-time sum of squares against quadrature
+  - Table 2's diffusivities against the Wilke-Chang and Hayduk-Minhas estimates
+  - the same series read from three raster figures, beside the tick-fit residuals of the sidecars
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Little: the page is algebra and statistics, and pymrm contributes only
+  pymrm.checks.find_roots for the least-squares probe rate, the half time of eq. 5 and
+  the sensor-sensitivity root. What the page adds to the paper is the exponent with its
+  uncertainty from the paper's own exact plateaus, the flatness test on its plotted
+  points, and the size of the probe correction from its printed constants.
+
+agreement: >
+  From the four exact Figure 5 plateaus the free exponent is -0.409 <!-- claim: exp_free_slope -->
+  ± 0.061 <!-- claim: exp_free_se --> on two degrees of freedom; the free slope differs from the paper's -1/3 by t = -1.24
+  <!-- claim: exp_t_vs_minus_third --> standard errors (95 % interval -0.671
+  <!-- claim: exp_ci_lo --> to -0.147 <!-- claim: exp_ci_hi -->), so the data neither
+  confirm nor refute it. The drawn line misses the plateaus by -27.4 % <!-- claim: rule_miss_tetradecane -->
+  to +29.6 % <!-- claim: rule_miss_tellus -->. Above the paper's threshold velocity, 4 <!-- claim: r3_n_t_beyond_2 -->
+  of 6 <!-- claim: r3_n_series --> digitised series have a slope beyond two standard
+  errors (water marginal). An uncorrected evaluation would return 0.562 <!-- claim: probe_rate_min -->
+  to 0.930 <!-- claim: probe_rate_max --> of the corrected kLa_L for the captioned cases.
+
+caveats: >
+  This is a correlation-and-data page, not a discretised model. The Figure 5, 7, 9 and
+  11 values are exact (vector paths); Figures 4c, 8c and 10f are read by template
+  matching with the error stated in their sidecars, and two half-hidden water markers
+  of Figure 4c are not read. Figures 4a and 6a are not digitised, so the holdups the
+  captions imply are not compared with plotted holdups. The paper prints no constant
+  for its rule; the page reads it from the drawn line. Ambient air only; nothing beyond the paper's largest column.

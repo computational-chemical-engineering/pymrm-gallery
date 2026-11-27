@@ -1,0 +1,30 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Vandu, C. O.", "Krishna, R."]
+  year: 2004
+  container: "Chemical Engineering and Processing 43, 987-995"
+  doi: "10.1016/j.cep.2003.09.007"
+  access: >
+    The equations are those of the paper (eqs. 1 to 6, Tables 1 to 4, the Fig. 2 and Fig. 3
+    caption values and the plotted values of the vector figures), with the readings and
+    ambiguities stated in the build plan's equations file. The values are not read from the paper
+    but computed from its equations, printed constants and vector-read plotted values by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f15_check_values.py (numpy and scipy, no pymrm, no page code; Fig. 2b inputs are the exact vector centres, not 3-decimal roundings), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; looser rtol rows carry the route's own error"
+
+conditions: >
+  The test condition stated in the build plan's equations file (f15_EQUATIONS.md).
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
