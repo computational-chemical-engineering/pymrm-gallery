@@ -973,7 +973,7 @@ say("**The boundary numbers follow from the printed equations.** <<n:d>> of the 
     "Grace prints (Table 6's derived cells, eq 19's constants and limits, eq 21 and the p. 361 values, eq 15 at A1, "
     "eq 16's $Ar$ form) lie within a half-unit of the last printed digit when recomputed from the constants he "
     "states for them, taking those constants as exact (eq 15's four with the page's air viscosity). The closest is "
-    "Richardson's 53, computed <<r:.3f>>, <<m:.3f>> of a half-unit from the edge; the rounding of his $C_1$, $C_2$ "
+    "Richardson's 53, computed <<r:.3f>>, <<m:.3f>> of a half-unit from 53; the rounding of his $C_1$, $C_2$ "
     "carries it from <<rl:.2f>> to <<rh:.2f>>, across 52.5, so that 53 cannot be decided. Eq 15 needs an air viscosity the paper "
     "does not print; it holds for $\\mu$ from <<lo:.2f>> to <<hi:.2f>> µPa s. Eq 19's 219 fixes the bubble "
     "coefficient 0.711 (with $1/\\sqrt2$ it would be <<b2:.1f>>). In the supporting tables, <<t2:d>> of 7 Table 2 range ends and "
