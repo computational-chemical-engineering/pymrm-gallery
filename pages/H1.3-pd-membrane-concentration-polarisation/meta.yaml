@@ -1,0 +1,63 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.3
+slug: pd-membrane-concentration-polarisation
+title: "Caravella, Barbieri and Drioli (2009): concentration polarisation in Pd membranes, and what a film coefficient misses along a laminar tube"
+section: H
+status: planned
+tier: T1
+priority: P1
+structures: [S6]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Caravella, A.", "Barbieri, G.", "Drioli, E."]
+    year: 2009
+    title: "Concentration polarization analysis in self-supported Pd-based membranes"
+    container: "Separation and Purification Technology 66, 613-624"
+    doi: 10.1016/j.seppur.2009.01.008
+
+pymrm_min_version: "3.4.1"
+runtime_seconds: 76
+datasets:
+  - caravella-2009-printed-numbers.csv
+  - caravella-2009-fig10-model-reads.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route (closed forms, scipy quadrature and a scipy method-of-lines 2-D solve, no pymrm), before the first claim
+  - Graetz limit of the 2-D march (wall at zero, no suction) against the developed Sherwood number from the Kummer function
+  - N2 conservation of the conservative scheme at every step
+  - radial and axial ladders at the test condition, each with observed orders, and a solver-tolerance companion; every 2-D number Richardson-extrapolated on three levels
+  - plug-flow profile and low-flux wall as one-at-a-time sensitivities
+  - every number the page states is a registered claim; every non-structural claim has a break row that moves it (the structural ones are named in the break-table cell)
+
+adds: >
+  The resolved boundary layer the paper's length-averaged film coefficient stands for:
+  pymrm solves a laminar Pd-membrane tube in 2-D (construct_grad and construct_div with
+  nu=1, two construct_convflux_upwind operators averaged into a central suction flux, the
+  wall value an external unknown through shapes_d, the nonlinear Sieverts wall row and the
+  total flow bordering the cell block, pymrm.newton per BDF2 step with NumJac for the
+  Sieverts flux, compute_boundary_values at the wall), and pymrm.checks supplies the
+  thresholds (find_roots) and the extrapolations (observed_orders). The film relations are
+  scalar roots and a scipy ODE.
+
+agreement: >
+  At the test condition (2-D depletion 5.677 <!-- claim: r1_depl_pct --> %, inside the
+  paper's "(4–7%)", p. 623), the film module with Eq. (9)'s averaged coefficient recovers
+  0.10802 <!-- claim: r1_rec_1d --> against 0.10744 <!-- claim: r1_rec_2d --> from the 2-D
+  solve, but its outlet CPC is 0.72028 <!-- claim: r1_cpc_avg_film --> against
+  0.80081 <!-- claim: r1_cpc_2d -->; a local Leveque coefficient gives
+  0.80287 <!-- claim: r1_cpc_local_film -->.
+
+caveats: >
+  The 2-D tube is the page's own extension; the paper solves a point model. Laminar only;
+  the paper's maps are turbulent and out of scope. The parabolic profile is kept although
+  the wall Reynolds number is not small; with a plug profile the module-total verdict
+  changes (see the page). The Schmidt number and the viscosity are assumptions, not the
+  paper's. The six-component and surface-step models are not reproduced. Fig. 10 values
+  are figure reads at 200 ppi.
