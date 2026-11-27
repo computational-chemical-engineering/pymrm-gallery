@@ -81,19 +81,21 @@ PAGE_A17 = "A1.7-geldart-classification"     # the measured u_mf come from here
 BREAK = []   # (injected defect, claim, clean value, broken value, caught)
 
 
-def brk(row, metric, broken):
-    """One injected defect: ``broken`` is what claim ``metric`` becomes with it."""
-    caught = claims.breaks(row, metric, broken)
+def brk(row, metric, broken, by_failure=False):
+    """One injected defect: ``broken`` is what claim ``metric`` becomes with it.
+    ``by_failure`` declares that a missing value is itself the detection."""
+    caught = claims.breaks(row, metric, broken, detects_by_failure=by_failure)
     BREAK.append((row, metric, claims[metric], broken, caught))
     return caught
 
 
-def brk_all(row, got):
+def brk_all(row, got, by_failure=()):
     """Break row for every claim the defective run reports: ``got`` maps claim names to
-    the values a function returns when it is called with the defect injected."""
+    the values a function returns when it is called with the defect injected. Claims
+    named in ``by_failure`` are declared detected by failure (no solution exists)."""
     for name, value in got.items():
         if name in claims.metrics:
-            brk(row, name, value)
+            brk(row, name, value, by_failure=name in by_failure)
 
 
 def fill(text, **kw):
@@ -874,6 +876,33 @@ def derivation(k1=K1_ERGUN, k2=K2_ERGUN, g2=G2_PRINT, g3=G3_PRINT):
     return out
 
 
+# A reading of eqs. (2) and (3) that leaves no admissible root has no effective particle,
+# so the root-dependent claims have no value under it: the failure is the detection.
+# The second route below does not use find_roots: (1-e) e^3 peaks at 27/256 (e = 3/4),
+# so g2/g3^2 above that leaves no root in (0, 1); otherwise numpy's companion-matrix
+# roots of the quartic are mapped to phi_s and checked against the printed phi_s range.
+ROOT_CLAIMS = ("implied_eps_mf", "implied_phi_s", "second_root_phi_s")
+
+
+def no_admissible_particle(g2=G2_PRINT, g3=G3_PRINT, phi_range=PHI_RANGE):
+    """True when no root of (1-e) e^3 = g2/g3^2 in (0, 1) gives phi_s in ``phi_range``;
+    prints the reason (closed-form peak, or the phi_s of every root)."""
+    rhs = g2 / g3**2
+    if rhs > 27.0 / 256.0:
+        print(f"   g2 = {g2:g}, g3 = {g3:g}: g2/g3^2 = {rhs:.4f} > 27/256 = {27/256:.4f}, "
+              "the peak of (1-e) e^3: no root in (0, 1)")
+        return True
+    r = np.roots([-1.0, 1.0, 0.0, 0.0, -rhs])
+    r = np.sort(r[(abs(r.imag) < 1e-12) & (r.real > 0) & (r.real < 1)].real)
+    phis = g3 * (1.0 - r) / g2
+    inside = (phis >= phi_range[0]) & (phis <= phi_range[1])
+    if not inside.any():
+        print(f"   g2 = {g2:g}, g3 = {g3:g}: roots give phi_s = "
+              + ", ".join(f"{p:.4f}" for p in phis)
+              + f", all outside {phi_range[0]}-{phi_range[1]}: no admissible particle")
+    return not inside.any()
+
+
 variants = [
     ("none: as built (Ergun 150/1.75, eqs 2 and 3)", dict()),
     ("eqs. (2) and (3) swapped",                      dict(g2=G3_PRINT, g3=G2_PRINT)),
@@ -894,7 +923,8 @@ for name, kw in variants + [refit_row]:
     print(f"{name:47s} {got['C1_recovered']:9.3f} {got['C1_deviation_pct']:+8.2f} "
           f"{got['C2_recovered']:9.6f} {got['C2_deviation_pct']:+8.2f}   {eff:>30s}")
     if name != "none: as built (Ergun 150/1.75, eqs 2 and 3)" and not name.startswith("(not a defect)"):
-        brk_all(name, got)
+        none_left = no_admissible_particle(**{k: v for k, v in kw.items() if k in ("g2", "g3")})
+        brk_all(name, got, by_failure=ROOT_CLAIMS if none_left else ())
 wrong = [g for n, g in brk1[1:-1]]
 WORST_ALT = min(max(abs(g["C1_deviation_pct"]), abs(g["C2_deviation_pct"])) for g in wrong)
 BEST_READ = max(abs(d1), abs(d2))
