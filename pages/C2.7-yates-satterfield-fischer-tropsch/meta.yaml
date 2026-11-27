@@ -1,0 +1,80 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.7
+slug: yates-satterfield-fischer-tropsch
+title: "Fischer-Tropsch on cobalt: the Yates-Satterfield rate law"
+section: C
+status: planned
+tier: T1
+priority: P1
+structures: [S1, S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Yates, I. C.", "Satterfield, C. N."]
+  year: 1991
+  container: "Energy & Fuels 5(1) 168-173"
+  doi: 10.1021/ef00025a029
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 45
+datasets:
+  - yates-satterfield-1991-printed-numbers.csv
+  - yates-satterfield-1991-fig1-fig2-design.csv
+  - yates-satterfield-1991-fig8-parity.csv
+  - check_values.csv
+  - "F2.3-slurry-bubble-column-ft/model.py PARAMS (imported, not a dataset)"
+
+validation:
+  - >-
+    Check values: every row of check_values.csv, computed by a second route,
+    reproduced by the page's functions before any result is stated.
+  - >-
+    Closed forms: the limits of the apparent activation energy, its roots by
+    find_roots against their closed form, the rate maximum as a root of the
+    analytic derivative.
+  - >-
+    Design covariance: analytic sensitivities against central differences; a
+    Monte Carlo of the reading error; the printed 240 C ratio of
+    standard errors 9.485 <!-- claim: r2_ratio_240_printed --> inside the design
+    band 9.476 <!-- claim: r2_ratio_240_lo --> to 9.650 <!-- claim: r2_ratio_240_hi -->.
+  - >-
+    Reactors: the pymrm CSTR against its closed form; the pymrm plug-flow reactor
+    on a ladder of grids with observed order 1.000 <!-- claim: v4_order_min -->
+    (first-order upwind) and Richardson extrapolation against the closed form.
+  - >-
+    Claims format 2: every non-structural claim is failed by at least one break
+    row, each injected through an argument, a unit or a printed entry.
+
+adds: >
+  The rate law, its apparent activation energy and the Table audits need no
+  solver; pymrm contributes find_roots for every quoted root, the slurry CSTR
+  as species balances solved by newton and the ideal plug-flow reactor as
+  steady upwind convection of the molar flows, checked by observed_orders.
+
+agreement: >
+  Table V does not carry the apparent activation energy the paper reports.
+  Over the partial pressures both temperatures cover it gives 133.0
+  <!-- claim: r3_band_lo --> to 159.4 <!-- claim: r3_band_hi --> kJ/mol; it
+  reaches the larger quoted value only at P_CO 0.0444 <!-- claim: r3_root_945 --> MPa,
+  2.50 <!-- claim: r3_lowest_over_root_945 --> times below the lowest measured
+  P_CO. With the a-b covariance recovered from the design, the smallest
+  one-sample z is 9.56 <!-- claim: r3_z_945 --> (standard error 4.03
+  <!-- claim: r3_sdE_at_min --> kJ/mol); without the correlation it would be
+  0.90 <!-- claim: r3_z_945_rho0 -->. The design reproduces the printed 240 C
+  standard errors, but implies a standard error of a at 220 C of 14.7
+  <!-- claim: r2_sd_a220_design -->, a factor 10.6 <!-- claim: r2_factor_220 -->
+  above the printed one. Figure 8 agrees
+  with Table V at 240 C.
+
+caveats: >
+  The rate data are not printed, so nothing is refitted; the covariance comes
+  from the digitised design, with one run at 240 C hidden under another
+  marker. The page does not say whether Table V or the two rate pairs
+  behind the quoted activation energies are in error. The plug-flow reactor is
+  ideal and isothermal (no pore diffusion or heat removal). Standard
+  conditions of the feed are not defined in the paper (0 C taken).
