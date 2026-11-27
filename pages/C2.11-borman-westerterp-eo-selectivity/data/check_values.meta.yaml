@@ -1,0 +1,33 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Borman, P. C.", "Westerterp, K. R."]
+  year: 1995
+  container: "Industrial & Engineering Chemistry Research 34, 49-58"
+  doi: "10.1021/ie00040a002"
+  access: >
+    The equations are those of the paper (rate expressions of Table 5, model III, with the
+    parameters of Table 6; eqs. 1, 2 and 8; Table 8 and Appendix formulas for the gas
+    composition), with the readings and misprints stated in the build plan's equations file
+    (M1: the model III r2 rate constant; F = 100 is a stated test value). The values are not read
+    from the paper but computed from its equations and printed parameters by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script c211_check_values.py (numpy and scipy, no pymrm, no page code; analytic derivatives cross-checked against central differences, closed-form F against a brentq root, the Table 4 inversion against a forward CSTR solve), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; looser rtol rows carry the route's own error"
+
+conditions: >
+  Test condition T: the Figure 6 base point (476 K, P_E 0.09, P_O 1.06, P_C 0.07, P_EO 0.06,
+  P_W 0.07 bar), caption form of Table 5. T4: Table 4 row 2 at 500 K, dry CO2-free air feed
+  (rows F_T4row1 and F_T4row3: rows 1 and 3). F = 1 is Table 6 as printed.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

@@ -1,0 +1,82 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: C2.11
+slug: borman-westerterp-eo-selectivity
+title: "Ethene epoxidation selectivity over silver (Borman and Westerterp)"
+section: C
+status: published
+tier: T1
+priority: P1
+structures: [S1]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Borman, P. C.", "Westerterp, K. R."]
+  year: 1995
+  container: "Industrial & Engineering Chemistry Research 34(1) 49-58"
+  doi: 10.1021/ie00040a002
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 40
+datasets:
+  - borman-1995-table6.csv
+  - borman-1995-table7.csv
+  - borman-1995-table4.csv
+  - borman-1995-table3.csv
+  - borman-1995-printed-numbers.csv
+  - borman-1995-fig6.csv
+  - check_values.csv
+
+validation:
+  - >-
+    The authors' calculation reproduced: one factor of 112.8 <!-- claim: F_fig6 --> on the
+    model III combustion rate constant reproduces the three digitised curves of Figure 6 with
+    a root mean square residual of 0.031 <!-- claim: fig6_rms_Ffit --> selectivity points;
+    104 <!-- claim: fig6_inside_Ffit --> of the 105 <!-- claim: fig6_n_points --> points lie within the reading band.
+  - >-
+    Analytic apparent activation energies and product sensitivities against central
+    differences: observed orders 1.96 <!-- claim: V1_order_min --> to
+    2.08 <!-- claim: V1_order_max --> in the asymptotic range.
+  - >-
+    Table 8 against A-4 and A-5 and the C, H, O balances at every Table 4 row, to round-off.
+  - >-
+    The pymrm forward solve of the Berty reactor returns the conversions of the explicit
+    inversion of every Table 4 row, at two newton tolerances.
+  - >-
+    Check values from an independent second route reproduced; claims format 2: every claim
+    except the one structural claim (the point count of the committed CSV) is failed by at
+    least one break row.
+
+adds: >
+  Little: the finding needs no solver. pymrm provides the forward solve of the gradientless
+  reactor (newton, residual_check), the root check of the closed-form factor (find_roots) and
+  the observed orders of the derivative checks (observed_orders).
+
+agreement: >
+  Table 6 as printed gives 99.62 <!-- claim: sigma_T_F1_pct --> % selectivity at the Figure 6
+  condition, where the authors' own curves lie far lower: 0 <!-- claim: fig6_inside_F1 --> of
+  the 105 <!-- claim: fig6_n_points --> digitised points lie within the reading band. With the fitted factor on the
+  combustion rate constant all three curves are reproduced: one factor of
+  112.8 <!-- claim: F_fig6 --> (112.4 <!-- claim: F_fig6_K476 --> to
+  112.8 <!-- claim: F_fig6 --> over the printed forms of the constants); per curve the factor
+  is 112.72 <!-- claim: F_fig6_C -->, 112.89 <!-- claim: F_fig6_EO --> and
+  112.75 <!-- claim: F_fig6_W -->. No other reading restores the printed constants: the
+  deactivation factors refer later series to series 1 (eq. 6) and move r2/r1 by
+  0.886 <!-- claim: f3_factor --> or 1.128 <!-- claim: f3_factor_inv --> (selectivity
+  99.66 <!-- claim: sigma_T_f3_pct --> or 99.57 <!-- claim: sigma_T_f3inv_pct --> %); models I
+  and II as printed miss the curves (root mean square 3.55 <!-- claim: fig6_rms_modelI --> and
+  1.52 <!-- claim: fig6_rms_modelII --> points). The ratio 100 f3(r1)/f3(r2) =
+  112.8 <!-- claim: f3_ratio_x100 --> matches the factor, but its rounding interval,
+  110.1 <!-- claim: f3_ratio_x100_lo --> to 115.6 <!-- claim: f3_ratio_x100_hi -->, covers every
+  factor the printed forms give, so it cannot be tested; the page does not adopt it as the
+  cause. The factors that match the three Table 4 runs are
+  62.0 <!-- claim: F_row1 -->, 100.7 <!-- claim: F_row2 --> and 113.1 <!-- claim: F_row3 -->.
+
+caveats: >
+  The kinetic data set is not printed, so the fit is neither tested nor refitted, and the page
+  does not say why the factor is near 113. Table 4 used fresh catalyst samples, not the kinetic
+  batch, and gives three runs only. The Table 4 feed is assumed to be dry, CO2-free air.
