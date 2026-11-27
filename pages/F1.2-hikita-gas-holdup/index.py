@@ -575,6 +575,8 @@ def r2_gap(K, C, curves):
     devf = np.array([M[f"maxdev_{s}"] for s in FITTED])
     M["n_fitted_maxdev_gt_10"] = int((devf > K["maxdev_eq8_pct"] / 100).sum())
     M["n_fitted_maxdev_gt_10__margin"] = float(np.min(np.abs(devf - K["maxdev_eq8_pct"] / 100)))
+    M["n_fitted"] = len(FITTED)
+    M["maxdev_air_water_excess"] = M["maxdev_air_water"] - K["maxdev_eq8_pct"] / 100
     M["mo_round_air_water"] = M["_round_air_water"]
     M["n_maxdev_gt_10_beyond_rounding"] = int(sum(M[f"maxdev_{s}"] - K["maxdev_eq8_pct"] / 100 > M[f"_round_{s}"]
                                                   for s in SYSTEMS))
@@ -627,12 +629,13 @@ def r3_fig2(K, C):
         M[f"f2_lay_t_{s}"] = M[f"f2_lay_{s}"] / M[f"f2_lay_se_{s}"]
         a0[s] = np.log(e) - n8 * np.log(u)          # intercepts with eq. 8's slope fixed
         M[f"_f2_{s}"] = (u, e)
-    for s, tag in (("H2_water", "H2"), ("H2N2_51_water", "51")):
+    for s, tag in (("H2_water", "H2"), ("H2N2_51_water", "51"), ("H2N2_11_water", "11")):
         d = a0[s].mean() - a0["air_water"].mean()
         se = math.sqrt(a0[s].var(ddof=1) / len(a0[s]) + a0["air_water"].var(ddof=1) / len(a0["air_water"]))
         M[f"f2_{tag}_air"], M[f"f2_{tag}_air_se"] = d, se
         M[f"f2_{tag}_air_t8"] = (d - math.log(M_gas(s, fl, g, K))) / se
         M[f"f2_{tag}_air_tay"] = d / se
+        M[f"f2_{tag}_air_misfit"] = math.exp(d) / M_gas(s, fl, g, K) - 1
     d = a0["H2_water"].mean() - a0["H2N2_51_water"].mean()
     se = math.sqrt(a0["H2_water"].var(ddof=1) / len(a0["H2_water"])
                    + a0["H2N2_51_water"].var(ddof=1) / len(a0["H2N2_51_water"]))
@@ -693,7 +696,26 @@ def r4_fig3(K, C):
     M["f3_AD_ay"] = float(np.mean(np.abs(a.eps_obs / a.eay - 1)))
     M["f3_AD8_assigned"] = float(np.mean(np.abs(a.eps_obs / a.eps_cal - 1)))
     M["f3_pair_all"], M["f3_pair_all_se"] = mean_se(a.pair)
-    M["f3_n_outside_window"] = int((~a.inside).sum())
+    lo_ca, hi_umax = bounds(K, C)["Ca"][0], K["uG_max_cm_s"] / 100
+    a["Ca"] = [groups(u, fl[s], g)[0] for u, s in zip(a.u, a.system)]
+    below, above = a.Ca < lo_ca, a.u > hi_umax
+    M["f3_n_below_Ca"], M["f3_n_above_umax"] = int(below.sum()), int(above.sum())
+    M["f3_n_outside_other"] = int((~a.inside & ~below & ~above).sum())   # a window bound other than Ca or u_max
+    h = a[a.system == "H2_water"]
+    M["f3_n_H2_water"], M["f3_n_H2_water_above_umax"] = len(h), int((h.u > hi_umax).sum())
+    # a 10 px (600 dpi) shift of every H2 marker, in either coordinate: the largest change of the H2 pair mean
+    mkd = C.f3[C.f3.kind == "marker"]
+    ky, kx = math.log(10) / px_per_decade(mkd, "px_y", "eps_obs"), math.log(10) / px_per_decade(mkd, "px_x", "eps_cal")
+    base, worst = (h.pair.mean() if len(h) else math.nan), 0.0
+    for dy, dx in ((10, 0), (-10, 0), (0, 10), (0, -10)) if len(h) else ():
+        eo, ec = h.eps_obs * math.exp(dy * ky), h.eps_cal * math.exp(dx * kx)
+        us = [e8_velocity(e, fl["H2_water"], g, K) for e in ec]
+        pr = [abs(math.log(o / eps_ay(u, fl["H2_water"], C, K))) - abs(math.log(o / e)) for o, e, u in zip(eo, ec, us)]
+        worst = max(worst, abs(float(np.mean(pr)) - base))
+    M["f3_pair_H2_water_shift10px"] = worst if len(h) else math.nan
+    hin = h[h.u <= hi_umax]
+    M["f3_n_H2_water_in_range"] = len(hin)
+    M["f3_pair_H2_water_in_range"], M["f3_pair_se_H2_water_in_range"] = mean_se(hin.pair) if len(hin) > 1 else (math.nan, math.nan)
     for s, d in a.groupby("system"):
         if len(d) >= 3:
             M[f"f3_l8_{s}"], M[f"f3_l8_se_{s}"] = mean_se(d.l8)
@@ -890,9 +912,11 @@ say("At matched velocity (intercepts with eq. 8's slope 0.578 fixed), the H2 dat
     "<<s5:.3f>> from air ($t$ = <<t58:+.1f>> against eq. 8's <<lg5:.3f>>, <<t5ay:+.1f>> against 0). With a free common "
     "slope (<<b:.3f>> ± <<bs:.3f>>) the two differences are <<dhf:.3f>> ± <<shf:.3f>> and <<d5f:.3f>> ± <<s5f:.3f>>. "
     "H2 against the 5:1 mixture: <<d:+.3f>> ± <<s:.3f>>, where eq. 8 says <<lgg:.3f>> ($t$ = <<t:+.1f>>). One "
-    "reading error of a marker is <<er:.4f>> in $\\ln\\varepsilon$. Both light gases hold less gas than air, which "
-    "Akita-Yoshida cannot give; neither follows eq. 8's gas factor, and H2 does not sit below the 5:1 mixture as "
-    "eq. 8 puts it. The two lines drawn in Figure 2 have slopes <<lu:.3f>> (upper: air and 1:1) and "
+    "reading error of a marker is <<er:.4f>> in $\\ln\\varepsilon$. The 1:1 mixture lies <<d1:.3f>> ± <<s1:.3f>> from air "
+    "($t$ = <<t18:+.1f>> against eq. 8's <<lg1:.3f>>, <<t1ay:+.1f>> against 0). Both light gases hold less gas than air, "
+    "which Akita-Yoshida cannot give; H2 (misfit <<mh:pct1>> in holdup against eq. 8's gas factor <<gfh:.4f>>, inside "
+    "its printed maximum deviation of <<md:g>> %) and the 5:1 mixture miss eq. 8's gas factor, the 1:1 mixture follows "
+    "it, and H2 does not sit below the 5:1 mixture as eq. 8 puts it. The two lines drawn in Figure 2 have slopes <<lu:.3f>> (upper: air and 1:1) and "
     "<<ll:.3f>> (lower: 5:1 and H2), against the text's \"about the 0.58 power\" (p. 62); they are not eq. 8, "
     "which would give four lines.",
     dh=M["f2_H2_air"], sh=M["f2_H2_air_se"], th8=M["f2_H2_air_t8"], lgh=math.log(M["gasfactor_H2_water"]),
@@ -901,7 +925,9 @@ say("At matched velocity (intercepts with eq. 8's slope 0.578 fixed), the H2 dat
     bs=M["f2_slope_free_se"], dhf=M["f2_H2_air_free"], shf=M["f2_H2_air_free_se"], d5f=M["f2_51_air_free"],
     s5f=M["f2_51_air_free_se"], d=M["f2_H2_51"], s=M["f2_H2_51_se"], t=M["f2_H2_51_t8"],
     lgg=math.log(M["H2_over_51_eq8"]), er=M["f2_read_err"], lu=M["f2_line_slope_upper"],
-    ll=M["f2_line_slope_lower"])
+    ll=M["f2_line_slope_lower"], d1=M["f2_11_air"], s1=M["f2_11_air_se"], t18=M["f2_11_air_t8"],
+    lg1=math.log(M["gasfactor_H2N2_11_water"]), t1ay=M["f2_11_air_tay"], mh=M["f2_H2_air_misfit"],
+    gfh=M["gasfactor_H2_water"], md=K["maxdev_eq8_pct"])
 
 # %% [markdown]
 # ### R4. The fitted set, Figure 3
@@ -938,15 +964,18 @@ say("Over all <<n:d>> markers read, $AD$ = <<ad:pct2>> and $AD'$ = <<adp:pct2>>,
     "$\\ln$), <<nw:d>> within <<md:g>> % by more than two; the largest deviation is <<mx:pct1>>. On the <<na:d>> assigned "
     "markers, eq. 8 gives $AD$ = <<ad8:pct2>> and Akita-Yoshida at the E8 velocity <<aday:pct2>>, against the "
     "<<p6:g>> % printed on Fig. 6 for Akita-Yoshida on all the data; the paired difference is "
-    "<<pa:.4f>> ± <<ps:.4f>> (positive: eq. 8 closer). <<no:d>> of the <<na:d>> assigned markers lie outside the "
-    "window of eq. 8 at their E8 velocity. The lowest CH4-water marker sits at <<uc:.4f>> m/s ($Ca$ = <<cc:.2e>>) "
+    "<<pa:.4f>> ± <<ps:.4f>> (positive: eq. 8 closer; the ± values here are scatter of the markers only, not reading "
+    "error; a 10 px shift of every H2 marker moves the H2 mean by at most <<sh10:.4f>>). Of the <<na:d>> assigned markers, <<nbc:d>> has a $Ca$ below the printed lower bound and <<nau:d>> (H2) "
+    "plot where eq. 8 needs a velocity beyond the highest of the experiments, <<umaxf:.1f>> cm/s. The H2 pair value is "
+    "<<ph:.4f>> ± <<phs:.4f>> over all <<nh:d>> H2 markers and <<pi:.4f>> ± <<pis:.4f>> over the <<ni:d>> that plot "
+    "at or below <<umaxf:.1f>> cm/s. The lowest CH4-water marker sits at <<uc:.4f>> m/s ($Ca$ = <<cc:.2e>>) "
     "and the lowest air-water marker at <<ua:.4f>> m/s ($Ca$ = <<ca:.2e>>); Figure 2's air-water point at <<umin:g>> cm/s "
     "would plot at $(\\varepsilon)_{cal}$ = <<e42:.4f>>, and <<nn:d>> markers read lie within two reading errors "
     "of it. The drawn line of Figure 3 lies <<lm:.4f>> ± <<ls:.4f>> in $\\ln$ from $y = x$ (largest <<lx:.4f>>), "
     "inside one reading error.",
     n=M["f3_n"], ad=M["f3_AD"], adp=M["f3_ADp"], nb=M["f3_n_beyond"], nw=M["f3_n_within"], re=M["f3_ratio_err"],
     mx=M["f3_maxdev"], na=M["f3_n_assigned"], ad8=M["f3_AD8_assigned"], aday=M["f3_AD_ay"], p6=K["ad_fig6_ay_pct"],
-    pa=M["f3_pair_all"], ps=M["f3_pair_all_se"], no=M["f3_n_outside_window"], uc=M["f3_umin_CH4_water"],
+    pa=M["f3_pair_all"], ps=M["f3_pair_all_se"], nbc=M["f3_n_below_Ca"], nau=M["f3_n_above_umax"], umaxf=K["uG_max_cm_s"], ph=M["f3_pair_H2_water"], phs=M["f3_pair_se_H2_water"], nh=M["f3_n_H2_water"], pi=M["f3_pair_H2_water_in_range"], pis=M["f3_pair_se_H2_water_in_range"], ni=M["f3_n_H2_water_in_range"], sh10=M["f3_pair_H2_water_shift10px"], uc=M["f3_umin_CH4_water"],
     cc=M["f3_Camin_CH4_water"], ua=M["f3_umin_air_water"], ca=M["f3_Camin_air_water"], e42=M["f3_cal_aw_u042"],
     nn=M["f3_n_near_aw_u042"], lm=M["f3_line_mean"], ls=M["f3_line_se"], lx=M["f3_line_max"])
 
@@ -1017,7 +1046,7 @@ assert _far[:4] == ["H2_water", "H2N2_51_water", "air_aniline", "air_sucrose50"]
 say("**The gap.** Over the velocity range of the paper (<<umin:g>> to <<umax:.1f>> cm/s, any diameter: both formulas are "
     "diameter-free), eq. 8 and Akita-Yoshida differ by more than eq. 8's printed <<md:g>> % maximum deviation somewhere for "
     "<<n:d>> of the <<nft:d>> fitted systems (<<nr:d>> beyond the rounding of the $Mo$ exponent), and a fitted system "
-    "has on average <<fr:pct0>> of its range within <<md:g>> %. The gap is a product of a velocity-shape factor common to "
+    "has on average <<fr:pct0>> of its range (in $\\ln u_G$) within <<md:g>> %. The gap is a product of a velocity-shape factor common to "
     "all systems, at most <<sf:.4f>>, and a property factor $P$ from <<pmin:.3f>> to <<pmax:.3f>> over Table 2.\n\n"
     "**The points where $P$ is far from 1.** Of the Figure 3 systems with three or more assigned markers, the three "
     "with $P$ farthest from 1 are H2 (<<Ph:.3f>>), the 5:1 mixture (<<P5:.3f>>) and aniline (<<Pa:.3f>>); their "
@@ -1026,13 +1055,19 @@ say("**The gap.** Over the velocity range of the paper (<<umin:g>> to <<umax:.1f
     "against a ratio reading error of <<re:.4f>>. The next, 50 wt % sucrose (<<Ps:.3f>>), decides nothing "
     "(<<psu:+.3f>> ± <<psus:.3f>>). In Figure 2 H2 lies "
     "<<lh8:+.3f>> ± <<lh8s:.3f>> from eq. 8 and <<lhay:+.3f>> ± <<lhays:.3f>> from Akita-Yoshida. The points side with "
-    "eq. 8 where $P$ is large, but they do not follow its gas factors: at matched velocity H2 sits <<t8:+.1f>> "
-    "standard errors from eq. 8's ratio to air, and not below the 5:1 mixture as eq. 8 puts it (<<t:+.1f>>). "
+    "eq. 8 where $P$ is large, but two of the three gases miss its gas factor: at matched velocity H2 sits <<t8:+.1f>> "
+    "and the 5:1 mixture <<t58:+.1f>> standard errors from eq. 8's ratio to air, the 1:1 mixture <<t18:+.1f>> (it follows "
+    "eq. 8), and H2 does not sit below the 5:1 mixture as eq. 8 puts it (<<t:+.1f>>). The H2 miss is <<mh:pct1>> in holdup, "
+    "inside eq. 8's printed <<md:g>> % maximum deviation, and about one reading error in size: the miss is in the ratio "
+    "between gases. "
     "All of this is the fitting data of eq. 8: it shows how eq. 8 represents its own data, not that it holds "
     "elsewhere. No n-butanol marker could be assigned in Figure 3, so the smallest property factor is not tested.\n\n"
-    "**The window.** <<no:d>> of the <<na:d>> assigned Figure 3 markers lie outside the printed window at their E8 "
-    "velocity, and the lowest CH4-water marker has $Ca$ = <<cc:.2e>>, below the printed lower bound: the printed "
-    "window is narrower than the plotted fitting data at the low-velocity end.",
+    "**The window.** The printed window is narrower than the plotted fitting data at both ends: <<nbc:d>> of the "
+    "<<na:d>> assigned Figure 3 markers (CH4-water, $Ca$ = <<cc:.2e>>) lies below the printed $Ca$ bound, and <<nau:d>> "
+    "H2 markers plot where eq. 8 needs a velocity beyond <<umaxf:.1f>> cm/s, the highest velocity of the "
+    "experiments, which the paper does not explain. The H2 pair value is <<ph:.3f>> ± <<phs:.3f>> with all <<nh:d>> H2 markers and "
+    "<<pi:.3f>> ± <<pis:.3f>> with the <<ni:d>> inside the velocity range; the ± are scatter only, and a 10 px shift "
+    "of every H2 marker moves the mean by at most <<sh10:.3f>>.",
     n=M["n_fitted_maxdev_gt_10"], nft=len(FITTED), nr=M["n_fitted_maxdev_gt_10_beyond_rounding"],
     fr=M["mean_band_frac_fitted"], sf=M["shape_factor"],
     pmin=min(M[f"P_{s}"] for s in SYSTEMS if s != "air_water"), pmax=max(M[f"P_{s}"] for s in SYSTEMS if s != "air_water"),
@@ -1041,7 +1076,10 @@ say("**The gap.** Over the velocity range of the paper (<<umin:g>> to <<umax:.1f
     p5s=M["f3_pair_se_H2N2_51_water"], pa_=M["f3_pair_air_aniline"], pas=M["f3_pair_se_air_aniline"],
     re=M["f3_ratio_err"], lh8=M["f2_l8_H2_water"], lh8s=M["f2_l8_se_H2_water"], lhay=M["f2_lay_H2_water"],
     lhays=M["f2_lay_se_H2_water"], t8=M["f2_H2_air_t8"], t=M["f2_H2_51_t8"], na=M["f3_n_assigned"],
-    no=M["f3_n_outside_window"], cc=M["f3_Camin_CH4_water"])
+    nbc=M["f3_n_below_Ca"], nau=M["f3_n_above_umax"], umaxf=K["uG_max_cm_s"], nh=M["f3_n_H2_water"],
+    pi=M["f3_pair_H2_water_in_range"], pis=M["f3_pair_se_H2_water_in_range"], ni=M["f3_n_H2_water_in_range"],
+    sh10=M["f3_pair_H2_water_shift10px"], t58=M["f2_51_air_t8"], t18=M["f2_11_air_t8"],
+    mh=M["f2_H2_air_misfit"], md=K["maxdev_eq8_pct"], cc=M["f3_Camin_CH4_water"])
 
 # %% [markdown]
 # ## What pymrm adds
@@ -1086,7 +1124,7 @@ STRUCTURAL = {"v3_slope_fd_gap": "E5's slope is the exact derivative of E3 for a
               "v3_P_gap": "P in closed form equals the ratio of the maxima for any constants",
               "v3_ustar_gap": "the closed form is the exact root of d ln R/d ln u for any constants; bound: find_roots xtol",
               "v2_cgs_gap": "the four groups of E1 are dimensionless for any exponents",
-              "f3_n": "digitised marker count",
+              "f3_n": "digitised marker count", "n_fitted": "count of Table 2 rows with role fitted", "f3_n_H2_water": "digitised marker count",
               **{f"f2_n_{s}": "digitised marker count per legend shape" for s in FIG2_GASES}, "f3_n_assigned": "digitised marker count (shapes decided)",
               "v1_pairs": "number of constants compared", "v2_e9_n": "number of exponents compared"}
 BOUNDS = {"v3_slope_fd_gap": (1e-8, "theory", STRUCTURAL["v3_slope_fd_gap"]),
@@ -1101,7 +1139,7 @@ BOUNDS = {"v3_slope_fd_gap": (1e-8, "theory", STRUCTURAL["v3_slope_fd_gap"]),
 COUNTS = {"n_maxdev_gt_10": 1e-6, "n_fitted_maxdev_gt_10": 1e-6, "n_named_side_ok": 0.01,
           "f3_n_near_aw_u042": 0.005}
 EXACT = {"n_fitted_all_in", "n_fitted_all_in_strict", "n_fitted_never_in", "n_fitted_never_in_strict",
-         "n_heldout_all_in", "n_ay_in", "f3_n_beyond", "f3_n_within", "f3_n_outside_window", "v1_agree",
+         "n_heldout_all_in", "n_ay_in", "f3_n_beyond", "f3_n_within", "f3_n_below_Ca", "f3_n_above_umax", "f3_n_outside_other", "f3_n_H2_water_above_umax", "f3_n_H2_water_in_range", "v1_agree",
          "v2_e9_exps_agree", "n_maxdev_gt_10_beyond_rounding", "n_fitted_maxdev_gt_10_beyond_rounding"}
 
 
