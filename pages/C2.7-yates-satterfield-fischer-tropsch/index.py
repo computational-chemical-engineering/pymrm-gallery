@@ -139,8 +139,9 @@ def page_module(page):
 # P<sub>H2</sub> and P<sub>CO</sub> that were nearly the same at 220 and 240 °C. The
 # apparent activation energies were 92.7 and 94.5 kJ/mol" (p. 172). Table V fixes the
 # same quantity: at one $(P_{\mathrm{H_2}}, P_{\mathrm{CO}})$ the ratio of the two
-# fitted rates gives an apparent activation energy, the like-for-like ratio the
-# authors used. This page computes it over the range of $P_{\mathrm{CO}}$ that both
+# fitted rates gives an apparent activation energy at fixed partial pressures; the
+# authors used two pairs of measured rates, whose ratio this is the expected value of,
+# and single runs add their scatter (below). This page computes it over the range of $P_{\mathrm{CO}}$ that both
 # temperatures cover, with its standard error, and asks whether 92.7 to 94.5 kJ/mol
 # lies in that range.
 #
@@ -149,8 +150,9 @@ def page_module(page):
 # at the same operating conditions will be reported separately", p. 168); the
 # mass-transfer verification (p. 169); the other authors' data of Figs. 9 to 11; the
 # 230 °C points of Fig. 8, for which no parameters are printed; the linearised forms
-# other than through their printed $R^2$; and a refit of the rate data, which are not
-# printed.
+# of Figs. 3 to 7; and a refit of 240 °C rates rebuilt from Figure 8 (planned, not
+# done: neither eq. 16 against eq. 7 nor the scatter of the near-identical run pairs is
+# refitted here).
 
 # %% [markdown]
 # ## The published model
@@ -237,7 +239,8 @@ print("Table V as printed:", ", ".join(f"{k} {v}" for k, v in tv.items()))
 #   every run, Figure 1 (220 °C) and Figure 2 (240 °C), the design behind Table V.
 #   Overlapping markers were separated by template matching. Figure 2 shows 22
 #   triangles for 23 runs (Table V, footnote b): the 23rd lies under one of them, and
-#   the page carries all 22 placements through every design-dependent number.
+#   the page carries all 22 placements through the correlation of the 240 °C design, the
+#   ratio and correlation of the standard errors and the minimum of z.
 #   Reading error ±0.003 MPa per coordinate (sidecar).
 # - `yates-satterfield-1991-fig8-parity.csv`: Figure 8, measured against predicted
 #   rate. Only markers that stand alone are used one by one; four merged pairs and a
@@ -517,6 +520,9 @@ def part_design(cfg, M):
         r, p = stats.pearsonr(pc, ph)
         rl = stats.pearsonr(np.log(pc), np.log(ph))[0]
         M[f"r1_r_{T}"], M[f"r1_p_{T}"], M[f"r1_vif_log_{T}"] = float(r), float(p), 1.0 / (1.0 - abs(rl) ** cfg.vif_power)
+    rr_, pp_ = zip(*(stats.pearsonr(*d_) for d_ in D[240]))
+    M["r1_r_240_lo"], M["r1_r_240_hi"] = float(min(rr_)), float(max(rr_))
+    M["r1_p_240_lo"], M["r1_p_240_hi"] = float(min(pp_)), float(max(pp_))
     # Table V arithmetic (the check-value functions) at this cfg
     cv = check_values_t(cfg)
     M.update(cv)
@@ -616,11 +622,41 @@ def part_z(cfg, M, D, par, lo, hi):
     M["r3_sdE_at_min"] = float(sd_e_app(p_at, par, c240, c220, rho_zero=cfg.rho_zero))
     M["r3_z_945_spread_placements"] = max(zs) - min(zs)
     M["r3_z_927"] = z_min(par, c240, c220, num(pn, "E_app_1"), lo, hi, cfg.rho_zero, log)[0]
-    M["r3_inflation"] = z / 2.0
+    pair_z(cfg, M, D, par, i_min, c240, c220, eq)
     M["r3_z_945_rho0"], p0 = z_min(par, c240, c220, eq, lo, hi, True, log)
     M["r3_sdE_rho0"] = float(sd_e_app(p0, par, c240, c220, rho_zero=True))
     c220b = c220 * (3.36 / num(pn, "sd_b_220")) ** 2
     M["r3_z_945_sd336"] = z_min(par, c240, c220b, eq, lo, hi, cfg.rho_zero, log)[0]
+
+
+def pair_z(cfg, M, D, par, i240, c240, c220, eq):
+    """z of a quoted E against the one pair of measured rates behind it (p. 172).
+
+    The pair is the 220/240 C pair of runs closest in (P_CO, P_H2). A quoted E is a ratio of
+    the two single rates, so it carries their scatter: s_T from the printed sd_b with the
+    design, or at 240 C from Table IV's SSE; the fitted-curve error of E_app is added.
+    """
+    pn = cfg.pn
+    (c2, h2), (c4, h4) = D[220][0], D[240][i240]
+    dist = np.hypot(c2[:, None] - c4[None, :], h2[:, None] - h4[None, :])
+    j, k = np.unravel_index(int(np.argmin(dist)), dist.shape)
+    M["r3_pair_dist"] = float(dist[j, k])
+    r = {220: float(rate(par["a220"], par["b220"], h2[j], c2[j])),
+         240: float(rate(par["a240"], par["b240"], h4[k], c4[k]))}
+    s = {}
+    for T, (pc, ph) in ((220, (c2, h2)), (240, (c4, h4))):
+        ju = design_covariance(par[f"a{T}"], par[f"b{T}"], ph, pc, b_col=cfg.b_col)
+        s[T] = num(pn, f"sd_b_{T}") / np.sqrt(ju[1, 1])
+    s_tab4 = np.sqrt(num(pn, "tab4_eq16_SSE") / (int(num(pn, "n_240")) - 2))
+    rd = R_GAS / 1e3 / abs(inv_dT(par))
+    p = 0.5 * (c2[j] + c4[k])
+    e = float(e_app(p, par, log=cfg.log))
+    sd_c = float(sd_e_app(p, par, c240, c220, rho_zero=cfg.rho_zero))
+    sd_pair = rd * np.hypot(s[240] / r[240], s[220] / r[220])
+    sd_pair4 = rd * np.hypot(s_tab4 / r[240], s[220] / r[220])
+    M["r3_sd_pair"] = float(sd_pair)
+    M["r3_z_945_pair"] = (e - eq) / np.hypot(sd_c, sd_pair)
+    M["r3_z_945_pair_tab4"] = (e - eq) / np.hypot(sd_c, sd_pair4)
 
 
 def part_mc(cfg, M, D):
@@ -698,6 +734,13 @@ def part_r4(cfg, M, D):
                       + (r_ / ph[idx] * DESIGN_ERR) ** 2)
         M[f"r4_fig8_dev_{T}"] = f8.R_pred.to_numpy()[:k] - model
         M[f"r4_fig8_tol_{T}"] = tol
+    # Table III: the temperatures at which eq. 21 has the highest R^2 of the linearised forms
+    best = []
+    for T in (220, 240):
+        r2 = {e: num(pn, f"tab3_eq{e}_{T}") for e in range(17, 22)}
+        best.append(max(r2, key=r2.get) == 21)
+        M[f"r4_tab3_eq21_{T}"], M[f"r4_tab3_eq20_{T}"] = r2[21], r2[20]
+    M["r4_tab3_eq21_best_count"] = int(sum(best))
     # Table II at 240 C
     for k in (1, 2, 3, 4):
         r = tab2(pn, k)
@@ -881,12 +924,14 @@ fig.tight_layout()
 plt.show()
 say("Pearson's r between $P_{\\mathrm{CO}}$ and $P_{\\mathrm{H_2}}$ is <<r220:.3f>> at 220 °C "
     "(p = <<p220:.1e>>, 17 runs) and <<r240:.3f>> at 240 °C (p = <<p240:.1e>>, 22 visible "
-    "runs), each significant at the 1 % level: the partial pressures are correlated. The "
+    "runs; <<rlo:.3f>> to <<rhi:.3f>> over the placements of the 23rd run, p = <<plo:.1e>> to "
+    "<<phi:.1e>>), each significant at the 1 % level: the partial pressures are correlated. The "
     "correlation of their logarithms inflates the variance of a power-law order by a "
     "factor 1/(1 - r²) = <<v220:.2f>> and <<v240:.2f>>. The range of $P_{\\mathrm{CO}}$ "
     "that both temperatures cover is <<lo:.3f>> to <<hi:.3f>> MPa (reading error "
     "±0.003 MPa); the lowest measured $P_{\\mathrm{CO}}$ is <<low:.3f>> MPa, at 240 °C.",
     r220=M["r1_r_220"], p220=M["r1_p_220"], r240=M["r1_r_240"], p240=M["r1_p_240"],
+    rlo=M["r1_r_240_lo"], rhi=M["r1_r_240_hi"], plo=M["r1_p_240_lo"], phi=M["r1_p_240_hi"],
     v220=M["r1_vif_log_220"], v240=M["r1_vif_log_240"], lo=M["r3_common_lo"],
     hi=M["r3_common_hi"], low=M["r1_pco_lo_240"])
 
@@ -938,7 +983,8 @@ say("From the design, $\\sigma_a/\\sigma_b$ at 240 °C is <<lo:.3f>> to <<hi:.3f
 # ### R3: the apparent activation energy that Table V carries
 #
 # The covariance at each temperature is scaled to the printed $\sigma_b$ (0.97 and
-# 3.63 1/MPa) and propagated into $E_{\mathrm{app}}(P_{\mathrm{CO}})$; the two
+# 3.63 1/MPa; scaling to $\sigma_a$ instead would give a smaller $\sigma_E$ at 220 °C,
+# so $\sigma_b$ is the cautious choice) and propagated into $E_{\mathrm{app}}(P_{\mathrm{CO}})$; the two
 # temperatures are independent fits. The one-sample statistic of a quoted value is
 # $z = (E_{\mathrm{app}} - E_{\mathrm{quoted}})/\sigma_E$, minimised over the range
 # both temperatures cover. Of the 22 placements of the hidden 240 °C run, the one with
@@ -982,8 +1028,7 @@ say("Over the range both temperatures cover, Table V gives $E_{\\mathrm{app}}$ =
 say("With the design covariance, $z$ for 94.5 kJ/mol is smallest at the lower end of the "
     "common range ($P_{\\mathrm{CO}}$ = <<p:.3f>> MPa), where $\\sigma_E$ = <<sd:.2f>> kJ/mol "
     "and $z$ = <<z:.2f>> (Monte Carlo of the reading error: ±<<mz:.2f>>; over the placements of "
-    "the hidden run it varies by <<zp:.2f>>); for 92.7 kJ/mol the minimum is <<z2:.2f>>. Every "
-    "standard error would have to be <<inf:.2f>> times larger to bring $z$ to 2. With "
+    "the hidden run it varies by <<zp:.2f>>); for 92.7 kJ/mol the minimum is <<z2:.2f>>. With "
     "$\\sigma_b$ = 3.36 at 220 °C the minimum is <<z3:.2f>>. Dropping the a-b correlation "
     "(same variances) gives $\\sigma_E$ = <<sd0:.1f>> kJ/mol and $z$ = <<z0:.2f>>, which "
     "decides nothing: the near-perfect correlation of $a$ and $b$ that the design implies is "
@@ -992,8 +1037,21 @@ say("With the design covariance, $z$ for 94.5 kJ/mol is smallest at the lower en
     "below every measured run. Whether Table V or the two rate pairs behind the quoted values "
     "(not printed) are at odds with the data, the paper does not let one say.",
     p=M["r3_p_at_min"], sd=M["r3_sdE_at_min"], z=M["r3_z_945"], mz=M["mc_sd_r3_z_945"],
-    zp=M["r3_z_945_spread_placements"], z2=M["r3_z_927"], inf=M["r3_inflation"],
+    zp=M["r3_z_945_spread_placements"], z2=M["r3_z_927"],
     z3=M["r3_z_945_sd336"], sd0=M["r3_sdE_rho0"], z0=M["r3_z_945_rho0"])
+assert min(M["r3_z_945_pair"], M["r3_z_945_pair_tab4"]) > 2
+say("That $z$ counts only the uncertainty of the fitted curves. The quoted values are ratios "
+    "of single measured rates, not of fitted ones, so a single run adds its own scatter. "
+    "At the closest 220/240 °C pair of the digitised design (distance <<dd:.4f>> MPa in "
+    "$(P_{\\mathrm{CO}}, P_{\\mathrm{H_2}})$) the standard error of the ratio of the two "
+    "rates, with the scatter of each run taken from the printed $\\sigma_b$ and the design, "
+    "is <<sp:.1f>> kJ/mol on $E_{\\mathrm{app}}$. Added to the curve error, it gives "
+    "$z$ = <<zq:.2f>> for 94.5 kJ/mol; with the 240 °C scatter from Table IV's SSE, "
+    "<<zt:.2f>>. Both stay above 2, so the verdict holds, with the significance of the "
+    "curve-only <<z:.2f>> much reduced. Scaling to the printed $\\sigma_b$ rather than $\\sigma_a$ is the cautious "
+    "choice: it gives the larger $\\sigma_E$.",
+    dd=M["r3_pair_dist"], sp=M["r3_sd_pair"], zq=M["r3_z_945_pair"],
+    zt=M["r3_z_945_pair_tab4"], z=M["r3_z_945"])
 say("The rate maximum in $P_{\\mathrm{CO}}$ at fixed $P_{\\mathrm{H_2}}$ (a root of the "
     "analytic derivative, at $1/b$) lies at <<p240:.4f>> MPa at 240 °C and <<p220:.4f>> MPa "
     "at 220 °C, <<f240:.2f>> and <<f220:.2f>> of the lowest $P_{\\mathrm{CO}}$ measured at each "
@@ -1026,10 +1084,13 @@ show(F8T.style.hide(axis="index").format(precision=4), "c272")
 # every row of Table IV must share one total sum of squares SST = SSE/(1 - R²).
 
 # %%
+# lo is the largest lower end and hi the smallest upper end of the rows' rounding intervals,
+# so every row's interval contains [lo, hi] exactly when the two do not cross
+assert M["r4_sst_lo"] <= M["r4_sst_hi"], "the Table IV rounding intervals have no common value"
 say("Table II: eq. 16 at the printed partial pressures misses the four measured rates by "
     "<<a:+.3f>>, <<b:+.3f>>, <<c:+.3f>> and <<d:+.3f>> mmol/(min g). Table IV: the rows give SST "
-    "<<s4:.4f>>, <<s7:.4f>>, <<s14:.4f>>, <<s15:.4f>> and <<s16:.4f>>, all inside the interval "
-    "<<lo:.4f>> to <<hi:.4f>> that rounding of every printed SSE and R² allows: one data set. "
+    "<<s4:.4f>>, <<s7:.4f>>, <<s14:.4f>>, <<s15:.4f>> and <<s16:.4f>>, whose rounding intervals "
+    "all contain <<lo:.4f>> to <<hi:.4f>>: one data set. "
     "The eq. 16 predictions spread by <<sp240:.3f>> (sum of squares about their mean) over the "
     "240 °C design and by <<sp220:.4f>> over the 220 °C design; only the first is of the size "
     "of that SST, so Table IV is the 240 °C fit. Its SSE ratios to eq. 16 are <<q4:.2f>>, <<q7:.2f>>, <<q14:.2f>> and <<q15:.2f>> "
@@ -1039,6 +1100,12 @@ say("Table II: eq. 16 at the printed partial pressures misses the four measured 
     s16=M["r4_sst_eq16"], lo=M["r4_sst_lo"], hi=M["r4_sst_hi"], sp240=M["r4_spread_240"],
     sp220=M["r4_spread_220"], q4=M["r4_sse_ratio_eq4"], q7=M["r4_sse_ratio_eq7"],
     q14=M["r4_sse_ratio_eq14"], q15=M["r4_sse_ratio_eq15"])
+say("Table III: the linearised eq. 21 has the highest $R^2$ of eqs. 17 to 21 at <<n:d>> of the "
+    "two temperatures; at 220 °C eq. 20 has <<e20:.3f>> against <<e21:.3f>> for eq. 21, at "
+    "240 °C eq. 21 has <<f21:.3f>> against <<f20:.3f>> for eq. 20. The paper states: \"The "
+    "equation which fits the data best is eq 21\" (p. 172).",
+    n=M["r4_tab3_eq21_best_count"], e20=M["r4_tab3_eq20_220"], e21=M["r4_tab3_eq21_220"],
+    f21=M["r4_tab3_eq21_240"], f20=M["r4_tab3_eq20_240"])
 say("Figure 8 and Table V: <<nin:d>> of the <<n240:d>> top-ranked triangles lie within their "
     "reading tolerance of eq. 16 at the 240 °C design, so $a$ and $b$ at "
     "240 °C are printed as the authors used them. The two top 220 °C squares lie "
@@ -1168,7 +1235,9 @@ VIA_MC = {"r2_ratio_240_lo": "r2_ratio_240", "r2_ratio_240_hi": "r2_ratio_240",
           "r2_rho_240_lo": "r2_rho_240", "r2_rho_240_hi": "r2_rho_240",
           "r2_sd_a220_design": "r2_ratio_220", "r2_sd_a220_design_sd336": "r2_ratio_220",
           "r2_t_a220_design": "r2_ratio_220", "r2_t_a220_design_sd336": "r2_ratio_220",
-          "r2_factor_220": "r2_ratio_220", "r3_inflation": "r3_z_945",
+          "r2_factor_220": "r2_ratio_220", "r1_r_240_lo": "r1_r_240",
+          "r1_r_240_hi": "r1_r_240", "r3_sd_pair": "r3_z_945",
+          "r3_z_945_pair": "r3_z_945", "r3_z_945_pair_tab4": "r3_z_945",
           "r3_z_945_sd336": "r3_z_945", "r4_sse_implied_240_lo": "r4_sse_implied_240",
           "r4_sse_implied_240_hi": "r4_sse_implied_240"}
 READ = {"r1_pco_lo_220", "r1_pco_hi_220", "r1_pco_lo_240", "r1_pco_hi_240", "r3_common_lo",
@@ -1205,8 +1274,8 @@ SKIP = {"r3_dz_lo_rel", "r2_g2_margin", "r2_g2_margin_rel", "r3_p_at_min_over_lo
 
 def tol_of(name, M):
     """CI tolerance of a value claim, from its basis."""
-    if name in ("r1_p_220", "r1_p_240"):
-        return float(np.expm1(3 * M[f"mc_sd_{name}"])), "three Monte Carlo spreads of ln p"
+    if name in ("r1_p_220", "r1_p_240", "r1_p_240_lo", "r1_p_240_hi"):
+        return float(np.expm1(3 * M[f"mc_sd_{name[:8]}"])), "three Monte Carlo spreads of ln p"
     key = VIA_MC.get(name, name)
     if f"mc_sd_{key}" in M:
         return max(3 * M[f"mc_sd_{key}"] / abs(M[key] if key in M else M[key + "_lo"]), TIGHT), \
@@ -1339,6 +1408,10 @@ DEFECTS = [
     printed_row("tab4_eq14_SSE", "0.254", ("design", "r4")),
     printed_row("tab4_eq15_SSE", "0.241", ("design", "r4")),
     printed_row("tab4_eq16_R2", "0.983", ("design", "r4")),
+    printed_row("tab3_eq20_220", "0.960", ("design", "r4")),
+    printed_row("tab3_eq21_240", "0.884", ("design", "r4")),
+    printed_row("tab3_eq21_220", "0.986", ("design", "r4")),
+    printed_row("tab3_eq20_240", "0.868", ("design", "r4")),
 ]
 CONTROLS = [("control: clean rerun without the Monte Carlo", C0, NO_MC)]
 claims.define_rows([r_ for r_, _, _ in CONTROLS + DEFECTS])

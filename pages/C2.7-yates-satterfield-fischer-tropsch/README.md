@@ -8,23 +8,27 @@ fitted in a slurry CSTR at 220 and 240 C (Table V), which slurry-reactor models
 take as given (`F2.3`). The page
 
 - digitises the experimental design (Figures 1 and 2): the partial pressures are
-  correlated (r = 0.797 <!-- claim: r1_r_220 --> and 0.773 <!-- claim: r1_r_240 -->),
-  where the paper says they are not;
+  correlated (r = 0.797 <!-- claim: r1_r_220 --> and 0.773 <!-- claim: r1_r_240 -->, from
+  0.731 <!-- claim: r1_r_240_lo --> to 0.802 <!-- claim: r1_r_240_hi --> over
+  the placements of the hidden 23rd run), where the paper says
+  "no significant correlation" (p. 170);
 - audits Table V: the t value of b at 220 C is not estimate over standard error
   (32.9 <!-- claim: r2_allow_b220 --> times the rounding allowance), and the
-  design that reproduces the printed 240 C standard errors implies a standard
+  design that reproduces the ratio of the printed 240 C standard errors implies a standard
   error of a at 220 C of 14.7 <!-- claim: r2_sd_a220_design -->, a factor
   10.6 <!-- claim: r2_factor_220 --> above the printed one;
 - computes the apparent activation energy Table V carries, at fixed partial
-  pressures as the authors did: 133.0 <!-- claim: r3_band_lo --> to
+  pressures (the authors used two pairs of measured rates): 133.0 <!-- claim: r3_band_lo --> to
   159.4 <!-- claim: r3_band_hi --> kJ/mol over the range both temperatures
   cover, against "The apparent activation energies were 92.7 and 94.5 kJ/mol"
   (p. 172), values Table V reaches only at
   P_CO 0.0420 <!-- claim: r3_root_927 --> and 0.0444 <!-- claim: r3_root_945 -->
-  MPa, below every run. With the a-b covariance from the design the smallest
-  one-sample z is 9.56 <!-- claim: r3_z_945 -->; without it,
-  0.90 <!-- claim: r3_z_945_rho0 -->, so the covariance decides the verdict. Which of
-  Table V and the quoted values is wrong the paper does not let one say;
+  MPa, below every run. Against Table V's own standard error (a-b covariance from the
+  design) the smallest one-sample z is 9.56 <!-- claim: r3_z_945 -->; counting the
+  scatter of the one measured rate pair behind a quoted value,
+  3.00 <!-- claim: r3_z_945_pair --> (2.54 <!-- claim: r3_z_945_pair_tab4 -->
+  with Table IV's scatter); without the covariance, 0.90 <!-- claim: r3_z_945_rho0 -->.
+  Which of Table V and the quoted values is wrong the paper does not let one say;
 - checks Table V against Figure 8, Table II and Table IV;
 - puts eq. 16 in the paper's CSTR and an ideal plug-flow reactor with pymrm
   (CO conversion 0.2048 <!-- claim: r6_cstr_X --> and
