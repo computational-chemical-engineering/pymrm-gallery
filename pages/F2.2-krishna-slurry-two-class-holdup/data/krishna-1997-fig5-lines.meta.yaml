@@ -1,0 +1,93 @@
+dataset_id: krishna-1997-fig5-lines
+title: Fig. 5 drawn lines (total holdup against U at low U, 0.10 m column), column crossings
+status: complete
+conditions:
+  column_diameter_m: 0.1
+  liquid: paraffin oil
+  solids: porous silica
+  gas: air
+acquisition:
+  method: digitised
+  figure: Figure 5, journal p. 314 (PDF page 4)
+  tool: 'poppler pdftoppm -r 300 -gray (the scan is a 300 ppi bilevel image), ink = grey < 128; numpy
+    and scipy.ndimage scripts: tick marks located as short ink runs normal to each axis line, linear calibration
+    by least squares through the tick centres'
+  procedure: Only the six drawn lines (through the origin) were traced, not the markers. Per pixel column
+    between U = 0.0025 m/s and the line end, the centre of the ink run nearest a seed line within +-6
+    px; runs longer than 7 px (11 px for the steep eps_s = 0 line) are marker overlaps and skipped; legend
+    and label boxes masked. Two passes (seed, then the refit line). Every third pixel column is stored.
+  calibration:
+    dpi: 300
+    x_ticks_px_value:
+    - - 546.0
+      - 0.005
+    - - 815.0
+      - 0.01
+    - - 1085.0
+      - 0.015
+    y_ticks_px_value:
+    - - 707.0
+      - 0.02
+    - - 599.0
+      - 0.04
+    - - 492.0
+      - 0.06
+    - - 383.0
+      - 0.08
+    - - 274.0
+      - 0.1
+    x_value_per_px: 1.8552854408855815e-05
+    x_offset: -0.0051267606280204535
+    y_value_per_px: -0.00018484035738080212
+    y_offset: 0.1507566154739738
+    x_tick_residual_px_max: 0.3333333333339595
+    y_tick_residual_px_max: 1.0000000000002736
+    note: x = 0 from the ticks lies at column 276.3; the drawn y-axis line is centred at column 273.0,
+      3.3 px left of it (break row "x calibration from the axis line").
+  operator: Claude Opus 5.5 (assisted)
+  date: '2026-11-27'
+  estimated_error: crossing rms about the through-origin line 0.30 to 1.02 px (dashed and dotted lines
+    the largest); slope of each line about +-1 % from the x calibration
+  second_pass:
+    method: 'independent route: ray scan from the tick origin, ink fraction along trial lines U/V, 2000
+      trial V, peak positions'
+    V_small_m_s:
+      '0.0': 0.079
+      '0.05': 0.1587
+      '0.1': 0.179
+      '0.16': 0.2278
+      '0.25': 0.308
+      '0.35': 0.3742
+    spread_note: relative difference to the crossing fit at most 0.4 %
+columns:
+- name: eps_s
+  unit: '-'
+  description: solids fraction of the line (legend)
+- name: x_px
+  unit: px
+  description: page column at 300 dpi
+- name: y_px
+  unit: px
+  description: page row at 300 dpi
+- name: U_m_s
+  unit: m/s
+  description: superficial gas velocity
+- name: eps
+  unit: '-'
+  description: total gas holdup on the drawn line
+source:
+  authors:
+  - Krishna, R.
+  - de Swart, J. W. A.
+  - Ellenberger, J.
+  - Martina, G. B.
+  - Maretto, C.
+  year: 1997
+  container: AIChE Journal 43(2) 311-316
+  doi: 10.1002/aic.690430204
+  access: institutional subscription, TU Eindhoven (lawful access)
+  licence: all rights reserved (facts extracted; figure image not reproduced)
+redistribution_basis: Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research organisation with lawful
+  access is covered by Art. 15n Auteurswet (DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced; the points are re-plotted from the extracted coordinates.

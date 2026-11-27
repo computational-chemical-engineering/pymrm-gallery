@@ -1,0 +1,105 @@
+dataset_id: krishna-1997-fig6
+title: 'Fig. 6 markers: dense-phase voidage against U, 0.38 m column, four slurry concentrations'
+status: complete
+conditions:
+  column_diameter_m: 0.38
+  liquid: paraffin oil
+  solids: porous silica
+  gas: air
+acquisition:
+  method: digitised
+  figure: Figure 6, journal p. 314 (PDF page 4)
+  tool: 'poppler pdftoppm -r 300 -gray (the scan is a 300 ppi bilevel image), ink = grey < 128; numpy
+    and scipy.ndimage scripts: tick marks located as short ink runs normal to each axis line, linear calibration
+    by least squares through the tick centres'
+  procedure: 'Matching pursuit with outline templates (circle 21 px, diamond 27, square 23, triangle 25,
+    stroke 3): score = outline coverage by the 1-px dilated ink - 0.6 x interior fill - 0.5 x ink in a
+    shell 2 to 4 px off the outline; best (position, shape) taken, its outline erased, repeated down to
+    score 0.6. Centre refined to sub-pixel by the coverage-weighted mean over +-2 px. Series: eps_s 0
+    and 0.16 by their disjoint bands (eps_df above 0.2, 0.08 to 0.17); below 0.08 by the square-minus-triangle
+    local score gap (|gap| > 0.1), otherwise `unassigned`. Overlapping markers in the U < 0.15 m/s clusters
+    are partly missed. Rows with legend = yes are the legend glyphs, found only when the legend box is
+    not masked; they are not data (break row "legend unmasked").'
+  calibration:
+    dpi: 300
+    x_ticks_px_value:
+    - - 318.0
+      - 0.0
+    - - 626.0
+      - 0.3
+    - - 832.0
+      - 0.5
+    - - 935.0
+      - 0.6
+    y_ticks_px_value:
+    - - 2739.0
+      - 0.0
+    - - 2621.5
+      - 0.1
+    - - 2503.0
+      - 0.2
+    - - 2384.5
+      - 0.3
+    - - 2264.5
+      - 0.4
+    x_value_per_px: 0.0009724465959303149
+    x_offset: -0.309075680391771
+    y_value_per_px: -0.0008431589311929696
+    y_offset: 2.310005225310407
+    x_tick_residual_px_max: 0.3332947441538351
+    y_tick_residual_px_max: 0.7967959527830313
+    note: x ticks at 0.1, 0.2 and 0.4 are hidden by markers on the axis
+  operator: Claude Opus 5.5 (assisted)
+  date: '2026-11-27'
+  estimated_error: eps_df +-0.002 (about 2 px), U +-0.003 m/s
+  second_pass:
+    method: bounding-box centre of isolated single-glyph components (independent of the templates)
+    markers: 13
+    of_markers: 97
+    eps_df_difference_sd: 0.00017038130309769803
+    eps_df_difference_max: 0.0003919602993951443
+    U_difference_max: 0.0005237453531136138
+columns:
+- name: eps_s
+  unit: '-'
+  description: series (legend), or unassigned
+- name: assigned_by
+  unit: '-'
+  description: band, or shape with the square-minus-triangle score gap
+- name: shape
+  unit: '-'
+  description: best template in the pursuit
+- name: score
+  unit: '-'
+  description: pursuit score
+- name: legend
+  unit: '-'
+  description: yes for legend glyphs (not data)
+- name: x_px
+  unit: px
+  description: page column at 300 dpi
+- name: y_px
+  unit: px
+  description: page row at 300 dpi
+- name: U_m_s
+  unit: m/s
+  description: superficial gas velocity
+- name: eps_df
+  unit: '-'
+  description: dense-phase voidage
+source:
+  authors:
+  - Krishna, R.
+  - de Swart, J. W. A.
+  - Ellenberger, J.
+  - Martina, G. B.
+  - Maretto, C.
+  year: 1997
+  container: AIChE Journal 43(2) 311-316
+  doi: 10.1002/aic.690430204
+  access: institutional subscription, TU Eindhoven (lawful access)
+  licence: all rights reserved (facts extracted; figure image not reproduced)
+redistribution_basis: Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research organisation with lawful
+  access is covered by Art. 15n Auteurswet (DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced; the points are re-plotted from the extracted coordinates.
