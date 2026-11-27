@@ -109,7 +109,7 @@ def show(frame, uuid, fmt=None):
 # burns ethene to CO2 and water and releases far more heat per mole of ethene.
 # The selectivity, the fraction of converted ethene that becomes ethene oxide, therefore
 # sets both the yield and the thermal stability of the multitubular reactors used
-# industrially (catalogue entry `D3.5`, planned, uses this kinetics).
+# industrially (page `D3.5` puts this kinetics in a cooled multitubular reactor tube).
 #
 # Borman and Westerterp worked in a Berty reactor with one batch of catalyst at four
 # temperatures, measured the epoxidation rate $r_1$ (ethene oxide formed) and the
@@ -1405,7 +1405,7 @@ say("As printed, model III gives <<s1:.2f>> % selectivity at the Figure 6 condit
 #   always by one factor on both rates (row 1). Fit the activity of your own sample.
 # - **Structure.** A 0-D gradientless reactor (S1): change `model.table6_params` for
 #   another rate law, keep `BertyReactor` for the forward solve.
-# - Related pages: `D3.5` (planned: the multitubular reactor with this kinetics), `C2.10`
+# - Related pages: `D3.5` (the multitubular reactor tube with this kinetics, loading `F_fig6` from this page), `C2.10`
 #   (hot spot in a cooled fixed bed), `C2.1` (parity and refit of a fitted kinetics),
 #   `C2.13` (an integral reactor against the authors' calculated curves), `C1.1`
 #   (Langmuir-Hinshelwood forms).

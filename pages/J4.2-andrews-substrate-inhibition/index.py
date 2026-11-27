@@ -1022,6 +1022,13 @@ if MONOD_CRIT_IDENTITY > 1e-14:
     raise RuntimeError("the Monod criterion is not the transcritical one with K_i -> inf")
 print(f"  Monod D_c = {D_C_MONOD:.10f} 1/h, theta_c = {CH['monod_theta_c_h']:.10f} h"
       f" = 1/mu_Monod(S_0) to {MONOD_CRIT_IDENTITY:.0e}")
+KI_MONOD = 1e12                                     # g/l, the break table's Monod limit
+S_PLUS_MONOD = K_S*KI_MONOD/steady_states(with_(Ki=KI_MONOD))[0]   # Vieta: S_+ S_- = K_s K_i
+N_SS_MONOD = len(steady_states(with_(Ki=KI_MONOD)))
+if not (S_PLUS_MONOD > S_FEED and N_SS_MONOD == 1):
+    raise RuntimeError("the Monod limit keeps an upper steady state below the feed")
+print(f"  Monod limit K_i = {KI_MONOD:.0e} g/l: eq. (9)'s upper root K_s K_i/S_- = {S_PLUS_MONOD:.3e} g/l"
+      f" > S_0, so {N_SS_MONOD} nontrivial steady state (no saddle)")
 for _k in ("monod_vs_haldane_S_shift_rel", "monod_vs_haldane_X_shift_rel"):
     claims.value(_k, CH[_k])
 claims.value("washout_eigenvalue_monod_per_h", CH["washout_eigenvalue_monod_per_h"], unit="1/h")
@@ -1564,8 +1571,12 @@ display(Markdown(
 # Every non-structural claim has a row below that injects a defect through an
 # argument or a constant of the study that computes it, recomputes the claim and
 # must fail its check. A row whose study cannot run records `nan` for the claims it
-# targets; where that happens below, the quantity does not exist under the defect
-# (no sign change over the whole scanned range), which is the detection.
+# targets, and such a row catches nothing unless it is declared a detection by
+# failure. One row is: under the Monod limit $K_i \to 10^{12}$ g/l the upper steady
+# state does not exist, because eq. (9)'s second root $K_s K_i/S_-$ lies far above
+# the feed (section 5 prints it from the closed form), so the missing upper-branch
+# values are the detection. The $\hat\mu$ row moves the upper root by a finite amount
+# as well.
 #
 # Two claims are structural and have no row: eq. (11) minus 1/eq. (2), which are
 # the same arithmetic expression, and the $S + X/Y$ balance across the plug-flow
@@ -1691,8 +1702,8 @@ ROWS = [
     (f"muhat {MU_HAT:g} -> 0.9 1/h", {
         **take("inh", ["mu_hat_m_eq2_per_h", "theta_washout_h"], PMU), **take("tim", TIM_K, PMU),
         **take("bat", ["batch_time_no_inhibition_h", "lag_hours_at_Ki2"], PMU), **thresholds(PMU),
-        **take("chem", ["saddle_positive_eigenvalue_per_h", "washout_eigenvalue_haldane_per_h",
-                        "lower_node_fast_eigenvalue_per_h", "washout_eigenvalue_monod_per_h",
+        **take("chem", ["saddle_positive_eigenvalue_per_h", "steady_S_upper_g_per_l",
+                        "washout_eigenvalue_haldane_per_h", "lower_node_fast_eigenvalue_per_h", "washout_eigenvalue_monod_per_h",
                         "monod_theta_c_h"], PMU)}),
     ("acclimation read as the 2/4/6 ladder", take(
         "tim", ["batch_time_seeded_h", "batch_time_seeded_vs_printed12p5_rel", "seed_speedup_factor",
@@ -1735,6 +1746,10 @@ ROWS = [
 ]
 
 claims.define_rows([r[0] for r in ROWS])
+# Under Monod there is no upper steady state (section 5: K_s K_i/S_- far above S_0),
+# so the claims of the upper branch recording nan there is the detection.
+BY_FAILURE = {(ROWS[0][0], k) for k in ("steady_S_upper_g_per_l", "steady_X_upper_g_per_l",
+                                        "saddle_positive_eigenvalue_per_h")}
 BREAK = []
 for row, targets in ROWS:
     for name, fn in targets.items():
@@ -1743,7 +1758,7 @@ for row, targets in ROWS:
         except Exception as exc:                 # noqa: BLE001 - a failed study is a result
             print(f"  {row}: {name} raised {type(exc).__name__}: {str(exc)[:80]}; records nan")
             out = np.nan
-        caught_ = claims.breaks(row, name, out)
+        caught_ = claims.breaks(row, name, out, detects_by_failure=(row, name) in BY_FAILURE)
         base_ = claims.metrics[name]["value"]
         if claims.metrics[name]["kind"] == "bound":   # round-off digits differ between machines
             base_ = f"(here {float(base_):.1e})"

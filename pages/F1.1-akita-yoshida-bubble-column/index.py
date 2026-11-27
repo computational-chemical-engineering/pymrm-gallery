@@ -731,8 +731,10 @@ say("The Akita-Yoshida deviation here is <<a:.2f>> times that of eq. 19 on F1.4 
 # Every number registered below has a row that moves it. Each row mistypes one
 # published constant, or changes one input of the data, and reruns the whole study;
 # the claims it fails are counted. A row under which one of the root searches no
-# longer finds exactly one root makes the study raise; such a row records a crash, and every
-# claim counts as failed for it, not as moved. The controls fail nothing.
+# longer finds exactly one root makes the study raise; such a row records nan, which
+# catches no claim, so every claim also has a row that moves it to a finite value
+# (the counts of table entries and the worst Table IV class by a dropped table row).
+# The controls fail nothing.
 
 # %%
 RTOL = 1e-6
@@ -787,6 +789,17 @@ def t2_change(col, i, new):
     return f"1973 Table II {col} row {i}: {old} -> {new}", K, replace(C, t2=t)
 
 
+def t4_drop(i):
+    t = C.t4.drop(index=i).reset_index(drop=True)
+    return f"Table IV row {i} ({C.t4.range_mm[i]} mm) dropped", K, replace(C, t4=t)
+
+
+def t2_drop(i):
+    t = C.t2.drop(index=i).reset_index(drop=True)
+    return (f"1973 Table II row {i} ({C.t2.system[i]}, {C.t2.temp_C[i]} C) dropped", K,
+            replace(C, t2=t))
+
+
 def f12_scaled(col, f):
     t = C.f12.copy()
     t[col] = t[col] * f
@@ -819,6 +832,7 @@ DEFECTS = [mistyped(k) for k in BREAK_K] + [
     t2_change("eps_lo", 10, "0.022"), t2_change("NFr_lo_e3", 3, "4.3"),
     t2_change("NBo_em3", 11, "8.12"), t2_change("NGa_em10", 8, "0.646"),
     t2_change("NSc_em3", 9, "11.3"), t2_change("eps_lo", 1, "0.007"),
+    t4_drop(10), t2_drop(1),
     f12_scaled("kla_obs_per_h", 1.05), f12_scaled("kla_calc_per_h", 1.05),
     f12_drop(0), f12_drop(32), f12_relabel(0),
 ]

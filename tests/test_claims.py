@@ -142,10 +142,28 @@ def test_defined_row_that_records_nothing_raises():
     c.breaks("sign flip", "m", -0.7186)
     with pytest.raises(ClaimsFailed, match="'solver fails' is defined but recorded no claim"):
         c.report(write=False)
-    c.breaks("solver fails", "m", float("nan"))           # nan fails the claim's check
+    c.breaks("solver fails", "m", float("nan"))           # recorded, but catches nothing
     payload = c.report(write=False)
     assert payload["rows"] == {"defined": 2, "recorded": 2}
-    assert payload["breaks"]["m"] == ["sign flip", "solver fails"]
+    assert payload["breaks"]["m"] == ["sign flip"]
+
+
+def test_nan_catches_only_when_declared_detects_by_failure():
+    # learnings row 330: crash-only rows were counted as catching their claims
+    for broken in (float("nan"), None, float("inf")):
+        c = _one()
+        assert c.breaks("solver fails", "m", broken) is False
+        with pytest.raises(ClaimsFailed, match="m: no break row fails its check"):
+            c.report(write=False)
+    c = _one()
+    assert c.breaks("no solution exists", "m", float("nan"), detects_by_failure=True)
+    payload = c.report(write=False)
+    assert payload["breaks"]["m"] == ["no solution exists"]
+    assert payload["rows_by_failure"] == {"no solution exists": ["m"]}
+    assert payload["rows_nan"] == {"m": ["no solution exists"]}
+    c = _one()                                             # a finite value is checked as usual
+    assert not c.breaks("small defect", "m", 0.7186, detects_by_failure=True)
+    assert "rows_by_failure" not in c.report(write=False, require_breaks=False)
 
 
 def test_undefined_and_twice_defined_rows():

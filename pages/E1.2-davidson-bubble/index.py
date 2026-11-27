@@ -645,9 +645,14 @@ _err_same = [field_error(_same[n]) for n in NS]
 _row = f"finest rung solved on n = {NS[-2]} again (refinement not passed)"
 brk(_row, "grid_order_observed", np.log2(_err_same[-2] / _err_same[-1]))
 _oo_same = observed_orders(lambda n: _same[n].cloud_radius() / R, NS)["orders"][-1]
-brk(_row, "Rc_order_observed", _oo_same)   # nan (no convergence) counts as caught
+brk(_row, "Rc_order_observed", _oo_same)   # equal rungs give 0/0: nan, catches nothing
 brk(_row, "grid_finest_over_roundoff",
     abs(_same[NS[-1]].cloud_radius() - _same[NS[-2]].cloud_radius()) / R / FLOOR)
+_N_SHORT = 3 * NS[-1] // 4        # the finest rung refined by 1.5 while labelled 2
+_short = {n: LAD[n] if n < NS[-1] else DavidsonBubble(R, uf, ubr, n=_N_SHORT).solve()
+          for n in NS}
+brk(f"finest rung solved on n = {_N_SHORT} but labelled n = {NS[-1]}", "Rc_order_observed",
+    observed_orders(lambda n: _short[n].cloud_radius() / R, NS)["orders"][-1])
 
 # %% [markdown]
 # ### 2. The far-field condition, measured

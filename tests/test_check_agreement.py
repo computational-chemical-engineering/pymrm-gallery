@@ -57,3 +57,16 @@ def test_loosenings():
     assert {"tolerance widened", "max widened", "min_margin lowered", "break row removed"} <= whats
     assert any("coarser" in w for w in whats)
     assert ca.loosenings("P", old, v2(a=VAL)) [-1] == ("c", "claim removed")
+
+
+def test_dropping_a_nan_row_from_breaks_is_not_a_loosening():
+    # Decision Desk gallery-breaks-nan-not-caught: a row that records nan catches
+    # nothing unless declared detects_by_failure
+    old = v2(a=VAL)
+    old["breaks"] = {"a": ["sign flip", "solver fails"]}
+    new = v2(a=VAL)
+    new["breaks"] = {"a": ["sign flip"]}
+    new["rows_nan"] = {"a": ["solver fails"]}
+    assert ca.loosenings("P", old, new) == []
+    new["breaks"] = {"a": []}
+    assert ca.loosenings("P", old, new) == [("a", "break row removed")]

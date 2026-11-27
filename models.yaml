@@ -3886,7 +3886,7 @@ models:
       Tables 3, 4, 6 and 7 and the printed numbers read from the page images;
       Figure 6 (the authors' model III curves) digitised by extract_figures.py.
       The kinetic data set is not printed, so the fit itself is neither tested
-      nor refitted. D3.5 (planned, same source) should load the combustion-rate
+      nor refitted. D3.5 (same source) loads the combustion-rate
       factor F_fig6 from this page with load_claims.
     page: pages/C2.11-borman-westerterp-eo-selectivity/
     related: [D3.5, C2.10, C2.1, C2.13, C1.1]
@@ -4208,6 +4208,40 @@ models:
       pymrm reactor and an independent phase-plane back-integration.
     page: pages/D2.2-van-welsenaere-froment-runaway/
     related: [D2.1, D2.3, C2.10, C2.1, B1.1]
+
+  - id: D3.5
+    slug: ethylene-oxide-multitubular-runaway
+    title: "Ethylene oxide multitubular"
+    description: >
+      Borman and Westerterp's model III kinetics of ethene oxidation over silver in a
+      wall-cooled tube, tested by Morbidelli and Varma's generalized criterion inside the
+      paper's own window. With Table 6 as printed no point is sensitive (largest normalised
+      sensitivity 0.0770 <!-- claim: max_abs_Sh_window_F1 -->); with the combustion factor
+      of C2.11 the runaway boundary runs through the window, located only by extrapolated
+      kinetics.
+    section: D
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S2]
+    phases: [gas-solid]
+    predicts: [hot spot temperature, runaway boundary, selectivity]
+    pymrm_api: [construct_convflux_upwind, construct_div, NumJac, newton, continuation,
+                find_roots, observed_orders, residual_check]
+    reference:
+      authors: ["Borman, P. C.", "Westerterp, K. R."]
+      year: 1995
+      container: "Industrial & Engineering Chemistry Research 34(1) 49-58"
+      doi: 10.1021/ie00040a002
+    data: {tier: 2, method: table, status: complete}
+    note: >
+      The paper prints no tube, no plant and no packed-bed measurement: the page compares with
+      no packed-bed data. Table 6 and the factors F_fig6 (from C2.11's digitised Figure 6, the
+      one figure-derived input) and F_row1 are loaded from C2.11; the tube diameter, wall
+      coefficient and heat capacity are borrowed from C2.10 as page choices. T1 is the
+      catalogue's model rank, not a data claim.
+    page: pages/D3.5-ethylene-oxide-multitubular-runaway/
+    related: [C2.11, C2.10, D2.2, D2.1, D1.1, D2.3]
 
   # ---------------------------------------------------------------- section E
   - id: E2.1

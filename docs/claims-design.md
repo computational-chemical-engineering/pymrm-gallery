@@ -119,6 +119,9 @@ order is fitted to noise; that is what `B1.7`'s 2.3 % spread is.
 - `env` lets the check refuse a baseline produced off the pinned environment.
 - `quoted` lists the prose literals, so a cut in prose precision is visible in review.
 - `breaks` lists, per claim, the break-table rows that fail that claim's own check.
+- `rows_nan` (only when there are any) lists, per claim, the rows that recorded no
+  finite value for it, and `rows_by_failure` the rows declared `detects_by_failure`
+  with the claims they caught that way (section 5).
 - The measured spread stays out of this file; it changes with every portability run and
   lives in `docs/reproducibility/spread.json`, written by `scripts/measure_spread.py`.
 
@@ -130,7 +133,8 @@ does one that disappeared.
 
 **Loosening.** `check_agreement.py --base origin/main` compares the committed file with
 the merge-base and fails on a widened bound or tolerance, a changed kind, a removed
-claim, a removed break row or a coarser quoted literal, unless `docs/loosened.yaml`
+claim, a removed break row (other than one the new file lists under `rows_nan` for
+that claim) or a coarser quoted literal, unless `docs/loosened.yaml`
 has an entry (page, metric, date, reason). A widened bound would otherwise hide in the
 value churn of the diff.
 
@@ -160,12 +164,17 @@ claims.report()
   also raises for a declared row that recorded no claim (a study that raised and was
   caught, an empty result) and for a recorded row never declared, and the file gets
   `"rows": {"defined": n, "recorded": n}` (declared rows that recorded a claim). A
-  row whose study cannot run records nan for the claims it targets, which fails their
-  checks: right only when the failed solve is itself the detection, otherwise fix the
-  study. Without the declaration such a row drops out of the table unseen. Rows under
-  which every claim came back as nan or None are listed in `"rows_missing_only"`
-  (written only when there are any); `accept_page.py` shows them as a LOOK, because
-  such a row records a crash, not a moved claim.
+  row whose study cannot run records nan for the claims it targets, so that it stays
+  in the table; without the declaration it drops out unseen. A value that is no finite
+  number (None, nan, inf) catches nothing: a crash is not a moved claim. Only a row
+  declared `claims.breaks(row, name, nan, detects_by_failure=True)` counts it as
+  caught, and only where the defect leaves no solution and the page shows that by a
+  second route (refresh checklist rule 11); the file lists those rows and their claims
+  under `"rows_by_failure"`. Decided by the maintainer on 2026-11-27 (Decision Desk
+  `gallery-breaks-nan-not-caught`, learnings row 330); before, every nan counted as
+  caught, and crash-only rows passed claims that no finite row moved. Rows under which
+  every claim came back as nan or None are listed in `"rows_missing_only"` (written
+  only when there are any); `accept_page.py` shows them as a LOOK.
 - `assert_check_values(computed, "check_values.csv", page=...)` asserts the page's
   functions against check values from a second route (`data/check_values.csv`:
   `name,value,rtol`) and must run before the first claim is registered.
