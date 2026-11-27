@@ -1,0 +1,54 @@
+dataset_id: hikita-1980-fig2
+title: "Gas holdup against gas velocity for four gases in water, Figure 2 of Hikita et al. (1980)"
+status: complete
+
+source:
+  authors: ["Hikita, H.", "Asai, S.", "Tanigawa, K.", "Segawa, K.", "Kitao, M."]
+  year: 1980
+  container: "Chemical Engineering Journal 20, 59-67"
+  doi: "10.1016/0300-9467(80)85006-4"
+  access: >
+    Publisher PDF (a 300 ppi bilevel scan) held outside the repository
+    (~/papers/pymrm-gallery/). No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 2, journal page 63"
+  tool: "pdftoppm at 600 dpi (twice the native 300 ppi of the scan); marker and line centres read by eye on zoomed crops; calibration and conversion by data/digitise.py (committed)"
+  procedure: >
+    Log-log axes. Each axis calibrated by a least-squares affine map of log10(value)
+    on the pixel column and row from the printed ticks on both frames: abscissa 4 to
+    200 cm/s, 10 ticks on the bottom (row 4583) and 10 on the top frame (row 3986);
+    ordinate 0.06 to 0.6, 6 on the left (column 513) and 4 on the right frame (column
+    1780); pixels at 600 dpi. About 597 px per decade at 600 dpi on both axes (about
+    300 native). Largest tick-fit residual 1.40 native px (abscissa) and 0.86
+    (ordinate). 19 markers read: 6 air (open circle), 4 H2 + N2 1:1 (open diamond),
+    4 H2 (open square), 5 H2 + N2 5:1 (filled diamond). Two drawn lines (upper: air
+    and 1:1; lower: 5:1 and H2) by their centre rows at 5 and 4 columns.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: >
+    About 2 native px per marker centre (4 px at 600 dpi), 0.0067 decades or about
+    1.5 % in each coordinate. The page sets every data effect against this error.
+
+conditions: "Water at 20 C, D 10 cm, single nozzle 1.1 cm ID (pp. 61-62)."
+
+missing:
+  - "Markers hidden under others: none seen."
+
+columns:
+  - {name: kind, unit: "-", description: "marker or line"}
+  - {name: series, unit: "-", description: "Table 2 key of the system (marker) or upper/lower (line)"}
+  - {name: shape, unit: "-", description: "marker shape from the legend"}
+  - {name: uG_cm_s, unit: cm/s, description: "superficial gas velocity from the calibration"}
+  - {name: eps, unit: "-", description: "gas holdup from the calibration"}
+  - {name: px_x, unit: px, description: "centre column at 600 dpi"}
+  - {name: px_y, unit: px, description: "centre row at 600 dpi"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
