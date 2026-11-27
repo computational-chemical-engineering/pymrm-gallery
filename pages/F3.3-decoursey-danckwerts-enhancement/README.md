@@ -4,17 +4,17 @@ W. J. DeCoursey, "Absorption with chemical reaction: development of a new relati
 Danckwerts model", *Chem. Eng. Sci.* **29**, 1867-1872 (1974),
 doi:10.1016/0009-2509(74)85003-7. DeCoursey derived an explicit enhancement factor, Eq. (21),
 for a second-order reaction under Danckwerts surface renewal, but "No numerical solution ...
-for the Danckwerts model appears to be available" (p. 1870), so he compared it only with
+for the Danckwerts model appears to be available" (p. 1870), so he compared it quantitatively only with
 Higbie-model numbers and predicted it "should be within about 12 per cent of the exact results
 for the Danckwerts model at all practical values of the parameters" (p. 1870). This page solves
-the exact Danckwerts model over the paper's own grid and decides that prediction.
+the exact Danckwerts model and tests that prediction on the paper's own grid.
 
 - **Structure:** `S4` (1-D transient PDE; the catalogue line says `S3`), tier T1, data tier 6
   (nothing measured).
 
 ## Findings
 
-- **The prediction holds, with room to spare.** Over the 12 cases of Table 2 the worst error
+- **On the paper's grid the prediction holds, with room to spare.** Over the 12 cases of Table 2 the worst error
   of Eq. (21) against the exact Danckwerts model is 6.2705 <!-- claim: r1_worst_abs_pct --> %
   in magnitude (at E_a = 11, D_B/D_A = `0.02`, M = 46.78 <!-- claim: r1_worst_M -->), so
   12 <!-- claim: r1_n_within --> of 12 cases are within the paper's "about 12 per cent", a margin of
@@ -22,14 +22,16 @@ the exact Danckwerts model over the paper's own grid and decides that prediction
   3.2053 <!-- claim: r1_max_r_ge1_pct --> %. Every worst point is root-found inside the
   window and Richardson-extrapolated (largest error estimate
   0.0039 <!-- claim: r1_max_errest --> points).
-- **The film comparison of F3.1 is mostly a model difference.** At E_a = 100, D_B/D_A = 1 the
-  worst error against the Danckwerts model is 2.8551 <!-- claim: r2_ea100_worst_pct --> %,
-  0.32704 <!-- claim: r2_share_of_f31 --> of F3.1's film figure (loaded from F3.1, not
-  retyped); at F3.1's worst point the Danckwerts error is
-  -0.0011552 <!-- claim: r2_at_f31_M_pct --> %.
+- **F3.1's film figure is the model difference.** At F3.1's worst point Eq. (21) is
+  8.7301 <!-- claim: f31_decoursey_worst_error_pct_loaded --> % above the film model (loaded
+  from F3.1) and -0.0011552 <!-- claim: r2_at_f31_M_pct --> % from the Danckwerts model.
+  Against its own model the worst at E_a = 100, D_B/D_A = 1 is
+  2.8551 <!-- claim: r2_ea100_worst_pct --> % at M =
+  47244 <!-- claim: r2_ea100_worst_M -->, 0.32704 <!-- claim: r2_share_of_f31 --> of F3.1's
+  worst, at a different M.
 - **Compensation.** At equal diffusivities the bridging relation (15) is exact for the
   Danckwerts model (extrapolated gap at most 1e-6 <!-- claim: r2_idgap_ext -->), so the error is
-  the "B_i constant in time" step. That step alone (Eq. 19 fed the exact mean) overestimates
+  the step the paper names, "treating B_i/B_0 as though it were constant with time" (p. 1869). That step alone (Eq. 19 fed the exact mean) overestimates
   E by up to 29.988 <!-- claim: r3_e19_max_pct --> % on the window, still rising at its end,
   while Eq. (21) stays within 2.4208 <!-- claim: r3_e21_max_r1_pct --> %: the self-consistent
   mean compensates. A measured gap on this grid, not a general result.
@@ -46,15 +48,16 @@ the exact Danckwerts model over the paper's own grid and decides that prediction
   pseudo-first-order form is below the Danckwerts one by -2.5494 <!-- claim: r6_pfo_worst_pct --> %
   at worst (M =
   1.2659 <!-- claim: r6_pfo_worst_M -->).
-- **Misprint:** Eq. (23) prints erfc where erf is meant (as printed it tends to infinity as
-  M goes to 0).
+- **Misprint:** Eq. (23) prints erfc where erf is meant: the paper calls it the Higbie
+  pseudo-first-order expression with M replaced (p. 1869), and with erfc that form tends to
+  infinity as M goes to 0 instead of to 1.
 
 ## Things to know before reusing this
 
 - Eq. (21) is a Danckwerts-model estimate; it is not a film-model (F3.1) or Higbie estimate.
 - At unequal diffusivities q = B0/(z A_i) comes from the exact penetration relation for E_a,
   not from Eq. (14), which the paper says is exact only for equal diffusivities.
-- The fast-reaction approach falls as 1/M: d ln(E_a - E_D)/d ln M is
+- At the test case (E_a = 6, D_B/D_A = 1) the fast-reaction approach falls nearly as 1/M: d ln(E_a - E_D)/d ln M is
   -0.99164 <!-- claim: v1_fast_slope --> between M = `1e4` and `1e5`.
 - Not covered: reversible reactions, A_0 not zero, other orders, experiments.
 

@@ -26,7 +26,7 @@
 # absorbed faster than without reaction, by the enhancement factor $E$. For a
 # second-order reaction no closed form exists. DeCoursey (1974) derived one for
 # Danckwerts' surface-renewal model by replacing B at the interface by its time mean,
-# Eq. (21), an explicit formula. He could test it only against numerical results for a
+# Eq. (21), an explicit formula. He could test it quantitatively only against numerical results for a
 # different model, Higbie's penetration model, because "No numerical solution to the
 # partial differential equations and boundary conditions of this paper for the
 # Danckwerts model appears to be available." (p. 1870). From the closeness of the two
@@ -34,7 +34,7 @@
 # results for the Danckwerts model at all practical values of the parameters" (p. 1870).
 # This page solves the exact Danckwerts model (the coupled transient equations for A and
 # B, averaged over the exponential age distribution) over the paper's own grid of
-# parameters and decides that prediction, recomputes the paper's Tables 1 and 2 with
+# parameters and tests that prediction there, recomputes the paper's Tables 1 and 2 with
 # the exact Higbie average of the same solution, and locates where the error of Eq. (21)
 # comes from.
 
@@ -108,8 +108,8 @@ def say(text, **v):
 # second-order reaction $A + zB \to$ products in the liquid, the absorption rate depends
 # on how much B is left near the interface, which itself changes with the age of the
 # element. The enhancement factor then needs the solution of two coupled nonlinear
-# diffusion-reaction equations, which in 1974 was available only for the Higbie model
-# (Brian, Hurley and Hasseltine, 1961, as correction charts).
+# diffusion-reaction equations, which, DeCoursey writes, did not appear to be available for the Danckwerts model;
+# Brian, Hurley and Hasseltine (1961) had it for the Higbie model, as correction charts.
 #
 # DeCoursey's step was to replace the interfacial concentration of B by its time mean,
 # which he obtained from a linear combination of the two equations, and to keep it
@@ -705,8 +705,9 @@ say("At $E_a$ = 6, $D_B/D_A$ = 1, $M$ = 24 the Danckwerts mean of $b(0)$ and "
     "<<o:.3f>> to <<x:.1e>> extrapolated. At $E_a$ = 100 the worst error of Eq. (21) against "
     "the Danckwerts model is <<w:.3f>> % at $M$ = <<m:.4g>>; `F3.1` finds <<f:.3f>> % against the "
     "film model at $M = \\mathrm{Ha}^2$ = <<mf:.4g>>, where the Danckwerts error is <<a:.3f>> %. "
-    "The Danckwerts worst is <<s:.3f>> of the film worst: most of `F3.1`'s figure is the "
-    "difference between the film and surface-renewal models.",
+    "At `F3.1`'s own worst point Eq. (21) is thus <<a:.2e>> % from the Danckwerts model "
+    "though <<f:.3f>> % above the film model: `F3.1`'s figure is the difference between the "
+    "film and surface-renewal models. (The ratio of the two worsts, <<s:.3f>>, is at different $M$.)",
     g=M["r2_idgap_finest"], o=M["r2_idgap_order"], x=M["r2_idgap_ext"], w=M["r2_ea100_worst_pct"],
     m=M["r2_ea100_worst_M"], f=F31["decoursey_worst_error_pct"], mf=F31["decoursey_worst_ha"] ** 2,
     a=M["r2_at_f31_M_pct"], s=M["r2_share_of_f31"])
