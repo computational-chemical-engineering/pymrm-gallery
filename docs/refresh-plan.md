@@ -161,8 +161,13 @@ qualifies when it would change what an agent writes or checks, and it carries
 evidence (page, numbers). Each row names a target in the pymrm repo: a pitfall with
 its test (`conventions/references/pitfalls.md`), the API map, the style guide, an
 exemplar, a new eval case built from the page, or the library itself (a bug or a
-missing API). Rows are flushed to pymrm as one PR per batch of about ten pages, and
-the row records the PR.
+missing API), or a gallery rule (`gallery: <where>`), applied in the same PR. Rows for
+pymrm are flushed as one pymrm PR when ten are open or ten pages have passed, and the
+row records the PR. New pages and second reviews record learnings the same way: the
+build, review and fix reports end with a "Learnings" line, and the coordinator writes
+the rows or "learnings: none" before the commit
+(`.claude/skills/gallery-refresh/references/commit-and-merge.md`, "Learnings rows").
+`scripts/learnings_status.py` checks the file against the citations in pymrm.
 
 This also runs in the other direction: a refreshed `model.py` that is clean, tested
 and public is a candidate plugin exemplar.
@@ -198,44 +203,32 @@ Unknown until the pilot measures it. What is known:
    Closed-form and correlation pages get the lighter lane: bootstrap, pin, Claims and
    maths, no `model.py`.
 
-## 8. State on 2026-10-31, and how to continue
+## 8. State on 2026-11-27
 
-**Refreshed and on main** (new layout, pymrm 3.2.0, Claims format 2): the pilots
-`A2.4 B1.1 C2.10`; the reactor section `D2.2 D2.1 G1.7 G1.8 G1.1 H1.4 H1.1 H1.7 H1.9
-H1.8 I1.2 I1.3 D1.1` (PRs #10, #12); transport `A2.1 A2.3` (PR #13).
-Committed on `refresh/sweep-transport` and pushed for a PR: `A2.5` (`89c6b8a`) and
-`A2.8` (`a53f3f9`), each after an independent review whose findings were all fixed.
+**The sweep is done.** Every page is on the new layout with Claims format 2 (90 pages;
+`scripts/check_claims.py`: 0 problems), no `build_page.py` remains, and the lock is
+pymrm 3.4.1. The last refreshes (`J4.6`, `J5.3`) merged on 2026-11-19.
 
-**Next, in this order.** Transport: `A3.15 A3.1 A3.2 A3.3`, then `B1.2 B1.3 B1.4 B1.6
-B1.7 B2.2 B2.3 B3.1 B3.2 B3.3` (`B3.2` with `BlockLayout.from_fields(["psi", "xi"],
-(n,))`; `B1.3` and `F3.2` must stop using `clip_approach`, decision 3). After that the
-pages outside sections D, G, H, I, A2, A3, B: those that solve a model (most of `F`,
-`J3`, `J4`, `J5`, `E1.2`) in both lanes; closed-form and correlation pages (`A1.x`,
-`A2.6`, `A3.4`-`A3.8`, `A3.12`, `A4.x`, `B2.1`, `C1.x`, `J1.x`) in the lighter lane
-(bootstrap, pin, Claims and maths, no `model.py`). `A4.9` and `F3.1` have neither
-`build_page.py` nor `index.py` yet.
+**Learnings.** pymrm PR #51 (merged 2026-11-20, in 3.4.1) carried the rows
+open on 2026-11-19 into the plugin. An audit on 2026-11-27 found that 25 rows it or 3.4.0 had
+carried were still marked open; they are marked now. The second flush (seven rows the
+first one missed, seven harvested from the reviews of the new pages) and
+`residual_check(scale=)` (row 115) are pymrm PRs #54 and #53. Gallery-only rows went
+into the refresh checklist, the briefs and `scripts/check_claims.py`.
 
-**How a page is done:** [`playbooks/refresh-page-brief.md`](playbooks/refresh-page-brief.md)
-holds the refresh brief, the review brief, and the commit checklist. Every review so
-far found must-fix defects on any page whose published statements changed, so do not
-skip it. Pages go one per commit on a section branch, pushed as a PR of a few pages;
-the maintainer has authorised merging a case PR once its CI is green.
+**Now: new pages** from the shared queue (`~/Code/pymrm_suite/worktrees/gallery-queue`,
+`gq.py list`): on 2026-11-27, 8 merged, 1 in a PR (`C2.11`, #69), 2 claimed, 16 open and
+48 blocked on sources or the maintainer's build waves. The cycle is the
+gallery-refresh skill with the new-page plan step (`references/briefs.md`), and second
+reviews follow `docs/second-reviews.md`.
 
-**Environment.** A venv from `requirements-lock.txt` (`python3.13 -m venv ...; pip
-install -r requirements-lock.txt`) has pymrm 3.2.0 and jupytext. `scripts/run_pages.py`
-and `scripts/run_kernels.py` pin the arithmetic themselves, including
-`OPENBLAS_L2_SIZE=512` (OpenBLAS 0.3.34 overflows the forced Haswell kernel on AMD
-AVX-512 CPUs; `docs/claims-design.md` section 7). Drop that pin once the lock carries
-OpenBLAS with upstream commit a78196c5.
-
-**Open, outside the page sweep.**
-- PR #11 (`fix/j42-front-matter`, the site build fix for `J4.2`'s YAML front matter)
-  is green and waits for the maintainer to merge it; publishing is blocked until then.
-  After it merges, check that the publish workflow tags a release and deploys.
-- `refresh-learnings.md`: 67 rows are `open` and none has been flushed to pymrm yet,
-  although the rule is one PR per about ten pages. Flush them next.
-- pymrm library candidates found on the way: `continuation`'s step-halving budget and
-  its false fold message; `newton`'s rule for bounds; the `NumJac` docstring (the bare
-  1-D shape and `axes_diagonals` traps of AGENTS.md).
-- `publish.yml` TODO: the Colab badge and download-link filter (step 1).
-- pymrm: move the development dependencies to extras.
+**Open, outside the pages.**
+- Decision 3: no page uses `clip_approach` any more, so pymrm can deprecate it.
+- `publish.yml` TODO: the "Open in Colab" badge and download-link filter
+  (`docs/page-infrastructure.md` section 1.5) is not built yet.
+- `run_pages.py` and `run_kernels.py` pin `OPENBLAS_L2_SIZE=512` (OpenBLAS 0.3.34 on
+  AMD AVX-512; `docs/claims-design.md` section 7). Drop the pin once the lock carries
+  OpenBLAS with upstream commit a78196c5.
+- Row 330: `Claims.breaks` counts a non-finite value as caught. Making that a failure
+  unless a row is declared as detecting by failure is a tooling change for the
+  maintainer to decide.

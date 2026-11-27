@@ -42,4 +42,6 @@ Output (the brief sets the word limit; default 400 words):
   is wrong (with evidence), and the exact fix.
 - One verdict line per question the brief asks, ending with
   "sound / sound with changes / not sound".
+- "Learnings": up to three findings that would change what an agent writes or checks
+  on another page, each with its numbers, or "Learnings: none".
 No em dashes in anything you write.
