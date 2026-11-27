@@ -1,0 +1,62 @@
+dataset_id: yates-satterfield-1991-fig8-parity
+title: Parity plot of eq 16, measured against predicted rate (Figure 8), filled markers
+status: partial
+
+source:
+  authors: ["Yates, I. C.", "Satterfield, C. N."]
+  year: 1991
+  container: "Energy & Fuels 5(1) 168-173"
+  doi: 10.1021/ef00025a029
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+conditions:
+  temperature_C: [220, 240]
+  note: "inverted triangles 240 C, squares 220 C; the open 230 C circles are not extracted"
+
+provenance_tier:
+  tier: 4
+  note: >
+    The authors' own eq 16 predictions (y) against their measured rates (x), H2 + CO in
+    mmol/(min g of catalyst). Only markers that stand alone are usable one by one.
+
+acquisition:
+  method: digitised
+  figure: "Figure 8, page 172 (PDF page 5)"
+  tool: "poppler pdftoppm at 300 dpi; scipy.ndimage binary opening (disk radius 4 px) and connected components"
+  script: >
+    pages/C2.7-yates-satterfield-fischer-tropsch/extract_figures.py regenerates this file from a
+    local copy of the PDF (not in the repository); symbol and status per component are constants
+    in the script, assigned by eye on an 8x zoom.
+  procedure: >
+    The opening removes the 45 degree line (3 px wide) and the open circles and keeps filled
+    markers. Calibration: affine fit to 40 ticks every 0.1, rms residual 0.0026 (x) and 0.0018
+    (y) mmol/(min g). Each remaining component is one row at its ink centroid, with a status:
+    isolated (one marker), pair (two triangles merged; the row is their centroid and is used only
+    for counting) or clump (everything below about 0.3 merged; unassigned).
+  operator: "Claude Opus 5.5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-11-27
+  calibration: "affine fit to the ticks; 1 px = 0.0026 mmol/(min g) in x, 0.0023 in y"
+  estimated_error: >
+    +/- 0.004 mmol/(min g) for an isolated marker in each coordinate (centre to about 1.5 px after
+    the opening, calibration 0.0026); pair and clump rows carry no individual reading.
+
+missing:
+  - "The 230 C open circles (no Table V parameters exist for 230 C)."
+  - "Individual markers inside the four pairs and the clump below 0.3 mmol/(min g)."
+
+columns:
+  - {name: symbol, unit: "-", description: "triangle (240 C), square (220 C) or mixed (clump)"}
+  - {name: R_exp, unit: "mmol/(min g)", description: "measured rate, x axis"}
+  - {name: R_pred, unit: "mmol/(min g)", description: "eq 16 prediction, y axis"}
+  - {name: u_px, unit: "px", description: "component centroid, column of the 300 dpi render"}
+  - {name: v_px, unit: "px", description: "component centroid, row of the 300 dpi render"}
+  - {name: area_px, unit: "px", description: "ink area after the opening"}
+  - {name: status, unit: "-", description: "isolated, pair or clump"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The original figure and
+  table images are NOT reproduced.

@@ -1,0 +1,67 @@
+dataset_id: yates-satterfield-1991-fig1-fig2-design
+title: Reactor partial pressures of every run at 220 C (Figure 1) and 240 C (Figure 2)
+status: complete
+
+source:
+  authors: ["Yates, I. C.", "Satterfield, C. N."]
+  year: 1991
+  container: "Energy & Fuels 5(1) 168-173"
+  doi: 10.1021/ef00025a029
+  access: "institutional subscription, TU Eindhoven (lawful access)"
+  licence: "all rights reserved (facts extracted; no page image reproduced)"
+
+conditions:
+  temperature_C: [220, 240]
+  note: "slurry CSTR, so these are the outlet (reactor) partial pressures at which each rate was measured"
+
+provenance_tier:
+  tier: 4
+  note: >
+    The experimental design behind the Table V fits: 17 runs at 220 C and 23 at 240 C (Table V
+    footnote b). The rates themselves are not printed.
+
+acquisition:
+  method: digitised
+  figure: "Figure 1 (220 C) and Figure 2 (240 C), page 170 (PDF page 3)"
+  tool: "poppler pdftoppm at 300 dpi (native scan 300 ppi); scipy.ndimage connected components"
+  script: >
+    pages/C2.7-yates-satterfield-fischer-tropsch/extract_figures.py regenerates this file from a
+    local copy of the PDF (not in the repository); it is deterministic.
+  procedure: >
+    Ink below 128 of 255. Calibration: each axis an affine function of both pixel coordinates
+    (the scan is turned by about 0.3 degree), fitted to the printed tick marks every 0.1 MPa
+    (18 ticks on Figure 1, 17 on Figure 2); rms residual 0.0006 MPa in P_CO and 0.0009 MPa
+    (Figure 1) and 0.0014 MPa (Figure 2) in P_H2. The frame lines are not the axis limits to
+    better than 0.006 MPa, so they are not used. Markers (circles 15 px, triangles 14 px across)
+    are connected components located at the centroid of their ink. Overlapping markers are
+    matched by a union of copies of an isolated marker's ink at integer pixel offsets, chosen to
+    minimise the unmatched pixels: one cluster of three circles in Figure 1 (cluster c1.1), three
+    pairs of triangles in Figure 2 (c2.1 to c2.3), each checked by eye on an 8x zoom.
+  operator: "Claude Opus 5.5 (assisted), reviewed by the gallery maintainers"
+  date: 2026-11-27
+  calibration: "affine fit to the ticks; 1 px = 0.00107 MPa in P_CO, 0.0018 MPa in P_H2"
+  estimated_error: >
+    +/- 0.003 MPa in each partial pressure (marker centre to about 2 px, calibration 0.0014 MPa
+    at worst, the centroid of a triangle against its plotted point); clustered markers the same,
+    as the template match leaves fewer than 20 unmatched pixels per marker.
+
+missing:
+  - >-
+    Figure 2: 22 triangles are visible against 23 runs at 240 C (Table V footnote b). The 23rd
+    lies under one of the 22; the page treats each of the 22 positions in turn as its location.
+
+columns:
+  - {name: T_C, unit: "C", description: "reactor temperature (figure)"}
+  - {name: P_CO_MPa, unit: "MPa", description: "CO partial pressure"}
+  - {name: P_H2_MPa, unit: "MPa", description: "H2 partial pressure"}
+  - {name: u_px, unit: "px", description: "marker centre, column of the 300 dpi render"}
+  - {name: v_px, unit: "px", description: "marker centre, row of the 300 dpi render"}
+  - {name: cluster, unit: "-", description: "cluster id where markers overlap, empty for an isolated marker"}
+  - {name: n_in_cluster, unit: "-", description: "markers in the cluster (1 for isolated)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by
+  a research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). The original figure and
+  table images are NOT reproduced.
