@@ -22,14 +22,21 @@
       "rtol": 1e-06,
       "note": "R = 8.314"
     },
+    "r1_hu_KH2O_R8314_min": {
+      "kind": "bound",
+      "value": 1.2443024259548492,
+      "min": 1.0,
+      "basis": "theory",
+      "note": "R = 8.314: smallest miss over the rounding of A*, B and T_av, in half-units"
+    },
     "r1_R_lo": {
       "kind": "value",
-      "value": 8.314134466067628,
+      "value": 8.314051585795823,
       "rtol": 1e-09
     },
     "r1_R_hi": {
       "kind": "value",
-      "value": 8.314628441348589,
+      "value": 8.314711328197166,
       "rtol": 1e-09
     },
     "r1_multiplier": {
@@ -256,10 +263,17 @@
       "rtol": 0.05
     },
     "r3_shift_over_half_distance": {
-      "kind": "value",
+      "kind": "bound",
       "value": 1.045342592052732,
-      "rtol": 0.01,
+      "min": 1.0,
+      "basis": "chosen",
       "note": "largest thermodynamic shift of F over |F - 1|/2 (the plan's stop rule)"
+    },
+    "r3_F_lowest": {
+      "kind": "value",
+      "value": 1.0462772663993625,
+      "rtol": 0.01,
+      "note": "lowest F over the heat-capacity and formation-enthalpy readings tested"
     },
     "r3_scaling_gap_K": {
       "kind": "bound",
@@ -356,25 +370,66 @@
     "r5_points_above_eq": {
       "kind": "exact",
       "value": 57,
-      "margin": 0.1384813378032692,
+      "margin": 0.35679604712273866,
       "min_margin": 0.0001,
       "note": "digitised points above the caption equilibrium by three pixels"
+    },
+    "r5_points_total": {
+      "kind": "exact",
+      "value": 114
+    },
+    "r5_points_above_eq_alt": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 15.662516143830079,
+      "min_margin": 0.01,
+      "note": "digitised points above the equilibrium at 225 C by three pixels"
+    },
+    "r5_points_above_eq_co": {
+      "kind": "exact",
+      "value": 0,
+      "margin": 0.29868579534500395,
+      "min_margin": 0.01,
+      "note": "digitised points above the CO-only-basis equilibrium by three pixels"
+    },
+    "r5_rms_fit_ivp": {
+      "kind": "value",
+      "value": 0.696846764328411,
+      "rtol": 0.01
+    },
+    "r5_resid_max": {
+      "kind": "value",
+      "value": 1.5833225673948945,
+      "rtol": 0.01
+    },
+    "r5_resid_max_x": {
+      "kind": "value",
+      "value": 1.5,
+      "rtol": 0.01
+    },
+    "r5_X21_pymrm_minus_ivp": {
+      "kind": "bound",
+      "value": -0.08125004009799142,
+      "min": -0.15,
+      "max": 0.15,
+      "basis": "chosen",
+      "note": "finite volumes (Richardson) against solve_ivp at the fitted point, x = 21 %"
     },
     "r5_eq_increases": {
       "kind": "exact",
       "value": 0,
-      "margin": 0.9007562080130498,
+      "margin": 0.8983681552788312,
       "min_margin": 1e-06,
       "note": "increases of the equilibrium conversion with x at the fitted T"
     },
     "r5_excess_max": {
       "kind": "value",
-      "value": 8.328086303525588,
+      "value": 8.328036927865853,
       "rtol": 0.01
     },
     "r5_excess_x_lo": {
       "kind": "value",
-      "value": 1.9574146060563127,
+      "value": 1.7997327272726729,
       "rtol": 0.01
     },
     "r5_excess_x_hi": {
@@ -389,47 +444,67 @@
     },
     "r5_T_fit": {
       "kind": "value",
-      "value": 503.81822066165574,
+      "value": 504.22999996990427,
       "rtol": 0.01
     },
     "r5_tau_fit": {
       "kind": "value",
-      "value": 10.921253692612103,
+      "value": 10.520309922473281,
       "rtol": 0.01
     },
     "r5_rms_fit": {
       "kind": "value",
-      "value": 0.27515997189624203,
+      "value": 0.7001880790663596,
       "rtol": 0.01
     },
     "r5_rms_caption": {
       "kind": "value",
-      "value": 6.067541821580688,
+      "value": 5.036548667182746,
       "rtol": 0.01
     },
     "r5_removed_X05": {
       "kind": "value",
-      "value": 42.161222556145574,
+      "value": 40.804976889335705,
       "rtol": 0.01
     },
     "r5_removed_X2": {
       "kind": "value",
-      "value": 75.68745815767132,
+      "value": 75.4410244464508,
       "rtol": 0.01
     },
     "r5_removed_X21": {
       "kind": "value",
-      "value": 37.179139856960234,
+      "value": 37.05888079874555,
       "rtol": 0.01
     },
     "r5_model_X21": {
       "kind": "value",
-      "value": 21.226805584907655,
+      "value": 21.15151661620724,
       "rtol": 0.01
     },
     "r5_eq_X21": {
       "kind": "value",
-      "value": 37.17913985696025,
+      "value": 37.0588807987455,
+      "rtol": 0.01
+    },
+    "r5_alt_below_min": {
+      "kind": "value",
+      "value": 3.910053180075167,
+      "rtol": 0.01
+    },
+    "r5_co_excess_max": {
+      "kind": "value",
+      "value": 0.18701945895534777,
+      "rtol": 0.01
+    },
+    "r5_co_rms_caption": {
+      "kind": "value",
+      "value": 23.66490593593454,
+      "rtol": 0.01
+    },
+    "r5_t_alt_C": {
+      "kind": "value",
+      "value": 225.0,
       "rtol": 0.01
     },
     "r5_rates_x0": {
@@ -509,10 +584,10 @@
   },
   "quoted": {
     "r1_R_lo": [
-      "8.31413"
+      "8.31405"
     ],
     "r1_R_hi": [
-      "8.31463"
+      "8.31471"
     ]
   },
   "breaks": {
@@ -592,6 +667,9 @@
     ],
     "r1_hu_KH2O_R8314": [
       "Table 1 B of K_H2O read 124,191"
+    ],
+    "r1_hu_KH2O_R8314_min": [
+      "gas constant 8.3141 in the water constant check"
     ],
     "r2_r_MeOH": [
       "pressures in kPa in the kinetic groups",
@@ -767,6 +845,26 @@
       "Fig. 5 calibration 1 K low"
     ],
     "r5_points_above_eq": [
+      "Fig. 8 calibration 2 points high",
+      "every sixteenth Fig. 8 column checked against equilibrium"
+    ],
+    "r5_points_total": [
+      "every sixteenth Fig. 8 column checked against equilibrium"
+    ],
+    "r5_points_above_eq_alt": [
+      "Fig. 8 equilibrium alternative read at 250 C instead of 225 C"
+    ],
+    "r5_points_above_eq_co": [
+      "Fig. 8 calibration 2 points high"
+    ],
+    "r5_t_alt_C": [
+      "Fig. 8 equilibrium alternative read at 250 C instead of 225 C"
+    ],
+    "r5_alt_below_min": [
+      "Fig. 8 calibration 2 points high",
+      "Fig. 8 equilibrium alternative read at 250 C instead of 225 C"
+    ],
+    "r5_co_excess_max": [
       "Fig. 8 calibration 2 points high"
     ],
     "r5_excess_max": [
@@ -783,6 +881,12 @@
     ],
     "r5_rms_caption": [
       "Fig. 8 calibration 2 points high",
+      "Fig. 8 beds on 20 cells",
+      "Fig. 8 caption temperature read as 260 C"
+    ],
+    "r5_co_rms_caption": [
+      "Fig. 8 calibration 2 points high",
+      "Fig. 8 beds on 20 cells",
       "Fig. 8 caption temperature read as 260 C"
     ],
     "r5_T_fit": [
@@ -792,6 +896,18 @@
       "Fig. 8 at its caption temperature (W/F0 fitted alone)"
     ],
     "r5_rms_fit": [
+      "Fig. 8 at its caption temperature (W/F0 fitted alone)"
+    ],
+    "r5_resid_max": [
+      "Fig. 8 at its caption temperature (W/F0 fitted alone)"
+    ],
+    "r5_resid_max_x": [
+      "Fig. 8 at its caption temperature (W/F0 fitted alone)"
+    ],
+    "r5_X21_pymrm_minus_ivp": [
+      "Fig. 8 beds on 20 cells"
+    ],
+    "r5_rms_fit_ivp": [
       "Fig. 8 at its caption temperature (W/F0 fitted alone)"
     ],
     "r5_eq_increases": [
@@ -855,6 +971,9 @@
     "r3_shift_over_half_distance": [
       "heat capacities perturbed by 1 % instead of 3 %"
     ],
+    "r3_F_lowest": [
+      "heat capacities perturbed by 1 % instead of 3 %"
+    ],
     "v3_order_finest_min": [
       "ladder on 10 to 320 cells"
     ],
@@ -869,7 +988,7 @@
     ]
   },
   "rows": {
-    "defined": 43,
-    "recorded": 43
+    "defined": 47,
+    "recorded": 47
   }
 }

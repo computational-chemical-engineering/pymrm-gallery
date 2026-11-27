@@ -168,10 +168,11 @@ def bounded_min(f, lo, hi, n_scan=61, xtol=1e-7, at_end_ok=False):
 # silent:
 #
 # - **Gas constant** $R$ = 8.314462618 J/(mol K). It is not printed; Table 1
-#   converts to Table 2 only for $R$ between 8.31413 and 8.31463 (Results, R1),
+#   converts to Table 2 only for $R$ between 8.31405 and 8.31471 (Results, R1),
 #   and B is in J/mol.
 # - **Ideal gas** (the paper reports SRK compressibility factors 0.99 to 1.01 in
-#   its window, p. 5), isobaric bed (no pressure drop is printed).
+#   its window, p. 5), isobaric bed (no pressure drop is printed; the pressure
+#   drop is not bounded with the Ergun equation, no gas viscosity being read).
 # - **Inert**: Table 3 does not name it. Argon, the internal standard of the
 #   experiments (p. 2), is the page's reading; nitrogen is computed beside it.
 # - **Heats and heat capacities** are not printed. The page reads the heats as the
@@ -180,7 +181,10 @@ def bounded_min(f, lo, hi, n_scan=61, xtol=1e-7, at_end_ok=False):
 #   NIST WebBook (Shomate coefficients of Chase 1998; methanol from the TRC
 #   ideal-gas table by a cubic spline). The van 't Hoff heats of the two
 #   equilibrium correlations are computed beside it. Fig. 5's plateau selects
-#   between them (R3).
+#   between them (R3). Constant 298 K heats with temperature-dependent heat
+#   capacities do not conserve enthalpy exactly; the H298 reading is the one
+#   Fig. 5's plateau selects, not a thermodynamically consistent model, and the
+#   van 't Hoff reading beside it is the consistent one.
 # - The bed is uniform: $\zeta = z/L = W/W_\mathrm{bed}$ with $W_\mathrm{bed}$ =
 #   34.8 g over the 0.15 m tube.
 
@@ -247,7 +251,7 @@ print(cite_data(load_meta("nist-webbook-thermo.csv", page=PAGE)))
 #   markers at 2 % CO2 in Fig. 8): digitised by `extract_figures.py` from the
 #   1-bit scans embedded in the PDF, at native resolution, calibrated on the
 #   tick marks (the axis value of one pixel is printed below). The inlet ends of
-#   Fig. 7a are not read: the five curves merge there.
+#   Fig. 7a are not read.
 # - `nist-webbook-*.csv`: heat capacities and formation enthalpies (not from the
 #   paper).
 # - `check_values.csv`: 53 values of the page's functions at one test
@@ -282,7 +286,7 @@ show(READ[["figure", "curve", "quantity", "value", "sd", "n_px", "value_per_px"]
 # `residual_check`. The inlet is a Dirichlet face (outward normal $-\zeta$:
 # $u = u_\mathrm{in}$), the outlet `{"outflow": True}`, read with
 # `compute_boundary_values`. First-order upwind; values between cells are read
-# linearly between centres, and quoted values are Richardson-extrapolated from
+# linearly between faces, and quoted values are Richardson-extrapolated from
 # two grids. An isothermal bed (Fig. 8) is the same class without the energy
 # balance. The second route is `scipy.integrate.solve_ivp` (Radau) on the same
 # source function.
@@ -330,7 +334,7 @@ def check_values():
         out[f"T1_A_from_Astar_{key}"] = table1_to_table2(
             float(t1.value[(g, "A*")]), float(t1.value[(g, "B")]), R_GAS, T_AV)
     s = stats_r1()
-    out.update({"T1_R_window_KH2O_lo": s["R_lo"], "T1_R_window_KH2O_hi": s["R_hi"],
+    out.update({"T1_R_window_KH2O_lo": s["R_lo_nom"], "T1_R_window_KH2O_hi": s["R_hi_nom"],
                 "T1_t975_dof543": s["t975"], "T1_dof": s["dof"],
                 "T1_ci_multiplier_k5B": s["mult"], "T1_ci_multiplier_k5B_lo": s["mult_lo"],
                 "T1_ci_multiplier_k5B_hi": s["mult_hi"],
@@ -388,8 +392,14 @@ def stats_r1(t1=T1, t2=T2, r_gas=R_GAS, t_av=T_AV, n_exp=N_EXP, quantile="t"):
     corners = [f(g, "B") + db for db in (-0.5, 0.5)]
     a_star = [f(g, "A*") + da for da in (-0.005, 0.005)]
     a_pr = [float(t2.value_printed[(g, "A")]) + da for da in (-0.005e-11, 0.005e-11)]
-    rs = [b / (t_av * (np.log(ast) - np.log(ap))) for b in corners for ast in a_star for ap in a_pr]
+    t_box = [t_av + dt for dt in (-0.005, 0.005)]       # T_av is printed as 501.57 K
+    rs = [b / (tv * (np.log(ast) - np.log(ap))) for b in corners for ast in a_star for ap in a_pr
+          for tv in t_box]
     s["R_lo"], s["R_hi"] = min(rs), max(rs)
+    rs0 = [b / (t_av * (np.log(ast) - np.log(ap))) for b in corners for ast in a_star for ap in a_pr]
+    s["R_lo_nom"], s["R_hi_nom"] = min(rs0), max(rs0)       # T_av taken as printed (check script)
+    s["hu_KH2O_min"] = min(half_units(t2.value_printed[(g, "A")], table1_to_table2(ast, b, r_gas, tv))
+                           for b in corners for ast in a_star for tv in t_box)
     n_par = int(t1.value.notna().sum())                         # printed estimates
     s["dof"] = 2 * n_exp - n_par
     s["t975"] = float(stats.t.ppf(0.975, s["dof"]) if quantile == "t" else stats.norm.ppf(0.975))
@@ -437,7 +447,7 @@ print(f"{len(dev)} check values reproduced; largest relative deviation "
 # %%
 def study_r1(**kw):
     s = stats_r1(**kw)
-    m = {"r1_hu": np.array(list(s["hu"].values())), "r1_hu_KH2O": s["hu"]["KH2O"],
+    m = {"r1_hu": np.array(list(s["hu"].values())), "r1_hu_KH2O": s["hu"]["KH2O"], "r1_hu_KH2O_min": s["hu_KH2O_min"],
          "r1_R_lo": s["R_lo"], "r1_R_hi": s["R_hi"], "r1_dof": s["dof"], "r1_t975": s["t975"],
          "r1_multiplier": s["mult"], "r1_t975_above_window": s["t975"] - s["mult_hi"],
          "r1_sd_gap": s["sd_t_lo"] - s["sd_printed"],
@@ -465,8 +475,8 @@ show(pd.DataFrame({"group": ["sqrt(K_H2)", "K_H2O", "k5 lump", "k'1"],
 display(Markdown(
     f"With $R$ = 8.314462618 J/(mol K), {4 - R1['r1_groups_outside_rounding']} of 4 converted "
     f"frequency factors round to Table 2 (largest {R1['r1_hu'].max():.2f} half-units). With "
-    f"$R$ = 8.314, $K_{{H_2O}}$ misses by {R1_8314['r1_hu_KH2O']:.2f} half-units; its rounding box "
-    f"allows only $R$ = {R1['r1_R_lo']:.5f} to {R1['r1_R_hi']:.5f}. The degrees of freedom are "
+    f"$R$ = 8.314, $K_{{H_2O}}$ misses by {R1_8314['r1_hu_KH2O']:.2f} half-units (at least {R1_8314['r1_hu_KH2O_min']:.2f} over the rounding of the printed "
+    f"A*, B and T_av); its rounding box allows only $R$ = {R1['r1_R_lo']:.5f} to {R1['r1_R_hi']:.5f}. The degrees of freedom are "
     f"2 x {N_EXP} - 9 = {R1['r1_dof']}, as printed (p. 7: \"The tabulated $t_{{0.95}}$, with 543 "
     f"degrees of freedom, amounts to 1.96.\"), but $t_{{0.975}}({R1['r1_dof']})$ = "
     f"{R1['r1_t975']:.4f}; the intervals of Table 1 use {R1['r1_multiplier']:.5f} (the $k_5$-lump "
@@ -661,7 +671,7 @@ def f_sens(cp_rel=0.03, dhf_u=DHF_MEOH_U):
             "dHf(MeOH) high": study_r3(dhf=DHF_MEOH + dhf_u)["r3_F"]}
     shift = max(abs(v - F0_) for v in sens.values())
     return {"r3_F_thermo_shift": shift, "r3_shift_over_half_distance": shift / (abs(F0_ - 1.0) / 2.0),
-            "_sens": sens}
+            "r3_F_lowest": min(sens.values()), "_sens": sens}
 
 
 R3.update(f_band())
@@ -741,11 +751,12 @@ display(Markdown(
     f"{SENS['dHf(MeOH) low']:.3f} to {SENS['dHf(MeOH) high']:.3f}. The largest "
     f"shift, {R3['r3_F_thermo_shift']:.3f}, is "
     + f"{R3['r3_shift_over_half_distance']:.2f} times"
-    + f" half the distance of $F$ from 1 ({abs(F0_ - 1) / 2:.3f}). "
+    + f" half the distance of $F$ from 1 ({abs(F0_ - 1) / 2:.3f}), that is "
+    + f"{R3['r3_F_thermo_shift'] / abs(F0_ - 1):.2f} of the distance. "
     + ("By the rule set before the run (no claim $F \\ne 1$ when the thermodynamic shift exceeds "
-       "half that distance) **$F$ is undecided**: Fig. 5b's shape depends as much on heat "
-       "capacities the paper does not give as on the rate level. The ratio is close to 1, so the "
-       "verdict rests on a thin margin and on the 3 % chosen for the heat capacities."
+       "half that distance) **$F$ is undecided** by the rule's factor of two: every reading "
+       f"tested still gives $F$ above 1 (lowest {R3['r3_F_lowest']:.3f}). The ratio is close to 1, "
+       "so the verdict rests on a thin margin and on the 3 % chosen for the heat capacities."
        if R3["r3_shift_over_half_distance"] > 1.0 else
        "$F$ differs from 1 by more than the thermodynamic readings move it.")
     + f" Nitrogen as the inert needs $F$ = {R3['r3_F_H298_N2']:.3f}; the van 't Hoff heats leave "
@@ -827,16 +838,23 @@ display(Markdown(
 
 # %%
 T_CAPTION, P8 = 523.15, 75.0
-# x used in the fit (%): from 2.5 %, where the drawn line's chords between the authors'
-# simulated points (kinks at about 3, 4, 6 and 16 %) follow the model's curvature; below 2 % the
-# line is three steep chords (about 0.5, 1 and 2 %) that a smooth curve cannot follow
-X_FIT = np.array([2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0])
+# x used in the fit (%): the whole traced line, but for the columns around Klier's markers at 2 %
+# (no line is read from 1.68 to 2.33 %)
+X_FIT = np.array([0.7, 0.8, 1.0, 1.25, 1.5, 1.65, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0,
+                  14.0, 16.0, 18.0, 20.0])
+T_ALT = 498.15        # 225 C, the alternative reading of the caption's condition
 TAU_MAX, N8 = 40.0, 150
 _cache8 = {}
 
 
 def fig8_curve(x, shift=0.0):
     return np.interp(x, F8.x_CO2_pct, F8.X_MeOH_pct) + shift
+
+
+def X_ivp(kin, T, x, tau):
+    """The same conversion (%) by ``solve_ivp``, exact in space."""
+    bed = PlugFlowBed(kin, fig8_feed(x), T, P8, TAU_MAX, n=10)
+    return 100 * reference_solution(bed, rtol=1e-9, atol=1e-11).sol(tau / TAU_MAX)[3] / 0.30
 
 
 def X_profile(kin, T, x, n=N8):
@@ -859,13 +877,24 @@ X_GRID = np.array([0.5, 1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 12.0, 16.0, 21.0])
 
 
 def study_r5(par=PAR, T_fix=None, shift=0.0, p=P8, equil=EQ, drop=("KH2O", "Kw"), fit=True,
-             eq_shift=True, t_caption=T_CAPTION):
+             eq_shift=True, t_caption=T_CAPTION, t_alt=T_ALT, stride=8, n8=N8):
     kin = kinetics(par, equil=equil)
     out = {}
-    xs, Xs = F8.x_CO2_pct.values[::8], F8.X_MeOH_pct.values[::8] + shift
+    xs, Xs = F8.x_CO2_pct.values[::stride], F8.X_MeOH_pct.values[::stride] + shift
     exc = np.array([X - X_eq(kin, T_CAPTION, x, p) for x, X in zip(xs, Xs)])
     out["r5_points_above_eq"] = int(np.sum(exc > 3 * PX["8"]))
     out["_exc"], out["_xs"] = exc, xs
+    out["r5_points_total"] = len(xs)
+    # two other readings of the axis: 225 C, and a CO-only conversion basis (eq. 3 is in
+    # partial pressures: no solution of it exceeds its ideal-gas equilibrium)
+    exc_alt = np.array([X - X_eq(kin, t_alt, x, p) for x, X in zip(xs, Xs)])
+    exc_co = np.array([X - X_eq(kin, T_CAPTION, x, p) * 30.0 / (30.0 - x) for x, X in zip(xs, Xs)])
+    out["_exc_alt"], out["_exc_co"] = exc_alt, exc_co
+    out["r5_points_above_eq_alt"] = int(np.sum(exc_alt > 3 * PX["8"]))
+    out["r5_points_above_eq_co"] = int(np.sum(exc_co > 3 * PX["8"]))
+    out["r5_t_alt_C"] = t_alt - 273.15
+    out["r5_alt_below_min"] = float(-exc_alt.max())
+    out["r5_co_excess_max"] = float(exc_co.max())
     out["r5_excess_max"] = float(exc.max())
     g = lambda x: fig8_curve(x, shift) - X_eq(kin, T_CAPTION, x, p)    # noqa: E731
     roots = find_roots(g, 0.8, 20.8, n_scan=40, xtol=1e-6)["roots"]
@@ -875,29 +904,39 @@ def study_r5(par=PAR, T_fix=None, shift=0.0, p=P8, equil=EQ, drop=("KH2O", "Kw")
         - X_eq(kin, T_CAPTION, 2.0, p)
     target = fig8_curve(X_FIT, shift)
 
-    def best_tau(T, at_end_ok=True):
-        prof = [X_profile(kin, T, x) for x in X_FIT]
-        f = lambda tau: float(np.sqrt(np.mean((np.array([pr(tau) for pr in prof]) - target) ** 2)))  # noqa: E731
+    def best_tau(T, at_end_ok=True, co=False):
+        prof = [X_profile(kin, T, x, n8) for x in X_FIT]
+        scale = 30.0 / (30.0 - X_FIT) if co else 1.0
+        f = lambda tau: float(np.sqrt(np.mean((scale * np.array([pr(tau) for pr in prof]) - target) ** 2)))  # noqa: E731
         return bounded_min(f, 0.5, TAU_MAX, n_scan=40, xtol=1e-5, at_end_ok=at_end_ok)
 
     out["r5_rms_caption"] = best_tau(t_caption)[1]
+    out["r5_co_rms_caption"] = best_tau(t_caption, co=True)[1]
     if fit:
         T_fit = bounded_min(lambda T: best_tau(T)[1], 483.15, 528.15, n_scan=7, xtol=2e-2)[0] \
             if T_fix is None else T_fix
         tau_fit, rms = best_tau(T_fit, at_end_ok=False)
         out.update({"r5_T_fit": T_fit, "r5_tau_fit": tau_fit, "r5_rms_fit": rms})
-        out["_X_fit"] = [X_profile(kin, T_fit, x)(tau_fit) for x in X_FIT]
+        out["_X_fit"] = [X_profile(kin, T_fit, x, n8)(tau_fit) for x in X_FIT]
+        res = np.array(out["_X_fit"]) - target
+        out["r5_resid_max"], out["r5_resid_max_x"] = float(np.abs(res).max()), float(X_FIT[np.argmax(np.abs(res))])
     else:
         T_fit, tau_fit = R5["r5_T_fit"], R5["r5_tau_fit"]
+        out["_X_fit"] = [X_profile(kin, T_fit, x, n8)(tau_fit) for x in X_FIT]
+    # grid check against solve_ivp at the fitted point
+    out["r5_X21_pymrm_minus_ivp"] = X_profile(kin, T_fit, 21.0, n8)(tau_fit) - X_ivp(kin, T_fit, 21.0, tau_fit)
+    if fit:
+        out["r5_rms_fit_ivp"] = float(np.sqrt(np.mean(
+            (np.array([X_ivp(kin, T_fit, x, tau_fit) for x in X_FIT]) - target) ** 2)))
     # the p. 9 explanation by removal, at the fitted point
     eq_fit = np.array([X_eq(kin, T_fit, x, shift=eq_shift) for x in X_GRID])
     out["_eq_diff"] = np.diff(eq_fit)
     out["r5_eq_increases"] = int(np.sum(out["_eq_diff"] > 0))
     kin_dry = kinetics(par, equil=equil, drop=drop)
-    out["r5_removed_X05"] = X_profile(kin_dry, T_fit, 0.5)(tau_fit)
-    out["r5_removed_X2"] = X_profile(kin_dry, T_fit, 2.0)(tau_fit)
-    out["r5_removed_X21"] = X_profile(kin_dry, T_fit, 21.0)(tau_fit)
-    out["r5_model_X21"] = X_profile(kin, T_fit, 21.0)(tau_fit)
+    out["r5_removed_X05"] = X_profile(kin_dry, T_fit, 0.5, n8)(tau_fit)
+    out["r5_removed_X2"] = X_profile(kin_dry, T_fit, 2.0, n8)(tau_fit)
+    out["r5_removed_X21"] = X_profile(kin_dry, T_fit, 21.0, n8)(tau_fit)
+    out["r5_model_X21"] = X_profile(kin, T_fit, 21.0, n8)(tau_fit)
     out["r5_eq_X21"] = X_eq(kin, T_fit, 21.0)
     out["r5_rates_x0"] = float(np.abs(kin.rates(P8 * fig8_feed(0.0), T_fit)).max())
     return out
@@ -923,17 +962,28 @@ plt.show()
 
 display(Markdown(
     f"**Equilibrium at the caption.** {n_above} of {len(R5['_xs'])} digitised points of the curve "
-    f"(every eighth column) lie above the equilibrium conversion of the paper's own $K_1^*$, "
-    f"$K_3^*$ at 523.15 K and 75 bar by more than three pixels ({3 * PX['8']:.2f} points); the "
+    f"(every eighth column) lie above the equilibrium conversion (carbon basis, ideal gas) of the "
+    f"paper's own $K_1^*$, $K_3^*$ at 523.15 K and 75 bar by more than three pixels ({3 * PX['8']:.2f} points); the "
     f"curve exceeds it from $x$ = {R5['r5_excess_x_lo']:.2f} to {R5['r5_excess_x_hi']:.2f} % CO2, "
     f"by up to {R5['r5_excess_max']:.2f} points. Klier's lowest marker at 2 % is "
-    f"{R5['r5_klier_low_minus_eq']:.2f} points above it too. No kinetic model can exceed "
-    "equilibrium, so with these constants the curve cannot be at the caption's condition.\n\n"
-    f"**What reproduces it.** Fitting $T$ and $W/F_0$ to the curve ({len(X_FIT)} points, "
-    f"$x$ = 2.5 to 20 %; below 2 % the drawn line is three steep chords between the authors' "
-    f"simulated points, which a smooth curve cannot follow) gives $T$ = {T_FIT:.2f} K and $W/F_0$ = {TAU_FIT:.2f} kg s/mol, RMS "
-    f"{R5['r5_rms_fit']:.2f} points; at the caption's 523.15 K the best $W/F_0$ leaves "
-    f"{R5['r5_rms_caption']:.2f} points. Which temperature the authors used is not printed.\n\n"
+    f"{R5['r5_klier_low_minus_eq']:.2f} points above it too. Eq. 3 is written in partial "
+    "pressures, so none of its solutions exceeds this ideal-gas equilibrium: on the axis label's "
+    "carbon basis the curve is not eq. 3 at the caption's condition. Klier's marker above it "
+    "shows the real gas at 75 bar differs; fugacities are not computed (no critical constants "
+    f"read). At {R5['r5_t_alt_C']:.0f} °C the curve lies below equilibrium ({R5['r5_points_above_eq_alt']} of "
+    f"{R5['r5_points_total']} points above it, the curve at least {R5['r5_alt_below_min']:.2f} points "
+    f"below); on a CO-only basis equilibrium reaches it ({R5['r5_points_above_eq_co']} of "
+    f"{R5['r5_points_total']} above, by at most {R5['r5_co_excess_max']:.2f} points), but eq. 3 then "
+    f"fits with RMS {R5['r5_co_rms_caption']:.1f} points at best at 523.15 K.\n\n"
+    f"**What reproduces it.** Fitting $T$ and $W/F_0$ to the curve ({len(X_FIT)} points over "
+    f"$x$ = {X_FIT.min():.1f} to {X_FIT.max():.0f} %, the whole traced line but for the columns "
+    f"at Klier's markers) gives $T$ = {T_FIT:.2f} K and $W/F_0$ = {TAU_FIT:.2f} kg s/mol, RMS "
+    f"{R5['r5_rms_fit']:.2f} points (largest residual {R5['r5_resid_max']:.2f} points at $x$ = {R5['r5_resid_max_x']:.2f} %); "
+    f"at the caption's 523.15 K the best $W/F_0$ leaves "
+    f"{R5['r5_rms_caption']:.2f} points. On the finite-volume grid of {N8} cells (Richardson from "
+    f"{N8} and {2 * N8}) the conversion at 21 % is {R5['r5_X21_pymrm_minus_ivp']:+.3f} points from "
+    f"`solve_ivp` at the fitted point, and the RMS against `solve_ivp` there is "
+    f"{R5['r5_rms_fit_ivp']:.2f} points. The caption prints 250 °C; the page does not infer which inputs the authors' simulation used.\n\n"
     f"**The p. 9 explanation by removal.** At the fitted point the equilibrium alone decreases "
     f"with $x$ ({R5['r5_eq_increases']} increases on {len(X_GRID)} points from 0.5 to 21 %): it "
     f"has no maximum. With $K_{{H_2O}}$ and $K_{{H_2O}}/(K_8K_9K_{{H_2}})$ set to zero the "
@@ -960,6 +1010,9 @@ display(Markdown(
 # - **V3, convergence.** $T(z/L = 0.1)$, the half rise and the RWGS reversal on 250 to 8000
 #   cells: observed orders of first-order upwind, the Richardson values against the
 #   check values of the independent script.
+# - **Not done: the pressure drop.** The plan's V4 bound with the Ergun equation is
+#   not computed: it needs the gas viscosity, which the paper does not print and the
+#   page reads from no source.
 
 # %%
 LADDER = (250, 500, 1000, 2000, 4000, 8000)
@@ -1052,6 +1105,8 @@ display(Markdown(
 claims.count("r1_groups_outside_rounding", R1["r1_hu"], 1.0, min_margin=0.05,
              note="Table 1 converted with R = 8.314462618, half-units from Table 2")
 claims.value("r1_hu_KH2O_R8314", R1_8314["r1_hu_KH2O"], rtol=1e-6, note="R = 8.314")
+claims.bound("r1_hu_KH2O_R8314_min", R1_8314["r1_hu_KH2O_min"], min=1.0, basis="theory",
+             note="R = 8.314: smallest miss over the rounding of A*, B and T_av, in half-units")
 for k in ("r1_R_lo", "r1_R_hi", "r1_multiplier", "r1_tA_max_k5", "r1_tA_max_KH2O",
           "r1_tA_min_sqrtKH2", "r1_tA_min_k1", "r1_dS_H2_T2", "r1_voidage"):
     claims.value(k, R1[k], rtol=1e-9)
@@ -1066,8 +1121,8 @@ claims.count("r1_A_not_significant", -R1["r1_tA_max"], -1.96, min_margin=0.05,
 claims.bound("r1_dS_H2_T2_hu", R1["r1_dS_H2_T2_hu"], max=1.0, basis="theory")
 claims.bound("r1_dS_H2_T1_hu", R1["r1_dS_H2_T1_hu"], min=1.0, basis="theory")
 claims.bound("r1_dS_H2O_hu", R1["r1_dS_H2O_hu"], max=1.0, basis="theory")
-claims.says("8.31413", "r1_R_lo")                     # Parameters and assumptions
-claims.says("8.31463", "r1_R_hi")
+claims.says("8.31405", "r1_R_lo")                     # Parameters and assumptions
+claims.says("8.31471", "r1_R_hi")
 # R2
 for k in R2:
     claims.value(k, R2[k], rtol=1e-9)
@@ -1086,8 +1141,10 @@ for k in ("r3_zrev_mm", "r3_zhalf", "r3_zhalf_F", "r3_z_within_halfK", "r3_fig_z
     claims.value(k, R3[k], rtol=2e-3)
 claims.value("r3_F_band", R3["r3_F_band"], rtol=0.05)
 claims.value("r3_F_thermo_shift", R3["r3_F_thermo_shift"], rtol=0.05)
-claims.value("r3_shift_over_half_distance", R3["r3_shift_over_half_distance"], rtol=0.01,
-             note="largest thermodynamic shift of F over |F - 1|/2 (the plan's stop rule)")
+claims.bound("r3_shift_over_half_distance", R3["r3_shift_over_half_distance"], min=1.0,
+             basis="chosen", note="largest thermodynamic shift of F over |F - 1|/2 (the plan's stop rule)")
+claims.value("r3_F_lowest", R3["r3_F_lowest"], rtol=0.01,
+             note="lowest F over the heat-capacity and formation-enthalpy readings tested")
 claims.bound("r3_scaling_gap_K", R3["r3_scaling_gap_K"], max=1e-6, basis="tolerance",
              note="solve_ivp rtol 1e-12 on both routes")
 claims.bound("r3_pymrm_vs_ivp_K", R3["r3_pymrm_vs_ivp_K"], max=0.05, basis="chosen",
@@ -1100,11 +1157,22 @@ for k in R4:
 # R5
 claims.count("r5_points_above_eq", R5["_exc"], 3 * PX["8"], min_margin=1e-4,
              note="digitised points above the caption equilibrium by three pixels")
+claims.exact("r5_points_total", R5["r5_points_total"])
+claims.count("r5_points_above_eq_alt", R5["_exc_alt"], 3 * PX["8"], min_margin=0.01,
+             note="digitised points above the equilibrium at 225 C by three pixels")
+claims.count("r5_points_above_eq_co", R5["_exc_co"], 3 * PX["8"], min_margin=0.01,
+             note="digitised points above the CO-only-basis equilibrium by three pixels")
+claims.value("r5_rms_fit_ivp", R5["r5_rms_fit_ivp"], rtol=0.01)
+claims.value("r5_resid_max", R5["r5_resid_max"], rtol=0.01)
+claims.value("r5_resid_max_x", R5["r5_resid_max_x"], rtol=0.01)
+claims.bound("r5_X21_pymrm_minus_ivp", R5["r5_X21_pymrm_minus_ivp"], min=-0.15, max=0.15, basis="chosen",
+             note="finite volumes (Richardson) against solve_ivp at the fitted point, x = 21 %")
 claims.count("r5_eq_increases", R5["_eq_diff"], 0.0, min_margin=1e-6,
              note="increases of the equilibrium conversion with x at the fitted T")
 for k in ("r5_excess_max", "r5_excess_x_lo", "r5_excess_x_hi", "r5_klier_low_minus_eq",
           "r5_T_fit", "r5_tau_fit", "r5_rms_fit", "r5_rms_caption", "r5_removed_X05", "r5_removed_X2",
-          "r5_removed_X21", "r5_model_X21", "r5_eq_X21"):
+          "r5_removed_X21", "r5_model_X21", "r5_eq_X21", "r5_alt_below_min", "r5_co_excess_max",
+          "r5_co_rms_caption", "r5_t_alt_C"):
     claims.value(k, R5[k], rtol=0.01)
 claims.bound("r5_rates_x0", R5["r5_rates_x0"], max=0.0, basis="identity", structural=True,
              note="r = 0 exactly at p_CO2 = p_H2O = 0 (multiplied-out approach terms)")
@@ -1147,6 +1215,8 @@ ROWS = [
         **study_r1(t1=edit(T1, "K_H2O", "B", "value", "124191")),
         "r1_hu_KH2O_R8314": study_r1(t1=edit(T1, "K_H2O", "B", "value", "124191"),
                                      r_gas=8.314)["r1_hu_KH2O"]}),
+    ("gas constant 8.3141 in the water constant check",
+     lambda: {"r1_hu_KH2O_R8314_min": study_r1(r_gas=8.3141)["r1_hu_KH2O_min"]}),
     ("normal quantile instead of t(543)", lambda: study_r1(quantile="normal")),
     ("276 experiments counted as one response each", lambda: study_r1(n_exp=138)),
     ("Table 1 sd of sqrt(K_H2) A* read 0.376",
@@ -1183,6 +1253,10 @@ ROWS = [
     ("Fig. 8 at its caption temperature (W/F0 fitted alone)", lambda: study_r5(T_fix=T_CAPTION)),
     ("Fig. 8 calibration 2 points high", lambda: study_r5(shift=2.0, fit=False)),
     ("RWGS frozen in the equilibrium", lambda: study_r5(eq_shift=False, fit=False)),
+    ("Fig. 8 equilibrium alternative read at 250 C instead of 225 C",
+     lambda: study_r5(t_alt=T_CAPTION, fit=False)),
+    ("every sixteenth Fig. 8 column checked against equilibrium", lambda: study_r5(stride=16, fit=False)),
+    ("Fig. 8 beds on 20 cells", lambda: study_r5(n8=20, fit=False)),
     ("Fig. 8 caption temperature read as 260 C", lambda: study_r5(t_caption=533.15, fit=False)),
     ("only K_H2O removed in the p. 9 test", lambda: study_r5(drop=("KH2O",), fit=False)),
     ("3 cm taken on a 0.10 m tube", lambda: study_fig5(l_tube=0.10)),
@@ -1238,7 +1312,8 @@ print("rows whose study raised (recorded nothing):", CRASHED or "none")
 # the RWGS reversal, the half rise, the CO2 minimum and the crossings of Fig. 8,
 # and `observed_orders` for the convergence study. A `solve_ivp` march computes
 # the same beds and is the page's second route. With them the page finds what
-# the paper does not state: which unprinted thermodynamics its Fig. 5 used,
+# the paper does not state: which reading of the unprinted thermodynamics
+# reproduces Fig. 5's plateau,
 # that Fig. 5b's shape cannot settle the rate level, that Fig. 7a's temperature
 # axis is offset, and that Fig. 8's curve exceeds the equilibrium of the paper's own
 # constants at its caption's condition.
@@ -1254,8 +1329,8 @@ print("rows whose study raised (recorded nothing):", CRASHED or "none")
 #   heat capacities; Fig. 5's plateau is reproduced by 298 K heats with argon,
 #   not by the van 't Hoff heats of the equilibrium correlations.
 # - **Do not tune the rates to the figures.** Fig. 5b's shape cannot fix the
-#   rate level: the factor it implies moves with the unprinted heat capacities
-#   about as much as it differs from 1 (R3), and Fig. 8's curve exceeds the
+#   rate level: the factor it implies moves with a 3 % change in the heat
+#   capacities by more than half its distance from 1 (R3), and Fig. 8's curve exceeds the
 #   equilibrium of the paper's constants at its caption's condition (R5).
 # - **Statistics.** Table 1's intervals use 1.96; the $k_5$-lump frequency
 #   factor is not significant once back-transformed.

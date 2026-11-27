@@ -19,12 +19,16 @@ acquisition:
   tool: "extract_figures.py (pdfimages at native resolution, numpy column scan)"
   procedure: >
     Calibrated on the seven x ticks (0 to 30 %) and nine y ticks (0 to 80 %).
-    One point per pixel column from x = 0.6 to 20.9 % where the column holds
-    exactly one run of at most 8 px below the legend; columns within 16 px of
-    the markers at 2 and 20 % (which overlap the line) are skipped.
+    One point per pixel column from x = 0.6 to 20.9 % (912 points) where the
+    column holds exactly one stroke below the legend; runs of black pixels
+    separated by up to 3 px count as one stroke. The stroke is at most 8 px
+    high, but up to 60 px high for x below 2.4 %, where the line is steep and a
+    column holds its vertical stretch; the point is the stroke's centre. Columns
+    within 16 px of the markers at 2 and 20 % (which overlap the line) are
+    skipped, so no line is read from 1.68 to 2.33 % and from 19.68 to 20.32 %.
   operator: "Claude Opus 5.5 (assisted), reviewed by the gallery maintainers"
   date: 2026-11-27
-  estimated_error: "about 1 px: 0.089 percentage points in conversion, 0.019 % in x"
+  estimated_error: "about 1 px: 0.089 percentage points in conversion, 0.019 % in x; in the steep part below 1.1 % the line is 4 columns wide, so up to 0.04 % in x"
 columns:
   - {name: x_CO2_pct, unit: "mol %", description: "CO2 in the feed"}
   - {name: X_MeOH_pct, unit: "%", description: "carbon conversion to methanol"}

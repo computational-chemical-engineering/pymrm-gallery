@@ -75,6 +75,9 @@ def fit(pairs):
     return value, float(np.max(np.abs(slope * p + icpt - v)))
 
 
+STEEP_RUN = 60                      # px, longest vertical run read as the steep line
+
+
 def runs(col):
     """Runs of black pixels in a column: list of (start, end) indices, inclusive."""
     idx = np.flatnonzero(col)
@@ -155,14 +158,24 @@ def main():
         for z, T, w in trace:
             f.write(f"{z:.5f},{T:.3f},{w}\n")
 
-    # Fig. 8: the simulated line, thin runs only (the markers are wider than 8 px)
+    # Fig. 8: the simulated line, one thin run per column (the markers are wider than 8 px);
+    # in the steep first part a column holds the whole vertical stretch of the line, so runs
+    # up to STEEP_RUN px are accepted there
     p = P["8"]
     curve = []
     marker_cols = [(p.x_of(2.0), 16), (p.x_of(20.0), 16)]
     for c in range(int(p.x_of(0.6)), int(p.x_of(20.9)) + 1):
         if any(abs(c - mc) <= w for mc, w in marker_cols):
             continue
-        rr = [(s, e) for s, e in p.column_runs(c) if e - s + 1 <= 8 and s > p.r0 + 2]
+        steep = p.xv(c) < 2.4          # the line rises 0.5 to 60 % within a few columns here
+        rr = []
+        for s, e in p.column_runs(c):             # runs split by up to 3 px are one stroke
+            if rr and s - rr[-1][1] <= 4:
+                rr[-1] = (rr[-1][0], e)
+            else:
+                rr.append((s, e))
+        rr = [(s, e) for s, e in rr
+              if e - s + 1 <= (STEEP_RUN if steep else 8) and s > p.r0 + 2]
         rr = [(s, e) for s, e in rr if (e + s) / 2 > 120]     # legend text above 71 %
         if len(rr) == 1:
             s, e = rr[0]

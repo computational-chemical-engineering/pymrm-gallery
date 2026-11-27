@@ -44,7 +44,7 @@ __all__ = ["R_GAS", "SPECIES", "NU", "ATOMS", "MOLAR_MASS", "EQUIL", "GROUP_KEYS
            "table1_to_table2", "Kinetics", "Thermo", "PlugFlowBed", "reference_solution",
            "equilibrium", "adiabatic_equilibrium", "half_units"]
 
-R_GAS = 8.314462618  # J/(mol K), CODATA 2018 (Table 1 to Table 2 needs 8.31413 to 8.31463)
+R_GAS = 8.314462618  # J/(mol K), CODATA 2018 (Table 1 to Table 2 needs 8.31405 to 8.31471)
 SPECIES = ("CO", "CO2", "H2", "MeOH", "H2O", "inert")
 # Columns: methanol synthesis CO2 + 3 H2 -> CH3OH + H2O; RWGS CO2 + H2 -> CO + H2O
 NU = np.array([[0.0, 1.0],     # CO
