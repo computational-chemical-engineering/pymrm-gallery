@@ -1202,23 +1202,27 @@ def bed_rate(dS_S=None):
     return lambda pH, pU, pS: rate_eqq(T_BED, pH, pU, pS, TH, dS_S=dS_S)
 
 
-def quad_study(P=P_BED, nu=NU, x_target=X_TARGET):
-    """W/F by quadrature, with its tolerance check and the fixed-total bias."""
+def quad_study(P=P_BED, nu=NU, x_target=X_TARGET, epsrel=1e-12):
+    """W/F by quadrature (relative tolerance ``epsrel``), with its tolerance check and the
+    fixed-total bias."""
     rate = bed_rate()
-    W, err = wf_quadrature(rate, x_target, FEED, nu, P)
+    W, err = wf_quadrature(rate, x_target, FEED, nu, P, epsrel=epsrel)
     W9, _ = wf_quadrature(rate, x_target, FEED, nu, P, epsrel=1e-9)
     Wn, _ = wf_quadrature(rate, x_target, FEED, nu, P, moving_total=False)
     return {"reactor_WF_998_quadrature": W, "reactor_WF_quad_tolerance_rel": max(err, abs(W9 - W)) / W,
             "reactor_naive_fixed_total_bias_rel": (Wn - W) / W}
 
 
-def column_study(P=P_BED, nu=NU, moving_total=True, outlet_bc=None, xtol=1e-9, ns=NS_BED):
+def column_study(P=P_BED, nu=NU, moving_total=True, outlet_bc=None, xtol=1e-9, ns=NS_BED, cells=None):
     """The pymrm bed on the grid ladder ``ns``: the root W/F per grid, observed orders,
-    the extrapolated value, and the outlet state of the finest bed."""
+    the extrapolated value, and the outlet state of the finest bed. ``cells`` maps a rung
+    of the ladder to the cell count actually solved (a typed ladder entry)."""
+    cells = cells or {}
     rate = bed_rate()
     Wq = wf_quadrature(rate, X_TARGET, FEED, nu, P)[0]
     kw = dict(feed=FEED, nu=nu, P=P, moving_total=moving_total, outlet_bc=outlet_bc)
-    st = observed_orders(lambda n: bed_wf(rate, n, X_TARGET, 0.6 * Wq, 2.5 * Wq, xtol=xtol, **kw), ns)
+    st = observed_orders(lambda n: bed_wf(rate, cells.get(n, n), X_TARGET, 0.6 * Wq, 2.5 * Wq, xtol=xtol, **kw),
+                         ns)
     W = dict(zip(ns, st["values"]))
     bed = IsothermalBed(rate, ns[-1], W[ns[-1]], **kw).solve()
     newton_tol = 1e-11 * max(FEED)          # the bed's Newton step tolerance, in flows of order one
@@ -1416,6 +1420,8 @@ ROWS = [
      lambda: column_study(outlet_bc={"a": 0.0, "b": 1.0, "d": 0.0}), COLUMN),
     ("bed-length root tolerance 0.1 instead of 1e-9", lambda: column_study(xtol=0.1), None),
     ("conversion target 1 (the integral of 1/r diverges as p_U -> 0)", lambda: quad_study(x_target=1.0), None),
+    ("quadrature relative tolerance 1e-4 instead of 1e-12", lambda: quad_study(epsrel=1e-4), None),
+    ("bed ladder's 200-cell rung solved on 300 cells", lambda: column_study(cells={200: 300}), None),
 ]
 # Two rows leave no solution at all, so their nan is the detection; each is shown by a
 # route that needs no solver.
