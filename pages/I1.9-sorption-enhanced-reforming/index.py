@@ -124,7 +124,8 @@ def page_module(page):
 # desorption at 400 °C, dry); and one bench-scale SERP run at 450 °C and 55 psig, compared
 # with the equilibrium of a conventional reformer in Table 1. Only the first part is a
 # model with printed equations. The paper prints no kinetics, no sorbent capacity at
-# 450 °C or in steam, no void fraction and no mass-transfer coefficient, so the SERP column
+# 450 °C (Figs. 4 and 5 are at 400 °C), no void fraction and no mass-transfer coefficient;
+# the desorption model behind Fig. 8 (p. 253) is cited, not printed. So the SERP column
 # cannot be re-solved from it; that is out of scope here, not judged. The question this
 # page answers: **do the printed equilibrium numbers, and the sentences built on them,
 # follow from the printed equations?** The answer is in the closing cell of the Results.
@@ -196,9 +197,9 @@ def page_module(page):
 # $K_{WGS} = \exp(4400/T - 4.036)$. Which K the authors used is unknown, so every verdict
 # below is also evaluated with each K multiplied independently by $1 \pm e$ (the four
 # corners and the centre). **The band $e$ is an assumption**, set in the next cell: twice
-# the 5 % shift `C2.1` applies to the same constants as its own sensitivity, because the
-# authors' source is a different edition of a handbook table this page cannot read. A
-# verdict that changes inside the band is reported as undecided.
+# the 5 % shift `C2.1` applies to the same constants as its own sensitivity. It is chosen,
+# not measured: the page cannot compare the correlation with the tables the authors read.
+# A verdict that changes inside the band is reported as undecided.
 #
 # Assumptions of the paper's model, kept: ideal gas, constant $T$ and $P$, a batch with no
 # carbon formation, and the sorbent as a sink for a fixed fraction $f$ of the CO2 made
@@ -226,9 +227,9 @@ print("K(T) from page C2.1, XuFroment.eq =", KIN.eq, "(K_SMR in bar^2, K_WGS dim
 # because its model class is built from it; no kinetic constant enters here). `C2.1`'s
 # findings about it: it is "not from this paper" (Xu and Froment), its van 't Hoff slopes
 # are tested there against Xu and Froment's Table 7 enthalpies, and "the long-space-time
-# residual is the size of a 5 % change in them". This page relies on the correlation over
-# 450 to 900 °C, inside the reformer range `C2.1` uses it for, and on the 5 % as the scale
-# of its K band.
+# residual is the size of a 5 % change in them". This page uses the correlation over
+# 450 to 900 °C, outside the 500 to 575 °C at which `C2.1` tests it, and takes the 5 % as
+# the scale of its K band.
 
 # %%
 PN = load_data("hufton-1999-printed-numbers.csv", page=PAGE, dtype=str)
@@ -269,6 +270,7 @@ class Cfg:
     """Everything a defect can change: the printed strings, the K functions, readings."""
     pn: dict = field(default_factory=lambda: dict(zip(PN["item"], PN["printed"])))
     band: float = BAND           # relative K band
+    band_narrow: float = 0.05    # the narrower K band of the Table 1 count
     wgs_inverted: bool = False   # K_WGS replaced by 1/K_WGS (break row)
     p_unit: str = "psig"         # "psig_as_atm": the gauge number passed as atm (break row)
     t1_conv: str = "X"           # which conversion Table 1 is compared with ("X" or "chi4")
@@ -368,6 +370,14 @@ def part_r5(c, M):
     nom, band = band_cells(c, dict(T_item="t1_645_T_C", P_item="t1_645_P_psig"))
     consistency(c, M, "r5", nom, band, {"H2": "t1_645_H2_pct", "CH4": "t1_645_CH4_pct",
                                         "COx": "t1_645_COx_pct", key: "t1_645_conv_pct"})
+    # The same count at the narrower band, in both K (a separate call, so its tag is its own).
+    cn = replace(c, band=c.band_narrow)
+    nom, band = band_cells(cn, dict(T_item="t1_645_T_C", P_item="t1_645_P_psig"))
+    Mn = {}
+    consistency(cn, Mn, "n", nom, band, {"H2": "t1_645_H2_pct", "CH4": "t1_645_CH4_pct",
+                                         "COx": "t1_645_COx_pct", key: "t1_645_conv_pct"})
+    M["r5_n_consistent_band5"] = Mn["n_n_consistent"]
+    M["r5_n_consistent_band5__margin"] = Mn["n_n_consistent__margin"]
 
 # %% [markdown]
 # R2, the sentence on Fig. 3 (p. 251): the state at the printed 99.9 % removal and the
@@ -685,13 +695,13 @@ say("At 450 °C and 50 psig with $f = 0$ the re-solve gives χ/4 = <<c:.2f>> % "
     "($X_{CH_4}$ <<x:.2f>> %) against the printed \"28.0%\", and dry H2, CH4, CO2 and CO of "
     "<<h:.2f>>, <<m:.2f>>, <<o2:.2f>> and <<o:.3f>> % against the printed 52.8, 33.8, 12.9 "
     "and 0.34 % (gaps <<gh:+.2f>>, <<gm:+.2f>>, <<go2:+.2f>> and <<go:+.3f>> points). With the "
-    "K band, <<n:d>> of <<t:d>> printed cells are consistent (smallest overlap <<mg:.3f>> "
+    "assumed ±<<b:.0f>> % K band in both constants, <<n:d>> of <<t:d>> printed cells are consistent (smallest overlap <<mg:.3f>> "
     "points). Only <<nr:d>> of <<t:d>> round to the printed string at the centre K, which is "
     "what an unprinted K allows: the cells move by tenths of a point inside the band.",
     c=M["r1_chi4"], x=M["r1_X"], h=M["r1_H2"], m=M["r1_CH4"], o2=M["r1_CO2"], o=M["r1_CO"],
     gh=M["r1_gap_H2"], gm=M["r1_gap_CH4"], go2=M["r1_gap_CO2"], go=M["r1_gap_CO"],
     n=M["r1_n_consistent"], t=len(R1_CELLS), mg=M["r1_n_consistent__margin"],
-    nr=M["r1_n_round"])
+    nr=M["r1_n_round"], b=100 * C0.band)
 
 # %% [markdown]
 # ### R2: "> 95%" H2 and "< 100 ppm" carbon oxides at 99.9 % removal (p. 251)
@@ -715,8 +725,8 @@ say("At 99.9 % removal ($1-f$ = 1e-3) the re-solve gives dry H2 <<h:.2f>> % (K b
     "- Dry H2 above 95 % at 99.9 %: **<<v2>>**; the band's highest value is <<hm:.2f>> points "
     "short.\n"
     "- χ/4 above 80 % at 99.9 %: **<<v3>>**; the band straddles 80 % (<<vm:.2f>> points to "
-    "its nearer edge), so the conversion part of the sentence is neither confirmed nor "
-    "refuted at the printed 99.9 %.",
+    "its nearer edge). Clause (a), \"> 80%\" at 450 °C, has no removal condition and holds: "
+    "χ/4 reaches 80 % at $1-f$ = <<ov:.3e>>; the \"when\" clause governs (b) only.",
     h=M["r2_999_H2"], hl=q[:, 0].min(), hh=q[:, 0].max(), p=M["r2_999_COx_ppm"],
     pl=q[:, 1].min(), ph=q[:, 1].max(), c=M["r2_999_chi4"], cl=q[:, 2].min(), ch=q[:, 2].max(),
     oh=M["r2_om_star_H2"], oc=M["r2_om_star_COx_ppm"], ocm=M["r2_om_star_COx_ppm_band_max"],
@@ -755,9 +765,10 @@ say("From the printed 645 °C composition alone, the carbon-based conversion is 
     "agrees: $X_{CH_4}$ reaches 82 % at <<tx:.1f>> °C and χ/4 at <<tc:.1f>> °C. With the "
     "printed 82's rounding and the K band, $X_{CH_4}$ = 82 needs <<xa:.1f>> to <<xb:.1f>> °C, "
     "which holds 645 °C (<<mx:.1f>> °C from the nearer end), and χ/4 = 82 needs <<ca:.1f>> "
-    "to <<cb:.1f>> °C, <<mc:.1f>> °C above it. Table 1's 645 °C is therefore the carbon-based "
-    "match; matching the defined χ/4 of the SERP run's 82 would take <<ca:.0f>> °C or more, "
-    "not ~650 °C.",
+    "to <<cb:.1f>> °C, <<mc:.1f>> °C above it. Table 1's 645 °C matches only the carbon-based "
+    "conversion; matching the defined χ/4 of the SERP run's 82 would take <<ca:.0f>> °C or "
+    "more, not ~650 °C. Both readings of Table 1 (the carbon-based conversion, and the 50 psig "
+    "numbers in the row labelled 55 psig) are inferences from the printed cells.",
     px=M["r3_printed_Xcarbon"], pc=M["r3_printed_chi4"], tx=M["r3_Tstar_X"],
     tc=M["r3_Tstar_chi4"], xa=xi[0], xb=xi[1], ca=ci[0], cb=ci[1],
     mx=M["r3_645_in_table1_interval__margin"], mc=M["r3_645_in_other_interval__margin"])
@@ -776,12 +787,15 @@ say("Moving the p. 251 numbers (50 psig) by the model's change from 50 to 55 psi
     "band.\n\n"
     "The 645 °C row (55 psig): dry H2 <<h:.2f>>, CH4 <<m:.2f>>, CO + CO2 <<o:.2f>> % and "
     "$X_{CH_4}$ <<x:.2f>> % against 75.5, 4.4, 20.1 and 82; <<n5:d>> of 4 cells are consistent "
-    "within the K band (smallest overlap <<m5:.2f>> points), <<r5:d>> of 4 round at the centre K.",
+    "under the assumed ±<<b:.0f>> % band (smallest overlap <<m5:.2f>> points), <<r5:d>> of 4 round "
+    "at the centre K, and <<n5b:d>> of 4 are consistent at ±<<bn:.0f>> % (smallest overlap "
+    "<<m5b:.3f>> points).",
     sh=M["r4_shift_H2"], sm=M["r4_shift_CH4"], so=M["r4_shift_COx"], sc=M["r4_shift_conv"],
     n55=M["r4_n_p55"], n50=M["r4_n_p50"], m55=M["r4_n_p55__margin"], m50=M["r4_n_p50__margin"],
     d0=M["r4_direct_n55_centre"], dm=M["r4_direct_n55_band_max"], h=M["r5_H2"], m=M["r5_CH4"],
     o=M["r5_COx"], x=M["r5_X"], n5=M["r5_n_consistent"], m5=M["r5_n_consistent__margin"],
-    r5=M["r5_n_round"])
+    r5=M["r5_n_round"], b=100 * C0.band, bn=100 * C0.band_narrow,
+    n5b=M["r5_n_consistent_band5"], m5b=M["r5_n_consistent_band5__margin"])
 
 # %% [markdown]
 # ### R6 and R7: what the printed experiment and sorbent numbers allow
@@ -855,7 +869,7 @@ BOUNDS = {"v1_route_gap": (None, 1e-10, "tolerance", "route A against route B, n
           "v4_jacobian": (None, 1e-6, "tolerance", "central differences, cbrt(eps) step", False),
           "v4_tol_effect": (None, 1e-8, "tolerance", "newton tol and backward_tol 1e-8 against 1e-12", False)}
 MARGINS = {"r1_n_consistent": 0.01, "r1_n_round": 1e-6, "r5_n_consistent": 0.01,
-           "r5_n_round": 1e-3, "r4_n_p55": 0.05, "r4_n_p50": 0.05, "r2_cox_holds": 0.1,
+           "r5_n_round": 1e-3, "r5_n_consistent_band5": 0.005, "r4_n_p55": 0.05, "r4_n_p50": 0.05, "r2_cox_holds": 0.1,
            "r2_h2_holds": 0.1, "r2_conv_verdict": 0.1, "r3_645_in_table1_interval": 0.5,
            "r3_645_in_other_interval": 0.5}
 EXACT = {"r4_direct_n55_centre", "r4_direct_n55_band_max"}
@@ -910,6 +924,7 @@ DEFECTS = [
     ("95 % H2 tested on the wet basis", replace(C0, h2_basis="wet"), ("r2",)),
     ("K_WGS replaced by 1/K_WGS", replace(C0, wgs_inverted=True), RES + ("v2", "v4")),
     ("K band 0 instead of 10 %", replace(C0, band=0.0), ("r1", "r2", "r3", "r5")),
+    ("narrow K band 0 instead of 5 %", replace(C0, band_narrow=0.0), ("r5",)),
     printed_row("t1_450_H2_pct", "52", ("r4",)),
     printed_row("t1_450_conv_pct", "27", ("r4",)),
     printed_row("t1_645_conv_pct", "84", ("r3",)),
@@ -967,28 +982,33 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 # ### The finding
 
 # %%
-say("**Re-solving Eqs. 7 to 10 reproduces the paper's equilibrium numbers within the "
-    "uncertainty its unprinted K leaves, but three statements do not follow as worded.**\n\n"
-    "1. The $f = 0$ state of p. 251: <<n1:d>> of 5 printed cells are consistent within the K "
-    "band; the 645 °C row of Table 1: <<n5:d>> of 4.\n"
+say("**Re-solving Eqs. 7 to 10 reproduces the paper's equilibrium numbers when its unprinted "
+    "K is allowed an assumed band, but three statements do not follow as worded.**\n\n"
+    "1. The printed states are consistent under an assumed ±<<b:.0f>> % band in both K "
+    "(chosen, not measured): <<n1:d>> of 5 cells of the $f = 0$ state of p. 251 and <<n5:d>> "
+    "of 4 of Table 1's 645 °C row; at the centre K <<r1:d>> of 5 and <<r5:d>> of 4 round; at "
+    "±<<bn:.0f>> % <<n5b:d>> of 4.\n"
     "2. Table 1's \"CH4 Conversion\" is the carbon-based conversion, not the χ/4 the text "
     "defines: 645 °C lies inside the interval that gives $X_{CH_4}$ = 82 and <<mc:.1f>> °C "
-    "below the one that gives χ/4 = 82, under every K in the band. \"~650°C ... for "
-    "matching the CH4 to H2 conversion\" holds only for the carbon-based conversion.\n"
-    "3. The 450 °C row labelled 55 psig carries the 50 psig numbers: <<n50:d>> of 4 cells "
-    "match the p. 251 (50 psig) values and <<n55:d>> of 4 match them moved to 55 psig.\n"
-    "4. At the stated 99.9 % removal the dry carbon oxides are <<p:.0f>> ppm, not \"< 100 "
-    "ppm\" (at least <<r:.2f>> times the bound in the band; 100 ppm needs $1-f$ ≤ "
-    "<<oc:.2e>>), and the dry H2 is <<h:.2f>> %, not \"> 95%\" (95 % needs $1-f$ ≤ "
-    "<<oh:.2e>>). Both verdicts hold across the K band. The \"> 80%\" conversion at 99.9 % "
-    "is <<v3>> within the band.\n\n"
+    "below the one that gives χ/4 = 82, under every K in the band. Table 1's 645 °C matches "
+    "only the carbon-based conversion (an inference from the printed cells).\n"
+    "3. The 450 °C row labelled 55 psig carries the 50 psig numbers (an inference from the "
+    "printed cells): <<n50:d>> of 4 cells match the p. 251 (50 psig) values and <<n55:d>> of 4 "
+    "match them moved to 55 psig.\n"
+    "4. \"> 95%\" H2 and \"< 100 ppm\" carbon oxides need more removal than the stated 99.9 %: "
+    "the dry carbon oxides are <<p:.0f>> ppm at 99.9 %, not \"< 100 ppm\" (at least <<r:.2f>> "
+    "times the bound in the band; 100 ppm needs $1-f$ ≤ <<oc:.2e>>), and the dry H2 is "
+    "<<h:.2f>> %, not \"> 95%\" (95 % needs $1-f$ ≤ <<oh:.2e>>). Both verdicts hold across the "
+    "K band. Clause (a), \"> 80%\" at 450 °C, has no removal condition and holds: χ/4 reaches "
+    "80 % at $1-f$ = <<ov:.3e>>. At exactly 99.9 % the conversion is <<v3>> within the band.\n\n"
     "Out of scope, not judged: the SERP column's dynamics, kinetics, sorbent capacity at "
-    "450 °C in steam and the cycle, none of which the paper prints.",
-    n1=M["r1_n_consistent"], n5=M["r5_n_consistent"],
+    "450 °C and the cycle, none of which the paper prints (Figs. 4 and 5 are at 400 °C).",
+    n1=M["r1_n_consistent"], n5=M["r5_n_consistent"], r1=M["r1_n_round"],
+    r5=M["r5_n_round"], b=100 * C0.band, bn=100 * C0.band_narrow, n5b=M["r5_n_consistent_band5"],
     mc=M["r3_645_in_other_interval__margin"], n50=M["r4_n_p50"], n55=M["r4_n_p55"],
     p=M["r2_999_COx_ppm"], r=q[:, 1].min() / C0.num("p251_claim_COx_ppm"),
     oc=M["r2_om_star_COx_ppm"], h=M["r2_999_H2"], oh=M["r2_om_star_H2"],
-    v3=M["r2_conv_verdict"])
+    v3=M["r2_conv_verdict"], ov=M["r2_om_star_chi4"])
 
 # %% [markdown]
 # ## What pymrm adds
@@ -1013,7 +1033,8 @@ say("**Re-solving Eqs. 7 to 10 reproduces the paper's equilibrium numbers within
 #   differ by several points at $f = 0$ above 600 °C.
 # - This is an equilibrium bound, not a reactor model. A sorption-enhanced column needs
 #   reforming kinetics (`C2.1`), a CO2 isotherm at the reaction temperature in steam, a
-#   sorbent capacity and a mass-transfer model, none of which this paper prints.
+#   sorbent capacity at that temperature and a mass-transfer model, none of which this
+#   paper prints (its Figs. 4 and 5 are at 400 °C).
 # - Related pages: `C2.1` (the K(T) correlations used here, and the kinetics),
 #   `I1.2` and `I1.3` (neighbouring entries in section I), `D2.6`.
 
