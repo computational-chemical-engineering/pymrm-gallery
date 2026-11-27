@@ -1,0 +1,50 @@
+dataset_id: fig-reads
+title: "Two figure reads from Springer, Zawodzinski and Gottesfeld (1991): the Fig. 3 correction-factor peak and the Fig. 4 midpoint of the 0.5 A/cm2 profile"
+status: complete
+
+source:
+  authors: ["Springer, T. E.", "Zawodzinski, T. A.", "Gottesfeld, S."]
+  year: 1991
+  title: "Polymer electrolyte fuel cell model"
+  container: "Journal of the Electrochemical Society 138, 2334-2342"
+  doi: "10.1149/1.2085971"
+  access: >
+    Scanned journal PDF held outside the repository, lawful access. No PDF and no page
+    image is stored in this repository.
+  licence: "all rights reserved (facts extracted; figure not reproduced)"
+
+acquisition:
+  method: digitised
+  tool: "pixel columns of the 300 ppi page image (numpy), axes calibrated on the plot frame"
+  figure: "Fig. 3 (p. 2337) and Fig. 4 (p. 2338)"
+  resolution: >
+    Fig. 3: the frame spans 651 px for 0 to 6 on the ratio axis (0.0092 per px) and 732 px
+    for lambda 0 to 15; the dotted curve's peak is read in the pixel columns at lambda 2.93
+    and 2.99, where the dotted line runs from 2.39 to 2.44. Fig. 4: the frame spans 690 px
+    for lambda 0 to 16 (0.023 per px); at thickness fraction 0.5 the filled-square curve
+    occupies 7.54 to 7.61.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: >
+    These are figure reads, not printed numbers. read_error is the half-width of the
+    drawn line plus one pixel of frame calibration, rounded up: 0.05 for Fig. 3 and 0.10
+    for Fig. 4. The Fig. 3 read decides only between Eq. 21 and Eq. 20, which differ by a
+    factor of 3; the Fig. 4 curve may not be the Table I case (its caption holds gas flow
+    rates constant at nu_H = 1 at 1 A/cm2), so that read is illustrative only.
+
+conditions: >
+  Fig. 3 at 30 C (Nafion 117). Fig. 4 at T_cell = T_satA = T_satC = 80 C, J = 0.5 A/cm2; its
+  abscissa is the thickness fraction measured from the cathode.
+
+columns:
+  - {name: item, unit: "-", description: "short name"}
+  - {name: abscissa, unit: "-", description: "where the read is taken: lambda (Fig. 3) or thickness fraction (Fig. 4)"}
+  - {name: value, unit: "-", description: "the read: D_lambda/D' (Fig. 3) or lambda (Fig. 4)"}
+  - {name: read_error, unit: "-", description: "estimated reading error, same unit as value"}
+  - {name: page, unit: "-", description: "journal page"}
+  - {name: meaning, unit: "-", description: "what the read is"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications v.
+  Rural Telephone, 1991). Extraction for scientific research is covered by Art. 15n
+  Auteurswet (DSM Directive (EU) 2019/790 Art. 3). No figure image is reproduced.
