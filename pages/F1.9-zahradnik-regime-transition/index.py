@@ -152,7 +152,7 @@ def say(text, **v):
 # | E10 | $u_{drift} = 1.53(\sigma g\Delta\rho/\rho_L^2)^{1/4}$, printed value 0.250 m/s | eq. 13, p. 3823 |
 # | E11 | $u_{b\infty} = (\mu_L/(\rho_L d_b))Mo^{-0.149}(J - 0.857)$, $J = 0.94H_d^{0.757}$ ($2 < H_d < 59.3$), $3.42H_d^{0.441}$ ($H_d > 59.3$), $H_d = \tfrac43 Eo\,Mo^{-0.149}(\mu_L/\mu_w)^{-0.14}$, $d_b = 1.8(\sigma/(\Delta\rho g))^{0.5}$, printed value 0.267 m/s | eq. 14, p. 3823 |
 # | E12 | page: the kinematic limit of the homogeneous branch, $dj_h/d\varepsilon = 0$; $dj_h/d\varepsilon$ is the kinematic wave speed | page |
-# | E13 | page: the branches meet where $u_{b\infty}\phi(\varepsilon)(1 - C_0\varepsilon) = u_d$; for $\phi \le 1$ and $u_{b\infty} < u_d$ the left side never reaches $u_d$ | page |
+# | E13 | page: the branches meet where $u_{b\infty}\phi(\varepsilon)(1 - C_0\varepsilon) = u_d$; since $\phi(\varepsilon)(1 - C_0\varepsilon) \le 1$ for all six forms (Davidson-Harrison: $(1 - C_0\varepsilon)/(1 - \varepsilon) < 1$ as $C_0 > 1$) and $u_{b\infty} < u_d$ the left side never reaches $u_d$ | page |
 # | E14 | page: each Fig. 11(a) marker gives $u_G = y\,\varepsilon\,u_{b\infty}$, $y = u_s/u_{b\infty}$ (semibatch) | page |
 #
 # | symbol | code |
@@ -167,8 +167,9 @@ def say(text, **v):
 # $g\mu_L\Delta\rho/(\rho_L^2\sigma)$, $Eo$ printed with $d_b$ for $d_b^2$); the page uses
 # Clift's groups $Mo = g\mu_L^4\Delta\rho/(\rho_L^2\sigma^3)$, $Eo = g\Delta\rho d_b^2/\sigma$
 # and shows what the printed groups give. **M6** "By re-arranging eq. (8)" precedes
-# eq. 8: it re-arranges eq. 7. **M8** Table 2 prints the Joshi-Lali exponent as "1.2",
-# the Fig. 11(b) legend as "1/2"; the page uses 1/2. **M9** the two meanings of
+# eq. 8: it re-arranges eq. 7. **M8** in the scan the Joshi-Lali exponent of Table 2 reads "1.2";
+# the scan breaks every solidus of that table into dots (the Marrucci exponent reads "5:3"),
+# and the Fig. 11(b) legend prints "1/2", which the page uses. This is the scan, not a misprint. **M9** the two meanings of
 # $u_{b\infty}$ above. **M10** the riser $u_{b\infty}$ behind eq. 6 is not restated; the
 # page takes 0.235 m/s (same section, same symbol) and shows the verdict's sensitivity
 # to it. **M12** eq. 9 alone does not give $C_0$: the velocity profile is not printed.
@@ -238,8 +239,8 @@ def halfunits(x, name, K):
 # - **Printed numbers** (pp. 3814, 3815, 3821 to 3823): constants, limits and results
 #   with a short quote each.
 # - **Fig. 11(a)** (p. 3821): $u_s/u_{b\infty}$ against $\varepsilon$ for air-water,
-#   plate A, with the drawn Table 2 lines 1 to 5. The 21 markers and 38 readings of the
-#   drawn lines are digitised from the native 300 ppi scan by `data/digitise.py`; the
+#   plate A, with the drawn Table 2 lines 1 to 5. The markers and the readings of the
+#   drawn lines (counts printed below) are digitised from the native 300 ppi scan by `data/digitise.py`; the
 #   sidecar gives the rotation correction and the calibration. Reading error per
 #   marker: $\sigma_\varepsilon$ = 0.001, $\sigma_y$ = 0.007 (sidecar).
 # - **Fig. 3(a)** (p. 3815): holdup against $u_G$ for plates A and B in the same column;
@@ -260,6 +261,9 @@ for name in ("zahradnik-1997-printed-numbers", "zahradnik-1997-fig11a", "zahradn
              "zahradnik-1997-fig12b"):
     print(cite_data(load_meta(name + ".csv", page=PAGE)))
 SIG_EPS, SIG_Y = 0.001, 0.007   # Fig. 11(a) reading error per marker (sidecar)
+SIG_LINE = 0.005                # Fig. 11(a) reading error of a drawn-line point in y: "about 1 px (0.004 in y)" (sidecar), rounded up
+SIG_EPS3, SIG_U3 = 0.001, 0.0005  # Fig. 3(a) reading error per marker (sidecar), m/s for u
+REL_U11 = 0.006                 # relative error of u_G = y eps u_binf at a Fig. 11(a) marker (sidecar)
 
 
 @dataclass(frozen=True)
@@ -394,7 +398,7 @@ def eps10(u, K, keys=("C0_column_plateB", "u_drift_column_plateB")):
 def crossing_roots(form, K, C, ub):
     """Holdups where the homogeneous branch (u_binf = ub) meets eq. 10 (E13)."""
     C0, ud = K["C0_column_plateB"], K["u_drift_column_plateB"]
-    return roots(lambda e: ub * phi(form, e, K, C) * (1.0 - C0 * e) - ud, 1e-9, 1.0 / C0 - 1e-12)
+    return roots(lambda e: ub * phi(form, e, K, C) * (1.0 - C0 * e) - ud, 1e-9, min(1.0 / C0, 1.0) - 1e-12)
 
 
 def eq13(w, K, C):
@@ -533,9 +537,9 @@ def check_computed(K, C):
     return out
 
 
-def flip_velocity(K):
-    """u_binf at which the E6 holdup at break 1 equals the printed limit 0.15."""
-    f = lambda ub: K["riser_break1_u_G"] / (K["riser_break1_j"] + K["A_c"] * ub) - K["eps_Gr_limit_riser"]
+def flip_velocity(K, du=0.0, dj=0.0):
+    """u_binf at which the E6 holdup at break 1 equals the printed limit 0.15 (inputs shifted by du, dj)."""
+    f = lambda ub: (K["riser_break1_u_G"] + du) / (K["riser_break1_j"] + dj + K["A_c"] * ub) - K["eps_Gr_limit_riser"]
     return one(find_roots(f, 0.05, 2.0, n_scan=200, xtol=1e-15)["roots"], "flip velocity")
 
 
@@ -601,6 +605,13 @@ def markers(C):
     return e[o], y[o], u[o], m.series.to_numpy(int)[o]
 
 
+def e13(K, C):
+    """E13's factor phi (1 - C0 eps) over the whole holdup range, for each form (it is 1 at eps = 0)."""
+    eg = np.linspace(0.0, 0.999, 4000)
+    return {"r3_n_forms_slip_above_one": sum(
+        float(np.max(phi(f, eg, K, C) * (1.0 - K["C0_column_plateB"] * eg))) > 1.0 + 1e-12 for f in FORMS)}
+
+
 def r3(K, C):
     M, uc = {}, K["u_G_crit"]
     M["r3_eps10_ucrit"] = eps10(uc, K)
@@ -609,7 +620,7 @@ def r3(K, C):
     # E13: crossings at the printed u_binf, then with the two other printed velocities
     ub, ud = K["u_b_inf_homogeneous"], K["u_drift_column_plateB"]
     M["r3_n_forms_crossing"] = sum(len(crossing_roots(f, K, C, ub)) > 0 for f in FORMS)
-    M["r3_n_forms_crossing__margin"] = (ud - ub) / ud          # E13: u_binf phi <= u_binf < u_d
+    M["r3_n_forms_crossing__margin"] = (ud - ub) / ud          # E13: u_binf phi (1 - C0 eps) <= u_binf < u_d
     for tag, key in (("263", "u_drift_riser_plateB"), ("267", "u_b_inf_clift")):
         ub2 = K[key]
         cr = {f: crossing_roots(f, K, C, ub2) for f in FORMS}
@@ -688,6 +699,14 @@ def r4(K, C):
     M["r4_best"], M["r4_second"] = FORMS.index(order[0]), FORMS.index(order[1])
     M["r4_best__margin"] = (rms[order[1]] - rms[order[0]]) / rms[order[1]]
     M["r4_second__margin"] = (rms[order[2]] - rms[order[1]]) / rms[order[2]]
+    # the u_binf at which Richardson-Zaki overtakes Griffith-Wallis on the homogeneous markers
+    def rms_gap(ubv):
+        Kv = {**K, "u_b_inf_homogeneous": ubv}
+        g = [float(np.sqrt(np.mean(residuals(f, e[hom], y[hom], Kv, C)[0] ** 2))) for f in
+             ("richardson_zaki", "griffith_wallis")]
+        return g[0] - g[1]
+    M["r4_ub_rz_overtakes"] = one(find_roots(rms_gap, 0.2, 0.3, n_scan=100, xtol=1e-12)["roots"],
+                                  "Richardson-Zaki overtakes Griffith-Wallis")
     rb, _ = residuals(order[0], e[hom], y[hom], K, C)
     r2_, _ = residuals(order[1], e[hom], y[hom], K, C)
     d = np.abs(r2_) - np.abs(rb)                                   # paired, per marker
@@ -738,6 +757,8 @@ def v2(K, C):
     M["v2_n_lines"] = len(dev)
     M["v2_line_maxdev"] = float(np.abs(dev).max())
     M["_line_dev"] = np.abs(dev)
+    M["v2_n_lines_read"] = int((np.abs(dev) <= SIG_LINE).sum())
+    M["v2_n_lines_read__margin"] = float(np.abs(np.abs(dev) - SIG_LINE).min() / SIG_LINE)
     # Fig. 11(a) markers, converted with u_binf (E14), against the Fig. 3(a) plate A markers on
     # the rising branch: eps of Fig. 11(a) interpolated linearly between neighbouring markers
     # (both are data; the interpolation is between two readings, not a model)
@@ -750,6 +771,16 @@ def v2(K, C):
     M["v2_f3_n"] = len(rel)
     M["v2_f3_maxrel"] = float(np.abs(rel).max())
     M["_f3_rel"] = np.abs(rel)
+    # reading errors combined: both eps readings, and the u readings through the local slope of
+    # the interpolated Fig. 11(a) curve
+    h = 1e-5
+    slope = (np.interp(ua + h, u[rise], e[rise]) - np.interp(ua - h, u[rise], e[rise])) / (2 * h)
+    s_comb = np.sqrt(SIG_EPS3 ** 2 + (slope * SIG_U3) ** 2 + SIG_EPS ** 2 + (slope * REL_U11 * ua) ** 2)
+    zf3 = np.abs(ea - np.interp(ua, u[rise], e[rise])) / s_comb
+    M["_f3_z"] = zf3
+    M["v2_f3_max_z"] = float(zf3.max())
+    M["v2_f3_n_read"] = int((zf3 <= 3.0).sum())
+    M["v2_f3_n_read__margin"] = float(np.abs(zf3 - 3.0).min() / 3.0)
     return M
 
 
@@ -780,6 +811,9 @@ def r5(K, C):
         M[f"r5_uL{i}"], M[f"r5_eps6_{i}"], M[f"r5_slip{i}"], M[f"r5_epsB_{i}"] = r["uL"], r["e6"], r["slip"], r["eB"]
     M["r5_eps6_1_over_limit"] = M["r5_eps6_1"] / K["eps_Gr_limit_riser"]
     M["r5_ub_flip"] = flip_velocity(K)
+    hu_g, hu_j = half_unit("riser_break1_u_G"), half_unit("riser_break1_j")   # rounding of the printed inputs
+    M["r5_ub_flip_lo"] = flip_velocity(K, -hu_g, +hu_j)
+    M["r5_ub_flip_hi"] = flip_velocity(K, +hu_g, -hu_j)
     cr = find_roots(lambda j: (K["C0_riser_plateB"] - 1.0) * j + K["u_drift_riser_plateB"] - K["A_c"] * ub,
                     -1.0, 1.0, xtol=1e-15)["roots"]
     M["r5_cross_j"] = cr[0] if cr else np.nan
@@ -842,7 +876,7 @@ def study(K, C, tolerant=False):
     """Every number of the page. ``tolerant`` (break rows only): a part that cannot run under
     a defect returns nothing for its claims, and the failure is listed."""
     M = {}
-    for part in (r1_r2, r3, r4, r5, v1, v2, v3, combined):
+    for part in (r1_r2, e13, r3, r4, r5, v1, v2, v3, combined):
         try:
             M.update(part(K, C) if part is not combined else part(M))
         except (ValueError, IndexError, KeyError, ZeroDivisionError) as exc:
@@ -948,16 +982,16 @@ limit, and the flux maximum does not fix the transition.""",
 # %%
 say("""Eq. 10 gives $\\varepsilon$ = <<e1:.4f>> at 0.04 m/s and <<e2:.4f>> at 0.125 m/s. At the
 printed transition velocity the homogeneous (Griffith-Wallis) holdup is <<jr:.3f>> times the
-heterogeneous one, so the change of regime at fixed $u_G$ is a jump in holdup, not a meeting of
-two curves. By E13 the branches cannot meet at the printed constants: $u_{b\\infty}\\phi \\le
-u_{b\\infty}$ = 0.235 m/s, below $u_d$ = 0.257 m/s, and the root scan of E13 finds a crossing for
-<<nc>> of the 6 forms. Replacing $u_{b\\infty}$ by either of the other two velocities the paper
-prints for single bubbles makes the forms cross (<<n263>> of 6 with 0.263 m/s, <<n267>> of 6 with
+heterogeneous one, so going from one fitted branch to the other at fixed $u_G$ is a change of holdup, not a meeting of two
+curves (the data make the passage gradually, R4). By E13 the branches cannot meet at the printed constants:
+$u_{b\\infty}\\phi(1 - C_0\\varepsilon) \\le u_{b\\infty}$ = 0.235 m/s for all six forms (the factor $\\phi(1 - C_0\\varepsilon)$ exceeds 1 for <<ns>> of them),
+below $u_d$ = 0.257 m/s, and the root scan of E13 finds a crossing for <<nc>> of the 6 forms.
+Replacing $u_{b\\infty}$ by 0.263 m/s (the riser's drift intercept) or 0.267 m/s (eq. 14) makes the forms cross (<<n263>> of 6 with 0.263 m/s, <<n267>> of 6 with
 0.267 m/s), but at tiny holdups:
 with 0.263 m/s Griffith-Wallis meets eq. 10 at $\\varepsilon$ = <<ce3:.5f>>, $u_G$ = <<cu3:.5f>> m/s,
 with 0.267 m/s at <<ce7:.4f>>, <<cu7:.5f>> m/s, and the largest crossing holdup of any form is
 <<cm3:.4f>> and <<cm7:.4f>>: nowhere near 0.210.""",
-    e1=M["r3_eps10_ucrit"], e2=M["r3_eps10_ufull"], jr=M["r3_jump_ratio"], nc=M["r3_n_forms_crossing"],
+    e1=M["r3_eps10_ucrit"], e2=M["r3_eps10_ufull"], jr=M["r3_jump_ratio"], nc=M["r3_n_forms_crossing"], ns=M["r3_n_forms_slip_above_one"],
     n263=M["r3_n_forms_crossing_263"], n267=M["r3_n_forms_crossing_267"],
     ce3=M["r3_cross_eps_gw_263"], cu3=M["r3_cross_uG_gw_263"], ce7=M["r3_cross_eps_gw_267"], cu7=M["r3_cross_uG_gw_267"],
     cm3=M["r3_cross_eps_max_263"], cm7=M["r3_cross_eps_max_267"])
@@ -972,7 +1006,7 @@ Mersmann's $d_b$ = <<db:.3e>> m ($Mo$ = <<mo:.4e>>, $H_d$ = <<hd:.2f>>) gives <<
 <<h14:.1f>> half-units from the printed 0.267. Neither branch of $J$ has an interior maximum
 over $d_b$ (<<ni>> roots of the derivative), so the supremum is at the branch switch $H_d$ = 59.3
 ($d_b$ = <<dbs:.3e>> m), where $J$ jumps by <<jj:pct3>>: <<us:.4f>> m/s, still <<hs:.1f>>
-half-units below 0.267. No bubble size gives the printed value for water; the block's groups as
+half-units below 0.267. No bubble size gives the printed value for water at 20 C; the block's groups as
 printed give <<up:.4f>> m/s. How the authors obtained 0.267 is not known.""",
     r1=M["r3_ratio_10_12_low"], r2=M["r3_ratio_10_12_high"], sg=M["r3_ratio_10_12_slope_sign"],
     r3=M["r3_ratio_10_11_high"], d13=M["r3_eq13_20C"], h13=M["r3_hu_eq13_20C"], d15=M["r3_eq13_15C"],
@@ -1056,14 +1090,15 @@ A_c u_{b\\infty}$, with $C_0$ = 1 and a drift velocity of <<ud:.5f>> m/s, so the
 hindered" (p. 3822) is a slip of 0.79 $u_{b\\infty}$ at zero holdup. At the printed slope breaks the
 implied liquid velocity is <<l1:.3f>> and <<l2:.3f>> m/s; eq. 6 gives $\\varepsilon$ = <<e1:.4f>> and
 <<e2:.4f>> ($u_s/u_{b\\infty}$ = <<s1:.4f>>, <<s2:.4f>>), the plate B line <<b1:.4f>> and <<b2:.4f>>.
-The first break holds <<r1:.4f>> times the printed limit "eps_Gr > 0.15" of eq. 6, consistent with
-it; the verdict would flip only for a riser $u_{b\\infty}$ above <<uf:.5f>> m/s, above every single-bubble
-velocity the paper prints. The two riser lines meet at $j$ = <<cj:.5f>> m/s (<<nc>> crossings at
+The first break holds <<r1:.4f>> times the printed limit "eps_Gr > 0.15" of eq. 6. At the printed 0.067
+and 0.235 m/s the verdict flips only for a riser $u_{b\\infty}$ above <<uf:.5f>> m/s; over the rounding of
+those two inputs the flip spans <<ufl:.4f>> to <<ufh:.4f>> m/s, which contains the printed 0.263 and 0.267,
+so the verdict is firm for 0.235 m/s only. The two riser lines meet at $j$ = <<cj:.5f>> m/s (<<nc>> crossings at
 $j > 0$). Eq. 9 does not fix 1.07 by itself: with a velocity profile $1 - (r/R)^m$ the area average
 gives $C_0$ = <<c7:.7f>> at $m$ = 7 (<<h7:.2f>> half-units from 1.07) and exactly 1.07 at $m$ =
 <<m7:.4f>>.""",
     ud=M["r5_ud_eq6"], l1=M["r5_uL1"], l2=M["r5_uL2"], e1=M["r5_eps6_1"], e2=M["r5_eps6_2"], s1=M["r5_slip1"],
-    s2=M["r5_slip2"], b1=M["r5_epsB_1"], b2=M["r5_epsB_2"], r1=M["r5_eps6_1_over_limit"], uf=M["r5_ub_flip"],
+    s2=M["r5_slip2"], b1=M["r5_epsB_1"], b2=M["r5_epsB_2"], r1=M["r5_eps6_1_over_limit"], uf=M["r5_ub_flip"], ufl=M["r5_ub_flip_lo"], ufh=M["r5_ub_flip_hi"],
     cj=M["r5_cross_j"], nc=M["r5_n_cross_physical"], c7=M["r5_C0_m7"], h7=M["r5_hu_107"], m7=M["r5_m_for_107"])
 
 # %% [markdown]
@@ -1086,22 +1121,24 @@ print(f"check values: {len(CHECK_DEV)} rows, worst relative {max(map(abs, CHECK_
 # %% [markdown]
 # **V2. The digitising.** The drawn Table 2 lines of Fig. 11(a) are read back against
 # their formulas, and the Fig. 11(a) markers, converted to $u_G$ with 0.235 m/s, are
-# compared with the plate A holdups of Fig. 3(a), the same column, plate and run
-# conditions plotted on other axes. This tests the calibration, the drawing and the
+# compared with the plate A holdups of Fig. 3(a), the same column and plate at other
+# gas velocities. This tests the calibration, the drawing and the
 # $u_{b\infty}$ normalisation together.
 
 # %%
-say("""The <<nl>> line readings lie at most <<ld:.4f>> from their formulas (<<nlw>> of <<nl>> within
-0.03, the tolerance set before the reading; R1's table gives the Griffith-Wallis to Marrucci gap at
-$\\varepsilon$ = 0.210, which the drawing resolves). The <<n3>> Fig. 3(a) markers on the rising
-branch differ from the interpolated Fig. 11(a) holdups by at most <<d3:pct1>> (<<n3w>> of <<n3>>
-within 5 %, the tolerance set before the reading): the two figures agree as plots of the same
-runs, with Fig. 11(a) normalised by 0.235 m/s.""",
-    nl=M["v2_n_lines"], ld=M["v2_line_maxdev"], nlw=M["v2_n_lines_within"],
-    n3=M["v2_f3_n"], d3=M["v2_f3_maxrel"], n3w=M["v2_f3_n_within"])
+say("""The <<nl>> line readings lie at most <<ld:.4f>> from their formulas: <<nlr>> of <<nl>> within the reading
+error of a line, <<sl:.3f>> (the sidecar's 1 px, rounded up), and <<nlw>> of <<nl>> within 0.03, the stop rule set before the
+reading. The departures beyond the reading error stay well inside the Griffith-Wallis to Marrucci gap
+at $\\varepsilon$ = 0.210 (R1's table). The <<n3>> Fig. 3(a) markers on the rising branch differ from the
+interpolated Fig. 11(a) holdups by at most <<d3:pct1>> (<<n3w>> of <<n3>> within 5 %, again the stop rule);
+<<n3r>> of <<n3>> lie within three combined reading errors (the worst at <<zm:.2f>>). The two figures show the
+same column, plate and conditions (Fig. 3(a) caption) at other gas velocities, so this tests the
+normalisation by 0.235 m/s to that accuracy, not marker by marker.""",
+    nl=M["v2_n_lines"], ld=M["v2_line_maxdev"], nlw=M["v2_n_lines_within"], nlr=M["v2_n_lines_read"], sl=SIG_LINE,
+    n3=M["v2_f3_n"], d3=M["v2_f3_maxrel"], n3w=M["v2_f3_n_within"], n3r=M["v2_f3_n_read"], zm=M["v2_f3_max_z"])
 
 # %% [markdown]
-# **V3. Eq. 10 against its own data.** A least-squares line through the 8 markers of
+# **V3. Eq. 10 against its own data.** A least-squares line through the markers of
 # Fig. 12(b) (plate B), $u_G/\varepsilon = C_0u_G + u_d$.
 
 # %%
@@ -1118,8 +1155,8 @@ the yardstick of R4. The plate B holdups of Fig. 3(a) lie within <<f3:pct1>> of 
 # Neither fitted model fixes the transition. The homogeneous branch's own limit, the
 # flux maximum, lies well above the printed velocity for both forms that have one (R2),
 # and the four others have none; the two branches do not meet at the printed constants,
-# and with any other printed single-bubble velocity they meet only near zero holdup
-# (R3). The change of regime is a jump in holdup at fixed $u_G$. The printed pair is a
+# and with the two printed velocities that exceed the eq. 10 intercept (0.263 and 0.267 m/s) they meet only near zero holdup
+# (R3). The two fitted branches stay apart in holdup; the data pass from one to the other through a holdup maximum (R4). The printed pair is a
 # property of the data: it matches, within the reading error, the last Fig. 11(a) marker
 # on the Griffith-Wallis line (R4), consistent with that line once 0.04 is read as a rounded value (R1), and the
 # data rejoin eq. 10 from the printed 0.125 m/s. In the riser, eq. 6 and the
@@ -1150,7 +1187,7 @@ the yardstick of R4. The plate B holdups of Fig. 3(a) lie within <<f3:pct1>> of 
 #   crossing scan follow. A form with a flux maximum returns two roots of eq. 5 below
 #   its maximum velocity.
 # - Another heterogeneous fit: change `C0_column_plateB` and `u_drift_column_plateB`;
-#   E13 says the branches can meet only where $u_{b\infty}\phi$ exceeds $u_d$.
+#   E13 says the branches can meet only where $u_{b\infty}\phi(1 - C_0\varepsilon)$ exceeds $u_d$.
 # - A riser with known $u_L$: E6 turns eq. 6 into Zuber-Findlay with $C_0$ = 1.
 # - Related pages: F1.3 (Wilkinson's transition correlation and holdup), F1.4
 #   (large-bubble holdup in the churn-turbulent regime), F1.1, F1.2 and F1.8 (holdup
@@ -1161,7 +1198,7 @@ the yardstick of R4. The plate B holdups of Fig. 3(a) lie within <<f3:pct1>> of 
 # form and identical under the three BLAS kernels; an exact count, with its margin to the
 # threshold that decides it; or a two-route gap with its bound.
 RTOL = 1e-6
-STRUCTURAL = {"r4_n_markers": "digitised marker count", "v2_n_lines": "digitised line readings",
+STRUCTURAL = {"v2_n_lines": "digitised line readings",
               "v3_n": "digitised marker count"}
 BOUNDS = {"v1_fixed_point_gap": (1e-12, "tolerance", "find_roots xtol 1e-15 against a fixed point iterated to 1e-16"),
           "v1_closed_form_gap": (1e-12, "tolerance", "find_roots xtol 1e-15 against closed forms"),
@@ -1175,9 +1212,9 @@ BOUNDS = {"v1_fixed_point_gap": (1e-12, "tolerance", "find_roots xtol 1e-15 agai
 COUNTS = {"r1_n_forms_round_to_ucrit": 0.05, "r2_n_maxima_below_ucrit": 0.01, "r3_n_forms_crossing": 0.01,
           "r2_n_markers_above_ustar": 0.01, "r4_n_homog": 1.0, "r4_best": 0.05, "r4_second": 0.05,
           "r4_last_on": 0.05, "r4_first_off": 0.05, "r4_n_within_2sig": 0.05, "r4_n_full": 0.01,
-          "r4_n_rejoin_within": 0.05, "v2_n_lines_within": 0.05, "v2_f3_n_within": 0.05, "v3_n_inside_1se": 0.05}
+          "r4_n_rejoin_within": 0.05, "v2_n_lines_within": 0.05, "v2_f3_n_within": 0.05, "v2_n_lines_read": 0.05, "v2_f3_n_read": 0.05, "v3_n_inside_1se": 0.05}
 EXACT = {*(f"r1_nroots_{SHORT[f]}" for f in FORMS), "r2_n_maxima", "r3_n_forms_crossing_263",
-         "r3_n_forms_crossing_267", "r3_n_eq14_interior_maxima", "r5_n_cross_physical", "v2_f3_n"}
+         "r3_n_forms_crossing_267", "r3_n_eq14_interior_maxima", "r5_n_cross_physical", "v2_f3_n", "r4_n_markers", "r3_n_forms_slip_above_one"}
 
 
 def register(M):
@@ -1187,7 +1224,8 @@ def register(M):
             continue
         if name in BOUNDS:
             mx, basis, note = BOUNDS[name]
-            claims.bound(name, v, max=mx, basis=basis, structural=True, note=note)
+            claims.bound(name, v, max=mx, basis=basis, note=note,
+                         structural=name not in {"v1_closed_form_gap", "v1_max_closed_gap", "v1_crossing_gap"})
         elif name in STRUCTURAL:
             claims.exact(name, v, structural=True, note=STRUCTURAL[name])
         elif name in COUNTS:
@@ -1204,7 +1242,7 @@ register(M)
 # ### The break table
 #
 # Every non-structural number registered above has a row that moves it. Each row
-# mistypes one printed constant by 10 %, or makes one named substitution (a form for
+# mistypes one printed constant by 10 % (by 1 % where 10 % leaves no solution), or makes one named substitution (a form for
 # another, a constant from elsewhere in the paper, a misread equation), or changes one
 # set of figure readings, and reruns the whole study; the claims it fails are counted.
 # A row records only finite values: a claim that a row removes (a root that no longer
@@ -1247,11 +1285,12 @@ def drop_marker(i):
     return f"Fig. 11(a) marker {i} dropped", K, replace(C, f11=df)
 
 
-DEFECTS = [mistyped(k) for k in K if k not in UNUSED] + [
+DEFECTS = [mistyped(k, 1.01 if k == "C0_zuber_findlay_theory" else 1.1) for k in K if k not in UNUSED] + [
     form_as("griffith_wallis", "richardson_zaki"), form_as("griffith_wallis", "turner"),
     form_as("davidson_harrison", "griffith_wallis"), form_as("turner", "griffith_wallis"),
     form_as("marrucci", "richardson_zaki"),
-    set_to("Table 2 Joshi-Lali exponent as printed", "joshi_lali_exponent_fig11b", 1.2),
+    set_to("Joshi-Lali exponent read as 1.2", "joshi_lali_exponent_fig11b", 1.2),
+    set_to("eq. 10 with C0 below one", "C0_column_plateB", 0.9),
     set_to("eq. 5 with the eq. 10 intercept", "u_b_inf_homogeneous", K["u_drift_column_plateB"]),
     set_to("eq. 5 with the eq. 14 velocity", "u_b_inf_homogeneous", K["u_b_inf_clift"]),
     set_to("Richardson-Zaki exponent", "rz_exponent_air_water", 4.65),

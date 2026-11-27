@@ -35,30 +35,35 @@ Each CSV has a `.meta.yaml` provenance sidecar beside it.
   0.05875 <!-- claim: r2_uGmax_gw --> m/s, and the printed velocity is 0.6809 <!-- claim: r2_ratio_u_gw -->
   of it (0.8641 <!-- claim: r2_ratio_u_rz --> for Richardson-Zaki; the other four forms have
   no maximum). The two branches never meet at the printed constants: 0 <!-- claim: r3_n_forms_crossing -->
-  of the 6 forms cross eq. 10, because the homogeneous slip velocity never reaches the
-  eq. 10 intercept. With the other single-bubble velocities the paper prints, the
-  crossings sit at holdups of 0.0354 <!-- claim: r3_cross_eps_max_267 --> or less.
-- The change of regime is a jump in holdup at fixed gas velocity: at `0.04` m/s the
-  Griffith-Wallis holdup is 1.837 <!-- claim: r3_jump_ratio --> times that of eq. 10.
+  of the 6 forms cross eq. 10, because the slip velocity times (1 - C0 eps), in every form,
+  never exceeds `0.235` m/s, below the eq. 10 intercept `0.257` m/s. With `0.263` m/s (the riser's
+  drift intercept) or `0.267` m/s (eq. 14) in place of `0.235`, every form crosses, at holdups of
+  0.0354 <!-- claim: r3_cross_eps_max_267 --> or less.
+- The branches stay apart: at `0.04` m/s the Griffith-Wallis holdup is
+  1.837 <!-- claim: r3_jump_ratio --> times that of eq. 10, and the data pass from one to the other
+  through a transition region whose holdup peaks at 0.3515 <!-- claim: r4_eps_max --> (Fig. 11(a), gas velocity
+  0.0846 <!-- claim: r4_uG_eps_max --> m/s).
 - The printed pair is a property of the data: it is the last Fig. 11(a) marker within
   three reading errors of the Griffith-Wallis line (marker 7 <!-- claim: r4_last_on -->,
-  0.6 <!-- claim: r4_hu_eps_last --> half-units from `0.210`), and the next marker is
+  0.6 <!-- claim: r4_hu_eps_last --> half-units from `0.210`, against a reading error of `0.001`), and the next marker is
   7.7 <!-- claim: r4_z_first_off --> reading errors off. On the line itself, `0.210` sits at
   0.03899 <!-- claim: r1_uG_gw --> m/s, which rounds to `0.04`; the same line at exactly
   `0.04` m/s gives 0.2175 <!-- claim: r1_eps_gw -->. The printed digits do not select the
   form: 4 <!-- claim: r1_n_forms_round_to_ucrit --> of the 6 forms put `0.210` at a velocity
-  that rounds to `0.04`. The fit to the markers does: Griffith-Wallis has an rms residual
+  that rounds to `0.04`. The fit to the markers does: with the paper's `0.235` m/s, Griffith-Wallis has an rms residual
   of 0.0078 <!-- claim: r4_rms_gw --> on 7 <!-- claim: r4_n_homog --> homogeneous markers, against
-  0.0343 <!-- claim: r4_rms_marrucci --> for the runner-up.
+  0.0343 <!-- claim: r4_rms_marrucci --> for the runner-up. With the terminal velocity free, Richardson-Zaki overtakes
+  Griffith-Wallis from 0.2428 <!-- claim: r4_ub_rz_overtakes --> m/s.
 - The pair holds for air-water, a column of `0.15` m at an aspect ratio of `10` and plate A only.
   The plate A data rejoin eq. 10 (fitted on plate B) from `0.125` m/s, within
   2.78 <!-- claim: r4_z_rejoin_max --> standard deviations of the plate B scatter.
 - In the airlift riser, eq. 6 inserted in eq. 3 is Zuber-Findlay with a distribution
   parameter of one, an identity; the first printed slope break then holds a holdup of
   0.1593 <!-- claim: r5_eps6_1 -->, beyond the printed limit `0.15`; the verdict would flip
-  only at a riser terminal velocity of 0.2679 <!-- claim: r5_ub_flip --> m/s, higher than
-  every single-bubble velocity the paper prints.
-- Eq. 14 cannot give the printed `0.267` m/s for water at any bubble size: its supremum is
+  at a riser terminal velocity of 0.2679 <!-- claim: r5_ub_flip --> m/s at the printed `0.067` and `0.235` m/s;
+  over their rounding the flip spans 0.2631 <!-- claim: r5_ub_flip_lo --> to 0.2728 <!-- claim: r5_ub_flip_hi --> m/s,
+  which contains the printed `0.263` and `0.267`, so the verdict is firm for `0.235` only.
+- Eq. 14 cannot give the printed `0.267` m/s for water at 20 C at any bubble size: its supremum is
   0.2529 <!-- claim: r3_ub_sup --> m/s with corrected groups; the groups as printed in the
   eq. 14 block are not dimensionless.
 - No temperature is printed; eqs. 13 and 14 use water at 20 C as an input of this page.
