@@ -566,7 +566,7 @@ try:
     _bmm.solve_y(np.zeros(200), y0=np.ones(200))
     _sw_mm = _bmm.last_nit
 except SolveFailed:
-    _sw_mm = np.inf                                     # no convergence within 300 sweeps
+    _sw_mm = _bmm.last_sweeps       # the sweep budget spent without settling, a lower bound
 brk("minmod limiter in the sweeps (Bed(..., limiter=minmod))", "frozen_deferred_sweeps_max", _sw_mm)
 print(f"{'n':>5} {'T':>4} {'newton iterations':>18}   deferred sweeps and route gap")
 for n, T, ni, nd, gap in FROZEN:
