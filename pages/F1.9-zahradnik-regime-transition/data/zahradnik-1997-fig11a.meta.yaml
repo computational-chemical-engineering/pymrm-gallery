@@ -1,0 +1,60 @@
+dataset_id: zahradnik-1997-fig11a
+title: "Slip-velocity ratio against gas holdup, Fig. 11(a) of Zahradnik et al. (1997): plate A markers and the drawn Table 2 lines"
+status: complete
+
+source:
+  authors: ["Zahradnik, J.", "Fialova, M.", "Ruzicka, M.", "Drahos, J.", "Kastanek, F.", "Thomas, N. H."]
+  year: 1997
+  title: "Duality of the gas-liquid flow regimes in bubble column reactors"
+  container: "Chemical Engineering Science 52, 3811-3826"
+  doi: "10.1016/S0009-2509(97)00226-1"
+  access: >
+    Publisher PDF (a 300 ppi bilevel scan whose text layer garbles symbols and numbers)
+    held outside the repository (~/papers/pymrm-gallery/). Every value is read from the
+    page images. No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 11(a), journal page 3821 (PDF page 11)"
+  tool: "pdfimages -png native bitmap (2280 x 3255 px, 300 ppi, 1-bit); ring-template marker search and line-run centres; calibration and conversion by data/digitise.py (committed)"
+  procedure: >
+    The scan is rotated by about 0.58 deg: the left frame drifts -1.02 px per 100 rows
+    and the bottom frame +0.98 px per 100 columns (least-squares fits to the frame
+    centroids). Rotation-corrected coordinates u = px + 0.01018 (py - 2755),
+    v = py - 0.00979 (px - 355). Abscissa from the three bottom-frame ticks 0.1, 0.2,
+    0.3 (1940.0 px per unit eps, largest residual 0.00 px; the dashed 0.21 line lands at
+    0.2093); ordinate from the bottom frame (y = 0), the right-frame tick 1 and the
+    left-frame tick 2 (248.64 px per unit, largest residual 0.26 px). The extrapolated
+    zero of the abscissa ticks lies 2.3 px right of the left frame; the ticks are used.
+    21 open circles found by a ring template (radius 5.5 to 9 px) and checked by eye; no
+    legend glyph kept. The drawn lines 1 to 5 are read as the centre of the line's dark
+    run at eps 0.05 to 0.30 in steps of 0.025, wherever no marker covers the line and no
+    other line lies within 0.03 in y (38 readings).
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: >
+    sigma_eps 0.001 and sigma_y 0.007 per marker (centre 1.5 px, which a line through the
+    marker can pull by about 1 px, plus the calibration); u_G = y eps u_binf inherits
+    about 0.6 % at the homogeneous markers. A line reading carries about 1 px (0.004 in y).
+
+conditions: "Air-water, semibatch (u_OL = 0), bubble column D_r 0.15 m, H0/D_r 10, perforated plate A (d0 0.5 mm, free area 0.2 %), p. 3821."
+
+missing:
+  - "Line 6 (Joshi-Lali) is not drawn in Fig. 11(a)."
+  - "Lines 3, 4 and 5 lie within 0.03 of each other below eps 0.1 to 0.2 and are not read there."
+
+columns:
+  - {name: kind, unit: "-", description: "marker or line"}
+  - {name: series, unit: "-", description: "marker number in order along the data (1 to 21), or the Table 2 line number (1 to 5)"}
+  - {name: eps_G, unit: "-", description: "gas holdup"}
+  - {name: us_over_ubinf, unit: "-", description: "ordinate u_s/u_binf = u_OG/(eps_G u_binf) (semibatch)"}
+  - {name: px, unit: px, description: "centre column in the native bitmap"}
+  - {name: py, unit: px, description: "centre row in the native bitmap"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
