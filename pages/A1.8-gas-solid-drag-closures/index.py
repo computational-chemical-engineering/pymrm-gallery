@@ -144,6 +144,8 @@ def brk_helper(row, helper, names, *args, **kw):
     except ValueError as exc:
         got = {n: float("nan") for n in names}
         row = f"{row} (no admissible root on the whole range: {exc})"
+    if isinstance(got, dict) and "_no_root" in got:   # only the claims that need the root are nan
+        row = f"{row} (no admissible root on the whole range: {got['_no_root']})"
     return brk_all(row, got)
 
 
@@ -1591,7 +1593,10 @@ def check3_claims(p=P0, tab=rz):
     out["check3_rows_above_eps095"] = int((dev[0.95] > 0).sum())
     b = [bias[e] for e in EPS_PROBE3]
     out["check3_bias_falls_between_voidages"] = int(np.sum(np.diff(b) < 0))
-    out["check3_all_rows_above_from_eps"] = rows_all_above_from(p, tab)
+    try:   # only this claim needs a crossing of every row; the others stay computable without one
+        out["check3_all_rows_above_from_eps"] = rows_all_above_from(p, tab)
+    except ValueError as exc:
+        out["check3_all_rows_above_from_eps"], out["_no_root"] = float("nan"), str(exc)
     out["check3_readings_one_unit_apart"] = float(max(
         abs(implied_index(e, r, p) - alt_index(e, r, p) - 1.0) for e in (0.45, 0.95) for r in tab.Re))
     out["_dev"], out["_bias"] = dev, bias
@@ -2089,6 +2094,10 @@ VOIDAGES4 = [("settled eps_0, per row", dict(eps_col="eps_0")), ("reported eps_M
              ("0.50 for every row", dict(eps_all=0.50))]
 
 
+EPS4_NAMES = [f"check4_eps_erasing_{SHORT[c]}_bias" for c in CLOSURES] + [
+    "check4_closures_needing_voidage_below_table", "check4_ergun_needs_smallest_voidage_correction"]
+
+
 def check4_claims(sub=dia, p=P0, gel=GEL, dscale=1e-4, tab=rz, eps_main=None, p_vt_other=None):
     """The claims of Check 4. ``eps_main`` replaces the settled voidage of the headline by a column name
     or one value for every row; ``p_vt_other`` builds the Syamlal-O'Brien / Richardson-Zaki ratio's
@@ -2138,16 +2147,22 @@ def check4_claims(sub=dia, p=P0, gel=GEL, dscale=1e-4, tab=rz, eps_main=None, p_
     gaps = [min(a[SO], a[RZ]) / a[ERG] - 1 for a in ab.values()]
     out["_margin_least"] = float(min(abs(g) for g in gaps))
     out["_margin_lead"] = float(min(abs(z - 2) / 2 for z in so_rz_z))
-    eimp = {c: eps_erasing(sub, c, vt=vt, **kw) for c in CLOSURES}
-    for c in CLOSURES:
-        out[f"check4_eps_erasing_{SHORT[c]}_bias"] = float(eimp[c])
-    e_lo = float(sub.eps_0.min())
-    out["check4_closures_needing_voidage_below_table"] = int(sum(v < e_lo for v in eimp.values()))
-    shortfall = sorted(abs(v - float(sub.eps_0.mean())) for v in eimp.values())
-    out["check4_ergun_needs_smallest_voidage_correction"] = bool(
-        abs(eimp["Ergun"] - float(sub.eps_0.mean())) == shortfall[0])
-    out["_margin_eps"] = float(min(abs(e_lo - v) / e_lo for v in eimp.values()))
-    out["_margin_corr"] = float((shortfall[1] - shortfall[0]) / shortfall[0])
+    try:   # the bias-erasing voidages; the claims after this block do not need them
+        eimp = {c: eps_erasing(sub, c, vt=vt, **kw) for c in CLOSURES}
+    except ValueError as exc:
+        eimp, out["_no_root"] = None, str(exc)
+        for name in EPS4_NAMES:
+            out[name] = float("nan")
+    if eimp is not None:
+        for c in CLOSURES:
+            out[f"check4_eps_erasing_{SHORT[c]}_bias"] = float(eimp[c])
+        e_lo = float(sub.eps_0.min())
+        out["check4_closures_needing_voidage_below_table"] = int(sum(v < e_lo for v in eimp.values()))
+        shortfall = sorted(abs(v - float(sub.eps_0.mean())) for v in eimp.values())
+        out["check4_ergun_needs_smallest_voidage_correction"] = bool(
+            abs(eimp["Ergun"] - float(sub.eps_0.mean())) == shortfall[0])
+        out["_margin_eps"] = float(min(abs(e_lo - v) / e_lo for v in eimp.values()))
+        out["_margin_corr"] = float((shortfall[1] - shortfall[0]) / shortfall[0])
     so, er, rzv = (res_["Syamlal-O'Brien"].to_numpy(), res_["Ergun"].to_numpy(), res_["Richardson-Zaki"].to_numpy())
     r_se, r_sr = so / er, so / rzv
     out["ratio_SO_over_Ergun_min_diakon"] = float(r_se.min())
@@ -2389,8 +2404,14 @@ TAB4 = pd.DataFrame([dict(reading="as read", **mean_bias(res))]
 print("mean bias in per cent, eight Diakon rows")
 print(TAB4.to_string(index=False, float_format=lambda v: f"{v:+10.2f}"))
 for row, kw in DEFECTS4:
-    brk_helper(row, lambda **k: {n: v for n, v in check4_claims(**k).items() if not n.startswith("_")},
-               C4_NAMES, **kw)
+    brk_helper(row, lambda **k: {n: v for n, v in check4_claims(**k).items()
+                                 if not n.startswith("_") or n == "_no_root"}, C4_NAMES, **kw)
+# two more readings, kept out of the bias table above: a slipped decimal in Ergun's viscous
+# constant moves the bias-erasing voidages, and dropping the coarsest cut changes the last row
+for row, kw in [("Ergun viscous constant a decimal place out (k1 x 10)", dict(p=dict(P0, k1=10 * P0["k1"]))),
+                ("coarsest Diakon cut dropped", dict(sub=dia.iloc[:-1]))]:
+    brk_helper(row, lambda **k: {n: v for n, v in check4_claims(**k).items()
+                                 if not n.startswith("_") or n == "_no_root"}, C4_NAMES, **kw)
 for row, kw in [("effects measured with the A exponent 4.65", dict(p=dict(P0, aexp=4.65))),
                 ("effects measured with the gas viscosity a decimal place out", dict(gel=dict(GEL, mu=1.8e-5))),
                 ("effects measured on Table VI read one row low",
