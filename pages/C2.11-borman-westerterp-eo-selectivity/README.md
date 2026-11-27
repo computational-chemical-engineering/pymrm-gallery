@@ -40,8 +40,8 @@ page tests whether those conclusions follow from model III with Table 6 as print
 - eq. 8 gives r3/r1 = 0.727 <!-- claim: r3_over_r1_T --> at the Figure 6 condition, outside
   the range the paper prints (printed as r1/r3).
 
-The page says what factor the paper's own curves imply, never why. `D3.5` (planned) should
-load `F_fig6` from this page's `agreement.json` with `load_claims`.
+The page says what factor the paper's own curves imply, never why. `D3.5` loads
+`F_fig6` from this page's `agreement.json` with `load_claims`.
 
 ## Files
 
