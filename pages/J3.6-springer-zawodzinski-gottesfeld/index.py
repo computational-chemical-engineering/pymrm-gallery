@@ -118,7 +118,7 @@ def say(text, **v):
 # the critical constants and the molar masses of Eq. 10 are not printed. The membrane
 # can, from the printed interface water fractions $x_{w2}$ and $x_{w3}$, except for one
 # constant: the dry density over the equivalent weight, $\rho_{dry}/M_m$, appears in
-# Eqs. 23 and 24 but is not printed anywhere. This page treats it as the one free
+# Eqs. 23 and 24 but has no printed value (list of symbols, p. 2341; Table I; Eqs. 19 to 26; the 1155 of p. 2337 is Yeo and Eisenberg's Nafion). This page treats it as the one free
 # constant and finds the value that gives the printed $\alpha$.
 #
 # The page complements `J3.4` (Doyle, Fuller and Newman, the lithium-ion P2D model):
@@ -637,7 +637,7 @@ say("Solved for $\\alpha$ with the printed $x^I_w$ = 0.1558, Eq. 8 at $x_{w1}$ g
 # ladder. The plot shows the profile and the split of the constant net flux into drag and
 # back-diffusion along the membrane; the Fig. 4 read is overlaid but carries no weight
 # (its caption holds gas flows constant at $\nu_H$ = 1 at 1 A/cm², so the 0.5 A/cm² curve
-# may not be the Table I case).
+# is at $\nu_H$ = 2 by the flow rule of p. 2338, against Table I's 4).
 
 # %%
 say("At $c_f$ = 1.8e-3 mol/cm³: $\\alpha$ = <<a:.5f>> ($\\beta$ = <<be:.5f>>), $R_{mem}$ = <<R:.5f>> "
