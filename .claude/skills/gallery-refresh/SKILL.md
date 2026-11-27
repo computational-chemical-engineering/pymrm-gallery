@@ -113,4 +113,5 @@ model goes to `docs/refresh-learnings.md` as a row with evidence. Gallery-only
 rules belong in `references/refresh-checklist.md` as well; generic pymrm rules
 (numerics, pitfalls, verifier attacks, library bugs) are flushed to the pymrm repo
 (targets listed at the top of the learnings file). Mark a row `filed` or `merged`
-with the pymrm PR number when that happens.
+with the pymrm PR number when that happens. The coordinator writes the rows before
+each commit, or "learnings: none" (`references/commit-and-merge.md`, "Learnings rows").

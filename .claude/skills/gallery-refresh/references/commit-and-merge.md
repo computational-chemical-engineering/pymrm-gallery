@@ -34,6 +34,19 @@ git diff --cached --stat                                # nothing you did not me
   no more than one row catches a claim, or that a row only records a crash (say so
   on the page, or make the row move a number).
 
+## Learnings rows (coordinator, before the commit)
+
+Every page closes with its learnings decided, also a new page and a second review.
+Take the "Learnings" lines of the build or refresh report and of each review, keep
+those the evidence supports, reserve row numbers with `gq.py rows <ID> <n>`, and append
+them to `docs/refresh-learnings.md` with a target: a pymrm file (`numerics`,
+`style-guide`, `verifier`, `pitfall`, `library`, ...) or `gallery: <where>`. Apply a
+gallery row in the same commit and mark it `done`. If nothing qualifies, write
+"learnings: none" in the page's cost-log notes. Then run
+`python scripts/learnings_status.py --pymrm ~/Code/pymrm_suite/pymrm`: exit status 1
+means ten rows wait for pymrm (flush them, refresh-plan section 5) or a row pymrm
+already cites is still marked open (mark it).
+
 ## Known checker behaviour
 
 - **Format-1 baseline on main**: before the commit, check_agreement compares against

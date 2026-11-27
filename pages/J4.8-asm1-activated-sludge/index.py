@@ -801,14 +801,17 @@ F_GRID = np.linspace(0.0, 0.60, 13)              # unaerated fractions scanned
 NH, NO, ALK = IX["S_NH"], IX["S_NO"], IX["S_ALK"]
 
 
-def tn_optimum(p=None):
+def tn_optimum(p=None, require_interior=True):
     """Lowest total inorganic N over the unaerated fraction: a scan of the window,
-    refined by bounded minimisation; an interior scan minimum is required."""
+    refined by bounded minimisation. An interior scan minimum is required unless
+    require_interior is False; then a minimum at a window end is that end."""
     out = np.array([lane(n=N_SWEEP, f_anox=f, p=p)["c_out"] for f in F_GRID])
     TN = out[:, NH] + out[:, NO]
     i = int(np.argmin(TN))                       # scan bracket, refined below
     if i in (0, len(F_GRID) - 1):
-        raise RuntimeError(f"TN scan minimum at the window end f = {F_GRID[i]:.2f}")
+        if require_interior:
+            raise RuntimeError(f"TN scan minimum at the window end f = {F_GRID[i]:.2f}")
+        return dict(f=float(F_GRID[i]), tn=float(TN[i]), tn0=float(TN[0]), out=out, TN=TN)
     r = minimize_scalar(lambda f: tn(lane(n=N_SWEEP, f_anox=f, p=p)["c_out"]),
                         bounds=(F_GRID[i - 1], F_GRID[i + 1]), method="bounded",
                         options={"xatol": 1e-4})
@@ -1085,8 +1088,9 @@ def reactor_g(g, key, **kw):
 
 
 def opt_or_nan(key, p):
+    """The optimum under a defect; a minimum at a window end is recorded as that end."""
     try:
-        o = tn_optimum(p=p)
+        o = tn_optimum(p=p, require_interior=False)
     except RuntimeError as exc:
         print(f"   tn_optimum raised: {exc}; records nan")
         return np.nan

@@ -30,3 +30,7 @@ Which pages get one:
 
 A page counts as checked by a model when it has a row with that model and its fix PR is
 merged (or `none`).
+
+A second review's "Learnings" lines go to `docs/refresh-learnings.md` in its fix PR, as
+for a first review (`.claude/skills/gallery-refresh/references/commit-and-merge.md`,
+"Learnings rows").

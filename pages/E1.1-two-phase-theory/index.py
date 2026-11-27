@@ -1632,8 +1632,10 @@ claims.bound("excess_spread_vs_quadrature", SPREAD_GAP, max=1e-6, basis="chosen"
                   f"closed form; the cell-value reading is {_CELL_GAP:.1e} off")
 _lx = {n: pymrm_results(n=n, xtol=1e-4)["Lf"] for n in NS}
 _labx = "root tolerance xtol = 1e-4 m on every rung"
-brk(f"finest rung solved on n = {NS[-2]} again (refinement not passed)", "upwind_order",
-    float(observed_orders(lambda n: LAD[min(n, NS[-2])]["Lf"], NS)["orders"][-1]))
+_N_SHORT = 3 * NS[-1] // 4        # the finest rung refined by 1.5 while labelled 2
+brk(f"finest rung solved on n = {_N_SHORT} but labelled n = {NS[-1]}", "upwind_order",
+    float(observed_orders(lambda n: LAD[n]["Lf"] if n < NS[-1]
+                          else pymrm_results(n=_N_SHORT)["Lf"], NS)["orders"][-1]))
 brk(_labx, "grid_finest_over_roundoff",
     abs(_lx[NS[-1]] - _lx[NS[-2]]) / Lf_exact / max(NS[-1] * EPS, 1e-4 / Lf_exact))
 _oc = observed_orders(lambda n: pymrm_results(n=n)["Lf"], (25, 50, 100))

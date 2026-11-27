@@ -876,11 +876,11 @@ fig.tight_layout()
 plt.show()
 
 
-def tau90(k, sol, T, i):
-    """Space time at which beta_i reaches 0.90 on the Radau dense solution ``sol``;
-    None if the bed ends first."""
+def tau90(k, sol, T, i, tau_end=TAU_MAX):
+    """Space time at which beta_i reaches 0.90 on the Radau dense solution ``sol``
+    (integrated to ``tau_end``); None if the bed ends first."""
     f = lambda t: beta_ref(k, sol, T, t)[i] - 0.90   # noqa: E731
-    return brentq(f, models[T].tau_c[0], TAU_MAX, xtol=1e-12) if f(TAU_MAX) > 0 else None
+    return brentq(f, models[T].tau_c[0], tau_end, xtol=1e-12) if f(tau_end) > 0 else None
 
 
 def tau90_fv(m, i):
@@ -935,12 +935,16 @@ _gap = [_bo[T][1] - _bo[T][0] for T in TEMPS]
 brk(_lab, "beta_gap_outlet_min", min(_gap))
 brk(_lab, "beta_gap_outlet_max", max(_gap))
 brk(_lab, "tau90_crossings_in_bed", int(sum(_bo[T][i] > 0.90 for T in TEMPS for i in range(3))))
+# With K2 x e most crossings move past the outlet, so the broken crossings are
+# root-found on the same ODEs integrated over a bed ten times longer, where every
+# beta approaches 1 and each crossing is a finite space time.
+TAU_LONG = 10 * TAU_MAX
+_rs_long = {T: reference_solution(_k, T, TAU_LONG, P_T, SR, HR) for T in TEMPS}
 for T in (823.0, 848.0):
-    t2, t1 = tau90(_k, _rs[T], T, 1), tau90(_k, _rs[T], T, 0)
-    brk(_lab, f"tau90_ratio_II_I_{T:.0f}K", np.nan if t2 is None or t1 is None else t2 / t1)
+    t2, t1 = (tau90(_k, _rs_long[T], T, i, TAU_LONG) for i in (1, 0))
+    brk(_lab, f"tau90_ratio_II_I_{T:.0f}K", t2 / t1)
 for (T, i) in ((798.0, 1), (823.0, 0), (823.0, 1), (848.0, 0), (848.0, 1), (848.0, 2)):
-    t = tau90(_k, _rs[T], T, i)
-    brk(_lab, f"tau90_{('I', 'II', 'III')[i]}_{T:.0f}K", np.nan if t is None else t)
+    brk(_lab, f"tau90_{('I', 'II', 'III')[i]}_{T:.0f}K", tau90(_k, _rs_long[T], T, i, TAU_LONG))
 
 # %% [markdown]
 # ### The break table

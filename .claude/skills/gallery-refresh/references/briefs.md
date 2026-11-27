@@ -21,11 +21,15 @@ report it asks for." Placeholders:
 **New pages (not refreshes): plan first.** Before the build agent starts, one `think`
 call writes `<SCRATCH>/<id>_PLAN.md` (one page: the question, the message to test,
 results R1..Rn each with what it must show, the validations, what counts as a claim,
-stop rules) and `<SCRATCH>/<id>_EQUATIONS.md` (the equations as used, units, and check
+stop rules; each claim of the paper it tests is quoted exactly from the page image,
+with its page, so the build tests it at its own strength: learnings row 331) and `<SCRATCH>/<id>_EQUATIONS.md` (the equations as used, units, and check
 values at one test condition computed by a second route: a script of the plan agent or
 the coordinator, never the builder). The coordinator turns the check values into
 `pages/<PAGE>/data/check_values.csv` (`name,value,rtol`, with a `.meta.yaml` sidecar
-naming the second route). The build brief names both files; the builder calls
+naming the second route). The check script is reviewed like model code before its
+values are used: an "exact" start state must satisfy the equations it is exact for
+(`J2.7`: a back substitution without the diagonal term B_kk left a residual of 0.23;
+row 322). The build brief names both files; the builder calls
 `gallery_utils.assert_check_values(...)` before the first claim (accept_page.py's
 `contract` step checks the order) and closes the page with the finding the plan asked
 for, or says the numbers do not support it. Log the plan call as its own cost-log row.
@@ -158,7 +162,8 @@ line under lint checked (tagged, quoted or an identifier). Then the checklist's
 
 Report at most 400 words: files changed, lane B choice and its measured justification,
 moved metrics, changed published statements (each with evidence), the accept_page
-summary as printed, runtime.
+summary as printed, runtime, and "Learnings": findings another page would need, with
+numbers, or "none".
 
 Budget: aim for well under 100 tool calls. Plan the edits from the facts file before
 running anything, use `accept_page.py --quick --only <steps>` while iterating, and
@@ -244,7 +249,10 @@ State the page's one finding with its number, and whether the page sets it again
 the relevant scatter or uncertainty. If there is none, that is a MUST-FIX.
 Output (at most 400 words): numbered items for a Sonnet fix round, each MUST-FIX or
 optional, with file:line, what is wrong, and the exact fix (replacement wording where
-wording is the issue). Then one verdict line per question asked above.
+wording is the issue). Then one verdict line per question asked above. Last, under
+"Learnings": up to three findings that would change what an agent writes or checks on
+another page (a defect class, a numerical trap, a pymrm behaviour), each with its
+numbers, or "Learnings: none".
 ```
 
 ## C. Fix round (`gallery-fixer`)

@@ -42,8 +42,12 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
    was 1 of 16 cells; row 245). "Consistent with rounding" compares each row with the
    half units of every printed entry it combines (`A4.6` O2-Xe at 1.36 of its
    allowance; row 263); a mean of printed values also gets the movement rounding of its
-   inputs can cause (`A4.5` N2 mean at 1.023 half-units against 0.1; row 261). (rows 44,
-   46, 124, 143, 245, 261, 263)
+   inputs can cause (`A4.5` N2 mean at 1.023 half-units against 0.1; row 261). A sum the
+   source formed from its own printed column is recomputed from that column, not from a
+   rounded recomputation of it (`C1.1`: 2.9e-3 against 3.9e-5; row 269). When two printed
+   copies of one result disagree, judge each by the test that classifies the rows; a gap
+   smaller than the shift half a printed unit causes decides nothing (row 268). (rows 44,
+   46, 124, 143, 245, 261, 263, 268, 269)
 7. Never retype a CSV value, another page's claim (use `load_claims`) or a hand read no
    CSV holds; a hand read belongs to the page that makes it. A threshold from another
    page is its claim, not its rounded prose (`C1.2` used 16.9 % for 16.856 %: window
@@ -58,17 +62,28 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
    row can move. Measure which defect size crosses the bound before writing the row
    (`C1.2` step guard: 1e-2 moved the orders 2.6e-9 against a bound of 1e-8, 1.0 moves
    them 2.8e-5; row 249). A limiter of higher order (STOIC, orders 2.28 to 2.37 on
-   `A3.8`) is the break row of an order's upper bound (row 240). (AGENTS.md "Adding a
-   page"; claims-design 3, 5; rows 7, 54, 119, 240, 249)
+   `A3.8`) is the break row of an order's upper bound (row 240). Size each claim's
+   tolerance against its own row's move, not one tolerance for all a row touches; a mean
+   of two claims halves a one-cell defect (`J5.3`; rows 304, 313). A bound with a lower
+   end of zero is broken by pushing it out of the top, not by collapsing it to zero (row
+   300). Measure which claim each defect moves: one that "must" move a spread may not
+   (`J3.1`; row 287). (AGENTS.md "Adding a page"; claims-design 3, 5; rows 7, 54, 119,
+   240, 249, 287, 300, 304, 313)
 9. Inject the defect through a call argument or physical parameter, everywhere the
    parameter enters, post-processing included; never edit a result after the solve or
    hand back the baseline value. Build labels from the call. A defect a mask can absorb
    (one bad cell) is too small. A looser `tol` is no defect for a `newton` cross-check
    on a well-conditioned root (`C1.2`: tol 1e-1 to 1e-8 all end at 4.8e-11); perturb
-   what newton solves, or `maxfev` (row 248). (rows 28, 86, 154, 158, 191, 248)
+   what newton solves, or `maxfev` (row 248). A loosened integrator or optimiser under a
+   root-find or a refit is no defect of known size either: its result scatters across
+   BLAS kernels by more than the claim's tolerance (`J4.6`: 5.8e-2, 5.7e-2, 3.0e-2;
+   `J4.1`; rows 291, 305). (rows 28, 86, 154, 158, 191, 248, 291, 305)
 10. A defect's effect is the difference of two solves that differ only by the defect.
     A comparison of an approximation with an exact solve has a row where the
-    approximation is exact by construction. (rows 70, 78)
+    approximation is exact by construction. The check and its break row call one
+    function with the defect as an argument; a metric rebuilt for the table drifts from
+    the claim (`A3.4`: the table's 2.14e-3 was unextrapolated, the check 2.0e-6; row
+    233). (rows 70, 78, 233)
 11. Convergence is a precondition, not a detector. A defect that leaves no solution
     records nan, with the non-existence shown by an independent route or a root scan
     over the whole physical range. (rows 61, 72, 156, 192)
@@ -78,6 +93,11 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
     recorded nothing, and accept_page.py prints "break rows: N defined, N recorded".
     A summary such as "rows that fail no claim: none" cannot see a row that recorded
     nothing. (A3.7 review, 9 Nov: 42 rows defined, 40 printed)
+    A row that only crashes, or records nan for a claim its study skips, catches
+    nothing unless the failure is itself the detection and a second route shows it:
+    accept_page.py lists such rows (`rows_missing_only`) as LOOK; make the row move a
+    number, or say on the page why the failure detects the defect (`F1.8`: six
+    crash-only rows; `F2.1`, `J2.6`; row 330).
 
 ## Numerics and evidence
 
@@ -88,8 +108,9 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
     model. An event of a time march (a flux that vanishes) is a root in time of an
     interpolant through the step values, then extrapolated in dt after its order is
     checked on three levels (`A4.2`: argmax 7.52 h, spline root 7.555 h, limit 7.5040
-    h; row 247). (numerics.md "Bracket before you root-find"; rows 17, 33, 65, 81, 156,
-    169, 182, 247)
+    h; row 247). A row that coarsens the grid a root-found crossing is read on moves
+    nothing and goes (`J5.3`; row 311). (numerics.md "Bracket before you root-find";
+    rows 17, 33, 65, 81, 156, 169, 182, 247, 311)
 13. An extremum is a root of an analytic derivative (pole multiplied out), or a bounded
     maximisation refined from a scan of the whole window; an argmax on a domain end
     means "at or beyond the end". Take limits in closed form, not at the grid end; at a
@@ -216,7 +237,9 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
     "A page shows current pymrm, not history"; row 92)
 28. A failure mode, trap or alternative result stated in prose needs the cell that
     produces it and a claim, or it goes (`C1.2` "a smaller number" from minimising
-    mean-\|Δ\|, which no cell did: 22.76 %; row 252). (rows 53, 60, 252)
+    mean-\|Δ\|, which no cell did: 22.76 %; row 252). A trap stated from memory is
+    rerun before it is kept (`J3.1`: the 0.44 mV belonged to another defect; row 286).
+    (rows 53, 60, 252, 286)
 
 ## Wording
 
@@ -225,7 +248,10 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
 30. Say what a number is: what a sensitivity holds fixed (re-solve the coupled
     system), which statistic, which denominator, which uncertainties a margin covers. A
     statement about one grid ("cannot resolve") or one solver ("Newton cannot reach")
-    is not one about the physics. (rows 18, 23, 29, 82, 171, 180)
+    is not one about the physics. The paper's claim under test is quoted exactly from
+    the page image, and tested at its own strength: an order of magnitude is not a sharp
+    value, a result derived for one quantity is not claimed for another (five of seven
+    new pages, 23 to 27 Nov; row 331). (rows 18, 23, 29, 82, 171, 180, 331)
 31. No history narration and no pymrm version names in the notebook, comments,
     meta.yaml or models.yaml; a second route is described by what it computes. No em
     dashes anywhere. (AGENTS.md "A page shows current pymrm, not history")

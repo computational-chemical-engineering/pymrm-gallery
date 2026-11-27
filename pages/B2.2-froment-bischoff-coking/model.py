@@ -460,6 +460,7 @@ class Bed:
             y_new = lu.solve(rhs0 - self.div @ np.asarray(dface).ravel())
             change = np.max(np.abs(y_new - y))
             y = y_new
+            self.last_sweeps = sweep
             if change < tol:
                 self.last_nit = sweep
                 return y
