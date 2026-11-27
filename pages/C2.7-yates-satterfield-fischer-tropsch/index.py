@@ -1416,6 +1416,8 @@ DEFECTS = [
 CONTROLS = [("control: clean rerun without the Monte Carlo", C0, NO_MC)]
 claims.define_rows([r_ for r_, _, _ in CONTROLS + DEFECTS])
 BREAK, CRASH = [], set()
+NOROOT_CLAIMS = {"r3_root_927", "r3_root_945", "r3_lowest_over_root_927",
+                 "r3_lowest_over_root_945", "v2_root_gap"}
 for row, c_, parts in CONTROLS + DEFECTS:
     try:
         with np.errstate(divide="ignore", invalid="ignore"):
@@ -1439,7 +1441,10 @@ for row, c_, parts in CONTROLS + DEFECTS:
             continue                      # only finite values, except a shown non-existence
         if name == "r4_fig8_n_in_240" and "r4_fig8_tol_240" in Mb:
             x_ = int(np.sum(Mb["r4_fig8_tol_240"] - np.abs(Mb["r4_fig8_dev_240"]) > 0))
-        BREAK.append((row, name, claims.breaks(row, name, x_)))
+        # the closed-form bound test of E_app (e_app_limits) shows that no root exists:
+        # that failure is the detection for the claims that need the root
+        by_failure = noroot and name in NOROOT_CLAIMS and not np.isfinite(x_)
+        BREAK.append((row, name, claims.breaks(row, name, x_, detects_by_failure=by_failure)))
         rec += 1
     if rec == 0:
         CRASH.add(row)

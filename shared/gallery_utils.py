@@ -187,11 +187,14 @@ def assert_check_values(computed: dict, name: str = "check_values.csv",
 
 
 def _is_missing(x) -> bool:
-    """A break-row value that is no number: None or nan (the study crashed)."""
+    """A break-row value that is no finite number: None, nan or inf (the study
+    crashed or skipped the claim). Labels and other non-numbers are not missing."""
     if x is None:
         return True
+    if isinstance(x, (bool, np.bool_)):
+        return False
     try:
-        return bool(np.isnan(x))
+        return not bool(np.isfinite(x))
     except (TypeError, ValueError):
         return False
 
@@ -343,6 +346,8 @@ class Claims:
         self._rows: dict[str, list[tuple[str, bool]]] = {}
         self._defined: list[str] | None = None
         self._missing: dict[str, list[bool]] = {}
+        self._by_failure: dict[str, list[str]] = {}
+        self._nan: dict[str, list[str]] = {}
         self._problems: list[str] = []
 
     # -- registration ---------------------------------------------------------
@@ -421,8 +426,9 @@ class Claims:
         :meth:`report` raises for a declared row that called :meth:`breaks` for no
         claim (a study that raised and was caught, an empty result) and for a
         recorded row that was never declared. A row whose study cannot run records
-        ``nan`` for the claims it targets, which fails their checks; that is right
-        only when the failed solve is itself the detection, otherwise fix the study.
+        ``nan`` for the claims it targets. That catches them only when the row says
+        ``breaks(..., detects_by_failure=True)``, which is right only when the
+        failed solve is itself the detection; otherwise fix the study.
         """
         rows = [rows] if isinstance(rows, str) else list(rows)
         known = self._defined or []
@@ -431,14 +437,28 @@ class Claims:
             raise ValueError(f"break row(s) defined twice: {twice}")
         self._defined = known + rows
 
-    def breaks(self, row: str, name: str, broken) -> bool:
+    def breaks(self, row: str, name: str, broken, detects_by_failure: bool = False) -> bool:
         """Record a break-table row: the value claim ``name`` takes with the
-        defect injected. Returns whether the claim's own check catches it."""
+        defect injected. Returns whether the claim's own check catches it.
+
+        A value that is no finite number (None, nan, inf: the study crashed or
+        skipped the claim) catches nothing, unless ``detects_by_failure=True``
+        declares that the failure is itself the detection: the defect leaves no
+        solution, and the page shows that by a second route (refresh checklist
+        rule 11). A declared row with a finite value is checked as usual.
+        """
         if name not in self.metrics:
             raise KeyError(f"break row {row!r} names unknown claim {name!r}")
-        caught = not _passes(self.metrics[name], self.metrics[name]["value"], broken)
+        missing = _is_missing(broken)
+        if missing:
+            self._nan.setdefault(name, []).append(row)
+            caught = bool(detects_by_failure)
+            if caught:
+                self._by_failure.setdefault(row, []).append(name)
+        else:
+            caught = not _passes(self.metrics[name], self.metrics[name]["value"], broken)
         self._rows.setdefault(name, []).append((row, caught))
-        self._missing.setdefault(row, []).append(_is_missing(broken))
+        self._missing.setdefault(row, []).append(missing)
         return caught
 
     def says(self, literal: str, name: str) -> bool:
@@ -480,15 +500,18 @@ class Claims:
                     and not any(caught for _, caught in self._rows.get(name, []))]
         if require_breaks:
             problems += [f"{name}: no break row fails its check (add one, or mark the "
-                         "claim structural and say why)" for name in unbroken]
+                         "claim structural and say why; a row that records nan or None "
+                         "counts only when declared detects_by_failure=True)"
+                         for name in unbroken]
         recorded = {r for rows in self._rows.values() for r, _ in rows}
         # only declared rows count, so a missing row and a mistyped label never
         # balance each other in the file's counts
         n_recorded = sum(r in recorded for r in (self._defined or []))
         if self._defined is not None:
             problems += [f"break row {r!r} is defined but recorded no claim (a row whose "
-                         "study fails records nan for its claims, when the failure is "
-                         "itself the detection; otherwise fix the study)"
+                         "study fails records nan for its claims, declared "
+                         "detects_by_failure=True when the failure is itself the "
+                         "detection; otherwise fix the study)"
                          for r in self._defined if r not in recorded]
             problems += [f"break row {r!r} is recorded but not defined"
                          for r in sorted(recorded - set(self._defined))]
@@ -507,6 +530,14 @@ class Claims:
         crash = [r for r, flags in self._missing.items() if flags and all(flags)]
         if crash:
             payload["rows_missing_only"] = crash
+        if self._nan:
+            # per claim, the rows that recorded no finite value for it: they catch it
+            # only when declared detects_by_failure (scripts/check_agreement.py does
+            # not count dropping such a row from "breaks" as a loosening)
+            payload["rows_nan"] = {n: sorted(set(r)) for n, r in self._nan.items()}
+        if self._by_failure:
+            # rows declared detects_by_failure, with the claims they caught that way
+            payload["rows_by_failure"] = {r: sorted(set(n)) for r, n in self._by_failure.items()}
         if not require_breaks:
             # A page migrated before its break table: visible in the file and
             # listed by scripts/check_claims.py until the table exists.

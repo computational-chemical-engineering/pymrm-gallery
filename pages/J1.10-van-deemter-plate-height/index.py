@@ -907,16 +907,19 @@ print(f"   nv from eq (26) with the mean printed S_rf ({S_rf_mean:.1f} ml): "
 def n_match(w):
     return int(sum(abs(round(cmax(A / w), 2) - c) < 1e-9 for A, c in zip(A_vals, printed)))
 
-def calc_window(cells):
+def calc_window(cells, feeds=None):
     """The interval of v sqrt(n) on which every printed calc value is reproduced.
 
     round(cmax(A/w), 2) = c holds for cmax(A/w) in [c - 0.005, c + 0.005], i.e. for
     w between A / a(c + 0.005) and A / a(c - 0.005), a(y) = 2 sqrt(2) erfinv(y)
-    (eq 20 inverted). The window is the intersection over the rows, in closed form.
+    (eq 20 inverted). The window is the intersection over the rows, in closed form;
+    an empty intersection (lo >= hi) proves that no v sqrt(n) exists. ``feeds``
+    replaces the printed feed volumes A (a break row reads them wrong).
     """
     a_of = lambda y: 2 * SQ2 * erfinv(y)
-    lo = max(A / a_of(c + 0.005) for A, c in zip(A_vals, cells))
-    hi = min(A / a_of(c - 0.005) for A, c in zip(A_vals, cells))
+    feeds = A_vals if feeds is None else feeds
+    lo = max(A / a_of(c + 0.005) for A, c in zip(feeds, cells))
+    hi = min(A / a_of(c - 0.005) for A, c in zip(feeds, cells))
     return float(lo), float(hi)
 
 W_LO, W_HI = calc_window(printed)
@@ -1655,7 +1658,12 @@ printed_bad = printed.copy(); printed_bad[3] = 0.88          # A = 122 ml: 0.86 
 W_LO_BAD, W_HI_BAD = calc_window(printed_bad)
 abrk.append(("table1_dS0_window_lo_ml", "one printed calc cell altered (A = 122: 0.86 -> 0.88)",
              f"window [{W_LO_BAD:.3f}, {W_HI_BAD:.3f}]",
-             "window empties" if W_LO_BAD >= W_HI_BAD else "no move"))
+             "window empties: no dS0 reproduces every cell (closed form)"
+             if W_LO_BAD >= W_HI_BAD else "no move"))
+W_LO_A, W_HI_A = calc_window(printed, feeds=1.1 * A_vals)   # every feed volume read 10 % high
+abrk.append(("table1_dS0_window_lo_ml", "every Table 1 feed volume read 10 % high",
+             f"window [{W_LO_A:.3f}, {W_HI_A:.3f}]",
+             f"{abs(dev(W_LO_A, W_LO)):.0%}"))
 L_bad = np.concatenate([(T3.n_plates_lo * T3.hetp_hi_mm).to_numpy(),
                         (T3.n_plates_hi * T3.hetp_lo_mm).to_numpy()])
 L_bad[0] = T3.n_plates_lo.iloc[0] * 9.3          # 0.93 mis-read as 9.3, a plausible slip
@@ -1670,7 +1678,7 @@ for _, r in single.iterrows():                 # rows with a root of the printed
 EQ21_N_SOLVABLE = int(n_solvable)
 abrk.append(("table3_n_median_rel_dev", "eq (21) EXACTLY AS PRINTED for the width route",
              f"{EQ21_N_SOLVABLE} of {len(single)} rows solvable",
-             "the width route ceases to exist"))
+             "the width route ceases to exist (no root on the scan)"))
 
 EQ21_LARGE_A_PRINTED = float(width_red(5.0, "delta"))
 abrk.append(("eq21_corrected_large_a_dev", "eq (21) as printed at a = 5, vs eq (25)",
@@ -1975,6 +1983,7 @@ BREAKS += [
     ("nv = 77 ml in place of 70 (10 % high)", "table3_n_median_height_route", lambda: mh_nv),
     ("nv = 77 ml in place of 70 (10 % high)", "table3_n_median_width_route", lambda: mw_nv),
     ("nv = 77 ml in place of 70 (10 % high)", "table3_n_median_rel_dev", lambda: float(np.median(devs_nv))),
+    ("nv = 77 ml in place of 70 (10 % high)", "table3_n_max_rel_dev", lambda: float(devs_nv.max())),
     ("the corrected denominator in the width-route scan", "eq21_printed_solvable_rows",
      lambda: _solvable("a")),
     ("v sqrt(n) = 41.25 (dS0 = 165 exactly)", "table1_calc_frac_reproduced",
@@ -1983,6 +1992,8 @@ BREAKS += [
      lambda: 4 * W_LO_BAD if W_LO_BAD < W_HI_BAD else np.nan),
     ("one printed calc cell altered", "table1_dS0_window_hi_ml",
      lambda: 4 * W_HI_BAD if W_LO_BAD < W_HI_BAD else np.nan),
+    ("every Table 1 feed volume read 10 % high", "table1_dS0_window_lo_ml", lambda: 4 * W_LO_A),
+    ("every Table 1 feed volume read 10 % high", "table1_dS0_window_hi_ml", lambda: 4 * W_HI_A),
     ("Table 3 cell 0.93 mis-read as 9.3", "table3_recovered_length_mm", lambda: float(L_bad.mean())),
     ("C for iso-butane x1.5", "eq54_fit_rmse_mm",
      lambda: max([rmse_bad] + [f["rmse"] for n, f in fitstat.items() if n != "Celite, iso-butane"])),
@@ -2004,6 +2015,14 @@ BREAKS += [
      lambda: max(abs(f["u_root"] / np.sqrt(FITS[n][2] / FITS[n][0]) - 1) for n, f in fitstat.items())),
 ]
 claims.define_rows(list(dict.fromkeys(r for r, _, _ in BREAKS)))
+# Rows whose nan IS the detection: the defect leaves no solution, shown by a second
+# route. Eq (21) as printed has no root for some rows on the whole log scan of
+# v sqrt(n) (the eq21_printed_solvable_rows count); the altered calc cell empties the
+# closed-form window (lo >= hi), so no dS0 reproduces every printed cell.
+BY_FAILURE = {("eq (21) exactly as printed", "table3_n_median_rel_dev"),
+              ("eq (21) exactly as printed", "table3_n_max_rel_dev"),
+              ("one printed calc cell altered", "table1_dS0_window_lo_ml"),
+              ("one printed calc cell altered", "table1_dS0_window_hi_ml")}
 BT = []
 for row, name, fn in BREAKS:
     try:
@@ -2011,7 +2030,8 @@ for row, name, fn in BREAKS:
     except Exception as exc:                 # noqa: BLE001 - a failed study is a result
         print(f"  {row}: {name} raised {type(exc).__name__}: {str(exc)[:70]}; records nan")
         out = np.nan
-    BT.append((row, name, claims.breaks(row, name, out)))
+    BT.append((row, name, claims.breaks(row, name, out,
+                                        detects_by_failure=(row, name) in BY_FAILURE)))
     base_ = claims.metrics[name]["value"]
     print(f"  {row[:58]:<58} {name:<34} {base_:>11.4g} -> {out:>11.4g}  "
           f"{'caught' if BT[-1][2] else 'NOT caught'}")

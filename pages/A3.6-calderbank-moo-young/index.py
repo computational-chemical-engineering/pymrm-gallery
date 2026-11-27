@@ -851,12 +851,13 @@ print(f"surface flux against shell flux x area ratio: below 1e-9 "
 # $\operatorname{erfc}(8)$; the domain study below measures it.
 
 # %%
-def bl_study(branch, flow=None, lad=LAD, read="face", y_span=16.0, interface="dirichlet"):
+def bl_study(branch, flow=None, lad=LAD, read="face", y_span=16.0, interface="dirichlet",
+             x_ladder_moves_cells=False):
     flow_, exact = BRANCH[branch]
     flow = flow_ if flow is None else flow
     run = lambda ny, nx: bl(ny, nx, read=read, y_span=y_span, interface=interface, **flow)
     prod = run(N_PROD, N_PROD)
-    ox = observed_orders(lambda n: run(lad[-1], n)["kbar"], lad)
+    ox = observed_orders(lambda n: run(n if x_ladder_moves_cells else lad[-1], n)["kbar"], lad)
     oy = observed_orders(lambda n: run(n, N_PROD)["kbar"], lad)
     y_err = oy["values"][-1] - oy["extrapolated"]
     k_xy = ox["extrapolated"] - y_err
@@ -1118,8 +1119,9 @@ print(f"{len(claims.metrics)} claims registered")
 # Every claim above needs a row that fails its own check. The algebra claims come
 # from `algebra(P, X)`: each row mis-reads one printed or external constant and
 # reruns it in full, so every claim the constant reaches is tested. A quantity that
-# cannot be computed under a defect (a crossing that disappears) records `nan`,
-# which fails its claim. The pymrm claims get rows of their own, each a call
+# cannot be computed under a defect (a crossing that disappears, an order of an
+# identically zero flux) records `nan`, which catches nothing: every claim also has
+# a row with a finite value that fails its check. The pymrm claims get rows of their own, each a call
 # argument of the solver or the study: the geometry code, the outer and interface
 # conditions, the velocity profile, the flux read, the far field, the grid and the
 # ladder.
@@ -1213,10 +1215,15 @@ _swap = {"leveque": BRANCH["higbie"][0], "higbie": BRANCH["leveque"][0]}
 _rs = {}
 for b in BRANCH:
     bl_row(f"{b} branch run with the other branch's velocity profile", b, flow=_swap[b])
+    # the zero-flux interface leaves c = 0 and kbar = 0 at every rung, so the ladder
+    # orders are 0/0 and record nan: they catch nothing, and the two rows after the
+    # ladder-start row carry the order bounds
     bl_row(f"{b} branch with a zero-flux interface", b, interface="noflux")
     _rs[b] = bl_row(f"{b} branch, flux read two-point to the first cell centre", b, read="centre")
     bl_row(f"{b} branch, far field at 2 layer thicknesses", b, y_span=2.0)
     bl_row(f"{b} ladders started at 4 cells and 4 steps", b, lad=(4, 8, 16, 32))
+    bl_row(f"{b} step ladder refines the cells with the steps", b, x_ladder_moves_cells=True)
+    bl_row(f"{b} grid stretching 6 read as 1", b, flow={**BRANCH[b][0], "stretch": 1.0})
 brk("flux read two-point to the first cell centre", "ladder_finest_over_roundoff",
     min(SPH["_finest_diff"], *(BLS[b]["_finest"] for b in BRANCH))
     / max(_rs[b][f"{b}_balance_gap"] for b in BRANCH))

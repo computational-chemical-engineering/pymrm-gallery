@@ -2,11 +2,11 @@
   "page": "A1.7",
   "format": 2,
   "env": {
-    "pymrm": "3.4.0",
+    "pymrm": "3.4.1",
     "numpy": "2.5.4",
     "scipy": "1.18.1",
-    "openblas_coretype": "default",
-    "threads": "default"
+    "openblas_coretype": "Haswell",
+    "threads": "1"
   },
   "metrics": {
     "eq6_constant_recomputed": {
@@ -724,7 +724,6 @@
       "thr8: 1e6 -> 1e5"
     ],
     "AB_last_A_row_inside_pct": [
-      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
       "thr6: 225 -> 229.4 (the recomputed constant)",
       "thr6: 225 -> 150",
       "thr6: 225 -> 500",
@@ -758,23 +757,10 @@
       "Table 1 transcribed without its last row"
     ],
     "AB_disagree_row_prod6": [
-      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
-      "thr6: 225 -> 150",
-      "thr6: 225 -> 500",
-      "thr6: 225 -> 2250 (decimal slip)",
-      "criterion inverted (A when the product exceeds 225)",
-      "dens: rho_s - rho_f -> rho_s",
-      "size: d' in um -> d' left in cm",
-      "U_0 and U_MB columns swapped"
+      "dens: rho_s - rho_f -> rho_s"
     ],
     "AB_disagree_row_ratio": [
-      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
-      "thr6: 225 -> 150",
-      "thr6: 225 -> 500",
-      "thr6: 225 -> 2250 (decimal slip)",
-      "criterion inverted (A when the product exceeds 225)",
-      "size: d' in um -> d' left in cm",
-      "U_0 and U_MB columns swapped"
+      "U_MB of the 220 um diakon row: 2.51 -> 2.52"
     ],
     "AB_rows_at_most_150_comparable": [
       "size: d' in um -> d' left in cm",
@@ -848,8 +834,7 @@
       "dens: rho_s - rho_f -> rho_s",
       "mu: 0.00018 -> 0.0018",
       "C3: 0.0008 -> 0.008",
-      "g: 981 -> 9.81",
-      "d_sv_um column: um -> cm"
+      "g: 981 -> 9.81"
     ],
     "eq3_K0eff_ratio_max_diakon_gt100": [
       "exponent: 2 -> 1",
@@ -858,8 +843,7 @@
       "mu: 0.00018 -> 0.0018",
       "C3: 0.0008 -> 0.008",
       "g: 981 -> 9.81",
-      "U_0 column: measured -> the U_MB column",
-      "d_sv_um column: um -> cm"
+      "U_0 column: measured -> the U_MB column"
     ],
     "eq3_K0eff_diakon_gt100_worst_pct": [
       "exponent: 2 -> 1",
@@ -868,8 +852,7 @@
       "mu: 0.00018 -> 0.0018",
       "C3: 0.0008 -> 0.008",
       "g: 981 -> 9.81",
-      "U_0 column: measured -> the U_MB column",
-      "d_sv_um column: um -> cm"
+      "U_0 column: measured -> the U_MB column"
     ],
     "eq3_K0eff_catalyst_rows_beyond_band": [
       "exponent: 2 -> 1",
@@ -944,25 +927,21 @@
       "c_ubr: 0.711 -> 0.5"
     ],
     "cloud_RcR_sand_600um": [
-      "d_ubr: 25 -> 12.5",
       "eps_0: 0.4 -> 0.8",
       "far_field: robin -> dirichlet",
       "nu_div: 2 -> 1",
       "sink_coeff: 2 -> 1",
-      "n: 1600 -> 100",
-      "c_ubr: 0.711 -> 0.5"
+      "n: 1600 -> 100"
     ],
     "cloud_absent_sand_700um": [
       "eps_0: 0.4 -> 0.8"
     ],
     "cloud_pymrm_vs_closed_form": [
-      "d_ubr: 25 -> 12.5",
       "eps_0: 0.4 -> 0.8",
       "far_field: robin -> dirichlet",
       "nu_div: 2 -> 1",
       "sink_coeff: 2 -> 1",
-      "n: 1600 -> 100",
-      "c_ubr: 0.711 -> 0.5"
+      "n: 1600 -> 100"
     ],
     "cloud_beds_groups": [
       "thr8: 1e+06 -> 500000"
@@ -975,6 +954,46 @@
     "cloud_copy_vs_E12_Rc_error": [
       "n: 1600 -> 200",
       "far_field: robin -> dirichlet"
+    ]
+  },
+  "rows_nan": {
+    "AB_last_A_row_inside_pct": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)"
+    ],
+    "AB_disagree_row_prod6": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "U_0 and U_MB columns swapped",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "thr6: 225 -> 500"
+    ],
+    "AB_disagree_row_ratio": [
+      "REFERENCE: the null model, group A for everything (thr6: 225 -> inf)",
+      "U_0 and U_MB columns swapped",
+      "criterion inverted (A when the product exceeds 225)",
+      "size: d' in um -> d' left in cm",
+      "thr6: 225 -> 150",
+      "thr6: 225 -> 2250 (decimal slip)",
+      "thr6: 225 -> 500"
+    ],
+    "eq3_K0eff_ratio_min_diakon_gt100": [
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_ratio_max_diakon_gt100": [
+      "d_sv_um column: um -> cm"
+    ],
+    "eq3_K0eff_diakon_gt100_worst_pct": [
+      "d_sv_um column: um -> cm"
+    ],
+    "cloud_RcR_sand_600um": [
+      "c_ubr: 0.711 -> 0.5",
+      "d_ubr: 25 -> 12.5"
+    ],
+    "cloud_pymrm_vs_closed_form": [
+      "c_ubr: 0.711 -> 0.5",
+      "d_ubr: 25 -> 12.5"
     ]
   }
 }

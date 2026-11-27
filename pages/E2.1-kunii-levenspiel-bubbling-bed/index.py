@@ -864,9 +864,16 @@ claims.value("mass_balance_zero_gradient_n2000", zg, rtol=1e-3,
 # $n\,\varepsilon$, so that the order is not fitted to noise.
 
 # %%
-def ext_ladder(ns=NS_EXT, cap=None, **solve_kw):
-    """Per K_m: observed_orders result and the exact exit, on the balance closure."""
-    beds = {n: BubblingBed(hC, n if cap is None else min(n, cap)) for n in ns}
+def ext_ladder(ns=NS_EXT, cap=None, finest=None, **solve_kw):
+    """Per K_m: observed_orders result and the exact exit, on the balance closure.
+
+    ``cap`` solves every rung on at most that many cells; ``finest`` solves the
+    finest rung alone on that many cells, still labelled ``ns[-1]``.
+    """
+    grid = {n: n if cap is None else min(n, cap) for n in ns}
+    if finest is not None:
+        grid[ns[-1]] = finest
+    beds = {n: BubblingBed(hC, grid[n]) for n in ns}
     out = []
     for km in KM_LIST:
         oo = observed_orders(lambda n: beds[n].solve(km, **solve_kw).c_exit, ns)
@@ -1057,8 +1064,12 @@ brk("K_bc x (u_0/13.2)^0.1 (parameter set)", "ceiling_u0_spread",
 brk("backmix scan stopped at K_m = 50 (hi)", "backmix_crossings_found", crossings_found(50.0))
 row = f"finest rung solved on n = {NS_EXT[-2]} again (cap)"
 ord_s, _e, _r, fl_s = ext_metrics(ext_ladder(cap=NS_EXT[-2]))
-brk(row, "extension_order_worst_dev", np.max(np.abs(ord_s - 1)))
+brk(row, "extension_order_worst_dev", np.max(np.abs(ord_s - 1)))   # equal rungs: 0/0, nan
 brk(row, "extension_finest_over_roundoff", fl_s)
+N_SHORT_EXT = 3 * NS_EXT[-1] // 4      # the finest rung refined by 1.5 while labelled 2
+ord_t = ext_metrics(ext_ladder(finest=N_SHORT_EXT))[0]
+brk(f"finest rung solved on n = {N_SHORT_EXT} but labelled n = {NS_EXT[-1]} (finest)",
+    "extension_order_worst_dev", np.max(np.abs(ord_t - 1)))
 row = f"frozen ladder with its finest rung on n = {NS_FROZEN[-2]} again (cap)"
 _g, rows_s = frozen_metrics(cap=NS_FROZEN[-2])
 orders_s = np.concatenate([r[3] for r in rows_s])
