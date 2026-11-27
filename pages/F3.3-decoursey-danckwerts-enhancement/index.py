@@ -41,7 +41,7 @@
 # %%
 # Bootstrap: the pymrm this page was checked with, and the gallery files it was
 # published with. Works in a checkout, in CI and on a fresh Colab VM.
-GALLERY_REF = "main"  # replaced by the release tag at publication
+GALLERY_REF = "gallery-2026.11.27.11"  # replaced by the release tag at publication
 PYMRM = ">=3.4.1,<4"  # equals meta.yaml pymrm_min_version, up to the next major
 PAGE = "F3.3-decoursey-danckwerts-enhancement"  # equals the page directory
 
