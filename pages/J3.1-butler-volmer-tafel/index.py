@@ -1170,11 +1170,16 @@ print("\nwhere the first-lobe overshoot reaches the tolerance - i.e. where the "
       "threshold jumps:")
 
 
-def jump(eps, slope=None):
+def jump(eps, slope=None, per_linear=False):
     """alpha_a in [0.30, 0.4999999] at which the first-lobe overshoot peak equals eps;
-    slope replaces n = 1 in the linear form (a defect passes 2 alpha_a)."""
-    return one_root(lambda a: first_lobe_peak(a, None if slope is None else slope(a)) - eps,
-                    0.30, 0.4999999, "jump in alpha_a", xtol=1e-12)
+    slope replaces n = 1 in the linear form (a defect passes 2 alpha_a), and
+    per_linear measures the overshoot p relative to the linear form, p / (1 + p)
+    (a defect)."""
+    def peak(a):
+        p = first_lobe_peak(a, None if slope is None else slope(a))
+        return p / (1.0 + p) if per_linear else p
+
+    return one_root(lambda a: peak(a) - eps, 0.30, 0.4999999, "jump in alpha_a", xtol=1e-12)
 
 
 JUMP = {eps: jump(eps) for eps in (0.01, 0.05)}
@@ -1182,6 +1187,11 @@ claims.value("linear_jump_alpha_a_1pct", JUMP[0.01], rtol=1e-6)
 claims.value("linear_jump_alpha_a_5pct", JUMP[0.05], rtol=1e-6)
 for eps in (0.01, 0.05):
     print(f"  {100*eps:4.0f} % tolerance : alpha_a = {JUMP[eps]:.4f}")
+# with the symmetric slope 2 alpha_a the linear form never overshoots: a scan of
+# alpha_a over the whole range finds no peak above zero, so that defect has no jump
+PEAK_2A = max(first_lobe_peak(a, 2 * a) for a in np.linspace(0.30, 0.4999999, 401))
+print(f"  slope 2 alpha_a : largest overshoot over the scanned alpha_a range is "
+      f"{PEAK_2A:.1e}, below every tolerance, so no jump exists")
 OVERSHOOT_045 = first_lobe_peak(0.45)
 claims.value("linear_overshoot_peak_alpha0p45", OVERSHOOT_045, rtol=1e-6)
 print(f"at alpha_a = 0.45 the overshoot peaks at only {100*OVERSHOOT_045:.2f} %, so a "
@@ -2224,6 +2234,9 @@ ROWS = [
         "linear_jump_alpha_a_1pct": lambda: jump(0.01, slope=lambda a: 2 * a),
         "linear_jump_alpha_a_5pct": lambda: jump(0.05, slope=lambda a: 2 * a),
         "linear_overshoot_peak_alpha0p45": lambda: first_lobe_peak(0.45, 0.9)}),
+    ("overshoot measured relative to the linear form", {
+        "linear_jump_alpha_a_1pct": lambda: jump(0.01, per_linear=True),
+        "linear_jump_alpha_a_5pct": lambda: jump(0.05, per_linear=True)}),
     ("initial solid state read as u_0 = 0.02", {
         "nu2_over_delta_dev_frac": lambda: nu2_study(0.02)["dev"],
         "nu2_over_delta_as_kappa_ratio": lambda: nu2_study(0.02)["as_kappa"],
@@ -2320,6 +2333,10 @@ ROWS = [
 ]
 
 claims.define_rows([r[0] for r in ROWS])
+# a jump that does not exist under the defect: the scan above (PEAK_2A) finds no
+# overshoot anywhere in alpha_a, so the refused root is the detection
+BY_FAILURE = {("symmetric slope 2 alpha_a f eta at asymmetric alpha", n)
+              for n in ("linear_jump_alpha_a_1pct", "linear_jump_alpha_a_5pct")}
 BREAK = []
 for row, studies in ROWS:
     for name, fn in studies.items():
@@ -2328,7 +2345,7 @@ for row, studies in ROWS:
         except Exception as exc:                 # noqa: BLE001 - a failed study is a result
             print(f"  {row}: {name} raised {type(exc).__name__}: {str(exc)[:70]}; records nan")
             out = np.nan
-        caught_ = claims.breaks(row, name, out)
+        caught_ = claims.breaks(row, name, out, detects_by_failure=(row, name) in BY_FAILURE)
         base_ = claims.metrics[name]["value"]
         if claims.metrics[name]["kind"] == "bound":   # round-off digits differ between machines
             base_, out = f"(here {base_:.1e})", f"(here {float(out):.1e})"
