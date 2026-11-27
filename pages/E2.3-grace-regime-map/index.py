@@ -93,6 +93,12 @@ def fill(text, **v):
     return re.sub(r"<<([^<>]+)>>", sub, text)
 
 
+def plain(df):
+    """A comparison table as plain strings: a Styler's text repr carries a memory address."""
+    return df.assign(computed=[f"{v:.5g}" for v in df["computed"]],
+                     **{"half-units": [f"{v:.3f}" for v in df["half-units"]]}).reset_index(drop=True)
+
+
 def say(text, **v):
     """Prose whose numbers are written by code, so they cannot drift."""
     display(Markdown(fill(text, **v)))
@@ -238,6 +244,11 @@ display(PN.set_index("name")[["printed", "where"]].T.iloc[:, :8])
 # range, raised on unless it returns exactly one root. The roots are solved in $d_p^*$,
 # in $x$ or in micrometres, never in metres, because `find_roots` takes an absolute
 # tolerance.
+#
+# The page's `structures` list is empty on purpose: the boundaries are algebraic
+# relations between dimensionless scalars, with no spatial or time coordinate, no
+# conservation law and no unknown field, so none of the S codes of the taxonomy fits
+# (precedent: H1.8).
 
 # %%
 def one_root(f, lo, hi, what, log=True):
@@ -647,6 +658,14 @@ def study(K):
     M["ab_T_inside_A_range"] = int(K["size_A_lo_um"] < M["dpAB_um_T"] < K["size_A_hi_um"])
     M["ab_T_inside_A_range__margin"] = min(M["dpAB_um_T"] - K["size_A_lo_um"],
                                            K["size_A_hi_um"] - M["dpAB_um_T"]) / M["dpAB_um_T"]
+    # V2: eq 18 in SI units with the viscosity doubled and g = 9.0 m/s2 at the same density ratio
+    k_v2 = K | {"A_mu_factor": 2 * K["A_mu_factor"], "A_g": 9.0}
+    ag_v2 = air(k_v2)
+    M["v2_dp_um_scaled"] = eq18_dp_um(k_v2, ag_v2)
+    M["v2_eq18_scaling_gap"] = abs(M["v2_dp_um_scaled"] * 1e-6 * ag_v2["klen"] / M["eq19_dstar_T"] - 1)
+    hb = [c[-1] for c in cmp if c[0] in ("Table 6", "eq 19", "eq 21", "p. 361", "eq 15", "eq 16")]
+    M["boundary_numbers_max_halfunits"] = max(h for h in hb if h <= 1)
+    M["mu_A1_window_margin"] = M["mu_A1_inside_window__margin"]
     M["_cmp"] = cmp
     return M
 
@@ -688,7 +707,7 @@ say(r"Air at A1: $\rho$ = <<r:.6f>> kg/m³, $\mu$ = <<m:.4f>> µPa s; the glass 
 CMP = pd.DataFrame(M["_cmp"], columns=["group", "item", "printed key", "tag", "computed", "half-units"])
 CMP.insert(3, "printed", CMP["printed key"].map(PRINTED))
 show = CMP[CMP.group.isin(["Table 6", "eq 21", "p. 361"])][["group", "item", "printed", "computed", "half-units"]]
-display(show.style.format({"computed": "{:.5g}", "half-units": "{:.3f}"}).hide(axis="index"))
+display(plain(show))
 say("<<n:d>> of the <<t:d>> derived cells of Table 6 round to the printed entry (largest <<w:.3f>> half-units). "
     "Eq 21's 53 is the rounding of <<r:.3f>> (Richardson) and <<g:.3f>> (Grace), but the half-unit intervals of the "
     "printed $C_1$, $C_2$ give <<rl:.2f>> to <<rh:.2f>> and <<gl:.2f>> to <<gh:.2f>>: both straddle 52.5 "
@@ -723,7 +742,7 @@ say("At $d_p^*$ = 10, eq 11a overpredicts eq 11 by <<a:+pct2>> with Grace's pair
 
 # %%
 show = CMP[CMP.group == "eq 19"][["item", "printed", "computed", "half-units"]]
-display(show.style.format({"computed": "{:.5g}", "half-units": "{:.3f}"}).hide(axis="index"))
+display(plain(show))
 say(r"Re-derived from eq 18 with $d_b = 100d_p$, $\epsilon_{mf}$ = 0.42 and Grace's $C_1$, $C_2$, eq 19's prefactor is "
     r"<<c:.3f>> and its constant <<b:.3f>>, against the printed 251 and 219. Readings ruled out: Geldart's "
     r"$1/\sqrt2$ in place of 0.711 gives $b$ = <<b2:.2f>>, <<h2:.2f>> half-units from 219, so the printed 219 fixes "
@@ -811,7 +830,7 @@ say("Eq 16's $Ar$ form follows from its $d_p^*$ form: $101^3$ = <<c:,.0f>> (<<hc
 
 # %%
 show = CMP[CMP.group == "eq 15"][["item", "printed", "computed", "half-units"]]
-display(show.style.format({"computed": "{:.5g}", "half-units": "{:.3f}"}).hide(axis="index"))
+display(plain(show))
 say(r"$\Delta\rho$ cancels from eq 14 in $Ar$: the boundary from eq 14 solved for $d_p$ at twice the particle "
     r"density gives the same $d_p^*$ to <<g:.0e>> (an identity; bound 1e-12). At A1, <<n:d>> of the 4 printed eq 15 "
     r"numbers are roundings of the computed ones. Grace prints no air properties: the four printed numbers are all "
@@ -819,7 +838,7 @@ say(r"$\Delta\rho$ cancels from eq 14 in $Ar$: the boundary from eq 14 solved fo
     r"(<<f:d>> of 1), <<m:pct2>> from the nearer end. Which viscosity Grace used is not known.",
     g=max(M["ca_drho_gap"], 1e-16), n=M["eq15_within"], lo=M["mu_window_lo_uPas_at_rhoT"],
     hi=M["mu_window_hi_uPas_at_rhoT"], mu=M["mu_air_T"] * 1e6, f=M["mu_A1_inside_window"],
-    m=M["mu_A1_inside_window__margin"])
+    m=M["mu_A1_window_margin"])
 
 # %% [markdown]
 # ### R8. Table 2 and Richardson-Zaki's brackets
@@ -829,7 +848,7 @@ say(r"$\Delta\rho$ cancels from eq 14 in $Ar$: the boundary from eq 14 solved fo
 
 # %%
 show = CMP[CMP.group.isin(["Table 2", "eq 13"])][["group", "item", "printed", "computed", "half-units"]]
-display(show.style.format({"computed": "{:.5g}", "half-units": "{:.3f}"}).hide(axis="index"))
+display(plain(show))
 say(r"The pieces of Table 2 join with jumps of <<j1:+.3f>> %, <<j2:+.3f>> % and <<j3:+.3f>> % at $d_p^*$ = 3.8, "
     r"7.58 and 227. <<n:d>> of the 7 printed $v_T^*$ range ends lie within a half-unit of the formula at their "
     r"$d_p^*$ end; the last, 91.7 at 3350, is <<v:.3f>>, <<h:.2f>> half-units away (truncated, not rounded). Row 1 "
@@ -889,13 +908,8 @@ say("Eq 19 against eq 18 solved directly in $d_p^*$ at the test particle: <<a:.0
 # same density ratio; the $d_p^*$ it returns must equal eq 19's.
 
 # %%
-K_v2 = K | {"A_mu_factor": 2.0, "A_g": 9.0}
-ag_v2 = air(K_v2)
-v2_gap = abs(eq18_dp_um(K_v2, ag_v2) * 1e-6 * ag_v2["klen"] / M["eq19_dstar_T"] - 1)
-M["v2_eq18_scaling_gap"] = v2_gap
 say("Relative difference: <<g:.0e>> (bound 1e-10), with $d_p$ itself moving from <<d1:.1f>> to <<d2:.1f>> µm.",
-    g=max(v2_gap, 1e-16), d1=M["eq19_dp_um_T"], d2=eq18_dp_um(K_v2, ag_v2))
-M["v2_dp_um_scaled"] = eq18_dp_um(K_v2, ag_v2)
+    g=max(M["v2_eq18_scaling_gap"], 1e-16), d1=M["eq19_dp_um_T"], d2=M["v2_dp_um_scaled"])
 
 # %% [markdown]
 # ### V3. The check values
@@ -912,7 +926,7 @@ say("The page's functions reproduce all <<c:d>> check values of the second route
 say("**The boundary numbers follow from the printed equations.** <<n:d>> of the <<t:d>> boundary numbers Grace prints "
     "(Table 6's derived cells, eq 19's constants and limits, eq 21 and the p. 361 values, eq 15 at A1, eq 16's $Ar$ "
     "form) lie within a half-unit of their last printed digit when recomputed from the constants he states for "
-    "them, the nearest to the edge at <<m:.3f>> of a half-unit from it. Eq 15 needs an air viscosity the paper "
+    "them; the one nearest the edge differs from its printed value by <<m:.3f>> of a half-unit. Eq 15 needs an air viscosity the paper "
     "does not print; it holds for $\\mu$ from <<lo:.2f>> to <<hi:.2f>> µPa s. Eq 19's 219 fixes the bubble "
     "coefficient 0.711 (with $1/\\sqrt2$ it would be <<b2:.1f>>). The supporting tables do less well: <<t2:d>> of 7 "
     "Table 2 range ends and <<e13:d>> of 6 eq 13 bracket ends.\n\n"
@@ -921,7 +935,7 @@ say("**The boundary numbers follow from the printed equations.** <<n:d>> of the 
     "Grace's practical range begins; the crossing stays below 500 over the rounding of his constants. Over that "
     "range they differ by a factor <<r5:.2f>> to <<r4:.2f>> in $d_p^*$; for glass in air at A1, <<b19:.0f>> µm "
     "against <<b21:.0f>> µm. Grace recommends eq 21; the page measures the gap and does not decide between them.",
-    n=M["boundary_numbers_within"], t=M["boundary_numbers_within_of"], m=1 - M["boundary_numbers_within__margin"],
+    n=M["boundary_numbers_within"], t=M["boundary_numbers_within_of"], m=M["boundary_numbers_max_halfunits"],
     lo=M["mu_window_lo_uPas_at_rhoT"], hi=M["mu_window_hi_uPas_at_rhoT"], b2=M["eq19_b_one_over_sqrt2"],
     t2=M["t2_range_cells_within_half_unit"], e13=M["eq13_pair_ends_within_half_unit"],
     x=M["x_cross_19_21_exact"], xp=M["x_cross_19_21_printed"], mg=M["x_cross_19_21_margin_to_500"],
@@ -964,8 +978,10 @@ say("**The boundary numbers follow from the printed equations.** <<n:d>> of the 
 # records only the claims it returned a number for; a row under which the study
 # raises is listed as a crash and catches nothing. The structural claims are the
 # identities of R1, R3 at $Re_{mf} = 2C_1$, the closed forms against their own
-# general routes (eq 19, the crossing, the minimum, eq 14 in $Ar$), the scaling of V2
-# and the absence of a root of eq 18 below $b$: no changed constant can move them.
+# general routes (eq 19, the crossing, the minimum, eq 14 in $Ar$), the scaling of V2,
+# the absence of a root of eq 18 below $b$, the count of R3's overpredictions (12 of 12
+# for any positive $C_1$, $C_2$) and the totals of the counts: no changed constant can
+# move them.
 
 # %%
 RTOL = 1e-6
@@ -978,6 +994,8 @@ STRUCTURAL = {
     "x_cross_closed_gap": "the quadratic is the exact crossing of eq 19 with a constant",
     "x_min_closed_gap": "the closed form is the exact root of the derivative",
     "ca_drho_gap": "drho cancels from eq 14 in Ar",
+    "err11_n_over": "Re_mf = C2 Ar / (sqrt(C1^2 + C2 Ar) + C1) lies below C2 Ar / (2 C1) and below sqrt(C2 Ar) "
+                    "for any positive C1, C2, Ar, so both limits overpredict for every pair",
     "eq18_roots_below_b": "for x <= b eq 18 has no root in d* (published model, E11)"}
 BOUNDS = {"r1_identity_gap": (1e-12, "identity"), "ratio11_at_Remf_2C1_gap": (1e-12, "identity"),
           "eq19_direct_gap_T": (1e-10, "tolerance"), "eq19_SI_gap_T": (1e-10, "tolerance"),
@@ -987,8 +1005,11 @@ BOUNDS = {"r1_identity_gap": (1e-12, "identity"), "ratio11_at_Remf_2C1_gap": (1e
 NOTES = {"eq20_root_gap": "eq 20 printed as 2 (C1^2/C2)^(1/3) against the root of eq 10 at the printed Re_mf = 2 C1",
          "stokes_limit_gap": "row 1 of Table 2 against Stokes' v* = d*^2/18 at d* = 0.001; the next term is 5.6e-12"}
 # Count margins: the inputs are exact printed numbers, so a margin only needs to clear
-# floating-point noise; 0.01 of a half-unit (or of the compared value) is chosen.
-COUNT_MIN = 0.01
+# floating-point noise (about 1e-15); 1e-4 of a half-unit (or of the compared value) is
+# chosen. The smallest margins are stated in the prose: the eq 21 rounding intervals
+# end 0.04 in d* from 52.5, and A1's viscosity sits 0.24 % inside the eq 15 window
+# (an assumed viscosity: that margin is its own claim, mu_A1_window_margin).
+COUNT_MIN = 1e-4
 EXACT = {"err11a_worst_pair", "err11b_worst_pair"}
 INFO = {"boundary_numbers_within_of", "t6_cells_rounding_to_print_of", "eq15_within_of",
         "t2_range_cells_within_half_unit_of", "eq13_pair_ends_within_half_unit_of"}
@@ -1043,16 +1064,19 @@ DEFECTS = [mistyped(k) for k in PRINTED] + [
     set_to("eq15_T_K", 293.0, " (air temperature)"),
     set_to("A_g", 9.81), set_to("A_rho_p", 2600.0), set_to("A_dp_um", 550.0), set_to("A_U", 0.55),
     set_to("A_x_wide", 150.0), set_to("A_M_air", 0.029), set_to("A_S", 120.0),
+    set_to("A_rho_p", 1000.0, " (a light test particle)"),
+    set_to("t6_wenyu_C1", 25.7, " (Richardson's C1 read into Wen and Yu's row)"),
 ]
 CONTROLS = [("control: clean rerun", K), ("control: Sutherland reference written as 1.716e-5 x 1.0", K | {"A_mu_factor": 1.0})]
-claims.define_rows([r_ for r_, _ in CONTROLS + DEFECTS])
-BREAK, CRASH = [], {}
+RAN, CRASH = {}, {}
 for row, k_ in CONTROLS + DEFECTS:
     try:
-        Mb = study(k_)
+        RAN[row] = study(k_)
     except (ValueError, ZeroDivisionError) as err:
         CRASH[row] = str(err)
-        continue
+claims.define_rows(list(RAN))   # a crashed row catches nothing, so it is listed apart, not declared
+BREAK = []
+for row, Mb in RAN.items():
     for name in claims.metrics:
         v = Mb.get(name)
         if v is None or (isinstance(v, float) and not math.isfinite(v)):

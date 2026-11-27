@@ -4368,6 +4368,37 @@ models:
     pymrm_api: [construct_grad, construct_div, compute_boundary_values, checks.find_roots, checks.observed_orders]
     data: {tier: 2, method: table, status: complete}
     related: [E1.2, E1.1, E2.1, E1.3]
+  - id: E2.3
+    slug: grace-regime-map
+    title: "Grace's regime map: Geldart's boundaries for any gas, and where his two B/D criteria part"
+    description: >
+      Grace (1986) writes Geldart's four powder groups as boundaries in the dimensionless
+      particle size d* against the density ratio, for any gas. The page tests whether every
+      boundary number he prints follows, within its printed rounding, from the correlation
+      and constants he states for it (36 of 36 do; eq 15 only for an air viscosity he does
+      not print), and measures where his two B/D criteria part: the cloud criterion (eqs
+      18-19) and the Ergun-term balance (eqs 20-21), both on eq 10 with the same C1, C2,
+      cross once at drho/rho = 437.1, below the 500 to 1e4 range he calls practical, and
+      differ by a factor 1.13 to 4.44 in d* over it. A correlation page; pymrm contributes
+      only pymrm.checks.find_roots.
+    section: E
+    status: planned
+    page: pages/E2.3-grace-regime-map/
+    tier: T1
+    priority: P2
+    structures: []
+    phases: [gas-solid]
+    predicts:
+      - minimum fluidisation velocity (eq 11)
+      - terminal velocity (Table 2)
+      - C/A, A/B and B/D boundaries in d* for any gas
+    pymrm_api: [find_roots]
+    reference:
+      authors: ["Grace, J. R."]
+      year: 1986
+      container: "Canadian Journal of Chemical Engineering 64(3) 353-363 (1986)"
+      doi: 10.1002/cjce.5450640301
+    related: [A1.7, A1.8, E1.1, E2.1]
 
   - id: E2.7
     slug: cfb-core-annulus
