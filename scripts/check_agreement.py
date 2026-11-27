@@ -145,7 +145,11 @@ def loosenings(page: str, old: dict, new: dict) -> list[tuple[str, str]]:
             if o.get("min_margin") is not None and (
                     n.get("min_margin") is None or n["min_margin"] < o["min_margin"]):
                 out.append((key, "min_margin lowered"))
-        if set(old.get("breaks", {}).get(key, [])) - set(new.get("breaks", {}).get(key, [])):
+        # a row that records no finite value for the claim catches it only when
+        # declared detects_by_failure (docs/claims-design.md section 5); dropping
+        # such a row from "breaks" is not a loosening
+        removed = set(old.get("breaks", {}).get(key, [])) - set(new.get("breaks", {}).get(key, []))
+        if removed - set(new.get("rows_nan", {}).get(key, [])):
             out.append((key, "break row removed"))
         for lit in old.get("quoted", {}).get(key, []):
             if coarser(lit, new.get("quoted", {}).get(key, [])):

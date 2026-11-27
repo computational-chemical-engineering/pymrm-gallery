@@ -311,6 +311,12 @@ def transposed(x):
     m, e = f"{x:.2e}".split("e")
     return float(m[:-2] + m[-1] + m[-2] + "e" + e)
 
+
+def first_two_swapped(x):
+    """A printed value with the first two digits of its three-figure mantissa swapped."""
+    m, e = f"{x:.2e}".split("e")
+    return float(m[2] + "." + m[0] + m[3:] + "e" + e)
+
 # %% [markdown]
 # ## PyMRM implementation
 #
@@ -670,7 +676,8 @@ INJECTIONS = [
 def exposure_study(injections=tuple(INJECTIONS), form="eq33", verbose=False):
     """How far each injected transcription slip moves the survey's numbers and conclusions."""
     base, bst = survey(form=form), survey_study(form=form)
-    shifts, moved, lost, ident, slipped_2mb, shift_2mp = [], 0, 0, [], np.nan, np.nan
+    # the 2MB minimum after the slips: its own value when no 2MB slip is injected
+    shifts, moved, lost, ident, slipped_2mb, shift_2mp = [], 0, 0, [], base["2MB"]["thmin"], np.nan
     for comp, tab, key, slip, why in injections:
         old = params(comp, tab)[key]
         over = {key: slip(old)}
@@ -1487,6 +1494,8 @@ COUNTS = {"sh75_weak_rises_with_theta_s": ("weak", lambda o: o.get("_sh_rises"))
 print(f"{len(claims.metrics)} claims registered")
 
 # %%
+C2_B_A = params("C2", "Table 1")["b_A"]
+C2_B_A_SLIP = first_two_swapped(C2_B_A)   # moves the C2 maximum past the 2 % criterion
 CH4_LITERAL = "nu_str"           # the printed sentence: nu_str for both channel systems
 ROWS = [
     ("cell dimensions a and b swapped: Karger", "karger", dict(swap_ab=True)),
@@ -1506,6 +1515,8 @@ ROWS = [
      dict(overrides={"2MB": {"Theta_sat_B": params("2MB", "Table 1")["Theta_sat_B"] / 10}})),
     ("nC7 Theta_sat,B read as 0: survey", "survey", dict(overrides={"nC7": {"Theta_sat_B": 0.0}})),
     ("eq. (33) without the site-B factor: survey", "survey", dict(form="no site B factor")),
+    (f"C2 b_A {C2_B_A:.2e} read as {C2_B_A_SLIP:.2e}: survey", "survey",
+     dict(overrides={"C2": {"b_A": C2_B_A_SLIP}})),
     ("the nC5 slip left out: exposure", "exposure", dict(injections=tuple(INJECTIONS[1:]))),
     ("the 2MB slip left out: exposure", "exposure", dict(injections=tuple(INJECTIONS[:1] + INJECTIONS[2:]))),
     ("eq. (33) without the site-B factor: exposure", "exposure", dict(form="no site B factor")),

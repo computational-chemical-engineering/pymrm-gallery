@@ -634,12 +634,13 @@ def correlation_study(G, eps=EPS, eq1=None, alpha1_1993=None, sc=None, sc_liq=No
         return [float(Dl(R) / Dg(R)), R]
     part(["liquid_gas_max_ratio", "liquid_gas_max_reynolds"], lg_max)
 
-    def lg_cross():
+    def lg_cross():   # the count is recorded under any defect; the crossing only if unique
         r = find_roots(lambda R: float(Dl(R) / Dg(R)) - 1.0, 1e-3, 1e6, n_scan=400, log=True)
+        out["liquid_gas_crossings"] = np.nan if r["failed"] else len(r["roots"])
         if r["failed"] or len(r["roots"]) != 1:
-            raise ValueError(f"expected one crossing, found {r['roots']}")
-        return [r["roots"][0], len(r["roots"])]
-    part(["liquid_gas_crossover_reynolds", "liquid_gas_crossings"], lg_cross)
+            raise ValueError(f"expected one crossing, found {len(r['roots'])}")
+        return [r["roots"][0]]
+    part(["liquid_gas_crossover_reynolds"], lg_cross)
     out["liquid_gas_ratio_at_Re_300"] = float(Dl(G["liquid_gas_range_max"])
                                               / Dg(G["liquid_gas_range_max"]))
     out["liquid_gas_ratio_at_Re_1000"] = float(Dl(1000.0) / Dg(1000.0))
@@ -1264,6 +1265,10 @@ def data_study(G, eps=EPS, eq1=None, E=E, re=Re_d, pe=Pe_d, px_per_decade=None):
                   "null_free_constant_p_best_p", "null_free_constant_p_best_eps_mean_abs_dev",
                   "p_cost_at_preferred_eps", "p_cost_at_preferred_eps_over_se"):
             out[k] = np.nan
+        # the count of interior local minima stays defined when the minimum is on an edge
+        fs = mad_eps(np.linspace(*EPS_WINDOW, 601))
+        out["eq1_vs_fig9_eps_local_minima"] = int(np.sum((fs[1:-1] < fs[:-2])
+                                                         & (fs[1:-1] < fs[2:])))
     out["fraction_of_p_excursion_sampled"] = float(
         (p_of_Re(re.max(), G) - p_of_Re(re.min(), G)) / G["p_amplitude_spheres"])
     # A2.5's systematics, propagated into this page's headline
@@ -1824,7 +1829,7 @@ WALL_FV_VS_BVP = float(dev(NAIVE_WITHOUT, WALL_NO_RADIAL_BVP))
 RMS_BVP = max(RMS_BVP, rms_w, rms_u)
 print(f"\nwall channel, radial dispersion off, {n_vel} distinct column velocities solved "
       "separately by collocation")
-print(f"  pymrm 2-D bed  {NAIVE_WITHOUT:+.8f}")
+print(f"  2-D pymrm bed  {NAIVE_WITHOUT:+.8f}")
 print(f"  collocation    {WALL_NO_RADIAL_BVP:+.8f}")
 print(f"  they differ by {abs(WALL_FV_VS_BVP):.2e} relative")
 

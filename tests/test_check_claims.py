@@ -36,3 +36,11 @@ def test_problems(tmp_path):
     assert "README says 'below 1e-10'" in text
     assert "last place" in text                # 0.7186 quoted, spread 1e-3
     assert "ABS_FLOOR" in text
+
+
+def test_bound_word_inside_another_word(tmp_path):
+    # learnings row 164: 'cover 0.72' was read as 'over 0.72' and failed an exact claim
+    d = page(tmp_path, "the windows cover 0.72<!-- claim: err --> of the range; "
+                       "a discover 1e-11<!-- claim: res --> case")
+    p = "\n".join(cc.check_page(d, {"X1.1-fixture": {"err": {"abs": 1e-7}}}))
+    assert "over" not in p and "under" not in p
