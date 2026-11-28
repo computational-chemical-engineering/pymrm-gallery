@@ -216,6 +216,7 @@ class Cfg:
     scheme: Scheme = Scheme()
     target_scale: float = 1.0       # bordered row alpha - scale * alpha_printed = 0
     comp_dl2: float = 0.0           # relative change of lambda_2 in the round-off companion
+    band_desc: bool = False         # scan the alpha band from high to low (a measurement defect)
 
 
 C0 = Cfg()
@@ -479,7 +480,8 @@ def part_r4(cfg, b, M):
     # alpha band: R at the two ends (extrapolated), monotone over an 11-point scan
     for tag, a in zip(("lo", "hi"), ALPHA_BAND):
         M[f"r4_R_band_{tag}"] = star(cfg, b, a, u0)[0][1]
-    scan = [bordered(cfg, b, a, N_SCAN, u0) for a in np.linspace(*ALPHA_BAND, 11)]
+    band = np.linspace(*ALPHA_BAND, 11)
+    scan = [bordered(cfg, b, a, N_SCAN, u0) for a in (band[::-1] if cfg.band_desc else band)]
     M["_r4_band_steps"] = np.diff([r_of(m, cfg) for m in scan])
     # rounding of x_w2, x_w3 and the printed x^I in place of Eq. 15 (all re-rooted)
     C, P, ps = b["C"], b["P"], b["ps"]
@@ -844,7 +846,7 @@ register(M)
 #
 # Every non-structural number registered above has a row that moves it. Each row injects
 # one defect through `Cfg` (a reading of the paper, a printed entry, a solver or grid
-# setting) and reruns the study; the claims it fails are counted. Only finite values are
+# setting, the direction of the alpha-band scan) and reruns the study; the claims it fails are counted. Only finite values are
 # recorded, and a row under which the study raises is listed as a crash. One exception
 # (rule 11): under the literal drag no $c_f$ gives $\alpha$ = 0.4 (R5 shows it on the whole
 # range), so the claims at $c_f^{\ast}$ record nan. The structural claims, which no row moves,
@@ -872,6 +874,7 @@ DEFECTS = [
     ("face lambda from the left cell (one-sided)", replace(C0, scheme=Scheme(face="left"))),
     ("bordered row alpha 1e-6 high", replace(C0, target_scale=1.0 + 1e-6)),
     ("round-off companion with lambda_2 1e-6 high", replace(C0, comp_dl2=1e-6)),
+    ("alpha band scanned from high to low", replace(C0, band_desc=True)),
     printed_row("nu_H", "3"),
     printed_row("x_w1", "0.1016"),
     printed_row("x_w2", "0.1014"),

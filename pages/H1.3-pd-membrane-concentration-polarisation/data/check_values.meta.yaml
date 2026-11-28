@@ -1,0 +1,33 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Caravella, A.", "Barbieri, G.", "Drioli, E."]
+  year: 2009
+  container: "Separation and Purification Technology 66, 613-624"
+  doi: "10.1016/j.seppur.2009.01.008"
+  access: >
+    The equations are those of the paper (the film and Sieverts-law flux relations and the
+    concentration polarisation coefficient, Eqs. 1 to 15, with the Sherwood correlation Eq. 9),
+    with the readings and misprints stated in the build plan's equations file, and a resolved
+    2-D laminar tube model that the paper does not solve (the page's own extension). The values
+    are not read from the paper but computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script h13_check_values.py (numpy and scipy, no pymrm, no page code; closed forms, brentq on the film relation, quadrature cross-checked against solve_ivp DOP853 to 1e-9, and a 2-D method-of-lines route with observed orders 2.08 to 2.17), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; the quadrature and 2-D rows carry their route's error, covered by their rtol"
+
+conditions: >
+  Test condition TC: inlet H2 fraction 0.5, permeate-to-retentate pressure ratio 0.0505, Graetz
+  number 500, Damkoehler number 25 (dimensionless groups as defined in the equations file); rows
+  without the TC prefix are closed forms of the printed numbers at the conditions they name.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, in the units stated in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
