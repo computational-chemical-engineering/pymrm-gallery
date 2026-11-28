@@ -1,0 +1,52 @@
+dataset_id: tsotsis-1992-fig3a
+title: "Figure 3a (p. 2907): conversion vs sweep ratio, dense feed, T = 550 C, tau = 2.0 s, P_T^F = 30 psi, P_T^P = 15 psi: digitised measured, model, xeq_shell, xeq_tube"
+status: complete
+
+source:
+  authors: ["Tsotsis, T. T.", "Champagnie, A. M.", "Vasileiadis, S. P.", "Ziaka, Z. D.", "Minet, R. G."]
+  year: 1992
+  title: "Packed bed catalytic membrane reactors"
+  container: "Chemical Engineering Science 47(9-11), 2903-2908"
+  doi: "10.1016/0009-2509(92)87149-K"
+  access: >
+    Scanned journal PDF (300 ppi bilevel, garbled text layer) held outside the repository, lawful
+    access. No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (facts extracted; figure not reproduced)"
+
+acquisition:
+  method: digitised
+  tool: "own script (numpy, scipy.ndimage) on a 300 ppi render (pdftoppm), not stored"
+  figure: "Figure 3a (p. 2907): conversion vs sweep ratio, dense feed, T = 550 C, tau = 2.0 s, P_T^F = 30 psi, P_T^P = 15 psi"
+  resolution: "300 ppi, the native scan resolution; one pixel is 0.0281 points of conversion and 0.00248 units of the abscissa"
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-28
+  estimated_error: >
+    Axis calibration by a linear least-squares fit through 10 vertical and 7 horizontal grid
+    lines; largest residual 0.00159 abscissa units and 0.0533 points of conversion. Each
+    line is traced as the centre of its dark run per pixel column, with the dotted grid removed (grid
+    columns replaced by the AND of their neighbours 4 px away, thin runs confined to a grid row deleted)
+    and text labels masked; it is read at the abscissa nodes as the mean of two one-sided linear fits
+    over 4 to 28 px from the node (the equilibrium lines are polylines with kinks at the nodes, EQUATIONS
+    M7). Reading error = max(calibration residual, half line width) = 0.056 points; doubled for a node
+    read from one side only, read from columns next to a text label or grid crossing ("fallback"), and for
+    a measured symbol that overlaps the model line. Symbols are read as the centroid of the dark pixels
+    within 8 px of a guessed position, grid pixels removed, iterated three times. Nodes where two lines
+    are within one line width of each other (both equilibrium lines at the lowest temperatures) are
+    left out: the reading cannot tell the lines apart.
+
+conditions: >
+  Figure 3a (p. 2907): conversion vs sweep ratio, dense feed, T = 550 C, tau = 2.0 s, P_T^F = 30 psi, P_T^P = 15 psi. Pressures as printed ("psi", basis not stated, EQUATIONS M1).
+
+columns:
+  - {name: series, unit: "-", description: "model (solid line), xeq_shell, xeq_tube (dashed lines labelled Xeq,shellside and Xeq,tubeside), xeq (calculated equilibrium line of Fig. 4), measured (symbols)"}
+  - {name: Pr, unit: "-", description: "sweep ratio"}
+  - {name: conversion_pct, unit: "%", description: "reactor conversion as plotted"}
+  - {name: reading_error_pct, unit: "%", description: "reading error of this entry, points of conversion"}
+  - {name: sides, unit: "-", description: "number of one-sided fits behind a line reading (0 for a symbol)"}
+  - {name: quality, unit: "-", description: "clean, fallback (read through a masked region), on_line or clear (symbols)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist Publications v. Rural
+  Telephone, 1991). Extraction for scientific research by a research organisation with lawful access
+  is covered by Art. 15n Auteurswet (implementing DSM Directive (EU) 2019/790 Art. 3). The original
+  figure image is not reproduced.

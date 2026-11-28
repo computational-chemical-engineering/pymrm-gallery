@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Tsotsis, T. T.", "Champagnie, A. M.", "Vasileiadis, S. P.", "Ziaka, Z. D.", "Minet, R. G."]
+  year: 1992
+  container: "Chemical Engineering Science 47(9-11), 2903-2908"
+  doi: "10.1016/0009-2509(92)87149-K"
+  access: >
+    The equations are those of the paper (the isothermal packed-bed catalytic membrane reactor
+    model, eqs. 1, 3 and 5, with Knudsen permeation of every species), closed by the named page
+    assumptions of the build plan's equations file (cocurrent plug flow, a stated rate form,
+    equilibrium constants from standard thermodynamic data, gauge pressures). The paper prints no
+    kinetics and no permeances; the values are not read from the paper but computed from these
+    equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script h15_check_values.py (numpy and scipy, no pymrm, no page code; solve_ivp Radau at rtol 1e-12; shortcuts cross-checked against the full IVP), 2026-11-28"
+  date: 2026-11-28
+  estimated_error: "none beyond floating point for the closed-form and algebraic rows; rows at rtol 1e-10 to 1e-4 carry the route's own error (quadrature, IVP tolerance, root finding, bounded maximisation)"
+
+conditions: >
+  Test condition T: 550 C (823.15 K), dense feed, P^F = 30 psig, P^P = 15 psig, sweep ratio 1.0,
+  cocurrent, Knudsen permeances with IUPAC molar masses, Pi = 0.5, Da = 0.1, K_p from standard
+  thermodynamic data, no shell reaction (equations file, section "Check values").
+
+columns:
+  - {name: name, unit: "-", description: "quantity, in the units its name states or dimensionless as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
