@@ -107,14 +107,22 @@ def say(text, **v):
 # passes hydrogen only (page `H1.4`); a porous ceramic passes every gas, by Knudsen diffusion
 # in pores of a few nanometres, hydrogen only about four times faster than ethane. Tsotsis
 # et al. ran ethane dehydrogenation, $\mathrm{C_2H_6 \rightleftharpoons C_2H_4 + H_2}$, at 500
-# to 625 C in a Membralox alumina tube (40 A pores in the top layer) packed with Pt catalyst,
-# argon sweep on the shell side, and wrote (p. 2907, quoted from the page image):
+# to 625 C in a Membralox alumina tube (40 A pores in the top layer), the tube "also wet
+# impregnated with hexachloroplatinic acid" and the bed made of particles 0.1 to 0.15 cm in
+# diameter (p. 2905), argon sweep on the shell side, and wrote (p. 2907, quoted from the page
+# image):
 #
 # > "The conversion shown in Fig. 2b, already higher than equilibrium, can be improved
 # > further by increasing the sweep ratio, the residence time or decreasing the tubeside
 # > pressure, see Fig. 3."
 #
-# and, about the fit: "Over a broad range of conditions the model performed reasonably
+# and, about the fit (p. 2907): "The isothermal version of the PBCMR model was used to fit the data
+# (the model results are the solid line) using the thickness of the permselective layer as the
+# only adjustable parameter. The thickness value used was 10$\mu$m, which is different from the
+# nominal thickness of the first microporous layer (see Champagnie, 1991), but still a reasonable
+# value given the uncertainties involved in the measurement of the layer's thickness and some
+# expected contribution of the second layer both in terms of activity and resistance to flow. Over
+# a broad range of conditions the model performed reasonably
 # well, see for example Fig. 2 which shows the conversion vs. temperature for both dilute
 # and dense feed conditions." The model curves are therefore the paper's claim about its
 # own model, and that claim is what this page tests: not the measurements, not the
@@ -168,9 +176,10 @@ def say(text, **v):
 # $\tau$ = 2.0 s, $P_T^F$ = 30 psi, $P_T^P$ = 15 psi, Fig. 3 at 550 C. Named assumptions
 # (EQUATIONS A1 to A8): A1 mass-action reversible rate, lumped $k$; A2 Knudsen ratios for
 # every species, $\Pi$ free; A3 sweep ratio molar; A4 $\tau$ at tube conditions; A5 layer
-# on the tube side; A6 no reaction in the wall (the shell-reaction variant brackets it); A7
+# on the tube side; A6 no reaction in the wall, although eq. 1 carries one and the tube is
+# Pt-impregnated (the shell-reaction variant is taken to bracket it, not shown); A7
 # $K_p$ from Smith, Van Ness and Abbott, Tables C.1 and C.4 (`svna-thermo.csv`); A8
-# isothermal, no pressure drop. "psi" is read as gauge (the default) or absolute: both are
+# isothermal, no pressure drop (the paper adds Ergun-type equations, p. 2905). "psi" is read as gauge (the default) or absolute: both are
 # carried. No kinetic constant, permeance, $\varepsilon/\tau_m$ or layer thickness is the
 # paper's; none is claimed.
 
@@ -267,6 +276,8 @@ class Cfg:
     lever_sign: float = 1.0         # direction of the paired lever solves
     map_reverse: bool = False       # Da axis of the map in reverse order
     fig3b_axis: str = "linear"      # conversion axis of Fig. 3b read as linear (log: a misread axis)
+    fv_pi_mult: float = 1.0         # Pi of the finite-volume check of the best variant only
+    mix_pr: float = 1.0             # sweep ratio in the closed-form sweep-diluted equilibrium of the supremum check
 
 
 C0 = Cfg()
@@ -432,28 +443,37 @@ def part_r1(cfg, M):
 
 
 def part_r2(cfg, M):
-    """R2: measured symbols above Xeq,shell, Xeq,tube and Xeq,mix by more than two errors."""
-    PF_, PP_ = pressures(cfg.basis)
-    refs = {"shell": [], "tube": [], "mix": []}
-    errs, xs = [], []
-    for fig in ("2a", "2b", "3a", "3b", "3c"):
-        x, y, e = series(fig, "measured", cfg)
-        for xi, yi, ei in zip(x, y, e):
-            feed = DILUTE if fig == "2a" else dense_feed(cfg)
-            T = xi + 273.15 if fig in ("2a", "2b") else TK
-            Pr = xi if fig == "3a" else 1.0
-            PFx = xi * ATM + (ATM if cfg.basis == "gauge" else 0.0) if fig == "3c" else PF_
-            K = K_of(T, cfg)
-            refs["shell"].append(yi - 100 * xeq(K, feed, PP_))
-            refs["tube"].append(yi - 100 * xeq(K, feed, PFx))
-            refs["mix"].append(yi - 100 * xeq(K, feed, PP_, Pr))
-            errs.append(ei)
-    errs = np.array(errs)
+    """R2: measured symbols above Xeq,shell, Xeq,tube and Xeq,mix by more than two errors, both readings."""
+    def count(basis):
+        PF_, PP_ = pressures(basis)
+        refs = {"shell": [], "tube": [], "mix": []}
+        errs = []
+        for fig in ("2a", "2b", "3a", "3b", "3c"):
+            x, y, e = series(fig, "measured", cfg)
+            for xi, yi, ei in zip(x, y, e):
+                feed = DILUTE if fig == "2a" else dense_feed(cfg)
+                T = xi + 273.15 if fig in ("2a", "2b") else TK
+                Pr = xi if fig == "3a" else 1.0
+                PFx = xi * ATM + (ATM if basis == "gauge" else 0.0) if fig == "3c" else PF_
+                K = K_of(T, cfg)
+                refs["shell"].append(yi - 100 * xeq(K, feed, PP_))
+                refs["tube"].append(yi - 100 * xeq(K, feed, PFx))
+                refs["mix"].append(yi - 100 * xeq(K, feed, PP_, Pr))
+                errs.append(ei)
+        return {k: np.array(v) for k, v in refs.items()}, np.array(errs)
+
+    refs, errs = count(cfg.basis)
     M["r2_n_symbols"] = int(errs.size)
     for k, v in refs.items():
-        vals = np.array(v) / (2 * errs)
+        vals = v / (2 * errs)
         M[f"r2_n_above_{k}"] = int(np.sum(vals > 1.0))
         M[f"r2_n_above_{k}__vals"] = vals
+    M["r2_mix_min_margin_pt"] = float(np.min(np.abs(refs["mix"] - 2 * errs)))     # nearest approach to the threshold
+    refs_a, errs_a = count("abs")
+    for k, v in refs_a.items():
+        vals = v / (2 * errs_a)
+        M[f"r2_n_above_{k}_abs"] = int(np.sum(vals > 1.0))
+        M[f"r2_n_above_{k}_abs__vals"] = vals
     return M
 
 
@@ -571,7 +591,10 @@ def fit_3b(case, cfg, kind="D1"):
         return float(np.max(np.abs(model(p2) - y)))
     p2, dev = bounded_min(obj, 1e-3 * top, top, n=81)
     m = model(p2)
-    return dict(Pi2=p2, maxdev=dev, maxdev_re=float(np.max(np.abs(m - y) / e)), model=m, top=top)
+    dv = np.abs(m - y)
+    i_pt, i_re = int(np.argmax(dv)), int(np.argmax(dv / e))
+    return dict(Pi2=p2, maxdev=dev, maxdev_re=float(dv[i_re] / e[i_re]), maxdev_pt_re=float(dv[i_pt] / e[i_pt]),
+                node_pt=float(tau[i_pt]), node_re=float(tau[i_re]), model=m, top=top)
 
 
 def predict(case, cfg, p2, fig):
@@ -616,11 +639,25 @@ def part_r4(cfg, M):
     case, fit = fits[best]
     M["r4_best_maxdev_pt"], M["r4_best_maxdev_re"] = fit["maxdev"], fit["maxdev_re"]
     M["r4_best_Pi2"] = fit["Pi2"]
+    M["r4_best_maxdev_pt_re"] = fit["maxdev_pt_re"]               # at the node of the largest miss in points
+    M["r4_best_maxdev_pt_node_s"], M["r4_best_maxdev_re_node_s"] = fit["node_pt"], fit["node_re"]
+    M["_best_case"] = case
     mm = fit["model"]
     M["r4_best_d2_wide_pt"] = float(mm[i10] - 2 * mm[i6] + mm[i2])
     M["r4_best_X10_pct"] = float(fit["model"][-1])
     M["r4_gap_sup_vs_3b_10s_pt"] = float(y[-1]) - M[f"r4_{best}_sup_pct"]
     M["r4_min_maxdev_over_variants_pt"] = min(f[1]["maxdev"] for f in fits.values())
+    M["r4_max_sup_over_variants_pct"] = max(M[f"r4_{k}_sup_pct"] for k in fits)
+    M["r4_min_gap_10s_pt"] = float(y[-1]) - M["r4_max_sup_over_variants_pct"]
+    M["r4_min_gap_10s_re"] = M["r4_min_gap_10s_pt"] / float(e[-1])
+    M["r4_best_Pi_d"] = le_traj(case, eps=EPS_D).s_drain
+    # the best variant's supremum against the sweep-diluted equilibrium at the shell pressure (closed form)
+    xmix = lambda pr: 100 * xeq(case.K, case.feed, case.PP, pr)
+    M["r4_sup_minus_xeq_mix_pt"] = abs(M[f"r4_{best}_sup_pct"] - xmix(case.Pr * cfg.mix_pr))
+    try:
+        M["r4_Pr_needed_best"] = one_root(lambda pr: xmix(pr) - float(y[-1]), 0.5, 20.0, "sweep ratio reaching the 10 s conversion")
+    except ValueError as err_:
+        print(err_)
     lo_, hi_ = V_LO * cfg.v_scale, V_HI * cfg.v_scale
     md = M["r4_min_maxdev_over_variants_pt"]
     M["r4_verdict"] = "reproduced" if md <= lo_ else "not reproduced" if md > hi_ else "undecided"
@@ -633,6 +670,49 @@ def part_r4(cfg, M):
     for rank, v in (("1", best), ("2", second)):
         for kind in ("D2", "D4"):
             M[f"r4_best{rank}_{kind}_maxdev_pt"] = fit_3b(fits[v][0], cfg, kind)["maxdev"]
+    return M
+
+
+RISE_VARIANTS = ("a_a7_ts", "a_a7_t", "g_pk_ts")
+RISE_DAS = (1e-2, 1e-1, 1.0, 10.0, 100.0)
+
+
+def part_r4b(cfg, M):
+    """R4 over all eight variants: curvature of the envelope, and X rising with Da in three more variants."""
+    n_conv, vals, n_win = 0, [], 0
+    for name, case in variant_cases(cfg).items():
+        le = le_traj(case, eps=EPS_D)
+        k1, k2, k3 = {"both": (1, 3, 5), "da": (1, 1, 1), "square": (1, 9, 25)}[cfg.tau_scaling]   # the 2, 6, 10 s nodes
+        ps = np.linspace(0.005, 1.0, 200) * le.s_drain / k3
+        d2 = np.array([100 * (le.conversion(k3 * p) - 2 * le.conversion(k2 * p) + le.conversion(k1 * p)) for p in ps])
+        n_conv += int(np.sum(d2 > 0))
+        n_win += d2.size
+        vals.append(d2 / (np.max(np.abs(d2)) or 1.0))
+    M["r4_n_convex_windows"], M["r4_n_convex_windows__vals"], M["r4_n_windows"] = n_conv, np.concatenate(vals), n_win
+    n_rise, rv, n_pairs = 0, [], 0
+    cases = variant_cases(cfg)
+    for name in RISE_VARIANTS:
+        case = cases[name]
+        le = le_traj(case, eps=EPS_D)
+        Pis = np.linspace(0.1, 0.9, 9) * le.s_drain
+        X = np.array([[conversion(ivp_out(case, p_, d_, rtol=1e-9), case) for p_ in Pis] for d_ in RISE_DAS]
+                     + [[le.conversion(p_) for p_ in Pis]])
+        dX = np.diff(X[::-1] if cfg.map_reverse else X, axis=0)
+        n_rise += int(np.sum(dX > 0))
+        rv.append((dX / np.abs(X[1:])).ravel())
+        n_pairs += dX.size
+    M["r4_var_n_rise_with_Da"], M["r4_var_n_rise_with_Da__vals"], M["r4_var_n_pairs"] = n_rise, np.concatenate(rv), n_pairs
+    return M
+
+
+def part_r4fv(cfg, M):
+    """The best variant at its 6 s node on the finite-volume solve, Da = 1e3, against the IVP at the same Da."""
+    case, Da = M["_best_case"], 1e3
+    Pi = M["r4_best_Pi2"] * {"both": 3.0, "da": 1.0, "square": 9.0}[cfg.tau_scaling]
+    o = observed_orders(lambda n: fv(case, Pi * cfg.fv_pi_mult, Da * cfg.fv_da_mult, ladder_n(n, cfg)).conversion(), NS[:4])
+    M["r4_fv_best_order_min"], M["r4_fv_best_order_max"] = float(min(o["orders"])), float(max(o["orders"]))
+    M["r4_fv_best_extrap_pct"] = 100 * float(o["extrapolated"])
+    M["r4_fv_best_gap_over_err"] = abs(o["extrapolated"] - conversion(ivp_out(case, Pi, Da, rtol=1e-11), case)) / o["error_estimate"]
     return M
 
 
@@ -681,6 +761,11 @@ def fv_drain(case, Da, n, lo):
 NS = (100, 200, 400, 800, 1600)
 
 
+def ladder_n(n, cfg):
+    """Cells of ladder level n: the refinement ratio actually used is cfg.order_ratio (orders assume 2)."""
+    return int(round(NS[0] * cfg.order_ratio ** np.log2(n / NS[0])))
+
+
 def part_v(cfg, M):
     """V1 to V3: closed forms, atom balances, grid ladders, round-off companion."""
     case = base_case(cfg)
@@ -709,7 +794,7 @@ def part_v(cfg, M):
     cT = replace(case)
     da = DA_T * cfg.fv_da_mult
     def nmap(n):
-        return int(round(NS[0] * cfg.order_ratio ** np.log2(n / NS[0])))
+        return ladder_n(n, cfg)
     ms = {n: fv(cT, PI_T, da, nmap(n)) for n in NS}
     M["v2_atom_balance_max"] = float(max(m.atom_balances().max() for m in ms.values()))
     oT = observed_orders(lambda n: ms[n].conversion(), NS)
@@ -734,7 +819,7 @@ def part_v(cfg, M):
     return M
 
 
-PARTS = {"r1": part_r1, "r2": part_r2, "r3": part_r3, "r4": part_r4, "r5": part_r5, "v": part_v}
+PARTS = {"r1": part_r1, "r2": part_r2, "r3": part_r3, "r4": part_r4, "r4b": part_r4b, "r4fv": part_r4fv, "r5": part_r5, "v": part_v}
 
 
 def study(cfg, parts=tuple(PARTS)):
@@ -809,16 +894,16 @@ say("At 550 C the tabulated data give $K_p$ = <<K:.5f>> bar and $\\Delta H$ = <<
     "against <<ra:.2f>> on the absolute reading, a ratio of <<q:.1f>>; <<w:d>> of <<n:d>> readings lie "
     "within two reading errors on the gauge reading. Fig. 4a's equilibrium line (steam reforming at 10 psig, "
     "printed as gauge) gives rms <<g4:.2f>> points against <<a4:.2f>> at 10 psia (at 550 C: <<s5g:.1f>> % "
-    "against <<s5a:.1f>> %). The basis is gauge.",
+    "against <<s5a:.1f>> %). The figures favour the gauge reading; the page carries both.",
     K=M["r1_K_823_bar"], H=M["r1_dH_823_kJ"], n=M["r1_n_2a_lines"], rg=M["r1_rms_2a_gauge"],
     ra=M["r1_rms_2a_abs"], q=M["r1_rms_ratio_2a"], w=M["r1_n_2a_within_2re"], g4=M["r1_rms_4a_gauge"],
     a4=M["r1_rms_4a_abs"], s5g=M["r1_smr_550_gauge_pct"], s5a=M["r1_smr_550_abs_pct"])
 say("The dense-feed lines (Figs. 2b, 3a, 3b, 3c, <<n:d>> readings) lie above what the printed dense feed "
     "gives: mean residual (computed minus read) <<m:.2f>> points, rms <<r:.2f>> on the gauge reading "
     "(<<ra:.2f>> absolute); <<b:d>> of <<n:d>> lie more than two reading errors below the reading. One "
-    "parameter closes the gap either way: an H2 co-feed of <<yh:.2f>> % in place of the printed 8.3 % "
-    "(rms <<ry:.2f>>), or $K_p$ times <<km:.3f>> (rms <<rk:.2f>>). The page does not say which input the "
-    "authors used. The 'paper's own' $K_p$, the one whose tube equilibrium is the Fig. 3 Xeq,tube reading, "
+    "parameter lowers the rms either way: an H2 fraction of <<yh:.2f>> % in place of the printed 8.3 % "
+    "(rms <<ry:.2f>>), or $K_p$ times <<km:.3f>> (rms <<rk:.2f>>); both are fits, not the authors' inputs, and "
+    "the page does not say which input the authors used. The 'paper's own' $K_p$, the one whose tube equilibrium is the Fig. 3 Xeq,tube reading, "
     "is <<kp:.3f>> times the tabulated value on the gauge reading and <<kpa:.3f>> on the absolute one.",
     n=M["r1_n_dense_lines"], m=M["r1_mean_dense_gauge"], r=M["r1_rms_dense_gauge"], ra=M["r1_rms_dense_abs"],
     b=M["r1_n_dense_below"], yh=M["r1_fit_yH_pct"], ry=M["r1_fit_yH_rms"], km=M["r1_fit_Kmult"],
@@ -836,9 +921,12 @@ say("Two printed copies of one line disagree (M3): Xeq,shellside at 550 C, dense
 say("Of the <<n:d>> measured points of Figs. 2a, 2b, 3a, 3b and 3c, <<s:d>> lie above Xeq,shellside, "
     "<<t:d>> above Xeq,tubeside and <<m:d>> above the sweep-diluted equilibrium Xeq,mix (feed plus sweep "
     "at the shell pressure, the reference a membrane that passes every gas must beat), each by more than "
-    "two reading errors, all computed for the printed feeds on the gauge reading. The paper says \"already "
+    "two reading errors, all computed for the printed feeds on the gauge reading. On the absolute reading the "
+    "counts are <<sa:d>>, <<ta:d>> and <<ma:d>>. The gauge count above Xeq,mix has its smallest margin "
+    "<<mg:.4f>> points from the two-reading-error threshold. The paper says \"already "
     "higher than equilibrium\" of Fig. 2b; counted over all five figures it holds against both lines as "
-    "computed, and against Xeq,mix for <<m:d>> of <<n:d>>.", n=M["r2_n_symbols"], s=M["r2_n_above_shell"], t=M["r2_n_above_tube"], m=M["r2_n_above_mix"])
+    "computed, and against Xeq,mix for <<m:d>> of <<n:d>>.", n=M["r2_n_symbols"], s=M["r2_n_above_shell"], t=M["r2_n_above_tube"], m=M["r2_n_above_mix"],
+    sa=M["r2_n_above_shell_abs"], ta=M["r2_n_above_tube_abs"], ma=M["r2_n_above_mix_abs"], mg=M["r2_mix_min_margin_pt"])
 
 # %% [markdown]
 # ### R3: the model, its drainage and its levers
@@ -896,22 +984,50 @@ VN = sorted(M["_fits"])
 print(f"{'variant':10s} {'sup %':>8s} {'+-':>8s} {'max dev, pt':>12s}")
 for k in VN:
     print(f"{k:10s} {M[f'r4_{k}_sup_pct']:8.3f} {M[f'r4_{k}_sup_err_pct']:8.1e} {M[f'r4_{k}_maxdev_pt']:12.3f}")
-say("**Verdict: <<v>>.** The best variant (<<b>>) misses the Fig. 3b model line by <<d:.2f>> points at "
-    "its worst node, <<dr:.0f>> reading errors; no variant comes within <<m:.2f>> points. The model rises "
-    "with falling slope: its second difference over 2, 6 and 10 s is <<md:.3f>> points, where the printed "
+BG = min((k for k in VN if k.startswith("g_")), key=lambda k: M[f"r4_{k}_maxdev_pt"])   # best variant on the gauge reading
+say("**Verdict: <<v>>.** One bound holds for all eight variants: the supremum of the model (the tube at "
+    "drainage, $Da\\to\\infty$) is at most <<smax:.2f>> %, <<gapm:.2f>> points below the printed <<y10:.2f>> % at 10 s "
+    "(<<gapre:.1f>> times that node's reading error). The best variant (<<b>>) misses the Fig. 3b model "
+    "line by up to <<d:.2f>> points (at <<n1:.0f>> s, <<dpr:.1f>> of that node's reading errors) and by up to <<dr:.0f>> "
+    "reading errors (at <<n2:.0f>> s); no variant comes within <<m:.2f>> points. The best fit of each variant "
+    "sits on the drainage bound. The model rises with falling slope in every variant: <<nc:d>> of <<nw:d>> windows "
+    "(second difference at $\\Pi$, 3$\\Pi$ and 5$\\Pi$, the 2, 6 and 10 s nodes, over 200 values of $\\Pi$ per variant) are "
+    "convex. In the best variant the second difference over 2, 6 and 10 s is <<md:.3f>> points, where the printed "
     "line's is <<pd:+.3f>>, <<pz:.1f>> times its reading error (the printed line is convex). Locally the "
-    "printed curvature is not resolved: <<p2:d>> of 7 one-second differences exceed two reading errors. Its supremum (the tube at drainage, $Da\\to\\infty$) is <<sup:.2f>> % in that variant, "
-    "<<gap:.2f>> points below the printed <<y10:.2f>> % at 10 s. With the same $\\Pi$ the variant misses "
+    "printed curvature is not resolved: <<p2:d>> of 7 one-second differences exceed two reading errors. "
+    "In the best variant the supremum is <<sup:.2f>> %, <<gap:.2f>> points below the printed value at 10 s. "
+    "On the gauge reading the best variant (<<bg>>) misses by <<gd:.2f>> points and its supremum is <<gs:.2f>> %. "
+    "With the same $\\Pi$ the best variant misses "
     "Fig. 3a by <<a:.2f>>, Fig. 3c by <<c:.2f>> and Fig. 2b by <<t:.2f>> points (largest deviations). Other "
     "conversion definitions in the two best variants: D2 <<d2a:.2f>> and <<d2b:.2f>>, D4 <<d4a:.2f>> and "
     "<<d4b:.2f>> points. The four printed model readings of the one shared state (550 C, $Pr$ 1, 2 s, "
     "30/15 psi) spread over <<sp:.2f>> points.",
-    v=M["r4_verdict"], b=M["_best"], d=M["r4_best_maxdev_pt"], dr=M["r4_best_maxdev_re"],
+    v=M["r4_verdict"], b=M["_best"], d=M["r4_best_maxdev_pt"], dr=M["r4_best_maxdev_re"], n1=M["r4_best_maxdev_pt_node_s"],
+    n2=M["r4_best_maxdev_re_node_s"], dpr=M["r4_best_maxdev_pt_re"], smax=M["r4_max_sup_over_variants_pct"],
+    gapm=M["r4_min_gap_10s_pt"], gapre=M["r4_min_gap_10s_re"], nc=M["r4_n_convex_windows"], nw=M["r4_n_windows"],
     m=M["r4_min_maxdev_over_variants_pt"], md=M["r4_best_d2_wide_pt"], pd=M["r4_printed_d2_wide_pt"], pz=M["r4_printed_d2_wide_sig"], p2=M["r4_printed_n_d2_pos"],
     sup=M[f"r4_{M['_best']}_sup_pct"], gap=M["r4_gap_sup_vs_3b_10s_pt"], y10=series("3b", "model")[1][-1],
+    bg=BG, gd=M[f"r4_{BG}_maxdev_pt"], gs=M[f"r4_{BG}_sup_pct"],
     a=M["r4_best_3a_maxdev_pt"], c=M["r4_best_3c_maxdev_pt"], t=M["r4_best_2b_maxdev_pt"],
     d2a=M["r4_best1_D2_maxdev_pt"], d2b=M["r4_best2_D2_maxdev_pt"], d4a=M["r4_best1_D4_maxdev_pt"],
     d4b=M["r4_best2_D4_maxdev_pt"], sp=M["r4_shared_spread_pt"])
+say("**The cap.** The tube of the best variant drains at $\\Pi_d$ = <<pdb:.3f>> (the gauge, tube-only test case of R3 "
+    "drains at <<pdt:.3f>> at $Da$ = 0.1). At drainage the whole tube content reaches the shell and "
+    "equilibrates there, so the supremum of a variant with shell reaction is the sweep-diluted equilibrium at the "
+    "shell pressure, $X_{eq,mix}$: in the best variant they differ by <<dx:.1e>> points (the supremum's own "
+    "extrapolation error is <<se:.1e>> points). That equilibrium reaches the printed 10 s value only at a "
+    "sweep ratio of <<prn:.2f>>, against the printed 1.0. $X$ rises with $Da$ (so $Da\\to\\infty$ is the envelope "
+    "used) at <<nr:d>> of <<np:d>> neighbouring map pairs of the gauge variant of R3, and at <<nv:d>> of <<npv:d>> "
+    "pairs (9 values of $\\Pi$, $Da$ from 0.01 to 100 and $Da\\to\\infty$) in the variants <<vn>>.",
+    pdb=M["r4_best_Pi_d"], pdt=M["r3_Pi_d_DaT"], dx=M["r4_sup_minus_xeq_mix_pt"], se=M[f"r4_{M['_best']}_sup_err_pct"],
+    prn=M["r4_Pr_needed_best"], nr=M["r3_map_n_rise_with_Da"], np=M["r3_map_n_pairs"], nv=M["r4_var_n_rise_with_Da"],
+    npv=M["r4_var_n_pairs"], vn=", ".join(RISE_VARIANTS))
+say("**Routes.** The Fig. 3b test and the suprema run on the local-equilibrium integration ($Da\\to\\infty$) and "
+    "scipy's Radau integration. The finite-volume solve (pymrm) checks the best variant at its 6 s node "
+    "($\\Pi$ = 3 $\\Pi_2$, $\\Pi_2$ = <<p2:.4f>>, $Da$ = 1e3, 100 to 800 cells): observed orders <<o1:.3f>> to <<o2:.3f>>, "
+    "extrapolated $X$ <<x:.5f>> %, which differs from the Radau value at the same $Da$ by <<g:.3f>> of its "
+    "extrapolation-error estimate.", p2=M["r4_best_Pi2"], o1=M["r4_fv_best_order_min"], o2=M["r4_fv_best_order_max"],
+    x=M["r4_fv_best_extrap_pct"], g=M["r4_fv_best_gap_over_err"])
 
 # %% [markdown]
 # ### R5: the printed membrane as a permeation number
@@ -955,7 +1071,8 @@ say("Atom balances (C, H, Ar) on the FV faces close to below 1e-12 on every grid
 # %%
 RT = 1e-6
 STRUCTURAL = {"r2_n_symbols": "number of digitised symbols", "r1_n_2a_lines": "number of Fig. 2a line readings",
-              "r1_n_dense_lines": "number of dense line readings", "r3_map_n_pairs": "6 x 12 map pairs",
+              "r1_n_dense_lines": "number of dense line readings", "r3_map_n_pairs": "6 x 12 map pairs", "r4_n_windows": "8 variants x 200 windows",
+              "r4_var_n_pairs": "3 variants x 9 Pi x 5 Da pairs",
               "r3_lever_n_points": "20 Pi values", "r3_lever_tau_n_points": "Pi values with room for a 1 % step", "r3_Pi_d_closed_q1": "1/(1 - beta), a formula",
               "v2_atom_balance_max": "the conservative scheme closes C, H, Ar by construction"}
 BOUNDS = {
@@ -973,9 +1090,11 @@ BOUNDS = {
     "v3_exch_ext_gap": (None, 1e-5, "chosen", "Richardson remainder O(h^2) at 1600 cells"),
     "v3_companion_gap": (None, 1e-12, "tolerance", "round-off of the newton solve"),
     "v3_finest_diff_over_roundoff": (1e3, None, "chosen", "the finest difference above its round-off by 1e3"),
+    "r4_fv_best_order_min": (0.9, 1.1, "theory", "first-order upwind"), "r4_fv_best_order_max": (0.9, 1.1, "theory", "first-order upwind"),
+    "r4_fv_best_gap_over_err": (None, 10.0, "chosen", "plan stop rule: FV within 10 extrapolation-error estimates of the IVP"),
 }
 COUNTS = {"r1_n_2a_within_2re": 1.0, "r1_n_dense_below": 1.0, "r2_n_above_shell": 1.0, "r2_n_above_tube": 1.0,
-          "r2_n_above_mix": 1.0, "r3_map_n_rise_with_Da": 0.0, "r4_printed_n_d2_pos": 1.0}
+          "r2_n_above_mix": 1.0, "r2_n_above_shell_abs": 1.0, "r2_n_above_tube_abs": 1.0, "r2_n_above_mix_abs": 1.0, "r3_map_n_rise_with_Da": 0.0, "r4_n_convex_windows": 0.0, "r4_var_n_rise_with_Da": 0.0, "r4_printed_n_d2_pos": 1.0}
 for tag in ("tube", "rx"):
     for lv in ("pr", "pf", "tau"):
         COUNTS[f"r3_lever_{lv}_pos_{tag}"] = 0.0
@@ -988,6 +1107,9 @@ def register(M):
         if name in BOUNDS:
             lo, hi, basis, note = BOUNDS[name]
             claims.bound(name, v, min=lo, max=hi, basis=basis, structural=name in STRUCTURAL, note=note)
+        elif name == "r4_sup_minus_xeq_mix_pt":
+            claims.bound(name, v, min=None, max=M[f"r4_{M['_best']}_sup_err_pct"], basis="tolerance",
+                         note="the supremum's extrapolation-error estimate in eps_d (percent = points)")
         elif name in COUNTS:
             vals = np.asarray(M[name + "__vals"], float)
             thr = 1.0 if COUNTS[name] == 1.0 else 0.0
@@ -1021,16 +1143,16 @@ register(M)
 
 # %%
 DEFECTS = [
-    ("Cp terms dropped from K_p", replace(C0, cp=False), ("r1", "r2", "r3", "r4")),
-    ("dense feed without its H2 co-feed", replace(C0, h2_zero=True), ("r1", "r2", "r3", "r4")),
-    ("absolute pressures in place of gauge", replace(C0, basis="abs"), ("r1", "r2", "r4")),
+    ("Cp terms dropped from K_p", replace(C0, cp=False), ("r1", "r2", "r3", "r4", "r4fv")),
+    ("dense feed without its H2 co-feed", replace(C0, h2_zero=True), ("r1", "r2", "r3", "r4", "r4fv")),
+    ("absolute pressures in place of gauge", replace(C0, basis="abs"), ("r1", "r2", "r4", "r4fv")),
     ("dilute feed in the dense rows", replace(C0, dense_as_dilute=True), ("r1",)),
     ("Fig. 3a axis shifted one grid interval (2 pt)", replace(C0, fig3a_shift=2.0), ("r1", "r4")),
-    ("q_j = 1 for every species", replace(C0, q_equal=True), ("r3", "r4", "r5")),
+    ("q_j = 1 for every species", replace(C0, q_equal=True), ("r3", "r4", "r4fv", "r5")),
     ("beta = 1 for the levers", replace(C0, beta_one=True), ("r3",)),
-    ("tau scaling applied to Da only", replace(C0, tau_scaling="da"), ("r4",)),
+    ("tau scaling applied to Da only", replace(C0, tau_scaling="da"), ("r4", "r4fv")),
     ("verdict thresholds ten times wider", replace(C0, v_scale=10.0), ("r4",)),
-    ("ladder refined by 1.5, orders computed for 2", replace(C0, order_ratio=1.5), ("v",)),
+    ("ladder refined by 1.5, orders computed for 2", replace(C0, order_ratio=1.5), ("v", "r4", "r4fv")),
     ("pore radius for diameter", replace(C0, pore="radius"), ("r5",)),
     ("steam reforming at 10 psia", replace(C0, smr_basis="abs"), ("r1",)),
     ("Fig. 4b read as CO2/(CO + CO2)", replace(C0, m4="over_COx"), ("r1",)),
@@ -1038,12 +1160,14 @@ DEFECTS = [
     ("exchange closed form at half the sweep ratio", replace(C0, exch_pr=0.5), ("v",)),
     ("linear drainage closed form with the absolute beta", replace(C0, lin_beta="abs"), ("v",)),
     ("Da -> infinity route with K 0.1 % high", replace(C0, le_kmult=1.001), ("v",)),
-    ("FV ladders at Da 50 % high", replace(C0, fv_da_mult=1.5), ("v",)),
+    ("FV ladders at Da 50 % high", replace(C0, fv_da_mult=1.5), ("v", "r4", "r4fv")),
+    ("finite-volume check of the best variant at Pi 1 % high", replace(C0, fv_pi_mult=1.01), ("r4", "r4fv")),
+    ("closed-form sweep-diluted equilibrium at 0.9 times the sweep ratio", replace(C0, mix_pr=0.9), ("r4",)),
     ("round-off companion at Pi 1e-4 high", replace(C0, comp_pi_mult=1 + 1e-4), ("v",)),
     ("levers differenced in the wrong direction", replace(C0, lever_sign=-1.0), ("r3",)),
-    ("map Da axis in reverse order", replace(C0, map_reverse=True), ("r3",)),
-    ("Fig. 3b conversion axis read as logarithmic", replace(C0, fig3b_axis="log"), ("r4",)),
-    ("Pi proportional to tau squared", replace(C0, tau_scaling="square"), ("r4",)),
+    ("map Da axis in reverse order", replace(C0, map_reverse=True), ("r3", "r4b")),
+    ("Fig. 3b conversion axis read as logarithmic", replace(C0, fig3b_axis="log"), ("r4", "r4fv")),
+    ("Pi proportional to tau squared", replace(C0, tau_scaling="square"), ("r4", "r4b", "r4fv")),
 ]
 CONTROLS = [("control: clean rerun of R1, R2 and R5", C0, ("r1", "r2", "r5"))]
 claims.define_rows([r_ for r_, _, _ in CONTROLS + DEFECTS])
@@ -1078,7 +1202,10 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 # %% [markdown]
 # ## What pymrm adds
 #
-# pymrm contributes the reactor solve and the checks. `MembraneReactor` carries two
+# pymrm contributes the reactor solve and the checks. The Fig. 3b test and the suprema, the page's
+# finding, run on scipy routes (the local-equilibrium integration and Radau); the pymrm solve
+# confirms the best variant at its 6 s node and carries the test condition, the drainage
+# threshold and the grid ladders. `MembraneReactor` carries two
 # plug-flow channels with four molar flows each on one axial grid: a `BlockLayout` of the
 # tube and shell blocks, each convected by a constant unit-velocity upwind operator
 # (`construct_convflux_upwind`, `construct_div`), inlet values in the `bc`, outlets

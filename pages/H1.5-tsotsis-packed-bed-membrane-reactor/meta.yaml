@@ -22,7 +22,7 @@ reference:
     doi: 10.1016/0009-2509(92)87149-K
 
 pymrm_min_version: "3.4.0"
-runtime_seconds: 165
+runtime_seconds: 190
 datasets:
   - tsotsis-1992-fig2a.csv
   - tsotsis-1992-fig2b.csv
@@ -49,25 +49,33 @@ adds: >
   compute_boundary_values, NumJac and newton on the sparse Jacobian), whose conservative
   form closes the atom balances to round-off; pymrm.checks.find_roots for the drainage
   thresholds and the lever reversal, pymrm.checks.observed_orders for the grid orders and
-  the extrapolations. The equilibrium algebra, the thermodynamics, the fast-reaction limit
+  the extrapolations. The Fig. 3b test and the suprema, the page's finding, run on scipy routes
+  (the local-equilibrium integration and Radau); the pymrm solve confirms the best variant at its
+  6 s node and carries the test condition, the drainage threshold and the grid ladders. The
+  equilibrium algebra, the thermodynamics, the fast-reaction limit
   and the figure reading are numpy and scipy. No published number is reproduced: the page
   tests printed model curves against the printed model.
 
 agreement: >
-  Not reproduced. With the printed model closed by the named assumptions, the best of eight
-  closure variants misses the Fig. 3b model line by 1.08 <!-- claim: r4_best_maxdev_pt --> points at
-  its worst node, 16 <!-- claim: r4_best_maxdev_re --> reading errors, outside the verdict thresholds
-  fixed before the run. The model rises with falling slope and is capped by drainage of the
-  tube through the Knudsen wall: its supremum lies 1.07 <!-- claim: r4_gap_sup_vs_3b_10s_pt --> points
-  below the printed conversion at 10 s. The equilibrium lines favour gauge pressures (rms ratio
-  8.7 <!-- claim: r1_rms_ratio_2a --> on the dilute lines); the dense lines sit about
-  1.2 <!-- claim: r1_rms_dense_gauge --> points (rms) above the printed dense feed.
+  Not reproduced by the printed model without its wall reaction. Over eight closure variants
+  the model's supremum is at most 10.07 <!-- claim: r4_max_sup_over_variants_pct --> %, 1.07 <!-- claim: r4_min_gap_10s_pt -->
+  points short of the printed conversion at 10 s (12.7 <!-- claim: r4_min_gap_10s_re --> times that node's
+  reading error). The best variant misses the Fig. 3b model line by up to 1.08 <!-- claim: r4_best_maxdev_pt -->
+  points (at 10 <!-- claim: r4_best_maxdev_pt_node_s --> s, 12.9 <!-- claim: r4_best_maxdev_pt_re --> of that
+  node's reading errors) and by up to 16 <!-- claim: r4_best_maxdev_re --> reading errors (at
+  9 <!-- claim: r4_best_maxdev_re_node_s --> s), outside the verdict thresholds fixed before the run. The
+  model rises with falling slope in every variant and is capped by drainage of the tube through the
+  Knudsen wall. The equilibrium lines favour the gauge reading (rms ratio
+  8.7 <!-- claim: r1_rms_ratio_2a --> on the dilute lines); the dense lines sit above the printed dense
+  feed by 1.14 <!-- claim: r1_mean_dense_gauge --> points (mean).
 
 caveats: >
   The paper prints no kinetics, no permeances and no definition of conversion, sweep ratio,
   residence time or of its two equilibrium lines; every closure is a named assumption and the
   missing ingredient may be in the thesis the paper cites. The page predicts no physical
-  reactor and claims no rate constant, permeance or layer property as the paper's. Energy
-  balances, reaction inside the membrane and any steam reforming model are not covered; the
+  reactor and claims no rate constant, permeance or layer property as the paper's. The paper's
+  eq. 1 carries a reaction in the wall of a Pt-impregnated tube; the page drops it (A6) and leaves
+  Pi and Da free. Energy balances, the pressure drop, reaction inside the membrane and any steam
+  reforming model are not covered; the
   Fig. 4 measured points are not digitised. Figure readings carry the reading errors stated
   in the sidecars.
