@@ -1,0 +1,35 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Zahradnik, J.", "Fialova, M.", "Ruzicka, M.", "Drahos, J.", "Kastanek, F.", "Thomas, N. H."]
+  year: 1997
+  container: "Chemical Engineering Science 52, 3811-3826"
+  doi: "10.1016/S0009-2509(97)00226-1"
+  access: >
+    The equations are those of the paper (slip-velocity concept eqs. 3 to 6 with the Table 2
+    forms of phi(eps), Zuber-Findlay drift flux eqs. 7 to 12, drift velocities eqs. 13 and 14),
+    with the readings and misprints stated in the build plan's equations file (eq. 14 read with
+    the corrected Morton and Eotvos groups; water at 20 C for eqs. 13 and 14 only). The values are
+    not read from the paper but computed from its equations by a second route; the half-unit rows
+    compare those values with the paper's printed constants.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f19_check_values.py (plain Python and scipy, no pymrm, no page code; closed forms cross-checked against fixed-point and bracketed root solves), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; root rows carry the root finder's tolerance, well inside each row's rtol"
+
+conditions: >
+  Test condition T: air-water, semibatch, D_r 0.15 m, H0/D_r 10, u_binf = 0.235 m/s; u_G = 0.04 m/s
+  and eps = 0.210 (the printed transition pair); eq. 10 constants C0 = 2.02, u_d = 0.257 m/s; riser
+  rows at the printed slope breaks with A_c = 0.79 and plate B constants 1.52, 0.263 m/s; eqs. 13
+  and 14 with water at 20 C.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, SI units where dimensional (m, m/s), as named in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

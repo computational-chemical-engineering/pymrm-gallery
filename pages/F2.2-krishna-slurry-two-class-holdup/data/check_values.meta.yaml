@@ -1,0 +1,35 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Krishna, R.", "de Swart, J. W. A.", "Ellenberger, J.", "Martina, G. B.", "Maretto, C."]
+  year: 1997
+  container: "AIChE Journal 43, 311-316"
+  doi: "10.1002/aic.690430204"
+  access: >
+    The equations are those of the paper (eqs. 1 to 7: the small-bubble swarm velocity, the
+    dense-phase voidage, the transition velocity, the large-bubble holdup with its diameter
+    factor and the total holdup), with the readings and misprints stated in the build plan's
+    equations file; the two-class reactor (first-order gas consumption, plug-flow large bubbles,
+    stirred, plug or dispersed dense phase) is the page's own model, not the paper's. The values
+    are not read from the paper but computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f22_check_values.py (numpy and scipy, no pymrm, no page code; the Danckwerts closed form cross-checked against scipy solve_bvp, the Lambert W root against brentq, the dispersed form at extreme Pe against the stirred and plug forms), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point for the closed-form rows; rows at rtol 1e-10 or 1e-9 carry the route's own root-finding error"
+
+conditions: >
+  Test condition T: column diameter 0.38 m, superficial gas velocity 0.30 m/s, slurry
+  concentration 0.36 (dispersion height 1.92 m, alpha2 0.3). Companion T0: slurry 0 (height
+  1.75 m, alpha2 0.268). Target conversion 0.9; dense-phase Peclet number 5; fixed-k rows at
+  k H0/U = 10.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, as defined in the equations file (velocities in m/s, times in s, otherwise dimensionless)"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

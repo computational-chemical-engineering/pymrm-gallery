@@ -1,0 +1,68 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: F1.9
+slug: zahradnik-regime-transition
+title: "Zahradnik regime transition in a bubble column"
+section: F
+status: published
+tier: T1
+priority: P1
+structures: [S1]
+phases: [gas-liquid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Zahradnik, J.", "Fialova, M.", "Ruzicka, M.", "Drahos, J.", "Kastanek, F.", "Thomas, N. H."]
+    year: 1997
+    title: "Duality of the gas-liquid flow regimes in bubble column reactors"
+    container: "Chemical Engineering Science 52 3811-3826"
+    doi: 10.1016/S0009-2509(97)00226-1
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 16
+datasets:
+  - zahradnik-1997-printed-numbers.csv
+  - zahradnik-1997-fig11a.csv
+  - zahradnik-1997-fig3a.csv
+  - zahradnik-1997-fig12b.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route
+  - every root and extremum by two routes (closed forms, the fixed-point form of eq. 5, bounded maximisation, quadrature)
+  - the drawn Table 2 lines of Fig. 11(a) against their formulas, and the Fig. 11(a) markers against the Fig. 3(a) holdups of the same column and plate, which tests the calibration and the terminal-velocity normalisation
+  - eq. 10 refitted on the Fig. 12(b) markers, with standard errors
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  Checks only: the page is algebra, and pymrm contributes pymrm.checks.find_roots for
+  the roots of eq. 5 with their count, the flux maxima, the branch crossings (an empty
+  list is the result), the riser crossing, the flip velocity and the eq. 9 exponent.
+  What the page adds to the paper is the test of the two model-intrinsic candidates
+  for the transition and the measured consistency of the printed numbers with each
+  other and with three of the paper's figures.
+
+agreement: >
+  Griffith-Wallis fits the 7 <!-- claim: r4_n_homog --> homogeneous Fig. 11(a) markers with an rms
+  residual of 0.0078 <!-- claim: r4_rms_gw --> in the slip-velocity ratio, against 0.0343
+  <!-- claim: r4_rms_marrucci --> for Marrucci (paired gap 0.0240 <!-- claim: r4_gap_mean --> with a standard
+  error of 0.0069 <!-- claim: r4_gap_se -->). The printed pair is the last marker on that line, 0.6
+  <!-- claim: r4_hu_eps_last --> half-units from the printed holdup, inside the marker's reading error; on the line, the printed holdup sits
+  0.2027 <!-- claim: r1_hu_u_gw --> half-units from the printed velocity, and the printed velocity
+  15.07 <!-- claim: r1_hu_eps_gw --> half-units from the printed holdup. The printed velocity is below the flux
+  maximum (ratio 0.6809 <!-- claim: r2_ratio_u_gw --> for Griffith-Wallis,
+  0.8641 <!-- claim: r2_ratio_u_rz --> for Richardson-Zaki), and the branches meet for 0
+  <!-- claim: r3_n_forms_crossing --> of the 6 forms. Refitted on Fig. 12(b), eq. 10 gives C0 2.043
+  <!-- claim: v3_C0 --> and u_d 0.2549 <!-- claim: v3_ud --> m/s, inside one standard error of the printed
+  values. Eq. 14 misses its printed value by 49.7 <!-- claim: r3_hu_eq14 --> half-units.
+
+caveats: >
+  A correlation page, not a discretised model. The figures are read from a 300 ppi
+  bilevel scan with the reading error in their sidecars; Fig. 11(a) carries the
+  transition argument, and the markers are its plotted data, not a held-out set. The
+  transition pair holds for air-water, one column, one aspect ratio and one plate. No
+  stability theory is evaluated: the paper prints no coefficients for one. The water
+  properties of eqs. 13 and 14 are this page's input; the paper states no temperature.

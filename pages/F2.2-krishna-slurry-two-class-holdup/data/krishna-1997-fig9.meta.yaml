@@ -1,0 +1,99 @@
+dataset_id: krishna-1997-fig9
+title: 'Fig. 9 markers: total gas holdup against U, three sets'
+status: complete
+conditions:
+  sets:
+  - eps_s 0.35, D_T 0.10 m (circles)
+  - eps_s 0, D_T 0.19 m (diamonds)
+  - eps_s 0.36, D_T 0.38 m (squares)
+  liquid: paraffin oil
+  solids: porous silica
+  gas: air
+acquisition:
+  method: digitised
+  figure: Figure 9, journal p. 315 (PDF page 5)
+  tool: 'poppler pdftoppm -r 300 -gray (the scan is a 300 ppi bilevel image), ink = grey < 128; numpy
+    and scipy.ndimage scripts: tick marks located as short ink runs normal to each axis line, linear calibration
+    by least squares through the tick centres'
+  procedure: 'Matching pursuit as for Fig. 6 (circle 20 px, diamond 30, square 21), U >= 0.05 m/s, legend
+    and caption masked (legend box rows 548 to 706, columns 1755 to 2120). The template shape is NOT used
+    to assign a set: circles and squares are confused where they overlap the curves. The page assigns
+    each marker to the nearest of the three drawn curves.'
+  calibration:
+    dpi: 300
+    x_ticks_px_value:
+    - - 1443.0
+      - 0.1
+    - - 1544.5
+      - 0.2
+    - - 1645.0
+      - 0.3
+    - - 1746.0
+      - 0.4
+    - - 1847.0
+      - 0.5
+    - - 1947.0
+      - 0.6
+    - - 2048.0
+      - 0.7
+    - - 2149.5
+      - 0.8
+    y_ticks_px_value:
+    - - 750.0
+      - 0.0
+    - - 533.0
+      - 0.2
+    - - 425.5
+      - 0.3
+    - - 317.0
+      - 0.4
+    - - 209.0
+      - 0.5
+    x_value_per_px: 0.0009917336018546697
+    x_offset: -1.3314014823314497
+    y_value_per_px: -0.0009243628587527822
+    y_offset: 0.6930977615766182
+    x_tick_residual_px_max: 0.5002951593855979
+    y_tick_residual_px_max: 0.44609955655472144
+    note: ''
+  operator: Claude Opus 5.5 (assisted)
+  date: '2026-11-27'
+  estimated_error: +-0.003 in eps, +-0.003 m/s in U
+columns:
+- name: shape
+  unit: '-'
+  description: best template (not used for the set)
+- name: score
+  unit: '-'
+  description: pursuit score
+- name: shape_margin
+  unit: '-'
+  description: best minus second-best score
+- name: x_px
+  unit: px
+  description: page column
+- name: y_px
+  unit: px
+  description: page row
+- name: U_m_s
+  unit: m/s
+  description: superficial gas velocity
+- name: eps
+  unit: '-'
+  description: total gas holdup
+source:
+  authors:
+  - Krishna, R.
+  - de Swart, J. W. A.
+  - Ellenberger, J.
+  - Martina, G. B.
+  - Maretto, C.
+  year: 1997
+  container: AIChE Journal 43(2) 311-316
+  doi: 10.1002/aic.690430204
+  access: institutional subscription, TU Eindhoven (lawful access)
+  licence: all rights reserved (facts extracted; figure image not reproduced)
+redistribution_basis: Numerical values are facts and are not protected by copyright (Feist Publications
+  v. Rural Telephone, 1991). Extraction for scientific research by a research organisation with lawful
+  access is covered by Art. 15n Auteurswet (DSM Directive (EU) 2019/790 Art. 3). The figure image is NOT
+  reproduced; the points are re-plotted from the extracted coordinates.

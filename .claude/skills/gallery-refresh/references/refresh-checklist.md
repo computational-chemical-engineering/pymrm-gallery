@@ -164,7 +164,11 @@ P10), `numerics.md` and `style-guide.md` in `conventions/references/`, and
     6 by two standard errors; row 260); "consistent with" a figure reading counts the
     points inside their sidecar reading error (`A3.12`: 4 of 14; row 243). A slope over
     ratios is printed with and without each named anomalous row, excluded by identity
-    (`A4.5`: 1.74920 and 1.75001; row 259).
+    (`A4.5`: 1.74920 and 1.75001; row 259). Markers pooled over runs or series are
+    not independent: when the series differ by more than the marker standard error, use
+    the series as the unit of scatter, and print a weighted fit's chi-square before its
+    parameter error (`F2.2`: 6.8 marker-level, 1.9 series-level; chi-square 59.4 on 1
+    degree of freedom; row 332).
 36. A quoted value at a condition, a difference between two parameter values on one
     grid, and an extremum of a sweep carry the grid error at that condition: extrapolate
     each on its own ladder before stating it (`A4.4`: 600-cell minus extrapolated 1.1e-5
