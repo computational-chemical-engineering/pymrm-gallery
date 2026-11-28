@@ -1,0 +1,33 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["van 't Riet, K."]
+  year: 1979
+  container: "Industrial & Engineering Chemistry Process Design and Development 18(3), 357-364"
+  doi: "10.1021/i260071a001"
+  access: >
+    The equations are film theory for absorption with an m-th order liquid reaction, coupled to a
+    well-mixed tank through the bulk balance, with kLA from the review's eq. 9 and k_L, the
+    Figure 4 legend box and the 20-40 % accuracy as printed; the diffusivity is an assumed value,
+    with the readings and assumptions stated in the build plan's equations file. The values are
+    not read from the paper but computed from these equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script f26_check_values.py (numpy and scipy, no pymrm, no page code; closed form for m = 1, first-integral quadrature with brentq for m = 2, shortcuts cross-checked against scipy solve_bvp and box fractions against a direct 2-D sum), 2026-11-28"
+  date: 2026-11-28
+  estimated_error: "none beyond floating point for the closed-form rows; looser rtol rows (quadrature, root finding, box fractions) carry the route's own error"
+
+conditions: >
+  Test condition T: P/V = 2236.07 W/m3, v_s = 0.047 m/s (Figure 4's Reith sulphite line), k_L = 4e-4 m/s,
+  assumed diffusivity as in the equations file; box rows over P/V 500-10 000 W/m3 and v_s 0.0045-0.047 m/s.
+  Row names state their order m, tolerance and k_L where they differ from T.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
