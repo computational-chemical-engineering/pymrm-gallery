@@ -1,0 +1,64 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: G1.3
+slug: saez-carbonell-relative-permeability
+title: "Sáez and Carbonell: trickle-flow holdup and pressure drop from relative permeabilities"
+section: G
+status: published
+tier: T1
+priority: P1
+structures: [S3]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Saez, A. E.", "Carbonell, R. G."]
+    year: 1985
+    title: "Hydrodynamic parameters for gas-liquid cocurrent flow in packed beds"
+    container: "AIChE Journal 31(1) 52-62"
+    doi: 10.1002/aic.690310105
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 11
+datasets:
+  - saez-carbonell-1985-printed-numbers.csv
+  - saez-carbonell-1985-fig8.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route, asserted before the first claim
+  - the derivation chain from the two-fluid balances to Eqs. 34, 50 and 51 re-derived, with the gas weight, the rounded exponent 0.41 and the Ergun constants measured as shifts at one test condition, and the liquid-balance residual of Eq. 51 confirmed as exactly minus the density ratio
+  - the solver's limits against closed forms (dimensional Ergun, the stagnant-gas holdup, the trickle end, the dry-bed limit with its approach exponent)
+  - newton on the coupled pairs of the whole sweep against brentq on the eliminated scalar equation, the analytic Jacobian against central differences, and the backward error
+  - Table 5 re-derived, its re-derived form against the direct ratio, and the maximum over the Eötvös number by an analytic-slope root against a bounded search
+  - Figure 8's drawn lines against the forms they stand for, with tick-fit residuals and a reading error per marker
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  The coupled solve and the checks, not the model: pymrm.newton on the pair of
+  Eqs. 50 and 51 for all sweep points at once with an analytic block Jacobian and
+  bounds, pymrm.checks.find_roots for the coupling root, the trickle end, the
+  Table 5 maximum and the printed-form roots, and check_jacobian and
+  residual_check. The scalar elimination with brentq gives the same holdups and
+  pressure drops point by point on its own; nothing is discretised.
+
+agreement: >
+  The derivation chain holds with three named approximations. The surfactant
+  ratios of Table 5 cannot follow from the paper's own Eqs. 8, 24 and 34 for any
+  packed bed: the largest ratio the model can give lies below every measured ratio,
+  so the model under-predicts all of them, while the printed Eq. 35, which drops a
+  factor Eo*_o, reproduces the printed Calc. values at one point in porosity and Eötvös number
+  (two equations in two unknowns), which the paper does not show to be its bed. The
+  recombined statistics are consistent with rounding. Figure 8 shows readable
+  markers outside the band the text says holds the holdup data (counts and
+  margins in README.md).
+
+caveats: >
+  The paper prints no operating-point table, so the model is not rerun on its data
+  points. Figure 8 is digitised; most of its markers sit in clusters of touching
+  markers and only the readable ones are counted; the clusters are not counted. Figure 7 and Figure 5 are not digitised. The page does not
+  judge saturation-only relative permeability or the zero capillary-pressure
+  gradient, and does not compare with other correlations.
