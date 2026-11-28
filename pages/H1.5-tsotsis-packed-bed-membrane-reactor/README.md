@@ -50,8 +50,8 @@ tube; the page drops that term (A6) and leaves Pi and Da free.
   1.36 <!-- claim: r4_Pr_needed_best -->, against the printed sweep ratio. The finite-volume solve (pymrm)
   confirms the best variant at its 6 s node: observed orders 1.01 <!-- claim: r4_fv_best_order_min -->
   to 1.02 <!-- claim: r4_fv_best_order_max -->, extrapolated conversion
-  9.3475 <!-- claim: r4_fv_best_extrap_pct --> %, within 0.008 <!-- claim: r4_fv_best_gap_over_err -->
-  of its extrapolation-error estimate of the Radau value; the test and the suprema themselves run
+  9.3475 <!-- claim: r4_fv_best_extrap_pct --> %, its gap to the Radau value
+  0.008 <!-- claim: r4_fv_best_gap_over_err --> times its extrapolation-error estimate; the test and the suprema themselves run
   on the local-equilibrium integration and Radau.
 - The equilibrium lines favour the gauge reading; the page carries both. On the dilute lines of
   Fig. 2a the rms deviation is 0.65 <!-- claim: r1_rms_2a_gauge --> points against
