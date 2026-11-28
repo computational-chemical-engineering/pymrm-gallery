@@ -1,0 +1,64 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: D3.5
+slug: ethylene-oxide-multitubular-runaway
+title: "Ethylene oxide multitubular"
+section: D
+status: published
+tier: T1
+priority: P1
+structures: [S2]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Borman, P. C.", "Westerterp, K. R."]
+  year: 1995
+  container: "Industrial & Engineering Chemistry Research 34(1) 49-58"
+  doi: 10.1021/ie00040a002
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 255
+datasets:
+  - borman-1995-reactor-numbers.csv
+  - borman-1995-reactor-statements.csv
+  - check_values.csv
+
+validation:
+  - >-
+    Check values of an independent scipy solve_ivp (Radau) route with forward sensitivities
+    reproduced for every row, from the closed forms to the Morbidelli-Varma critical
+    points, each within its tolerance.
+  - >-
+    C, H and O and the adiabatic energy invariant kept along every tube to round-off; the
+    frozen-composition limit: the long-tube outlet equals the Semenov root and the profile
+    converges to the quadrature at the scheme's first order; the base-tube grid ladders
+    converge at first order.
+  - >-
+    The Jacobian sensitivity against a central difference of two solves; the rate law
+    against C2.11's check values; the activity identity (a, h) to (1, h/a) to round-off.
+
+adds: >
+  The steady tube as one sparse Newton system with continuation through the sensitive
+  region, the converged Jacobian for the sensitivity the criterion needs, find_roots and
+  observed_orders. A solve_ivp march gives the same numbers; pymrm's part is the steady
+  formulation and its Jacobian.
+
+agreement: >
+  No packed-bed data exist for comparison: the paper prints no tube. With Table 6 as printed
+  the largest normalised sensitivity over the cooling at 500 K and the explosion limit is
+  0.0634 <!-- claim: max_abs_Sh_M_F1 --> and over the window 0.0770 <!-- claim: max_abs_Sh_window_F1 -->
+  at the worst corner; with the combustion factor of C2.11 the critical cooling at the explosion
+  limit is 14.449 <!-- claim: hcrit_MV_M_F6 --> W/(kg K), and the borrowed C2.10 tube is
+  critical for coolant temperatures near 507.86 <!-- claim: Tc_crit_C210_03_F6 --> K at the explosion limit
+  and 526.1 <!-- claim: Tc_crit_C210_018_F6 --> K at the standard ethene fraction, with a hot spot of
+  749.6 <!-- claim: Tstar_crit_C210_03_F6 --> K (extrapolated kinetics) at the first.
+
+caveats: >
+  Tube geometry, wall coefficient and heat capacity are borrowed from C2.10; the one
+  figure-derived input is C2.11's factor F_fig6. Every critical hot spot lies above the
+  highest kinetic temperature, so the boundary is located by extrapolated kinetics.
+  Flammability, radial and interphase gradients and ethene oxide oxidation are not modelled.
