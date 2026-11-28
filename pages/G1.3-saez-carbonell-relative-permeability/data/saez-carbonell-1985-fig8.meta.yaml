@@ -27,8 +27,11 @@ acquisition:
     upper dashed +0.08955, lower dashed -0.09114 decades (rows kind = line). Marker
     centres: bounding-box centre for circles and squares, vertex centroid
     (bounding-box centre moved h/6 toward the base) for triangles, after removing
-    pixels within 0.0085 decades of a drawn line. Two touching pairs are split by
-    hand reads. Blobs of touching markers that cannot be told apart are cluster rows
+    pixels within 0.0085 decades of a drawn line. A marker a drawn line crosses
+    is centred from its raw pixels instead: a circle by a least-squares circle
+    fit to the outline pixels outside the removed band, a triangle from its base
+    or apex row and the median height of the uncrossed triangles of its kind.
+    Two touching pairs are split by hand reads. Blobs of touching markers that cannot be told apart are cluster rows
     with the range of D over their dark pixels; a hidden marker's centre lies inside
     that range.
   operator: "Claude Opus 5.5 (assisted)"

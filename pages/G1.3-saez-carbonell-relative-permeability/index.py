@@ -114,7 +114,7 @@ claims = Claims(PAGE.split("-")[0])
 # |---|---|---|
 # | 8 (p. 54) | $\varepsilon^0 = 1/(20 + 0.9\,\mathrm{Eo}^{\ast})$, $\mathrm{Eo}^{\ast} = \rho_L g d_e^2\varepsilon^2/(\sigma(1-\varepsilon)^2)$ | `static_holdup`, `eotvos` |
 # | 13, 14 (p. 55) | $-dP_a/dz + \rho_a g = (X_a/k_a)\rho_a g$ | `momentum_residuals` |
-# | 20 (p. 56) | $dP_L/dz = dP_G/dz$ (capillary pressure gradient zero, an assumption) | |
+# | 20 (p. 56) | the capillary pressure in Leverett's J-function form; the assumption stated after it is that $dP_c/dz$ is negligible in Eq. 19, so $dP_L/dz = dP_G/dz$ | |
 # | 21 (p. 56) | $X_L/k_L - (\rho_G/\rho_L)X_G/k_G = 1 - \rho_G/\rho_L$ | `params(exact=True)` |
 # | 24 (p. 56) | $\delta = (\varepsilon_L - \varepsilon^0)/(\varepsilon - \varepsilon^0)$ | `holdup` |
 # | 32 (p. 56) | $k_L = \delta^{2.43}$ | `a` |
@@ -155,7 +155,7 @@ claims = Claims(PAGE.split("-")[0])
 # are read from the data file as strings; the model takes them from one dictionary
 # `M.PRINTED`, so a break row changes one entry.
 #
-# Assumptions: equal phase pressure gradients (the paper's Eq. 20, untested here);
+# Assumptions: equal phase pressure gradients (the assumption stated after Eq. 20, p. 56: $dP_c/dz$ negligible in Eq. 19; untested here);
 # zero irreducible gas saturation ($\delta_G = S_G$, p. 58); water surface tension
 # 72.8 mN/m for Table 5 (the paper does not print it; 72.0 is shown as an
 # alternative); the densest sphere packing, $1 - \pi/(3\sqrt 2)$, as the smallest
@@ -205,8 +205,8 @@ print(pd.DataFrame({k: [g_T[k], PRN[lo], PRN[hi]] for k, lo, hi in RANGES},
 #   page + 51). Read as strings.
 # - `saez-carbonell-1985-fig8.csv`: Figure 8 (p. 60), digitised from the native 300 ppi
 #   scan by `data/digitise.py` (committed; it takes the PDF path and stores no image).
-#   Of the 59 points the paper states, 13 markers can be read one by one; the rest sit
-#   in five blobs of touching markers, kept as cluster rows with the range of their
+#   Of the points the paper states, a few markers can be read one by one; the rest sit
+#   in blobs of touching markers, kept as cluster rows with the range of their
 #   pixels. Hidden markers are not invented. Figure 7 (pressure drop) is not digitised
 #   on this page, and neither is Figure 5.
 # - `check_values.csv`: 66 values computed from the paper's equations by an
@@ -391,6 +391,7 @@ def table5(P, o):
                t5_corrected_max_Eo_sol1_dense=E1, t5_corrected_max_Eo_sol2_dense=E2,
                t5_exp_min_over_bound_sol1=exp1.min() / m1, t5_exp_min_over_bound_sol2=exp2.min() / m2,
                t5_max_root_vs_bounded_search=max(abs(bounded_max(s1) / m1 - 1), abs(bounded_max(s2) / m2 - 1)))
+    out["t5_eps_dense"] = eps_f
     out["t5_corrected_max_sol1_eps036"] = M.ratio_max(0.36, s1, P)[0]
     out["t5_corrected_max_sol2_eps036"] = M.ratio_max(0.36, s2, P)[0]
     out["t5_eps_needed_for_calc1_upper"] = M.eps_for_ratio(calc1, P)
@@ -402,6 +403,13 @@ def table5(P, o):
                t5_printed_eps0_sol2=M.static_holdup(E_p * s2, P),
                t5_corrected_at_printed_sol1=ratio(e_p, E_p, s1, P),
                t5_corrected_at_printed_sol2=ratio(e_p, E_p, s2, P))
+    hc = (M.half_unit(p["t5_calc1"]), M.half_unit(p["t5_calc2"])) if o["calc_half"] is None else (o["calc_half"],) * 2
+    box = [M.printed_inversion(calc1 + d1 * hc[0], calc2 + d2 * hc[1], s1, s2, P)
+           for d1 in (-1, 1) for d2 in (-1, 1)]
+    roots = [r[0] for b in box for r in b]
+    out["t5_printed_box_one_root"] = sum(len(b) == 1 for b in box)     # corners with exactly one root
+    out["t5_printed_eps_lo"] = min(roots) if roots else np.nan
+    out["t5_printed_eps_hi"] = max(roots) if roots else np.nan
     inv72 = M.printed_inversion(calc1, calc2, SIGMA_WATER_ALT / num(p["p57_sigma_1"]),
                                 SIGMA_WATER_ALT / num(p["p57_sigma_2"]), P)
     out["t5_printed_eps_sigma72"], out["t5_printed_Eo_o_sigma72"] = inv72[0] if len(inv72) == 1 else (np.nan,) * 2
@@ -421,7 +429,7 @@ def table5(P, o):
 OPT = dict(dim_A=None, limit_exp=None, flood_A_closed=None, balance_exact=True, rho_G_factor=1.0,
            newton_a=None, drop_jac=False, maxfev=100, eps_floor=EPS_DENSE, t5_form="rederived",
            search_hi=1e4, printed_override={}, t7_swap=False, band_pct=None, centre_shift_px=0.0,
-           line_shift_px={})
+           line_shift_px={}, calc_half=None, pair_split=True)
 
 CV = check_values(P0)
 DEV = assert_check_values(CV, page=PAGE)
@@ -434,7 +442,7 @@ print(f"{len(DEV)} check values reproduced; largest relative deviation"
 # ### R1. The derivation chain, re-derived
 #
 # Subtracting Eq. 14 times $\rho_G/\rho_L$ from Eq. 13 with $dP_L/dz = dP_G/dz$
-# (Eq. 20) eliminates the pressure gradient and gives Eq. 21 exactly. With stagnant gas
+# (the assumption stated after Eq. 20, p. 56: $dP_c/dz$ negligible in Eq. 19) eliminates the pressure gradient and gives Eq. 21 exactly. With stagnant gas
 # ($X_G = 0$) and $\rho_G \ll \rho_L$ it reduces to $X_L/k_L = 1$ (Eq. 23), and with
 # $k_L = \delta^{2.43}$ to $\delta = X_L^{1/2.43}$, printed as Eq. 34 with 0.41.
 # Eq. 50 is Eq. 14 with $k_G = S_G^{4.8}$ written for $\psi_G$; Eq. 51 is Eq. 21 with
@@ -624,7 +632,9 @@ display(Markdown(
     f" Eo*$_o$ = {T5['t5_printed_Eo_o']:.3f} (water 72.8 mN/m; with 72.0 mN/m: {T5['t5_printed_eps_sigma72']:.4f},"
     f" {T5['t5_printed_Eo_o_sigma72']:.3f}). There the correct ratios are {T5['t5_corrected_at_printed_sol1']:.4f}"
     f" and {T5['t5_corrected_at_printed_sol2']:.4f}. The paper prints neither porosity nor diameter for the"
-    f" carbon rings, so this is consistent evidence that Calc. used the printed form, not proof."))
+    f" carbon rings, so this is consistent evidence that Calc. used the printed form, not proof. Over the rounding"
+    f" of the two printed Calc. values (each half a unit of its last digit), with one root at each corner of that box,"
+    f" the porosity ranges from {T5['t5_printed_eps_lo']:.3f} to {T5['t5_printed_eps_hi']:.3f}."))
 
 eg = np.linspace(0.12, 0.95, 120)
 fig, ax = plt.subplots(figsize=(6.5, 4))
@@ -671,9 +681,10 @@ display(Markdown(
 # region (Figure 7), whereas the liquid holdup data lie between the −20% and the +20%
 # lines (Figure 8)." (p. 59). Each readable marker of Figure 8 gives its own deviation
 # $\varepsilon_{cal}/\varepsilon_{exp} - 1$ from its coordinates, and its position
-# against the dashed lines as drawn. With 13 readable markers of 59, fewer than the 40
-# the plan requires for a mean, the page counts markers outside the band and does not
-# compute a mean deviation.
+# against the dashed lines as drawn. The readable markers are fewer than the 40
+# the plan requires for a mean, so the page counts markers outside the band and does not
+# compute a mean deviation. The blobs of touching markers are not counted; at least one
+# marker hidden in them sits on the lower line within its reading error.
 
 # %%
 def block_fig8(P, o):
@@ -684,37 +695,40 @@ def block_fig8(P, o):
     if o["band_pct"] is not None:
         b = o["band_pct"] / 100.0
         plus, minus = solid + np.log10(1 + b), solid + np.log10(1 - b)
-    D = np.log10(MK.cal.values) - np.log10(MK.exp.values) - o["centre_shift_px"] / PXY
+    mk = MK if o["pair_split"] else MK[~MK.flag.str.contains("split by hand")]
+    D = np.log10(mk.cal.values) - np.log10(mk.exp.values) - o["centre_shift_px"] / PXY
     dev = 10**(D - solid) - 1
-    inside = np.minimum(plus - CL.offset_max_dec.values, CL.offset_min_dec.values - minus)
-    return {"fig8_n_above_plus": int(np.sum(D > plus)), "fig8_n_below_minus": int(np.sum(D < minus)),
-            "fig8_n_outside": int(np.sum((D > plus) | (D < minus))),
-            "fig8_n_clusters_inside": int(np.sum(inside > 0)),
+    beyond = np.maximum(D - plus, minus - D)     # signed distance beyond the nearer drawn line, decades
+    return {"fig8_n_readable": len(mk),
+            "fig8_n_above_plus": int(np.sum(D - plus > E_D)), "fig8_n_below_minus": int(np.sum(minus - D > E_D)),
+            "fig8_n_outside": int(np.sum(beyond > E_D)), "fig8_n_near": int(np.sum(np.abs(beyond) <= E_D)),
             "fig8_dev_max_pct": 100 * dev.max(), "fig8_dev_min_pct": 100 * dev.min(),
             "fig8_plus_line_vs_log12_px": (plus - solid - np.log10(1.2)) * PXY,
             "fig8_minus_line_vs_log08_px": (minus - solid - np.log10(0.8)) * PXY,
             "fig8_minus_line_vs_inv12_px": (minus - solid + np.log10(1.2)) * PXY,
             "fig8_diagonal_offset_px": solid * PXY,
-            "_D": D, "_plus": plus, "_minus": minus, "_solid": solid, "_inside": inside, "_dev": dev}
+            "_D": D, "_plus": plus, "_minus": minus, "_solid": solid, "_beyond": beyond, "_dev": dev}
 
 
 F8 = block_fig8(P0, OPT)
-dist = np.where(F8["_D"] > F8["_plus"], F8["_D"] - F8["_plus"],
-                np.where(F8["_D"] < F8["_minus"], F8["_minus"] - F8["_D"], np.nan)) / E_D
+dist = F8["_beyond"] / E_D                      # reading errors beyond the nearer drawn line
 tab8 = MK[["symbol", "exp", "cal"]].assign(**{"deviation (%)": np.round(100 * F8["_dev"], 1),
                                               "beyond the band (reading errors)": np.round(dist, 1)})
 print(tab8.to_string(index=False))
 display(Markdown(
-    f"Of the {len(MK)} readable markers (of 59), {F8['fig8_n_above_plus']} lie above the +20 % line and"
-    f" {F8['fig8_n_below_minus']} below the −20 % line, {F8['fig8_n_outside']} outside the band in all; every"
-    f" one of them is at least {np.nanmin(dist):.1f} reading errors ({READ_PX:g} px per coordinate) beyond its"
-    f" line. The {F8['fig8_n_clusters_inside']} of {len(CL)} blobs of touching markers lie wholly inside the band, so"
-    f" the hidden markers cannot add to the count. Readable deviations range from {F8['fig8_dev_min_pct']:+.1f} %"
+    f"Of the {F8['fig8_n_readable']} readable markers (the paper states {PRN['t7_n_eps_all']} points; the others are in"
+    f" blobs), {F8['fig8_n_above_plus']} lie above the +20 % line and {F8['fig8_n_below_minus']} below the −20 %"
+    f" line, each by more than the reading error ({READ_PX:g} px per coordinate), so {F8['fig8_n_outside']} lie"
+    f" outside the band; {F8['fig8_n_near']} more sits within one reading error of a line (it lies"
+    f" {', '.join(f'{d:.2f}' for d in dist[np.abs(dist) <= 1])} reading errors beyond its line)."
+    f" The blobs of touching markers are not counted; at least one marker hidden in them sits on the lower line"
+    f" within its reading error. Readable deviations range from {F8['fig8_dev_min_pct']:+.1f} %"
     f" to {F8['fig8_dev_max_pct']:+.1f} %. The statement that the holdup data \"lie between\" the lines does not hold"
     f" for the figure as printed. The drawn lines themselves: the solid diagonal sits {F8['fig8_diagonal_offset_px']:.1f} px"
     f" above y = x from the ticks; the upper dashed line is {F8['fig8_plus_line_vs_log12_px']:+.1f} px from"
     f" cal/exp = 1.2, the lower {F8['fig8_minus_line_vs_log08_px']:+.1f} px from 0.8 (and"
-    f" {F8['fig8_minus_line_vs_inv12_px']:+.1f} px from 1/1.2), so the band is drawn as 0.8 to 1.2."))
+    f" {F8['fig8_minus_line_vs_inv12_px']:+.1f} px from 1/1.2), so the band is drawn as 0.8 to 1.2; these offsets are"
+    f" means over each line, which the upper dashed line departs from by drifting along its length."))
 
 fig, ax = plt.subplots(figsize=(5.2, 5))
 xx = np.array([0.04, 0.5])
@@ -726,7 +740,7 @@ ax.loglog(MK.exp[out], MK.cal[out], "o", color="C3", label="readable, outside th
 for r in CL.itertuples():
     xe = 10**((r.x_px - MK.x_px[0]) / PXX + np.log10(MK.exp[0]))   # the abscissa calibration
     ax.plot([xe, xe], [xe * 10**r.offset_min_dec, xe * 10**r.offset_max_dec], color="grey", lw=4, alpha=0.5)
-ax.plot([], [], color="grey", lw=4, alpha=0.5, label="cluster: extent of its pixels")
+ax.plot([], [], color="grey", lw=4, alpha=0.5, label="blob of markers: extent of its pixels, not counted")
 for axis in (ax.xaxis, ax.yaxis):
     axis.set_minor_formatter(plt.NullFormatter())
     axis.set_major_formatter(plt.FormatStrFormatter("%g"))
@@ -759,15 +773,17 @@ display(Markdown(
     f" {T5['t5_margin_halfunits_sol1']:.1f} and {T5['t5_margin_halfunits_sol2']:.1f} half-units of their"
     f" printed last digit. The corrected model under-predicts all eight. The printed Eq. 35 reproduces both"
     f" Calc. values at one bed ({T5['t5_printed_n_roots']} root in porosity 0.27 to 0.95), $\\varepsilon$ = {T5['t5_printed_eps']:.3f},"
-    f" Eo*$_o$ = {T5['t5_printed_Eo_o']:.2f}; the paper prints no porosity for that bed.\n"
+    f" Eo*$_o$ = {T5['t5_printed_Eo_o']:.2f}; the paper prints no porosity for that bed, and over the rounding of the two"
+    f" printed Calc. values the porosity ranges from {T5['t5_printed_eps_lo']:.2f} to {T5['t5_printed_eps_hi']:.2f}.\n"
     f"3. **Statistics.** {int(np.sum(np.array(ST['_gaps']) < 1))} of 4 recombined means fall inside their rounding"
     f" allowance (largest {max(ST['_gaps']):.3f} of it): consistent with rounding.\n"
     f"4. **Figure 8.** The paper says the holdup data \"lie between the −20% and the +20% lines\" (p. 59)."
-    f" {F8['fig8_n_outside']} of the {len(MK)} readable markers lie outside the lines as drawn"
-    f" ({F8['fig8_n_above_plus']} above, {F8['fig8_n_below_minus']} below), the closest"
-    f" {np.nanmin(dist):.1f} reading errors beyond its line. The other markers of the 59 sit in"
-    f" {len(CL)} blobs whose pixels all lie inside the band, so no hidden marker adds to the count:"
-    f" {F8['fig8_n_outside']} of the 59 points lie outside the band the text states. No mean deviation is"
+    f" Of the {len(MK)} readable markers, {F8['fig8_n_outside']} lie outside the lines as drawn"
+    f" ({F8['fig8_n_above_plus']} above, {F8['fig8_n_below_minus']} below) by more than the reading error, the closest"
+    f" {np.min(dist[dist > 1]):.1f} reading errors beyond its line, and {F8['fig8_n_near']} more sits within one reading"
+    f" error of a line. The rest of the {PRN['t7_n_eps_all']} points the paper states sit in blobs of touching markers, which are"
+    f" not counted; at least one marker hidden in them sits on the lower line within its reading error. So at least"
+    f" {F8['fig8_n_outside']} of the {PRN['t7_n_eps_all']} points the paper states lie outside the drawn band. No mean deviation is"
     f" computed from {len(MK)} readable markers, so the stated 12.7 % is neither confirmed nor contradicted."))
 
 # %% [markdown]
@@ -831,22 +847,24 @@ for b, out in BASE.items():
             claims.bound(name, x, max=1e-12, basis="tolerance", note="componentwise backward error")
         elif name == "t5_max_root_vs_bounded_search":
             claims.bound(name, x, max=1e-10, basis="tolerance", note="bounded search xatol 1e-12 in log10 Eo*")
-        elif name == "fig8_n_above_plus":
-            claims.count(name, F8["_D"], F8["_plus"], min_margin=E_D, relative=False,
-                         note="margin in decades; min_margin the reading error")
-        elif name == "fig8_n_below_minus":
-            claims.count(name, F8["_D"], F8["_minus"], min_margin=E_D, above=False, relative=False,
-                         note="margin in decades; min_margin the reading error")
-        elif name == "fig8_n_outside":
-            m = float(np.min(np.minimum(np.abs(F8["_D"] - F8["_plus"]), np.abs(F8["_D"] - F8["_minus"]))))
-            claims.exact(name, x, margin=m, min_margin=E_D)
-        elif name == "fig8_n_clusters_inside":
-            claims.count(name, F8["_inside"], 0.0, min_margin=E_D, relative=False,
-                         note="pixel extremes of each cluster against both dashed lines")
+        elif name == "fig8_n_readable":
+            claims.exact(name, x, note="rows of the digitised CSV that are single markers")
+        elif name in ("fig8_n_above_plus", "fig8_n_below_minus", "fig8_n_outside", "fig8_n_near"):
+            edge = {"fig8_n_above_plus": [1.0], "fig8_n_below_minus": [1.0], "fig8_n_outside": [1.0],
+                    "fig8_n_near": [-1.0, 1.0]}[name]
+            side = F8["_D"] - F8["_plus"] if name == "fig8_n_above_plus" else (
+                F8["_minus"] - F8["_D"] if name == "fig8_n_below_minus" else F8["_beyond"])
+            m = float(min(np.min(np.abs(side / E_D - e)) for e in edge)) * E_D
+            claims.exact(name, x, margin=m, min_margin=0.01 * E_D,
+                         note="thresholded at one reading error beyond the drawn line; margin in decades, the"
+                              " smallest distance of any marker to that threshold (the circle crossed by the"
+                              " lower line sits just inside it, so it is counted with the near markers)")
         elif name == "t5_n_calc_above_exp":
             claims.exact(name, x, margin=float(np.min(np.abs(np.r_[num(PRN["t5_calc1"]) - T5["_exp1"],
                                                                 num(PRN["t5_calc2"]) - T5["_exp2"]]))),
                          min_margin=0.01, note="printed Calc. against printed Exp.")
+        elif name == "t5_printed_box_one_root":
+            claims.exact(name, x, note="corners of the rounding box of the printed Calc. values with one root, of 4")
         elif name == "t5_printed_n_roots":
             claims.exact(name, x, note="find_roots over eps 0.27 to 0.95, poles excluded")
         elif name == "L0_approach_exponent":
@@ -858,8 +876,6 @@ for b, out in BASE.items():
 claims.count("t5_n_exp_above_bound", T5["_bound_values"], 1.0, min_margin=0.01,
              note="Exp./bound against 1; densest packing")
 claims.count("stats_n_within_allowance", ST["_gaps"], 1.0, above=False, min_margin=0.05)
-claims.exact("fig8_n_readable", len(MK), structural=True,
-             note="rows of the digitised CSV; no defect of the page moves it")
 claims.says("13", "fig8_n_readable")   # The data and R5 state the count of readable markers
 print(f"{len(claims.metrics)} claims registered")
 
@@ -886,10 +902,12 @@ ROWS = [
     ("Calc. 1.81 read as 1.18", dict(printed_override={"t5_calc1": "1.18"}), ("t5",)),
     ("Calc. 2.12 read as 2.21", dict(printed_override={"t5_calc2": "2.21"}), ("t5",)),
     ("bounded search window ending at Eo* = 5", dict(search_hi=5.0), ("t5",)),
+    ("printed Calc. values taken to +-0.05 for +-0.005", dict(calc_half=0.05), ("t5",)),
     ("Table 7 subset counts swapped", dict(t7_swap=True), ("stats",)),
     ("13 other-fluid points read as 31", dict(printed_override={"p57_other_n": "31"}), ("stats",)),
     ("Jesser-Elgin 16 % read as 18 %", dict(printed_override={"p57_jesser_e_pct": "18"}), ("stats",)),
     ("Table 3 a != b deviation 11.4 read as 11.9", dict(printed_override={"t3_free_e_pct": "11.9"}), ("stats",)),
+    ("Figure 8 hand-split pairs not counted", dict(pair_split=False), ("fig8",)),
     ("Figure 8 band read at +-30 %", dict(band_pct=30.0), ("fig8",)),
     ("Figure 8 band read at +-10 %", dict(band_pct=10.0), ("fig8",)),
     ("Figure 8 marker centres 2 px low", dict(centre_shift_px=2.0), ("fig8",)),

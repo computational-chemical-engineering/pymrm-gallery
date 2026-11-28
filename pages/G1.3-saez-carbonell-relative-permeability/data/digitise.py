@@ -20,7 +20,11 @@ resampling) into a temporary folder, read, and deleted. Steps:
    is a candidate. Its centre is the centre of its undilated bounding box
    (circles, squares) or the vertex centroid (triangles: the bounding-box centre
    moved by h/6 toward the base). Symbols are assigned by hand from a 3x zoom
-   (``HAND`` below); blobs holding several touching markers are ``cluster`` rows,
+   (``HAND`` below); a marker a drawn line crosses (flag "crossed by") is centred
+   from its raw pixels: a circle by a least-squares circle fit to the outline
+   pixels outside the removed band, a triangle from its base (or apex) row, which
+   the line does not reach, and the median height of the isolated triangles of
+   its kind; blobs holding several touching markers are ``cluster`` rows,
    with the range of D over their dark pixels, and two touching pairs whose
    members can be told apart are split by hand reads.
 
@@ -55,7 +59,7 @@ HAND = {
     (589, 556): ("open inverted triangle", "isolated"),
     (637, 524): ("open square", "isolated"),
     (640, 496): ("filled inverted triangle", "isolated"),
-    (676, 573): ("open triangle", "touching an open triangle of the lower cluster"),
+    (676, 573): ("open triangle", "touching an open triangle of the lower cluster; crossed by the -20% line"),
     (699, 462): ("filled inverted triangle", "isolated"),
     (728, 420): ("open inverted triangle", "isolated"),
     (749, 499): ("open circle", "isolated; crossed by the -20% line"),
@@ -76,6 +80,28 @@ def page_image(pdf: str) -> np.ndarray:
                         f"{tmp}/p"], check=True)
         png = sorted(Path(tmp).glob("p-*.png"))[0]
         return np.array(Image.open(png).convert("L")) < 128
+
+
+def raw_centre(a, fx, fy, lines, sym, x, y, h_ref):
+    """Centre of a marker a drawn line crosses, from the raw (unmasked) pixels near (x, y)."""
+    r0, c0 = int(y) - 9, int(x) - 9
+    rr, cc = np.nonzero(a[r0:r0 + 19, c0:c0 + 19])
+    rr, cc = rr + r0, cc + c0
+    near = np.hypot(cc - x, rr - y) < 8.5
+    if sym == "open circle":
+        dpx = np.polyval(fy, rr) - np.polyval(fx, cc)
+        k = near & (np.min([np.abs(dpx - v) for v in lines.values()], axis=0) > LINE_HALF)
+        A = np.c_[2 * cc[k], 2 * rr[k], np.ones(k.sum())]
+        sol = np.linalg.lstsq(A, cc[k]**2 + rr[k]**2.0, rcond=None)[0]
+        return float(sol[0]), float(sol[1])
+    sign = TRIANGLES[sym]         # +1 apex up, base at the bottom; -1 apex down
+    rr, cc = rr[near], cc[near]
+    need = 5 if sign > 0 else 2   # pixels in the base row, in the apex row
+    edge = max(r for r in np.unique(rr) if np.sum(rr == r) >= need)
+    cols = np.sort(cc[rr == edge])
+    runs = np.split(cols, np.where(np.diff(cols) > 1)[0] + 1)
+    run = min(runs, key=lambda g: abs(g.mean() - x))
+    return float(run.mean()), float(edge - (1 / 3 if sign > 0 else 2 / 3) * h_ref)
 
 
 def calibrate(a):
@@ -120,6 +146,16 @@ def main(pdf):
         keep &= ~(np.abs(D - v) < LINE_HALF)
     lab, _ = ndi.label(ndi.binary_dilation(keep, iterations=2))
     rows = []
+    isolated_h = {}
+    for i, sl in enumerate(ndi.find_objects(lab)):       # heights of the uncrossed triangles
+        m = (lab[sl] == i + 1) & keep[sl]
+        if m.sum() < MIN_AREA:
+            continue
+        rr, cc = np.nonzero(m)
+        x, y = (cc.min() + cc.max()) / 2 + sl[1].start + c0, (rr.min() + rr.max()) / 2 + sl[0].start + r0
+        key = min(HAND, key=lambda p: (p[0] - x)**2 + (p[1] - y)**2)
+        if (key[0] - x)**2 + (key[1] - y)**2 < 6**2 and HAND[key][0] in TRIANGLES and "crossed" not in HAND[key][1]:
+            isolated_h.setdefault(HAND[key][0], []).append(rr.max() - rr.min() + 1)
     for i, sl in enumerate(ndi.find_objects(lab)):
         m = (lab[sl] == i + 1) & keep[sl]
         if m.sum() < MIN_AREA:
@@ -136,6 +172,9 @@ def main(pdf):
         if near and key in HAND:
             sym, flag = HAND[key]
             y += TRIANGLES.get(sym, 0) * h / 6.0
+            if "crossed by" in flag:
+                h_ref = float(np.median(isolated_h[sym])) if sym in TRIANGLES else 0.0
+                x, y = raw_centre(a, fx, fy, lines, sym, x, y, h_ref)
             rows.append(("marker", sym, flag, x, y, np.nan, np.nan))
         elif near and key in SPLIT:
             for sym, xs, ys in SPLIT[key]:
