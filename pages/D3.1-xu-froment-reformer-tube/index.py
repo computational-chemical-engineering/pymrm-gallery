@@ -28,7 +28,7 @@
 #
 # Xu and Froment (1989, Part II) put their Part I kinetics into a slab model of the
 # catalyst ring and the slab into a one-dimensional heterogeneous model of an industrial
-# reformer tube, and concluded that the conversion "is limited mainly by the heat flux
+# reformer tube, and state (p. 101) that the conversion "is limited mainly by the heat flux
 # supplied per unit weight of catalyst". This page rebuilds that model with pymrm and
 # tests the statement inside it: how much does the exit conversion respond to the
 # catalyst activity, and how much to the heat? It also audits the printed inputs and
@@ -77,7 +77,7 @@ from IPython.display import HTML, Markdown, display
 from scipy.interpolate import CubicSpline
 from pymrm.checks import find_roots, observed_orders
 
-from gallery_utils import Claims, assert_check_values, load_data
+from gallery_utils import Claims, assert_check_values, load_data, load_meta
 import model as M
 
 claims = Claims(PAGE.split("-")[0])
@@ -125,7 +125,9 @@ def show(frame, uuid, digits=None):
 # Part II's industrial simulation found effectiveness factors near 0.02, so only a thin
 # outer shell of each ring works, and concluded that the heat flux is the limit. A
 # statement of that kind is a statement about a sensitivity, so this page measures the
-# two sensitivities in the authors' own model.
+# two sensitivities in a rebuild of the authors' model.
+#
+# Not repeated: the model ladder (page `D1.1`) and the Thiele closed forms (page `B1.1`).
 
 # %%
 ST_ = load_data("xu-froment-1989-ii-statements.csv", page=PAGE, dtype=str)
@@ -148,7 +150,8 @@ say("\n".join(f"- **{r.id}** (p. {r.journal_page}): \"{r.quote}\"" for r in ST_.
 # with r_CH4 = r1 + r3 and r_CO2 = r2 + r3 (Part I's eq. 3 rates), p = p_bulk at
 # x = 0. The other three partial pressures follow from the element balances (eqs. 6e-g).
 # The observed rate is the layer average, r_obs = (1/l) ∫ r dx; the paper divides the
-# slab value by 1.071 for the ring (p. 100), and eta_j = r_j,obs / r_j(bulk).
+# slab value by 1.071 for the ring (p. 100), and eta_j = r_j,obs / r_j(bulk). Eq. 13b is printed
+# with the sign of 13a (p. 100); r_CO2 is a formation rate, so the sign is corrected here.
 #
 # **Tube (eqs. 10a-c).** Plug flow with
 #
@@ -235,7 +238,7 @@ print(f"eps_s = {CASE.eps_s:.6f}, rho_B = {CASE.rho_B:.1f} kg/m3, F0 = {CASE.F0:
 # - Loaded from other pages: C2.1's Part I parameter table (C2.1 finds that its
 #   equilibrium correlation is not in the paper and that the activity level of the
 #   industrial catalyst is not stated: both enter here as choices A1, A2); C2.5's NIST
-#   Shomate rows (the H2 row is valid to 1000 K and is applied up to about 1060 K here; flagged);
+#   Shomate rows (the H2 row is valid to 1000 K and is applied above it in the hottest tubes, whose highest gas temperature is stated in R4; flagged);
 #   A4.5's Table I diffusion volumes and atomic weights.
 # - `check_values.csv`: independent values from a second route (scipy Radau and a
 #   finite-difference slab), asserted below before any result.
@@ -316,10 +319,14 @@ def extrap(res, key, ns, z_at):
 # result is shown. The studies are functions of the defect a break row injects.
 
 # %%
-def table2_study(molar_volume=22.414, rho_skeletal=False, l_act=None, eps_B=0.50, drop_first_pore=False):
+def table2_study(molar_volume=22.414, rho_skeletal=False, l_act=None, eps_B=0.50, drop_first_pore=False,
+                 y_ch4_pct=None):
     """R1: the printed feed, pores and ring, recomputed."""
     ng = P("natural_gas_feed") / molar_volume
     y = {k: P(f"y_{k}_natural_gas") / 100 for k in ("CH4", "N2", "C2H6", "CO2", "C3H8", "C4H10", "C5H12")}
+    if y_ch4_pct is not None:
+        y["CH4"] = y_ch4_pct / 100
+    comp_sum = 100 * sum(y.values())
     F0 = P("equiv_CH4_feed")
     st = P("steam_feed") / molar_volume
     vg = sum(PORE_DV[1:] if drop_first_pore else PORE_DV) * 1e-3
@@ -339,14 +346,14 @@ def table2_study(molar_volume=22.414, rho_skeletal=False, l_act=None, eps_B=0.50
                                            + 4 * y["C4H10"] + 5 * y["C5H12"]),
         steam_kmol_h_at_22414=st, steam_ratio_from_Nm3=st / F0,
         n2_ratio_from_Nm3=y["N2"] * ng / F0, co2_ratio_from_Nm3=y["CO2"] * ng / F0,
-        eps_s_rho_pellet=eps, eps_s_rho_skeletal=eps_k, skeletal_density_if_pellet=rho / (1 - eps),
+        T2_comp_sum_pct=comp_sum, eps_s_rho_pellet=eps, eps_s_rho_skeletal=eps_k, skeletal_density_if_pellet=rho / (1 - eps),
         ring_volume_m3=v_ring, ring_active_volume_lateral_m3=va1,
         ring_active_volume_with_ends_m3=va2, ring_av_ratio_lateral_only=lat * l / va1,
         ring_av_ratio_lateral_ends=(lat + ends) * l / va2,
         rho_B_page=rho * (1 - eps_B), catalyst_heated_kg=rho * (1 - eps_B) * CASE.omega * CASE.L_heat)
 
 
-def figure_study(co2_nm3=False, t_col="T_K", sensible=False, col="x_0e-5m", f5_z=4.0):
+def figure_study(co2_nm3=False, t_col="T_K", sensible=False, col="x_0e-5m", f5_z=4.0, f5_end=11.1):
     """R1: algebra on the digitised Figs. 3, 5 and 7 (no model solve)."""
     ps = np.array([F7.loc[k, col] for k in ("CH4", "H2O", "H2", "CO", "CO2")])
     a_co, a_co2 = ps[3] / ps[0], ps[4] / ps[0]
@@ -376,6 +383,13 @@ def figure_study(co2_nm3=False, t_col="T_K", sensible=False, col="x_0e-5m", f5_z
     out["F3_K1_factor_implied_at_4m"] = Q1 / f5.V1 / K1
     out["F3_K2_factor_implied_at_4m"] = Q2 / f5.V2 / K2
     out["F3_T4_K"] = T4
+    for z3, z5, tag in ((4.0, 4.0, "4m"), (11.12, f5_end, "1112m")):    # Fig. 3's own composition
+        e3 = f3.loc[z3]
+        pq = CASE.state(e3.CH4_axis, e3.CO2_axis, float(np.interp(z3, FIG3_PT[0], FIG3_PT[1])))[0]
+        v = CASE.approach(pq, e3[t_col])
+        out[f"F3_K1_factor_fig3comp_{tag}"] = v[0] / F5.set_index("z_m").loc[z5].V1
+        out[f"F3_K2_factor_fig3comp_{tag}"] = v[1] / F5.set_index("z_m").loc[z5].V2
+    out["F3_x_4m"], out["F3_y_4m"] = f3.loc[4.0].CH4_axis, f3.loc[4.0].CO2_axis
     case = CASE
     if sensible:                       # break: enthalpy without formation (reaction heat dropped)
         h298 = case.h_i(298.15)
@@ -621,7 +635,8 @@ say(f"Fig. 7 at 4 m gives x = {FIG['F7_x_from_surface']:.6f} and y = {FIG['F7_y_
     f"{FIG['F7_H2_over_CH4_predicted_Nm3_CO2']:.5f}. The simulation used 5.168 kmol/h and the printed "
     f"ratios. The factor 1.071 is not reproduced: lateral faces give a ring a_v equal to the slab's "
     f"exactly ({TAB['ring_av_ratio_lateral_only']:.12f}), lateral and end faces "
-    f"{TAB['ring_av_ratio_lateral_ends']:.5f}.\n\n"
+    f"{TAB['ring_av_ratio_lateral_ends']:.5f}. Table 2's natural gas composition sums to "
+    f"{TAB['T2_comp_sum_pct']:.1f} vol. % with the printed CH4 entry of {P('y_CH4_natural_gas')} %.\n\n"
     f"**Fig. 3's energy.** Read as x (the axis is labelled x/(1 + zeta)), Fig. 3's exit state holds "
     f"{FIG['F3_duty_W_axis_as_x'] / 1e3:.3f} kW more enthalpy than the feed "
     f"({FIG['F3_duty_W_axis_times_1pz'] / 1e3:.3f} kW with the axis factor): that is the duty this "
@@ -634,8 +649,14 @@ say(f"Fig. 7 at 4 m gives x = {FIG['F7_x_from_surface']:.6f} and y = {FIG['F7_y_
     f"**The temperature at 4 m.** Fig. 5's V1 and V2 with Fig. 7's surface composition give "
     f"T = {FIG['F7F5_T_from_V1_K']:.2f} K (from V1) and {FIG['F7F5_T_from_V2_K']:.2f} K (from V2) under "
     f"C2.1's constants, against {FIG['F3_T4_K']:.2f} K read on Fig. 3. At Fig. 3's temperature the figures "
-    f"imply K1 x {FIG['F3_K1_factor_implied_at_4m']:.4f} and K2 x {FIG['F3_K2_factor_implied_at_4m']:.4f}: "
-    f"the authors' equilibrium constants are not C2.1's correlation (they are not printed).")
+    f"imply K1 x {FIG['F3_K1_factor_implied_at_4m']:.4f} and K2 x {FIG['F3_K2_factor_implied_at_4m']:.4f}. "
+    f"With Fig. 3's own composition instead of Fig. 7's the factors are "
+    f"{FIG['F3_K1_factor_fig3comp_4m']:.3f} and {FIG['F3_K2_factor_fig3comp_4m']:.3f} at 4 m and "
+    f"{FIG['F3_K1_factor_fig3comp_1112m']:.3f} and {FIG['F3_K2_factor_fig3comp_1112m']:.3f} at 11.12 m "
+    f"(Fig. 3 reads x = {FIG['F3_x_4m']:.4f}, y = {FIG['F3_y_4m']:.4f} at 4 m against "
+    f"{FIG['F7_x_from_surface']:.4f}, {FIG['F7_y_from_surface']:.4f} from Fig. 7, reading error 0.003). "
+    f"No pair of constant factors reconciles Figs. 3, 5 and 7; the authors' constants are not printed "
+    f"and the page cannot decide the cause.")
 
 # %% [markdown]
 # ### R2: the pellet
@@ -647,7 +668,14 @@ say(f"Fig. 7 at 4 m gives x = {FIG['F7_x_from_surface']:.6f} and y = {FIG['F7_y_
 
 # %%
 F6_4 = float(np.interp(4.0, F6.z_m, F6.eta1)), float(np.interp(4.0, F6.z_m, F6.eta3))
-ERR7 = {"CH4": 0.0006, "H2O": 0.0008, "CO": 0.0002, "H2": 0.001, "CO2": 0.0008}
+ERR7 = {m_[0]: float(m_[1]) for m_ in __import__("re").findall(
+    r"(\w+) ([0-9.]+)", load_meta("xu-froment-1989-ii-fig7.csv", page=PAGE)["acquisition"]["estimated_error"].split(" bar")[0])}
+
+
+def skeletal_case(case):
+    """rho_s read as the skeletal density: the pellet density, which enters the source term and rho_B, is
+    rho_s (1 - eps_s), with eps_s = V_g / (1/rho_s + V_g)."""
+    return replace(case, eps_s=TAB["eps_s_rho_skeletal"], rho_s=case.rho_s * (1 - TAB["eps_s_rho_skeletal"]))
 
 
 def fig7_state(case):
@@ -663,16 +691,18 @@ def r2_study(ring=None, T=None, n=160, base=None):
     ring = base.ring_factor if ring is None else ring
     T = FIG["F7F5_T_from_V1_K"] if T is None else T
     out, band = {}, []
-    for eps in (CASE.eps_s, TAB["eps_s_rho_skeletal"]):
+    for rd in (False, True):
         for TT in (FIG["F3_T4_K"], FIG["F7F5_T_from_V1_K"]):
             for a in (1.0, 2.246):
                 for cut in (None, 0.08e-3):
-                    case = replace(base, eps_s=eps, act=a)
+                    case = replace(skeletal_case(base) if rd else base, act=a)
                     pb, yf = fig7_state(case)
                     De = case.d_eff(yf, TT, sum(pb) / (1 - yf[5]))
                     e = M.pellet_rates(case, pb, TT, De, n=n // 2, cut=cut)
-                    band.append(e[0] / case.rates(pb, TT)[0] / ring)
-    out["R2_eta1_band_min"], out["R2_eta1_band_max"] = min(band), max(band)
+                    band.append((a, e[0] / case.rates(pb, TT)[0] / ring))
+    for nm, a_ in (("a1", 1.0), ("fresh", 2.246)):
+        b_ = [v_ for a, v_ in band if a == a_]
+        out[f"R2_eta1_band_{nm}_min"], out[f"R2_eta1_band_{nm}_max"] = min(b_), max(b_)
     pb, yf = fig7_state(base)
     pt = sum(pb) / (1 - yf[5])
     De = base.d_eff(yf, T, pt)
@@ -680,7 +710,9 @@ def r2_study(ring=None, T=None, n=160, base=None):
     r = base.rates(pb, T)
     out["R2_eta1_4m"], out["R2_eta3_4m"] = ext[0] / r[0] / ring, ext[2] / r[2] / ring
     out["R2_eta1_minus_fig6"] = out["R2_eta1_4m"] - F6_4[0]
-    out["R2_band_min_minus_fig6"] = out["R2_eta1_band_min"] - F6_4[0]
+    out["R2_band_a1_min_minus_fig6"] = out["R2_eta1_band_a1_min"] - F6_4[0]
+    out["R2_surface_H2_below_read"] = F7.loc["H2", "x_0e-5m"] - pb[2]
+    out["R2_surface_H2O_below_read"] = F7.loc["H2O", "x_0e-5m"] - pb[1]
     U, pel = sols[-1], pels[-1]
     prof = dict(zip(("CH4", "H2O", "H2", "CO", "CO2"), pel.dependent(U[:, 0], U[:, 1], pb, De)))
     cols = [c for c in F7.columns if c.startswith("x_") and c != "x_0e-5m"]
@@ -700,13 +732,17 @@ def r2_study(ring=None, T=None, n=160, base=None):
 
 R2, PROF, PEL7 = r2_study()
 say(f"At the 4 m state ({R2['R2_eta1_4m']:.4f} for eta1 and {R2['R2_eta3_4m']:.4f} for eta3 at "
-    f"{FIG['F7F5_T_from_V1_K']:.2f} K) the page lies above Fig. 6 ({F6_4[0]:.4f} ± 0.0007). Over "
-    f"ε_s, T, a in {{1, 2.246}} and the 0.08 mm cut, eta1 spans {R2['R2_eta1_band_min']:.4f} to "
-    f"{R2['R2_eta1_band_max']:.4f}; Fig. 6 lies {abs(R2['R2_band_min_minus_fig6']):.4f} "
-    f"{'below' if R2['R2_band_min_minus_fig6'] > 0 else 'above'} the band's low corner. "
-    f"Against Fig. 7's profiles (2e-5 to 7.9e-5 m), {R2['R2_fig7_inside']} of {R2['R2_fig7_total']} "
-    f"points lie inside the reading error; the largest H2 difference is "
-    f"{R2['R2_fig7_H2_worst_bar']:+.4f} bar and CH4 {R2['R2_fig7_CH4_worst_bar']:+.4f} bar. "
+    f"{FIG['F7F5_T_from_V1_K']:.2f} K) the page lies above Fig. 6 ({F6_4[0]:.4f} ± 0.0007). At a = 1, "
+    f"eta1 spans {R2['R2_eta1_band_a1_min']:.4f} to {R2['R2_eta1_band_a1_max']:.4f} over eps_s, T and the "
+    f"0.08 mm cut: "
+    f"{'above' if R2['R2_band_a1_min_minus_fig6'] > 0.0007 else 'not above'} Fig. 6 in every member; with "
+    f"a = 2.246 it spans {R2['R2_eta1_band_fresh_min']:.4f} to {R2['R2_eta1_band_fresh_max']:.4f}, "
+    f"{'which contains' if R2['R2_eta1_band_fresh_min'] <= F6_4[0] <= R2['R2_eta1_band_fresh_max'] else 'which does not contain'} "
+    f"Fig. 6. Against Fig. 7's profiles (2e-5 to 7.9e-5 m) the profiles disagree: {R2['R2_fig7_inside']} of "
+    f"{R2['R2_fig7_total']} points lie inside the reading error; the largest H2 difference is "
+    f"{R2['R2_fig7_H2_worst_bar']:+.4f} bar and CH4 {R2['R2_fig7_CH4_worst_bar']:+.4f} bar. The page's "
+    f"surface state follows the stoichiometry, so its H2 and H2O start {R2['R2_surface_H2_below_read']:.4f} "
+    f"and {R2['R2_surface_H2O_below_read']:.4f} bar below Fig. 7's read surface values. "
     f"At condition C the cut at 0.08 mm keeps {PC['C_robs_CH4_cut_over_full']:.6f} of the full layer's "
     f"CH4 rate; the lateral layers as cylindrical shells give {PC['C_shell_outer_over_slab_CH4']:.5f} "
     f"(outer) and {PC['C_shell_inner_over_slab_CH4']:.6f} (inner) of the slab rate per volume, "
@@ -821,9 +857,11 @@ show(msg.rename_axis("case").reset_index(), "d31msg", "5g")
 
 # %%
 SWEEPS = {
+    "a = 0.5": dict(case=replace(CASE, act=0.5)),
     "a = 1.225": dict(case=replace(CASE, act=1.225)),
+    "a = 2": dict(case=replace(CASE, act=2.0)),
     "a = 2.246": dict(case=replace(CASE, act=2.246)),
-    "eps_s skeletal reading": dict(case=replace(CASE, eps_s=TAB["eps_s_rho_skeletal"])),
+    "eps_s skeletal reading": dict(case=skeletal_case(CASE)),
     "geometric pore diameters": dict(case=replace(CASE, pore_d=PORE_D_GEO)),
     "eps_B = 0.40": dict(case=replace(CASE, eps_B=0.40)),
     "eps_B = 0.60": dict(case=replace(CASE, eps_B=0.60)),
@@ -835,20 +873,24 @@ SWEEPS = {
 }
 
 
-def sweep_study(act_scale=1.0):
-    """The message on one axial level (n_z = 100) over the robustness sweeps (imposed flux)."""
+def sweep_study(act_scale=1.0, form="flux"):
+    """The message on one axial level (n_z = 100) over the robustness sweeps, in one form."""
     rows = {}
     for name, kw in SWEEPS.items():
         kw = dict(kw)
+        if form == "Tw" and ("shape" in kw or "Q" in kw):      # the heat input does not enter that form
+            continue
         c = kw.pop("case", CASE)
         a = c.act * act_scale
-        d, _ = message_study("flux", a_base=a, case=c, ns=(100,), **kw)
+        d, _ = message_study(form, a_base=a, case=c, ns=(100,), **kw)
         rows[name] = d
     return rows
 
 
 SW = sweep_study()
 SW_RATIOS = np.array([d["ratio"] for d in SW.values()])
+SW_TW = sweep_study(form="Tw")
+SW_TW_RATIOS = np.array([d["ratio"] for d in SW_TW.values()])
 BASE100, _ = message_study("flux", ns=(100,))
 show(pd.DataFrame({k: {"e_a": d["e_a"], "e_Q": d["e_Q"], "e_a/e_Q": d["ratio"], "x(11.12 m)": d["x"]}
                    for k, d in SW.items()}).T.rename_axis("sweep (n_z = 100)").reset_index(), "d31sw", "4g")
@@ -917,6 +959,8 @@ say(f"At 11.12 m the base tube gives x = {SP3(CASE.L_heat)[0]:.4f} against Fig. 
     f"{F3.set_index('z_m').loc[CASE.L_heat].CH4_axis:.4f} (difference {R3['R3_x_minus_fig3_1112']:+.4f}, "
     f"reading error ±0.003) and T {R3['R3_T_minus_fig3_1112']:+.1f} K from Fig. 3 (±1.5 K); "
     f"V1 = {R3['R3_V1_1112']:.4f} against Fig. 5's {F5.set_index('z_m').loc[11.1].V1:.4f}. "
+    f"The duty is Fig. 3's enthalpy gain to 11.12 m (A7), so only the split between conversion and "
+    f"temperature is tested there; Fig. 3's axis, labelled x/(1+ζ), is read as x. "
     f"For z > 4 m, {R3['R3_CH4_axis_outside_gt4']} of {R3['R3_CH4_axis_n_gt4']} x readings and "
     f"{R3['R3_T_K_outside_gt4']} of {R3['R3_T_K_n_gt4']} T readings lie outside the reading error; for "
     f"z ≤ 4 m, {R3['R3_CH4_axis_outside_le4']} of {R3['R3_CH4_axis_n_le4']} and "
@@ -990,9 +1034,11 @@ def low_claims(a_low=0.01):
 
 
 def sweep_claims(act_scale=1.0):
-    sw = sweep_study(act_scale)
-    r = np.array([d["ratio"] for d in sw.values()])
-    return {"R4_sweep_n_below": int(np.sum(r < 0.1)), "R4_sweep_max_ratio": float(r.max())}
+    out = {}
+    for form, key in (("flux", "R4_sweep"), ("Tw", "R4_Tw_sweep")):
+        r = np.array([d["ratio"] for d in sweep_study(act_scale, form).values()])
+        out[f"{key}_n_below"], out[f"{key}_max_ratio"] = int(np.sum(r < 0.1)), float(r.max())
+    return out
 
 
 R4 = {**r4_claims("flux"), **r4_claims("Tw"), **low_claims(), **sweep_claims()}
@@ -1010,12 +1056,14 @@ TIGHT = 1e-9       # algebra on printed numbers and digitised cells
 PELLET = 1e-6      # Richardson values of pellet solves (newton tol 1e-12 on bar)
 TUBE = 1e-5        # Richardson values of the march
 DIFF = 1e-3        # elasticities and differences of nearby tubes
-for n_ in ("ng_hydrocarbon_carbon_kmol_h", "steam_ratio_from_Nm3", "co2_ratio_from_Nm3", "n2_ratio_from_Nm3",
+for n_ in ("T2_comp_sum_pct", "ng_hydrocarbon_carbon_kmol_h", "steam_ratio_from_Nm3", "co2_ratio_from_Nm3", "n2_ratio_from_Nm3",
            "eps_s_rho_pellet", "eps_s_rho_skeletal", "skeletal_density_if_pellet",
            "ring_av_ratio_lateral_ends", "catalyst_heated_kg", "F7_x_from_surface", "F7_y_from_surface",
            "F7_H2_over_CH4_predicted", "F7_H2_over_CH4_read", "F7_H2_over_CH4_predicted_Nm3_CO2",
            "F7_H2O_over_CH4_predicted", "F7_H2O_over_CH4_read", "F7F5_T_from_V1_K", "F7F5_T_from_V2_K",
-           "F3_K1_factor_implied_at_4m", "F3_K2_factor_implied_at_4m", "F3_T4_K", "F3_duty_W_axis_as_x",
+           "F3_K1_factor_implied_at_4m", "F3_K2_factor_implied_at_4m", "F3_T4_K",
+           "F3_K1_factor_fig3comp_4m", "F3_K2_factor_fig3comp_4m", "F3_K1_factor_fig3comp_1112m",
+           "F3_K2_factor_fig3comp_1112m", "F3_duty_W_axis_as_x",
            "F3_duty_W_axis_times_1pz", "F3_excess_kW_0.25", "F3_excess_kW_0.75", "F3_excess_kW_6",
            "F3_lambda_st_implied"):
     claims.value(n_, ALL[n_], rtol=TIGHT)
@@ -1023,8 +1071,9 @@ claims.bound("ring_av_lateral_identity_gap", abs(TAB["ring_av_ratio_lateral_only
              basis="identity", structural=True, note="the l^2 terms cancel: a_v(ring, lateral) = a_v(slab)")
 for n_ in ("C_robs_CH4_cut_over_full", "C_shell_outer_over_slab_CH4", "C_shell_inner_over_slab_CH4",
            "C_lateral_ring_over_slab_CH4", "C0_Eapp_observed_CH4_kJmol", "C0_Eapp_intrinsic_CH4_kJmol",
-           "C0_Eapp_ratio", "C0_eta_CH4_ring", "R2_eta1_4m", "R2_eta3_4m", "R2_eta1_band_min",
-           "R2_eta1_band_max", "R2_band_min_minus_fig6"):
+           "C0_Eapp_ratio", "C0_eta_CH4_ring", "R2_eta1_4m", "R2_eta3_4m", "R2_eta1_band_a1_min",
+           "R2_eta1_band_a1_max", "R2_eta1_band_fresh_min", "R2_eta1_band_fresh_max",
+           "R2_band_a1_min_minus_fig6", "R2_surface_H2_below_read", "R2_surface_H2O_below_read"):
     claims.value(n_, ALL[n_], rtol=PELLET)
 for n_ in ("R2_fig7_H2_worst_bar", "R2_fig7_CH4_worst_bar"):
     claims.value(n_, ALL[n_], rtol=1e-4)
@@ -1038,11 +1087,12 @@ for c_ in ("CH4_axis", "T_K"):
         claims.exact(f"R3_{c_}_n_{zone}", R3[f"R3_{c_}_n_{zone}"], structural=True, note="digitised points")
 for n_ in ("R4_flux_e_a", "R4_flux_e_Q", "R4_flux_ratio", "R4_flux_dx_inf", "R4_flux_heat_equiv_pct",
            "R4_Tw_e_a", "R4_Tw_e_Q", "R4_Tw_ratio", "R4_Tw_duty_double_change_pct", "R4_flux_low_ratio",
-           "R4_Tw_low_ratio", "R4_Tw_low_duty_change_pct", "R4_sweep_max_ratio", "R4_flux_ratio_n100_gap"):
+           "R4_Tw_low_ratio", "R4_Tw_low_duty_change_pct", "R4_sweep_max_ratio", "R4_Tw_sweep_max_ratio", "R4_flux_ratio_n100_gap"):
     claims.value(n_, ALL[n_], rtol=DIFF)
 claims.value("R4_flux_low_T", ALL["R4_flux_low_T"], rtol=TUBE)
 claims.value("U_TW", U_TW, rtol=1e-6, unit="W/(m2 K)")
 claims.count("R4_sweep_n_below", SW_RATIOS, 0.1, min_margin=0.1, above=False)
+claims.count("R4_Tw_sweep_n_below", SW_TW_RATIOS, 0.1, min_margin=0.1, above=False)
 claims.bound("V1_energy_invariant", V1["V1_energy_invariant"], max=1e-12, basis="identity")
 claims.bound("thiele_eta_phi10_gap", TH["thiele_eta_phi10_gap"], max=1e-8, basis="theory")
 claims.bound("thiele_eta_phi100_gap", TH["thiele_eta_phi100_gap"], max=1e-7, basis="theory")
@@ -1058,6 +1108,9 @@ claims.bound("V5_rate_gap", V5["V5_rate_gap"], max=1e-13, basis="identity")
 
 ROWS = [
     ("normal volume at 20 °C (24.055 m3/kmol)", [(table2_study, dict(molar_volume=24.055))]),
+    ("CH4 entry of Table 2 read as 81.4", [(table2_study, dict(y_ch4_pct=81.4))]),
+    ("steam/CH4 of 3.0 in the pellet state", [(r2_study, dict(base=replace(CASE, n0=np.array([1.0, 3.0, 0.122, 0.0, 0.056, 0.164]))))]),
+    ("H2 in the feed 0.3 per CH4 in the pellet state", [(r2_study, dict(base=replace(CASE, n0=np.array([1.0, 3.358, 0.3, 0.0, 0.056, 0.164]))))]),
     ("rho_s read as skeletal density", [(table2_study, dict(rho_skeletal=True))]),
     ("first pore class of Table 1 dropped", [(table2_study, dict(drop_first_pore=True))]),
     ("active layer 3 mm", [(table2_study, dict(l_act=0.003))]),
@@ -1066,6 +1119,7 @@ ROWS = [
     ("Fig. 7 surface read at the 2e-5 m column", [(figure_study, dict(col="x_2e-5m"))]),
     ("T(4 m) read on the inner-skin curve", [(figure_study, dict(t_col="T_i_K"))]),
     ("Fig. 5 read at 5 m for 4 m", [(figure_study, dict(f5_z=5.0))]),
+    ("Fig. 5 read at 10 m for 11.1 m", [(figure_study, dict(f5_end=10.0))]),
     ("enthalpy without formation (reaction heat dropped)", [(figure_study, dict(sensible=True))]),
     ("ring factor omitted", [(pellet_c_study, dict(ring=1.0)), (c0_study, dict(ring=1.0)),
                              (r2_study, dict(ring=1.0))]),
@@ -1122,10 +1176,13 @@ print(f"{len(ROWS)} rows; {len(caught)} of {len(claims.metrics)} claims are fail
 # ### The finding
 
 # %%
-n_sw = len(SW_RATIOS)
-verdict = ("confirmed" if max(R4["R4_flux_ratio"], R4["R4_Tw_ratio"], R4["R4_sweep_max_ratio"]) <= 0.1
+n_sw, n_tw = len(SW_RATIOS), len(SW_TW_RATIOS)
+R4_max = max(R4["R4_flux_ratio"], R4["R4_Tw_ratio"], R4["R4_sweep_max_ratio"], R4["R4_Tw_sweep_max_ratio"])
+verdict = ("confirmed" if R4_max <= 0.1
            else "refuted" if max(R4["R4_flux_ratio"], R4["R4_Tw_ratio"]) > 0.3 else "partly confirmed")
-say(f"**Inside the paper's own model, S1 is {verdict}.** At the base (Fig. 3's duty "
+say(f"**Inside this page's rebuild of the paper's model (page choices A1 to A10: the activity, the "
+    f"equilibrium constants and U are not the authors'), S1 is {verdict} by the criterion fixed before the "
+    f"runs.** At the base (Fig. 3's duty "
     f"{Q_BASE / 1e3:.3f} kW, a = 1) under imposed flux, e_a = {R4['R4_flux_e_a']:.5f} and "
     f"e_Q = {R4['R4_flux_e_Q']:.4f}: ratio {R4['R4_flux_ratio']:.4f}. Under an imposed wall "
     f"temperature (U = {U_TW:.1f} W/(m² K)), e_a = {R4['R4_Tw_e_a']:.5f}, e_Q = {R4['R4_Tw_e_Q']:.4f}, "
@@ -1134,17 +1191,21 @@ say(f"**Inside the paper's own model, S1 is {verdict}.** At the base (Fig. 3's d
     f"n_z = 100 and 200; the one-level (n_z = 100) ratio differs from the extrapolated one by "
     f"{100 * R4['R4_flux_ratio_n100_gap']:.2f} % (relative), the grid error of the sweeps. An infinitely active "
     f"catalyst adds {R4['R4_flux_dx_inf']:.4f} to x(11.12 m), worth {R4['R4_flux_heat_equiv_pct']:.2f} % "
-    f"more heat. Over the {n_sw} robustness sweeps (imposed flux only; the wall-temperature form is "
-    f"run at the base and at low activity) {R4['R4_sweep_n_below']} of {n_sw} ratios are below 0.1 "
-    f"(largest {R4['R4_sweep_max_ratio']:.4f}, at n_z = 100).\n\n"
+    f"more heat. Over the robustness sweeps (n_z = 100) {R4['R4_sweep_n_below']} of {n_sw} ratios are below "
+    f"0.1 under imposed flux (largest {R4['R4_sweep_max_ratio']:.4f}) and {R4['R4_Tw_sweep_n_below']} of "
+    f"{n_tw} under imposed wall temperature (largest {R4['R4_Tw_sweep_max_ratio']:.4f}, the rate cut at "
+    f"0.08 mm).\n\n"
     f"Why the wall-temperature form is the discriminating one: under a fixed flux, energy forces the "
-    f"conversion. At a = 0.01 the flux form still gives a ratio of only {R4['R4_flux_low_ratio']:.3f} "
-    f"(gas at {R4['R4_flux_low_T']:.0f} K), while under fixed T_w the ratio is "
-    f"{R4['R4_Tw_low_ratio']:.3f} and the duty changes by {R4['R4_Tw_low_duty_change_pct']:.1f} %. "
+    f"conversion. At a = 0.01 both forms exceed the 0.1 criterion: {R4['R4_flux_low_ratio']:.3f} under "
+    f"imposed flux (gas at {R4['R4_flux_low_T']:.0f} K, the hottest tube this page solves; the H2 Shomate "
+    f"row is valid to 1000 K) and {R4['R4_Tw_low_ratio']:.3f} under fixed T_w, where the duty changes by "
+    f"{R4['R4_Tw_low_duty_change_pct']:.1f} %. The confirmation therefore holds for the swept activities "
+    f"(0.5 to 2.246), not for a catalyst a hundred times less active. "
     f"The pellet at the 4 m state gives eta1 = {R2['R2_eta1_4m']:.4f} against Fig. 6's "
-    f"{F6_4[0]:.4f} ± 0.0007, with a band of {R2['R2_eta1_band_min']:.4f} to {R2['R2_eta1_band_max']:.4f} "
-    f"over the page choices. The comparison throughout is with the authors' simulation, not with plant "
-    f"data, and it holds for this furnace and the swept heat range only.")
+    f"{F6_4[0]:.4f} ± 0.0007; the bands of R2 are {R2['R2_eta1_band_a1_min']:.4f} to "
+    f"{R2['R2_eta1_band_a1_max']:.4f} at a = 1 and {R2['R2_eta1_band_fresh_min']:.4f} to "
+    f"{R2['R2_eta1_band_fresh_max']:.4f} at a = 2.246. The comparison throughout is with the authors' "
+    f"simulation, not with plant data, and it holds for this furnace and the swept heat range only.")
 
 # %% [markdown]
 # ## What pymrm adds

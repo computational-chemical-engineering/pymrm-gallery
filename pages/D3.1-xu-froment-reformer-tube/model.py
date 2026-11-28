@@ -264,6 +264,8 @@ class Pellet:
 
         U0 = np.tile([pb[0], pb[4]], (n, 1)) if guess is None else guess
         res = newton(fun, U0.ravel(), tol=tol, maxfev=60)
+        if not res.success:
+            raise RuntimeError("pellet Newton solve did not converge")
         return np.asarray(res.x).reshape(n, 2)
 
     # codehealth: allow params -- the bulk state and the continuation length
@@ -419,6 +421,8 @@ class Tube:
             if not ok:                                # refresh the chord Jacobian once
                 J = None
                 out = newton(fun, u0, tol=tol, maxfev=60)
+                if not out.success and not self.intrinsic:     # eta = 1 is the stiff break-row mode, kept as is
+                    raise RuntimeError(f"tube Newton solve did not converge at z = {zi:.4g} m")
             Y[i] = np.asarray(out.x)
             Qs[i] = Qs[i - 1] + dz * perim * self.q(zi, Y[i, 2])
             if i % 10 == 0:

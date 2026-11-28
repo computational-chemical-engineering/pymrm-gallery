@@ -18,4 +18,5 @@ printed 4 m state and the tube against the digitised Figs. 3 to 7.
 There are no plant data: every comparison is with the authors' simulation, digitised. The
 ratio of the elasticities e_a/e_Q at the end of heating is 0.0082 <!-- claim: R4_flux_ratio -->
 under imposed flux and 0.0237 <!-- claim: R4_Tw_ratio --> under imposed wall temperature;
-over the robustness sweeps the largest is 0.0127 <!-- claim: R4_sweep_max_ratio -->.
+over the robustness sweeps the largest is 0.0134 <!-- claim: R4_sweep_max_ratio --> under
+imposed flux and 0.0383 <!-- claim: R4_Tw_sweep_max_ratio --> under imposed wall temperature.

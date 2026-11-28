@@ -9,6 +9,11 @@
     "threads": "1"
   },
   "metrics": {
+    "T2_comp_sum_pct": {
+      "kind": "value",
+      "value": 100.1,
+      "rtol": 1e-09
+    },
     "ng_hydrocarbon_carbon_kmol_h": {
       "kind": "value",
       "value": 5.402650129383421,
@@ -114,6 +119,26 @@
       "value": 886.38,
       "rtol": 1e-09
     },
+    "F3_K1_factor_fig3comp_4m": {
+      "kind": "value",
+      "value": 1.1928168334171352,
+      "rtol": 1e-09
+    },
+    "F3_K2_factor_fig3comp_4m": {
+      "kind": "value",
+      "value": 1.3007343978360189,
+      "rtol": 1e-09
+    },
+    "F3_K1_factor_fig3comp_1112m": {
+      "kind": "value",
+      "value": 0.7977003091107948,
+      "rtol": 1e-09
+    },
+    "F3_K2_factor_fig3comp_1112m": {
+      "kind": "value",
+      "value": 1.1754255651618104,
+      "rtol": 1e-09
+    },
     "F3_duty_W_axis_as_x": {
       "kind": "value",
       "value": 238024.26292783406,
@@ -202,19 +227,39 @@
       "value": 0.031223516742580743,
       "rtol": 1e-06
     },
-    "R2_eta1_band_min": {
+    "R2_eta1_band_a1_min": {
       "kind": "value",
-      "value": 0.016252743113252102,
+      "value": 0.025893441923031692,
       "rtol": 1e-06
     },
-    "R2_eta1_band_max": {
+    "R2_eta1_band_a1_max": {
       "kind": "value",
       "value": 0.03515120102642,
       "rtol": 1e-06
     },
-    "R2_band_min_minus_fig6": {
+    "R2_eta1_band_fresh_min": {
       "kind": "value",
-      "value": -0.003327256886747898,
+      "value": 0.01976888203391948,
+      "rtol": 1e-06
+    },
+    "R2_eta1_band_fresh_max": {
+      "kind": "value",
+      "value": 0.02345499137140947,
+      "rtol": 1e-06
+    },
+    "R2_band_a1_min_minus_fig6": {
+      "kind": "value",
+      "value": 0.006313441923031692,
+      "rtol": 1e-06
+    },
+    "R2_surface_H2_below_read": {
+      "kind": "value",
+      "value": 0.033002840909092335,
+      "rtol": 1e-06
+    },
+    "R2_surface_H2O_below_read": {
+      "kind": "value",
+      "value": 0.018466098484848814,
       "rtol": 1e-06
     },
     "R2_fig7_H2_worst_bar": {
@@ -364,7 +409,12 @@
     },
     "R4_sweep_max_ratio": {
       "kind": "value",
-      "value": 0.012670626394492839,
+      "value": 0.013447147767245413,
+      "rtol": 0.001
+    },
+    "R4_Tw_sweep_max_ratio": {
+      "kind": "value",
+      "value": 0.038285366628656656,
       "rtol": 0.001
     },
     "R4_flux_ratio_n100_gap": {
@@ -385,8 +435,14 @@
     },
     "R4_sweep_n_below": {
       "kind": "exact",
+      "value": 12,
+      "margin": 0.8655285223275458,
+      "min_margin": 0.1
+    },
+    "R4_Tw_sweep_n_below": {
+      "kind": "exact",
       "value": 10,
-      "margin": 0.8732937360550715,
+      "margin": 0.6171463337134334,
       "min_margin": 0.1
     },
     "V1_energy_invariant": {
@@ -467,7 +523,8 @@
   "quoted": {},
   "breaks": {
     "ng_hydrocarbon_carbon_kmol_h": [
-      "normal volume at 20 \u00b0C (24.055 m3/kmol)"
+      "normal volume at 20 \u00b0C (24.055 m3/kmol)",
+      "CH4 entry of Table 2 read as 81.4"
     ],
     "steam_ratio_from_Nm3": [
       "normal volume at 20 \u00b0C (24.055 m3/kmol)"
@@ -477,6 +534,9 @@
     ],
     "co2_ratio_from_Nm3": [
       "normal volume at 20 \u00b0C (24.055 m3/kmol)"
+    ],
+    "T2_comp_sum_pct": [
+      "CH4 entry of Table 2 read as 81.4"
     ],
     "eps_s_rho_pellet": [
       "rho_s read as skeletal density",
@@ -494,6 +554,73 @@
     ],
     "catalyst_heated_kg": [
       "eps_B = 0.40"
+    ],
+    "R2_eta1_band_a1_min": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off"
+    ],
+    "R2_eta1_band_a1_max": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off"
+    ],
+    "R2_eta1_band_fresh_min": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off"
+    ],
+    "R2_eta1_band_fresh_max": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off"
+    ],
+    "R2_eta1_4m": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off",
+      "pellet at Fig. 3's T(4 m)"
+    ],
+    "R2_eta3_4m": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off",
+      "pellet at Fig. 3's T(4 m)"
+    ],
+    "R2_band_a1_min_minus_fig6": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "ring factor omitted",
+      "Knudsen diffusion off"
+    ],
+    "R2_surface_H2_below_read": [
+      "H2 in the feed 0.3 per CH4 in the pellet state"
+    ],
+    "R2_surface_H2O_below_read": [
+      "steam/CH4 of 3.0 in the pellet state"
+    ],
+    "R2_fig7_inside": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "Knudsen diffusion off",
+      "pellet at Fig. 3's T(4 m)"
+    ],
+    "R2_fig7_H2_worst_bar": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "Knudsen diffusion off",
+      "pellet at Fig. 3's T(4 m)"
+    ],
+    "R2_fig7_CH4_worst_bar": [
+      "steam/CH4 of 3.0 in the pellet state",
+      "H2 in the feed 0.3 per CH4 in the pellet state",
+      "Knudsen diffusion off",
+      "pellet at Fig. 3's T(4 m)"
     ],
     "R3_CH4_axis_outside_le4": [
       "zones split at 2 m instead of 4 m"
@@ -578,6 +705,18 @@
     "F3_T4_K": [
       "T(4 m) read on the inner-skin curve"
     ],
+    "F3_K1_factor_fig3comp_4m": [
+      "T(4 m) read on the inner-skin curve"
+    ],
+    "F3_K2_factor_fig3comp_4m": [
+      "T(4 m) read on the inner-skin curve"
+    ],
+    "F3_K1_factor_fig3comp_1112m": [
+      "Fig. 5 read at 10 m for 11.1 m"
+    ],
+    "F3_K2_factor_fig3comp_1112m": [
+      "Fig. 5 read at 10 m for 11.1 m"
+    ],
     "F3_duty_W_axis_as_x": [
       "enthalpy without formation (reaction heat dropped)"
     ],
@@ -627,40 +766,6 @@
     "C0_eta_CH4_ring": [
       "ring factor omitted",
       "K_H2O at T_ref 648 K"
-    ],
-    "R2_eta1_band_min": [
-      "ring factor omitted",
-      "Knudsen diffusion off"
-    ],
-    "R2_eta1_band_max": [
-      "ring factor omitted",
-      "Knudsen diffusion off"
-    ],
-    "R2_eta1_4m": [
-      "ring factor omitted",
-      "Knudsen diffusion off",
-      "pellet at Fig. 3's T(4 m)"
-    ],
-    "R2_eta3_4m": [
-      "ring factor omitted",
-      "Knudsen diffusion off",
-      "pellet at Fig. 3's T(4 m)"
-    ],
-    "R2_band_min_minus_fig6": [
-      "ring factor omitted",
-      "Knudsen diffusion off"
-    ],
-    "R2_fig7_inside": [
-      "Knudsen diffusion off",
-      "pellet at Fig. 3's T(4 m)"
-    ],
-    "R2_fig7_H2_worst_bar": [
-      "Knudsen diffusion off",
-      "pellet at Fig. 3's T(4 m)"
-    ],
-    "R2_fig7_CH4_worst_bar": [
-      "Knudsen diffusion off",
-      "pellet at Fig. 3's T(4 m)"
     ],
     "U_TW": [
       "T_w line 10 K higher in the calibration"
@@ -713,6 +818,12 @@
     "R4_sweep_max_ratio": [
       "activity times 0.01 in every sweep"
     ],
+    "R4_Tw_sweep_n_below": [
+      "activity times 0.01 in every sweep"
+    ],
+    "R4_Tw_sweep_max_ratio": [
+      "activity times 0.01 in every sweep"
+    ],
     "V3_order_min": [
       "eta forced to 1 (intrinsic rates, no pellet)"
     ],
@@ -748,7 +859,7 @@
     ]
   },
   "rows": {
-    "defined": 28,
-    "recorded": 28
+    "defined": 32,
+    "recorded": 32
   }
 }
