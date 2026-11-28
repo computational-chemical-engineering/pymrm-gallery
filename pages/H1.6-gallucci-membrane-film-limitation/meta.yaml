@@ -1,0 +1,62 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.6
+slug: gallucci-membrane-film-limitation
+title: "Gallucci et al. (2013): membrane or bed-to-wall film, which limits the hydrogen flux"
+section: H
+status: published
+tier: T1
+priority: P1
+structures: [S7]
+phases: [gas]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Gallucci, F.", "Fernandez, E.", "Corengia, P.", "van Sint Annaland, M."]
+    year: 2013
+    title: "Recent advances on membranes and membrane reactors for hydrogen production"
+    container: "Chemical Engineering Science 92, 40-66"
+    doi: 10.1016/j.ces.2013.01.008
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 15
+datasets:
+  - gallucci-2013-fig15-reads.csv
+  - gallucci-2013-fig16-reads.csv
+  - gallucci-2013-table2.csv
+  - gallucci-2013-printed-numbers.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route (closed forms, quadrature, root finding; no pymrm), before the first claim
+  - the three algebraic forms of the local flux at every cell, and H2 conservation f + g = 1 in every cell
+  - limits of the module (membrane-limited vacuum closed form, film-limited closed form, pinch recovery)
+  - observed order of the module on six levels with a round-off companion, Richardson value against the check value within its estimate
+  - every module number extrapolated on three levels and compared with scipy quadrature at every conductance ratio of the sweep
+  - every number the page states is a registered claim; every non-structural claim has a break row that moves it (the structural ones are named in the break-table cell)
+
+adds: >
+  The membrane module of the area statement: pymrm solves retentate and permeate as one
+  finite-volume system (BlockLayout, construct_convflux_upwind, construct_div, the exact
+  source derivative through construct_coefficient_matrix, compute_boundary_values at the
+  outlet), the membrane area as a bordering unknown in one pymrm.newton solve, and the exact
+  discrete derivative of the area from the converged Jacobian; pymrm.checks supplies the
+  thresholds (find_roots) and the grid errors (observed_orders). The figure verdicts and the
+  Table 2 checks are closed forms and reads, to which pymrm adds nothing.
+
+agreement: >
+  Fig. 16 bounds membrane control at 0.22936 <!-- claim: r3_bound_15 --> or less at every
+  feed pressure (4 <!-- claim: r3_n_below_half --> of the four below one half); the module's area
+  elasticity is one half, for a recovery of 0.8 <!-- claim: tc_r_star -->, at a conductance ratio of
+  1.1403 <!-- claim: r4_beta_half_pymrm --> with a permeate of one bar and 0.95425 <!-- claim: r4_beta_half_R80_vac -->
+  with a vacuum permeate;
+  Table 2 is consistent in 22 <!-- claim: r5_n_consistent_two --> of 23 <!-- claim: r5_n_rows --> rows.
+
+caveats: >
+  The review prints no model, no permeate pressure for Fig. 15 and no definitions of
+  Fig. 16's categories. Figure values are reads at 200 ppi; Fig. 15's weight-fraction ratio is
+  used as a partial-pressure ratio. The module is isothermal, isobaric, without reaction, with
+  an assumed pure-H2 permeate at one bar.
