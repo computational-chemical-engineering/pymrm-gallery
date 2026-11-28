@@ -1,0 +1,53 @@
+dataset_id: al-dahhan-1995-fig6
+title: "Experimental against predicted wetting efficiency, both beds, Figure 6 of Al-Dahhan and Dudukovic (1995)"
+status: complete
+
+source:
+  authors: ["Al-Dahhan, M. H.", "Dudukovic, M. P."]
+  year: 1995
+  container: "Chemical Engineering Science 50(15), 2377-2389"
+  doi: "10.1016/0009-2509(95)00092-J"
+  access: >
+    Publisher PDF (a 300 ppi scan) held outside the repository (~/papers/pymrm-gallery/).
+    No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 6, journal p. 2387 (PDF page 11)"
+  tool: "pdftoppm -r 300 (the native resolution of the scan); marker boxes from connected components of the thresholded image, touching markers separated by eye on pixel printouts; ring centres from a ring-template score (radius 8 px, 64 samples) clustered and weighted, checked by eye on a numbered overlay; calibration and conversion by data/digitise.py (committed)"
+  procedure: >
+    Linear axes, calibrated on the labelled inner ticks 0.2 to 0.8: columns 526, 654.5, 783,
+    913; rows 370, 500, 629.5, 758.5. 644.8 px per unit (abscissa), 647.5 px per unit
+    (ordinate), 1 px = 0.0016; largest tick residual 0.60 px. 33 rings resolved: 28 in the
+    band, one double ring (two coincident rings, recorded twice), one ring on the top frame
+    at predicted 0.97, and a stack of rings at (1.0, 1.0) on both frames, from which three
+    centres are read (rows 238, 245.5, 254.5); whether the stack holds three or four rings
+    cannot be decided from the scan.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-28
+  estimated_error: >
+    Isolated rings +/-1 px (0.0016), overlapping +/-1.5 to 2 px, the double ring and the
+    corner stack +/-3 px (the sd columns). The count is the weak part: 33 resolved.
+
+conditions: "Both beds, all cases of Figs 4 and 5 with gas flow; dashed lines drawn as the +/-10 % band."
+
+missing:
+  - "Rings hidden under others: the corner stack at (1, 1) may hold a fourth ring; any ring exactly under another cannot be seen."
+
+columns:
+  - {name: ring, unit: "-", description: "ring index"}
+  - {name: eta_pred, unit: "-", description: "abscissa, eta_CE predicted"}
+  - {name: eta_exp, unit: "-", description: "ordinate, eta_CE experimental"}
+  - {name: px_x, unit: px, description: "ring centre column at 300 ppi"}
+  - {name: px_y, unit: px, description: "ring centre row at 300 ppi"}
+  - {name: sd_pred, unit: "-", description: "reading SD of eta_pred"}
+  - {name: sd_exp, unit: "-", description: "reading SD of eta_exp"}
+  - {name: flag, unit: "-", description: "overlap, double ring, frame, corner stack"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.

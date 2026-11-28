@@ -1,0 +1,33 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Al-Dahhan, M. H.", "Dudukovic, M. P."]
+  year: 1995
+  container: "Chemical Engineering Science 50(15), 2377-2389"
+  doi: "10.1016/0009-2509(95)00092-J"
+  access: >
+    The equations are those of the paper (eqs. 1, 6, 8 and 9, Tables 1 to 4) with the readings and
+    misprints stated in the build plan's equations file. The values are not read from the paper but
+    computed from its equations by a second route at a stated test condition; the half-unit rows
+    compare those values with the paper's printed constants.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script g15_check_values.py (numpy, scipy and mpmath, no pymrm, no page code; eq. 9 full groups cross-checked against the reduced form, the full-wetting L against a root find, the pellet moment coefficients against mpmath derivatives of the exact transfer functions), 2026-11-28"
+  date: 2026-11-28
+  estimated_error: "none beyond floating point (closed forms and plain arithmetic; the mpmath rows agree to 1e-12 or better)"
+
+conditions: >
+  Test condition T: rho_L = 654.8 kg/m3, mu_L = 3.00e-4 Pa s (test inputs, not claims about the
+  liquid), g = 9.80665 m/s2, L = 1.0 kg/(m2 s), (dP/Z)/(rho_L g) = 0.5; the Table 4 sphere and
+  extrudate beds; a synthetic four-point metric set; tracer condition T2 for the moment rows. All
+  as stated in the equations file's check-value section.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
