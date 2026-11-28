@@ -5,14 +5,15 @@ listing:
   contents: pages
   type: grid
   grid-columns: 3
-  sort: "categories"
-  sort-ui: [title, date, date-modified]
+  sort: "listing-order"
+  sort-ui: [title, paper-year, date, date-modified]
   filter-ui: true
   categories: cloud
-  fields: [catalog-id, title, description, categories, date, date-modified]
+  fields: [catalog-id, title, description, categories, paper-year, date, date-modified]
   field-display-names:
     catalog-id: "ID"
-    date: "Published"
+    paper-year: "Paper"
+    date: "Added"
     date-modified: "Updated"
   date-format: "YYYY-MM-DD"
   page-size: 1000
@@ -24,7 +25,7 @@ toc: false
 Every page shows a published model, the experimental data it was validated
 against, and a `pymrm` reproduction with a quantitative agreement metric.
 
-**Filtering.** Every page carries tags on five axes at once. The **Categories**
+**Filtering.** Every page carries tags on six axes at once. The **Categories**
 panel groups them by axis — click a tag to filter, click *Categories* to clear.
 Selecting a tag prints its code and meaning above the list. The
 [Taxonomy](taxonomy.qmd) page defines every axis and code in full.
@@ -36,6 +37,11 @@ Selecting a tag prints its code and meaning above the list. The
 | **Tier** | Standing in the literature | `T0` canonical |
 | **Data** | Provenance tier of the dataset | `tier1` open repository, `tier6` reference solution |
 | **Phase** | Phase system | `gas`, `gas-solid` |
+| **Paper decade** | When the original paper appeared | `1950s` |
+
+The **Paper** field on each card is the year the original paper was published;
+*Order By* sorts on it (oldest or newest first), and **Added** is the date the
+page joined the gallery.
 
 Two pages sharing a structure code are solved by nearly the same pymrm code even
 when their physics is unrelated — that is the intended route to reuse. Hovering a
@@ -70,6 +76,7 @@ all.
     { prefix: "tier", label: "Tier" },
     { prefix: "data", label: "Data" },
     { prefix: "phase", label: "Phase" },
+    { prefix: "decade", label: "Paper decade" },
   ];
 
   // A bare "A" or "S8" on a chip says nothing on its own, so the meaning goes
@@ -270,7 +277,40 @@ all.
     updateTitle();
   }
 
+  // Sort by the paper year, oldest or newest first. Quarto offers a custom
+  // field in one direction only, and in a grid listing its List.js sort finds
+  // nothing to compare (the card cell is `td.paper-year`, while the sort key is
+  // `listing-paper-year`), so both options sort here on the card's own value.
+  // The select's inline handler still runs first; this listener runs after it.
+  function paperYear(item) {
+    var td = item.elm.querySelector("td.paper-year");
+    return td ? parseInt(td.textContent, 10) || 0 : 0;
+  }
+
+  function wireYearSort() {
+    var sel = document.querySelector(".quarto-listing-sort select");
+    var list = window["quarto-listings"] && window["quarto-listings"]["listing-model-listing"];
+    if (!sel || !list || sel.dataset.yearSort === "1") return;
+    var asc = sel.querySelector('option[value="listing-paper-year"]');
+    if (!asc) return;
+    asc.textContent = "Paper - Oldest";
+    var desc = asc.cloneNode(false);
+    desc.setAttribute("data-direction", "desc");
+    desc.textContent = "Paper - Newest";
+    asc.parentNode.insertBefore(desc, asc.nextSibling);
+    sel.addEventListener("change", function () {
+      var opt = sel.options[sel.selectedIndex];
+      if (opt.value !== "listing-paper-year") return;
+      list.sort("listing-paper-year", {
+        order: opt.getAttribute("data-direction"),
+        sortFunction: function (a, b) { return paperYear(a) - paperYear(b); },
+      });
+    });
+    sel.dataset.yearSort = "1";
+  }
+
   function init() {
+    wireYearSort();
     group();
     wireTitle();
   }
