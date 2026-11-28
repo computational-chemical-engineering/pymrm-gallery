@@ -1,0 +1,37 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at the stated test conditions"
+status: complete
+
+source:
+  authors: ["Xu, J.", "Froment, G. F."]
+  year: 1989
+  container: "AIChE Journal 35, 97-103 (Part II); kinetics from Part I, AIChE Journal 35, 88-96, via page C2.1"
+  doi: "10.1002/aic.690350110"
+  access: >
+    The kinetics are Part I's Table 6 as loaded from page C2.1 (with C2.1's equilibrium-constant
+    correlation); the pellet is the paper's slab with the fitted tortuosity 3.54 and
+    Fuller-Wilke-Knudsen effective diffusivities (pages A4.5, A4.1); enthalpies from C2.5's Shomate
+    rows plus a NIST CH4 row; the tube is the 1-D heterogeneous model of Part II with Table 2's feed
+    and geometry and the page choices of the plan's equations file. F rows are algebra on the
+    digitised figure CSVs of this page. The values are not read from any paper but computed by a
+    second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script d31_check_values.py (numpy and scipy: finite-difference slab with Richardson extrapolation, cross-checked against solve_bvp to 1.4e-11; solve_ivp Radau for the tube; no pymrm, no page code), 2026-11-28"
+  date: 2026-11-28
+  estimated_error: "floating point for the algebraic rows; below 1e-10 relative for the slab rows; below 3e-11 relative for the tube rows (pellet levels doubled, Radau rtol 1e-11); the tube rtols (1e-5) are sized for the page's Richardson-extrapolated first-order march; difference rows (deficit orders, elasticities, E_app) carry 1e-5 to 1e-2"
+
+conditions: >
+  C (pellet and kinetics): bulk T 900 K, p_t 28 bar, x 0.25, y 0.20 with the Table 2 ratios, a = 1,
+  eps_s 0.590684, tau 3.54, slab 2 mm, ring factor 1.071. C0: the Table 2 feed (x = y = 0, 793.15 K,
+  29 bar). B (tube): Table 2 feed and geometry, constant inner-wall flux 70 kW/m2 on 0 to 11.12 m,
+  adiabatic to 12 m, p_t = 29 - 0.27 z bar, eps_B 0.50, a = 1. EQ: the same tube at equilibrium.
+  F: algebra on the digitised figure CSVs. Full definitions in the plan's equations file.
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the plan's equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

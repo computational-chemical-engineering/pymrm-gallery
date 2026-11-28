@@ -1,0 +1,63 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: D3.1
+slug: xu-froment-reformer-tube
+title: "Steam methane reformer tube"
+section: D
+status: planned
+tier: T1
+priority: P1
+structures: [S2, S3, S8]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  authors: ["Xu, J.", "Froment, G. F."]
+  year: 1989
+  container: "AIChE Journal 35(1) 97-103"
+  doi: 10.1002/aic.690350110
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 280
+datasets:
+  - xu-froment-1989-ii-printed-numbers.csv
+  - xu-froment-1989-ii-statements.csv
+  - xu-froment-1989-ii-fig3.csv
+  - xu-froment-1989-ii-fig5.csv
+  - xu-froment-1989-ii-fig6.csv
+  - xu-froment-1989-ii-fig7.csv
+  - nist-webbook-ch4-shomate.csv
+  - check_values.csv
+
+validation:
+  - >-
+    All 101 check values of an independent scipy route (Radau with a finite-difference slab)
+    reproduced within their tolerances: kinetics, diffusivities, the pellet at two states,
+    the constant-flux tube, the equilibrium tube and the elasticities.
+  - >-
+    The energy budget of every tube to round-off; the graded slab against tanh(phi)/phi at
+    second order; the equilibrium deficit scaling as a^(-1/2); the axial ladder at first order;
+    the rate function identical to C2.1's.
+
+adds: >
+  Plain reuse: a z-march whose implicit-Euler step nests a newton on the slab pellet
+  (construct_grad, construct_div, NumJac) inside a newton on the bulk state, with
+  compute_boundary_values, find_roots and observed_orders. An independent scipy route gives
+  the same numbers.
+
+agreement: >
+  No plant data: the comparison is with the authors' own simulation, digitised. Inside the
+  paper's model the exit conversion responds far more to heat than to catalyst activity:
+  e_a/e_Q = 0.0082 <!-- claim: R4_flux_ratio --> under imposed flux and
+  0.0237 <!-- claim: R4_Tw_ratio --> under imposed wall temperature, largest over the sweeps
+  0.0127 <!-- claim: R4_sweep_max_ratio -->. The pellet at the 4 m state gives
+  eta1 = 0.0315 <!-- claim: R2_eta1_4m -->, above Fig. 6.
+
+caveats: >
+  Part II's activity level, equilibrium constants, furnace model and pressure-drop inputs are
+  not printed and enter as page choices; Table 2's feed does not close and Fig. 3's inlet
+  carries an enthalpy excess the page cannot explain. The Shomate H2 row is applied up to about
+  1060 K, above its 1000 K range.
