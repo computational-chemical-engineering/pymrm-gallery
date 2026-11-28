@@ -933,7 +933,7 @@ say("**On the elasticity scale the review's own numbers support S2 and leave S1 
     "the film is the limiting step only if the permeate-to-bed H2 ratio exceeds <<t1:.3f>> $\\pm$ <<u1:.3f>> "
     "(1x) or <<t4:.3f>> $\\pm$ <<u4:.3f>> (4x) (centre reference, one read uncertainty; <<t1b:.3f>> and "
     "<<t4b:.3f>> cup-mix); the review prints no permeate pressure. At a fixed centre value the three curves "
-    "give a control of <<fd:.3f>> between 1x and 4x, so S1 stays open only through the centre values the "
+    "give a control of <<fd:.3f>> $\\pm$ <<sfd:.3f>> between 1x and 4x, so S1 stays open only through the centre values the "
     "normalised figure hides. Module (S3): the area stops responding mainly to the permeance once "
     "$\\beta$ exceeds <<bh:.4f>> (grid error <<bhe:.1e>>) at TC. Table 2: <<c2:d>> of <<nr:d>> rows "
     "consistent at two significant figures (<<cs:d>> with every digit significant, <<c1:d>> at one figure).",
@@ -942,7 +942,7 @@ say("**On the elasticity scale the review's own numbers support S2 and leave S1 
     t1=M["r2_theta_star_2D_1x"], t4=M["r2_theta_star_2D_4x"], t1b=M["r2_theta_star_1D_1x"],
     t4b=M["r2_theta_star_1D_4x"], bh=M["r4_beta_half_pymrm"], bhe=M["r4_beta_half_pymrm_est"],
     u1=M["r2_theta_star_u_2D_1x"], u4=M["r2_theta_star_u_2D_4x"], fd=M["r2_fd_control_1x_4x"],
-    ekm=min(M[f"r3_epsk_min_{P}"] for P in PRESSURES),
+    sfd=M["r2_fd_control_u"], ekm=min(M[f"r3_epsk_min_{P}"] for P in PRESSURES),
     c2=M["r5_n_consistent_two"], nr=M["_r5_n_rows"], cs=M["r5_n_consistent_strict"], c1=M["r5_n_consistent_one"])
 
 # %% [markdown]

@@ -41,7 +41,7 @@ statement on membrane area.
   0.63443 <!-- claim: r2_theta_star_1D_4x --> (±0.0071952 <!-- claim: r2_theta_star_u_1D_4x -->,
   0.62351 <!-- claim: r2_theta_star_n1_1D_4x --> at exponent 1); each ± is one read uncertainty on
   the last marker. The review prints no permeate pressure; at a fixed centre value the three
-  curves give a control of 0.99033 <!-- claim: r2_fd_control_1x_4x --> between the experimental and the quadrupled permeability.
+  curves give a control of 0.99033 <!-- claim: r2_fd_control_1x_4x --> ± 0.050544 <!-- claim: r2_fd_control_u --> (one read uncertainty) between the experimental and the quadrupled permeability.
 - **Area (S3), pymrm module.** At the review's WGS feed (p. 46) with a permeate of pure H2 at
   one bar (assumed), the area elasticity falls to one half, for a recovery of 0.8 <!-- claim: tc_r_star -->, at a conductance ratio of
   1.1403 <!-- claim: r4_beta_half_pymrm --> (pymrm, grid error of the finest-grid value
