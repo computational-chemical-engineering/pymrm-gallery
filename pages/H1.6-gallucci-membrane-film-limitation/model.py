@@ -45,7 +45,8 @@ from pymrm import (BlockLayout, compute_boundary_values, construct_coefficient_m
 from pymrm.checks import find_roots
 
 __all__ = ["wall_root", "local_flux", "film_share", "elasticities", "eps_q_vacuum", "theta_star",
-           "lambda_star", "depletion_vacuum", "share_elasticities", "eps_q_bound", "eps_k_from_eta",
+           "theta_star_linear", "depletion_with_permeate", "lambda_star", "depletion_vacuum",
+           "share_elasticities", "eps_q_bound", "eps_k_from_eta",
            "wall_factor", "centre_depletion", "cupmix_depletion", "fit_profile", "pi_of_f", "pinch",
            "module_number", "area_elasticity", "n_membrane_vacuum", "a_film", "recovery_at",
            "MembraneModule"]
@@ -118,6 +119,37 @@ def theta_star(x2):
     return (3.0 * x2 - 1.0) ** 2 / (4.0 * x2)
 
 
+def theta_star_linear(x2):
+    """Permeate-to-bed ratio at which ``eps_Q = 1/2`` for a linear membrane, ``n = 1`` (the
+    membrane takes half the drop): ``theta = 2 x^2 - 1``.
+
+    Raises
+    ------
+    ValueError
+        When ``x2 <= 1/2``: the film limits at any permeate pressure.
+    """
+    if x2 <= 0.5:
+        raise ValueError(f"x^2 = {x2:.4g} <= 1/2: eps_Q < 1/2 already under vacuum")
+    return 2.0 * x2 - 1.0
+
+
+def depletion_with_permeate(d1, lam, theta):
+    """Wall depletion ``1 - p_w/p_b`` at fixed bulk when the film conductance ratio is scaled
+    by ``lam`` (E8 with a permeate): ``beta_1`` from the wall depletion ``d1`` at permeate
+    ratio ``theta``, then the wall root at ``lam beta_1``.
+
+    Raises
+    ------
+    ValueError
+        When the permeate ratio is not below the wall ratio ``sqrt(p_w/p_b)`` of ``d1``.
+    """
+    u1 = math.sqrt(1.0 - d1)
+    if math.sqrt(theta) >= u1:
+        raise ValueError(f"permeate ratio {theta:.4g} reaches the wall: no flux at d1 = {d1:.4g}")
+    beta1 = (1.0 - u1 * u1) / (u1 - math.sqrt(theta))
+    return 1.0 - float(wall_root(1.0, theta, lam * beta1)) ** 2
+
+
 def lambda_star(d1):
     """Permeability multiplier at which the vacuum film takes 2/3 of the drop (E8)."""
     return (2.0 / math.sqrt(3.0)) / (d1 / math.sqrt(1.0 - d1))
@@ -137,7 +169,7 @@ def share_elasticities(c, m, sigma, s, n=0.5):
     ``c`` film, ``m`` membrane, ``sigma`` support shares; ``s = p_s/p_w`` at the Pd/support
     interface; ``n`` the membrane exponent.
     """
-    g = n * (1.0 - s) / (1.0 - s ** n)
+    g = n * (1.0 - s) / (1.0 - s ** n) if n != 1.0 else 1.0
     a = (c / m) * g
     b = (sigma / m) * g * s ** (n - 1.0)
     return 1.0 / (1.0 + a + b), a / (1.0 + a + b), b / (1.0 + a + b)

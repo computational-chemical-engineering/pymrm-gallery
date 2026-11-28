@@ -41,3 +41,13 @@ def test_one_module_solve():
     assert abs(module_number(0.8, THETA, PHI, 1.0) / ref - 1) < 1e-10
     stored = load_claims(PAGE)
     assert abs(m.N / stored["r4_N80_pymrm"] - 1) < 1e-2
+
+
+def test_permeate_prediction_and_linear_threshold():
+    """E8 with a permeate reduces to the vacuum closed form; the linear threshold is 2 x^2 - 1."""
+    from model import depletion_vacuum, depletion_with_permeate, theta_star_linear
+    d1, lam = 0.08, 4.0
+    assert abs(depletion_with_permeate(d1, lam, 0.0)
+               - depletion_vacuum(lam * d1 / np.sqrt(1.0 - d1))) < 1e-12
+    assert depletion_with_permeate(d1, lam, 0.5) < depletion_with_permeate(d1, lam, 0.0)
+    assert abs(theta_star_linear(0.9) - 0.8) < 1e-15

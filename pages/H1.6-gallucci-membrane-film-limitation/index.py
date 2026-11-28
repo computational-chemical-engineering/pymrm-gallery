@@ -71,12 +71,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from IPython.display import Markdown, display
 from pymrm.checks import find_roots, observed_orders
+from scipy.optimize import minimize_scalar
 from gallery_utils import Claims, assert_check_values, cite_data, load_data, load_meta
 from model import (MembraneModule, a_film, area_elasticity, centre_depletion, cupmix_depletion,
                    depletion_vacuum, elasticities, eps_k_from_eta, eps_q_bound, eps_q_vacuum,
                    film_share, fit_profile, lambda_star, local_flux, module_number,
                    n_membrane_vacuum, pinch, recovery_at, share_elasticities, theta_star,
-                   wall_factor, wall_root)
+                   wall_factor, wall_root, depletion_with_permeate, theta_star_linear)
 
 plt.rcParams.update({"figure.dpi": 110, "axes.grid": True, "grid.alpha": 0.3})
 claims = Claims(PAGE.split("-")[0])
@@ -164,8 +165,8 @@ def say(text, **v):
 # | E14 | area elasticity $e_A = -d\ln a/d\ln\beta = \int(\varepsilon_Q/j)df / \int(1/j)df$ | `area_elasticity` |
 # | E15 | Fig. 15 profile $1 - D r^2$ normalised at the first marker $r_0 = 1/24$; wall over last-marker depletion $(1 - r_0^2)/(r_l^2 - r_0^2)$, $r_l = 23/24$; cup-mix depletion $d_{1D} = (D/2)/(1 - D/2)$ | `wall_factor`, `centre_depletion`, `cupmix_depletion` |
 #
-# "Limiting" on this page: the film limits when $\varepsilon_k > 1/2$, i.e. when doubling the
-# film conductance raises the flux more than doubling the permeance. Under vacuum permeate
+# "Limiting" on this page: the film limits when $\varepsilon_k > 1/2$, i.e. when a small relative
+# increase of the film conductance raises the flux more than the same increase of the permeance. Under vacuum permeate
 # that happens only when the film takes two thirds of the drop (E7), not half.
 
 # %% [markdown]
@@ -178,11 +179,11 @@ def say(text, **v):
 # - **Fig. 15**: the plotted ratio is a weight fraction; the page uses it as the
 #   partial-pressure ratio. With H2 depleted at the wall the mean molar mass rises there, so
 #   the weight-fraction depletion overstates the partial-pressure depletion; every
-#   conclusion below is worded so that a smaller depletion only strengthens it. The
+#   bound and threshold of R2 is worded so that a smaller depletion only strengthens it. The
 #   permeate pressure, bulk pressure and permeability are not printed.
 # - **Fig. 16**: only the ratio of the film and membrane shares enters (E9). The categories
 #   are not defined in the review; the source is a permeation cell with sweep gas
-#   (Caravella et al., 2009, p. 622), so "bed-to-wall" is the review's label.
+#   (Caravella et al., 2009, p. 623), so "bed-to-wall" is the review's label.
 # - **Sieverts exponent** $n = 1/2$ (H1.1 owns $n$); $n = 1$ is shown as the sensitivity.
 
 # %%
@@ -213,6 +214,7 @@ def num(pn, item):
 U15 = read_u("gallucci-2013-fig15-reads.csv")     # per point, Fig. 15 sidecar
 U16 = read_u("gallucci-2013-fig16-reads.csv")     # per boundary, Fig. 16 sidecar
 R0, RL = 1.0 / 24.0, 23.0 / 24.0                  # first and last marker, r/R = (i - 1/2)/12
+THETA_EX = 0.8                                    # permeate-to-bed H2 ratio of the worked example (R2)
 P_PERM_BAR = 1.0                                  # bar, permeate pure H2 (page assumption)
 BETA_TC, N_TC, R_STAR = 1.0, 2.0, 0.8             # TC: conductance ratio, membrane number, recovery
 BETAS = np.logspace(-2, 2, 41)                    # R4 sweep
@@ -361,6 +363,7 @@ def part_f15(c, M):
     M["r1_wall_factor"] = wall_factor(R0, RL, c.k15)
     last = {cv: float(rd.loc[(rd["curve"] == cv) & (rd["cell"] == 12), "rel_H2_wt_fraction"].iloc[0])
             for cv in CURVES}
+    j_ref = {"2D": 0, "1D": 1}
     for cv in CURVES:
         t = TAG[cv]
         D, d1 = f15_chain(last[cv], c.k15)
@@ -370,6 +373,12 @@ def part_f15(c, M):
             x2 = 1.0 - d
             M[f"r2_epsQ_vac_{ref}_{t}"] = eps_q_vacuum(x2)
             M[f"r2_theta_star_{ref}_{t}"] = theta_star(x2)
+            if t != "2x":
+                M[f"r2_theta_star_n1_{ref}_{t}"] = theta_star_linear(x2)
+                hh = 1e-6
+                M[f"r2_theta_star_u_{ref}_{t}"] = abs(
+                    theta_star(1.0 - f15_chain(last[cv] + hh, c.k15)[j_ref[ref]])
+                    - theta_star(1.0 - f15_chain(last[cv] - hh, c.k15)[j_ref[ref]])) / (2 * hh) * c.u15
     # proportionality from the 1x curve (E8), each reference
     h = 1e-6
     for ref, j in (("2D", 0), ("1D", 1)):
@@ -385,6 +394,30 @@ def part_f15(c, M):
             s_obs = abs(f15_chain(last[cv] + h, c.k15)[j] - f15_chain(last[cv] - h, c.k15)[j]) / (2 * h) * c.u15
             M[f"r2_pred_{ref}_{TAG[cv]}"] = dp
             M[f"r2_gap_units_{ref}_{TAG[cv]}"] = (d_obs - dp) / math.hypot(s_pred, s_obs)
+            if ref == "2D":           # the same prediction with the permeate of the 1x deciding ratio
+                th_s = M["r2_theta_star_2D_1x"]
+
+                def pred_t(v1, lam=lam):
+                    return depletion_with_permeate(f15_chain(v1, c.k15)[0], lam, th_s)
+                dpt = pred_t(last["experimental"])
+                s_t = abs(pred_t(last["experimental"] + h) - pred_t(last["experimental"] - h)) / (2 * h) * c.u15
+                gap_t = (d_obs - dpt) / math.hypot(s_t, s_obs)
+                if cv == "quadrupled":
+                    M["r2_pred_2D_4x_thstar"], M["r2_gap_units_2D_4x_thstar"] = dpt, gap_t
+                else:
+                    M["r2_gap_units_2D_2x_thstar"] = gap_t
+    # the film of the 1x curve at a permeate ratio below the deciding one (centre reference)
+    u1 = math.sqrt(1.0 - M["r1_D_last_1x"])
+    beta1 = (1.0 - u1 * u1) / (u1 - math.sqrt(THETA_EX))
+    M["r2_ex_epsk_2D_1x"] = beta1 / (2.0 * u1 + beta1)
+    M["r2_ex_flux_2D_1x"] = (u1 - math.sqrt(THETA_EX)) / (1.0 - math.sqrt(THETA_EX))
+    # direct control from the curves: at a fixed centre value the wall flux scales as D
+    def sD(cv):
+        return abs(f15_chain(last[cv] + h, c.k15)[0] - f15_chain(last[cv] - h, c.k15)[0]) / (2 * h) * c.u15
+    D1, D4 = M["r1_D_last_1x"], M["r1_D_last_4x"]
+    M["r2_fd_control_1x_4x"] = math.log(D4 / D1) / math.log(4.0)
+    M["r2_fd_control_u"] = math.hypot(sD("quadrupled") / D4, sD("experimental") / D1) / math.log(4.0)
+    M["r2_centre_ratio_half"] = 4.0 ** 0.5 / (D4 / D1)      # centre(4x)/centre(1x) for a control of 1/2
 
 
 # ---------------------------------------------------------------- R3: Fig. 16
@@ -393,6 +426,19 @@ PRESSURES = (10, 15, 20, 26)
 
 def f16_bound(dep, cp, pd, n):
     return eps_q_bound(cp - dep, pd - cp, n)
+
+
+def epsk_min(cc, mm, sigma, n):
+    """Minimum film elasticity over the interface ratio ``s`` in ``[sigma/(sigma + m), 1)``
+    (permeate H2 pressure not negative): a scan refined by a bounded minimisation."""
+    def f(s):
+        return share_elasticities(cc, mm, sigma, s, n)[1]
+    ss = np.linspace(sigma / (sigma + mm), 1.0 - 1e-6, 2001)
+    v = np.array([f(s) for s in ss])
+    i = int(np.argmin(v))
+    r = minimize_scalar(f, bounds=(ss[max(i - 1, 0)], ss[min(i + 1, len(ss) - 1)]), method="bounded",
+                        options={"xatol": 1e-12})
+    return float(min(r.fun, v[i]))
 
 
 def part_f16(c, M):
@@ -410,6 +456,7 @@ def part_f16(c, M):
         M[f"r3_bound_{P}"] = b
         M[f"r3_bound_n1_{P}"] = eps_q_bound(cc, mm, 1.0)
         M[f"r3_ubound_{P}"] = ub
+        M[f"r3_epsk_min_{P}"] = epsk_min(cc, mm, float(row["support_top"]) - pd, c.n_mem)
         M[f"r3_margin_u_{P}"] = (0.5 - b) / ub
         margins.append((0.5 - b) / ub)
     M["_r3_margins"] = np.array(margins)
@@ -514,6 +561,8 @@ def part_local(c, M):
     M["r4_N80_quad"] = module_number(c.r_star, theta, phi, b)
     M["r4_rec_N2_quad"] = recovery_at(c.n_tc, theta, phi, b)
     M["r4_N80_mem"] = module_number(c.r_star, theta, phi, 0.0)
+    M["r4_N80_over_mem"] = M["r4_N80_quad"] / M["r4_N80_mem"]
+    M["tc_r_star"] = c.r_star
     M["r4_N80_mem_vac"] = n_membrane_vacuum(c.r_star, phi)
     M["r4_a80_film"] = a_film(c.r_star, theta, phi)
     M["r4_beta_cross"] = M["r4_N80_mem"] / M["r4_a80_film"]
@@ -681,30 +730,50 @@ say("Of <<n>> points read (squares 2 to 12, triangles 5 to 12; the triangles' ma
 # ($x^2 = 1 - D$) and the 1-D cup-mix mean ($x^2 = 1 - d_{1D}$).
 
 # %%
-rows_ = ["| curve | ref. | vacuum $\\varepsilon_Q$ | $\\theta^*_b$ |", "|---|---|---|---|"]
+rows_ = ["| curve | ref. | vacuum $\\varepsilon_Q$ | $\\theta^*_b$ | $\\pm$ one read uncertainty | $\\theta^*_b$ at $n$ = 1 |",
+         "|---|---|---|---|---|---|"]
 for cv in CURVES:
     for ref in ("2D", "1D"):
         rows_.append(f"| {cv} | {ref} | {M[f'r2_epsQ_vac_{ref}_{TAG[cv]}']:.4f} | "
-                     f"{M[f'r2_theta_star_{ref}_{TAG[cv]}']:.4f} |")
+                     f"{M[f'r2_theta_star_{ref}_{TAG[cv]}']:.4f} | "
+                     f"{M.get(f'r2_theta_star_u_{ref}_{TAG[cv]}', float('nan')):.4f} | "
+                     f"{M.get(f'r2_theta_star_n1_{ref}_{TAG[cv]}', float('nan')):.4f} |")
 display(Markdown("\n".join(rows_)))
 say("Membrane control under vacuum is at least <<lo:.3f>> on every curve and reference, so the film "
-    "of Fig. 15 limits only through the permeate. \"Quite limited\" (1x) holds unless the permeate "
-    "H2 pressure exceeds <<t1a:.3f>> (centre) or <<t1b:.3f>> (cup-mix) of the bed's; \"could become a "
-    "limiting step\" at 4x needs a ratio above <<t4a:.3f>> (centre) or <<t4b:.3f>> (cup-mix). The "
-    "review prints neither ratio, so Fig. 15 alone cannot decide S1; these ratios are the deciding "
-    "numbers. A smaller partial-pressure depletion than the weight-fraction read (A1) raises them.",
+    "of Fig. 15 limits only through the permeate. The film is not the limiting step at 1x unless the "
+    "permeate H2 pressure exceeds <<t1a:.3f>> $\\pm$ <<u1a:.3f>> (centre; <<n1a:.3f>> at $n$ = 1) or "
+    "<<t1b:.3f>> $\\pm$ <<u1b:.3f>> (cup-mix; <<n1b:.3f>> at $n$ = 1) of the bed's; \"could become a "
+    "limiting step\" at 4x needs a ratio above <<t4a:.3f>> $\\pm$ <<u4a:.3f>> (centre; <<n4a:.3f>> at "
+    "$n$ = 1) or <<t4b:.3f>> $\\pm$ <<u4b:.3f>> (cup-mix; <<n4b:.3f>> at $n$ = 1); each $\\pm$ is "
+    "one read uncertainty on the last marker, propagated. The review prints neither ratio, so Fig. 15 "
+    "alone cannot decide S1; these ratios are the thresholds for \"a limiting step\". Under vacuum "
+    "the film holds <<ek1:.3f>> of the control at 1x (centre): \"quite limited\" is a statement of "
+    "that size, which the 1/2 threshold does not test. A film that is not limiting is not necessarily "
+    "a small one: at a permeate ratio of <<tx:.1f>> the film holds <<exk:.3f>> of the control at 1x "
+    "and the flux is <<exf:.3f>> of the flux without the film. A smaller partial-pressure depletion "
+    "than the weight-fraction read (A1) raises the thresholds.",
     lo=min(M[f"r2_epsQ_vac_{r}_{t}"] for r in ("2D", "1D") for t in ("1x", "2x", "4x")),
     t1a=M["r2_theta_star_2D_1x"], t1b=M["r2_theta_star_1D_1x"], t4a=M["r2_theta_star_2D_4x"],
-    t4b=M["r2_theta_star_1D_4x"])
+    t4b=M["r2_theta_star_1D_4x"], u1a=M["r2_theta_star_u_2D_1x"], u1b=M["r2_theta_star_u_1D_1x"],
+    u4a=M["r2_theta_star_u_2D_4x"], u4b=M["r2_theta_star_u_1D_4x"], n1a=M["r2_theta_star_n1_2D_1x"],
+    n1b=M["r2_theta_star_n1_1D_1x"], n4a=M["r2_theta_star_n1_2D_4x"], n4b=M["r2_theta_star_n1_1D_4x"],
+    ek1=1.0 - M["r2_epsQ_vac_2D_1x"], tx=THETA_EX, exk=M["r2_ex_epsk_2D_1x"], exf=M["r2_ex_flux_2D_1x"])
 say("Proportionality (E8, vacuum, fixed bulk): from the 1x curve the film would take two thirds of the "
     "drop at a permeability <<la:.2f>> (centre) or <<lb:.2f>> (cup-mix) times Tiemersma's. The predicted "
     "4x depletion is <<p4:.4f>> (centre) against <<o4:.4f>> read, read minus prediction <<g4:+.1f>> "
     "combined read units; 2x: <<g2:+.1f>> units (cup-mix: <<h2:+.1f>> at 2x, <<h4:+.1f>> at 4x). The 2x "
-    "curve follows the scaled film; at 4x the read is deeper by a few read units, which a permeate "
-    "pressure or a changed bulk could cause; the figure does not say which. For orientation, the seven Pd-based films at the top of Table 2 span a "
+    "curve follows the scaled film; at 4x the read is deeper by the gap stated above. A "
+    "permeate pressure does not cause that: at fixed bulk it makes the predicted depletion shallower, "
+    "<<p4t:.4f>> at the 1x deciding ratio (<<g4t:+.1f>> units from the read; 2x: <<g2t:+.1f>>). At a "
+    "fixed centre value the wall flux scales as $D$, so the three curves give the control directly: "
+    "$\\ln(D_4/D_1)/\\ln 4$ = <<fd:.3f>> $\\pm$ <<sfd:.3f>>. A control below 1/2 would need the "
+    "centre H2 fraction at 4x to be <<cr:.3f>> of its 1x value or less; the normalised figure does not "
+    "print the centre values. For orientation, the seven Pd-based films at the top of Table 2 span a "
     "factor <<sp:.1f>> in permeance.",
     la=M["r2_lambda_star_2D"], lb=M["r2_lambda_star_1D"], p4=M["r2_pred_2D_4x"], o4=M["r1_D_last_4x"],
     g4=M["r2_gap_units_2D_4x"], g2=M["r2_gap_units_2D_2x"], h2=M["r2_gap_units_1D_2x"],
+    p4t=M["r2_pred_2D_4x_thstar"], g4t=M["r2_gap_units_2D_4x_thstar"], g2t=M["r2_gap_units_2D_2x_thstar"],
+    fd=M["r2_fd_control_1x_4x"], sfd=M["r2_fd_control_u"], cr=M["r2_centre_ratio_half"],
     h4=M["r2_gap_units_1D_4x"], sp=M["r5_pd_span"])
 
 # %% [markdown]
@@ -742,11 +811,15 @@ for P in PRESSURES:
                  f"{M[f'r3_bound_{P}']:.4f} | {M[f'r3_bound_n1_{P}']:.4f} | {M[f'r3_margin_u_{P}']:.1f} |")
 display(Markdown("\n".join(rows_)))
 say("Membrane control is at most <<bmax:.3f>> at every feed pressure. Pressures with the bound below 1/2: <<n:d>> of <<t:d>>, the closest "
-    "<<mg:.1f>> propagated read uncertainties away. On the elasticity scale S2's \"the limiting "
-    "factor\" holds for the device of Fig. 16 with no unprinted number. It is a permeation cell with "
-    "sweep gas (Caravella et al., 2009, p. 622), so the statement is about that cell, not a packed bed.",
+    "<<mg:.1f>> propagated read uncertainties away. Membrane control below 1/2 does not by itself make "
+    "the film limiting. The film itself keeps at least <<ekm:.3f>> of the control when the permeate H2 "
+    "pressure is not negative ($s \\ge \\sigma/(\\sigma + m)$); without that limit the support could "
+    "take the control. On the elasticity scale S2's \"the limiting factor\" holds for the device of "
+    "Fig. 16 with no unprinted number. It is a permeation cell with "
+    "sweep gas (Caravella et al., 2009, p. 623), so the statement is about that cell, not a packed bed.",
     bmax=max(M[f"r3_bound_{P}"] for P in PRESSURES),
-    n=M["r3_n_below_half"], t=len(PRESSURES), mg=float(np.min(M["_r3_margins"])))
+    n=M["r3_n_below_half"], t=len(PRESSURES), mg=float(np.min(M["_r3_margins"])),
+    ekm=min(M[f"r3_epsk_min_{P}"] for P in PRESSURES))
 
 # %% [markdown]
 # ### R4. S3 at module scale (pymrm)
@@ -776,7 +849,7 @@ plt.show()
 say("At TC and $\\beta$ = <<b:g>>: $N$ = <<n:.6f>> (pymrm, extrapolated; grid error of the "
     "<<nz:d>>-cell value <<ne:.1e>>; quadrature <<nq:.6f>>), $e_A$ = <<e:.5f>> (pymrm, grid error <<ee:.1e>>). "
     "Limits: $N_{mem}$ = <<nm:.5f>> (vacuum <<nv:.5f>>), $a_{film}$ = <<af:.5f>>; the asymptotes cross at "
-    "$\\beta$ = <<bc:.4f>>, and at $\\beta$ = 1 the area is <<ad:+.4f>> of their sum. $e_A$ = 1/2 at "
+    "$\\beta$ = <<bc:.4f>>, and at $\\beta$ = 1 the area differs from their sum by <<ad:+.4f>> (relative). $e_A$ = 1/2 at "
     "$\\beta_{1/2}$ = <<bh:.5f>> (pymrm, grid error <<bhe:.1e>>; quadrature <<bhq:.6f>>). The inlet "
     "already shows the point of the elasticity scale: the film takes <<sh:.3f>> of the drop there "
     "but the membrane keeps <<eq:.3f>> of the control.",
@@ -788,11 +861,14 @@ rows_ = ["| $R^*$ | $\\beta_{1/2}$, vacuum permeate | $\\beta_{1/2}$, TC permeat
 for rs in (50, 80, 90):
     rows_.append(f"| {rs / 100:.1f} | {M[f'r4_beta_half_R{rs}_vac']:.4f} | {M[f'r4_beta_half_R{rs}_tc']:.4f} |")
 display(Markdown("\n".join(rows_)))
-say("S3 holds as a statement about the area: below $\\beta_{1/2}$ the membrane sets most of it, above "
-    "it the film does. The threshold sits near $\\beta$ = 1 for every recovery and permeate in the table "
+say("The second half of S3 holds as a statement about the area: above $\\beta_{1/2}$ the film sets most "
+    "of it. The first half (\"can be neglected\") does not follow from membrane control: at $\\beta$ = "
+    "<<b:g>> the membrane holds $e_A$ = <<e:.3f>> while the area is <<rn:.3f>> times the "
+    "membrane-limit area. The threshold sits near $\\beta$ = 1 for every recovery and permeate in the table "
     "(<<lo:.3f>> to <<hi:.3f>>): the film determines the area once its conductance is below the "
     "membrane's at the feed, $k_p p_{in} < Q_s\\sqrt{p_{in}}$, roughly. Pinch: recovery cannot exceed "
     "<<rm:.5f>> with a 1 bar permeate.",
+    b=BETA_TC, e=M["r4_eA_pymrm"], rn=M["r4_N80_over_mem"],
     lo=min(M[f"r4_beta_half_R{r}_{t}"] for r in (50, 80, 90) for t in ("vac", "tc")),
     hi=max(M[f"r4_beta_half_R{r}_{t}"] for r in (50, 80, 90) for t in ("vac", "tc")), rm=M["r4_R_max"])
 
@@ -852,17 +928,21 @@ display(Markdown("\n".join(rows_)))
 # %%
 say("**On the elasticity scale the review's own numbers support S2 and leave S1 open.** Fig. 16: membrane "
     "control is bounded by <<b10:.3f>>, <<b15:.3f>>, <<b20:.3f>> and <<b26:.3f>> at 10, 15, 20 and 26 bar, below "
-    "1/2 at <<n:d>> of <<t:d>> pressures with at least <<mg:.1f>> read uncertainties to spare: the film is "
-    "\"the limiting factor\" there. Fig. 15: the film limits only if the permeate-to-bed H2 ratio exceeds "
-    "<<t1:.3f>> (1x) or <<t4:.3f>> (4x) (centre reference; <<t1b:.3f>> and <<t4b:.3f>> cup-mix); the review "
-    "prints no permeate pressure, so \"quite limited\" and \"could become a limiting step\" are neither "
-    "confirmed nor refuted. Module (S3): the area stops responding mainly to the permeance once "
+    "1/2 at <<n:d>> of <<t:d>> pressures with at least <<mg:.1f>> read uncertainties to spare, and the film "
+    "itself keeps at least <<ekm:.3f>> of the control: the film is \"the limiting factor\" there. Fig. 15: "
+    "the film is the limiting step only if the permeate-to-bed H2 ratio exceeds <<t1:.3f>> $\\pm$ <<u1:.3f>> "
+    "(1x) or <<t4:.3f>> $\\pm$ <<u4:.3f>> (4x) (centre reference, one read uncertainty; <<t1b:.3f>> and "
+    "<<t4b:.3f>> cup-mix); the review prints no permeate pressure. At a fixed centre value the three curves "
+    "give a control of <<fd:.3f>> between 1x and 4x, so S1 stays open only through the centre values the "
+    "normalised figure hides. Module (S3): the area stops responding mainly to the permeance once "
     "$\\beta$ exceeds <<bh:.4f>> (grid error <<bhe:.1e>>) at TC. Table 2: <<c2:d>> of <<nr:d>> rows "
     "consistent at two significant figures (<<cs:d>> with every digit significant, <<c1:d>> at one figure).",
     b10=M["r3_bound_10"], b15=M["r3_bound_15"], b20=M["r3_bound_20"], b26=M["r3_bound_26"],
     n=M["r3_n_below_half"], t=len(PRESSURES), mg=float(np.min(M["_r3_margins"])),
     t1=M["r2_theta_star_2D_1x"], t4=M["r2_theta_star_2D_4x"], t1b=M["r2_theta_star_1D_1x"],
     t4b=M["r2_theta_star_1D_4x"], bh=M["r4_beta_half_pymrm"], bhe=M["r4_beta_half_pymrm_est"],
+    u1=M["r2_theta_star_u_2D_1x"], u4=M["r2_theta_star_u_2D_4x"], fd=M["r2_fd_control_1x_4x"],
+    ekm=min(M[f"r3_epsk_min_{P}"] for P in PRESSURES),
     c2=M["r5_n_consistent_two"], nr=M["_r5_n_rows"], cs=M["r5_n_consistent_strict"], c1=M["r5_n_consistent_one"])
 
 # %% [markdown]
@@ -913,7 +993,7 @@ BOUNDS = {"v1_flux_forms_gap": (None, 1e-13, "identity", STRUCTURAL["v1_flux_for
 TIGHT = {k: 1e-8 for k in ("r4_N80_pymrm", "r4_eA_pymrm", "r4_beta_half_pymrm", "r4_rec_N2_pymrm")}
 COUNTS = {"r3_n_below_half": ("_r3_margins", 0.0, 3.0, "margins in read units, at least 3 (chosen)"),
           "r5_n_readings_inconsistent": ("_r5_sintef_los", 1.0, 0.05, "lowest ratio at least 5 % above 1 (chosen)")}
-EXACT = tuple(f"r5_n_consistent_{r_}" for r_ in READINGS)
+EXACT = tuple(f"r5_n_consistent_{r_}" for r_ in READINGS) + ("tc_r_star",)
 
 
 def register(M):
@@ -1072,14 +1152,14 @@ print(f"\n{len(by_row)} rows; {len(_caught)} of {len(claims.metrics)} claims are
 # unknown in one `pymrm.newton` solve, the outlet read by `compute_boundary_values`, and the
 # exact discrete $dN/d\beta$ from the converged Jacobian. `pymrm.checks.observed_orders`
 # supplies every grid error and `find_roots` the threshold $\beta_{1/2}$. The module itself
-# has a quadrature solution (E12), which the page uses as the second route; pymrm's value
-# here is a module that extends to what quadrature cannot do (axial dispersion, a sweep, a
-# reaction), with its numerics already verified.
+# has a quadrature solution (E12), the second route of R4. On this page the module gives no
+# number the quadrature does not.
 
 # %%
-say("Not stated by the review and not claimed here: whether Tiemersma's film was limiting (that needs "
-    "the permeate-to-bed ratio of R2), that Peters' cell confirms Tiemersma's reactor, or that "
-    "fluidized beds beat packed beds.")
+say("Stated by the review and not tested here: that the SINTEF work confirms Tiemersma (p. 55, "
+    "\"completely confirmed by the work carried out at SINTEF\"; one is a reactor model, the other a "
+    "permeation cell), and that fluidized beds reduce the bed-to-wall limitation (p. 55). Not claimed "
+    "here: whether Tiemersma's film was limiting.")
 
 # %% [markdown]
 # ## Reuse
