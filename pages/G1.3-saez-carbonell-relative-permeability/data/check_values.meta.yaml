@@ -1,0 +1,37 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Saez, A. E.", "Carbonell, R. G."]
+  year: 1985
+  container: "AIChE Journal 31(1), 52-62"
+  doi: "10.1002/aic.690310105"
+  access: >
+    The equations are those of the paper (the two-fluid momentum balances with Ergun drag and
+    relative permeabilities, eqs. 9 to 14 and 20; the fitted laws k_L = delta^2.43 and
+    k_G = S_G^4.8; the stagnant-gas holdup eq. 34, holdup eq. 51 and pressure drop eq. 50; the
+    surfactant ratios of Table 5 from eqs. 8, 24, 34 to 37), with the readings and misprints
+    stated in the build plan's equations file. The values are not read from the paper but
+    computed from its equations by a second route; the half-unit and printed-arithmetic rows
+    compare those values with the paper's printed numbers.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script g13_check_values.py (numpy and scipy, no pymrm, no page code; brentq on the eliminated scalar equation cross-checked against fsolve on the coupled pair, the Table 5 maximum by analytic-derivative root against bounded search, the printed-form inversion by nested brentq against fsolve), 2026-11-28"
+  date: 2026-11-28
+  estimated_error: "none beyond floating point for the closed-form rows; root-finding rows carry the route's own error, below each row's rtol"
+
+conditions: >
+  Test condition T: air-water, spheres d_e = 3 mm, eps 0.38, L 5 kg/m2 s, G 0.1 kg/m2 s,
+  rho_L 998 kg/m3, mu_L 1.0e-3 Pa s, sigma 0.0728 N/m, rho_G 1.2 kg/m3, mu_G 1.8e-5 Pa s,
+  g 9.81 m/s2, Ergun constants A 180, B 1.8. Table 5 rows use water sigma 72.8 mN/m (rows named
+  sigma72 use 72.0) and the densest sphere packing porosity 0.2595 as the floor (rows named eps036
+  use 0.36).
+
+columns:
+  - {name: name, unit: "-", description: "quantity; units as defined in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}

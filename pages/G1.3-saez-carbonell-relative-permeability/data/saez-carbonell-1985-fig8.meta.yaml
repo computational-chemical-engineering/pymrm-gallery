@@ -1,0 +1,63 @@
+dataset_id: saez-carbonell-1985-fig8
+title: "Liquid holdup, calculated against experimental, Figure 8 of Saez and Carbonell (1985)"
+status: partial
+
+source:
+  authors: ["Saez, A. E.", "Carbonell, R. G."]
+  year: 1985
+  container: "AIChE Journal 31(1), 52-62"
+  doi: "10.1002/aic.690310105"
+  access: >
+    Publisher PDF (a 300 ppi bilevel scan) held outside the repository
+    (~/papers/pymrm-gallery/). No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 8, journal p. 60 (PDF page 9)"
+  tool: "data/digitise.py (committed): pdfimages -png at the native 300 ppi, no resampling; axes and lines located automatically, symbols assigned by hand on a 3x zoom"
+  procedure: >
+    Log-log axes, 10^-2 to 10^0 on both. Each axis is calibrated by a least-squares
+    line of log10(value) on pixels through the frame corner (10^-2) and the tick
+    marks at 10^-1 and 10^0: abscissa ticks at columns 620.0 and 996.0, frame column
+    244.8; ordinate ticks at rows 588.5 and 214.0, frame row 961.2. 375.6 px per
+    decade (abscissa) and 373.6 (ordinate); largest tick-fit residual 0.27 px
+    (abscissa) and 0.58 px (ordinate). The three drawn lines are the centroids of
+    the peaks of D = log10(cal) - log10(exp) over the dark pixels: solid +0.00698,
+    upper dashed +0.08955, lower dashed -0.09114 decades (rows kind = line). Marker
+    centres: bounding-box centre for circles and squares, vertex centroid
+    (bounding-box centre moved h/6 toward the base) for triangles, after removing
+    pixels within 0.0085 decades of a drawn line. Two touching pairs are split by
+    hand reads. Blobs of touching markers that cannot be told apart are cluster rows
+    with the range of D over their dark pixels; a hidden marker's centre lies inside
+    that range.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-28
+  estimated_error: >
+    Chosen: 2 px per coordinate for a marker centre (the hand splits and the
+    markers a drawn line crosses), so 0.0076 decades in D, about 1.8 % in cal/exp.
+    The tick fit itself is below 0.6 px.
+
+conditions: "Air-water, the 59 two-phase points of Table 6 (p. 58), Eq. 51 against measured holdup."
+
+missing:
+  - "13 markers are readable of the 59 the paper states (11 single, 2 touching pairs split by hand). The rest sit in 5 blobs of touching markers (cluster rows); they are not invented."
+  - "Fig. 7 (pressure drop, p. 59) is not digitised."
+
+columns:
+  - {name: kind, unit: "-", description: "marker, cluster (touching markers) or line (a drawn line)"}
+  - {name: symbol, unit: "-", description: "marker symbol (Table 6 legend), several for a cluster, or the line (solid, plus, minus)"}
+  - {name: flag, unit: "-", description: "isolated, touching, crossed by a line, or the blob size"}
+  - {name: x_px, unit: px, description: "centre column, native 300 ppi"}
+  - {name: y_px, unit: px, description: "centre row, native 300 ppi"}
+  - {name: exp, unit: "-", description: "experimental holdup from the abscissa calibration"}
+  - {name: cal, unit: "-", description: "calculated holdup from the ordinate calibration"}
+  - {name: offset_min_dec, unit: decades, description: "cluster: smallest D over its dark pixels; line: its offset"}
+  - {name: offset_max_dec, unit: decades, description: "cluster: largest D over its dark pixels; line: its offset"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
