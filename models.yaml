@@ -2741,7 +2741,7 @@ models:
       authors: ["Weisz, P. B.", "Prater, C. D."]
       year: 1954
       container: "Advances in Catalysis 6, 143. Academic Press, New York"
-      doi: null
+      doi: 10.1016/s0360-0564(08)60390-9
     reference_read_from:
       authors: ["Weisz, P. B.", "Hicks, J. S."]
       year: 1962
@@ -3334,6 +3334,7 @@ models:
       authors: ["Yagi, S.", "Kunii, D."]
       year: 1955
       container: "5th Symposium (International) on Combustion, 231–244"
+      doi: 10.1016/s0082-0784(55)80033-1
     data: {tier: 6, method: analytical, status: complete}
     related: [B3.2, B3.3, I1.8, B1.1]
 
@@ -5765,6 +5766,7 @@ models:
       authors: ["Glueckauf, E."]
       year: 1955
       container: "Transactions of the Faraday Society 51 1540–1551"
+      doi: 10.1039/tf9555101540
     note: "Build as a triptych with J1.6 (analytical) and J1.8 (general rate model)."
     related: [J1.6, J1.8, J1.10]
 
@@ -5898,6 +5900,7 @@ models:
       authors: ["Smoluchowski, M. v."]
       year: 1917
       container: "Zeitschrift fuer physikalische Chemie 92, 129-168"
+      doi: 10.1515/zpch-1918-9209   # Crossref dates the issue 1918; vol. 92 is dated 1917
     data: {tier: 6, method: table, status: complete}
     related: [J2.2]
 
@@ -6903,3 +6906,33 @@ models:
     pymrm_api: [construct_convflux_upwind, construct_div, newton, checks.find_roots, checks.observed_orders]
     data: {tier: 0, method: table, status: complete}
     related: [J5.3, J5.1, J5.2, J2.1, J2.2, J2.6]
+
+  - id: H1.3
+    slug: pd-membrane-concentration-polarisation
+    title: "Caravella, Barbieri and Drioli (2009): concentration polarisation in Pd membranes, and what a film coefficient misses along a laminar tube"
+    description: >
+      Caravella, Barbieri and Drioli compute a concentration polarisation coefficient from a
+      local film model with a length-averaged Sherwood correlation and read it along a
+      module. The page solves a resolved 2-D laminar Pd-membrane tube (radial diffusion,
+      hydrogen suction, a nonlinear Sieverts wall), its own extension, and tests whether the
+      film describes the loss of driving force along the tube, as a module total and as a
+      local coefficient; it also checks the paper's printed numbers and misprints.
+    section: H
+    status: published
+    tier: T1
+    priority: P1
+    structures: [S6]
+    # note: the catalogue line (docs/catalog-B-reactors.md) says S6+S7; the paper solves a
+    # point model, and the module along the tube is the page's own extension, with a pure-H2
+    # permeate at fixed pressure (no second domain), hence S6.
+    phases: [gas]
+    reference:
+      authors: ["Caravella, A.", "Barbieri, G.", "Drioli, E."]
+      year: 2009
+      container: "Separation and Purification Technology 66, 613-624"
+      doi: 10.1016/j.seppur.2009.01.008
+    pymrm_api: [construct_grad, construct_div, construct_convflux_upwind, compute_boundary_values,
+                NumJac, newton, checks.find_roots, checks.observed_orders]
+    data: {tier: 6, method: table, status: complete}
+    page: pages/H1.3-pd-membrane-concentration-polarisation/
+    related: [H1.1, H1.4, H1.7, A2.6, A2.3]
