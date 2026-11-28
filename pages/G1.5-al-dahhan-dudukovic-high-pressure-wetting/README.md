@@ -38,11 +38,13 @@ Each CSV has a `.meta.yaml` provenance sidecar beside it.
   prints "The mean relative error is 3.7%.", which its own Fig. 6 reproduces (3.67 % <!-- claim: r3_mre_B -->).
   Whether the authors capped, and which liquid properties they used, is not printed.
 - The residuals depend on the bed: spheres -4.46 % <!-- claim: r4_bias_sphere -->, extrudates
-  +2.11 % <!-- claim: r4_bias_extrudate -->. Refit the bed term, and the exponents if possible, for a
-  new bed: within the paper's beds the pressure-drop exponent is 0.0790 <!-- claim: r4_m -->, not 1/9.
+  +2.11 % <!-- claim: r4_bias_extrudate -->, a split of 5.1 <!-- claim: r4_bias_z_cases --> standard
+  errors with the nine case means as units. Refit the bed term, and the exponents if possible, for a
+  new bed: within the paper's beds the pressure-drop exponent is 0.0790 <!-- claim: r4_m --> (case
+  bootstrap 95 % 0.0704 <!-- claim: r4_m_lo --> to 0.0889 <!-- claim: r4_m_hi -->), below the printed 1/9.
 - El-Hisnawi's eq. 1 lies above the low-pressure data (cases 2 and 3) at 16 <!-- claim: r5_above --> of
   17 <!-- claim: r5_n --> points, and "within the error margin of the correlation (± 10%)" at only
   9 <!-- claim: r5_within10 -->.
-- Tables 1 and 2 of the paper write the tracer variance without the factor 2 of the second cumulant:
+- Table 2 and the liquid-filled lines of Table 1 of the paper write the tracer variance without the factor 2 of the second cumulant:
   an effective diffusivity recovered with them is 0.5 <!-- claim: r6_de_recovered_over_true --> of the
   true value, which cancels in eq. 8 only when both variances use the same form.

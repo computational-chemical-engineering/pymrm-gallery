@@ -71,7 +71,7 @@ import matplotlib.pyplot as plt
 from IPython.display import Markdown, display
 from scipy.optimize import linear_sum_assignment
 import pymrm
-from pymrm.checks import observed_orders
+from pymrm.checks import find_roots, observed_orders
 from gallery_utils import Claims, assert_check_values, cite_data, load_data, load_meta
 import model as M_
 from model import (G_GRAV, FILM_EXACT, MOMENT_EXACT, cluster_bootstrap, d_volume, de_recovered,
@@ -233,11 +233,13 @@ for f in ("al-dahhan-1995-fig4.csv", "al-dahhan-1995-fig6.csv"):
 F4.flag, F5.flag, F6.flag, F7.flag = (f.flag.fillna("") for f in (F4, F5, F6, F7))
 say("Read from the scan: Fig. 4 (spheres) <<a4:d>> wetting efficiencies and <<b4:d>> pressure drops, <<c1:d>> of them "
     "case 1 (no gas) on the zero axis and not used; Fig. 5 (extrudates, with the 4.93 MPa series called case 5b here) "
-    "<<a5:d>> and <<b5:d>>; Fig. 6 <<r6:d>> rings resolved, of which <<cs:d>> in a stack at (1, 1) that may hide one more; "
+    "<<a5:d>> and <<b5:d>>; Fig. 6 <<r6:d>> rings resolved, of which <<cs:d>> rings down the predicted = 1 frame (experimental <<ea:.2f>> to <<eb:.2f>>), which may "
+    "hide up to two coincident rings; "
     "Fig. 7 <<m7:d>> markers and the two predicted lines (<<l7:d>> line points).",
     a4=int((F4.panel == "a").sum()), b4=int((F4.panel == "b").sum()), c1=int(((F4.panel == "b") & (F4.case == "1")).sum()),
     a5=int((F5.panel == "a").sum()), b5=int((F5.panel == "b").sum()), r6=len(F6),
-    cs=int(F6.flag.str.contains("corner").sum()), m7=int((F7.kind == "marker").sum()), l7=int((F7.kind == "line").sum()))
+    cs=int(F6.flag.str.contains("corner").sum()), ea=F6[F6.flag.str.contains("corner")].eta_exp.min(),
+    eb=F6[F6.flag.str.contains("corner")].eta_exp.max(), m7=int((F7.kind == "marker").sum()), l7=int((F7.kind == "line").sum()))
 
 
 @dataclass(frozen=True)
@@ -581,6 +583,10 @@ def r4(C, K, P, pc, rng):
     out["r4_bias_diff"] = out["r4_bias_extrudate"] - out["r4_bias_sphere"]
     out["r4_bias_diff_se"] = float(np.hypot(out["r4_bias_sphere_se"], out["r4_bias_extrudate_se"]))
     out["r4_bias_z"] = out["r4_bias_diff"] / out["r4_bias_diff_se"]
+    case_mean = pd.Series(d).groupby(P.cluster.to_numpy()).mean()       # the (bed, case) means are the units
+    (cm_s, se_s), (cm_x, se_x) = (mean_se(case_mean[[c for c in case_mean.index if c.startswith(b + " ")]])
+                                  for b in ("sphere", "extrudate"))
+    out["r4_bias_z_cases"] = (cm_x - cm_s) / float(np.hypot(se_s, se_x))
     rho, mu = props_at(C, "0.31")
     Q = P[~P.frame].reset_index(drop=True)
     dp = np.array([C.beds[b]["d_p"] for b in Q.bed])
@@ -592,8 +598,21 @@ def r4(C, K, P, pc, rng):
     out["r4_eq6_n_se"], out["r4_eq6_m_se"] = float(s6[1]), float(s6[2])
     out["r4_eq6_m_dist_19_se"] = (K["m9"] - out["r4_eq6_m"]) / out["r4_eq6_m_se"]
     out["r4_eq6_n_dist_13_se"] = (K["n9"] - out["r4_eq6_n"]) / out["r4_eq6_n_se"]
+    row6 = lambda b: design_eq6(np.array([1.0]), np.array([0.5]), np.array([C.beds[b]["d_p"]]),
+                                np.array([C.beds[b]["eps_B"]]), rho, mu)[0]
+    out["r4_eq6_bed_ratio"] = float(np.exp((row6("extrudate") - row6("sphere")) @ b6))   # at equal L and psi_L
+    out["r4_eq6_rms"] = float(np.sqrt(np.mean((y - X6 @ b6) ** 2)))
     Xb = design_bed(Q.L.to_numpy(), Q.dpz.to_numpy(), Q.bed.to_numpy())
     bb_, sb = ols(Xb, y)
+    out["r4_bedoffset_rms"] = float(np.sqrt(np.mean((y - Xb @ bb_) ** 2)))
+    for bed in ("sphere", "extrudate"):                      # each bed fitted alone: ln eta = a + n ln L + m ln psi_L
+        s_ = (Q.bed == bed).to_numpy()
+        Xs = np.column_stack([np.ones(s_.sum()), np.log(Q.L.to_numpy()[s_]), np.log(psi_l(Q.dpz.to_numpy()[s_]))])
+        bs, ss = ols(Xs, y[s_])
+        out[f"r4_n_{bed}"], out[f"r4_m_{bed}"] = float(bs[1]), float(bs[2])
+        out[f"r4_n_{bed}_se"], out[f"r4_m_{bed}_se"] = float(ss[1]), float(ss[2])
+    out["r4_perbed_m_gap_19"] = min(K["m9"] - out[f"r4_m_{b}"] for b in ("sphere", "extrudate"))   # > 0: both below 1/9
+    out["r4_perbed_n_gap_13"] = min(out[f"r4_n_{b}"] - K["n9"] for b in ("sphere", "extrudate"))   # > 0: both above 1/3
     out["r4_bed_ratio_ext_sph"] = float(np.exp(bb_[1] - bb_[0]))
     X, cols = (Xb, (2, 3)) if C.refit == "bed" else (X6, (1, 2))
     beta, se = (bb_, sb) if C.refit == "bed" else (b6, s6)
@@ -610,6 +629,13 @@ def r4(C, K, P, pc, rng):
     lo = leave_one_out(X, y, cl)
     out["r4_m_loco_min"], out["r4_m_loco_max"] = float(lo[:, cols[1]].min()), float(lo[:, cols[1]].max())
     out["r4_n_loco_min"], out["r4_n_loco_max"] = float(lo[:, cols[0]].min()), float(lo[:, cols[0]].max())
+    if C.refit == "bed":
+        boot_b, lo_b = boot, lo
+    else:
+        boot_b, lo_b = cluster_bootstrap(Xb, y, cl, N_BOOT, rng)[0], leave_one_out(Xb, y, cl)
+    rb_, rl_ = np.exp(boot_b[:, 1] - boot_b[:, 0]), np.exp(lo_b[:, 1] - lo_b[:, 0])   # extrudates over spheres
+    out["r4_ratio_lo"], out["r4_ratio_hi"] = (float(v) for v in np.percentile(rb_, [2.5, 97.5]))
+    out["r4_ratio_loco_min"], out["r4_ratio_loco_max"] = float(rl_.min()), float(rl_.max())
     out["r4_m_dist_19_se"] = (K["m9"] - out["r4_m"]) / out["r4_m_se"]
     out["r4_n_dist_13_se"] = (K["n9"] - out["r4_n"]) / out["r4_n_se"]
     out["r4_m_excludes_19__margin"] = min(abs(K["m9"] - out["r4_m_hi"]), abs(K["m9"] - out["r4_m_loco_max"]))
@@ -652,6 +678,9 @@ def r5(C, K, P):
         out[f"r5_within10{tag}"] = int(np.sum(np.abs(x[s]) <= 0.10))
         out[f"r5_within10{tag}__margin"] = float(np.min(np.abs(np.abs(x[s]) - 0.10)))
         out[f"r5_outside10_decided{tag}"] = int(np.sum(np.abs(x[s]) - FRAC_SD * sd[s] > 0.10))
+    out["r5_mean_excess"] = float(x.mean())
+    for bed in ("sphere", "extrudate"):
+        out[f"r5_mean_excess_{bed}"] = float(x[(Q.bed == bed).to_numpy()].mean())
     i = int(np.argmax(x))
     out["r5_max_excess"], out["r5_max_excess_L"] = float(x[i]), float(Q.L.iloc[i])
     out["_r5"] = Q.assign(eta1=e1, excess=x)
@@ -722,6 +751,10 @@ def study(K, C):
     out |= r3(C, K, P, out["_pc"], rng)
     out |= r4(C, K, P, out["_pc"], rng)
     out |= r5(C, K, P)
+    ends = (out["r4_ratio_lo"], out["r4_ratio_hi"], out["r4_ratio_loco_min"], out["r4_ratio_loco_max"])
+    r9 = out["r1_ext_over_sph_eq9"]
+    out["r4_ratio_eq9_outside"] = int(r9 > ends[1] and r9 > ends[3] or r9 < ends[0] and r9 < ends[2])
+    out["r4_ratio_eq9_outside__margin"] = min(abs(r9 - v) for v in ends)
     out |= r6(C)
     out |= v2(C)
     # G1 band over the unprinted choices
@@ -733,6 +766,12 @@ def study(K, C):
             p = pred9(P, C, Kf, cap=cap and C.cap)
             band += [metrics(p, P.eta, conv)["mre"] for conv in ("exp", "pred")]
     out["g1_band_lo"], out["g1_band_hi"] = float(min(band)), float(max(band))
+    # prefactor range that keeps every capped deviation inside 10 %: the two roots of max|dev| - 0.10
+    rts = find_roots(lambda f: metrics(pred9(P, C, {**K, "c9": K["c9"] * f}, cap=C.cap), P.eta)["maxdev"] - 0.10,
+                     0.9, 1.1, n_scan=201)["roots"]
+    out["r2_inside_all_pref_lo"], out["r2_inside_all_pref_hi"] = (float(rts[0]), float(rts[1])) if len(rts) == 2 else (np.nan, np.nan)
+    (rho_l, mu_l), (rho_h, mu_h) = props_at(C, "0.31"), props_at(C, "4.93")
+    out["r2_props_pref_shift"] = float((mu_h * rho_h ** 2 / (mu_l * rho_l ** 2)) ** (-K["m9"]) - 1.0)
     out["r2_mre_pref"] = metrics(pred9(P, C, {**K, "c9": K["c9"] * pref}, cap=C.cap), P.eta)["mre"]
     # the gates, decided as the plan wrote them before the run
     target = num(PN["mre_pct"]) / 100
@@ -751,8 +790,8 @@ def study(K, C):
     out["g2_distance"] = out["r3_mre_B"] - target
     out["g3_verdict"] = "all inside" if out["r2_maxdev_plus_2sd"] <= 0.10 else "not all inside"
     out["g3_verdict__margin"] = abs(0.10 - out["r2_maxdev_plus_2sd"])
-    out["g4_verdict"] = "split" if abs(out["r4_bias_z"]) >= 3 else "no split"
-    out["g4_verdict__margin"] = abs(abs(out["r4_bias_z"]) - 3)
+    out["g4_verdict"] = "split" if abs(out["r4_bias_z_cases"]) >= 3 else "no split"
+    out["g4_verdict__margin"] = abs(abs(out["r4_bias_z_cases"]) - 3)
     return out
 
 
@@ -763,6 +802,10 @@ if not 0.025 <= Mv["r2_mre_capped_exp"] <= 0.05 and not 0.025 <= Mv["r2_mre_unca
     raise ValueError("stop rule: route A MRE outside 2.5 to 5 %")
 if not 0.97 <= Mv["r3_f7_solid_over_eq9"] <= 1.03:
     raise ValueError("stop rule: the Fig. 7 line over eq. 9 outside 0.97 to 1.03")
+if not np.isfinite([Mv["r2_inside_all_pref_lo"], Mv["r2_inside_all_pref_hi"]]).all():
+    raise ValueError("the prefactor range for 37 of 37 inside 10 % does not have exactly two ends in 0.9 to 1.1")
+if not (Mv["r4_perbed_m_gap_19"] > 0 and Mv["r4_perbed_n_gap_13"] > 0):
+    raise ValueError("the text says each bed alone has m below 1/9 and n above 1/3")
 if not 33 <= Mv["r3_n_rings"] <= 38:
     raise ValueError("stop rule: Fig. 6 ring count outside 33 to 38")
 print(f"{sum(not k.startswith('_') and not k.endswith('__margin') for k in Mv)} numbers computed")
@@ -890,15 +933,20 @@ ax.set_xlabel("$\\psi_L$"); ax.set_ylabel("$(p - e)/e$ (%)"); ax.legend(fontsize
 ax.set_title("Route A residuals by bed")
 plt.show()
 say("The residuals split by bed: spheres <<bs:+pct2>> ± <<bss:pct2>> (<<n1:d>> points), extrudates <<bx:+pct2>> ± "
-    "<<bxs:pct2>> (<<n2:d>>), a difference of <<d:pct2>> at <<z:.1f>> two-sample standard errors. The bed-offset refit "
-    "puts the extrudates at <<rr:.4f>> times the spheres at equal $L$ and $\\psi_L$, where eq. 9 says <<r9:.4f>> and eq. 1 "
-    "<<r1:.4f>>. Eq. 6 refitted: $c$ = <<c6:.3f>>, $n$ = <<n6:.3f>> ± <<n6s:.3f>>, $m$ = <<m6:.3f>> ± <<m6s:.3f>> (OLS "
-    "SEs): 1/3 lies <<d6n:.2f>> SEs and 1/9 <<d6m:.2f>> SEs from these, because in eq. 6 the bed term moves both exponents. Within the "
+    "<<bxs:pct2>> (<<n2:d>>), a difference of <<d:pct2>> at <<z:.1f>> two-sample standard errors (<<zc:.1f>> with the "
+    "<<nc:d>> case means as units, which is the figure the G4 gate uses: the points of one case are not independent). "
+    "The bed-offset refit puts the extrudates at <<rr:.4f>> times the spheres at equal $L$ and $\\psi_L$ (case bootstrap "
+    "95 % [<<rlo:.3f>>, <<rhi:.3f>>], leave-one-case-out <<rlm:.3f>> to <<rlx:.3f>>), where eq. 9 says <<r9:.3f>>, outside "
+    "both, and eq. 1 <<r1:.4f>>. Eq. 6 refitted: $c$ = <<c6:.3f>>, $n$ = <<n6:.3f>> ± <<n6s:.3f>>, $m$ = <<m6:.3f>> ± <<m6s:.3f>> (OLS "
+    "SEs): 1/3 lies <<d6n:.2f>> SEs and 1/9 <<d6m:.2f>> SEs from these. Eq. 6 cannot carry the measured bed offset (it implies "
+    "<<r6b:.3f>> where the data give <<rb3:.3f>>), so the offset stays in its residuals (rms <<s6:pct1>> against <<sb:pct1>>) "
+    "and widens its standard errors. Within the "
     "beds (form b) $n$ = <<nb:.4f>> ± <<nbs:.4f>> and $m$ = <<mb:.4f>> ± <<mbs:.4f>>: 1/9 lies <<dm:.1f>> SEs above $m$ and "
     "1/3 lies <<dn:.1f>> SEs from $n$. The cluster bootstrap gives $m$ in [<<ml:.4f>>, <<mh:.4f>>] and $n$ in "
     "[<<nl:.4f>>, <<nh:.4f>>] (95 %, <<nb_:d>> draws, <<sg:pct1>> of them singular), leave-one-case-out $m$ from "
     "<<mlo:.4f>> to <<mhi:.4f>> and $n$ from <<nlo:.4f>> to <<nhi:.4f>>. With the four frame points included, $m$ = "
-    "<<mf:.4f>>.",
+    "<<mf:.4f>>. Each bed fitted alone gives $m$ of <<ms:.4f>> ± <<mss:.4f>> (spheres) and <<me:.4f>> ± <<mes:.4f>> "
+    "(extrudates), and $n$ of <<ns_:.3f>> ± <<nss:.3f>> and <<ne:.3f>> ± <<nes:.3f>>.",
     bs=Mv["r4_bias_sphere"], bss=Mv["r4_bias_sphere_se"], n1=int((P0.bed == "sphere").sum()), bx=Mv["r4_bias_extrudate"],
     bxs=Mv["r4_bias_extrudate_se"], n2=int((P0.bed == "extrudate").sum()), d=Mv["r4_bias_diff"], z=Mv["r4_bias_z"],
     rr=Mv["r4_bed_ratio_ext_sph"], r9=Mv["r1_ext_over_sph_eq9"], r1=Mv["r1_ext_over_sph_eq1"], c6=Mv["r4_eq6_c"],
@@ -906,7 +954,12 @@ say("The residuals split by bed: spheres <<bs:+pct2>> ± <<bss:pct2>> (<<n1:d>> 
     mb=Mv["r4_m"], mbs=Mv["r4_m_se"], dm=Mv["r4_m_dist_19_se"], dn=abs(Mv["r4_n_dist_13_se"]), ml=Mv["r4_m_lo"],
     mh=Mv["r4_m_hi"], nl=Mv["r4_n_lo"], nh=Mv["r4_n_hi"], nb_=N_BOOT, sg=Mv["r4_boot_singular_frac"],
     mlo=Mv["r4_m_loco_min"], mhi=Mv["r4_m_loco_max"], nlo=Mv["r4_n_loco_min"], nhi=Mv["r4_n_loco_max"],
-    mf=Mv["r4_m_with_frame"], d6n=Mv["r4_eq6_n_dist_13_se"], d6m=Mv["r4_eq6_m_dist_19_se"])
+    mf=Mv["r4_m_with_frame"], d6n=Mv["r4_eq6_n_dist_13_se"], d6m=Mv["r4_eq6_m_dist_19_se"],
+    zc=Mv["r4_bias_z_cases"], nc=P0.cluster.nunique(), rlo=Mv["r4_ratio_lo"], rhi=Mv["r4_ratio_hi"],
+    rlm=Mv["r4_ratio_loco_min"], rlx=Mv["r4_ratio_loco_max"], r6b=Mv["r4_eq6_bed_ratio"], rb3=Mv["r4_bed_ratio_ext_sph"],
+    s6=Mv["r4_eq6_rms"], sb=Mv["r4_bedoffset_rms"], ms=Mv["r4_m_sphere"], mss=Mv["r4_m_sphere_se"],
+    me=Mv["r4_m_extrudate"], mes=Mv["r4_m_extrudate_se"], ns_=Mv["r4_n_sphere"], nss=Mv["r4_n_sphere_se"],
+    ne=Mv["r4_n_extrudate"], nes=Mv["r4_n_extrudate_se"])
 say("The paper attributes the gain from case 2 (0.31 MPa, low gas rate) to case 5 (3.55 MPa, high gas rate) as "
     "\"about 20% improvement in the extrudate bed (Fig. 5) and about 10% improvement in the bed of spheres (Fig. 4)\" "
     "(p. 2386). At matched $L$ (case 2 interpolated log-log, no extrapolation) the data give <<sa:pct1>> to <<sb:pct1>> "
@@ -922,7 +975,8 @@ say("The paper attributes the gain from case 2 (0.31 MPa, low gas rate) to case 
 # ### R5. El-Hisnawi's eq. 1 at 0.31 MPa
 #
 # The paper: "which predicts higher contacting values than both sets of data but within
-# the error margin of the correlation (± 10%)" (p. 2387). Eq. 1 at the 0.31 MPa points
+# the error margin of the correlation (± 10%)" (p. 2387) ("both sets" are El-Hisnawi's atmospheric
+# data and this paper's low-pressure data; only the latter is tested here). Eq. 1 at the 0.31 MPa points
 # (cases 2 and 3 of both beds), each decided against its reading SD.
 
 # %%
@@ -931,11 +985,11 @@ display(r5t.assign(L=r5t.L.round(3), eta=r5t.eta.round(4), eta1=r5t.eta1.round(4
 say("Eq. 1 lies above the data at <<a:d>> of <<n:d>> points (<<ad:d>> of them by more than two reading SDs; case 2 "
     "alone <<a2:d>> of <<n2:d>>), and within ±10 % at <<w:d>> of <<n:d>> (case 2 alone <<w2:d>> of <<n2:d>>); <<o:d>> "
     "points lie outside ±10 % by more than two reading SDs. The largest excess is <<x:+pct1>> at $L$ = <<xl:.2f>> "
-    "kg/(m² s). The first half of the sentence holds at <<a:d>> of <<n:d>> points; the second half holds at <<w:d>> of "
+    "kg/(m² s); the mean excess is <<xm:+pct1>> (spheres <<xs:+pct1>>, extrudates <<xe:+pct1>>). The first half of the sentence holds at <<a:d>> of <<n:d>> points; the second half holds at <<w:d>> of "
     "<<n:d>>, so as a statement about every point it does not.",
     a=Mv["r5_above"], n=Mv["r5_n"], ad=Mv["r5_above_decided"], a2=Mv["r5_above_case2"], n2=Mv["r5_n_case2"],
     w=Mv["r5_within10"], w2=Mv["r5_within10_case2"], o=Mv["r5_outside10_decided"], x=Mv["r5_max_excess"],
-    xl=Mv["r5_max_excess_L"])
+    xl=Mv["r5_max_excess_L"], xm=Mv["r5_mean_excess"], xs=Mv["r5_mean_excess_sphere"], xe=Mv["r5_mean_excess_extrudate"])
 
 # %% [markdown]
 # ### R6. The measurement chain: moment coefficients by pymrm, and the tables' factor 2
@@ -1010,7 +1064,7 @@ say("V2. <<n:d>> of the <<nt:d>> rows that recompute a printed entry from other 
 # seeds; each claim's tolerance is three times the largest relative move a seed causes.
 
 # %%
-MC_KEYS = ("r2_mc_sd", "r3_mc_sd", "r4_m_lo", "r4_m_hi", "r4_n_lo", "r4_n_hi")
+MC_KEYS = ("r2_mc_sd", "r3_mc_sd", "r4_m_lo", "r4_m_hi", "r4_n_lo", "r4_n_hi", "r4_ratio_lo", "r4_ratio_hi")
 
 
 def seeded(seed):
@@ -1038,7 +1092,7 @@ display(pd.DataFrame({"value": {k: Mv[k] for k in MC_KEYS}, "largest seed move":
 # value), else "not reproduced"; G2 the same for Fig. 6 with $s$ from the ring reading
 # error and half the shift a full count of rings could cause; G3 "all inside" only if the
 # largest deviation plus 2 SD is at most 10 %; G4 a split only at 3 two-sample SEs or
-# more; G5 an exponent "excluded" only if outside the bootstrap interval and outside every
+# more, judged with the case means as units; G5 an exponent "excluded" only if outside the bootstrap interval and outside every
 # leave-one-case-out estimate; G6 counts with totals; G7 orders 1.95 to 2.05 and
 # Richardson values within 1e-8.
 
@@ -1049,7 +1103,8 @@ gates = pd.DataFrame([
     ("G2 route B", f"MRE {Mv['r3_mre_B'] * 100:.2f} %, s {Mv['g2_s'] * 100:.3f} %", Mv["g2_verdict"]),
     ("G3 ±10 %", f"largest {Mv['r2_maxdev_capped_exp'] * 100:.2f} %, + 2 SD {Mv['r2_maxdev_plus_2sd'] * 100:.2f} %; "
                  f"uncapped {Mv['r2_inside_uncapped_exp']} of {Mv['n_points']}", Mv["g3_verdict"]),
-    ("G4 bed split", f"{Mv['r4_bias_diff'] * 100:.2f} % at {Mv['r4_bias_z']:.1f} SE", Mv["g4_verdict"]),
+    ("G4 bed split", f"{Mv['r4_bias_diff'] * 100:.2f} % at {Mv['r4_bias_z_cases']:.1f} SE (case means), "
+                   f"{Mv['r4_bias_z']:.1f} SE (points)", Mv["g4_verdict"]),
     ("G5 m = 1/9", f"bootstrap [{Mv['r4_m_lo']:.4f}, {Mv['r4_m_hi']:.4f}], LOCO [{Mv['r4_m_loco_min']:.4f}, "
                    f"{Mv['r4_m_loco_max']:.4f}]", "excluded" if Mv["r4_m_excludes_19"] else "not excluded"),
     ("G5 n = 1/3", f"bootstrap [{Mv['r4_n_lo']:.4f}, {Mv['r4_n_hi']:.4f}], LOCO [{Mv['r4_n_loco_min']:.4f}, "
@@ -1069,12 +1124,19 @@ say("**G1.** Route A gives <<ma:pct2>> against \"The mean relative error is 3.7%
     "parity plot gives <<mb:pct2>>: verdict \"<<g2>>\". So the printed 3.7 % is what Fig. 6 shows, and eq. 9 as printed, "
     "at n-hexane properties, lands near it rather than on it. **G3.** \"The data are bounded by ± 10%.\": "
     "\"<<g3>>\" for capped predictions (<<ci:d>> of <<n:d>> points by two reading SDs); uncapped, <<iu:d>> of <<n:d>>. "
-    "**G4.** The residuals split by bed (\"<<g4>>\", <<z:.1f>> SEs): spheres below eq. 9, extrudates above it. "
+    "The verdict depends on the unprinted liquid properties: all <<n:d>> capped deviations stay inside 10 % only for an "
+    "eq. 9 prefactor between <<pl:.4f>> and <<ph:.4f>> times the printed one, and a property change of that size (the "
+    "prefactor moves as $(\\mu_L\\rho_L^2)^{-1/9}$) flips it; the NIST properties between 0.31 and 4.93 MPa move the "
+    "prefactor by <<ps:+pct2>>, inside that range, but the paper's \"commercial grade hexane\" properties are not printed. "
+    "**G4.** The residuals split by bed (\"<<g4>>\", at <<zc:.1f>> standard errors with the case means as units, <<z:.1f>> "
+    "two-sample standard errors treating the points as independent): spheres below eq. 9, extrudates above it. "
     "**G5.** Within the beds the exponent on $\\psi_L$ is <<m:.4f>>: 1/9 is <<g5m>> by the data (outside the bootstrap "
     "interval and every leave-one-case-out value), and the within-bed $L$ exponent <<n_:.4f>> has 1/3 <<g5n>>; eq. 6 with "
-    "free exponents does not show this because its bed term absorbs it. The data put the extrudates below the spheres "
-    "at equal $L$ and $\\psi_L$, where eq. 9 puts them above through $\\varepsilon_B^{-1/3}$ alone: the exponents of eq. "
-    "9 average over two beds rather than describe either. **G6.** Eq. 1 lies above the data at <<a:d>> of <<n5:d>> "
+    "free exponents cannot carry the measured bed offset (it implies <<r6b:.3f>> where the data give <<rb:.3f>>), so the "
+    "offset stays in its residuals (rms <<s6:pct1>> against <<sb:pct1>>) and widens its standard errors. The data put the "
+    "extrudates below the spheres at equal $L$ and $\\psi_L$ (<<rb:.3f>>, case bootstrap 95 % [<<rlo:.3f>>, <<rhi:.3f>>]), "
+    "where eq. 9 puts them above (<<r9:.3f>>) through $\\varepsilon_B^{-1/3}$ alone. Each bed fitted alone gives $m$ of "
+    "<<ms:.4f>> and <<me:.4f>>, both below 1/9, and $n$ of <<ns_:.3f>> and <<ne:.3f>>, both above 1/3. **G6.** Eq. 1 lies above the data at <<a:d>> of <<n5:d>> "
     "points at 0.31 MPa but within ±10 % at only <<w:d>> of <<n5:d>>, so \"within the error margin of the correlation "
     "(± 10%)\" (p. 2387) does not hold point by point. **G7.** The pellet moment problem converges at second order "
     "onto 1/15, 1/8 and 1/3 (with film terms); Tables 1 and 2 write the reduced variance without the factor 2 of the "
@@ -1084,7 +1146,11 @@ say("**G1.** Route A gives <<ma:pct2>> against \"The mean relative error is 3.7%
     mb=Mv["r3_mre_B"], g2=Mv["g2_verdict"], g3=Mv["g3_verdict"], ci=Mv["r2_n_certain_inside"], n=Mv["n_points"],
     iu=Mv["r2_inside_uncapped_exp"], g4=Mv["g4_verdict"], z=Mv["r4_bias_z"], m=Mv["r4_m"],
     g5m="excluded" if Mv["r4_m_excludes_19"] else "not excluded", n_=Mv["r4_n"],
-    g5n="excluded" if Mv["r4_n_excludes_13"] else "not excluded", a=Mv["r5_above"], n5=Mv["r5_n"], w=Mv["r5_within10"])
+    g5n="excluded" if Mv["r4_n_excludes_13"] else "not excluded",
+    zc=Mv["r4_bias_z_cases"], pl=Mv["r2_inside_all_pref_lo"], ph=Mv["r2_inside_all_pref_hi"], ps=Mv["r2_props_pref_shift"],
+    r6b=Mv["r4_eq6_bed_ratio"], rb=Mv["r4_bed_ratio_ext_sph"], s6=Mv["r4_eq6_rms"], sb=Mv["r4_bedoffset_rms"],
+    rlo=Mv["r4_ratio_lo"], rhi=Mv["r4_ratio_hi"], r9=Mv["r1_ext_over_sph_eq9"], ms=Mv["r4_m_sphere"],
+    me=Mv["r4_m_extrudate"], ns_=Mv["r4_n_sphere"], ne=Mv["r4_n_extrudate"], a=Mv["r5_above"], n5=Mv["r5_n"], w=Mv["r5_within10"])
 
 # %% [markdown]
 # ## What pymrm adds
@@ -1128,7 +1194,7 @@ say("**G1.** Route A gives <<ma:pct2>> against \"The mean relative error is 3.7%
 # %%
 RTOL = 1e-6
 STRUCTURAL = {"n_points": "digitised marker count (paired points)", "n_frame": "digitised count of frame points",
-              "r3_n_rings": "digitised ring count of Fig. 6", "r5_n": "count of 0.31 MPa points",
+              "r5_n": "count of 0.31 MPa points",
               "r5_n_case2": "count of case-2 points", "r4_gain_sphere_n": "case-5 points inside the case-2 L range",
               "r4_gain_extrudate_n": "case-5 points inside the case-2 L range",
               "r6_slope_q_gap": "Table 2's slope times Q_L equals its sigma_D^2 for any inputs",
@@ -1148,8 +1214,8 @@ COUNTS = {"r2_inside_capped_exp": 0.002, "r2_inside_capped_pred": 0.002, "r2_ins
           "r2_inside_uncapped_pred": 0.002, "r2_n_pred_above_1": 0.002, "r3_inside_B": 0.002, "r5_above": 0.002,
           "r5_above_case2": 0.002, "r5_within10": 0.002, "r5_within10_case2": 0.002, "v2_n_within": 0.05,
           "g1_verdict": 0.0005, "g2_verdict": 0.0005, "g3_verdict": 0.002, "g4_verdict": 0.5,
-          "r4_m_excludes_19": 0.002, "r4_n_excludes_13": 0.002}
-EXACT = {"r2_n_certain_inside", "r3_n_pred_above_1", "r3_n_ambiguous", "r3_ratio_sphere_n", "r3_ratio_extrudate_n",
+          "r4_m_excludes_19": 0.002, "r4_n_excludes_13": 0.002, "r4_ratio_eq9_outside": 0.002}
+EXACT = {"r3_n_rings", "r2_n_certain_inside", "r3_n_pred_above_1", "r3_n_ambiguous", "r3_ratio_sphere_n", "r3_ratio_extrudate_n",
          "r5_above_decided", "r5_above_decided_case2", "r5_outside10_decided", "r5_outside10_decided_case2"}
 
 
@@ -1198,6 +1264,8 @@ _m = (_f5.panel == "a") & (np.arange(len(_f5)) % 2 == 0)
 _f5.loc[_m, "value"] = _f5.loc[_m, "value"] * 1.02
 _f6s = F6.assign(eta_pred=F6.eta_pred * 1.05)
 _f6c = pd.concat([F6, F6.iloc[[-1]].assign(ring=len(F6), eta_pred=1.0, eta_exp=1.0)], ignore_index=True)
+_f6c5 = pd.concat([F6, F6.iloc[[-1]].assign(ring=len(F6), eta_pred=1.0, eta_exp=1.0),
+                   F6.iloc[[-1]].assign(ring=len(F6) + 1, eta_pred=1.0, eta_exp=1.0)], ignore_index=True)
 _props_hi = PROPS.copy()
 _props_hi.loc[1, ["rho_kg_m3", "mu_Pa_s"]] = PROPS.loc[3, ["rho_kg_m3", "mu_Pa_s"]].to_numpy()
 _beds_sw = {"sphere": {**BEDS["sphere"], "eps_B": BEDS["extrudate"]["eps_B"]},
@@ -1214,6 +1282,7 @@ DEFECTS = [mistyped(k) for k in K] + [
     ("Fig. 5a eta x 1.02, every 2nd marker", K, replace(C0, f5=_f5)),
     f6_with(_f6s, "Fig. 6 eta_pred x 1.05"),
     f6_with(_f6c, "Fig. 6 corner stack read as four rings"),
+    f6_with(_f6c5, "Fig. 6 corner stack read as five rings"),
     ("liquid properties of 4.93 MPa used at 0.31 MPa", K, replace(C0, props=_props_hi)),
     ("eq. 1 with the voidage groups of eq. 9", K, replace(C0, eq1_voidage=True)),
     ("eq. 6 form for the within-bed exponents", K, replace(C0, refit="eq6")),

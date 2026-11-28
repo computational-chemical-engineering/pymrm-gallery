@@ -18,7 +18,7 @@ from pymrm import construct_div, construct_grad
 G_GRAV = 9.80665          # m/s2, standard gravity
 R_GAS = 8.314462618       # J/(mol K)
 M_N2 = 28.0134e-3         # kg/mol
-PA_PER_PSI = 6894.757293168   # Pa per psi (lbf/in2 to 13 digits)
+PA_PER_PSI = 6894.757293168   # Pa per psi: the exact 6894.757293168361 rounded to 13 digits, as in the check-value script (relative difference 5e-14)
 P_ATM_MPA = 0.101325      # MPa
 
 
