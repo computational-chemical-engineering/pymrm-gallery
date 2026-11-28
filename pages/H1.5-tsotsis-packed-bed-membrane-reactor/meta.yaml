@@ -1,0 +1,73 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: H1.5
+slug: tsotsis-packed-bed-membrane-reactor
+title: "Tsotsis et al. (1992): packed-bed catalytic membrane reactor, conversion beyond equilibrium"
+section: H
+status: planned
+tier: T1
+priority: P1
+structures: [S7]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Tsotsis, T. T.", "Champagnie, A. M.", "Vasileiadis, S. P.", "Ziaka, Z. D.", "Minet, R. G."]
+    year: 1992
+    title: "Packed bed catalytic membrane reactors"
+    container: "Chemical Engineering Science 47(9-11), 2903-2908"
+    doi: 10.1016/0009-2509(92)87149-K
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 165
+datasets:
+  - tsotsis-1992-fig2a.csv
+  - tsotsis-1992-fig2b.csv
+  - tsotsis-1992-fig3a.csv
+  - tsotsis-1992-fig3b.csv
+  - tsotsis-1992-fig3c.csv
+  - tsotsis-1992-fig4a.csv
+  - tsotsis-1992-fig4b.csv
+  - tsotsis-1992-printed-numbers.csv
+  - svna-thermo.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route
+  - closed forms of the isothermal model (packed bed, pure exchange, linear drainage) against the IVP and the finite-volume solve
+  - the fast-reaction limit against the full model, the gap falling inversely with Da
+  - atom balances C, H, Ar on the finite-volume faces to round-off
+  - five-level grid ladders with observed orders, extrapolated values against the IVP, a round-off companion
+  - every number the page states is a registered claim with a break row that moves it
+
+adds: >
+  The reactor solve: two cocurrent plug-flow channels with four molar flows each on one
+  axial grid (BlockLayout, upwind convection of the flows, outflow outlets read with
+  compute_boundary_values, NumJac and newton on the sparse Jacobian), whose conservative
+  form closes the atom balances to round-off; pymrm.checks.find_roots for the drainage
+  thresholds and the lever reversal, pymrm.checks.observed_orders for the grid orders and
+  the extrapolations. The equilibrium algebra, the thermodynamics, the fast-reaction limit
+  and the figure reading are numpy and scipy. No published number is reproduced: the page
+  tests printed model curves against the printed model.
+
+agreement: >
+  Not reproduced. With the printed model closed by the named assumptions, the best of eight
+  closure variants misses the Fig. 3b model line by 1.08 <!-- claim: r4_best_maxdev_pt --> points at
+  its worst node, 16 <!-- claim: r4_best_maxdev_re --> reading errors, outside the verdict thresholds
+  fixed before the run. The model rises with falling slope and is capped by drainage of the
+  tube through the Knudsen wall: its supremum lies 1.07 <!-- claim: r4_gap_sup_vs_3b_10s_pt --> points
+  below the printed conversion at 10 s. The equilibrium lines favour gauge pressures (rms ratio
+  8.7 <!-- claim: r1_rms_ratio_2a --> on the dilute lines); the dense lines sit about
+  1.2 <!-- claim: r1_rms_dense_gauge --> points (rms) above the printed dense feed.
+
+caveats: >
+  The paper prints no kinetics, no permeances and no definition of conversion, sweep ratio,
+  residence time or of its two equilibrium lines; every closure is a named assumption and the
+  missing ingredient may be in the thesis the paper cites. The page predicts no physical
+  reactor and claims no rate constant, permeance or layer property as the paper's. Energy
+  balances, reaction inside the membrane and any steam reforming model are not covered; the
+  Fig. 4 measured points are not digitised. Figure readings carry the reading errors stated
+  in the sidecars.
