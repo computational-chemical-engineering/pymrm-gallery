@@ -181,6 +181,13 @@ def main() -> int:
             errors.append(
                 f"models.yaml {mid}: status 'deferred' requires a `blocked_by` "
                 f"field explaining the block and what lifts it")
+        # The gallery listing shows, sorts and filters by the paper year, and
+        # the page title block links the DOI (scripts/prepare_site.py).
+        if status == "published" and not isinstance(
+                (rec.get("reference") or {}).get("year"), int):
+            errors.append(
+                f"models.yaml {mid}: published record needs an integer "
+                f"`reference.year` (the year the original paper appeared)")
         if status == "deferred" and (ROOT / "pages").joinpath(
                 f"{mid}-{rec.get('slug', '')}").is_dir():
             errors.append(f"models.yaml {mid}: deferred but a page directory exists")
