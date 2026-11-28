@@ -1,0 +1,66 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: I1.9
+slug: sorption-enhanced-reforming
+title: "Hufton, Mayorga and Sircar (1999): the equilibrium limit of sorption-enhanced steam reforming"
+section: I
+status: published
+tier: T1
+priority: P1
+structures: [S10]
+phases: [gas-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Hufton, J. R.", "Mayorga, S.", "Sircar, S."]
+    year: 1999
+    title: "Sorption-enhanced reaction process for hydrogen production"
+    container: "AIChE Journal 45, 248-256"
+    doi: 10.1002/aic.690450205
+
+pymrm_min_version: "3.4.1"
+runtime_seconds: 11
+datasets:
+  - hufton-1999-printed-numbers.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route (a scipy script with two formulations, no pymrm), before the first claim
+  - route A (the paper's extents, Eqs. 8 and 9) against route B (gas amounts with C, H and O balances and Eqs. 3 and 4) on sweeps in 1 - f and T
+  - element balances, Eq. (5) and the corrected Eq. (6) as identities at every state; the printed Eq. (6) off by sqrt(y_H2O/y_H2)
+  - limits f -> 1 (local slope of the dry CH4 approaching 1, chi/4 -> X), P -> 0
+  - analytic Jacobian against central differences (pymrm.checks.check_jacobian); Newton tolerance ladder; every threshold the single root of pymrm.checks.find_roots on its range
+  - every verdict re-evaluated over a stated band in both equilibrium constants (an assumption, since the paper prints no K)
+  - every number the page states is a registered claim; every non-structural claim has a break row that moves it (the structural ones are named in the break-table cell)
+
+adds: >
+  Nothing beyond the paper's physics: the page re-solves the paper's own batch equilibrium
+  and checks its printed numbers. pymrm.newton solves the two log unknowns of Eqs. (8) and
+  (9) and the balance formulation of the validation route; pymrm.checks.find_roots gives
+  every threshold and temperature as a single root; pymrm.checks.check_jacobian checks the
+  Jacobian. No discretisation operator is used.
+
+agreement: >
+  With the equilibrium constants of page C2.1 and an assumed ±10 % band in both (chosen,
+  not measured), the f = 0 state of p. 251 is consistent with 5 <!-- claim: r1_n_consistent -->
+  of 5 printed cells and Table 1's 645 C row with 4 <!-- claim: r5_n_consistent --> of 4; at
+  ±5 % the 645 C row is consistent with 3 <!-- claim: r5_n_consistent_band5 --> of 4.
+  "> 95%" H2 and "< 100 ppm" carbon oxides need more removal than the stated 99.9 %: the dry carbon oxides are 257.41 <!-- claim: r2_999_COx_ppm --> ppm, not under the stated
+  100 ppm, and the dry H2 is 94.129 <!-- claim: r2_999_H2 --> %, not over the stated 95 %.
+  Clause (a), "> 80%" at 450 C, has no removal condition and holds: chi/4 reaches 80 % at
+  1 - f = 0.0010122 <!-- claim: r2_om_star_chi4 -->.
+  Table 1's conversion is the carbon-based one (82 % at 641.12 <!-- claim: r3_Tstar_X --> C;
+  the defined chi/4 needs 667.26 <!-- claim: r3_Tstar_chi4 --> C), and its 450 C row labelled
+  55 psig carries the 50 psig numbers.
+
+caveats: >
+  The paper prints no equilibrium constants; the page uses page C2.1's correlations and
+  tests every verdict over an assumed band in them, reporting a verdict that changes inside
+  the band as undecided (the "> 80%" conversion at exactly 99.9 % removal is). The paper
+  prints no kinetics, no sorbent capacity at 450 C (its Figs. 4 and 5 are at 400 C), no void
+  fraction and no mass-transfer coefficient, and the desorption model behind its Fig. 8 is
+  cited, not printed, so the SERP experiment is not modelled and not judged. The Langmuir constant is for
+  400 C and dry CO2/N2. Nothing is measured on this page (data tier 6).

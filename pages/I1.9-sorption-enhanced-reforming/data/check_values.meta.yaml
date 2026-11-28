@@ -1,0 +1,34 @@
+dataset_id: check-values
+title: "Independent check values for the page's functions at one test condition"
+status: complete
+
+source:
+  authors: ["Hufton, J. R.", "Mayorga, S.", "Sircar, S."]
+  year: 1999
+  container: "AIChE Journal 45, 248-256"
+  doi: "10.1002/aic.690450205"
+  access: >
+    The equations are those of the paper (the batch equilibrium of steam reforming and the
+    water-gas shift with a fraction f of the CO2 removed, Eqs. 3 to 10, p. 250), with the
+    readings and misprints stated in the build plan's equations file. The equilibrium constants
+    K(T) are not printed in the paper (it cites them to Twigg 1989 and shows them only in
+    Fig. 2); the values here use the correlations of the gallery page C2.1 (Xu and Froment 1989).
+    The values are not read from the paper but computed from its equations by a second route.
+  licence: "computed values (no text, figure or page image reproduced)"
+
+acquisition:
+  method: computed by a second route, not by the page
+  resolution: "12 significant digits (rounding up to 5e-12 relative); each row's rtol (1e-11 or looser) is the agreement the page must reach"
+  operator: "Claude Opus 5.5 (assisted): plan agent's script i19_check_values.py (numpy and scipy, no pymrm, no page code; two formulations of the equilibrium, extents and element balances, agreeing to about 2.5e-13), 2026-11-27"
+  date: 2026-11-27
+  estimated_error: "none beyond floating point and root-finding tolerance, covered by each row's rtol"
+
+conditions: >
+  Test conditions as named in each row: 450 C at 50 psig with f = 0 and f = 0.999 (rows f0_ and
+  f999_), the Table 1 conditions of p. 255 for the named Table 1 rows, and the thresholds in
+  1 - f as roots.
+
+columns:
+  - {name: name, unit: "-", description: "quantity, in the units stated in the equations file"}
+  - {name: value, unit: "-", description: "value computed by the second route"}
+  - {name: rtol, unit: "-", description: "relative tolerance the page must meet"}
