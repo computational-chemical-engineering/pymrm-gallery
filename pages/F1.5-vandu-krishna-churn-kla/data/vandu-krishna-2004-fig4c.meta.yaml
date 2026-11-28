@@ -1,0 +1,66 @@
+dataset_id: vandu-krishna-2004-fig4c
+title: "Fig. 4c (p. 990): kLa/eps_G against U, water, tetradecane, paraffin oil and Tellus oil, D_T 0.1 m"
+status: complete
+
+source:
+  authors: ["Vandu, C. O.", "Krishna, R."]
+  year: 2004
+  title: "Volumetric mass transfer coefficients in slurry bubble columns operating in the churn-turbulent flow regime"
+  container: "Chemical Engineering and Processing 43, 987-995"
+  doi: "10.1016/j.cep.2003.09.007"
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/). No PDF and no
+    page image is stored in this repository; data/digitise.py takes a local PDF path.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 4c (p. 990): kLa/eps_G against U, water, tetradecane, paraffin oil and Tellus oil, D_T 0.1 m"
+  tool: "pdfimages -png (native 600 ppi stencil, no resampling); template matching by data/digitise_raster.py (committed)"
+  procedure: >
+    Axes: the longest ink runs of the panel; ticks refined from nominal places between
+    labelled ticks; least-squares calibration through every tick found (x 2200 px per m/s, y 1154 px per 1/s; tick residuals 0.71 px (x) and 0.63 px (y); four y ticks hidden by markers skipped). Markers:
+    peaks of the fraction of the legend marker's ink covered (threshold 0.86 unless set:
+    cover {paraffin: 0.75}; value bands water and tetradecane 0.35-0.8, paraffin 0.1-0.35, Tellus 0-0.1 1/s); one marker per place, the highest-scoring template. Centres: circle and square
+    the box centre, triangle the vertex centroid (h/6 from the box centre toward the
+    base; on the vector Figs. 7 and 11 the joining polylines meet the centroid to 0.07 pt).
+    Drawn thick lines: rows with ink across at least a quarter of the panel, 6 or more rows
+    thick; value at the mean row, ends where the line is unbroken by more than 60 px; each
+    line labelled by the series whose markers above 0.08 m/s have the nearest median.
+    The overlay of every read centre on the bitmap was checked by eye.
+    The two half-hidden water triangles (kind marker_partial) are read by hand, from the
+    visible apex column and the visible base row of each, with the triangle height of the
+    legend marker: the centre column is the apex column, the centre row is the base row
+    plus the distance from the base to the vertex centroid (a third of the height); the
+    values are converted with the same calibration. Their cover and rival columns are 0.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: >
+    About 2 native px per centre (2 px: 0.0009 m/s in U, 0.0017 1/s in P); about 4 native
+    px per centre for the two marker_partial rows (4 px: 0.0018 m/s in U, 0.0035 1/s in P),
+    because the apex or base is read from a partly covered outline. The page measures the reading error empirically
+    from the same series read in more than one figure.
+
+conditions: "Air, ambient, about 293 K."
+
+missing:
+  - "Markers below U = 0.03 m/s are not read (overlapping clusters near the axis)."
+  - "Water: two triangles half hidden beside others (near U 0.15 and 0.22) fall below the cover threshold; they are listed as kind marker_partial (see estimated_error) and the main statistics leave them out."
+
+columns:
+  - {name: kind, unit: "-", description: "marker, marker_partial (half-hidden marker read by hand, larger reading error) or line (two rows per line: its ends)"}
+  - {name: series, unit: "-", description: "liquid (Fig. 10f: Tellus oil per column diameter)"}
+  - {name: shape, unit: "-", description: "marker shape or line thickness"}
+  - {name: U_m_s, unit: m/s, description: "superficial gas velocity"}
+  - {name: P_1_s, unit: 1/s, description: "kLa/eps_G"}
+  - {name: px_x, unit: px, description: "centre column, native 600 ppi bitmap"}
+  - {name: px_y, unit: px, description: "centre row"}
+  - {name: cover, unit: "-", description: "fraction of the template's ink present (0 for lines)"}
+  - {name: rival, unit: "-", description: "best cover of another series' template at the same centre"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.

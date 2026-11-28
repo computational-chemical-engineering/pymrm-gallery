@@ -1,0 +1,57 @@
+dataset_id: vandu-krishna-2004-vector
+title: "Plotted values of Figs. 2b, 5, 7, 9 and 11 of Vandu and Krishna (2004), from the PDF vector paths"
+status: complete
+
+source:
+  authors: ["Vandu, C. O.", "Krishna, R."]
+  year: 2004
+  title: "Volumetric mass transfer coefficients in slurry bubble columns operating in the churn-turbulent flow regime"
+  container: "Chemical Engineering and Processing 43, 987-995"
+  doi: "10.1016/j.cep.2003.09.007"
+  access: >
+    Publisher PDF held outside the repository (~/papers/pymrm-gallery/). No PDF and no
+    page image is stored in this repository; data/digitise.py takes a local PDF path.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 2b (p. 989, PDF object 16), Fig. 5 (p. 991, object 33), Fig. 7 (p. 992, object 52), Fig. 9 (p. 993, object 66), Fig. 11 (p. 994, object 83)"
+  tool: "vector extraction: mutool show -b, path operators parsed by data/digitise.py (committed)"
+  procedure: >
+    These figures are vector paths in the PDF. Marker centres (D1): circle the centre of
+    its Bezier box, square the centre of its re rectangle, triangle the mean of its three
+    vertices, diamond the mean of its four. On Figs. 7 and 11 the polylines joining the
+    markers pass 0.034 to 0.068 pt from the triangle centroids and 1.02 to 1.12 pt from
+    the triangle box centres, which settles the triangle rule; a polyline vertex is the
+    data point there. Series on Figs. 5, 9 and 2b by marker shape (legend order of the
+    caption); on Figs. 7 and 11 by vertex count (Table 4: water at three solids levels
+    and four diameters, tetradecane at four solids levels, Tellus oil at two diameters).
+    Axes piecewise linear between adjacent labelled ticks (log10 on log axes), tick
+    positions asserted to be vertices of the axis paths. Figs. 5 and 9 also give the two
+    end vertices of the drawn line.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-27
+  estimated_error: >
+    Exact to the 0.001 pt the stream prints; the centre rule is settled to 0.07 pt (0.2 %
+    on the log axes). No digitising error beyond that.
+
+conditions: "Air, ambient, about 293 K; D_T 0.1 m except Fig. 11 (pp. 988-994)."
+
+missing:
+  - "Fig. 2a markers are not extracted (the drawn fit curves are, in the fig2a-curves file)."
+
+columns:
+  - {name: figure, unit: "-", description: "fig2b, fig5, fig7, fig9 or fig11"}
+  - {name: series, unit: "-", description: "liquid (or line_left, line_right for a drawn line end)"}
+  - {name: shape, unit: "-", description: "marker shape, polyline vertex or line end"}
+  - {name: x_pt, unit: pt, description: "PDF x coordinate of the centre"}
+  - {name: y_pt, unit: pt, description: "PDF y coordinate of the centre (y up)"}
+  - {name: value_x, unit: "see figure", description: "Fig. 2b D_L 1e-9 m2/s; Fig. 5, 9 Sc; Fig. 7 eps_s; Fig. 11 D_T m"}
+  - {name: value_y, unit: "1/s", description: "Fig. 2b k_sensor; otherwise kLa/eps_G"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
