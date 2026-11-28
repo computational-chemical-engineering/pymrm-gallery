@@ -29,19 +29,19 @@ datasets:
 
 validation:
   - "CHECK VALUES FROM A SECOND ROUTE: all 102 rows of data/check_values.csv (closed form for m = 1, first-integral quadrature for m = 2, the box share by direct integration; no pymrm) are reproduced by the page's functions inside their own tolerances before the first claim, every deviation below 1 <!-- claim: check_values_worst_over_rtol --> times its rtol."
-  - "PYMRM AGAINST THE CLOSED FORM at m = 1: the Richardson limit of 200, 400 and 800 cells meets the exact phi, u_b, g and the 20 % band below 1e-9 <!-- claim: pymrm_vs_closed_m1_richardson -->; on 3200 cells alone below 1e-8 <!-- claim: pymrm_vs_closed_m1_n3200 -->."
+  - "PYMRM AGAINST THE CLOSED FORM at m = 1: the Richardson limit of 200, 400 and 800 cells meets the exact phi, u_b, g and the 20 % band below 1e-9 <!-- claim: pymrm_vs_closed_m1_richardson -->; on 4096 cells alone below 1e-8 <!-- claim: pymrm_vs_closed_m1_finest -->."
   - "LIMITS of the film alone: the small-Ha slope of phi - 1 is 1/(m+2) below 1e-6 <!-- claim: L2_slope_gap_m2 --> for both orders; phi/Ha at Ha^2 = 400 approaches sqrt(2/3) to below 1e-4 <!-- claim: L3_phi_over_Ha_gap_m2 --> on a grid fine at the interface; at Al = 1e6 the band width per unit Al - 1 meets its limit to below 1e-4 <!-- claim: L4_W_slope_gap_m1 --> (first order) and below 3e-2 <!-- claim: L4_W_slope_gap_m2 --> (second)."
   - "OXYGEN BALANCE phi = g + Ha^2 sum h u^m from the operator's face gradients, below 1e-8 <!-- claim: balance_worst --> in every ladder solve; it fails when phi is read from the first cell."
-  - "GRID CONVERGENCE on 100 to 3200 cells: orders of phi, u_b and both band edges of at least 1.75 <!-- claim: orders_min_m2 --> and at most 2.25 <!-- claim: orders_max_m2 --> (second order, with an h^3 term on the coarse levels), counted on the triples up to 800 cells, every step used at least 100 <!-- claim: step_over_companion_min --> times the round-off companion (a second column ordering and a second Newton path); the finer triples are printed, since the lower edge meets round-off there."
-  - "A DEFECT-INJECTION TABLE: 18 rows (unit and constant misreadings in eq. 9 and k_L, the box, the bulk balance, the order, the bulk boundary, the face read, the film share, the k_R shift, the accuracy, the film limit, the ladder, and the sulfite arithmetic); every claim fails under at least one, and the band width's invariance to the Ha normalisation is labelled structural."
+  - "GRID CONVERGENCE on 128 to 4096 cells (128 x 2^k, cell widths exact in binary): orders of phi, u_b and both band edges of at least 1.75 <!-- claim: orders_min_m2 --> and at most 2.25 <!-- claim: orders_max_m2 --> (second order, with an h^3 term on the coarse levels), counted on every triple, every triple's finest step at least 50 <!-- claim: step_over_companion_min --> times the round-off companion (a second column ordering and a second Newton path)."
+  - "A DEFECT-INJECTION TABLE: 19 rows (unit and constant misreadings in eq. 9 and k_L, the box, the bulk balance, the order, the bulk boundary, the face read, the film share, the k_R shift, the accuracy, the film limit, the ladder (two refinement factors and a coarser finest rung), and the sulfite arithmetic); every claim fails under at least one, and the band width's invariance to the Ha normalisation is labelled structural."
 
 adds: >
   For m = 1 nothing beyond a check: the closed form is exact. For m = 2, the order the review
-  prints for low partial pressures, the film coupled to the tank has no closed form, and pymrm
+  prints for low partial pressures, the film coupled to the tank has no elementary closed form, and pymrm
   solves it as one bordered Newton system with the bulk level as an extra unknown (construct_grad
   with shapes_d, construct_div, analytic Jacobian, newton), with find_roots for every band edge,
   nil point and Al_25 and observed_orders for the ladder. The second-order band at 20 % spans
-  W = 20.429 <!-- claim: m2_tol20_W_T --> at the test condition, below the printed 25-fold shift.
+  W = 20.429 <!-- claim: m2_tol20_W_T --> at the test condition, below the printed 25-fold shift; that second-order `20 %` verdict at T reverses for a diffusivity below 1.5518e-09 <!-- claim: m2_tol20_D_flip_T --> m2/s.
 
 agreement: >
   Nothing is measured and nothing is fitted. The printed sulfite numbers are consistent: 100 g/L
@@ -56,10 +56,10 @@ caveats: >
   band; it tests only the kinetic part of the review's "even more restricted". The diffusivity is
   assumed (2.0e-9 m2/s): the page prints the diffusivity at which each box verdict flips instead
   of sweeping an invented range. A is read per liquid volume (per dispersion volume is the same
-  table at D/(1 - eps)). Film theory; surface renewal moves the upper edge to 0.70451
+  table at D/(1 - eps)). Film theory; surface renewal moves the first-order upper edge, in the film limit, to 0.70451
   <!-- claim: lim_m1_tol20_upper_edge_ratio_sr_over_film --> of the film edge at 20 %. Eq. 9 is
   taken at face value; page A3.7 shows its v_s^0.2 is not resolved by the data and that eq. 2's
   gassing-out readings behind it are biased low on the ionic branch. Gas-phase depletion, ion
   effects on A and k_L, and scale-up are not modelled. The catalogue's second name, Bakker, has
-  no source held for the gallery and is not used. The borrowed rows come from A3.7
-  (data.tier from A3.7's transcription, own data the sulfite statements).
+  no source held for the gallery and is not used. The borrowed rows are A3.7's
+  transcription; the page's own data are the sulfite statements.

@@ -181,7 +181,7 @@ def brk(row, metric, broken):
 # For $m = 1$ the solution is closed:
 # $u_b = 1/(\cosh\mathrm{Ha} + \mathrm{Ha}(\mathrm{Al}-1)\sinh\mathrm{Ha})$,
 # $\varphi = (\mathrm{Ha}/\tanh\mathrm{Ha})(1 - u_b/\cosh\mathrm{Ha})$. For $m = 2$
-# there is none: pymrm solves it.
+# there is no elementary closed form: pymrm solves it.
 
 # %% [markdown]
 # ## Parameters and assumptions
@@ -400,6 +400,10 @@ def g_box(st, m, tol, me=None, alF=None):
            f"box_{t}_kL{KT}_D_none_W_ge_25": b4["D_none"],
            f"box_{t}_kL{KT}_margin_Almin_over_Al25": b4["margin_min"]}
     if tol == TOLS[0]:
+        # the T verdict reverses where Al_T meets Al_25: Al goes as k_L^2/(D k_L A)
+        aT = st.conditions()["Al_T"]
+        out[f"{t}_D_flip_T"] = st.P["D"] * aT / alF
+        out[f"{t}_kL_flip_T"] = st.P["kL"] * np.sqrt(alF / aT)
         out.update({f"box_{t}_kL{KT}_frac_W_ge_25": b4["share"],
                     f"box_{t}_kL{KLO}_margin_Almax_over_Al25": b1["margin_max"]})
     else:
@@ -408,11 +412,13 @@ def g_box(st, m, tol, me=None, alF=None):
 
 
 def g_nil(st, m, me=None):
-    """Where the bulk is nil to 1 % and 5 %, where the film carries half the
+    """Where the bulk is nil to 1 %, 5 % and (first order) 0.1 %, where the film carries half the
     reaction (at T), and the film share at the nil point at both Al corners."""
     me = me or m
     out, err = {}, {}
-    for tgt, nm in ((0.01, "nil01"), (0.05, "nil05")):
+    for tgt, nm in ((0.01, "nil01"), (0.05, "nil05"), (0.001, "nil0p1")):
+        if nm == "nil0p1" and m != 1:
+            continue    # the second order's three-level limit is too coarse at 0.1 %
         v, e = st.where(me, "ub", tgt)
         for i, k in ((0, "Ha2"), (3, "film_share"), (1, "phi")):
             out[f"m{m}_{nm}_{k}_T"], err[f"m{m}_{nm}_{k}_T"] = v[i], e[i]
@@ -624,11 +630,15 @@ display(Markdown(
     f"{sum(f > 0.5 for f in NIL[1])} of 2 box corners: where the bulk is nil, most of the "
     f"reaction still runs in the bulk, which is large ($\\mathrm{{Al}}$ from {COND['Al_min']:.0f} "
     f"to {COND['Al_max']:.0f} over the box) and needs only a trace of oxygen to consume what "
-    "the film passes. The implication fails. "
+    "the film passes. At 1 % the implication fails. "
     f"For $m = 2$ it holds at {sum(f > 0.5 for f in NIL[2])} of 2: a second-order rate "
     "collapses as $u_b^2$, so a nil bulk needs a fast reaction, which runs in the film. "
-    f"At 5 % instead of 1 % the film share at T is {VAL['m1_nil05_film_share_T']:.3f} "
-    f"($m = 1$) and {VAL['m2_nil05_film_share_T']:.3f} ($m = 2$). Where the film does carry "
+    f"The verdict is the 1 % reading of nil, not the order alone: at T the film carries half "
+    f"once the bulk falls below $u_b$ = {VAL['m1_film50_ub_T']:.4g} ($m = 1$) and "
+    f"{VAL['m2_film50_ub_T']:.4g} ($m = 2$); at $u_b$ = 0.1 % the first-order film share at T "
+    f"is {VAL['m1_nil0p1_film_share_T']:.3f}, and at 5 % the second-order share is "
+    f"{VAL['m2_nil05_film_share_T']:.3f} (first order {VAL['m1_nil05_film_share_T']:.3f}). "
+    f"Where the film does carry "
     f"half, the method reads {VAL['m1_film50_phi_T']:.2f} and {VAL['m2_film50_phi_T']:.2f} "
     f"times the true $k_\\mathrm{{L}}A$: beyond the {TOLS[1]:.0%} band for both orders.\n\n"
     "What flips these verdicts is $\\mathrm{Al}$ (the film share at the nil point falls as "
@@ -677,9 +687,15 @@ display(Markdown(
     f"At the assumed $D_m$ = {P0['D']:.1e} m²/s, the {TOLS[0]:.0%} verdict for the whole box "
     f"would hold only below {VAL[f'box_{tg(1, TOLS[0])}_kL{KT}_D_all_W_ge_25']:.2e} m²/s ($m = 1$) "
     f"and {VAL[f'box_{tg(2, TOLS[0])}_kL{KT}_D_all_W_ge_25']:.2e} m²/s ($m = 2$). "
+    f"The {TOLS[0]:.0%} verdict at T alone reverses for $D_m$ below "
+    f"{VAL[f'{tg(2, TOLS[0])}_D_flip_T']:.4e} m²/s ($m = 2$, "
+    f"{VAL[f'{tg(2, TOLS[0])}_D_flip_T'] / P0['D']:.3f} of the assumed $D_m$) and "
+    f"$m = 1$ holds up to {VAL[f'{tg(1, TOLS[0])}_D_flip_T']:.3e} m²/s; read the other way, "
+    f"the verdicts at T flip at $k_\\mathrm{{L}}$ = {VAL[f'{tg(1, TOLS[0])}_kL_flip_T']:.4e} "
+    f"($m = 1$) and {VAL[f'{tg(2, TOLS[0])}_kL_flip_T']:.4e} m/s ($m = 2$). "
     f"Surface renewal puts the upper edge at {VAL[f'lim_{tg(1, TOLS[0])}_upper_edge_ratio_sr_over_film']:.4f} "
     f"({TOLS[0]:.0%}) and {VAL[f'lim_{tg(1, TOLS[1])}_upper_edge_ratio_sr_over_film']:.4f} "
-    f"({TOLS[1]:.0%}) of the film-theory edge for $m = 1$ in the film limit; the lower edge "
+    f"({TOLS[1]:.0%}) of the film-theory edge, for the first-order upper edge in the film limit; the lower edge "
     "does not move, so near that limit $W$ narrows by the same factor."))
 
 # %% [markdown]
@@ -704,7 +720,8 @@ display(Markdown(
     f"misses \"1 to 2 M\" by {VAL['reading_salt_gap_to_1M']:.3f} M; as an ionic strength it spans "
     f"{VAL['printed_ionic_strength_10gL']:.3f} to {VAL['printed_ionic_strength_100gL']:.2f} M "
     f"and covers 1-2 M with {VAL['reading_ionic_cover_margin']:.3f} M to spare. The text "
-    "cannot decide between the readings; only the ionic-strength one is consistent. "
+    "cannot decide between the readings; taking sulfite as $\\mathrm{Na_2SO_3}$, only an "
+    "ionic-strength reading or a total ion molarity (both three times the salt molarity) is consistent. "
     f"At 10 g/L, $E_\\infty \\approx$ {VAL['E_inf_10gL']:.1f} (assumed $C^{{\\ast}}$ = "
     f"{SULF['C_star']} mol/m³, $D_B/D_m$ = {SULF['DB_over_D']}), "
     f"{VAL['E_inf_10gL'] / (1 + TOLS[1]):.1f} times the largest reading at any band edge, "
@@ -725,6 +742,9 @@ CV = load_data("check_values.csv", page=PAGE).set_index("name")
 DEV = assert_check_values({k: VAL[k] for k in CV.index}, page=PAGE)
 CV_WORST = max(abs(DEV[k]) / CV.loc[k, "rtol"] for k in CV.index)
 print(f"worst |deviation| / rtol over the rows: below 1 (here {CV_WORST:.2f})")
+CV_TIGHT = CV.rtol.max()    # the loosest check rtol: the rows the grid error can reach
+N_TIGHT = int((CV.rtol == CV_TIGHT).sum())
+TIGHT_WORST = max(abs(DEV[k]) / CV.loc[k, "rtol"] for k in CV.index[CV.rtol == CV_TIGHT])
 
 
 # %% [markdown]
@@ -740,13 +760,13 @@ print(f"worst |deviation| / rtol over the rows: below 1 (here {CV_WORST:.2f})")
 #   $(1-\mathrm{tol})/\mathrm{tol}^m$.
 # - **V2, the oxygen balance** $\varphi = g + \mathrm{Ha}^2\sum_i h_i u_i^m$ in every
 #   ladder solve, from the operator's face gradients.
-# - **V3, grid convergence.** 100 to 3200 cells, uniform, at T: observed orders of
+# - **V3, grid convergence.** 128 to 4096 cells, uniform, at T: observed orders of
 #   $\varphi$, $u_b$ and both band edges ($m = 1$ and 2, 20 %), and a round-off
 #   companion: every level solved again with a second column ordering
 #   (`permc_spec` MMD_ATA) and from a flat initial profile (a different Newton path).
 
 # %%
-LADDER = tuple(100 * 2 ** k for k in range(6))
+LADDER = tuple(128 * 2 ** k for k in range(6))
 H2_L2 = np.geomspace(1e-3, 1e-2, 5)
 AL_L4 = 1e6
 
@@ -780,18 +800,18 @@ def closed_gaps(read="face"):
     bv = lim_p.band(1, TOLS[0])[0]
     gaps = [pv[0] / ex["phi"] - 1, pv[1] / ex["ub"] - 1, pv[4] / ex["g"] - 1,
             *(np.asarray(bv) / np.asarray(exb) - 1)]
-    return {"pymrm_vs_closed_m1_n3200": abs(fine["phi"] / ex["phi"] - 1),
+    return {"pymrm_vs_closed_m1_finest": abs(fine["phi"] / ex["phi"] - 1),
             "pymrm_vs_closed_m1_richardson": float(np.max(np.abs(gaps)))}
 
 
-def ladder_solve(read="face", cap=False, cells=None):
+def ladder_solve(read="face", cap=False, cells=None, ladder=LADDER):
     """phi, u_b and both 20 % edges at T on every ladder level, the worst balance,
     and the round-off companion on every level. ``cells(n)``: the cells
     actually solved for the rung labelled n (a defect)."""
     q, comp, bal = {}, {}, 0.0
     for m in ORD:
-        for n in LADDER:
-            nn = LADDER[-2] if cap and n == LADDER[-1] else (cells(n) if cells else n)
+        for n in ladder:
+            nn = ladder[-2] if cap and n == ladder[-1] else (cells(n) if cells else n)
             for spec in (None, "MMD_ATA"):
                 # the companion: a second column ordering AND a different Newton path
                 r = PymrmRoute(nn, permc_spec=spec, read=read,
@@ -806,22 +826,19 @@ def ladder_solve(read="face", cap=False, cells=None):
     return q, comp, bal
 
 
-def ladder_claims(q, comp, bal, ratio=None):
-    """Orders on the triples up to 800 cells (a fixed set; finer triples are printed),
-    the smallest step over its round-off companion (those triples' finest steps, and the
-    finest steps of phi, u_b and the upper edge), and the balance."""
+def ladder_claims(q, comp, bal, ratio=None, ladder=LADDER):
+    """Orders on every triple of the ladder, the smallest step over its round-off
+    companion (the finest step of every triple), and the balance."""
     out, info = {}, {}
     for m in ORD:
         ords = []
         for k in ("phi", "ub", "lo", "hi"):
-            o = observed_orders(lambda n: q[(m, n)][k], LADDER, ratio=ratio)["orders"]
-            steps = [abs(q[(m, b)][k] / q[(m, a)][k] - 1) for a, b in zip(LADDER, LADDER[1:])]
+            o = observed_orders(lambda n: q[(m, n)][k], ladder, ratio=ratio)["orders"]
+            steps = [abs(q[(m, b)][k] / q[(m, a)][k] - 1) for a, b in zip(ladder, ladder[1:])]
             floors = [max(comp[(m, a)][k], comp[(m, b)][k], 1e-16)
-                      for a, b in zip(LADDER, LADDER[1:])]
-            keep = [i for i in range(len(o)) if LADDER[i + 2] <= 800]
+                      for a, b in zip(ladder, ladder[1:])]
+            keep = list(range(len(o)))
             ratios = [steps[i + 1] / floors[i + 1] for i in keep]
-            if k != "lo":
-                ratios.append(steps[-1] / floors[-1])
             info[(m, k)] = (o, keep, min(ratios))
             ords += [o[i] for i in keep]
         out[f"orders_min_m{m}"], out[f"orders_max_m{m}"] = min(ords), max(ords)
@@ -837,11 +854,12 @@ VLAD, LINFO = ladder_claims(*LQ)
 VAL.update(VLIM); VAL.update(VCLO); VAL.update(VLAD)
 COMP_MAX = max(max(c.values()) for c in LQ[1].values())
 for (m, k), (o, keep, ratio_fc) in LINFO.items():
-    shown = ", ".join(f"{x:.2f}" if i in keep else f"(here {x:.2f})" for i, x in enumerate(o))
+    shown = ", ".join(f"{x:.1f}" for x in o)
     print(f"m = {m}, {k:3s}: orders {shown}; the first {len(keep)} of {len(o)} triples counted")
 GRID_M2 = max(abs(ERR[k] / VAL[k]) for k in ERR if ERR[k] and VAL[k])
+RTOL = 1e-7    # the rtol of every value claim
 display(Markdown(
-    f"**V1.** pymrm at $m = 1$ meets the closed form to {VCLO['pymrm_vs_closed_m1_n3200']:.1e} on "
+    f"**V1.** pymrm at $m = 1$ meets the closed form to {VCLO['pymrm_vs_closed_m1_finest']:.1e} on "
     f"{LADDER[-1]} cells; the Richardson limit of 200, 400 and 800 cells meets it below 1e-9 "
     f"for $\\varphi$, $u_b$, $g$ and the 20 % band. The small-Ha slopes match $1/(m+2)$ below "
     f"1e-6, $\\varphi/\\mathrm{{Ha}}$ at $\\mathrm{{Ha}}^2$ = 400 is within "
@@ -850,17 +868,17 @@ display(Markdown(
     f"within {VLIM['L4_W_slope_gap_m1']:.1e} ($m = 1$) and {VLIM['L4_W_slope_gap_m2']:.1e} "
     "($m = 2$, slower: $u_b$ at the upper edge falls only as $\\mathrm{Al}^{-1/2}$) of its limit. "
     f"**V2.** The oxygen balance closes below 1e-8 in every ladder solve (here "
-    f"{VLAD['balance_worst']:.0e}). **V3.** Orders on the triples above round-off: "
+    f"{VLAD['balance_worst']:.0e}). **V3.** Orders on every triple of the ladder: "
     f"{VLAD['orders_min_m1']:.2f} to {VLAD['orders_max_m1']:.2f} ($m = 1$) and "
     f"{VLAD['orders_min_m2']:.2f} to {VLAD['orders_max_m2']:.2f} ($m = 2$), theory 2 with an "
-    "$h^3$ term that is still visible on the coarse levels. The orders are counted on the "
-    "triples up to 800 cells; the finer ones are printed in parentheses, because the lower "
-    "edge is nearly grid-independent (the profile is almost linear at small Ha) and its "
-    "fine steps meet round-off. Every counted step, and the finest step of $\\varphi$, $u_b$ "
-    "and the upper edge, is at least 100 times the round-off companion "
-    f"(here {COMP_MAX:.0e} at most). Every $m = 2$ value is "
-    f"a three-level limit with an estimated remaining grid error below 1e-7 relative, inside every value claim's tolerance (here "
-    f"{GRID_M2:.0e})."))
+    "$h^3$ term that is still visible on the coarse levels. The ladder is "
+    f"{LADDER[0]} $\\times$ 2$^k$ cells, so every cell width is exact in binary. Every "
+    f"triple's finest step is at least {VLAD['step_over_companion_min']:.0f} times the "
+    f"round-off companion (here {COMP_MAX:.0e} at most; the companion is the change under "
+    "a second column ordering and a second Newton path). Every $m = 2$ value is "
+    f"a three-level limit; its estimated remaining grid error (here {GRID_M2:.1e} at most) is "
+    f"inside the value claims' rtol of {RTOL:.0e} and above the {CV_TIGHT:.0e} rtol of "
+    f"{N_TIGHT} check rows, whose measured deviations stay within {TIGHT_WORST:.2f} of it."))
 
 # %% [markdown]
 # ### Claims
@@ -873,8 +891,8 @@ display(Markdown(
 
 # %%
 BOUND_V = {
-    "pymrm_vs_closed_m1_n3200": dict(max=1e-8, basis="theory",
-                                     note="second-order finite volumes at 3200 cells"),
+    "pymrm_vs_closed_m1_finest": dict(max=1e-8, basis="theory",
+                                     note="second-order finite volumes at 4096 cells"),
     "pymrm_vs_closed_m1_richardson": dict(max=1e-9, basis="tolerance",
                                           note="three-level limit against the exact m = 1 solution"),
     "L2_slope_gap_m1": dict(max=1e-6, basis="theory", note="phi = 1 + Ha^2/(m+2) + O(Ha^4), u_b = 0"),
@@ -888,10 +906,10 @@ BOUND_V = {
     "orders_max_m1": dict(min=1.75, max=2.25, basis="theory", note="second order, h^3 term"),
     "orders_min_m2": dict(min=1.75, max=2.25, basis="theory", note="second order, h^3 term"),
     "orders_max_m2": dict(min=1.75, max=2.25, basis="theory", note="second order, h^3 term"),
-    "step_over_companion_min": dict(min=100.0, basis="chosen",
-                                    note="every step an order or a limit uses stands clear of round-off"),
+    "step_over_companion_min": dict(min=50.0, basis="chosen",
+                                    note="round-off moves a step by at most 2 %, an order by under 0.06"),
     "balance_worst": dict(max=1e-8, basis="tolerance",
-                          note="round-off of the discrete balance, about n^2 eps at 3200 cells"),
+                          note="round-off of the discrete balance, about n^2 eps at 4096 cells"),
     "salt_079_half_units": dict(max=1.0, basis="tolerance",
                                 note="half a unit of the last printed digit of 0.79"),
 }
@@ -903,9 +921,9 @@ claims.define_rows([
     "film share written as 1 - u_b", "k_R shift read as 5 (the glycerin percentage)",
     "accuracy 20-40 % read as 2-4 %", "film limit read at Al_T instead of Al -> infinity",
     "ladder refined by sqrt(2) per rung, orders read with ratio 2",
-    "finest ladder rung solved on 1600 cells again", "Na2SO4 molar mass 142.04 for Na2SO3",
+    "ladder refined by 4 per rung, orders read with ratio 2",
+    "finest ladder rung solved on the next coarser grid again", "Na2SO4 molar mass 142.04 for Na2SO3",
     "ionic strength taken as the salt molarity", "1 mol sulfite per mol O2 instead of 2"])
-RTOL = 1e-7
 for name, x in VAL.items():
     if name in BOUND_V:
         claims.bound(name, x, **BOUND_V[name])
@@ -914,7 +932,7 @@ for name, x in VAL.items():
 claims.bound("check_values_worst_over_rtol", CV_WORST, max=1.0, basis="tolerance",
              note="every check row inside its own rtol")
 claims.bound("grid_error_m2_max", GRID_M2, max=RTOL, basis="tolerance",
-             note="largest remaining grid-error estimate of the m = 2 limits, inside the values' rtol")
+             note="largest remaining grid-error estimate of the m = 2 limits, inside the value claims' rtol (the tighter check-row rtol is compared on the page)")
 W_NORM = max(abs((2 / (m + 1) * VAL[f"{tg(m, t)}_Ha2_hi_T"]) / (2 / (m + 1) * VAL[f"{tg(m, t)}_Ha2_lo_T"])
                  / VAL[f"{tg(m, t)}_W_T"] - 1) for m in ORD for t in TOLS)
 claims.bound("W_invariant_to_Ha_normalisation", W_NORM, max=1e-12, basis="identity",
@@ -1048,7 +1066,14 @@ for m in ORD:
 record("film limit read at Al_T instead of Al -> infinity", vals)
 record("ladder refined by sqrt(2) per rung, orders read with ratio 2",
        ladder_claims(*ladder_solve(cells=lambda n: round(LADDER[0] * np.sqrt(n / LADDER[0]))))[0])
-record("finest ladder rung solved on 1600 cells again", ladder_claims(*ladder_solve(cap=True))[0])
+LAD3 = LADDER[:3]
+_l4 = ladder_claims(*ladder_solve(cells=lambda n: round(LADDER[0] * (n / LADDER[0]) ** 2),
+                                  ladder=LAD3), ladder=LAD3)[0]
+print("ladder refined by 4 per rung, read with ratio 2: orders "
+      + ", ".join(f"m{m} {_l4[f'orders_min_m{m}']:.2f} to {_l4[f'orders_max_m{m}']:.2f}" for m in ORD))
+record("ladder refined by 4 per rung, orders read with ratio 2", _l4)
+record("finest ladder rung solved on the next coarser grid again",
+       ladder_claims(*ladder_solve(cap=True))[0])
 for row, over in (("Na2SO4 molar mass 142.04 for Na2SO3", dict(M=142.04)),
                   ("ionic strength taken as the salt molarity", dict(ion_factor=1.0)),
                   ("1 mol sulfite per mol O2 instead of 2", dict(nu=1.0))):
@@ -1098,7 +1123,7 @@ display(Markdown(
 #
 # For $m = 1$ nothing beyond a check: the closed form is exact, and the page's
 # $m = 1$ numbers come from it. For $m = 2$, the order the review prints for low
-# partial pressures, the film coupled to the tank has no closed form, and every
+# partial pressures, the film coupled to the tank has no elementary closed form, and every
 # $m = 2$ number on the page is a pymrm solution: the bordered Newton system with the
 # bulk level as an extra unknown, the bulk face carried by `construct_grad` with
 # `shapes_d` so the operators are assembled once, `construct_div` for the flat film,
