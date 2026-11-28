@@ -20,8 +20,8 @@ its printed accuracy, "accurate for 20-40%", without any conversion, how wide it
   175.26 <!-- claim: m2_tol40_W_T --> at `40 %`: the 25-fold shift fits in
   3 <!-- claim: fits_at_T_count --> of the four cases; the second-order `20 %` verdict at T
   reverses for a diffusivity below 1.5518e-09 <!-- claim: m2_tol20_D_flip_T --> m2/s (first order:
-  up to 4.6178e-09 <!-- claim: m1_tol20_D_flip_T --> m2/s), or for a k_L below
-  4.5411e-04 <!-- claim: m2_tol20_kL_flip_T --> m/s (first order: 2.6324e-04 <!-- claim: m1_tol20_kL_flip_T -->);
+  up to 4.6178e-09 <!-- claim: m1_tol20_D_flip_T --> m2/s), or once k_L exceeds
+  4.5411e-04 <!-- claim: m2_tol20_kL_flip_T --> m/s (the first-order verdict once k_L falls under the flip value 2.6324e-04 <!-- claim: m1_tol20_kL_flip_T --> m/s);
 - over the box, Al runs from 116.85 <!-- claim: box_kL4e-4_Al_min --> to
   1521 <!-- claim: box_kL4e-4_Al_max -->, W at `20 %` from 20.684 <!-- claim: box_m1_tol20_kL4e-4_W_min -->
   to 240 <!-- claim: box_m1_tol20_kL4e-4_W_max --> (first order) and from
