@@ -1,0 +1,70 @@
+# Page metadata. Validated against models.yaml by scripts/check_metadata.py.
+# models.yaml is canonical; this file must not contradict it.
+id: G1.5
+slug: al-dahhan-dudukovic-high-pressure-wetting
+title: "Al-Dahhan–Duduković high-pressure catalyst wetting efficiency in trickle beds"
+section: G
+status: planned
+tier: T1
+priority: P1
+structures: [S3]
+phases: [gas-liquid-solid]
+
+authors:
+  - name: "PyMRM Gallery contributors"
+    orcid: null
+
+reference:
+  - authors: ["Al-Dahhan, M. H.", "Dudukovic, M. P."]
+    year: 1995
+    title: "Catalyst wetting efficiency in trickle-bed reactors at high pressure"
+    container: "Chemical Engineering Science 50(15) 2377-2389"
+    doi: 10.1016/0009-2509(95)00092-J
+
+pymrm_min_version: "3.4.0"
+runtime_seconds: 18
+datasets:
+  - al-dahhan-1995-printed-numbers.csv
+  - al-dahhan-1995-fig4.csv
+  - al-dahhan-1995-fig5.csv
+  - al-dahhan-1995-fig6.csv
+  - al-dahhan-1995-fig7.csv
+  - nist-n-hexane-298k.csv
+  - check_values.csv
+
+validation:
+  - every function against independent check values from a second route (eq. 9 full groups against the reduced form, eq. 1, the metric conventions, the Table 3 and 4 input checks, the moment coefficients and tracer moments)
+  - duplicate digitised readings of the same runs (L from panels a and b, Fig. 7 markers against Fig. 5a, Fig. 6 rings against Figs 4a and 5a)
+  - the printed inputs of Tables 3 and 4 recomputed and compared in half-units of their last printed digit
+  - the pymrm pellet moment problem for sphere, cylinder and slab, with and without film, at second order onto its rationals, with a dense-solve round-off companion
+  - Monte Carlo and bootstrap draw counts fixed by a twelve-seed study
+
+adds: >
+  One thing: the pellet first-moment problem behind the tracer method, solved with
+  construct_grad and construct_div (sphere, cylinder, slab; Dirichlet and Robin on the
+  outward normal), a sparse direct solve and observed_orders, as a second route to the
+  coefficients 1/15, 1/8 and 1/3 that Tables 1 and 2 use. Everything about eq. 9 and eq.
+  1 is closed forms and linear least squares on digitised data; pymrm adds nothing there.
+
+agreement: >
+  Eq. 9 with its printed constants, at the paper's own measured pressure drops and
+  n-hexane properties, reproduces the 37 <!-- claim: n_points --> digitised wetting
+  efficiencies with a mean relative error of 3.32 % <!-- claim: r2_mre_capped_exp -->
+  (capped at 1) or 4.01 % <!-- claim: r2_mre_uncapped_exp --> (uncapped), against the
+  printed "The mean relative error is 3.7%."; the paper's own Fig. 6 gives 3.67 % <!-- claim: r3_mre_B --> from 33
+  <!-- claim: r3_n_rings --> resolved rings. All 37 <!-- claim: r2_inside_capped_exp -->
+  points lie within 10 % when capped, 36 <!-- claim: r2_inside_uncapped_exp --> when not.
+  The residuals split by bed: spheres -4.46 % <!-- claim: r4_bias_sphere -->, extrudates
+  +2.11 % <!-- claim: r4_bias_extrudate -->, at 8.1 <!-- claim: r4_bias_z --> standard
+  errors; within the beds the exponent on psi_L is 0.0790 <!-- claim: r4_m -->, below
+  1/9 in every leave-one-case-out refit.
+
+caveats: >
+  The wetting efficiencies are the paper's own fitting data, read from a scan, so this
+  tests the transcription, the printed constants and the residual structure, not
+  predictive power. The liquid properties are not printed; pure n-hexane from the NIST
+  WebBook stands in for "commercial grade hexane". The tracer method (eq. 8) is a model
+  and no tracer data are tested; the holdup panels, Holub's model and El-Hisnawi's own
+  data are not covered. Fig. 6's corner stack may hide a ring. Eq. 9 has no
+  particle-size term, so two beds that differ in size, voidage and shape cannot tell
+  whether wetting depends on particle size.

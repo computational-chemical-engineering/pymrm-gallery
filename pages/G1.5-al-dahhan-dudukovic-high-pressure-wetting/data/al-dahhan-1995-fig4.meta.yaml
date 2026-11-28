@@ -1,0 +1,62 @@
+dataset_id: al-dahhan-1995-fig4
+title: "Wetting efficiency and pressure drop against L, bed of spheres, Figure 4(a, b) of Al-Dahhan and Dudukovic (1995)"
+status: complete
+
+source:
+  authors: ["Al-Dahhan, M. H.", "Dudukovic, M. P."]
+  year: 1995
+  container: "Chemical Engineering Science 50(15), 2377-2389"
+  doi: "10.1016/0009-2509(95)00092-J"
+  access: >
+    Publisher PDF (a 300 ppi scan) held outside the repository (~/papers/pymrm-gallery/).
+    No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 4 (a) and (b), journal p. 2385 (PDF page 9)"
+  tool: "pdftoppm -r 300 (the native resolution of the scan); marker boxes from connected components of the thresholded image, touching markers separated by eye on pixel printouts; calibration and conversion by data/digitise.py (committed)"
+  procedure: >
+    Panel (a): logarithmic eta_CE and L axes although the tick labels read linear (ticks
+    0.5 to 1.0 and 0.5 to 3.0 spaced as ln): ln value fitted on the pixel by least squares,
+    L ticks 0.5 and 3.0 (frame corners, columns 415.5 and 1044.5), 1.0 (658), 2.0 (901);
+    eta ticks 1.0 (top frame, row 2199), 0.9 (2295), 0.8 (2400.5), 0.7 (2521.5),
+    0.6 (2660.5), 0.5 (bottom frame, 2823). 350.9 px per unit ln L, 900.5 px per unit
+    ln eta (1 px = 0.29 % in L, 0.11 % in eta); largest tick residual 0.61 px (L), 0.90 px
+    (eta). Panel (b): linear; L ticks 0 to 3.0 every 0.5 (columns 1327 to 1942.5), 205.0
+    px per unit; ordinate ticks 0 to 8 every 2 (rows 1565 to 949), 77.0 px per unit;
+    largest residual 0.84 px. 17 markers in (a): case 2 star (5), case 3 cross (4), case 4
+    open square (4), case 5 filled square (4); 22 in (b), the same 17 plus 5 case-1 filled
+    triangles on the dP = 0 axis. The filled square at L 1.93 and the star at L 2.65 sit on
+    the eta = 1 frame of (a). A cross and an open square overlap near L 1.5 in (a); three
+    star/open-square pairs touch in (b).
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-28
+  estimated_error: >
+    Isolated marker centres +/-1 px, touching markers +/-2.5 px, markers on a frame or
+    the axis +/-2 to 3 px (the sd columns, per point). Axes per px: see procedure.
+
+conditions: "Bed of spheres (Table 4), hexane and nitrogen, 298 K; legend: case 1 U_G 0; 2: 0.31 MPa, 1.0 cm/s; 3: 0.31, 8.5; 4: 3.55, 1.0; 5: 3.55, 8.5."
+
+missing:
+  - "Case 1 (no gas) has pressure-drop markers only; panel (a) shows no case-1 wetting point."
+
+columns:
+  - {name: panel, unit: "-", description: "a (eta_CE) or b (pressure drop)"}
+  - {name: case, unit: "-", description: "legend case: 1 to 5; 5b is the 4.93 MPa series of Fig. 5"}
+  - {name: shape, unit: "-", description: "marker shape from the legend"}
+  - {name: L_kg_m2s, unit: kg/(m2 s), description: "superficial liquid mass velocity from the calibration"}
+  - {name: quantity, unit: "-", description: "eta_CE (panel a) or dpz_rhog = (dP/Z)/(rho_L g) (panel b)"}
+  - {name: value, unit: "-", description: "the ordinate from the calibration"}
+  - {name: px_x, unit: px, description: "marker box centre column at 300 ppi"}
+  - {name: px_y, unit: px, description: "marker box centre row at 300 ppi"}
+  - {name: sd_L, unit: "-", description: "reading SD of L: relative on the log axis (a), absolute in kg/(m2 s) on the linear axis (b)"}
+  - {name: sd_value, unit: "-", description: "reading SD of the ordinate: relative (a), absolute (b)"}
+  - {name: flag, unit: "-", description: "frame (on the eta = 1 frame), axis (on the dP = 0 axis), overlap (touching markers)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.

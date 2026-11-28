@@ -1,0 +1,59 @@
+dataset_id: al-dahhan-1995-fig5
+title: "Wetting efficiency and pressure drop against L, bed of extrudates, Figure 5(a, b) of Al-Dahhan and Dudukovic (1995)"
+status: complete
+
+source:
+  authors: ["Al-Dahhan, M. H.", "Dudukovic, M. P."]
+  year: 1995
+  container: "Chemical Engineering Science 50(15), 2377-2389"
+  doi: "10.1016/0009-2509(95)00092-J"
+  access: >
+    Publisher PDF (a 300 ppi scan) held outside the repository (~/papers/pymrm-gallery/).
+    No PDF and no page image is stored in this repository.
+  licence: "all rights reserved (numeric facts extracted; no text block, figure or page image reproduced)"
+
+acquisition:
+  method: digitised
+  figure: "Fig. 5 (a) and (b), journal p. 2386 (PDF page 10)"
+  tool: "pdftoppm -r 300 (the native resolution of the scan); marker boxes from connected components of the thresholded image, touching markers separated by eye on pixel printouts; calibration and conversion by data/digitise.py (committed)"
+  procedure: >
+    Panel (a): logarithmic eta_CE and L axes (labels read linear): L ticks 0.5 (left frame,
+    column 445), 0.6 (515.5), 1.0 (713), 2.0 (981.5); eta ticks 1.0 (top frame, row 230.5),
+    0.9 (325), 0.8 (431.5), 0.7 (553.5), 0.6 (693.5), 0.5 (bottom frame, 857). 387.0 px
+    per unit ln L, 905.3 px per unit ln eta; largest tick residual 0.17 px (L), 0.92 px
+    (eta). Panel (b): linear; L ticks 0 to 3.0 every 0.5 (columns 454.5 to 1066.5), 203.8
+    px per unit; ordinate ticks 0, 2, 4, 6 (rows 1752 to 1226), 87.7 px per unit; largest
+    residual 1.46 px. 20 markers in each panel: case 2 star, case 3 cross, case 4 open
+    square, case 5 (3.55 MPa) filled square, case 5b (4.93 MPa) open triangle, 4 each. The
+    filled square at L 2.04 and the triangle at L 2.31 sit on the eta = 1 frame of (a). The
+    four case-2 stars of (b) sit on the dP = 0 axis line; two of them touch open squares.
+  operator: "Claude Opus 5.5 (assisted)"
+  date: 2026-11-28
+  estimated_error: >
+    Isolated marker centres +/-1 px, touching markers +/-2.5 px, markers on a frame or
+    the axis +/-2 to 3 px (the sd columns, per point). Axes per px: see procedure.
+
+conditions: "Bed of extrudates (Table 4), hexane and nitrogen, 298 K; legend: 2: 0.31 MPa, 1.02 cm/s; 3: 0.31, 8.73; 4: 3.55, 1.03; 5: 3.55, 8.75; 5 (open triangle): 4.93, 7.20."
+
+missing:
+  - "none seen"
+
+columns:
+  - {name: panel, unit: "-", description: "a (eta_CE) or b (pressure drop)"}
+  - {name: case, unit: "-", description: "legend case: 1 to 5; 5b is the 4.93 MPa series of Fig. 5"}
+  - {name: shape, unit: "-", description: "marker shape from the legend"}
+  - {name: L_kg_m2s, unit: kg/(m2 s), description: "superficial liquid mass velocity from the calibration"}
+  - {name: quantity, unit: "-", description: "eta_CE (panel a) or dpz_rhog = (dP/Z)/(rho_L g) (panel b)"}
+  - {name: value, unit: "-", description: "the ordinate from the calibration"}
+  - {name: px_x, unit: px, description: "marker box centre column at 300 ppi"}
+  - {name: px_y, unit: px, description: "marker box centre row at 300 ppi"}
+  - {name: sd_L, unit: "-", description: "reading SD of L: relative on the log axis (a), absolute in kg/(m2 s) on the linear axis (b)"}
+  - {name: sd_value, unit: "-", description: "reading SD of the ordinate: relative (a), absolute (b)"}
+  - {name: flag, unit: "-", description: "frame (on the eta = 1 frame), axis (on the dP = 0 axis), overlap (touching markers)"}
+
+redistribution_basis: >
+  Numerical values are facts and are not protected by copyright (Feist
+  Publications v. Rural Telephone, 1991). Extraction for scientific research by a
+  research organisation with lawful access is covered by Art. 15n Auteurswet
+  (implementing DSM Directive (EU) 2019/790 Art. 3). No figure or page image is
+  reproduced; figure points are re-plotted from the extracted coordinates.
